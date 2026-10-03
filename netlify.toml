@@ -1,0 +1,4 @@
+# Alternative host: connect the repo on Netlify and it picks these up.
+[build]
+  command = "npm run build"
+  publish = "dist"

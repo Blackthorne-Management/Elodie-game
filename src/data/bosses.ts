@@ -17,7 +17,7 @@ export interface BossDef {
 export const BOSSES: BossDef[] = [
   {
     id: 'galebeak', name: 'Galebeak', region: 'gale', type: 'gale',
-    speciesStats: { hp: 110, attack: 20, defense: 16, speed: 22 },
+    speciesStats: { hp: 95, attack: 15, defense: 15, speed: 22 },
     moves: ['talonSwipe', 'cyclone', 'skyrend'],
     actsTwice: true,
   },

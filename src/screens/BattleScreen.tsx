@@ -19,17 +19,20 @@ const viewOf = (b: Battle): View =>
 interface Props {
   initial: Battle;
   rng: Rng;
+  title: string;
+  initialFast: boolean;
+  onSpeedChange: (fast: boolean) => void;
   onFinish: (winner: 'player' | 'enemy') => void;
 }
 
-export function BattleScreen({ initial, rng, onFinish }: Props) {
+export function BattleScreen({ initial, rng, title, initialFast, onSpeedChange, onFinish }: Props) {
   const [battle, setBattle] = useState(initial);
   const [view, setView] = useState(() => viewOf(initial));
   const [playback, setPlayback] = useState<{ next: Battle; i: number } | null>(null);
   const [choices, setChoices] = useState<Record<string, Choice>>({});
   const [target, setTarget] = useState<string | null>(null);
   const [auto, setAuto] = useState(false);
-  const [fast, setFast] = useState(false);
+  const [fast, setFast] = useState(initialFast);
   const [floaters, setFloaters] = useState<Record<string, Floater[]>>({});
   const [fx, setFx] = useState<Record<string, CardFx>>({});
   const [caption, setCaption] = useState('Choose a move for each Skyling');
@@ -179,8 +182,16 @@ export function BattleScreen({ initial, rng, onFinish }: Props) {
           <span>Grace</span>
         </div>
         <button type="button" className={`toggle ${auto ? 'on' : ''}`} onClick={() => setAuto(a => !a)}>Auto</button>
-        <button type="button" className={`toggle ${fast ? 'on' : ''}`} onClick={() => setFast(f => !f)}>2×</button>
+        <button type="button" className={`toggle ${fast ? 'on' : ''}`} onClick={() => { setFast(!fast); onSpeedChange(!fast); }}>2×</button>
       </header>
+      <div className="battle-title">
+        <span>{title}</span>
+        {!battle.winner && (
+          <button type="button" className="link" onClick={() => { if (confirm('Leave this battle? It will count as a loss.')) onFinish('enemy'); }}>
+            Leave
+          </button>
+        )}
+      </div>
 
       <section className="row enemies">
         {enemies.map(u => {

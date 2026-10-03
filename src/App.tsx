@@ -1,17 +1,42 @@
-import { useState } from 'react';
+import { useGame } from './state/store';
 import { BattleScreen } from './screens/BattleScreen';
-import { demoBattle } from './state/demoBattle';
-import { makeRng } from './engine/rng';
+import { HomeScreen } from './screens/HomeScreen';
+import { TeamScreen } from './screens/TeamScreen';
+import { SettingsScreen } from './screens/SettingsScreen';
+import { TabBar } from './components/TabBar';
+import { floorInfo } from './engine/floors';
 
-// Milestone 4: the app opens straight into a practice battle.
-// A screen switch in the store replaces this once the Dungeon map exists.
+const KIND = { normal: '', miniBoss: ' · Mini-boss', regionBoss: ' · Region boss' } as const;
+
+// No router: the store holds the current screen.
 export default function App() {
-  const [fight, setFight] = useState(() => newFight());
-  return <BattleScreen key={fight.id} initial={fight.battle} rng={fight.rng} onFinish={() => setFight(newFight())} />;
-}
+  const screen = useGame(s => s.screen);
+  const go = useGame(s => s.go);
+  const fight = useGame(s => s.fight);
+  const finishFight = useGame(s => s.finishFight);
+  const fast = useGame(s => s.save.settings.battleSpeed === 2);
+  const update = useGame(s => s.update);
 
-function newFight() {
-  const seed = Date.now() >>> 0;
-  const rng = makeRng(seed);
-  return { id: seed, rng, battle: demoBattle(rng) };
+  if (screen === 'battle' && fight) {
+    return (
+      <BattleScreen
+        key={fight.id}
+        initial={fight.battle}
+        rng={fight.rng}
+        title={`Floor ${fight.floor}${KIND[floorInfo(fight.floor).kind]}`}
+        initialFast={fast}
+        onSpeedChange={f => update(s => ({ ...s, settings: { ...s.settings, battleSpeed: f ? 2 : 1 } }))}
+        onFinish={finishFight}
+      />
+    );
+  }
+
+  return (
+    <div className="app">
+      <main className="content">
+        {screen === 'team' ? <TeamScreen /> : screen === 'settings' ? <SettingsScreen /> : <HomeScreen />}
+      </main>
+      <TabBar screen={screen} go={go} />
+    </div>
+  );
 }

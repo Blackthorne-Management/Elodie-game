@@ -14,6 +14,7 @@ Turn-based pet battler. React + TypeScript + Vite + Zustand, installed as a PWA.
 - `npm run dev` (add `-- --host` to open it on a phone on the same Wi-Fi)
 - `npm test` — Vitest, once
 - `npm run typecheck` / `npm run lint` / `npm run build`
+- Deploys to GitHub Pages from `.github/workflows/deploy.yml`; `BASE_PATH` sets the sub-path.
 
 ## Notes
 - tsconfig uses `verbatimModuleSyntax`: import types with `import type`.

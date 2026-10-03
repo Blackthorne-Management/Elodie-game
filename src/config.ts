@@ -44,3 +44,24 @@ export const PLAYBACK_MS_FAST = 200;
 // shield stand-offs always end.
 export const STORM_START_ROUND = 12;
 export const STORM_RAMP_PER_ROUND = 0.2;
+
+// Floors and rewards
+export const FLOORS_PER_ACT = 150;
+export const FLOORS_PER_REGION = 25;
+export const MINI_BOSS_EVERY = 5;
+export const FLOORS_PER_ENEMY_LEVEL = 6;
+export const SPARKS_BASE = 40;
+export const SPARKS_PER_FLOOR = 8;
+export const SPARKS_MULT = { normal: 1, miniBoss: 2, regionBoss: 4 } as const;
+export const REPLAY_SPARKS = 0.5;       // replaying a cleared floor pays half
+export const CRYSTALS_PER_FIRST_BOSS_CLEAR = 1;
+
+// Evolution
+export const EVOLVE = {
+  2: { level: 15, sparks: 500, crystals: 0 },
+  3: { level: 35, sparks: 2000, crystals: 1 },
+} as const;
+
+export const STARTING_EGGS = 3;
+export const STARTING_LEVEL = 3;
+export const STARTING_SPARKS = 200;
