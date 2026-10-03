@@ -39,7 +39,7 @@ export function botChoose(g: Game, d: Decision, rng: Rng): number {
   };
   switch (d.kind) {
     case 'turn': return turnChoice(g, me, d as Decision<TurnAction>, pers, rng);
-    case 'move': return pick(d.options.map(o => moveScore(g, me, d, o.value as { d: Dir; n: number } | Pos | null, pers)));
+    case 'move': return pick(d.options.map(o => moveScore(g, me, d, o.value as { d: Dir; n: number } | Pos | null)));
     case 'square': return pick(d.options.map(o => destinationScore(g, me, o.value as Pos, pers)));
     case 'direction': {
       const victim = d.prompt.match(/of (.+)'s move/)?.[1];
@@ -227,7 +227,7 @@ export function destinationScore(g: Game, p: PlayerState, q: Pos, pers: Personal
   return s;
 }
 
-function moveScore(g: Game, me: PlayerState, d: Decision, v: { d: Dir; n: number } | Pos | null, pers: Personality): number {
+function moveScore(g: Game, me: PlayerState, d: Decision, v: { d: Dir; n: number } | Pos | null): number {
   const mover = g.p((d.context?.player as number | undefined) ?? me.id);
   if (!mover.pos) return 0;
   let to: Pos;

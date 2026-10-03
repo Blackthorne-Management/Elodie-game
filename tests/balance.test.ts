@@ -3,6 +3,8 @@ import { CONTENT } from '../src/data';
 import { playBotGame } from '../src/ai/autoplay';
 import { setup } from './helpers';
 
+declare const process: { env: Record<string, string | undefined> };
+
 // Run with `npm run balance`; skipped in the normal test run because it plays 180 full games.
 it.skipIf(!process.env.BALANCE)('balance report', () => {
   for (const n of [2, 4, 8]) {
