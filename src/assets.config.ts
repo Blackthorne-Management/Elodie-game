@@ -20,6 +20,12 @@ export const HOUSE_ART: Record<HouseId, HouseArt> = {
   stillwater: { color: '#2e86c1', initial: 'W' },
 };
 
+// One portrait per house per generation (I-IV). Add an image URL (e.g. '/portraits/brasador-1.png')
+// and it replaces the placeholder silhouette everywhere: character card, duel screen, 2.5D tokens.
+export const PORTRAITS: Record<HouseId, [string?, string?, string?, string?]> = {
+  brasador: [], dorini: [], ironvow: [], suzumori: [], vaitama: [], kaysoley: [], agnivansh: [], stillwater: [],
+};
+
 export const TILE_ART: Record<TileType, { color: string; glyph: string; label: string }> = {
   court: { color: '#3f6fb5', glyph: 'C', label: 'Court' },
   war: { color: '#a83232', glyph: 'W', label: 'War' },

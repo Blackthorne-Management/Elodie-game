@@ -76,6 +76,7 @@ export interface LogEvent {
   target?: number;
   amount?: number;
   cards?: number[];
+  tag?: string;             // extra detail for the UI (e.g. the kind of attack)
   visibleTo?: number[];     // hidden-information events (hand reveals); undefined = everyone
 }
 

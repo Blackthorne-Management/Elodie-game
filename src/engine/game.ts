@@ -561,7 +561,7 @@ export class Game {
     if (this.house(t).mostFearedDownside?.(t.gen) && this.mostFeared()?.id === t.id) damage += 1;
     const marked = this.findEffect('markedForDeath', t.id);
     const info: AttackInfo = { attacker: a.id, target: t.id, kind, damage: damage + (marked ? 1 : 0) };
-    this.log(`${a.name} attacks ${t.name}!`, 'attack', { player: a.id, target: t.id, amount: info.damage });
+    this.log(`${a.name} attacks ${t.name}!`, 'attack', { player: a.id, target: t.id, amount: info.damage, tag: kind });
 
     // Block / Deflect window.
     const blocks = unblockable ? [] : t.hand.filter(c => this.card(c).block?.canUse(this, t, info));
