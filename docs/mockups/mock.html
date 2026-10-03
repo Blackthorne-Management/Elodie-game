@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bloodlines mockups</title>
+<style>
+  :root {
+    --bg: #17110f; --panel: #241b1e; --panel2: #2f2428; --ink: #f2e9dc; --muted: #a8998c; --gold: #d9a441;
+    --brasador: #b03a2e; --kay: #d4ac0d; --dorini: #b7950b; --ironvow: #5d6d7e; --agni: #e67e22; --still: #2e86c1;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
+  .screen { width: 100vw; height: 100vh; display: none; position: relative; overflow: hidden; }
+  .screen.on { display: flex; }
+  .muted { color: var(--muted); }
+
+  /* ---- hero card (you) ---- */
+  .hero { display: flex; gap: 10px; align-items: center; background: linear-gradient(135deg, #3a2420, #241b1e); border: 2px solid var(--gold);
+    border-radius: 14px; padding: 8px 10px; box-shadow: 0 6px 18px rgba(0,0,0,.5); }
+  .portrait { width: 64px; height: 76px; border-radius: 10px; flex: none; position: relative; overflow: hidden;
+    background: radial-gradient(circle at 50% 30%, #f3d9b0 0 18%, transparent 19%), radial-gradient(ellipse at 50% 105%, var(--c) 0 45%, transparent 46%), linear-gradient(#5a3a30, #2a1a18);
+    border: 2px solid var(--c); }
+  .portrait .gen { position: absolute; bottom: 2px; right: 4px; font-size: 11px; font-weight: 900; color: var(--gold); text-shadow: 0 1px 2px #000; }
+  .portrait .ph { position: absolute; top: 3px; left: 4px; font-size: 8px; color: #fff8; letter-spacing: .05em; }
+  .hero-body { flex: 1; min-width: 0; }
+  .hero-name { font-weight: 900; font-size: 16px; }
+  .hero-house { font-size: 12px; color: var(--muted); }
+  .stats { display: flex; gap: 10px; font-weight: 800; font-size: 14px; margin-top: 3px; }
+  .hearts { color: #ef6b6b; }
+  .chips { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+  .chip { font-size: 10.5px; font-weight: 700; padding: 3px 7px; border-radius: 999px; background: #3b3150; border: 1px solid #5c4f80; }
+
+  /* ---- rivals strip ---- */
+  .rivals { display: flex; gap: 6px; }
+  .rival { display: flex; align-items: center; gap: 5px; background: var(--panel); border-radius: 10px; padding: 4px 7px 4px 4px; font-size: 11px; border: 1px solid #3a2e32; }
+  .rival.active { border-color: var(--gold); box-shadow: 0 0 10px rgba(217,164,65,.4); }
+  .emblem { width: 24px; height: 24px; border-radius: 50%; background: var(--c); display: grid; place-items: center; font-weight: 900; font-size: 12px; color: #fff; border: 2px solid #0006; flex: none; }
+  .rival b { display: block; font-size: 11px; }
+
+  /* ---- 2.5D local view ---- */
+  .stage { position: relative; flex: 1; perspective: 700px; perspective-origin: 50% 0%; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, #3a2c34 0%, #17110f 70%); border-radius: 16px; }
+  .plane { position: absolute; left: 50%; top: 52%; width: 540px; height: 540px; margin-left: -270px; margin-top: -330px;
+    transform: rotateX(56deg) rotateZ(0deg); transform-style: preserve-3d; }
+  .terrain { position: absolute; inset: 0; border-radius: 6px;
+    background:
+      radial-gradient(ellipse 60% 50% at 18% 22%, #1f4446 0 55%, transparent 70%),
+      radial-gradient(ellipse 55% 55% at 85% 20%, #4f4a26 0 50%, transparent 72%),
+      radial-gradient(ellipse 70% 50% at 50% 95%, #3a3434 0 40%, transparent 70%),
+      radial-gradient(ellipse 60% 60% at 52% 12%, #4a2a24 0 60%, transparent 75%),
+      #3a3036; filter: saturate(1.1); }
+  .grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(9, 1fr); }
+  .cell { border: 1px solid rgba(0,0,0,.25); }
+  .cell.reach { background: rgba(243,210,122,.18); box-shadow: inset 0 0 0 1px rgba(243,210,122,.55); }
+  .cell.dest { background: rgba(243,210,122,.45); box-shadow: inset 0 0 0 2px #f3d27a; }
+  .cell.path { background: rgba(243,210,122,.3); }
+  .cell.tile { background: #a83232; box-shadow: inset 0 0 0 2px #0008; display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 20px; }
+  .cell.court { background: #3f6fb5; }
+  .marks { position: absolute; inset: 0; background-image:
+      repeating-linear-gradient(60deg, transparent 0 22px, rgba(255,160,120,.12) 22px 24px); pointer-events: none; }
+  .token { position: absolute; transform-style: preserve-3d; }
+  .token .stand { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%) rotateX(-56deg); transform-origin: 50% 100%; display: flex; flex-direction: column; align-items: center; }
+  .token .disc { width: 54px; height: 54px; border-radius: 50%; border: 3px solid var(--c);
+    background: radial-gradient(circle at 50% 35%, #f3d9b0 0 22%, transparent 23%), radial-gradient(ellipse at 50% 110%, var(--c) 0 50%, transparent 51%), #2a1a18;
+    box-shadow: 0 6px 12px rgba(0,0,0,.6); }
+  .token .base { width: 46px; height: 12px; border-radius: 50%; background: radial-gradient(#000a, transparent 70%); margin-top: -2px; }
+  .token .tag { font-size: 11px; font-weight: 800; background: #000a; padding: 1px 6px; border-radius: 6px; margin-bottom: 3px; white-space: nowrap; }
+  .token.me .disc { box-shadow: 0 0 0 3px var(--gold), 0 6px 14px rgba(0,0,0,.6); }
+  .arrow { position: absolute; width: 0; height: 0; filter: drop-shadow(0 2px 3px #000); }
+  .arrow svg { position: absolute; left: -22px; top: -22px; }
+  .steps { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #000a; border: 1px solid var(--gold); color: var(--gold);
+    font-weight: 900; padding: 6px 14px; border-radius: 999px; font-size: 14px; white-space: nowrap; }
+  .minimap { position: absolute; right: 8px; bottom: 8px; width: 92px; height: 92px; border-radius: 10px; border: 2px solid #ffffff55;
+    background: linear-gradient(135deg, #1f4446 0 30%, #4a2a24 30% 55%, #4f4a26 55%); box-shadow: 0 4px 12px #000a; overflow: hidden; }
+  .minimap .mm-throne { position: absolute; left: 42px; top: 42px; width: 9px; height: 9px; background: #5a1620; border: 1px solid var(--gold); }
+  .minimap .mm-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #000; }
+  .minimap .mm-view { position: absolute; border: 1.5px solid #fff; border-radius: 3px; }
+  .minimap .mm-label { position: absolute; bottom: 2px; left: 0; right: 0; text-align: center; font-size: 9px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px #000; }
+
+  /* ---- hand ---- */
+  .handzone { position: relative; height: 150px; }
+  .card { position: absolute; bottom: 0; width: 108px; height: 150px; border-radius: 12px; padding: 8px; background: linear-gradient(#2e3340, #232733);
+    border: 2px solid #4a4f60; box-shadow: 0 8px 18px rgba(0,0,0,.6); transform-origin: 50% 120%; display: flex; flex-direction: column; gap: 4px; }
+  .card .cat { font-size: 8.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .card .nm { font-weight: 900; font-size: 13px; line-height: 1.1; }
+  .card .art { height: 46px; border-radius: 6px; background: linear-gradient(135deg, #46506a, #2a2f3d); display: grid; place-items: center; font-size: 22px; opacity: .8; }
+  .card .tx { font-size: 10px; line-height: 1.3; color: #ddd; }
+  .card.glow { border-color: var(--gold); box-shadow: 0 0 16px rgba(217,164,65,.55), 0 8px 18px rgba(0,0,0,.6); }
+  .card.lift { transform: translateY(-26px) rotate(0deg) !important; z-index: 3; }
+  .card.back { background: repeating-linear-gradient(45deg, #3a1d24 0 8px, #301820 8px 16px); border-color: #6b3a44; }
+  .actions { display: flex; gap: 8px; }
+  .btn { flex: 1; min-height: 46px; border-radius: 12px; border: 1px solid #5a4650; background: var(--panel2); color: var(--ink); font-weight: 800; font-size: 15px; display: grid; place-items: center; }
+  .btn.gold { background: var(--gold); color: #2a1a10; border-color: var(--gold); }
+  .btn.red { background: #6b2a2a; border-color: #8c3a3a; }
+
+  /* ---- layouts ---- */
+  .portraitL { flex-direction: column; gap: 8px; padding: 46px 10px 18px; }
+  .banner { position: absolute; left: 50%; top: 18px; transform: translateX(-50%); background: #000c; border: 1px solid #ffffff33; padding: 6px 12px;
+    border-radius: 10px; font-weight: 800; font-size: 13px; white-space: nowrap; display: flex; gap: 6px; align-items: center; }
+  .flying { position: absolute; width: 70px; height: 98px; border-radius: 9px; transform: rotate(-12deg); box-shadow: 0 10px 24px #000c; }
+  .dim { opacity: .45; filter: grayscale(.5); }
+
+  /* duel */
+  .duel { flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 30px 16px;
+    background: radial-gradient(circle at 50% 45%, #5a1620 0%, #17110f 65%); }
+  .duel h2 { margin: 0; color: var(--gold); letter-spacing: .12em; font-size: 15px; text-transform: uppercase; }
+  .fighters { display: flex; align-items: center; gap: 10px; }
+  .fcard { width: 150px; border-radius: 14px; border: 3px solid var(--c); background: linear-gradient(#3a2826, #221817); padding: 8px; box-shadow: 0 12px 30px #000c; }
+  .fcard .portrait { width: 100%; height: 150px; }
+  .fcard .nm { font-weight: 900; margin-top: 6px; }
+  .fcard .meta { font-size: 12px; color: var(--muted); }
+  .fcard .hp { font-size: 18px; font-weight: 900; color: #ef6b6b; margin-top: 4px; }
+  .fcard.hit { transform: rotate(4deg) translateX(6px); }
+  .vs { font-size: 28px; font-weight: 900; color: var(--gold); text-shadow: 0 0 16px #d9a44188; }
+  .dmg { position: absolute; font-size: 54px; font-weight: 900; color: #ff5a4a; text-shadow: 0 4px 0 #000, 0 0 20px #f00a; }
+  .respond { background: #241b1ecc; border: 1px solid #ffffff22; border-radius: 14px; padding: 10px; width: 100%; max-width: 360px; text-align: center; }
+
+  /* overhead map */
+  .overhead { flex-direction: column; padding: 46px 10px 18px; gap: 10px; }
+  .fullmap { position: relative; width: 100%; aspect-ratio: 1; border-radius: 12px; overflow: hidden;
+    background:
+      radial-gradient(ellipse 34% 30% at 18% 18%, #1f4446 0 60%, transparent 75%),
+      radial-gradient(ellipse 32% 30% at 50% 6%, #4a2a24 0 60%, transparent 76%),
+      radial-gradient(ellipse 32% 32% at 82% 18%, #4f4a26 0 60%, transparent 76%),
+      radial-gradient(ellipse 30% 34% at 94% 52%, #5a4a2c 0 60%, transparent 76%),
+      radial-gradient(ellipse 32% 32% at 82% 84%, #33403e 0 60%, transparent 76%),
+      radial-gradient(ellipse 32% 30% at 50% 96%, #2f3442 0 60%, transparent 76%),
+      radial-gradient(ellipse 32% 32% at 18% 84%, #4d3220 0 60%, transparent 76%),
+      radial-gradient(ellipse 30% 34% at 5% 50%, #3a3044 0 60%, transparent 76%),
+      #3a3434; }
+  .fullmap .gridlines { position: absolute; inset: 0; background-image: linear-gradient(#0003 1px, transparent 1px), linear-gradient(90deg, #0003 1px, transparent 1px); background-size: calc(100%/18) calc(100%/18); }
+  .fullmap .throne { position: absolute; left: calc(100%*8/18); top: calc(100%*8/18); width: calc(100%*2/18); height: calc(100%*2/18); background: #5a1620; border: 2px solid var(--gold); display: grid; place-items: center; color: var(--gold); }
+  .fullmap .emb { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: var(--c); border: 2px solid #000; display: grid; place-items: center; font-weight: 900; color: #fff; font-size: 14px; box-shadow: 0 3px 8px #000a; }
+  .fullmap .emb.me { box-shadow: 0 0 0 3px var(--gold), 0 3px 8px #000a; }
+  .fullmap .land { position: absolute; font-size: 11px; font-style: italic; color: #fff7; transform: translate(-50%, -50%); }
+
+  /* landscape */
+  .land-grid { display: grid; grid-template-columns: 210px 1fr 150px; grid-template-rows: 1fr 118px; gap: 8px; padding: 10px 14px; width: 100%; }
+  .land-grid .stage { grid-row: 1; grid-column: 2; }
+  .land-left { grid-row: 1 / 3; display: flex; flex-direction: column; gap: 8px; }
+  .land-right { grid-row: 1 / 3; grid-column: 3; display: flex; flex-direction: column; gap: 6px; }
+  .land-hand { grid-column: 2; grid-row: 2; position: relative; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. YOUR TURN: MOVING (portrait) ============ -->
+<section class="screen portraitL" id="move">
+  <div class="rivals">
+    <div class="rival"><span class="emblem" style="--c:var(--brasador)">B</span><span><b>Brasador</b>♥3 · ♔1 ⚔4 ◈0</span></div>
+    <div class="rival"><span class="emblem" style="--c:var(--kay)">K</span><span><b>Kay Soley</b>♥2 · ♔5 ⚔0 ◈1</span></div>
+    <div class="rival"><span class="emblem" style="--c:var(--dorini)">D</span><span><b>Dorini</b>♥2 · ♔0 ⚔0 ◈6</span></div>
+  </div>
+  <div class="hero">
+    <div class="portrait" style="--c:var(--still)"><span class="ph">PORTRAIT</span><span class="gen">II</span></div>
+    <div class="hero-body">
+      <div class="hero-name">Elodie</div>
+      <div class="hero-house">House Stillwater · Aldermoor · Gen II</div>
+      <div class="stats"><span class="hearts">♥ 2/2</span><span style="color:#6f9be0">♔ 3</span><span style="color:#e06f6f">⚔ 1</span><span style="color:#e0b84f">◈ 2</span></div>
+      <div class="chips"><span class="chip">The Long Watch</span><span class="chip">Patience ×1</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="steps">🎲 Rolled 4 · 1 step left</div>
+    <div class="plane">
+      <div class="terrain"></div><div class="marks"></div>
+      <div class="grid" id="g1"></div>
+    </div>
+    <div class="minimap"><div class="mm-throne"></div><div class="mm-view" style="left:28px;top:4px;width:30px;height:30px"></div>
+      <div class="mm-dot" style="left:40px;top:14px;background:var(--still)"></div><div class="mm-dot" style="left:46px;top:3px;background:var(--brasador)"></div>
+      <div class="mm-dot" style="left:78px;top:18px;background:var(--kay)"></div><div class="mm-dot" style="left:84px;top:50px;background:var(--dorini)"></div><div class="mm-label">MAP</div></div>
+  </div>
+
+  <div class="handzone">
+    <div class="card glow" style="left:12px;transform:rotate(-9deg)"><span class="cat">Influence</span><span class="nm">Royal Favor</span><span class="art">♔</span><span class="tx">Gain 2 Influence.</span></div>
+    <div class="card glow lift" style="left:50%;margin-left:-54px;transform:rotate(0)"><span class="cat">Ranged</span><span class="nm">Cursed Dagger</span><span class="art">🗡</span><span class="tx">Attack any player on the board. Deal 1 damage.</span></div>
+    <div class="card" style="right:12px;transform:rotate(9deg)"><span class="cat">Block</span><span class="nm">Riposte</span><span class="art">⛨</span><span class="tx">Negate an attack and deal 1 back.</span></div>
+  </div>
+  <div class="actions"><div class="btn">↶ Undo step</div><div class="btn gold">Stop here</div></div>
+</section>
+
+<!-- ============ 2. WATCHING AN OPPONENT (portrait) ============ -->
+<section class="screen portraitL" id="watch">
+  <div class="rivals">
+    <div class="rival active"><span class="emblem" style="--c:var(--brasador)">B</span><span><b>Brasador</b>♥3 · ♔1 ⚔4 ◈0</span></div>
+    <div class="rival"><span class="emblem" style="--c:var(--kay)">K</span><span><b>Kay Soley</b>♥2 · ♔5 ⚔0 ◈1</span></div>
+    <div class="rival"><span class="emblem" style="--c:var(--dorini)">D</span><span><b>Dorini</b>♥2 · ♔0 ⚔0 ◈6</span></div>
+  </div>
+  <div class="hero dim">
+    <div class="portrait" style="--c:var(--still)"><span class="ph">PORTRAIT</span><span class="gen">II</span></div>
+    <div class="hero-body"><div class="hero-name">Elodie</div><div class="hero-house">House Stillwater · waiting</div>
+      <div class="stats"><span class="hearts">♥ 2/2</span><span style="color:#6f9be0">♔ 3</span><span style="color:#e06f6f">⚔ 1</span><span style="color:#e0b84f">◈ 2</span></div></div>
+  </div>
+  <div class="stage">
+    <div class="banner"><span class="emblem" style="--c:var(--brasador)">B</span> Brasador is playing a card…</div>
+    <div class="plane"><div class="terrain"></div><div class="marks"></div><div class="grid" id="g2"></div></div>
+    <div class="card back flying" style="left:54%;top:22%;"></div>
+    <div class="minimap"><div class="mm-throne"></div><div class="mm-dot" style="left:46px;top:20px;background:var(--brasador)"></div><div class="mm-label">MAP</div></div>
+  </div>
+  <div class="handzone dim">
+    <div class="card" style="left:12px;transform:rotate(-9deg)"><span class="cat">Influence</span><span class="nm">Royal Favor</span><span class="art">♔</span></div>
+    <div class="card" style="left:50%;margin-left:-54px"><span class="cat">Ranged</span><span class="nm">Cursed Dagger</span><span class="art">🗡</span></div>
+    <div class="card" style="right:12px;transform:rotate(9deg)"><span class="cat">Block</span><span class="nm">Riposte</span><span class="art">⛨</span></div>
+  </div>
+  <div class="actions"><div class="btn" style="opacity:.6">Brasador's turn · Round 4/15</div></div>
+</section>
+
+<!-- ============ 3. DUEL ============ -->
+<section class="screen duel" id="duel">
+  <h2>Attack!</h2>
+  <div class="fighters">
+    <div class="fcard" style="--c:var(--brasador)"><div class="portrait" style="--c:var(--brasador)"><span class="ph">PORTRAIT</span><span class="gen">III</span></div>
+      <div class="nm">Brasador</div><div class="meta">Gen III · La Marca</div><div class="hp">♥ 4</div></div>
+    <div class="vs">VS</div>
+    <div class="fcard hit" style="--c:var(--still)"><div class="portrait" style="--c:var(--still)"><span class="ph">PORTRAIT</span><span class="gen">II</span></div>
+      <div class="nm">Elodie</div><div class="meta">Stillwater · Gen II</div><div class="hp">♥ 2</div></div>
+  </div>
+  <div class="dmg" style="right:70px;top:150px">−4</div>
+  <div class="respond">
+    <div style="font-weight:800;margin-bottom:8px">Brasador strikes for 4. Respond?</div>
+    <div class="actions"><div class="btn gold">⛨ Riposte</div><div class="btn red">Take it</div></div>
+    <div class="muted" style="font-size:12px;margin-top:6px">Other players see only that a card was played.</div>
+  </div>
+</section>
+
+<!-- ============ 4. OVERHEAD MAP ============ -->
+<section class="screen overhead" id="map">
+  <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:var(--gold)">The Realm · Round 4/15</b><span class="btn" style="flex:none;padding:0 14px">Back to view</span></div>
+  <div class="fullmap">
+    <div class="gridlines"></div><div class="throne">♛</div>
+    <span class="land" style="left:50%;top:13%">Ardencia</span><span class="land" style="left:20%;top:26%">Moa'olani</span><span class="land" style="left:80%;top:26%">Zetwal</span>
+    <span class="land" style="left:85%;top:56%">Al-Doria</span><span class="land" style="left:14%;top:56%">Aldermoor</span><span class="land" style="left:24%;top:76%">Jwaladesh</span>
+    <span class="land" style="left:78%;top:76%">Skarragol</span><span class="land" style="left:50%;top:88%">Kuroshi</span>
+    <span class="emb me" style="--c:var(--still);left:30%;top:22%">W</span>
+    <span class="emb" style="--c:var(--brasador);left:47%;top:9%">B</span>
+    <span class="emb" style="--c:var(--kay);left:82%;top:20%">K</span>
+    <span class="emb" style="--c:var(--dorini);left:95%;top:55%">D</span>
+  </div>
+  <div class="muted" style="font-size:13px">Each house is a circle with its emblem (placeholder letters until the crests are drawn). Your ring is gold. Tap a circle for that player's card.</div>
+</section>
+
+<!-- ============ 5. LANDSCAPE ============ -->
+<section class="screen" id="land">
+  <div class="land-grid">
+    <div class="land-left">
+      <div class="hero" style="flex-direction:column;align-items:stretch">
+        <div class="portrait" style="--c:var(--still);width:100%;height:110px"><span class="ph">PORTRAIT</span><span class="gen">II</span></div>
+        <div><div class="hero-name">Elodie</div><div class="hero-house">Stillwater · Gen II</div>
+          <div class="stats"><span class="hearts">♥2/2</span><span style="color:#6f9be0">♔3</span><span style="color:#e06f6f">⚔1</span><span style="color:#e0b84f">◈2</span></div></div>
+      </div>
+      <div class="actions" style="flex-direction:column"><div class="btn gold">Stop here</div><div class="btn">End turn</div></div>
+    </div>
+    <div class="stage"><div class="steps">🎲 4 · 1 step left</div><div class="plane" style="top:62%"><div class="terrain"></div><div class="marks"></div><div class="grid" id="g3"></div></div>
+      <div class="minimap" style="width:80px;height:80px"><div class="mm-throne" style="left:36px;top:36px"></div><div class="mm-label">MAP</div></div></div>
+    <div class="land-right">
+      <div class="rival"><span class="emblem" style="--c:var(--brasador)">B</span><span><b>Brasador</b>♥3 ⚔4</span></div>
+      <div class="rival"><span class="emblem" style="--c:var(--kay)">K</span><span><b>Kay Soley</b>♥2 ♔5</span></div>
+      <div class="rival"><span class="emblem" style="--c:var(--dorini)">D</span><span><b>Dorini</b>♥2 ◈6</span></div>
+    </div>
+    <div class="land-hand">
+      <div class="card glow" style="left:10%;transform:rotate(-7deg) scale(.78);transform-origin:50% 100%"><span class="cat">Influence</span><span class="nm">Royal Favor</span><span class="art">♔</span></div>
+      <div class="card glow" style="left:36%;transform:scale(.78);transform-origin:50% 100%"><span class="cat">Ranged</span><span class="nm">Cursed Dagger</span><span class="art">🗡</span></div>
+      <div class="card" style="left:62%;transform:rotate(7deg) scale(.78);transform-origin:50% 100%"><span class="cat">Block</span><span class="nm">Riposte</span><span class="art">⛨</span></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Build the 9x9 local grid around your character (centre cell 4,4 = you).
+  function grid(el, opts) {
+    const g = document.getElementById(el);
+    for (let y = 0; y < 9; y++) for (let x = 0; x < 9; x++) {
+      const c = document.createElement('div');
+      c.className = 'cell';
+      const d = Math.abs(x - 4) + Math.abs(y - 6);
+      if (opts.reach && d <= 1 && d > 0) c.classList.add('reach');
+      if (opts.path && opts.path.some(p => p[0] === x && p[1] === y)) c.classList.add('path');
+      if (x === 2 && y === 1) { c.classList.add('tile'); c.textContent = 'W'; }
+      if (x === 7 && y === 2) { c.classList.add('tile', 'court'); c.textContent = 'C'; }
+      g.appendChild(c);
+    }
+    const cell = 540 / 9;
+    const token = (x, y, color, name, me) => {
+      const t = document.createElement('div');
+      t.className = 'token' + (me ? ' me' : '');
+      t.style.left = (x * cell + cell / 2) + 'px'; t.style.top = (y * cell + cell / 2) + 'px';
+      t.innerHTML = `<div class="stand"><span class="tag">${name}</span><div class="disc" style="--c:${color}"></div><div class="base"></div></div>`;
+      g.parentElement.appendChild(t);
+    };
+    token(4, 6, 'var(--still)', 'You', true);
+    token(3, 1, 'var(--brasador)', 'Brasador');
+    if (opts.arrows) {
+      const arrow = (x, y, rot) => {
+        const a = document.createElement('div');
+        a.className = 'arrow';
+        a.style.left = (x * cell + cell / 2) + 'px'; a.style.top = (y * cell + cell / 2) + 'px';
+        a.innerHTML = `<svg width="44" height="44" viewBox="0 0 44 44" style="transform:rotate(${rot}deg)"><circle cx="22" cy="22" r="20" fill="#d9a441"/><path d="M22 10 L32 26 H25 V34 H19 V26 H12 Z" fill="#2a1a10"/></svg>`;
+        g.parentElement.appendChild(a);
+      };
+      arrow(4, 5, 0); arrow(5, 6, 90); arrow(3, 6, 270); arrow(4, 7, 180);
+    }
+  }
+  grid('g1', { reach: true, arrows: true, path: [[4, 8], [4, 7]] });
+  grid('g2', { path: [[3, 3], [3, 2]] });
+  grid('g3', { reach: true, arrows: true, path: [[4, 8], [4, 7]] });
+  const s = new URLSearchParams(location.search).get('s') || 'move';
+  document.getElementById(s).classList.add('on');
+</script>
+</body>
+</html>
