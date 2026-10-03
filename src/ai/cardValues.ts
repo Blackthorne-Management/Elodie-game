@@ -67,7 +67,7 @@ export function playScore(g: Game, p: PlayerState, id: number, pers: Personality
     case 23: return w('wealth') + 0.2;
     case 24: return (t?.attacks ?? 0) === 0 && !g.basicTargets(p).length ? 2 * w('wealth') : 0.2;
     case 25: return w('wealth');
-    case 26: return Math.min(2, t?.damageDealt ?? 0) * w('wealth');
+    case 26: return (t?.damageDealt ? Math.min(2, t.damageDealt) : g.basicTargets(p).length ? 1.5 : 0) * w('wealth');
     case 27: return (p.gen >= 3 ? 3 : 2) * w('wealth');
     case 28: case 32: {
       const kill = rivals(g, p).some(o => o.hp <= 1);

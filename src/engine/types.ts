@@ -93,6 +93,7 @@ export interface TurnState {
   stopDrawing: boolean;
   extraTurn: boolean;
   vanishingAct: boolean;
+  onHit: number[];          // cards waiting to pay out when this turn's attack lands (Plunder)
 }
 
 export interface GameConfig {

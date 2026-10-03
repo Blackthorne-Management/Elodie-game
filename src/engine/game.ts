@@ -13,7 +13,7 @@ import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  CHALLENGE_FIRST_STRIKER, HAND_SIZE, MAX_FIGHT_BLOWS, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, HAND_SIZE, MAX_FIGHT_BLOWS, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS,
 } from '../config';
 
 export class GameOver extends Error {}
@@ -598,7 +598,11 @@ export class Game {
     turn.attacks++;
     const puppeteer = this.redirectChooser(a, REDIRECT_TARGET);
     if (puppeteer) t = (yield* this.choosePlayer(puppeteer, this.basicTargets(a), `Choose who ${a.name} attacks`)) ?? t;
-    yield* this.attack(a, t, 'basic');
+    const hit = yield* this.attack(a, t, 'basic');
+    if (hit.landed && !a.specter) {
+      for (const c of turn.onHit) yield* this.card(c).onAttackLanded!(this, a, hit.damage);
+    }
+    turn.onHit = [];
     if (turn.vanishingAct && !a.specter && a.pos) {
       turn.vanishingAct = false;
       yield* this.moveFree(a, 1, 'Vanishing Act: move 1 space');
@@ -762,7 +766,10 @@ export class Game {
     if (!t.moved) out.push({ label: 'Roll and move', value: { type: 'roll' } });
     const canAttackNow = t.moved || this.house(p).attackBeforeMove?.(p.gen);
     if (canAttackNow && t.attacks < t.attacksAllowed) {
-      for (const target of this.basicTargets(p)) out.push({ label: `Attack ${target.name}`, value: { type: 'attack', target: target.id } });
+      const ends = ATTACK_ENDS_TURN && t.moved && t.attacks + 1 >= t.attacksAllowed;
+      for (const target of this.basicTargets(p)) {
+        out.push({ label: `Attack ${target.name}${ends ? ' (ends turn)' : ''}`, value: { type: 'attack', target: target.id } });
+      }
     }
     if (t.cardPlays < t.cardPlaysAllowed) {
       for (const c of p.hand) if (this.canPlay(p, c)) out.push({ label: `Play ${this.card(c).name}`, value: { type: 'card', card: c } });
@@ -777,7 +784,7 @@ export class Game {
     this.s.turnNo++;
     this.s.turn = {
       player: p.id, moved: false, attacks: 0, attacksAllowed: 1, cardPlays: 0, cardPlaysAllowed: 1,
-      rollBonus: 0, aggressive: false, damageDealt: 0, scoredTile: null, stopDrawing: false, extraTurn, vanishingAct: false,
+      rollBonus: 0, aggressive: false, damageDealt: 0, scoredTile: null, stopDrawing: false, extraTurn, vanishingAct: false, onHit: [],
     };
     // Effects that last "until your next turn" end now; "next turn" effects arm.
     this.expire(x => x.at === 'turnStart' && x.player === p.id);
@@ -801,6 +808,9 @@ export class Game {
         if (action.type === 'end') break;
         yield* this.doAction(p, action);
         if (this.s.winner !== null) throw new GameOver();
+        // Attacking is your action: the turn ends after your last allowed attack, once you've moved.
+        const t = this.s.turn!;
+        if (ATTACK_ENDS_TURN && action.type === 'attack' && t.attacks >= t.attacksAllowed && t.moved) break;
       }
 
       // Stillwater II: The Long Watch.

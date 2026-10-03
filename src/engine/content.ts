@@ -29,6 +29,8 @@ export interface CardDef {
   // Can this Hand Card be played right now (on your own turn)?
   playable?: (g: Game, p: PlayerState) => boolean;
   effect: (g: Game, self: PlayerState, card: CardDef) => Flow;
+  // Played before attacking: pays out when this turn's basic attack lands.
+  onAttackLanded?: (g: Game, self: PlayerState, damage: number) => Flow;
 }
 
 export interface PassiveHooks {

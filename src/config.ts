@@ -15,6 +15,10 @@ export const SUDDEN_DEATH_ROUND = 15;
 export type FirstStriker = 'claimant' | 'challenger';
 export const CHALLENGE_FIRST_STRIKER: FirstStriker = 'claimant';
 
+// Attacking ends your turn (after your last allowed attack). Ironvow from Gen II may attack before
+// moving and still move afterwards.
+export const ATTACK_ENDS_TURN = true;
+
 // Safety cap on blows in one Challenge fight or duel (each blow is at least 1 damage, so real fights end long before).
 export const MAX_FIGHT_BLOWS = 60;
 

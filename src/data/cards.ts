@@ -159,8 +159,16 @@ hand(25, 'Black Market Deal', 'Wealth / Trade', 'Gain 1 Wealth. You may Barter 1
     const t = yield* g.choosePlayer(p, partners, 'Barter with whom?');
     if (t) yield* barter(g, p, t, 'Black Market Deal');
   });
+// Attacking ends the turn, so Plunder is played before the attack and pays out when it lands (rules-decisions).
 hand(26, 'Plunder', 'Wealth / Trade', "Gain 1 Wealth for each Heart Token of damage you've dealt this turn (max 2).",
-  function* (g, p) { g.gain(p, 'wealth', Math.min(2, g.s.turn?.player === p.id ? g.s.turn.damageDealt : 0)); });
+  function* (g, p) {
+    const t = g.s.turn;
+    if (!t || t.player !== p.id) return;
+    if (t.damageDealt > 0) g.gain(p, 'wealth', Math.min(2, t.damageDealt), 'Plunder');
+    else { t.onHit.push(26); g.log(`${p.name} readies to plunder: Wealth for the damage of this turn's attack.`, 'info', { player: p.id }); }
+  }, {
+    *onAttackLanded(g, p, damage) { g.gain(p, 'wealth', Math.min(2, damage), 'Plunder'); },
+  });
 hand(27, 'Inheritance', 'Wealth / Trade', 'Gain 2 Wealth. If your current generation is III or IV, gain 1 more.',
   function* (g, p) { g.gain(p, 'wealth', p.gen >= 3 ? 3 : 2); });
 

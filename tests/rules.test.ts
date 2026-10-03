@@ -156,6 +156,33 @@ describe('combat and death (Sections 6 and 9)', () => {
     drive(g.basicAttack(a, b), byLabel('Riposte'));
     expect(a.hp).toBe(g.house(a).hp[0] - 1);
   });
+  it('attacking ends the turn (after moving), and the turn still draws back to 3', () => {
+    const g = newGame(2, ['brasador', 'kaysoley']);
+    const [a, b] = g.s.players;
+    b.pos = { x: a.pos!.x, y: a.pos!.y + 1 };
+    b.maxHp = b.hp = 10; b.hand = [];
+    const kinds: string[] = [];
+    drive(g.playTurn(a), d => {
+      kinds.push(d.kind === 'turn' ? (d.options.map(o => (o.value as { type: string }).type).join('/')) : d.kind);
+      if (d.kind === 'turn') {
+        const atk = d.options.findIndex(o => (o.value as { type: string }).type === 'attack');
+        const roll = d.options.findIndex(o => (o.value as { type: string }).type === 'roll');
+        return roll >= 0 ? roll : atk >= 0 ? atk : d.options.length - 1;
+      }
+      return 0;   // stay put
+    });
+    expect(b.hp).toBe(10 - a.hp);
+    expect(kinds.filter(k => k.includes('end')).length).toBe(1);   // one menu after moving, then the attack ended it
+    expect(a.hand.length).toBe(3);
+  });
+  it('Plunder played before the attack pays out when it lands', () => {
+    const { g, a, b } = duelists();
+    b.maxHp = b.hp = 10;
+    a.hand = [26];
+    drive(g.playHandCard(a, 26));
+    drive(g.basicAttack(a, b));
+    expect(a.res.wealth).toBe(2);
+  });
   it('truces stop basic attacks', () => {
     const { g, a, b } = duelists();
     g.addEffect('truce', a.id, { at: 'turnStart', player: a.id }, { other: b.id });

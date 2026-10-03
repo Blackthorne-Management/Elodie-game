@@ -44,6 +44,12 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 
 ## Combat
 - **One basic attack per turn [14].** Attack cards are separate.
+- **Attacking ends your turn** (changed after Phase 1). Your attack is your action: once you've moved and attack,
+  the turn ends (you still draw back to 3). Play your Hand Card before attacking if you want one.
+  - With more than one attack allowed (Dorini IV, Agnivansh IV), the turn ends after the last one.
+  - Ironvow's Raider's Charge (Gen II+): attack before moving, then still move.
+  - Vanishing Act still gives its 1-square step after the attack.
+  - Plunder is played before the attack and pays out (max 2 Wealth) when that attack lands.
 - **"Attacks" [15]** (for Block/Deflect, truces, Dread Banner and Marked for Death): basic attacks,
   Cursed Dagger, Shadow Strike, Elodie's Trial and Challenge fights. Hex of Withering, Poisoned
   Chalice, Duel of Honor and self/global HP loss are not attacks.

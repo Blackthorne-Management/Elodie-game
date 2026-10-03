@@ -45,7 +45,7 @@ export function SetupScreen() {
         <ol>
           <li><b>Move:</b> roll a die and move up to that many squares, turning as you like (no diagonals).</li>
           <li><b>Resources:</b> end on a Court, War or Trade tile to gain Influence, Fear or Wealth (2 if you're alone there). Never from your own tile, nor the same tile twice in a row.</li>
-          <li><b>Fight:</b> attack an adjacent rival for damage equal to your Heart Tokens.</li>
+          <li><b>Fight:</b> attack a rival beside you (not diagonal) for damage equal to your Heart Tokens. Attacking ends your turn, so play your card first.</li>
           <li><b>Cards:</b> play one Hand Card any time on your turn, then draw back to 3. Instants resolve the moment they're drawn.</li>
           <li><b>Win:</b> reach 10 combined or 6 in one pillar (8 / 5 with 2–3 players), stand on the Throne and Claim it. Eligible rivals may Challenge.</li>
           <li><b>Death</b> isn't the end: your heir rises with new powers. After Gen IV you become a Specter.</li>
