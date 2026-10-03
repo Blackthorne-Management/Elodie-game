@@ -19,6 +19,7 @@ export interface Combatant {
   cooldowns: Record<string, number>; // move id -> turns left
   moves: Move[];
   freezeImmune: number;        // turns before it can be frozen again
+  actsTwice?: boolean;         // Galebeak: takes a second turn each round
 }
 
 const has = (c: Combatant, id: StatusId) => c.statuses.some(s => s.id === id);

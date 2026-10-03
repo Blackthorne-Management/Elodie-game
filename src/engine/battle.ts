@@ -35,16 +35,26 @@ export function runRound(prev: Battle, choices: Record<string, Choice>, rng: Rng
   b.log = [];
   b.round += 1;
 
+  // Units that act twice get a second slot at half their speed.
   const order = b.units
     .filter(u => u.hp > 0)
-    .map(u => ({ u, speed: effectiveStat(u, 'speed'), tie: rng() }))
+    .flatMap(u => {
+      const speed = effectiveStat(u, 'speed');
+      const slots = [{ u, speed, tie: rng() }];
+      if (u.actsTwice) slots.push({ u, speed: speed / 2, tie: rng() });
+      return slots;
+    })
     .sort((x, y) => y.speed - x.speed || y.tie - x.tie)
     .map(x => x.u);
 
+  const started = new Set<string>();
   for (const unit of order) {
     if (b.winner || unit.hp <= 0) continue;
-    startOfTurn(unit, b);
-    if (unit.hp <= 0) { checkEnd(b); continue; }
+    if (!started.has(unit.key)) {        // burn and regen tick once per round
+      started.add(unit.key);
+      startOfTurn(unit, b);
+      if (unit.hp <= 0) { checkEnd(b); continue; }
+    }
     if (takeStatus(unit, 'freeze')) {
       unit.freezeImmune = FREEZE_IMMUNE_TURNS;
       b.log.push({ t: 'skip', who: unit.key });

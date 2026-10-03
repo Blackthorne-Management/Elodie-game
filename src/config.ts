@@ -31,3 +31,11 @@ export const GRACE_MAX = 100;
 export const GRACE_PER_ACTION = 10;
 
 export const AI_HEAL_THRESHOLD = 0.5;
+
+// Enemy scaling by floor kind
+export const ELITE_MULT = { hp: 2.5, attack: 1.3 } as const;
+export const BOSS_MULT = { hp: 8, attack: 1.5 } as const;
+
+// Battle playback, in ms per log event
+export const PLAYBACK_MS = 400;
+export const PLAYBACK_MS_FAST = 200;
