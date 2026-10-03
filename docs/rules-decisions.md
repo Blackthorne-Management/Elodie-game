@@ -33,8 +33,9 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **Extra movement [9]:** cards are played after moving, so extra movement moves you up to that many more
   squares straight away (any path). There is no second resource check.
 - **Distances [10]:** counted in orthogonal steps (up/down/left/right).
-- **Resource check [11]:** happens once, right after your roll-move. You're blocked only if you
-  actually scored from that tile on your previous turn. The Throne gives nothing.
+- **Resource check [11]** (changed after Phase 1): happens once, right after your move. **Your next score must
+  come from a different tile than your last one**, however many turns pass; you can't step off and back on.
+  Your heir starts fresh (death clears it). The Throne gives nothing.
 
 ## Resources and information
 - **Resource totals are public [12].** Everyone always sees everyone's Influence, Fear and Wealth.

@@ -4,6 +4,7 @@ import type { Pos } from '../engine/types';
 import { BOARD_SIZE } from '../config';
 import { THRONE, key } from '../engine/board';
 import { BOARD_ART, HOUSE_ART, TILE_ART } from '../assets.config';
+import { Terrain } from './Terrain';
 
 interface Props {
   game: Game;
@@ -31,14 +32,7 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
   return (
     <div className={`board-wrap ${zoom ? 'zoom' : ''}`}>
       <svg className="board" viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Game board">
-        <defs>
-          <pattern id="sq" width={C * 2} height={C * 2} patternUnits="userSpaceOnUse">
-            <rect width={C * 2} height={C * 2} fill={BOARD_ART.light} />
-            <rect width={C} height={C} fill={BOARD_ART.dark} />
-            <rect x={C} y={C} width={C} height={C} fill={BOARD_ART.dark} />
-          </pattern>
-        </defs>
-        <rect width={size} height={size} fill="url(#sq)" />
+        <Terrain houses={tiles} />
 
         <rect x={THRONE[0].x * C} y={THRONE[0].y * C} width={C * 2} height={C * 2} fill={BOARD_ART.throne} stroke={BOARD_ART.throneEdge} strokeWidth={0.8} />
         <text x={(THRONE[0].x + 1) * C} y={(THRONE[0].y + 1) * C + 2.5} textAnchor="middle" fontSize={7} fill={BOARD_ART.throneEdge}>♛</text>

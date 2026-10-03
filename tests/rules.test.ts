@@ -78,14 +78,19 @@ describe('resources (Section 5)', () => {
     g.resourceCheck(dorini);
     expect(dorini.res.influence).toBe(1);
   });
-  it('does not pay from the same tile two turns running', () => {
+  it('never pays from the same tile twice in a row, even after stepping away', () => {
     const g = newGame(2, ['brasador', 'dorini']);
     const p = g.p(0);
-    p.pos = { ...g.house('kaysoley').home };
+    const court = { ...g.house('kaysoley').home };
+    p.pos = court;
     startTurn(g, 0); g.resourceCheck(p);
-    p.prevScoredTile = g.s.turn!.scoredTile;
-    startTurn(g, 0); g.resourceCheck(p);
+    p.lastScoredTile = g.s.turn!.scoredTile;
+    startTurn(g, 0); p.pos = { x: 5, y: 5 };                // a turn spent elsewhere, scoring nothing
+    startTurn(g, 0); p.pos = court; g.resourceCheck(p);     // back again
     expect(p.res.influence).toBe(2);
+    p.pos = { ...g.house('suzumori').home };                  // a different Court tile pays
+    startTurn(g, 0); g.resourceCheck(p);
+    expect(p.res.influence).toBe(4);
   });
   it('adds Dorini\'s bonus on Trade tiles', () => {
     const g = newGame(2, ['dorini', 'brasador']);

@@ -65,7 +65,7 @@ export class Game {
         id, name: seat.name, isBot: seat.isBot, house, gen: 1, hp: def.hp[0], maxHp: def.hp[0],
         pos: { ...def.home }, specter: false, res: { influence: 0, fear: 0, wealth: 0 },
         hand: [], grudges: [], kills: 0, reckonings: 0, handCardsPlayed: 0, visited: [key(def.home)],
-        prevScoredTile: null, legacy: null, extraPassive: null, pendingExtraPassive: false,
+        lastScoredTile: null, legacy: null, extraPassive: null, pendingExtraPassive: false,
         used: {}, mark: null, extraTurn: false,
       };
     });
@@ -514,7 +514,7 @@ export class Game {
     if (tile.house.id === p.house) {
       return this.log(`${p.name} cannot farm their own tile.`, 'info', { player: p.id });
     }
-    if (p.prevScoredTile === k) return this.log(`${p.name} scored here last turn; nothing this time.`, 'info', { player: p.id });
+    if (p.lastScoredTile === k) return this.log(`${p.name} already took from this land; the next score must come from a different tile.`, 'info', { player: p.id });
     if (this.findEffect('sabotage', p.id)) return this.log(`Sabotage: ${p.name} gains nothing from tiles this turn.`, 'blocked', { player: p.id });
     const pillar = TILE_PILLAR[tile.house.tileType];
     const alone = this.playersOn(p.pos).length === 1;
@@ -702,7 +702,7 @@ export class Game {
       v.hp = v.maxHp;
       v.pos = { ...house.home };
       v.visited = [key(house.home)];
-      v.prevScoredTile = null;
+      v.lastScoredTile = null;
       this.log(`${v.name}'s Gen ${roman(v.gen)} heir rises at home with ${v.hp} Heart Tokens.`, 'succession', { player: v.id });
       if (house.legacyOnDeath) yield* this.chooseLegacy(v);
       if (house.extraPassiveAt && v.gen >= house.extraPassiveAt && !v.extraPassive && !v.pendingExtraPassive) {
@@ -833,7 +833,7 @@ export class Game {
       if (!(e instanceof EndTurn)) throw e;
       this.log(`${p.name}'s turn ends.`, 'info', { player: p.id });
     }
-    p.prevScoredTile = this.s.turn!.scoredTile;
+    if (this.s.turn!.scoredTile) p.lastScoredTile = this.s.turn!.scoredTile;
     this.expire(x => x.at === 'turnEnd' && x.player === p.id);
     if (extraTurn) for (const e of this.s.effects.filter(x => x.kind === 'handPublic' && x.owner === p.id)) this.removeEffect(e);
     this.s.turn = null;

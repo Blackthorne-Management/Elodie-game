@@ -41,10 +41,26 @@ export const ICONS = {
   dice: '⚄',
 };
 
+// Each house's homeland, drawn as terrain around its tile. `mark` is the texture drawn on top.
+export type TerrainMark = 'peaks' | 'dunes' | 'tufts' | 'waves' | 'mist' | 'rays' | 'embers' | 'heather' | 'stone';
+export interface TerrainArt { name: string; base: string; ink: string; mark: TerrainMark }
+
+export const TERRAIN_ART: Record<HouseId | 'heartland', TerrainArt> = {
+  brasador: { name: 'Ardencia', base: '#4a2a24', ink: '#a5523c', mark: 'peaks' },
+  dorini: { name: 'Al-Doria', base: '#5a4a2c', ink: '#a88d4c', mark: 'dunes' },
+  ironvow: { name: 'Skarragol', base: '#33403e', ink: '#6f8a84', mark: 'tufts' },
+  suzumori: { name: 'Kuroshi', base: '#2f3442', ink: '#6a7390', mark: 'mist' },
+  vaitama: { name: "Moa'olani", base: '#1f4446', ink: '#3f9490', mark: 'waves' },
+  kaysoley: { name: 'Zetwal', base: '#4f4a26', ink: '#a89842', mark: 'rays' },
+  agnivansh: { name: 'Jwaladesh', base: '#4d3220', ink: '#b0703a', mark: 'embers' },
+  stillwater: { name: 'Aldermoor', base: '#3a3044', ink: '#7d6490', mark: 'heather' },
+  heartland: { name: 'The Heartland', base: '#3a3434', ink: '#5c5454', mark: 'stone' },
+};
+
 export const BOARD_ART = {
   light: '#2a2026',
   dark: '#251c21',
-  grid: '#3a2d33',
+  grid: 'rgba(0,0,0,.28)',
   throne: '#5a1620',
   throneEdge: '#d9a441',
   highlight: '#f3d27a',

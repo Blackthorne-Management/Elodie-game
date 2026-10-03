@@ -191,7 +191,7 @@ export function destinationScore(g: Game, p: PlayerState, q: Pos, pers: Personal
   let s = 0;
   const elig = g.eligible(p);
   const tile = g.tileAt(q);
-  if (tile && tile.house.id !== p.house && key(q) !== p.prevScoredTile && !g.findEffect('sabotage', p.id)) {
+  if (tile && tile.house.id !== p.house && key(q) !== p.lastScoredTile && !g.findEffect('sabotage', p.id)) {
     const pillar = ({ court: 'influence', war: 'fear', trade: 'wealth' } as const)[tile.house.tileType];
     const alone = !g.living().some(o => o.id !== p.id && o.pos && o.pos.x === q.x && o.pos.y === q.y);
     s += ((alone ? 2 : 1) + g.hook(p, 'tileBonus', pillar)) * pillarWeight(g, p, pillar, pers) * 1.5;

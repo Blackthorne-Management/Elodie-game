@@ -32,7 +32,7 @@ export interface PlayerState {
   reckonings: number;
   handCardsPlayed: number;
   visited: string[];             // squares ended on this life (Hidden Path)
-  prevScoredTile: string | null; // tile scored on the previous turn
+  lastScoredTile: string | null; // the last tile this character scored from (the next score must be elsewhere)
   legacy: HouseId | null;        // Vai'tama Legacy
   extraPassive: HouseId | null;  // Vai'tama IV
   pendingExtraPassive: boolean;  // Vai'tama IV waiting for a house to become a Specter
