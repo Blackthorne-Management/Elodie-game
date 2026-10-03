@@ -1,14 +1,26 @@
 # Throne of Bloodlines
 
-Eight houses. One throne. A digital version of the board game, playable solo against bots
-(Phase 1) and later online with friends via join codes and QR (Phase 2).
+Eight houses. One throne. A digital version of the board game: Phase 1 is a complete local game
+against up to 7 bots on one phone; Phase 2 adds online play with join codes and QR.
 
 ```sh
 npm install
-npm run dev     # dev server
-npm test        # rules engine tests
+npm run dev       # dev server (add -- --host to open on a phone on the same Wi-Fi)
+npm test          # rules engine, card, house, bot and fuzz tests
+npm run balance   # plays 180 bot games and prints win rates per house
 ```
 
-- `docs/` holds the build guide and (once added) the rulebook, card list and houses.
-- `src/engine/` is the pure, tested rules engine; `src/data/` the cards and houses.
-- Hosted on Netlify; every push tests, builds and publishes. Installing to the home screen is optional.
+## Where things live
+
+- `docs/` — the rulebook, card list and houses (source of truth), the build guide,
+  `rules-decisions.md` (every ruling on gaps and conflicts) and the board picture.
+- `src/engine/` — the pure rules engine. A game is a generator that pauses on a *Decision* whenever a
+  player must choose; a game is fully described by its setup plus the list of answers, so it can be
+  saved, replayed, and later run on a server.
+- `src/data/` — the 120 cards and 8 houses, written against the engine's helpers.
+- `src/ai/` — the heuristic bots and their house personalities.
+- `src/ui/`, `src/state/` — the phone UI and the store (saves after every move).
+- `src/assets.config.ts` — every visual asset; the art pass only changes this file.
+- `src/config.ts` — every tunable number (thresholds, Sudden Death round, who strikes first in a Challenge).
+
+Hosted on Netlify; every push runs the tests, builds and publishes. Installing to the home screen is optional.

@@ -127,3 +127,18 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **Unstated ties [57]:** no effect.
 - **Treasure Map [58]:** "Wealth-related" = the card's text mentions Wealth.
 - **Truces [59]:** don't stop a Challenge fight.
+
+## Implementation calls (made while building; please confirm or change)
+These came up in code and weren't covered above. Each is easy to flip.
+- **Golden Harvest** can't be played after you've attacked this turn (otherwise the drawback is free).
+- **Counterspell vs. attack cards:** Cursed Dagger and Shadow Strike are attacks, so Block/Deflect cards answer
+  them, not Counterspell. Counterspell answers every other Hand Card aimed at you.
+- **Poisoned Chalice** still costs you 1 Wealth if it's countered.
+- **Bridge the Gap** played before you roll *is* your move for the turn (with the resource check after it);
+  played after rolling it just moves you.
+- **The Great Raid:** if you die during the first of the two turns, your heir still takes the second.
+- **La Marca** stays on its target until they die or you brand someone else.
+- **Shadow Strike's** "cannot be blocked" also rules out Last Stand.
+- **Duel of Honor, Sudden Death duel:** the earlier player in turn order strikes first in a tie-break duel;
+  Block/Deflect cards aren't used in that duel.
+- **Specter targets:** a Specter may aim a card at any living player, including one the card helps.
