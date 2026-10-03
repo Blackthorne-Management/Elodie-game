@@ -5,6 +5,7 @@ React + TypeScript + Vite + Zustand, installable as a PWA (installing is optiona
 
 ## Source of truth
 - `docs/bloodline-rulebook-draft.md`, `docs/bloodline-card-list.md`, `docs/bloodline-houses.md` define every rule, card and ability.
+- `docs/rules-decisions.md` settles every ambiguity and overrides the three documents where they differ. Board picture: `docs/board-layout.png`.
 - `docs/app-build-guide.md` is the engineering spec.
 - Implement rules exactly as written. If something is ambiguous or two sections conflict, stop and flag it; never pick an interpretation silently.
 

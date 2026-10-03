@@ -1,5 +1,7 @@
 # Rules questions before building
 
+> **Status:** answered. The final rulings are in `rules-decisions.md`.
+
 Everything below is either undefined, ambiguous, or contradicts another section. Each item has a
 **proposed default** I will build unless you say otherwise. Items marked **BLOCKER** have no safe
 default: the rules don't say enough to guess.
