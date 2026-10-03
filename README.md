@@ -11,7 +11,8 @@ npm test         # engine tests
 ## Putting it on an iPhone
 
 The app is a PWA: open it in Safari, tap **Share → Add to Home Screen**, and it runs
-full screen and offline, with the save kept on the phone.
+full screen and offline, with the save kept on the phone. Opened in a normal browser tab it
+only shows install instructions; add `?play` to the URL (or use `npm run dev`) to test in a browser.
 
 Hosting is GitHub Pages via `.github/workflows/deploy.yml`:
 

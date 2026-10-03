@@ -33,6 +33,27 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 textarea { -webkit-user-select: text; user-select: text; }
 
+/* ---------- Install gate ---------- */
+.install {
+  min-height: 100dvh; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column;
+  align-items: center; gap: 14px; text-align: center;
+  padding: max(32px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  background: linear-gradient(#dbe9f5, var(--bg) 60%);
+}
+.install-icon { border-radius: 26px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+.install h1 { margin: 4px 0 0; font-size: 26px; }
+.install-lead { margin: 0; font-size: 17px; }
+.install-card {
+  width: 100%; background: var(--panel); border-radius: 16px; padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1); text-align: left; font-size: 16px; line-height: 1.5;
+}
+.install-card p { margin: 0 0 8px; }
+.install-card .big { width: 100%; }
+.steps { margin: 0; padding-left: 36px; display: flex; flex-direction: column; gap: 12px; }
+.steps small { color: var(--muted); }
+.inline-icon { vertical-align: -5px; color: var(--accent); }
+.install-url { font-weight: 700; word-break: break-all; color: var(--accent); }
+
 /* ---------- App shell ---------- */
 .app { display: flex; flex-direction: column; min-height: 100dvh; max-width: 480px; margin: 0 auto; }
 .content { flex: 1; padding-bottom: calc(72px + env(safe-area-inset-bottom)); }

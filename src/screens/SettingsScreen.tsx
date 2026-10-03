@@ -63,11 +63,6 @@ export function SettingsScreen() {
         {message && <p className="hint" role="status">{message}</p>}
       </section>
 
-      <section className="panel">
-        <h2>Add to Home Screen</h2>
-        <p className="hint">On iPhone, open this page in Safari, tap Share, then “Add to Home Screen”. It then opens full screen and works offline.</p>
-      </section>
-
       <section className="panel danger">
         <button type="button" className="action" onClick={reset}>Start a new game</button>
       </section>

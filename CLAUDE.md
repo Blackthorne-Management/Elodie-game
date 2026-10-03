@@ -17,5 +17,6 @@ Turn-based pet battler. React + TypeScript + Vite + Zustand, installed as a PWA.
 - Deploys to GitHub Pages from `.github/workflows/deploy.yml`; `BASE_PATH` sets the sub-path.
 
 ## Notes
+- The game only runs as an installed home-screen app; a browser tab shows the install screen. `npm run dev` and any URL with `?play` bypass that for testing.
 - tsconfig uses `verbatimModuleSyntax`: import types with `import type`.
 - The oxlint React hooks rule treats any `useX(...)` call as a hook, so don't name engine functions `use...`.

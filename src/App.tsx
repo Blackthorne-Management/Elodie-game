@@ -5,11 +5,20 @@ import { TeamScreen } from './screens/TeamScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { TabBar } from './components/TabBar';
 import { floorInfo } from './engine/floors';
+import { InstallScreen } from './screens/InstallScreen';
+import { browserPlayAllowed, isStandalone } from './state/install';
+
+// Checked once: the game only runs as the installed home-screen app.
+const mayPlay = isStandalone() || browserPlayAllowed();
 
 const KIND = { normal: '', miniBoss: ' · Mini-boss', regionBoss: ' · Region boss' } as const;
 
-// No router: the store holds the current screen.
 export default function App() {
+  return mayPlay ? <Game /> : <InstallScreen />;
+}
+
+// No router: the store holds the current screen.
+function Game() {
   const screen = useGame(s => s.screen);
   const go = useGame(s => s.go);
   const fight = useGame(s => s.fight);
