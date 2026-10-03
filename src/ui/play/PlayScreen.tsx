@@ -18,10 +18,10 @@ import { Stage } from './Stage';
 import { Hand } from './Hand';
 import { Duel } from './Duel';
 import type { DuelShow } from './Duel';
-import { useWalkers } from './walkers';
+import { useMotion } from './motion';
 import { CARD_ART } from '../../assets.config';
 
-const STEP_MS: Record<Speed, number> = { normal: 150, fast: 70, instant: 0 };
+const WALK_SPEED: Record<Speed, number> = { normal: 6.5, fast: 13, instant: Infinity };   // squares per second
 const SHOW_MS: Record<Speed, number> = { normal: 1500, fast: 700, instant: 0 };
 
 // Rivals' cards stay hidden: the log says that they played a card, not which.
@@ -51,7 +51,7 @@ export function PlayScreen() {
   const mine = d?.player === HUMAN ? d : null;
   const me = s.players[HUMAN];
 
-  const { shown, walking, place } = useWalkers(s, version, STEP_MS[speed]);
+  const { motion, busy: walking } = useMotion(s, version, WALK_SPEED[speed], me.pos ?? { x: 9, y: 9 });
   const [sheet, setSheet] = useState<SheetState>(null);
   const [showMap, setShowMap] = useState(false);
   const [duel, setDuel] = useState<DuelShow | null>(null);
@@ -108,7 +108,7 @@ export function PlayScreen() {
   // Bots answer once the table has finished showing what just happened.
   useEffect(() => {
     if (!d || !s.players[d.player].isBot) return;
-    if (walking !== null) return;
+    if (walking) return;
     const wait = Math.max(SPEED_MS[speed], busyUntil.current - Date.now());
     const t = setTimeout(() => {
       if (busyUntil.current > Date.now()) { setTick(x => x + 1); return; }
@@ -125,7 +125,6 @@ export function PlayScreen() {
 
   function commitAt(dest: Pos) {
     if (!mine || !moveMode) return;
-    if (path.length) place(HUMAN, dest);     // you already walked there; don't replay the walk
     const i = mine.options.findIndex(o => o.value === null ? samePos(dest, moveMode.from) : 'x' in (o.value as object) ? samePos(o.value as Pos, dest) : false);
     if (i >= 0) answer(i);
   }
@@ -137,7 +136,7 @@ export function PlayScreen() {
       mine.options.forEach((o, i) => {
         const to = optionDest(o.value, moveMode.from);
         // Tapping a square walks you there from wherever your steps have reached.
-        if (to && !m.has(key(to))) m.set(key(to), () => { if (path.length && end) place(HUMAN, end); answer(i); });
+        if (to && !m.has(key(to))) m.set(key(to), () => answer(i));
       });
     } else if (mine?.kind === 'square') {
       mine.options.forEach((o, i) => m.set(key(o.value as Pos), () => answer(i)));
@@ -148,14 +147,20 @@ export function PlayScreen() {
     .filter(a => inBoard(a.to) && manhattan(a.to, moveMode.from) <= moveMode.max)
     .map(a => ({ ...a, onTap: () => setPath(p => [...p, a.to]) }));
 
-  // ---- camera: your move, else whoever is walking or acting, else you
+  // ---- camera: while you step it holds on the middle of your path; otherwise it follows whoever is
+  // walking, then settles on whoever is acting.
   const activeId = s.turn?.player ?? null;
-  const focusId = walking ?? (mine ? HUMAN : activeId ?? HUMAN);
-  // While you step, the camera holds still unless you wander far from where you started.
-  // While you step, the camera follows the middle of your path: it drifts half a step per tap
-  // instead of lurching, and keeps both where you started and where you are in view.
-  const stepFocus = moveMode && start && end ? { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 } : null;
-  const focus: Pos = stepFocus || shown[focusId] || shown[HUMAN] || { x: 9, y: 9 };
+  const stepFocus = moveMode?.free && start && end ? { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 } : null;
+  const restOn = s.players[mine ? HUMAN : activeId ?? HUMAN].pos ?? me.pos ?? { x: 9, y: 9 };
+  const focusKey = stepFocus ? `${stepFocus.x},${stepFocus.y}` : `${restOn.x},${restOn.y}`;
+  useEffect(() => { motion.setFocus(stepFocus ?? restOn, !stepFocus); },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [motion, focusKey]);
+  // Your steps move your character on the board right away (the engine only hears about it when you confirm).
+  const ghostKey = moveMode?.free && end ? `${end.x},${end.y}` : '';
+  useEffect(() => { if (moveMode?.free && end) motion.walkTo(HUMAN, end); },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [motion, ghostKey]);
 
   // ---- your turn's actions
   const turnOpts = mine?.kind === 'turn' ? (mine as Decision<TurnAction>).options : [];
@@ -178,7 +183,7 @@ export function PlayScreen() {
 
       <HeroCard g={g} p={me} dim={!mine && activeId !== HUMAN} onOpen={() => setSheet({ type: 'house', id: HUMAN })} />
 
-      <Stage game={g} shown={shown} focus={focus} lit={lit} path={path} arrows={arrows} ghost={moveMode?.free ? end : null}
+      <Stage game={g} motion={motion} lit={lit} path={path} arrows={arrows}
         active={activeId} onToken={id => setSheet({ type: 'house', id })}>
         <button type="button" className="feed2" onClick={() => setSheet({ type: 'log' })}>
           {feed.map(e => <span key={e.seq}>{displayText(g, e)}</span>)}

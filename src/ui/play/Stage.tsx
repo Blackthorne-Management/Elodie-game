@@ -8,19 +8,18 @@ import { BOARD_SIZE } from '../../config';
 import { BOARD_ART, HOUSE_ART, PORTRAITS, TILE_ART } from '../../assets.config';
 import { terrainUrl } from '../terrainSvg';
 import { HUMAN } from '../../state/gameStore';
+import type { Motion } from './motion';
+import { CELL, TILT } from './motion';
 
-export const CELL = 64;
-const TILT = 46;          // degrees the table leans back
+export { CELL };
 const MARGIN = 7;         // squares of sea drawn around the board so its edge never shows empty space
 
 export interface StageProps {
   game: Game;
-  shown: Record<number, Pos | null>;
-  focus: Pos;
+  motion: Motion;
   lit: Map<string, () => void>;          // squares you can tap
   path: Pos[];                            // the steps you've taken so far this move
   arrows: { dir: Dir; to: Pos; onTap: () => void }[];
-  ghost: Pos | null;                      // where your character stands during a move you haven't confirmed
   active: number | null;
   onToken: (id: number) => void;
   children?: ReactNode;                   // overlays (feed, banners, mini-map)
@@ -30,23 +29,22 @@ const ROT: Record<Dir, number> = { north: 0, east: 90, south: 180, west: 270 };
 // Arrows sit toward the far side of their square so your standing character doesn't hide them.
 const NUDGE: Record<Dir, Pos> = { north: { x: 0, y: -0.22 }, south: { x: 0, y: 0.12 }, east: { x: 0.12, y: 0 }, west: { x: -0.12, y: 0 } };
 
-export function Stage({ game, shown, focus, lit, path, arrows, ghost, active, onToken, children }: StageProps) {
+export function Stage({ game, motion, lit, path, arrows, active, onToken, children }: StageProps) {
   const s = game.s;
   const houses = Object.values(game.content.houses);
   const size = BOARD_SIZE * CELL;
-  const fx = focus.x * CELL + CELL / 2, fy = focus.y * CELL + CELL / 2;
 
   // Pawns sharing a square fan out a little.
   const at = new Map<string, number[]>();
   for (const p of s.players) {
-    const pos = p.id === HUMAN && ghost ? ghost : shown[p.id];
+    const pos = motion.dest.get(p.id);
     if (!pos || p.specter) continue;
     at.set(key(pos), [...(at.get(key(pos)) ?? []), p.id]);
   }
 
   return (
     <div className={`stage2 ${arrows.length ? 'stepping' : ''}`}>
-      <div className="cam" style={{ transform: `rotateX(${TILT}deg) translate3d(${-fx}px, ${-fy}px, 0)` }}>
+      <div className="cam" ref={el => motion.registerCamera(el)}>
         <div className="sea" style={{ left: -MARGIN * CELL, top: -MARGIN * CELL, width: size + 2 * MARGIN * CELL, height: size + 2 * MARGIN * CELL }} />
         <div className="plane2" style={{ width: size, height: size, backgroundImage: `url("${terrainUrl(houses)}")` }}>
           <div className="throne2" style={{ left: THRONE[0].x * CELL, top: THRONE[0].y * CELL, width: CELL * 2, height: CELL * 2, background: BOARD_ART.throne, borderColor: BOARD_ART.throneEdge }}>♛</div>
@@ -66,26 +64,24 @@ export function Stage({ game, shown, focus, lit, path, arrows, ghost, active, on
               <svg viewBox="0 0 44 44" style={{ transform: `rotate(${ROT[a.dir]}deg)` }}><circle cx="22" cy="22" r="20" fill="#d9a441" /><path d="M22 9 L33 25 H25.5 V34 H18.5 V25 H11 Z" fill="#2a1a10" /></svg>
             </button>
           ))}
-          {[...at.entries()].flatMap(([k, ids]) => {
-            const [x, y] = k.split(',').map(Number);
-            return ids.map((id, n) => {
-              const p = s.players[id];
-              const spread = ids.length > 1 ? (n - (ids.length - 1) / 2) * 20 : 0;
-              const url = PORTRAITS[p.house][p.gen - 1];
-              const named = id === HUMAN || id === active;
-              return (
-                <div key={id} className={`token2 ${id === HUMAN ? 'me' : ''} ${active === id ? 'active' : ''}`}
-                  style={{ left: x * CELL + CELL / 2 + spread, top: y * CELL + CELL / 2, ['--c' as string]: HOUSE_ART[p.house].color }}>
-                  <button type="button" className="stand" onClick={() => onToken(id)} aria-label={p.name}
-                    style={{ transform: `translate(-50%, -100%) rotateX(${-TILT}deg)` }}>
-                    {named && <span className="tag">{id === HUMAN ? 'You' : p.name}</span>}
-                    <span className="disc">{url ? <img src={url} alt="" /> : <span className="silhouette" />}<span className="badge">{HOUSE_ART[p.house].initial}</span></span>
-                    <span className="base" />
-                  </button>
-                </div>
-              );
-            });
-          })}
+          {[...at.values()].flatMap(ids => ids.map((id, n) => {
+            const p = s.players[id];
+            const spread = ids.length > 1 ? (n - (ids.length - 1) / 2) * 20 : 0;
+            const url = PORTRAITS[p.house][p.gen - 1];
+            const named = id === HUMAN || id === active;
+            // The animation loop positions each token (see motion.ts); React only draws it.
+            return (
+              <div key={id} ref={el => motion.registerToken(id, el)} className={`token2 ${id === HUMAN ? 'me' : ''} ${active === id ? 'active' : ''}`}
+                style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
+                <button type="button" className="stand" onClick={() => onToken(id)} aria-label={p.name}
+                  style={{ transform: `translate(calc(-50% + ${spread}px), -100%) rotateX(${-TILT}deg)` }}>
+                  {named && <span className="tag">{id === HUMAN ? 'You' : p.name}</span>}
+                  <span className="disc">{url ? <img src={url} alt="" /> : <span className="silhouette" />}<span className="badge">{HOUSE_ART[p.house].initial}</span></span>
+                  <span className="base" />
+                </button>
+              </div>
+            );
+          }))}
         </div>
       </div>
       {children}

@@ -456,3 +456,13 @@ button:disabled { cursor: default; }
   .feed2 { right: auto; max-width: 70%; padding: 3px 8px; }
   .cam { top: 76%; }
 }
+
+/* ---- motion loop: transforms are written every frame by motion.ts, so no CSS transitions here ---- */
+.cam { transition: none; will-change: transform; }
+.token2 { left: 0; top: 0; transition: none; will-change: transform; }
+/* Mist on the far side, as an overlay (cheaper than a mask on phones). */
+.stage2 { -webkit-mask-image: none; mask-image: none; }
+.stage2::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 34%; pointer-events: none; z-index: 1;
+  background: linear-gradient(#241d26 0%, rgba(36,29,38,.85) 35%, rgba(36,29,38,0) 100%);
+}
