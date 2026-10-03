@@ -66,7 +66,7 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
           );
         })}
 
-        {[...byKey.entries()].map(([k, ids]) => {
+        {[...byKey.entries()].flatMap(([k, ids]) => {
           const [x, y] = k.split(',').map(Number);
           return ids.map((id, n) => {
             const p = s.players[id];
@@ -74,11 +74,12 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
             const r = ids.length > 1 ? 2.6 : 3.6;
             const off = ids.length > 1 ? offsets(ids.length)[n] : { x: 0, y: 0 };
             const cx = x * C + C / 2 + off.x, cy = y * C + C / 2 + off.y;
+            // Pawns slide to their new square so you can see the journey (CSS transition on the transform).
             return (
-              <g key={id} className="pawn" pointerEvents="none">
-                {focus === id && <circle cx={cx} cy={cy} r={r + 1.2} fill="none" stroke="#fff" strokeWidth={0.6} />}
-                <circle cx={cx} cy={cy} r={r} fill={art.color} stroke="#111" strokeWidth={0.4} />
-                <text x={cx} y={cy + r * 0.4} textAnchor="middle" fontSize={r * 1.15} fontWeight={800} fill="#fff">{art.initial}</text>
+              <g key={id} className="pawn" pointerEvents="none" style={{ transform: `translate(${cx}px, ${cy}px)` }}>
+                {focus === id && <circle r={r + 1.2} fill="none" stroke="#fff" strokeWidth={0.6} />}
+                <circle r={r} fill={art.color} stroke="#111" strokeWidth={0.4} />
+                <text y={r * 0.4} textAnchor="middle" fontSize={r * 1.15} fontWeight={800} fill="#fff">{art.initial}</text>
               </g>
             );
           });
