@@ -25,7 +25,7 @@ export const BENEFICIAL_INSTANTS = new Set([
 
 function weight(g: Game, p: PlayerState, x: Pillar, pers: Personality) {
   const t = g.thresholds(p);
-  return 1 + (pers.focus === x ? 0.3 : 0) + (p.res[x] >= t.single - 2 ? 0.5 : 0);
+  return 1 + (pers.focus === x ? 0.3 : 0) + (p.res[x] >= t.single - 2 ? 0.5 : 0) + (p.res[x] < t.minEach ? 0.8 : 0);
 }
 
 const rivals = (g: Game, p: PlayerState) => g.others(p);

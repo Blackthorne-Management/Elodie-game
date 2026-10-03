@@ -14,6 +14,7 @@ import { Board } from '../Board';
 import { CardFace, HouseSheet, Sheet } from '../parts';
 import { GameLogActions } from '../HistorySheet';
 import { Emblem, HeroCard, RivalChip } from './Figures';
+import { claimGoal } from '../claimGoal';
 import { Stage } from './Stage';
 import { Hand } from './Hand';
 import { Duel } from './Duel';
@@ -286,7 +287,7 @@ export function PlayScreen() {
             ))}
           </div>
           <h3>Winning</h3>
-          <p>Reach {g.thresholds(me).combined} combined or {g.thresholds(me).single} in one pillar, stand on the Throne and Claim it.</p>
+          <p>Reach {claimGoal(g.thresholds(me))}, stand on the Throne and Claim it.</p>
           <h3>Report a problem</h3>
           <p className="muted small">Something odd happened? Copy or download this game's full log and send it to Claude.</p>
           <GameLogActions game={snapshot(runner, runner.over ? 'won' : 'in progress', startedAt)} />

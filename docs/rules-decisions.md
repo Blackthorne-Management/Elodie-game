@@ -123,9 +123,15 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   Block/Deflect cards work. Several challengers are fought one at a time in seat order from the
   claimant's left, and the claimant's damage carries between fights. First striker is a setting.
 - **Claims [43]:** at any point on your turn while on the Throne and eligible at that moment.
-- **Kay Soley IV [44]:** the combined threshold drops by 2; the single-pillar threshold doesn't.
-- **Thresholds [45]** (changed after playtesting): 2–3 players: 8 combined / **7** in one pillar. 4–8 players: 10 combined /
-  **8** in one pillar. The rulebook's 5/6 single-pillar targets let a lucky house qualify in one turn from chained Instants.
+- **Kay Soley IV [44]:** the combined total drops by 2; the per-pillar minimum doesn't.
+- **What you need to claim [45]** (changed after playtesting and simulation): a combined total **and** a minimum in
+  every pillar. There is no one-pillar route any more.
+  - 2–3 players: **8 total, with at least 1 in each** of Influence, Fear and Wealth.
+  - 4–8 players: **9 total, with at least 2 in each.**
+  - Why: with the rulebook's routes, winners typically claimed holding 6–7 in one pillar and 1 in their weakest
+    (16–39% had 0 in a pillar). Raising the limits alone didn't change that. With the minimum, nobody can win
+    from one pillar, and games run about as long as before (Sudden Death 10–21% of games, up from 8–12%).
+  - Earlier versions: rulebook 5/6 in one pillar, then 7/8 in one pillar, combined 8/10.
 
 ## The Specter
 - **Mischief [46]:** once per round, in their normal turn slot, a Specter may play one Instant from the

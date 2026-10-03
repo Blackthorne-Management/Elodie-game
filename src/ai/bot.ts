@@ -67,7 +67,9 @@ export function botChoose(g: Game, d: Decision, rng: Rng): number {
 
 export function danger(g: Game, p: PlayerState): number {
   const t = g.thresholds(p);
-  const progress = Math.max(g.total(p) / t.combined, ...PILLARS.map(x => p.res[x] / t.single));
+  // The combined route only counts as far as your weakest pillar allows.
+  const spread = t.minEach ? Math.min(1, ...PILLARS.map(x => p.res[x] / t.minEach)) : 1;
+  const progress = Math.max(Math.min(g.total(p) / t.combined, spread), ...PILLARS.map(x => p.res[x] / t.single));
   return progress * 10 + (g.eligible(p) ? 10 : 0) + (p.pos ? Math.max(0, 10 - throneDistance(p.pos)) * 0.3 : 0);
 }
 
@@ -97,6 +99,8 @@ function pillarWeight(g: Game, p: PlayerState, x: Pillar, pers: Personality): nu
   if (pers.focus === x) w += 0.35;
   // Concentrating on a near-complete pillar is the fastest route to eligibility.
   if (p.res[x] >= t.single - 2) w += 0.5;
+  // Below the per-pillar minimum, that pillar is what's holding a claim back.
+  if (p.res[x] < t.minEach) w += 0.8;
   return w;
 }
 

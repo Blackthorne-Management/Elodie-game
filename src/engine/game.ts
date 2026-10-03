@@ -316,12 +316,18 @@ export class Game {
   thresholds(p: PlayerState) {
     const t = this.s.players.length <= THRESHOLDS.small.maxPlayers ? THRESHOLDS.small : THRESHOLDS.normal;
     const reduce = this.house(p).claimReduction?.(p.gen) ?? 0;
-    return { combined: t.combined - reduce, single: t.single };
+    return { combined: t.combined - reduce, minEach: t.minEach, single: t.single ?? Infinity };
+  }
+  // Which route makes this player eligible to claim, if any.
+  claimRoute(p: PlayerState): 'combined' | 'single' | null {
+    if (p.specter) return null;
+    const t = this.thresholds(p);
+    if (this.total(p) >= t.combined && PILLARS.every(x => p.res[x] >= t.minEach)) return 'combined';
+    if (PILLARS.some(x => p.res[x] >= t.single)) return 'single';
+    return null;
   }
   eligible(p: PlayerState) {
-    if (p.specter) return false;
-    const t = this.thresholds(p);
-    return this.total(p) >= t.combined || PILLARS.some(x => p.res[x] >= t.single);
+    return this.claimRoute(p) !== null;
   }
 
   // ---------------------------------------------------------------- cards and hands
@@ -892,7 +898,7 @@ export class Game {
   // ---------------------------------------------------------------- winning (Section 8)
 
   *claim(p: PlayerState): Flow {
-    this.log(`${p.name} claims Elodie's Throne!`, 'claim', { player: p.id });
+    this.log(`${p.name} claims Elodie's Throne!`, 'claim', { player: p.id, tag: this.claimRoute(p) ?? undefined });
     const challengers: PlayerState[] = [];
     for (const o of this.seatsAfter(p)) {
       if (!this.eligible(o)) continue;

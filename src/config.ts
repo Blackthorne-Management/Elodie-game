@@ -4,12 +4,15 @@ export const BOARD_SIZE = 18;
 export const HAND_SIZE = 3;
 export const DIE_SIDES = 6;
 
-// Section 8: win thresholds by player count.
-// The single-pillar targets are 2 higher than the rulebook's 5/6 (changed after playtesting): chained
-// Instant draws could hand one house a whole pillar in a single turn.
-export const THRESHOLDS = {
-  small: { maxPlayers: 3, combined: 8, single: 7 },
-  normal: { combined: 10, single: 8 },
+// Section 8: win thresholds by player count (changed after playtesting and simulation, see
+// rules-decisions.md): a claim needs a combined total AND a minimum in every pillar; the rulebook's
+// one-pillar route is off, because nearly every winner was piling into one pillar.
+// combined: total needed; minEach: the least you must hold in every pillar for the combined route;
+// single: the one-pillar route (null = no such route).
+export interface Threshold { combined: number; minEach: number; single: number | null }
+export const THRESHOLDS: { small: Threshold & { maxPlayers: number }; normal: Threshold } = {
+  small: { maxPlayers: 3, combined: 8, minEach: 1, single: null },
+  normal: { combined: 9, minEach: 2, single: null },
 };
 
 // Tuning items flagged by the rulebook (Section 12).

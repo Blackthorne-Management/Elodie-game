@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGame } from '../state/gameStore';
 import { HistorySheet } from './HistorySheet';
 import { BUILD } from '../state/history';
-import { TUNING } from '../config';
+import { THRESHOLDS, TUNING } from '../config';
 
 export function SetupScreen() {
   const start = useGame(s => s.start);
@@ -57,7 +57,7 @@ export function SetupScreen() {
           <li><b>Resources:</b> end on a Court, War or Trade tile to gain Influence, Fear or Wealth ({TUNING.tileAlone} if you're alone there, {TUNING.tileShared} if shared). Never from your own tile, nor the same tile twice in a row.</li>
           <li><b>Then one action:</b> attack a rival beside you (not diagonal) for damage equal to your Heart Tokens, <i>or</i> play a Hand Card. Not both.</li>
           <li><b>Cards:</b> at the end of your turn, draw back to 3. Instants resolve the moment they're drawn.</li>
-          <li><b>Win:</b> reach 10 combined or 8 in one pillar (8 / 7 with 2–3 players), stand on the Throne and Claim it. Eligible rivals may Challenge.</li>
+          <li><b>Win:</b> reach {THRESHOLDS.normal.combined} resources in total with at least {THRESHOLDS.normal.minEach} in every pillar ({THRESHOLDS.small.combined} with {THRESHOLDS.small.minEach}+ each in 2–3 player games), stand on the Throne and Claim it. Eligible rivals may Challenge.</li>
           <li><b>Death</b> isn't the end: your heir rises with new powers. After Gen IV you become a Specter.</li>
         </ol>
       </details>

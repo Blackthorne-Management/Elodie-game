@@ -4,6 +4,7 @@ import { roman } from '../../engine/game';
 import type { HouseId, PlayerState } from '../../engine/types';
 import { PILLARS } from '../../engine/types';
 import { HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS } from '../../assets.config';
+import { claimGoal } from '../claimGoal';
 
 export function Portrait({ house, gen, className = '' }: { house: HouseId; gen: number; className?: string }) {
   const url = PORTRAITS[house][gen - 1];
@@ -49,7 +50,7 @@ export function HeroCard({ g, p, dim, onOpen }: { g: Game; p: PlayerState; dim?:
           {p.specter ? <span className="hearts specter">{ICONS.specter} Specter</span> : <span className="hearts">{ICONS.heart} {p.hp}/{p.maxHp}</span>}
           <Res p={p} />
         </span>
-        <span className="hero2-goal">Claim at {t.combined} total or {t.single} in one</span>
+        <span className="hero2-goal">Claim at {claimGoal(t)}</span>
         {abilities.length > 0 && (
           <span className="hero2-chips">{abilities.map(a => <span key={a.id} className="ab-chip">{a.name}</span>)}</span>
         )}

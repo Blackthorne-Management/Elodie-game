@@ -341,14 +341,24 @@ describe('winning (Section 8)', () => {
     const g = newGame(3, ['brasador', 'dorini', 'kaysoley']);
     const [a, b, c] = g.s.players;
     a.pos = { x: 8, y: 8 };
-    a.res.fear = 7;
+    a.res = { influence: 2, fear: 4, wealth: 2 };
     startTurn(g, 0);
     g.s.turn!.moved = true;
     return { g, a, b, c };
   };
-  it('uses 8/7 thresholds at 2-3 players and 10/8 above', () => {
-    expect(newGame(3).thresholds(newGame(3).p(0))).toEqual({ combined: 8, single: 7 });
-    expect(newGame(4).thresholds(newGame(4).p(0))).toEqual({ combined: 10, single: 8 });
+  it('needs 8 total with 1+ in every pillar at 2-3 players, 9 with 2+ above; no one-pillar route', () => {
+    expect(newGame(3).thresholds(newGame(3).p(0))).toEqual({ combined: 8, minEach: 1, single: Infinity });
+    expect(newGame(4).thresholds(newGame(4).p(0))).toEqual({ combined: 9, minEach: 2, single: Infinity });
+  });
+  it('a big total is not enough without the minimum in every pillar', () => {
+    const g = newGame(4);
+    const p = g.p(0);
+    p.res = { influence: 0, fear: 12, wealth: 0 };
+    expect(g.eligible(p)).toBe(false);
+    p.res = { influence: 1, fear: 6, wealth: 4 };
+    expect(g.eligible(p)).toBe(false);
+    p.res = { influence: 2, fear: 5, wealth: 2 };
+    expect(g.claimRoute(p)).toBe('combined');
   });
   it('an unchallenged claim wins', () => {
     const { g, a } = atThrone();
@@ -357,7 +367,7 @@ describe('winning (Section 8)', () => {
   });
   it('a challenger who kills the claimant stops the claim but does not win', () => {
     const { g, a, b } = atThrone();
-    b.res.wealth = 7;                     // eligible
+    b.res = { influence: 1, fear: 1, wealth: 6 };   // eligible
     a.hp = 1; b.hp = 2;
     b.hand = []; a.hand = [];
     expect(() => drive(g.claim(a), byLabel('Challenge!'))).toThrow();   // EndTurn: the claimant died
@@ -366,7 +376,7 @@ describe('winning (Section 8)', () => {
   });
   it('the claimant strikes first and can beat the challenger', () => {
     const { g, a, b } = atThrone();
-    b.res.wealth = 7;
+    b.res = { influence: 1, fear: 1, wealth: 6 };
     a.hp = 3; b.hp = 2;
     b.hand = []; a.hand = [];
     drive(g.claim(a), byLabel('Challenge!'));

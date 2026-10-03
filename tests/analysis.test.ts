@@ -7,6 +7,7 @@ import { Runner } from '../src/engine/runner';
 import { makeRng } from '../src/engine/rng';
 import { botChoose } from '../src/ai/bot';
 import { THRESHOLDS, TUNING } from '../src/config';
+import { Game } from '../src/engine/game';
 
 declare const process: { env: Record<string, string | undefined> };
 
@@ -21,9 +22,17 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
   if (env.TILE) [TUNING.tileAlone, TUNING.tileShared] = env.TILE.split('/').map(Number);
   if (env.CAP) TUNING.maxDamage = Number(env.CAP);
   if (env.SPECTER) TUNING.specterChoices = Number(env.SPECTER);
-  if (env.SINGLE) [THRESHOLDS.small.single, THRESHOLDS.normal.single] = env.SINGLE.split('/').map(Number);
+  if (env.SINGLE) [THRESHOLDS.small.single, THRESHOLDS.normal.single] = env.SINGLE === 'off' ? [null, null] : env.SINGLE.split('/').map(Number);
+  if (env.MIN_EACH) [THRESHOLDS.small.minEach, THRESHOLDS.normal.minEach] = env.MIN_EACH.split('/').map(Number);
   if (env.FLAT_HP) for (const h of Object.values(CONTENT.houses)) h.hp = h.hp.map(() => Number(env.FLAT_HP)) as typeof h.hp;
   if (env.COMBINED) [THRESHOLDS.small.combined, THRESHOLDS.normal.combined] = env.COMBINED.split('/').map(Number);
+  // Record each claimant's resources at the moment they claim.
+  const atClaim: { res: number[]; n: number }[] = [];
+  const origClaim = Game.prototype.claim;
+  Game.prototype.claim = function (p) {
+    atClaim.push({ res: [p.res.influence, p.res.fear, p.res.wealth].sort((a, b) => a - b), n: this.s.players.length });
+    return origClaim.call(this, p);
+  };
   const cardPlays: Record<string, number> = {};
   const instantDraws: Record<string, number> = {};
   const blockPlays: Record<string, number> = {};
@@ -35,6 +44,8 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
   for (const n of (env.PLAYERS ?? '2,3,4,6,8').split(',').map(Number)) {
     const wins: Record<string, number> = {}, seats: Record<string, number> = {};
     const rounds: number[] = [], deaths: number[] = [], specters: number[] = [], turnsPerGame: number[] = [];
+    let byCombined = 0, bySingle = 0;
+    const claimRound: number[] = [];
     let claims = 0, sudden = 0, challenges = 0, claimantSurvived = 0, failedClaims = 0, reckonings = 0;
     let turns = 0, attackTurns = 0, cardTurns = 0, idleTurns = 0;
     let specterTurns = 0, specterPlays = 0;
@@ -78,6 +89,8 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
         if (e.kind === 'drawPrivate' && e.cards) for (const c of e.cards) cardsSeen[CONTENT.cards[c - 1].name] = (cardsSeen[CONTENT.cards[c - 1].name] ?? 0) + 1;
         if (e.kind === 'ability' && / uses /.test(e.text)) { const a = e.text.split(' uses ')[1].replace(/\.$/, ''); abilityUses[a] = (abilityUses[a] ?? 0) + 1; }
         if (e.kind === 'challenge') challenges++;
+        if (e.kind === 'claim' && e.tag === 'combined') { byCombined++; claimRound.push(s.round); }
+        if (e.kind === 'claim' && e.tag === 'single') { bySingle++; claimRound.push(s.round); }
         if (e.kind === 'claim' && /claim fails/.test(e.text)) failedClaims++;
         if (e.kind === 'gain') { if (/ tile\)/.test(e.text)) gainsTile++; else gainsOther++; }
       }
@@ -90,12 +103,17 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
     lines.push(`\n=== ${n} players (${N} games) ===`,
       `Length: median ${med(rounds)} rounds (avg ${avg(rounds).toFixed(1)}), ~${Math.round(avg(turnsPerGame))} turns per game`,
       `Endings: Throne claim ${pct(claims, N)}, Sudden Death ${pct(sudden, N)}; claim median round ${med(firstWinRound)}`,
+      `Claims made: ${byCombined + bySingle} (${pct(byCombined, byCombined + bySingle)} by combined total, ${pct(bySingle, byCombined + bySingle)} by one pillar)`,
       `Challenges per game ${(challenges / N).toFixed(2)}; claims that failed ${(failedClaims / N).toFixed(2)}/game; wins after beating challengers ${pct(claimantSurvived, N)}`,
       `Deaths per game ${avg(deaths).toFixed(1)}; Specters per game ${avg(specters).toFixed(2)}; Reckonings per game ${(reckonings / N).toFixed(2)}`,
       `Turn actions: attack ${pct(attackTurns, turns)}, card ${pct(cardTurns, turns)}, neither ${pct(idleTurns, turns)}`,
       `Specter turns ${specterTurns}, of which mischief played ${pct(specterPlays, specterTurns)}`,
       `House wins: ${houseLine}`,
       `Win by seat order: ${seatLine}`);
+    const mine = atClaim.filter(c => c.n === n);
+    const lowest = mine.map(c => c.res[0]), top = mine.map(c => c.res[2]);
+    const share = mine.map(c => c.res[2] / Math.max(1, c.res[0] + c.res[1] + c.res[2]));
+    lines.push(`At claim: weakest pillar median ${med(lowest)} (0 in ${pct(lowest.filter(x => x === 0).length, mine.length)}, ≤1 in ${pct(lowest.filter(x => x <= 1).length, mine.length)}); strongest median ${med(top)}; strongest share avg ${pct(avg(share) * 100, 100)}`);
   }
   const top = (o: Record<string, number>, k = 8) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, k).map(([x, c]) => `${x} ${c}`).join(', ');
   const handNames = CONTENT.cards.filter(c => c.kind === 'hand' && !c.responseOnly).map(c => c.name);
@@ -107,5 +125,6 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
     `Least played when held (plays per draw): ${playRate.slice(0, 10).map(([x, r]) => `${x} ${r.toFixed(2)}`).join(', ')}`,
     `Block/Deflect used: ${top(blockPlays, 9)}`,
     `Abilities used: ${top(abilityUses, 20)}`);
+  Game.prototype.claim = origClaim;
   console.log(lines.join('\n'));
 }, 3_600_000);
