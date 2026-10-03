@@ -43,7 +43,7 @@ export function SetupScreen() {
       <details className="rules-brief">
         <summary>How to play</summary>
         <ol>
-          <li><b>Move:</b> roll a die and move up to that many squares in one straight line.</li>
+          <li><b>Move:</b> roll a die and move up to that many squares, turning as you like (no diagonals).</li>
           <li><b>Resources:</b> end on a Court, War or Trade tile to gain Influence, Fear or Wealth (2 if you're alone there). Never from your own tile, nor the same tile twice in a row.</li>
           <li><b>Fight:</b> attack an adjacent rival for damage equal to your Heart Tokens.</li>
           <li><b>Cards:</b> play one Hand Card any time on your turn, then draw back to 3. Instants resolve the moment they're drawn.</li>

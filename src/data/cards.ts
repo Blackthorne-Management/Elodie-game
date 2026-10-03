@@ -261,7 +261,7 @@ hand(44, 'Forced Retreat', 'Movement', 'Move an adjacent player 2 spaces away fr
 hand(45, 'Vanishing Act', 'Movement', 'After resolving combat this turn, move 1 extra space as a free action.',
   function* (g, p) {
     const t = g.s.turn;
-    if (t && t.attacks > 0) yield* g.moveStraight(p, 1, { why: 'Vanishing Act: move 1 space' });
+    if (t && t.attacks > 0) yield* g.moveFree(p, 1, 'Vanishing Act: move 1 space');
     else if (t) t.vanishingAct = true;
   });
 hand(46, 'Bridge the Gap', 'Movement', 'Move directly to any tile within 8 spaces this turn, ignoring the straight-line-only movement rule.',
@@ -376,7 +376,7 @@ block(58, 'Iron Guard', 'Negate the next attack against you.', () => true, funct
 block(59, 'Riposte', 'Negate an attack and deal 1 damage back to the attacker.', () => true,
   function* (g, d, a) { g.damage(g.p(a.attacker), 1, d.id, '(Riposte)'); return 'negate'; });
 block(60, 'Vanish', 'Negate an attack, then move 1 space immediately after.', () => true,
-  function* (g, d) { yield* g.moveStraight(d, 1, { why: 'Vanish: move 1 space' }); return 'negate'; });
+  function* (g, d) { yield* g.moveFree(d, 1, 'Vanish: move 1 space'); return 'negate'; });
 block(61, 'Shield Wall', 'Negate an attack. Any ally sharing your tile is also protected this turn.', () => true,
   function* (g, d) {
     if (d.pos) g.addEffect('shieldWall', d.id, g.s.turn ? { at: 'turnEnd', player: g.s.turn.player } : { at: 'consumed' }, { square: key(d.pos) });
@@ -442,7 +442,7 @@ instant(79, "Fortune's Wheel", 'Dice', 'Roll a die: 1-2 gain 1 Influence, 3-4 ga
 instant(80, 'Risky Crossing', 'Dice', 'Roll a die. On 1-3, lose 1 Heart Token. On 4-6, move 2 extra spaces immediately.',
   function* (g, p, c) {
     if (g.roll(p, c.name) <= 3) yield* hpLoss(g, p, 1, c.name);
-    else yield* g.moveStraight(p, 2, { why: 'Risky Crossing: move up to 2' });
+    else yield* g.moveFree(p, 2, 'Risky Crossing: move up to 2');
   }, { noSpecter: true });
 
 // Global Effects

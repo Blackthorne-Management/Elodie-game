@@ -219,12 +219,14 @@ function MovePanel({ d, onAnswer }: { d: Decision; onAnswer: (i: number) => void
   d.options.forEach((o, i) => {
     const v = o.value as { d: Dir; n: number } | Pos | null;
     if (v && typeof v === 'object' && 'd' in v && v.n > 0) rows.set(v.d, [...(rows.get(v.d) ?? []), { n: v.n, i }]);
-    else plain.push({ label: o.label, i });
+    else if (v === null || 'd' in (v as object) || o.label.startsWith('Step')) plain.push({ label: o.label, i });
+    // Free moves list every reachable square: those are picked on the board.
+
   });
   return (
     <div>
       <div className="prompt">{d.prompt}</div>
-      <div className="hint">Tap a highlighted square, or choose below.</div>
+      <div className="hint">{rows.size ? 'Tap a highlighted square, or choose below.' : 'Tap a highlighted square on the board (＋ zooms in).'}</div>
       {[...rows.entries()].map(([dir, xs]) => (
         <div key={dir} className="move-row">
           <span className="move-dir">{ARROW[dir as Dir]} {dir}</span>

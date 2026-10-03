@@ -10,7 +10,7 @@ import type { Ability, AttackInfo, CardDef, Content, HouseDef, PassiveHooks } fr
 import type { Rng } from './rng';
 import { makeRng, rollD6, shuffle } from './rng';
 import {
-  DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, step, throneDistance,
+  DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
   CHALLENGE_FIRST_STRIKER, HAND_SIZE, MAX_FIGHT_BLOWS, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS,
@@ -436,6 +436,17 @@ export class Game {
     if (choice.n > 0) this.moveTo(p, step(p.pos, choice.d, choice.n), 'moves');
   }
 
+  // Up to `max` orthogonal steps in any combination (rules-decisions 5): any square within that many
+  // steps, turning as often as you like. Pawns never block.
+  *moveFree(p: PlayerState, max: number, why?: string): Flow {
+    if (!p.pos || max <= 0) return;
+    const from = p.pos;
+    const options: Option<Pos | null>[] = [{ label: 'Stay here', value: null }];
+    for (const q of squaresWithin(from, max)) options.push({ label: label(q), value: q });
+    const to = yield* this.ask(p, 'move', why ?? `Move up to ${max} spaces`, options, { player: p.id, max, from, free: true });
+    if (to) this.moveTo(p, to, 'moves');
+  }
+
   // One step toward a goal (Grand Market, Elodie's Memory...). Optional.
   *stepToward(p: PlayerState, goals: Pos[], why: string): Flow {
     if (!p.pos || !goals.length) return;
@@ -461,7 +472,7 @@ export class Game {
       t.rollBonus += n;
       this.log(`${p.name} will move ${n} further this turn.`, 'info', { player: p.id });
     } else {
-      yield* this.moveStraight(p, n, { why: `Move up to ${n} extra` });
+      yield* this.moveFree(p, n, `Move up to ${n} extra`);
     }
   }
 
@@ -488,7 +499,7 @@ export class Game {
         DIR_NAMES.filter(d => roomToEdge(p.pos!, d) > 0).map(d => ({ label: cap(d), value: d })));
       yield* this.moveStraight(p, roll, { dirs: [dir] });
     } else {
-      yield* this.moveStraight(p, roll);
+      yield* this.moveFree(p, roll);
     }
     this.resourceCheck(p);
   }
@@ -590,7 +601,7 @@ export class Game {
     yield* this.attack(a, t, 'basic');
     if (turn.vanishingAct && !a.specter && a.pos) {
       turn.vanishingAct = false;
-      yield* this.moveStraight(a, 1, { why: 'Vanishing Act: move 1 space' });
+      yield* this.moveFree(a, 1, 'Vanishing Act: move 1 space');
     }
   }
 
@@ -700,7 +711,7 @@ export class Game {
     // Agnivansh II: a bonus half-move after landing a kill.
     if (killer && !killer.specter && killer.pos && this.house(killer).halfMoveOnKill?.(killer.gen)) {
       const n = Math.ceil(rollD6(this.rng) / 2);
-      yield* this.moveStraight(killer, n, { why: `Thirst for Blood: move up to ${n}` });
+      yield* this.moveFree(killer, n, `Thirst for Blood: move up to ${n}`);
     }
   }
 

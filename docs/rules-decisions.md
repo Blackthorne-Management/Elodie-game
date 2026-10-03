@@ -21,11 +21,15 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **First player [4]:** random in solo; the host picks in multiplayer.
 
 ## Turn and movement
-- **Movement [5–7]:** roll a d6 and move **up to** that many squares (0 is allowed) in one straight
-  line, in any of the 4 directions. You stop at the board edge.
+- **Movement [5–7]** (changed after Phase 1): roll a d6 and move **up to** that many squares in total,
+  stepping up/down/left/right and turning as often as you like (a 3 can be 2 up and 1 right). 0 is
+  allowed. No diagonals; pawns never block; you can't leave the board. This replaces the rulebook's
+  straight-line rule. Cards that name a straight line or a direction keep it: Forced March (full roll in
+  the chosen direction), Forced Retreat (2 spaces in a straight line) and Suzumori's Marionette (chosen
+  direction, straight line). Bridge the Gap is simply "move to any square within 8".
 - **Card timing [8]:** your one Hand Card may be played **at any point during your own turn**.
-- **Extra movement [9]:** played before you move, it adds to the roll. Played after, you move that many
-  extra squares straight away (straight line, any direction). No second resource check.
+- **Extra movement [9]:** played before you move, it adds to the roll. Played after, you move up to that
+  many extra squares straight away (any path). No second resource check.
 - **Distances [10]:** counted in orthogonal steps (up/down/left/right).
 - **Resource check [11]:** happens once, right after your roll-move. You're blocked only if you
   actually scored from that tile on your previous turn. The Throne gives nothing.

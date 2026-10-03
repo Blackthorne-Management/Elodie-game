@@ -32,17 +32,27 @@ describe('setup (Section 3)', () => {
 });
 
 describe('movement (Section 4)', () => {
-  it('offers up to the roll in one straight line, stopping at the edge', () => {
+  it('offers every square within the roll, turning allowed, never off the board', () => {
     const g = newGame(2, ['brasador', 'dorini']);
     const p = g.p(0);                       // Brasador at column 9, row 1 (top edge)
     startTurn(g, 0);
     let seen: Decision | null = null;
-    drive(g.moveStraight(p, 3), d => { seen = d; return 0; });
-    const labels = seen!.options.map(o => o.label);
-    expect(labels).toContain('Stay here');
-    expect(labels).toContain('South 3');
-    expect(labels.some(l => l.startsWith('North'))).toBe(false);   // already on the top edge
-    expect(labels).not.toContain('South 4');
+    drive(g.moveFree(p, 3), d => { seen = d; return 0; });
+    const squares = seen!.options.map(o => o.value as { x: number; y: number } | null);
+    expect(squares[0]).toBeNull();                                         // stay
+    expect(squares).toContainEqual({ x: 9, y: 2 });                        // 2 down, 1 right
+    expect(squares).toContainEqual({ x: 8, y: 3 });                        // 3 straight down
+    expect(squares).not.toContainEqual({ x: 9, y: 3 });                    // 4 steps away
+    expect(squares.every(q => !q || q.y >= 0)).toBe(true);                 // nothing off the top edge
+    expect(squares.length).toBe(1 + 6 + 5 + 3 + 1);                       // stay + rows 1-4 below the edge square
+  });
+  it('Forced March still moves the full roll in a straight line', () => {
+    const g = newGame(2, ['brasador', 'dorini']);
+    const p = g.p(0);
+    startTurn(g, 0);
+    let seen: Decision | null = null;
+    drive(g.moveStraight(p, 3, { full: true }), d => { seen = d; return 0; });
+    expect(seen!.options.map(o => o.label)).toEqual(['South 3', 'East 3', 'West 3']);
   });
   it('Ironvow adds 1 to the roll', () => {
     const g = newGame(2, ['ironvow', 'dorini']);
