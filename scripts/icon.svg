@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Placeholder icon until the art pass: a gold crown on deep crimson. -->
+  <rect width="512" height="512" fill="#5a1620"/>
+  <path d="M120 340 L104 176 L196 252 L256 140 L316 252 L408 176 L392 340 Z" fill="#d9a441"/>
+  <rect x="120" y="356" width="272" height="36" rx="8" fill="#d9a441"/>
+  <circle cx="256" cy="140" r="16" fill="#f3d27a"/>
+  <circle cx="104" cy="176" r="14" fill="#f3d27a"/>
+  <circle cx="408" cy="176" r="14" fill="#f3d27a"/>
+</svg>
