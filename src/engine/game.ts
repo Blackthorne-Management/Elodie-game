@@ -13,7 +13,7 @@ import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, HAND_SIZE, MAX_FIGHT_BLOWS, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
 } from '../config';
 
 export class GameOver extends Error {}
@@ -518,7 +518,7 @@ export class Game {
     if (this.findEffect('sabotage', p.id)) return this.log(`Sabotage: ${p.name} gains nothing from tiles this turn.`, 'blocked', { player: p.id });
     const pillar = TILE_PILLAR[tile.house.tileType];
     const alone = this.playersOn(p.pos).length === 1;
-    const n = (alone ? 2 : 1) + this.hook(p, 'tileBonus', pillar);
+    const n = (alone ? TUNING.tileAlone : TUNING.tileShared) + this.hook(p, 'tileBonus', pillar);
     if (this.gain(p, pillar, n, `${tile.house.name} ${tile.house.tileType} tile`)) t.scoredTile = k;
   }
 
@@ -560,7 +560,7 @@ export class Game {
     if (a.mark === t.id) damage += 1;   // La Marca
     if (this.house(t).mostFearedDownside?.(t.gen) && this.mostFeared()?.id === t.id) damage += 1;
     const marked = this.findEffect('markedForDeath', t.id);
-    const info: AttackInfo = { attacker: a.id, target: t.id, kind, damage: damage + (marked ? 1 : 0) };
+    const info: AttackInfo = { attacker: a.id, target: t.id, kind, damage: Math.min(TUNING.maxDamage, damage + (marked ? 1 : 0)) };
     this.log(`${a.name} attacks ${t.name}!`, 'attack', { player: a.id, target: t.id, amount: info.damage, tag: kind });
 
     // Block / Deflect window.
@@ -857,8 +857,8 @@ export class Game {
   // ---------------------------------------------------------------- the Specter (Section 10)
 
   specterChoices(): number[] {
-    if (this.s.discard.length < SPECTER_CHOICES) return [];
-    return this.s.discard.slice(-SPECTER_CHOICES).filter(c => {
+    if (this.s.discard.length < TUNING.specterChoices) return [];
+    return this.s.discard.slice(-TUNING.specterChoices).filter(c => {
       const d = this.card(c);
       return d.kind === 'instant' && !d.noSpecter;
     });

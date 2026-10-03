@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc -b",
     "balance": "BALANCE=1 vitest run tests/balance.test.ts --silent=false",
-    "replay": "vitest run tests/replay.test.ts --silent=false"
+    "replay": "vitest run tests/replay.test.ts --silent=false",
+    "analyse": "ANALYSE=1 vitest run tests/analysis.test.ts --silent=false"
   },
   "dependencies": {
     "react": "^19.2.8",

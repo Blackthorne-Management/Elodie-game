@@ -27,5 +27,13 @@ export const MAX_FIGHT_BLOWS = 60;
 // Specter (Section 10).
 export const SPECTER_CHOICES = 3;
 
+// Balance knobs (rulebook values by default). Objects so balance experiments can adjust them.
+export const TUNING = {
+  tileAlone: 2,          // resources from a tile when you're alone on it
+  tileShared: 1,         // ...when someone else is there too
+  maxDamage: 99,         // cap on the damage of one attack (99 = no cap)
+  specterChoices: SPECTER_CHOICES,
+};
+
 // Bots
 export const BOT_THINK_MS = 450;
