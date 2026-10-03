@@ -409,3 +409,50 @@ button:disabled { cursor: default; }
   .card2.up { transform: translateX(calc(var(--i) * 100px)) translateY(-110px) scale(1.15); height: 150px; }
   .card2.up .c-text { display: block; }
 }
+
+/* ---- stage v2 polish: real depth, sea around the board, mist on the horizon, less clutter ---- */
+.stage2 {
+  perspective: 560px; perspective-origin: 50% -20%;
+  background: linear-gradient(#2b2531 0%, #3a3140 18%, #1a1418 60%);
+  /* The far side of the table fades into mist instead of ending in a hard edge. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 26%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 26%);
+}
+.stage2::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 34%; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 70% 100% at 50% 100%, rgba(217,164,65,.10), transparent 70%);
+}
+.cam { top: 60%; transition: transform .8s cubic-bezier(.25,.8,.3,1); }
+.sea {
+  position: absolute; border-radius: 40px;
+  background:
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.035) 0 2px, transparent 2px 26px),
+    radial-gradient(ellipse at 50% 50%, #1d3a40 0%, #142a30 55%, #0d1a1e 100%);
+}
+.plane2 { box-shadow: 0 0 0 3px #00000055, 0 0 60px 20px #0007; }
+.tile2 { font-size: 24px; border-width: 3px; }
+.throne2 { font-size: 52px; }
+
+.sq.lit { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(243,210,122,.45); animation: none; }
+.sq.lit:active { background: rgba(243,210,122,.3); }
+.sq.path { background: rgba(243,210,122,.38); box-shadow: inset 0 0 0 2px rgba(243,210,122,.9); display: grid; place-items: center; }
+.sq.path span { font-weight: 900; font-size: 22px; color: #2a1a10; opacity: .65; }
+
+.arrow2 { width: 40px; height: 40px; margin: -20px 0 0 -20px; z-index: 2; }
+.token2 { transition: left .16s linear, top .16s linear; }
+.stand .tag { font-size: 11px; padding: 1px 6px; margin-bottom: 2px; }
+.stand .disc { width: 44px; height: 44px; border-width: 3px; }
+.stand .disc .badge {
+  position: absolute; right: -2px; bottom: -2px; width: 18px; height: 18px; border-radius: 50%; background: var(--c);
+  border: 2px solid #111; color: #fff; font-size: 10px; font-weight: 900; display: grid; place-items: center;
+}
+.stand .disc { overflow: visible; }
+.stand .disc .silhouette, .stand .disc img { border-radius: 50%; overflow: hidden; }
+.stand .disc .silhouette { position: absolute; inset: 0; border-radius: 50%; }
+.stand .base { width: 38px; height: 10px; }
+.stage2.stepping .token2:not(.me) .stand { opacity: .85; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .feed2 span:first-child { display: none; }
+  .feed2 { right: auto; max-width: 70%; padding: 3px 8px; }
+  .cam { top: 76%; }
+}

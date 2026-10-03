@@ -51,7 +51,7 @@ export function PlayScreen() {
   const mine = d?.player === HUMAN ? d : null;
   const me = s.players[HUMAN];
 
-  const { shown, walking } = useWalkers(s, version, STEP_MS[speed]);
+  const { shown, walking, place } = useWalkers(s, version, STEP_MS[speed]);
   const [sheet, setSheet] = useState<SheetState>(null);
   const [showMap, setShowMap] = useState(false);
   const [duel, setDuel] = useState<DuelShow | null>(null);
@@ -125,6 +125,7 @@ export function PlayScreen() {
 
   function commitAt(dest: Pos) {
     if (!mine || !moveMode) return;
+    if (path.length) place(HUMAN, dest);     // you already walked there; don't replay the walk
     const i = mine.options.findIndex(o => o.value === null ? samePos(dest, moveMode.from) : 'x' in (o.value as object) ? samePos(o.value as Pos, dest) : false);
     if (i >= 0) answer(i);
   }
@@ -135,7 +136,8 @@ export function PlayScreen() {
     if (mine && moveMode) {
       mine.options.forEach((o, i) => {
         const to = optionDest(o.value, moveMode.from);
-        if (to && !m.has(key(to))) m.set(key(to), () => answer(i));
+        // Tapping a square walks you there from wherever your steps have reached.
+        if (to && !m.has(key(to))) m.set(key(to), () => { if (path.length && end) place(HUMAN, end); answer(i); });
       });
     } else if (mine?.kind === 'square') {
       mine.options.forEach((o, i) => m.set(key(o.value as Pos), () => answer(i)));
@@ -149,7 +151,11 @@ export function PlayScreen() {
   // ---- camera: your move, else whoever is walking or acting, else you
   const activeId = s.turn?.player ?? null;
   const focusId = walking ?? (mine ? HUMAN : activeId ?? HUMAN);
-  const focus: Pos = (moveMode && end) || shown[focusId] || shown[HUMAN] || { x: 9, y: 9 };
+  // While you step, the camera holds still unless you wander far from where you started.
+  // While you step, the camera follows the middle of your path: it drifts half a step per tap
+  // instead of lurching, and keeps both where you started and where you are in view.
+  const stepFocus = moveMode && start && end ? { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 } : null;
+  const focus: Pos = stepFocus || shown[focusId] || shown[HUMAN] || { x: 9, y: 9 };
 
   // ---- your turn's actions
   const turnOpts = mine?.kind === 'turn' ? (mine as Decision<TurnAction>).options : [];

@@ -65,5 +65,12 @@ export function useWalkers(s: GameState, version: number, stepMs: number) {
     return () => clearInterval(t);
   }, [walking, stepMs]);
 
-  return { shown, walking };
+  // Put a pawn somewhere immediately (your own stepped move is already where you walked it).
+  const place = (id: number, pos: Pos) => {
+    queue.current = queue.current.filter(w => w.id !== id);
+    shownRef.current = { ...shownRef.current, [id]: { ...pos } };
+    setShown(shownRef.current);
+  };
+
+  return { shown, walking, place };
 }

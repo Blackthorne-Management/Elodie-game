@@ -52,7 +52,7 @@ export const useGame = create<GameStore>((set, get) => ({
     const setup: GameSetup = {
       seed,
       seats: houses.map((house, i) => ({
-        name: i === HUMAN ? (name.trim() || 'You') : CONTENT.houses[house].name.replace('House ', ''),
+        name: i === HUMAN && name.trim() ? name.trim() : CONTENT.houses[house].name.replace('House ', ''),
         isBot: i !== HUMAN,
         house,
       })),

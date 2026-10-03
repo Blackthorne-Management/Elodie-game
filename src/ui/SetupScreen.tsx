@@ -32,7 +32,7 @@ export function SetupScreen() {
       <section className="panel-card">
         <label className="field">
           <span>Your name</span>
-          <input value={name} onChange={e => setName(e.target.value)} placeholder="You" maxLength={16} />
+          <input value={name} onChange={e => setName(e.target.value)} placeholder="Optional: your house name is used" maxLength={16} />
         </label>
         <div className="field">
           <span>Players (you + {players - 1} bot{players === 2 ? '' : 's'})</span>
