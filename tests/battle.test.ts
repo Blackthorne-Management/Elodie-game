@@ -4,6 +4,7 @@ import type { Battle, BattleEvent } from '../src/engine/battle';
 import { aiChoose } from '../src/engine/ai';
 import { addStatus, absorb } from '../src/engine/status';
 import { makeRng } from '../src/engine/rng';
+import { stormMultiplier } from '../src/engine/damage';
 import { basic, makeUnit, mend, skill } from './fixtures';
 
 function fourVsFour(): Battle {
@@ -98,6 +99,25 @@ describe('battle loop', () => {
     const next = runRound(b, { p3: { moveId: 'peck', targetKey: 'e1' } }, makeRng(7));
     const i = next.log.findIndex(e => e.t === 'move' && e.who === 'p3');
     expect(next.log[i + 1]).toMatchObject({ target: 'e3' });
+  });
+});
+
+describe('storm', () => {
+  it('only starts at the storm round and then ramps up', () => {
+    expect(stormMultiplier(11)).toBe(1);
+    expect(stormMultiplier(12)).toBeCloseTo(1.2);
+    expect(stormMultiplier(14)).toBeCloseTo(1.6);
+  });
+
+  it('ends a healer and shield stand-off', () => {
+    const team = (side: 'player' | 'enemy', p: string) => [
+      makeUnit(`${p}1`, side, 'rain', { attack: 8, defense: 40 }, [basic, mend]),
+      makeUnit(`${p}2`, side, 'bloom', { attack: 8, defense: 40 }, [basic, mend]),
+    ];
+    const rng = makeRng(11);
+    let b: Battle = { round: 0, grace: 0, log: [], units: [...team('player', 'p'), ...team('enemy', 'e')] };
+    while (!b.winner && b.round < 60) b = runRound(b, {}, rng);
+    expect(b.winner).toBeDefined();
   });
 });
 

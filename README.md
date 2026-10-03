@@ -27,8 +27,8 @@ tests/        Vitest specs for the engine
 |---|-----------|--------|
 | 1 | Engine core: types, rng, typeChart, stats, damage | Done |
 | 2 | Battle engine: status, battle, ai | Done |
-| 3 | First content: 5 Commons, their moves, Galebeak | |
-| 4 | Battle screen | |
+| 3 | First content: 5 Commons, their moves, Galebeak | Done (placeholder numbers) |
+| 4 | Battle screen | Done (practice battle on launch) |
 | 5 | First region (floors 1–25) | |
 | 6 | Hatchery and Journal | |
 | 7 | Full roster and evolution | |

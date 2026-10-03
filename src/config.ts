@@ -39,3 +39,8 @@ export const BOSS_MULT = { hp: 8, attack: 1.5 } as const;
 // Battle playback, in ms per log event
 export const PLAYBACK_MS = 400;
 export const PLAYBACK_MS_FAST = 200;
+
+// The storm rises: long fights deal more damage each round so healer and
+// shield stand-offs always end.
+export const STORM_START_ROUND = 12;
+export const STORM_RAMP_PER_ROUND = 0.2;

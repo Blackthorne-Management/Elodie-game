@@ -1,7 +1,7 @@
 import type { Combatant } from './damage';
 import type { Rng } from './rng';
 import type { StatusId, Target } from './types';
-import { calcDamage, effectiveStat } from './damage';
+import { calcDamage, effectiveStat, stormMultiplier } from './damage';
 import { addStatus, absorb, takeStatus } from './status';
 import { aiChoose } from './ai';
 import {
@@ -129,7 +129,7 @@ function performMove(user: Combatant, choice: Choice, b: Battle, rng: Rng) {
         for (let i = 0; i < (e.hits ?? 1) && target.hp > 0; i++) {
           const blind = user.statuses.some(s => s.id === 'blind') && rng() < BLIND_MISS_CHANCE;
           if (blind || takeStatus(target, 'dodge')) { b.log.push({ t: 'miss', target: target.key }); continue; }
-          const { amount, crit } = calcDamage(user, target, e.power, rng);
+          const { amount, crit } = calcDamage(user, target, e.power, rng, stormMultiplier(b.round));
           b.log.push({ t: 'damage', target: target.key, amount: absorb(target, amount), crit });
           if (target.hp === 0) b.log.push({ t: 'faint', target: target.key });
         }
