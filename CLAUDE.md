@@ -28,3 +28,4 @@ Phase 1 (current): rules engine + local game vs bots, 2–8 players. No Supabase
 ## Notes
 - tsconfig uses `verbatimModuleSyntax`: import types with `import type`.
 - The oxlint React hooks rule treats any `useX(...)` call as a hook, so don't name engine functions `use...`.
+- Card effects and abilities are generators even when they never pause (the engine needs one shape), so the `require-yield` lint rule is off.
