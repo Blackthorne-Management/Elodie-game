@@ -10,6 +10,8 @@ import type { Speed } from '../state/gameStore';
 import { Board } from './Board';
 import { CardFace, Crest, Hearts, HouseSheet, Resources, Sheet } from './parts';
 import { ICONS } from '../assets.config';
+import { GameLogActions } from './HistorySheet';
+import { snapshot } from '../state/history';
 
 const visible = (e: LogEvent) => !e.visibleTo || e.visibleTo.includes(HUMAN);
 
@@ -20,6 +22,7 @@ export function GameScreen() {
   const setSpeed = useGame(s => s.setSpeed);
   const answer = useGame(s => s.answer);
   const quit = useGame(s => s.quit);
+  const startedAt = useGame(s => s.startedAt);
   const g = runner.game;
   const s = g.s;
   const d = runner.pending;
@@ -143,7 +146,10 @@ export function GameScreen() {
           </div>
           <h3>Thresholds</h3>
           <p>Claim the Throne with {g.thresholds(me).combined} combined or {g.thresholds(me).single} in one pillar.</p>
-          <button type="button" className="big danger" onClick={() => { if (confirm('Abandon this game?')) { quit(); } }}>Abandon game</button>
+          <h3>Report a problem</h3>
+          <p className="muted small">Something odd happened? Copy or download this game's full log and send it to Claude.</p>
+          <GameLogActions game={snapshot(runner, runner.over ? 'won' : 'in progress', startedAt)} />
+          <button type="button" className="big danger" onClick={() => { if (confirm('Abandon this game? It will be kept in Past games.')) { quit(); } }}>Abandon game</button>
         </Sheet>
       )}
     </div>

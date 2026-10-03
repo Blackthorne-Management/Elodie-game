@@ -174,3 +174,23 @@ button:disabled { cursor: default; }
 .lore { font-style: italic; color: var(--muted); }
 .log { display: flex; flex-direction: column; gap: 4px; }
 .log .feed-line { color: var(--ink); }
+
+/* ---------- history and logs ---------- */
+.secondary {
+  min-height: 46px; border-radius: 12px; border: 1px solid #5a4650; background: var(--panel); font-weight: 700;
+}
+.notice {
+  border: none; border-radius: 12px; background: #3d2f1c; color: var(--ink); padding: 10px 12px; text-align: left;
+  font-weight: 600; display: flex; justify-content: space-between; gap: 8px; min-height: 44px;
+}
+.history { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.history-row {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; text-align: left;
+  min-height: 48px; padding: 8px 10px; border-radius: 10px; border: 1px solid #4a3a42; background: var(--panel-2); font-size: 14px;
+}
+.history-date { color: var(--muted); font-size: 12px; }
+.tag { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 6px; background: #444; text-transform: uppercase; }
+.tag-won { background: #2e5a34; }
+.tag-abandoned { background: #5a4a2e; }
+.tag-interrupted { background: #5a2e2e; }
+.log-actions { margin: 8px 0; }

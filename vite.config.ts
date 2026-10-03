@@ -1,9 +1,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { execSync } from 'node:child_process';
+
+// Which build this is: Netlify's commit, else the local git commit. Saved games record it so a game is
+// only ever replayed on the code it was played on.
+function buildId(): string {
+  if (process.env.COMMIT_REF) return process.env.COMMIT_REF.slice(0, 7);
+  try { return execSync('git rev-parse --short HEAD').toString().trim(); } catch { return 'dev'; }
+}
 
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/',
+  define: { __BUILD__: JSON.stringify(buildId()) },
   plugins: [
     react(),
     VitePWA({

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useGame } from '../state/gameStore';
+import { HistorySheet } from './HistorySheet';
+import { BUILD } from '../state/history';
 
 export function SetupScreen() {
   const start = useGame(s => s.start);
@@ -9,6 +11,9 @@ export function SetupScreen() {
     try { return localStorage.getItem('tob-name') ?? ''; } catch { return ''; }
   });
   const [players, setPlayers] = useState(4);
+  const [history, setHistory] = useState(false);
+  const notice = useGame(s => s.notice);
+  const dismissNotice = useGame(s => s.dismissNotice);
 
   function begin() {
     try { localStorage.setItem('tob-name', name); } catch { /* ignore */ }
@@ -21,6 +26,7 @@ export function SetupScreen() {
       <h1>Throne of Bloodlines</h1>
       <p className="tagline">Eight houses. One throne. Every death makes your bloodline stronger.</p>
 
+      {notice && <button type="button" className="notice" onClick={dismissNotice}>{notice} <span aria-hidden>✕</span></button>}
       {hasSave && <button type="button" className="big" onClick={() => resume()}>Continue your game</button>}
 
       <section className="panel-card">
@@ -40,6 +46,9 @@ export function SetupScreen() {
         <button type="button" className="big" onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>
       </section>
 
+      <button type="button" className="secondary" onClick={() => setHistory(true)}>Past games &amp; logs</button>
+      {history && <HistorySheet onClose={() => setHistory(false)} />}
+
       <details className="rules-brief">
         <summary>How to play</summary>
         <ol>
@@ -51,6 +60,7 @@ export function SetupScreen() {
           <li><b>Death</b> isn't the end: your heir rises with new powers. After Gen IV you become a Specter.</li>
         </ol>
       </details>
+      <p className="muted small">Build {BUILD}</p>
     </main>
   );
 }
