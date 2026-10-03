@@ -84,8 +84,8 @@ export interface TurnState {
   moved: boolean;
   attacks: number;
   attacksAllowed: number;
-  cardPlays: number;
-  cardPlaysAllowed: number;
+  actions: number;          // your one action per turn: an attack or a Hand Card
+  actionsAllowed: number;
   rollBonus: number;
   aggressive: boolean;
   damageDealt: number;

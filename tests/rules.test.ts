@@ -175,7 +175,20 @@ describe('combat and death (Sections 6 and 9)', () => {
     expect(kinds.filter(k => k.includes('end')).length).toBe(1);   // one menu after moving, then the attack ended it
     expect(a.hand.length).toBe(3);
   });
-  it('Plunder played before the attack pays out when it lands', () => {
+  it('one action per turn: no cards before moving, and a card or an attack, not both', () => {
+    const { g, a } = duelists();
+    a.hand = [1, 15, 22];
+    g.s.turn!.moved = false;
+    const types = () => g.turnActions(a).map(o => o.value.type);
+    expect(types()).not.toContain('card');                 // not before moving
+    g.s.turn!.moved = true;
+    expect(types()).toContain('card');
+    expect(types()).toContain('attack');
+    drive(g.playHandCard(a, 1));
+    expect(types()).not.toContain('card');
+    expect(types()).not.toContain('attack');                // the card was the action
+  });
+  it('Plunder (with an extra action) pays out when the attack lands', () => {
     const { g, a, b } = duelists();
     b.maxHp = b.hp = 10;
     a.hand = [26];
@@ -221,9 +234,14 @@ describe('cards', () => {
     expect(g.s.effects.some(e => e.cardId === 12)).toBe(true);
     expect(g.s.discard).not.toContain(12);
   });
-  it('Swift Steed before moving adds 2 to the roll', () => {
-    const { g } = play(41);
-    expect(g.s.turn!.rollBonus).toBe(2);
+  it('Swift Steed after moving moves you up to 2 more squares', () => {
+    const g = newGame(2, ['brasador', 'dorini']);
+    const p = g.p(0);
+    p.hand = [41];
+    startTurn(g, 0);
+    g.s.turn!.moved = true;
+    drive(g.playHandCard(p, 41), d => d.options.findIndex(o => JSON.stringify(o.value) === JSON.stringify({ x: 8, y: 2 })));
+    expect(p.pos).toEqual({ x: 8, y: 2 });
   });
   it('Homeward Bound teleports home', () => {
     const g = newGame(2, ['brasador', 'dorini']);

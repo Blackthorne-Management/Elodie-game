@@ -66,12 +66,11 @@ export const HOUSES: Record<HouseId, HouseDef> = {
       },
       {
         id: 'bazaar', name: 'Bazaar al-Dhahab', gen: 4, limit: 'turn',
-        text: 'Spend 5 Wealth: one extra Hand Card play and one extra attack this turn.',
+        text: 'Spend 5 Wealth: take one extra action this turn (an attack or a Hand Card).',
         canUse: (g, p) => p.res.wealth >= 5 && g.isActive(p),
         *run(g, p) {
           g.lose(p, 'wealth', 5, 'Golden Bazaar');
-          g.s.turn!.cardPlaysAllowed++;
-          g.s.turn!.attacksAllowed++;
+          g.s.turn!.actionsAllowed++;
         },
       },
     ],

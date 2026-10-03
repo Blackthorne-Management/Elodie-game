@@ -126,21 +126,7 @@ function turnChoice(g: Game, me: PlayerState, d: Decision<TurnAction>, pers: Per
     return idx(a => a.type === 'roll');
   }
 
-  // Attacking ends the turn, so cards and abilities come first.
-  const atk = bestAttack(g, me, opts, pers);
-  const attacking = atk !== null && atk.score > 0.4;
-
-  // 3. Play the best card (never one that forbids the attack we're about to make).
-  let bestCard = -1, bestCardScore = 0.3;
-  opts.forEach((o, i) => {
-    if (o.value.type !== 'card') return;
-    if (attacking && g.card(o.value.card).name === 'Golden Harvest') return;
-    const s = playScore(g, me, o.value.card, pers);
-    if (s > bestCardScore) { bestCard = i; bestCardScore = s; }
-  });
-  if (bestCard >= 0) return bestCard;
-
-  // 4. Abilities.
+  // Abilities are free, so they come first. Then one action: the better of an attack or a card.
   let bestAb = -1, bestAbScore = 0.5;
   opts.forEach((o, i) => {
     if (o.value.type !== 'ability') return;
@@ -149,8 +135,16 @@ function turnChoice(g: Game, me: PlayerState, d: Decision<TurnAction>, pers: Per
   });
   if (bestAb >= 0) return bestAb;
 
-  // 5. Attack, which ends the turn.
-  if (attacking) return atk.index;
+  const atk = bestAttack(g, me, opts, pers);
+  let bestCard = -1, bestCardScore = 0.3;
+  opts.forEach((o, i) => {
+    if (o.value.type !== 'card') return;
+    const s = playScore(g, me, o.value.card, pers);
+    if (s > bestCardScore) { bestCard = i; bestCardScore = s; }
+  });
+  // An attack's score is roughly on the same scale as a card's (a kill is worth about 3-5).
+  if (atk !== null && atk.score > 0.4 && (bestCard < 0 || atk.score * 1.2 >= bestCardScore)) return atk.index;
+  if (bestCard >= 0) return bestCard;
 
   return Math.max(0, idx(a => a.type === 'end'));
 }

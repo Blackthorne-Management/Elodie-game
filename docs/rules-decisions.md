@@ -27,9 +27,11 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   straight-line rule. Cards that name a straight line or a direction keep it: Forced March (full roll in
   the chosen direction), Forced Retreat (2 spaces in a straight line) and Suzumori's Marionette (chosen
   direction, straight line). Bridge the Gap is simply "move to any square within 8".
-- **Card timing [8]:** your one Hand Card may be played **at any point during your own turn**.
-- **Extra movement [9]:** played before you move, it adds to the roll. Played after, you move up to that
-  many extra squares straight away (any path). No second resource check.
+- **Your action [8]** (changed after Phase 1): after moving and the resource check, you take **one action:
+  attack a rival beside you, or play one Hand Card** (or neither). Not both. Hand Cards can't be played before
+  you move. House abilities are free extras and don't use your action; claiming the Throne is separate.
+- **Extra movement [9]:** cards are played after moving, so extra movement moves you up to that many more
+  squares straight away (any path). There is no second resource check.
 - **Distances [10]:** counted in orthogonal steps (up/down/left/right).
 - **Resource check [11]:** happens once, right after your roll-move. You're blocked only if you
   actually scored from that tile on your previous turn. The Throne gives nothing.
@@ -44,12 +46,15 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 
 ## Combat
 - **One basic attack per turn [14].** Attack cards are separate.
-- **Attacking ends your turn** (changed after Phase 1). Your attack is your action: once you've moved and attack,
-  the turn ends (you still draw back to 3). Play your Hand Card before attacking if you want one.
-  - With more than one attack allowed (Dorini IV, Agnivansh IV), the turn ends after the last one.
-  - Ironvow's Raider's Charge (Gen II+): attack before moving, then still move.
-  - Vanishing Act still gives its 1-square step after the attack.
-  - Plunder is played before the attack and pays out (max 2 Wealth) when that attack lands.
+- **Attacking ends your turn** (changed after Phase 1). The attack is your action; you still draw back to 3.
+  - Dorini IV's Golden Bazaar gives one extra action (attack or card). Agnivansh IV's Endless War lets one
+    attack action be up to 3 attacks. The turn ends after the last.
+  - Ironvow's Raider's Charge (Gen II+): attack before moving (that's your action), then still move.
+  - **Needs your call:** with "card or attack", three cards lose most of their point because they assume you
+    attack in the same turn. They still work in the rare turn with an extra action (Dorini IV).
+    - *Plunder* ("Wealth for damage you've dealt this turn").
+    - *Vanishing Act* ("after resolving combat this turn, move 1").
+    - *Golden Harvest*'s "you may not attack this turn" is now automatic.
 - **"Attacks" [15]** (for Block/Deflect, truces, Dread Banner and Marked for Death): basic attacks,
   Cursed Dagger, Shadow Strike, Elodie's Trial and Challenge fights. Hex of Withering, Poisoned
   Chalice, Duel of Honor and self/global HP loss are not attacks.

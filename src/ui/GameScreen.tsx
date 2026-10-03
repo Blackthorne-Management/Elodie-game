@@ -176,7 +176,7 @@ function DecisionPanel({ g, d, onAnswer, onCard }: { g: Game; d: Decision; onAns
     return (
       <div>
         <div className="prompt">
-          Your turn{t ? ` · ${t.moved ? 'moved' : 'not moved yet'}${t.attacks ? ' · attacked' : ''}${t.cardPlays ? ' · card played' : ''}` : ''}
+          Your turn{t ? ` · ${t.moved ? 'moved' : 'not moved yet'}${t.actions >= t.actionsAllowed ? ' · action used' : t.moved ? ' · attack or play a card' : ''}` : ''}
         </div>
         <div className="actions">
           {buttons.map(({ o, i }) => (

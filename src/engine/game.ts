@@ -394,7 +394,7 @@ export class Game {
     p.hand = p.hand.filter(x => x !== c);
     p.handCardsPlayed++;
     if (this.s.turn) {
-      this.s.turn.cardPlays++;
+      this.s.turn.actions++;
       if (def.aggressive) this.s.turn.aggressive = true;
     }
     this.log(`${p.name} plays ${def.name}.`, 'card', { player: p.id, cards: [c] });
@@ -595,6 +595,11 @@ export class Game {
 
   *basicAttack(a: PlayerState, t: PlayerState): Flow {
     const turn = this.s.turn!;
+    // The first attack of an attack action uses your action; Endless War's follow-ups don't.
+    if (turn.attacks === 0 || turn.attacks >= turn.attacksAllowed) {
+      if (turn.attacks >= turn.attacksAllowed) turn.attacksAllowed++;
+      turn.actions++;
+    }
     turn.attacks++;
     const puppeteer = this.redirectChooser(a, REDIRECT_TARGET);
     if (puppeteer) t = (yield* this.choosePlayer(puppeteer, this.basicTargets(a), `Choose who ${a.name} attacks`)) ?? t;
@@ -765,13 +770,17 @@ export class Game {
     const out: Option<TurnAction>[] = [];
     if (!t.moved) out.push({ label: 'Roll and move', value: { type: 'roll' } });
     const canAttackNow = t.moved || this.house(p).attackBeforeMove?.(p.gen);
-    if (canAttackNow && t.attacks < t.attacksAllowed) {
-      const ends = ATTACK_ENDS_TURN && t.moved && t.attacks + 1 >= t.attacksAllowed;
+    const actionLeft = t.actions < t.actionsAllowed;
+    const midAttack = t.attacks > 0 && t.attacks < t.attacksAllowed;
+    if (canAttackNow && (midAttack || actionLeft)) {
+      const ends = ATTACK_ENDS_TURN && t.moved && (midAttack ? t.attacks + 1 >= t.attacksAllowed : t.attacksAllowed <= 1) &&
+        t.actions + (midAttack ? 0 : 1) >= t.actionsAllowed;
       for (const target of this.basicTargets(p)) {
         out.push({ label: `Attack ${target.name}${ends ? ' (ends turn)' : ''}`, value: { type: 'attack', target: target.id } });
       }
     }
-    if (t.cardPlays < t.cardPlaysAllowed) {
+    // A Hand Card is your action for the turn, played after you move (instead of attacking).
+    if (t.moved && actionLeft && !midAttack) {
       for (const c of p.hand) if (this.canPlay(p, c)) out.push({ label: `Play ${this.card(c).name}`, value: { type: 'card', card: c } });
     }
     for (const a of this.usableAbilities(p)) out.push({ label: a.name, value: { type: 'ability', id: a.id } });
@@ -783,7 +792,7 @@ export class Game {
   private startTurn(p: PlayerState, extraTurn: boolean) {
     this.s.turnNo++;
     this.s.turn = {
-      player: p.id, moved: false, attacks: 0, attacksAllowed: 1, cardPlays: 0, cardPlaysAllowed: 1,
+      player: p.id, moved: false, attacks: 0, attacksAllowed: 1, actions: 0, actionsAllowed: 1,
       rollBonus: 0, aggressive: false, damageDealt: 0, scoredTile: null, stopDrawing: false, extraTurn, vanishingAct: false, onHit: [],
     };
     // Effects that last "until your next turn" end now; "next turn" effects arm.
@@ -810,7 +819,7 @@ export class Game {
         if (this.s.winner !== null) throw new GameOver();
         // Attacking is your action: the turn ends after your last allowed attack, once you've moved.
         const t = this.s.turn!;
-        if (ATTACK_ENDS_TURN && action.type === 'attack' && t.attacks >= t.attacksAllowed && t.moved) break;
+        if (ATTACK_ENDS_TURN && action.type === 'attack' && t.attacks >= t.attacksAllowed && t.moved && t.actions >= t.actionsAllowed) break;
       }
 
       // Stillwater II: The Long Watch.
