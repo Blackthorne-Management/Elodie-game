@@ -5,9 +5,11 @@ export const HAND_SIZE = 3;
 export const DIE_SIDES = 6;
 
 // Section 8: win thresholds by player count.
+// The single-pillar targets are 2 higher than the rulebook's 5/6 (changed after playtesting): chained
+// Instant draws could hand one house a whole pillar in a single turn.
 export const THRESHOLDS = {
-  small: { maxPlayers: 3, combined: 8, single: 5 },
-  normal: { combined: 10, single: 6 },
+  small: { maxPlayers: 3, combined: 8, single: 7 },
+  normal: { combined: 10, single: 8 },
 };
 
 // Tuning items flagged by the rulebook (Section 12).

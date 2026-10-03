@@ -117,7 +117,8 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   claimant's left, and the claimant's damage carries between fights. First striker is a setting.
 - **Claims [43]:** at any point on your turn while on the Throne and eligible at that moment.
 - **Kay Soley IV [44]:** the combined threshold drops by 2; the single-pillar threshold doesn't.
-- **Thresholds [45]:** 2–3 players: 8 total / 5 in one pillar. 4–8 players: 10 / 6.
+- **Thresholds [45]** (changed after playtesting): 2–3 players: 8 combined / **7** in one pillar. 4–8 players: 10 combined /
+  **8** in one pillar. The rulebook's 5/6 single-pillar targets let a lucky house qualify in one turn from chained Instants.
 
 ## The Specter
 - **Mischief [46]:** once per round, in their normal turn slot, a Specter may play one Instant from the
