@@ -65,9 +65,9 @@ export function playScore(g: Game, p: PlayerState, id: number, pers: Personality
     case 21: return g.onTileType(p, 'trade') ? 2 * w('wealth') : 0;
     case 22: return w('wealth');
     case 23: return w('wealth') + 0.2;
-    case 24: return (t?.attacks ?? 0) === 0 && !g.basicTargets(p).length ? 2 * w('wealth') : 0.2;
+    case 24: return (t?.attacks ?? 0) === 0 && !g.basicTargets(p).length ? 2 * w('wealth') - 0.8 * pers.aggression : 0.2;
     case 25: return w('wealth');
-    case 26: return (t?.damageDealt ? Math.min(2, t.damageDealt) : g.basicTargets(p).length ? 1.5 : 0) * w('wealth');
+    case 26: return (t?.damageDealt ? Math.min(2, t.damageDealt) : 0.6 + pers.aggression) * w('wealth');
     case 27: return (p.gen >= 3 ? 3 : 2) * w('wealth');
     case 28: case 32: {
       const kill = rivals(g, p).some(o => o.hp <= 1);
@@ -86,7 +86,7 @@ export function playScore(g: Game, p: PlayerState, id: number, pers: Personality
     case 42: return 0.2;
     case 43: return 0.4;
     case 44: return stronger ? 1.5 : 0.2;
-    case 45: return 0.2;
+    case 45: return 0.3 + 0.5 * pers.aggression;
     case 46: return g.eligible(p) && p.pos && throneDistance(p.pos) <= 8 && !onThrone(p.pos) ? 6 : 0.4;
     case 47: return p.pos && manhattan(p.pos, g.house(p).home) > 10 && stronger ? 1 : 0;
     case 48: case 52: case 53: return 0.2;

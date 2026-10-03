@@ -103,6 +103,7 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
   lines.push('\n=== Across all games ===',
     `Resource gains from tiles ${pct(gainsTile, gainsTile + gainsOther)}, from cards/events/abilities ${pct(gainsOther, gainsTile + gainsOther)}`,
     `Most played Hand Cards: ${top(cardPlays)}`,
+    `Watched cards (plays per draw): ${['Plunder', 'Vanishing Act', 'Golden Harvest'].map(nm => `${nm} ${((cardPlays[nm] ?? 0) / Math.max(1, cardsSeen[nm] ?? 0)).toFixed(2)}`).join(', ')}`,
     `Least played when held (plays per draw): ${playRate.slice(0, 10).map(([x, r]) => `${x} ${r.toFixed(2)}`).join(', ')}`,
     `Block/Deflect used: ${top(blockPlays, 9)}`,
     `Abilities used: ${top(abilityUses, 20)}`);

@@ -3,10 +3,14 @@ import { byLabel, drive, newGame } from './helpers';
 import { CARDS } from '../src/data';
 import type { Game } from '../src/engine/game';
 import { key } from '../src/engine/board';
-import type { Decision } from '../src/engine/types';
+import type { Decision, Expiry } from '../src/engine/types';
 
 const startTurn = (g: Game, id: number) => {
   (g as unknown as { startTurn: (p: unknown, x: boolean) => void }).startTurn(g.p(id), false);
+};
+// The end-of-turn expiry step on its own.
+const endTurn = (g: Game, id: number) => {
+  (g as unknown as { expire: (m: (x: Expiry) => boolean) => void }).expire(x => x.at === 'turnEnd' && x.player === id);
 };
 
 describe('setup (Section 3)', () => {
@@ -62,7 +66,7 @@ describe('movement (Section 4)', () => {
 });
 
 describe('resources (Section 5)', () => {
-  it('pays 2 when alone on a tile, 1 when contested, nothing on your own tile', () => {
+  it('pays 3 when alone on a tile, 2 when contested, nothing on your own tile', () => {
     const g = newGame(3, ['dorini', 'brasador', 'kaysoley']);
     const [dorini, brasador, kay] = g.s.players;
     startTurn(g, 2);
@@ -72,11 +76,11 @@ describe('resources (Section 5)', () => {
     startTurn(g, 1);
     brasador.pos = { ...g.house('kaysoley').home };      // Kay Soley's Court tile, alone
     g.resourceCheck(brasador);
-    expect(brasador.res.influence).toBe(2);
+    expect(brasador.res.influence).toBe(3);
     startTurn(g, 0);
     dorini.pos = { ...g.house('kaysoley').home };         // now shares the tile with Brasador
     g.resourceCheck(dorini);
-    expect(dorini.res.influence).toBe(1);
+    expect(dorini.res.influence).toBe(2);
   });
   it('never pays from the same tile twice in a row, even after stepping away', () => {
     const g = newGame(2, ['brasador', 'dorini']);
@@ -87,17 +91,17 @@ describe('resources (Section 5)', () => {
     p.lastScoredTile = g.s.turn!.scoredTile;
     startTurn(g, 0); p.pos = { x: 5, y: 5 };                // a turn spent elsewhere, scoring nothing
     startTurn(g, 0); p.pos = court; g.resourceCheck(p);     // back again
-    expect(p.res.influence).toBe(2);
+    expect(p.res.influence).toBe(3);
     p.pos = { ...g.house('suzumori').home };                  // a different Court tile pays
     startTurn(g, 0); g.resourceCheck(p);
-    expect(p.res.influence).toBe(4);
+    expect(p.res.influence).toBe(6);
   });
   it('adds Dorini\'s bonus on Trade tiles', () => {
     const g = newGame(2, ['dorini', 'brasador']);
     const p = g.p(0);
     p.pos = { ...g.house('vaitama').home };              // an ownerless Trade tile
     startTurn(g, 0); g.resourceCheck(p);
-    expect(p.res.wealth).toBe(3);
+    expect(p.res.wealth).toBe(4);
   });
 });
 
@@ -193,13 +197,69 @@ describe('combat and death (Sections 6 and 9)', () => {
     expect(types()).not.toContain('card');
     expect(types()).not.toContain('attack');                // the card was the action
   });
-  it('Plunder (with an extra action) pays out when the attack lands', () => {
+  it('Plunder waits for your next basic attack, up to the end of your next turn', () => {
     const { g, a, b } = duelists();
     b.maxHp = b.hp = 10;
     a.hand = [26];
     drive(g.playHandCard(a, 26));
+    expect(g.s.discard).not.toContain(26);                 // in play, waiting
+    endTurn(g, a.id);
+    startTurn(g, a.id);
     drive(g.basicAttack(a, b));
     expect(a.res.wealth).toBe(2);
+    expect(g.s.discard).toContain(26);
+    drive(g.basicAttack(a, b));                            // pays only once
+    expect(a.res.wealth).toBe(2);
+  });
+  it('Plunder lapses after your next turn, and pays nothing for a blocked attack', () => {
+    const { g, a, b } = duelists();
+    b.maxHp = b.hp = 10;
+    a.hand = [26];
+    drive(g.playHandCard(a, 26));
+    endTurn(g, a.id); endTurn(g, a.id);
+    expect(g.s.discard).toContain(26);
+    a.hand = [26]; g.s.discard = [];
+    drive(g.playHandCard(a, 26));
+    b.hand = [58];                                         // Iron Guard
+    drive(g.basicAttack(a, b), byLabel('Iron Guard'));
+    expect(a.res.wealth).toBe(0);
+    expect(g.s.effects.some(e => e.cardId === 26)).toBe(false);   // used up anyway
+  });
+  it("Elodie's Sorrow and Elodie's Exile can't take a player below 1 Heart Token", () => {
+    const g = newGame(3);
+    startTurn(g, 0);
+    const [a, b, c] = g.s.players;
+    a.hp = 1; b.hp = 3; c.hp = 2;
+    drive(g.card(81).effect(g, a, g.card(81)));
+    expect([a.hp, b.hp, c.hp]).toEqual([1, 2, 1]);
+    expect(g.s.players.every(p => p.gen === 1)).toBe(true);
+    b.pos = { x: 10, y: 10 };
+    drive(g.card(89).effect(g, a, g.card(89)));
+    expect(b.hp).toBe(1);
+    expect(g.s.players.every(p => p.gen === 1)).toBe(true);
+  });
+  it('Vanishing Act moves you 1 after your next basic attack', () => {
+    const { g, a, b } = duelists();
+    b.maxHp = b.hp = 10;
+    a.hand = [45];
+    drive(g.playHandCard(a, 45));
+    endTurn(g, a.id);
+    startTurn(g, a.id);
+    const before = { ...a.pos! };
+    drive(g.basicAttack(a, b), d => (d.prompt.startsWith('Vanishing Act') ? 1 : 0));   // 0 = stay
+    expect(Math.abs(a.pos!.x - before.x) + Math.abs(a.pos!.y - before.y)).toBe(1);
+  });
+  it('Golden Harvest stops you attacking this turn and your next', () => {
+    const { g, a, b } = duelists();
+    a.hand = [24];
+    drive(g.playHandCard(a, 24));
+    expect(a.res.wealth).toBe(2);
+    endTurn(g, a.id);
+    startTurn(g, a.id);
+    expect(g.attackBlockedReason(a, b, 'basic')).toMatch(/may not attack/);
+    endTurn(g, a.id);
+    startTurn(g, a.id);
+    expect(g.attackBlockedReason(a, b, 'basic')).toBeNull();
   });
   it('truces stop basic attacks', () => {
     const { g, a, b } = duelists();
@@ -338,18 +398,18 @@ describe('winning (Section 8)', () => {
 });
 
 describe('the Specter (Section 10)', () => {
-  it('only picks harmless Instants from the top 3 of the discard pile', () => {
+  it('only picks harmless Instants from the top 5 of the discard pile', () => {
     const g = newGame(3);
-    g.s.discard = [82, 81, 112];      // The Harvest, Elodie's Sorrow (barred), Merchant's Windfall
+    g.s.discard = [83, 1, 2, 82, 81, 112];   // Blessing is 6th from the top; The Harvest, Elodie's Sorrow (barred), Merchant's Windfall
     expect(g.specterChoices().sort((x, y) => x - y)).toEqual([82, 112]);
-    g.s.discard = [82, 112];
+    g.s.discard = [1, 2, 82, 112];
     expect(g.specterChoices()).toEqual([]);
   });
   it('a played Specter card leaves the game', () => {
     const g = newGame(3);
     const sp = g.p(2);
     sp.specter = true; sp.pos = null; sp.hand = [];
-    g.s.discard = [1, 2, 112];
+    g.s.discard = [1, 2, 3, 4, 112];
     drive(g.specterTurn(sp), byLabel("Merchant's Windfall", 'P0'));
     expect(g.s.removed).toEqual([112]);
     expect(g.p(0).res.wealth).toBe(1);

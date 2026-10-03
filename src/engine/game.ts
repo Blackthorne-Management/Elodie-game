@@ -249,6 +249,7 @@ export class Game {
     for (const e of [...this.s.effects]) if (match(e.expiry)) {
       // Disarmed "next turn" effects only expire after their turn has run.
       if (e.expiry.at === 'turnEnd' && !e.armed) continue;
+      if (e.expiry.at === 'turnEnd' && (e.expiry.turns ?? 1) > 1) { e.expiry.turns = (e.expiry.turns ?? 1) - 1; continue; }
       this.removeEffect(e);
     }
   }
@@ -604,13 +605,10 @@ export class Game {
     const puppeteer = this.redirectChooser(a, REDIRECT_TARGET);
     if (puppeteer) t = (yield* this.choosePlayer(puppeteer, this.basicTargets(a), `Choose who ${a.name} attacks`)) ?? t;
     const hit = yield* this.attack(a, t, 'basic');
-    if (hit.landed && !a.specter) {
-      for (const c of turn.onHit) yield* this.card(c).onAttackLanded!(this, a, hit.damage);
-    }
-    turn.onHit = [];
-    if (turn.vanishingAct && !a.specter && a.pos) {
-      turn.vanishingAct = false;
-      yield* this.moveFree(a, 1, 'Vanishing Act: move 1 space');
+    // Cards waiting for this attack resolve now, each once.
+    for (const e of this.s.effects.filter(x => x.kind === 'afterAttack' && x.owner === a.id && x.armed)) {
+      this.removeEffect(e);
+      if (!a.specter) yield* this.card(e.cardId!).afterAttack!(this, a, hit.landed ? hit.damage : 0);
     }
   }
 
@@ -676,7 +674,7 @@ export class Game {
 
     // Effects that end with the character.
     this.s.effects = this.s.effects.filter(e => {
-      const gone = e.owner === v.id && ['hex', 'markedForDeath', 'dreadBanner', 'confusion', 'forcedMarch', 'noFearGain', 'sabotage', 'noInfluenceGain'].includes(e.kind);
+      const gone = e.owner === v.id && ['afterAttack', 'hex', 'markedForDeath', 'dreadBanner', 'confusion', 'forcedMarch', 'noFearGain', 'sabotage', 'noInfluenceGain'].includes(e.kind);
       if (gone && e.cardId) this.s.discard.push(e.cardId);
       return !gone;
     });
@@ -793,7 +791,7 @@ export class Game {
     this.s.turnNo++;
     this.s.turn = {
       player: p.id, moved: false, attacks: 0, attacksAllowed: 1, actions: 0, actionsAllowed: 1,
-      rollBonus: 0, aggressive: false, damageDealt: 0, scoredTile: null, stopDrawing: false, extraTurn, vanishingAct: false, onHit: [],
+      rollBonus: 0, aggressive: false, damageDealt: 0, scoredTile: null, stopDrawing: false, extraTurn,
     };
     // Effects that last "until your next turn" end now; "next turn" effects arm.
     this.expire(x => x.at === 'turnStart' && x.player === p.id);

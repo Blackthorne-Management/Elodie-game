@@ -44,12 +44,13 @@ export interface PlayerState {
 // Ongoing effects with an expiry. All are plain data so state stays serialisable.
 export type Expiry =
   | { at: 'turnStart'; player: number }   // expires when this player's next turn starts
-  | { at: 'turnEnd'; player: number }     // expires at the end of this player's current or next turn
+  | { at: 'turnEnd'; player: number; turns?: number }  // expires at the end of this player's current or next turn;
+                                                       // turns: 2 = survives the current turn and ends after the next
   | { at: 'roundEnd'; round: number }
   | { at: 'consumed' };                    // removed by the rule that uses it
 
 export type EffectKind =
-  | 'noInfluenceGain' | 'noAttack' | 'sabotage' | 'confusion' | 'forcedMarch' | 'hex'
+  | 'afterAttack' | 'noInfluenceGain' | 'noAttack' | 'sabotage' | 'confusion' | 'forcedMarch' | 'hex'
   | 'dreadBanner' | 'markedForDeath' | 'truce' | 'ceasefire' | 'shieldWall' | 'noFearGain'
   | 'redirect' | 'mask' | 'handPublic';
 
@@ -93,8 +94,6 @@ export interface TurnState {
   scoredTile: string | null;
   stopDrawing: boolean;
   extraTurn: boolean;
-  vanishingAct: boolean;
-  onHit: number[];          // cards waiting to pay out when this turn's attack lands (Plunder)
 }
 
 export interface GameConfig {

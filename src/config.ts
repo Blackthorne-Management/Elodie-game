@@ -25,12 +25,12 @@ export const ATTACK_ENDS_TURN = true;
 export const MAX_FIGHT_BLOWS = 60;
 
 // Specter (Section 10).
-export const SPECTER_CHOICES = 3;
+export const SPECTER_CHOICES = 5;
 
 // Balance knobs (rulebook values by default). Objects so balance experiments can adjust them.
 export const TUNING = {
-  tileAlone: 2,          // resources from a tile when you're alone on it
-  tileShared: 1,         // ...when someone else is there too
+  tileAlone: 3,          // resources from a tile when you're alone on it
+  tileShared: 2,         // ...when someone else is there too
   maxDamage: 99,         // cap on the damage of one attack (99 = no cap)
   specterChoices: SPECTER_CHOICES,
 };

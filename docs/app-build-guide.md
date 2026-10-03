@@ -62,7 +62,7 @@ Build this as a pure, testable rules engine, separate from the UI, so every rule
 - **The shared deck (Section 7):** implement all 120 cards from `bloodline-card-list.md` as discrete, individually testable effect handlers. Deck reshuffles from the discard pile when empty. Flag the 10 Elodie cards with a data attribute (for a future visual treatment) but no mechanical difference.
 - **Winning (Section 8):** threshold tracking, Claim declaration, a Challenge window broadcast to every other eligible player when a Claim happens, sequential resolution for multiple challengers, and the Sudden Death round-cap fallback with its full tie-break chain.
 - **Death & Succession (Section 9):** resource-pool halving (player's choice), Grudge Token placement and the Reckoning bonus/vendetta-ending logic, generation flip with the correct new HP and abilities, teleport-home reset.
-- **The Specter (Section 10):** post-Gen-IV state, mischief card draw from the top 3 of the discard pile, permanent removal of played Specter cards, the skip-if-discard-pile-low fallback.
+- **The Specter (Section 10):** post-Gen-IV state, mischief card draw from the top 5 of the discard pile (see rules-decisions.md), permanent removal of played Specter cards, the skip-if-discard-pile-low fallback.
 - **The 8 houses (`bloodline-houses.md`):** implement every house's exact Gen I-IV abilities and passives as code, including the specific soft downsides (Ironvow's forced hand reveal, Agnivansh's lower Gen IV HP, Brasador's "most Feared" bonus-to-attackers effect).
 
 ---

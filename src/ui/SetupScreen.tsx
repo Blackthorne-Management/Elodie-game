@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useGame } from '../state/gameStore';
 import { HistorySheet } from './HistorySheet';
 import { BUILD } from '../state/history';
+import { TUNING } from '../config';
 
 export function SetupScreen() {
   const start = useGame(s => s.start);
@@ -53,7 +54,7 @@ export function SetupScreen() {
         <summary>How to play</summary>
         <ol>
           <li><b>Move:</b> roll a die and move up to that many squares, turning as you like (no diagonals).</li>
-          <li><b>Resources:</b> end on a Court, War or Trade tile to gain Influence, Fear or Wealth (2 if you're alone there). Never from your own tile, nor the same tile twice in a row.</li>
+          <li><b>Resources:</b> end on a Court, War or Trade tile to gain Influence, Fear or Wealth ({TUNING.tileAlone} if you're alone there, {TUNING.tileShared} if shared). Never from your own tile, nor the same tile twice in a row.</li>
           <li><b>Then one action:</b> attack a rival beside you (not diagonal) for damage equal to your Heart Tokens, <i>or</i> play a Hand Card. Not both.</li>
           <li><b>Cards:</b> at the end of your turn, draw back to 3. Instants resolve the moment they're drawn.</li>
           <li><b>Win:</b> reach 10 combined or 8 in one pillar (8 / 7 with 2–3 players), stand on the Throne and Claim it. Eligible rivals may Challenge.</li>

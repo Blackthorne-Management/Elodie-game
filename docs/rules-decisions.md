@@ -44,6 +44,8 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
     unchanged.)
   - **House change, Suzumori III:** the passive upgrades to "view two players' hands once per round".
 - **Floors [13]:** totals never go below 0; stealing from 0 gives nothing.
+- **Tile yield** (changed after simulation): a tile pays **3** when you're alone on it and **2** when you share it
+  (rulebook: 2 / 1). Travel to other lands now pays enough to matter.
 
 ## Combat
 - **One basic attack per turn [14].** Attack cards are separate.
@@ -51,11 +53,14 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   - Dorini IV's Golden Bazaar gives one extra action (attack or card). Agnivansh IV's Endless War lets one
     attack action be up to 3 attacks. The turn ends after the last.
   - Ironvow's Raider's Charge (Gen II+): attack before moving (that's your action), then still move.
-  - **Needs your call:** with "card or attack", three cards lose most of their point because they assume you
-    attack in the same turn. They still work in the rare turn with an extra action (Dorini IV).
-    - *Plunder* ("Wealth for damage you've dealt this turn").
-    - *Vanishing Act* ("after resolving combat this turn, move 1").
-    - *Golden Harvest*'s "you may not attack this turn" is now automatic.
+  - **Cards rewritten for "card or attack"** (they assumed you attack in the same turn as playing them):
+    - *Plunder (26):* "Until the end of your next turn: when your next basic attack lands, gain 1 Wealth for
+      each Heart Token of damage it dealt (max 2)." A negated attack uses it up for nothing.
+    - *Vanishing Act (45):* "Until the end of your next turn: after your next basic attack resolves, move 1
+      space as a free action."
+    - *Golden Harvest (24):* "Gain 2 Wealth, but you may not attack this turn or on your next turn."
+    - With an extra action (Dorini IV), attacking first and then playing Plunder or Vanishing Act still pays
+      out at once, as before.
 - **"Attacks" [15]** (for Block/Deflect, truces, Dread Banner and Marked for Death): basic attacks,
   Cursed Dagger, Shadow Strike, Elodie's Trial and Challenge fights. Hex of Withering, Poisoned
   Chalice, Duel of Honor and self/global HP loss are not attacks.
@@ -97,7 +102,9 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **Stillwater I/III [32]:** one use in Gen I–II; from Gen III, one more use (two total).
 - **Stillwater II [33]:** "no aggressive action" = you didn't attack, play an attack card, or play a
   card that takes something from another player.
-- **Gen IV HP [34]:** Agnivansh IV = 2, Stillwater IV = 4, as the tables show.
+- **Heart Tokens** (changed after simulation, replaces [34]): every house has **3** in every generation, except
+  Agnivansh IV = 2 and Stillwater IV = 4. Attack damage equals your Heart Tokens, so the old tables (2 to 4)
+  counted HP twice and decided most games; houses now differ through their abilities.
 - **Brasador downside [35]:** +1 damage to attacks against Brasador when Brasador is Gen III+ and has
   strictly the most Fear.
 - **Brasador [36]:** La Marca marks one player at a time (until they die or you mark another). Grito
@@ -122,11 +129,11 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 
 ## The Specter
 - **Mischief [46]:** once per round, in their normal turn slot, a Specter may play one Instant from the
-  top 3 of the discard pile. It can't pick any Instant that costs anyone Heart Tokens (Duel of Honor,
+  top **5** of the discard pile (changed after simulation; was 3). It can't pick any Instant that costs anyone Heart Tokens (Duel of Honor,
   Cursed Dice, Wildfire, Risky Crossing, Elodie's Sorrow, Elodie's Exile, Elodie's Judgment, Elodie's
   Trial, Elodie's Reckoning, Gilded Cage). For "you" cards, the Specter picks a target player, who
   resolves it as if they drew it. Global cards work as written. The card leaves the game. With fewer
-  than 3 cards in the discard pile, the Specter skips.
+  than 5 cards in the discard pile, the Specter skips.
 - **Discard pile [47]:** top = most recently discarded; hand-limit discards go to the bottom.
 
 ## Individual cards
@@ -142,11 +149,15 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   1-damage attack. A tie for fewest HP means no effect.
 - **Duel of Honor [56]:** you choose among adjacent players; tied rolls are re-rolled.
 - **Unstated ties [57]:** no effect.
+- **Elodie's Sorrow (81), Elodie's Exile (89)** (changed after simulation): they can't take anyone below 1 Heart
+  Token. Sorrow: "Every player with more than 1 Heart Token loses 1 Heart Token." Exile: "Every player not
+  currently on their owned tile, and with more than 1 Heart Token, loses 1 Heart Token."
+
 - **Treasure Map [58]:** "Wealth-related" = the card's text mentions Wealth.
 - **Truces [59]:** don't stop a Challenge fight.
 
-## Implementation calls (made while building; please confirm or change)
-These came up in code and weren't covered above. Each is easy to flip.
+## Implementation calls (confirmed)
+These came up in code and weren't covered above; all confirmed as they stand.
 - **Golden Harvest** can't be played after you've attacked this turn (otherwise the drawback is free).
 - **Counterspell vs. attack cards:** Cursed Dagger and Shadow Strike are attacks, so Block/Deflect cards answer
   them, not Counterspell. Counterspell answers every other Hand Card aimed at you.
@@ -159,3 +170,14 @@ These came up in code and weren't covered above. Each is easy to flip.
 - **Duel of Honor, Sudden Death duel:** the earlier player in turn order strikes first in a tie-break duel;
   Block/Deflect cards aren't used in that duel.
 - **Specter targets:** a Specter may aim a card at any living player, including one the card helps.
+
+## Balance pass (simulation)
+`npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):
+- **Before:** at 8 players, house wins ran from 1% to 46%, in order of Heart Tokens (Brasador on top, every
+  2-HP house at 1–6%). Sudden Death decided 30% of 2-player games. Plunder and Vanishing Act were never played.
+- **After (HP evened, tiles 3/2, Specters pick from 5, the card changes above):** at 8 players, every house wins
+  6–21%; at 2–4 players, 7–18%. Sudden Death decides 7–13% of games. Games run about a round shorter.
+  Plunder and Vanishing Act are now played about as often as other cards.
+- **Still open:** big games stay deadly (about 26 deaths and 4.4 Specters in an 8-player game); damage caps,
+  softer global Heart Token loss and kill-reward changes barely moved it. Tiles still give only about 13% of
+  resources because players reach a rival tile only a few times a game. Bots aren't people: confirm with play.

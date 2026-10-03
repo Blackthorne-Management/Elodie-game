@@ -145,10 +145,11 @@ hand(21, "Merchant's Gambit", 'Wealth / Trade', 'Gain 2 Wealth if you are on a T
 hand(22, 'Counterfeit Coin', 'Wealth / Trade', 'Gain 1 Wealth.', function* (g, p) { g.gain(p, 'wealth', 1); });
 hand(23, 'Silk Road', 'Wealth / Trade', 'Gain 1 Wealth and move 1 extra space this turn.',
   function* (g, p) { g.gain(p, 'wealth', 1); yield* g.extraMove(p, 1); });
-hand(24, 'Golden Harvest', 'Wealth / Trade', 'Gain 2 Wealth, but you may not attack this turn.',
+// Changed (rules-decisions): the drawback now reaches your next turn, since playing a card already uses your attack.
+hand(24, 'Golden Harvest', 'Wealth / Trade', 'Gain 2 Wealth, but you may not attack this turn or on your next turn.',
   function* (g, p) {
     g.gain(p, 'wealth', 2);
-    if (g.s.turn) g.addEffect('noAttack', p.id, { at: 'turnEnd', player: p.id });
+    if (g.s.turn) g.addEffect('noAttack', p.id, { at: 'turnEnd', player: p.id, turns: 2 });
   }, { playable: g => (g.s.turn?.attacks ?? 0) === 0 });
 hand(25, 'Black Market Deal', 'Wealth / Trade', 'Gain 1 Wealth. You may Barter 1 card with any player.',
   function* (g, p) {
@@ -159,15 +160,16 @@ hand(25, 'Black Market Deal', 'Wealth / Trade', 'Gain 1 Wealth. You may Barter 1
     const t = yield* g.choosePlayer(p, partners, 'Barter with whom?');
     if (t) yield* barter(g, p, t, 'Black Market Deal');
   });
-// Attacking ends the turn, so Plunder is played before the attack and pays out when it lands (rules-decisions).
-hand(26, 'Plunder', 'Wealth / Trade', "Gain 1 Wealth for each Heart Token of damage you've dealt this turn (max 2).",
+// Changed (rules-decisions): a card is your action, so Plunder waits for your next basic attack.
+hand(26, 'Plunder', 'Wealth / Trade', 'Until the end of your next turn: when your next basic attack lands, gain 1 Wealth for each Heart Token of damage it dealt (max 2).',
   function* (g, p) {
     const t = g.s.turn;
     if (!t || t.player !== p.id) return;
-    if (t.damageDealt > 0) g.gain(p, 'wealth', Math.min(2, t.damageDealt), 'Plunder');
-    else { t.onHit.push(26); g.log(`${p.name} readies to plunder: Wealth for the damage of this turn's attack.`, 'info', { player: p.id }); }
+    if (t.damageDealt > 0) return void g.gain(p, 'wealth', Math.min(2, t.damageDealt), 'Plunder');
+    g.addEffect('afterAttack', p.id, { at: 'turnEnd', player: p.id, turns: 2 }, { cardId: 26 });
+    g.log(`${p.name} readies to plunder: Wealth for the damage of their next attack.`, 'info', { player: p.id });
   }, {
-    *onAttackLanded(g, p, damage) { g.gain(p, 'wealth', Math.min(2, damage), 'Plunder'); },
+    *afterAttack(g, p, damage) { if (damage > 0) g.gain(p, 'wealth', Math.min(2, damage), 'Plunder'); },
   });
 hand(27, 'Inheritance', 'Wealth / Trade', 'Gain 2 Wealth. If your current generation is III or IV, gain 1 more.',
   function* (g, p) { g.gain(p, 'wealth', p.gen >= 3 ? 3 : 2); });
@@ -266,11 +268,14 @@ hand(44, 'Forced Retreat', 'Movement', 'Move an adjacent player 2 spaces away fr
     const t = yield* pickTarget(g, p, c, g.adjacentTo(p), 'push back whom?');
     if (t?.pos && p.pos) yield* g.moveStraight(t, 2, { full: true, dirs: dirAway(p.pos, t.pos), why: `Forced Retreat: ${p.name} pushes you back 2` });
   }, { aggressive: true, playable: (g, p) => g.adjacentTo(p).length > 0 });
-hand(45, 'Vanishing Act', 'Movement', 'After resolving combat this turn, move 1 extra space as a free action.',
+// Changed (rules-decisions): a card is your action, so Vanishing Act waits for your next basic attack.
+hand(45, 'Vanishing Act', 'Movement', 'Until the end of your next turn: after your next basic attack resolves, move 1 space as a free action.',
   function* (g, p) {
     const t = g.s.turn;
-    if (t && t.attacks > 0) yield* g.moveFree(p, 1, 'Vanishing Act: move 1 space');
-    else if (t) t.vanishingAct = true;
+    if (t && t.attacks > 0) return void (yield* g.moveFree(p, 1, 'Vanishing Act: move 1 space'));
+    if (t) g.addEffect('afterAttack', p.id, { at: 'turnEnd', player: p.id, turns: 2 }, { cardId: 45 });
+  }, {
+    *afterAttack(g, p) { if (p.pos) yield* g.moveFree(p, 1, 'Vanishing Act: move 1 space'); },
   });
 hand(46, 'Bridge the Gap', 'Movement', 'Move directly to any tile within 8 spaces this turn, ignoring the straight-line-only movement rule.',
   function* (g, p) {
@@ -454,8 +459,9 @@ instant(80, 'Risky Crossing', 'Dice', 'Roll a die. On 1-3, lose 1 Heart Token. O
   }, { noSpecter: true });
 
 // Global Effects
-instant(81, "Elodie's Sorrow", 'Global', 'Every player loses 1 Heart Token.',
-  function* (g, p, c) { yield* everyone(g, p, o => { g.damage(o, 1, null, `(${c.name})`); }); },
+// Changed (rules-decisions): global Heart Token loss can't kill.
+instant(81, "Elodie's Sorrow", 'Global', 'Every player with more than 1 Heart Token loses 1 Heart Token.',
+  function* (g, p, c) { yield* everyone(g, p, o => { if (o.hp > 1) g.damage(o, 1, null, `(${c.name})`); }); },
   { elodie: true, flavor: 'The goddess weeps, and the realm bleeds with her.', noSpecter: true });
 instant(82, 'The Harvest', 'Global', 'Every player gains 1 Wealth.',
   function* (g, p, c) { yield* everyone(g, p, o => { g.gain(o, 'wealth', 1, c.name); }); });
@@ -476,9 +482,9 @@ instant(88, 'Night of Shadows', 'Global', 'Every player discards down to 2 cards
     yield* everyone(g, p, o => g.enforceHandCap(o, 2));
     if (g.s.turn) g.s.turn.stopDrawing = true;
   });
-instant(89, "Elodie's Exile", 'Global', 'Every player not currently on their owned tile loses 1 Heart Token.',
+instant(89, "Elodie's Exile", 'Global', 'Every player not currently on their owned tile, and with more than 1 Heart Token, loses 1 Heart Token.',
   function* (g, p, c) {
-    yield* everyone(g, p, o => { if (o.pos && !samePos(o.pos, ownTile(g, o))) g.damage(o, 1, null, `(${c.name})`); });
+    yield* everyone(g, p, o => { if (o.pos && o.hp > 1 && !samePos(o.pos, ownTile(g, o))) g.damage(o, 1, null, `(${c.name})`); });
   }, { elodie: true, flavor: 'Stray too far from home, and even she cannot shield you.', noSpecter: true });
 instant(90, "Elodie's Gaze", 'Global', 'Every player reveals their hand to the table.',
   function* (g, p, c) { yield* everyone(g, p, o => { g.reveal(o, 'all', c.name); }); },

@@ -38,10 +38,10 @@ describe('the houses', () => {
       if (a !== b && a.tileType === b.tileType) expect(manhattan(a.home, b.home)).toBeGreaterThan(1);
     }
   });
-  it('matches the HP tables', () => {
-    expect(HOUSES.brasador.hp).toEqual([3, 4, 4, 4]);
-    expect(HOUSES.agnivansh.hp).toEqual([3, 3, 3, 2]);
-    expect(HOUSES.stillwater.hp).toEqual([2, 2, 2, 4]);
-    expect(HOUSES.ironvow.hp).toEqual([3, 3, 3, 3]);
+  it('uses the evened-out HP (rules-decisions): 3 everywhere except Agnivansh IV 2 and Stillwater IV 4', () => {
+    for (const h of Object.values(HOUSES)) {
+      const want = h.id === 'agnivansh' ? [3, 3, 3, 2] : h.id === 'stillwater' ? [3, 3, 3, 4] : [3, 3, 3, 3];
+      expect(h.hp).toEqual(want);
+    }
   });
 });
