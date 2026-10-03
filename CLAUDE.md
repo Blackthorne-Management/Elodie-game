@@ -14,7 +14,8 @@ Turn-based pet battler. React + TypeScript + Vite + Zustand, installed as a PWA.
 - `npm run dev` (add `-- --host` to open it on a phone on the same Wi-Fi)
 - `npm test` — Vitest, once
 - `npm run typecheck` / `npm run lint` / `npm run build`
-- Deploys to GitHub Pages from `.github/workflows/deploy.yml`; `BASE_PATH` sets the sub-path.
+- Deploys to Netlify (zesty-puffpuff-852680.netlify.app) via `netlify.toml` on every push; CI in `.github/workflows/ci.yml`.
+- `BASE_PATH` env var sets a sub-path if it is ever hosted somewhere other than a domain root.
 
 ## Notes
 - The game only runs as an installed home-screen app; a browser tab shows the install screen. `npm run dev` and any URL with `?play` bypass that for testing.

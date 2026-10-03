@@ -14,13 +14,11 @@ The app is a PWA: open it in Safari, tap **Share → Add to Home Screen**, and i
 full screen and offline, with the save kept on the phone. Opened in a normal browser tab it
 only shows install instructions; add `?play` to the URL (or use `npm run dev`) to test in a browser.
 
-Hosting is GitHub Pages via `.github/workflows/deploy.yml`:
+Hosting is Netlify: **https://zesty-puffpuff-852680.netlify.app**. Every push to the
+repo runs the tests, builds, and publishes (`netlify.toml`). Installed copies update
+themselves the next time the app is opened online.
 
-1. In the repo on GitHub, go to **Settings → Pages** and set **Source** to **GitHub Actions** (one time).
-2. Push to `main` (or run the workflow from the Actions tab). It tests, builds and publishes to
-   `https://blackthorne-management.github.io/Elodie-game/`.
-
-Netlify also works: connect the repo and it uses `netlify.toml`.
+GitHub Actions (`.github/workflows/ci.yml`) also runs lint, tests and a build on every push.
 
 Icons are drawn in `scripts/icon.svg`; run `node scripts/make-icons.cjs` to re-render the PNGs.
 
@@ -53,6 +51,6 @@ tests/        Vitest specs for the engine
 | 8 | Buff items | |
 | 9 | Whole Act I | |
 | 10 | Keepers: save, settings, daily | Partly: save, backup code, settings |
-| 11 | Install as PWA and host | Done (GitHub Pages) |
+| 11 | Install as PWA and host | Done (Netlify) |
 | 12 | Acts II–VIII | |
 | 13 | Live features | |
