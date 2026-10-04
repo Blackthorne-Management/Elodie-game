@@ -67,7 +67,8 @@ export const TERRAIN_ART: Record<HouseId | 'heartland', TerrainArt> = {
 export const BOARD_ART = {
   // The painted board (docs/art/ART-GUIDE.md §3). Without it, the drawn homeland terrain is used.
   image: '/art/board.webp' as string | undefined,
-  // Squares of ocean the painting includes on each side of the 18 × 18 board (0 = the image is just the board).
+  // Squares of ocean the painting includes on each side of the 18 × 18 board (0 = the image is just the board;
+  // paintings made from the current guide use 4).
   imageMargin: 0,
   light: '#2a2026',
   dark: '#251c21',

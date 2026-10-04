@@ -106,18 +106,20 @@ In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, si
   painting has **no grid and no markers**.
 - Because the app tilts it, the painting must be a **straight top-down view**: no perspective, no horizon,
   no sides of buildings leaning outward.
-- **The painting is an island in the ocean.** The 18×18 playable squares fill the **middle 75%** of the
-  image; the outer band (3 squares wide on every side) is open sea. The game lines the island up with the
-  grid and lets the painted ocean fade into its own sea, so nothing at the edge of the board gets cut off.
+- **The painting is a continent in the ocean.** The 18×18 playable squares fill the **middle 69%** of the
+  image, with a band 4 squares wide on every side for coast and sea. The coastline is wild and natural:
+  headlands, peninsulas, capes, bays and offshore islands all push **outward** into that band, but it never
+  cuts inward into the playable squares. The game lines the continent up with the grid and lets the painted
+  ocean fade into its own sea, so nothing at the edge of the board gets cut off.
 
 | File | Size | Format | Background |
 |---|---|---|---|
-| `board.png` | **4096 × 4096** (2048 × 2048 at the very least) | PNG | Opaque: an island filling the middle 75%, ocean around it. |
+| `board.png` | **4096 × 4096** (2048 × 2048 at the very least) | PNG | Opaque: a continent in the middle, with ocean around it. |
 
 ### The layout (must match the rules)
 Attach **`docs/art/board-guide.png`** to the prompt.
-- **Blue outer band:** open ocean. The coastline runs just outside the playable squares, so every square is
-  on land.
+- **Blue:** open ocean. The guide's coastline is the shape to follow: it wanders well outside the playable
+  squares in places and comes close in others, but every playable square is land.
 - **Coloured areas:** each is one homeland. Their sizes and soft borders match the game's own map.
 - **The ring in the middle:** Elodie's Throne. It covers the centre 2×2 squares, about the middle 8% of
   the image.
@@ -127,17 +129,17 @@ Attach **`docs/art/board-guide.png`** to the prompt.
 
 | Seat | House (tile) | Where | Across, down |
 |---|---|---|---|
-| Ardencia | Brasador (War) | North coast, middle | 48%, 15% |
-| Zetwal | Kay Soley (Court) | Upper right | 73%, 27% |
-| Al-Doria | Dorini (Trade) | East coast, middle | 85%, 52% |
-| Skarragol | Ironvow (War) | Lower right | 73%, 73% |
-| Kuroshi | Suzumori (Court) | South coast, middle | 52%, 85% |
-| Jwaladesh | Agnivansh (War) | Lower left | 27%, 73% |
-| Aldermoor | Stillwater (Court) | West coast, middle | 15%, 48% |
-| Moa'olani | Vai'tama (Trade) | Upper left | 27%, 27% |
+| Ardencia | Brasador (War) | North coast, middle | 48%, 17% |
+| Zetwal | Kay Soley (Court) | Upper right | 71%, 29% |
+| Al-Doria | Dorini (Trade) | East coast, middle | 83%, 52% |
+| Skarragol | Ironvow (War) | Lower right | 71%, 71% |
+| Kuroshi | Suzumori (Court) | South side, middle | 52%, 83% |
+| Jwaladesh | Agnivansh (War) | Lower left | 29%, 71% |
+| Aldermoor | Stillwater (Court) | West coast, middle | 17%, 48% |
+| Moa'olani | Vai'tama (Trade) | Upper left | 29%, 29% |
 
-The four middle-of-the-edge seats sit right on the coast, which suits them: Ardencia's fortress on its
-cliffs, Al-Doria's harbour, Kuroshi's castle on a rocky point and Aldermoor's keep above the shore.
+The four middle-of-the-edge seats sit near the coast, which suits them: Ardencia's fortress on its cliffs,
+Al-Doria's harbour, Kuroshi's castle above its bays and Aldermoor's keep above the shore.
 
 If a seat lands within about half a square of its dot, I can nudge the image to fit. Further off than that,
 repaint that spot.
@@ -179,22 +181,24 @@ repaint that spot.
    across the whole map.
 5. **Keep the centre throne ring and each seat spot open:** a plaza or courtyard, so the markers sit
    cleanly.
-6. **Ocean all the way to the image edges,** deep and calm, so it blends into the game's sea.
+6. **A coastline with character:** headlands, peninsulas, bays and a few islands, like a real continent,
+   never a smooth or straight edge. Ocean, deep and calm, runs all the way to the image edges so it blends
+   into the game's sea.
 7. **Nothing else on the map:** no people, animals larger than tiny herds, clouds over the land, text or
    compass rose.
 
 ### Prompt for ChatGPT (recommended): attach `board-guide.png`
 ```
-Paint a square, straight top-down (orthographic, no perspective, no horizon) fantasy game-board map: one roughly square island continent made of eight homelands around a central plaza, surrounded on every side by open ocean.
+Paint a square, straight top-down (orthographic, no perspective, no horizon) fantasy game-board map: one continent made of eight homelands around a central plaza, set in the middle of open ocean.
 
-Use the attached guide image ONLY for layout. The blue band around the outside is open ocean: paint deep, calm sea all the way to the image edges. The coastline must follow the guide's coast closely — beaches, low cliffs and small coves are welcome, but the land must cover everything the guide shows as land; never let the sea cut into it. Each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, on dry land, with that land's signature building right beside it. Four dots sit on the coast; their buildings stand on the shore.
+Use the attached guide image ONLY for layout. The blue is open ocean: paint deep, calm sea all the way to the image edges. Follow the guide's coastline shape: a wild, natural, irregular coast with headlands, peninsulas, capes, bays, coves, beaches, cliffs and the small offshore islands shown — never a straight or smooth edge. The land must cover everything the guide shows as land; the sea may never cut inward into it. Each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, on dry land, with that land's signature building right beside it. The four dots on the north, east, south and west sides sit near the coast.
 
 Homelands (positions as on the guide):
 - North (deep red area): Ardencia — scorched volcanic highlands, black basalt and rust-red rock, faint glowing lava seams, dry scrub and cork oaks; a walled fortress with terracotta roofs on the north coast cliffs at its seat.
 - North-east (yellow area): Zetwal — sun-bright land, golden fields, palm and mango groves, colourful roofs with lacy carved trim; a white-and-gold sun temple court at its seat.
 - East (tan area): Al-Doria — golden dunes running down to a white-domed harbour city on the east coast, striped bazaar awnings, date palms, caravan tracks, ships in the harbour out at sea; a grand caravanserai courtyard on the shore at its seat.
 - South-east (grey-green area): Skarragol — grassy steppe with turf-roofed longhouses beside round felt yurts and tiny horse herds; fjords cut into the coast from the ocean but stay outside the guide's land; a timber-and-stone hall with a round horse paddock at its seat.
-- South (slate-blue area): Kuroshi — dark cedar forest, moss, terraced paddies, ribbons of mist; a castle compound with tiered curved roofs on a rocky point of the south coast at its seat.
+- South (slate-blue area): Kuroshi — dark cedar forest, moss, terraced paddies, ribbons of mist, a rugged coast of rocky points and small bays; a castle compound with tiered curved roofs at its seat.
 - South-west (orange area): Jwaladesh — ochre and saffron plains, red-sandstone fort-palaces, a stepwell, banyan trees and flame-orange flowering trees; a palace courtyard ringed with braziers at its seat.
 - West (purple area): Aldermoor — fog-wrapped moorland, purple heather, dry-stone walls, hedgerows, alder trees, a dark, perfectly still tarn; an old grey stone keep above the west shore at its seat.
 - North-west (turquoise area): Moa'olani — small green hills joined by white-sand flats and shallow turquoise lagoons, coral, outrigger canoes; a thatched meeting house on stilts at its seat.
@@ -209,7 +213,7 @@ Avoid: any text, letters, numbers, labels, map legends or compass roses; waterma
 
 ### Prompt for Midjourney (alternative): upload `board-guide.png` as an image prompt
 ```
-<guide image URL> top-down orthographic fantasy atlas map of a roughly square island continent filling the middle of the image, surrounded on all sides by deep calm ocean to the edges; eight homelands around a central round marble-and-gold throne plaza with eight paved roads radiating out; north: volcanic basalt highlands with glowing lava seams and a terracotta fortress on the coast cliffs; north-east: sun-bright fields, palm groves, colourful carved roofs and a white-gold sun temple; east: golden dunes and a white-domed harbour city on the coast; south-east: grassy steppe with longhouses and felt yurts; south: cedar forest and mist with a tiered-roof castle on a rocky point; south-west: ochre plains, red sandstone fort-palace and stepwell; west: purple heather moorland, stone walls, a grey keep by a still tarn above the shore; north-west: turquoise lagoons and green hills with a stilted thatched hall; soft natural borders, calm medium detail, hand-painted gouache and oil glaze over ink linework, gold-leaf accents, warm paper grain, rich muted jewel tones, soft light from upper left --ar 1:1 --v 7 --style raw --iw 1.5 --no text, letters, labels, compass, grid, border, frame, people, perspective, horizon, 3d render, photo
+<guide image URL> top-down orthographic fantasy atlas map of a continent in the middle of the image with a wild irregular coastline of headlands, peninsulas, bays and small offshore islands, surrounded on all sides by deep calm ocean to the edges; eight homelands around a central round marble-and-gold throne plaza with eight paved roads radiating out; north: volcanic basalt highlands with glowing lava seams and a terracotta fortress on the coast cliffs; north-east: sun-bright fields, palm groves, colourful carved roofs and a white-gold sun temple; east: golden dunes and a white-domed harbour city on the coast; south-east: grassy steppe with longhouses and felt yurts; south: cedar forest and mist with a tiered-roof castle on a rocky point; south-west: ochre plains, red sandstone fort-palace and stepwell; west: purple heather moorland, stone walls, a grey keep by a still tarn above the shore; north-west: turquoise lagoons and green hills with a stilted thatched hall; soft natural borders, calm medium detail, hand-painted gouache and oil glaze over ink linework, gold-leaf accents, warm paper grain, rich muted jewel tones, soft light from upper left --ar 1:1 --v 7 --style raw --iw 1.5 --no text, letters, labels, compass, grid, border, frame, people, perspective, horizon, 3d render, photo
 ```
 Midjourney follows the layout loosely. Check the seats against the guide and fix misplaced ones with
 *Vary Region*.
@@ -228,7 +232,8 @@ Midjourney follows the layout loosely. Check the seats against the guide and fix
 - [ ] Each of the 8 seats sits on its dot, within half a square.
 - [ ] All 8 lands are easy to tell apart on a thumbnail.
 - [ ] There's no text, grid, frame or people.
-- [ ] The island fills the middle, matching the guide's coast, with ocean all the way to every edge.
+- [ ] The continent fills the middle with a wild coastline like the guide's (headlands, bays, islands),
+  every playable square on land, and ocean all the way to every edge.
 
 ### Plan B, if one painting won't follow the layout
 Paint each land as a separate **seamless top-down texture** and I'll blend them into the game's exact
