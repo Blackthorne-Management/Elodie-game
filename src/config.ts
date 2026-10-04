@@ -2,28 +2,29 @@
 
 export const BOARD_SIZE = 18;
 // The continent: '.' is land, '~' is sea (row by row, north at the top). Sea squares can't be entered;
-// moves go around them. The coastline is drawn in docs/art/board-guide-labelled.png. Every seat keeps its distance to the Throne and to every other seat.
+// moves go around them. Read from the painted board (public/art/board.webp): its deep-water squares are sea;
+// the shallow Moa'olani lagoons are walkable. Every seat keeps its distance to the Throne and to every other seat.
 // An object so balance experiments can swap the map (null = all land).
 export const BOARD: { land: string[] | null } = {
   land: [
-    '~~~~~~~~.......~~~',
-    '~...~~~~........~~',
-    '.....~~...........',
+    '~...~~~...........',
+    '....~~~~..........',
+    '....~~~...........',
+    '..................',
+    '..................',
+    '..................',
+    '..................',
+    '..................',
     '..................',
     '..................',
     '..................',
     '..................',
     '~.................',
-    '..................',
     '~.................',
-    '~................~',
-    '~...............~~',
-    '~...............~~',
-    '................~~',
-    '................~~',
-    '..~~~~..........~~',
-    '.~~~~~~~.......~~~',
-    '.~~~~~~~~......~~~',
+    '~.................',
+    '...............~~.',
+    '....~~~...........',
+    '...~~~~.........~~',
   ],
 };
 export const HAND_SIZE = 3;

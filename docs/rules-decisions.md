@@ -21,9 +21,10 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **First player [4]:** random in solo; the host picks in multiplayer.
 
 ## The continent (changed after playtesting)
-- **The board has sea.** 61 of the 324 squares are sea, in a realistic coastline: a gulf in the north, a gulf beside a
-  long south-western peninsula, and the outer corners. Homeland borders are on land; their sizes follow the coast.
-  The land map is `BOARD.land` in `src/config.ts`, drawn in `docs/art/board-guide-labelled.png`.
+- **The board has sea.** The continent is the painted board; its deep water inside the grid is sea (25 of the 324
+  squares): the north-western gulf, the south-western bay, a strip off the west coast, the Skarragol fjord and the
+  south-eastern corner. The shallow Moa'olani lagoons are walkable. Homeland sizes follow the painting.
+  The land map is `BOARD.land` in `src/config.ts`, read square by square from the painting.
 - Sea squares can't be entered. Free moves count steps around the sea (a square 3 steps away by walking,
   not as the crow flies). Straight-line moves stop at the shore, as at the board edge. Bridge the Gap
   reaches any land square within 8 steps' walk.

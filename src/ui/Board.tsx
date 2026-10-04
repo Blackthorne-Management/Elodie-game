@@ -23,8 +23,8 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
   const size = BOARD_SIZE * C;
   const tiles = Object.values(game.content.houses);
   const art = BOARD_ART.image;
-  // With a painting that includes ocean, show a little of the coast around the board.
-  const view = art ? Math.min(BOARD_ART.imageMargin, 1.2) * C : 0;
+  // With a painting that includes ocean, show the coast around the board too.
+  const view = art ? Math.min(BOARD_ART.imageMargin, 3) * C : 0;
   const living = s.players.filter(p => p.pos);
   const byKey = new Map<string, number[]>();
   for (const p of living) {

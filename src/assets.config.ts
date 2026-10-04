@@ -70,9 +70,9 @@ export const BOARD_ART = {
   image: '/art/board.webp' as string | undefined,
   // Squares of ocean the painting includes on each side of the 18 × 18 board (0 = the image is just the board;
   // paintings made from the current guide use 4).
-  imageMargin: 0,
+  imageMargin: 4,
   // Tint the sea squares over the painting (for a painting made before the continent had its bays).
-  tintSea: true,
+  tintSea: false,
   light: '#2a2026',
   dark: '#251c21',
   grid: 'rgba(0,0,0,.28)',
