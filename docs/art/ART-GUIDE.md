@@ -107,10 +107,11 @@ In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, si
 - Because the app tilts it, the painting must be a **straight top-down view**: no perspective, no horizon,
   no sides of buildings leaning outward.
 - **The painting is a continent in the ocean.** The 18×18 grid fills the **middle 69%** of the image, with
-  a band 4 squares wide on every side of open sea. The continent has a lobe reaching out to each of the
-  eight seats and deep bays curving in between them; the bays are real sea squares in the rules, so pawns
-  walk around them. The game lines the continent up with the grid and lets the painted ocean fade into its
-  own sea, so nothing at the edge of the board gets cut off.
+  a band 4 squares wide on every side of open sea. It's a realistic continent: a gulf in the north, a long
+  peninsula in the south-west with a gulf beside it, coasts that bulge out past the grid in the north-east,
+  east and south, and islands offshore. Sea inside the grid is real sea in the rules, so pawns walk around
+  it. The game lines the continent up with the grid and lets the painted ocean fade into its own sea, so
+  nothing at the edge of the board gets cut off.
 
 | File | Size | Format | Background |
 |---|---|---|---|
@@ -120,7 +121,8 @@ In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, si
 Attach **`docs/art/board-guide.png`** to the prompt.
 - **Blue:** open ocean. **Follow the guide's coastline closely,** within about half a square: land squares must
   look like land and sea squares like sea. The labelled copy shades the sea squares inside the grid.
-- **Coloured areas:** each is one homeland. Their sizes and soft borders match the game's own map.
+- **Coloured areas:** each is one homeland. They're different sizes, following the coast; borders between
+  them are on land (ridges, rivers, forest edges), never water.
 - **The ring in the middle:** Elodie's Throne. It covers the centre 2×2 squares, about the middle 8% of
   the image.
 - **The 8 white dots:** each house's **seat**, its owned tile. These positions are rules, so the painting
@@ -182,16 +184,18 @@ repaint that spot.
 5. **Keep the centre throne ring and each seat spot open:** a plaza or courtyard, so the markers sit
    cleanly.
 6. **A coastline with character:** headlands, peninsulas, bays and a few islands, like a real continent,
-   never a smooth or straight edge. Ocean, deep and calm, runs all the way to the image edges so it blends
-   into the game's sea.
-7. **Nothing else on the map:** no people, animals larger than tiny herds, clouds over the land, text or
+   never a smooth or straight edge.
+7. **A living ocean:** beaches and surf along the coasts; reefs, rocks and small islands; ships under sail,
+   fishing boats, a lighthouse, a shipwreck, whales or a sea serpent far out. Deep water darkens toward the
+   image edges so it blends into the game's sea.
+8. **Nothing else on the map:** no people, animals larger than tiny herds, clouds over the land, text or
    compass rose.
 
 ### Prompt for ChatGPT (recommended): attach `board-guide.png`
 ```
 Paint a square, straight top-down (orthographic, no perspective, no horizon) fantasy game-board map: one continent made of eight homelands around a central plaza, set in the middle of open ocean.
 
-Use the attached guide image ONLY for layout. The blue is open ocean: paint deep, calm sea all the way to the image edges. Follow the guide's coastline closely: the continent has a lobe of land reaching out toward each of the eight white dots, with deep bays of open sea curving in between them, and open sea in all four corners. Keep every lobe, cape and bay where the guide puts it — land where the guide shows land, sea where it shows sea — and paint the coast itself wild and natural (cliffs, beaches, coves, rocky points, the small offshore islands shown), never a straight or smooth edge. The continent must not look square. Each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, on dry land, with that land's signature building right beside it. The four dots on the north, east, south and west sides sit near the coast.
+Use the attached guide image ONLY for layout. The blue is open ocean: paint deep, calm sea all the way to the image edges. Follow the guide's coastline closely — it is a realistic continent: a gulf in the north, a long peninsula in the south-west with a gulf beside it, coasts that bulge out in the north-east, east and south, and small islands offshore. Keep every gulf, peninsula and cape where the guide puts it — land where the guide shows land, sea where it shows sea — and paint the coast itself wild and natural (cliffs, beaches, coves, rocky points), never a straight or smooth edge. The continent must not look square. Make the ocean alive: sandy beaches and surf along the coasts, reefs and rocks, the small islands shown, ships under sail and fishing boats, a lighthouse on a headland, a shipwreck, whales or a sea serpent far out, with the deep water darkening toward the image edges. The borders between homelands are on land — ridges, rivers, forest edges, changes of ground — never water. Each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, on dry land, with that land's signature building right beside it. The four dots on the north, east, south and west sides sit near the coast.
 
 Homelands (positions as on the guide):
 - North (deep red area): Ardencia — scorched volcanic highlands, black basalt and rust-red rock, faint glowing lava seams, dry scrub and cork oaks; a walled fortress with terracotta roofs on the north coast cliffs at its seat.

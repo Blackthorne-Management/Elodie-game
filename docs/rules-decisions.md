@@ -21,7 +21,8 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **First player [4]:** random in solo; the host picks in multiplayer.
 
 ## The continent (changed after playtesting)
-- **The board has sea.** 120 of the 324 squares are sea: bays between the homelands and the outer corners.
+- **The board has sea.** 61 of the 324 squares are sea, in a realistic coastline: a gulf in the north, a gulf beside a
+  long south-western peninsula, and the outer corners. Homeland borders are on land; their sizes follow the coast.
   The land map is `BOARD.land` in `src/config.ts`, drawn in `docs/art/board-guide-labelled.png`.
 - Sea squares can't be entered. Free moves count steps around the sea (a square 3 steps away by walking,
   not as the crow flies). Straight-line moves stop at the shore, as at the board edge. Bridge the Gap

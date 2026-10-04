@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { byLabel, drive, newGame } from './helpers';
 import { CARDS } from '../src/data';
 import type { Game } from '../src/engine/game';
-import { THRONE, inBoard, key, manhattan, walkDistances } from '../src/engine/board';
+import { THRONE, inBoard, key, manhattan, step, walkDistances } from '../src/engine/board';
 import { BOARD } from '../src/config';
 import type { Decision, Expiry } from '../src/engine/types';
 
@@ -77,9 +77,14 @@ describe('movement (Section 4)', () => {
     expect(squares.every(q => inBoard(q))).toBe(true);
     const walk = walkDistances(p.pos!);
     expect(squares.every(q => walk.get(key(q))! <= 4)).toBe(true);
-    // Straight moves stop at the shore.
+    // Straight moves stop at the shore: every square along each offered line is land, and the next isn't.
     drive(g.moveStraight(p, 3, { full: true }), d => { seen = d; return 0; });
-    expect(seen!.options.map(o => o.label)).toEqual(['South 3', 'East 1']);   // the cape is 2 squares wide
+    expect(seen!.options.length).toBeGreaterThan(0);
+    for (const o of seen!.options) {
+      const { d, n } = o.value as { d: 'north' | 'south' | 'east' | 'west'; n: number };
+      for (let i = 1; i <= n; i++) expect(inBoard(step(p.pos!, d, i))).toBe(true);
+      if (n < 3) expect(inBoard(step(p.pos!, d, n + 1))).toBe(false);
+    }
   });
   it('the sea leaves every seat on land, as far from the Throne and from each other as before', () => {
     const homes = Object.values(newGame(8).content.houses).map(h => h.home);

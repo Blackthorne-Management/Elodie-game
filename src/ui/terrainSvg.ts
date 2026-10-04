@@ -26,39 +26,24 @@ function noise(x: number, y: number, scale: number) {
 
 type Region = HouseId | 'heartland' | 'sea';
 
-// Which territory each square belongs to: the homeland whose direction from the Throne is closest,
-// with noise bending the borders. Each homeland's reach is then tuned until all eight are about the
-// same size (a corner-facing wedge of a square board holds more land than an edge-facing one).
+// Which territory each square belongs to: a small Heartland around the Throne, then the nearest homeland,
+// with noise bending the borders so they wander like real ones. Sizes follow the coastline, not a quota.
 export function territories(houses: HouseDef[]): Region[][] {
   const mid = (BOARD_SIZE - 1) / 2;
-  const angle = (x: number, y: number) => Math.atan2(y - mid, x - mid);
-  const reach = new Map<HouseId, number>(houses.map(h => [h.id, 1]));
-  const assign = () => {
-    const grid: Region[][] = [];
-    for (let y = 0; y < BOARD_SIZE; y++) {
-      grid.push([]);
-      for (let x = 0; x < BOARD_SIZE; x++) {
-        const wobble = (noise(x, y, 3.2) - 0.5) * 3.2;
-        if (!inBoard({ x, y })) { grid[y].push('sea'); continue; }
-        if (Math.hypot(x - mid, y - mid) + wobble * 0.6 < 3.4) { grid[y].push('heartland'); continue; }
-        let best: Region = houses[0].id, bestD = Infinity;
-        for (const h of houses) {
-          const turn = Math.abs(((angle(x, y) - angle(h.home.x, h.home.y) + 3 * Math.PI) % (2 * Math.PI)) - Math.PI);
-          const d = turn / reach.get(h.id)! + (noise(x + h.home.x * 7, y + h.home.y * 7, 2.6) - 0.5) * 0.45;
-          if (d < bestD) { bestD = d; best = h.id; }
-        }
-        grid[y].push(best);
+  const grid: Region[][] = [];
+  for (let y = 0; y < BOARD_SIZE; y++) {
+    grid.push([]);
+    for (let x = 0; x < BOARD_SIZE; x++) {
+      if (!inBoard({ x, y })) { grid[y].push('sea'); continue; }
+      const wobble = (noise(x, y, 3.2) - 0.5) * 3.2;
+      if (Math.hypot(x - mid, y - mid) + wobble * 0.6 < 2.7) { grid[y].push('heartland'); continue; }
+      let best: Region = houses[0].id, bestD = Infinity;
+      for (const h of houses) {
+        const d = Math.hypot(x - h.home.x, y - h.home.y) + (noise(x + h.home.x * 7, y + h.home.y * 7, 2.6) - 0.5) * 3.4;
+        if (d < bestD) { bestD = d; best = h.id; }
       }
+      grid[y].push(best);
     }
-    return grid;
-  };
-  let grid = assign();
-  for (let i = 0; i < 40; i++) {
-    const count = new Map<Region, number>();
-    for (const row of grid) for (const r of row) count.set(r, (count.get(r) ?? 0) + 1);
-    const target = (BOARD_SIZE * BOARD_SIZE - (count.get('heartland') ?? 0) - (count.get('sea') ?? 0)) / houses.length;
-    for (const h of houses) reach.set(h.id, reach.get(h.id)! * Math.pow(target / Math.max(1, count.get(h.id) ?? 0), 0.25));
-    grid = assign();
   }
   return grid;
 }
