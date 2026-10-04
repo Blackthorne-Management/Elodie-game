@@ -20,18 +20,11 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   Players on the same square are adjacent.
 - **First player [4]:** random in solo; the host picks in multiplayer.
 
-## The continent (changed after playtesting)
-- **The board has sea.** The continent is the painted board; its deep water inside the grid is sea (25 of the 324
-  squares): the north-western gulf, the south-western bay, a strip off the west coast, the Skarragol fjord and the
-  south-eastern corner. The shallow Moa'olani lagoons are walkable. Homeland sizes follow the painting.
-  The land map is `BOARD.land` in `src/config.ts`, read square by square from the painting.
-- Sea squares can't be entered. Free moves count steps around the sea (a square 3 steps away by walking,
-  not as the crow flies). Straight-line moves stop at the shore, as at the board edge. Bridge the Gap
-  reaches any land square within 8 steps' walk.
-- Every seat keeps its distance to the Throne (8 from the edges, 10 from the corners) and to every other
-  seat; none of those routes has to detour. Attacks (including Ironvow's reach of 2) aren't blocked by
-  water.
-- Simulation: no measurable change in game length, endings, deaths or house balance.
+## The board
+- **Every square of the 18×18 grid can be walked on,** water included (changed after playtesting). Pawns can't
+  leave the grid. The painted continent and its seas are scenery.
+- An optional setting can make chosen squares impassable (`BOARD.land` in `src/config.ts`). It's switched off; while
+  it was on, moves went around the sea and every seat kept its distances. Its tests run on a sample map.
 
 ## Turn and movement
 - **Movement [5–7]** (changed after Phase 1): roll a d6 and move **up to** that many squares in total,

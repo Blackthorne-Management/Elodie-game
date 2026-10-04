@@ -4,6 +4,7 @@ import { CARDS } from '../src/data';
 import type { Game } from '../src/engine/game';
 import { THRONE, inBoard, key, manhattan, step, walkDistances } from '../src/engine/board';
 import { BOARD } from '../src/config';
+import { readFileSync } from 'node:fs';
 import type { Decision, Expiry } from '../src/engine/types';
 
 const startTurn = (g: Game, id: number) => {
@@ -36,12 +37,16 @@ describe('setup (Section 3)', () => {
   });
 });
 
-// Run a test on an all-land board (no sea), for the pure movement shapes.
-const allLand = (fn: () => void) => () => {
+// Run a test on a given map (null = every square walkable).
+const onMap = (map: string[] | null, fn: () => void) => () => {
   const land = BOARD.land;
-  BOARD.land = null;
+  BOARD.land = map;
   try { fn(); } finally { BOARD.land = land; }
 };
+const allLand = (fn: () => void) => onMap(null, fn);
+// A sample map with impassable water, to test the setting that keeps pawns out of the sea.
+const SEA_MAP = readFileSync(new URL('./fixtures-sea-map.txt', import.meta.url), 'utf8').trim().split('\n');
+const withSea = (fn: () => void) => onMap(SEA_MAP, fn);
 
 describe('movement (Section 4)', () => {
   it('offers every square within the roll, turning allowed, never off the board', allLand(() => {
@@ -66,7 +71,11 @@ describe('movement (Section 4)', () => {
     drive(g.moveStraight(p, 3, { full: true }), d => { seen = d; return 0; });
     expect(seen!.options.map(o => o.label)).toEqual(['South 3', 'East 3', 'West 3']);
   }));
-  it('never offers a sea square, and counts steps around the sea', () => {
+  it('every square on the grid is walkable, water included, and nothing off it', () => {
+    for (let y = 0; y < 18; y++) for (let x = 0; x < 18; x++) expect(inBoard({ x, y })).toBe(true);
+    for (const q of [{ x: -1, y: 0 }, { x: 18, y: 5 }, { x: 4, y: -1 }, { x: 0, y: 18 }]) expect(inBoard(q)).toBe(false);
+  });
+  it('with impassable water switched on: never offers a sea square, and counts steps around the sea', withSea(() => {
     const g = newGame(2, ['brasador', 'dorini']);
     const p = g.p(0);                                   // Brasador's seat on the northern cape
     startTurn(g, 0);
@@ -87,8 +96,8 @@ describe('movement (Section 4)', () => {
       if (n < 3) expect(inBoard(step(from, d, n + 1))).toBe(false);
     }
     expect(seen!.options.some(o => (o.value as { n: number }).n < 3)).toBe(true);   // the shore cuts one line short
-  });
-  it('the sea leaves every seat on land, as far from the Throne and from each other as before', () => {
+   }));
+  it('with impassable water switched on: every seat stays on land, as far from the Throne and each other', withSea(() => {
     const homes = Object.values(newGame(8).content.houses).map(h => h.home);
     for (const h of homes) {
       expect(inBoard(h)).toBe(true);
@@ -97,7 +106,7 @@ describe('movement (Section 4)', () => {
       for (const o of homes) expect(walk.get(key(o))).toBe(manhattan(h, o));
     }
     for (const t of THRONE) expect(inBoard(t)).toBe(true);
-  });
+  }));
   it('Ironvow adds 1 to the roll', () => {
     const g = newGame(2, ['ironvow', 'dorini']);
     expect(g.hook(g.p(0), 'moveBonus')).toBe(1);

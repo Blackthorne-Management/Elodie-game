@@ -1,31 +1,10 @@
 // Every tunable number lives here. Rules references are to docs/rules-decisions.md.
 
 export const BOARD_SIZE = 18;
-// The continent: '.' is land, '~' is sea (row by row, north at the top). Sea squares can't be entered;
-// moves go around them. Read from the painted board (public/art/board.webp): its deep-water squares are sea;
-// the shallow Moa'olani lagoons are walkable. Every seat keeps its distance to the Throne and to every other seat.
-// An object so balance experiments can swap the map (null = all land).
+// Squares pawns can't enter: '.' is walkable, '~' is not (row by row, north at the top). null = every square on
+// the grid is walkable, water included (the current rule). Moves never leave the grid either way.
 export const BOARD: { land: string[] | null } = {
-  land: [
-    '~...~~~...........',
-    '....~~~~..........',
-    '....~~~...........',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
-    '~.................',
-    '~.................',
-    '~.................',
-    '...............~~.',
-    '....~~~...........',
-    '...~~~~.........~~',
-  ],
+  land: null,
 };
 export const HAND_SIZE = 3;
 export const DIE_SIDES = 6;
