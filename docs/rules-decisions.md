@@ -143,6 +143,14 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **Challenge fights [42]:** the **claimant strikes first**, then they trade blows until one dies.
   Block/Deflect cards work. Several challengers are fought one at a time in seat order from the
   claimant's left, and the claimant's damage carries between fights. First striker is a setting.
+- **The Throne is a sanctuary** (added after playtesting). On its four centre squares:
+  - **No attacks onto or off them.** That covers every attack, ranged ones included: basic attacks, Ironvow's reach,
+    Cursed Dagger, Shadow Strike and Elodie's Trial. A blocked attack is simply never offered: you lose no action
+    and no card, and an attack card with no legal target can't be played.
+  - **No one dies there.** Any other Heart Token loss (Hex, Poisoned Chalice, Duel of Honor, Elodie's cards…) stops
+    at 1.
+  - **Challenge fights for the Throne are the exception:** the claimant can still be fought, and can still fall.
+  - The Sudden Death tie-break isn't fought on the board, so it's unaffected. This is a setting (`THRONE_SANCTUARY`).
 - **Claims [43]:** at any point on your turn while on the Throne and eligible at that moment.
 - **Kay Soley IV [44]:** the combined total drops by 2; the per-pillar minimum doesn't.
 - **What you need to claim [45]** (changed after playtesting and simulation): a combined total **and** a minimum in

@@ -48,6 +48,9 @@ export const CHALLENGE_FIRST_STRIKER: FirstStriker = 'claimant';
 
 // Attacking ends your turn (after your last allowed attack). Ironvow from Gen II may attack before
 // moving and still move afterwards.
+// The Throne's four squares are a sanctuary: no attacks into or out of them (ranged ones too), and no one standing
+// there can be killed; other Heart Token loss stops at 1. Challenge fights for the Throne are the exception.
+export const THRONE_SANCTUARY = true;
 // A new heir can't be attacked until the end of their first turn (challenge fights excepted).
 export const NEWBORN_PROTECTION = true;
 export const ATTACK_ENDS_TURN = true;

@@ -13,7 +13,7 @@ import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, NEWBORN_PROTECTION, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
 } from '../config';
 
 export class GameOver extends Error {}
@@ -534,6 +534,7 @@ export class Game {
   attackBlockedReason(a: PlayerState, t: PlayerState, kind: AttackInfo['kind']): string | null {
     if (t.specter || a.id === t.id) return 'invalid';
     if (kind === 'challenge') return null;
+    if (THRONE_SANCTUARY && (onThrone(t.pos) || onThrone(a.pos))) return 'no one fights on the Throne';
     if (this.findEffect('newborn', t.id)) return `${t.name}'s heir has only just risen`;
     if (this.findEffect('noAttack', a.id)) return `${a.name} may not attack this turn`;
     if (this.s.effects.some(e => e.kind === 'truce' && e.armed &&
@@ -622,6 +623,12 @@ export class Game {
   // HP loss of any kind. Deaths are queued and processed by flushDeaths.
   damage(t: PlayerState, n: number, killer: number | null, why = '') {
     if (t.specter || n <= 0 || t.hp <= 0) return;
+    // Sanctuary: no one dies on the Throne (except in a challenge fight); the loss stops at 1 Heart Token.
+    if (THRONE_SANCTUARY && !this.inChallenge && onThrone(t.pos) && t.hp - n < 1) {
+      n = t.hp - 1;
+      this.log(`The Throne's sanctuary holds: ${t.name} cannot fall here.`, 'block', { player: t.id });
+      if (n <= 0) return;
+    }
     t.hp = Math.max(0, t.hp - n);
     this.log(`${t.name} loses ${n} Heart Token${n === 1 ? '' : 's'}${why ? ` ${why}` : ''}.`, 'damage', { player: t.id, amount: n });
     if (t.hp === 0 && !this.s.dying.some(d => d.victim === t.id)) this.s.dying.push({ victim: t.id, killer });

@@ -301,6 +301,32 @@ describe('combat and death (Sections 6 and 9)', () => {
     startTurn(g, a.id);
     expect(g.attackBlockedReason(a, b, 'basic')).toBeNull();
   });
+  it('the Throne is sanctuary: no attacks onto or off it, ranged ones included', () => {
+    const { g, a, b } = duelists();
+    a.pos = { x: 9, y: 7 }; b.pos = { x: 9, y: 8 };            // b on the Throne, a right beside it
+    expect(g.basicTargets(a)).toHaveLength(0);
+    expect(g.attackBlockedReason(a, b, 'card')).toMatch(/Throne/);
+    expect(g.attackBlockedReason(b, a, 'basic')).toMatch(/Throne/);   // nor from it
+    a.hand = [CARDS.find(c => c.name === 'Shadow Strike')!.id];  // a ranged card has no one to hit
+    expect(g.turnActions(a).some(o => o.value.type === 'card')).toBe(false);
+    expect(g.attackBlockedReason(a, b, 'challenge')).toBeNull();     // challenges still happen
+    b.pos = { x: 9, y: 10 };                                         // off the Throne: fair game
+    a.pos = { x: 9, y: 11 };
+    expect(g.basicTargets(a)).toEqual([b]);
+  });
+  it('no one dies on the Throne; other Heart Token loss stops at 1', () => {
+    const { g, a } = duelists();
+    a.pos = { x: 8, y: 8 }; a.hp = 1;
+    g.damage(a, 1, null, '(test)');
+    expect(a.hp).toBe(1);
+    a.hp = 3;
+    g.damage(a, 5, null, '(test)');
+    expect(a.hp).toBe(1);
+    expect(g.s.dying).toHaveLength(0);
+    a.pos = { x: 5, y: 5 };
+    g.damage(a, 1, null, '(test)');
+    expect(g.s.dying).toHaveLength(1);
+  });
   it("a new heir can't be attacked until the end of their first turn", () => {
     const { g, a, b } = duelists();
     b.hp = 1;
