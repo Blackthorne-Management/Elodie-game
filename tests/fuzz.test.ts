@@ -1,3 +1,4 @@
+import { inBoard } from '../src/engine/board';
 import { describe, it, expect } from 'vitest';
 import { randomGame } from './helpers';
 import { HAND_SIZE } from '../src/config';
@@ -14,6 +15,7 @@ function invariants(r: Runner) {
     if (r.pending?.kind !== 'discard') expect(p.hand.length).toBeLessThanOrEqual(HAND_SIZE);
     for (const v of Object.values(p.res)) expect(v).toBeGreaterThanOrEqual(0);
     expect(p.hp).toBeLessThanOrEqual(p.maxHp);
+    if (p.pos) expect(inBoard(p.pos)).toBe(true);           // never in the sea or off the board
     if (!p.specter && !s.dying.some(d => d.victim === p.id)) expect(p.hp).toBeGreaterThan(0);
   }
 }

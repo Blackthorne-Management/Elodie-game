@@ -3,6 +3,7 @@
 import type { HouseDef } from '../engine/content';
 import type { HouseId } from '../engine/types';
 import { BOARD_SIZE } from '../config';
+import { inBoard } from '../engine/board';
 import { TERRAIN_ART } from '../assets.config';
 import type { TerrainMark } from '../assets.config';
 
@@ -23,7 +24,7 @@ function noise(x: number, y: number, scale: number) {
   return (a + (b - a) * sx) + ((c + (d - c) * sx) - (a + (b - a) * sx)) * sy;
 }
 
-type Region = HouseId | 'heartland';
+type Region = HouseId | 'heartland' | 'sea';
 
 // Which territory each square belongs to: the homeland whose direction from the Throne is closest,
 // with noise bending the borders. Each homeland's reach is then tuned until all eight are about the
@@ -38,6 +39,7 @@ export function territories(houses: HouseDef[]): Region[][] {
       grid.push([]);
       for (let x = 0; x < BOARD_SIZE; x++) {
         const wobble = (noise(x, y, 3.2) - 0.5) * 3.2;
+        if (!inBoard({ x, y })) { grid[y].push('sea'); continue; }
         if (Math.hypot(x - mid, y - mid) + wobble * 0.6 < 3.4) { grid[y].push('heartland'); continue; }
         let best: Region = houses[0].id, bestD = Infinity;
         for (const h of houses) {
@@ -54,7 +56,7 @@ export function territories(houses: HouseDef[]): Region[][] {
   for (let i = 0; i < 40; i++) {
     const count = new Map<Region, number>();
     for (const row of grid) for (const r of row) count.set(r, (count.get(r) ?? 0) + 1);
-    const target = (BOARD_SIZE * BOARD_SIZE - (count.get('heartland') ?? 0)) / houses.length;
+    const target = (BOARD_SIZE * BOARD_SIZE - (count.get('heartland') ?? 0) - (count.get('sea') ?? 0)) / houses.length;
     for (const h of houses) reach.set(h.id, reach.get(h.id)! * Math.pow(target / Math.max(1, count.get(h.id) ?? 0), 0.25));
     grid = assign();
   }

@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import type { Game } from '../../engine/game';
 import type { Dir, Pos } from '../../engine/types';
-import { THRONE, key } from '../../engine/board';
+import { THRONE, isSea, key } from '../../engine/board';
 import { BOARD_SIZE } from '../../config';
 import { BOARD_ART, HOUSE_ART, PORTRAITS, TILE_ART } from '../../assets.config';
 import { terrainUrl } from '../terrainSvg';
@@ -12,7 +12,8 @@ import type { Motion } from './motion';
 import { CELL, TILT } from './motion';
 
 export { CELL };
-const MARGIN = 7;         // squares of sea drawn around the board so its edge never shows empty space
+const MARGIN = 7;
+const seaSquares = Array.from({ length: BOARD_SIZE * BOARD_SIZE }, (_, i) => ({ x: i % BOARD_SIZE, y: Math.floor(i / BOARD_SIZE) })).filter(isSea);         // squares of sea drawn around the board so its edge never shows empty space
 
 export interface StageProps {
   game: Game;
@@ -54,6 +55,9 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
         <div className={`plane2 ${art ? 'art' : ''} ${artMargin ? 'margin' : ''}`}
           style={{ width: size, height: size, backgroundImage: art && artMargin ? 'none' : `url("${art ?? terrainUrl(houses)}")` }}>
           <div className="throne2" style={{ left: THRONE[0].x * CELL, top: THRONE[0].y * CELL, width: CELL * 2, height: CELL * 2, background: art ? 'transparent' : BOARD_ART.throne, borderColor: BOARD_ART.throneEdge }}>{art ? '' : '♛'}</div>
+          {art && BOARD_ART.tintSea && seaSquares.map(q => (
+            <div key={`sea${q.x},${q.y}`} className="sq sea" style={{ left: q.x * CELL, top: q.y * CELL, width: CELL, height: CELL }} />
+          ))}
           {houses.map(h => (
             <div key={h.id} className="tile2" style={{ left: h.home.x * CELL, top: h.home.y * CELL, width: CELL, height: CELL,
               background: art ? `${TILE_ART[h.tileType].color}66` : TILE_ART[h.tileType].color,

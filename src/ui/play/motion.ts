@@ -3,19 +3,11 @@
 // frame (no React re-render per frame, no restarting CSS transitions), so nothing stutters.
 import { useEffect, useRef, useState } from 'react';
 import type { GameState, Pos } from '../../engine/types';
-import { samePos } from '../../engine/board';
+import { samePos, walkPath } from '../../engine/board';
 
 export const CELL = 64;
 export const TILT = 46;
 const CAMERA_MAX_SPEED = 11;        // squares per second
-
-function lPath(from: Pos, to: Pos): Pos[] {
-  const out: Pos[] = [];
-  let { x, y } = from;
-  while (x !== to.x) { x += Math.sign(to.x - x); out.push({ x, y }); }
-  while (y !== to.y) { y += Math.sign(to.y - y); out.push({ x, y }); }
-  return out;
-}
 
 export class Motion {
   pos = new Map<number, Pos>();          // where each pawn is drawn right now (fractional squares)
@@ -59,7 +51,7 @@ export class Motion {
     if (!from) return this.jump(id, to);
     if (samePos(from, to)) return;
     if (this.speed === Infinity) return this.jump(id, to);
-    this.queue.set(id, [...(this.queue.get(id) ?? []), ...lPath(from, to)]);
+    this.queue.set(id, [...(this.queue.get(id) ?? []), ...walkPath(from, to)]);
     this.dest.set(id, { ...to });
     if (!this.order.includes(id)) this.order.push(id);
     this.onBusy(true);

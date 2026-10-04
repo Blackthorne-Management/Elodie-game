@@ -106,11 +106,11 @@ In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, si
   painting has **no grid and no markers**.
 - Because the app tilts it, the painting must be a **straight top-down view**: no perspective, no horizon,
   no sides of buildings leaning outward.
-- **The painting is a continent in the ocean.** The 18×18 playable squares fill the **middle 69%** of the
-  image, with a band 4 squares wide on every side for coast and sea. The coastline is wild and natural:
-  headlands, peninsulas, capes, bays and offshore islands all push **outward** into that band, but it never
-  cuts inward into the playable squares. The game lines the continent up with the grid and lets the painted
-  ocean fade into its own sea, so nothing at the edge of the board gets cut off.
+- **The painting is a continent in the ocean.** The 18×18 grid fills the **middle 69%** of the image, with
+  a band 4 squares wide on every side of open sea. The continent has a lobe reaching out to each of the
+  eight seats and deep bays curving in between them; the bays are real sea squares in the rules, so pawns
+  walk around them. The game lines the continent up with the grid and lets the painted ocean fade into its
+  own sea, so nothing at the edge of the board gets cut off.
 
 | File | Size | Format | Background |
 |---|---|---|---|
@@ -118,8 +118,8 @@ In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, si
 
 ### The layout (must match the rules)
 Attach **`docs/art/board-guide.png`** to the prompt.
-- **Blue:** open ocean. The guide's coastline is the shape to follow: it wanders well outside the playable
-  squares in places and comes close in others, but every playable square is land.
+- **Blue:** open ocean. **Follow the guide's coastline closely,** within about half a square: land squares must
+  look like land and sea squares like sea. The labelled copy shades the sea squares inside the grid.
 - **Coloured areas:** each is one homeland. Their sizes and soft borders match the game's own map.
 - **The ring in the middle:** Elodie's Throne. It covers the centre 2×2 squares, about the middle 8% of
   the image.
@@ -232,8 +232,8 @@ Midjourney follows the layout loosely. Check the seats against the guide and fix
 - [ ] Each of the 8 seats sits on its dot, within half a square.
 - [ ] All 8 lands are easy to tell apart on a thumbnail.
 - [ ] There's no text, grid, frame or people.
-- [ ] The continent fills the middle with a wild coastline like the guide's (headlands, bays, islands),
-  every playable square on land, and ocean all the way to every edge.
+- [ ] The coastline follows the guide's within about half a square: the capes, lobes and bays in the same
+  places, and ocean all the way to every edge.
 
 ### Plan B, if one painting won't follow the layout
 Paint each land as a separate **seamless top-down texture** and I'll blend them into the game's exact

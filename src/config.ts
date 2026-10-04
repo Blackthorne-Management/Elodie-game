@@ -1,6 +1,31 @@
 // Every tunable number lives here. Rules references are to docs/rules-decisions.md.
 
 export const BOARD_SIZE = 18;
+// The continent: '.' is land, '~' is sea (row by row, north at the top). Sea squares can't be entered;
+// moves go around them. Every seat keeps its distance to the Throne and to every other seat.
+// An object so balance experiments can swap the map (null = all land).
+export const BOARD: { land: string[] | null } = {
+  land: [
+    '~~~~~~~~..~~~~~~~~',
+    '~~~~~~~...~~~~~~~~',
+    '~~....~....~~...~~',
+    '~~..............~~',
+    '~~..............~~',
+    '~~~............~~~',
+    '~~~............~~~',
+    '~~................',
+    '..................',
+    '..................',
+    '~.................',
+    '~~..............~~',
+    '~~.............~~~',
+    '~~..............~~',
+    '~~..............~~',
+    '~~...~~....~~~~~~~',
+    '~~~~~~~...~~~~~~~~',
+    '~~~~~~~~..~~~~~~~~',
+  ],
+};
 export const HAND_SIZE = 3;
 export const DIE_SIDES = 6;
 

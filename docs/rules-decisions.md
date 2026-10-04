@@ -20,6 +20,17 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   Players on the same square are adjacent.
 - **First player [4]:** random in solo; the host picks in multiplayer.
 
+## The continent (changed after playtesting)
+- **The board has sea.** 120 of the 324 squares are sea: bays between the homelands and the outer corners.
+  The land map is `BOARD.land` in `src/config.ts`, drawn in `docs/art/board-guide-labelled.png`.
+- Sea squares can't be entered. Free moves count steps around the sea (a square 3 steps away by walking,
+  not as the crow flies). Straight-line moves stop at the shore, as at the board edge. Bridge the Gap
+  reaches any land square within 8 steps' walk.
+- Every seat keeps its distance to the Throne (8 from the edges, 10 from the corners) and to every other
+  seat; none of those routes has to detour. Attacks (including Ironvow's reach of 2) aren't blocked by
+  water.
+- Simulation: no measurable change in game length, endings, deaths or house balance.
+
 ## Turn and movement
 - **Movement [5–7]** (changed after Phase 1): roll a d6 and move **up to** that many squares in total,
   stepping up/down/left/right and turning as often as you like (a 3 can be 2 up and 1 right). 0 is

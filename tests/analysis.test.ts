@@ -6,7 +6,8 @@ import { CONTENT } from '../src/data';
 import { Runner } from '../src/engine/runner';
 import { makeRng } from '../src/engine/rng';
 import { botChoose } from '../src/ai/bot';
-import { THRESHOLDS, TUNING } from '../src/config';
+import { BOARD, THRESHOLDS, TUNING } from '../src/config';
+import { readFileSync } from 'node:fs';
 import { Game } from '../src/engine/game';
 
 declare const process: { env: Record<string, string | undefined> };
@@ -24,6 +25,8 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
   if (env.SPECTER) TUNING.specterChoices = Number(env.SPECTER);
   if (env.SINGLE) [THRESHOLDS.small.single, THRESHOLDS.normal.single] = env.SINGLE === 'off' ? [null, null] : env.SINGLE.split('/').map(Number);
   if (env.MIN_EACH) [THRESHOLDS.small.minEach, THRESHOLDS.normal.minEach] = env.MIN_EACH.split('/').map(Number);
+  // LAND=none plays on an all-land board; LAND=<file> on a map of '.' land and '~' sea rows.
+  if (env.LAND) BOARD.land = env.LAND === 'none' ? null : readFileSync(env.LAND, 'utf8').trim().split('\n');
   if (env.FLAT_HP) for (const h of Object.values(CONTENT.houses)) h.hp = h.hp.map(() => Number(env.FLAT_HP)) as typeof h.hp;
   if (env.COMBINED) [THRESHOLDS.small.combined, THRESHOLDS.normal.combined] = env.COMBINED.split('/').map(Number);
   // Record each claimant's resources at the moment they claim.

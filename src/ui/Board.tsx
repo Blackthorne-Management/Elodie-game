@@ -2,7 +2,7 @@ import { memo } from 'react';
 import type { Game } from '../engine/game';
 import type { Pos } from '../engine/types';
 import { BOARD_SIZE } from '../config';
-import { THRONE, key } from '../engine/board';
+import { THRONE, isSea, key } from '../engine/board';
 import { BOARD_ART, HOUSE_ART, TILE_ART } from '../assets.config';
 import { Terrain } from './Terrain';
 
@@ -40,6 +40,8 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
           <>
             <defs><pattern id="artGrid" width={C} height={C} patternUnits="userSpaceOnUse"><path d={`M${C} 0V${C}H0`} fill="none" stroke="rgba(0,0,0,.25)" strokeWidth={0.3} /></pattern></defs>
             <rect width={size} height={size} fill="url(#artGrid)" />
+            {BOARD_ART.tintSea && Array.from({ length: BOARD_SIZE * BOARD_SIZE }, (_, i) => ({ x: i % BOARD_SIZE, y: Math.floor(i / BOARD_SIZE) })).filter(isSea)
+              .map(q => <rect key={`sea${q.x},${q.y}`} x={q.x * C} y={q.y * C} width={C} height={C} fill="#123a4a" fillOpacity={0.72} />)}
           </>
         )}
 

@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { byLabel, drive, newGame } from './helpers';
 import { CARDS } from '../src/data';
 import type { Game } from '../src/engine/game';
-import { key } from '../src/engine/board';
+import { THRONE, inBoard, key, manhattan, walkDistances } from '../src/engine/board';
+import { BOARD } from '../src/config';
 import type { Decision, Expiry } from '../src/engine/types';
 
 const startTurn = (g: Game, id: number) => {
@@ -35,8 +36,15 @@ describe('setup (Section 3)', () => {
   });
 });
 
+// Run a test on an all-land board (no sea), for the pure movement shapes.
+const allLand = (fn: () => void) => () => {
+  const land = BOARD.land;
+  BOARD.land = null;
+  try { fn(); } finally { BOARD.land = land; }
+};
+
 describe('movement (Section 4)', () => {
-  it('offers every square within the roll, turning allowed, never off the board', () => {
+  it('offers every square within the roll, turning allowed, never off the board', allLand(() => {
     const g = newGame(2, ['brasador', 'dorini']);
     const p = g.p(0);                       // Brasador at column 9, row 1 (top edge)
     startTurn(g, 0);
@@ -49,14 +57,39 @@ describe('movement (Section 4)', () => {
     expect(squares).not.toContainEqual({ x: 9, y: 3 });                    // 4 steps away
     expect(squares.every(q => !q || q.y >= 0)).toBe(true);                 // nothing off the top edge
     expect(squares.length).toBe(1 + 6 + 5 + 3 + 1);                       // stay + rows 1-4 below the edge square
-  });
-  it('Forced March still moves the full roll in a straight line', () => {
+  }));
+  it('Forced March still moves the full roll in a straight line', allLand(() => {
     const g = newGame(2, ['brasador', 'dorini']);
     const p = g.p(0);
     startTurn(g, 0);
     let seen: Decision | null = null;
     drive(g.moveStraight(p, 3, { full: true }), d => { seen = d; return 0; });
     expect(seen!.options.map(o => o.label)).toEqual(['South 3', 'East 3', 'West 3']);
+  }));
+  it('never offers a sea square, and counts steps around the sea', () => {
+    const g = newGame(2, ['brasador', 'dorini']);
+    const p = g.p(0);                                   // Brasador's seat on the northern cape
+    startTurn(g, 0);
+    let seen: Decision | null = null;
+    drive(g.moveFree(p, 4), d => { seen = d; return 0; });
+    const squares = seen!.options.slice(1).map(o => o.value as { x: number; y: number });
+    expect(squares.length).toBeGreaterThan(0);
+    expect(squares.every(q => inBoard(q))).toBe(true);
+    const walk = walkDistances(p.pos!);
+    expect(squares.every(q => walk.get(key(q))! <= 4)).toBe(true);
+    // Straight moves stop at the shore.
+    drive(g.moveStraight(p, 3, { full: true }), d => { seen = d; return 0; });
+    expect(seen!.options.map(o => o.label)).toEqual(['South 3', 'East 1']);   // the cape is 2 squares wide
+  });
+  it('the sea leaves every seat on land, as far from the Throne and from each other as before', () => {
+    const homes = Object.values(newGame(8).content.houses).map(h => h.home);
+    for (const h of homes) {
+      expect(inBoard(h)).toBe(true);
+      const walk = walkDistances(h);
+      expect(Math.min(...THRONE.map(t => walk.get(key(t))!))).toBe(Math.min(...THRONE.map(t => manhattan(h, t))));
+      for (const o of homes) expect(walk.get(key(o))).toBe(manhattan(h, o));
+    }
+    for (const t of THRONE) expect(inBoard(t)).toBe(true);
   });
   it('Ironvow adds 1 to the roll', () => {
     const g = newGame(2, ['ironvow', 'dorini']);

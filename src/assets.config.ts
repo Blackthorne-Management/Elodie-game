@@ -52,7 +52,7 @@ export const ICONS = {
 export type TerrainMark = 'peaks' | 'dunes' | 'tufts' | 'waves' | 'mist' | 'rays' | 'embers' | 'heather' | 'stone';
 export interface TerrainArt { name: string; base: string; ink: string; mark: TerrainMark }
 
-export const TERRAIN_ART: Record<HouseId | 'heartland', TerrainArt> = {
+export const TERRAIN_ART: Record<HouseId | 'heartland' | 'sea', TerrainArt> = {
   brasador: { name: 'Ardencia', base: '#4a2a24', ink: '#a5523c', mark: 'peaks' },
   dorini: { name: 'Al-Doria', base: '#5a4a2c', ink: '#a88d4c', mark: 'dunes' },
   ironvow: { name: 'Skarragol', base: '#33403e', ink: '#6f8a84', mark: 'tufts' },
@@ -62,6 +62,7 @@ export const TERRAIN_ART: Record<HouseId | 'heartland', TerrainArt> = {
   agnivansh: { name: 'Jwaladesh', base: '#4d3220', ink: '#b0703a', mark: 'embers' },
   stillwater: { name: 'Aldermoor', base: '#3a3044', ink: '#7d6490', mark: 'heather' },
   heartland: { name: 'The Heartland', base: '#3a3434', ink: '#5c5454', mark: 'stone' },
+  sea: { name: 'The Sea', base: '#16313a', ink: '#2b5361', mark: 'waves' },
 };
 
 export const BOARD_ART = {
@@ -70,6 +71,8 @@ export const BOARD_ART = {
   // Squares of ocean the painting includes on each side of the 18 × 18 board (0 = the image is just the board;
   // paintings made from the current guide use 4).
   imageMargin: 0,
+  // Tint the sea squares over the painting (for a painting made before the continent had its bays).
+  tintSea: true,
   light: '#2a2026',
   dark: '#251c21',
   grid: 'rgba(0,0,0,.28)',
