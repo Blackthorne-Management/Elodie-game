@@ -91,7 +91,7 @@ Style: hand-painted fantasy atlas illustration, gouache and oil glazes over fine
 
 ### The avoid list (paste after it)
 ```
-Avoid: any text, letters, numbers, labels, map legends or compass roses; watermarks or signatures; frames or borders; user-interface elements; photorealism; 3D render or CGI look; plastic shine; anime or cartoon style; oversaturated neon colour; heavy black outlines.
+Avoid: any text, letters, numbers, place names, labels, map legends or compass roses; watermarks or signatures; frames or borders; user-interface elements; photorealism; 3D render or CGI look; plastic shine; anime or cartoon style; oversaturated neon colour; heavy black outlines.
 ```
 In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, signature, frame, border, 3d render, photo, anime`.
 
@@ -191,7 +191,7 @@ repaint that spot.
 ```
 Paint a square, straight top-down (orthographic, no perspective, no horizon) fantasy game-board map: one continent made of eight homelands around a central plaza, set in the middle of open ocean.
 
-Use the attached guide image ONLY for layout. The blue is open ocean: paint deep, calm sea all the way to the image edges. Follow the guide's coastline shape: a wild, natural, irregular coast with headlands, peninsulas, capes, bays, coves, beaches, cliffs and the small offshore islands shown — never a straight or smooth edge. The land must cover everything the guide shows as land; the sea may never cut inward into it. Each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, on dry land, with that land's signature building right beside it. The four dots on the north, east, south and west sides sit near the coast.
+Use the attached guide image ONLY for layout. The blue is open ocean: paint deep, calm sea all the way to the image edges. Follow the guide's coastline closely: the continent has a lobe of land reaching out toward each of the eight white dots, with deep bays of open sea curving in between them, and open sea in all four corners. Keep every lobe, cape and bay where the guide puts it — land where the guide shows land, sea where it shows sea — and paint the coast itself wild and natural (cliffs, beaches, coves, rocky points, the small offshore islands shown), never a straight or smooth edge. The continent must not look square. Each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, on dry land, with that land's signature building right beside it. The four dots on the north, east, south and west sides sit near the coast.
 
 Homelands (positions as on the guide):
 - North (deep red area): Ardencia — scorched volcanic highlands, black basalt and rust-red rock, faint glowing lava seams, dry scrub and cork oaks; a walled fortress with terracotta roofs on the north coast cliffs at its seat.
@@ -208,7 +208,7 @@ Inside the coastline, water stays small and shallow (rivers, the tarn, lagoons).
 
 Style: hand-painted fantasy atlas illustration, gouache and oil glazes over fine ink linework, subtle real gold-leaf accents, visible brushwork on warm paper grain, rich muted jewel tones, soft warm light from the upper left with cool soft shadows, gentle dusk glow, mythic and dignified, detailed up close but calm and readable from a distance. Overall value mid-dark and rich, never washed out.
 
-Avoid: any text, letters, numbers, labels, map legends or compass roses; watermarks or signatures; frames or borders; user-interface elements; photorealism; 3D render or CGI look; plastic shine; anime or cartoon style; oversaturated neon colour; heavy black outlines.
+Avoid: any text, letters, numbers, place names, labels, map legends or compass roses; watermarks or signatures; frames or borders; user-interface elements; photorealism; 3D render or CGI look; plastic shine; anime or cartoon style; oversaturated neon colour; heavy black outlines.
 ```
 
 ### Prompt for Midjourney (alternative): upload `board-guide.png` as an image prompt
