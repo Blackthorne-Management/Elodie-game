@@ -34,6 +34,7 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
   const houses = Object.values(game.content.houses);
   const size = BOARD_SIZE * CELL;
   const art = BOARD_ART.image;
+  const artMargin = art ? BOARD_ART.imageMargin : 0;
 
   // Pawns sharing a square fan out a little.
   const at = new Map<string, number[]>();
@@ -47,7 +48,11 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
     <div className={`stage2 ${arrows.length ? 'stepping' : ''}`}>
       <div className="cam" ref={el => motion.registerCamera(el)}>
         <div className="sea" style={{ left: -MARGIN * CELL, top: -MARGIN * CELL, width: size + 2 * MARGIN * CELL, height: size + 2 * MARGIN * CELL }} />
-        <div className={`plane2 ${art ? 'art' : ''}`} style={{ width: size, height: size, backgroundImage: `url("${art ?? terrainUrl(houses)}")` }}>
+        {art && artMargin > 0 && (
+          <div className="art-sea" style={{ left: -artMargin * CELL, top: -artMargin * CELL, width: size + 2 * artMargin * CELL, height: size + 2 * artMargin * CELL, backgroundImage: `url("${art}")` }} />
+        )}
+        <div className={`plane2 ${art ? 'art' : ''} ${artMargin ? 'margin' : ''}`}
+          style={{ width: size, height: size, backgroundImage: art && artMargin ? 'none' : `url("${art ?? terrainUrl(houses)}")` }}>
           <div className="throne2" style={{ left: THRONE[0].x * CELL, top: THRONE[0].y * CELL, width: CELL * 2, height: CELL * 2, background: art ? 'transparent' : BOARD_ART.throne, borderColor: BOARD_ART.throneEdge }}>{art ? '' : '♛'}</div>
           {houses.map(h => (
             <div key={h.id} className="tile2" style={{ left: h.home.x * CELL, top: h.home.y * CELL, width: CELL, height: CELL,

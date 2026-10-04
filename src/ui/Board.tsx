@@ -23,6 +23,8 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
   const size = BOARD_SIZE * C;
   const tiles = Object.values(game.content.houses);
   const art = BOARD_ART.image;
+  // With a painting that includes ocean, show a little of the coast around the board.
+  const view = art ? Math.min(BOARD_ART.imageMargin, 1.2) * C : 0;
   const living = s.players.filter(p => p.pos);
   const byKey = new Map<string, number[]>();
   for (const p of living) {
@@ -32,7 +34,7 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
 
   return (
     <div className={`board-wrap ${zoom ? 'zoom' : ''}`}>
-      <svg className="board" viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Game board">
+      <svg className="board" viewBox={`${-view} ${-view} ${size + 2 * view} ${size + 2 * view}`} role="img" aria-label="Game board">
         <Terrain houses={tiles} />
         {art && (
           <>

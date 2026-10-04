@@ -7,7 +7,8 @@ import { BOARD_ART } from '../assets.config';
 // The overhead map's ground: the same picture the 2.5D view uses (the painted board, else drawn terrain).
 function TerrainView({ houses }: { houses: HouseDef[] }) {
   const size = BOARD_SIZE * UNIT;
-  return <image href={BOARD_ART.image ?? terrainUrl(houses)} x={0} y={0} width={size} height={size} preserveAspectRatio="none" />;
+  const m = BOARD_ART.image ? BOARD_ART.imageMargin * UNIT : 0;
+  return <image href={BOARD_ART.image ?? terrainUrl(houses)} x={-m} y={-m} width={size + 2 * m} height={size + 2 * m} preserveAspectRatio="none" />;
 }
 
 export const Terrain = memo(TerrainView);

@@ -106,15 +106,20 @@ In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, si
   painting has **no grid and no markers**.
 - Because the app tilts it, the painting must be a **straight top-down view**: no perspective, no horizon,
   no sides of buildings leaning outward.
+- **The painting is an island in the ocean.** The 18×18 playable squares fill the **middle 75%** of the
+  image; the outer band (3 squares wide on every side) is open sea. The game lines the island up with the
+  grid and lets the painted ocean fade into its own sea, so nothing at the edge of the board gets cut off.
 
 | File | Size | Format | Background |
 |---|---|---|---|
-| `board.png` | **4096 × 4096** (2048 × 2048 at the very least) | PNG | Opaque; the land fills the whole square. |
+| `board.png` | **4096 × 4096** (2048 × 2048 at the very least) | PNG | Opaque: an island filling the middle 75%, ocean around it. |
 
 ### The layout (must match the rules)
 Attach **`docs/art/board-guide.png`** to the prompt.
+- **Blue outer band:** open ocean. The coastline runs just outside the playable squares, so every square is
+  on land.
 - **Coloured areas:** each is one homeland. Their sizes and soft borders match the game's own map.
-- **The ring in the middle:** Elodie's Throne. It covers the centre 2×2 squares, about the middle 11% of
+- **The ring in the middle:** Elodie's Throne. It covers the centre 2×2 squares, about the middle 8% of
   the image.
 - **The 8 white dots:** each house's **seat**, its owned tile. These positions are rules, so the painting
   has to put each seat on its dot. **`docs/art/board-guide-labelled.png`** shows which is which, for you,
@@ -122,14 +127,17 @@ Attach **`docs/art/board-guide.png`** to the prompt.
 
 | Seat | House (tile) | Where | Across, down |
 |---|---|---|---|
-| Ardencia | Brasador (War) | Top edge, middle | 47%, 3% |
-| Zetwal | Kay Soley (Court) | Upper right | 81%, 19% |
-| Al-Doria | Dorini (Trade) | Right edge, middle | 97%, 53% |
-| Skarragol | Ironvow (War) | Lower right | 81%, 81% |
-| Kuroshi | Suzumori (Court) | Bottom edge, middle | 53%, 97% |
-| Jwaladesh | Agnivansh (War) | Lower left | 19%, 81% |
-| Aldermoor | Stillwater (Court) | Left edge, middle | 3%, 47% |
-| Moa'olani | Vai'tama (Trade) | Upper left | 19%, 19% |
+| Ardencia | Brasador (War) | North coast, middle | 48%, 15% |
+| Zetwal | Kay Soley (Court) | Upper right | 73%, 27% |
+| Al-Doria | Dorini (Trade) | East coast, middle | 85%, 52% |
+| Skarragol | Ironvow (War) | Lower right | 73%, 73% |
+| Kuroshi | Suzumori (Court) | South coast, middle | 52%, 85% |
+| Jwaladesh | Agnivansh (War) | Lower left | 27%, 73% |
+| Aldermoor | Stillwater (Court) | West coast, middle | 15%, 48% |
+| Moa'olani | Vai'tama (Trade) | Upper left | 27%, 27% |
+
+The four middle-of-the-edge seats sit right on the coast, which suits them: Ardencia's fortress on its
+cliffs, Al-Doria's harbour, Kuroshi's castle on a rocky point and Aldermoor's keep above the shore.
 
 If a seat lands within about half a square of its dot, I can nudge the image to fit. Further off than that,
 repaint that spot.
@@ -145,7 +153,7 @@ repaint that spot.
   colourful painted roofs with lacy carved trim (Haitian gingerbread houses). At the seat, a white-and-gold
   temple court to Elodie with sun-ray paving.
 - **Al-Doria, Dorini (right):** where sea trade meets the desert. Golden dunes inland, a white-domed
-  harbour city on the right edge, striped bazaar awnings, date palms, caravan tracks. At the seat, the
+  harbour city on the east coast, striped bazaar awnings, date palms, caravan tracks. At the seat, the
   courtyard of a grand caravanserai.
 - **Skarragol, Ironvow (lower right):** cold fjords cutting into grassy steppe. Turf-roofed longhouses
   beside round felt yurts, herds of horses, grey-green grass. At the seat, a timber-and-stone hall with a
@@ -165,35 +173,34 @@ repaint that spot.
 1. **Each land must be recognisable at a glance**, by colour *and* texture, even on the small overhead map.
 2. **Borders are natural and soft:** rivers, ridges, forest edges and changes of grass. Never painted
    lines.
-3. **Walkable everywhere:** water inside the board stays shallow (lagoons, tarns, rivers), and there are
-   no large lakes or open sea inside the square.
+3. **Every square inside the coastline is land:** water there stays small and shallow (lagoons, the tarn,
+   rivers). Open sea, fjords and harbours belong in the outer ocean band.
 4. **Calm, medium detail:** lots of quiet ground for pawns to stand on. No busy high-contrast clutter
    across the whole map.
 5. **Keep the centre throne ring and each seat spot open:** a plaza or courtyard, so the markers sit
    cleanly.
-6. **The land runs to all four edges.** The outermost sliver may soften into sea mist, because the app
-   puts a misty sea around the board.
+6. **Ocean all the way to the image edges,** deep and calm, so it blends into the game's sea.
 7. **Nothing else on the map:** no people, animals larger than tiny herds, clouds over the land, text or
    compass rose.
 
 ### Prompt for ChatGPT (recommended): attach `board-guide.png`
 ```
-Paint a square, straight top-down (orthographic, no perspective, no horizon) fantasy game-board map of one continent made of eight homelands around a central plaza.
+Paint a square, straight top-down (orthographic, no perspective, no horizon) fantasy game-board map: one roughly square island continent made of eight homelands around a central plaza, surrounded on every side by open ocean.
 
-Use the attached guide image ONLY for layout: each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, with that land's signature building right beside it.
+Use the attached guide image ONLY for layout. The blue band around the outside is open ocean: paint deep, calm sea all the way to the image edges. The coastline must follow the guide's coast closely — beaches, low cliffs and small coves are welcome, but the land must cover everything the guide shows as land; never let the sea cut into it. Each flat coloured area is one homeland — keep every homeland in the same place and about the same size and shape, with soft, natural, wandering borders (rivers, ridges, forest edges), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne: paint a round plaza of pale marble inlaid with gold filigree rings, with eight old paved roads leading out toward each homeland. Each white dot marks a house's seat: paint an open courtyard or plaza exactly on each dot, on dry land, with that land's signature building right beside it. Four dots sit on the coast; their buildings stand on the shore.
 
 Homelands (positions as on the guide):
-- Top (deep red area): Ardencia — scorched volcanic highlands, black basalt and rust-red rock, faint glowing lava seams, dry scrub and cork oaks; a walled hilltop fortress with terracotta roofs at its seat.
-- Upper right (yellow area): Zetwal — sun-bright coast, golden fields, palm and mango groves, colourful roofs with lacy carved trim; a white-and-gold sun temple court at its seat.
-- Right (tan area): Al-Doria — golden dunes meeting a white-domed harbour city on the right edge, striped bazaar awnings, date palms, caravan tracks; a grand caravanserai courtyard at its seat.
-- Lower right (grey-green area): Skarragol — cold fjords cutting into grassy steppe, turf-roofed longhouses beside round felt yurts, tiny horse herds; a timber-and-stone hall with a round horse paddock at its seat.
-- Bottom (slate-blue area): Kuroshi — fog-veiled coast, dark cedar forest, moss, terraced paddies, ribbons of mist; a castle compound with tiered curved roofs on a rocky point at its seat.
-- Lower left (orange area): Jwaladesh — ochre and saffron plains, red-sandstone fort-palaces, a stepwell, banyan trees and flame-orange flowering trees; a palace courtyard ringed with braziers at its seat.
-- Left (purple area): Aldermoor — fog-wrapped moorland, purple heather, dry-stone walls, hedgerows, alder trees; an old grey stone keep beside a dark, perfectly still tarn at its seat.
-- Upper left (turquoise area): Moa'olani — small green islands joined by white-sand shallows and turquoise lagoons, coral, outrigger canoes; a thatched meeting house on stilts at its seat.
+- North (deep red area): Ardencia — scorched volcanic highlands, black basalt and rust-red rock, faint glowing lava seams, dry scrub and cork oaks; a walled fortress with terracotta roofs on the north coast cliffs at its seat.
+- North-east (yellow area): Zetwal — sun-bright land, golden fields, palm and mango groves, colourful roofs with lacy carved trim; a white-and-gold sun temple court at its seat.
+- East (tan area): Al-Doria — golden dunes running down to a white-domed harbour city on the east coast, striped bazaar awnings, date palms, caravan tracks, ships in the harbour out at sea; a grand caravanserai courtyard on the shore at its seat.
+- South-east (grey-green area): Skarragol — grassy steppe with turf-roofed longhouses beside round felt yurts and tiny horse herds; fjords cut into the coast from the ocean but stay outside the guide's land; a timber-and-stone hall with a round horse paddock at its seat.
+- South (slate-blue area): Kuroshi — dark cedar forest, moss, terraced paddies, ribbons of mist; a castle compound with tiered curved roofs on a rocky point of the south coast at its seat.
+- South-west (orange area): Jwaladesh — ochre and saffron plains, red-sandstone fort-palaces, a stepwell, banyan trees and flame-orange flowering trees; a palace courtyard ringed with braziers at its seat.
+- West (purple area): Aldermoor — fog-wrapped moorland, purple heather, dry-stone walls, hedgerows, alder trees, a dark, perfectly still tarn; an old grey stone keep above the west shore at its seat.
+- North-west (turquoise area): Moa'olani — small green hills joined by white-sand flats and shallow turquoise lagoons, coral, outrigger canoes; a thatched meeting house on stilts at its seat.
 - Centre (grey-brown area): the Heartland — ancient ruins, olive and cypress scrub, wildflower meadows, in warm neutral stone colours.
 
-The land fills the whole square to all four edges; only the outermost sliver softens into drifting sea mist. All water inside is shallow. Keep the ground calm with medium detail and plenty of open space, so game pieces placed on top stay readable. Each homeland must be recognisable at a glance by its colour and texture. No people, no clouds over the land, no grid, no markers.
+Inside the coastline, water stays small and shallow (rivers, the tarn, lagoons). Keep the ground calm with medium detail and plenty of open space, so game pieces placed on top stay readable. Each homeland must be recognisable at a glance by its colour and texture. No people, no clouds over the land, no grid, no markers.
 
 Style: hand-painted fantasy atlas illustration, gouache and oil glazes over fine ink linework, subtle real gold-leaf accents, visible brushwork on warm paper grain, rich muted jewel tones, soft warm light from the upper left with cool soft shadows, gentle dusk glow, mythic and dignified, detailed up close but calm and readable from a distance. Overall value mid-dark and rich, never washed out.
 
@@ -202,14 +209,14 @@ Avoid: any text, letters, numbers, labels, map legends or compass roses; waterma
 
 ### Prompt for Midjourney (alternative): upload `board-guide.png` as an image prompt
 ```
-<guide image URL> top-down orthographic fantasy atlas map of a continent of eight homelands around a central round marble-and-gold throne plaza with eight paved roads radiating out; north: volcanic basalt highlands with glowing lava seams and a terracotta fortress; north-east: sun-bright coast, palm groves, colourful carved roofs and a white-gold sun temple; east: golden dunes and a white-domed harbour city; south-east: fjords cutting into grassy steppe with longhouses and felt yurts; south: fog-veiled cedar coast with a tiered-roof castle; south-west: ochre plains, red sandstone fort-palace and stepwell; west: purple heather moorland, stone walls, a grey keep by a still tarn; north-west: turquoise lagoons and small green islands with a stilted thatched hall; soft natural borders, land to every edge, calm medium detail, hand-painted gouache and oil glaze over ink linework, gold-leaf accents, warm paper grain, rich muted jewel tones, soft light from upper left --ar 1:1 --v 7 --style raw --iw 1.5 --no text, letters, labels, compass, grid, border, frame, people, perspective, horizon, 3d render, photo
+<guide image URL> top-down orthographic fantasy atlas map of a roughly square island continent filling the middle of the image, surrounded on all sides by deep calm ocean to the edges; eight homelands around a central round marble-and-gold throne plaza with eight paved roads radiating out; north: volcanic basalt highlands with glowing lava seams and a terracotta fortress on the coast cliffs; north-east: sun-bright fields, palm groves, colourful carved roofs and a white-gold sun temple; east: golden dunes and a white-domed harbour city on the coast; south-east: grassy steppe with longhouses and felt yurts; south: cedar forest and mist with a tiered-roof castle on a rocky point; south-west: ochre plains, red sandstone fort-palace and stepwell; west: purple heather moorland, stone walls, a grey keep by a still tarn above the shore; north-west: turquoise lagoons and green hills with a stilted thatched hall; soft natural borders, calm medium detail, hand-painted gouache and oil glaze over ink linework, gold-leaf accents, warm paper grain, rich muted jewel tones, soft light from upper left --ar 1:1 --v 7 --style raw --iw 1.5 --no text, letters, labels, compass, grid, border, frame, people, perspective, horizon, 3d render, photo
 ```
 Midjourney follows the layout loosely. Check the seats against the guide and fix misplaced ones with
 *Vary Region*.
 
 ### Refining it
-- **Something in the wrong place?** Select it and ask: *"Move the Al-Doria caravanserai courtyard to the
-  middle of the right edge, as on the guide."*
+- **Something in the wrong place?** Select it and ask: *"Move the Al-Doria caravanserai courtyard onto the
+  shore in the middle of the east coast, as on the guide."*
 - **Too busy?** Ask: *"Simplify the ground texture in this area into calmer open fields; keep the style."*
 - **Too dark or bright overall?** Ask: *"Same image, overall slightly brighter/darker, keep everything
   else."*
@@ -217,11 +224,11 @@ Midjourney follows the layout loosely. Check the seats against the guide and fix
 
 ### Check before sending
 - [ ] Seen from straight above, with no perspective.
-- [ ] The throne plaza is centred, about 11% of the width across.
+- [ ] The throne plaza is centred, about 8% of the width across.
 - [ ] Each of the 8 seats sits on its dot, within half a square.
 - [ ] All 8 lands are easy to tell apart on a thumbnail.
 - [ ] There's no text, grid, frame or people.
-- [ ] The land reaches every edge.
+- [ ] The island fills the middle, matching the guide's coast, with ocean all the way to every edge.
 
 ### Plan B, if one painting won't follow the layout
 Paint each land as a separate **seamless top-down texture** and I'll blend them into the game's exact

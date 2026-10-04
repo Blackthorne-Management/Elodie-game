@@ -499,3 +499,11 @@ button:disabled { cursor: default; }
 @media (orientation: landscape) and (max-height: 600px) {
   .round2 { left: auto; top: 0; flex-direction: row; gap: 4px; box-shadow: 0 6px 10px -4px #0009; }
 }
+/* A painting with its own ocean: drawn larger than the board, fading into the sea at its edges. */
+.art-sea {
+  position: absolute; background-size: 100% 100%; pointer-events: none;
+  --fade: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent), linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: var(--fade); -webkit-mask-composite: source-in; mask-image: var(--fade); mask-composite: intersect;
+}
+.plane2.margin { box-shadow: none; border-radius: 0; }
+.plane2.margin::before { border-radius: 0; }
