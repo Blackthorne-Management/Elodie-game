@@ -79,6 +79,14 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   one against the same player; a Reckoning settles one.
 - **Reckoning order [24]:** the dying player halves a pool first, then the killer steals 1.
 - **Becoming a Specter [25]:** the hand is discarded.
+- **New heirs are protected** (added after playtesting): a new heir can't be attacked until the end of their first
+  turn. If the character fell on their own turn, the protection lasts through their next turn. "Attacks" are those
+  in [15]: basic attacks, Cursed Dagger, Shadow Strike and Elodie's Trial. Two exceptions:
+  - Challenge fights still happen.
+  - Effects that aren't attacks still apply, such as Hex of Withering, Poisoned Chalice, Duel of Honor and global
+    Heart Token loss.
+  
+  Shown with a shield beside the player's name. It's a setting (`NEWBORN_PROTECTION`).
 
 ## Houses
 - **Ability frequency [26]:** an active ability with no stated limit can be used once per your own

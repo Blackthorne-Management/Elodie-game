@@ -33,6 +33,7 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
   const s = game.s;
   const houses = Object.values(game.content.houses);
   const size = BOARD_SIZE * CELL;
+  const art = BOARD_ART.image;
 
   // Pawns sharing a square fan out a little.
   const at = new Map<string, number[]>();
@@ -46,10 +47,11 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
     <div className={`stage2 ${arrows.length ? 'stepping' : ''}`}>
       <div className="cam" ref={el => motion.registerCamera(el)}>
         <div className="sea" style={{ left: -MARGIN * CELL, top: -MARGIN * CELL, width: size + 2 * MARGIN * CELL, height: size + 2 * MARGIN * CELL }} />
-        <div className="plane2" style={{ width: size, height: size, backgroundImage: `url("${terrainUrl(houses)}")` }}>
-          <div className="throne2" style={{ left: THRONE[0].x * CELL, top: THRONE[0].y * CELL, width: CELL * 2, height: CELL * 2, background: BOARD_ART.throne, borderColor: BOARD_ART.throneEdge }}>♛</div>
+        <div className={`plane2 ${art ? 'art' : ''}`} style={{ width: size, height: size, backgroundImage: `url("${art ?? terrainUrl(houses)}")` }}>
+          <div className="throne2" style={{ left: THRONE[0].x * CELL, top: THRONE[0].y * CELL, width: CELL * 2, height: CELL * 2, background: art ? 'transparent' : BOARD_ART.throne, borderColor: BOARD_ART.throneEdge }}>{art ? '' : '♛'}</div>
           {houses.map(h => (
-            <div key={h.id} className="tile2" style={{ left: h.home.x * CELL, top: h.home.y * CELL, width: CELL, height: CELL, background: TILE_ART[h.tileType].color,
+            <div key={h.id} className="tile2" style={{ left: h.home.x * CELL, top: h.home.y * CELL, width: CELL, height: CELL,
+              background: art ? `${TILE_ART[h.tileType].color}66` : TILE_ART[h.tileType].color,
               borderColor: s.players.some(p => p.house === h.id) ? HOUSE_ART[h.id].color : '#777' }}>{TILE_ART[h.tileType].glyph}</div>
           ))}
           {[...lit.entries()].map(([k, onTap]) => {

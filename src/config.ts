@@ -22,6 +22,8 @@ export const CHALLENGE_FIRST_STRIKER: FirstStriker = 'claimant';
 
 // Attacking ends your turn (after your last allowed attack). Ironvow from Gen II may attack before
 // moving and still move afterwards.
+// A new heir can't be attacked until the end of their first turn (challenge fights excepted).
+export const NEWBORN_PROTECTION = true;
 export const ATTACK_ENDS_TURN = true;
 
 // Safety cap on blows in one Challenge fight or duel (each blow is at least 1 damage, so real fights end long before).

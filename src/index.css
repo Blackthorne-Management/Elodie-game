@@ -466,3 +466,36 @@ button:disabled { cursor: default; }
   content: ''; position: absolute; left: 0; right: 0; top: 0; height: 34%; pointer-events: none; z-index: 1;
   background: linear-gradient(#241d26 0%, rgba(36,29,38,.85) 35%, rgba(36,29,38,0) 100%);
 }
+
+/* Painted board: a faint grid so squares can still be counted. */
+.plane2.art::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 8px;
+  background-image: linear-gradient(to right, rgba(0,0,0,.22) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,.22) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.plane2.art .throne2 { box-shadow: 0 0 24px rgba(217,164,65,.35), inset 0 0 18px rgba(217,164,65,.25); }
+.plane2.art .tile2 { color: #fffc; text-shadow: 0 1px 3px #000; }
+
+/* Turn tracker: round counter, then every seat in turn order. */
+.round2 {
+  flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 52px; min-height: 44px;
+  padding: 2px 6px; border-radius: 12px; background: #2a1d21; border: 1.5px solid var(--gold); line-height: 1.05;
+  position: sticky; left: 0; z-index: 1; box-shadow: 6px 0 10px -4px #0009;
+}
+.round2 span { font-size: 9.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.round2 b { font-size: 18px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.rival2 { position: relative; }
+.rival2.done { opacity: .55; }
+.rival2.me { border-color: #6a5560; }
+.rival2.me.active { border-color: var(--gold); }
+.seat-no {
+  position: absolute; top: -5px; left: -4px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 8px;
+  display: grid; place-items: center; font-size: 10px; font-weight: 900; background: #4a3a40; color: #fff; border: 1px solid #0006;
+}
+.rival2.active .seat-no { background: var(--gold); color: #2a1a10; }
+.rival2.done .seat-no { background: #2f6b45; }
+.newborn { margin-left: 3px; font-size: .9em; }
+.rivals2 { padding-top: 5px; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .round2 { left: auto; top: 0; flex-direction: row; gap: 4px; box-shadow: 0 6px 10px -4px #0009; }
+}

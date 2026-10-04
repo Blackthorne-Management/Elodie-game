@@ -11,10 +11,10 @@ export interface HouseArt {
 
 export const HOUSE_ART: Record<HouseId, HouseArt> = {
   brasador: { color: '#b03a2e', initial: 'B' },
-  dorini: { color: '#b7950b', initial: 'D' },
+  dorini: { color: '#1e8449', initial: 'D' },
   ironvow: { color: '#5d6d7e', initial: 'I' },
   suzumori: { color: '#7d3c98', initial: 'S' },
-  vaitama: { color: '#138d75', initial: 'V' },
+  vaitama: { color: '#17a5a5', initial: 'V' },
   kaysoley: { color: '#d4ac0d', initial: 'K' },
   agnivansh: { color: '#e67e22', initial: 'A' },
   stillwater: { color: '#2e86c1', initial: 'W' },
@@ -45,6 +45,7 @@ export const ICONS = {
   grudge: '✖',
   eligible: '♛',
   dice: '⚄',
+  newborn: '🛡',
 };
 
 // Each house's homeland, drawn as terrain around its tile. `mark` is the texture drawn on top.
@@ -64,6 +65,8 @@ export const TERRAIN_ART: Record<HouseId | 'heartland', TerrainArt> = {
 };
 
 export const BOARD_ART = {
+  // The painted board (docs/art/ART-GUIDE.md §3). Without it, the drawn homeland terrain is used.
+  image: '/art/board.webp' as string | undefined,
   light: '#2a2026',
   dark: '#251c21',
   grid: 'rgba(0,0,0,.28)',

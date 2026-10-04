@@ -13,7 +13,7 @@ import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, NEWBORN_PROTECTION, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
 } from '../config';
 
 export class GameOver extends Error {}
@@ -534,6 +534,7 @@ export class Game {
   attackBlockedReason(a: PlayerState, t: PlayerState, kind: AttackInfo['kind']): string | null {
     if (t.specter || a.id === t.id) return 'invalid';
     if (kind === 'challenge') return null;
+    if (this.findEffect('newborn', t.id)) return `${t.name}'s heir has only just risen`;
     if (this.findEffect('noAttack', a.id)) return `${a.name} may not attack this turn`;
     if (this.s.effects.some(e => e.kind === 'truce' && e.armed &&
       ((e.owner === a.id && e.other === t.id) || (e.owner === t.id && e.other === a.id)))) return 'truce';
@@ -708,6 +709,12 @@ export class Game {
       v.visited = [key(house.home)];
       v.lastScoredTile = null;
       this.log(`${v.name}'s Gen ${roman(v.gen)} heir rises at home with ${v.hp} Heart Tokens.`, 'succession', { player: v.id });
+      if (NEWBORN_PROTECTION) {
+        // Safe from attacks until the end of their first turn; if they fell on their own turn, that's the next one.
+        this.s.effects = this.s.effects.filter(e => !(e.kind === 'newborn' && e.owner === v.id));
+        this.addEffect('newborn', v.id, { at: 'turnEnd', player: v.id, turns: this.s.turn?.player === v.id ? 2 : 1 });
+        this.log(`${v.name}'s heir is protected from attacks until the end of their first turn.`, 'info', { player: v.id });
+      }
       if (house.legacyOnDeath) yield* this.chooseLegacy(v);
       if (house.extraPassiveAt && v.gen >= house.extraPassiveAt && !v.extraPassive && !v.pendingExtraPassive) {
         const gone = this.s.players.filter(o => o.specter && o.id !== v.id).map(o => o.house);

@@ -63,15 +63,14 @@ should never be brighter than them. Avoid pure white and pure black.
 | Brasador | Crimson | `#b03a2e` | Black, ember orange |
 | Agnivansh | Saffron orange | `#e67e22` | Crimson, gold |
 | Kay Soley | Sun gold | `#d4ac0d` | White, sky blue |
-| Dorini | **Emerald** (proposed, was gold) | `#1e8449` | Gold |
+| Dorini | **Emerald** (was gold) | `#1e8449` | Gold |
 | Vai'tama | Lagoon turquoise | `#17a5a5` | Bone, coral |
 | Stillwater | Slate blue | `#2e86c1` | Pewter grey |
 | Suzumori | Violet | `#7d3c98` | Charcoal, silver |
 | Ironvow | Steel grey | `#5d6d7e` | Black, white |
 
-> Dorini and Kay Soley were both gold, which is impossible to tell apart on a small pawn. I propose
-> emerald for Dorini (coin and sea-trade) and a slightly bluer turquoise for Vai'tama. Say no and I'll
-> keep the old colours.
+> Dorini was gold like Kay Soley, impossible to tell apart on a small pawn, so Dorini is now emerald and
+> Vai'tama a slightly bluer turquoise. The game uses these colours.
 
 **Respecting real cultures.** Each house is *inspired by* a real culture: draw on it with care and research,
 never as costume or caricature.

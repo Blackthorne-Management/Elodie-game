@@ -50,7 +50,7 @@ export type Expiry =
   | { at: 'consumed' };                    // removed by the rule that uses it
 
 export type EffectKind =
-  | 'afterAttack' | 'noInfluenceGain' | 'noAttack' | 'sabotage' | 'confusion' | 'forcedMarch' | 'hex'
+  | 'afterAttack' | 'newborn' | 'noInfluenceGain' | 'noAttack' | 'sabotage' | 'confusion' | 'forcedMarch' | 'hex'
   | 'dreadBanner' | 'markedForDeath' | 'truce' | 'ceasefire' | 'shieldWall' | 'noFearGain'
   | 'redirect' | 'mask' | 'handPublic';
 

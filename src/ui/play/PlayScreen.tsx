@@ -157,6 +157,15 @@ export function PlayScreen() {
   useEffect(() => { motion.setFocus(stepFocus ?? restOn, !stepFocus); },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [motion, focusKey]);
+  // Keep whoever is playing visible in the turn tracker.
+  const trackerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const box = trackerRef.current, chip = box?.querySelector<HTMLElement>('.rival2.active');
+    if (!box || !chip) return;
+    const horizontal = box.scrollWidth > box.clientWidth;
+    if (horizontal) box.scrollTo({ left: chip.offsetLeft - box.clientWidth / 2 + chip.offsetWidth / 2, behavior: 'smooth' });
+    else box.scrollTo({ top: chip.offsetTop - box.clientHeight / 2 + chip.offsetHeight / 2, behavior: 'smooth' });
+  }, [activeId]);
   // Your steps move your character on the board right away (the engine only hears about it when you confirm).
   const ghostKey = moveMode?.free && end ? `${end.x},${end.y}` : '';
   useEffect(() => { if (moveMode?.free && end) motion.walkTo(HUMAN, end); },
@@ -170,15 +179,22 @@ export function PlayScreen() {
   const buttons = turnOpts.map((o, i) => ({ o, i })).filter(({ o }) => o.value.type !== 'card');
 
   const feed = s.log.filter(visible).slice(-2);
-  const rivals = [...s.order.slice(s.order.indexOf(HUMAN) + 1), ...s.order.slice(0, s.order.indexOf(HUMAN))].map(id => s.players[id]);
+  // The turn tracker: everyone in turn order; earlier seats have played this round.
+  const nowIdx = s.turn ? s.order.indexOf(s.turn.player) : -1;
   const blockDecision = mine?.kind === 'block' ? mine : null;
   const duelToShow = duel ?? (blockDecision ? fromBlock(blockDecision) : null);
   const genericDecision = mine && !['turn', 'move', 'square', 'block'].includes(mine.kind) ? mine : null;
 
   return (
     <div className="play">
-      <div className="rivals2">
-        {rivals.map(p => <RivalChip key={p.id} g={g} p={p} active={activeId === p.id} onOpen={() => setSheet({ type: 'house', id: p.id })} />)}
+      <div className="rivals2" ref={trackerRef}>
+        <div className="round2" aria-label={`Round ${s.round} of ${s.config.suddenDeathRound}`}>
+          <span>Round</span><b>{s.round}</b><span>of {s.config.suddenDeathRound}</span>
+        </div>
+        {s.order.map((id, i) => (
+          <RivalChip key={id} g={g} p={s.players[id]} n={i + 1} me={id === HUMAN} active={activeId === id} done={nowIdx >= 0 && i < nowIdx}
+            onOpen={() => setSheet({ type: 'house', id })} />
+        ))}
         <button type="button" className="icon-btn menu-btn" onClick={() => setSheet({ type: 'menu' })} aria-label="Menu">☰</button>
       </div>
 

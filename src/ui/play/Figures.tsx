@@ -44,7 +44,7 @@ export function HeroCard({ g, p, dim, onOpen }: { g: Game; p: PlayerState; dim?:
     <button type="button" className={`hero2 ${dim ? 'dim' : ''}`} onClick={onOpen}>
       <Portrait house={p.house} gen={p.gen} />
       <span className="hero2-body">
-        <span className="hero2-name">{p.name} {g.eligible(p) && <span className="elig" title="Can claim the Throne">{ICONS.eligible}</span>}</span>
+        <span className="hero2-name">{p.name} {g.eligible(p) && <span className="elig" title="Can claim the Throne">{ICONS.eligible}</span>}{g.findEffect('newborn', p.id) && <span className="newborn" title="New heir: can't be attacked until the end of your first turn">{ICONS.newborn}</span>}</span>
         <span className="hero2-house">{h.name.replace('House ', '')} · {h.homeland} · Gen {roman(p.gen)}</span>
         <span className="hero2-stats">
           {p.specter ? <span className="hearts specter">{ICONS.specter} Specter</span> : <span className="hearts">{ICONS.heart} {p.hp}/{p.maxHp}</span>}
@@ -59,12 +59,15 @@ export function HeroCard({ g, p, dim, onOpen }: { g: Game; p: PlayerState; dim?:
   );
 }
 
-export function RivalChip({ g, p, active, onOpen }: { g: Game; p: PlayerState; active: boolean; onOpen: () => void }) {
+// One seat in the turn tracker: `n` is its place in the turn order; `done` = already played this round.
+export function RivalChip({ g, p, n, active, done, me, onOpen }: { g: Game; p: PlayerState; n: number; active: boolean; done: boolean; me?: boolean; onOpen: () => void }) {
   return (
-    <button type="button" className={`rival2 ${active ? 'active' : ''} ${p.specter ? 'specter' : ''}`} onClick={onOpen}>
+    <button type="button" className={`rival2 ${active ? 'active' : ''} ${done ? 'done' : ''} ${me ? 'me' : ''} ${p.specter ? 'specter' : ''}`} onClick={onOpen}
+      aria-label={`${n}. ${me ? 'You' : p.name}${active ? ', playing now' : done ? ', played this round' : ''}`}>
+      <span className="seat-no">{done ? '✓' : n}</span>
       <Emblem house={p.house} size={26} />
       <span className="rival2-body">
-        <span className="rival2-name">{p.name} {g.eligible(p) && <span className="elig">{ICONS.eligible}</span>}</span>
+        <span className="rival2-name">{me ? 'You' : p.name} {g.eligible(p) && <span className="elig">{ICONS.eligible}</span>}{g.findEffect('newborn', p.id) && <span className="newborn" title="New heir: can't be attacked until the end of their first turn">{ICONS.newborn}</span>}</span>
         <span className="rival2-stats">
           {p.specter ? <span className="hearts specter">{ICONS.specter}</span> : <span className="hearts">{ICONS.heart}{p.hp}</span>}
           <Res p={p} short />

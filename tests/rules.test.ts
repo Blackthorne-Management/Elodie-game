@@ -261,6 +261,31 @@ describe('combat and death (Sections 6 and 9)', () => {
     startTurn(g, a.id);
     expect(g.attackBlockedReason(a, b, 'basic')).toBeNull();
   });
+  it("a new heir can't be attacked until the end of their first turn", () => {
+    const { g, a, b } = duelists();
+    b.hp = 1;
+    drive(g.basicAttack(a, b), byLabel('Wealth'));        // b dies on a's turn; the heir rises at home
+    expect(b.gen).toBe(2);
+    b.pos = { x: a.pos!.x, y: a.pos!.y + 1 };              // stand next to a again
+    expect(g.attackBlockedReason(a, b, 'basic')).toMatch(/only just risen/);
+    expect(g.basicTargets(a)).toHaveLength(0);
+    expect(g.attackBlockedReason(a, b, 'challenge')).toBeNull();   // challenge fights still happen
+    endTurn(g, a.id);
+    startTurn(g, b.id);                                      // the heir's first turn: still safe
+    expect(g.attackBlockedReason(a, b, 'basic')).toMatch(/only just risen/);
+    endTurn(g, b.id);
+    expect(g.attackBlockedReason(a, b, 'basic')).toBeNull();
+  });
+  it('a heir who fell on their own turn stays safe through their next turn', () => {
+    const { g, a, b } = duelists();
+    a.hp = 1;
+    g.addEffect('newborn', b.id, { at: 'turnEnd', player: b.id });   // irrelevant noise for b
+    expect(() => drive(g.killPlayer(a, b))).not.toThrow();
+    endTurn(g, a.id);                                        // the turn a died on ends
+    expect(g.findEffect('newborn', a.id)).toBeTruthy();
+    startTurn(g, a.id); endTurn(g, a.id);
+    expect(g.findEffect('newborn', a.id)).toBeFalsy();
+  });
   it('truces stop basic attacks', () => {
     const { g, a, b } = duelists();
     g.addEffect('truce', a.id, { at: 'turnStart', player: a.id }, { other: b.id });
