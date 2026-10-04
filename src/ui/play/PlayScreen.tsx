@@ -18,6 +18,9 @@ import { claimGoal } from '../claimGoal';
 import { Stage } from './Stage';
 import { Hand } from './Hand';
 import { Duel } from './Duel';
+import { CardRow, PeekSheet } from './Peek';
+import { peekTitle } from './peekTitle';
+import type { PeekGroup } from './Peek';
 import type { DuelShow } from './Duel';
 import { useMotion } from './motion';
 import { CARD_ART } from '../../assets.config';
@@ -34,6 +37,8 @@ function displayText(g: Game, e: LogEvent): string {
   }
   return e.text;
 }
+// Decisions whose options are cards (picking from a hand, the deck or the discard pile).
+const CARD_CHOICES = new Set(['card', 'discard', 'specter']);
 const visible = (e: LogEvent) => !e.visibleTo || e.visibleTo.includes(HUMAN);
 
 type SheetState = null | { type: 'house'; id: number } | { type: 'log' } | { type: 'card'; id: number } | { type: 'menu' };
@@ -60,6 +65,7 @@ export function PlayScreen() {
   const [dice, setDice] = useState<{ n: number; who: string; seq: number } | null>(null);
   const [pathState, setPathState] = useState<{ id: number; steps: Pos[] }>({ id: -1, steps: [] });
   const busyUntil = useRef(0);
+  const [peek, setPeek] = useState<PeekGroup[]>([]);
   const lastSeen = useRef(s.seq);
   const botRng = useRef(makeRng(s.setup.seed ^ 0x2545f491));
   const [tick, setTick] = useState(0);
@@ -73,6 +79,10 @@ export function PlayScreen() {
     const fresh = s.log.filter(e => e.seq > lastSeen.current);
     lastSeen.current = s.seq;
     const show = SHOW_MS[speed];
+    // Cards revealed to you (a rival's hand, the top of the deck) open face up, like your own hand.
+    const peeks = fresh.filter(e => e.kind === 'reveal' && visible(e) && e.cards && (e.tag === 'deck' || e.player !== HUMAN))
+      .map(e => ({ seq: e.seq, title: peekTitle(e.text), cards: e.cards! }));
+    if (peeks.length) setPeek(p => [...p, ...peeks]);
     for (let i = 0; i < fresh.length; i++) {
       const e = fresh[i];
       if (e.kind === 'roll' && /rolls a/.test(e.text) && e.amount !== undefined) {
@@ -109,14 +119,14 @@ export function PlayScreen() {
   // Bots answer once the table has finished showing what just happened.
   useEffect(() => {
     if (!d || !s.players[d.player].isBot) return;
-    if (walking) return;
+    if (walking || peek.length) return;
     const wait = Math.max(SPEED_MS[speed], busyUntil.current - Date.now());
     const t = setTimeout(() => {
       if (busyUntil.current > Date.now()) { setTick(x => x + 1); return; }
       answer(botChoose(g, d, botRng.current));
     }, wait);
     return () => clearTimeout(t);
-  }, [version, speed, d, g, s.players, answer, walking, tick]);
+  }, [version, speed, d, g, s.players, answer, walking, tick, peek.length]);
 
   // ---- your move: step with arrows or tap a destination
   const moveMode = mine?.kind === 'move' ? moveInfo(g, mine) : null;
@@ -184,6 +194,7 @@ export function PlayScreen() {
   const blockDecision = mine?.kind === 'block' ? mine : null;
   const duelToShow = duel ?? (blockDecision ? fromBlock(blockDecision) : null);
   const genericDecision = mine && !['turn', 'move', 'square', 'block'].includes(mine.kind) ? mine : null;
+  const cardOptions = genericDecision ? genericDecision.options.map((o, i) => ({ card: o.value as number, i })).filter(o => typeof o.card === 'number') : [];
 
   return (
     <div className="play">
@@ -256,11 +267,23 @@ export function PlayScreen() {
       {genericDecision && (
         <div className="ask2">
           <div className="ask2-prompt">{genericDecision.prompt}</div>
-          <div className="opts2">
-            {genericDecision.options.map((o, i) => <button key={i} type="button" className="act2" onClick={() => answer(i)}>{o.label}</button>)}
-          </div>
+          {CARD_CHOICES.has(genericDecision.kind) ? (
+            <>
+              {/* Choosing between cards: see each one in full, as if holding it. */}
+              <CardRow g={g} cards={cardOptions.map(c => c.card)} onChoose={i => answer(cardOptions[i].i)} />
+              <div className="opts2">
+                {genericDecision.options.map((o, i) => typeof o.value === 'number' ? null : <button key={i} type="button" className="act2" onClick={() => answer(i)}>{o.label}</button>)}
+              </div>
+            </>
+          ) : (
+            <div className="opts2">
+              {genericDecision.options.map((o, i) => <button key={i} type="button" className="act2" onClick={() => answer(i)}>{o.label}</button>)}
+            </div>
+          )}
         </div>
       )}
+
+      {peek.length > 0 && <PeekSheet g={g} groups={peek} onClose={() => setPeek([])} />}
 
       {showMap && (
         <div className="mapview">
@@ -291,7 +314,10 @@ export function PlayScreen() {
       )}
       {sheet?.type === 'log' && (
         <Sheet title="Chronicle" onClose={() => setSheet(null)}>
-          <div className="log">{[...s.log].filter(visible).reverse().slice(0, 250).map(e => <div key={e.seq} className={`feed-line k-${e.kind}`}><span className="muted">R{e.round}</span> {displayText(g, e)}</div>)}</div>
+          <div className="log">{[...s.log].filter(visible).reverse().slice(0, 250).map(e => e.kind === 'reveal' && e.cards?.length
+            ? <button key={e.seq} type="button" className={`feed-line k-${e.kind} peekable`} onClick={() => { setSheet(null); setPeek([{ seq: e.seq, title: peekTitle(e.text), cards: e.cards! }]); }}>
+                <span className="muted">R{e.round}</span> {displayText(g, e)} <span className="peek-hint">See cards</span></button>
+            : <div key={e.seq} className={`feed-line k-${e.kind}`}><span className="muted">R{e.round}</span> {displayText(g, e)}</div>)}</div>
         </Sheet>
       )}
       {sheet?.type === 'menu' && (

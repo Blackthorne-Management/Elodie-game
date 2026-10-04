@@ -167,7 +167,7 @@ export class Game {
   reveal(p: PlayerState, to: number[] | 'all', why: string) {
     const names = p.hand.map(c => this.card(c).name).join(', ') || 'no cards';
     this.log(`${why}: ${p.name}'s hand is ${names}.`, 'reveal', {
-      player: p.id, cards: [...p.hand], visibleTo: to === 'all' ? undefined : [...to, p.id],
+      player: p.id, cards: [...p.hand], visibleTo: to === 'all' ? undefined : [...to, p.id], tag: 'hand',
     });
   }
 

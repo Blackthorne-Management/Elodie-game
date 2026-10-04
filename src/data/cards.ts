@@ -253,7 +253,7 @@ hand(43, 'Scout Ahead', 'Movement', 'Look at the top 3 cards of the draw deck. R
     g.ensureDrawPile();
     const n = Math.min(3, g.s.drawPile.length);
     const top = g.s.drawPile.slice(-n).reverse();           // top first; they stay on the deck while she decides
-    g.log(`Scout Ahead: the next cards are ${top.map(c => g.card(c).name).join(', ')}.`, 'reveal', { player: p.id, cards: top, visibleTo: [p.id] });
+    g.log(`Scout Ahead: the next cards are ${top.map(c => g.card(c).name).join(', ')}.`, 'reveal', { player: p.id, cards: top, visibleTo: [p.id], tag: 'deck' });
     const order: number[] = [];
     const left = [...top];
     while (left.length) {
@@ -580,7 +580,7 @@ instant(108, 'Stolen Secrets', 'Hand Disruption', 'Look at the top card of the d
     g.ensureDrawPile();
     const top = g.s.drawPile.at(-1);
     if (top === undefined) return;
-    g.log(`${c.name}: the top card is ${g.card(top).name}.`, 'reveal', { player: p.id, cards: [top], visibleTo: [p.id] });
+    g.log(`${c.name}: the top card is ${g.card(top).name}.`, 'reveal', { player: p.id, cards: [top], visibleTo: [p.id], tag: 'deck' });
     if (g.card(top).kind !== 'hand') return;
     if (yield* g.confirm(p, `Take ${g.card(top).name}?`, 'Take it', 'Leave it')) {
       g.s.drawPile.pop();
