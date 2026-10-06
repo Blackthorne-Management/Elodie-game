@@ -265,6 +265,13 @@ These came up in code and weren't covered above; all confirmed as they stand.
     their kits (seeing hands, inheriting Legacies) lean on information and choice the bots barely use, so playtest
     before patching them.
 
+- **Opening truce [65]:** no attacks of any kind (basic, card or Reaction) during the first round; Challenges
+  excepted. Why: at 8 players, win rates fell steadily with turn order (seat 1 10.9%, seat 7 14.2%, 3,000 games,
+  p ≈ 0.009). Seat 1 moves out first and later seats can close in and strike before it acts again; seat 1 died 1.35
+  times in rounds 1–4 against 0.97 for seat 8, and trailed in resources by round 3. With the truce, seats win
+  11.7–13.0% (p ≈ 0.77) and house balance and game length are unchanged. A two-round truce was no better.
+  `OPENING.truceRounds` in `src/config.ts`.
+
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):
 - **Before:** at 8 players, house wins ran from 1% to 46%, in order of Heart Tokens (Brasador on top, every

@@ -13,7 +13,7 @@ import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, TRADE, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, OPENING, TRADE, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
 } from '../config';
 
 export class GameOver extends Error {}
@@ -606,6 +606,7 @@ export class Game {
   attackBlockedReason(a: PlayerState, t: PlayerState, kind: AttackInfo['kind']): string | null {
     if (t.specter || a.id === t.id) return 'invalid';
     if (kind === 'challenge') return null;
+    if (OPENING.truceRounds > 0 && this.s.round <= OPENING.truceRounds) return 'the opening truce holds';
     if (THRONE_SANCTUARY && (onThrone(t.pos) || onThrone(a.pos))) return 'no one fights on the Throne';
     if (this.findEffect('newborn', t.id)) return `${t.name}'s heir has only just risen`;
     if (this.findEffect('noAttack', a.id)) return `${a.name} may not attack this turn`;

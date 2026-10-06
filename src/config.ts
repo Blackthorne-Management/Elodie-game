@@ -33,6 +33,9 @@ export const THRONE_SANCTUARY = true;
 // A new heir can't be attacked until the end of their first turn (challenge fights excepted).
 export const NEWBORN_PROTECTION = true;
 export const ATTACK_ENDS_TURN = true;
+// Opening truce (rules-decisions 65): no attacks of any kind until this many rounds have finished (0 = off). Without it,
+// the first seats move out before anyone else and are the easiest early targets (seat 1 won 10.9% at 8 players).
+export const OPENING = { truceRounds: 1 };
 
 // Trade offer (rules-decisions 60): instead of playing a Hand Card, offer another player 1 of your resources
 // for 1 of a different kind of theirs; they accept or refuse. One offer per turn. A refused offer still uses

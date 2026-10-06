@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { afterAll, beforeAll, describe, it, expect } from 'vitest';
 import { byLabel, drive, newGame } from './helpers';
 import { CARDS } from '../src/data';
 import type { Game } from '../src/engine/game';
 import { THRONE, inBoard, key, manhattan, step, walkDistances } from '../src/engine/board';
-import { BOARD } from '../src/config';
+import { BOARD, OPENING } from '../src/config';
 import { readFileSync } from 'node:fs';
 import type { Decision, Expiry } from '../src/engine/types';
 
@@ -14,6 +14,11 @@ const startTurn = (g: Game, id: number) => {
 const endTurn = (g: Game, id: number) => {
   (g as unknown as { expire: (m: (x: Expiry) => boolean) => void }).expire(x => x.at === 'turnEnd' && x.player === id);
 };
+
+// These tests set up fights at the very start of a game; the opening truce is tested on its own below.
+const truce = OPENING.truceRounds;
+beforeAll(() => { OPENING.truceRounds = 0; });
+afterAll(() => { OPENING.truceRounds = truce; });
 
 describe('setup (Section 3)', () => {
   it('deals 3 Hand Cards (never Instants) and starts everyone at home with Gen I HP', () => {
@@ -712,5 +717,24 @@ describe('trade offers and Reaction cards (rules-decisions 60-61)', () => {
     const { g, p } = two();
     p.hand = [121, 122, 123, 124, 125, 126];
     expect(p.hand.some(c => g.canPlay(p, c))).toBe(false);
+  });
+});
+
+describe('opening truce (rules-decisions 65)', () => {
+  it('no attacks of any kind in round 1; from round 2 they are allowed', () => {
+    OPENING.truceRounds = 1;
+    try {
+      const g = newGame(2, ['brasador', 'kaysoley']);
+      const [a, b] = g.s.players;
+      b.pos = { x: 4, y: 4 }; a.pos = { x: 4, y: 5 };
+      g.s.round = 1;
+      expect(g.attackBlockedReason(a, b, 'basic')).toBe('the opening truce holds');
+      expect(g.attackBlockedReason(a, b, 'card')).toBe('the opening truce holds');
+      expect(g.attackBlockedReason(a, b, 'challenge')).toBeNull();
+      g.s.round = 2;
+      expect(g.attackBlockedReason(a, b, 'basic')).toBeNull();
+    } finally {
+      OPENING.truceRounds = 0;
+    }
   });
 });
