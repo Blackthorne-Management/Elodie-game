@@ -25,7 +25,7 @@ describe('setup (Section 3)', () => {
       expect(p.hp).toBe(g.house(p).hp[0]);
     }
     expect(new Set(g.s.players.map(p => p.house)).size).toBe(8);
-    expect(g.s.drawPile.length).toBe(120 - 24);
+    expect(g.s.drawPile.length).toBe(126 - 24);
   });
   it('can seat 2 players, leaving 6 tiles ownerless', () => {
     const g = newGame(2, ['dorini', 'brasador']);
@@ -119,16 +119,16 @@ describe('resources (Section 5)', () => {
     const g = newGame(3, ['dorini', 'brasador', 'kaysoley']);
     const [dorini, brasador, kay] = g.s.players;
     startTurn(g, 2);
-    g.resourceCheck(kay);                                  // own tile
+    drive(g.resourceCheck(kay));                                  // own tile
     expect(kay.res.influence).toBe(0);
     kay.pos = { x: 5, y: 5 };
     startTurn(g, 1);
     brasador.pos = { ...g.house('kaysoley').home };      // Kay Soley's Court tile, alone
-    g.resourceCheck(brasador);
+    drive(g.resourceCheck(brasador));
     expect(brasador.res.influence).toBe(3);
     startTurn(g, 0);
     dorini.pos = { ...g.house('kaysoley').home };         // now shares the tile with Brasador
-    g.resourceCheck(dorini);
+    drive(g.resourceCheck(dorini));
     expect(dorini.res.influence).toBe(2);
   });
   it('never pays from the same tile twice in a row, even after stepping away', () => {
@@ -136,20 +136,20 @@ describe('resources (Section 5)', () => {
     const p = g.p(0);
     const court = { ...g.house('kaysoley').home };
     p.pos = court;
-    startTurn(g, 0); g.resourceCheck(p);
+    startTurn(g, 0); drive(g.resourceCheck(p));
     p.lastScoredTile = g.s.turn!.scoredTile;
     startTurn(g, 0); p.pos = { x: 5, y: 5 };                // a turn spent elsewhere, scoring nothing
-    startTurn(g, 0); p.pos = court; g.resourceCheck(p);     // back again
+    startTurn(g, 0); p.pos = court; drive(g.resourceCheck(p));     // back again
     expect(p.res.influence).toBe(3);
     p.pos = { ...g.house('suzumori').home };                  // a different Court tile pays
-    startTurn(g, 0); g.resourceCheck(p);
+    startTurn(g, 0); drive(g.resourceCheck(p));
     expect(p.res.influence).toBe(6);
   });
   it('adds Dorini\'s bonus on Trade tiles', () => {
     const g = newGame(2, ['dorini', 'brasador']);
     const p = g.p(0);
     p.pos = { ...g.house('vaitama').home };              // an ownerless Trade tile
-    startTurn(g, 0); g.resourceCheck(p);
+    startTurn(g, 0); drive(g.resourceCheck(p));
     expect(p.res.wealth).toBe(4);
   });
 });
@@ -573,5 +573,111 @@ describe('houses', () => {
     const p = g.p(0);
     g.moveTo(p, { x: 8, y: 3 }, 'moves');
     expect(p.visited).toContain(key({ x: 8, y: 3 }));
+  });
+});
+
+describe('trade offers and Reaction cards (rules-decisions 60-61)', () => {
+  const two = () => {
+    const g = newGame(3, ['brasador', 'dorini', 'ironvow']);
+    for (const x of g.s.players) x.hand = [];
+    startTurn(g, 0);
+    g.s.turn!.moved = true;
+    return { g, p: g.p(0), o: g.p(1), c: g.p(2) };
+  };
+  it('offers a 1-for-1 trade as the action; the partner may accept', () => {
+    const { g, p, o } = two();
+    p.res = { influence: 2, fear: 0, wealth: 0 };
+    o.res = { influence: 0, fear: 2, wealth: 0 };
+    expect(g.turnActions(p).some(a => a.value.type === 'trade')).toBe(true);
+    drive(g.offerTrade(p), byLabel('P1', 'Accept'));
+    expect(p.res).toEqual({ influence: 1, fear: 1, wealth: 0 });
+    expect(o.res).toEqual({ influence: 1, fear: 1, wealth: 0 });
+    expect(g.s.turn!.actions).toBe(1);
+    expect(g.turnActions(p).some(a => a.value.type === 'trade' || a.value.type === 'card')).toBe(false);
+  });
+  it('a refused trade changes nothing and still uses the action', () => {
+    const { g, p, o } = two();
+    p.res = { influence: 2, fear: 0, wealth: 0 };
+    o.res = { influence: 0, fear: 2, wealth: 0 };
+    drive(g.offerTrade(p), byLabel('P1', 'Refuse'));
+    expect(p.res.influence).toBe(2);
+    expect(o.res.fear).toBe(2);
+    expect(g.s.turn!.actions).toBe(1);
+  });
+  it('Embargo cancels an accepted trade', () => {
+    const { g, p, o, c } = two();
+    p.res = { influence: 2, fear: 0, wealth: 0 };
+    o.res = { influence: 0, fear: 2, wealth: 0 };
+    c.hand = [122];
+    drive(g.offerTrade(p), byLabel('P1', 'Accept', 'Play Embargo'));
+    expect(p.res.influence).toBe(2);
+    expect(o.res.fear).toBe(2);
+    expect(c.hand).toEqual([]);
+  });
+  it('Ill Omen cancels the move: the roller stays put', () => {
+    const { g, p, o } = two();
+    g.s.turn!.moved = false;
+    const from = { ...p.pos! };
+    o.hand = [121];
+    drive(g.rollAndMove(p), byLabel('Play Ill Omen', 'North 1'));
+    expect(p.pos).toEqual(from);
+    expect(g.s.turn!.moved).toBe(true);
+  });
+  it('Intercept takes 1 off a tile gain', () => {
+    const { g, p, o } = two();
+    p.pos = { ...g.house('kaysoley').home };
+    o.hand = [123];
+    drive(g.resourceCheck(p), byLabel('Play Intercept'));
+    expect(p.res.influence).toBe(2);
+  });
+  it('Interference cancels a Hand Card; it is discarded with no effect', () => {
+    const { g, p, o } = two();
+    p.hand = [1];                                          // Royal Favor
+    o.hand = [124];
+    drive(g.playHandCard(p, 1), byLabel('Play Interference'));
+    expect(p.res.influence).toBe(0);
+    expect(g.s.discard).toContain(1);
+  });
+  it('Embargo can also cancel a Barter card, but not other cards', () => {
+    const { g, p, o } = two();
+    p.hand = [51, 1];                                      // Fair Exchange (Barter), Royal Favor
+    o.hand = [122];
+    drive(g.playHandCard(p, 1), byLabel('Play Embargo'));
+    expect(p.res.influence).toBe(2);
+    expect(o.hand).toEqual([122]);
+    drive(g.playHandCard(p, 51), byLabel('P1', 'Play Embargo'));
+    expect(p.res.wealth).toBe(0);
+    expect(o.hand).toEqual([]);
+  });
+  it('Ambush attacks a rival who stops beside you', () => {
+    const { g, p, o } = two();
+    o.pos = { x: 3, y: 3 };
+    p.pos = { x: 3, y: 4 };
+    o.hp = 1;
+    o.hand = [125];
+    drive(g.ambush(p), byLabel('Play Ambush', 'Take'));
+    expect(p.hp).toBe(p.maxHp - 1);
+  });
+  it('Ambush is not offered where an attack is not allowed (the Throne)', () => {
+    const { g, p, o } = two();
+    p.pos = { x: 8, y: 8 };
+    o.pos = { x: 8, y: 7 };
+    o.hand = [125];
+    const flow = g.ambush(p);
+    expect(flow.next().done).toBe(true);
+  });
+  it('Turnabout sends a targeted Hand Card to another player', () => {
+    const { g, p, o, c } = two();
+    for (const x of g.s.players) x.res.influence = 3;
+    p.hand = [34];                                         // Broken Trust
+    o.hand = [126];
+    drive(g.playHandCard(p, 34), byLabel('P1', 'Play Turnabout'));
+    expect(o.res.influence).toBe(3);
+    expect(c.res.influence).toBe(2);
+  });
+  it('Reaction cards are never played as your own action', () => {
+    const { g, p } = two();
+    p.hand = [121, 122, 123, 124, 125, 126];
+    expect(p.hand.some(c => g.canPlay(p, c))).toBe(false);
   });
 });

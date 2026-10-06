@@ -9,6 +9,9 @@ export interface AttackInfo {
   damage: number;            // what would land if not negated
 }
 
+// Reaction cards (rules-decisions 61): Hand Cards held and played on another player's turn, at one moment.
+export type ReactionKind = 'omen' | 'intercept' | 'interference' | 'embargo' | 'ambush' | 'turnabout';
+
 export interface CardDef {
   id: number;
   name: string;
@@ -26,6 +29,8 @@ export interface CardDef {
     resolve: (g: Game, defender: PlayerState, attack: AttackInfo) => Flow<'negate' | 'survive1'>;
   };
   counterspell?: boolean;
+  reaction?: ReactionKind;
+  timing?: string;           // reminder printed under the divider, e.g. "Play when a rival rolls to move"
   // Can this Hand Card be played right now (on your own turn)?
   playable?: (g: Game, p: PlayerState) => boolean;
   effect: (g: Game, self: PlayerState, card: CardDef) => Flow;

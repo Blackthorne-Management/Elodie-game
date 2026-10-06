@@ -34,6 +34,11 @@ export const THRONE_SANCTUARY = true;
 export const NEWBORN_PROTECTION = true;
 export const ATTACK_ENDS_TURN = true;
 
+// Trade offer (rules-decisions 60): instead of playing a Hand Card, offer another player 1 of your resources
+// for 1 of a different kind of theirs; they accept or refuse. One offer per turn. A refused offer still uses
+// your action when this is true; set it false to let a refused trader still play a card.
+export const TRADE = { offer: true, refusedUsesAction: true };
+
 // Safety cap on blows in one Challenge fight or duel (each blow is at least 1 damage, so real fights end long before).
 export const MAX_FIGHT_BLOWS = 60;
 

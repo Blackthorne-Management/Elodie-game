@@ -46,6 +46,8 @@ const SYMBOLS = {
   target: `<circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="28" fill="${INK}" stroke="none" opacity=".75"/>
     <circle cx="50" cy="50" r="19"/><circle cx="50" cy="50" r="7" fill="${INK}" stroke="none" opacity=".75"/>
     <path d="M50 4 V22 M50 78 V96 M4 50 H22 M78 50 H96" fill="none" stroke="url(#g)" stroke-width="5"/>`,
+  bolt: `<path d="M60 5 L20 55 L45 55 L36 95 L80 39 L55 39 L66 5 Z"/>
+    <path d="M58 16 L34 49" fill="none" stroke="#fff4c9" stroke-width="2" opacity=".6"/>`,
   cards: [-22, 0, 22].map(r => `<g transform="rotate(${r} 50 88)"><rect x="33" y="14" width="34" height="50" rx="5"/>
     <rect x="38" y="19" width="24" height="40" rx="3" fill="none" stroke="${INK}" stroke-width="1.8" opacity=".5"/></g>`).join(''),
 };

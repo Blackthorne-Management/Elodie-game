@@ -21,7 +21,7 @@ You win by building power across three pillars, Influence, Fear, and Wealth, the
 ## 2. COMPONENTS
 
 - 8 Bloodline decks (4 generation cards each: I, II, III, IV)
-- 1 Shared Action Deck (120 cards: 65 Hand Cards and 55 Instant/Event Cards)
+- 1 Shared Action Deck (126 cards: 71 Hand Cards, 6 of them Reactions, and 55 Instant/Event Cards)
 - Heart Tokens (life total, also your attack power)
 - Grudge Tokens (one per bloodline color/emblem)
 - Resource trackers or tokens for Influence, Fear, and Wealth (per player)
@@ -51,7 +51,9 @@ On your turn, in order:
 1. **Move:** roll 1d6 to determine your movement range this turn. Move your pawn that many spaces in a straight line, orthogonal only (forward or to the side, no diagonals), and you must commit to one direction for the full roll (no turning corners mid-move).
 2. **Resource Check:** If you end your move on a tile matching a resource type (Court = Influence, War = Fear, Trade = Wealth), gain 1 (or 2 if you're the only player on that tile). **Exception:** you cannot gain from your own owned tile, ever. **Exception:** you cannot gain from the same tile you scored from on your immediately preceding turn.
 3. **Combat (optional, free action):** If an enemy pawn is adjacent to you, you may attack. This does NOT use up your card play for the turn: you can attack and still play a Hand Card in the same turn. Damage dealt = your current Heart Token count. Defender may play a Block/Deflect card in response (see Section 6).
-4. **Play 1 Hand Card** from your hand (optional, you may pass).
+4. **Play 1 Hand Card** from your hand, **or offer a trade** (optional, you may pass). A trade offer: 1 of your resources for 1 of a different kind from any other player, who may accept or refuse. Either way it is your action.
+
+**Reactions:** Reaction cards are Hand Cards you hold for other players' turns. Each says the moment it can be played (when a rival rolls to move, plays a card, trades, takes from a tile, stops beside you, or targets you with a card). They are never your own action.
 5. **Draw back up to 3 Hand Cards.** If you draw an Instant/Event card, resolve it immediately; it does not count toward your hand of 3, and does not get held. Keep drawing until you hold 3 Hand Cards.
 
 **Hand size cap (always enforced):** your hand can never hold more than 3 Hand Cards, even briefly. If a Barter card, a forced-draw effect, or anything else would push you above 3, immediately discard your choice of cards back down to 3 before play continues. Discards from this go to the bottom of the discard pile as normal.
@@ -97,6 +99,7 @@ Two card types, one shared deck:
 - **Barter cards** (forced or optional card/resource swaps between players, e.g., *"A traveling merchant offers a trade: switch one card in your hand with the player to your left."* Not related to Trade tiles/Wealth specifically.)
 - Temporary truce cards (non-binding alliances, short duration)
 - Block/Deflect cards (rare, off-turn use)
+- Reaction cards (6: played on another player's turn at a set moment, e.g. cancel their move or their card)
 
 **B. Instant/Event Cards** (drawn, resolve immediately, never held)
 - Dice-based chaos affecting one or all players (gain/lose resources, gain/lose HP)
@@ -104,7 +107,7 @@ Two card types, one shared deck:
 - Targeted effects based on game state (e.g., "the player closest to the Throne loses 1 Influence")
 - Hand disruption (forced reveals, forced swaps)
 
-**Deck composition (120 cards total): 65 Hand Cards (including 8 Block/Deflect and 5 ranged-attack cards), 55 Instant/Event cards.** The full card-by-card list lives in `bloodline-card-list.md`.
+**Deck composition (126 cards total): 71 Hand Cards (including 8 Block/Deflect, 6 Reactions and 5 ranged-attack cards), 55 Instant/Event cards.** The full card-by-card list lives in `bloodline-card-list.md`.
 
 **The deck size and composition stays fixed regardless of player count.** No scaling up or down the Instant/Event ratio at lower player counts; the only adjustments for player count are the number of tiles in play and the win threshold (Section 8).
 

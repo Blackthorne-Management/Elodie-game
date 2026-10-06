@@ -199,6 +199,33 @@ These came up in code and weren't covered above; all confirmed as they stand.
   Block/Deflect cards aren't used in that duel.
 - **Specter targets:** a Specter may aim a card at any living player, including one the card helps.
 
+## Trading and Reaction cards (added after playtesting)
+- **Trade offer [60]:** after moving, instead of attacking or playing a Hand Card, you may offer one other player
+  1 of your resources for 1 of a *different* kind of theirs. They accept or refuse; nothing happens without their
+  yes. The offer is your action whether or not they accept (`TRADE.refusedUsesAction` in `src/config.ts`), and you
+  may make one offer per turn. Any distance; Specters can't trade. Uneasy Trade (card 49) stays as it is: a forced
+  trade, played as a card.
+- **Reaction cards [61]:** six new Hand Cards, numbered 121–126, in a new category, **Reaction**. The deck grows to 126
+  (71 Hand Cards, 55 Instants). You hold them like any Hand Card (they count toward your 3) and play one only at its
+  moment, on another player's turn; never as your own action. Each prints its moment under the divider.
+  - **Ill Omen [121]:** when another player rolls to move, cancel the move. They stay where they are this turn; the
+    resource check still happens on the square they're on.
+  - **Embargo [122]:** when another player's trade offer is accepted, or another player plays a Barter card,
+    cancel it. Nothing changes hands; the card is discarded and their action is spent. The trade partner can't
+    Embargo their own trade.
+  - **Intercept [123]:** when another player gains resources from a tile, they gain 1 less.
+  - **Interference [124]:** when another player plays a Hand Card, cancel it: discarded, no effect, action spent.
+  - **Ambush [125]:** when another player ends their roll-and-move next to you, attack them at once (damage = your
+    Heart Tokens, as a basic attack). Only where an attack is allowed (not on the Throne, not a protected heir,
+    not during a truce). They may Block it. It happens before their resource check.
+  - **Turnabout [126]:** when a Hand Card targets you, it targets another player of your choice instead (any other
+    valid target of that card). Counterspell is offered first.
+  - **Timing:** players are asked in turn order after the acting player; the first Reaction played closes that
+    moment. Reactions can't themselves be answered by another Reaction, Counterspell or Block.
+- **Simulation (300 bot games per count):** trades are about 10% of turns at 4+ players; every Reaction gets used
+  (Interference, Ill Omen and Intercept most). Games run about a round longer and Sudden Death decides 10–22% of
+  games (was 11–17%). Stillwater wins 19–20% at 4–8 players (was 12–17%); Dorini is lowest at 5–9%.
+
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):
 - **Before:** at 8 players, house wins ran from 1% to 46%, in order of Heart Tokens (Brasador on top, every

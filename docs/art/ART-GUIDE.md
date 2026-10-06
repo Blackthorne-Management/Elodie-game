@@ -396,11 +396,11 @@ faces** aren't art: the game draws them, so the numbers are always right.
 
 ## 10. Cards
 
-**The game draws every card's frame, title bar, text box and category symbol,** so all 120 match exactly and the
+**The game draws every card's frame, title bar, text box and category symbol,** so all 126 match exactly and the
 text is always right. Each card type has its own look: Hand Cards dark slate, Instants storm bronze, Elodie's cards
 gold with stars.
 
-**Card art: all 120 prompts are in [`CARD-PROMPTS.md`](CARD-PROMPTS.md).**
+**Card art: all 126 prompts are in [`CARD-PROMPTS.md`](CARD-PROMPTS.md).**
 - **Full trading-card artwork:** 1000 × 1400 (5:7), `card-<number>.png`, filling the whole card.
 - **Room for the overlay:** the top 12% calm for the title; the subject between 15% and 60%; the bottom 40% kept
   simple under the text box. No frame, title or text in the art.
@@ -438,7 +438,7 @@ ready for MakePlayingCards, plus `print/preview-*.jpg` contact sheets.
 
 **Card backs** (2; the game has a drawn back until then):
 
-All 120 game cards are **one shuffled deck** (the Shared Action Deck), so they share **one back**. Different backs
+All 126 game cards are **one shuffled deck** (the Shared Action Deck), so they share **one back**. Different backs
 would show whether the next card is an Instant. The character cards have their own back.
 
 | File | Size | Notes |
@@ -488,11 +488,11 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 
 | Cards | Product | Art |
 |---|---|---|
-| 120 game cards | Custom Game Cards, 63 × 88 mm | 1000 × 1400 (5:7) |
+| 126 game cards | Custom Game Cards, 63 × 88 mm | 1000 × 1400 (5:7) |
 | 32 character cards | Tarot size, 2.75" × 4.75" (70 × 121 mm) | 1050 × 1800 (7:12) |
 
 - **Resolution:** both sizes print at about 360–380 dpi from that art, and anything over 300 is crisp.
-- **Card backs:** all 120 game cards share one back (spot gold foil), because they're one shuffled deck. Characters
+- **Card backs:** all 126 game cards share one back (spot gold foil), because they're one shuffled deck. Characters
   get their own back.
 - **MPC's rule for every card size:** at 300 dpi, the outer **36 px on each side is bleed** (trimmed off), and the
   **safe zone is a further 36 px inside** the cut line. Keep everything important within it.
@@ -503,7 +503,7 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
   - **Bleed:** about 44 px on every side, trimmed off. Art and overlay borders run into it.
   - **Safe zone:** about 88 px in from every edge. Titles, rules text and anything that must survive the cut stay
     inside it.
-  - **Uploading:** fronts as "Different images" (`card-001` … `card-120` in order), back as "Same image", plus a
+  - **Uploading:** fronts as "Different images" (`card-001` … `card-126` in order), back as "Same image", plus a
     foil mask for the gold on the back.
 - **Character-card print files (tarot, 2.75" × 4.75"):** minimum 897 × 1497 px at 300 dpi.
   - **What I'll make:** each finished card at **1050 × 1752 px**: the same shape, about 350 dpi, with only 24 px
@@ -531,7 +531,7 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 | 8 | Elodie, icon and title | `elodie.png`, `app-icon.png`, `title-*.png` | as in §11 | Opaque | Medium |
 | 9 | Seats | `seat-<house>.png` ×8 | 1024² | Transparent | Optional |
 | 10 | Duel background | `duel-bg.png` | 1290 × 2796 | Opaque | Optional |
-| 11 | Card art | `card-<number>.png` ×120 | 1000 × 1400 | Opaque | High (10 Elodie cards first) |
+| 11 | Card art | `card-<number>.png` ×126 | 1000 × 1400 | Opaque | High (10 Elodie cards first) |
 | 12 | Card overlays | `overlay-<type>.png` ×4 | 1000 × 1400 (character: 1050 × 1800) | Transparent | After the art |
 
 House file names: `brasador`, `dorini`, `ironvow`, `suzumori`, `vaitama`, `kaysoley`, `agnivansh`,

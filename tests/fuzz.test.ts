@@ -1,4 +1,5 @@
 import { inBoard } from '../src/engine/board';
+import { CARDS } from '../src/data';
 import { describe, it, expect } from 'vitest';
 import { randomGame } from './helpers';
 import { HAND_SIZE } from '../src/config';
@@ -9,8 +10,8 @@ function invariants(r: Runner) {
   const inHands = s.players.flatMap(p => p.hand);
   const marked = s.effects.map(e => e.cardId).filter((c): c is number => c !== undefined);
   const all = [...s.drawPile, ...s.discard, ...s.removed, ...s.inPlay, ...inHands, ...marked];
-  expect(all.length).toBe(120);
-  expect(new Set(all).size).toBe(120);
+  expect(all.length).toBe(CARDS.length);
+  expect(new Set(all).size).toBe(CARDS.length);
   for (const p of s.players) {
     if (r.pending?.kind !== 'discard') expect(p.hand.length).toBeLessThanOrEqual(HAND_SIZE);
     for (const v of Object.values(p.res)) expect(v).toBeGreaterThanOrEqual(0);

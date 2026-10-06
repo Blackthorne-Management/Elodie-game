@@ -49,13 +49,15 @@ export function botChoose(g: Game, d: Decision, rng: Rng): number {
         return throneDistance(to) + manhattan(to, g.house(v).home) * 0.1;
       }));
     }
-    case 'player': return choosePlayer(g, me, d, pers);
+    case 'player': return d.context?.trade ? tradePartnerChoice(g, me, d, pers) : choosePlayer(g, me, d, pers);
     case 'card': return chooseCard(g, me, d);
     case 'discard': return lowestValue(d.options.map(o => o.value as number));
     case 'block': return chooseBlock(g, me, d, pers);
     case 'counterspell':
     case 'confirm': return confirm(g, me, d, rng) ? 0 : 1;
-    case 'pool': return choosePool(g, me, d);
+    case 'pool': return d.context?.trade ? tradePoolChoice(g, me, d, pers) : choosePool(g, me, d);
+    case 'reaction': return chooseReaction(g, me, d, pers, rng) ? 1 : 0;
+    case 'trade': return acceptTrade(g, me, d.context as { from: number; give: Pillar; take: Pillar }) ? 0 : 1;
     case 'legacy': return pick(d.options.map(o => LEGACY_ORDER.length - LEGACY_ORDER.indexOf(o.value as HouseId)));
     case 'challenge': return 0;    // not challenging means the claimant wins, so always fight
     case 'specter': return chooseSpecter(g, d);
@@ -148,6 +150,10 @@ function turnChoice(g: Game, me: PlayerState, d: Decision<TurnAction>, pers: Per
   });
   // An attack's score is roughly on the same scale as a card's (a kill is worth about 3-5).
   if (atk !== null && atk.score > 0.4 && (bestCard < 0 || atk.score * 1.2 >= bestCardScore)) return atk.index;
+  // A trade offer instead of a card, when one fixes a missing pillar and the partner would likely accept.
+  const trade = idx(a => a.type === 'trade');
+  const plan = trade >= 0 ? planTrade(g, me, pers) : null;
+  if (plan && plan.score > Math.max(0.6, bestCardScore * 0.8)) return trade;
   if (bestCard >= 0) return bestCard;
 
   return Math.max(0, idx(a => a.type === 'end'));
@@ -186,6 +192,89 @@ function abilityScore(g: Game, me: PlayerState, id: string, pers: Personality): 
     case 'semanLape': return g.adjacentTo(me).some(o => o.hp >= me.hp) ? 1.2 : 0;
     case 'anantaYuddha': return g.basicTargets(me).length > 0 ? 1.5 : 0;
     default: return 0.6;
+  }
+}
+
+// ---------------------------------------------------------------- trades and reactions
+
+// What one more (or one less) of a pillar is worth to p: pillars under the per-pillar minimum count double.
+function pillarNeed(g: Game, p: PlayerState, x: Pillar, change: 1 | -1, pers: Personality) {
+  const t = g.thresholds(p);
+  const after = p.res[x] + change;
+  const short = change > 0 ? p.res[x] < t.minEach : after < t.minEach;
+  return (short ? 2 : 1) + (pers.focus === x ? 0.3 : 0);
+}
+const withRes = (p: PlayerState, res: PlayerState['res']): PlayerState => ({ ...p, res });
+
+// Would `me` accept: receive 1 `give`, hand over 1 `take`? Never if it lets the offerer claim, or helps a runaway leader.
+export function acceptTrade(g: Game, me: PlayerState, offer: { from: number; give: Pillar; take: Pillar }): boolean {
+  const from = g.p(offer.from);
+  const theirs = { ...from.res, [offer.give]: from.res[offer.give] - 1, [offer.take]: from.res[offer.take] + 1 };
+  if (g.eligible(withRes(from, theirs))) return false;
+  if (danger(g, from) > danger(g, me) + 4) return false;
+  const pers = PERSONALITY[me.house];
+  return pillarNeed(g, me, offer.give, 1, pers) - pillarNeed(g, me, offer.take, -1, pers) >= 0;
+}
+
+// The bot's best trade: the pillar it lacks most for one it can spare, with the friendliest partner who'd say yes.
+export function planTrade(g: Game, me: PlayerState, pers: Personality, partnerId?: number, giveFixed?: Pillar) {
+  let best: { partner: number; give: Pillar; take: Pillar; score: number } | null = null;
+  const partners = g.tradePartners(me).filter(o => partnerId === undefined || o.id === partnerId);
+  for (const o of partners) for (const give of g.tradeGives(me, o)) {
+    if (giveFixed && give !== giveFixed) continue;
+    for (const take of PILLARS) {
+      if (take === give || o.res[take] <= 0) continue;
+      const mine = { ...me.res, [give]: me.res[give] - 1, [take]: me.res[take] + 1 };
+      let score = pillarNeed(g, me, take, 1, pers) - pillarNeed(g, me, give, -1, pers);
+      if (g.eligible(withRes(me, mine))) score += 2;
+      if (!acceptTrade(g, o, { from: me.id, give, take })) score -= 3;
+      score -= danger(g, o) * 0.02;
+      if (!best || score > best.score) best = { partner: o.id, give, take, score };
+    }
+  }
+  return best;
+}
+
+function tradePartnerChoice(g: Game, me: PlayerState, d: Decision, pers: Personality): number {
+  const plan = planTrade(g, me, pers);
+  const i = d.options.findIndex(o => o.value === plan?.partner);
+  return Math.max(0, i);
+}
+
+function tradePoolChoice(g: Game, me: PlayerState, d: Decision, pers: Personality): number {
+  const partner = d.context?.partner as number | undefined;
+  const give = d.context?.give as Pillar | undefined;
+  const plan = planTrade(g, me, pers, partner, give);
+  const want = give ? plan?.take : plan?.give;
+  return Math.max(0, d.options.findIndex(o => o.value === want));
+}
+
+function chooseReaction(g: Game, me: PlayerState, d: Decision, pers: Personality, rng: Rng): boolean {
+  const c = d.context ?? {};
+  const actor = g.p(c.actor as number);
+  const threat = g.eligible(actor) ? 10 : danger(g, actor) - danger(g, me);
+  switch (c.reaction) {
+    case 'omen': {
+      const roll = (c.roll as number) ?? 6;
+      if (g.eligible(actor) && actor.pos && throneDistance(actor.pos) <= roll + 1) return true;
+      return threat > 6 && rng() < 0.3;              // otherwise save it to stop a Claim
+    }
+    case 'intercept': {
+      const res = { ...actor.res, [c.pillar as Pillar]: actor.res[c.pillar as Pillar] + (c.amount as number) };
+      return g.eligible(withRes(actor, res)) || threat > 3;
+    }
+    case 'interference': return threat > 4;
+    case 'embargo': {
+      if (!c.trade) return threat > 3;
+      const partner = g.p(c.partner as number);
+      return Math.max(threat, danger(g, partner) - danger(g, me)) > 3;
+    }
+    case 'ambush': {
+      const dmg = attackDamage(g, me, actor);
+      return dmg >= actor.hp || g.eligible(actor) || (pers.aggression > 0.5 && me.hp >= actor.hp);
+    }
+    case 'turnabout': return !FRIENDLY.test(g.card(c.played as number).name);
+    default: return false;
   }
 }
 

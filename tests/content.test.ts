@@ -3,12 +3,14 @@ import { CARDS, HOUSES } from '../src/data';
 import { manhattan } from '../src/engine/board';
 
 describe('the shared deck', () => {
-  it('has 120 cards numbered 1-120', () => {
-    expect(CARDS).toHaveLength(120);
+  it('has 126 cards numbered 1-126', () => {
+    expect(CARDS).toHaveLength(126);
     CARDS.forEach((c, i) => expect(c.id).toBe(i + 1));
   });
-  it('has 65 Hand Cards and 55 Instants', () => {
-    expect(CARDS.filter(c => c.kind === 'hand')).toHaveLength(65);
+  it('has 71 Hand Cards (6 of them Reactions) and 55 Instants', () => {
+    expect(CARDS.filter(c => c.kind === 'hand')).toHaveLength(71);
+    expect(CARDS.filter(c => c.category === 'Reaction').map(c => c.id)).toEqual([121, 122, 123, 124, 125, 126]);
+    expect(CARDS.filter(c => c.reaction).every(c => c.responseOnly && c.timing)).toBe(true);
     expect(CARDS.filter(c => c.kind === 'instant')).toHaveLength(55);
   });
   it('has 8 Block/Deflect cards and 5 ranged attacks', () => {

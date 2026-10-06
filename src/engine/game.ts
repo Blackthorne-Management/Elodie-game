@@ -6,14 +6,14 @@ import type {
   HouseId, LogEvent, Option, Pillar, PlayerState, Pos,
 } from './types';
 import { PILLARS, TILE_PILLAR } from './types';
-import type { Ability, AttackInfo, CardDef, Content, HouseDef, PassiveHooks } from './content';
+import type { Ability, AttackInfo, CardDef, Content, HouseDef, PassiveHooks, ReactionKind } from './content';
 import type { Rng } from './rng';
 import { makeRng, rollD6, shuffle } from './rng';
 import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, TRADE, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
 } from '../config';
 
 export class GameOver extends Error {}
@@ -27,6 +27,7 @@ export type TurnAction =
   | { type: 'card'; card: number }
   | { type: 'ability'; id: string }
   | { type: 'claim' }
+  | { type: 'trade' }
   | { type: 'end' };
 
 export class Game {
@@ -211,8 +212,44 @@ export class Game {
         this.log(`${target.name} counters ${card.name}!`, 'block', { player: target.id, target: user.id });
         return null;
       }
+      // Turnabout: the card falls on another player of the target's choice instead.
+      const alts = candidates.filter(o => o.id !== target.id);
+      const tb = alts.length ? target.hand.find(c => this.card(c).reaction === 'turnabout') : undefined;
+      if (tb !== undefined) {
+        const play = yield* this.ask(target, 'reaction', `${user.name} plays ${card.name} on you. Respond?`,
+          [{ label: 'Let it happen', value: false }, { label: `Play ${this.card(tb).name}`, value: true }],
+          { card: tb, reaction: 'turnabout', actor: user.id, played: card.id });
+        if (play) {
+          this.discardFromHand(target, tb);
+          this.log(`${target.name} answers with ${this.card(tb).name}!`, 'block', { player: target.id, target: user.id, cards: [tb] });
+          const next = yield* this.choosePlayer(target, alts, `Turnabout: who does ${card.name} fall on instead?`, { card: card.id, user: user.id, turnabout: true });
+          if (next) this.log(`${card.name} turns toward ${next.name}.`, 'info', { player: next.id });
+          return next;
+        }
+      }
     }
     return target;
+  }
+
+  // A reaction window: other players holding a matching Reaction card may play it, asked in seat order after
+  // `actor`. The first one played closes the window. Reactions themselves can't be answered.
+  *reaction(kinds: ReactionKind[], actor: PlayerState, what: string, context: Record<string, unknown> = {},
+    may: (o: PlayerState) => boolean = () => true): Flow<{ player: PlayerState; card: CardDef } | null> {
+    for (const o of this.seatsAfter(actor)) {
+      if (!may(o)) continue;
+      const held = o.hand.filter(c => kinds.includes(this.card(c).reaction!));
+      for (const c of held) {
+        const def = this.card(c);
+        const play = yield* this.ask(o, 'reaction', `${what} Respond?`,
+          [{ label: 'Let it happen', value: false }, { label: `Play ${def.name}`, value: true }],
+          { ...context, card: c, reaction: def.reaction, actor: actor.id });
+        if (!play) continue;
+        this.discardFromHand(o, c);
+        this.log(`${o.name} answers with ${def.name}!`, 'block', { player: o.id, target: actor.id, cards: [c] });
+        return { player: o, card: def };
+      }
+    }
+    return null;
   }
 
   // ---------------------------------------------------------------- effects
@@ -406,6 +443,15 @@ export class Game {
     }
     this.log(`${p.name} plays ${def.name}.`, 'card', { player: p.id, cards: [c] });
     this.s.inPlay.push(c);
+    // Interference cancels any Hand Card; Embargo cancels a Barter card.
+    const stop = yield* this.reaction(def.category === 'Barter' ? ['interference', 'embargo'] : ['interference'],
+      p, `${p.name} plays ${def.name}.`, { played: c });
+    if (stop) {
+      this.log(`${def.name} is cancelled and has no effect.`, 'blocked', { player: p.id, cards: [c] });
+      this.s.inPlay = this.s.inPlay.filter(x => x !== c);
+      this.s.discard.push(c);
+      return;
+    }
     yield* this.resolveCard(def, p);
     this.s.inPlay = this.s.inPlay.filter(x => x !== c);
     // Cards that "mark" themselves stay out until an effect returns them.
@@ -494,6 +540,13 @@ export class Game {
     this.log(`${p.name} rolls a ${rolled}${roll !== rolled ? ` (moves up to ${roll})` : ''}.`, 'roll', { player: p.id, amount: rolled });
     t.moved = true;
 
+    // Ill Omen: the move is cancelled; they stay where they are (the resource check still happens there).
+    if (yield* this.reaction(['omen'], p, `${p.name} rolls to move up to ${roll}.`, { roll })) {
+      this.log(`Ill Omen: ${p.name} does not move this turn.`, 'blocked', { player: p.id });
+      yield* this.resourceCheck(p);
+      return;
+    }
+
     const march = this.findEffect('forcedMarch', p.id, false);
     const puppeteer = march ? null : this.redirectChooser(p, REDIRECT_MOVE);
     if (march && march.by !== undefined) {
@@ -508,11 +561,19 @@ export class Game {
     } else {
       yield* this.moveFree(p, roll);
     }
-    this.resourceCheck(p);
+    yield* this.ambush(p);
+    yield* this.resourceCheck(p);
+  }
+
+  // Ambush: a rival next to where the mover stopped may attack them at once (if an attack is allowed).
+  *ambush(p: PlayerState): Flow {
+    const ok = (o: PlayerState) => !!(o.pos && p.pos && adjacent(o.pos, p.pos) && !this.attackBlockedReason(o, p, 'basic'));
+    const hit = yield* this.reaction(['ambush'], p, `${p.name} stops beside you.`, {}, ok);
+    if (hit) yield* this.attack(hit.player, p, 'basic');
   }
 
   // Step 2: the resource check.
-  resourceCheck(p: PlayerState) {
+  *resourceCheck(p: PlayerState): Flow {
     const t = this.s.turn;
     if (!p.pos || !t) return;
     const tile = this.tileAt(p.pos);
@@ -525,8 +586,13 @@ export class Game {
     if (this.findEffect('sabotage', p.id)) return this.log(`Sabotage: ${p.name} gains nothing from tiles this turn.`, 'blocked', { player: p.id });
     const pillar = TILE_PILLAR[tile.house.tileType];
     const alone = this.playersOn(p.pos).length === 1;
-    const n = (alone ? TUNING.tileAlone : TUNING.tileShared) + this.hook(p, 'tileBonus', pillar);
-    if (this.gain(p, pillar, n, `${tile.house.name} ${tile.house.tileType} tile`)) t.scoredTile = k;
+    let n = (alone ? TUNING.tileAlone : TUNING.tileShared) + this.hook(p, 'tileBonus', pillar);
+    // Intercept: they gain 1 less.
+    if (yield* this.reaction(['intercept'], p, `${p.name} is about to gain ${n} ${cap(pillar)} from ${tile.house.name}'s tile.`, { pillar, amount: n })) {
+      n -= 1;
+      this.log(`Intercepted: ${p.name} gains 1 less.`, 'blocked', { player: p.id });
+    }
+    if (n > 0 && this.gain(p, pillar, n, `${tile.house.name} ${tile.house.tileType} tile`)) t.scoredTile = k;
   }
 
   // ---------------------------------------------------------------- combat (Section 6)
@@ -801,6 +867,9 @@ export class Game {
     if (t.moved && actionLeft && !midAttack) {
       for (const c of p.hand) if (this.canPlay(p, c)) out.push({ label: `Play ${this.card(c).name}`, value: { type: 'card', card: c } });
     }
+    if (TRADE.offer && t.moved && actionLeft && !midAttack && !t.offered && this.tradePartners(p).length) {
+      out.push({ label: 'Offer a trade', value: { type: 'trade' } });
+    }
     for (const a of this.usableAbilities(p)) out.push({ label: a.name, value: { type: 'ability', id: a.id } });
     if (onThrone(p.pos) && this.eligible(p)) out.push({ label: 'Claim the Throne', value: { type: 'claim' } });
     if (t.moved) out.push({ label: 'End turn', value: { type: 'end' } });
@@ -811,7 +880,7 @@ export class Game {
     this.s.turnNo++;
     this.s.turn = {
       player: p.id, moved: false, attacks: 0, attacksAllowed: 1, actions: 0, actionsAllowed: 1,
-      rollBonus: 0, aggressive: false, damageDealt: 0, scoredTile: null, stopDrawing: false, extraTurn,
+      rollBonus: 0, aggressive: false, damageDealt: 0, scoredTile: null, stopDrawing: false, extraTurn, offered: false,
     };
     // Effects that last "until your next turn" end now; "next turn" effects arm.
     this.expire(x => x.at === 'turnStart' && x.player === p.id);
@@ -868,8 +937,46 @@ export class Game {
         break;
       }
       case 'claim': yield* this.claim(p); break;
+      case 'trade': yield* this.offerTrade(p); break;
       case 'end': break;
     }
+  }
+
+  // ---------------------------------------------------------------- the trade offer (rules-decisions 60)
+
+  // What p could give a partner: a resource p holds, for a different one the partner holds.
+  tradeGives(p: PlayerState, partner: PlayerState): Pillar[] {
+    return PILLARS.filter(y => p.res[y] > 0 && PILLARS.some(x => x !== y && partner.res[x] > 0));
+  }
+  tradePartners(p: PlayerState): PlayerState[] {
+    return this.others(p).filter(o => this.tradeGives(p, o).length > 0);
+  }
+
+  *offerTrade(p: PlayerState): Flow {
+    const t = this.s.turn!;
+    t.offered = true;
+    t.actions++;
+    const partner = yield* this.choosePlayer(p, this.tradePartners(p), 'Offer a trade to whom?', { trade: true });
+    if (!partner) return;
+    const give = (yield* this.choosePillar(p, `Trade: give ${partner.name} 1 of`, this.tradeGives(p, partner), { trade: true, partner: partner.id }))!;
+    const take = (yield* this.choosePillar(p, `Trade: ask ${partner.name} for 1`, PILLARS.filter(x => x !== give && partner.res[x] > 0),
+      { trade: true, partner: partner.id, give }))!;
+    this.log(`${p.name} offers ${partner.name} 1 ${cap(give)} for 1 ${cap(take)}.`, 'trade', { player: p.id, target: partner.id });
+    const yes = yield* this.ask(partner, 'trade', `${p.name} offers you 1 ${cap(give)} for 1 of your ${cap(take)}.`,
+      [{ label: 'Accept', value: true }, { label: 'Refuse', value: false }], { from: p.id, give, take });
+    if (!yes) {
+      this.log(`${partner.name} refuses the trade.`, 'trade', { player: partner.id, target: p.id });
+      if (!TRADE.refusedUsesAction) t.actions--;
+      return;
+    }
+    // Embargo: anyone else may cancel the deal.
+    if (yield* this.reaction(['embargo'], p, `${p.name} and ${partner.name} trade ${cap(give)} for ${cap(take)}.`,
+      { trade: true, partner: partner.id, give, take }, o => o.id !== partner.id)) {
+      this.log('Embargo: the trade is cancelled. Nothing changes hands.', 'blocked', { player: p.id });
+      return;
+    }
+    this.lose(p, give, 1, 'trade'); this.gain(partner, give, 1, 'trade');
+    this.lose(partner, take, 1, 'trade'); this.gain(p, take, 1, 'trade');
   }
 
   // ---------------------------------------------------------------- the Specter (Section 10)

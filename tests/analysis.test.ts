@@ -6,7 +6,7 @@ import { CONTENT } from '../src/data';
 import { Runner } from '../src/engine/runner';
 import { makeRng } from '../src/engine/rng';
 import { botChoose } from '../src/ai/bot';
-import { BOARD, THRESHOLDS, TUNING } from '../src/config';
+import { BOARD, THRESHOLDS, TRADE, TUNING } from '../src/config';
 import { readFileSync } from 'node:fs';
 import { Game } from '../src/engine/game';
 
@@ -28,6 +28,10 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
   // LAND=none plays on an all-land board; LAND=<file> on a map of '.' land and '~' sea rows.
   if (env.LAND) BOARD.land = env.LAND === 'none' ? null : readFileSync(env.LAND, 'utf8').trim().split('\n');
   if (env.FLAT_HP) for (const h of Object.values(CONTENT.houses)) h.hp = h.hp.map(() => Number(env.FLAT_HP)) as typeof h.hp;
+  // TRADE=off removes the trade offer; REACT=off makes every reaction window pass.
+  if (env.TRADE === 'off') TRADE.offer = false;
+  const origReaction = Game.prototype.reaction;
+  if (env.REACT === 'off') Game.prototype.reaction = function* () { return null; };
   if (env.COMBINED) [THRESHOLDS.small.combined, THRESHOLDS.normal.combined] = env.COMBINED.split('/').map(Number);
   // Record each claimant's resources at the moment they claim.
   const atClaim: { res: number[]; n: number }[] = [];
@@ -50,7 +54,8 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
     let byCombined = 0, bySingle = 0;
     const claimRound: number[] = [];
     let claims = 0, sudden = 0, challenges = 0, claimantSurvived = 0, failedClaims = 0, reckonings = 0;
-    let turns = 0, attackTurns = 0, cardTurns = 0, idleTurns = 0;
+    let turns = 0, attackTurns = 0, cardTurns = 0, tradeTurns = 0, idleTurns = 0;
+    let offers = 0, refused = 0, embargoed = 0;
     let specterTurns = 0, specterPlays = 0;
     let firstWinRound: number[] = [];
     for (let seed = 1; seed <= N; seed++) {
@@ -69,12 +74,12 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
       reckonings += s.log.filter(e => e.kind === 'reckoning').length;
 
       // Per-turn activity.
-      let cur: { player: number; acted: 'attack' | 'card' | null; specter: boolean } | null = null;
+      let cur: { player: number; acted: 'attack' | 'card' | 'trade' | null; specter: boolean } | null = null;
       const close = () => {
         if (!cur) return;
         if (cur.specter) return;
         turns++;
-        if (cur.acted === 'attack') attackTurns++; else if (cur.acted === 'card') cardTurns++; else idleTurns++;
+        if (cur.acted === 'attack') attackTurns++; else if (cur.acted === 'card') cardTurns++; else if (cur.acted === 'trade') tradeTurns++; else idleTurns++;
       };
       let turnCount = 0;
       for (const e of s.log) {
@@ -91,6 +96,9 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
         if (e.kind === 'block' && e.cards) for (const c of e.cards) blockPlays[CONTENT.cards[c - 1].name] = (blockPlays[CONTENT.cards[c - 1].name] ?? 0) + 1;
         if (e.kind === 'drawPrivate' && e.cards) for (const c of e.cards) cardsSeen[CONTENT.cards[c - 1].name] = (cardsSeen[CONTENT.cards[c - 1].name] ?? 0) + 1;
         if (e.kind === 'ability' && / uses /.test(e.text)) { const a = e.text.split(' uses ')[1].replace(/\.$/, ''); abilityUses[a] = (abilityUses[a] ?? 0) + 1; }
+        if (e.kind === 'trade' && / offers /.test(e.text)) { offers++; if (cur && e.player === cur.player) cur.acted = cur.acted ?? 'trade'; }
+        if (e.kind === 'trade' && /refuses/.test(e.text)) refused++;
+        if (e.kind === 'blocked' && /^Embargo: the trade/.test(e.text)) embargoed++;
         if (e.kind === 'challenge') challenges++;
         if (e.kind === 'claim' && e.tag === 'combined') { byCombined++; claimRound.push(s.round); }
         if (e.kind === 'claim' && e.tag === 'single') { bySingle++; claimRound.push(s.round); }
@@ -109,7 +117,8 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
       `Claims made: ${byCombined + bySingle} (${pct(byCombined, byCombined + bySingle)} by combined total, ${pct(bySingle, byCombined + bySingle)} by one pillar)`,
       `Challenges per game ${(challenges / N).toFixed(2)}; claims that failed ${(failedClaims / N).toFixed(2)}/game; wins after beating challengers ${pct(claimantSurvived, N)}`,
       `Deaths per game ${avg(deaths).toFixed(1)}; Specters per game ${avg(specters).toFixed(2)}; Reckonings per game ${(reckonings / N).toFixed(2)}`,
-      `Turn actions: attack ${pct(attackTurns, turns)}, card ${pct(cardTurns, turns)}, neither ${pct(idleTurns, turns)}`,
+      `Turn actions: attack ${pct(attackTurns, turns)}, card ${pct(cardTurns, turns)}, trade offer ${pct(tradeTurns, turns)}, neither ${pct(idleTurns, turns)}`,
+      `Trade offers per game ${(offers / N).toFixed(2)}: refused ${pct(refused, offers)}, embargoed ${pct(embargoed, offers)}`,
       `Specter turns ${specterTurns}, of which mischief played ${pct(specterPlays, specterTurns)}`,
       `House wins: ${houseLine}`,
       `Win by seat order: ${seatLine}`);
@@ -126,8 +135,9 @@ it.skipIf(!process.env.ANALYSE)('design report', () => {
     `Most played Hand Cards: ${top(cardPlays)}`,
     `Watched cards (plays per draw): ${['Plunder', 'Vanishing Act', 'Golden Harvest'].map(nm => `${nm} ${((cardPlays[nm] ?? 0) / Math.max(1, cardsSeen[nm] ?? 0)).toFixed(2)}`).join(', ')}`,
     `Least played when held (plays per draw): ${playRate.slice(0, 10).map(([x, r]) => `${x} ${r.toFixed(2)}`).join(', ')}`,
-    `Block/Deflect used: ${top(blockPlays, 9)}`,
+    `Block/Deflect and Reactions used: ${top(blockPlays, 16)}`,
     `Abilities used: ${top(abilityUses, 20)}`);
   Game.prototype.claim = origClaim;
+  Game.prototype.reaction = origReaction;
   console.log(lines.join('\n'));
 }, 3_600_000);

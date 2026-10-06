@@ -268,6 +268,10 @@ export function PlayScreen() {
       {genericDecision && (
         <div className="ask2">
           <div className="ask2-prompt">{genericDecision.prompt}</div>
+          {/* A Reaction you could play: show it in full. */}
+          {genericDecision.kind === 'reaction' && typeof genericDecision.context?.card === 'number' && (
+            <CardRow g={g} cards={[genericDecision.context.card]} />
+          )}
           {CARD_CHOICES.has(genericDecision.kind) ? (
             <>
               {/* Choosing between cards: see each one in full, as if holding it. */}

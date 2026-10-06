@@ -1,11 +1,11 @@
 # THRONE OF BLOODLINES — SHARED ACTION DECK
-### Full card list — 120 cards (65 Hand Cards / 55 Instant-Event Cards)
+### Full card list — 126 cards (71 Hand Cards, 6 of them Reactions / 55 Instant-Event Cards)
 
 This is the complete draft deck referenced in Section 7 of the rulebook. Numbers are for reference/printing, not in-game card IDs. Effects are written tight and literal, ready to transcribe to physical cards as-is. Flag anything that needs rewording or rebalancing after a playtest.
 
 ---
 
-## HAND CARDS (65 total — drawn, held up to 3, play 1 per turn)
+## HAND CARDS (71 total — drawn, held up to 3, play 1 per turn; Reactions only at their moment)
 
 ### Influence / Court (7)
 1. **Royal Favor** — Gain 2 Influence.
@@ -89,6 +89,14 @@ This is the complete draft deck referenced in Section 7 of the rulebook. Numbers
 63. **Counterspell** — Negate a Hand Card effect targeting you (does not apply to combat damage).
 64. **Steadfast** — Negate an attack, but only if your Heart Tokens are at half of your max or below.
 65. **Last Stand** — Negate an attack that would reduce you to 0 Heart Tokens. You survive with 1 Heart Token instead.
+
+### Reaction (6) — played only at their moment, on another player's turn (rules-decisions 61)
+121. **Ill Omen** — When another player rolls to move, cancel the move: they stay where they are this turn.
+122. **Embargo** — When another player makes a trade or plays a Barter card, cancel it. Nothing changes hands.
+123. **Intercept** — When another player gains resources from a tile, they gain 1 less.
+124. **Interference** — When another player plays a Hand Card, cancel it. It is discarded with no effect.
+125. **Ambush** — When another player ends their move next to you, attack them at once.
+126. **Turnabout** — When a Hand Card targets you, it targets another player of your choice instead.
 
 ---
 

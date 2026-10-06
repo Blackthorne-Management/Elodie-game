@@ -1,7 +1,7 @@
-# Card art: 120 prompts
+# Card art: 126 prompts
 
 Each block is a complete prompt: paste one per image, in any chat, in any order. **Attach the board painting
-(the map you made) to every prompt** as the style reference; that and the shared style line keep 120 pictures
+(the map you made) to every prompt** as the style reference; that and the shared style line keep 126 pictures
 looking like one set.
 
 **What you're making:** the full card artwork, like a trading card. The painting fills the whole card. Later
@@ -11,7 +11,7 @@ part. So the art must have **no frame, no border, no title and no text**, and mu
 | | |
 |---|---|
 | **Size** | 1000 × 1400 (vertical, 5:7, standard trading-card shape) |
-| **Labels** | Every card is tagged `HAND CARD`, `INSTANT` or `ELODIE (Instant)`; that tag says which overlay goes on it (silver, bronze or gold-starred). Cards 1–65 are Hand Cards; 66–120 are Instants, 10 of them Elodie cards (81, 83, 84, 89, 90, 94, 95, 96, 98, 102). |
+| **Labels** | Every card is tagged `HAND CARD`, `INSTANT` or `ELODIE (Instant)`; that tag says which overlay goes on it (silver, bronze or gold-starred). Cards 1–65 and 121–126 (the Reactions) are Hand Cards; 66–120 are Instants, 10 of them Elodie cards (81, 83, 84, 89, 90, 94, 95, 96, 98, 102). |
 | **File name** | `card-<number>.png`, e.g. `card-1.png` for Royal Favor |
 | **Layout** | Top 12%: calm background for the title. 15–60%: the main subject. Bottom 40%: the scene continues under the text box, with nothing important in it. |
 
@@ -796,3 +796,43 @@ Illustration for a fantasy board game card: a frowning merchant weighing a tiny 
 ```
 Illustration for a fantasy board game card: an old treasure map on a table with a compass, a coin and a dagger pinning its corners, an X glowing faintly. Vertical trading-card artwork, 5:7 portrait, the painting filling the whole image edge to edge. Keep the top 12% calm, simple background (sky, wall, mist or shadow) because a title will sit there. Put the main subject in the upper-middle of the picture, between about 15% and 60% from the top. The bottom 40% will be partly covered by a text box: continue the scene there (ground, floor, water, cloth, shadow) with no faces, hands or important details. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes. Avoid: any text, letters, numbers, words or runes; card frames, borders, title banners or text boxes; user-interface elements; watermarks or signatures; photorealism; 3D render look; anime or cartoon style.
 ```
+
+## Reaction (6)
+
+New Hand Cards played on another player's turn. They use the silver Hand Card overlay.
+
+**121. Ill Omen** · `HAND CARD` — When another player rolls to move, cancel the move: they stay where they are this turn.  
+`card-121.png`
+```
+Illustration for a fantasy board game card: a black crow landing on a milestone in the middle of a dusty road, a marching column of soldiers and a horse halted behind it in alarm, an overcast amber sky. Vertical trading-card artwork, 5:7 portrait, the painting filling the whole image edge to edge. Keep the top 12% calm, simple background (sky, wall, mist or shadow) because a title will sit there. Put the main subject in the upper-middle of the picture, between about 15% and 60% from the top. The bottom 40% will be partly covered by a text box: continue the scene there (ground, floor, water, cloth, shadow) with no faces, hands or important details. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes. Avoid: any text, letters, numbers, words or runes; card frames, borders, title banners or text boxes; user-interface elements; watermarks or signatures; photorealism; 3D render look; anime or cartoon style.
+
+
+**122. Embargo** · `HAND CARD` — When another player makes a trade or plays a Barter card, cancel it. Nothing changes hands.  
+`card-122.png`
+```
+Illustration for a fantasy board game card: a harbour official in a dark coat pressing a heavy wax seal onto a chain stretched across a busy pier, merchant ships held at anchor behind him, crates stacked and roped shut. Vertical trading-card artwork, 5:7 portrait, the painting filling the whole image edge to edge. Keep the top 12% calm, simple background (sky, wall, mist or shadow) because a title will sit there. Put the main subject in the upper-middle of the picture, between about 15% and 60% from the top. The bottom 40% will be partly covered by a text box: continue the scene there (ground, floor, water, cloth, shadow) with no faces, hands or important details. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes. Avoid: any text, letters, numbers, words or runes; card frames, borders, title banners or text boxes; user-interface elements; watermarks or signatures; photorealism; 3D render look; anime or cartoon style.
+
+
+**123. Intercept** · `HAND CARD` — When another player gains resources from a tile, they gain 1 less.  
+`card-123.png`
+```
+Illustration for a fantasy board game card: a hooded highwayman on a stone bridge lifting a coin purse from a passing merchant's cart, the merchant looking the other way, late afternoon light. Vertical trading-card artwork, 5:7 portrait, the painting filling the whole image edge to edge. Keep the top 12% calm, simple background (sky, wall, mist or shadow) because a title will sit there. Put the main subject in the upper-middle of the picture, between about 15% and 60% from the top. The bottom 40% will be partly covered by a text box: continue the scene there (ground, floor, water, cloth, shadow) with no faces, hands or important details. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes. Avoid: any text, letters, numbers, words or runes; card frames, borders, title banners or text boxes; user-interface elements; watermarks or signatures; photorealism; 3D render look; anime or cartoon style.
+
+
+**124. Interference** · `HAND CARD` — When another player plays a Hand Card, cancel it. It is discarded with no effect.  
+`card-124.png`
+```
+Illustration for a fantasy board game card: a courtier's gloved hand catching a royal messenger's sealed scroll mid-hand-off in a candlelit corridor, the messenger startled, a broken seal falling. Vertical trading-card artwork, 5:7 portrait, the painting filling the whole image edge to edge. Keep the top 12% calm, simple background (sky, wall, mist or shadow) because a title will sit there. Put the main subject in the upper-middle of the picture, between about 15% and 60% from the top. The bottom 40% will be partly covered by a text box: continue the scene there (ground, floor, water, cloth, shadow) with no faces, hands or important details. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes. Avoid: any text, letters, numbers, words or runes; card frames, borders, title banners or text boxes; user-interface elements; watermarks or signatures; photorealism; 3D render look; anime or cartoon style.
+
+
+**125. Ambush** · `HAND CARD` — When another player ends their move next to you, attack them at once.  
+`card-125.png`
+```
+Illustration for a fantasy board game card: riders bursting from tall roadside reeds onto a lone traveller at dusk, swords drawn, the traveller's horse rearing, dust in the low sun. Vertical trading-card artwork, 5:7 portrait, the painting filling the whole image edge to edge. Keep the top 12% calm, simple background (sky, wall, mist or shadow) because a title will sit there. Put the main subject in the upper-middle of the picture, between about 15% and 60% from the top. The bottom 40% will be partly covered by a text box: continue the scene there (ground, floor, water, cloth, shadow) with no faces, hands or important details. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes. Avoid: any text, letters, numbers, words or runes; card frames, borders, title banners or text boxes; user-interface elements; watermarks or signatures; photorealism; 3D render look; anime or cartoon style.
+
+
+**126. Turnabout** · `HAND CARD` — When a Hand Card targets you, it targets another player of your choice instead.  
+`card-126.png`
+```
+Illustration for a fantasy board game card: a cloaked duelist turning a mirrored shield so that a glowing arrow glances off and curves away toward a distant figure, sparks of light in the air. Vertical trading-card artwork, 5:7 portrait, the painting filling the whole image edge to edge. Keep the top 12% calm, simple background (sky, wall, mist or shadow) because a title will sit there. Put the main subject in the upper-middle of the picture, between about 15% and 60% from the top. The bottom 40% will be partly covered by a text box: continue the scene there (ground, floor, water, cloth, shadow) with no faces, hands or important details. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes. Avoid: any text, letters, numbers, words or runes; card frames, borders, title banners or text boxes; user-interface elements; watermarks or signatures; photorealism; 3D render look; anime or cartoon style.
+

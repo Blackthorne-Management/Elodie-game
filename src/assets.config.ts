@@ -104,6 +104,7 @@ export const CATEGORY_ART: Record<string, { glyph: string; icon?: string }> = {
   Targeted: { glyph: '◎', icon: '/art/icons/cat-target.svg' },
   'Hand Disruption': { glyph: '🂠', icon: '/art/icons/cat-cards.svg' },
   Wealth: { glyph: '◈', icon: '/art/icons/cat-coins.svg' },
+  Reaction: { glyph: '⚡', icon: '/art/icons/cat-bolt.svg' },
 };
 
 export const CARD_ART = {

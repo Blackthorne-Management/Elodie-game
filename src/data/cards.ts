@@ -286,7 +286,7 @@ hand(46, 'Bridge the Gap', 'Movement', 'Move directly to any tile within 8 space
       // Played before moving, it is this turn's move.
       t.moved = true;
       g.moveTo(p, to, 'bridges the gap');
-      g.resourceCheck(p);
+      yield* g.resourceCheck(p);
     } else {
       g.moveTo(p, to, 'bridges the gap');
     }
@@ -640,6 +640,30 @@ instant(120, 'Treasure Map', 'Wealth', 'Reveal the top card of the discard pile.
     g.log(`${c.name}: the top of the discard pile is ${def.name}.`, 'info', { cards: [top] });
     if (/wealth/i.test(def.text)) g.gain(p, 'wealth', 1, c.name);
   });
+
+// ---------------------------------------------------------------- REACTIONS (rules-decisions 61)
+// Hand Cards held for another player's turn. The engine opens a window at each moment; the card itself does nothing
+// when "played" outside it, so the effect lives in the engine (Game.reaction and its callers).
+const reaction = (id: number, name: string, kind: NonNullable<CardDef['reaction']>, timing: string, text: string, flavor: string) =>
+  hand(id, name, 'Reaction', text, nothing, { responseOnly: true, reaction: kind, timing, flavor });
+reaction(121, 'Ill Omen', 'omen', 'Play when a rival rolls to move',
+  'When another player rolls to move, cancel the move: they stay where they are this turn.',
+  'A crow on the road, and the whole column halts.');
+reaction(122, 'Embargo', 'embargo', 'Play when rivals trade',
+  'When another player makes a trade or plays a Barter card, cancel it. Nothing changes hands.',
+  'No ship leaves harbour without the right seal.');
+reaction(123, 'Intercept', 'intercept', 'Play when a rival takes from a tile',
+  'When another player gains resources from a tile, they gain 1 less.',
+  'Every road has a toll, if you know who to pay.');
+reaction(124, 'Interference', 'interference', 'Play when a rival plays a card',
+  'When another player plays a Hand Card, cancel it. It is discarded with no effect.',
+  'A word in the right ear, and the order is never given.');
+reaction(125, 'Ambush', 'ambush', 'Play when a rival stops beside you',
+  'When another player ends their move next to you, attack them at once.',
+  'They never saw the second rider.');
+reaction(126, 'Turnabout', 'turnabout', 'Play when a card targets you',
+  'When a Hand Card targets you, it targets another player of your choice instead.',
+  'The arrow was always meant for someone.');
 
 defs.sort((a, b) => a.id - b.id);
 export const CARDS: CardDef[] = defs;

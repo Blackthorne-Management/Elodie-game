@@ -94,6 +94,7 @@ export interface TurnState {
   scoredTile: string | null;
   stopDrawing: boolean;
   extraTurn: boolean;
+  offered: boolean;          // made this turn's trade offer
 }
 
 export interface GameConfig {
@@ -137,7 +138,7 @@ export interface GameState {
 
 export type DecisionKind =
   | 'turn' | 'move' | 'player' | 'card' | 'block' | 'counterspell' | 'pool' | 'direction'
-  | 'square' | 'legacy' | 'challenge' | 'confirm' | 'specter' | 'discard';
+  | 'square' | 'legacy' | 'challenge' | 'confirm' | 'specter' | 'discard' | 'reaction' | 'trade';
 
 export interface Option<V = unknown> { label: string; value: V }
 
