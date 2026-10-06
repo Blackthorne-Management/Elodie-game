@@ -81,9 +81,9 @@ export const BOARD_ART = {
   highlight: '#f3d27a',
 };
 
-// One full-body picture per character (docs/art/CHARACTER-PROMPTS.md). Pawns cut a head-and-shoulders circle
+// One full-body picture per character, painted as a 5:7 card (docs/art/CHARACTER-PROMPTS.md). Pawns cut a head-and-shoulders circle
 // from it: zoom is how much the picture is enlarged inside the circle, y where the head sits (from the top).
-export const PORTRAIT_CROP = { pawnZoom: 2.6, pawnY: '7%' };
+export const PORTRAIT_CROP = { pawnZoom: 2.8, pawnY: '13%' };
 
 // Each card category's symbol: an image once painted (docs/art/ART-GUIDE.md §9), a glyph until then.
 export const CATEGORY_ART: Record<string, { glyph: string; icon?: string }> = {
@@ -106,6 +106,8 @@ export const CATEGORY_ART: Record<string, { glyph: string; icon?: string }> = {
 export const CARD_ART = {
   // Card pictures by card number (docs/art/CARD-PROMPTS.md), e.g. 1: '/art/cards/card-1.webp'.
   pictures: {} as Record<number, string>,
+  // Per-design overlays laid over the art (border, title plate, text box), 1000 × 1400 transparent PNGs.
+  overlays: {} as { hand?: string; instant?: string; elodie?: string; character?: string },
   back: '#3a1d24',
   hand: '#2b2f3a',
   instant: '#3a2b1f',

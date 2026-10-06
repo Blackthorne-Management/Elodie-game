@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Game } from '../../engine/game';
 import { CategorySymbol } from '../CardFrame';
+import { CARD_ART } from '../../assets.config';
 import { cardKindClass } from '../cardKind';
 
 // Your hand, fanned. Tap a card to lift it; tap Play on a lifted card to play it.
@@ -18,7 +19,8 @@ export function Hand({ g, cards, playable, onPlay, onRead, dim }: {
         const canPlay = playable.has(c);
         return (
           <div key={c} className={`card2 ${cardKindClass(def)} ${canPlay ? 'glow' : ''} ${up ? 'up' : ''} ${def.elodie ? 'elodie' : ''}`}
-            style={{ ['--a' as string]: `${angle}deg`, ['--i' as string]: i - (n - 1) / 2 }}
+            style={{ ['--a' as string]: `${angle}deg`, ['--i' as string]: i - (n - 1) / 2,
+              ...(CARD_ART.pictures[c] ? { backgroundImage: `linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.8)), url("${CARD_ART.pictures[c]}")`, backgroundSize: 'cover', backgroundPosition: 'center 30%' } : {}) }}
             onClick={() => setLifted(up ? null : c)} role="button" tabIndex={0}
             onKeyDown={e => { if (e.key === 'Enter') setLifted(up ? null : c); }}>
             <span className="c-cat">{def.category}</span>
