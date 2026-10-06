@@ -404,19 +404,21 @@ gold with stars.
   simple under the text box. No frame, title or text in the art.
 - **Do the 10 Elodie cards first** (marked ✦).
 
-**Overlays (later):** one transparent PNG per card design, laid over every card of that type:
+**Overlays (done, drawn in code):** one transparent PNG per card design, laid over every card of that type:
 
 | File | Used for |
 |---|---|
-| `overlay-hand.png` | Hand Cards |
-| `overlay-instant.png` | Instants |
-| `overlay-elodie.png` | Elodie's 10 cards |
-| `overlay-character.png` | Character cards: tarot size, 1050 × 1800 (name plate and abilities panel instead of a rules box) |
+| `overlay-hand.png` | Hand Cards (silver) |
+| `overlay-instant.png` | Instants (bronze) |
+| `overlay-elodie.png` | Elodie's 10 cards (gold with stars) |
+| `overlay-character.png` | Character cards (gold and wine): tarot print size 1050 × 1752, name plate with medallions for the generation and crest, abilities panel |
 
-- **Size and shape:** 1000 × 1400 for the game cards (1050 × 1800 for the character overlay), with a transparent centre.
+- **Size and shape:** print size with bleed: 1000 × 1360 for the game cards, 1050 × 1752 for characters, transparent centre.
+- **Where they live:** masters in `docs/art/overlays/`, web copies in `public/art/overlays/`. Regenerate both with
+  `node scripts/make-overlays.cjs docs/art/overlays public/art/overlays` (colours and geometry are at the top of the script).
 - **What each overlay holds:** the border, a title plate across the top 12%, and the text box over the lower part.
 - **Text:** the game writes the words into the plate and the box, so the overlays stay blank.
-- **Order:** we'll design these after the art, so they suit it.
+- **Tweaks:** once the art is in, adjust the colours in the script if a border fights the paintings.
 
 **Card backs** (2; the game has a drawn back until then):
 

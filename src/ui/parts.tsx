@@ -4,7 +4,7 @@ import type { Game } from '../engine/game';
 import { roman } from '../engine/game';
 import type { PlayerState } from '../engine/types';
 import { PILLARS } from '../engine/types';
-import { HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS } from '../assets.config';
+import { CARD_ART, HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS } from '../assets.config';
 import { CardFrame } from './CardFrame';
 
 export function Crest({ house, size = 32 }: { house: PlayerState['house']; size?: number }) {
@@ -51,14 +51,37 @@ export function Sheet({ title, onClose, children }: { title: string; onClose: ()
   );
 }
 
+// The character card (tarot): full-body art under the character overlay, the generation and crest in its
+// medallions, and this generation's passive and abilities in the panel.
+export function CharacterCard({ game, p }: { game: Game; p: PlayerState }) {
+  const h = game.house(p);
+  const art = PORTRAITS[p.house][p.gen - 1];
+  const level = p.gen >= 3 ? 2 : 1;
+  const abilities = h.abilities.filter(a => a.gen <= p.gen);
+  return (
+    <div className="charcard2" style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
+      {art ? <img className="art" src={art} alt={`${p.name}, Gen ${roman(p.gen)}`} /> : <span className="silhouette" aria-hidden />}
+      {CARD_ART.overlays.character && <img className="ov" src={CARD_ART.overlays.character} alt="" />}
+      <div className="cc-name">{h.name.replace('House ', '')}</div>
+      <div className="cc-gen" aria-label={`Generation ${roman(p.gen)}`}>{roman(p.gen)}</div>
+      <div className="cc-crest"><Crest house={p.house} size={24} /></div>
+      <div className="cc-panel">
+        <div className="cc-type">{h.homeland} · Gen {roman(p.gen)} · {h.hp[p.gen - 1]} ♥</div>
+        <div className="cc-lines">
+          <span><b>{h.passiveName}:</b> {h.passiveText[level - 1]}</span>
+          {abilities.map(a => <span key={a.id}><b>{a.name}:</b> {a.text}</span>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function HouseSheet({ game, p, onClose }: { game: Game; p: PlayerState; onClose: () => void }) {
   const h = game.house(p);
   const level = p.gen >= 3 ? 2 : 1;
   return (
     <Sheet title={h.name} onClose={onClose}>
-      {PORTRAITS[p.house][p.gen - 1] && (
-        <div className="charcard" style={{ ['--c' as string]: HOUSE_ART[p.house].color }}><img src={PORTRAITS[p.house][p.gen - 1]} alt={`${p.name}, Gen ${roman(p.gen)}`} /></div>
-      )}
+      <CharacterCard game={game} p={p} />
       <div className="house-head">
         <Crest house={p.house} size={48} />
         <div>

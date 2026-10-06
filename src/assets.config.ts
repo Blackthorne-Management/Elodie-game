@@ -107,7 +107,12 @@ export const CARD_ART = {
   // Card pictures by card number (docs/art/CARD-PROMPTS.md), e.g. 1: '/art/cards/card-1.webp'.
   pictures: {} as Record<number, string>,
   // Per-design overlays laid over the art (border, title plate, text box), 1000 × 1400 transparent PNGs.
-  overlays: {} as { hand?: string; instant?: string; elodie?: string; character?: string },
+  overlays: {
+    hand: '/art/overlays/overlay-hand.webp',
+    instant: '/art/overlays/overlay-instant.webp',
+    elodie: '/art/overlays/overlay-elodie.webp',
+    character: '/art/overlays/overlay-character.webp',
+  } as { hand?: string; instant?: string; elodie?: string; character?: string },
   back: '#3a1d24',
   hand: '#2b2f3a',
   instant: '#3a2b1f',
