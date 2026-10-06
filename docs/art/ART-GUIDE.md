@@ -471,13 +471,15 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 | Cards | Product | Art |
 |---|---|---|
 | 120 game cards | Custom Game Cards, 63 × 88 mm | 1000 × 1400 (5:7) |
-| 32 character cards | Tarot size, 70 × 120 mm | 1050 × 1800 (7:12) |
+| 32 character cards | Tarot size, 2.75" × 4.75" (70 × 121 mm) | 1050 × 1800 (7:12) |
 
 - **Resolution:** both sizes print at about 360–380 dpi from that art, and anything over 300 is crisp.
 - **Card backs:** all 120 game cards share one back (spot gold foil), because they're one shuffled deck. Characters
   get their own back.
-- **Game-card print files (MPC's spec):** minimum 816 × 1110 px at 300 dpi, which is the 63 × 88 mm card plus 3 mm of
-  bleed on every side; max 32 MB each.
+- **MPC's rule for every card size:** at 300 dpi, the outer **36 px on each side is bleed** (trimmed off), and the
+  **safe zone is a further 36 px inside** the cut line. Keep everything important within it.
+- **Game-card print files (MPC's spec):** minimum 816 × 1110 px at 300 dpi, which is the 63 × 88 mm card plus bleed
+  (the card itself is 744 × 1038, the safe area 672 × 966); max 32 MB each.
   - **What I'll make:** each finished front at **1000 × 1360 px**. It's the same shape, kept at the art's full
     resolution (about 370 dpi), with only 20 px trimmed from the top and bottom of each painting.
   - **Bleed:** about 44 px on every side, trimmed off. Art and overlay borders run into it.
@@ -485,7 +487,11 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
     inside it.
   - **Uploading:** fronts as "Different images" (`card-001` … `card-120` in order), back as "Same image", plus a
     foil mask for the gold on the back.
-- **Character cards (tarot):** I'll check MPC's tarot spec the same way when we order them.
+- **Character-card print files (tarot, 2.75" × 4.75"):** minimum 897 × 1497 px at 300 dpi.
+  - **What I'll make:** each finished card at **1050 × 1752 px**: the same shape, about 350 dpi, with only 24 px
+    trimmed from the top and bottom of the 1050 × 1800 painting.
+  - **Bleed:** about 42 px on every side. **Safe zone:** about 84 px in from every edge.
+- **Orientation:** every card is portrait, top edge up; the game-card back is symmetrical.
 
 ## 14. Checklist
 
