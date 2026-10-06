@@ -492,6 +492,12 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
     trimmed from the top and bottom of the 1050 × 1800 painting.
   - **Bleed:** about 42 px on every side. **Safe zone:** about 84 px in from every edge.
 - **Orientation:** every card is portrait, top edge up; the game-card back is symmetrical.
+- **Layout guides for Photopea or Photoshop:** [`templates/card-template.png`](templates/card-template.png) (1000 × 1360)
+  and [`templates/character-template.png`](templates/character-template.png) (1050 × 1752).
+  - **What they show:** the bleed, the cut line, the safe zone, the title band and the text-box area.
+  - **How to use them:** put one in a bottom layer, design or check on top, then hide it before exporting.
+  - **New document settings:** 1000 × 1360 px at 368 DPI (or 1050 × 1752 at 375 DPI), transparent background,
+    RGB 8-bit sRGB.
 
 ## 14. Checklist
 
