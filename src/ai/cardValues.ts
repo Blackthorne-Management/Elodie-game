@@ -4,6 +4,8 @@ import type { Pillar, PlayerState } from '../engine/types';
 import { PILLARS } from '../engine/types';
 import { manhattan, onThrone, throneDistance } from '../engine/board';
 import type { Personality } from './bot';
+import { destinationScore } from './bot';
+import { key } from '../engine/board';
 
 // Value of holding a card (used for discards, barters, Scout Ahead). Higher = keep.
 const HOLD: Record<number, number> = {
@@ -34,6 +36,21 @@ const topRival = (g: Game, p: PlayerState) =>
   rivals(g, p).reduce<PlayerState | null>((a, b) => (!a || g.total(b) > g.total(a) ? b : a), null);
 
 // How good is playing card `id` right now? <= 0.3 means hold it.
+// Uneasy Trade's best forced swap: take the pillar you lack, give one you can spare.
+export function forcedTradeGain(g: Game, p: PlayerState, pers: Personality): number {
+  const t = g.thresholds(p);
+  let best = 0;
+  for (const o of g.others(p)) for (const give of PILLARS) for (const take of PILLARS) {
+    if (give === take || p.res[give] <= 0 || o.res[take] <= 0) continue;
+    const cost = p.res[give] - 1 < t.minEach ? weight(g, p, give, pers) + 0.8 : 1;
+    let gain = weight(g, p, take, pers) - cost;
+    const res = { ...p.res, [give]: p.res[give] - 1, [take]: p.res[take] + 1 };
+    if (g.eligible({ ...p, res })) gain += 3;
+    best = Math.max(best, gain);
+  }
+  return best;
+}
+
 export function playScore(g: Game, p: PlayerState, id: number, pers: Personality): number {
   const w = (x: Pillar) => weight(g, p, x, pers);
   const adj = g.adjacentTo(p);
@@ -84,14 +101,29 @@ export function playScore(g: Game, p: PlayerState, id: number, pers: Personality
     case 39: return 0.2;
     case 40: return lead ? 0.9 : 0;
     case 41: return t && !t.moved ? 0.8 : 0.4;
-    case 42: return 0.2;
+    case 42: {                                   // Hidden Path: the best square you've stood on, if it beats this one
+      if (!p.pos) return 0;
+      const here = destinationScore(g, p, p.pos, pers);
+      const best = Math.max(...p.visited.filter(k => k !== key(p.pos!)).map(k => {
+        const [x, y] = k.split(',').map(Number);
+        return destinationScore(g, p, { x, y }, pers);
+      }));
+      return best - here > 2 ? Math.min(3, (best - here) / 3) : 0;
+    }
     case 43: return 0.4;
     case 44: return stronger ? 1.5 : 0.2;
     case 45: return 0.3 + 0.5 * pers.aggression;
     case 46: return g.eligible(p) && p.pos && throneDistance(p.pos) <= 8 && !onThrone(p.pos) ? 6 : 0.4;
     case 47: return p.pos && manhattan(p.pos, g.house(p).home) > 10 && stronger ? 1 : 0;
-    case 48: case 52: case 53: return 0.2;
-    case 49: return 0.3;
+    case 52: {                                   // Black Market Contact: swap for the top 3 discards if they're better
+      const top = g.s.discard.filter(c => g.card(c).kind === 'hand').slice(-3);
+      if (top.length < 3) return 0;
+      const avg = (cs: number[]) => cs.reduce((a, c) => a + cardValue(g, c), 0) / cs.length;
+      const mine = p.hand.filter(c => c !== id);
+      return mine.length && avg(top) - avg(mine) > 1 ? 1 : 0.2;
+    }
+    case 48: case 53: return 0.2;
+    case 49: return forcedTradeGain(g, p, pers);  // Uneasy Trade: you pick both sides
     case 50: return adj.some(o => o.hand.length) ? 1 : 0;
     case 51: return w('wealth') - 0.2;
     case 54: case 56: return stronger ? 1.8 : 0.1;

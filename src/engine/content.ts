@@ -47,6 +47,7 @@ export interface PassiveHooks {
   basicAttackBonus?: (level: number) => number;
   fearOnKill?: (level: number) => number;
   fearOnLanded?: (level: number) => number;
+  stepOnLanded?: (level: number) => number;        // free steps after landing an attack
   peeksPerRound?: (level: number) => number;
   reckoningCancels?: (level: number) => number;
 }

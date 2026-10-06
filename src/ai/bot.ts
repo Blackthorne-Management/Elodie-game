@@ -183,7 +183,7 @@ function abilityScore(g: Game, me: PlayerState, id: string, pers: Personality): 
     case 'gritoDeGuerra': return others.some(o => o.res.fear >= 3) ? 0.8 : 0.2;
     case 'reinadoDeCenizas': return me.kills >= 2 || g.eligible({ ...me, res: { ...me.res, fear: me.res.fear + me.kills } }) ? 2 : 0;
     case 'daftar': return me.res.wealth >= 3 ? 0.9 : 0;
-    case 'bazaar': return me.res.wealth >= 7 ? 1 : 0;
+    case 'bazaar': return me.res.wealth >= 5 && (g.eligible(me) || g.basicTargets(me).length > 0) ? 1 : 0;
     case 'greatRaid': return g.eligible(me) || (pers.aggression > 0.5 && g.s.round > 4) ? 1.5 : 0;
     case 'kagemimi': return 0.6;
     case 'sasayakiHa': return 1;
@@ -413,6 +413,10 @@ function choosePool(g: Game, me: PlayerState, d: Decision): number {
     const v = g.s.players.find(p => p.name === victimName);
     return v ? argmax(pillars.map(x => v.res[x])) : 0;
   }
+  // Uneasy Trade: give what you can best spare, take what you lack most.
+  const t = g.thresholds(me);
+  if (/^Uneasy Trade: give/.test(d.prompt)) return argmax(pillars.map(x => me.res[x] - t.minEach));
+  if (/^Uneasy Trade: take/.test(d.prompt)) return argmax(pillars.map(x => t.minEach - me.res[x] + (PERSONALITY[me.house].focus === x ? 0.3 : 0)));
   if (/give .+ 1 of/.test(d.prompt)) return argmax(pillars.map(x => -me.res[x]));
   // Gaining: build toward the nearest threshold.
   return argmax(pillars.map(x => me.res[x] + (PERSONALITY[me.house].focus === x ? 0.5 : 0)));

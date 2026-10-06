@@ -182,6 +182,30 @@ describe('combat and death (Sections 6 and 9)', () => {
     expect(a.kills).toBe(1);
     expect(a.res.fear).toBe(0);                         // Sangre Ardiente starts at Gen III
   });
+  it('Agni ki Shakti III: a free step after landing an attack, no Fear', () => {
+    const g = newGame(2, ['agnivansh', 'kaysoley']);
+    const [a, b] = g.s.players;
+    b.pos = { x: a.pos!.x, y: a.pos!.y + 1 };
+    a.hand = []; b.hand = [];
+    a.gen = 3;
+    startTurn(g, 0);
+    g.s.turn!.moved = true;
+    const prompts: string[] = [];
+    drive(g.basicAttack(a, b), d => { prompts.push(d.prompt); return 0; });
+    expect(prompts.some(x => x.startsWith('Agni ki Shakti: move up to 1'))).toBe(true);
+    expect(a.res.fear).toBe(0);
+  });
+  it('Bazaar al-Dhahab costs 3 Wealth for an extra action', () => {
+    const g = newGame(2, ['dorini', 'kaysoley']);
+    const d = g.p(0);
+    d.gen = 4; d.res.wealth = 3;
+    startTurn(g, 0);
+    const bazaar = g.usableAbilities(d).find(x => x.id === 'bazaar')!;
+    expect(bazaar).toBeTruthy();
+    drive(g.useAbility(d, bazaar));
+    expect(d.res.wealth).toBe(0);
+    expect(g.s.turn!.actionsAllowed).toBe(2);
+  });
   it('Sangre Ardiente: +1 Fear on kill from Gen III', () => {
     const { g, a, b } = duelists();
     a.gen = 3;

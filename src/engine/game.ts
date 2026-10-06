@@ -670,6 +670,9 @@ export class Game {
     if (this.s.turn?.player === a.id) this.s.turn.damageDealt += dealt;
     const fear = this.hook(a, 'fearOnLanded');
     if (fear) this.gain(a, 'fear', fear, 'combat win');
+    // Agni ki Shakti III: a free step after landing an attack (rules-decisions 64).
+    const steps = this.hook(a, 'stepOnLanded');
+    if (steps && !a.specter && a.pos && !this.inChallenge) yield* this.moveFree(a, steps, `Agni ki Shakti: move up to ${steps}`);
     yield* this.flushDeaths();
     return { landed: true, damage: dealt };
   }

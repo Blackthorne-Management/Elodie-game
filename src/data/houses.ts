@@ -67,10 +67,10 @@ export const HOUSES: Record<HouseId, HouseDef> = {
       },
       {
         id: 'bazaar', name: 'Bazaar al-Dhahab', gen: 4, limit: 'turn',
-        text: 'Spend 5 Wealth: take one extra action this turn (an attack or a Hand Card).',
-        canUse: (g, p) => p.res.wealth >= 5 && g.isActive(p),
+        text: 'Spend 3 Wealth: take one extra action this turn (an attack, a Hand Card or a trade offer).',
+        canUse: (g, p) => p.res.wealth >= 3 && g.isActive(p),
         *run(g, p) {
-          g.lose(p, 'wealth', 5, 'Golden Bazaar');
+          g.lose(p, 'wealth', 3, 'Golden Bazaar');
           g.s.turn!.actionsAllowed++;
         },
       },
@@ -200,8 +200,8 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     lore: "Jwaladesh's warriors follow the fire-god's doctrine: hesitation is the only true death. House Agnivansh trains for speed above all, trusting that momentum itself is a kind of armor.",
     hp: [3, 3, 3, 2],
     passiveName: 'Agni ki Shakti',
-    passiveText: ['Your basic attacks deal +1 damage.', 'Also: +1 Fear whenever your attack lands.'],
-    passive: { basicAttackBonus: () => 1, fearOnLanded: level => (level >= 2 ? 1 : 0) },
+    passiveText: ['Your basic attacks deal +1 damage.', 'Also: after your attack lands, you may move 1 space.'],
+    passive: { basicAttackBonus: () => 1, stepOnLanded: level => (level >= 2 ? 1 : 0) },
     halfMoveOnKill: gen => gen >= 2,
     abilities: [
       {

@@ -56,7 +56,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 ## Combat
 - **One basic attack per turn [14].** Attack cards are separate.
 - **Attacking ends your turn** (changed after Phase 1). The attack is your action; you still draw back to 3.
-  - Dorini IV's Golden Bazaar gives one extra action (attack or card). Agnivansh IV's Endless War lets one
+  - Dorini IV's Golden Bazaar gives one extra action (attack, card or trade offer); it costs 3 Wealth ([64]). Agnivansh IV's Endless War lets one
     attack action be up to 3 attacks. The turn ends after the last.
   - Ironvow's Raider's Charge (Gen II+): attack before moving (that's your action), then still move.
   - **Cards rewritten for "card or attack"** (they assumed you attack in the same turn as playing them):
@@ -249,6 +249,21 @@ These came up in code and weren't covered above; all confirmed as they stand.
   - **Picking houses vs. the blind draw:** in a simulated draft (first pick takes the strongest house) the first pick
     won up to 2.1× its share at 6 players and the last pick 0.54×; with the blind draw no seat beat ~1.1×. The blind
     Grudge Token lottery stays the rule.
+
+- **Follow-up pass [64]** (5,000-game statistical check after [63]):
+  - **Agnivansh, Agni ki Shakti III:** "+1 Fear whenever your attack lands" became "after your attack lands, you
+    may move 1 space" (not in a Challenge). Agnivansh was 1.32× its share at 6–8 players; now 1.00× overall, 1.14× there.
+  - **Dorini IV, Bazaar al-Dhahab:** costs 3 Wealth (was 5); it was used 25 times in 2,500 games.
+  - **Bots** now play Uneasy Trade, Hidden Path and Black Market Contact (they never did). Whispers of Doubt,
+    Traveling Merchant, Broker's Fee and Homeward Bound remain bot-blind (information and card swaps).
+  - **Seat order at 8 players:** with the bot fixes, seats win 11.0–14.1% (p ≈ 0.4): no real first- or last-seat
+    effect; no change made.
+  - **Tested, not adopted: damage cap 2** (`TUNING.maxDamage`). It cuts Specters at 8 players from 3.9 to 2.7 a game,
+    but lifts Ironvow to 1.24× at big tables and Dorini to 1.13× (χ² 40 vs 26). Try it after real playtests if big games
+    feel too deadly.
+  - **Result:** every house 0.90–1.09× its fair share (χ² 26). Suzumori 0.90× and Vai'tama 0.93× stay a little low;
+    their kits (seeing hands, inheriting Legacies) lean on information and choice the bots barely use, so playtest
+    before patching them.
 
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):
