@@ -309,6 +309,8 @@ above, centred, transparent background, …"* followed by the style block and th
 ## 7. House crests (8)
 
 The overhead map shows each house as a round emblem, so the crests are **round medallions**.
+**All 8 prompts are in [`CREST-PROMPTS.md`](CREST-PROMPTS.md),** ready to paste. Crests are for house things only (character cards,
+pawns, Grudge Tokens, owned tiles): the shared deck of Hand Cards, Instants and Elodie cards has none.
 
 | File | Size | Notes |
 |---|---|---|
