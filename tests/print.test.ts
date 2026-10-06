@@ -5,6 +5,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { CARDS } from '../src/data/cards';
 import { HOUSES } from '../src/data/houses';
 import { CATEGORY_ART, HOUSE_ART } from '../src/assets.config';
+import { cardTiming } from '../src/ui/cardKind';
 
 declare const process: { env: Record<string, string | undefined> };
 
@@ -13,6 +14,7 @@ it.skipIf(!process.env.PRINT)('export card and house text', () => {
     cards: CARDS.map(c => ({
       id: c.id, name: c.name, kind: c.elodie ? 'elodie' : c.kind, category: c.category, text: c.text, flavor: c.flavor ?? '',
       icon: CATEGORY_ART[c.category]?.icon ?? '',
+      when: cardTiming(c),
     })),
     houses: Object.values(HOUSES).map(h => ({
       id: h.id, name: h.name, homeland: h.homeland, hp: h.hp, passiveName: h.passiveName, passiveText: h.passiveText,

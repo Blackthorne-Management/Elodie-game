@@ -60,6 +60,9 @@ body { background: #000; }
 .rules .flavor { margin-top: auto; padding-top: .5em; font-style: italic; color: #cfc3ad; font-size: .86em; text-align: center; }
 .medal { position: absolute; display: grid; place-items: center; transform: translate(-50%, -50%); }`;
 
+// Timing reminder under the divider: Instants resolve on the draw; Block / Deflect cards are played off-turn.
+const when = c => c.when;  // from cardTiming in src/ui/cardKind.ts
+
 // Game card, 1000 × 1360. Geometry matches scripts/make-overlays.cjs: safe zone 88, plate 96–186, box 830–1262.
 function cardHtml(c, art) {
   const type = c.kind === 'hand' ? 'Hand Card' : c.kind === 'elodie' ? 'Instant · Elodie' : 'Instant';
@@ -71,7 +74,7 @@ function cardHtml(c, art) {
     <div class="title fit-w" style="left:188px;right:188px;top:96px;height:90px">${esc(c.name)}</div>
     <div class="type fit-w" style="left:150px;right:150px;top:840px;height:40px;color:${TYPE_COLOR[c.kind]}">${type} · ${esc(c.category)}</div>
     <div class="rules fit-h" style="left:134px;right:134px;top:904px;bottom:126px;font-size:44px;text-align:center">
-      ${c.kind === 'hand' ? '' : `<div class="when" style="color:${TYPE_COLOR[c.kind]}">Resolve when drawn · Never held</div>`}
+      ${when(c) ? `<div class="when" style="color:${TYPE_COLOR[c.kind]}">${when(c)}</div>` : ''}
       <div>${rich(c.text)}</div>${c.flavor ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div></div>`;
 }
