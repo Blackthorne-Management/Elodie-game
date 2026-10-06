@@ -586,6 +586,8 @@ button:disabled { cursor: default; }
 .cf.has-overlay .cf-type { text-align: center; color: #f3d27a; height: 12%; flex: none; display: flex; align-items: center; justify-content: center; margin-bottom: 5%; font-family: Georgia, serif; }
 .cf.has-overlay .cf-text, .cf.has-overlay .cf-flavor { font-family: Georgia, 'Times New Roman', serif; }
 .cf.has-overlay .cf-text { color: #f4ece0; }
+.cf-when { font: 600 7.5px Georgia, serif; letter-spacing: .08em; text-transform: uppercase; color: var(--cf-accent); text-align: center; opacity: .9; margin-bottom: 3px; }
+.cf.has-overlay .cf-when { color: #f3d27a; }
 
 /* The character card (tarot, 1050 x 1752, bleed 42) */
 .charcard2 { position: relative; width: min(64%, 250px); margin: 0 auto 14px; aspect-ratio: 966 / 1668; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 24px #000a; background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--c) 45%, #2a1a1e), #120c0e); }

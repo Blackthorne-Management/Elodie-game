@@ -56,6 +56,7 @@ body { background: #000; }
   font: 600 31px Cinzel; letter-spacing: .1em; text-transform: uppercase; }
 .rules { position: absolute; display: flex; flex-direction: column; color: #f4ece0; font-family: Garamond; line-height: 1.18; }
 .rules b { color: #f3d27a; font-weight: 700; }
+.rules .when { font: 600 25px Cinzel; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; opacity: .9; }
 .rules .flavor { margin-top: auto; padding-top: .5em; font-style: italic; color: #cfc3ad; font-size: .86em; text-align: center; }
 .medal { position: absolute; display: grid; place-items: center; transform: translate(-50%, -50%); }`;
 
@@ -70,6 +71,7 @@ function cardHtml(c, art) {
     <div class="title fit-w" style="left:188px;right:188px;top:96px;height:90px">${esc(c.name)}</div>
     <div class="type fit-w" style="left:150px;right:150px;top:840px;height:40px;color:${TYPE_COLOR[c.kind]}">${type} · ${esc(c.category)}</div>
     <div class="rules fit-h" style="left:134px;right:134px;top:904px;bottom:126px;font-size:44px;text-align:center">
+      ${c.kind === 'hand' ? '' : `<div class="when" style="color:${TYPE_COLOR[c.kind]}">Resolve when drawn · Never held</div>`}
       <div>${rich(c.text)}</div>${c.flavor ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div></div>`;
 }

@@ -27,6 +27,7 @@ export function CardFrame({ card, children }: { card: CardDef; children?: ReactN
         <div className="cf-title"><CategorySymbol card={card} /><span className="cf-name">{card.name}</span></div>
         <div className="cf-box">
           <div className="cf-type">{card.elodie ? 'Elodie · ' : ''}{card.kind === 'hand' ? 'Hand Card' : 'Instant'} · {card.category}</div>
+          {card.kind === 'instant' && <div className="cf-when">Resolve when drawn · Never held</div>}
           <div className="cf-text">{card.text}</div>
           {card.flavor && <div className="cf-flavor">{card.flavor}</div>}
         </div>
