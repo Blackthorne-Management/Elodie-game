@@ -336,12 +336,13 @@ A round heraldic medallion emblem: {motif}, bold clear silhouette, {colours}, th
 
 **All 32 prompts are in [`CHARACTER-PROMPTS.md`](CHARACTER-PROMPTS.md),** ready to paste.
 
-- **One full-body picture per character, painted as a full trading card.** The character card shows the whole figure
-  under its own overlay (name plate and stats panel); the pawn on the board shows a head-and-shoulders circle that the
-  game cuts from the same picture, so a pawn always matches its card.
-- **Size:** 1000 × 1400 (5:7, the same shape as the game cards), opaque, the homeland backdrop filling the card.
-- **Layout:** top 12% calm for the name; the figure from the head (about 13% down) to the feet (about 75% down);
-  the bottom 25% is ground and backdrop under the stats panel.
+- **One full-body picture per character, painted as a full tarot-size card** (70 × 120 mm, bigger than the game
+  cards). The character card shows the whole figure under its own overlay (name plate and abilities panel); the pawn
+  on the board shows a head-and-shoulders circle that the game cuts from the same picture, so a pawn always matches
+  its card.
+- **Size:** 1050 × 1800 (7:12), opaque, the homeland backdrop filling the card.
+- **Layout:** top 10% calm for the name; the figure from the head (about 12% down) to the feet (about 68% down);
+  the bottom 30% is ground and backdrop under the abilities panel.
 - **Family likeness:** make Generation I of a house first, then attach it when making Generations II–IV.
 - **Specters** need no art of their own: the game greys out and tints the portrait.
 
@@ -410,9 +411,9 @@ gold with stars.
 | `overlay-hand.png` | Hand Cards |
 | `overlay-instant.png` | Instants |
 | `overlay-elodie.png` | Elodie's 10 cards |
-| `overlay-character.png` | Character cards (name plate and stats panel instead of a rules box) |
+| `overlay-character.png` | Character cards: tarot size, 1050 × 1800 (name plate and abilities panel instead of a rules box) |
 
-- **Size and shape:** 1000 × 1400 with a transparent centre.
+- **Size and shape:** 1000 × 1400 for the game cards (1050 × 1800 for the character overlay), with a transparent centre.
 - **What each overlay holds:** the border, a title plate across the top 12%, and the text box over the lower part.
 - **Text:** the game writes the words into the plate and the box, so the overlays stay blank.
 - **Order:** we'll design these after the art, so they suit it.
@@ -462,7 +463,22 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 
 ---
 
-## 13. Checklist
+## 13. Printing (MakePlayingCards)
+
+| Cards | Product | Art |
+|---|---|---|
+| 120 game cards | Custom Game Cards, 63 × 88 mm | 1000 × 1400 (5:7) |
+| 32 character cards | Tarot size, 70 × 120 mm | 1050 × 1800 (7:12) |
+
+- **Resolution:** both sizes print at about 360–380 dpi from that art, and anything over 300 is crisp.
+- **Card backs:**
+  - Hand Cards and Instants need different backs, because they're separate draw piles.
+  - Elodie's cards use the Instant back, so they can't be spotted in the pile.
+  - Characters get their own back.
+- **Print files:** when ordering, send me MPC's templates and I'll prepare every print file at their exact size, with
+  the bleed and the art, overlay and text composited together.
+
+## 14. Checklist
 
 | # | Asset | Files | Size | Background | Priority |
 |---|---|---|---|---|---|
@@ -470,14 +486,14 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 | 2 | Sea | `sea.png` | 1024², seamless | Opaque | High |
 | 3 | Throne | `throne.png` | 1024 × 1280 | Transparent | High |
 | 4 | Crests | `crest-<house>.png` ×8 | 1024² | Transparent | High |
-| 5 | Characters (full body) | `portrait-<house>-<1-4>.png` ×32 | 1000 × 1400 | Opaque | High |
+| 5 | Characters (full body, tarot) | `portrait-<house>-<1-4>.png` ×32 | 1050 × 1800 | Opaque | High |
 | 6 | Icons and card symbols | `icon-<name>.png` ×8, `icon-cat-<name>.png` ×10 | 512² | Transparent | Medium |
 | 7 | Card backs | `card-back-*.png` ×3 | 750 × 1050 | Opaque | Optional |
 | 8 | Elodie, icon and title | `elodie.png`, `app-icon.png`, `title-*.png` | as in §11 | Opaque | Medium |
 | 9 | Seats | `seat-<house>.png` ×8 | 1024² | Transparent | Optional |
 | 10 | Duel background | `duel-bg.png` | 1290 × 2796 | Opaque | Optional |
 | 11 | Card art | `card-<number>.png` ×120 | 1000 × 1400 | Opaque | High (10 Elodie cards first) |
-| 12 | Card overlays | `overlay-<type>.png` ×4 | 1000 × 1400 | Transparent | After the art |
+| 12 | Card overlays | `overlay-<type>.png` ×4 | 1000 × 1400 (character: 1050 × 1800) | Transparent | After the art |
 
 House file names: `brasador`, `dorini`, `ironvow`, `suzumori`, `vaitama`, `kaysoley`, `agnivansh`,
 `stillwater`.

@@ -81,9 +81,9 @@ export const BOARD_ART = {
   highlight: '#f3d27a',
 };
 
-// One full-body picture per character, painted as a 5:7 card (docs/art/CHARACTER-PROMPTS.md). Pawns cut a head-and-shoulders circle
+// One full-body picture per character, painted as a tarot-size 7:12 card (docs/art/CHARACTER-PROMPTS.md). Pawns cut a head-and-shoulders circle
 // from it: zoom is how much the picture is enlarged inside the circle, y where the head sits (from the top).
-export const PORTRAIT_CROP = { pawnZoom: 2.8, pawnY: '13%' };
+export const PORTRAIT_CROP = { pawnZoom: 2.8, pawnY: '12%' };
 
 // Each card category's symbol: an image once painted (docs/art/ART-GUIDE.md §9), a glyph until then.
 export const CATEGORY_ART: Record<string, { glyph: string; icon?: string }> = {
