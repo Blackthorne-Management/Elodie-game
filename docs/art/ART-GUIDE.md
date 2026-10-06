@@ -219,10 +219,17 @@ Avoid: any text, letters, numbers, place names, labels, map legends or compass r
 
 ### Prompt for Midjourney (alternative): upload `board-guide.png` as an image prompt
 ```
-<guide image URL> top-down orthographic fantasy atlas map of a continent in the middle of the image with a wild irregular coastline of headlands, peninsulas, bays and small offshore islands, surrounded on all sides by deep calm ocean to the edges; eight homelands around a central round marble-and-gold throne plaza with eight paved roads radiating out; north: volcanic basalt highlands with glowing lava seams and a terracotta fortress on the coast cliffs; north-east: sun-bright fields, palm groves, colourful carved roofs and a white-gold sun temple; east: golden dunes and a white-domed harbour city on the coast; south-east: grassy steppe with longhouses and felt yurts; south: cedar forest and mist with a tiered-roof castle on a rocky point; south-west: ochre plains, red sandstone fort-palace and stepwell; west: purple heather moorland, stone walls, a grey keep by a still tarn above the shore; north-west: turquoise lagoons and green hills with a stilted thatched hall; soft natural borders, calm medium detail, hand-painted gouache and oil glaze over ink linework, gold-leaf accents, warm paper grain, rich muted jewel tones, soft light from upper left --ar 1:1 --v 7 --style raw --iw 1.5 --no text, letters, labels, compass, grid, border, frame, people, perspective, horizon, 3d render, photo
+<guide image URL> top-down orthographic fantasy atlas map of a continent in the middle of the image with a wild irregular coastline of headlands, peninsulas, bays and small offshore islands, surrounded on all sides by deep calm ocean to the edges; eight homelands around a central round marble-and-gold throne plaza with eight paved roads radiating out; north: volcanic basalt highlands with glowing lava seams and a terracotta fortress on the coast cliffs; north-east: sun-bright fields, palm groves, colourful carved roofs and a white-gold sun temple; east: golden dunes and a white-domed harbour city on the coast; south-east: grassy steppe with longhouses and felt yurts; south: cedar forest and mist with a tiered-roof castle on a rocky point; south-west: ochre plains, red sandstone fort-palace and stepwell; west: purple heather moorland, stone walls, a grey keep by a still tarn above the shore; north-west: turquoise lagoons, green hills and ceiba trees with a round thatched bohío hall beside a stone plaza; soft natural borders, calm medium detail, hand-painted gouache and oil glaze over ink linework, gold-leaf accents, warm paper grain, rich muted jewel tones, soft light from upper left --ar 1:1 --v 7 --style raw --iw 1.5 --no text, letters, labels, compass, grid, border, frame, people, perspective, horizon, 3d render, photo
 ```
 Midjourney follows the layout loosely. Check the seats against the guide and fix misplaced ones with
 *Vary Region*.
+
+### Changing a name on a finished map
+If your painting has the homeland names lettered on it, edit just the label instead of repainting. Attach the
+current map and paste:
+```
+Edit the attached map image. Change only the place-name label "Moa'olani" in the north-west: replace that word with "Xaraguá", spelled exactly X-A-R-A-G-U-Á with an accent on the final A. Use exactly the same lettering style, size, colour, weight and position as the other place names on the map, centred over the same land. Change nothing else: keep every other label, the coastline, the terrain, the buildings, the colours and the whole composition exactly as they are.
+```
 
 ### Refining it
 - **Something in the wrong place?** Select it and ask: *"Move the Al-Doria caravanserai courtyard onto the
