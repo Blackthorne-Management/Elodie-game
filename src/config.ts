@@ -21,7 +21,7 @@ export const THRESHOLDS: { small: Threshold & { maxPlayers: number }; normal: Th
 };
 
 // Tuning items flagged by the rulebook (Section 12).
-export const SUDDEN_DEATH_ROUND = 15;
+export const SUDDEN_DEATH_ROUND = 16;
 export type FirstStriker = 'claimant' | 'challenger';
 export const CHALLENGE_FIRST_STRIKER: FirstStriker = 'claimant';
 

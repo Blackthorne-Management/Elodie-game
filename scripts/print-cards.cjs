@@ -24,7 +24,7 @@ const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'print/.data.json'), 'ut
 const EXT = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
 const uri = f => `data:${EXT[path.extname(f).toLowerCase()]};base64,${fs.readFileSync(f).toString('base64')}`;
 const find = (dir, base) => {
-  for (const e of ['.png', '.jpg', '.jpeg', '.webp']) { const f = path.join(dir, base + e); if (fs.existsSync(f)) return f; }
+  for (const e of ['.png', '.jpg', '.jpeg', '.webp', '.PNG', '.JPG', '.JPEG', '.WEBP']) { const f = path.join(dir, base + e); if (fs.existsSync(f)) return f; }
   return null;
 };
 const font = (pkg, file) => uri(path.join(ROOT, 'node_modules/@fontsource', pkg, 'files', file));

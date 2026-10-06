@@ -52,8 +52,9 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     lore: 'Al-Doria is a sprawling entrepôt, half port city and half caravanserai. House Dorini built their power on ledgers and bazaars rather than armies, converting coin into influence or fear when the need arises.',
     hp: [3, 3, 3, 3],
     passiveName: 'Baraka Dorini',
-    passiveText: ['+1 Wealth when you gain Wealth from a Trade tile.', '+2 Wealth from Trade tiles.'],
-    passive: { tileBonus: (pillar, level) => (pillar === 'wealth' ? level : 0) },
+    passiveText: ['+1 Wealth when you gain Wealth from a Trade tile. Once per turn, Wealth from anything else brings 1 more.',
+      '+2 Wealth from Trade tiles. Once per turn, Wealth from anything else brings 1 more.'],
+    passive: { tileBonus: (pillar, level) => (pillar === 'wealth' ? level : 0), wealthBonus: () => 1 },
     abilities: [
       {
         id: 'daftar', name: 'Daftar al-Dorini', gen: 2, limit: 'turn',
@@ -217,7 +218,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     id: 'stillwater', name: 'House Stillwater', homeland: 'Aldermoor', culture: 'English-inspired',
     identity: 'Defensive/patient', curve: 'Late-favored', tileType: 'court', home: { x: 0, y: 8 },
     lore: "Aldermoor's old families have weathered centuries of invasion and famine the same way every time: by simply outlasting everyone else.",
-    hp: [3, 3, 3, 4],
+    hp: [3, 3, 3, 3],
     passiveName: "Stillwater's Patience",
     passiveText: ['Once per game, cancel a Reckoning bonus used against you.', 'One more use (two in total).'],
     passive: { reckoningCancels: level => level },
@@ -231,8 +232,7 @@ export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<2 | 3 | 4, string
   ironvow: { 2: "Raider's Charge: your basic attack may come before you move." },
   agnivansh: { 2: 'Rakt Ki Pyaas: after landing a kill, move up to half a d6 roll (rounded up).' },
   stillwater: {
-    2: 'The Long Watch: if you take no aggressive action on your turn, gain 1 of any resource.',
-    4: "Aldermoor's Vigil: Gen IV has 4 Heart Tokens.",
+    2: 'The Long Watch: if you take no action on your turn (no attack, Hand Card or trade), gain 1 of any resource.',
   },
   kaysoley: { 4: 'Rit Solèy: you need 2 less combined resources to Claim the Throne.' },
   vaitama: { 4: 'Tide of Ancestors: permanently gain the passive of a bloodline that has become a Specter.' },

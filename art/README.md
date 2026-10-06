@@ -1,6 +1,7 @@
 # Art drop folder
 
-Put finished paintings here, named exactly like this (PNG, JPG or WebP):
+Put finished paintings here, named exactly like this. PNG, JPG/JPEG or WebP all work, straight from the AI tool: no need to
+convert. The finished print files always come out as PNG.
 
 | Folder | File name | Size |
 |---|---|---|

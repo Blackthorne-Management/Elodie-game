@@ -16,7 +16,7 @@ export interface Personality {
 
 export const PERSONALITY: Record<HouseId, Personality> = {
   brasador: { aggression: 0.9, caution: 0.2, focus: 'fear', noise: 0.1 },
-  dorini: { aggression: 0.2, caution: 0.75, focus: 'wealth', noise: 0.1 },
+  dorini: { aggression: 0.45, caution: 0.5, focus: null, noise: 0.1 },
   ironvow: { aggression: 0.8, caution: 0.3, focus: 'fear', noise: 0.1 },
   suzumori: { aggression: 0.4, caution: 0.5, focus: 'influence', noise: 0.1 },
   vaitama: { aggression: 0.55, caution: 0.4, focus: null, noise: 0.6 },

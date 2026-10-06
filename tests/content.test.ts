@@ -40,9 +40,9 @@ describe('the houses', () => {
       if (a !== b && a.tileType === b.tileType) expect(manhattan(a.home, b.home)).toBeGreaterThan(1);
     }
   });
-  it('uses the evened-out HP (rules-decisions): 3 everywhere except Agnivansh IV 2 and Stillwater IV 4', () => {
+  it('uses the evened-out HP (rules-decisions): 3 everywhere except Agnivansh IV 2', () => {
     for (const h of Object.values(HOUSES)) {
-      const want = h.id === 'agnivansh' ? [3, 3, 3, 2] : h.id === 'stillwater' ? [3, 3, 3, 4] : [3, 3, 3, 3];
+      const want = h.id === 'agnivansh' ? [3, 3, 3, 2] : [3, 3, 3, 3];
       expect(h.hp).toEqual(want);
     }
   });

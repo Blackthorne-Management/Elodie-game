@@ -41,6 +41,7 @@ export interface CardDef {
 
 export interface PassiveHooks {
   tileBonus?: (pillar: Pillar, level: number) => number;
+  wealthBonus?: (level: number) => number;          // once per turn, on Wealth from anything but a tile
   moveBonus?: (level: number) => number;
   reach?: (level: number) => number;               // basic attack reach in a straight line
   basicAttackBonus?: (level: number) => number;

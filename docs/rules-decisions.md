@@ -114,10 +114,10 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   Court tile.
 - **Suzumori I [31]:** once per round.
 - **Stillwater I/III [32]:** one use in Gen I–II; from Gen III, one more use (two total).
-- **Stillwater II [33]:** "no aggressive action" = you didn't attack, play an attack card, or play a
-  card that takes something from another player.
+- **Stillwater II [33]** (tightened by [62]): the Long Watch needs a turn with **no action at all**: no attack,
+  no Hand Card and no trade offer (and nothing aggressive, such as an ability that hurts a rival).
 - **Heart Tokens** (changed after simulation, replaces [34]): every house has **3** in every generation, except
-  Agnivansh IV = 2 and Stillwater IV = 4. Attack damage equals your Heart Tokens, so the old tables (2 to 4)
+  Agnivansh IV = 2 (Stillwater IV went back from 4 to 3 in [62]). Attack damage equals your Heart Tokens, so the old tables (2 to 4)
   counted HP twice and decided most games; houses now differ through their abilities.
 - **Brasador downside [35]:** +1 damage to attacks against Brasador when Brasador is Gen III+ and has
   strictly the most Fear.
@@ -225,6 +225,18 @@ These came up in code and weren't covered above; all confirmed as they stand.
 - **Simulation (300 bot games per count):** trades are about 10% of turns at 4+ players; every Reaction gets used
   (Interference, Ill Omen and Intercept most). Games run about a round longer and Sudden Death decides 10–22% of
   games (was 11–17%). Stillwater wins 19–20% at 4–8 players (was 12–17%); Dorini is lowest at 5–9%.
+
+- **House balance after trading and Reactions [62]** (simulation, 300 games per count): Stillwater had risen to
+  about 1.5× its fair share of wins (the Long Watch's free resource of choice fills the every-pillar minimum, and the
+  games now run longer); Dorini sat at about 0.6× (only one Trade tile it can farm, since the other is its own,
+  and the trade offer beats its 2-for-1 Ledger). Changes:
+  - **Sudden Death** moves from round 15 to **16** (`SUDDEN_DEATH_ROUND`).
+  - **Stillwater:** the Long Watch needs a turn with no action at all; Gen IV has 3 Heart Tokens, like everyone.
+  - **Dorini (Baraka Dorini):** also, once per turn, Wealth gained from anything but a tile (a card, an event, a
+    trade, an ability) brings 1 more.
+  - Bot only: Dorini's bot no longer hoards Wealth alone.
+  - **Result:** every house wins 7–22% at every player count (Stillwater 9–14%, Dorini 10–17%); Sudden Death
+    decides 7–18% of games.
 
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):

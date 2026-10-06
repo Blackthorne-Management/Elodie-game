@@ -330,6 +330,12 @@ export class Game {
         return 0;
       }
     }
+    // Baraka Dorini: once per turn, Wealth from anything but a tile brings 1 more (rules-decisions 62).
+    if (pillar === 'wealth' && !why.endsWith(' tile')) {
+      const bonus = this.hook(p, 'wealthBonus');
+      const k = `wealthBonus@t${this.s.turnNo}`;
+      if (bonus && !p.used[k]) { p.used[k] = 1; n += bonus; }
+    }
     p.res[pillar] += n;
     if (pillar === 'influence') this.s.lastInfluenceGain = p.id;
     this.log(`${p.name} gains ${n} ${cap(pillar)}${why ? ` (${why})` : ''}.`, 'gain', { player: p.id, amount: n });
@@ -909,8 +915,8 @@ export class Game {
         if (ATTACK_ENDS_TURN && action.type === 'attack' && t.attacks >= t.attacksAllowed && t.moved && t.actions >= t.actionsAllowed) break;
       }
 
-      // Stillwater II: The Long Watch.
-      if (this.house(p).longWatch?.(p.gen) && !this.s.turn!.aggressive) {
+      // Stillwater II: The Long Watch (no action at all: no attack, Hand Card or trade; rules-decisions 62).
+      if (this.house(p).longWatch?.(p.gen) && !this.s.turn!.aggressive && this.s.turn!.actions === 0) {
         const x = yield* this.choosePillar(p, 'The Long Watch: you stayed your hand. Gain 1 of which resource?');
         if (x) this.gain(p, x, 1, 'The Long Watch');
       }

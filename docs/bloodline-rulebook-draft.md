@@ -131,7 +131,7 @@ Two card types, one shared deck:
 
 ### Sudden Death (end-of-game safety valve)
 
-Track rounds (one round = every player has taken one turn). **Suggested cap: 15 rounds** for a roughly hour-long game; adjust up or down after your first playtest depending on how fast turns actually move at your table.
+Track rounds (one round = every player has taken one turn). **Suggested cap: 16 rounds** (raised from 15 after Reaction cards slowed games) for a roughly hour-long game; adjust up or down after your first playtest depending on how fast turns actually move at your table.
 
 If no one has successfully claimed the Throne by the end of the capped round, the game ends immediately:
 
@@ -196,7 +196,7 @@ Each house carries a distinct cultural identity, homeland, and backstory woven i
 All structural/edge-case gaps are resolved (hand-size overflow, deck reshuffling, tile stacking, Specter card exhaustion, simultaneous deaths, and the Sudden Death round cap). The full 120-card list is drafted separately (see `bloodline-card-list.md`), and the full house lore, homelands, and Gen I-IV ability text are drafted in `bloodline-houses.md`. What's left is tuning, not rules:
 
 1. **Multiple challengers at the Throne**: if 3+ players are all threshold-eligible when a Claim is made, resolving fights one at a time (per Section 8) could take a while. Worth a quick playtest to see if this drags, or if it's actually the exciting climax it's designed to be.
-2. **Sudden Death round cap**: 15 rounds is a starting estimate; confirm with an actual playtest and adjust.
+2. **Sudden Death round cap**: 16 rounds is the current estimate; confirm with an actual playtest and adjust.
 
 ---
 
