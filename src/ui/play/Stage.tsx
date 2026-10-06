@@ -5,7 +5,7 @@ import type { Game } from '../../engine/game';
 import type { Dir, Pos } from '../../engine/types';
 import { THRONE, isSea, key } from '../../engine/board';
 import { BOARD_SIZE } from '../../config';
-import { BOARD_ART, HOUSE_ART, PORTRAITS, TILE_ART } from '../../assets.config';
+import { BOARD_ART, HOUSE_ART, PORTRAITS, PORTRAIT_CROP, TILE_ART } from '../../assets.config';
 import { terrainUrl } from '../terrainSvg';
 import { HUMAN } from '../../state/gameStore';
 import type { Motion } from './motion';
@@ -87,7 +87,9 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
                 <button type="button" className="stand" onClick={() => onToken(id)} aria-label={p.name}
                   style={{ transform: `translate(calc(-50% + ${spread}px), -100%) rotateX(${-TILT}deg)` }}>
                   {named && <span className="tag">{id === HUMAN ? 'You' : p.name}</span>}
-                  <span className="disc">{url ? <img src={url} alt="" /> : <span className="silhouette" />}<span className="badge">{HOUSE_ART[p.house].initial}</span></span>
+                  <span className="disc">{url
+                    ? <span className="disc-face" style={{ backgroundImage: `url("${url}")`, backgroundSize: `${PORTRAIT_CROP.pawnZoom * 100}% auto`, backgroundPosition: `50% ${PORTRAIT_CROP.pawnY}` }} />
+                    : <span className="silhouette" />}<span className="badge">{HOUSE_ART[p.house].initial}</span></span>
                   <span className="base" />
                 </button>
               </div>

@@ -4,7 +4,8 @@ import type { Game } from '../engine/game';
 import { roman } from '../engine/game';
 import type { PlayerState } from '../engine/types';
 import { PILLARS } from '../engine/types';
-import { CARD_ART, HOUSE_ART, ICONS, PILLAR_ART } from '../assets.config';
+import { HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS } from '../assets.config';
+import { CardFrame } from './CardFrame';
 
 export function Crest({ house, size = 32 }: { house: PlayerState['house']; size?: number }) {
   const art = HOUSE_ART[house];
@@ -32,19 +33,8 @@ export function Hearts({ p }: { p: PlayerState }) {
   return <span className="hearts">{ICONS.heart}{p.hp}/{p.maxHp}</span>;
 }
 
-export function CardFace({ card, onClick, selected, small, playable }: {
-  card: CardDef; onClick?: () => void; selected?: boolean; small?: boolean; playable?: boolean;
-}) {
-  const cls = ['card', card.kind, card.elodie && 'elodie', selected && 'selected', small && 'small', playable && 'playable'].filter(Boolean).join(' ');
-  return (
-    <button type="button" className={cls} onClick={onClick} disabled={!onClick}
-      style={{ background: card.kind === 'hand' ? CARD_ART.hand : CARD_ART.instant, borderColor: card.elodie ? CARD_ART.elodieBorder : undefined }}>
-      <span className="card-cat">{card.category}</span>
-      <span className="card-name">{card.name}</span>
-      {!small && <span className="card-text">{card.text}</span>}
-      {!small && card.flavor && <span className="card-flavor">{card.flavor}</span>}
-    </button>
-  );
+export function CardSheetFace({ card }: { card: CardDef }) {
+  return <div className="cardsheet"><CardFrame card={card} /></div>;
 }
 
 export function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
@@ -66,6 +56,9 @@ export function HouseSheet({ game, p, onClose }: { game: Game; p: PlayerState; o
   const level = p.gen >= 3 ? 2 : 1;
   return (
     <Sheet title={h.name} onClose={onClose}>
+      {PORTRAITS[p.house][p.gen - 1] && (
+        <div className="charcard" style={{ ['--c' as string]: HOUSE_ART[p.house].color }}><img src={PORTRAITS[p.house][p.gen - 1]} alt={`${p.name}, Gen ${roman(p.gen)}`} /></div>
+      )}
       <div className="house-head">
         <Crest house={p.house} size={48} />
         <div>

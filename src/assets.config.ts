@@ -81,7 +81,31 @@ export const BOARD_ART = {
   highlight: '#f3d27a',
 };
 
+// One full-body picture per character (docs/art/CHARACTER-PROMPTS.md). Pawns cut a head-and-shoulders circle
+// from it: zoom is how much the picture is enlarged inside the circle, y where the head sits (from the top).
+export const PORTRAIT_CROP = { pawnZoom: 2.6, pawnY: '7%' };
+
+// Each card category's symbol: an image once painted (docs/art/ART-GUIDE.md §9), a glyph until then.
+export const CATEGORY_ART: Record<string, { glyph: string; icon?: string }> = {
+  'Influence / Court': { glyph: '♔' },
+  'Fear / War': { glyph: '⚔' },
+  'Wealth / Trade': { glyph: '◈' },
+  'Ranged / Cursed': { glyph: '☠' },
+  Disruption: { glyph: '✶' },
+  Movement: { glyph: '➶' },
+  Barter: { glyph: '⇄' },
+  Truce: { glyph: '☮' },
+  'Block / Deflect': { glyph: '⛨' },
+  Dice: { glyph: '⚄' },
+  Global: { glyph: '☀' },
+  Targeted: { glyph: '◎' },
+  'Hand Disruption': { glyph: '🂠' },
+  Wealth: { glyph: '◈' },
+};
+
 export const CARD_ART = {
+  // Card pictures by card number (docs/art/CARD-PROMPTS.md), e.g. 1: '/art/cards/card-1.webp'.
+  pictures: {} as Record<number, string>,
   back: '#3a1d24',
   hand: '#2b2f3a',
   instant: '#3a2b1f',

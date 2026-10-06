@@ -1,19 +1,16 @@
 // Cards shown face up as if you were holding them: a rival's revealed hand, the top of the deck, or the
 // cards you're choosing between. Full text, so you know exactly what each one does.
 import type { Game } from '../../engine/game';
-import { CARD_ART } from '../../assets.config';
+import { CardFrame } from '../CardFrame';
 
 export function FullCard({ g, id, onChoose, chooseLabel = 'Choose' }: {
   g: Game; id: number; onChoose?: () => void; chooseLabel?: string;
 }) {
-  const def = g.card(id);
   return (
-    <div className={`fullcard ${def.elodie ? 'elodie' : ''}`} style={{ background: def.kind === 'hand' ? CARD_ART.hand : CARD_ART.instant }}>
-      <span className="c-cat">{def.category}{def.kind === 'instant' ? ' · Instant' : ''}</span>
-      <span className="c-name">{def.name}</span>
-      <span className="c-text">{def.text}</span>
-      {def.flavor && <span className="c-flavor">{def.flavor}</span>}
-      {onChoose && <button type="button" className="c-play" onClick={onChoose}>{chooseLabel}</button>}
+    <div className="fullcard">
+      <CardFrame card={g.card(id)}>
+        {onChoose && <button type="button" className="c-play" onClick={onChoose}>{chooseLabel}</button>}
+      </CardFrame>
     </div>
   );
 }

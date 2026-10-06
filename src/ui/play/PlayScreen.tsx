@@ -11,7 +11,7 @@ import { HUMAN, SPEED_MS, useGame } from '../../state/gameStore';
 import type { Speed } from '../../state/gameStore';
 import { snapshot } from '../../state/history';
 import { Board } from '../Board';
-import { CardFace, HouseSheet, Sheet } from '../parts';
+import { CardSheetFace, HouseSheet, Sheet } from '../parts';
 import { GameLogActions } from '../HistorySheet';
 import { Emblem, HeroCard, RivalChip } from './Figures';
 import { claimGoal } from '../claimGoal';
@@ -19,6 +19,7 @@ import { Stage } from './Stage';
 import { Hand } from './Hand';
 import { Duel } from './Duel';
 import { CardRow, PeekSheet } from './Peek';
+import { Die } from './Die';
 import { peekTitle } from './peekTitle';
 import type { PeekGroup } from './Peek';
 import type { DuelShow } from './Duel';
@@ -260,7 +261,7 @@ export function PlayScreen() {
 
       {!me.specter && <Hand g={g} cards={me.hand} playable={playable} onPlay={answer} onRead={id => setSheet({ type: 'card', id })} dim={!mine} />}
 
-      {dice && <div className="dice" key={dice.seq}><span className="die">{dice.n}</span><span className="die-who">{dice.who}</span></div>}
+      {dice && <div className="dice" key={dice.seq}><Die n={dice.n} /><span className="die-who">{dice.who} rolls {dice.n}</span></div>}
 
       {duelToShow && !runner.over && <Duel g={g} duel={duelToShow} block={blockDecision} onAnswer={answer} onClose={() => setDuel(null)} />}
 
@@ -307,7 +308,7 @@ export function PlayScreen() {
       {sheet?.type === 'house' && <HouseSheet game={g} p={s.players[sheet.id]} onClose={() => setSheet(null)} />}
       {sheet?.type === 'card' && (
         <Sheet title={g.card(sheet.id).name} onClose={() => setSheet(null)}>
-          <CardFace card={g.card(sheet.id)} />
+          <CardSheetFace card={g.card(sheet.id)} />
           {playable.has(sheet.id) && <button type="button" className="big" onClick={() => { answer(playable.get(sheet.id)!); setSheet(null); }}>Play this card</button>}
           {g.card(sheet.id).responseOnly && <p className="muted">Played only in response, when you are attacked or targeted.</p>}
         </Sheet>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Game } from '../../engine/game';
-import { CARD_ART } from '../../assets.config';
+import { CategorySymbol } from '../CardFrame';
+import { cardKindClass } from '../cardKind';
 
 // Your hand, fanned. Tap a card to lift it; tap Play on a lifted card to play it.
 export function Hand({ g, cards, playable, onPlay, onRead, dim }: {
@@ -16,12 +17,12 @@ export function Hand({ g, cards, playable, onPlay, onRead, dim }: {
         const up = lifted === c;
         const canPlay = playable.has(c);
         return (
-          <div key={c} className={`card2 ${canPlay ? 'glow' : ''} ${up ? 'up' : ''} ${def.elodie ? 'elodie' : ''}`}
-            style={{ ['--a' as string]: `${angle}deg`, ['--i' as string]: i - (n - 1) / 2, background: def.kind === 'hand' ? CARD_ART.hand : CARD_ART.instant }}
+          <div key={c} className={`card2 ${cardKindClass(def)} ${canPlay ? 'glow' : ''} ${up ? 'up' : ''} ${def.elodie ? 'elodie' : ''}`}
+            style={{ ['--a' as string]: `${angle}deg`, ['--i' as string]: i - (n - 1) / 2 }}
             onClick={() => setLifted(up ? null : c)} role="button" tabIndex={0}
             onKeyDown={e => { if (e.key === 'Enter') setLifted(up ? null : c); }}>
             <span className="c-cat">{def.category}</span>
-            <span className="c-name">{def.name}</span>
+            <span className="c-name"><CategorySymbol card={def} /> {def.name}</span>
             <span className="c-text">{def.text}</span>
             {up && (
               <span className="c-actions">

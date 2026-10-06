@@ -6,6 +6,7 @@ import { PILLARS } from '../../engine/types';
 import { HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS } from '../../assets.config';
 import { claimGoal } from '../claimGoal';
 
+// The character's full-body picture. In small spots (the hero card) it shows from the head down.
 export function Portrait({ house, gen, className = '' }: { house: HouseId; gen: number; className?: string }) {
   const url = PORTRAITS[house][gen - 1];
   const color = HOUSE_ART[house].color;
