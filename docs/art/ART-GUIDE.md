@@ -6,9 +6,10 @@ frames are added by the app later, so every screen stays uniform.
 When a piece is done, send it to me in chat. I resize it, compress it, cut out backgrounds if needed and
 plug it into `src/assets.config.ts`; nothing else in the game changes.
 
-**Order of work:** 1. the board (§3) → 2. sea (§4) → 3. Elodie's Throne (§5) → 4. crests (§7) →
-5. portraits (§8) → 6. icons (§9) → 7. card backs (§10) → 8. Elodie, app icon and title art (§11) →
-9. seats, duel background and card pictures (§6, §12, §10).
+**Order of work:** 1. the board (§3, done; a cleaned-up, larger version is still to come) → 2. characters
+([CHARACTER-PROMPTS.md](CHARACTER-PROMPTS.md)) → 3. card pictures ([CARD-PROMPTS.md](CARD-PROMPTS.md)) → 4. icons and
+card symbols (§9) → 5. crests (§7) → 6. Elodie, app icon and title art (§11) → 7. the rest: Throne piece, sea, card
+backs, seats, duel background.
 
 ---
 
@@ -41,8 +42,9 @@ a *"plain flat light-grey background"* instead and I'll cut it out.
 empty throne. It feels mythic, warm and old, a little melancholy (she watches dynasties rise and fall),
 never cartoonish and never grimdark.
 
-**Painting:** gouache and oil glazes over fine ink lines, visible brushwork, a faint warm paper grain,
-small touches of real-looking gold leaf. Detailed up close but calm from a distance.
+**The style anchor is your board painting** (`public/art/board.webp`): a hand-drawn storybook fantasy look with crisp
+dark ink outlines, warm painterly colour and rich jewel tones. **Attach it to every prompt** as the style reference.
+Everything else in the game should look like it belongs on that map.
 
 **Light, the same in every image:** soft warm light from the **upper left**, cool soft shadows, gentle
 dusk glow. No harsh contrast or blown-out highlights.
@@ -86,12 +88,12 @@ never as costume or caricature.
 
 ### The style block (paste at the end of every prompt)
 ```
-Style: hand-painted fantasy atlas illustration, gouache and oil glazes over fine ink linework, subtle real gold-leaf accents, visible brushwork on warm paper grain, rich muted jewel tones, soft warm light from the upper left with cool soft shadows, gentle dusk glow, mythic and dignified, detailed up close but calm and readable from a distance.
+Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour with soft shading, rich jewel tones, warm light from the upper left, clean readable shapes, detailed but uncluttered.
 ```
 
 ### The avoid list (paste after it)
 ```
-Avoid: any text, letters, numbers, place names, labels, map legends or compass roses; watermarks or signatures; frames or borders; user-interface elements; photorealism; 3D render or CGI look; plastic shine; anime or cartoon style; oversaturated neon colour; heavy black outlines.
+Avoid: any text, letters, numbers, place names, labels, map legends or compass roses; watermarks or signatures; frames or borders; user-interface elements; photorealism; 3D render or CGI look; plastic shine; anime or cartoon style; oversaturated neon colour.
 ```
 In Midjourney, put the avoid list in `--no text, letters, numbers, watermark, signature, frame, border, 3d render, photo, anime`.
 
@@ -330,185 +332,89 @@ A round heraldic medallion emblem: {motif}, bold clear silhouette, {colours}, th
 
 ---
 
-## 8. Character portraits (32: 8 houses × 4 generations)
+## 8. Characters (32: 8 houses × 4 generations)
 
-These show on the character card, in the duel screen and, cropped to a circle, on pawns.
+**All 32 prompts are in [`CHARACTER-PROMPTS.md`](CHARACTER-PROMPTS.md),** ready to paste.
 
-| File | Size | Notes |
-|---|---|---|
-| `portrait-<house>-<gen>.png`, e.g. `portrait-brasador-1.png` | **1024 × 1280** (4:5) | Opaque. |
-
-### Framing (identical for all 32)
-- Head and shoulders, the body turned three-quarters, **looking at the viewer**.
-- Face centred left to right, **eyes about 38% from the top**, with the head about 45% of the height.
-- Everything important inside a **centred circle 70% of the width** (the pawn crop).
-- **Backdrop:** a soft painted gradient in the house colour with a faint hint of the homeland, never
-  busy.
-- The same light from the upper left as the board.
-- Specters need no separate art; the app greys out and tints the portrait.
-
-### Keeping each family consistent
-- Paint **Gen I of every house first**, then use it as the reference for that house's other three:
-  - **ChatGPT:** attach it and write *"a blood relative of this person: same family features, eye colour
-    and colouring, different age and gender as described"*.
-  - **Midjourney v7:** add `--oref <Gen I URL> --ow 60`. Keep the weight low so you get a relative, not
-    a clone.
-- **Every character is an adult.** Each generation is the next heir after the previous one dies.
-
-### Template
-```
-Head-and-shoulders portrait of {character}. {house look}. Body turned three-quarters, looking directly at the viewer, face centred, eyes about 38% from the top of the frame, head filling about 45% of the height. Background: a soft painted gradient of {house colour} with a faint hint of {homeland}. [style block] [avoid list]
-```
-
-### House looks (paste as {house look})
-- **Brasador:** Spanish-inspired frontier nobility; blackened steel gorget and pauldron over a
-  crimson-and-black doublet, crimson sash, a gold brand-mark brooch, faint ember sparks in the air.
-  *Backdrop:* crimson, volcanic haze.
-- **Dorini:** Mediterranean and Levantine merchant princes; layered silk robes in emerald and gold,
-  embroidered sashes, rings and a gold chain of office, kohl-lined eyes, an optional head wrap.
-  *Backdrop:* emerald, a harbour at dusk.
-- **Ironvow:** a fusion of Nordic and Mongolian; a fur-trimmed wrap coat over mail, braided hair, an iron
-  oath-ring arm ring or torc, wind-burned skin. *Backdrop:* steel grey, a wide steppe sky.
-- **Suzumori:** Japanese-inspired court intrigue; layered robes in violet and charcoal with silver
-  thread, a small round bell charm, a composed and unreadable expression. *Backdrop:* violet, fog through
-  cedars.
-- **Vai'tama:** Pacific-islander-inspired; garments with original bark-cloth-style patterns, shell and
-  bone ornaments, fern and flower adornments, sea-weathered skin. *Backdrop:* turquoise, a lagoon.
-- **Kay Soley:** Haitian-inspired Caribbean court; elegant coats and gowns in white, gold and sky blue,
-  madras head wraps, and **a faint sun-shaped birthmark** on the temple or cheek (their signature).
-  *Backdrop:* gold, a sunlit temple.
-- **Agnivansh:** Indian-subcontinent-inspired warrior lineage; saffron and crimson coats with lamellar
-  armour, gold jewellery, ember motes in the air. *Backdrop:* saffron, firelight on red sandstone.
-- **Stillwater:** English-inspired old country gentry; wool and velvet in slate blue and pewter grey, a
-  heron brooch, a weathered and patient calm. *Backdrop:* slate blue, moorland fog.
-
-### The 32 characters (paste as {character})
-The arc follows each house's curve: early-strong houses peak at Gen I and grow desperate, while
-late-strong houses grow grander with every generation.
-
-**Brasador** (strongest early)
-1. A scarred, iron-haired conquistador lord in his fifties, the family legend, cold and certain.
-2. His daughter, early thirties, ambitious, an old burn scar along her jaw, a branding-iron pendant.
-3. Her younger brother, mid twenties, a reckless and hungry stare, singed sleeves.
-4. The last heir, a gaunt woman in her twenties, ash on her cheek, defiant in armour too large for her.
-
-**Dorini** (strongest late)
-1. A shrewd, heavy-set merchant in his sixties with a knowing half-smile and many rings.
-2. His son, thirties, ink-stained fingers, a small ledger on a gold chain.
-3. A sharp-eyed woman in her forties, harbour banker, gold coins stitched along her veil.
-4. The golden heir, a magnificent woman in her thirties in cloth-of-gold over emerald, a circlet of
-   coins, the richest person in the realm.
-
-**Ironvow** (strongest early)
-1. A broad, grey-bearded warlord in his fifties, wolf-fur collar, an oath scar across his brow.
-2. A young horse-archer woman, mid twenties, braids threaded with iron rings, wind-burned cheeks.
-3. A raider in his thirties, shaved sides and a salt-crusted beard, a sea-axe over his shoulder.
-4. The last oath-keeper, a lean, weary woman in her thirties wearing a broken iron ring on a cord.
-
-**Suzumori** (strongest mid-game)
-1. An elderly spymaster in his seventies, a gentle smile and cold eyes, a white topknot.
-2. A soft-spoken woman in her thirties, half her face in shadow, a closed fan near her lips.
-3. A courtier in their forties at the height of their power, eyes visible above a sheer violet veil.
-4. The puppeteer, a young woman in her twenties, fine silver threads glinting between her fingers.
-
-**Vai'tama** (swingy; the dead live on in them)
-1. A chieftain-navigator in his fifties, an ancestral shell necklace and a carved wooden staff.
-2. A young woman in her twenties with an original carved ancestor mask pushed up on her head.
-3. A broad-shouldered man in his thirties, faint ghostly ancestor faces forming in the sea spray behind
-   him.
-4. An elder woman in her sixties whose eyes reflect many faces, wreathed in faint blue-green spirit light.
-
-**Kay Soley** (strongest late)
-1. A dignified high priestess in her sixties, white head wrap, the sun birthmark at her temple.
-2. A charismatic diplomat in his thirties, a gold-buttoned coat, the birthmark on his cheek.
-3. A radiant young orator, a woman in her twenties in a sky-blue madras head wrap.
-4. The sun-crowned heir, in her thirties in white and gold, her birthmark glowing faintly, serene power.
-
-**Agnivansh** (strongest early)
-1. A fierce warrior queen in her forties in flame-red lamellar, a commanding glare.
-2. A swordsman in his twenties, twin blades crossed behind his back, an ember-lit stare.
-3. A war-band captain, a woman in her thirties, a burn-scarred shoulder, a gold nose ring.
-4. The last flame, a young man in his twenties, soot-dark face and cracked armour, eyes like coals.
-
-**Stillwater** (strongest late)
-1. A quiet old matriarch in her seventies, a walking staff, a heron brooch, unhurried eyes.
-2. A plainly dressed steward in his thirties, watchful and patient.
-3. A woman in her forties in a slate-blue cloak, a calm, knowing half-smile.
-4. The Vigil, a towering knight in her forties in old plate armour with a heron crest, mist around her,
-   unbreakable calm.
+- **One full-body picture per character.** The character card shows the whole figure; the pawn on the board shows a
+  head-and-shoulders circle that the game cuts from the same picture, so a pawn always matches its card.
+- **Size:** 1024 × 1536 (2:3), opaque, with a soft out-of-focus backdrop of the homeland.
+- **Framing:** head to toe, centred, the top of the head about 6% below the top edge and the feet about 4% above the
+  bottom edge, so every face sits in the same spot for the pawn crop.
+- **Family likeness:** make Generation I of a house first, then attach it when making Generations II–IV.
+- **Specters** need no art of their own: the game greys out and tints the portrait.
 
 ---
 
-## 9. Icons
+## 9. Icons and card symbols
 
 | File | Size | Notes |
 |---|---|---|
 | `icon-<name>.png` | 512 × 512 | Transparent background. 10% padding. One bold silhouette, readable at 24 px. |
 
-Template:
+Make them all in **one chat**, so they come out as a matching set. Template:
 ```
-A single game icon: {subject}, bold simple silhouette, painted gold leaf and enamel look with a thin dark ink outline, centred, flat front view, transparent background, readable when tiny. [style block] [avoid list]
+A single game icon: {subject}, bold simple silhouette, gold and enamel look with a dark ink outline, centred, flat front view, transparent background, readable when tiny. Style: hand-drawn fantasy storybook illustration matching the attached map image — crisp dark ink outlines, warm painterly colour, rich jewel tones. Avoid: any text, letters or numbers; frames or borders; watermarks; photorealism; 3D render look.
 ```
+
+**Game icons:**
 
 | Name | Subject | Used for |
 |---|---|---|
-| `influence` | A royal crown with three points | Court tiles and the Influence total |
-| `fear` | Two crossed blades over a small flame | War tiles and the Fear total |
-| `wealth` | A short stack of gold coins with one gem | Trade tiles and the Wealth total |
+| `influence` | A royal crown with three points | Court tiles, the Influence total, Influence / Court cards |
+| `fear` | Two crossed blades over a small flame | War tiles, the Fear total, Fear / War cards |
+| `wealth` | A short stack of gold coins with one gem | Trade tiles, the Wealth total, both Wealth card groups |
 | `heart` | A heart made of red enamel with a gold rim | Heart Tokens |
 | `specter` | A pale ghostly wisp curling into a crescent moon | Specters |
 | `grudge` | A knotted red cord tied around a broken link | Grudges |
-| `dice` | A six-sided die in carved bone | Rolls |
 | `throne` | A simple tall throne silhouette with a gold halo | The Throne and claims |
 | `elodie` | A sun-eye: an open eye inside a ring of sun rays | Elodie cards |
+
+**Card category symbols** (shown in each card's title bar):
+
+| Name | Subject | Category |
+|---|---|---|
+| `cat-ranged` | A curved dagger trailing a wisp of green smoke | Ranged / Cursed |
+| `cat-disruption` | A cracked mask | Disruption |
+| `cat-movement` | A winged boot | Movement |
+| `cat-barter` | Two hands passing a single coin | Barter |
+| `cat-truce` | Two clasped hands under an olive sprig | Truce |
+| `cat-block` | A round shield with an iron boss | Block / Deflect |
+| `cat-dice` | A single carved bone die, three-quarter view, pips not important | Dice Chaos |
+| `cat-global` | A sun and a crescent moon over eight small peaks | Global |
+| `cat-targeted` | An eye inside a target ring | Targeted |
+| `cat-hand` | Three fanned playing cards with a hand reaching for one | Hand Disruption |
+
+Influence / Court, Fear / War and the two Wealth groups reuse the `influence`, `fear` and `wealth` icons. **Dice
+faces** aren't art: the game draws them, so the numbers are always right.
 
 ---
 
 ## 10. Cards
 
-**Card backs** (3):
+**The game draws every card's frame, title bar, text box and category symbol,** so all 120 match exactly and the
+text is always right. Each card type has its own look: Hand Cards dark slate, Instants storm bronze, Elodie's cards
+gold with stars.
+
+**Card pictures: all 120 prompts are in [`CARD-PROMPTS.md`](CARD-PROMPTS.md).**
+- **Size:** 1024 × 768 (landscape, 4:3), `card-<number>.png`.
+- **Picture only:** no frame, title or text.
+- **Do the 10 Elodie cards first** (marked ✦).
+
+**Card backs** (3, optional; the game has a drawn back until then):
 
 | File | Size | Notes |
 |---|---|---|
 | `card-back-hand.png`, `card-back-instant.png`, `card-back-elodie.png` | 750 × 1050 (5:7) | Opaque, symmetrical, important detail kept 6% in from every edge. |
 
-- **Hand cards:**
-  ```
-  An ornate symmetrical card back: deep wine-red field with a fine gold filigree border and a central medallion of eight small emblems circling an empty throne. [style block] [avoid list]
-  ```
-- **Instant / event cards:**
-  ```
-  An ornate symmetrical card back: deep ink-brown field with swirling storm clouds and a central medallion of a cracked hourglass, fine bronze filigree border. [style block] [avoid list]
-  ```
-- **Elodie cards:**
-  ```
-  An ornate symmetrical card back: midnight-blue field scattered with tiny gold stars, a central sun-eye (an open eye ringed by sun rays) in radiant gold leaf, rich gold filigree border, sacred and luminous. [style block] [avoid list]
-  ```
+- **Hand Cards:** *"An ornate symmetrical card back: deep wine-red field with a fine gold filigree border and a
+  central medallion of eight small emblems circling an empty throne."*
+- **Instants:** *"An ornate symmetrical card back: deep ink-brown field with swirling storm clouds and a central
+  medallion of a cracked hourglass, fine bronze filigree border."*
+- **Elodie:** *"An ornate symmetrical card back: midnight-blue field scattered with tiny gold stars, a central sun-eye
+  (an open eye ringed by sun rays) in radiant gold leaf, rich gold filigree border, sacred and luminous."*
 
-**Card pictures (later; 120 in all).** Each card shows a picture window and the app adds the frame and
-text.
-- **Size:** `card-<number>.png` at 1024 × 768 (4:3), opaque.
-- **Do the 10 Elodie cards first.** They're special, and they show the goddess acting.
-
-Template:
-```
-A scene illustration for a card called "{name}": {scene}. No text. [style block] [avoid list]
-```
-
-| # | Card | Scene |
-|---|---|---|
-| 81 | Elodie's Sorrow | The goddess's tears falling as gold rain over the eight lands |
-| 83 | Elodie's Blessing | Soft gold light falling evenly on eight distant banners |
-| 84 | Elodie's Wrath | Her shadow across a stormy sky, armies looking up in dread |
-| 89 | Elodie's Exile | A lone traveller far from home on a darkening road, her eye in the clouds |
-| 90 | Elodie's Gaze | A vast luminous eye opening in the night sky over the throne |
-| 94 | Elodie's Judgment | A golden beam striking the tallest tower in a rich city |
-| 95 | Elodie's Mercy | Her hand lifting a small fallen banner from the mud |
-| 96 | Elodie's Memory | Glowing threads linking rival houses across a map |
-| 98 | Elodie's Trial | A lone wounded warrior in a ring of watching rivals, light from above |
-| 102 | Elodie's Reckoning | A gold scale tipping, a crown on one pan, a blade on the other |
-
-The other 110 can be done later, category by category; I'll write those scenes when we get there.
+Add the style line and avoid list from §2 to each.
 
 ---
 
@@ -548,13 +454,13 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 | 2 | Sea | `sea.png` | 1024², seamless | Opaque | High |
 | 3 | Throne | `throne.png` | 1024 × 1280 | Transparent | High |
 | 4 | Crests | `crest-<house>.png` ×8 | 1024² | Transparent | High |
-| 5 | Portraits | `portrait-<house>-<1-4>.png` ×32 | 1024 × 1280 | Opaque | High |
-| 6 | Icons | `icon-<name>.png` ×9 | 512² | Transparent | Medium |
-| 7 | Card backs | `card-back-*.png` ×3 | 750 × 1050 | Opaque | Medium |
+| 5 | Characters (full body) | `portrait-<house>-<1-4>.png` ×32 | 1024 × 1536 | Opaque | High |
+| 6 | Icons and card symbols | `icon-<name>.png` ×8, `icon-cat-<name>.png` ×10 | 512² | Transparent | Medium |
+| 7 | Card backs | `card-back-*.png` ×3 | 750 × 1050 | Opaque | Optional |
 | 8 | Elodie, icon and title | `elodie.png`, `app-icon.png`, `title-*.png` | as in §11 | Opaque | Medium |
 | 9 | Seats | `seat-<house>.png` ×8 | 1024² | Transparent | Optional |
 | 10 | Duel background | `duel-bg.png` | 1290 × 2796 | Opaque | Optional |
-| 11 | Card pictures | `card-<number>.png` | 1024 × 768 | Opaque | Later (10 Elodie cards first) |
+| 11 | Card pictures | `card-<number>.png` ×120 | 1024 × 768 | Opaque | High (10 Elodie cards first) |
 
 House file names: `brasador`, `dorini`, `ironvow`, `suzumori`, `vaitama`, `kaysoley`, `agnivansh`,
 `stillwater`.
