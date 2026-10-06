@@ -476,8 +476,16 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 - **Resolution:** both sizes print at about 360–380 dpi from that art, and anything over 300 is crisp.
 - **Card backs:** all 120 game cards share one back (spot gold foil), because they're one shuffled deck. Characters
   get their own back.
-- **Print files:** when ordering, send me MPC's templates and I'll prepare every print file at their exact size, with
-  the bleed and the art, overlay and text composited together.
+- **Game-card print files (MPC's spec):** minimum 816 × 1110 px at 300 dpi, which is the 63 × 88 mm card plus 3 mm of
+  bleed on every side; max 32 MB each.
+  - **What I'll make:** each finished front at **1000 × 1360 px**. It's the same shape, kept at the art's full
+    resolution (about 370 dpi), with only 20 px trimmed from the top and bottom of each painting.
+  - **Bleed:** about 44 px on every side, trimmed off. Art and overlay borders run into it.
+  - **Safe zone:** about 88 px in from every edge. Titles, rules text and anything that must survive the cut stay
+    inside it.
+  - **Uploading:** fronts as "Different images" (`card-001` … `card-120` in order), back as "Same image", plus a
+    foil mask for the gold on the back.
+- **Character cards (tarot):** I'll check MPC's tarot spec the same way when we order them.
 
 ## 14. Checklist
 
