@@ -14,8 +14,8 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     lore: 'Ardencia is a land of fire-cracked highlands and old wounds. House Brasador rose from conquistador-warlords who carved out their territory through open conquest. They do not need to be present to be feared; the brand alone is enough.',
     hp: [3, 3, 3, 3],
     passiveName: 'Sangre Ardiente',
-    passiveText: ['+1 Fear on kill.', '+2 Fear on kill.'],
-    passive: { fearOnKill: level => (level >= 2 ? 2 : 1) },
+    passiveText: ['From Gen III: +1 Fear on kill.', '+1 Fear on kill.'],
+    passive: { fearOnKill: level => (level >= 2 ? 1 : 0) },
     abilities: [
       {
         id: 'laMarca', name: 'La Marca', gen: 2, limit: 'turn',
@@ -178,7 +178,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     passiveName: 'Limyè Elodie',
     passiveText: ['+1 Influence when you gain Influence from a Court tile.', '+2 Influence from Court tiles.'],
     passive: { tileBonus: (pillar, level) => (pillar === 'influence' ? level : 0) },
-    claimReduction: gen => (gen >= 4 ? 2 : 0),
+    claimReduction: gen => (gen >= 3 ? 2 : gen >= 2 ? 1 : 0),
     abilities: [
       {
         id: 'semanLape', name: 'Sèman Lapè', gen: 2, limit: 'game',
@@ -234,7 +234,7 @@ export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<2 | 3 | 4, string
   stillwater: {
     2: 'The Long Watch: if you take no action on your turn (no attack, Hand Card or trade), gain 1 of any resource.',
   },
-  kaysoley: { 4: 'Rit Solèy: you need 2 less combined resources to Claim the Throne.' },
+  kaysoley: { 2: 'Rit Solèy: you need 1 less combined resource to Claim the Throne (2 less from Gen III).' },
   vaitama: { 4: 'Tide of Ancestors: permanently gain the passive of a bloodline that has become a Specter.' },
 };
 

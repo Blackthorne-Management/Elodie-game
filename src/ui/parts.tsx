@@ -6,6 +6,7 @@ import type { PlayerState } from '../engine/types';
 import { PILLARS } from '../engine/types';
 import { CARD_ART, HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS } from '../assets.config';
 import { CardFrame } from './CardFrame';
+import { houseNotes } from './houseNotes';
 
 export function Crest({ house, size = 32 }: { house: PlayerState['house']; size?: number }) {
   const art = HOUSE_ART[house];
@@ -69,6 +70,7 @@ export function CharacterCard({ game, p }: { game: Game; p: PlayerState }) {
         <div className="cc-type">{h.homeland} · Gen {roman(p.gen)} · {h.hp[p.gen - 1]} ♥</div>
         <div className="cc-lines">
           <span><b>{h.passiveName}:</b> {h.passiveText[level - 1]}</span>
+          {houseNotes(p.house).filter(n => n.gen <= p.gen).map(n => <span key={n.name}><b>{n.name}:</b> {n.text}</span>)}
           {abilities.map(a => <span key={a.id}><b>{a.name}:</b> {a.text}</span>)}
         </div>
       </div>
@@ -95,6 +97,9 @@ export function HouseSheet({ game, p, onClose }: { game: Game; p: PlayerState; o
       <p>{h.passiveText[level - 1]}</p>
       {p.legacy && p.legacy !== p.house && <p>Legacy: {game.house(p.legacy).passiveName} ({game.house(p.legacy).passiveText[0]})</p>}
       {p.extraPassive && <p>Tide of Ancestors: {game.house(p.extraPassive).passiveName}</p>}
+      {houseNotes(p.house).map(n => (
+        <p key={n.name} className={p.gen >= n.gen ? '' : 'muted'}><b>Gen {roman(n.gen)} · {n.name}</b> — {n.text}</p>
+      ))}
       {h.abilities.length > 0 && <h3>Abilities</h3>}
       {h.abilities.map(a => (
         <p key={a.id} className={p.gen >= a.gen ? '' : 'muted'}>

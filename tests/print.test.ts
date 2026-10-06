@@ -3,7 +3,7 @@
 import { it } from 'vitest';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { CARDS } from '../src/data/cards';
-import { HOUSES } from '../src/data/houses';
+import { GEN_NOTES, HOUSES } from '../src/data/houses';
 import { CATEGORY_ART, HOUSE_ART } from '../src/assets.config';
 import { cardTiming } from '../src/ui/cardKind';
 
@@ -18,7 +18,7 @@ it.skipIf(!process.env.PRINT)('export card and house text', () => {
     })),
     houses: Object.values(HOUSES).map(h => ({
       id: h.id, name: h.name, homeland: h.homeland, hp: h.hp, passiveName: h.passiveName, passiveText: h.passiveText,
-      downsideText: h.downsideText ?? '', abilities: h.abilities.map(a => ({ gen: a.gen, name: a.name, text: a.text })),
+      downsideText: h.downsideText ?? '', notes: GEN_NOTES[h.id] ?? {}, abilities: h.abilities.map(a => ({ gen: a.gen, name: a.name, text: a.text })),
       color: HOUSE_ART[h.id].color, initial: HOUSE_ART[h.id].initial,
     })),
   };

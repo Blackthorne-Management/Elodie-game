@@ -238,6 +238,18 @@ These came up in code and weren't covered above; all confirmed as they stand.
   - **Result:** every house wins 7–22% at every player count (Stillwater 9–14%, Dorini 10–17%); Sudden Death
     decides 7–18% of games.
 
+- **Brasador and Kay Soley [63]** (statistical check, 5,000 games: 1,000 each at 2, 3, 4, 6 and 8 players, wins
+  measured against a fair share for the seats each house actually held): Brasador won 1.26× its share and Kay Soley
+  0.84× (difference p ≈ 10⁻¹⁸; head to head 447–263). Brasador's edge came from Sangre Ardiente (Fear on every kill,
+  and big tables have ~24 deaths). Changes:
+  - **Brasador, Sangre Ardiente:** no bonus in Gen I–II; from Gen III, +1 Fear on kill (was +1, then +2).
+  - **Kay Soley, Rit Solèy:** 1 less combined total to Claim from Gen II, 2 less from Gen III (was 2 less at Gen IV).
+  - **Result:** Brasador 1.12×, Kay Soley 0.95× (no longer different from fair, p = 0.15); the test that all houses
+    are equal fell from χ² = 108 to 29. Still slightly weak: Suzumori 0.91×, Vai'tama 0.94×.
+  - **Picking houses vs. the blind draw:** in a simulated draft (first pick takes the strongest house) the first pick
+    won up to 2.1× its share at 6 players and the last pick 0.54×; with the blind draw no seat beat ~1.1×. The blind
+    Grudge Token lottery stays the rule.
+
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):
 - **Before:** at 8 players, house wins ran from 1% to 46%, in order of Heart Tokens (Brasador on top, every

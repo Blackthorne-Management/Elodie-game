@@ -180,7 +180,13 @@ describe('combat and death (Sections 6 and 9)', () => {
     expect(b.pos).toEqual(g.house(b).home);
     expect(b.grudges).toEqual([a.id]);
     expect(a.kills).toBe(1);
-    expect(a.res.fear).toBe(1);                         // Sangre Ardiente
+    expect(a.res.fear).toBe(0);                         // Sangre Ardiente starts at Gen III
+  });
+  it('Sangre Ardiente: +1 Fear on kill from Gen III', () => {
+    const { g, a, b } = duelists();
+    a.gen = 3;
+    drive(g.basicAttack(a, b), byLabel('Wealth'));
+    expect(a.res.fear).toBe(1);
   });
   it('a Reckoning steals 1 and settles the Grudge without starting a new one', () => {
     const { g, a, b } = duelists();
@@ -483,14 +489,17 @@ describe('winning (Section 8)', () => {
     expect(g.s.winner).toBe(a.id);
     expect(b.gen).toBe(2);
   });
-  it('Kay Soley IV needs 2 less combined', () => {
+  it('Kay Soley needs 1 less combined from Gen II, 2 less from Gen III', () => {
     const g = newGame(4, ['kaysoley', 'brasador', 'dorini', 'ironvow']);
     const k = g.p(0);
-    k.gen = 4;
-    k.res = { influence: 4, fear: 2, wealth: 2 };
-    expect(g.eligible(k)).toBe(true);
-    k.gen = 3;
+    k.res = { influence: 4, fear: 2, wealth: 2 };     // 8: needs 9 at Gen I
     expect(g.eligible(k)).toBe(false);
+    k.gen = 2;
+    expect(g.eligible(k)).toBe(true);
+    k.res = { influence: 3, fear: 2, wealth: 2 };     // 7
+    expect(g.eligible(k)).toBe(false);
+    k.gen = 3;
+    expect(g.eligible(k)).toBe(true);
   });
   it('Sudden Death goes to the highest combined total', () => {
     const g = newGame(3);

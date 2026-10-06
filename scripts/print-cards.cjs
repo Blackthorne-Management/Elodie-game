@@ -89,7 +89,12 @@ function characterHtml(h, gen, art, crest) {
   const downGen = /Gen (IV|III|II|I)\b/.exec(h.downsideText);
   const named = h.abilities.find(a => h.downsideText.includes(a.name));
   const showDown = h.downsideText && (!downGen || gen >= ['I', 'II', 'III', 'IV'].indexOf(downGen[1]) + 1) && (!named || abilities.includes(named));
-  const lines = [`<p><b>${esc(h.passiveName)}:</b> ${rich(passive)}</p>`,
+  // House rules that aren't abilities (The Long Watch, Rit Solèy...), from the generation they start; "Name: text".
+  const notes = Object.entries(h.notes ?? {}).filter(([g]) => Number(g) <= gen).map(([, t]) => {
+    const [name, ...rest] = t.split(': ');
+    return `<p><b>${esc(name)}:</b> ${rich(rest.join(': '))}</p>`;
+  });
+  const lines = [`<p><b>${esc(h.passiveName)}:</b> ${rich(passive)}</p>`, ...notes,
     ...abilities.map(a => `<p><b>${esc(a.name)}:</b> ${rich(a.text)}</p>`),
     ...(showDown ? [`<p class="down">${rich(h.downsideText)}</p>`] : [])];
   const hp = h.hp[gen - 1];
