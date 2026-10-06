@@ -418,18 +418,21 @@ gold with stars.
 - **Text:** the game writes the words into the plate and the box, so the overlays stay blank.
 - **Order:** we'll design these after the art, so they suit it.
 
-**Card backs** (3, optional; the game has a drawn back until then):
+**Card backs** (2; the game has a drawn back until then):
+
+All 120 game cards are **one shuffled deck** (the Shared Action Deck), so they share **one back**. Different backs
+would show whether the next card is an Instant. The character cards have their own back.
 
 | File | Size | Notes |
 |---|---|---|
-| `card-back-hand.png`, `card-back-instant.png`, `card-back-elodie.png` | 750 × 1050 (5:7) | Opaque, symmetrical, important detail kept 6% in from every edge. |
+| `card-back.png` | 1000 × 1400 (5:7) | Every game card. Opaque, symmetrical (it looks the same upside down), important detail kept 6% in from every edge. Printed with **spot gold foil** on the gold parts. |
+| `card-back-character.png` | 1050 × 1800 (7:12) | Character cards. |
 
-- **Hand Cards:** *"An ornate symmetrical card back: deep wine-red field with a fine gold filigree border and a
-  central medallion of eight small emblems circling an empty throne."*
-- **Instants:** *"An ornate symmetrical card back: deep ink-brown field with swirling storm clouds and a central
-  medallion of a cracked hourglass, fine bronze filigree border."*
-- **Elodie:** *"An ornate symmetrical card back: midnight-blue field scattered with tiny gold stars, a central sun-eye
-  (an open eye ringed by sun rays) in radiant gold leaf, rich gold filigree border, sacred and luminous."*
+- **Game cards:** *"An ornate symmetrical card back: deep wine-red field, a fine gold filigree border, and at the
+  centre Elodie's sun-eye (an open eye ringed by sun rays) inside a medallion of eight small house emblems circling an
+  empty throne."*
+- **Character cards:** *"An ornate symmetrical tarot card back: midnight-blue field scattered with tiny gold stars,
+  eight house emblems around a central throne, rich gold filigree border."*
 
 Add the style line and avoid list from §2 to each.
 
@@ -471,10 +474,8 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 | 32 character cards | Tarot size, 70 × 120 mm | 1050 × 1800 (7:12) |
 
 - **Resolution:** both sizes print at about 360–380 dpi from that art, and anything over 300 is crisp.
-- **Card backs:**
-  - Hand Cards and Instants need different backs, because they're separate draw piles.
-  - Elodie's cards use the Instant back, so they can't be spotted in the pile.
-  - Characters get their own back.
+- **Card backs:** all 120 game cards share one back (spot gold foil), because they're one shuffled deck. Characters
+  get their own back.
 - **Print files:** when ordering, send me MPC's templates and I'll prepare every print file at their exact size, with
   the bleed and the art, overlay and text composited together.
 
@@ -488,7 +489,7 @@ A ruined ancient arena of pale stone at dusk seen from above, cracked marble flo
 | 4 | Crests | `crest-<house>.png` ×8 | 1024² | Transparent | High |
 | 5 | Characters (full body, tarot) | `portrait-<house>-<1-4>.png` ×32 | 1050 × 1800 | Opaque | High |
 | 6 | Icons and card symbols | `icon-<name>.png` ×8, `icon-cat-<name>.png` ×10 | 512² | Transparent | Medium |
-| 7 | Card backs | `card-back-*.png` ×3 | 750 × 1050 | Opaque | Optional |
+| 7 | Card backs | `card-back.png`, `card-back-character.png` | 1000 × 1400, 1050 × 1800 | Opaque | Before printing |
 | 8 | Elodie, icon and title | `elodie.png`, `app-icon.png`, `title-*.png` | as in §11 | Opaque | Medium |
 | 9 | Seats | `seat-<house>.png` ×8 | 1024² | Transparent | Optional |
 | 10 | Duel background | `duel-bg.png` | 1290 × 2796 | Opaque | Optional |
