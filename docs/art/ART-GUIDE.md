@@ -420,6 +420,20 @@ gold with stars.
 - **Text:** the game writes the words into the plate and the box, so the overlays stay blank.
 - **Tweaks:** once the art is in, adjust the colours in the script if a border fights the paintings.
 
+**Finished card fronts (done in code):** put the paintings in `art/` (see `art/README.md`) and run `npm run print`.
+It lays each painting under its overlay and writes the card's own text from the game data:
+
+- **Title:** Cinzel SemiBold, cream #F6ECD2, up to 50 px, shrinking to fit the plate.
+- **Symbol:** the category's gold icon (`public/art/icons/`, from `scripts/make-symbols.cjs`) in the left medallion.
+- **Type line:** Cinzel, capitals, 31 px, in the overlay's metal (silver #D6DCE8, bronze #F0C08A, pale gold #FFF1BF).
+- **Rules:** EB Garamond 44 px, parchment #F4ECE0, keywords (Influence, Fear, Wealth, Heart Token…) bold gold #F3D27A;
+  shrinks to fit, never below 28 px. **Flavour:** EB Garamond Italic, #CFC3AD, at the foot of the box.
+- **Character cards:** house name, generation numeral and crest in the plate; homeland, generation and Heart Tokens
+  on the type line; the passive (upgraded from Gen III) and every ability unlocked by that generation.
+
+Output: `print/cards/card-<n>.png` (1000 × 1360) and `print/characters/character-<house>-<gen>.png` (1050 × 1752),
+ready for MakePlayingCards, plus `print/preview-*.jpg` contact sheets.
+
 **Card backs** (2; the game has a drawn back until then):
 
 All 120 game cards are **one shuffled deck** (the Shared Action Deck), so they share **one back**. Different backs

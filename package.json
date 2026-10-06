@@ -13,7 +13,8 @@
     "typecheck": "tsc -b",
     "balance": "BALANCE=1 vitest run tests/balance.test.ts --silent=false",
     "replay": "vitest run tests/replay.test.ts --silent=false",
-    "analyse": "ANALYSE=1 vitest run tests/analysis.test.ts --silent=false"
+    "analyse": "ANALYSE=1 vitest run tests/analysis.test.ts --silent=false",
+    "print": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-cards.cjs"
   },
   "dependencies": {
     "react": "^19.2.8",
@@ -21,6 +22,8 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@fontsource/cinzel": "^5.3.0",
+    "@fontsource/eb-garamond": "^5.3.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
