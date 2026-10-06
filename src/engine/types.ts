@@ -33,9 +33,9 @@ export interface PlayerState {
   handCardsPlayed: number;
   visited: string[];             // squares ended on this life (Hidden Path)
   lastScoredTile: string | null; // the last tile this character scored from (the next score must be elsewhere)
-  legacy: HouseId | null;        // Vai'tama Legacy
-  extraPassive: HouseId | null;  // Vai'tama IV
-  pendingExtraPassive: boolean;  // Vai'tama IV waiting for a house to become a Specter
+  legacy: HouseId | null;        // Yaguana Legacy
+  extraPassive: HouseId | null;  // Yaguana IV
+  pendingExtraPassive: boolean;  // Yaguana IV waiting for a house to become a Specter
   used: Record<string, number>;  // ability use counters (per game, per turn, per round keys)
   mark: number | null;           // Brasador's La Marca target
   extraTurn: boolean;            // Ironvow IV pending second turn
@@ -61,7 +61,7 @@ export interface Effect {
   by?: number;              // who caused it
   other?: number;           // second party (truces)
   square?: string;          // Shield Wall
-  house?: HouseId;          // Ancestor's Mask copy
+  house?: HouseId;          // Guaíza copy
   level?: number;
   cardId?: number;          // a "marked" card waiting to be discarded
   armed: boolean;           // false = waiting for the owner's next turn to begin ("next turn" effects)

@@ -71,19 +71,19 @@ Kuroshi's power has never come from open strength. House Suzumori built a networ
 
 ---
 
-## House Vai'tama (originally "Wraithmoor")
-**Homeland:** Moa'olani, a scattered reef archipelago
-**Culture:** Native-islander-inspired
+## House Yaguana (originally "Wraithmoor", then "Yaguana")
+**Homeland:** Xaraguá, green Caribbean islands and mountains
+**Culture:** Taíno-inspired
 **Identity:** Adaptive/chaotic, swingy at all stages
 
-Moa'olani's people believe the drowned ancestors never fully leave. House Vai'tama's warriors are said to carry the fallen within them in battle, inheriting strength, memory, and secrets from the dead with every generation.
+In Xaraguá the dead are never far: the opía, spirits of the departed, walk the island by night, and in the areíto, the great dance of memory, every generation sings the deeds of those before it. House Yaguana's warriors are said to carry the fallen within them in battle, inheriting strength, memory, and secrets from the dead with every generation.
 
 | Gen | HP | Ability |
 |---|---|---|
-| I | 2 | Basic attack. Passive **Tahu'ora**: on death, your heir's inherited Legacy trait can be drawn from ANY dead bloodline, not just your own. |
-| II | 2 | **Ancestor's Mask** (Borrowed Face): once per game, copy another player's currently active passive for one full turn. |
+| I | 2 | Basic attack. Passive **Voice of the Opía**: on death, your heir's inherited Legacy trait can be drawn from ANY dead bloodline, not just your own. |
+| II | 2 | **Guaíza** (Spirit Face): once per game, copy another player's currently active passive for one full turn. |
 | III | 2 | Passive upgrades: draw 2 Legacy options on death and pick one. |
-| IV | 2 | **Tide of Ancestors** (Legion of the Dead): permanently gain a second passive, copied from any bloodline currently eliminated from the game entirely. |
+| IV | 2 | **Song of Coaybay** (Legion of the Dead): permanently gain a second passive, copied from any bloodline currently eliminated from the game entirely. |
 
 ---
 
@@ -145,7 +145,7 @@ Aldermoor's old families have weathered centuries of invasion and famine the sam
 | Dorini | Al-Doria | Mediterranean/Middle-Eastern | Wealth/economy | Late-favored |
 | Ironvow | Skarragol | Fused Nordic/Mongolian | Mobility/aggression | Early-favored |
 | Suzumori | Kuroshi | Japanese-inspired | Info/control | Mid-favored |
-| Vai'tama | Moa'olani | Native-islander | Adaptive/chaotic | Swingy |
+| Yaguana | Xaraguá | Taíno | Adaptive/chaotic | Swingy |
 | Kay Soley | Zetwal | Kreyol/Haitian | Influence/diplomacy | Late-favored |
 | Agnivansh | Jwaladesh | Indian-subcontinent | Aggro/tempo | Early-favored |
 | Stillwater | Aldermoor | English-inspired | Defensive/patient | Late-favored |

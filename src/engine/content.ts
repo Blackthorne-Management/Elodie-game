@@ -85,9 +85,9 @@ export interface HouseDef {
   longWatch?: (gen: Gen) => boolean;
   claimReduction?: (gen: Gen) => number;
   mostFearedDownside?: (gen: Gen) => boolean;
-  legacyOnDeath?: boolean;                         // Vai'tama
-  legacyDrawTwoAt?: Gen;                           // Vai'tama III
-  extraPassiveAt?: Gen;                            // Vai'tama IV
+  legacyOnDeath?: boolean;                         // Yaguana
+  legacyDrawTwoAt?: Gen;                           // Yaguana III
+  extraPassiveAt?: Gen;                            // Yaguana IV
   downsideText?: string;
 }
 

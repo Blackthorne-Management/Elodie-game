@@ -4,7 +4,7 @@ These settle every gap found in `rules-questions.md`. Where this file and the th
 differ, **this file wins**. Numbers in brackets refer to the question list.
 
 ## Board and setup
-- **Tile types [1]:** War = Brasador, Ironvow, Agnivansh. Trade = Dorini, Vai'tama. Court = Kay Soley,
+- **Tile types [1]:** War = Brasador, Ironvow, Agnivansh. Trade = Dorini, Yaguana. Court = Kay Soley,
   Suzumori, Stillwater.
 - **Layout [2]** (columns and rows 1–18, as on the board picture):
   - Throne: the centre 2×2, columns 9–10 × rows 9–10. It counts as one tile.
@@ -15,7 +15,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   - Suzumori (Court): column 10, row 18
   - Agnivansh (War): column 4, row 15
   - Stillwater (Court): column 1, row 9
-  - Vai'tama (Trade): column 4, row 4
+  - Yaguana (Trade): column 4, row 4
 - **Squares [3]:** every grid square is a space. The 8 house squares and the Throne are the "tiles".
   Players on the same square are adjacent.
 - **First player [4]:** random in solo; the host picks in multiplayer.
@@ -102,7 +102,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   - Agnivansh I: your basic attacks deal +1 damage.
   - Agnivansh IV, Endless War: once per game, make up to 3 basic attacks in one turn.
 - **Ironvow I [28]:** +1 to your movement roll.
-- **Vai'tama's Legacy [29]:**
+- **Yaguana's Legacy [29]:**
   - A Legacy is another house's Gen I passive.
   - Gen I: when your character dies, your heir picks a Legacy from any house that has lost at least
     one character this game (including your own). You hold one Legacy at a time; a new one replaces
@@ -245,7 +245,7 @@ These came up in code and weren't covered above; all confirmed as they stand.
   - **Brasador, Sangre Ardiente:** no bonus in Gen I–II; from Gen III, +1 Fear on kill (was +1, then +2).
   - **Kay Soley, Rit Solèy:** 1 less combined total to Claim from Gen II, 2 less from Gen III (was 2 less at Gen IV).
   - **Result:** Brasador 1.12×, Kay Soley 0.95× (no longer different from fair, p = 0.15); the test that all houses
-    are equal fell from χ² = 108 to 29. Still slightly weak: Suzumori 0.91×, Vai'tama 0.94×.
+    are equal fell from χ² = 108 to 29. Still slightly weak: Suzumori 0.91×, Yaguana 0.94×.
   - **Picking houses vs. the blind draw:** in a simulated draft (first pick takes the strongest house) the first pick
     won up to 2.1× its share at 6 players and the last pick 0.54×; with the blind draw no seat beat ~1.1×. The blind
     Grudge Token lottery stays the rule.
@@ -261,7 +261,7 @@ These came up in code and weren't covered above; all confirmed as they stand.
   - **Tested, not adopted: damage cap 2** (`TUNING.maxDamage`). It cuts Specters at 8 players from 3.9 to 2.7 a game,
     but lifts Ironvow to 1.24× at big tables and Dorini to 1.13× (χ² 40 vs 26). Try it after real playtests if big games
     feel too deadly.
-  - **Result:** every house 0.90–1.09× its fair share (χ² 26). Suzumori 0.90× and Vai'tama 0.93× stay a little low;
+  - **Result:** every house 0.90–1.09× its fair share (χ² 26). Suzumori 0.90× and Yaguana 0.93× stay a little low;
     their kits (seeing hands, inheriting Legacies) lean on information and choice the bots barely use, so playtest
     before patching them.
 
@@ -271,6 +271,10 @@ These came up in code and weren't covered above; all confirmed as they stand.
   times in rounds 1–4 against 0.97 for seat 8, and trailed in resources by round 3. With the truce, seats win
   11.7–13.0% (p ≈ 0.77) and house balance and game length are unchanged. A two-round truce was no better.
   `OPENING.truceRounds` in `src/config.ts`.
+
+- **House Yaguana [66]:** the house formerly called Vai'tama is now Taíno-inspired: House Yaguana of Xaraguá, with
+  Voice of the Opía (was Tahu'ora), Guaíza (was Ancestor's Mask) and Song of Coaybay (was Tide of Ancestors). Names,
+  lore and art only; every rule is unchanged. The code keeps the internal id `vaitama`.
 
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):

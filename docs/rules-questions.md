@@ -14,7 +14,7 @@ Answer by number, e.g. "3: War. 7: go with default. Everything else default."
 
 1. **BLOCKER: which house's tile is which type?** The rules say 3 Court, 3 War, 2 Trade tiles, one per
    house, but never say which house gets which.
-   *Proposal:* War = Brasador, Ironvow, Agnivansh. Trade = Dorini, Vai'tama. Court = Kay Soley,
+   *Proposal:* War = Brasador, Ironvow, Agnivansh. Trade = Dorini, Yaguana. Court = Kay Soley,
    Suzumori, Stillwater.
 
 2. **BLOCKER: where exactly are the tiles?** The rulebook says the layout isn't final. Also, 18×18 has
@@ -133,10 +133,10 @@ Answer by number, e.g. "3: War. 7: go with default. Everything else default."
 28. **BLOCKER: Ironvow I, "movement costs -1 to adjacent territories".** Movement is a dice roll, with
     no costs or territories. *Option:* +1 to your movement roll.
 
-29. **BLOCKER: Vai'tama's "Legacy trait".** Vai'tama I and III are built on inheriting a Legacy trait
-    on death, which isn't defined anywhere. Vai'tama IV also needs a meaning for "a bloodline
+29. **BLOCKER: Yaguana's "Legacy trait".** Yaguana I and III are built on inheriting a Legacy trait
+    on death, which isn't defined anywhere. Yaguana IV also needs a meaning for "a bloodline
     eliminated from the game entirely".
-    *Option:* a Legacy trait is the Gen I passive of the house that killed you (Vai'tama I: any house
+    *Option:* a Legacy trait is the Gen I passive of the house that killed you (Yaguana I: any house
     with a character that has died this game; III: draw 2 random, pick 1). "Eliminated" means that
     house has become a Specter.
 
@@ -155,7 +155,7 @@ Answer by number, e.g. "3: War. 7: go with default. Everything else default."
 
 34. **Gen IV HP contradictions:**
     - Agnivansh is said to have the **lowest** Gen IV HP of all 8, at 2, but Dorini, Suzumori,
-      Vai'tama, Kay Soley and Stillwater's base are also 2. Should Agnivansh IV be 1?
+      Yaguana, Kay Soley and Stillwater's base are also 2. Should Agnivansh IV be 1?
     - Stillwater IV is listed as 4 HP "+2 on top of normal stats". Is that 4 total, or 6?
     *Default:* Agnivansh IV = 2 and Stillwater IV = 4, as the tables show. Flagged for your call.
 

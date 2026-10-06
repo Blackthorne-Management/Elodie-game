@@ -15,7 +15,7 @@ export const HOUSE_ART: Record<HouseId, HouseArt> = {
   dorini: { color: '#1e8449', initial: 'D' },
   ironvow: { color: '#5d6d7e', initial: 'I' },
   suzumori: { color: '#7d3c98', initial: 'S' },
-  vaitama: { color: '#17a5a5', initial: 'V' },
+  vaitama: { color: '#17a5a5', initial: 'Y' },   // House Yaguana (internal id kept)
   kaysoley: { color: '#d4ac0d', initial: 'K' },
   agnivansh: { color: '#e67e22', initial: 'A' },
   stillwater: { color: '#2e86c1', initial: 'W' },
@@ -60,7 +60,7 @@ export const TERRAIN_ART: Record<HouseId | 'heartland' | 'sea', TerrainArt> = {
   dorini: { name: 'Al-Doria', base: '#5a4a2c', ink: '#a88d4c', mark: 'dunes' },
   ironvow: { name: 'Skarragol', base: '#33403e', ink: '#6f8a84', mark: 'tufts' },
   suzumori: { name: 'Kuroshi', base: '#2f3442', ink: '#6a7390', mark: 'mist' },
-  vaitama: { name: "Moa'olani", base: '#1f4446', ink: '#3f9490', mark: 'waves' },
+  vaitama: { name: 'Xaraguá', base: '#1f4446', ink: '#3f9490', mark: 'waves' },
   kaysoley: { name: 'Zetwal', base: '#4f4a26', ink: '#a89842', mark: 'rays' },
   agnivansh: { name: 'Jwaladesh', base: '#4d3220', ink: '#b0703a', mark: 'embers' },
   stillwater: { name: 'Aldermoor', base: '#3a3044', ink: '#7d6490', mark: 'heather' },

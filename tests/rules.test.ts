@@ -573,7 +573,7 @@ describe('houses', () => {
     g.s.turn!.moved = true;
     v.hand = [];
     drive(g.basicAttack(b, v));
-    expect(v.legacy).toBe('vaitama');           // only Vai'tama has lost a character so far
+    expect(v.legacy).toBe('vaitama');           // only Yaguana has lost a character so far
   });
   it('Agnivansh basic attacks deal +1', () => {
     const g = newGame(2, ['agnivansh', 'dorini']);

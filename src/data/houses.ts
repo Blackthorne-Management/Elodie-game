@@ -145,11 +145,11 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   vaitama: {
-    id: 'vaitama', name: "House Vai'tama", homeland: "Moa'olani", culture: 'Native-islander-inspired',
+    id: 'vaitama', name: 'House Yaguana', homeland: 'Xaraguá', culture: 'Taíno-inspired',
     identity: 'Adaptive/chaotic', curve: 'Swingy', tileType: 'trade', home: { x: 3, y: 3 },
-    lore: "Moa'olani's people believe the drowned ancestors never fully leave. House Vai'tama's warriors carry the fallen within them, inheriting strength, memory, and secrets from the dead with every generation.",
+    lore: "In Xaraguá the dead are never far: the opía, spirits of the departed, walk the island by night, and in the areíto, the great dance of memory, every generation sings the deeds of those before it. House Yaguana's warriors carry the fallen within them, inheriting strength, memory, and secrets from the dead with every generation.",
     hp: [3, 3, 3, 3],
-    passiveName: "Tahu'ora",
+    passiveName: 'Voice of the Opía',
     passiveText: ['On death, your heir inherits a Legacy from any fallen bloodline.', 'On death, draw 2 Legacies and pick one.'],
     passive: {},
     legacyOnDeath: true,
@@ -157,11 +157,11 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     extraPassiveAt: 4,
     abilities: [
       {
-        id: 'ancestorsMask', name: "Ancestor's Mask", gen: 2, limit: 'game',
+        id: 'ancestorsMask', name: 'Guaíza', gen: 2, limit: 'game',
         text: "Once per game: copy another player's passive until your next turn.",
         canUse: (g, p) => others(g, p.id).length > 0,
         *run(g, p) {
-          const t = yield* g.choosePlayer(p, others(g, p.id), 'Borrowed Face: whose passive do you wear?');
+          const t = yield* g.choosePlayer(p, others(g, p.id), 'Guaíza: whose spirit-face do you wear?');
           if (!t) return;
           g.addEffect('mask', p.id, { at: 'turnStart', player: p.id }, { house: t.house, level: t.gen >= 3 ? 2 : 1 });
           g.log(`${p.name} wears the face of ${g.house(t).name}: ${g.house(t).passiveName}.`, 'ability', { player: p.id });
@@ -235,7 +235,7 @@ export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<2 | 3 | 4, string
     2: 'The Long Watch: if you take no action on your turn (no attack, Hand Card or trade), gain 1 of any resource.',
   },
   kaysoley: { 2: 'Rit Solèy: you need 1 less combined resource to Claim the Throne (2 less from Gen III).' },
-  vaitama: { 4: 'Tide of Ancestors: permanently gain the passive of a bloodline that has become a Specter.' },
+  vaitama: { 4: 'Song of Coaybay: permanently gain the passive of a bloodline that has become a Specter.' },
 };
 
 export const pillarLabel = (x: Pillar) => cap(x);

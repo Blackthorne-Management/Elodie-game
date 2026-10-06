@@ -778,7 +778,7 @@ export class Game {
       for (const c of [...v.hand]) this.discardFromHand(v, c);
       v.grudges = [];
       this.log(`${v.name}'s bloodline has ended. They rise as a Specter.`, 'specter', { player: v.id });
-      // Vai'tama IV: take a passive from a house that has become a Specter.
+      // Yaguana IV: take a passive from a house that has become a Specter.
       for (const o of this.living()) if (o.pendingExtraPassive) {
         o.pendingExtraPassive = false;
         o.extraPassive = v.house;
@@ -802,7 +802,7 @@ export class Game {
       if (house.extraPassiveAt && v.gen >= house.extraPassiveAt && !v.extraPassive && !v.pendingExtraPassive) {
         const gone = this.s.players.filter(o => o.specter && o.id !== v.id).map(o => o.house);
         if (gone.length) {
-          v.extraPassive = yield* this.ask(v, 'legacy', 'Tide of Ancestors: take the passive of a vanished bloodline',
+          v.extraPassive = yield* this.ask(v, 'legacy', 'Song of Coaybay: take the passive of a vanished bloodline',
             gone.map(h => ({ label: `${this.house(h).name}: ${this.house(h).passiveName}`, value: h })));
           this.log(`${v.name} gains ${this.house(v.extraPassive!).passiveName} forever.`, 'ability', { player: v.id });
         } else {
@@ -823,7 +823,7 @@ export class Game {
     if (!pool.length) return;
     const drawTwo = this.house(v).legacyDrawTwoAt;
     if (drawTwo && v.gen >= drawTwo) pool = shuffle(pool, this.rng).slice(0, 2);
-    const h = yield* this.ask(v, 'legacy', 'Tahu\'ora: choose a Legacy from a fallen bloodline',
+    const h = yield* this.ask(v, 'legacy', 'Voice of the Opía: choose a Legacy from a fallen bloodline',
       pool.map(x => ({ label: `${this.house(x).name}: ${this.house(x).passiveName}`, value: x })));
     v.legacy = h;
     this.log(`${v.name} inherits the ${this.house(h).passiveName} Legacy of ${this.house(h).name}.`, 'ability', { player: v.id });

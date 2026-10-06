@@ -66,19 +66,19 @@ should never be brighter than them. Avoid pure white and pure black.
 | Agnivansh | Saffron orange | `#e67e22` | Crimson, gold |
 | Kay Soley | Sun gold | `#d4ac0d` | White, sky blue |
 | Dorini | **Emerald** (was gold) | `#1e8449` | Gold |
-| Vai'tama | Lagoon turquoise | `#17a5a5` | Bone, coral |
+| Yaguana | Sea turquoise | `#17a5a5` | Bone white, red ochre |
 | Stillwater | Slate blue | `#2e86c1` | Pewter grey |
 | Suzumori | Violet | `#7d3c98` | Charcoal, silver |
 | Ironvow | Steel grey | `#5d6d7e` | Black, white |
 
 > Dorini was gold like Kay Soley, impossible to tell apart on a small pawn, so Dorini is now emerald and
-> Vai'tama a slightly bluer turquoise. The game uses these colours.
+> Yaguana a slightly bluer turquoise. The game uses these colours.
 
 **Respecting real cultures.** Each house is *inspired by* a real culture: draw on it with care and research,
 never as costume or caricature.
 - Skin tones, features and dress should be true to the inspiration.
 - Don't copy sacred or personal symbols. Invent original motifs instead:
-  - no real Māori tā moko or other real tattoo lineages (Vai'tama);
+  - no copies of real Taíno cemí figures or other sacred carvings (Yaguana): original spiral designs only;
   - no real Vodou vèvè (Kay Soley);
   - no Hindu deities, Om or tilak (Agnivansh);
   - no real Japanese family crests or Shinto shrine gates (Suzumori);
@@ -140,7 +140,7 @@ Attach **`docs/art/board-guide.png`** to the prompt.
 | Kuroshi | Suzumori (Court) | South side, middle | 52%, 83% |
 | Jwaladesh | Agnivansh (War) | Lower left | 29%, 71% |
 | Aldermoor | Stillwater (Court) | West coast, middle | 17%, 48% |
-| Moa'olani | Vai'tama (Trade) | Upper left | 29%, 29% |
+| Xaraguá | Yaguana (Trade) | Upper left | 29%, 29% |
 
 The four middle-of-the-edge seats sit near the coast, which suits them: Ardencia's fortress on its cliffs,
 Al-Doria's harbour, Kuroshi's castle above its bays and Aldermoor's keep above the shore.
@@ -171,9 +171,9 @@ repaint that spot.
   ringed with braziers.
 - **Aldermoor, Stillwater (left):** fog-wrapped moorland. Purple heather, dry-stone walls, hedgerows and
   alder trees. At the seat, an old grey stone keep beside a dark, perfectly still tarn.
-- **Moa'olani, Vai'tama (upper left):** a reef archipelago. Small green islands linked by white-sand
-  shallows and turquoise lagoons, outrigger canoes, coral. At the seat, a thatched meeting house on
-  stilts.
+- **Xaraguá, Yaguana (upper left):** green Caribbean islands and mountains. Small green hills linked by white-sand
+  shallows and turquoise lagoons, dugout canoes, ceiba trees. At the seat, a round thatched bohío meeting house beside
+  a stone-lined plaza.
 
 ### Rules that make it play well
 1. **Each land must be recognisable at a glance**, by colour *and* texture, even on the small overhead map.
@@ -207,7 +207,7 @@ Homelands (positions as on the guide):
 - South (slate-blue area): Kuroshi — dark cedar forest, moss, terraced paddies, ribbons of mist, a rugged coast of rocky points and small bays; a castle compound with tiered curved roofs at its seat.
 - South-west (orange area): Jwaladesh — ochre and saffron plains, red-sandstone fort-palaces, a stepwell, banyan trees and flame-orange flowering trees; a palace courtyard ringed with braziers at its seat.
 - West (purple area): Aldermoor — fog-wrapped moorland, purple heather, dry-stone walls, hedgerows, alder trees, a dark, perfectly still tarn; an old grey stone keep above the west shore at its seat.
-- North-west (turquoise area): Moa'olani — small green hills joined by white-sand flats and shallow turquoise lagoons, coral, outrigger canoes; a thatched meeting house on stilts at its seat.
+- North-west (turquoise area): Xaraguá — small green hills joined by white-sand flats and shallow turquoise lagoons, ceiba trees, dugout canoes; a round thatched bohío meeting house beside a stone-lined plaza at its seat.
 - Centre (grey-brown area): the Heartland — ancient ruins, olive and cypress scrub, wildflower meadows, in warm neutral stone colours.
 
 Inside the coastline, water stays small and shallow (rivers, the tarn, lagoons). Keep the ground calm with medium detail and plenty of open space, so game pieces placed on top stay readable. Each homeland must be recognisable at a glance by its colour and texture. No people, no clouds over the land, no grid, no markers.
@@ -302,7 +302,7 @@ above, centred, transparent background, …"* followed by the style block and th
 | Suzumori | Small castle with tiered curved roofs | Rocky moss and cedar, wrapped in mist |
 | Agnivansh | Red-sandstone palace gate ringed with braziers | Ochre earth |
 | Stillwater | Old grey stone keep | Heather beside a still tarn |
-| Vai'tama | Thatched meeting house on stilts | White-sand islet with lagoon water |
+| Yaguana | Round thatched bohío with a stone-lined plaza | White-sand islet with lagoon water and a ceiba tree |
 
 ---
 
@@ -327,7 +327,7 @@ A round heraldic medallion emblem: {motif}, bold clear silhouette, {colours}, th
 | Dorini | A balance scale whose pans are two coins, over a lateen sail | Emerald, gold |
 | Ironvow | A rearing horse inside an iron oath-ring, with an oar and a lance crossed behind | Steel grey, black, white |
 | Suzumori | A round bell hanging from a cedar sprig, with a half-closed eye on the bell | Violet, charcoal, silver |
-| Vai'tama | A spiral wave forming the profile of an ancestor's face, original pattern | Turquoise, bone white |
+| Yaguana | A round spiral face, like an original rock carving, rising from a sea wave | Sea turquoise, bone white, red ochre |
 | Kay Soley | A rayed sun rising between two open temple doors | Sun gold, white, sky blue |
 | Agnivansh | A spearhead made of flame | Saffron, crimson, gold |
 | Stillwater | A heron standing still in a ring of calm water | Slate blue, pewter |

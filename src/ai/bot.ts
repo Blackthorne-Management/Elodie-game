@@ -11,7 +11,7 @@ export interface Personality {
   aggression: number;   // 0-1: appetite for fights
   caution: number;      // 0-1: fear of stronger rivals
   focus: Pillar | null; // the pillar this house leans on
-  noise: number;        // randomness in choices (Vai'tama is swingy)
+  noise: number;        // randomness in choices (Yaguana is swingy)
 }
 
 export const PERSONALITY: Record<HouseId, Personality> = {

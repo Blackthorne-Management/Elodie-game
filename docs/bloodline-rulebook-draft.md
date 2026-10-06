@@ -179,7 +179,7 @@ Each house carries a distinct cultural identity, homeland, and backstory woven i
 | Dorini | Al-Doria, Mediterranean/Middle-Eastern | Wealth/economy | Late-favored | Baraka Dorini: +1 Wealth from trade actions, then +2 |
 | Ironvow | Skarragol, fused Nordic/Mongolian | Mobility/aggression | Early-favored | Ironvow's Oath: -1 movement cost, then also -1 attack cost |
 | Suzumori | Kuroshi, Japanese-inspired | Info/control | Mid-favored | Kagemimi: view 1 hand/day phase, then view hand + resources |
-| Vai'tama | Moa'olani, native-islander | Adaptive/chaotic | Swingy | Tahu'ora: inherit a trait from any dead bloodline, then draw 2, pick 1 |
+| Yaguana | Xaraguá, Taíno-inspired | Adaptive/chaotic | Swingy | Voice of the Opía: inherit a trait from any dead bloodline, then draw 2, pick 1 |
 | Kay Soley | Zetwal, Kreyol/Haitian | Influence/diplomacy | Late-favored | Limyè Elodie: +1 Influence from court actions, then +2 |
 | Agnivansh | Jwaladesh, Indian-subcontinent | Aggro/tempo | Early-favored | Agni ki Shakti: -1 ability cost, then also +1 Fear on any combat win |
 | Stillwater | Aldermoor, English-inspired | Defensive/patient | Late-favored | Stillwater's Patience: block 1 Reckoning/game, then recharges each game |
