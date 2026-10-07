@@ -896,7 +896,7 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
    so the filigree reaches into the panel, with a 10 px band. */
 .frame, .sheet, .ask2 { border-width: 10px; border-image: url('/art/ui/ui-frame-worn.png') 280 / 54px / 0 stretch; }
 /* The top bar gets its own heavy riveted iron strap (scripts/batter-frame.py builds both from the painted frame). */
-.rivals2.frame { border-width: 10px; border-image: url('/art/ui/ui-frame-iron.png') 240 / 40px / 0 stretch; }
+/* The top bar keeps the battered frame until its own painted border arrives (art/ui/ui-topbar). */
 /* the board in the same battered frame, heavier */
 .stage2 { border-width: 14px; border-image: url('/art/ui/ui-frame-worn.png') 280 / 64px / 0 stretch; }
 /* duller button lettering to sit with the aged brass */
