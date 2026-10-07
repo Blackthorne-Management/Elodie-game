@@ -214,6 +214,8 @@ export function PlayScreen() {
 
       <Stage game={g} motion={motion} lit={lit} path={path} arrows={arrows}
         active={activeId} onToken={id => setSheet({ type: 'house', id })}>
+        <span className="candle l" aria-hidden><img src={UI_ART.candle} alt="" /></span>
+        <span className="candle r" aria-hidden><img src={UI_ART.candle} alt="" /></span>
         <button type="button" className="feed2" onClick={() => setSheet({ type: 'log' })}>
           {feed.map(e => <span key={e.seq}>{displayText(g, e)}</span>)}
         </button>

@@ -48,6 +48,7 @@ export const UI_ART = {
   plaque: '/art/ui/plaque.svg',
   boardFrame: '/art/ui/board-frame.svg',
   crown: '/art/icons/cat-crown.svg',
+  candle: '/art/ui/candle.svg',
   actions: {
     roll: '/art/icons/cat-die.svg', attack: '/art/icons/cat-swords.svg', end: '/art/icons/cat-hourglass.svg',
     trade: '/art/icons/cat-exchange.svg', claim: '/art/icons/cat-crown.svg', ability: '/art/icons/cat-burst.svg',

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 90" width="40" height="90"><defs>
+  <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
+  <linearGradient id="ironv" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
+  <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6fa"/><stop offset=".45" stop-color="#a3abba"/><stop offset="1" stop-color="#454b58"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".4" stop-color="#e0b14f"/><stop offset=".75" stop-color="#9a6a22"/><stop offset="1" stop-color="#5e3d10"/></linearGradient>
+  <radialGradient id="gem" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ff9aa0"/><stop offset=".35" stop-color="#c0202e"/><stop offset=".8" stop-color="#5a0710"/><stop offset="1" stop-color="#2a0306"/></radialGradient>
+  <radialGradient id="boss" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8c94a4"/><stop offset=".5" stop-color="#363c48"/><stop offset="1" stop-color="#101318"/></radialGradient>
+</defs><defs><linearGradient id="wax" x1="0" x2="1"><stop offset="0" stop-color="#e9d6a8"/><stop offset=".5" stop-color="#fff2cf"/><stop offset="1" stop-color="#b89a62"/></linearGradient></defs>
+    <rect x="12" y="26" width="16" height="50" rx="2" fill="url(#wax)"/>
+    <path d="M12 30 q3 6 0 12 M28 34 q-3 5 0 9" fill="none" stroke="#fff6dc" stroke-width="2" opacity=".8"/>
+    <path d="M20 14 C25 20 24 26 20 26 C16 26 15 20 20 14 Z" fill="#ffd36b"/><path d="M20 18 C22 22 22 25 20 25 C18 25 18 22 20 18 Z" fill="#fff8dc"/>
+    <rect x="19.4" y="22" width="1.2" height="5" fill="#3a2a1a"/>
+    <path d="M6 76 H34 L30 84 H10 Z" fill="url(#iron)" stroke="#05070b" stroke-width="1"/><rect x="4" y="74" width="32" height="3" rx="1.5" fill="url(#gold)"/></svg>

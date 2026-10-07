@@ -807,3 +807,88 @@ h1, h2, h3, .display { font-family: var(--display); font-weight: 700; letter-spa
 .mapview-head { font-family: var(--display); }
 .log .feed-line { font-size: 15px; }
 .house-head strong { font-family: var(--display); }
+
+
+/* ================================================================ gothic pass
+   Grained near-black page, damask panels in jewelled iron-and-gold frames (repeating engraved edges, garnet corner
+   bosses, scrollwork), pointed plaque buttons, bevelled metal rings, candlelight on the board. */
+:root { --deco: 'Cinzel Decorative', 'Cinzel', Georgia, serif; --iron: conic-gradient(from 210deg, #f2f4f8, #7d8596, #262b35, #9aa3b3, #eef1f6, #4b5160, #1c2028, #b8c0cd, #f2f4f8); --goldring: conic-gradient(from 210deg, #fff3c4, #c99a3c, #5e3d10, #e9be62, #fff3c4, #8a5c1a, #4a300c, #f0c870, #fff3c4); }
+body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, transparent 62%), radial-gradient(ellipse 80% 45% at 50% 112%, #2a1216 0%, transparent 62%), url('/art/ui/grain.svg'), #06080d; background-attachment: fixed; }
+
+.frame {
+  border: 22px solid transparent; border-image: url('/art/ui/frame.svg') 50 / 22px round;
+  background: url('/art/ui/damask.svg') 0 0 / 64px, linear-gradient(180deg, #131a28 0%, #0a0e17 100%);
+  background-origin: border-box; background-clip: border-box;
+  box-shadow: 0 10px 26px rgba(0,0,0,.7), inset 0 0 24px rgba(0,0,0,.85);
+}
+.rivals2.frame { padding: 0; min-height: 84px; }
+.banner3.frame { padding: 0; }
+.panel-card.frame, .rules-brief.frame { padding: 0 2px; }
+
+/* plaques with pointed jewelled caps; the body stretches */
+.act2, .big, .seg button {
+  border-style: solid; border-color: transparent; border-width: 0 22px; border-image: url('/art/ui/plaque.svg') 0 34 fill / 0 22px stretch;
+  background: linear-gradient(180deg, #1c2333 0%, #0e131d 60%, #0a0d14 100%) padding-box; box-shadow: none;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.6));
+}
+.act2 { min-height: 50px; padding: 0 2px; }
+.act2.gold, .act2.t-roll, .act2.t-claim, .big { background: linear-gradient(180deg, #2a2418 0%, #15110b 60%, #0d0a06 100%) padding-box; }
+.act2.t-roll, .act2.t-claim { filter: drop-shadow(0 0 8px rgba(243,210,122,.35)) drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
+.act2.t-attack { background: linear-gradient(180deg, #4a161c 0%, #26090d 60%, #180508 100%) padding-box; }
+.act2.t-ability { background: linear-gradient(180deg, #27244a 0%, #15132c 60%, #0e0d20 100%) padding-box; }
+.big { min-height: 58px; border-width: 0 24px; border-image-width: 0 24px; }
+.big.danger { background: linear-gradient(180deg, #5a1d22, #22090c) padding-box; }
+.seg button { border-width: 0 14px; border-image-width: 0 14px; min-height: 48px; padding: 0; }
+.seg button.on { background: linear-gradient(180deg, #3a2e18, #1a140a) padding-box; filter: drop-shadow(0 0 8px rgba(243,210,122,.45)); }
+
+/* bevelled metal rings */
+.medal { border: 3.5px solid transparent; box-shadow: 0 0 0 1.5px #05070b, 0 4px 8px #000c;
+  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--c) 80%, #fff 0%), color-mix(in srgb, var(--c) 45%, #000)) padding-box, var(--iron) border-box; }
+.seat3.active .medal { background: radial-gradient(circle at 50% 35%, var(--c), color-mix(in srgb, var(--c) 45%, #000)) padding-box, var(--goldring) border-box;
+  box-shadow: 0 0 0 1.5px #05070b, 0 0 14px 4px rgba(243,210,122,.65); animation: seatglow2 1.8s ease-in-out infinite; }
+@keyframes seatglow2 { 50% { box-shadow: 0 0 0 1.5px #05070b, 0 0 22px 8px rgba(243,210,122,.8); } }
+.banner3 .medal { border-width: 5px; background: radial-gradient(circle at 50% 35%, var(--c), color-mix(in srgb, var(--c) 40%, #000)) padding-box, var(--goldring) border-box;
+  box-shadow: 0 0 0 2px #05070b, 0 0 16px rgba(243,210,122,.25), 0 6px 12px #000d; }
+.round3 { width: 58px; height: 58px; border: 4px solid transparent; background: radial-gradient(circle at 50% 30%, #222c42, #06080d 75%) padding-box, var(--iron) border-box;
+  box-shadow: 0 0 0 1.5px #05070b, inset 0 0 10px #000, 0 4px 8px #000c; }
+.round3 b { font-family: var(--deco); font-size: 22px; text-shadow: 0 0 8px rgba(243,210,122,.45); }
+.seat3-n { background: var(--iron); color: #06080d; }
+.seat3.active .seat3-n { background: var(--goldring); }
+
+/* the board: a heavy jewelled frame and two candles */
+.stage2 { border: 28px solid transparent; border-image: url('/art/ui/board-frame.svg') 70 / 28px round;
+  background: radial-gradient(ellipse at 50% 0%, #1e2a42 0%, #05070b 80%) border-box; box-shadow: 0 12px 30px rgba(0,0,0,.75), inset 0 0 50px #000; }
+.stage2::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: radial-gradient(circle at 0% 100%, rgba(255,190,90,.22), transparent 38%), radial-gradient(circle at 100% 100%, rgba(255,190,90,.18), transparent 36%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%);
+  animation: candlelight 3.2s ease-in-out infinite; }
+@keyframes candlelight { 0%, 100% { opacity: .9; } 30% { opacity: 1; } 55% { opacity: .78; } 80% { opacity: .95; } }
+.candle { position: absolute; bottom: -6px; width: 26px; z-index: 2; pointer-events: none; filter: drop-shadow(0 4px 4px #000c); }
+.candle img { width: 100%; display: block; }
+.candle::before { content: ''; position: absolute; left: 50%; top: 4px; width: 46px; height: 46px; margin-left: -23px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,214,120,.55), rgba(255,170,60,.15) 45%, transparent 70%); animation: flicker 1.7s ease-in-out infinite; }
+@keyframes flicker { 0%, 100% { transform: scale(1); opacity: .9; } 25% { transform: scale(1.12) translateX(1px); opacity: 1; } 50% { transform: scale(.94); opacity: .75; } 75% { transform: scale(1.05) translateX(-1px); opacity: .95; } }
+.candle.l { left: -4px; } .candle.r { right: -4px; }
+.feed2 { z-index: 3; background: rgba(5,7,11,.82); border: 1px solid #8a6a2e70; }
+.minimap2 { right: 18px; }
+
+/* headings and titles */
+.setup h1, .gameover h1 { font-family: var(--deco); }
+.sheet-head h2 { font-family: var(--deco); font-size: 19px; }
+.sheet-head { padding-bottom: 14px; background: url('/art/ui/divider.svg') center bottom / 92% 14px no-repeat; }
+.sheet { border-width: 22px; border-image: url('/art/ui/frame.svg') 50 / 22px round;
+  background: url('/art/ui/damask.svg') 0 0 / 64px, linear-gradient(180deg, #131a28, #090d15); background-origin: border-box; }
+.ask2 { border-width: 22px; border-image: url('/art/ui/frame.svg') 50 / 22px round;
+  background: url('/art/ui/damask.svg') 0 0 / 64px, linear-gradient(180deg, #141b2b, #090d15); background-origin: border-box; padding: 0 2px max(4px, env(safe-area-inset-bottom)); }
+.ask2-prompt { padding-bottom: 12px; background: url('/art/ui/divider.svg') center bottom / 80% 12px no-repeat; margin-bottom: 10px; }
+.setup .tagline { padding-bottom: 16px; background: url('/art/ui/divider.svg') center bottom / 80% 14px no-repeat; }
+.b3-res { border-left: none; background: linear-gradient(#0000, #0000) padding-box; position: relative; }
+.b3-res::before { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; background: linear-gradient(transparent, #d9a441, transparent); }
+/* plaques: each colour is its own drawing; nothing behind it */
+.act2, .big, .seg button { background: none; border-image-source: url('/art/ui/plaque.svg'); }
+.act2.gold, .act2.t-roll, .act2.t-claim, .big, .seg button.on { background: none; border-image-source: url('/art/ui/plaque-gold.svg'); }
+.act2.t-attack, .big.danger { background: none; border-image-source: url('/art/ui/plaque-red.svg'); }
+.act2.t-ability { background: none; border-image-source: url('/art/ui/plaque-violet.svg'); }
+.setup h1, .gameover h1, .round3 b, .sheet-head h2 { font-variant-ligatures: none; font-feature-settings: 'liga' 0, 'dlig' 0; }
+.frame { box-shadow: 0 10px 26px rgba(0,0,0,.7), inset 0 0 14px rgba(0,0,0,.6); }
+.setup h1, .gameover h1, .sheet-head h2 { font-family: var(--display); }

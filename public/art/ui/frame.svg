@@ -1,24 +1,117 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120"><defs>
-  <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef1f6"/><stop offset=".5" stop-color="#8d95a6"/><stop offset="1" stop-color="#4c5363"/></linearGradient>
-  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1bf"/><stop offset=".45" stop-color="#d9a441"/><stop offset="1" stop-color="#7c4f17"/></linearGradient>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150"><defs>
+  <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
+  <linearGradient id="ironv" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
+  <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6fa"/><stop offset=".45" stop-color="#a3abba"/><stop offset="1" stop-color="#454b58"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".4" stop-color="#e0b14f"/><stop offset=".75" stop-color="#9a6a22"/><stop offset="1" stop-color="#5e3d10"/></linearGradient>
+  <radialGradient id="gem" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ff9aa0"/><stop offset=".35" stop-color="#c0202e"/><stop offset=".8" stop-color="#5a0710"/><stop offset="1" stop-color="#2a0306"/></radialGradient>
+  <radialGradient id="boss" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8c94a4"/><stop offset=".5" stop-color="#363c48"/><stop offset="1" stop-color="#101318"/></radialGradient>
 </defs>
-  <rect x="2" y="2" width="116" height="116" rx="3" fill="none" stroke="#05070c" stroke-width="3"/>
-  <rect x="3" y="3" width="114" height="114" rx="3" fill="none" stroke="url(#silver)" stroke-width="2.4"/>
-  <rect x="8.5" y="8.5" width="103" height="103" rx="2" fill="none" stroke="url(#gold)" stroke-width="1.2" opacity=".85"/>
-  <g fill="url(#gold)" stroke="#2a1a06" stroke-width=".6">
-  <path d="M4 4 l9 3 l-6 6 z"/>
-  <path d="M12 6 c8 -2 14 2 18 6 c-6 -2 -11 -2 -16 1 z"/>
-  <path d="M6 12 c-2 8 2 14 6 18 c-2 -6 -2 -11 1 -16 z"/>
-  <circle cx="9" cy="9" r="2.2"/></g><g transform="translate(120 0) scale(-1 1)"><g fill="url(#gold)" stroke="#2a1a06" stroke-width=".6">
-  <path d="M4 4 l9 3 l-6 6 z"/>
-  <path d="M12 6 c8 -2 14 2 18 6 c-6 -2 -11 -2 -16 1 z"/>
-  <path d="M6 12 c-2 8 2 14 6 18 c-2 -6 -2 -11 1 -16 z"/>
-  <circle cx="9" cy="9" r="2.2"/></g></g><g transform="translate(0 120) scale(1 -1)"><g fill="url(#gold)" stroke="#2a1a06" stroke-width=".6">
-  <path d="M4 4 l9 3 l-6 6 z"/>
-  <path d="M12 6 c8 -2 14 2 18 6 c-6 -2 -11 -2 -16 1 z"/>
-  <path d="M6 12 c-2 8 2 14 6 18 c-2 -6 -2 -11 1 -16 z"/>
-  <circle cx="9" cy="9" r="2.2"/></g></g><g transform="translate(120 120) scale(-1 -1)"><g fill="url(#gold)" stroke="#2a1a06" stroke-width=".6">
-  <path d="M4 4 l9 3 l-6 6 z"/>
-  <path d="M12 6 c8 -2 14 2 18 6 c-6 -2 -11 -2 -16 1 z"/>
-  <path d="M6 12 c-2 8 2 14 6 18 c-2 -6 -2 -11 1 -16 z"/>
-  <circle cx="9" cy="9" r="2.2"/></g></g></svg>
+    <g><rect x="0" y="2" width="150" height="16" fill="url(#iron)"/>
+    <rect x="0" y="2" width="150" height="1.4" fill="#c9cfda"/>
+    <rect x="0" y="17" width="150" height="2" fill="#d9a441"/>
+    <rect x="0" y="17" width="150" height=".7" fill="#fff0bf" opacity=".6"/>
+    <rect x="0" y="21" width="150" height=".9" fill="#e0b14f" opacity=".5"/><g transform="translate(50 0)"><path d="M15.666666666666668 10 l9.333333333333332 -6 l9.333333333333332 6 l-9.333333333333332 6 z" fill="url(#gold)" stroke="#05070b" stroke-width=".7"/>
+      <path d="M21 10 l4 -2.6666666666666665 l4 2.6666666666666665 l-4 2.6666666666666665 z" fill="url(#gem)"/>
+      <circle cx="3.666666666666668" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <circle cx="46.33333333333333" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <path d="M-8.333333333333329 10 c4 -5.333333333333333 8 -5.333333333333333 10.666666666666666 0 c-2.6666666666666665 5.333333333333333 -6.666666666666666 5.333333333333333 -10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/>
+      <path d="M58.33333333333333 10 c-4 -5.333333333333333 -8 -5.333333333333333 -10.666666666666666 0 c2.6666666666666665 5.333333333333333 6.666666666666666 5.333333333333333 10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/></g></g>
+    <g transform="translate(150 0) rotate(90)"><rect x="0" y="2" width="150" height="16" fill="url(#iron)"/>
+    <rect x="0" y="2" width="150" height="1.4" fill="#c9cfda"/>
+    <rect x="0" y="17" width="150" height="2" fill="#d9a441"/>
+    <rect x="0" y="17" width="150" height=".7" fill="#fff0bf" opacity=".6"/>
+    <rect x="0" y="21" width="150" height=".9" fill="#e0b14f" opacity=".5"/><g transform="translate(50 0)"><path d="M15.666666666666668 10 l9.333333333333332 -6 l9.333333333333332 6 l-9.333333333333332 6 z" fill="url(#gold)" stroke="#05070b" stroke-width=".7"/>
+      <path d="M21 10 l4 -2.6666666666666665 l4 2.6666666666666665 l-4 2.6666666666666665 z" fill="url(#gem)"/>
+      <circle cx="3.666666666666668" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <circle cx="46.33333333333333" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <path d="M-8.333333333333329 10 c4 -5.333333333333333 8 -5.333333333333333 10.666666666666666 0 c-2.6666666666666665 5.333333333333333 -6.666666666666666 5.333333333333333 -10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/>
+      <path d="M58.33333333333333 10 c-4 -5.333333333333333 -8 -5.333333333333333 -10.666666666666666 0 c2.6666666666666665 5.333333333333333 6.666666666666666 5.333333333333333 10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/></g></g>
+    <g transform="translate(150 150) rotate(180)"><rect x="0" y="2" width="150" height="16" fill="url(#iron)"/>
+    <rect x="0" y="2" width="150" height="1.4" fill="#c9cfda"/>
+    <rect x="0" y="17" width="150" height="2" fill="#d9a441"/>
+    <rect x="0" y="17" width="150" height=".7" fill="#fff0bf" opacity=".6"/>
+    <rect x="0" y="21" width="150" height=".9" fill="#e0b14f" opacity=".5"/><g transform="translate(50 0)"><path d="M15.666666666666668 10 l9.333333333333332 -6 l9.333333333333332 6 l-9.333333333333332 6 z" fill="url(#gold)" stroke="#05070b" stroke-width=".7"/>
+      <path d="M21 10 l4 -2.6666666666666665 l4 2.6666666666666665 l-4 2.6666666666666665 z" fill="url(#gem)"/>
+      <circle cx="3.666666666666668" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <circle cx="46.33333333333333" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <path d="M-8.333333333333329 10 c4 -5.333333333333333 8 -5.333333333333333 10.666666666666666 0 c-2.6666666666666665 5.333333333333333 -6.666666666666666 5.333333333333333 -10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/>
+      <path d="M58.33333333333333 10 c-4 -5.333333333333333 -8 -5.333333333333333 -10.666666666666666 0 c2.6666666666666665 5.333333333333333 6.666666666666666 5.333333333333333 10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/></g></g>
+    <g transform="translate(0 150) rotate(-90)"><rect x="0" y="2" width="150" height="16" fill="url(#iron)"/>
+    <rect x="0" y="2" width="150" height="1.4" fill="#c9cfda"/>
+    <rect x="0" y="17" width="150" height="2" fill="#d9a441"/>
+    <rect x="0" y="17" width="150" height=".7" fill="#fff0bf" opacity=".6"/>
+    <rect x="0" y="21" width="150" height=".9" fill="#e0b14f" opacity=".5"/><g transform="translate(50 0)"><path d="M15.666666666666668 10 l9.333333333333332 -6 l9.333333333333332 6 l-9.333333333333332 6 z" fill="url(#gold)" stroke="#05070b" stroke-width=".7"/>
+      <path d="M21 10 l4 -2.6666666666666665 l4 2.6666666666666665 l-4 2.6666666666666665 z" fill="url(#gem)"/>
+      <circle cx="3.666666666666668" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <circle cx="46.33333333333333" cy="10" r="2.2666666666666666" fill="url(#gold)" stroke="#05070b" stroke-width=".4"/>
+      <path d="M-8.333333333333329 10 c4 -5.333333333333333 8 -5.333333333333333 10.666666666666666 0 c-2.6666666666666665 5.333333333333333 -6.666666666666666 5.333333333333333 -10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/>
+      <path d="M58.33333333333333 10 c-4 -5.333333333333333 -8 -5.333333333333333 -10.666666666666666 0 c2.6666666666666665 5.333333333333333 6.666666666666666 5.333333333333333 10.666666666666666 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/></g></g>
+    <rect x="1" y="1" width="148" height="148" rx="3" fill="none" stroke="#05070b" stroke-width="2"/>
+    <g>
+    <rect x="1" y="1" width="30" height="30" rx="3" fill="url(#boss)" stroke="#05070b" stroke-width="1.4"/>
+    <rect x="3.5" y="3.5" width="25" height="25" rx="2" fill="none" stroke="url(#gold)" stroke-width="1.3"/>
+    <circle cx="16" cy="16" r="6.2" fill="url(#gem)" stroke="url(#gold)" stroke-width="1.6"/>
+    <circle cx="14" cy="14" r="1.6" fill="#fff" opacity=".7"/>
+    <g transform="translate(30 23)"><path d="M0 0 C6.3 -2 11.700000000000001 2.5 14.76 0.5
+    C17.099999999999998 -1 18.36 5.5 16.2 7.5 C14.4 9 12.6 6 14.040000000000001 4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 -0.5 c0.9 3.5 2.16 4.5 3.6 4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(23 30) rotate(90)"><path d="M0 0 C6.3 2 11.700000000000001 -2.5 14.76 -0.5
+    C17.099999999999998 1 18.36 -5.5 16.2 -7.5 C14.4 -9 12.6 -6 14.040000000000001 -4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 0.5 c0.9 -3.5 2.16 -4.5 3.6 -4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(29 29) rotate(45)"><g fill="url(#gold)" stroke="#05070b" stroke-width=".7">
+  <path d="M0 0 C5.4 -4.050000000000001 10.8 -2.7 16.200000000000003 0 C10.8 2.7 5.4 4.050000000000001 0 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 -6.75 12.15 -9.450000000000001 14.850000000000001 -6.75 C10.8 -5.4 8.100000000000001 -2.7 6.75 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 6.75 12.15 9.450000000000001 14.850000000000001 6.75 C10.8 5.4 8.100000000000001 2.7 6.75 0 Z"/></g></g></g>
+    <g transform="translate(150 0) scale(-1 1)"><g>
+    <rect x="1" y="1" width="30" height="30" rx="3" fill="url(#boss)" stroke="#05070b" stroke-width="1.4"/>
+    <rect x="3.5" y="3.5" width="25" height="25" rx="2" fill="none" stroke="url(#gold)" stroke-width="1.3"/>
+    <circle cx="16" cy="16" r="6.2" fill="url(#gem)" stroke="url(#gold)" stroke-width="1.6"/>
+    <circle cx="14" cy="14" r="1.6" fill="#fff" opacity=".7"/>
+    <g transform="translate(30 23)"><path d="M0 0 C6.3 -2 11.700000000000001 2.5 14.76 0.5
+    C17.099999999999998 -1 18.36 5.5 16.2 7.5 C14.4 9 12.6 6 14.040000000000001 4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 -0.5 c0.9 3.5 2.16 4.5 3.6 4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(23 30) rotate(90)"><path d="M0 0 C6.3 2 11.700000000000001 -2.5 14.76 -0.5
+    C17.099999999999998 1 18.36 -5.5 16.2 -7.5 C14.4 -9 12.6 -6 14.040000000000001 -4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 0.5 c0.9 -3.5 2.16 -4.5 3.6 -4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(29 29) rotate(45)"><g fill="url(#gold)" stroke="#05070b" stroke-width=".7">
+  <path d="M0 0 C5.4 -4.050000000000001 10.8 -2.7 16.200000000000003 0 C10.8 2.7 5.4 4.050000000000001 0 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 -6.75 12.15 -9.450000000000001 14.850000000000001 -6.75 C10.8 -5.4 8.100000000000001 -2.7 6.75 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 6.75 12.15 9.450000000000001 14.850000000000001 6.75 C10.8 5.4 8.100000000000001 2.7 6.75 0 Z"/></g></g></g></g>
+    <g transform="translate(0 150) scale(1 -1)"><g>
+    <rect x="1" y="1" width="30" height="30" rx="3" fill="url(#boss)" stroke="#05070b" stroke-width="1.4"/>
+    <rect x="3.5" y="3.5" width="25" height="25" rx="2" fill="none" stroke="url(#gold)" stroke-width="1.3"/>
+    <circle cx="16" cy="16" r="6.2" fill="url(#gem)" stroke="url(#gold)" stroke-width="1.6"/>
+    <circle cx="14" cy="14" r="1.6" fill="#fff" opacity=".7"/>
+    <g transform="translate(30 23)"><path d="M0 0 C6.3 -2 11.700000000000001 2.5 14.76 0.5
+    C17.099999999999998 -1 18.36 5.5 16.2 7.5 C14.4 9 12.6 6 14.040000000000001 4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 -0.5 c0.9 3.5 2.16 4.5 3.6 4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(23 30) rotate(90)"><path d="M0 0 C6.3 2 11.700000000000001 -2.5 14.76 -0.5
+    C17.099999999999998 1 18.36 -5.5 16.2 -7.5 C14.4 -9 12.6 -6 14.040000000000001 -4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 0.5 c0.9 -3.5 2.16 -4.5 3.6 -4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(29 29) rotate(45)"><g fill="url(#gold)" stroke="#05070b" stroke-width=".7">
+  <path d="M0 0 C5.4 -4.050000000000001 10.8 -2.7 16.200000000000003 0 C10.8 2.7 5.4 4.050000000000001 0 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 -6.75 12.15 -9.450000000000001 14.850000000000001 -6.75 C10.8 -5.4 8.100000000000001 -2.7 6.75 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 6.75 12.15 9.450000000000001 14.850000000000001 6.75 C10.8 5.4 8.100000000000001 2.7 6.75 0 Z"/></g></g></g></g>
+    <g transform="translate(150 150) scale(-1 -1)"><g>
+    <rect x="1" y="1" width="30" height="30" rx="3" fill="url(#boss)" stroke="#05070b" stroke-width="1.4"/>
+    <rect x="3.5" y="3.5" width="25" height="25" rx="2" fill="none" stroke="url(#gold)" stroke-width="1.3"/>
+    <circle cx="16" cy="16" r="6.2" fill="url(#gem)" stroke="url(#gold)" stroke-width="1.6"/>
+    <circle cx="14" cy="14" r="1.6" fill="#fff" opacity=".7"/>
+    <g transform="translate(30 23)"><path d="M0 0 C6.3 -2 11.700000000000001 2.5 14.76 0.5
+    C17.099999999999998 -1 18.36 5.5 16.2 7.5 C14.4 9 12.6 6 14.040000000000001 4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 -0.5 c0.9 3.5 2.16 4.5 3.6 4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(23 30) rotate(90)"><path d="M0 0 C6.3 2 11.700000000000001 -2.5 14.76 -0.5
+    C17.099999999999998 1 18.36 -5.5 16.2 -7.5 C14.4 -9 12.6 -6 14.040000000000001 -4.5"
+    fill="none" stroke="url(#gold)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5.3999999999999995 0.5 c0.9 -3.5 2.16 -4.5 3.6 -4" fill="none" stroke="url(#gold)" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g transform="translate(29 29) rotate(45)"><g fill="url(#gold)" stroke="#05070b" stroke-width=".7">
+  <path d="M0 0 C5.4 -4.050000000000001 10.8 -2.7 16.200000000000003 0 C10.8 2.7 5.4 4.050000000000001 0 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 -6.75 12.15 -9.450000000000001 14.850000000000001 -6.75 C10.8 -5.4 8.100000000000001 -2.7 6.75 0 Z"/>
+  <path d="M4.050000000000001 0 C6.75 6.75 12.15 9.450000000000001 14.850000000000001 6.75 C10.8 5.4 8.100000000000001 2.7 6.75 0 Z"/></g></g></g></g></svg>
