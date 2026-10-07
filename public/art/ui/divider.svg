@@ -2,15 +2,15 @@
   <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
   <linearGradient id="ironv" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
   <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6fa"/><stop offset=".45" stop-color="#a3abba"/><stop offset="1" stop-color="#454b58"/></linearGradient>
-  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".4" stop-color="#e0b14f"/><stop offset=".75" stop-color="#9a6a22"/><stop offset="1" stop-color="#5e3d10"/></linearGradient>
-  <radialGradient id="gem" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ff9aa0"/><stop offset=".35" stop-color="#c0202e"/><stop offset=".8" stop-color="#5a0710"/><stop offset="1" stop-color="#2a0306"/></radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9a676"/><stop offset=".4" stop-color="#857043"/><stop offset=".75" stop-color="#55441f"/><stop offset="1" stop-color="#2e240e"/></linearGradient>
+  <radialGradient id="gem" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#b8646a"/><stop offset=".35" stop-color="#6e1620"/><stop offset=".8" stop-color="#33060c"/><stop offset="1" stop-color="#180204"/></radialGradient>
   <radialGradient id="boss" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8c94a4"/><stop offset=".5" stop-color="#363c48"/><stop offset="1" stop-color="#101318"/></radialGradient>
-</defs><rect x="16" y="9.2" width="112" height="1.6" fill="#d9a441"/>
+</defs><rect x="16" y="9.2" width="112" height="1.6" fill="#7d6a3e"/>
     <g transform="translate(128 10)"><g fill="url(#gold)" stroke="#05070b" stroke-width=".7">
   <path d="M0 0 C3.6 -2.7 7.2 -1.8 10.8 0 C7.2 1.8 3.6 2.7 0 0 Z"/>
   <path d="M2.7 0 C4.5 -4.5 8.1 -6.3 9.9 -4.5 C7.2 -3.6 5.4 -1.8 4.5 0 Z"/>
   <path d="M2.7 0 C4.5 4.5 8.1 6.3 9.9 4.5 C7.2 3.6 5.4 1.8 4.5 0 Z"/></g></g>
-    <circle cx="10" cy="10" r="2" fill="url(#gold)"/><g transform="translate(300 0) scale(-1 1)"><rect x="16" y="9.2" width="112" height="1.6" fill="#d9a441"/>
+    <circle cx="10" cy="10" r="2" fill="url(#gold)"/><g transform="translate(300 0) scale(-1 1)"><rect x="16" y="9.2" width="112" height="1.6" fill="#7d6a3e"/>
     <g transform="translate(128 10)"><g fill="url(#gold)" stroke="#05070b" stroke-width=".7">
   <path d="M0 0 C3.6 -2.7 7.2 -1.8 10.8 0 C7.2 1.8 3.6 2.7 0 0 Z"/>
   <path d="M2.7 0 C4.5 -4.5 8.1 -6.3 9.9 -4.5 C7.2 -3.6 5.4 -1.8 4.5 0 Z"/>

@@ -8,8 +8,8 @@ const DEFS = `<defs>
   <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
   <linearGradient id="ironv" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f7686"/><stop offset=".35" stop-color="#2b303b"/><stop offset=".7" stop-color="#14171e"/><stop offset="1" stop-color="#3a404d"/></linearGradient>
   <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6fa"/><stop offset=".45" stop-color="#a3abba"/><stop offset="1" stop-color="#454b58"/></linearGradient>
-  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".4" stop-color="#e0b14f"/><stop offset=".75" stop-color="#9a6a22"/><stop offset="1" stop-color="#5e3d10"/></linearGradient>
-  <radialGradient id="gem" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ff9aa0"/><stop offset=".35" stop-color="#c0202e"/><stop offset=".8" stop-color="#5a0710"/><stop offset="1" stop-color="#2a0306"/></radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9a676"/><stop offset=".4" stop-color="#857043"/><stop offset=".75" stop-color="#55441f"/><stop offset="1" stop-color="#2e240e"/></linearGradient>
+  <radialGradient id="gem" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#b8646a"/><stop offset=".35" stop-color="#6e1620"/><stop offset=".8" stop-color="#33060c"/><stop offset="1" stop-color="#180204"/></radialGradient>
   <radialGradient id="boss" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8c94a4"/><stop offset=".5" stop-color="#363c48"/><stop offset="1" stop-color="#101318"/></radialGradient>
 </defs>`;
 const INK = '#05070b';
@@ -39,15 +39,15 @@ function frame(S = 150, B = 50, band = 16) {
       <path d="M${len / 2 - 3 * k} ${y} l${3 * k} ${-2 * k} l${3 * k} ${2 * k} l${-3 * k} ${2 * k} z" fill="url(#gem)"/>
       <circle cx="${len / 2 - 16 * k}" cy="${y}" r="${1.7 * k}" fill="url(#gold)" stroke="${INK}" stroke-width=".4"/>
       <circle cx="${len / 2 + 16 * k}" cy="${y}" r="${1.7 * k}" fill="url(#gold)" stroke="${INK}" stroke-width=".4"/>
-      <path d="M${len / 2 - 25 * k} ${y} c${3 * k} ${-4 * k} ${6 * k} ${-4 * k} ${8 * k} 0 c${-2 * k} ${4 * k} ${-5 * k} ${4 * k} ${-8 * k} 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/>
-      <path d="M${len / 2 + 25 * k} ${y} c${-3 * k} ${-4 * k} ${-6 * k} ${-4 * k} ${-8 * k} 0 c${2 * k} ${4 * k} ${5 * k} ${4 * k} ${8 * k} 0 z" fill="none" stroke="#e0b14f" stroke-width="1" opacity=".85"/>`;
+      <path d="M${len / 2 - 25 * k} ${y} c${3 * k} ${-4 * k} ${6 * k} ${-4 * k} ${8 * k} 0 c${-2 * k} ${4 * k} ${-5 * k} ${4 * k} ${-8 * k} 0 z" fill="none" stroke="#7d6a3e" stroke-width="1" opacity=".85"/>
+      <path d="M${len / 2 + 25 * k} ${y} c${-3 * k} ${-4 * k} ${-6 * k} ${-4 * k} ${-8 * k} 0 c${2 * k} ${4 * k} ${5 * k} ${4 * k} ${8 * k} 0 z" fill="none" stroke="#7d6a3e" stroke-width="1" opacity=".85"/>`;
   };
   // band along the top (y 2..band+2) as one strip, repeated for the 4 sides via transforms of the whole edge group
   const strip = (len) => `<rect x="0" y="2" width="${len}" height="${band}" fill="url(#iron)"/>
-    <rect x="0" y="2" width="${len}" height="1.4" fill="#c9cfda"/>
-    <rect x="0" y="${band + 1}" width="${len}" height="2" fill="#d9a441"/>
-    <rect x="0" y="${band + 1}" width="${len}" height=".7" fill="#fff0bf" opacity=".6"/>
-    <rect x="0" y="${band + 5}" width="${len}" height=".9" fill="#e0b14f" opacity=".5"/>`;
+    <rect x="0" y="2" width="${len}" height="1.4" fill="#7f8794"/>
+    <rect x="0" y="${band + 1}" width="${len}" height="2" fill="#7d6a3e"/>
+    <rect x="0" y="${band + 1}" width="${len}" height=".7" fill="#a8976a" opacity=".6"/>
+    <rect x="0" y="${band + 5}" width="${len}" height=".9" fill="#7d6a3e" opacity=".5"/>`;
   // The edge between the corners is one tile (S - 2B long) that the browser repeats along each side.
   const top = `${strip(S)}<g transform="translate(${B} 0)">${edge(S - 2 * B)}</g>`;
   const corner = `<g>
@@ -79,13 +79,13 @@ function plaque(tone = ['#222a3c', '#10151f', '#0a0d14'], W = 240, H = 64, cap =
     <path d="M18 4.5 H${W - 18} L${W - 5} ${m} L${W - 18} ${H - 4.5} H18 L5 ${m} Z" fill="url(#body)"/>
     <path d="M18 4.5 H${W - 18} L${W - 12} ${m * .6} H12 Z" fill="#fff" opacity=".05"/>`;
   const body = `${fill}
-    <rect x="${cap - 2}" y="3.9" width="${W - 2 * cap + 4}" height="2.2" fill="#d9a441"/><rect x="${cap - 2}" y="3.9" width="${W - 2 * cap + 4}" height=".8" fill="#fff0bf" opacity=".6"/>
-    <rect x="${cap - 2}" y="${H - 6.1}" width="${W - 2 * cap + 4}" height="2.2" fill="#b07e2a"/>
-    <rect x="${cap}" y="8.6" width="${W - 2 * cap}" height=".7" fill="#f3d27a" opacity=".4"/>
-    <rect x="${cap}" y="${H - 9.3}" width="${W - 2 * cap}" height=".7" fill="#f3d27a" opacity=".4"/>`;
+    <rect x="${cap - 2}" y="3.9" width="${W - 2 * cap + 4}" height="2.2" fill="#7d6a3e"/><rect x="${cap - 2}" y="3.9" width="${W - 2 * cap + 4}" height=".8" fill="#a8976a" opacity=".6"/>
+    <rect x="${cap - 2}" y="${H - 6.1}" width="${W - 2 * cap + 4}" height="2.2" fill="#5a4a26"/>
+    <rect x="${cap}" y="8.6" width="${W - 2 * cap}" height=".7" fill="#8f7d4f" opacity=".4"/>
+    <rect x="${cap}" y="${H - 9.3}" width="${W - 2 * cap}" height=".7" fill="#8f7d4f" opacity=".4"/>`;
   const capL = `<path d="M${cap} 3.5 H18 L4 ${m} L18 ${H - 3.5} H${cap}" fill="none" stroke="${INK}" stroke-width="4"/>
     <path d="M${cap} 5 H18.5 L5.5 ${m} L18.5 ${H - 5} H${cap}" fill="none" stroke="url(#gold)" stroke-width="2.2"/>
-    <path d="M${cap} 9 H21 L10 ${m} L21 ${H - 9} H${cap}" fill="none" stroke="#f3d27a" stroke-width=".7" opacity=".45"/>
+    <path d="M${cap} 9 H21 L10 ${m} L21 ${H - 9} H${cap}" fill="none" stroke="#8f7d4f" stroke-width=".7" opacity=".45"/>
     <path d="M12 ${m} l5 -5 l5 5 l-5 5 z" fill="url(#gem)" stroke="url(#gold)" stroke-width="1.2"/>
     <circle cx="${cap - 6}" cy="10.5" r="2.4" fill="url(#gold)" stroke="${INK}" stroke-width=".6"/>
     <circle cx="${cap - 6}" cy="${H - 10.5}" r="2.4" fill="url(#gold)" stroke="${INK}" stroke-width=".6"/>`;
@@ -115,7 +115,7 @@ function grain(T = 160) {
 }
 // ---- an ornamental divider for headings: a gem between two scrolling gold lines.
 function divider(W = 300, H = 20) {
-  const half = `<rect x="16" y="${H / 2 - .8}" width="${W / 2 - 38}" height="1.6" fill="#d9a441"/>
+  const half = `<rect x="16" y="${H / 2 - .8}" width="${W / 2 - 38}" height="1.6" fill="#7d6a3e"/>
     <g transform="translate(${W / 2 - 22} ${H / 2})">${fleur(.9)}</g>
     <circle cx="10" cy="${H / 2}" r="2" fill="url(#gold)"/>`;
   return svg(W, H, `${half}<g transform="translate(${W} 0) scale(-1 1)">${half}</g>

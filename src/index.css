@@ -894,4 +894,12 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .setup h1, .gameover h1, .sheet-head h2 { font-family: var(--display); }
 /* Painted panel frame (art/ui/ui-frame from the user, green keyed out): corners 280 px of 1024, drawn 54 px wide
    so the filigree reaches into the panel, with a 10 px band. */
-.frame, .sheet, .ask2 { border-width: 10px; border-image: url('/art/ui/ui-frame.png') 280 / 54px / 0 stretch; }
+.frame, .sheet, .ask2 { border-width: 10px; border-image: url('/art/ui/ui-frame-worn.png') 280 / 54px / 0 stretch; }
+/* The top bar gets its own heavy riveted iron strap (scripts/batter-frame.py builds both from the painted frame). */
+.rivals2.frame { border-width: 10px; border-image: url('/art/ui/ui-frame-iron.png') 240 / 40px / 0 stretch; }
+/* the board in the same battered frame, heavier */
+.stage2 { border-width: 14px; border-image: url('/art/ui/ui-frame-worn.png') 280 / 64px / 0 stretch; }
+/* duller button lettering to sit with the aged brass */
+.act2.gold, .act2.t-roll, .act2.t-claim, .big { color: #d9c08a; text-shadow: 0 1px 2px #000; }
+.act2.t-roll, .act2.t-claim { filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
+.medal { background-clip: padding-box, border-box; }
