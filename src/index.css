@@ -970,3 +970,5 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .stats-hl > span { align-items: center; }
 .stats-hl b { font-size: 14px; }
 .stats-hl small { font-size: 12px; }
+.setup h1.logo-art { display: flex; justify-content: center; margin: 4px -8px 0; }
+.logo-art img { width: 100%; max-width: 400px; aspect-ratio: 1000 / 544; filter: drop-shadow(0 6px 14px rgba(0,0,0,.75)); }

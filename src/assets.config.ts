@@ -49,8 +49,8 @@ export const UI_ART = {
   plaque: '/art/ui/plaque.svg',
   boardFrame: '/art/ui/board-frame.svg',
   crown: '/art/icons/cat-crown.svg',
-  // The title logo (art/ui/logo from Gemini, keyed). Empty: the main screen sets the name in type around the crown.
-  logo: '',
+  // The title logo (art/ui/logo.jpg from Gemini, cut out by scripts/key-logo.py). Empty: the name is set in type.
+  logo: '/art/ui/logo.webp',
   candle: '/art/ui/candle.svg',
   actions: {
     roll: '/art/icons/cat-die.svg', attack: '/art/icons/cat-swords.svg', end: '/art/icons/cat-hourglass.svg',
