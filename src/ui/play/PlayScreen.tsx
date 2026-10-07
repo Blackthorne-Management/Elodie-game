@@ -344,7 +344,7 @@ export function PlayScreen() {
           <h3>Report a problem</h3>
           <p className="muted small">Something odd happened? Copy or download this game's full log and send it to Claude.</p>
           <GameLogActions game={snapshot(runner, runner.over ? 'won' : 'in progress', startedAt)} />
-          <button type="button" className="big danger" onClick={() => { if (confirm('Abandon this game? It will be kept in Past games.')) quit(); }}>Abandon game</button>
+          <button type="button" className="big danger" onClick={() => { if (confirm("Abandon this game? It won't count toward your record.")) quit(); }}>Abandon game</button>
         </Sheet>
       )}
     </div>

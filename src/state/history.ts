@@ -91,7 +91,7 @@ export function archiveRaw(setup: GameSetup, answers: number[], startedAt: numbe
 export function exportText(g: PastGame): string {
   const when = new Date(g.startedAt).toLocaleString();
   return [
-    'THRONE OF BLOODLINES — GAME LOG',
+    "BLOODLINES: THE RACE TO ELODIE'S GRACE — GAME LOG",
     `Started: ${when}`,
     `Build: ${g.build}`,
     `Outcome: ${g.outcome}${g.note ? ` (${g.note})` : ''}`,

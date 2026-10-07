@@ -36,7 +36,7 @@ export class Game {
   content: Content;
 
   constructor(setup: GameSetup, content: Content) {
-    if (setup.seats.length < 2 || setup.seats.length > 8) throw new Error('Throne of Bloodlines needs 2-8 players');
+    if (setup.seats.length < 2 || setup.seats.length > 8) throw new Error('Bloodlines needs 2-8 players');
     this.content = content;
     this.rng = makeRng(setup.seed);
     const config: GameConfig = {

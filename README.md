@@ -1,4 +1,6 @@
-# Throne of Bloodlines
+# Bloodlines: The Race to Elodie's Grace
+
+(Formerly Throne of Bloodlines.)
 
 Eight houses. One throne. A digital version of the board game: Phase 1 is a complete local game
 against up to 7 bots on one phone; Phase 2 adds online play with join codes and QR.

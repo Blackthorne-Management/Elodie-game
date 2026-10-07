@@ -921,3 +921,52 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 @media (orientation: landscape) and (max-height: 600px) {
   .seats3 { flex-direction: column; overflow-x: hidden; overflow-y: auto; -webkit-mask-image: none; mask-image: none; }
 }
+
+/* ---------- main screen: the title and your record ---------- */
+.setup h1.logo-type { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: inherit; text-shadow: none; }
+.logo-type .setup-crest { margin-bottom: 6px; }
+.logo-name {
+  font-family: var(--display); font-weight: 700; font-size: 44px; line-height: 1; letter-spacing: .08em; text-transform: uppercase;
+  background: linear-gradient(180deg, #f6e2a4 0%, #d6a74a 48%, #8a5a1c 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 2px 2px #000) drop-shadow(0 0 14px rgba(243,210,122,.25));
+}
+.logo-sub { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: 21px; color: #d9c08a; letter-spacing: .02em; text-shadow: 0 1px 2px #000; }
+.setup h1.logo-art { margin: 0; }
+.logo-art img { width: min(100%, 360px); height: auto; filter: drop-shadow(0 6px 12px rgba(0,0,0,.7)); }
+.setup .tagline { font-size: 16px; }
+
+.stats { text-align: center; padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 12px; }
+.stats h2 { margin: 0; font-family: var(--display); font-size: 18px; color: var(--gold-hi); letter-spacing: .06em; padding-bottom: 10px;
+  background: url('/art/ui/divider.svg') center bottom / 70% 12px no-repeat; }
+.stats-big { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.stats-big span { display: flex; flex-direction: column; font-family: var(--display); font-size: 12px; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; }
+.stats-big b { font-size: 30px; color: var(--gold-hi); font-variant-numeric: tabular-nums; line-height: 1.1; text-shadow: 0 2px 3px #000; }
+.stats-recent { display: flex; justify-content: center; gap: 10px; }
+.stats-recent > span { position: relative; display: inline-flex; }
+.stats-recent > span.lost { filter: grayscale(.85) brightness(.7); }
+.stats-recent i { position: absolute; right: -5px; bottom: -4px; font-style: normal; font-family: var(--display); font-weight: 700; font-size: 12px;
+  width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: #0a0e16; border: 1px solid #8a6a2e; }
+.stats-recent .won i { color: var(--gold-hi); }
+.stats-recent .lost i { color: #c46a5f; }
+.stats-highlights { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.stats-hl { display: flex; align-items: center; gap: 10px; padding: 6px 8px; background: rgba(0,0,0,.28); border: 1px solid #8a6a2e55; border-radius: 4px; }
+.stats-hl > span { display: flex; flex-direction: column; line-height: 1.15; }
+.stats-hl small { color: var(--muted); font-size: 13px; }
+.stats-hl b { font-family: var(--display); color: var(--gold-hi); font-size: 17px; }
+.stats-feats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; margin: 0; text-align: left; }
+.stats-feats div { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; border-bottom: 1px dotted #8a6a2e66; padding: 3px 0; }
+.stats-feats dt { font-size: 14px; color: #cfc3ad; }
+.stats-feats dd { margin: 0; font-family: var(--display); font-weight: 700; color: var(--gold-hi); font-variant-numeric: tabular-nums; }
+.stats-houses { text-align: left; }
+.stats-houses summary { font-family: var(--display); color: var(--gold); min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+.stats-houses table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.stats-houses th { font-family: var(--display); font-size: 12px; color: var(--muted); font-weight: 400; text-align: left; padding: 4px 0; }
+.stats-houses td { padding: 4px 0; border-top: 1px solid #ffffff12; }
+.stats-houses td:first-child { display: flex; align-items: center; gap: 6px; }
+.stats-houses th:not(:first-child), .stats-houses td:not(:first-child) { text-align: center; width: 64px; }
+.link-btn { background: none; border: none; color: var(--muted); text-decoration: underline; min-height: 44px; padding: 0 4px; font: inherit; font-size: 14px; cursor: pointer; }
+.stats-highlights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
+.stats-hl { flex-direction: column; gap: 4px; padding: 8px 4px; }
+.stats-hl > span { align-items: center; }
+.stats-hl b { font-size: 14px; }
+.stats-hl small { font-size: 12px; }

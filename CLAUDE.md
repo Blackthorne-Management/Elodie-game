@@ -1,6 +1,6 @@
-# Throne of Bloodlines
+# Bloodlines: The Race to Elodie's Grace
 
-Digital version of the Throne of Bloodlines board game: solo against bots, later online with friends.
+Digital version of the Bloodlines board game (formerly Throne of Bloodlines): solo against bots, later online with friends.
 React + TypeScript + Vite + Zustand, installable as a PWA (installing is optional). Supabase arrives in Phase 2.
 
 ## Source of truth

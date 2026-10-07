@@ -4,6 +4,7 @@ import type { GameSetup, HouseId } from '../engine/types';
 import { CONTENT } from '../data';
 import { makeRng, shuffle } from '../engine/rng';
 import { BUILD, archive, archiveRaw, snapshot } from './history';
+import { addRecord, recordOf } from './stats';
 
 const KEY = 'tob-game';
 export const HUMAN = 0;
@@ -77,7 +78,7 @@ export const useGame = create<GameStore>((set, get) => ({
     if (s.build !== BUILD) {
       archiveRaw(s.setup, s.answers, s.startedAt ?? Date.now(), s.build ?? 'unknown', `the app updated (${s.build ?? '?'} → ${BUILD})`);
       clear();
-      set({ notice: 'The app updated since your last game, so it was moved to Past games. Start a new one!', version: get().version + 1 });
+      set({ notice: 'The app updated since your last game, so it could not be resumed. Start a new one!', version: get().version + 1 });
       return false;
     }
     try {
@@ -87,7 +88,7 @@ export const useGame = create<GameStore>((set, get) => ({
     } catch {
       archiveRaw(s.setup, s.answers, s.startedAt ?? Date.now(), s.build ?? 'unknown', 'could not be resumed');
       clear();
-      set({ notice: 'Your last game could not be resumed; it was saved to Past games.', version: get().version + 1 });
+      set({ notice: 'Your last game could not be resumed. Start a new one!', version: get().version + 1 });
       return false;
     }
   },
@@ -96,7 +97,7 @@ export const useGame = create<GameStore>((set, get) => ({
     const r = get().runner;
     if (!r || r.over) return;
     r.answer(i);
-    if (r.over) { clear(); archive(snapshot(r, 'won', get().startedAt)); } else save(r, get().startedAt);
+    if (r.over) { clear(); archive(snapshot(r, 'won', get().startedAt)); addRecord(recordOf(r, HUMAN)); } else save(r, get().startedAt);
     set({ version: get().version + 1 });
   },
 

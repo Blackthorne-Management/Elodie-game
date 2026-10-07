@@ -19,9 +19,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Throne of Bloodlines',
+        name: "Bloodlines: The Race to Elodie's Grace",
         short_name: 'Bloodlines',
-        description: 'Eight houses. One throne.',
+        description: "Eight houses race to win Elodie's Throne.",
         display: 'standalone',
         orientation: 'portrait',
         start_url: '.',

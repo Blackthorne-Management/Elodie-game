@@ -1,7 +1,7 @@
 import { UI_ART } from '../assets.config';
 import { useState } from 'react';
 import { useGame } from '../state/gameStore';
-import { HistorySheet } from './HistorySheet';
+import { StatsPanel } from './StatsPanel';
 import { BUILD } from '../state/history';
 import { THRESHOLDS, TUNING } from '../config';
 
@@ -13,7 +13,6 @@ export function SetupScreen() {
     try { return localStorage.getItem('tob-name') ?? ''; } catch { return ''; }
   });
   const [players, setPlayers] = useState(4);
-  const [history, setHistory] = useState(false);
   const notice = useGame(s => s.notice);
   const dismissNotice = useGame(s => s.dismissNotice);
 
@@ -24,8 +23,15 @@ export function SetupScreen() {
 
   return (
     <main className="setup">
-      <span className="setup-crest" aria-hidden><img src={UI_ART.crown} alt="" /></span>
-      <h1>Throne of Bloodlines</h1>
+      {UI_ART.logo
+        ? <h1 className="logo-art"><img src={UI_ART.logo} alt="Bloodlines: The Race to Elodie's Grace" /></h1>
+        : (
+          <h1 className="logo-type">
+            <span className="setup-crest" aria-hidden><img src={UI_ART.crown} alt="" /></span>
+            <span className="logo-name">Bloodlines</span>
+            <span className="logo-sub">The Race to Elodie's Grace</span>
+          </h1>
+        )}
       <p className="tagline">Eight houses. One throne. Every death makes your bloodline stronger.</p>
 
       {notice && <button type="button" className="notice" onClick={dismissNotice}>{notice} <span aria-hidden>✕</span></button>}
@@ -48,8 +54,7 @@ export function SetupScreen() {
         <button type="button" className="big" onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>
       </section>
 
-      <button type="button" className="act2" onClick={() => setHistory(true)}>Past games &amp; logs</button>
-      {history && <HistorySheet onClose={() => setHistory(false)} />}
+      <StatsPanel />
 
       <details className="rules-brief frame">
         <summary>How to play</summary>
