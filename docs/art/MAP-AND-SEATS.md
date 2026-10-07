@@ -22,21 +22,21 @@ Generate it **in one go, with no follow-up edits** (pick the best of a few tries
 model if you have a choice. Attach **`docs/art/board-guide.png`** for the coastline and the homeland positions.
 
 ```
-Using the attached guide image ONLY as a rough guide to where each homeland sits, paint a square, straight top-down (orthographic, no perspective, no horizon) dark-fantasy game-board map of one continent in a dark ocean. Ignore the white dots on the guide.
+Using the attached guide image ONLY as a rough guide to where each homeland sits, create a square, straight top-down (orthographic, no perspective, no horizon) hyperrealistic dark-fantasy game-board map of one continent in a dark ocean, as if photographed from high orbit at dusk. Ignore the white dots on the guide.
 
-DETAIL AND QUALITY: an ultra-detailed, intricate, premium board-game map. Every part of the land is full of fine, crisp detail: individual trees and rocks, cliffs with strata, winding rivers and streams, cart roads and footpaths, fields with furrows, scree, ruins, bridges, tiny hamlets of a few roofs. No large empty flat areas anywhere. Fine dark ink linework with rich painted texture, sharp focus across the whole image.
+REALISM AND DETAIL: hyperrealistic, like a high-resolution satellite photograph combined with a cinematic matte painting. Real-world terrain: true relief with ridges, valleys and erosion, realistic rock, sand, snow, forest canopy and grassland textures, real river systems with tributaries and deltas, real surf and shallows along the coast, realistic scale (individual trees are tiny specks, villages are small clusters). Physically accurate low-angle dusk lighting from the west, with long shadows that show every mountain and cliff. Dense natural detail everywhere, no large empty flat areas, sharp focus across the whole image. Not an illustration: no outlines, no drawn or painted look.
 
 COASTLINE: dramatic and irregular, like a real continent. It must NOT be round, oval or blob-shaped. Deep jagged bays and fjords cutting far inland, long rocky peninsulas and capes, narrow straits, sea stacks, a scatter of islands and islets of different sizes, sheer cliffs in some places and wide beaches in others. A big gulf bites into the north, a long peninsula reaches out to the south-west with a gulf beside it, and the land bulges out in the north-east, east and south. Every stretch of coast looks different.
 
 NO CIRCLES OR PIE SLICES: the homelands must NOT be arranged as wedges around a circle, and the central Heartland must NOT be a circle or a ring. Each homeland is an irregular, organic shape of its own size, following ridges, rivers and the coast, the way real countries look on an old atlas. The roads to the centre wind naturally through the land; they are not straight spokes.
 
-BORDERS: every homeland border is clearly drawn, like an old hand-inked atlas: a fine, dark, slightly wavering ink line with a thin faded line of the neighbouring land's colour along it, easy to see at a glance and continuous from coast to coast. The terrain itself blends across each border: forest thins into moor, dunes into steppe, lava rock into burnt scrub, so the land feels like one continuous continent with the inked border laid over it.
+BORDERS: every homeland border is clearly visible from coast to coast as a thin, dark, slightly glowing line laid over the terrain, like a border on a realistic relief map (crisp, even width, following ridges and rivers). The terrain itself blends naturally across each border: forest thins into moor, dunes into steppe, lava rock into burnt scrub, so the land is one continuous, real continent with the border line laid on top.
 
 THE CENTRE: Elodie's Throne, a small round dais of pale marble inlaid with gold rings, exactly in the centre of the image and only about 7% of the image width across. It glows with intense golden-white light like a beacon; the light spills out along the winding roads that lead from it to each homeland and fades with distance. The ground around it is irregular ruins and meadow, not a circular plaza.
 
 NO SEATS OR CASTLES: do not paint any castles, forts, palaces, temples, keeps, large halls or torch-lit plazas anywhere. Settlements are only tiny scattered hamlets and ruins.
 
-MOOD: dark and edgy. A stormy dusk over a war-torn realm: deep shadows, cold desaturated land, ink-black and deep teal ocean with white storm-caps, crimson and ember accents, smoke from distant fires, scorched fields, broken walls, dead trees along the borders. The centre is the brightest place on the map; the coasts and outer ocean fall into near-black, with a strong vignette in the corners.
+MOOD: dark, grim and edgy. A stormy dusk over a war-torn realm, overall low-key and mostly in shadow: deep shadows, cold desaturated land, near-black and deep teal ocean with white storm-caps, crimson and ember accents, smoke from distant fires, scorched fields, broken walls, dead trees along the borders. The centre is the brightest place on the map; the coasts and outer ocean fall into near-black, with a strong vignette in the corners.
 
 HOMELANDS (rough positions as on the guide):
 - North: Ardencia: black basalt highlands and rust-red rock, glowing lava seams, burnt cork oaks, smoke.
@@ -49,7 +49,7 @@ HOMELANDS (rough positions as on the guide):
 - North-west: Xaraguá: dark green hills joined by pale sand flats and moonlit turquoise lagoons, ceiba trees, dugout canoes.
 - Centre: the Heartland: ancient ruins and overgrown meadow, lit gold by the Throne's glow.
 
-AVOID: any text, letters, numbers, place names, labels, legends or compass roses; grids or markers; a round, oval or symmetrical continent; homelands shaped like pie slices; a circular central region; straight spoke roads; people or large animals; clouds covering the land; frames or borders around the image; watermarks or signatures; cartoon, chibi or anime style; soft blurry or smudged areas; washed-out or flat lighting.
+AVOID: any text, letters, numbers, place names, labels, legends or compass roses; grids or markers; a round, oval or symmetrical continent; homelands shaped like pie slices; a circular central region; straight spoke roads; people or large animals; clouds covering the land; frames or borders around the image; watermarks or signatures; cartoon, illustration, hand-drawn, ink outlines, painterly or storybook look, cel shading, stylised or toy-like shapes, oversaturated colour; soft blurry or smudged areas; washed-out, bright or flat lighting.
 ```
 
 **If a try isn't right, generate again rather than editing it.** I can fix in code: darkness, contrast, the vignette,
