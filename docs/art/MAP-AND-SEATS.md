@@ -1,7 +1,7 @@
 # The dark map and the seats of power (Gemini)
 
 Two pieces of art that work together:
-1. **A new board map**, darker and edgier, with a bright, glowing centre. It is painted flat (top-down); the app tilts it.
+1. **A new board map**, darker and edgier, with a bright, glowing centre and no buildings at the seats. It is painted flat (top-down); the app tilts it.
 2. **Eight seats of power**: one 3D-rendered building per house, made separately. The app stands each one upright at
    the far edge of its home tile, so they rise off the board like the castles in the mockup, and pawns can still
    stand on the tile in front of them.
@@ -13,49 +13,50 @@ and lets them stand up in the tilted view instead of lying flat.
 
 ## 1. The map
 
-Attach **`docs/art/board-guide.png`** (the layout guide: blue sea, coloured homelands, the centre ring and the
-eight white dots) and paste the prompt below. Gemini is weak at following a layout; if a homeland or a seat lands in
-the wrong place, ask it to move that one thing (see "Fixes" below) rather than starting over.
+**Lesson from the first tries:** Gemini can't put eight plazas on exact spots, and every edit pass re-compresses the
+image and loses detail. So the map no longer paints the seats at all: the 3D seat buildings mark them, placed by the
+game exactly on their tiles. Since every square is walkable (sea too), the coastline only has to look right. The one
+thing that must be exact is the Throne: perfectly centred and small.
+
+Generate it **in one go, with no follow-up edits** (pick the best of a few tries). Use Gemini's highest-quality image
+model if you have a choice. Attach **`docs/art/board-guide.png`** for the coastline and the homeland positions.
 
 ```
-Using the attached guide image ONLY for layout, paint a square, straight top-down (orthographic, no perspective, no horizon) dark-fantasy game-board map: one continent of eight homelands around a central plaza, set in a dark ocean.
+Using the attached guide image ONLY for the coastline and where each homeland sits, paint a square, straight top-down (orthographic, no perspective, no horizon) dark-fantasy game-board map of one continent in a dark ocean. Ignore the white dots on the guide.
 
-LAYOUT (follow the guide closely): the blue is open ocean all the way to the image edges. Keep the continent's coastline where the guide puts it — a gulf in the north, a long peninsula in the south-west with a gulf beside it, coasts bulging out in the north-east, east and south, small islands offshore — painted as a wild, natural coast of cliffs, coves and rocky points, never a smooth or straight edge. Each flat coloured area is one homeland: keep each in the same place and about the same size and shape, with soft natural borders (ridges, rivers, forest edges, changes of ground), never drawn lines. Do not copy the guide's flat colours; repaint each area as real terrain. The pale ring in the centre is Elodie's Throne. Each white dot is a house's seat.
+DETAIL AND QUALITY: an ultra-detailed, intricate, premium board-game map. Every part of the land is full of fine, crisp detail: individual trees and rocks, cliffs with strata, winding rivers and streams, cart roads and footpaths, fields with furrows, scree, ruins, bridges, tiny hamlets of a few roofs. No large empty flat areas anywhere. Fine dark ink linework with rich painted texture, sharp focus across the whole image.
 
-MOOD: dark, edgy and dramatic. A stormy dusk over a war-torn realm: deep shadows, cold desaturated land, ink-black and deep teal ocean with white storm-caps, crimson and ember accents, smoke drifting from distant fires, scorched fields and old battle scars, broken walls, dead trees at the borders. The ONLY bright place is the centre: Elodie's Throne is a round plaza of pale marble inlaid with glowing gold rings, radiating warm golden-white light like a beacon, its glow spilling out along eight old paved roads that lead to each homeland and fading into darkness toward the coasts and the edges of the image. Strong vignette: the corners and the outer ocean are nearly black.
+LAYOUT: follow the guide's coastline (a gulf in the north, a long peninsula in the south-west with a gulf beside it, coasts bulging out in the north-east, east and south, small islands offshore), painted as a wild natural coast of cliffs, coves and rocky points. Each coloured area of the guide is one homeland, in the same place and about the same size, with soft natural borders (ridges, rivers, forest edges), never drawn lines. Do not copy the guide's flat colours; paint real terrain.
 
-SEATS: on each white dot, paint a small, flat, EMPTY stone plaza (about one fortieth of the image wide), lit by two or three torches, with nothing tall standing on it — the buildings are added separately. Low ruins, walls or roads may lead up to it.
+THE CENTRE: Elodie's Throne, a small round dais of pale marble inlaid with gold rings, exactly in the centre of the image and only about 7% of the image width across. It glows with intense golden-white light like a beacon; the light spills out along eight paved roads that run from it to each homeland and fades with distance.
+
+NO SEATS OR CASTLES: do not paint any castles, forts, palaces, temples, keeps, large halls or torch-lit plazas anywhere. Settlements are only tiny scattered hamlets and ruins.
+
+MOOD: dark and edgy. A stormy dusk over a war-torn realm: deep shadows, cold desaturated land, ink-black and deep teal ocean with white storm-caps, crimson and ember accents, smoke from distant fires, scorched fields, broken walls, dead trees along the borders. The centre is the brightest place on the map; the coasts and outer ocean fall into near-black, with a strong vignette in the corners.
 
 HOMELANDS (positions as on the guide):
-- North (deep red): Ardencia — scorched black basalt highlands and rust-red rock, glowing lava seams, burnt cork oaks, smoke.
-- North-east (yellow): Zetwal — golden fields gone amber in the dusk, palm and mango groves, small villages with lamplit painted roofs.
-- East (tan): Al-Doria — dark golden dunes running to a harbour city on the east coast, caravan tracks, date palms, ships with lanterns at sea.
-- South-east (grey-green): Skarragol — cold windswept steppe, turf-roofed longhouses and felt yurts with smoke, dark fjords cutting in from the ocean.
-- South (slate-blue): Kuroshi — black cedar forest, moss, terraced paddies, thick ribbons of mist, a rugged coast of rocky points.
-- South-west (orange): Jwaladesh — ochre and saffron plains, red-sandstone ruins, a stepwell, banyan trees, braziers burning.
-- West (purple): Aldermoor — fog-drowned moorland, dark purple heather, dry-stone walls, crooked alder trees, a black, perfectly still tarn.
-- North-west (turquoise): Xaraguá — dark green hills linked by pale sand flats and moonlit turquoise lagoons, ceiba trees, dugout canoes.
-- Centre (grey-brown): the Heartland — ancient ruins and overgrown meadow, lit gold by the Throne's glow.
-Inside the coastline, water stays small and shallow (rivers, the tarn, lagoons).
+- North (deep red): Ardencia: black basalt highlands and rust-red rock, glowing lava seams, burnt cork oaks, smoke.
+- North-east (yellow): Zetwal: amber fields at dusk, palm and mango groves, small lamplit hamlets with painted roofs.
+- East (tan): Al-Doria: dark golden dunes with ridged sand, caravan tracks, oases with date palms, a small harbour with lantern-lit ships out at sea.
+- South-east (grey-green): Skarragol: cold windswept steppe, scattered felt yurts and tiny horse herds, dark fjords cutting in from the ocean.
+- South (slate-blue): Kuroshi: black cedar forest, moss, terraced paddies, thick ribbons of mist, rocky points and small bays.
+- South-west (orange): Jwaladesh: ochre and saffron plains, red-sandstone ruins, a stepwell, banyan trees, flame-orange flowering trees.
+- West (purple): Aldermoor: fog-drowned moorland, dark purple heather, dry-stone walls, crooked alder trees, a black, perfectly still tarn.
+- North-west (turquoise): Xaraguá: dark green hills joined by pale sand flats and moonlit turquoise lagoons, ceiba trees, dugout canoes.
+- Centre (grey-brown): the Heartland: ancient ruins and overgrown meadow, lit gold by the Throne's glow.
 
-READABILITY: keep the ground itself calm, with plenty of open space, so game pieces placed on top stay readable. Each homeland must still be recognisable at a glance by its colour and texture, even in the dark.
-
-STYLE: premium dark-fantasy board-game art, highly detailed, sharp fine detail, painterly with realistic lighting, rich deep colour, high resolution.
-
-AVOID: any text, letters, numbers, place names, labels, map legends or compass roses; grids or markers; people or large animals; clouds covering the land; frames or borders; watermarks or signatures; cartoon or anime style; washed-out or flat lighting.
+AVOID: any text, letters, numbers, place names, labels, legends or compass roses; grids or markers; people or large animals; clouds covering the land; frames or borders; watermarks or signatures; cartoon, chibi or anime style; soft blurry or smudged areas; washed-out or flat lighting.
 ```
 
-**Fixes (send one at a time, with the map attached):**
-- *"Move the Al-Doria seat plaza onto the shore in the middle of the east coast, as on the guide. Change nothing else."*
-- *"The centre is not bright enough: make Elodie's Throne glow brighter gold-white and let the light spill further along the eight roads. Change nothing else."*
-- *"Too dark to read the ground in the south-west: lift that area slightly. Keep the mood."*
+**If a try isn't right, generate again rather than editing it.** I can fix in code: darkness, contrast, the vignette,
+the centre glow, small shifts of the whole map, and the size of the Throne by up to about a quarter.
 
-**Place names:** the prompt asks for no lettering, because Gemini garbles words. Once the map is in, I'll letter the
-eight homeland names on it in a matching engraved style (as I did for Xaraguá), so they're always spelled right.
+**Place names:** the prompt asks for no lettering, because Gemini garbles words. I'll letter the eight homeland names
+on it in a matching engraved style, so they're always spelled right.
 
-**Higher quality:** Gemini gives about 1024–2048 px. Upscale the final map 4× with a free AI upscaler (Upscayl, on
-Mac and Windows; the "Remacri" or "Ultrasharp" model suits painted art) to 4096 × 4096 before uploading. Save it as
-**`art/board/board-dark.png`** (or .jpg) and I'll fit it to the grid, check every seat lines up and switch the game over.
+**Higher quality:** Gemini gives about 2048 px. Upscale the chosen map 4× with a free AI upscaler (Upscayl, on Mac and
+Windows; the "Remacri" or "Ultrasharp" model suits painted art) to 4096 × 4096 or more, and save it as **PNG** (JPEG
+adds blocky artifacts). Upload it as **`art/board/board-dark.png`** and I'll fit it to the grid and switch the game over.
 
 ---
 
