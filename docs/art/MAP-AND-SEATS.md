@@ -19,37 +19,36 @@ game exactly on their tiles. Since every square is walkable (sea too), the coast
 thing that must be exact is the Throne: perfectly centred and small.
 
 Generate it **in one go, with no follow-up edits** (pick the best of a few tries). Use Gemini's highest-quality image
-model if you have a choice. Attach **`docs/art/board-guide.png`** for the coastline and the homeland positions.
+model if you have a choice. Attach **two images, in this order: `docs/art/board-guide.png`** (where the homelands go)
+**and `docs/art/style-reference-map.png`** (the map from your mockup, for the style).
 
 ```
-Using the attached guide image ONLY as a rough guide to where each homeland sits, create a square, flat, straight-on image of an authentic antique hand-coloured map of one fantasy continent in the ocean, in the style of a late 16th–17th-century engraved atlas plate (like the great Flemish and Dutch atlas makers), filling the whole image. Ignore the white dots on the guide.
+I am attaching two images. Image 1 is a layout guide: use it ONLY as a rough guide to where each homeland sits, and ignore its flat colours and white dots. Image 2 is the STYLE reference: match its art style, colour, lighting, level of detail and mood as closely as possible, but seen from directly overhead.
 
-AUTHENTIC PERIOD CRAFT: a copperplate engraving printed in dark brown-black ink on thick laid paper, then hand-coloured with watercolour washes. Mountains drawn as rows of small shaded molehill peaks with fine hatching; forests as clusters of tiny engraved trees; rivers as fine double lines with tributaries; marshes, dunes and fields in delicate engraved patterns; the sea filled with fine horizontal engraved wave lines and stippling; tiny towns drawn as little clusters of towers and roofs; dotted roads. Extremely fine, crisp linework and dense detail everywhere, like a museum original photographed in high resolution. Realistic, not cartoon: this should look like a real 400-year-old map.
+Create a square, straight top-down (orthographic, no perspective, no horizon, no tilt) map of one fantasy continent in a dark ocean, for a dark-fantasy digital board game.
 
-DARK AND AGED: the parchment is old and darkened, toned deep umber and sepia, with tide stains, foxing spots, faint smoke and scorch marks, worn creases from folding, and darker, almost burnt-looking corners and edges, as if seen by candlelight. The hand colouring is faded and muted (dusky crimson, olive, ochre, slate blue, faded violet, verdigris), never bright. Overall dark, grim and moody.
+STYLE (as in image 2): semi-realistic, hand-painted 3D game art, like the campaign map of a AAA dark-fantasy strategy game, or a highly detailed miniature diorama photographed from above. Dense forests of individual dark pine and oak trees with deep shadows between them; jagged grey mountain ranges with sharp ridges, snow-dusted peaks and scree; winding rivers of clear blue water with small stone bridges; worn dirt roads and footpaths; mossy green and olive grassland; rocky outcrops; tiny walled villages and farmsteads whose windows and torches glow warm orange. Crisp, fine detail everywhere with rich surface texture (bark, rock, moss, gravel), slightly gritty, never smooth or plastic. Moody evening light: deep near-black shadows, desaturated greens and greys, with warm orange-gold highlights from fires and windows. High contrast and very sharp, like a high-resolution game screenshot.
 
-THE CENTRE: Elodie's Throne, drawn as a small round illuminated emblem of concentric rings with a radiant sunburst, exactly in the centre of the image and only about 7% of the image width across, picked out in burnished real gold leaf that catches the light, the brightest thing on the map, with fine gold rays spreading out along the roads to each homeland.
+THE CENTRE: Elodie's Throne, a small round dais of pale marble inlaid with gold rings, exactly in the centre of the image and only about 7% of the image width across, glowing with intense golden-white light like a beacon. It is the brightest thing on the map; its glow lights up the ruins around it and spills along the winding roads that lead to each homeland, fading with distance.
 
-COASTLINE: dramatic and irregular, like a real continent drawn by a period cartographer: deep jagged bays and fjords, long peninsulas and capes, narrow straits, rocky islets and many islands of different sizes, shaded coasts with fine engraved shoreline lines. It must NOT be round, oval or blob-shaped. A big gulf bites into the north, a long peninsula reaches out to the south-west with a gulf beside it, and the land bulges out in the north-east, east and south.
+COASTLINE: dramatic and irregular, like a real continent: deep jagged bays and fjords, long rocky peninsulas and capes, cliffs and small beaches, sea stacks and many islands of different sizes. It must NOT be round, oval or blob-shaped. A big gulf bites into the north, a long peninsula reaches out to the south-west with a gulf beside it, and the land bulges out in the north-east, east and south. The ocean is very dark teal and navy with foam along the shores and a few small ships with lanterns, darkening to near-black at the image edges.
 
-BORDERS: each homeland's border is clearly drawn the period way: a fine dotted or dashed engraved line, edged with a band of hand-painted watercolour in that homeland's colour that softens inward. Each homeland has its own faded wash colour, and the engraved terrain flows continuously across the borders, so the lands blend while the borders stay easy to see. The homelands are irregular, organic shapes of different sizes following ridges, rivers and the coast; NOT pie slices around a circle, and the centre is NOT a circular region. Roads wind naturally; they are not straight spokes.
+BORDERS: each homeland's border is clearly marked the way strategy games show territory: a thin, crisp line glowing faintly in that homeland's colour, continuous from coast to coast and easy to see at a glance. The terrain itself blends naturally across every border (forest thins into moor, dunes into steppe, lava rock into burnt scrub). The homelands are irregular, organic shapes of different sizes following ridges, rivers and coasts; NOT pie slices around a circle, and the centre is NOT a circular region. Roads wind naturally; no straight spokes.
 
-NO SEATS OR CASTLES: no large castles, palaces, temples or plazas anywhere; settlements are only tiny engraved town symbols.
+NO SEATS: no large castles, palaces, temples or plazas anywhere (they are added separately); only tiny villages, farms and ruins.
 
-THE OCEAN: period decoration only in the open sea, well away from the land: a sea serpent and a whale engraved in the waves, two or three small galleons under sail, and engraved rhumb lines radiating faintly across the water. No compass rose on the land.
+HOMELANDS (rough positions as in image 1), each in the image 2 style:
+- North: Ardencia: black volcanic highlands and rust-red rock with glowing lava seams, burnt trees, smoke.
+- North-east: Zetwal: golden fields and orchards, palm and mango groves, small villages with lit windows.
+- East: Al-Doria: dark golden dunes, caravan tracks, palm oases, a small harbour town with lantern-lit ships.
+- South-east: Skarragol: cold windswept steppe with tiny yurts and horse herds, dark fjords on the coast.
+- South: Kuroshi: dense black cedar forest, terraced paddies, ribbons of mist, rocky points.
+- South-west: Jwaladesh: ochre and saffron plains, red-sandstone ruins, a stepwell, banyan trees, burning braziers.
+- West: Aldermoor: misty moorland, dark purple heather, dry-stone walls, crooked trees, a black still tarn.
+- North-west: Xaraguá: dark green hills, pale sand flats and turquoise lagoons, ceiba trees, many small islands.
+- Centre: the Heartland: ancient ruins and overgrown meadow, lit gold by the Throne.
 
-HOMELANDS (rough positions as on the guide; each with its own engraved terrain and faded wash):
-- North: Ardencia: volcanic highlands with smoking peaks and lava streams, burnt woods; dusky crimson wash.
-- North-east: Zetwal: fields, palm and mango groves, small towns; faded gold wash.
-- East: Al-Doria: dunes, caravan tracks, oases with palms, a harbour town on the coast; pale ochre wash.
-- South-east: Skarragol: open steppe with tiny yurts and horse herds, fjords on the coast; grey-green wash.
-- South: Kuroshi: dense cedar forest, terraced paddies, mist; slate blue wash.
-- South-west: Jwaladesh: plains, a stepwell, banyan trees, small sandstone towns; burnt orange wash.
-- West: Aldermoor: moorland with stone walls and a dark still tarn; faded violet wash.
-- North-west: Xaraguá: green hills, lagoons and sand flats, many small islands; verdigris turquoise wash.
-- Centre: the Heartland: ruins and meadow around the gold emblem; unpainted parchment.
-
-AVOID: any text, letters, numbers, place names, labels, cartouches with writing, scale bars or legends; a decorative border or frame around the map; grids or markers; a round, oval or symmetrical continent; pie-slice homelands; a circular central region; modern, satellite or 3D looks; cartoon, fantasy-game illustration, bright or saturated colour, clean new paper; blurry or smudged areas; watermarks or signatures.
+AVOID: any text, letters, numbers, place names, labels or compass roses; grids, squares or markers (no glowing squares like in image 2); game-interface elements, tokens or banners; perspective or a tilted view; a round, oval or symmetrical continent; pie-slice homelands; a circular central region; cartoon, flat illustration, ink outlines, watercolour or parchment looks; bright, saturated or pastel colour; blurry or smudged areas; watermarks or signatures.
 ```
 
 **If a try isn't right, generate again rather than editing it.** I can fix in code: darkness, contrast, the vignette,
