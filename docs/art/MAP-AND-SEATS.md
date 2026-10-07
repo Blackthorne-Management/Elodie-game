@@ -15,37 +15,41 @@ and lets them stand up in the tilted view instead of lying flat.
 
 **Lesson from the first tries:** Gemini can't put eight plazas on exact spots, and every edit pass re-compresses the
 image and loses detail. So the map no longer paints the seats at all: the 3D seat buildings mark them, placed by the
-game exactly on their tiles. Since every square is walkable (sea too), the coastline only has to look right. The one
+game exactly on their tiles. Since every square is walkable (sea too), the coastline only has to look right, so it can be as wild as Gemini likes; each homeland just needs to sit roughly where the guide puts it. The one
 thing that must be exact is the Throne: perfectly centred and small.
 
 Generate it **in one go, with no follow-up edits** (pick the best of a few tries). Use Gemini's highest-quality image
 model if you have a choice. Attach **`docs/art/board-guide.png`** for the coastline and the homeland positions.
 
 ```
-Using the attached guide image ONLY for the coastline and where each homeland sits, paint a square, straight top-down (orthographic, no perspective, no horizon) dark-fantasy game-board map of one continent in a dark ocean. Ignore the white dots on the guide.
+Using the attached guide image ONLY as a rough guide to where each homeland sits, paint a square, straight top-down (orthographic, no perspective, no horizon) dark-fantasy game-board map of one continent in a dark ocean. Ignore the white dots on the guide.
 
 DETAIL AND QUALITY: an ultra-detailed, intricate, premium board-game map. Every part of the land is full of fine, crisp detail: individual trees and rocks, cliffs with strata, winding rivers and streams, cart roads and footpaths, fields with furrows, scree, ruins, bridges, tiny hamlets of a few roofs. No large empty flat areas anywhere. Fine dark ink linework with rich painted texture, sharp focus across the whole image.
 
-LAYOUT: follow the guide's coastline (a gulf in the north, a long peninsula in the south-west with a gulf beside it, coasts bulging out in the north-east, east and south, small islands offshore), painted as a wild natural coast of cliffs, coves and rocky points. Each coloured area of the guide is one homeland, in the same place and about the same size, with soft natural borders (ridges, rivers, forest edges), never drawn lines. Do not copy the guide's flat colours; paint real terrain.
+COASTLINE: dramatic and irregular, like a real continent. It must NOT be round, oval or blob-shaped. Deep jagged bays and fjords cutting far inland, long rocky peninsulas and capes, narrow straits, sea stacks, a scatter of islands and islets of different sizes, sheer cliffs in some places and wide beaches in others. A big gulf bites into the north, a long peninsula reaches out to the south-west with a gulf beside it, and the land bulges out in the north-east, east and south. Every stretch of coast looks different.
 
-THE CENTRE: Elodie's Throne, a small round dais of pale marble inlaid with gold rings, exactly in the centre of the image and only about 7% of the image width across. It glows with intense golden-white light like a beacon; the light spills out along eight paved roads that run from it to each homeland and fades with distance.
+NO CIRCLES OR PIE SLICES: the homelands must NOT be arranged as wedges around a circle, and the central Heartland must NOT be a circle or a ring. Each homeland is an irregular, organic shape of its own size, following ridges, rivers and the coast, the way real countries look on an old atlas. The roads to the centre wind naturally through the land; they are not straight spokes.
+
+BORDERS: every homeland border is clearly drawn, like an old hand-inked atlas: a fine, dark, slightly wavering ink line with a thin faded line of the neighbouring land's colour along it, easy to see at a glance and continuous from coast to coast. The terrain itself blends across each border: forest thins into moor, dunes into steppe, lava rock into burnt scrub, so the land feels like one continuous continent with the inked border laid over it.
+
+THE CENTRE: Elodie's Throne, a small round dais of pale marble inlaid with gold rings, exactly in the centre of the image and only about 7% of the image width across. It glows with intense golden-white light like a beacon; the light spills out along the winding roads that lead from it to each homeland and fades with distance. The ground around it is irregular ruins and meadow, not a circular plaza.
 
 NO SEATS OR CASTLES: do not paint any castles, forts, palaces, temples, keeps, large halls or torch-lit plazas anywhere. Settlements are only tiny scattered hamlets and ruins.
 
 MOOD: dark and edgy. A stormy dusk over a war-torn realm: deep shadows, cold desaturated land, ink-black and deep teal ocean with white storm-caps, crimson and ember accents, smoke from distant fires, scorched fields, broken walls, dead trees along the borders. The centre is the brightest place on the map; the coasts and outer ocean fall into near-black, with a strong vignette in the corners.
 
-HOMELANDS (positions as on the guide):
-- North (deep red): Ardencia: black basalt highlands and rust-red rock, glowing lava seams, burnt cork oaks, smoke.
-- North-east (yellow): Zetwal: amber fields at dusk, palm and mango groves, small lamplit hamlets with painted roofs.
-- East (tan): Al-Doria: dark golden dunes with ridged sand, caravan tracks, oases with date palms, a small harbour with lantern-lit ships out at sea.
-- South-east (grey-green): Skarragol: cold windswept steppe, scattered felt yurts and tiny horse herds, dark fjords cutting in from the ocean.
-- South (slate-blue): Kuroshi: black cedar forest, moss, terraced paddies, thick ribbons of mist, rocky points and small bays.
-- South-west (orange): Jwaladesh: ochre and saffron plains, red-sandstone ruins, a stepwell, banyan trees, flame-orange flowering trees.
-- West (purple): Aldermoor: fog-drowned moorland, dark purple heather, dry-stone walls, crooked alder trees, a black, perfectly still tarn.
-- North-west (turquoise): Xaraguá: dark green hills joined by pale sand flats and moonlit turquoise lagoons, ceiba trees, dugout canoes.
-- Centre (grey-brown): the Heartland: ancient ruins and overgrown meadow, lit gold by the Throne's glow.
+HOMELANDS (rough positions as on the guide):
+- North: Ardencia: black basalt highlands and rust-red rock, glowing lava seams, burnt cork oaks, smoke.
+- North-east: Zetwal: amber fields at dusk, palm and mango groves, small lamplit hamlets with painted roofs.
+- East: Al-Doria: dark golden dunes with ridged sand, caravan tracks, oases with date palms, a small harbour with lantern-lit ships out at sea.
+- South-east: Skarragol: cold windswept steppe, scattered felt yurts and tiny horse herds, dark fjords cutting in from the ocean.
+- South: Kuroshi: black cedar forest, moss, terraced paddies, thick ribbons of mist, rocky points and small bays.
+- South-west: Jwaladesh: ochre and saffron plains, red-sandstone ruins, a stepwell, banyan trees, flame-orange flowering trees.
+- West: Aldermoor: fog-drowned moorland, dark purple heather, dry-stone walls, crooked alder trees, a black, perfectly still tarn.
+- North-west: Xaraguá: dark green hills joined by pale sand flats and moonlit turquoise lagoons, ceiba trees, dugout canoes.
+- Centre: the Heartland: ancient ruins and overgrown meadow, lit gold by the Throne's glow.
 
-AVOID: any text, letters, numbers, place names, labels, legends or compass roses; grids or markers; people or large animals; clouds covering the land; frames or borders; watermarks or signatures; cartoon, chibi or anime style; soft blurry or smudged areas; washed-out or flat lighting.
+AVOID: any text, letters, numbers, place names, labels, legends or compass roses; grids or markers; a round, oval or symmetrical continent; homelands shaped like pie slices; a circular central region; straight spoke roads; people or large animals; clouds covering the land; frames or borders around the image; watermarks or signatures; cartoon, chibi or anime style; soft blurry or smudged areas; washed-out or flat lighting.
 ```
 
 **If a try isn't right, generate again rather than editing it.** I can fix in code: darkness, contrast, the vignette,
