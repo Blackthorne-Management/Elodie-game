@@ -1,4 +1,4 @@
-# THRONE OF BLOODLINES — APP BUILD GUIDE
+# BLOODLINES: THE RACE TO ELODIE'S GRACE — APP BUILD GUIDE
 ### A prompt for Claude Code, written to be pasted in as the opening instruction
 
 **How to use this file:** paste this entire document as your first message to Claude Code, with `bloodline-rulebook-draft.md`, `bloodline-card-list.md`, and `bloodline-houses.md` available in the project folder. Those three files are the single source of truth for every rule, card, and ability; this document is the engineering spec for turning them into a working app.
@@ -7,7 +7,7 @@
 
 ## 1. PROJECT SUMMARY
 
-Build a fully playable digital version of Throne of Bloodlines, not a companion tracker. A player should be able to open the app and play a complete game start to finish, either solo against computer-controlled opponents or online with friends joining remotely or in the same room.
+Build a fully playable digital version of Bloodlines: The Race to Elodie's Grace, not a companion tracker. A player should be able to open the app and play a complete game start to finish, either solo against computer-controlled opponents or online with friends joining remotely or in the same room.
 
 Two non-negotiable requirements:
 1. **The game must be fully functional on its own**, including AI-controlled "bot" players, so one person can play a real game without anyone else present.

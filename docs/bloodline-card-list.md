@@ -1,4 +1,4 @@
-# THRONE OF BLOODLINES — SHARED ACTION DECK
+# BLOODLINES: THE RACE TO ELODIE'S GRACE — SHARED ACTION DECK
 ### Full card list — 126 cards (71 Hand Cards, 6 of them Reactions / 55 Instant-Event Cards)
 
 This is the complete draft deck referenced in Section 7 of the rulebook. Numbers are for reference/printing, not in-game card IDs. Effects are written tight and literal, ready to transcribe to physical cards as-is. Flag anything that needs rewording or rebalancing after a playtest.

@@ -1,4 +1,4 @@
-# THRONE OF BLOODLINES
+# BLOODLINES: THE RACE TO ELODIE'S GRACE
 ### A Game of Legacy, Betrayal, and Conquest
 *For 2-8 players. Playtime: ~60 minutes.*
 

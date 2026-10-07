@@ -1,4 +1,4 @@
-# Throne of Bloodlines: Art Guide
+# Art Guide — Bloodlines: The Race to Elodie's Grace
 
 Everything the game needs, as paintings only. **No text in any image.** Names, numbers, card text and
 frames are added by the app later, so every screen stays uniform.

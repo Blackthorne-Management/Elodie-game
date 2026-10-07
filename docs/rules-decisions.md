@@ -275,6 +275,8 @@ These came up in code and weren't covered above; all confirmed as they stand.
 - **House Yaguana [66]:** the house formerly called Vai'tama is now Taíno-inspired: House Yaguana of Xaraguá, with
   Voice of the Opía (was Tahu'ora), Guaíza (was Ancestor's Mask) and Song of Coaybay (was Tide of Ancestors). Names,
   lore and art only; every rule is unchanged. The code keeps the internal id `vaitama`.
+- **The game's name [67]:** Throne of Bloodlines is now *Bloodlines: The Race to Elodie's Grace* (short form
+  Bloodlines). The prize is still Elodie's Throne; no rule changes.
 
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):

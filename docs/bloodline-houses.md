@@ -1,4 +1,4 @@
-# THRONE OF BLOODLINES — THE EIGHT HOUSES
+# BLOODLINES: THE RACE TO ELODIE'S GRACE — THE EIGHT HOUSES
 ### Full lore, homelands, and Generation I-IV ability text
 
 This is the standalone reference flagged in Rulebook Section 12. Each house below replaces its original design codename (kept in parentheses on first mention for continuity with earlier design notes) with its full cultural identity: homeland, backstory, and complete generation-by-generation abilities. Mechanics and numbers are unchanged from the original design; only names and flavor text have been added.
