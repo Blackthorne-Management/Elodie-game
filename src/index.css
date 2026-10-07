@@ -892,3 +892,6 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .setup h1, .gameover h1, .round3 b, .sheet-head h2 { font-variant-ligatures: none; font-feature-settings: 'liga' 0, 'dlig' 0; }
 .frame { box-shadow: 0 10px 26px rgba(0,0,0,.7), inset 0 0 14px rgba(0,0,0,.6); }
 .setup h1, .gameover h1, .sheet-head h2 { font-family: var(--display); }
+/* Painted panel frame (art/ui/ui-frame from the user, green keyed out): corners 280 px of 1024, drawn 54 px wide
+   so the filigree reaches into the panel, with a 10 px band. */
+.frame, .sheet, .ask2 { border-width: 10px; border-image: url('/art/ui/ui-frame.png') 280 / 54px / 0 stretch; }

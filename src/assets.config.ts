@@ -45,6 +45,7 @@ export const PILLAR_ART: Record<Pillar, { glyph: string; color: string; label: s
 // border-images (src/index.css, theme section); the action icons label the turn's buttons.
 export const UI_ART = {
   frame: '/art/ui/frame.svg',
+  paintedFrame: '/art/ui/ui-frame.png',   // the user's painted frame (art/ui/ui-frame.webp, keyed by scripts/chroma-key.py)
   plaque: '/art/ui/plaque.svg',
   boardFrame: '/art/ui/board-frame.svg',
   crown: '/art/icons/cat-crown.svg',
