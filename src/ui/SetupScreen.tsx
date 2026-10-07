@@ -1,3 +1,4 @@
+import { UI_ART } from '../assets.config';
 import { useState } from 'react';
 import { useGame } from '../state/gameStore';
 import { HistorySheet } from './HistorySheet';
@@ -23,14 +24,14 @@ export function SetupScreen() {
 
   return (
     <main className="setup">
-      <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="" width="88" height="88" className="setup-icon" />
+      <span className="setup-crest" aria-hidden><img src={UI_ART.crown} alt="" /></span>
       <h1>Throne of Bloodlines</h1>
       <p className="tagline">Eight houses. One throne. Every death makes your bloodline stronger.</p>
 
       {notice && <button type="button" className="notice" onClick={dismissNotice}>{notice} <span aria-hidden>✕</span></button>}
       {hasSave && <button type="button" className="big" onClick={() => resume()}>Continue your game</button>}
 
-      <section className="panel-card">
+      <section className="panel-card frame">
         <label className="field">
           <span>Your name</span>
           <input value={name} onChange={e => setName(e.target.value)} placeholder="Optional: your house name is used" maxLength={16} />
@@ -47,10 +48,10 @@ export function SetupScreen() {
         <button type="button" className="big" onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>
       </section>
 
-      <button type="button" className="secondary" onClick={() => setHistory(true)}>Past games &amp; logs</button>
+      <button type="button" className="act2" onClick={() => setHistory(true)}>Past games &amp; logs</button>
       {history && <HistorySheet onClose={() => setHistory(false)} />}
 
-      <details className="rules-brief">
+      <details className="rules-brief frame">
         <summary>How to play</summary>
         <ol>
           <li><b>Move:</b> roll a die and move up to that many squares, turning as you like (no diagonals).</li>

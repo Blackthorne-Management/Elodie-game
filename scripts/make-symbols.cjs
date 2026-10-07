@@ -48,6 +48,9 @@ const SYMBOLS = {
     <path d="M50 4 V22 M50 78 V96 M4 50 H22 M78 50 H96" fill="none" stroke="url(#g)" stroke-width="5"/>`,
   bolt: `<path d="M60 5 L20 55 L45 55 L36 95 L80 39 L55 39 L66 5 Z"/>
     <path d="M58 16 L34 49" fill="none" stroke="#fff4c9" stroke-width="2" opacity=".6"/>`,
+  hourglass: `<path d="M24 8 H76 V16 H24 Z M24 84 H76 V92 H24 Z"/>
+    <path d="M30 16 C30 40 46 44 46 50 C46 56 30 60 30 84 H70 C70 60 54 56 54 50 C54 44 70 40 70 16 Z"/>
+    <path d="M37 26 H63 C61 38 52 42 50 47 C48 42 39 38 37 26 Z M36 80 C38 68 46 64 50 58 C54 64 62 68 64 80 Z" fill="${INK}" stroke="none" opacity=".55"/>`,
   cards: [-22, 0, 22].map(r => `<g transform="rotate(${r} 50 88)"><rect x="33" y="14" width="34" height="50" rx="5"/>
     <rect x="38" y="19" width="24" height="40" rx="3" fill="none" stroke="${INK}" stroke-width="1.8" opacity=".5"/></g>`).join(''),
 };

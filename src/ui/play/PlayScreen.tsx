@@ -24,7 +24,7 @@ import { peekTitle } from './peekTitle';
 import type { PeekGroup } from './Peek';
 import type { DuelShow } from './Duel';
 import { useMotion } from './motion';
-import { CARD_ART } from '../../assets.config';
+import { CARD_ART, UI_ART } from '../../assets.config';
 
 const WALK_SPEED: Record<Speed, number> = { normal: 6.5, fast: 13, instant: Infinity };   // squares per second
 const SHOW_MS: Record<Speed, number> = { normal: 1500, fast: 700, instant: 0 };
@@ -171,7 +171,7 @@ export function PlayScreen() {
   // Keep whoever is playing visible in the turn tracker.
   const trackerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const box = trackerRef.current, chip = box?.querySelector<HTMLElement>('.rival2.active');
+    const box = trackerRef.current, chip = box?.querySelector<HTMLElement>('.seat3.active');
     if (!box || !chip) return;
     const horizontal = box.scrollWidth > box.clientWidth;
     if (horizontal) box.scrollTo({ left: chip.offsetLeft - box.clientWidth / 2 + chip.offsetWidth / 2, behavior: 'smooth' });
@@ -199,8 +199,8 @@ export function PlayScreen() {
 
   return (
     <div className="play">
-      <div className="rivals2" ref={trackerRef}>
-        <div className="round2" aria-label={`Round ${s.round} of ${s.config.suddenDeathRound}`}>
+      <div className="rivals2 frame" ref={trackerRef}>
+        <div className="round3" aria-label={`Round ${s.round} of ${s.config.suddenDeathRound}`}>
           <span>Round</span><b>{s.round}</b><span>of {s.config.suddenDeathRound}</span>
         </div>
         {s.order.map((id, i) => (
@@ -249,7 +249,9 @@ export function PlayScreen() {
         ) : mine?.kind === 'turn' ? (
           <div className="opts2">
             {buttons.map(({ o, i }) => (
-              <button key={i} type="button" className={`act2 t-${o.value.type}`} onClick={() => answer(i)}>{o.value.type === 'roll' ? '🎲 Roll and move' : o.label}</button>
+              <button key={i} type="button" className={`act2 plaque t-${o.value.type}`} onClick={() => answer(i)}>
+                {UI_ART.actions[o.value.type] && <img src={UI_ART.actions[o.value.type]} alt="" />}<span>{o.label}</span>
+              </button>
             ))}
           </div>
         ) : mine?.kind === 'square' ? (

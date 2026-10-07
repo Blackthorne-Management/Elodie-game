@@ -35,10 +35,24 @@ export const TILE_ART: Record<TileType, { color: string; glyph: string; label: s
   trade: { color: '#c9962b', glyph: 'T', label: 'Trade' },
 };
 
-export const PILLAR_ART: Record<Pillar, { glyph: string; color: string; label: string }> = {
-  influence: { glyph: '♔', color: '#6f9be0', label: 'Influence' },
-  fear: { glyph: '⚔', color: '#e06f6f', label: 'Fear' },
-  wealth: { glyph: '◈', color: '#e0b84f', label: 'Wealth' },
+export const PILLAR_ART: Record<Pillar, { glyph: string; color: string; label: string; icon: string }> = {
+  influence: { glyph: '♔', color: '#6f9be0', label: 'Influence', icon: '/art/icons/cat-crown.svg' },
+  fear: { glyph: '⚔', color: '#e06f6f', label: 'Fear', icon: '/art/icons/cat-swords.svg' },
+  wealth: { glyph: '◈', color: '#e0b84f', label: 'Wealth', icon: '/art/icons/cat-coins.svg' },
+};
+
+// The app's ornaments, drawn by scripts/make-ui-art.cjs and scripts/make-symbols.cjs. The frames are CSS
+// border-images (src/index.css, theme section); the action icons label the turn's buttons.
+export const UI_ART = {
+  frame: '/art/ui/frame.svg',
+  plaque: '/art/ui/plaque.svg',
+  boardFrame: '/art/ui/board-frame.svg',
+  crown: '/art/icons/cat-crown.svg',
+  actions: {
+    roll: '/art/icons/cat-die.svg', attack: '/art/icons/cat-swords.svg', end: '/art/icons/cat-hourglass.svg',
+    trade: '/art/icons/cat-exchange.svg', claim: '/art/icons/cat-crown.svg', ability: '/art/icons/cat-burst.svg',
+    card: '/art/icons/cat-cards.svg',
+  } as Record<string, string>,
 };
 
 export const ICONS = {
