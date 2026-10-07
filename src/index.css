@@ -1122,3 +1122,6 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .rg-card-view .act2 { flex: none; height: 48px; }
 .rg-kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .rg-kinds button { min-width: 0; font-size: 14px; }
+/* seats of power: painted buildings standing at the far edge of each house tile */
+.seat-piece { position: absolute; width: 0; height: 0; transform-style: preserve-3d; pointer-events: none; }
+.seat-piece img { position: absolute; left: 0; top: 0; width: 132px; transform-origin: 50% 100%; filter: drop-shadow(0 6px 6px rgba(0,0,0,.6)); }

@@ -730,10 +730,14 @@ export class Game {
     this.log(`${v.name}'s Gen ${roman(v.gen)} ${house.name} falls${killer ? ` to ${killer.name}` : ''}.`, 'death', { player: v.id, target: killer?.id });
     if (!this.s.housesLost.includes(v.house)) this.s.housesLost.push(v.house);
 
-    // 1. Halve one pool (the dying player's choice).
-    const bleedable = PILLARS.filter(x => Math.floor(v.res[x] / 2) > 0);
-    const pool = yield* this.choosePillar(v, 'Your character died: choose a pool to lose half of.', bleedable);
-    if (pool) this.lose(v, pool, Math.floor(v.res[pool] / 2), 'death');
+    // 1. Halve one pool (the dying player's choice), or every pool in the 'allHalfUp' variant.
+    if (TUNING.deathLoss === 'allHalfUp') {
+      for (const x of PILLARS) if (v.res[x] > 0) this.lose(v, x, Math.ceil(v.res[x] / 2), 'death');
+    } else {
+      const bleedable = PILLARS.filter(x => Math.floor(v.res[x] / 2) > 0);
+      const pool = yield* this.choosePillar(v, 'Your character died: choose a pool to lose half of.', bleedable);
+      if (pool) this.lose(v, pool, Math.floor(v.res[pool] / 2), 'death');
+    }
 
     // 2. Grudge or Reckoning.
     if (killer && killer.id !== v.id) {

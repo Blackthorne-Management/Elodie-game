@@ -5,7 +5,7 @@ import type { Game } from '../../engine/game';
 import type { Dir, Pos } from '../../engine/types';
 import { THRONE, isSea, key } from '../../engine/board';
 import { BOARD_SIZE } from '../../config';
-import { BOARD_ART, HOUSE_ART, PORTRAITS, PORTRAIT_CROP, TILE_ART } from '../../assets.config';
+import { BOARD_ART, HOUSE_ART, PORTRAITS, PORTRAIT_CROP, SEAT_ART, TILE_ART } from '../../assets.config';
 import { terrainUrl } from '../terrainSvg';
 import { HUMAN } from '../../state/gameStore';
 import type { Motion } from './motion';
@@ -62,6 +62,11 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
             <div key={h.id} className="tile2" style={{ left: h.home.x * CELL, top: h.home.y * CELL, width: CELL, height: CELL,
               background: art ? `${TILE_ART[h.tileType].color}66` : TILE_ART[h.tileType].color,
               borderColor: s.players.some(p => p.house === h.id) ? HOUSE_ART[h.id].color : '#777' }}>{TILE_ART[h.tileType].glyph}</div>
+          ))}
+          {houses.map(h => SEAT_ART[h.id] && (
+            <div key={`seat${h.id}`} className="seat-piece" style={{ left: (h.home.x + 0.5) * CELL, top: (h.home.y + 0.12) * CELL }}>
+              <img src={SEAT_ART[h.id]} alt="" style={{ transform: `translate(-50%, -100%) rotateX(${-TILT}deg)` }} />
+            </div>
           ))}
           {[...lit.entries()].map(([k, onTap]) => {
             const [x, y] = k.split(',').map(Number);

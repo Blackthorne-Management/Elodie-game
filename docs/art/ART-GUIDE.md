@@ -290,6 +290,8 @@ An empty divine throne standing alone, seen from the front at a slight three-qua
 
 ## 6. Seats of power (8 standing landmarks, optional)
 
+**Current prompts (Gemini, dark style, 3D-rendered):** `docs/art/MAP-AND-SEATS.md`, with the new dark map.
+
 These are small upright buildings that stand on each seat in the 2.5D view. They're a nice extra, not
 needed for launch.
 

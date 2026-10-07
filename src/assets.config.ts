@@ -59,6 +59,10 @@ export const UI_ART = {
   } as Record<string, string>,
 };
 
+// Each house's seat of power: a painted 3D building that stands upright at the far edge of its home tile in the
+// board view (docs/art/MAP-AND-SEATS.md; keyed by scripts/chroma-key.py). Missing ones are simply not drawn.
+export const SEAT_ART: Partial<Record<HouseId, string>> = {};
+
 // How to play: an optional painted picture per slide (by slide id, e.g. 'move'). A slide without one shows its
 // built-in picture, made from the board, crests, cards and icons.
 export const HOWTO_ART: Record<string, string | undefined> = {};

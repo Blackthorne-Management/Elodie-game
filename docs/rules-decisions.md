@@ -277,6 +277,12 @@ These came up in code and weren't covered above; all confirmed as they stand.
   lore and art only; every rule is unchanged. The code keeps the internal id `vaitama`.
 - **The game's name [67]:** Throne of Bloodlines is now *Bloodlines: The Race to Elodie's Grace* (short form
   Bloodlines). The prize is still Elodie's Throne; no rule changes.
+- **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
+  On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
+  3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games
+  instead of 12% (42% at 6–8 players), Throne claims fall by a third and Challenges by 60% (all p < 10⁻⁹⁰). House
+  balance gets worse (χ² 32 → 90: Brasador 1.11 → 1.19, Ironvow 0.99 → 0.88, Kay Soley 0.94 → 1.05). Winners who never
+  died rise from 31% to 36%. Switch: `TUNING.deathLoss = 'allHalfUp'` in `src/config.ts`.
 
 ## Balance pass (simulation)
 `npm run analyse` plays bot games at 2, 3, 4, 6 and 8 players. These changes came from it (400 games per count):

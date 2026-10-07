@@ -53,6 +53,9 @@ export const TUNING = {
   tileAlone: 3,          // resources from a tile when you're alone on it
   tileShared: 2,         // ...when someone else is there too
   maxDamage: 99,         // cap on the damage of one attack (99 = no cap)
+  // On death: 'onePool' = lose half (rounded down) of one pool you choose (the rulebook);
+  // 'allHalfUp' = lose half (rounded up) of every pool (an experiment).
+  deathLoss: 'onePool' as 'onePool' | 'allHalfUp',
   specterChoices: SPECTER_CHOICES,
 };
 

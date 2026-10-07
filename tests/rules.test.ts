@@ -738,3 +738,24 @@ describe('opening truce (rules-decisions 65)', () => {
     }
   });
 });
+
+describe('death loss', () => {
+  it('rulebook: half (rounded down) of one pool the dying player picks', () => {
+    const g = newGame(2, ['brasador', 'kaysoley']);
+    const [a, b] = g.s.players;
+    a.res = { influence: 3, fear: 6, wealth: 1 };
+    drive(g.killPlayer(a, b), byLabel('Fear'));
+    expect(a.res).toEqual({ influence: 3, fear: 3, wealth: 1 });
+  });
+  it("variant 'allHalfUp': half (rounded up) of every pool", async () => {
+    const { TUNING } = await import('../src/config');
+    TUNING.deathLoss = 'allHalfUp';
+    try {
+      const g = newGame(2, ['brasador', 'kaysoley']);
+      const [a, b] = g.s.players;
+      a.res = { influence: 1, fear: 6, wealth: 3 };
+      drive(g.killPlayer(a, b));
+      expect(a.res).toEqual({ influence: 0, fear: 3, wealth: 1 });
+    } finally { TUNING.deathLoss = 'onePool'; }
+  });
+});
