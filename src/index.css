@@ -1125,3 +1125,10 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 /* seats of power: painted buildings standing at the far edge of each house tile */
 .seat-piece { position: absolute; width: 0; height: 0; transform-style: preserve-3d; pointer-events: none; }
 .seat-piece img { position: absolute; left: 0; top: 0; width: 132px; transform-origin: 50% 100%; filter: drop-shadow(0 6px 6px rgba(0,0,0,.6)); }
+/* the type line always stays on one line inside its plate */
+.cf-type, .cf.has-overlay .cf-type { white-space: nowrap; letter-spacing: .02em; font-size: 3.9cqw; overflow: hidden; text-overflow: ellipsis; }
+.cf-when, .cf.has-overlay .cf-when { white-space: nowrap; letter-spacing: .03em; font-size: 3.4cqw; overflow: hidden; text-overflow: ellipsis; }
+.cf-when, .cf.has-overlay .cf-when, .cf-type { flex: none; }
+/* long cards: --fit (set by CardFrame) shrinks the rules and flavor text until they fit the box */
+.cf-text, .cf.has-overlay .cf-text { font-size: calc(6.8cqw * var(--fit, 1)); }
+.cf-flavor, .cf.has-overlay .cf-flavor { font-size: calc(5.6cqw * var(--fit, 1)); }

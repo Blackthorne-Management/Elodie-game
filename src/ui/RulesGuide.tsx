@@ -116,7 +116,7 @@ export function RulesGuide({ onClose }: { onClose: () => void }) {
             {cards.map(c => (
               <li key={c.id}>
                 <button type="button" onClick={() => setOpen(c)}>
-                  <span className="rg-card-head"><b>{c.name}</b><small>#{c.id} · {c.reaction ? 'Reaction' : c.kind === 'hand' ? 'Hand' : 'Instant'} · {c.category}{c.elodie ? ' · Elodie' : ''}</small></span>
+                  <span className="rg-card-head"><b>{c.name}</b><small>#{c.id} · {c.reaction ? 'Reaction' : `${c.kind === 'hand' ? 'Hand' : 'Instant'} · ${c.category}`}{c.elodie ? ' · Elodie' : ''}</small></span>
                   {cardTiming(c) && <small className="rg-when">{cardTiming(c)}</small>}
                   <span className="rg-text">{c.text}</span>
                 </button>
