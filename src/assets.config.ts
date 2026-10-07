@@ -59,6 +59,10 @@ export const UI_ART = {
   } as Record<string, string>,
 };
 
+// How to play: an optional painted picture per slide (by slide id, e.g. 'move'). A slide without one shows its
+// built-in picture, made from the board, crests, cards and icons.
+export const HOWTO_ART: Record<string, string | undefined> = {};
+
 export const ICONS = {
   heart: '♥',
   throne: '♛',

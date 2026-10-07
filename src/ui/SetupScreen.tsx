@@ -2,8 +2,9 @@ import { UI_ART } from '../assets.config';
 import { useState } from 'react';
 import { useGame } from '../state/gameStore';
 import { StatsPanel } from './StatsPanel';
+import { HowToPlay } from './HowToPlay';
+import { RulesGuide } from './RulesGuide';
 import { BUILD } from '../state/history';
-import { THRESHOLDS, TUNING } from '../config';
 
 export function SetupScreen() {
   const start = useGame(s => s.start);
@@ -13,6 +14,7 @@ export function SetupScreen() {
     try { return localStorage.getItem('tob-name') ?? ''; } catch { return ''; }
   });
   const [players, setPlayers] = useState(4);
+  const [rules, setRules] = useState<null | 'howto' | 'guide'>(null);
   const notice = useGame(s => s.notice);
   const dismissNotice = useGame(s => s.dismissNotice);
 
@@ -56,20 +58,12 @@ export function SetupScreen() {
 
       <StatsPanel />
 
-      <details className="rules-brief frame">
-        <summary>How to play</summary>
-        <ol>
-          <li><b>Move:</b> roll a die and move up to that many squares, turning as you like (no diagonals).</li>
-          <li><b>Resources:</b> end on a Court, War or Trade tile to gain Influence, Fear or Wealth ({TUNING.tileAlone} if you're alone there, {TUNING.tileShared} if shared). Never from your own tile, nor the same tile twice in a row.</li>
-          <li><b>Then one action:</b> attack a rival beside you (not diagonal) for damage equal to your Heart Tokens, <i>or</i> play a Hand Card, <i>or</i> offer a rival a 1-for-1 resource trade they may refuse. Only one.</li>
-          <li><b>Opening truce:</b> no attacks during the first round.</li>
-          <li><b>Reactions:</b> some Hand Cards are played on other players' turns, at the moment printed on them (when a rival rolls, plays a card, trades…).</li>
-          <li><b>Cards:</b> at the end of your turn, draw back to 3. Instants resolve the moment they're drawn.</li>
-          <li><b>Win:</b> reach {THRESHOLDS.normal.combined} resources in total with at least {THRESHOLDS.normal.minEach} in every pillar ({THRESHOLDS.small.combined} with {THRESHOLDS.small.minEach}+ each in 2–3 player games), stand on the Throne and Claim it. Eligible rivals may Challenge.</li>
-          <li><b>The Throne is sanctuary:</b> no attacks onto or off its four squares, and no one dies there (Challenges for the Throne aside).</li>
-          <li><b>Death</b> isn't the end: your heir rises with new powers. After Gen IV you become a Specter.</li>
-        </ol>
-      </details>
+      <div className="setup-rules">
+        <button type="button" className="act2 gold" onClick={() => setRules('howto')}>How to play</button>
+        <button type="button" className="act2" onClick={() => setRules('guide')}>Full rule guide</button>
+      </div>
+      {rules === 'howto' && <HowToPlay onClose={() => setRules(null)} onGuide={() => setRules('guide')} />}
+      {rules === 'guide' && <RulesGuide onClose={() => setRules(null)} />}
       <p className="muted small">Build {BUILD}</p>
     </main>
   );

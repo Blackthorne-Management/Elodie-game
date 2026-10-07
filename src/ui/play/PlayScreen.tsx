@@ -13,6 +13,8 @@ import { snapshot } from '../../state/history';
 import { Board } from '../Board';
 import { CardSheetFace, HouseSheet, Sheet } from '../parts';
 import { GameLogActions } from '../HistorySheet';
+import { HowToPlay } from '../HowToPlay';
+import { RulesGuide } from '../RulesGuide';
 import { Emblem, HeroCard, RivalChip } from './Figures';
 import { claimGoal } from '../claimGoal';
 import { Stage } from './Stage';
@@ -60,6 +62,7 @@ export function PlayScreen() {
 
   const { motion, busy: walking } = useMotion(s, version, WALK_SPEED[speed], me.pos ?? { x: 9, y: 9 });
   const [sheet, setSheet] = useState<SheetState>(null);
+  const [rules, setRules] = useState<null | 'howto' | 'guide'>(null);
   const [showMap, setShowMap] = useState(false);
   const [duel, setDuel] = useState<DuelShow | null>(null);
   const [banner, setBanner] = useState<{ seq: number; player: number; text: string } | null>(null);
@@ -341,12 +344,19 @@ export function PlayScreen() {
           </div>
           <h3>Winning</h3>
           <p>Reach {claimGoal(g.thresholds(me))}, stand on the Throne and Claim it.</p>
+          <h3>Rules</h3>
+          <div className="seg">
+            <button type="button" onClick={() => setRules('howto')}>How to play</button>
+            <button type="button" onClick={() => setRules('guide')}>Rule guide</button>
+          </div>
           <h3>Report a problem</h3>
           <p className="muted small">Something odd happened? Copy or download this game's full log and send it to Claude.</p>
           <GameLogActions game={snapshot(runner, runner.over ? 'won' : 'in progress', startedAt)} />
           <button type="button" className="big danger" onClick={() => { if (confirm("Abandon this game? It won't count toward your record.")) quit(); }}>Abandon game</button>
         </Sheet>
       )}
+      {rules === 'howto' && <HowToPlay onClose={() => setRules(null)} onGuide={() => setRules('guide')} />}
+      {rules === 'guide' && <RulesGuide onClose={() => setRules(null)} />}
     </div>
   );
 }
