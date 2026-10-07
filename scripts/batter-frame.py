@@ -1,11 +1,13 @@
 # Age the painted frame and build the riveted iron variant.
 # Usage: python3 -I scripts/batter-frame.py public/art/ui/ui-frame.png public/art/ui
+#        python3 -I scripts/batter-frame.py <keyed.png> <out.png> --light   (a lighter pass for art that is already worn)
 #   ui-frame-worn.png  the filigree frame, darker, duller and battered (banner, sheets, dialogs)
 import sys, os
 import numpy as np
 import cv2
 
 src, out_dir = sys.argv[1], sys.argv[2]
+LIGHT = '--light' in sys.argv
 rng = np.random.default_rng(7)
 frame = cv2.imread(src, cv2.IMREAD_UNCHANGED).astype(np.float32)
 H, W = frame.shape[:2]
@@ -64,6 +66,10 @@ def batter(img, darken=0.6, desat=0.55, chip=True, seed_scratches=420):
     return out
 
 
+if LIGHT:
+    cv2.imwrite(out_dir, batter(frame, darken=0.8, desat=0.75, chip=False, seed_scratches=120).clip(0, 255).astype(np.uint8))
+    print('wrote', out_dir)
+    sys.exit()
 os.makedirs(out_dir, exist_ok=True)
 cv2.imwrite(os.path.join(out_dir, 'ui-frame-worn.png'), batter(frame).clip(0, 255).astype(np.uint8))
 print('wrote ui-frame-worn.png')

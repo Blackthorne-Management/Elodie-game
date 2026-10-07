@@ -199,14 +199,16 @@ export function PlayScreen() {
 
   return (
     <div className="play">
-      <div className="rivals2 frame" ref={trackerRef}>
+      <div className="rivals2 frame">
         <div className="round3" aria-label={`Round ${s.round} of ${s.config.suddenDeathRound}`}>
           <span>Round</span><b>{s.round}</b><span>of {s.config.suddenDeathRound}</span>
         </div>
-        {s.order.map((id, i) => (
-          <RivalChip key={id} g={g} p={s.players[id]} n={i + 1} me={id === HUMAN} active={activeId === id} done={nowIdx >= 0 && i < nowIdx}
-            onOpen={() => setSheet({ type: 'house', id })} />
-        ))}
+        <div className="seats3" ref={trackerRef}>
+          {s.order.map((id, i) => (
+            <RivalChip key={id} g={g} p={s.players[id]} n={i + 1} me={id === HUMAN} active={activeId === id} done={nowIdx >= 0 && i < nowIdx}
+              onOpen={() => setSheet({ type: 'house', id })} />
+          ))}
+        </div>
         <button type="button" className="icon-btn menu-btn" onClick={() => setSheet({ type: 'menu' })} aria-label="Menu">☰</button>
       </div>
 

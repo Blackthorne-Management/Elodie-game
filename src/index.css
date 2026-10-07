@@ -896,10 +896,28 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
    so the filigree reaches into the panel, with a 10 px band. */
 .frame, .sheet, .ask2 { border-width: 10px; border-image: url('/art/ui/ui-frame-worn.png') 280 / 54px / 0 stretch; }
 /* The top bar gets its own heavy riveted iron strap (scripts/batter-frame.py builds both from the painted frame). */
-/* The top bar keeps the battered frame until its own painted border arrives (art/ui/ui-topbar). */
+/* The top bar: its own painted frame (art/ui/ui-topbar, keyed and lightly aged). The arched ends stay fixed
+   (slice 182 of 1024 wide), the plain top and bottom bands stretch (slice 60 of 254 high). */
+.rivals2.frame { border-width: 12px 52px; border-image: url('/art/ui/ui-topbar.png') 60 182 / 18px 56px / 0 stretch;
+  min-height: 92px; background: url('/art/ui/damask.svg') 0 0 / 64px, linear-gradient(180deg, #131a28, #0a0e17); background-origin: padding-box; background-clip: padding-box;
+  box-shadow: none; padding: 0 2px; }
+.rivals2 .round3 { width: 50px; height: 50px; margin-left: 0; }
+.rivals2 .round3 b { font-size: 18px; }
+.rivals2 .seat3 { width: 46px; }
 /* the board in the same battered frame, heavier */
 .stage2 { border-width: 14px; border-image: url('/art/ui/ui-frame-worn.png') 280 / 64px / 0 stretch; }
 /* duller button lettering to sit with the aged brass */
 .act2.gold, .act2.t-roll, .act2.t-claim, .big { color: #d9c08a; text-shadow: 0 1px 2px #000; }
 .act2.t-roll, .act2.t-claim { filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
 .medal { background-clip: padding-box, border-box; }
+/* top bar: the round medallion and the menu stay put; only the row of portraits scrolls between them */
+.rivals2.frame { overflow: visible; gap: 4px; }
+.rivals2 .round3 { flex: none; }
+.seats3 { flex: 1; min-width: 0; display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; align-items: center; padding: 2px 6px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8px, #000 calc(100% - 8px), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 8px, #000 calc(100% - 8px), transparent 100%); }
+.seats3::-webkit-scrollbar { display: none; }
+.seats3 .seat3 { width: 44px; }
+.rivals2 .menu-btn { flex: none; min-width: 30px; padding: 0; margin: 0; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .seats3 { flex-direction: column; overflow-x: hidden; overflow-y: auto; -webkit-mask-image: none; mask-image: none; }
+}
