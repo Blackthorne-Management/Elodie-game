@@ -19,7 +19,7 @@ it.skipIf(!process.env.PRINT)('export card and house text', () => {
     houses: Object.values(HOUSES).map(h => ({
       id: h.id, name: h.name, homeland: h.homeland, hp: h.hp, passiveName: h.passiveName, passiveText: h.passiveText,
       downsideText: h.downsideText ?? '', notes: GEN_NOTES[h.id] ?? {}, abilities: h.abilities.map(a => ({ gen: a.gen, name: a.name, text: a.text })),
-      color: HOUSE_ART[h.id].color, initial: HOUSE_ART[h.id].initial,
+      color: HOUSE_ART[h.id].color, initial: HOUSE_ART[h.id].initial, home: h.home, tileType: h.tileType,
     })),
   };
   mkdirSync('print', { recursive: true });
