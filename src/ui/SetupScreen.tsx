@@ -5,6 +5,12 @@ import { StatsPanel } from './StatsPanel';
 import { HowToPlay } from './HowToPlay';
 import { RulesGuide } from './RulesGuide';
 import { BUILD } from '../state/history';
+import type { HouseId } from '../engine/types';
+import { CONTENT } from '../data';
+import { Emblem } from './play/Figures';
+
+const HOUSE_IDS = Object.keys(CONTENT.houses) as HouseId[];
+const stored = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
 
 export function SetupScreen() {
   const start = useGame(s => s.start);
@@ -15,12 +21,22 @@ export function SetupScreen() {
   });
   const [players, setPlayers] = useState(4);
   const [rules, setRules] = useState<null | 'howto' | 'guide'>(null);
+  // Houses: the lottery, or (playing solo) pick your own; the bots draw blind from the rest.
+  const [picking, setPicking] = useState(() => stored('tob-house-mode') === 'pick');
+  const [pick, setPick] = useState<HouseId | null>(() => {
+    const h = stored('tob-house') as HouseId | null;
+    return h && HOUSE_IDS.includes(h) ? h : null;
+  });
   const notice = useGame(s => s.notice);
   const dismissNotice = useGame(s => s.dismissNotice);
 
   function begin() {
-    try { localStorage.setItem('tob-name', name); } catch { /* ignore */ }
-    start(name, players);
+    try {
+      localStorage.setItem('tob-name', name);
+      localStorage.setItem('tob-house-mode', picking ? 'pick' : 'lottery');
+      if (pick) localStorage.setItem('tob-house', pick);
+    } catch { /* ignore */ }
+    start(name, players, picking ? pick : null);
   }
 
   return (
@@ -52,8 +68,32 @@ export function SetupScreen() {
             ))}
           </div>
         </div>
-        <p className="muted small">Houses are drawn by lottery. Unclaimed house tiles are free for anyone to farm.</p>
-        <button type="button" className="big" onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>
+        <div className="field">
+          <span>Houses</span>
+          <div className="seg">
+            <button type="button" className={!picking ? 'on' : ''} onClick={() => setPicking(false)}>Lottery</button>
+            <button type="button" className={picking ? 'on' : ''} onClick={() => setPicking(true)}>Pick my house</button>
+          </div>
+        </div>
+        {picking && (
+          <div className="house-pick" role="radiogroup" aria-label="Your house">
+            {HOUSE_IDS.map(h => {
+              const d = CONTENT.houses[h];
+              return (
+                <button key={h} type="button" role="radio" aria-checked={pick === h} className={pick === h ? 'on' : ''} onClick={() => setPick(h)}>
+                  <Emblem house={h} size={36} ring />
+                  <span><b>{d.name.replace('House ', '')}</b><small>{d.identity}</small></span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+        <p className="muted small">
+          {picking
+            ? 'You pick; the bots draw the other houses blind. At a table, picking needs every player to agree, and a dice roll decides who picks first.'
+            : 'Houses are drawn blind. Unclaimed house tiles are free for anyone to farm.'}
+        </p>
+        <button type="button" className="big" disabled={picking && !pick} onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>
       </section>
 
       <StatsPanel />

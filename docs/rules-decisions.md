@@ -319,6 +319,12 @@ These came up in code and weren't covered above; all confirmed as they stand.
   else's) draws back up to 3 as soon as that action is over; cards lost in other ways come back at the end of their
   own turn as before. `TUNING.refillOnPlay`. 5,000 bot games each way: games 0.2 rounds shorter (10.4), Sudden Death 9.7% → 8.5%,
   house balance better (χ² 36 → 21); Blocks and Reactions per game barely change (5.4 → 5.5).
+- **Picking houses [74]** (amends the lottery rule kept in [63]): the blind lottery stays the default. Players may pick
+  their houses instead only if **every** player agrees; a single "no" means the lottery. When picking, everyone rolls a
+  die, the highest roll picks first (ties re-roll) and picking goes clockwise. (The draft simulation in [63] showed the
+  first pick is worth up to 2.1× a fair share, hence unanimity and the dice.) In the app: solo against bots, you may pick
+  your house and the bots draw the rest blind. Online play (Phase 2) will hold the vote and the roll-off
+  (`src/engine/houseChoice.ts`: `houseChoiceAgreed`, `pickOrder`, `dealHouses`).
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about

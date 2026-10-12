@@ -155,7 +155,7 @@ const SLIDES: Slide[] = [
     'Eight houses race across the realm for the Throne at its heart.',
     'Gather **Influence**, **Fear** and **Wealth**, then stand on the Throne and **claim it**.'] },
   { id: 'houses', title: 'Your Bloodline', pic: HousesPic, text: [
-    'Your house is drawn **by lottery**. Each has its own powers, which grow with every generation.',
+    'Your house is drawn **by lottery**, or picked if every player agrees. Each has its own powers, which grow with every generation.',
     'You don\'t play one hero but a family: when you fall, **your heir rises stronger**.'] },
   { id: 'move', title: 'Roll and Move', pic: MovePic, text: [
     'Roll the die and move **up to** that many squares: up, down, left or right, turning as you like.',

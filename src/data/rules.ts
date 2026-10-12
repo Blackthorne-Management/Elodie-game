@@ -38,7 +38,8 @@ export const RULES: RuleSection[] = [
     id: 'setup', title: 'Setup',
     blocks: [{
       steps: [
-        '**Draw houses by lottery.** Shuffle the Grudge Tokens face down; each player draws one blind. That is your house for the game. (Picking houses is not allowed: a blind draw keeps the game fair.)',
+        '**Draw houses by lottery.** Shuffle the Grudge Tokens face down; each player draws one blind. That is your house for the game.',
+        '**Or pick, only if everyone agrees.** Before the draw, ask the table. If **every** player agrees, players pick their houses instead; **one "no" and it is the lottery** (seven yeses and one no is still the lottery). To pick, everyone rolls the die: the highest roll picks first (ties re-roll), then picking goes **clockwise** from that player. Picking first is an advantage, which is why it must be unanimous and decided by the dice.',
         'Take your house\'s generation cards with **Gen I** on top, and Heart Tokens equal to its Gen I Heart Tokens.',
         'Place all eight house tiles, whatever the player count. **A house not in the game leaves its tile unowned: anyone may farm it.**',
         'Put your pawn on your house\'s own tile.',

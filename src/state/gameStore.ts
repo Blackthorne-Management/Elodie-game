@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { Runner } from '../engine/runner';
 import type { GameSetup, HouseId } from '../engine/types';
 import { CONTENT } from '../data';
-import { makeRng, shuffle } from '../engine/rng';
+import { makeRng } from '../engine/rng';
+import { dealHouses } from '../engine/houseChoice';
 import { BUILD, archive, archiveRaw, snapshot } from './history';
 import { addRecord, recordOf } from './stats';
 
@@ -20,7 +21,7 @@ interface GameStore {
   notice: string | null;        // shown on the setup screen (e.g. a game interrupted by an update)
   version: number;              // bumps on every change so components re-render
   speed: Speed;
-  start: (name: string, players: number) => void;
+  start: (name: string, players: number, pick?: HouseId | null) => void;
   resume: () => boolean;
   answer: (i: number) => void;
   quit: () => void;
@@ -46,10 +47,12 @@ export const useGame = create<GameStore>((set, get) => ({
   version: 0,
   speed: 'normal',
 
-  start: (name, players) => {
+  start: (name, players, pick = null) => {
     const seed = (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
-    // The house lottery: shuffle the eight houses and deal one to each seat.
-    const houses = shuffle(Object.keys(CONTENT.houses) as HouseId[], makeRng(seed ^ 0x9e3779b9)).slice(0, players);
+    // The house lottery: every seat draws blind. Playing solo you may pick your own house (rules-decisions 74);
+    // the bots then draw blind from the rest.
+    const picks = Array.from({ length: players }, (_, i) => (i === HUMAN ? pick : null));
+    const houses = dealHouses(Object.keys(CONTENT.houses) as HouseId[], players, picks, makeRng(seed ^ 0x9e3779b9));
     const setup: GameSetup = {
       seed,
       seats: houses.map((house, i) => ({

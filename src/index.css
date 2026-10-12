@@ -1132,3 +1132,12 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 /* long cards: --fit (set by CardFrame) shrinks the rules and flavor text until they fit the box */
 .cf-text, .cf.has-overlay .cf-text { font-size: calc(6.8cqw * var(--fit, 1)); }
 .cf-flavor, .cf.has-overlay .cf-flavor { font-size: calc(5.6cqw * var(--fit, 1)); }
+/* house picker on the main screen */
+.house-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.house-pick button { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 6px 8px; text-align: left;
+  background: rgba(0,0,0,.3); border: 1px solid #8a6a2e55; border-radius: 4px; color: var(--ink); font: inherit; cursor: pointer; }
+.house-pick button.on { border-color: var(--gold-hi); background: rgba(214,167,74,.16); box-shadow: 0 0 10px rgba(243,210,122,.25); }
+.house-pick span { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.house-pick b { font-family: var(--display); font-size: 14px; color: var(--gold-hi); }
+.house-pick small { font-size: 12px; color: var(--muted); }
+.big:disabled { opacity: .5; }
