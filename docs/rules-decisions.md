@@ -281,6 +281,16 @@ These came up in code and weren't covered above; all confirmed as they stand.
   on the front and ×5 on the back; players make change with the supply at any time. Restating [12] for the table:
   resources are never hidden. Tokens stay in plain view, and any player may ask another's exact totals at any time
   and must get a truthful answer.
+- **Lasting cards stay out [70]** (physical game): a card with a lasting effect is left face up in front of the player
+  it affects (a truce between its two players) and discarded when the effect ends, so the table can see every
+  effect in play. Effects from houses and rules use reminder tokens: new-heir shields, the La Marca brand, War Cry
+  and Specter markers.
+- **Tested, awaiting a decision: a bigger Reckoning [71]** (5,000 bot games each way). The Reckoning steals 1 of
+  **each** pillar instead of 1 from one pool; for any pillar the victim has none of, the avenger takes 1 from a pool
+  they do have. Reckonings take 2.2 resources instead of 0.9 (victims are often low after halving a pool). Games end
+  0.3 rounds sooner and Sudden Death falls from 12% to 10% (p = 0.006). Revenge pays: players with one or two
+  Reckonings win 1.28× and 1.21× their fair share (was 1.12× and 0.96×). House balance moves slightly (χ² 32 → 46;
+  no single house changes significantly; Yaguana 0.93 → 0.86, p = 0.11). Switch: `TUNING.reckoningSteal = 'eachPillar'`.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

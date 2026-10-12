@@ -56,6 +56,9 @@ export const TUNING = {
   // On death: 'onePool' = lose half (rounded down) of one pool you choose (the rulebook);
   // 'allHalfUp' = lose half (rounded up) of every pool (an experiment).
   deathLoss: 'onePool' as 'onePool' | 'allHalfUp',
+  // Reckoning bonus: 'one' = steal 1 from one pool of your choice (the rulebook); 'eachPillar' = steal 1 of each
+  // pillar, taking from their other pools for any they have none of (an experiment).
+  reckoningSteal: 'one' as 'one' | 'eachPillar',
   specterChoices: SPECTER_CHOICES,
 };
 

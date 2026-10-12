@@ -759,3 +759,31 @@ describe('death loss', () => {
     } finally { TUNING.deathLoss = 'onePool'; }
   });
 });
+
+describe('reckoning bonus', () => {
+  const reckon = (res: Record<'influence' | 'fear' | 'wealth', number>) => {
+    const g = newGame(2, ['ironvow', 'kaysoley']);
+    const [a, b] = g.s.players;
+    a.grudges = [b.id];                       // a's family holds a Grudge against b
+    b.res = { ...res };
+    a.res = { influence: 0, fear: 0, wealth: 0 };
+    drive(g.killPlayer(b, a), byLabel('Fear'));  // b halves Fear first; any extra steal also picks Fear when it can
+    return { a: a.res, b: b.res };
+  };
+  it("rulebook: steal 1 from one pool", () => {
+    const r = reckon({ influence: 2, fear: 4, wealth: 2 });
+    expect(r.a.influence + r.a.fear + r.a.wealth).toBe(1);
+  });
+  it("variant 'eachPillar': 1 of each, the missing ones from pools they still have", async () => {
+    const { TUNING } = await import('../src/config');
+    TUNING.reckoningSteal = 'eachPillar';
+    try {
+      let r = reckon({ influence: 2, fear: 4, wealth: 2 });   // Fear halved to 2, then 1 of each
+      expect(r.a).toEqual({ influence: 1, fear: 1, wealth: 1 });
+      expect(r.b).toEqual({ influence: 1, fear: 1, wealth: 1 });
+      r = reckon({ influence: 0, fear: 6, wealth: 0 });       // Fear halved to 3: 1 Fear, then 2 more Fear
+      expect(r.a).toEqual({ influence: 0, fear: 3, wealth: 0 });
+      expect(r.b.fear).toBe(0);
+    } finally { TUNING.reckoningSteal = 'one'; }
+  });
+});

@@ -143,6 +143,7 @@ export const RULES: RuleSection[] = [
           `**Hand limit:** you can never hold more than ${HAND_SIZE} Hand Cards, even for a moment. If anything would put you over, discard down at once; those discards go to the bottom of the discard pile.`,
           'When the draw pile is empty, shuffle the discard pile into a new one and keep drawing.',
           'The top of the discard pile is the card most recently discarded.',
+          '**Lasting cards stay out until they end.** A card whose effect lasts (Ceasefire, Blood Pact, Dread Banner, Marked for Death, Hex of Withering, Confusion, Forced March, Golden Harvest, Plunder, Vanishing Act and the like) is not discarded when played: leave it face up in front of the player it affects (for a truce between two players, between them) and discard it the moment its effect ends.',
         ],
       },
     ],

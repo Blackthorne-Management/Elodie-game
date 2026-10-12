@@ -753,9 +753,21 @@ export class Game {
           v.used['reckoningCancel'] = usedCancels + 1;
           this.log(`${v.name}'s patience denies the Reckoning bonus.`, 'block', { player: v.id });
         } else {
-          const from = PILLARS.filter(x => v.res[x] > 0);
-          const pick = yield* this.choosePillar(killer, `Reckoning: steal 1 from ${v.name}'s pool`, from);
-          if (pick) this.steal(killer, v, pick, 1, 'Reckoning');
+          if (TUNING.reckoningSteal === 'eachPillar') {
+            // One of each pillar; for any pillar they have none of, one more from a pool they still have.
+            let owed = 0;
+            for (const x of PILLARS) if (v.res[x] > 0) this.steal(killer, v, x, 1, 'Reckoning'); else owed++;
+            for (; owed > 0; owed--) {
+              const from = PILLARS.filter(x => v.res[x] > 0);
+              const pick = yield* this.choosePillar(killer, `Reckoning: steal 1 more from ${v.name}'s pool`, from);
+              if (!pick) break;
+              this.steal(killer, v, pick, 1, 'Reckoning');
+            }
+          } else {
+            const from = PILLARS.filter(x => v.res[x] > 0);
+            const pick = yield* this.choosePillar(killer, `Reckoning: steal 1 from ${v.name}'s pool`, from);
+            if (pick) this.steal(killer, v, pick, 1, 'Reckoning');
+          }
         }
       } else {
         v.grudges.push(killer.id);
