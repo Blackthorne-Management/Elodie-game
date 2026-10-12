@@ -786,4 +786,24 @@ describe('reckoning bonus', () => {
       expect(r.b.fear).toBe(0);
     } finally { TUNING.reckoningSteal = 'one'; }
   });
+  it("timing 'before': 1 of each first, then the pool is halved", async () => {
+    const { TUNING } = await import('../src/config');
+    TUNING.reckoningSteal = 'eachPillar'; TUNING.reckoningTiming = 'before';
+    try {
+      const r = reckon({ influence: 2, fear: 5, wealth: 2 });   // steal 1/1/1 -> 1/4/1, then Fear halved -> 1/2/1
+      expect(r.a).toEqual({ influence: 1, fear: 1, wealth: 1 });
+      expect(r.b).toEqual({ influence: 1, fear: 2, wealth: 1 });
+    } finally { TUNING.reckoningSteal = 'one'; TUNING.reckoningTiming = 'after'; }
+  });
+  it("timing 'fromLoss': the avenger collects up to 3 of the lost half; the victim loses nothing extra", async () => {
+    const { TUNING } = await import('../src/config');
+    TUNING.reckoningSteal = 'eachPillar'; TUNING.reckoningTiming = 'fromLoss';
+    try {
+      let r = reckon({ influence: 2, fear: 8, wealth: 2 });   // Fear 8 -> 4 lost: 3 to the avenger, 1 to the supply
+      expect(r.a).toEqual({ influence: 0, fear: 3, wealth: 0 });
+      expect(r.b).toEqual({ influence: 2, fear: 4, wealth: 2 });
+      r = reckon({ influence: 0, fear: 2, wealth: 0 });       // only 1 lost
+      expect(r.a.fear).toBe(1);
+    } finally { TUNING.reckoningSteal = 'one'; TUNING.reckoningTiming = 'after'; }
+  });
 });

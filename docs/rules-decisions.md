@@ -285,12 +285,21 @@ These came up in code and weren't covered above; all confirmed as they stand.
   it affects (a truce between its two players) and discarded when the effect ends, so the table can see every
   effect in play. Effects from houses and rules use reminder tokens: new-heir shields, the La Marca brand, War Cry
   and Specter markers.
-- **Tested, awaiting a decision: a bigger Reckoning [71]** (5,000 bot games each way). The Reckoning steals 1 of
-  **each** pillar instead of 1 from one pool; for any pillar the victim has none of, the avenger takes 1 from a pool
-  they do have. Reckonings take 2.2 resources instead of 0.9 (victims are often low after halving a pool). Games end
-  0.3 rounds sooner and Sudden Death falls from 12% to 10% (p = 0.006). Revenge pays: players with one or two
-  Reckonings win 1.28× and 1.21× their fair share (was 1.12× and 0.96×). House balance moves slightly (χ² 32 → 46;
-  no single house changes significantly; Yaguana 0.93 → 0.86, p = 0.11). Switch: `TUNING.reckoningSteal = 'eachPillar'`.
+- **Tested, awaiting a decision: a bigger Reckoning [71]** (5,000 bot games per variant; death still halves one
+  pool of the victim's choice). "1 of each" = 1 of every pillar, taking from a pool they still have for any pillar they
+  have none of. Timing: after the halving (the rule), before it, or out of the half being lost.
+
+  | Variant | Rounds | Sudden Death | Taken per Reckoning | Win rate after 1 / 2 Reckonings | House χ² |
+  |---|---|---|---|---|---|
+  | Steal 1, after (current) | 11.0 | 12.1% | 0.9 | 1.12× / 0.96× | 32 |
+  | Steal 1, from the lost half | 10.9 | 10.3% | 0.8 | 1.08× / 0.99× | 28 |
+  | 1 of each, after | 10.7 | 10.3% | 2.3 | 1.28× / 1.21× | 46 |
+  | **1 of each, before** | 10.6 | 9.6% | 2.5 | 1.29× / 1.27× | 39 |
+  | 1 of each, from the lost half | 10.8 | 9.9% | 0.9 | 1.09× / 0.97× | 31 |
+
+  Taking from the lost half barely changes anything (the half is usually only 1–2 tokens). Recommended: **1 of each,
+  before the halving**: revenge clearly pays, games end a little sooner, and balance moves less than taking it after
+  (Brasador, the strongest house, falls from 1.11× to 1.03×). Switches: `TUNING.reckoningSteal`, `TUNING.reckoningTiming`.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

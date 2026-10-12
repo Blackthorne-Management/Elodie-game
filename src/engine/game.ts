@@ -725,10 +725,45 @@ export class Game {
 
   // ---------------------------------------------------------------- death and succession (Section 9)
 
+  // The Reckoning bonus: steal 1 from one pool, or 1 of each pillar (TUNING.reckoningSteal 'eachPillar'), taking
+  // from pools they still have for any pillar they have none of.
+  *reckoningSteal(killer: PlayerState, v: PlayerState): Flow {
+    if (TUNING.reckoningSteal === 'eachPillar') {
+      let owed = 0;
+      for (const x of PILLARS) if (v.res[x] > 0) this.steal(killer, v, x, 1, 'Reckoning'); else owed++;
+      for (; owed > 0; owed--) {
+        const from = PILLARS.filter(x => v.res[x] > 0);
+        const pick = yield* this.choosePillar(killer, `Reckoning: steal 1 more from ${v.name}'s pool`, from);
+        if (!pick) break;
+        this.steal(killer, v, pick, 1, 'Reckoning');
+      }
+    } else {
+      const from = PILLARS.filter(x => v.res[x] > 0);
+      const pick = yield* this.choosePillar(killer, `Reckoning: steal 1 from ${v.name}'s pool`, from);
+      if (pick) this.steal(killer, v, pick, 1, 'Reckoning');
+    }
+  }
+
   *killPlayer(v: PlayerState, killer: PlayerState | null): Flow {
     const house = this.house(v);
     this.log(`${v.name}'s Gen ${roman(v.gen)} ${house.name} falls${killer ? ` to ${killer.name}` : ''}.`, 'death', { player: v.id, target: killer?.id });
     if (!this.s.housesLost.includes(v.house)) this.s.housesLost.push(v.house);
+
+    // A Reckoning: the killer's family holds a Grudge against the victim.
+    const reckoning = !!killer && killer.id !== v.id && !killer.specter && killer.grudges.includes(v.id);
+    let bonus = reckoning;                          // still owed (Stillwater may cancel it)
+    if (reckoning) {
+      this.log(`Reckoning! ${killer.name} avenges their bloodline.`, 'reckoning', { player: killer.id, target: v.id });
+      const cancels = this.hook(v, 'reckoningCancels');
+      const usedCancels = v.used['reckoningCancel'] ?? 0;
+      if (cancels > usedCancels && (yield* this.confirm(v, `Stillwater's Patience: cancel ${killer.name}'s Reckoning bonus?`, 'Cancel it', 'Allow'))) {
+        v.used['reckoningCancel'] = usedCancels + 1;
+        this.log(`${v.name}'s patience denies the Reckoning bonus.`, 'block', { player: v.id });
+        bonus = false;
+      }
+    }
+    // The bonus can come before the death loss (TUNING.reckoningTiming 'before'), out of it ('fromLoss') or after it.
+    if (bonus && TUNING.reckoningTiming === 'before') { yield* this.reckoningSteal(killer!, v); bonus = false; }
 
     // 1. Halve one pool (the dying player's choice), or every pool in the 'allHalfUp' variant.
     if (TUNING.deathLoss === 'allHalfUp') {
@@ -736,39 +771,25 @@ export class Game {
     } else {
       const bleedable = PILLARS.filter(x => Math.floor(v.res[x] / 2) > 0);
       const pool = yield* this.choosePillar(v, 'Your character died: choose a pool to lose half of.', bleedable);
-      if (pool) this.lose(v, pool, Math.floor(v.res[pool] / 2), 'death');
+      if (pool) {
+        const lost = this.lose(v, pool, Math.floor(v.res[pool] / 2), 'death');
+        if (bonus && TUNING.reckoningTiming === 'fromLoss') {
+          // The avenger collects part of what was lost instead of it going back to the supply.
+          const take = Math.min(lost, TUNING.reckoningSteal === 'eachPillar' ? 3 : 1);
+          if (take) this.gain(killer!, pool, take, 'Reckoning');
+          bonus = false;
+        }
+      }
     }
+    if (bonus && TUNING.reckoningTiming === 'fromLoss') bonus = false;   // nothing was lost, so nothing to collect
 
     // 2. Grudge or Reckoning.
     if (killer && killer.id !== v.id) {
       killer.kills++;
-      const gi = killer.grudges.indexOf(v.id);
-      if (gi >= 0 && !killer.specter) {
-        killer.grudges.splice(gi, 1);
+      if (reckoning) {
+        killer.grudges.splice(killer.grudges.indexOf(v.id), 1);
         killer.reckonings++;
-        this.log(`Reckoning! ${killer.name} avenges their bloodline.`, 'reckoning', { player: killer.id, target: v.id });
-        const cancels = this.hook(v, 'reckoningCancels');
-        const usedCancels = v.used['reckoningCancel'] ?? 0;
-        if (cancels > usedCancels && (yield* this.confirm(v, `Stillwater's Patience: cancel ${killer.name}'s Reckoning bonus?`, 'Cancel it', 'Allow'))) {
-          v.used['reckoningCancel'] = usedCancels + 1;
-          this.log(`${v.name}'s patience denies the Reckoning bonus.`, 'block', { player: v.id });
-        } else {
-          if (TUNING.reckoningSteal === 'eachPillar') {
-            // One of each pillar; for any pillar they have none of, one more from a pool they still have.
-            let owed = 0;
-            for (const x of PILLARS) if (v.res[x] > 0) this.steal(killer, v, x, 1, 'Reckoning'); else owed++;
-            for (; owed > 0; owed--) {
-              const from = PILLARS.filter(x => v.res[x] > 0);
-              const pick = yield* this.choosePillar(killer, `Reckoning: steal 1 more from ${v.name}'s pool`, from);
-              if (!pick) break;
-              this.steal(killer, v, pick, 1, 'Reckoning');
-            }
-          } else {
-            const from = PILLARS.filter(x => v.res[x] > 0);
-            const pick = yield* this.choosePillar(killer, `Reckoning: steal 1 from ${v.name}'s pool`, from);
-            if (pick) this.steal(killer, v, pick, 1, 'Reckoning');
-          }
-        }
+        if (bonus) yield* this.reckoningSteal(killer, v);
       } else {
         v.grudges.push(killer.id);
         this.log(`${v.name}'s bloodline now holds a Grudge against ${killer.name}.`, 'grudge', { player: v.id, target: killer.id });

@@ -59,6 +59,9 @@ export const TUNING = {
   // Reckoning bonus: 'one' = steal 1 from one pool of your choice (the rulebook); 'eachPillar' = steal 1 of each
   // pillar, taking from their other pools for any they have none of (an experiment).
   reckoningSteal: 'one' as 'one' | 'eachPillar',
+  // When the Reckoning bonus is taken: 'after' the death loss (the rulebook), 'before' it, or 'fromLoss' (out of the
+  // tokens the dying player loses, which go to the avenger instead of the supply).
+  reckoningTiming: 'after' as 'after' | 'before' | 'fromLoss',
   specterChoices: SPECTER_CHOICES,
 };
 
