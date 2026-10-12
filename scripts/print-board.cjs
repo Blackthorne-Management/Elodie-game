@@ -49,6 +49,12 @@ const seats = data.houses.map(h => {
     <div class="tint"></div>${mark}
     <div class="type"><img src="${uri(path.join(ROOT, 'public/art/icons', t.icon + '.svg'))}"><span>${t.label}</span></div></div>`;
 }).join('');
+// Round track down the right-hand ocean margin: rounds 1 to the Sudden Death round, which gets a skull.
+const ROUNDS = data.suddenDeathRound ?? 16;
+const trackX = S * 0.955, trackTop = S * 0.2, step = (S * 0.6) / ROUNDS;
+const track = `<div class="track-title" style="left:${trackX}px;top:${trackTop - step * 0.9}px">Round</div>` +
+  Array.from({ length: ROUNDS }, (_, i) => `<div class="round ${i + 1 === ROUNDS ? 'last' : ''}" style="left:${trackX}px;top:${trackTop + i * step + step / 2}px;width:${step * 0.86}px;height:${step * 0.86}px">${i + 1 === ROUNDS ? `<img src="${uri(path.join(ROOT, 'public/art/icons/cat-skull.svg'))}"><b>${i + 1}</b>` : i + 1}</div>`).join('') +
+  `<div class="track-note" style="left:${trackX}px;top:${trackTop + ROUNDS * step + step * 0.35}px">Sudden<br>Death</div>`;
 const labels = data.houses.map(h => {
   const [fx, fy] = LABEL[h.id];
   return `<div class="label" style="left:${fx * S}px;top:${fy * S}px"><b>${h.homeland}</b><small>${h.name}</small></div>`;
@@ -75,6 +81,14 @@ svg { position: absolute; inset: 0; }
 .label b { font: 700 ${U * 0.42}px Cinzel; letter-spacing: .12em; text-transform: uppercase;
   background: linear-gradient(180deg, #fbeec4, #e2b85c 55%, #9a6a24); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 ${U * 0.03}px #000) drop-shadow(0 ${U * 0.03}px ${U * 0.05}px rgba(0,0,0,.85)); }
+.round { position: absolute; transform: translate(-50%, -50%); box-sizing: border-box; display: grid; place-items: center;
+  border: ${U * 0.03}px solid #c99a45; outline: ${U * 0.012}px solid #120b05; background: radial-gradient(circle at 50% 35%, rgba(40,28,18,.92), rgba(10,8,6,.92));
+  font: 700 ${U * 0.24}px Cinzel; color: #f3d27a; box-shadow: 0 0 ${U * 0.08}px rgba(0,0,0,.8); }
+.round.last { border-color: #e2b85c; background: radial-gradient(circle at 50% 35%, #5a1620, #1a0608); }
+.round.last img { position: absolute; width: 55%; opacity: .35; }
+.round.last b { position: relative; }
+.track-title, .track-note { position: absolute; transform: translate(-50%, -50%); font: 700 ${U * 0.16}px Cinzel; color: #f3d27a; letter-spacing: .1em;
+  text-transform: uppercase; text-align: center; line-height: 1.1; text-shadow: 0 0 ${U * 0.04}px #000, 0 0 ${U * 0.04}px #000; }
 .label small { font: italic ${U * 0.2}px Garamond; color: #e8dcc0; margin-top: -${U * 0.02}px; text-shadow: 0 0 ${U * 0.04}px #000, 0 0 ${U * 0.04}px #000; }
 </style>
 <div class="board">
@@ -85,7 +99,7 @@ svg { position: absolute; inset: 0; }
     <rect x="${O}" y="${O}" width="${18 * U}" height="${18 * U}" fill="none" stroke="#c99a45" stroke-width="${U * 0.05}" opacity=".85"/>
     <rect x="${O + 8 * U}" y="${O + 8 * U}" width="${2 * U}" height="${2 * U}" fill="none" stroke="#f3d27a" stroke-width="${U * 0.05}"/>
   </svg>
-  ${seats}${labels}
+  ${seats}${labels}${track}
 </div>`;
 
 (async () => {
