@@ -228,6 +228,15 @@ describe('combat and death (Sections 6 and 9)', () => {
     expect(a.res.influence).toBe(2);                    // 1 Influence, then 1 more in place of the missing Fear
     expect(b.res.influence).toBe(0);                    // ...before anything was halved
   });
+  it('a player who plays a Block draws back up to 3 once the attack is over (rules-decisions 73)', () => {
+    const { g, a, b } = duelists();
+    b.hand = [58];                                          // Iron Guard
+    g.s.drawPile = g.s.drawPile.filter(c => g.card(c).kind === 'hand' && c !== 58);
+    drive(g.basicAttack(a, b), byLabel('Iron Guard'));
+    expect(b.hand).toHaveLength(0);
+    drive(g.flushRefills());
+    expect(b.hand).toHaveLength(3);
+  });
   it('a Gen IV death makes a Specter', () => {
     const { g, a, b } = duelists();
     b.gen = 4; b.hp = 1;

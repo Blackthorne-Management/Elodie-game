@@ -305,15 +305,20 @@ These came up in code and weren't covered above; all confirmed as they stand.
     could track at a table.
   - **First player:** if Elodie is playing, she always goes first; otherwise everyone rolls and the highest roll goes
     first (re-roll ties). Play goes clockwise in seating order. (The opening truce [65] already removes the first seat's
-    disadvantage.) In the app, a player named Elodie goes first.
+    disadvantage.) In the app, a player named Elodie, Lolo or Lodie goes first.
   - **Round track:** the first player moves the round marker at the start of each round.
   - **Calling "Wait!":** a player calls "Wait!" or "Stop!" to play a Reaction, Block or Counterspell at its moment and
     everyone pauses; once the active player has moved on, the moment has passed. Ill Omen comes after the roll is
     seen and before the pawn moves.
-  - **The discard pile** stays face up in order (Specters choose from its top 5). **Hand size is public.**
+  - **The discard pile** is face down, in order, never shuffled. A Specter draws its top 5, looks, plays one and puts
+    the rest back on top in the same order.
   - **Play on the grid only;** the ocean and islands around it are scenery. **The token supply is unlimited.**
   - **Used tokens** mark once-per-game powers and Stillwater's Patience.
   - Not adopted: a marker for the last tile you scored from (players are trusted to remember).
+- **Always back to 3 [73]:** whoever plays a card (on their own turn, or a Block, Reaction or Counterspell on someone
+  else's) draws back up to 3 as soon as that action is over; cards lost in other ways come back at the end of their
+  own turn as before. `TUNING.refillOnPlay`. 5,000 bot games each way: games 0.2 rounds shorter (10.4), Sudden Death 9.7% → 8.5%,
+  house balance better (χ² 36 → 21); Blocks and Reactions per game barely change (5.4 → 5.5).
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about

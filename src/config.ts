@@ -62,6 +62,9 @@ export const TUNING = {
   // When the Reckoning bonus is taken: 'before' the death loss (the rule, 71), 'after' it (the old rule), or 'fromLoss'
   // (out of the tokens the dying player loses, which go to the avenger instead of the supply).
   reckoningTiming: 'before' as 'after' | 'before' | 'fromLoss',
+  // Whoever plays a card (on their turn or anyone's: a Block, Reaction or Counterspell too) draws back up to 3 as soon
+  // as the action it was played in is over (rules-decisions 73). false = only at the end of your own turn.
+  refillOnPlay: true,
   specterChoices: SPECTER_CHOICES,
 };
 

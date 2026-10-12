@@ -57,8 +57,8 @@ export const useGame = create<GameStore>((set, get) => ({
         isBot: i !== HUMAN,
         house,
       })),
-      // Elodie always goes first when she plays (rules-decisions 72); otherwise the first player is random.
-      ...(name.trim().toLowerCase() === 'elodie' ? { firstPlayer: HUMAN } : {}),
+      // Elodie (Lolo, Lodie) always goes first when she plays (rules-decisions 72); otherwise the first player is random.
+      ...(['elodie', 'lolo', 'lodie'].includes(name.trim().toLowerCase()) ? { firstPlayer: HUMAN } : {}),
     };
     // Starting over with a game in progress files the old one under "abandoned".
     const prev = get().runner;

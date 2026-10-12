@@ -209,6 +209,7 @@ export class Game {
       const cs = target.hand.find(c => this.card(c).counterspell);
       if (cs && (yield* this.confirm(target, `${user.name} plays ${card.name} on you. Use Counterspell to negate it?`, 'Counterspell', 'Let it happen'))) {
         this.discardFromHand(target, cs);
+        this.queueRefill(target);
         this.log(`${target.name} counters ${card.name}!`, 'block', { player: target.id, target: user.id });
         return null;
       }
@@ -221,6 +222,7 @@ export class Game {
           { card: tb, reaction: 'turnabout', actor: user.id, played: card.id });
         if (play) {
           this.discardFromHand(target, tb);
+          this.queueRefill(target);
           this.log(`${target.name} answers with ${this.card(tb).name}!`, 'block', { player: target.id, target: user.id, cards: [tb] });
           const next = yield* this.choosePlayer(target, alts, `Turnabout: who does ${card.name} fall on instead?`, { card: card.id, user: user.id, turnabout: true });
           if (next) this.log(`${card.name} turns toward ${next.name}.`, 'info', { player: next.id });
@@ -245,6 +247,7 @@ export class Game {
           { ...context, card: c, reaction: def.reaction, actor: actor.id });
         if (!play) continue;
         this.discardFromHand(o, c);
+        this.queueRefill(o);
         this.log(`${o.name} answers with ${def.name}!`, 'block', { player: o.id, target: actor.id, cards: [c] });
         return { player: o, card: def };
       }
@@ -414,7 +417,8 @@ export class Game {
 
   *drawToHand(p: PlayerState): Flow {
     let guard = 0;
-    while (!p.specter && p.hand.length < HAND_SIZE && !this.s.turn?.stopDrawing && guard++ < 200) {
+    const stopped = this.s.turn?.stopDrawing && this.s.turn.player === p.id;
+    while (!p.specter && p.hand.length < HAND_SIZE && !stopped && guard++ < 200) {
       if (!(yield* this.drawOne(p))) break;
     }
   }
@@ -443,6 +447,7 @@ export class Game {
     const def = this.card(c);
     p.hand = p.hand.filter(x => x !== c);
     p.handCardsPlayed++;
+    this.queueRefill(p);
     if (this.s.turn) {
       this.s.turn.actions++;
       if (def.aggressive) this.s.turn.aggressive = true;
@@ -654,6 +659,7 @@ export class Game {
       const c = yield* this.ask(t, 'block', `${a.name} attacks you for ${info.damage}. Respond?`, opts, { attack: info });
       if (c !== null) {
         this.discardFromHand(t, c);
+        this.queueRefill(t);
         this.log(`${t.name} answers with ${this.card(c).name}!`, 'block', { player: t.id, target: a.id, cards: [c] });
         outcome = yield* this.card(c).block!.resolve(this, t, info);
       }
@@ -722,6 +728,17 @@ export class Game {
     if (activeDied && !this.inChallenge) throw new EndTurn();
   }
   inChallenge = false;
+  // Players who played a card and draw back up to 3 at the end of the current action (rules-decisions 73).
+  private refills: number[] = [];
+  private queueRefill(p: PlayerState) {
+    if (TUNING.refillOnPlay && !this.refills.includes(p.id)) this.refills.push(p.id);
+  }
+  *flushRefills(): Flow {
+    while (this.refills.length) {
+      const p = this.p(this.refills.shift()!);
+      yield* this.drawToHand(p);
+    }
+  }
 
   // ---------------------------------------------------------------- death and succession (Section 9)
 
@@ -951,6 +968,7 @@ export class Game {
         if (action.type === 'end') break;
         yield* this.doAction(p, action);
         if (this.s.winner !== null) throw new GameOver();
+        yield* this.flushRefills();
         // Attacking is your action: the turn ends after your last allowed attack, once you've moved.
         const t = this.s.turn!;
         if (ATTACK_ENDS_TURN && action.type === 'attack' && t.attacks >= t.attacksAllowed && t.moved && t.actions >= t.actionsAllowed) break;
@@ -967,6 +985,8 @@ export class Game {
       if (!(e instanceof EndTurn)) throw e;
       this.log(`${p.name}'s turn ends.`, 'info', { player: p.id });
     }
+    // Cards played during an action that ended the turn are still replaced.
+    try { yield* this.flushRefills(); } catch (e) { if (!(e instanceof EndTurn)) throw e; }
     if (this.s.turn!.scoredTile) p.lastScoredTile = this.s.turn!.scoredTile;
     this.expire(x => x.at === 'turnEnd' && x.player === p.id);
     if (extraTurn) for (const e of this.s.effects.filter(x => x.kind === 'handPublic' && x.owner === p.id)) this.removeEffect(e);
