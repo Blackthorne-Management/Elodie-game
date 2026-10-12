@@ -174,7 +174,7 @@ const SLIDES: Slide[] = [
     '**Reactions** are played on a rival\'s turn, at the moment printed on them: cancel a move, a card, a trade…'] },
   { id: 'heirs', title: 'Death Makes You Stronger', pic: HeirsPic, text: [
     'When you fall, you lose half of one pool and your **heir rises** at home with every power so far, plus a new one.',
-    'Your family holds a **Grudge** against your killer. Kill them back for a **Reckoning**: steal 1.'] },
+    'Your killer hands you a **Grudge**. Kill them back for a **Reckoning**: take 1 of each resource, **before** they halve.'] },
   { id: 'specter', title: 'The Specter', pic: SpecterPic, text: [
     'When Gen IV falls, your bloodline ends, but you haunt the game as a **Specter**.',
     'Once a round, replay an Instant from the discard pile at any rival. Mischief only: **never damage**.'] },

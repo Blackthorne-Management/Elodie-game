@@ -83,7 +83,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **Grudges [22–23]:** the dead player's family holds a Grudge against the killer. A Reckoning is
   killing a player your family holds a Grudge against. You can hold several Grudges, even more than
   one against the same player; a Reckoning settles one.
-- **Reckoning order [24]:** the dying player halves a pool first, then the killer steals 1.
+- **Reckoning order [24]** (replaced by [71]): the Reckoning bonus is taken **before** the dying player halves a pool.
 - **Becoming a Specter [25]:** the hand is discarded.
 - **New heirs are protected** (added after playtesting): a new heir can't be attacked until the end of their first
   turn. If the character fell on their own turn, the protection lasts through their next turn. "Attacks" are those
@@ -285,7 +285,7 @@ These came up in code and weren't covered above; all confirmed as they stand.
   it affects (a truce between its two players) and discarded when the effect ends, so the table can see every
   effect in play. Effects from houses and rules use reminder tokens: new-heir shields, the La Marca brand, War Cry
   and Specter markers.
-- **Tested, awaiting a decision: a bigger Reckoning [71]** (5,000 bot games per variant; death still halves one
+- **Adopted: a bigger Reckoning, taken before the halving [71]** (5,000 bot games per variant; death still halves one
   pool of the victim's choice). "1 of each" = 1 of every pillar, taking from a pool they still have for any pillar they
   have none of. Timing: after the halving (the rule), before it, or out of the half being lost.
 
@@ -297,7 +297,7 @@ These came up in code and weren't covered above; all confirmed as they stand.
   | **1 of each, before** | 10.6 | 9.6% | 2.5 | 1.29× / 1.27× | 39 |
   | 1 of each, from the lost half | 10.8 | 9.9% | 0.9 | 1.09× / 0.97× | 31 |
 
-  Taking from the lost half barely changes anything (the half is usually only 1–2 tokens). Recommended: **1 of each,
+  Taking from the lost half barely changes anything (the half is usually only 1–2 tokens). **Adopted: 1 of each,
   before the halving**: revenge clearly pays, games end a little sooner, and balance moves less than taking it after
   (Brasador, the strongest house, falls from 1.11× to 1.03×). Switches: `TUNING.reckoningSteal`, `TUNING.reckoningTiming`.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).

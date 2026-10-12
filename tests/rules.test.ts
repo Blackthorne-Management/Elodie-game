@@ -217,7 +217,7 @@ describe('combat and death (Sections 6 and 9)', () => {
     drive(g.basicAttack(a, b), byLabel('Wealth'));
     expect(a.res.fear).toBe(1);
   });
-  it('a Reckoning steals 1 and settles the Grudge without starting a new one', () => {
+  it('a Reckoning takes its bonus before the halving and settles the Grudge without starting a new one', () => {
     const { g, a, b } = duelists();
     a.grudges = [b.id];
     b.res.influence = 2;
@@ -225,8 +225,8 @@ describe('combat and death (Sections 6 and 9)', () => {
     expect(a.reckonings).toBe(1);
     expect(a.grudges).toEqual([]);
     expect(b.grudges).toEqual([]);
-    expect(a.res.influence).toBe(1);                    // 2 halved to 1, then 1 stolen
-    expect(b.res.influence).toBe(0);
+    expect(a.res.influence).toBe(2);                    // 1 Influence, then 1 more in place of the missing Fear
+    expect(b.res.influence).toBe(0);                    // ...before anything was halved
   });
   it('a Gen IV death makes a Specter', () => {
     const { g, a, b } = duelists();
@@ -767,43 +767,42 @@ describe('reckoning bonus', () => {
     a.grudges = [b.id];                       // a's family holds a Grudge against b
     b.res = { ...res };
     a.res = { influence: 0, fear: 0, wealth: 0 };
-    drive(g.killPlayer(b, a), byLabel('Fear'));  // b halves Fear first; any extra steal also picks Fear when it can
+    drive(g.killPlayer(b, a), byLabel('Fear'));  // b halves Fear; any extra steal also picks Fear when it can
     return { a: a.res, b: b.res };
   };
-  it("rulebook: steal 1 from one pool", () => {
+  const withRule = async (steal: 'one' | 'eachPillar', timing: 'after' | 'before' | 'fromLoss', fn: () => void) => {
+    const { TUNING } = await import('../src/config');
+    const keep = [TUNING.reckoningSteal, TUNING.reckoningTiming] as const;
+    TUNING.reckoningSteal = steal; TUNING.reckoningTiming = timing;
+    try { fn(); } finally { [TUNING.reckoningSteal, TUNING.reckoningTiming] = keep; }
+  };
+  it('the rule: 1 of each BEFORE the halving', () => {
+    const r = reckon({ influence: 2, fear: 5, wealth: 2 });     // take 1/1/1 -> 1/4/1, then Fear halved -> 1/2/1
+    expect(r.a).toEqual({ influence: 1, fear: 1, wealth: 1 });
+    expect(r.b).toEqual({ influence: 1, fear: 2, wealth: 1 });
+  });
+  it('the rule: a pillar they lack is replaced from a pool they have (the rulebook example)', () => {
+    const r = reckon({ influence: 2, fear: 5, wealth: 0 });     // 1 Influence, 1 Fear, 1 more Fear -> 1/3/0, halve Fear -> 1/2/0
+    expect(r.a).toEqual({ influence: 1, fear: 2, wealth: 0 });
+    expect(r.b).toEqual({ influence: 1, fear: 2, wealth: 0 });
+  });
+  it("old rule: steal 1 after the halving", () => withRule('one', 'after', () => {
     const r = reckon({ influence: 2, fear: 4, wealth: 2 });
     expect(r.a.influence + r.a.fear + r.a.wealth).toBe(1);
-  });
-  it("variant 'eachPillar': 1 of each, the missing ones from pools they still have", async () => {
-    const { TUNING } = await import('../src/config');
-    TUNING.reckoningSteal = 'eachPillar';
-    try {
-      let r = reckon({ influence: 2, fear: 4, wealth: 2 });   // Fear halved to 2, then 1 of each
-      expect(r.a).toEqual({ influence: 1, fear: 1, wealth: 1 });
-      expect(r.b).toEqual({ influence: 1, fear: 1, wealth: 1 });
-      r = reckon({ influence: 0, fear: 6, wealth: 0 });       // Fear halved to 3: 1 Fear, then 2 more Fear
-      expect(r.a).toEqual({ influence: 0, fear: 3, wealth: 0 });
-      expect(r.b.fear).toBe(0);
-    } finally { TUNING.reckoningSteal = 'one'; }
-  });
-  it("timing 'before': 1 of each first, then the pool is halved", async () => {
-    const { TUNING } = await import('../src/config');
-    TUNING.reckoningSteal = 'eachPillar'; TUNING.reckoningTiming = 'before';
-    try {
-      const r = reckon({ influence: 2, fear: 5, wealth: 2 });   // steal 1/1/1 -> 1/4/1, then Fear halved -> 1/2/1
-      expect(r.a).toEqual({ influence: 1, fear: 1, wealth: 1 });
-      expect(r.b).toEqual({ influence: 1, fear: 2, wealth: 1 });
-    } finally { TUNING.reckoningSteal = 'one'; TUNING.reckoningTiming = 'after'; }
-  });
-  it("timing 'fromLoss': the avenger collects up to 3 of the lost half; the victim loses nothing extra", async () => {
-    const { TUNING } = await import('../src/config');
-    TUNING.reckoningSteal = 'eachPillar'; TUNING.reckoningTiming = 'fromLoss';
-    try {
-      let r = reckon({ influence: 2, fear: 8, wealth: 2 });   // Fear 8 -> 4 lost: 3 to the avenger, 1 to the supply
-      expect(r.a).toEqual({ influence: 0, fear: 3, wealth: 0 });
-      expect(r.b).toEqual({ influence: 2, fear: 4, wealth: 2 });
-      r = reckon({ influence: 0, fear: 2, wealth: 0 });       // only 1 lost
-      expect(r.a.fear).toBe(1);
-    } finally { TUNING.reckoningSteal = 'one'; TUNING.reckoningTiming = 'after'; }
-  });
+  }));
+  it("variant: 1 of each after the halving", () => withRule('eachPillar', 'after', () => {
+    let r = reckon({ influence: 2, fear: 4, wealth: 2 });       // Fear halved to 2, then 1 of each
+    expect(r.a).toEqual({ influence: 1, fear: 1, wealth: 1 });
+    expect(r.b).toEqual({ influence: 1, fear: 1, wealth: 1 });
+    r = reckon({ influence: 0, fear: 6, wealth: 0 });           // Fear halved to 3: 1 Fear, then 2 more Fear
+    expect(r.a).toEqual({ influence: 0, fear: 3, wealth: 0 });
+    expect(r.b.fear).toBe(0);
+  }));
+  it("variant: out of the lost half; the victim loses nothing extra", () => withRule('eachPillar', 'fromLoss', () => {
+    let r = reckon({ influence: 2, fear: 8, wealth: 2 });       // Fear 8 -> 4 lost: 3 to the avenger, 1 to the supply
+    expect(r.a).toEqual({ influence: 0, fear: 3, wealth: 0 });
+    expect(r.b).toEqual({ influence: 2, fear: 4, wealth: 2 });
+    r = reckon({ influence: 0, fear: 2, wealth: 0 });           // only 1 lost
+    expect(r.a.fear).toBe(1);
+  }));
 });

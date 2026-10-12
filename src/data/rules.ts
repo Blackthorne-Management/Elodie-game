@@ -171,6 +171,7 @@ export const RULES: RuleSection[] = [
       'When a character reaches 0 Heart Tokens:',
       {
         steps: [
+          '**Reckoning first:** if the killer\'s family holds a Grudge against the dying player, the killer takes the Reckoning bonus now, **before anything is halved** (see Reckoning below).',
           'The dying player loses **half (rounded down) of one pool** of their choice.',
           '**Grudge:** their family now holds a Grudge against the killer (unless this kill was a Reckoning).',
           'The next generation card is turned up: the heir keeps every earlier ability and gains a new one.',
@@ -178,7 +179,16 @@ export const RULES: RuleSection[] = [
           'The heir rises on the house\'s own tile, protected from attacks until the end of their first turn.',
         ],
       },
-      '**Reckoning:** killing a player your family holds a Grudge against settles it. Steal 1 from any one of their pools, and no new Grudge is created. You can hold several Grudges, even more than one against the same player; a Reckoning settles one. The dying player halves a pool first, then the Reckoning steal happens.',
+      '**Grudge Tokens:** when someone kills your character, they hand you one of their Grudge Tokens (their crest). Keep it in front of you: your family now holds a Grudge against them.',
+      '**Reckoning:** killing a player your family holds a Grudge against settles it. Give their Grudge Token back, and no new Grudge is created: the feud is over. You can hold several Grudges, even more than one against the same player; a Reckoning settles one.',
+      {
+        list: [
+          '**The Reckoning bonus: take 1 Influence, 1 Fear and 1 Wealth** from the player you killed. For any of those they have none of, take 1 from a pool they still have instead (your choice), so you take 3 in all when they hold at least 3.',
+          '**The bonus is taken BEFORE the death halving, never after.** First the avenger takes their 3, then the dying player halves one pool of their choice from what is left.',
+          '**Example:** you avenge yourself on a player holding 2 Influence, 5 Fear and 0 Wealth. You take 1 Influence, 1 Fear and, since they have no Wealth, 1 more Fear (your choice). They are left with 1 Influence and 3 Fear, then halve one pool: halving Fear leaves them 1 Influence and 2 Fear.',
+          'Stillwater\'s Patience can cancel the whole bonus.',
+        ],
+      },
     ],
   },
   {
