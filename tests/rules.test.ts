@@ -806,3 +806,20 @@ describe('reckoning bonus', () => {
     expect(r.a.fear).toBe(1);
   }));
 });
+
+describe('Hidden Path (rules-decisions 72)', () => {
+  it('teleports only to house tiles, never the Throne or your own square', () => {
+    const g = newGame(2, ['brasador', 'dorini']);
+    const p = g.p(0);
+    p.hand = [42];
+    const d = g.content.cards.find(c => c.id === 42)!;
+    const flow = d.effect(g, p, d);
+    const ask = flow.next().value as { options: { value: { x: number; y: number } }[] };
+    const homes = Object.values(g.content.houses).map(h => `${h.home.x},${h.home.y}`);
+    const offered = ask.options.map(o => `${o.value.x},${o.value.y}`);
+    expect(offered).toHaveLength(7);                         // eight house tiles minus the one Brasador stands on
+    for (const o of offered) expect(homes).toContain(o);
+    flow.next(0);
+    expect(homes).toContain(`${p.pos!.x},${p.pos!.y}`);
+  });
+});

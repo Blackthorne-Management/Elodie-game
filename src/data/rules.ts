@@ -43,7 +43,7 @@ export const RULES: RuleSection[] = [
         'Place all eight house tiles, whatever the player count. **A house not in the game leaves its tile unowned: anyone may farm it.**',
         'Put your pawn on your house\'s own tile.',
         `Shuffle the deck and deal everyone **${HAND_SIZE} Hand Cards**. Any Instant drawn in this deal is shuffled back and replaced.`,
-        'Choose the first player at random. Play goes clockwise.',
+        '**First player:** if Elodie is playing, she always goes first. Otherwise everyone rolls the die and the highest roll goes first (re-roll ties). Play then goes **clockwise** around the table, in seating order, for the whole game.',
       ],
     }],
   },
@@ -61,7 +61,7 @@ export const RULES: RuleSection[] = [
       },
       '**Free extras:** your house abilities don\'t use your action (each can be used once per turn unless it says otherwise), and you may **claim the Throne** at any point in your turn while standing on it and eligible.',
       `**Opening truce:** no attacks of any kind during ${truceText}.`,
-      'A **round** is every player taking one turn.',
+      'A **round** is every player taking one turn. At the start of each round, the first player moves the round marker one space along the round track on the board.',
     ],
   },
   {
@@ -69,7 +69,8 @@ export const RULES: RuleSection[] = [
     blocks: [{
       list: [
         'Roll one die and move **up to** that many squares, stepping up, down, left or right. You may turn as often as you like (a 3 can be two up and one right) and you may stop early or stay put.',
-        '**No diagonal steps.** Every square can be walked on, sea included. Pawns never block each other and any number may share a square. You can\'t leave the board.',
+        '**No diagonal steps.** Every square can be walked on, sea included. Pawns never block each other and any number may share a square.',
+        '**Play on the grid only.** The 18 × 18 grid is the whole play area: the ocean and islands outside it are scenery, and no move may leave the grid.',
         'Distances are always counted in up/down/left/right steps.',
         'Hand Cards can\'t be played before you move. Extra movement from a card moves you straight away, with no second resource check.',
         'Some cards name a straight line or a direction (Forced March, Forced Retreat, Suzumori\'s Ayatsuri); those keep to it.',
@@ -88,6 +89,7 @@ export const RULES: RuleSection[] = [
           'The Throne gives no resources.',
           '**No hidden resources.** Everyone\'s Influence, Fear and Wealth are public. Keep your resource tokens in plain view, and any player may ask your exact totals at any time: you must answer truthfully. Hands and the draw pile stay hidden.',
           'Totals never drop below 0. Stealing from an empty pool gives nothing.',
+          'The token supply is unlimited. If a kind of token runs out, use anything as a stand-in.',
           'Wealth is the scarcest pillar (only two Trade tiles), so the deck holds more cards that give Wealth.',
         ],
       },
@@ -142,7 +144,8 @@ export const RULES: RuleSection[] = [
         list: [
           `**Hand limit:** you can never hold more than ${HAND_SIZE} Hand Cards, even for a moment. If anything would put you over, discard down at once; those discards go to the bottom of the discard pile.`,
           'When the draw pile is empty, shuffle the discard pile into a new one and keep drawing.',
-          'The top of the discard pile is the card most recently discarded.',
+          '**Keep the discard pile face up in one neat stack, in order.** The top card is the one most recently discarded (Specters choose from the top 5, so never shuffle or spread it). Hand-limit discards go underneath.',
+          '**Your cards are secret; how many you hold is not.** Anyone may ask how many cards you have (it matters, because a player who played a Block or Reaction on someone else\'s turn holds fewer until their own turn ends).',
           '**Lasting cards stay out until they end.** A card whose effect lasts (Ceasefire, Blood Pact, Dread Banner, Marked for Death, Hex of Withering, Confusion, Forced March, Golden Harvest, Plunder, Vanishing Act and the like) is not discarded when played: leave it face up in front of the player it affects (for a truce between two players, between them) and discard it the moment its effect ends.',
         ],
       },
@@ -162,7 +165,9 @@ export const RULES: RuleSection[] = [
           '**Turnabout:** when a Hand Card targets you, it targets another player of your choice instead. Counterspell is offered first.',
         ],
       },
-      '**Timing:** players are asked in turn order after the acting player; the first Reaction played closes that moment. A Reaction can\'t be answered by another Reaction, Counterspell or Block.',
+      '**Say "Wait!"** To play a Reaction (or a Block or Counterspell), call out "Wait!" or "Stop!" at its moment. Everyone pauses while you play it. Once the active player has moved on to the next step, the moment has passed: you can\'t go back.',
+      '**Ill Omen** is played after the die is rolled and everyone has seen the number, before the pawn moves.',
+      '**Timing:** if more than one player calls at the same moment, the first in seat order after the acting player plays; the first Reaction played closes that moment. A Reaction can\'t be answered by another Reaction, Counterspell or Block.',
     ],
   },
   {
@@ -211,6 +216,7 @@ export const RULES: RuleSection[] = [
       list: [
         'Every house has a **passive** from Gen I that upgrades at Gen III, and new **abilities** or rules at Gen II, III and IV. Each heir keeps everything earlier generations had.',
         'An ability with no stated limit can be used **once per turn, as a free action** that doesn\'t use your action.',
+        '**Once-per-game powers:** when you use one (or Stillwater\'s Patience), put a Used token on it on your player board. It stays used when your heir takes over.',
         'Every house has 3 Heart Tokens in each generation, except Agnivansh Gen IV (2).',
         'The full list of every house and generation is below, under **The Eight Houses**.',
       ],
@@ -258,7 +264,7 @@ export const RULES: RuleSection[] = [
         '**Stolen Goods, Black Market Contact:** only Hand Cards can be taken from the discard pile.',
         '**Uneasy Trade:** you choose both resource types.',
         '**Forced Retreat:** they pick any direction that ends farther from you.',
-        '**Hidden Path:** any square you have ended a move on during this life.',
+        '**Hidden Path:** teleport to any of the eight house tiles (owned or not), never the Throne.',
         '**Night of Shadows:** everyone discards down to 2; the current player stops drawing this turn.',
         '**Scramble:** Hand Cards are dealt back round-robin, as evenly as possible (at most 3 each).',
         '**Elodie\'s Trial:** the drawer picks any other player to make the optional, blockable 1-damage attack. A tie for fewest Heart Tokens means no effect.',

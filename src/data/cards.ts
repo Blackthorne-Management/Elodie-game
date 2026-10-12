@@ -239,15 +239,17 @@ hand(40, 'Sabotage', 'Disruption', 'Target player cannot gain resources from til
 
 // Movement / Positioning
 hand(41, 'Swift Steed', 'Movement', 'Move 2 extra spaces this turn.', function* (g, p) { yield* g.extraMove(p, 2); });
-hand(42, 'Hidden Path', 'Movement', 'Teleport to any tile you have already visited this game.',
+// Hidden Path (rules-decisions 72): any house tile, never the Throne.
+const hiddenPathTiles = (g: Game, p: PlayerState) =>
+  Object.values(g.content.houses).map(h => h.home).filter(t => !p.pos || !samePos(t, p.pos));
+hand(42, 'Hidden Path', 'Movement', 'Teleport to any house tile (not the Throne).',
   function* (g, p) {
-    const squares = p.visited.filter(k => !p.pos || k !== key(p.pos));
-    const to = yield* g.ask(p, 'square', 'Hidden Path: teleport where?', squares.map(k => {
-      const [x, y] = k.split(',').map(Number);
-      return { label: `(${x + 1}, ${y + 1})`, value: { x, y } };
+    const to = yield* g.ask(p, 'square', 'Hidden Path: teleport to which house tile?', hiddenPathTiles(g, p).map(t => {
+      const h = Object.values(g.content.houses).find(x => samePos(x.home, t))!;
+      return { label: `${h.homeland} (${h.name.replace('House ', '')})`, value: t };
     }));
     g.teleport(p, to, 'takes a hidden path');
-  }, { playable: (_g, p) => p.visited.some(k => !p.pos || k !== key(p.pos)) });
+  }, { playable: (g, p) => hiddenPathTiles(g, p).length > 0 });
 hand(43, 'Scout Ahead', 'Movement', 'Look at the top 3 cards of the draw deck. Rearrange them in any order.',
   function* (g, p) {
     g.ensureDrawPile();

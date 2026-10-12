@@ -59,7 +59,7 @@ This is the complete draft deck referenced in Section 7 of the rulebook. Numbers
 
 ### Movement / Positioning (7)
 41. **Swift Steed** — Move 2 extra spaces this turn.
-42. **Hidden Path** — Teleport to any tile you have already visited this game.
+42. **Hidden Path** — Teleport to any house tile (not the Throne).
 43. **Scout Ahead** — Look at the top 3 cards of the draw deck. Rearrange them in any order.
 44. **Forced Retreat** — Move an adjacent player 2 spaces away from you in a straight line (their choice of direction).
 45. **Vanishing Act** — After resolving combat this turn, move 1 extra space as a free action.

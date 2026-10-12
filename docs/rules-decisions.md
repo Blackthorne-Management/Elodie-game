@@ -170,7 +170,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
 - **Stolen Goods, Black Market Contact [49]:** only Hand Cards can be taken from the discard pile.
 - **Uneasy Trade [50]:** you choose both resource types.
 - **Forced Retreat [51]:** they pick any direction that ends farther from you.
-- **Hidden Path [52]:** any square you have ended a move on during this life.
+- **Hidden Path [52]** (replaced by [72]): teleport to any house tile, never the Throne. (Was: any square you have ended a move on during this life, which nobody can track at a table.)
 - **Night of Shadows [53]:** everyone discards to 2; the current player stops drawing this turn.
 - **Scramble [54]:** Hand Cards are dealt back round-robin as evenly as possible (max 3 each).
 - **Elodie's Trial [55]:** the drawer picks any other player to make the optional, blockable
@@ -300,6 +300,21 @@ These came up in code and weren't covered above; all confirmed as they stand.
   Taking from the lost half barely changes anything (the half is usually only 1–2 tokens). **Adopted: 1 of each,
   before the halving**: revenge clearly pays, games end a little sooner, and balance moves less than taking it after
   (Brasador, the strongest house, falls from 1.11× to 1.03×). Switches: `TUNING.reckoningSteal`, `TUNING.reckoningTiming`.
+- **Table rules for the physical game [72]:**
+  - **Hidden Path (card 42)** now reads "Teleport to any house tile (not the Throne)." It replaces [52], which nobody
+    could track at a table.
+  - **First player:** if Elodie is playing, she always goes first; otherwise everyone rolls and the highest roll goes
+    first (re-roll ties). Play goes clockwise in seating order. (The opening truce [65] already removes the first seat's
+    disadvantage.) In the app, a player named Elodie goes first.
+  - **Round track:** the first player moves the round marker at the start of each round.
+  - **Calling "Wait!":** a player calls "Wait!" or "Stop!" to play a Reaction, Block or Counterspell at its moment and
+    everyone pauses; once the active player has moved on, the moment has passed. Ill Omen comes after the roll is
+    seen and before the pawn moves.
+  - **The discard pile** stays face up in order (Specters choose from its top 5). **Hand size is public.**
+  - **Play on the grid only;** the ocean and islands around it are scenery. **The token supply is unlimited.**
+  - **Used tokens** mark once-per-game powers and Stillwater's Patience.
+  - Not adopted: a marker for the last tile you scored from (players are trusted to remember).
+
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

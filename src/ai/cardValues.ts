@@ -101,13 +101,11 @@ export function playScore(g: Game, p: PlayerState, id: number, pers: Personality
     case 39: return 0.2;
     case 40: return lead ? 0.9 : 0;
     case 41: return t && !t.moved ? 0.8 : 0.4;
-    case 42: {                                   // Hidden Path: the best square you've stood on, if it beats this one
+    case 42: {                                   // Hidden Path: the best house tile, if it beats this square
       if (!p.pos) return 0;
       const here = destinationScore(g, p, p.pos, pers);
-      const best = Math.max(...p.visited.filter(k => k !== key(p.pos!)).map(k => {
-        const [x, y] = k.split(',').map(Number);
-        return destinationScore(g, p, { x, y }, pers);
-      }));
+      const best = Math.max(...Object.values(g.content.houses).map(h => h.home).filter(t => key(t) !== key(p.pos!))
+        .map(t => destinationScore(g, p, t, pers)));
       return best - here > 2 ? Math.min(3, (best - here) / 3) : 0;
     }
     case 43: return 0.4;
