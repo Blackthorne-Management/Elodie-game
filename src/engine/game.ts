@@ -783,7 +783,9 @@ export class Game {
     if (bonus && TUNING.reckoningTiming === 'before') { yield* this.reckoningSteal(killer!, v); bonus = false; }
 
     // 1. Halve one pool (the dying player's choice), or every pool in the 'allHalfUp' variant.
-    if (TUNING.deathLoss === 'allHalfUp') {
+    if (house.keepsOnDeath?.(v.gen)) {
+      // nothing is lost
+    } else if (TUNING.deathLoss === 'allHalfUp') {
       for (const x of PILLARS) if (v.res[x] > 0) this.lose(v, x, Math.ceil(v.res[x] / 2), 'death');
     } else {
       const bleedable = PILLARS.filter(x => Math.floor(v.res[x] / 2) > 0);

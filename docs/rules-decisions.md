@@ -325,6 +325,14 @@ These came up in code and weren't covered above; all confirmed as they stand.
   first pick is worth up to 2.1× a fair share, hence unanimity and the dice.) In the app: solo against bots, you may pick
   your house and the bots draw the rest blind. Online play (Phase 2) will hold the vote and the roll-off
   (`src/engine/houseChoice.ts`: `houseChoiceAgreed`, `pickOrder`, `dealHouses`).
+- **Tested, awaiting a decision: helping Yaguana [75]** (5,000 bot games per variant; Yaguana at 0.87× its fair share,
+  the lowest house). Results, as Yaguana's share and the all-houses χ² (lower is fairer; 21 now):
+  - **Loses nothing on death** (no half-pool loss; a Reckoning against them still takes its bonus): 0.99×, χ² 11.5,
+    the fairest result yet; game length unchanged. Recommended.
+  - **Starts with a Legacy** (a Gen I passive of a house not at the table): 0.92×, χ² 14.
+  - **Guaíza once per round instead of once per game:** no change (the bots never use it).
+  - **+1 resource the first time each round another bloodline's character dies:** 1.41×, far too strong.
+  Switch: `HouseDef.keepsOnDeath`.
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
