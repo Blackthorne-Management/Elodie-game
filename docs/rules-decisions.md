@@ -277,6 +277,10 @@ These came up in code and weren't covered above; all confirmed as they stand.
   lore and art only; every rule is unchanged. The code keeps the internal id `vaitama`.
 - **The game's name [67]:** Throne of Bloodlines is now *Bloodlines: The Race to Elodie's Grace* (short form
   Bloodlines). The prize is still Elodie's Throne; no rule changes.
+- **Resource tokens and open totals [69]** (physical game): Influence, Fear and Wealth are double-sided tokens, worth 1
+  on the front and ×5 on the back; players make change with the supply at any time. Restating [12] for the table:
+  resources are never hidden. Tokens stay in plain view, and any player may ask another's exact totals at any time
+  and must get a truthful answer.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games
