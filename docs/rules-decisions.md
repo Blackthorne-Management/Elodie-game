@@ -352,6 +352,12 @@ These came up in code and weren't covered above; all confirmed as they stand.
   the reach or Raider's Charge to Gen III did nothing; removing the +1 entirely sank it to 0.76× at 3–4 players. With
   this trim (2,000 games per player count, with [76] and [77]): Ironvow 0.95× at 6, 1.04× at 8, 0.89–1.05× at 2–4.
   Every house at 8 players now wins 0.90–1.12× its fair share (before [76]–[78]: 0.84–1.23×), the tightest yet.
+- **Adopted: name the target, then Interfere [79]** (the owner's request). A card aimed at a player (Court Scandal,
+  Tax Collector, Poisoned Chalice, Hex, the Disruption cards, the attack cards, the truces and the like) is played
+  face up and its target named first; only then may others answer with Interference or Embargo, so they know who it
+  hits. Cards with no target (or an optional one, like Black Market Deal's barter) open the window as soon as they're
+  played, as before. Whispered Promise, Court Scandal and Tax Collector now name their player before their gain;
+  the outcome is unchanged. Counterspell and Turnabout still come after Interference. Engine: `CardDef.namesTarget`.
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about

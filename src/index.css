@@ -1168,3 +1168,12 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .pick-order li b { color: var(--gold-hi); font-family: var(--display); font-size: 14px; }
 .pick-order li.now { color: var(--gold-hi); }
 .house-pick button.taken { opacity: .35; }
+
+/* A rival's card you could answer (Interference, Embargo, Turnabout): who, what, at whom, and your answer. */
+.played-aim { margin: 0 0 8px; font-size: 15px; line-height: 1.4; }
+.played-aim b { color: var(--gold-hi); }
+.played-aim .played-you { color: #ff8a7a; text-transform: uppercase; letter-spacing: .04em; }
+.played-row { gap: 8px; overflow: visible; }
+.played-row .fullcard { width: 100%; }
+.played-row figure { margin: 0; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.played-row figcaption { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted, #b9a98f); text-align: center; }

@@ -23,7 +23,7 @@ import { claimGoal } from '../claimGoal';
 import { Stage } from './Stage';
 import { Hand } from './Hand';
 import { Duel } from './Duel';
-import { CardRow, PeekSheet } from './Peek';
+import { CardRow, PeekSheet, PlayedCard } from './Peek';
 import { Die } from './Die';
 import { peekTitle } from './peekTitle';
 import type { PeekGroup } from './Peek';
@@ -283,10 +283,22 @@ export function PlayScreen() {
 
       {genericDecision && (
         <div className="ask2">
-          <div className="ask2-prompt">{genericDecision.prompt}</div>
-          {/* A Reaction you could play: show it in full. */}
-          {genericDecision.kind === 'reaction' && typeof genericDecision.context?.card === 'number' && (
-            <CardRow g={g} cards={[genericDecision.context.card]} />
+          {/* A rival's card you could answer: show it, who it's aimed at and your Reaction side by side. */}
+          {genericDecision.kind === 'reaction' && typeof genericDecision.context?.played === 'number' ? (
+            <>
+              <div className="ask2-prompt">Respond?</div>
+              <PlayedCard g={g} played={genericDecision.context.played} actor={genericDecision.context.actor as number}
+                target={genericDecision.context.target as number | undefined} me={seat()}
+                answer={typeof genericDecision.context.card === 'number' ? genericDecision.context.card : undefined} />
+            </>
+          ) : (
+            <>
+              <div className="ask2-prompt">{genericDecision.prompt}</div>
+              {/* A Reaction you could play: show it in full. */}
+              {genericDecision.kind === 'reaction' && typeof genericDecision.context?.card === 'number' && (
+                <CardRow g={g} cards={[genericDecision.context.card]} />
+              )}
+            </>
           )}
           {CARD_CHOICES.has(genericDecision.kind) ? (
             <>

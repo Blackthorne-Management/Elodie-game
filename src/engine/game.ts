@@ -20,6 +20,8 @@ export class GameOver extends Error {}
 export const REDIRECT_MOVE = 1;
 export const REDIRECT_TARGET = 2;
 export class EndTurn extends Error {}
+// Thrown when Interference cancels a card after its target was named; caught where the card was played.
+class CardCancelled extends Error {}
 
 export type TurnAction =
   | { type: 'roll' }
@@ -34,6 +36,8 @@ export class Game {
   s: GameState;
   rng: Rng;
   content: Content;
+  // A card waiting for its target to be named before anyone may Interfere (rules-decisions 79).
+  awaitingTarget: { player: number; card: number } | null = null;
 
   constructor(setup: GameSetup, content: Content) {
     if (setup.seats.length < 2 || setup.seats.length > 8) throw new Error('Bloodlines needs 2-8 players');
@@ -190,6 +194,12 @@ export class Game {
   *choosePlayer(chooser: PlayerState, candidates: PlayerState[], prompt: string, context?: Record<string, unknown>): Flow<PlayerState | null> {
     if (!candidates.length) return null;
     const id = yield* this.ask(chooser, 'player', prompt, candidates.map(c => ({ label: c.name, value: c.id })), context);
+    // The first player named by a card that names a target: now others may Interfere, knowing who it's aimed at.
+    const w = this.awaitingTarget;
+    if (w) {
+      this.awaitingTarget = null;
+      if (yield* this.interfere(this.p(w.player), w.card, this.p(id))) throw new CardCancelled();
+    }
     return this.p(id);
   }
 
@@ -454,6 +464,15 @@ export class Game {
     return def.playable ? def.playable(this, p) : true;
   }
 
+  // The window to cancel a Hand Card: Interference cancels any; Embargo cancels a Barter card.
+  *interfere(p: PlayerState, c: number, target?: PlayerState): Flow<boolean> {
+    const def = this.card(c);
+    const on = target ? ` on ${target.id === p.id ? 'themselves' : target.name}` : '';
+    const stop = yield* this.reaction(def.category === 'Barter' ? ['interference', 'embargo'] : ['interference'],
+      p, `${p.name} plays ${def.name}${on}.`, { played: c, ...(target ? { target: target.id } : {}) });
+    return !!stop;
+  }
+
   *playHandCard(p: PlayerState, c: number): Flow {
     const def = this.card(c);
     p.hand = p.hand.filter(x => x !== c);
@@ -465,16 +484,22 @@ export class Game {
     }
     this.log(`${p.name} plays ${def.name}.`, 'card', { player: p.id, cards: [c] });
     this.s.inPlay.push(c);
-    // Interference cancels any Hand Card; Embargo cancels a Barter card.
-    const stop = yield* this.reaction(def.category === 'Barter' ? ['interference', 'embargo'] : ['interference'],
-      p, `${p.name} plays ${def.name}.`, { played: c });
-    if (stop) {
+    const cancel = () => {
       this.log(`${def.name} is cancelled and has no effect.`, 'blocked', { player: p.id, cards: [c] });
       this.s.inPlay = this.s.inPlay.filter(x => x !== c);
       this.s.discard.push(c);
-      return;
+    };
+    // A card aimed at a player names its target first, then the Interference window opens (in choosePlayer).
+    if (!def.namesTarget && (yield* this.interfere(p, c))) return cancel();
+    this.awaitingTarget = def.namesTarget ? { player: p.id, card: c } : null;
+    try {
+      yield* this.resolveCard(def, p);
+    } catch (e) {
+      if (!(e instanceof CardCancelled)) throw e;
+      return cancel();
+    } finally {
+      this.awaitingTarget = null;
     }
-    yield* this.resolveCard(def, p);
     this.s.inPlay = this.s.inPlay.filter(x => x !== c);
     // Cards that "mark" themselves stay out until an effect returns them.
     if (!this.s.effects.some(e => e.cardId === c)) this.s.discard.push(c);

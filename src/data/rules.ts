@@ -162,7 +162,7 @@ export const RULES: RuleSection[] = [
           '**Ill Omen:** when a rival rolls to move, cancel the move. They stay put this turn; their resource check still happens where they stand.',
           '**Embargo:** when a rival\'s trade is accepted or they play a Barter card, cancel it. Nothing changes hands and their action is spent. The trade partner can\'t Embargo their own trade.',
           '**Intercept:** when a rival gains resources from a tile, they gain 1 less.',
-          '**Interference:** when a rival plays a Hand Card, cancel it. It is discarded with no effect and their action is spent.',
+          '**Interference:** when a rival plays a Hand Card, cancel it. It is discarded with no effect and their action is spent. **A card aimed at a player is played face up and its target is named first;** then anyone may say "Wait!" and Interfere, knowing who it was aimed at.',
           '**Ambush:** when a rival ends their move beside you, attack them at once (damage = your Heart Tokens), before their resource check. Only where an attack is allowed; they may Block it.',
           '**Turnabout:** when a Hand Card targets you, it targets another player of your choice instead. Counterspell is offered first.',
         ],

@@ -80,14 +80,14 @@ hand(2, 'Noble Alliance', 'Influence / Court', 'Gain 1 Influence. If you are adj
   function* (g, p) { g.gain(p, 'influence', g.adjacentTo(p).length ? 2 : 1); });
 hand(3, 'Whispered Promise', 'Influence / Court', 'Gain 2 Influence, but reveal your hand to one player of your choice.',
   function* (g, p) {
-    g.gain(p, 'influence', 2);
     const to = yield* g.choosePlayer(p, others(g, p), 'Whispered Promise: reveal your hand to whom?');
+    g.gain(p, 'influence', 2);
     if (to) g.reveal(p, [to.id], 'Whispered Promise');
   });
 hand(4, 'Court Scandal', 'Influence / Court', 'Gain 1 Influence. Target player loses 1 Influence.',
   function* (g, p, c) {
-    g.gain(p, 'influence', 1);
     const t = yield* pickTarget(g, p, c, others(g, p), 'who loses 1 Influence?');
+    g.gain(p, 'influence', 1);
     if (t) g.lose(t, 'influence', 1, c.name);
   }, { aggressive: true });
 hand(5, 'Diplomatic Envoy', 'Influence / Court', 'Gain 1 Influence and move 1 extra space this turn.',
@@ -136,8 +136,8 @@ hand(19, 'Market Day', 'Wealth / Trade', 'Gain 1 Wealth and draw 1 extra Hand Ca
   function* (g, p) { g.gain(p, 'wealth', 1); yield* g.drawOne(p); });
 hand(20, 'Tax Collector', 'Wealth / Trade', 'Gain 1 Wealth. Target player loses 1 Wealth.',
   function* (g, p, c) {
-    g.gain(p, 'wealth', 1);
     const t = yield* pickTarget(g, p, c, others(g, p), 'who loses 1 Wealth?');
+    g.gain(p, 'wealth', 1);
     if (t) g.lose(t, 'wealth', 1, c.name);
   }, { aggressive: true });
 hand(21, "Merchant's Gambit", 'Wealth / Trade', 'Gain 2 Wealth if you are on a Trade tile this turn.',
@@ -668,5 +668,11 @@ reaction(126, 'Turnabout', 'turnabout', 'Play when a card targets you',
   'The arrow was always meant for someone.');
 
 defs.sort((a, b) => a.id - b.id);
+
+// Cards whose first step is naming a player: the player is named, then others may Interfere, so they know who the
+// card is aimed at (rules-decisions 79). Nothing else happens before the player is named.
+const NAMES_TARGET = [3, 4, 9, 16, 20, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 44, 49, 50, 51, 53, 54, 55, 57];
+for (const d of defs) if (NAMES_TARGET.includes(d.id)) d.namesTarget = true;
+
 export const CARDS: CardDef[] = defs;
 export const THRONE_SQUARES = THRONE;

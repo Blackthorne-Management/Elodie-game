@@ -15,6 +15,26 @@ export function FullCard({ g, id, onChoose, chooseLabel = 'Choose' }: {
   );
 }
 
+// A card a rival just played, next to the Reaction you could answer it with: who played it, what it does and who
+// it's aimed at, so you can decide whether to step in.
+export function PlayedCard({ g, played, actor, target, me, answer }: {
+  g: Game; played: number; actor: number; target?: number; me: number; answer?: number;
+}) {
+  const name = (i: number) => g.s.players[i]?.name ?? '';
+  return (
+    <div className="played">
+      <p className="played-aim">
+        <b>{name(actor)}</b> plays <b>{g.card(played).name}</b>
+        {target !== undefined && <> on <b className={target === me ? 'played-you' : ''}>{target === me ? 'you' : target === actor ? 'themselves' : name(target)}</b></>}
+      </p>
+      <div className="cardrow played-row">
+        <figure><figcaption>Their card</figcaption><FullCard g={g} id={played} /></figure>
+        {answer !== undefined && <figure><figcaption>Your answer</figcaption><FullCard g={g} id={answer} /></figure>}
+      </div>
+    </div>
+  );
+}
+
 export function CardRow({ g, cards, onChoose }: { g: Game; cards: number[]; onChoose?: (i: number) => void }) {
   if (!cards.length) return <div className="muted small">No cards.</div>;
   return (

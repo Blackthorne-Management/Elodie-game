@@ -720,6 +720,21 @@ describe('trade offers and Reaction cards (rules-decisions 60-61)', () => {
     expect(p.res.influence).toBe(0);
     expect(g.s.discard).toContain(1);
   });
+  it('a card aimed at a player names its target before anyone may Interfere (rules-decisions 79)', () => {
+    const { g, p, o } = two();
+    p.hand = [30];                                         // Poisoned Chalice
+    p.res.wealth = 2;
+    o.hand = [124];
+    const seen: Decision[] = [];
+    drive(g.playHandCard(p, 30), d => { seen.push(d); return byLabel('P1', 'Play Interference')(d); });
+    const window = seen.find(d => d.kind === 'reaction')!;
+    expect(seen[0].kind).toBe('player');                   // the target is named first
+    expect(window.context).toMatchObject({ played: 30, target: o.id });
+    expect(window.prompt).toMatch(/Poisoned Chalice on P1/);
+    expect(o.hp).toBe(o.maxHp);                            // cancelled: no Heart Token lost, no Wealth paid
+    expect(p.res.wealth).toBe(2);
+    expect(g.s.discard).toContain(30);
+  });
   it('Embargo can also cancel a Barter card, but not other cards', () => {
     const { g, p, o } = two();
     p.hand = [51, 1];                                      // Fair Exchange (Barter), Royal Favor

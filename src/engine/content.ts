@@ -23,6 +23,7 @@ export interface CardDef {
   aggressive?: boolean;      // counts against Stillwater's Long Watch
   noSpecter?: boolean;       // causes HP loss, so a Specter can't play it
   responseOnly?: boolean;    // Block/Deflect and Counterspell: never played on your own turn
+  namesTarget?: boolean;     // the player is named first, then others may Interfere (rules-decisions 79)
   // Block/Deflect: can it answer this attack, and what happens when it does.
   block?: {
     canUse: (g: Game, defender: PlayerState, attack: AttackInfo) => boolean;

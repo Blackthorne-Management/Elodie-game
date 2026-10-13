@@ -263,7 +263,7 @@ function chooseReaction(g: Game, me: PlayerState, d: Decision, pers: Personality
       const res = { ...actor.res, [c.pillar as Pillar]: actor.res[c.pillar as Pillar] + (c.amount as number) };
       return g.eligible(withRes(actor, res)) || threat > 3;
     }
-    case 'interference': return threat > 4;
+    case 'interference': return threat > 4 || (c.target === me.id && !!g.card(c.played as number).aggressive && rng() < 0.5);
     case 'embargo': {
       if (!c.trade) return threat > 3;
       const partner = g.p(c.partner as number);
