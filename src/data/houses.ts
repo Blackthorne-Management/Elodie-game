@@ -188,13 +188,13 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     abilities: [
       {
         id: 'semanLape', name: 'Sèman Lapè', gen: 2, limit: 'game',
-        text: 'Once per game: you and one player cannot attack each other until your turn after next starts.',
+        text: 'Once per game: you and one player cannot attack each other until your next turn starts.',
         canUse: (g, p) => others(g, p.id).length > 0,
         *run(g, p) {
           const t = yield* g.choosePlayer(p, others(g, p.id), 'Sèman Lapè: a truce with whom?');
           if (!t) return;
-          // Turn-based, like the truce cards (rules-decisions 84): about 2 rounds for every seat.
-          g.addEffect('truce', p.id, { at: 'turnStart', player: p.id, turns: 2 }, { other: t.id });
+          // Turn-based, like the truce cards: about one round for every seat (rules-decisions 84, 85).
+          g.addEffect('truce', p.id, { at: 'turnStart', player: p.id }, { other: t.id });
           g.log(`${p.name} and ${t.name} swear Sèman Lapè.`, 'truce', { player: p.id, target: t.id });
         },
       },

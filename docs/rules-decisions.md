@@ -130,7 +130,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   "Win a combat" = your attack lands.
 - **Suzumori IV [40]:** you choose the direction of the target's next move and the target of their next
   attack or targeted card.
-- **Kay Soley II [41]** (superseded by [84]: until your turn after next starts): the truce lasts 2 rounds.
+- **Kay Soley II [41]** (superseded by [85]: until your next turn starts): the truce lasts 2 rounds.
 
 ## Winning
 - **Challenge fights [42]:** the **claimant strikes first**, then they trade blows until one dies.
@@ -478,6 +478,10 @@ These came up in code and weren't covered above; all confirmed as they stand.
     watch Kay Soley at 8 players. Games 9.3–10.8 rounds; Sudden Death 5–13%. No card above 1.55×: Bridge the Gap
     1.61× → 1.48×, Gambler's Luck 1.46× → 1.31×; Stolen Goods is the weakest (0.67×, rarely played).
 
+- **Adopted: Sèman Lapè until your next turn starts [85]**. After [84] made it "until your turn after next starts"
+  (about 2 rounds), Kay Soley won 1.19× its fair share at 8 players (4,000 bot games), where the truce is used in 62%
+  of games. Shortened to one round, like Ceasefire: Kay Soley 1.09× at 8 players, 1.06× at 6, 0.79–0.88× at 2–4
+  (1,000 games each, unchanged within noise). Game length unchanged. Kay Soley stays a little weak at 2–4 players.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

@@ -200,7 +200,7 @@ export const RULES: RuleSection[] = [
           '**Until it is used:** Hex of Withering, Confusion, Forced March, Dread Banner, Marked for Death.',
           '**Through the affected player\'s next turn:** Sabotage, Burn the Village, Golden Harvest (also this turn).',
           '**Until your next basic attack** (at most until the end of your next turn): Plunder, Vanishing Act.',
-          '**Truces, counted in your own turns:** Uneasy Truce and Ceasefire end when your next turn starts; Blood Pact (and Kay Soley\'s Sèman Lapè) when your turn after next starts.',
+          '**Truces, counted in your own turns:** Uneasy Truce, Ceasefire and Kay Soley\'s Sèman Lapè end when your next turn starts; Blood Pact when your turn after next starts.',
           '**Until the end of the turn:** Shield Wall.',
           '**When a character dies,** discard the lasting cards on them, **except** truces, Ceasefire and Golden Harvest, which carry over to the heir.',
         ],

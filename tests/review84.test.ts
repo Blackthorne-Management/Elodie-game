@@ -127,12 +127,11 @@ describe('truces last a number of turns', () => {
     expect(g.attackBlockedReason(a, b, 'basic')).toBeNull();
     expect(g.s.handDiscard).toContain(57);
   });
-  it("Kay Soley's Sèman Lapè lasts until your turn after next starts", () => {
+  it("Kay Soley's Sèman Lapè lasts until your next turn starts (rules-decisions 85)", () => {
     const { g, a, b } = table(['kaysoley', 'dorini']);
     a.gen = 2;
     const ab = g.abilitiesOf(a).find(x => x.id === 'semanLape')!;
     drive(g.useAbility(a, ab), byLabel('P1'));
-    startTurn(g, a.id);
     expect(g.attackBlockedReason(b, a, 'basic')).toBe('truce');
     startTurn(g, a.id);
     expect(g.attackBlockedReason(b, a, 'basic')).toBeNull();
