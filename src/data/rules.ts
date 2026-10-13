@@ -30,7 +30,7 @@ export const RULES: RuleSection[] = [
         '**Heart Tokens:** your life, and also your attack strength.',
         '**Resource tokens** for Influence, Fear and Wealth. Each token is worth **1** on its front and **×5** on its back. Flip a token to count 5, and make change with the supply whenever you like (four 1s back for one ×5), so you never need more than a handful of each.',
         '**Grudge Tokens**, pawns, player boards, dice and the round track printed on the board.',
-        'For **2 to 8 players**, about an hour.',
+        'For **2 to 8 players**, best with 3 to 6. **60 to 150 minutes:** about 20 minutes per player. For a first game, play with 3 to 5.',
       ],
     }],
   },
