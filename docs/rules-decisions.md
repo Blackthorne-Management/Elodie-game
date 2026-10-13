@@ -358,6 +358,12 @@ These came up in code and weren't covered above; all confirmed as they stand.
   hits. Cards with no target (or an optional one, like Black Market Deal's barter) open the window as soon as they're
   played, as before. Whispered Promise, Court Scandal and Tax Collector now name their player before their gain;
   the outcome is unchanged. Counterspell and Turnabout still come after Interference. Engine: `CardDef.namesTarget`.
+- **Tested, not adopted: forcing 2-player games together [80]** (4,000 bot games per option). At 2 players 41% of
+  games have no death and whoever first becomes eligible wins 80%. Neighbouring houses raised deaths from 1.5 to 2.3 a
+  game (no-death games 41% → 29%) but left the race unchanged (first eligible still wins 80%, 62% of claims
+  unchallenged), and Dorini beat Kay Soley 66–34 in that pairing. Starting the second pawn beside the first player
+  did the same with fewer deaths, but the pawn no longer starts on its own house. The owner chose to keep 2 players
+  as a fast race.
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
