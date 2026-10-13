@@ -1,7 +1,8 @@
 // The Tiled JSON (.tmj) subset the quest uses, and a parser that turns it into a GameMap the
 // engine can query. The validator (mapValidation.ts) reports problems; parseMap assumes a valid map.
 
-import { DIRS, type Dir, type Era, type FlagValue, type Pos } from './types.ts';
+import { parseConditionText, type Condition } from './conditions.ts';
+import { DIRS, type Dir, type Era, type EraScope, type FlagValue, type Pos } from './types.ts';
 
 export interface TiledProperty {
   name: string;
@@ -77,6 +78,7 @@ export const OBJECT_LAYERS = {
   spawns: 'spawns',
   echoZones: 'echo_zones',
   anchors: 'anchors',
+  puzzleObjects: 'puzzle_objects',
 } as const;
 
 export const REQUIRED_TILE_LAYERS: readonly string[] = Object.values(TILE_LAYERS);
@@ -106,6 +108,10 @@ export interface NpcPlacement {
   npc: string;
   pos: Pos;
   facing: Dir;
+  /** Era the NPC stands in (default: the present). Echo NPCs can differ from present ones. */
+  era: EraScope;
+  /** Shown only while this holds (Tiled property `if`, see parseConditionText). */
+  if?: Condition;
 }
 
 export interface Door {
@@ -128,6 +134,12 @@ export interface Trigger {
   flag?: string;
   /** Fire only while `flag` is unset. */
   once: boolean;
+  /** Era the trigger works in (default: the present). */
+  era: EraScope;
+  /** Fires only while this holds. */
+  if?: Condition;
+  /** Fires when the player enters the map (new game or a door), wherever they stand, instead of on a step. */
+  onEnter: boolean;
 }
 
 export interface Spawn {
@@ -137,10 +149,48 @@ export interface Spawn {
   era: Era;
 }
 
+/**
+ * Echo Zone (guide 6.1): shimmering tiles where the Echo swap works. `if` gates it (for example on
+ * having the Sun Locket); `onEcho` / `onReturn` are dialogues played after a swap into or out of the
+ * memory here (they guard themselves with flags).
+ */
+export interface EchoZone {
+  id: string;
+  area: Rect;
+  if?: Condition;
+  onEcho?: string;
+  onReturn?: string;
+}
+
+/**
+ * Anchor (guide 6.1): marks the one Echo-era puzzle object whose change carries back to the present.
+ * Using that object sets `flag` (an `anchor.` flag); present-era objects read it.
+ */
 export interface Anchor {
   id: string;
   pos: Pos;
-  flag?: string;
+  /** Puzzle object id (on this map) that is the anchor. */
+  object: string;
+  /** The flag the anchor carries into the present. */
+  flag: string;
+}
+
+/**
+ * Puzzle object (guide Section 9, layer `puzzle_objects`): something in one era (or both) that the
+ * player can examine or use (its dialogue sets flags), and that can change the ground while active:
+ * `walkable` opens its tiles (a lowered bridge), `solid` blocks them.
+ */
+export interface PuzzleObject {
+  id: string;
+  /** Tile name drawn over the area while active (assets.config.ts TILESET); none for an invisible object. */
+  kind?: string;
+  area: Rect;
+  era: EraScope;
+  if?: Condition;
+  solid: boolean;
+  walkable: boolean;
+  /** Played when the player faces the object and presses confirm. */
+  dialogue?: string;
 }
 
 export interface GameMap {
@@ -153,8 +203,9 @@ export interface GameMap {
   doors: Door[];
   triggers: Trigger[];
   spawns: Spawn[];
-  echoZones: Rect[];
+  echoZones: EchoZone[];
   anchors: Anchor[];
+  objects: PuzzleObject[];
 }
 
 export function getProp(obj: { properties?: TiledProperty[] }, name: string): FlagValue | undefined {
@@ -164,6 +215,19 @@ export function getProp(obj: { properties?: TiledProperty[] }, name: string): Fl
 function stringProp(obj: { properties?: TiledProperty[] }, name: string): string | undefined {
   const v = getProp(obj, name);
   return typeof v === 'string' && v.length > 0 ? v : undefined;
+}
+
+function eraScopeProp(obj: { properties?: TiledProperty[] }, fallback: EraScope): EraScope {
+  const v = getProp(obj, 'era');
+  return v === 'present' || v === 'echo' || v === 'both' ? v : fallback;
+}
+
+/** The `if` property as a Condition (undefined when absent or unreadable: the validator reports that). */
+function condProp(obj: { properties?: TiledProperty[] }): Condition | undefined {
+  const v = getProp(obj, 'if');
+  if (typeof v !== 'string') return undefined;
+  const parsed = parseConditionText(v);
+  return parsed.ok ? parsed.cond : undefined;
 }
 
 function dirProp(obj: { properties?: TiledProperty[] }, name: string, fallback: Dir): Dir {
@@ -230,6 +294,8 @@ export function parseMap(id: string, raw: TiledMap): GameMap {
       npc: stringProp(o, 'npc') ?? o.name,
       pos: objectTile(o, size),
       facing: dirProp(o, 'facing', 'down'),
+      era: eraScopeProp(o, 'present'),
+      if: condProp(o),
     })),
     doors: objects(raw, OBJECT_LAYERS.doors).map((o) => ({
       id: o.name,
@@ -244,6 +310,9 @@ export function parseMap(id: string, raw: TiledMap): GameMap {
       dialogue: stringProp(o, 'dialogue'),
       flag: stringProp(o, 'flag'),
       once: getProp(o, 'once') === true,
+      era: eraScopeProp(o, 'present'),
+      if: condProp(o),
+      onEnter: getProp(o, 'onEnter') === true,
     })),
     spawns: objects(raw, OBJECT_LAYERS.spawns).map((o) => ({
       id: o.name,
@@ -251,11 +320,28 @@ export function parseMap(id: string, raw: TiledMap): GameMap {
       facing: dirProp(o, 'facing', 'down'),
       era: stringProp(o, 'era') === 'echo' ? 'echo' : 'present',
     })),
-    echoZones: objects(raw, OBJECT_LAYERS.echoZones).map((o) => objectRect(o, size)),
+    echoZones: objects(raw, OBJECT_LAYERS.echoZones).map((o) => ({
+      id: o.name,
+      area: objectRect(o, size),
+      if: condProp(o),
+      onEcho: stringProp(o, 'onEcho'),
+      onReturn: stringProp(o, 'onReturn'),
+    })),
     anchors: objects(raw, OBJECT_LAYERS.anchors).map((o) => ({
       id: o.name,
       pos: objectTile(o, size),
-      flag: stringProp(o, 'flag'),
+      object: stringProp(o, 'object') ?? '',
+      flag: stringProp(o, 'flag') ?? '',
+    })),
+    objects: objects(raw, OBJECT_LAYERS.puzzleObjects).map((o) => ({
+      id: o.name,
+      kind: stringProp(o, 'kind'),
+      area: objectRect(o, size),
+      era: eraScopeProp(o, 'both'),
+      if: condProp(o),
+      solid: getProp(o, 'solid') === true,
+      walkable: getProp(o, 'walkable') === true,
+      dialogue: stringProp(o, 'dialogue'),
     })),
   };
 }

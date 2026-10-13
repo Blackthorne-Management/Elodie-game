@@ -10,7 +10,7 @@ const data: SaveData = {
   facing: 'down',
   era: 'present',
   flags: { 'villager.met': true, 'villager.answer': 'yes', count: 3, 'name.é': 'Limyè ☀' },
-  settings: { textSpeed: 'fast' },
+  settings: { textSpeed: 'fast', hints: false },
   savedAt: 1_760_000_000_000,
 };
 
@@ -27,7 +27,7 @@ function memoryStorage(): StorageLike & { map: Map<string, string> } {
 describe('save codes', () => {
   it('round-trips every field, including non-ASCII text', () => {
     const code = encodeSave(data);
-    expect(code).toMatch(/^BQ1\.[A-Za-z0-9_-]+\.[0-9a-f]{8}$/);
+    expect(code).toMatch(/^BQ2\.[A-Za-z0-9_-]+\.[0-9a-f]{8}$/);
     expect(decodeSave(code)).toEqual({ ok: true, data });
   });
 
@@ -68,6 +68,31 @@ describe('save codes', () => {
     expect(decodeSave(`BQ1.${body3}.${checksum(body3)}`)).toMatchObject({ ok: false });
   });
 
+  it('still reads version 1 codes (before the hints setting), with hints on', () => {
+    const v1 = Buffer.from(JSON.stringify([1, 'test-village', 3, 4, 1, 0, { a: true }, 2, 5])).toString('base64url');
+    expect(decodeSave(`BQ1.${v1}.${checksum(v1)}`)).toEqual({
+      ok: true,
+      data: {
+        version: SAVE_VERSION,
+        mapId: 'test-village',
+        x: 3,
+        y: 4,
+        facing: 'down',
+        era: 'present',
+        flags: { a: true },
+        settings: { textSpeed: 'fast', hints: true },
+        savedAt: 5,
+      },
+    });
+  });
+
+  it('stores the hints setting and the Echo era', () => {
+    const echo: SaveData = { ...data, era: 'echo', settings: { textSpeed: 'slow', hints: true } };
+    expect(decodeSave(encodeSave(echo))).toEqual({ ok: true, data: echo });
+    const bad = Buffer.from(JSON.stringify([2, 'm', 1, 1, 0, 0, {}, 0, 0, 7])).toString('base64url');
+    expect(decodeSave(`BQ2.${bad}.${checksum(bad)}`)).toMatchObject({ ok: false });
+  });
+
   it('checksum is stable FNV-1a', () => {
     expect(checksum('')).toBe('811c9dc5');
     expect(checksum('a')).toBe('e40c292c');
@@ -79,7 +104,7 @@ describe('save storage', () => {
     const s = memoryStorage();
     expect(readSave(s, 'k')).toBeNull();
     expect(writeSave(s, 'k', data)).toBe(true);
-    expect(s.map.get('k')).toMatch(/^BQ1\./);
+    expect(s.map.get('k')).toMatch(/^BQ2\./);
     expect(readSave(s, 'k')).toEqual({ ok: true, data });
     deleteSave(s, 'k');
     expect(readSave(s, 'k')).toBeNull();

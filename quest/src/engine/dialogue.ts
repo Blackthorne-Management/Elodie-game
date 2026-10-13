@@ -23,6 +23,8 @@ export interface DialogueLine {
   translation?: string;
   /** Overrides the node's speaker for this line. */
   speaker?: string;
+  /** A screen effect the field plays when the line appears (e.g. 'flash', 'shake', 'fade'). */
+  fx?: string;
 }
 
 export interface DialogueChoice {
@@ -62,8 +64,8 @@ export interface ChoiceView {
 }
 
 export type DialogueView =
-  | { kind: 'line'; speaker: Speaker | null; text: string; translation?: string }
-  | { kind: 'choice'; speaker: Speaker | null; text: string; translation?: string; choices: ChoiceView[] }
+  | { kind: 'line'; speaker: Speaker | null; text: string; translation?: string; fx?: string }
+  | { kind: 'choice'; speaker: Speaker | null; text: string; translation?: string; fx?: string; choices: ChoiceView[] }
   | { kind: 'end' };
 
 const MAX_NODE_HOPS = 64;
@@ -95,6 +97,7 @@ export class DialogueRunner {
     const speaker = this.resolveSpeaker(line?.speaker ?? node.speaker);
     const text = line?.text ?? '';
     const translation = line?.translation;
+    const fx = line?.fx;
     const isLast = this.lineIndex >= this.lines.length - 1;
     if (isLast && this.choices && this.choices.length > 0) {
       return {
@@ -102,10 +105,11 @@ export class DialogueRunner {
         speaker,
         text,
         translation,
+        fx,
         choices: this.choices.map((c, index) => ({ text: c.text, index })),
       };
     }
-    return { kind: 'line', speaker, text, translation };
+    return { kind: 'line', speaker, text, translation, fx };
   }
 
   /** Move past the current line. Does nothing while a choice is waiting. */
@@ -216,4 +220,32 @@ export function checkDialogue(
     }
   }
   return errors;
+}
+
+/** Every flag a script can set (node, line and choice `set` blocks). Used by content checks. */
+export function flagsSetBy(script: DialogueScript): string[] {
+  const out = new Set<string>();
+  const add = (set: FlagSnapshot | undefined) => {
+    for (const name of Object.keys(set ?? {})) out.add(name);
+  };
+  for (const node of Object.values(script.nodes)) {
+    add(node.set);
+    for (const l of node.lines) add(l.set);
+    for (const c of node.choices ?? []) add(c.set);
+  }
+  return [...out].sort();
+}
+
+/** Every flag a script reads in its conditions. */
+export function flagsReadBy(script: DialogueScript): string[] {
+  const out = new Set<string>();
+  for (const node of Object.values(script.nodes)) {
+    const conds = [
+      ...node.lines.map((l) => l.if),
+      ...(node.choices ?? []).map((c) => c.if),
+      ...(Array.isArray(node.next) ? node.next.map((b) => b.if) : []),
+    ];
+    for (const f of conds.flatMap(flagsIn)) out.add(f);
+  }
+  return [...out].sort();
 }

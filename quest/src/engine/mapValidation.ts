@@ -2,25 +2,36 @@
 // content defines and returns readable errors. tools/validate-maps.ts and tests/maps.test.ts run it.
 
 import { TILE_SIZE } from '../config.ts';
+import { flagsIn, parseConditionText, type Condition } from './conditions.ts';
 import { inBounds, isWalkable, samePos, stepFrom } from './grid.ts';
 import {
   OBJECT_LAYERS,
   REQUIRED_OBJECT_LAYERS,
   REQUIRED_TILE_LAYERS,
   findObjectLayer,
+  getProp,
   parseMap,
+  rectContains,
   rectTiles,
   type GameMap,
   type TiledMap,
 } from './tiledMap.ts';
 import { ERAS } from './types.ts';
+import { ANCHOR_FLAG_PREFIX, ECHO_FLAG_PREFIX } from './world.ts';
 
 export interface ValidationContext {
   /** NPC ids defined in data/npcs.ts. */
   npcIds: readonly string[];
   /** Dialogue ids defined in data/dialogue.ts. */
   dialogueIds: readonly string[];
+  /** Tile names a puzzle object may draw (assets.config.ts TILESET). Unchecked when absent. */
+  objectKinds?: readonly string[];
+  /** Flags each dialogue can set (engine/dialogue.ts flagsSetBy). Anchor checks need it. */
+  dialogueSets?: Readonly<Record<string, readonly string[]>>;
 }
+
+/** Layers whose objects may carry an `if` condition or an `era`. */
+const CONDITIONAL_LAYERS = [OBJECT_LAYERS.npcs, OBJECT_LAYERS.triggers, OBJECT_LAYERS.echoZones, OBJECT_LAYERS.puzzleObjects];
 
 function checkStructure(id: string, raw: TiledMap, errors: string[]): boolean {
   const e = (msg: string) => errors.push(`${id}: ${msg}`);
@@ -106,6 +117,7 @@ function checkObjects(id: string, raw: TiledMap, map: GameMap, ctx: ValidationCo
     [OBJECT_LAYERS.triggers, map.triggers],
     [OBJECT_LAYERS.spawns, map.spawns],
     [OBJECT_LAYERS.anchors, map.anchors],
+    [OBJECT_LAYERS.puzzleObjects, map.objects],
   ];
   for (const [layerName, items] of named) {
     const seen = new Set<string>();
@@ -137,18 +149,85 @@ function checkObjects(id: string, raw: TiledMap, map: GameMap, ctx: ValidationCo
     if (t.dialogue && !dialogueIds.has(t.dialogue)) e(`trigger "${t.id}" plays unknown dialogue "${t.dialogue}"`);
     if (!t.dialogue && !t.flag) e(`trigger "${t.id}" does nothing (no dialogue or flag)`);
     if (t.once && !t.flag) e(`trigger "${t.id}" is once-only but has no flag to remember it`);
+    if (t.onEnter && !t.once) e(`trigger "${t.id}" runs on entering the map, so it must be once-only`);
   }
 
-  // Echo Zones: every tile is walkable in BOTH eras (guide 6.1), so a swap inside one never fails.
-  for (const [i, zone] of map.echoZones.entries()) {
-    for (const tile of rectTiles(zone)) {
-      for (const era of ERAS) {
-        if (!isWalkable(map, era, tile)) e(`echo zone ${i + 1} tile ${tile.x},${tile.y} is not walkable in the ${era}`);
+  // `if` conditions parse and `era` values are known.
+  for (const layerName of CONDITIONAL_LAYERS) {
+    for (const o of findObjectLayer(raw, layerName)?.objects ?? []) {
+      const label = `${layerName} object "${o.name || o.id}"`;
+      const cond = getProp(o, 'if');
+      if (cond !== undefined) {
+        if (typeof cond !== 'string') e(`${label} has a non-text "if"`);
+        else {
+          const parsed = parseConditionText(cond);
+          if (!parsed.ok) e(`${label}: ${parsed.error}`);
+        }
       }
+      const era = getProp(o, 'era');
+      if (era !== undefined && era !== 'present' && era !== 'echo' && era !== 'both') e(`${label} has an unknown era "${String(era)}"`);
     }
   }
 
-  for (const a of map.anchors) if (!inBounds(map, a.pos)) e(`anchor "${a.id}" is outside the map`);
+  // Present-era content never reads the memory's own flags: they are wiped on the way back (guide 6.1).
+  const readsEcho = (cond: Condition | undefined) => flagsIn(cond).some((f) => f.startsWith(ECHO_FLAG_PREFIX));
+  for (const n of map.npcs) if (n.era === 'present' && readsEcho(n.if)) e(`npc "${n.npc}" is in the present but reads an echo flag`);
+  for (const t of map.triggers) if (t.era === 'present' && readsEcho(t.if)) e(`trigger "${t.id}" is in the present but reads an echo flag`);
+  for (const o of map.objects) if (o.era === 'present' && readsEcho(o.if)) e(`puzzle object "${o.id}" is in the present but reads an echo flag`);
+
+  // Puzzle objects: a known look, a real dialogue, and not both solid and walkable.
+  const kinds = ctx.objectKinds ? new Set(ctx.objectKinds) : null;
+  for (const o of map.objects) {
+    if (o.kind && kinds && !kinds.has(o.kind)) e(`puzzle object "${o.id}" draws unknown tile "${o.kind}"`);
+    if (o.dialogue && !dialogueIds.has(o.dialogue)) e(`puzzle object "${o.id}" plays unknown dialogue "${o.dialogue}"`);
+    if (o.solid && o.walkable) e(`puzzle object "${o.id}" is both solid and walkable`);
+    if (!o.kind && !o.dialogue && !o.solid && !o.walkable) e(`puzzle object "${o.id}" does nothing`);
+  }
+
+  // Echo Zones: every tile is walkable in BOTH eras (guide 6.1), so a swap inside one never fails.
+  // Nothing that can stand or appear on a zone tile may break that: no NPC, door or solid object.
+  for (const [i, zone] of map.echoZones.entries()) {
+    const label = zone.id ? `echo zone "${zone.id}"` : `echo zone ${i + 1}`;
+    for (const tile of rectTiles(zone.area)) {
+      for (const era of ERAS) {
+        if (!isWalkable(map, era, tile)) e(`${label} tile ${tile.x},${tile.y} is not walkable in the ${era}`);
+      }
+    }
+    for (const n of map.npcs) if (rectContains(zone.area, n.pos)) e(`npc "${n.npc}" stands inside ${label}`);
+    for (const d of map.doors) if (rectContains(zone.area, d.pos)) e(`door "${d.id}" is inside ${label}`);
+    for (const o of map.objects) {
+      if (o.solid && rectTiles(o.area).some((t) => rectContains(zone.area, t))) e(`solid puzzle object "${o.id}" overlaps ${label}`);
+    }
+    for (const d of [zone.onEcho, zone.onReturn]) if (d && !dialogueIds.has(d)) e(`${label} plays unknown dialogue "${d}"`);
+  }
+
+  // Anchors: each names a real Echo-era puzzle object on this map that sets the anchor's flag.
+  const sets = ctx.dialogueSets;
+  const anchorObjects = new Set<string>();
+  for (const a of map.anchors) {
+    if (!inBounds(map, a.pos)) e(`anchor "${a.id}" is outside the map`);
+    if (!a.flag.startsWith(ANCHOR_FLAG_PREFIX)) e(`anchor "${a.id}" flag "${a.flag}" must start with "${ANCHOR_FLAG_PREFIX}"`);
+    const obj = map.objects.find((o) => o.id === a.object);
+    if (!obj) {
+      e(`anchor "${a.id}" names unknown puzzle object "${a.object}"`);
+      continue;
+    }
+    anchorObjects.add(obj.id);
+    if (obj.era !== 'echo') e(`anchor "${a.id}" object "${obj.id}" must be in the echo (it is ${obj.era})`);
+    if (!rectContains(obj.area, a.pos)) e(`anchor "${a.id}" does not sit on its object "${obj.id}"`);
+    if (sets) {
+      if (!obj.dialogue) e(`anchor "${a.id}" object "${obj.id}" has no dialogue to set "${a.flag}"`);
+      else if (!(sets[obj.dialogue] ?? []).includes(a.flag)) e(`anchor "${a.id}": dialogue "${obj.dialogue}" never sets "${a.flag}"`);
+    }
+  }
+  // Only anchors carry changes: no other Echo-era object may set an anchor flag.
+  if (sets) {
+    for (const o of map.objects) {
+      if (o.era === 'present' || anchorObjects.has(o.id) || !o.dialogue) continue;
+      const bad = (sets[o.dialogue] ?? []).filter((f) => f.startsWith(ANCHOR_FLAG_PREFIX));
+      if (bad.length > 0) e(`puzzle object "${o.id}" is not an anchor but its dialogue sets ${bad.join(', ')}`);
+    }
+  }
 }
 
 /** Validate one map on its own (door targets on other maps are checked by validateMaps). */
@@ -172,6 +251,19 @@ export function validateMaps(maps: Readonly<Record<string, TiledMap>>, ctx: Vali
     const result = validateOne(id, raw, ctx);
     errors.push(...result.errors);
     if (result.map) parsed[id] = result.map;
+  }
+
+  // Every anchor flag is read by something in the present, or the anchor carries nothing.
+  const presentReads = new Set<string>();
+  for (const map of Object.values(parsed)) {
+    for (const thing of [...map.npcs, ...map.triggers, ...map.objects]) {
+      if (thing.era !== 'echo') for (const f of flagsIn(thing.if)) presentReads.add(f);
+    }
+  }
+  for (const map of Object.values(parsed)) {
+    for (const a of map.anchors) {
+      if (a.flag && !presentReads.has(a.flag)) errors.push(`${map.id}: anchor "${a.id}" flag "${a.flag}" changes nothing in the present`);
+    }
   }
 
   for (const map of Object.values(parsed)) {

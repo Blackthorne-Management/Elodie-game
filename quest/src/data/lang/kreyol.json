@@ -1,0 +1,10 @@
+{
+  "language": "Kreyol (Haitian Creole)",
+  "note": "Words heard in the quest. Every entry must be checked with a native or fluent speaker before release (guide 8); verified stays false until then.",
+  "entries": [
+    { "word": "Bonjou", "language": "Kreyol", "translation": "Hello / Good day", "verified": false },
+    { "word": "Kijan ou ye?", "language": "Kreyol", "translation": "How are you?", "verified": false },
+    { "word": "Mèsi", "language": "Kreyol", "translation": "Thank you", "verified": false },
+    { "word": "Limyè", "language": "Kreyol", "translation": "Light (the family surname)", "verified": false }
+  ]
+}

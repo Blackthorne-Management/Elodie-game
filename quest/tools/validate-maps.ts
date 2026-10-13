@@ -1,12 +1,12 @@
 // Map validator CLI: `npm run validate:maps`. Loads every quest/maps/*.tmj and checks it with the
 // engine's validator (required layers, sizes, Echo Zones walkable in both eras, spawns, door pairs,
-// NPC and dialogue ids). Exits non-zero on any problem. tests/maps.test.ts runs the same checks.
+// NPC, dialogue and puzzle object ids, anchors). Exits non-zero on any problem. tests/maps.test.ts
+// runs the same checks.
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DIALOGUE_IDS } from '../src/data/dialogue.ts';
-import { NPC_IDS } from '../src/data/npcs.ts';
+import { validationContext } from '../src/data/content.ts';
 import { validateMaps } from '../src/engine/mapValidation.ts';
 import type { TiledMap } from '../src/engine/tiledMap.ts';
 
@@ -22,7 +22,7 @@ export function readMapFiles(dir: string = MAPS_DIR): Record<string, TiledMap> {
 
 export function runValidation(dir: string = MAPS_DIR): { maps: string[]; errors: string[] } {
   const maps = readMapFiles(dir);
-  const errors = validateMaps(maps, { npcIds: NPC_IDS, dialogueIds: DIALOGUE_IDS });
+  const errors = validateMaps(maps, validationContext());
   return { maps: Object.keys(maps), errors };
 }
 

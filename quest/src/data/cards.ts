@@ -1,0 +1,12 @@
+// Full-screen cards shown once when their flag is set.
+
+import type { CardDef } from '../engine/content.ts';
+
+export const CARDS: readonly CardDef[] = [
+  {
+    id: 'act1_end',
+    when: 'act1.complete',
+    title: 'To be continued: Xaraguá',
+    lines: ['End of Act I: The Mark', 'Thank you for playing.'],
+  },
+];

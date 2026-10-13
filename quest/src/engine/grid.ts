@@ -81,7 +81,7 @@ export function doorArrival(door: Door): { pos: Pos; facing: Dir } {
 }
 
 export function inEchoZone(map: GameMap, pos: Pos): boolean {
-  return map.echoZones.some((z) => rectContains(z, pos));
+  return map.echoZones.some((z) => rectContains(z.area, pos));
 }
 
 export function otherEra(era: Era): Era {
@@ -89,8 +89,9 @@ export function otherEra(era: Era): Era {
 }
 
 /**
- * The Echo swap rule (guide 6.1), kept here so Phase 2 only has to animate it: allowed only inside an
- * Echo Zone and only when the same tile is walkable in the other era. The swap itself is not built yet.
+ * The static Echo swap rule (guide 6.1) on the map's own collision layers: allowed only inside an Echo
+ * Zone and only when the same tile is walkable in the other era. The game uses world.ts `checkSwap`,
+ * which adds zone conditions, puzzle objects and NPCs on top of this.
  */
 export function canSwapEra(map: GameMap, era: Era, pos: Pos): boolean {
   return inEchoZone(map, pos) && isWalkable(map, otherEra(era), pos);

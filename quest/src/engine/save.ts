@@ -12,6 +12,8 @@ import { DIRS, ERAS, type Dir, type Era, type FlagValue } from './types.ts';
 
 export interface SaveSettings {
   textSpeed: TextSpeed;
+  /** Anissa's hints (guide 6.2): on unless the player turns them off. Added in save version 2. */
+  hints: boolean;
 }
 
 export interface SaveData {
@@ -71,6 +73,7 @@ export function encodeSave(data: SaveData): string {
     data.flags,
     TEXT_SPEED_ORDER.indexOf(data.settings.textSpeed),
     Math.round(data.savedAt),
+    data.settings.hints ? 1 : 0,
   ]);
   const body = toBase64Url(payload);
   return `${SAVE_CODE_PREFIX}${SAVE_VERSION}.${body}.${checksum(body)}`;
@@ -103,8 +106,10 @@ export function decodeSave(code: string): DecodeResult {
   } catch {
     return fail('That save code is damaged (unreadable).');
   }
-  if (!Array.isArray(arr) || arr.length !== 9) return fail('That save code is damaged (wrong shape).');
-  const [v, mapId, x, y, facingIdx, eraIdx, flags, speedIdx, savedAt] = arr as unknown[];
+  // Version 1 had 9 fields; version 2 adds the hints setting.
+  const fields = version === 1 ? 9 : 10;
+  if (!Array.isArray(arr) || arr.length !== fields) return fail('That save code is damaged (wrong shape).');
+  const [v, mapId, x, y, facingIdx, eraIdx, flags, speedIdx, savedAt, hintsBit = 1] = arr as unknown[];
   if (v !== version) return fail('That save code is damaged (version mismatch).');
   if (typeof mapId !== 'string' || mapId.length === 0) return fail('That save code is damaged (map).');
   if (!isInt(x) || !isInt(y) || x < 0 || y < 0) return fail('That save code is damaged (position).');
@@ -115,6 +120,7 @@ export function decodeSave(code: string): DecodeResult {
   if (!flagEntries.every(([, fv]) => isFlagValue(fv))) return fail('That save code is damaged (flag values).');
   if (!isInt(speedIdx) || !TEXT_SPEED_ORDER[speedIdx]) return fail('That save code is damaged (settings).');
   if (!isInt(savedAt)) return fail('That save code is damaged (time).');
+  if (hintsBit !== 0 && hintsBit !== 1) return fail('That save code is damaged (settings).');
 
   return {
     ok: true,
@@ -126,7 +132,7 @@ export function decodeSave(code: string): DecodeResult {
       facing: DIRS[facingIdx]!,
       era: ERAS[eraIdx]!,
       flags: Object.fromEntries(flagEntries) as FlagSnapshot,
-      settings: { textSpeed: TEXT_SPEED_ORDER[speedIdx]! },
+      settings: { textSpeed: TEXT_SPEED_ORDER[speedIdx]!, hints: hintsBit === 1 },
       savedAt,
     },
   };

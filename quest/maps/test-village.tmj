@@ -10,8 +10,8 @@
   "type": "map",
   "version": "1.8",
   "tiledversion": "1.8.2",
-  "nextlayerid": 14,
-  "nextobjectid": 11,
+  "nextlayerid": 15,
+  "nextobjectid": 13,
   "layers": [
     {
       "id": 1,
@@ -534,7 +534,57 @@
               "name": "flag",
               "type": "string",
               "value": "anchor.old_marker"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "marker_echo"
             }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "draworder": "topdown",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "objects": [
+        {
+          "id": 11,
+          "name": "marker_echo",
+          "type": "puzzle_object",
+          "x": 272,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            { "name": "dialogue", "type": "string", "value": "marker_echo" },
+            { "name": "era", "type": "string", "value": "echo" },
+            { "name": "kind", "type": "string", "value": "sign" }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "marker_present",
+          "type": "puzzle_object",
+          "x": 272,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            { "name": "dialogue", "type": "string", "value": "marker_present" },
+            { "name": "era", "type": "string", "value": "present" },
+            { "name": "if", "type": "string", "value": "anchor.old_marker" },
+            { "name": "kind", "type": "string", "value": "shrine" }
           ]
         }
       ]

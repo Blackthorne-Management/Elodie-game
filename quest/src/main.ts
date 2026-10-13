@@ -1,13 +1,18 @@
-// Entry point: parse and check the maps, build the input layer and game state, load the save,
-// then start Phaser at 240 x 160 with whole-number scaling.
+// Entry point: parse and check the maps and content, build the input layer, the game logic and its
+// state, load the save, then start Phaser at 240 x 160 with whole-number scaling.
+//
+// URL options (for development and the smoke test):
+//   ?map=<id>        a new game (when there is no save) starts on that map's first spawn
+//   ?hintms=<ms>     Anissa's first hint after this much stuck time instead of 3 minutes
+//   ?touch=1         force the touch overlay
 
 import Phaser from 'phaser';
-import { MAX_ZOOM, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
-import { DIALOGUE, DIALOGUE_IDS } from './data/dialogue.ts';
+import { HINT_FIRST_MS, HINT_REPEAT_MS, MAX_ZOOM, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
+import { CONTENT, validationContext } from './data/content.ts';
 import { loadRawMaps } from './data/maps.ts';
-import { NPC_IDS } from './data/npcs.ts';
-import { SPEAKERS } from './data/speakers.ts';
 import { checkDialogue } from './engine/dialogue.ts';
+import { GameLogic } from './engine/game.ts';
+import { HintTracker } from './engine/hints.ts';
 import { validateMaps } from './engine/mapValidation.ts';
 import { integerZoom } from './engine/scaling.ts';
 import { newGame } from './engine/state.ts';
@@ -30,16 +35,21 @@ function fail(message: string): never {
 }
 
 const rawMaps = loadRawMaps();
-const problems = [
-  ...validateMaps(rawMaps, { npcIds: NPC_IDS, dialogueIds: DIALOGUE_IDS }),
-  ...checkDialogue(DIALOGUE, SPEAKERS),
-];
+const problems = [...validateMaps(rawMaps, validationContext()), ...checkDialogue(CONTENT.dialogue, CONTENT.speakers)];
 if (problems.length > 0) fail(`Content problems:\n${problems.join('\n')}`);
 
 const maps: Record<string, GameMap> = Object.fromEntries(
   Object.entries(rawMaps).map(([id, raw]) => [id, parseMap(id, raw)]),
 );
-const startMap = maps[START_MAP_ID] ?? fail(`Start map ${START_MAP_ID} is missing`);
+
+const params = new URLSearchParams(location.search);
+const askedMap = params.get('map');
+const start =
+  askedMap && maps[askedMap]
+    ? { map: askedMap, spawn: maps[askedMap]!.spawns[0]!.id }
+    : { map: START_MAP_ID, spawn: START_SPAWN };
+const startMap = maps[start.map] ?? fail(`Start map ${start.map} is missing`);
+const hintFirst = Number(params.get('hintms'));
 
 const sources: InputSource[] = [new KeyboardSource(), new GamepadSource()];
 if (isTouchDevice()) {
@@ -50,9 +60,13 @@ if (isTouchDevice()) {
 const runtime: Runtime = {
   maps,
   rawMaps,
-  state: newGame(startMap, START_SPAWN),
+  logic: new GameLogic(maps, CONTENT, newGame(startMap, start.spawn)),
   input: new InputManager(sources),
   storage: browserStorage(),
+  hints: new HintTracker(
+    hintFirst > 0 ? { firstMs: hintFirst, repeatMs: hintFirst } : { firstMs: HINT_FIRST_MS, repeatMs: HINT_REPEAT_MS },
+  ),
+  start: { map: START_MAP_ID, spawn: START_SPAWN },
 };
 setRuntime(runtime);
 const loaded = loadStoredGame(runtime);

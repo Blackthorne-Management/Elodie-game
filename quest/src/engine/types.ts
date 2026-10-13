@@ -7,6 +7,9 @@ export const DIRS: readonly Dir[] = ['up', 'down', 'left', 'right'];
 export type Era = 'present' | 'echo';
 export const ERAS: readonly Era[] = ['present', 'echo'];
 
+/** Which era a map object belongs to: one of them, or both. */
+export type EraScope = Era | 'both';
+
 export interface Pos {
   x: number;
   y: number;

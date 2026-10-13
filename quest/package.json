@@ -11,7 +11,10 @@
     "typecheck": "tsc -p tsconfig.json",
     "lint": "oxlint",
     "validate:maps": "node --experimental-strip-types tools/validate-maps.ts",
-    "smoke": "node tests/smoke.mjs"
+    "smoke": "node --experimental-strip-types tests/smoke.mjs",
+    "maps:build": "node --experimental-strip-types tools/build-maps.ts",
+    "audit:lang": "node --experimental-strip-types tools/audit-lang.ts",
+    "route:expand": "node --experimental-strip-types tools/expand-route.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"

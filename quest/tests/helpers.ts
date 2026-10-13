@@ -4,9 +4,11 @@ import type { TiledMap, TiledObject, TiledLayer } from '../src/engine/tiledMap.t
 
 export const LAYER_NAMES = ['ground_present', 'deco_present', 'ground_echo', 'deco_echo', 'above', 'collide_present', 'collide_echo'];
 
+let nextId = 1;
+
 export function obj(name: string, x: number, y: number, props: Record<string, string | boolean> = {}, w = 1, h = 1): TiledObject {
   return {
-    id: Math.floor(x * 100 + y),
+    id: nextId++,
     name,
     x: x * 16,
     y: y * 16,
@@ -22,7 +24,7 @@ export interface MapSpec {
   /** Rows of '.' (open) and '#' (blocked) for the present collision layer. */
   present?: string[];
   echo?: string[];
-  objects?: Partial<Record<'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors', TiledObject[]>>;
+  objects?: Partial<Record<'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors' | 'puzzle_objects', TiledObject[]>>;
 }
 
 function collide(rows: string[] | undefined, w: number, h: number): number[] {
@@ -58,6 +60,7 @@ export function makeMap(spec: MapSpec = {}): TiledMap {
       { type: 'objectgroup', name: 'spawns', objects: objects.spawns ?? [obj('start', 0, 0)] },
       { type: 'objectgroup', name: 'echo_zones', objects: objects.echo_zones ?? [] },
       { type: 'objectgroup', name: 'anchors', objects: objects.anchors ?? [] },
+      { type: 'objectgroup', name: 'puzzle_objects', objects: objects.puzzle_objects ?? [] },
     ],
   };
 }

@@ -2,9 +2,15 @@
 
 import type { TiledMap } from '../engine/tiledMap.ts';
 import testVillage from '../../maps/test-village.tmj?raw';
+import zetwalHouse from '../../maps/zetwal-house.tmj?raw';
+import zetwalTemple from '../../maps/zetwal-temple.tmj?raw';
+import zetwalTown from '../../maps/zetwal-town.tmj?raw';
 
 export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'test-village': testVillage,
+  'zetwal-town': zetwalTown,
+  'zetwal-house': zetwalHouse,
+  'zetwal-temple': zetwalTemple,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

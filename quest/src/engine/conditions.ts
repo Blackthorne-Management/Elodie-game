@@ -49,3 +49,34 @@ export function flagsIn(cond: Condition | undefined): string[] {
   if ('notFlag' in cond) return [cond.notFlag];
   return [cond.flag];
 }
+
+/** Flag names: letters, digits, `_`, `-` and `.` (namespaces such as `story.`, `echo.`, `anchor.`). */
+const FLAG_NAME = /^[A-Za-z0-9_.-]+$/;
+
+export type ParsedCondition = { ok: true; cond: Condition | undefined } | { ok: false; error: string };
+
+/**
+ * The short condition text used in Tiled custom properties (`if`), where a JSON object would be awkward:
+ * terms separated by commas must all hold; a term may list alternatives with `|`; `!` negates a flag.
+ *   "item.sun_locket"                      the flag is set
+ *   "story.met, !story.left"               met and not left
+ *   "echo.bridge_down|anchor.bridge"       either one
+ * Empty text means "always".
+ */
+export function parseConditionText(text: string): ParsedCondition {
+  const trimmed = text.trim();
+  if (trimmed === '') return { ok: true, cond: undefined };
+  const all: Condition[] = [];
+  for (const term of trimmed.split(',')) {
+    const any: Condition[] = [];
+    for (const raw of term.split('|')) {
+      const atom = raw.trim();
+      const negated = atom.startsWith('!');
+      const name = negated ? atom.slice(1).trim() : atom;
+      if (!FLAG_NAME.test(name)) return { ok: false, error: `bad flag name "${atom}" in condition "${text}"` };
+      any.push(negated ? { notFlag: name } : { flag: name });
+    }
+    all.push(any.length === 1 ? any[0]! : { any });
+  }
+  return { ok: true, cond: all.length === 1 ? all[0] : { all } };
+}

@@ -3,10 +3,11 @@
 
 import { DEFAULT_TEXT_SPEED, SAVE_VERSION } from '../config.ts';
 import { FlagStore } from './flags.ts';
-import { findSpawn, isWalkable } from './grid.ts';
+import { findSpawn } from './grid.ts';
 import type { SaveData, SaveSettings } from './save.ts';
 import type { GameMap } from './tiledMap.ts';
 import type { Dir, Era, Pos } from './types.ts';
+import { isOpen } from './world.ts';
 
 export interface PlayerState {
   mapId: string;
@@ -27,7 +28,7 @@ export function newGame(map: GameMap, spawnId: string): GameState {
   return {
     player: { mapId: map.id, pos: { ...spawn.pos }, facing: spawn.facing, era: spawn.era },
     flags: new FlagStore(),
-    settings: { textSpeed: DEFAULT_TEXT_SPEED },
+    settings: { textSpeed: DEFAULT_TEXT_SPEED, hints: true },
   };
 }
 
@@ -53,10 +54,11 @@ export function applySave(state: GameState, data: SaveData): void {
 }
 
 /**
- * Whether a save can be placed on the given maps: the map exists and the saved tile is walkable in the
- * saved era. A save that fails this falls back to a new game rather than trapping the player in a wall.
+ * Whether a save can be placed on the given maps: the map exists and the saved tile is open in the
+ * saved era with the saved flags (a lowered bridge counts). A save that fails this falls back to a new
+ * game rather than trapping the player in a wall.
  */
 export function saveFits(data: SaveData, maps: Readonly<Record<string, GameMap>>): boolean {
   const map = maps[data.mapId];
-  return !!map && isWalkable(map, data.era, { x: data.x, y: data.y });
+  return !!map && isOpen(map, data.era, { x: data.x, y: data.y }, new FlagStore(data.flags));
 }

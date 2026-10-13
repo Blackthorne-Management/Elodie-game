@@ -35,11 +35,11 @@ export const TOUCH_DPAD_PX = 156;
 
 /** Save storage. Bump SAVE_VERSION when the save shape changes. */
 export const SAVE_STORAGE_KEY = 'bloodlines-quest.save';
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 export const SAVE_CODE_PREFIX = 'BQ';
 
 /** Where a new game starts. */
-export const START_MAP_ID = 'test-village';
+export const START_MAP_ID = 'zetwal-town';
 export const START_SPAWN = 'start';
 
 /** How long a toast message stays on screen. */
@@ -47,3 +47,9 @@ export const TOAST_MS = 2200;
 
 /** Largest whole-number zoom we ever use (keeps very large monitors sane). */
 export const MAX_ZOOM = 8;
+
+/** Anissa's hints (guide 6.2 rule 4): first hint after 3 minutes stuck on one objective, then every 90 s. */
+export const HINT_FIRST_MS = 3 * 60 * 1000;
+export const HINT_REPEAT_MS = 90 * 1000;
+/** How long a hint stays on screen. */
+export const HINT_SHOW_MS = 7000;

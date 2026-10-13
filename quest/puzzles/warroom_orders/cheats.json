@@ -1,0 +1,5 @@
+{
+  "look under the window seat without the Echo": ["up*3","right*2","up*3","right","up","confirm","skip"],
+  "hear the night orders but never leave them under the board": ["up*2","echo","skip","up","left","up*2","left","confirm","skip","down*3","right","echo","skip","up","right*2","up*3","right","up","confirm","skip"],
+  "press Echo away from the shimmering tiles": ["echo","up*3","right*2","up*3","right","up","echo","confirm","skip"]
+}

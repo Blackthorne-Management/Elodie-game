@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { MAP_SOURCES } from '../src/data/maps.ts';
 import { validateMap, validateMaps, type ValidationContext } from '../src/engine/mapValidation.ts';
 import type { TiledMap, TiledTileLayer } from '../src/engine/tiledMap.ts';
+import { staleMaps } from '../tools/build-maps.ts';
 import { MAPS_DIR, runValidation } from '../tools/validate-maps.ts';
 import { makeMap, obj } from './helpers.ts';
 
@@ -13,6 +14,10 @@ describe('the real maps (same check as npm run validate:maps)', () => {
     const { maps, errors } = runValidation();
     expect(maps.length).toBeGreaterThan(0);
     expect(errors).toEqual([]);
+  });
+
+  it('the generated Zetwal maps match their sources (npm run maps:build)', () => {
+    expect(staleMaps()).toEqual([]);
   });
 
   it('the game registry bundles exactly the maps on disk', () => {
@@ -65,13 +70,13 @@ describe('map validator', () => {
       echo: ['.....', '..#..', '.....', '.....', '.....'],
       objects: { echo_zones: [obj('z', 1, 1, {}, 2, 2)] },
     });
-    expect(validateMap('m', blockedEcho, ctx)).toEqual(['m: echo zone 1 tile 2,1 is not walkable in the echo']);
+    expect(validateMap('m', blockedEcho, ctx)).toEqual(['m: echo zone "z" tile 2,1 is not walkable in the echo']);
     const blockedPresent = makeMap({
       present: ['.....', '.#...', '.....', '.....', '.....'],
       echo: ['.....', '.....', '.....', '.....', '.....'],
       objects: { echo_zones: [obj('z', 1, 1, {}, 2, 2)] },
     });
-    expect(validateMap('m', blockedPresent, ctx)).toEqual(['m: echo zone 1 tile 1,1 is not walkable in the present']);
+    expect(validateMap('m', blockedPresent, ctx)).toEqual(['m: echo zone "z" tile 1,1 is not walkable in the present']);
   });
 
   it('requires spawns, on walkable tiles', () => {
@@ -129,5 +134,98 @@ describe('map validator', () => {
     const one = makeMap({ objects: { doors: [obj('out', 2, 2, { target: 'in', map: 'two' })] } });
     const two = makeMap({ objects: { doors: [obj('in', 2, 2, { target: 'out', map: 'one' })] } });
     expect(validateMaps({ one, two }, ctx)).toEqual([]);
+  });
+});
+
+describe('map validator: Echo and anchors (guide Section 9)', () => {
+  const full: ValidationContext = {
+    npcIds: ['villager'],
+    dialogueIds: ['hello', 'pin', 'lever'],
+    objectKinds: ['bridge'],
+    dialogueSets: { hello: [], pin: ['anchor.bridge'], lever: ['echo.lever', 'anchor.bridge'] },
+  };
+  const anchored = (extra: NonNullable<Parameters<typeof makeMap>[0]>['objects'] = {}) =>
+    makeMap({
+      objects: {
+        puzzle_objects: [
+          obj('pin', 3, 0, { era: 'echo', dialogue: 'pin' }),
+          obj('bridge', 4, 4, { era: 'present', kind: 'bridge', walkable: true, if: 'anchor.bridge' }),
+        ],
+        anchors: [obj('a', 3, 0, { object: 'pin', flag: 'anchor.bridge' })],
+        ...extra,
+      },
+    });
+
+  it('accepts an anchor on a real Echo object whose dialogue sets its flag, read in the present', () => {
+    expect(validateMaps({ m: anchored() }, full)).toEqual([]);
+  });
+
+  it('rejects anchors that name no object, a present object, or the wrong flag', () => {
+    const errors = validateMaps(
+      {
+        m: anchored({
+          puzzle_objects: [obj('pin', 3, 0, { era: 'present', dialogue: 'hello' }), obj('b', 4, 4, { walkable: true, if: 'anchor.bridge' })],
+          anchors: [obj('a', 3, 0, { object: 'pin', flag: 'anchor.bridge' }), obj('b2', 1, 1, { object: 'ghost', flag: 'bridge' })],
+        }),
+      },
+      full,
+    );
+    expect(errors).toContain('m: anchor "a" object "pin" must be in the echo (it is present)');
+    expect(errors).toContain('m: anchor "a": dialogue "hello" never sets "anchor.bridge"');
+    expect(errors).toContain('m: anchor "b2" names unknown puzzle object "ghost"');
+    expect(errors).toContain('m: anchor "b2" flag "bridge" must start with "anchor."');
+  });
+
+  it('rejects an anchor that changes nothing in the present, and non-anchors that set anchor flags', () => {
+    const errors = validateMaps(
+      {
+        m: anchored({
+          puzzle_objects: [obj('pin', 3, 0, { era: 'echo', dialogue: 'pin' }), obj('lever', 2, 0, { era: 'echo', dialogue: 'lever' })],
+        }),
+      },
+      full,
+    );
+    expect(errors).toContain('m: anchor "a" flag "anchor.bridge" changes nothing in the present');
+    expect(errors).toContain('m: puzzle object "lever" is not an anchor but its dialogue sets anchor.bridge');
+  });
+
+  it('keeps zones swappable: no NPC, door or solid object inside, and no present content reading echo flags', () => {
+    const errors = validateMap(
+      'm',
+      makeMap({
+        objects: {
+          echo_zones: [obj('z', 0, 0, { onEcho: 'nope' }, 3, 3)],
+          npcs: [obj('n', 1, 1, { npc: 'villager', if: 'echo.lever' })],
+          doors: [obj('d', 2, 2, { target: 'd' })],
+          spawns: [obj('start', 4, 4)],
+          puzzle_objects: [obj('wall', 0, 2, { solid: true }), obj('x', 4, 0, { kind: 'lava', dialogue: 'zzz' }), obj('y', 4, 1, {})],
+        },
+      }),
+      full,
+    );
+    expect(errors).toContain('m: npc "villager" stands inside echo zone "z"');
+    expect(errors).toContain('m: door "d" is inside echo zone "z"');
+    expect(errors).toContain('m: solid puzzle object "wall" overlaps echo zone "z"');
+    expect(errors).toContain('m: echo zone "z" plays unknown dialogue "nope"');
+    expect(errors).toContain('m: npc "villager" is in the present but reads an echo flag');
+    expect(errors).toContain('m: puzzle object "x" draws unknown tile "lava"');
+    expect(errors).toContain('m: puzzle object "x" plays unknown dialogue "zzz"');
+    expect(errors).toContain('m: puzzle object "y" does nothing');
+  });
+
+  it('checks condition text, eras and on-enter triggers', () => {
+    const errors = validateMap(
+      'm',
+      makeMap({
+        objects: {
+          npcs: [obj('n', 1, 1, { npc: 'villager', if: 'a,,b', era: 'yesterday' })],
+          triggers: [obj('t', 2, 2, { dialogue: 'hello', onEnter: true })],
+        },
+      }),
+      full,
+    );
+    expect(errors.some((e) => e.includes('bad flag name'))).toBe(true);
+    expect(errors).toContain('m: npcs object "n" has an unknown era "yesterday"');
+    expect(errors).toContain('m: trigger "t" runs on entering the map, so it must be once-only');
   });
 });

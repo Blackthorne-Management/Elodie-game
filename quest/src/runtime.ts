@@ -1,18 +1,23 @@
-// Shared objects the scenes use: parsed maps, the game state, input and storage. Created once in
-// main.ts before Phaser starts.
+// Shared objects the scenes use: parsed maps, the game logic (which holds the game state), input,
+// storage and Anissa's hint timer. Created once in main.ts before Phaser starts.
 
 import { SAVE_STORAGE_KEY } from './config.ts';
+import type { GameLogic } from './engine/game.ts';
+import type { HintTracker } from './engine/hints.ts';
 import { readSave, writeSave, type StorageLike } from './engine/save.ts';
-import { applySave, saveFits, toSaveData, type GameState } from './engine/state.ts';
+import { applySave, saveFits, toSaveData } from './engine/state.ts';
 import type { GameMap, TiledMap } from './engine/tiledMap.ts';
 import type { InputManager } from './input/actions.ts';
 
 export interface Runtime {
   maps: Record<string, GameMap>;
   rawMaps: Record<string, TiledMap>;
-  state: GameState;
+  logic: GameLogic;
   input: InputManager;
   storage: StorageLike | undefined;
+  hints: HintTracker;
+  /** Where New game starts. */
+  start: { map: string; spawn: string };
 }
 
 let runtime: Runtime | null = null;
@@ -40,7 +45,7 @@ export function browserStorage(): StorageLike | undefined {
 }
 
 export function saveGame(r: Runtime = getRuntime()): boolean {
-  return writeSave(r.storage, SAVE_STORAGE_KEY, toSaveData(r.state, Date.now()));
+  return writeSave(r.storage, SAVE_STORAGE_KEY, toSaveData(r.logic.state, Date.now()));
 }
 
 /** Load the stored save into the state. Returns 'none', 'loaded' or 'invalid'. */
@@ -48,6 +53,7 @@ export function loadStoredGame(r: Runtime): 'none' | 'loaded' | 'invalid' {
   const result = readSave(r.storage, SAVE_STORAGE_KEY);
   if (!result) return 'none';
   if (!result.ok || !saveFits(result.data, r.maps)) return 'invalid';
-  applySave(r.state, result.data);
+  applySave(r.logic.state, result.data);
+  r.logic.reset();
   return 'loaded';
 }

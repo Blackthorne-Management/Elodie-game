@@ -1,10 +1,10 @@
-// Dialogue content. Placeholder lines only (no story content yet); they exist to exercise the
-// dialogue system: speakers, portraits, choices, flags set by lines and choices, conditional lines
-// and conditional branches.
+// Dialogue content: the Phase 1 test village (placeholder lines that exercise the dialogue system)
+// plus Act I, Zetwal (data/dialogue/zetwal.ts).
 
 import type { DialogueScript } from '../engine/dialogue.ts';
+import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
 
-export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
+const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
   villager_talk: {
     id: 'villager_talk',
     start: 'start',
@@ -103,7 +103,7 @@ export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
         speaker: 'sign',
         lines: [
           { text: 'TEST PLAZA. The shimmering tiles mark an Echo Zone.' },
-          { text: '(The Echo swap is not built yet.)' },
+          { text: '(Stand on them and press Echo to see this place fifty years ago.)' },
         ],
       },
     },
@@ -118,6 +118,29 @@ export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
       },
     },
   },
+
+  marker_echo: {
+    id: 'marker_echo',
+    start: 'start',
+    nodes: {
+      start: {
+        lines: [{ text: 'A fresh wooden marker. Carve your mark into it?' }],
+        choices: [{ text: 'Carve it.', set: { 'anchor.old_marker': true }, next: 'carved' }, { text: 'Leave it.' }],
+      },
+      carved: { lines: [{ text: 'Carved. (An anchor: it will still be here in the present.)' }] },
+    },
+  },
+
+  marker_present: {
+    id: 'marker_present',
+    start: 'start',
+    nodes: { start: { lines: [{ text: 'An old stone marker, worn smooth. Your mark is still on it.' }] } },
+  },
+};
+
+export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
+  ...TEST_VILLAGE,
+  ...Object.fromEntries(ZETWAL_DIALOGUE.map((d) => [d.id, d])),
 };
 
 export const DIALOGUE_IDS: readonly string[] = Object.keys(DIALOGUE);

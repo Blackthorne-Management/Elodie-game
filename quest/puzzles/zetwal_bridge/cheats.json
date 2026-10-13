@@ -1,0 +1,7 @@
+{
+  "walk straight to the island in the present": ["right*8"],
+  "work the rusted winch and pawl in the present": ["up","right*3","up","confirm","skip","right","up","confirm","skip","down","right*6"],
+  "lower the bridge in the Echo but never pin the pawl": ["up","right*3","up","echo","skip","confirm","skip","echo","skip","right*7"],
+  "cross the lowered bridge inside the Echo": ["up","right*3","up","echo","skip","confirm","skip","right*8"],
+  "pin the pawl while the bridge is still raised": ["up","right*4","up","echo","skip","confirm","skip","echo","skip","right*6"]
+}

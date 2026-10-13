@@ -1,8 +1,16 @@
-// Headless smoke test (guide Section 9, check 4): build, serve with `vite preview`, open Chromium,
-// walk a route with the keyboard, talk to an NPC through a dialogue with a choice, hit a trigger,
-// save from the menu, reload and check the position and flags came back, go through a door
-// (autosave) and reload again, export a save code, try the touch overlay on a phone-sized
-// landscape viewport, and take screenshots. Fails on any page error.
+// Headless smoke test (guide Section 9, check 4): build, serve with `vite preview`, open Chromium.
+//
+// 1. Phase 1 checks on the test village (?map=test-village): walk with the keyboard, talk through a
+//    dialogue with a choice, hit a trigger, swap into the Echo and back, save from the menu, reload
+//    and check the position and flags came back, go through a door (autosave) and reload again,
+//    export and import a save code, the touch overlay on a phone-sized landscape viewport.
+// 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
+// 3. The whole of Act I, Zetwal, from a new game, by the scripted route routes/zetwal-act1.json.
+//    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
+//    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
+//    Screenshots at the route's @markers, at desktop and landscape phone (844x390) sizes.
+//
+// Fails on any page error.
 //
 // Usage: npm run smoke            (builds first)
 //        SKIP_BUILD=1 npm run smoke
@@ -26,8 +34,15 @@ function loadPlaywright() {
 }
 const { chromium } = loadPlaywright();
 
+// The engine, content and maps, straight from the TypeScript sources (npm run smoke runs Node with
+// --experimental-strip-types).
+const { parseRoute } = await import('../src/engine/sim.ts');
+const { newGameSim, readJson } = await import('../tools/sim-setup.ts');
+const { ACT1 } = await import('../src/data/quests.ts');
+
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
+const VILLAGE = `${URL_BASE}?map=test-village`;
 const SHOT_DIR = process.env.SHOT_DIR ?? tmpdir();
 
 function check(cond, message) {
@@ -122,6 +137,181 @@ function watchErrors(page, errors) {
   });
 }
 
+// ---- Anissa's hints and the Journal --------------------------------------------------------------
+
+async function finishDialogue(page) {
+  for (let i = 0; i < 200; i++) {
+    const s = await snap(page);
+    if (s.mode !== 'dialogue') return;
+    await page.keyboard.press('z');
+    await page.waitForTimeout(30);
+  }
+  throw new Error('Dialogue did not end');
+}
+
+async function hintsAndJournal(browser, errors) {
+  console.log("Anissa's hints and the Journal:");
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  await page.goto(`${URL_BASE}?hintms=1200`);
+  await waitReady(page);
+  let s = await snap(page);
+  check(s.mapId === 'zetwal-town' && s.mode === 'dialogue', 'a new game opens in Zetwal with the festival scene');
+  await finishDialogue(page);
+  const first = ACT1.objectives[0];
+  await page.waitForFunction((h) => window.__quest.snapshot().hint === h, first.hints[0], { timeout: 5000 });
+  check(true, `after being stuck, Anissa offers a hint ("${first.hints[0]}")`);
+  await page.waitForFunction((h) => window.__quest.snapshot().hint === h, first.hints[1], { timeout: 5000 });
+  check(true, 'her hints escalate');
+  await menuSelect(page, "Anissa's hints");
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.items.some((t) => t === "Anissa's hints: Off"), null, { timeout: 2000 });
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(2600);
+  s = await snap(page);
+  check(s.hint === first.hints[1] && s.mode === 'field', 'turned off in the menu, she stays quiet');
+  await menuSelect(page, 'Journal');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'journal', null, { timeout: 2000 });
+  s = await snap(page);
+  check(s.journal.some((l) => l === `Now: ${first.title}`), `the Journal lists the current objective ("${first.title}")`);
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  await ctx.close();
+}
+
+// ---- Act I, Zetwal ------------------------------------------------------------------------------
+
+const KEYS = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight', confirm: 'KeyZ', cancel: 'KeyX', echo: 'KeyE' };
+
+/** What the browser must show once the last key has played out, from the simulator. */
+function expected(sim) {
+  const p = sim.logic.state.player;
+  const view = sim.logic.view();
+  return {
+    mapId: p.mapId,
+    x: p.pos.x,
+    y: p.pos.y,
+    facing: p.facing,
+    era: p.era,
+    mode: sim.logic.mode,
+    text: sim.logic.mode === 'dialogue' && view.kind !== 'end' ? view.text : null,
+  };
+}
+
+async function waitMatch(page, exp, what) {
+  try {
+    await page.waitForFunction(
+      (e) => {
+        try {
+          const s = window.__quest?.snapshot();
+          if (!s || s.moving) return false;
+          return (
+            s.mapId === e.mapId && s.x === e.x && s.y === e.y && s.facing === e.facing && s.era === e.era && s.mode === e.mode &&
+            (e.text === null || (s.dialogue && s.dialogue.text === e.text))
+          );
+        } catch {
+          return false;
+        }
+      },
+      exp,
+      { timeout: 6000 },
+    );
+  } catch {
+    const s = await snap(page).catch(() => null);
+    throw new Error(`Browser and simulator disagree after ${what}.\nexpected ${JSON.stringify(exp)}\nbrowser  ${JSON.stringify(s && { ...s, flags: undefined })}`);
+  }
+}
+
+/** Let the game run a couple of frames (a key pressed now has been read after this). */
+const frames = (page) => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r()))));
+
+/** Press A until the typewriter has finished the current line. */
+async function finishTyping(page) {
+  for (let i = 0; i < 10; i++) {
+    const s = await snap(page);
+    if (!s.dialogue?.typing) return s;
+    await page.keyboard.press('KeyZ');
+    await page.waitForFunction(() => !window.__quest.snapshot().dialogue?.typing, null, { timeout: 3000 }).catch(() => {});
+  }
+  return snap(page);
+}
+
+async function shoot(page, name, shots) {
+  await page.waitForTimeout(450); // let swaps, flashes and fades settle
+  const desktop = `quest2-${name}-desktop.png`;
+  const phone = `quest2-${name}-phone.png`;
+  await page.screenshot({ path: join(SHOT_DIR, desktop) });
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: join(SHOT_DIR, phone) });
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.waitForTimeout(150);
+  shots.push(desktop, phone);
+}
+
+async function playAct(browser, errors) {
+  console.log('Act I, Zetwal (scripted route, checked against the simulator after every key):');
+  const route = parseRoute(readJson('routes/zetwal-act1.json'));
+  const sim = newGameSim();
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  await page.goto(URL_BASE);
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await waitReady(page);
+  await waitMatch(page, expected(sim), 'the start');
+  await page.keyboard.down('Shift'); // run
+
+  const shots = [];
+  let anissaShot = false;
+  let keys = 0;
+  const started = Date.now();
+  for (const item of route) {
+    if (item.kind === 'mark') {
+      await shoot(page, item.name, shots);
+      continue;
+    }
+    for (const cmd of sim.expand(item)) {
+      const mode = sim.logic.mode;
+      if (cmd === 'skip') {
+        sim.press('skip');
+        for (let i = 0; i < 300; i++) {
+          const s = await finishTyping(page);
+          if (s.mode !== 'dialogue') break;
+          if (!anissaShot && s.dialogue?.speaker === 'Anissa') {
+            anissaShot = true;
+            await page.keyboard.up('Shift');
+            await shoot(page, 'anissa-dialogue', shots);
+            await page.keyboard.down('Shift');
+          }
+          await page.keyboard.press('KeyZ');
+          keys++;
+          await frames(page);
+        }
+      } else {
+        if (mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel')) await finishTyping(page);
+        sim.press(cmd);
+        await page.keyboard.press(KEYS[cmd]);
+        keys++;
+        await frames(page);
+      }
+      await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
+    }
+  }
+  await page.keyboard.up('Shift');
+  const s = await snap(page);
+  check(s.flags['act1.complete'] === true && s.flags['card.act1_end'] === true, `played Act I to the end card in the browser (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
+  check(s.flags['anchor.chain_bridge'] === true && s.flags['story.bridge_crossed'] === true, 'the bridge puzzle was solved through the Echo and its anchor');
+  check(Object.keys(s.flags).every((f) => !f.startsWith('echo.')), 'no memory-only flags leaked into the present');
+  await page.reload();
+  await waitReady(page);
+  const back = await snap(page);
+  check(back.mapId === 'zetwal-temple' && back.flags['act1.complete'] === true, 'the autosave keeps the finished act after a reload');
+  await ctx.close();
+  return shots;
+}
+
 async function main() {
   if (!process.env.SKIP_BUILD) {
     console.log('Building...');
@@ -152,7 +342,7 @@ async function main() {
     const desktop = await browser.newContext({ viewport: { width: 1280, height: 800 } });
     const page = await desktop.newPage();
     watchErrors(page, errors);
-    await page.goto(URL_BASE);
+    await page.goto(VILLAGE);
     await page.evaluate(() => localStorage.clear());
     await page.reload();
     await waitReady(page);
@@ -200,13 +390,21 @@ async function main() {
     s = await snap(page);
     check(s.flags['sign.plaza_read'] === true, 'trigger set its flag');
     check(s.toast === 'Autosaved', 'trigger autosaved');
-    check((await page.evaluate(() => localStorage.getItem('bloodlines-quest.save')))?.startsWith('BQ1.'), 'a save code is in localStorage');
+    check((await page.evaluate(() => localStorage.getItem('bloodlines-quest.save')))?.startsWith('BQ2.'), 'a save code is in localStorage');
 
-    // Into the Echo Zone: the echo action is not built yet.
-    await walk(page, [['ArrowDown', 1]]);
+    // Outside an Echo Zone the swap is refused; inside, it swaps to the Echo and back, keeping the tile.
     await page.keyboard.press('e');
-    await page.waitForFunction(() => window.__quest.snapshot().toast === 'Echo: not yet', null, { timeout: 2000 });
-    check((await snap(page)).era === 'present', 'echo action only reports "not yet"');
+    await page.waitForFunction(() => window.__quest.snapshot().toast === 'Nothing echoes here.', null, { timeout: 2000 });
+    check((await snap(page)).era === 'present', 'echo is refused outside an Echo Zone');
+    await walk(page, [['ArrowDown', 1]]);
+    const inZone = await snap(page);
+    await page.keyboard.press('e');
+    await page.waitForFunction(() => window.__quest.snapshot().era === 'echo', null, { timeout: 2000 });
+    s = await snap(page);
+    check(s.x === inZone.x && s.y === inZone.y && s.echoFilter && s.toast === 'Echo: fifty years ago', 'echo swaps inside the zone, keeps the tile, turns on the filter');
+    await page.keyboard.press('e');
+    await page.waitForFunction(() => window.__quest.snapshot().era === 'present', null, { timeout: 2000 });
+    check(!(await snap(page)).echoFilter, 'echo swaps back to the present');
 
     // Collision layer: the well at 12,10 blocks a step down from 12,9.
     await walk(page, [['ArrowUp', 2], ['ArrowLeft', 4], ['ArrowDown', 2]]);
@@ -240,7 +438,7 @@ async function main() {
     await menuSelect(page, 'Export save code');
     await page.waitForSelector('.code-dialog textarea');
     const code = await page.inputValue('.code-dialog textarea');
-    check(/^BQ1\.[A-Za-z0-9_-]+\.[0-9a-f]{8}$/.test(code), `export shows a save code (${code.length} chars)`);
+    check(/^BQ2\.[A-Za-z0-9_-]+\.[0-9a-f]{8}$/.test(code), `export shows a save code (${code.length} chars)`);
     await page.click('.code-dialog button:has-text("Close")');
     await page.waitForFunction(() => window.__quest.snapshot().mode === 'menu');
 
@@ -268,7 +466,7 @@ async function main() {
     });
     const ppage = await phone.newPage();
     watchErrors(ppage, errors);
-    await ppage.goto(URL_BASE);
+    await ppage.goto(VILLAGE);
     await waitReady(ppage);
     check(await ppage.isVisible('.touch-overlay'), 'touch overlay shows on a touch device');
     const sizes = await ppage.evaluate(() =>
@@ -307,14 +505,17 @@ async function main() {
     const portrait = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
     const pp = await portrait.newPage();
     watchErrors(pp, errors);
-    await pp.goto(URL_BASE);
+    await pp.goto(VILLAGE);
     await waitReady(pp);
     check(await pp.isVisible('.rotate-hint'), 'portrait shows the rotate hint');
     await pp.screenshot({ path: join(SHOT_DIR, 'quest-phone-portrait.png') });
     await portrait.close();
 
+    await hintsAndJournal(browser, errors);
+    const actShots = await playAct(browser, errors);
+
     check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
-    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest-phone-portrait.png'].map((f) => join(SHOT_DIR, f)).join(', ')}`);
+    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest-phone-portrait.png', ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
     console.log('Smoke test passed.');
   } finally {
     await browser.close();
