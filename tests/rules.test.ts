@@ -832,3 +832,39 @@ describe('Hidden Path (rules-decisions 72)', () => {
     expect(homes).toContain(`${p.pos!.x},${p.pos!.y}`);
   });
 });
+
+describe("Yaguana's Areíto (rules-decisions 75)", () => {
+  it('a dying Yaguana character loses no resources', () => {
+    const g = newGame(2, ['vaitama', 'brasador']);
+    const [y, b] = g.s.players;
+    y.res = { influence: 4, fear: 6, wealth: 2 };
+    drive(g.killPlayer(y, b));
+    expect(y.res).toEqual({ influence: 4, fear: 6, wealth: 2 });
+    expect(y.gen).toBe(2);
+  });
+  it('a Reckoning against Yaguana still takes its bonus', () => {
+    const g = newGame(2, ['vaitama', 'brasador']);
+    const [y, b] = g.s.players;
+    b.grudges = [y.id];
+    y.res = { influence: 4, fear: 6, wealth: 2 };
+    b.res = { influence: 0, fear: 0, wealth: 0 };
+    drive(g.killPlayer(y, b));
+    expect(b.res).toEqual({ influence: 1, fear: 1, wealth: 1 });
+    expect(y.res).toEqual({ influence: 3, fear: 5, wealth: 1 });
+  });
+  it('other houses still halve a pool', () => {
+    const g = newGame(2, ['brasador', 'vaitama']);
+    const [a, y] = g.s.players;
+    a.res = { influence: 0, fear: 6, wealth: 0 };
+    drive(g.killPlayer(a, y));
+    expect(a.res.fear).toBe(3);
+  });
+  it('a Legacy does not copy it (it is a house rule, not a passive)', () => {
+    const g = newGame(2, ['brasador', 'vaitama']);
+    const [a, y] = g.s.players;
+    a.legacy = 'vaitama';
+    a.res = { influence: 0, fear: 6, wealth: 0 };
+    drive(g.killPlayer(a, y));
+    expect(a.res.fear).toBe(3);
+  });
+});

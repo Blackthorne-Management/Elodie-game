@@ -86,7 +86,7 @@ export interface HouseDef {
   claimReduction?: (gen: Gen) => number;
   mostFearedDownside?: (gen: Gen) => boolean;
   legacyOnDeath?: boolean;                         // Yaguana
-  keepsOnDeath?: (gen: Gen) => boolean;            // the dying character loses no pool (a Yaguana experiment)
+  keepsOnDeath?: (gen: Gen) => boolean;            // the dying character loses no pool (Yaguana's Areíto)
   legacyDrawTwoAt?: Gen;                           // Yaguana III
   extraPassiveAt?: Gen;                            // Yaguana IV
   downsideText?: string;

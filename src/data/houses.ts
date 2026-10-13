@@ -153,6 +153,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     passiveText: ['On death, your heir inherits a Legacy from any fallen bloodline.', 'On death, draw 2 Legacies and pick one.'],
     passive: {},
     legacyOnDeath: true,
+    keepsOnDeath: () => true,                      // Areíto (rules-decisions 75)
     legacyDrawTwoAt: 3,
     extraPassiveAt: 4,
     abilities: [
@@ -228,14 +229,17 @@ export const HOUSES: Record<HouseId, HouseDef> = {
 };
 
 // Text for the generation cards (Gen II-IV rules that are not abilities).
-export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<2 | 3 | 4, string>>>> = {
+export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<1 | 2 | 3 | 4, string>>>> = {
   ironvow: { 2: "Raider's Charge: your basic attack may come before you move." },
   agnivansh: { 2: 'Rakt Ki Pyaas: after landing a kill, move up to half a d6 roll (rounded up).' },
   stillwater: {
     2: 'The Long Watch: if you take no action on your turn (no attack, Hand Card or trade), gain 1 of any resource.',
   },
   kaysoley: { 2: 'Rit Solèy: you need 1 less combined resource to Claim the Throne (2 less from Gen III).' },
-  vaitama: { 4: 'Song of Coaybay: permanently gain the passive of a bloodline that has become a Specter.' },
+  vaitama: {
+    1: 'Areíto: when your character dies, you lose no resources (a Reckoning against you still takes its bonus).',
+    4: 'Song of Coaybay: permanently gain the passive of a bloodline that has become a Specter.',
+  },
 };
 
 export const pillarLabel = (x: Pillar) => cap(x);

@@ -178,7 +178,7 @@ export const RULES: RuleSection[] = [
       {
         steps: [
           '**Reckoning first:** if the killer\'s family holds a Grudge against the dying player, the killer takes the Reckoning bonus now, **before anything is halved** (see Reckoning below).',
-          'The dying player loses **half (rounded down) of one pool** of their choice.',
+          'The dying player loses **half (rounded down) of one pool** of their choice. (House Yaguana\'s **Areíto**: Yaguana loses nothing here.)',
           '**Grudge:** their family now holds a Grudge against the killer (unless this kill was a Reckoning).',
           'The next generation card is turned up: the heir keeps every earlier ability and gains a new one.',
           'Take Heart Tokens for the new generation.',
