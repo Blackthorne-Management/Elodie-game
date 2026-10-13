@@ -18,7 +18,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   - Yaguana (Trade): column 4, row 4
 - **Squares [3]:** every grid square is a space. The 8 house squares and the Throne are the "tiles".
   Players on the same square are adjacent.
-- **First player [4]:** random in solo; the host picks in multiplayer.
+- **First player [4]** (superseded by [72]): random in solo; the host picks in multiplayer.
 
 ## The board
 - **Every square of the 18×18 grid can be walked on,** water included (changed after playtesting). Pawns can't
@@ -125,12 +125,12 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   de Guerra cancels the target's next Fear gain. Reinado de Cenizas counts kills by all your
   generations.
 - **Ironvow II [37]:** your basic attack may come before your move.
-- **Dorini IV [38]:** one extra Hand Card play and one extra basic attack this turn.
-- **Agnivansh II/III [39]:** half-move = roll a d6, move half (rounded up) in a straight line.
+- **Dorini IV [38]** (superseded: Bazaar al-Dhahab, spend 3 Wealth for one extra action): one extra Hand Card play and one extra basic attack this turn.
+- **Agnivansh II/III [39]** (superseded: the half-move takes any path, like other moves): half-move = roll a d6, move half (rounded up) in a straight line.
   "Win a combat" = your attack lands.
 - **Suzumori IV [40]:** you choose the direction of the target's next move and the target of their next
   attack or targeted card.
-- **Kay Soley II [41]:** the truce lasts 2 rounds.
+- **Kay Soley II [41]** (superseded by [84]: until your turn after next starts): the truce lasts 2 rounds.
 
 ## Winning
 - **Challenge fights [42]:** the **claimant strikes first**, then they trade blows until one dies.
@@ -145,7 +145,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   - **Challenge fights for the Throne are the exception:** the claimant can still be fought, and can still fall.
   - The Sudden Death tie-break isn't fought on the board, so it's unaffected. This is a setting (`THRONE_SANCTUARY`).
 - **Claims [43]:** at any point on your turn while on the Throne and eligible at that moment.
-- **Kay Soley IV [44]:** the combined total drops by 2; the per-pillar minimum doesn't.
+- **Kay Soley IV [44]** (superseded by [81]: 1 less from Gen I, 2 less from Gen III): the combined total drops by 2; the per-pillar minimum doesn't.
 - **What you need to claim [45]** (changed after playtesting and simulation): a combined total **and** a minimum in
   every pillar. There is no one-pillar route any more.
   - 2–3 players: **8 total, with at least 1 in each** of Influence, Fear and Wealth.
@@ -162,7 +162,7 @@ differ, **this file wins**. Numbers in brackets refer to the question list.
   Trial, Elodie's Reckoning, Gilded Cage). For "you" cards, the Specter picks a target player, who
   resolves it as if they drew it. Global cards work as written. The card leaves the game. With fewer
   than 5 cards in the discard pile, the Specter skips.
-- **Discard pile [47]:** top = most recently discarded; hand-limit discards go to the bottom.
+- **Discard pile [47]:** top = most recently discarded; hand-limit discards go to the bottom. (Two piles since [84]: Hand Cards and Instants; the Specter reads the Instant pile.)
 
 ## Individual cards
 - **Barter [48]:** you pick the card you give. The card you get is random, unless the card lets you see
@@ -190,8 +190,8 @@ These came up in code and weren't covered above; all confirmed as they stand.
 - **Counterspell vs. attack cards:** Cursed Dagger and Shadow Strike are attacks, so Block/Deflect cards answer
   them, not Counterspell. Counterspell answers every other Hand Card aimed at you.
 - **Poisoned Chalice** still costs you 1 Wealth if it's countered.
-- **Bridge the Gap** played before you roll *is* your move for the turn (with the resource check after it);
-  played after rolling it just moves you.
+- **Bridge the Gap** (superseded by [84]: cards are played after moving, so it just moves you) played before you roll
+  *is* your move for the turn (with the resource check after it); played after rolling it just moves you.
 - **The Great Raid:** if you die during the first of the two turns, your heir still takes the second.
 - **La Marca** stays on its target until they die or you brand someone else.
 - **Shadow Strike's** "cannot be blocked" also rules out Last Stand.
@@ -391,6 +391,92 @@ These came up in code and weren't covered above; all confirmed as they stand.
     Patience (cancel a Reckoning, once per game) moves to the Gen III upgrade. Stillwater 1.02× (0.97–1.05×); it saves
     a Stillwater heir about once every five games.
   With [76]–[83], every house wins 0.81–1.14× its fair share at every player count (3,000 games per count).
+- **Adopted: the rest of the design review [84]** (docs/REVIEW-2026-10.md sections 2–5, with the owner's overrides).
+  Card text now says what the engine does. Old → new:
+  - **Rules:**
+    - **Two discard piles:** Hand Cards go to the face-down **Hand Card discard pile**, Instants to the **Instant
+      discard pile**. The Specter picks from the top 5 of the Instant pile (fewer than 5 there: it skips). Stolen Goods,
+      Black Market Contact and Treasure Map read the Hand Card pile (so "skip Instants" is gone). When the draw pile
+      runs out, both piles are shuffled together into a new one; if all three are empty, nobody draws. (Was: one pile.)
+      Supersedes [46]–[47] where they differ.
+    - **Lasting cards** stay face up until their effect ends, and the engine now matches: Hex of Withering, Confusion,
+      Forced March, Sabotage, Burn the Village, Golden Harvest, Ceasefire, Blood Pact, Uneasy Truce, Dread Banner,
+      Marked for Death, Plunder, Vanishing Act, Shield Wall (until the end of the turn). When a character dies, the
+      lasting cards on them are discarded except truces, Ceasefire and Golden Harvest. (Was: discarded when played.)
+    - **Truces count your own turns** (round-based lengths gave the last seat nothing): Ceasefire "this round" →
+      "until your next turn starts"; Blood Pact "2 full rounds" → "until your turn after next starts"; Kay Soley's
+      Sèman Lapè "2 rounds" (end of next round) → "until your turn after next starts". Supersedes [41].
+    - **◎ Target cards:** Counterspell and Turnabout answer only the Hand Cards marked ◎ (4, 9, 16, 20, 29, 30, 31,
+      33–40, 44, 49, 50), the set the engine already used. Attack cards are answered by Blocks.
+    - **Barter cards** are the cards marked Barter; Black Market Deal (25) moves into that category, so Embargo
+      can cancel it.
+    - **Ambush (125):** full Heart Tokens → "When another player ends their roll-and-move on or next to your square,
+      attack them for 1 damage. (They may Block.)" A Reaction can't be cancelled by another Reaction or Counterspell,
+      but the Ambush attack can be Blocked.
+    - **Sudden Death with 3+ tied:** the earliest seat fights the next and the winner fights on with the Heart Tokens
+      left (the engine used to restore them between duels). The duel ignores every bonus.
+    - **Wording only (the engine already did this):** death halving is "one pool holding 2 or more"; the heir keeps
+      the hand, remaining resources, Grudges, kills and La Marca; Block cards are played whenever you're attacked, on
+      anyone's turn; challengers declare clockwise from the claimant's left, then fight in that order; Challenge blows
+      take the basic-attack bonuses (Agnivansh +1, La Marca, Dread Banner, Marked for Death, Brasador's downside);
+      resource tokens show 1 and 5 and are exchanged five-for-one; the house vote comes before the lottery; Brasador's
+      downside needs **strictly** the most Fear; Agni ki Shakti III's step isn't taken in a Challenge; Dorini's
+      bonus is once in **each player's** turn; the Specter rule lists the ten Instants it can't pick.
+    - **One name per power** in the app: Grito de Guerra, Reinado de Cenizas, Daftar al-Dorini, Bazaar al-Dhahab,
+      Kagemimi, Sasayaki Ha, Ayatsuri, Sèman Lapè, Rakt Ki Pyaas (no English aliases in prompts and logs).
+    - **Table helpers:** a "Your first three turns" box, a score pad (kills, Reckonings, fallen houses) and the full
+      components list (shields, La Marca, Grito de Guerra and Specter markers, 8 Legacy cards, generation cards, the
+      round marker, 40 Grudge Tokens, 5 per house).
+  - **Cards (balance, section 3):**
+    - 46 Bridge the Gap: any tile within 8 → "Move to any square within 5 spaces." The "played before you roll" ruling
+      is dropped (cards can't be played before moving).
+    - 70 Gambler's Luck: max 3 → max 2.
+    - 19 Market Day: "+1 Wealth, draw 1" → "Gain 1 Wealth. Draw 2 cards; keep 1 and put the other at the bottom of the
+      Hand Card discard pile." An Instant among the two resolves and counts as one of them.
+    - 62 Dodge: "negate, draw 1" → "Negate an attack and gain 1 resource of your choice." (A draw is worthless under
+      [73]; "move 1" would copy Vanish.)
+    - 64 Steadfast: "only at half Heart Tokens or below" → "Negate an attack. If you are at 1 Heart Token, also gain
+      1 Heart Token."
+    - 7 Ancient Charter, 14 Iron Reputation, 21 Merchant's Gambit: 2 → **3** on the matching tile.
+    - 18 Hidden Vault: "Gain 2 Wealth; reveal this card" → "Gain 2 Wealth, or 3 if you have no Wealth."
+    - 22 Counterfeit Coin: "Gain 1 Wealth" → "Gain 1 Wealth and 1 resource of your choice."
+    - 26 Plunder, 45 Vanishing Act, 17 Caravan Toll: each also **gains 1 Wealth** (Caravan Toll: 1, plus 1 per other
+      player on your square, max 2 more).
+    - 111 Caravan Passing (was a copy of Bandit Ambush): "Roll a die. Even: gain 1 Wealth. Odd: the player to your
+      left gains 1 Wealth."
+    - Not adopted: B10 (resource theft on Forced Discard and Pickpocket).
+  - **Cards (wording, section 2; the engine already did this unless noted):**
+    - 98 Elodie's Trial: "You may pick a player (you included) to attack the player with the fewest Heart Tokens for
+      1 damage. (Tie: no effect.)"
+    - 100 Scales of War: "The player with the most Fear gives 1 Fear to the player with the least. (Tie: no effect.)"
+    - 65 Last Stand: "When an attack would drop you to 0 Heart Tokens, stay at 1 instead (the attack still lands)."
+    - 32 Shadow Strike: adds "(not even by Last Stand)". 58 Iron Guard: "Negate an attack against you."
+    - 124 Interference: "...plays a Hand Card **as their action**..." 126 Turnabout, 63 Counterspell: ◎ Target cards.
+    - 38 Forced March: "...their full roll in a straight line, in a direction you choose."
+    - 61 Shield Wall: "For the rest of this turn, no one else on your square can be attacked."
+    - 12 Dread Banner: "your next attack (even if blocked) deals +1"; 31 Marked for Death: "this game" dropped.
+    - 52 Black Market Contact: "the top 3 cards of the Hand Card discard pile" (it took the top 3, not your choice).
+    - 49 Uneasy Trade: "...take 1 **different** resource..." (engine: the two now must differ).
+    - 25, 48, 103: "give a card of your choice; take a random card from their hand". 53 Broker's Fee: "Look at two
+      other players' hands. Choose one card from each; they swap them." (engine: the hands are now shown).
+    - 50 Stolen Goods: random card from the discard pile → "They look through the Hand Card discard pile and take any
+      one card." (engine changed).
+    - 88 Night of Shadows, 108 Stolen Secrets: the review's prints.
+    - 101 Whispers at Court: "most recently gained Influence" → "The player with the most Influence loses 1
+      Influence. (Tie: no effect.)" 110 Loose Lips: "most Hand Cards played" → "The player to your left reveals
+      their hand to the table." (engine changed: both can now be tracked at a table.)
+    - Tie notes on 76, 97, 117, 119; 67 Duel of Honor: "an adjacent player you choose (none: the player to your left);
+      re-roll ties".
+    - 120 Treasure Map: "the top card of the Hand Card discard pile... If its text mentions Wealth". 116 Trade
+      Winds: "move 1 space... right away" (it never added to the roll).
+    - Sasayaki Ha: "Look at a player's hand and choose one card for them to discard." (engine: the hand is shown).
+  - **Marked superseded:** [4] (by [72]), [38] (Bazaar al-Dhahab), [39] (half-move on any path), [41] (above),
+    [44] (by [81]), and the "Bridge the Gap before you roll" call.
+  - **Balance check** (1,000 bot games at each of 2, 3, 4, 6 and 8 players): houses 0.84–1.18× their fair share at
+    2–6 players; at 8 players Kay Soley 1.22× and Agnivansh 1.22× (Stillwater 0.69× in that sample, but 0.95× over
+    3,000 more games; over all 4,000: Kay Soley 1.19×, Agnivansh 1.12×, Stillwater 0.88×, Yaguana 0.88×). Not retuned:
+    watch Kay Soley at 8 players. Games 9.3–10.8 rounds; Sudden Death 5–13%. No card above 1.55×: Bridge the Gap
+    1.61× → 1.48×, Gambler's Luck 1.46× → 1.31×; Stolen Goods is the weakest (0.67×, rarely played).
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about

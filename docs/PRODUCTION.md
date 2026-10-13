@@ -14,14 +14,16 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 | 1 | **Game box** | Telescoping (lid + base) about 12.5" × 12.5" × 3", fits the folded board flat on top. Side panel: **2–8 players · 60–150 min · best with 3–6** | `print/box-*.png` (to build) | Logo ✔, board map ✔ |
 | 2 | **Game board** | 24" × 24" quad-fold, 7200 px | `print/board-24in.png` (`npm run print:board`) | Map ✔ (needs the 4096 file), seats or crests |
 | 3 | **Action deck** | 126 cards, 63 × 88 mm, one shared back | `print/cards/card-*.png` (`npm run print`) | Card art 1–126, card back |
-| 4 | **Character cards** | 32 tarot cards (8 houses × Gen I–IV), own back | `print/characters/*.png` (`npm run print`) | 32 portraits, crests |
+| 4 | **Character cards** (generation cards) | 32 tarot cards (8 houses × Gen I–IV), own back | `print/characters/*.png` (`npm run print`) | 32 portraits, crests |
 | 5 | **Player boards** | 8, one per house: spaces for Influence, Fear and Wealth tokens, Heart Tokens and Grudges, the turn summary | `print/mats/*.png` (to build) | Crests |
 | 6 | **Pawns** | 8 standees on plastic stands, the house's Gen I portrait (or crest) | `print/standees/*.png` (to build) | Portraits or crests |
 | 7 | **Heart Tokens** | 32 round chipboard tokens (3 per player + spares) | `print/tokens/*.png` (to build) | — |
 | 8 | **Grudge Tokens** | 40 round tokens, 5 per house, crest on the front, plain back (also used for the house lottery) | `print/tokens/*.png` (to build) | Crests |
 | 9 | **Resource tokens** | 180 round double-sided chipboard tokens, 60 each of Influence (crown), Fear (crossed swords) and Wealth (coins): **1** on the front, **×5** on the back | `print/tokens/*.png` (to build) | Icons ✔ |
 | 9b | **Round marker** | 1 wooden cube or pawn for the board's round track | stock piece | — |
-| 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 War Cry, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/*.png` (to build) | — |
+| 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 Grito de Guerra markers, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/*.png` (to build) | — |
+| 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive (Yaguana's Ancestor's Voice draws one blind from the houses not at the table) | `print/legacy/*.png` (to build) | Crests |
+| 10c | **Score pad** | 50-sheet pad, one column per player: kills, Reckonings, fallen houses (read by Sudden Death, Reinado de Cenizas, Elodie's Reckoning and Yaguana's Legacies) | `print/scorepad.pdf` (to build) | — |
 | 11 | **Dice** | 2 six-sided dice (stock, or custom-printed faces) | stock / `print/dice/*.png` | — |
 | 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`) | `print/rulebook.pdf` (to build) | Board, card and portrait art for pictures |
 | 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards) | `print/characters/reference-*.png` (to build) | — |
@@ -39,7 +41,7 @@ saved projects in one cart.
 | Order | What | Order by | Shipping |
 |---|---|---|---|
 | **A** | Board (2) | **Mon Oct 20** | Standard |
-| **B** | Box (1), cards (3, 4, 13), player boards (5), standees (6), tokens (7, 8, 9, 10), round marker (9b), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
+| **B** | Box (1), cards (3, 4, 10b, 13), player boards (5), standees (6), tokens (7, 8, 9, 10), round marker (9b), score pad (10c), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
 
 ## Schedule
 

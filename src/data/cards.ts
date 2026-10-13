@@ -456,7 +456,7 @@ block(65, 'Last Stand', 'When an attack would drop you to 0 Heart Tokens, stay a
 // Dice-Based Chaos
 instant(66, 'Bandit Ambush', 'Dice', 'Roll a die. Odd: lose 1 Wealth. Even: gain 1 Wealth.',
   function* (g, p, c) { if (odd(g.roll(p, c.name))) g.lose(p, 'wealth', 1, c.name); else g.gain(p, 'wealth', 1, c.name); });
-instant(67, 'Duel of Honor', 'Dice', 'Roll against an adjacent player of your choice (if none, the player to your left); re-roll ties. The lower roll loses 1 Heart Token.',
+instant(67, 'Duel of Honor', 'Dice', 'Roll against an adjacent player you choose (none: the player to your left); re-roll ties. The lower roll loses 1 Heart Token.',
   function* (g, p, c) {
     const adj = g.adjacentTo(p);
     const foe = adj.length ? yield* g.choosePlayer(p, adj, 'Duel of Honor: against whom?') : g.leftOf(p);

@@ -177,7 +177,7 @@ const SLIDES: Slide[] = [
     'Your killer hands you a **Grudge**. Kill them back for a **Reckoning**: take 1 of each resource, **before** they halve.'] },
   { id: 'specter', title: 'The Specter', pic: SpecterPic, text: [
     'When Gen IV falls, your bloodline ends, but you haunt the game as a **Specter**.',
-    'Once a round, replay an Instant from the discard pile at any rival. Mischief only: **never damage**.'] },
+    'Once a round, replay an Instant from the **Instant discard pile** at any rival. Mischief only: **never damage**.'] },
   { id: 'throne', title: 'Claim the Throne', pic: ThronePic, text: [
     'With enough resources **and** some of every pillar, stand on the Throne and **claim** it.',
     'Every other eligible rival may **challenge**: you fight each in turn. Survive them all and you win.'] },
