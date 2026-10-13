@@ -117,6 +117,14 @@ describe('movement (Section 4)', () => {
     expect(g.hook(g.p(0), 'moveBonus')).toBe(1);
     expect(g.hook(g.p(1), 'moveBonus')).toBe(0);
   });
+  it('from Gen III Ironvow\'s reach replaces the extra movement (rules-decisions 78)', () => {
+    const g = newGame(2, ['ironvow', 'dorini']);
+    const p = g.p(0);
+    p.gen = 2;
+    expect([g.hook(p, 'moveBonus'), g.hook(p, 'reach')]).toEqual([1, 1]);
+    p.gen = 3;
+    expect([g.hook(p, 'moveBonus'), g.hook(p, 'reach')]).toEqual([0, 2]);
+  });
 });
 
 describe('resources (Section 5)', () => {
@@ -169,6 +177,20 @@ describe('combat and death (Sections 6 and 9)', () => {
     g.s.turn!.moved = true;
     return { g, a, b };
   };
+  it('at 6+ players no attack deals more than 2 damage, bonuses included (rules-decisions 77)', () => {
+    const g = newGame(6);
+    const [a, b] = g.s.players;
+    b.pos = { x: a.pos!.x, y: a.pos!.y + 1 };
+    a.hand = []; b.hand = [];
+    startTurn(g, 0);
+    g.s.turn!.moved = true;
+    b.maxHp = b.hp = 10;
+    a.mark = b.id;                                               // La Marca would make it 4
+    drive(g.basicAttack(a, b));
+    expect(b.hp).toBe(8);
+    expect(g.damageCap()).toBe(2);
+    expect(newGame(4).damageCap()).toBeGreaterThan(3);
+  });
   it('deals damage equal to the attacker\'s Heart Tokens', () => {
     const { g, a, b } = duelists();
     b.maxHp = b.hp = 10;
@@ -354,9 +376,11 @@ describe('combat and death (Sections 6 and 9)', () => {
     startTurn(g, a.id);
     expect(g.attackBlockedReason(a, b, 'basic')).toBeNull();
   });
-  it('the Throne is sanctuary: no attacks onto or off it, ranged ones included', () => {
+  const RICH = { influence: 3, fear: 3, wealth: 3 };              // eligible to claim
+  it('the Throne is sanctuary for an eligible player: no attacks onto or off it, ranged ones included', () => {
     const { g, a, b } = duelists();
     a.pos = { x: 9, y: 7 }; b.pos = { x: 9, y: 8 };            // b on the Throne, a right beside it
+    b.res = { ...RICH };
     expect(g.basicTargets(a)).toHaveLength(0);
     expect(g.attackBlockedReason(a, b, 'card')).toMatch(/Throne/);
     expect(g.attackBlockedReason(b, a, 'basic')).toMatch(/Throne/);   // nor from it
@@ -367,9 +391,20 @@ describe('combat and death (Sections 6 and 9)', () => {
     a.pos = { x: 9, y: 11 };
     expect(g.basicTargets(a)).toEqual([b]);
   });
-  it('no one dies on the Throne; other Heart Token loss stops at 1', () => {
+  it('the Throne gives no protection to a player not eligible to claim (rules-decisions 76)', () => {
+    const { g, a, b } = duelists();
+    a.pos = { x: 9, y: 7 }; b.pos = { x: 9, y: 8 };
+    b.res = { influence: 1, fear: 0, wealth: 0 };
+    expect(g.basicTargets(a)).toEqual([b]);
+    expect(g.attackBlockedReason(b, a, 'basic')).toBeNull();
+    b.hp = 1;
+    g.damage(b, 1, a.id, '(test)');
+    expect(b.hp).toBe(0);
+    expect(g.s.dying).toHaveLength(1);
+  });
+  it('no one eligible dies on the Throne; other Heart Token loss stops at 1', () => {
     const { g, a } = duelists();
-    a.pos = { x: 8, y: 8 }; a.hp = 1;
+    a.pos = { x: 8, y: 8 }; a.hp = 1; a.res = { ...RICH };
     g.damage(a, 1, null, '(test)');
     expect(a.hp).toBe(1);
     a.hp = 3;
@@ -707,7 +742,7 @@ describe('trade offers and Reaction cards (rules-decisions 60-61)', () => {
   });
   it('Ambush is not offered where an attack is not allowed (the Throne)', () => {
     const { g, p, o } = two();
-    p.pos = { x: 8, y: 8 };
+    p.pos = { x: 8, y: 8 }; p.res = { influence: 3, fear: 3, wealth: 3 };
     o.pos = { x: 8, y: 7 };
     o.hand = [125];
     const flow = g.ambush(p);

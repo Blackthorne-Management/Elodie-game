@@ -167,8 +167,8 @@ const SLIDES: Slide[] = [
     'Attack a rival beside you, **or** play a Hand Card, **or** offer a rival a 1-for-1 resource trade they may refuse.',
     'Then draw back up to **3 cards**. House abilities are free extras.'] },
   { id: 'combat', title: 'Combat', pic: CombatPic, text: [
-    '**Damage equals your Heart Tokens**, so a wounded fighter hits weaker. Attacking ends your turn.',
-    `No attacks during ${truce}, none onto or off the Throne, and new heirs are safe for their first turn.`] },
+    `**Damage equals your Heart Tokens**, so a wounded fighter hits weaker (at most ${TUNING.bigTableMaxDamage} with ${TUNING.bigTablePlayers} or more players). Attacking ends your turn.`,
+    `No attacks during ${truce}, none onto or off the Throne against a player eligible to claim, and new heirs are safe for their first turn.`] },
   { id: 'cards', title: 'The Deck', pic: CardsPic, text: [
     '**Hand Cards** are held (up to 3). **Instants** resolve the moment they\'re drawn; ten are **Elodie** herself.',
     '**Reactions** are played on a rival\'s turn, at the moment printed on them: cancel a move, a card, a trade…'] },

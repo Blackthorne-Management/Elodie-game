@@ -103,6 +103,7 @@ export const RULES: RuleSection[] = [
         list: [
           '**Attack** a rival on your square or on one of the four squares beside you (not diagonal). Attacking is your action and **ends your turn**; you still draw back up.',
           '**Damage equals your current Heart Tokens.** A wounded fighter hits weaker.',
+          `**Big tables (${TUNING.bigTablePlayers}+ players): no attack deals more than ${TUNING.bigTableMaxDamage} damage,** bonuses included. This covers basic attacks, attack cards, Challenge blows and the Sudden Death duel; Heart Token loss that isn't an attack is not capped.`,
           'One basic attack per turn. Attack cards (Cursed Dagger, Shadow Strike) are separate.',
           '**Block/Deflect cards** are played off-turn, in answer to an attack on you. They don\'t use up your own action. **Counterspell** answers any other Hand Card aimed at you.',
           'At 0 Heart Tokens your character dies (see Death and Succession). If you die on your own turn, your turn ends.',
@@ -114,7 +115,7 @@ export const RULES: RuleSection[] = [
         list: [
           `**Opening truce:** no attacks of any kind (basic, card or Reaction) during ${truceText}. Challenges are not affected.`,
           '**New heirs are protected:** a new heir can\'t be attacked until the end of their first turn (if they fell on their own turn, through their next one). Challenges and non-attack effects still apply. A shield shows beside their name.',
-          '**The Throne is a sanctuary:** no attacks onto or off its four squares, ranged ones included, and no one can die there: any other Heart Token loss stops at 1. Challenge fights for the Throne are the exception.',
+          '**The Throne is a sanctuary, but only for a player eligible to claim:** no one can attack them there, they can\'t attack from there, and they can\'t die there (any other Heart Token loss stops at 1). **Anyone else may stand on the Throne but gets no protection:** they can be attacked and killed there like anywhere else. Challenge fights for the Throne are the exception.',
         ],
       },
     ],
@@ -252,7 +253,7 @@ export const RULES: RuleSection[] = [
         steps: [
           'The highest combined total of Influence + Fear + Wealth wins.',
           'Ties go to the highest single pillar, then the most kills, then the most Reckonings.',
-          'Still tied: the tied players duel (damage = Heart Tokens; the earlier player in turn order strikes first; no Block/Deflect cards) until one is left.',
+          `Still tied: the tied players duel (damage = Heart Tokens, at most ${TUNING.bigTableMaxDamage} at ${TUNING.bigTablePlayers}+ players; the earlier player in turn order strikes first; no Block/Deflect cards) until one is left.`,
         ],
       },
     ],

@@ -83,8 +83,9 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     lore: "Skarragol's warbands prize one thing above all else: speed. Their oath-bound clans strike before anyone can organize a response, whether on longship or on horseback.",
     hp: [3, 3, 3, 3],
     passiveName: "Ironvow's Oath",
-    passiveText: ['+1 to your movement roll.', 'Also: your basic attack reaches 2 squares in a straight line.'],
-    passive: { moveBonus: () => 1, reach: level => (level >= 2 ? 2 : 1) },
+    passiveText: ['+1 to your movement roll.', 'Instead of the +1 to movement: your basic attack reaches 2 squares in a straight line.'],
+    // From Gen III the reach replaces the extra movement (rules-decisions 78).
+    passive: { moveBonus: level => (level >= 2 ? 0 : 1), reach: level => (level >= 2 ? 2 : 1) },
     attackBeforeMove: gen => gen >= 2,
     abilities: [
       {

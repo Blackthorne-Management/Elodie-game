@@ -53,6 +53,11 @@ export const TUNING = {
   tileAlone: 3,          // resources from a tile when you're alone on it
   tileShared: 2,         // ...when someone else is there too
   maxDamage: 99,         // cap on the damage of one attack (99 = no cap)
+  // Big tables (rules-decisions 77): from this many players, no attack or duel blow deals more than bigTableMaxDamage.
+  bigTablePlayers: 6,
+  bigTableMaxDamage: 2,
+  // The Throne's sanctuary protects only players eligible to claim (rules-decisions 76). false = everyone (the old rule).
+  sanctuaryEligibleOnly: true,
   // On death: 'onePool' = lose half (rounded down) of one pool you choose (the rulebook);
   // 'allHalfUp' = lose half (rounded up) of every pool (an experiment).
   deathLoss: 'onePool' as 'onePool' | 'allHalfUp',

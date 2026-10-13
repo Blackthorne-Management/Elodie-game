@@ -334,6 +334,24 @@ These came up in code and weren't covered above; all confirmed as they stand.
   - **Guaíza once per round instead of once per game:** no change (the bots never use it).
   - **+1 resource the first time each round another bloodline's character dies:** 1.41×, far too strong.
   Switch: `HouseDef.keepsOnDeath`.
+- **Adopted: the Throne protects only a player eligible to claim [76]** (from the second review, docs/REVIEW-2026-10.md).
+  The sanctuary used to cover anyone on the Throne. A probe seat that walked there at 5 resources and waited won 25% of
+  6-player games (fair 17%) and 23% at 8 (fair 12.5%); waiting beside the Throne gave no edge. Now anyone may stand on
+  the Throne, but only a player eligible to claim can't be attacked there, can't attack from there and can't die
+  there. Chosen over "you may only move onto the Throne while eligible" because rivals don't have to police movement
+  and it also covers a player who drops below the threshold while sitting there. Switch:
+  `TUNING.sanctuaryEligibleOnly`.
+- **Adopted: no attack deals more than 2 damage at 6+ players [77]** (1,000 bot games at each of 2, 3, 4, 6 and 8
+  players, three options). At 8 players a Specter appeared in 86% of games (3.1 per game, the first around round 7).
+  With the cap: 70% (2.3 per game, the first around round 9); at 6 players 75% → 52% (1.6 → 1.0). Game length doesn't
+  change. Capping every player count was rejected: 2-player games already have too few deaths (1.5 → 1.1 per game).
+  The cap covers basic attacks, attack cards, Challenge blows and the Sudden Death duel, bonuses included; Heart Token
+  loss that isn't an attack is not capped. Switches: `TUNING.bigTablePlayers`, `TUNING.bigTableMaxDamage`.
+- **Adopted: Ironvow's extra movement ends at Gen III [78]**, where the 2-square reach replaces it instead of adding to
+  it. With the cap in [77], Ironvow became the strongest house at big tables (1.15× at 6 players, 1.26× at 8). Delaying
+  the reach or Raider's Charge to Gen III did nothing; removing the +1 entirely sank it to 0.76× at 3–4 players. With
+  this trim (2,000 games per player count, with [76] and [77]): Ironvow 0.95× at 6, 1.04× at 8, 0.89–1.05× at 2–4.
+  Every house at 8 players now wins 0.90–1.12× its fair share (before [76]–[78]: 0.84–1.23×), the tightest yet.
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about

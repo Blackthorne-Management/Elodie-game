@@ -376,6 +376,17 @@ export class Game {
     return this.claimRoute(p) !== null;
   }
 
+  // The Throne's sanctuary: no attacks onto or off it and no dying there, but only for a player eligible to claim
+  // (rules-decisions 76), so it can't be used as a hiding place while you gather resources.
+  safeOnThrone(p: PlayerState) {
+    return THRONE_SANCTUARY && onThrone(p.pos) && (!TUNING.sanctuaryEligibleOnly || this.eligible(p));
+  }
+
+  // The most damage one attack or duel blow can deal: no cap normally, 2 at big tables (rules-decisions 77).
+  damageCap() {
+    return this.s.players.length >= TUNING.bigTablePlayers ? Math.min(TUNING.maxDamage, TUNING.bigTableMaxDamage) : TUNING.maxDamage;
+  }
+
   // ---------------------------------------------------------------- cards and hands
 
   // Draws one card; the draw pile reshuffles from the discard when empty (Section 7).
@@ -612,7 +623,7 @@ export class Game {
     if (t.specter || a.id === t.id) return 'invalid';
     if (kind === 'challenge') return null;
     if (OPENING.truceRounds > 0 && this.s.round <= OPENING.truceRounds) return 'the opening truce holds';
-    if (THRONE_SANCTUARY && (onThrone(t.pos) || onThrone(a.pos))) return 'no one fights on the Throne';
+    if (this.safeOnThrone(t) || this.safeOnThrone(a)) return 'no one fights an heir on the Throne';
     if (this.findEffect('newborn', t.id)) return `${t.name}'s heir has only just risen`;
     if (this.findEffect('noAttack', a.id)) return `${a.name} may not attack this turn`;
     if (this.s.effects.some(e => e.kind === 'truce' && e.armed &&
@@ -647,7 +658,7 @@ export class Game {
     if (a.mark === t.id) damage += 1;   // La Marca
     if (this.house(t).mostFearedDownside?.(t.gen) && this.mostFeared()?.id === t.id) damage += 1;
     const marked = this.findEffect('markedForDeath', t.id);
-    const info: AttackInfo = { attacker: a.id, target: t.id, kind, damage: Math.min(TUNING.maxDamage, damage + (marked ? 1 : 0)) };
+    const info: AttackInfo = { attacker: a.id, target: t.id, kind, damage: Math.min(this.damageCap(), damage + (marked ? 1 : 0)) };
     this.log(`${a.name} attacks ${t.name}!`, 'attack', { player: a.id, target: t.id, amount: info.damage, tag: kind });
 
     // Block / Deflect window.
@@ -706,7 +717,7 @@ export class Game {
   damage(t: PlayerState, n: number, killer: number | null, why = '') {
     if (t.specter || n <= 0 || t.hp <= 0) return;
     // Sanctuary: no one dies on the Throne (except in a challenge fight); the loss stops at 1 Heart Token.
-    if (THRONE_SANCTUARY && !this.inChallenge && onThrone(t.pos) && t.hp - n < 1) {
+    if (!this.inChallenge && this.safeOnThrone(t) && t.hp - n < 1) {
       n = t.hp - 1;
       this.log(`The Throne's sanctuary holds: ${t.name} cannot fall here.`, 'block', { player: t.id });
       if (n <= 0) return;
@@ -1158,7 +1169,7 @@ export class Game {
     const hp = { [first.id]: first.hp, [second.id]: second.hp };
     for (let blow = 0; blow < MAX_FIGHT_BLOWS; blow++) {
       const [x, y] = blow % 2 === 0 ? [first, second] : [second, first];
-      hp[y.id] -= Math.max(1, hp[x.id]);
+      hp[y.id] -= Math.min(this.damageCap(), Math.max(1, hp[x.id]));
       this.log(`Duel: ${x.name} strikes ${y.name}.`, 'attack', { player: x.id, target: y.id });
       if (hp[y.id] <= 0) return x;
     }
