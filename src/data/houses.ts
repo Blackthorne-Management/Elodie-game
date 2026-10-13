@@ -151,11 +151,14 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     lore: "In Xaraguá the dead are never far: the opía, spirits of the departed, walk the island by night, and in the areíto, the great dance of memory, every generation sings the deeds of those before it. House Yaguana's warriors carry the fallen within them, inheriting strength, memory, and secrets from the dead with every generation.",
     hp: [3, 3, 3, 3],
     passiveName: 'Voice of the Opía',
-    passiveText: ['On death, your heir inherits a Legacy from any fallen bloodline.', 'On death, draw 2 Legacies and pick one.'],
+    passiveText: [
+      "Ancestor's Voice: you start the game with a Legacy, the Gen I passive of a house not at the table (any other house when all eight play), drawn blind. Every heir keeps it.",
+      'Your Legacy works at its Gen III strength.',
+    ],
     passive: {},
-    legacyOnDeath: true,
-    keepsOnDeath: () => true,                      // Areíto (rules-decisions 75)
-    legacyDrawTwoAt: 3,
+    startsWithLegacy: true,                        // rules-decisions 83 (was: a Legacy on death)
+    legacyUpgradeAt: 3,
+    keepsOnDeath: gen => gen >= 2,                 // Areíto from Gen II (rules-decisions 75, 83)
     extraPassiveAt: 4,
     abilities: [
       {
@@ -221,9 +224,13 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     identity: 'Defensive/patient', curve: 'Late-favored', tileType: 'court', home: { x: 0, y: 8 },
     lore: "Aldermoor's old families have weathered centuries of invasion and famine the same way every time: by simply outlasting everyone else.",
     hp: [3, 3, 3, 3],
-    passiveName: "Stillwater's Patience",
-    passiveText: ['Once per game, cancel a Reckoning bonus used against you.', 'One more use (two in total).'],
-    passive: { reckoningCancels: level => level },
+    passiveName: 'Unbroken',
+    passiveText: [
+      'The first attack that would kill each heir while at full Heart Tokens leaves them at 1 instead.',
+      "Also, Stillwater's Patience: once per game, cancel a Reckoning bonus used against you.",
+    ],
+    // rules-decisions 83 (was: Patience at Gen I, a second use at Gen III)
+    passive: { unbroken: () => 1, reckoningCancels: level => (level >= 2 ? 1 : 0) },
     longWatch: gen => gen >= 2,
     abilities: [],
   },
@@ -238,7 +245,7 @@ export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<1 | 2 | 3 | 4, st
   },
   kaysoley: { 1: 'Rit Solèy: you need 1 less combined resource to Claim the Throne (2 less from Gen III).' },
   vaitama: {
-    1: 'Areíto: when your character dies, you lose no resources (a Reckoning against you still takes its bonus).',
+    2: 'Areíto: from now on, when your character dies, you lose no resources (a Reckoning against you still takes its bonus).',
     4: 'Song of Coaybay: permanently gain the passive of a bloodline that has become a Specter.',
   },
 };

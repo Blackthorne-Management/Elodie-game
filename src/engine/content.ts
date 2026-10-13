@@ -51,6 +51,7 @@ export interface PassiveHooks {
   stepOnLanded?: (level: number) => number;        // free steps after landing an attack
   peeksPerRound?: (level: number) => number;
   reckoningCancels?: (level: number) => number;
+  unbroken?: (level: number) => number;            // 1: the first attack that would kill this heir from full Heart Tokens leaves 1
 }
 
 export interface Ability {
@@ -88,7 +89,9 @@ export interface HouseDef {
   mostFearedDownside?: (gen: Gen) => boolean;
   legacyOnDeath?: boolean;                         // Yaguana
   keepsOnDeath?: (gen: Gen) => boolean;            // the dying character loses no pool (Yaguana's Areíto)
-  legacyDrawTwoAt?: Gen;                           // Yaguana III
+  legacyDrawTwoAt?: Gen;                           // Yaguana III (old rule)
+  startsWithLegacy?: boolean;                      // Yaguana's Ancestor's Voice: a Legacy from the start (rules-decisions 83)
+  legacyUpgradeAt?: Gen;                           // the Legacy works at its upgraded (Gen III) strength from here
   extraPassiveAt?: Gen;                            // Yaguana IV
   downsideText?: string;
 }

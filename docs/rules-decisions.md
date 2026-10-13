@@ -378,6 +378,19 @@ These came up in code and weren't covered above; all confirmed as they stand.
   or clockwise (4–6); when picking, the first picks any house and the second one of its two neighbours. Can't agree:
   Race. In the app: a Race/Battle choice on the solo screen and when hosting a 2-player game. The neighbours come
   from where the home tiles sit round the board (`houseRing` in `src/engine/houseChoice.ts`).
+- **Adopted: Yaguana's Ancestor's Voice and Stillwater's Unbroken [83]** (second review: both houses did nothing
+  visible at Gen I). Tested ideas (2,000–4,000 bot games per player count), as the house's share of wins:
+  - Yaguana starts with a Legacy, on top of everything else: 1.12×. A +1 bonus on every rival tile: 1.23×.
+    Starting Legacy instead of Areíto: 0.95× (0.82× at 8). Starting Legacy instead of the Legacy at death, Areíto
+    from Gen I: 1.14× (1.28× at 6). **Adopted:** starting Legacy instead of the Legacy at death, and **Areíto from
+    Gen II**: 1.05× (0.94–1.14× across player counts). The Legacy is drawn blind from the houses not at the table
+    (any other house when all eight play), every heir keeps it, and it works at its Gen III strength from Gen III.
+  - Stillwater "Quiet Hours" (no action at Gen I: +1 Influence): 1.23×. "Stone Walls" (first attack each round
+    deals 1 less): 1.15×; once per heir: 1.14×; once per heir without The Long Watch: 1.04× but leaves Gen II empty.
+    **Adopted: Unbroken:** the first attack that would kill each heir while at full Heart Tokens leaves them at 1.
+    Patience (cancel a Reckoning, once per game) moves to the Gen III upgrade. Stillwater 1.02× (0.97–1.05×); it saves
+    a Stillwater heir about once every five games.
+  With [76]–[83], every house wins 0.81–1.14× its fair share at every player count (3,000 games per count).
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about

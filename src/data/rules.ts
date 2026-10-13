@@ -205,7 +205,7 @@ export const RULES: RuleSection[] = [
       {
         steps: [
           '**Reckoning first:** if the killer\'s family holds a Grudge against the dying player, the killer takes the Reckoning bonus now, **before anything is halved** (see Reckoning below).',
-          'The dying player loses **half (rounded down) of one pool** of their choice. (House Yaguana\'s **Areíto**: Yaguana loses nothing here.)',
+          'The dying player loses **half (rounded down) of one pool** of their choice. (House Yaguana\'s **Areíto**: from Gen II, Yaguana loses nothing here.)',
           '**Grudge:** their family now holds a Grudge against the killer (unless this kill was a Reckoning).',
           'The next generation card is turned up: the heir keeps every earlier ability and gains a new one.',
           'Take Heart Tokens for the new generation.',
@@ -219,7 +219,7 @@ export const RULES: RuleSection[] = [
           '**The Reckoning bonus: take 1 Influence, 1 Fear and 1 Wealth** from the player you killed. For any of those they have none of, take 1 from a pool they still have instead (your choice), so you take 3 in all when they hold at least 3.',
           '**The bonus is taken BEFORE the death halving, never after.** First the avenger takes their 3, then the dying player halves one pool of their choice from what is left.',
           '**Example:** you avenge yourself on a player holding 2 Influence, 5 Fear and 0 Wealth. You take 1 Influence, 1 Fear and, since they have no Wealth, 1 more Fear (your choice). They are left with 1 Influence and 3 Fear, then halve one pool: halving Fear leaves them 1 Influence and 2 Fear.',
-          'Stillwater\'s Patience can cancel the whole bonus.',
+          'Stillwater\'s Patience (from Gen III) can cancel the whole bonus.',
         ],
       },
     ],
@@ -244,7 +244,7 @@ export const RULES: RuleSection[] = [
       list: [
         'Every house has a **passive** from Gen I that upgrades at Gen III, and **abilities** or house rules that arrive from Gen I to Gen IV. Each heir keeps everything earlier generations had.',
         'An ability with no stated limit can be used **once per turn, as a free action** that doesn\'t use your action.',
-        '**Once-per-game powers:** when you use one (or Stillwater\'s Patience), put a Used token on it on your player board. It stays used when your heir takes over.',
+        '**Once-per-game powers:** when you use one (or Stillwater\'s Patience, from Gen III), put a Used token on it on your player board. It stays used when your heir takes over.',
         'Every house has 3 Heart Tokens in each generation, except Agnivansh Gen IV (2).',
         'The full list of every house and generation is below, under **The Eight Houses**.',
       ],

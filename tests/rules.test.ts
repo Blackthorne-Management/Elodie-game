@@ -613,15 +613,28 @@ describe('the Specter (Section 10)', () => {
 });
 
 describe('houses', () => {
-  it('Vai\'tama inherits a Legacy on death', () => {
+  it('Yaguana starts with a Legacy of a house not at the table, kept by every heir (rules-decisions 83)', () => {
+    for (let seed = 1; seed < 20; seed++) {
+      const g = newGame(3, ['vaitama', 'brasador', 'dorini'], seed);
+      const v = g.p(0);
+      expect(v.legacy).toBeTruthy();
+      expect(['vaitama', 'brasador', 'dorini']).not.toContain(v.legacy);
+      expect(g.passives(v)).toContainEqual({ house: v.legacy, level: 1 });
+      v.gen = 3;
+      expect(g.passives(v)).toContainEqual({ house: v.legacy, level: 2 });   // grows at Gen III
+    }
+    const all = newGame(8, ['vaitama', 'brasador', 'dorini', 'ironvow', 'suzumori', 'kaysoley', 'agnivansh', 'stillwater']);
+    expect(all.p(0).legacy).not.toBe('vaitama');                               // all eight play: any other house
     const g = newGame(2, ['vaitama', 'brasador']);
     const [v, b] = g.s.players;
+    const before = v.legacy;
     b.pos = { x: v.pos!.x, y: v.pos!.y + 1 };
     startTurn(g, 1);
     g.s.turn!.moved = true;
     v.hand = [];
     drive(g.basicAttack(b, v));
-    expect(v.legacy).toBe('vaitama');           // only Yaguana has lost a character so far
+    expect(v.gen).toBe(2);
+    expect(v.legacy).toBe(before);                                             // the heir keeps it
   });
   it('Agnivansh basic attacks deal +1', () => {
     const g = newGame(2, ['agnivansh', 'dorini']);
@@ -633,17 +646,33 @@ describe('houses', () => {
     drive(g.basicAttack(a, d));
     expect(d.hp).toBe(10 - 4);
   });
-  it('Stillwater can cancel a Reckoning bonus', () => {
+  it('Stillwater from Gen III can cancel a Reckoning bonus', () => {
     const g = newGame(2, ['brasador', 'stillwater']);
     const [a, s] = g.s.players;
     s.pos = { x: a.pos!.x, y: a.pos!.y + 1 };
     a.grudges = [s.id];
+    s.gen = 3; s.hp = 1;
     s.res.wealth = 2; s.hand = [];
     startTurn(g, 0);
     g.s.turn!.moved = true;
     drive(g.basicAttack(a, s), byLabel('Wealth', 'Cancel it'));
     expect(a.res.wealth).toBe(0);
     expect(s.used.reckoningCancel).toBe(1);
+  });
+  it('Unbroken: the first killing blow on each Stillwater heir at full Heart Tokens leaves 1 (rules-decisions 83)', () => {
+    const g = newGame(2, ['brasador', 'stillwater']);
+    const [a, s] = g.s.players;
+    s.pos = { x: a.pos!.x, y: a.pos!.y + 1 };
+    s.hand = []; a.hand = [];
+    startTurn(g, 0);
+    g.s.turn!.moved = true;
+    drive(g.basicAttack(a, s));
+    expect(s.hp).toBe(1);
+    expect(s.gen).toBe(1);
+    s.hp = s.maxHp;                                   // healed back to full: no second save for this heir
+    g.s.turn!.attacks = 0; g.s.turn!.actions = 0;
+    drive(g.basicAttack(a, s));
+    expect(s.gen).toBe(2);
   });
   it('Suzumori\'s Kagemimi reveals a hand once per round', () => {
     const g = newGame(2, ['suzumori', 'dorini']);
@@ -888,18 +917,22 @@ describe('Hidden Path (rules-decisions 72)', () => {
 });
 
 describe("Yaguana's Areíto (rules-decisions 75)", () => {
-  it('a dying Yaguana character loses no resources', () => {
+  it('a dying Yaguana character from Gen II loses no resources; Gen I still halves a pool (rules-decisions 83)', () => {
     const g = newGame(2, ['vaitama', 'brasador']);
     const [y, b] = g.s.players;
     y.res = { influence: 4, fear: 6, wealth: 2 };
-    drive(g.killPlayer(y, b));
-    expect(y.res).toEqual({ influence: 4, fear: 6, wealth: 2 });
+    drive(g.killPlayer(y, b), byLabel('Fear'));
+    expect(y.res).toEqual({ influence: 4, fear: 3, wealth: 2 });
     expect(y.gen).toBe(2);
+    drive(g.killPlayer(y, b));
+    expect(y.res).toEqual({ influence: 4, fear: 3, wealth: 2 });
+    expect(y.gen).toBe(3);
   });
   it('a Reckoning against Yaguana still takes its bonus', () => {
     const g = newGame(2, ['vaitama', 'brasador']);
     const [y, b] = g.s.players;
     b.grudges = [y.id];
+    y.gen = 2;
     y.res = { influence: 4, fear: 6, wealth: 2 };
     b.res = { influence: 0, fear: 0, wealth: 0 };
     drive(g.killPlayer(y, b));

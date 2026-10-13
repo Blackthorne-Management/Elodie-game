@@ -74,6 +74,16 @@ export class Game {
         used: {}, mark: null, extraTurn: false,
       };
     });
+    // Yaguana's Ancestor's Voice: a Legacy from the start, drawn blind from the houses not at the table (any other
+    // house when all eight play), rules-decisions 83.
+    for (const p of this.s.players) {
+      if (!this.content.houses[p.house].startsWithLegacy) continue;
+      const all = Object.keys(this.content.houses) as HouseId[];
+      const away = all.filter(h => !this.s.players.some(o => o.house === h));
+      const pool = away.length ? away : all.filter(h => h !== p.house);
+      p.legacy = pool[Math.floor(this.rng() * pool.length)];
+      this.log(`${p.name} hears the Voice of the Opía: the ${this.content.houses[p.legacy].passiveName} Legacy of ${this.content.houses[p.legacy].name}.`, 'ability', { player: p.id });
+    }
     const first = this.s.setup.firstPlayer ?? Math.floor(this.rng() * seats.length);
     this.s.order = seats.map((_, i) => (first + i) % seats.length);
 
@@ -309,7 +319,8 @@ export class Game {
   // Every passive a player holds, with its level (1 = Gen I text, 2 = Gen III upgrade).
   passives(p: PlayerState): { house: HouseId; level: number }[] {
     const out = [{ house: p.house, level: p.gen >= 3 ? 2 : 1 }];
-    if (p.legacy && p.legacy !== p.house) out.push({ house: p.legacy, level: 1 });
+    const up = this.house(p).legacyUpgradeAt;
+    if (p.legacy && p.legacy !== p.house) out.push({ house: p.legacy, level: up && p.gen >= up ? 2 : 1 });
     if (p.extraPassive) out.push({ house: p.extraPassive, level: 1 });
     const mask = this.findEffect('mask', p.id);
     if (mask?.house) out.push({ house: mask.house, level: mask.level ?? 1 });
@@ -708,6 +719,12 @@ export class Game {
     if (marked) this.removeEffect(marked);
     let dealt = info.damage;
     if (outcome === 'survive1') dealt = Math.max(0, Math.min(dealt, t.hp - 1));
+    // Stillwater's Unbroken: the first attack that would kill this heir from full Heart Tokens leaves 1 (rules-decisions 83).
+    if (dealt >= t.hp && t.hp === t.maxHp && t.used.unbroken !== t.gen && this.hook(t, 'unbroken') > 0) {
+      t.used.unbroken = t.gen;
+      dealt = t.hp - 1;
+      this.log(`Unbroken: ${t.name} stands firm with 1 Heart Token.`, 'block', { player: t.id });
+    }
     this.damage(t, dealt, a.id, kind === 'challenge' ? 'in the challenge' : '');
     if (outcome === 'survive1') this.log(`${t.name} refuses to fall!`, 'block', { player: t.id });
     if (this.s.turn?.player === a.id) this.s.turn.damageDealt += dealt;
