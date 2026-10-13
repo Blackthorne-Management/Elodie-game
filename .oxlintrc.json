@@ -14,5 +14,10 @@
       }
     ],
     "require-yield": "off"
-  }
+  },
+  "ignorePatterns": [
+    "public/server/**",
+    "supabase/**",
+    "dist/**"
+  ]
 }

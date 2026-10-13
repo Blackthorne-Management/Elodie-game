@@ -1,0 +1,2971 @@
+//#region src/engine/types.ts
+var e = [
+	"influence",
+	"fear",
+	"wealth"
+], t = {
+	court: "influence",
+	war: "fear",
+	trade: "wealth"
+};
+//#endregion
+//#region src/engine/rng.ts
+function n(e) {
+	let t = e >>> 0;
+	return () => {
+		t = t + 1831565813 >>> 0;
+		let e = t;
+		return e = Math.imul(e ^ e >>> 15, e | 1), e ^= e + Math.imul(e ^ e >>> 7, e | 61), ((e ^ e >>> 14) >>> 0) / 4294967296;
+	};
+}
+var r = (e) => 1 + Math.floor(e() * 6);
+function i(e, t) {
+	let n = [...e];
+	for (let e = n.length - 1; e > 0; e--) {
+		let r = Math.floor(t() * (e + 1));
+		[n[e], n[r]] = [n[r], n[e]];
+	}
+	return n;
+}
+//#endregion
+//#region src/config.ts
+var a = { land: null }, o = {
+	small: {
+		maxPlayers: 3,
+		combined: 8,
+		minEach: 1,
+		single: null
+	},
+	normal: {
+		combined: 9,
+		minEach: 2,
+		single: null
+	}
+}, s = "claimant", c = { truceRounds: 1 }, l = {
+	offer: !0,
+	refusedUsesAction: !0
+}, u = {
+	tileAlone: 3,
+	tileShared: 2,
+	maxDamage: 99,
+	deathLoss: "onePool",
+	reckoningSteal: "eachPillar",
+	reckoningTiming: "before",
+	refillOnPlay: !0,
+	specterChoices: 5
+}, d = {
+	north: {
+		x: 0,
+		y: -1
+	},
+	south: {
+		x: 0,
+		y: 1
+	},
+	east: {
+		x: 1,
+		y: 0
+	},
+	west: {
+		x: -1,
+		y: 0
+	}
+}, f = Object.keys(d), p = (e) => `${e.x},${e.y}`, m = (e, t) => e.x === t.x && e.y === t.y, ee = (e) => e.x >= 0 && e.y >= 0 && e.x < 18 && e.y < 18 && (!a.land || a.land[e.y][e.x] === "."), h = (e, t, n = 1) => ({
+	x: e.x + d[t].x * n,
+	y: e.y + d[t].y * n
+}), g = (e, t) => Math.abs(e.x - t.x) + Math.abs(e.y - t.y);
+function te(e, t) {
+	let n = 0;
+	for (; ee(h(e, t, n + 1));) n++;
+	return n;
+}
+function ne(e, t = Infinity) {
+	let n = /* @__PURE__ */ new Map([[p(e), 0]]), r = [e];
+	for (let e = 1; e <= t && r.length; e++) {
+		let t = [];
+		for (let i of r) for (let r of f) {
+			let a = h(i, r);
+			ee(a) && !n.has(p(a)) && (n.set(p(a), e), t.push(a));
+		}
+		r = t;
+	}
+	return n;
+}
+var _ = 9, re = [
+	{
+		x: _ - 1,
+		y: _ - 1
+	},
+	{
+		x: _,
+		y: _ - 1
+	},
+	{
+		x: _ - 1,
+		y: _
+	},
+	{
+		x: _,
+		y: _
+	}
+], v = (e) => !!e && re.some((t) => m(t, e)), y = (e) => Math.min(...re.map((t) => g(e, t))), b = (e, t) => g(e, t) <= 1, ie = (e, t, n) => e.x === t.x && Math.abs(e.y - t.y) <= n || e.y === t.y && Math.abs(e.x - t.x) <= n;
+function ae(e, t) {
+	let n = [];
+	for (let r of f) g(e, h(t, r)) > g(e, t) && n.push(r);
+	return n;
+}
+function oe(e, t) {
+	let n = [];
+	for (let r of ne(e, t).keys()) {
+		let [t, i] = r.split(",").map(Number);
+		(t !== e.x || i !== e.y) && n.push({
+			x: t,
+			y: i
+		});
+	}
+	return n;
+}
+var x = (e) => `(${e.x + 1}, ${e.y + 1})`, S = [], C = (e, t, n, r, i, a = {}) => S.push({
+	id: e,
+	name: t,
+	kind: "hand",
+	category: n,
+	text: r,
+	effect: i,
+	...a
+}), w = (e, t, n, r, i, a = {}) => S.push({
+	id: e,
+	name: t,
+	kind: "instant",
+	category: n,
+	text: r,
+	effect: i,
+	...a
+});
+function* se() {}
+var T = (e, t) => e.others(t), E = (e) => e.filter((e) => e.hand.length > 0), D = (e) => e % 2 == 1, ce = (e) => e.tilesOfType("trade");
+function* O(e, t, n, r, i) {
+	return yield* e.targetPlayer(t, r, `${n.name}: ${i}`, n);
+}
+function* k(e, t, n) {
+	return t.hand.length ? yield* e.ask(t, "card", n, t.hand.map((t) => ({
+		label: e.card(t).name,
+		value: t
+	}))) : null;
+}
+function* A(e, t, n, r, i = !1) {
+	if (!t.hand.length || !n.hand.length) return;
+	let a = yield* k(e, t, `${r}: choose a card to give ${n.name}`), o = i ? yield* e.ask(t, "card", `${r}: choose a card to take from ${n.name}`, n.hand.map((t) => ({
+		label: e.card(t).name,
+		value: t
+	}))) : e.randomItem(n.hand);
+	t.hand = t.hand.filter((e) => e !== a), n.hand = n.hand.filter((e) => e !== o), t.hand.push(o), n.hand.push(a), e.log(`${t.name} and ${n.name} swap a card.`, "barter", {
+		player: t.id,
+		target: n.id
+	});
+}
+function* j(e, t, n) {
+	let r = [t, ...e.seatsAfter(t)].filter((e) => !e.specter);
+	for (let e of r) {
+		let t = n(e);
+		t && (yield* t);
+	}
+	yield* e.flushDeaths();
+}
+function* M(e, t, n, r, i = null) {
+	t && !t.specter && (e.damage(t, n, i?.id ?? null, `(${r})`), yield* e.flushDeaths());
+}
+function* le(e, t, n, r, i) {
+	let a = yield* e.targetPlayer(t, r, `${n.name}: attack whom?`);
+	a && (yield* e.attack(t, a, "card", 1, i));
+}
+var N = (e, t, n = () => !0) => T(e, t).filter((r) => n(r) && !e.attackBlockedReason(t, r, "card")), P = (e, t) => e.house(t).home;
+C(1, "Royal Favor", "Influence / Court", "Gain 2 Influence.", function* (e, t) {
+	e.gain(t, "influence", 2);
+}), C(2, "Noble Alliance", "Influence / Court", "Gain 1 Influence. If you are adjacent to another player, gain 1 more.", function* (e, t) {
+	e.gain(t, "influence", e.adjacentTo(t).length ? 2 : 1);
+}), C(3, "Whispered Promise", "Influence / Court", "Gain 2 Influence, but reveal your hand to one player of your choice.", function* (e, t) {
+	e.gain(t, "influence", 2);
+	let n = yield* e.choosePlayer(t, T(e, t), "Whispered Promise: reveal your hand to whom?");
+	n && e.reveal(t, [n.id], "Whispered Promise");
+}), C(4, "Court Scandal", "Influence / Court", "Gain 1 Influence. Target player loses 1 Influence.", function* (e, t, n) {
+	e.gain(t, "influence", 1);
+	let r = yield* O(e, t, n, T(e, t), "who loses 1 Influence?");
+	r && e.lose(r, "influence", 1, n.name);
+}, { aggressive: !0 }), C(5, "Diplomatic Envoy", "Influence / Court", "Gain 1 Influence and move 1 extra space this turn.", function* (e, t) {
+	e.gain(t, "influence", 1), yield* e.extraMove(t, 1);
+}), C(6, "Silver Tongue", "Influence / Court", "Gain 1 Influence. If you currently have 0 Fear, gain 1 more.", function* (e, t) {
+	e.gain(t, "influence", t.res.fear === 0 ? 2 : 1);
+}), C(7, "Ancient Charter", "Influence / Court", "Gain 2 Influence if you are on a Court tile this turn.", function* (e, t) {
+	e.onTileType(t, "court") ? e.gain(t, "influence", 2) : e.log("Not on a Court tile: no effect.", "info");
+}), C(8, "Burn the Village", "Fear / War", "Gain 2 Fear, but you cannot gain Influence next turn.", function* (e, t) {
+	e.gain(t, "fear", 2), e.addNextTurnEffect("noInfluenceGain", t.id);
+}), C(9, "Silent Threat", "Fear / War", "Target player discards 1 card of their choice. Gain 1 Fear.", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "who discards?");
+	if (r?.hand.length) {
+		let t = yield* k(e, r, "Silent Threat: discard a card of your choice");
+		e.discardFromHand(r, t), e.log(`${r.name} discards ${e.card(t).name}.`, "discard", {
+			player: r.id,
+			cards: [t]
+		});
+	}
+	e.gain(t, "fear", 1);
+}, { aggressive: !0 }), C(10, "Show of Force", "Fear / War", "Gain 1 Fear for each adjacent player (max 2).", function* (e, t) {
+	e.gain(t, "fear", Math.min(2, e.adjacentTo(t).length));
+}), C(11, "Blood Oath", "Fear / War", "Gain 2 Fear. Lose 1 Heart Token.", function* (e, t) {
+	e.gain(t, "fear", 2), e.damage(t, 1, null, "(Blood Oath)");
+}), C(12, "Dread Banner", "Fear / War", "Gain 1 Fear. Mark this card: your next attack this game deals +1 damage.", function* (e, t, n) {
+	e.gain(t, "fear", 1), e.addEffect("dreadBanner", t.id, { at: "consumed" }, { cardId: n.id });
+}), C(13, "Conqueror's March", "Fear / War", "Gain 1 Fear and move 1 extra space this turn.", function* (e, t) {
+	e.gain(t, "fear", 1), yield* e.extraMove(t, 1);
+}), C(14, "Iron Reputation", "Fear / War", "Gain 2 Fear if you are on a War tile this turn.", function* (e, t) {
+	e.onTileType(t, "war") ? e.gain(t, "fear", 2) : e.log("Not on a War tile: no effect.", "info");
+}), C(15, "Smuggler's Route", "Wealth / Trade", "Gain 2 Wealth.", function* (e, t) {
+	e.gain(t, "wealth", 2);
+}), C(16, "Forged Ledger", "Wealth / Trade", "Steal 1 Wealth from an adjacent player.", function* (e, t, n) {
+	let r = yield* O(e, t, n, e.adjacentTo(t), "steal from whom?");
+	r && e.steal(t, r, "wealth", 1, n.name);
+}, {
+	aggressive: !0,
+	playable: (e, t) => e.adjacentTo(t).length > 0
+}), C(17, "Caravan Toll", "Wealth / Trade", "Gain 1 Wealth for each other player on your current tile (max 2).", function* (e, t) {
+	t.pos && e.gain(t, "wealth", Math.min(2, e.playersOn(t.pos).length - 1));
+}), C(18, "Hidden Vault", "Wealth / Trade", "Gain 2 Wealth. Reveal this card to the table immediately when played.", function* (e, t) {
+	e.gain(t, "wealth", 2);
+}), C(19, "Market Day", "Wealth / Trade", "Gain 1 Wealth and draw 1 extra Hand Card this turn (hand cap of 3 still applies — discard down if needed).", function* (e, t) {
+	e.gain(t, "wealth", 1), yield* e.drawOne(t);
+}), C(20, "Tax Collector", "Wealth / Trade", "Gain 1 Wealth. Target player loses 1 Wealth.", function* (e, t, n) {
+	e.gain(t, "wealth", 1);
+	let r = yield* O(e, t, n, T(e, t), "who loses 1 Wealth?");
+	r && e.lose(r, "wealth", 1, n.name);
+}, { aggressive: !0 }), C(21, "Merchant's Gambit", "Wealth / Trade", "Gain 2 Wealth if you are on a Trade tile this turn.", function* (e, t) {
+	e.onTileType(t, "trade") ? e.gain(t, "wealth", 2) : e.log("Not on a Trade tile: no effect.", "info");
+}), C(22, "Counterfeit Coin", "Wealth / Trade", "Gain 1 Wealth.", function* (e, t) {
+	e.gain(t, "wealth", 1);
+}), C(23, "Silk Road", "Wealth / Trade", "Gain 1 Wealth and move 1 extra space this turn.", function* (e, t) {
+	e.gain(t, "wealth", 1), yield* e.extraMove(t, 1);
+}), C(24, "Golden Harvest", "Wealth / Trade", "Gain 2 Wealth, but you may not attack this turn or on your next turn.", function* (e, t) {
+	e.gain(t, "wealth", 2), e.s.turn && e.addEffect("noAttack", t.id, {
+		at: "turnEnd",
+		player: t.id,
+		turns: 2
+	});
+}, { playable: (e) => (e.s.turn?.attacks ?? 0) === 0 }), C(25, "Black Market Deal", "Wealth / Trade", "Gain 1 Wealth. You may Barter 1 card with any player.", function* (e, t) {
+	e.gain(t, "wealth", 1);
+	let n = E(T(e, t));
+	if (!t.hand.length || !n.length || !(yield* e.confirm(t, "Black Market Deal: barter a card with another player?", "Barter", "Skip"))) return;
+	let r = yield* e.choosePlayer(t, n, "Barter with whom?");
+	r && (yield* A(e, t, r, "Black Market Deal"));
+}), C(26, "Plunder", "Wealth / Trade", "Until the end of your next turn: when your next basic attack lands, gain 1 Wealth for each Heart Token of damage it dealt (max 2).", function* (e, t) {
+	let n = e.s.turn;
+	if (n && n.player === t.id) {
+		if (n.damageDealt > 0) return void e.gain(t, "wealth", Math.min(2, n.damageDealt), "Plunder");
+		e.addEffect("afterAttack", t.id, {
+			at: "turnEnd",
+			player: t.id,
+			turns: 2
+		}, { cardId: 26 }), e.log(`${t.name} readies to plunder: Wealth for the damage of their next attack.`, "info", { player: t.id });
+	}
+}, { *afterAttack(e, t, n) {
+	n > 0 && e.gain(t, "wealth", Math.min(2, n), "Plunder");
+} }), C(27, "Inheritance", "Wealth / Trade", "Gain 2 Wealth. If your current generation is III or IV, gain 1 more.", function* (e, t) {
+	e.gain(t, "wealth", t.gen >= 3 ? 3 : 2);
+}), C(28, "Cursed Dagger", "Ranged / Cursed", "Attack any player on the board regardless of distance. Deal 1 damage. Can be blocked normally.", function* (e, t, n) {
+	yield* le(e, t, n, N(e, t), !1);
+}, {
+	aggressive: !0,
+	playable: (e, t) => N(e, t).length > 0
+}), C(29, "Hex of Withering", "Ranged / Cursed", "Target player loses 1 Heart Token at the start of their next turn.", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "curse whom?");
+	r && e.addEffect("hex", r.id, { at: "consumed" }, {
+		by: t.id,
+		armed: !1
+	});
+}, { aggressive: !0 }), C(30, "Poisoned Chalice", "Ranged / Cursed", "Target any player (adjacent or not). They lose 1 Heart Token. You lose 1 Wealth.", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "poison whom?");
+	e.lose(t, "wealth", 1, n.name), r && (yield* M(e, r, 1, n.name, t));
+}, { aggressive: !0 }), C(31, "Marked for Death", "Ranged / Cursed", "Choose a player. Mark this card: the next attack landed against them this game deals +1 damage, then discard.", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "mark whom?");
+	r && e.addEffect("markedForDeath", r.id, { at: "consumed" }, {
+		by: t.id,
+		cardId: n.id
+	});
+}, { aggressive: !0 }), C(32, "Shadow Strike", "Ranged / Cursed", "Attack any player within 6 spaces. Deal 1 damage. Cannot be blocked.", function* (e, t, n) {
+	yield* le(e, t, n, N(e, t, (e) => !!e.pos && !!t.pos && g(e.pos, t.pos) <= 6), !0);
+}, {
+	aggressive: !0,
+	playable: (e, t) => N(e, t, (e) => !!e.pos && !!t.pos && g(e.pos, t.pos) <= 6).length > 0
+}), C(33, "Forced Discard", "Disruption", "Target player discards 1 card of your choice.", function* (e, t, n) {
+	let r = yield* O(e, t, n, E(T(e, t)), "whose card?");
+	if (!r?.hand.length) return;
+	let i = yield* e.ask(t, "card", `Choose a card for ${r.name} to discard`, r.hand.map((t) => ({
+		label: e.card(t).name,
+		value: t
+	})));
+	e.discardFromHand(r, i), e.log(`${r.name} discards ${e.card(i).name}.`, "discard", {
+		player: r.id,
+		cards: [i]
+	});
+}, {
+	aggressive: !0,
+	playable: (e, t) => E(T(e, t)).length > 0
+});
+var F = (e, t, n) => C(e, t, "Disruption", `Target player loses 1 ${n[0].toUpperCase() + n.slice(1)}.`, function* (e, t, r) {
+	let i = yield* O(e, t, r, T(e, t), `who loses 1 ${n}?`);
+	i && e.lose(i, n, 1, r.name);
+}, { aggressive: !0 });
+F(34, "Broken Trust", "influence"), F(35, "Scattered Ranks", "fear"), F(36, "Robbed Blind", "wealth"), C(37, "Confusion", "Disruption", "Target player's next movement roll is reduced by 2 (minimum 1).", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "confuse whom?");
+	r && e.addEffect("confusion", r.id, { at: "consumed" }, { by: t.id });
+}, { aggressive: !0 }), C(38, "Forced March", "Disruption", "Target player must move their full next roll, in a direction of your choice.", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "march whom?");
+	r && e.addEffect("forcedMarch", r.id, { at: "consumed" }, { by: t.id });
+}, { aggressive: !0 }), C(39, "Whispers of Doubt", "Disruption", "Target player reveals their hand to you only.", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "whose hand?");
+	r && e.reveal(r, [t.id], n.name);
+}), C(40, "Sabotage", "Disruption", "Target player cannot gain resources from tiles on their next turn.", function* (e, t, n) {
+	let r = yield* O(e, t, n, T(e, t), "sabotage whom?");
+	r && e.addNextTurnEffect("sabotage", r.id, { by: t.id });
+}, { aggressive: !0 }), C(41, "Swift Steed", "Movement", "Move 2 extra spaces this turn.", function* (e, t) {
+	yield* e.extraMove(t, 2);
+});
+var ue = (e, t) => Object.values(e.content.houses).map((e) => e.home).filter((e) => !t.pos || !m(e, t.pos));
+C(42, "Hidden Path", "Movement", "Teleport to any house tile (not the Throne).", function* (e, t) {
+	let n = yield* e.ask(t, "square", "Hidden Path: teleport to which house tile?", ue(e, t).map((t) => {
+		let n = Object.values(e.content.houses).find((e) => m(e.home, t));
+		return {
+			label: `${n.homeland} (${n.name.replace("House ", "")})`,
+			value: t
+		};
+	}));
+	e.teleport(t, n, "takes a hidden path");
+}, { playable: (e, t) => ue(e, t).length > 0 }), C(43, "Scout Ahead", "Movement", "Look at the top 3 cards of the draw deck. Rearrange them in any order.", function* (e, t) {
+	e.ensureDrawPile();
+	let n = Math.min(3, e.s.drawPile.length), r = e.s.drawPile.slice(-n).reverse();
+	e.log(`Scout Ahead: the next cards are ${r.map((t) => e.card(t).name).join(", ")}.`, "reveal", {
+		player: t.id,
+		cards: r,
+		visibleTo: [t.id],
+		tag: "deck"
+	});
+	let i = [], a = [...r];
+	for (; a.length;) {
+		let n = yield* e.ask(t, "card", i.length ? "Which card comes next?" : "Which card goes on top?", a.map((t) => ({
+			label: e.card(t).name,
+			value: t
+		})));
+		i.push(n), a.splice(a.indexOf(n), 1);
+	}
+	e.s.drawPile.splice(-n, n, ...i.reverse());
+}), C(44, "Forced Retreat", "Movement", "Move an adjacent player 2 spaces away from you in a straight line (their choice of direction).", function* (e, t, n) {
+	let r = yield* O(e, t, n, e.adjacentTo(t), "push back whom?");
+	r?.pos && t.pos && (yield* e.moveStraight(r, 2, {
+		full: !0,
+		dirs: ae(t.pos, r.pos),
+		why: `Forced Retreat: ${t.name} pushes you back 2`
+	}));
+}, {
+	aggressive: !0,
+	playable: (e, t) => e.adjacentTo(t).length > 0
+}), C(45, "Vanishing Act", "Movement", "Until the end of your next turn: after your next basic attack resolves, move 1 space as a free action.", function* (e, t) {
+	let n = e.s.turn;
+	if (n && n.attacks > 0) return void (yield* e.moveFree(t, 1, "Vanishing Act: move 1 space"));
+	n && e.addEffect("afterAttack", t.id, {
+		at: "turnEnd",
+		player: t.id,
+		turns: 2
+	}, { cardId: 45 });
+}, { *afterAttack(e, t) {
+	t.pos && (yield* e.moveFree(t, 1, "Vanishing Act: move 1 space"));
+} }), C(46, "Bridge the Gap", "Movement", "Move directly to any tile within 8 spaces this turn, ignoring the straight-line-only movement rule.", function* (e, t) {
+	if (!t.pos) return;
+	let n = yield* e.ask(t, "square", "Bridge the Gap: move where?", oe(t.pos, 8).map((e) => ({
+		label: `(${e.x + 1}, ${e.y + 1})`,
+		value: e
+	}))), r = e.s.turn;
+	r && r.player === t.id && !r.moved ? (r.moved = !0, e.moveTo(t, n, "bridges the gap"), yield* e.resourceCheck(t)) : e.moveTo(t, n, "bridges the gap");
+}), C(47, "Homeward Bound", "Movement", "Teleport to your owned tile.", function* (e, t) {
+	e.teleport(t, P(e, t), "returns home");
+}, { playable: (e, t) => !!t.pos && !m(t.pos, P(e, t)) }), C(48, "Traveling Merchant", "Barter", "Switch one card in your hand with the player to your left.", function* (e, t) {
+	let n = e.leftOf(t);
+	n && (yield* A(e, t, n, "Traveling Merchant"));
+}, { playable: (e, t) => t.hand.length >= 2 && (e.leftOf(t)?.hand.length ?? 0) > 0 }), C(49, "Uneasy Trade", "Barter", "Trade 1 resource point (your choice of type) with any player, one-for-one.", function* (t, n, r) {
+	let i = e.filter((e) => n.res[e] > 0), a = yield* O(t, n, r, T(t, n).filter((t) => e.some((e) => t.res[e] > 0)), "trade with whom?");
+	if (!a || !i.length) return;
+	let o = yield* t.choosePillar(n, `Uneasy Trade: give ${a.name} 1 of`, i), s = yield* t.choosePillar(n, `Uneasy Trade: take 1 from ${a.name} of`, e.filter((e) => a.res[e] > 0));
+	s && (t.lose(n, o, 1, r.name), t.gain(a, o, 1, r.name), t.lose(a, s, 1, r.name), t.gain(n, s, 1, r.name));
+}, { playable: (t, n) => e.some((e) => n.res[e] > 0) && T(t, n).some((t) => e.some((e) => t.res[e] > 0)) }), C(50, "Stolen Goods", "Barter", "Take 1 random card from an adjacent player's hand. They take 1 random card from the discard pile in return.", function* (e, t, n) {
+	let r = yield* O(e, t, n, E(e.adjacentTo(t)), "rob whom?");
+	if (!r?.hand.length) return;
+	let i = e.randomItem(r.hand);
+	r.hand = r.hand.filter((e) => e !== i), t.hand.push(i), e.log(`${t.name} takes a card from ${r.name}.`, "barter", {
+		player: t.id,
+		target: r.id
+	});
+	let a = e.s.discard.filter((t) => e.card(t).kind === "hand");
+	if (a.length) {
+		let t = e.randomItem(a);
+		e.s.discard = e.s.discard.filter((e) => e !== t), r.hand.push(t);
+	}
+	yield* e.enforceHandCap(t);
+}, {
+	aggressive: !0,
+	playable: (e, t) => E(e.adjacentTo(t)).length > 0
+}), C(51, "Fair Exchange", "Barter", "You and target player each gain 1 Wealth.", function* (e, t) {
+	let n = yield* e.targetPlayer(t, T(e, t), "Fair Exchange: with whom?");
+	e.gain(t, "wealth", 1), n && e.gain(n, "wealth", 1);
+}), C(52, "Black Market Contact", "Barter", "Swap your entire hand for the top 3 cards of the discard pile (your choice).", function* (e, t) {
+	let n = e.s.discard.filter((t) => e.card(t).kind === "hand").slice(-3), r = [...t.hand];
+	e.s.discard = e.s.discard.filter((e) => !n.includes(e)), t.hand = n, e.s.discard.push(...r), e.log(`${t.name} swaps their hand with the discard pile.`, "barter", { player: t.id });
+}, { playable: (e) => e.s.discard.some((t) => e.card(t).kind === "hand") }), C(53, "Broker's Fee", "Barter", "Force two other players to each swap one card (your choice which cards).", function* (e, t) {
+	let n = yield* e.targetPlayer(t, E(T(e, t)), "Broker's Fee: first player");
+	if (!n) return;
+	let r = yield* e.targetPlayer(t, E(T(e, t)).filter((e) => e.id !== n.id), "Broker's Fee: second player");
+	if (!r) return;
+	let i = yield* e.ask(t, "card", `Card ${n.name} gives`, n.hand.map((t) => ({
+		label: e.card(t).name,
+		value: t
+	}))), a = yield* e.ask(t, "card", `Card ${r.name} gives`, r.hand.map((t) => ({
+		label: e.card(t).name,
+		value: t
+	})));
+	n.hand = [...n.hand.filter((e) => e !== i), a], r.hand = [...r.hand.filter((e) => e !== a), i], e.log(`${n.name} and ${r.name} are forced to swap a card.`, "barter", {
+		player: n.id,
+		target: r.id
+	});
+}, {
+	aggressive: !0,
+	playable: (e, t) => E(T(e, t)).length >= 2
+}), C(54, "Uneasy Truce", "Truce", "You and one chosen player cannot attack each other until your next turn.", function* (e, t) {
+	let n = yield* e.choosePlayer(t, T(e, t), "Uneasy Truce: with whom?");
+	n && e.addEffect("truce", t.id, {
+		at: "turnStart",
+		player: t.id
+	}, { other: n.id });
+}), C(55, "Shared Purpose", "Truce", "You and one adjacent player each gain 1 resource of your choice.", function* (e, t) {
+	let n = yield* e.choosePlayer(t, e.adjacentTo(t), "Shared Purpose: with whom?"), r = yield* e.choosePillar(t, "Shared Purpose: gain 1 of");
+	if (r && e.gain(t, r, 1), n) {
+		let t = yield* e.choosePillar(n, "Shared Purpose: gain 1 of");
+		t && e.gain(n, t, 1);
+	}
+}, { playable: (e, t) => e.adjacentTo(t).length > 0 }), C(56, "Ceasefire", "Truce", "No player may attack you this round.", function* (e, t) {
+	e.addEffect("ceasefire", t.id, {
+		at: "roundEnd",
+		round: e.s.round
+	});
+}), C(57, "Blood Pact", "Truce", "You and target player each gain 1 Fear. Neither of you may attack the other for 2 full rounds.", function* (e, t) {
+	let n = yield* e.choosePlayer(t, T(e, t), "Blood Pact: with whom?");
+	e.gain(t, "fear", 1), n && (e.gain(n, "fear", 1), e.addEffect("truce", t.id, {
+		at: "roundEnd",
+		round: e.s.round + 2
+	}, { other: n.id }));
+});
+var I = (e, t, n, r, i) => C(e, t, "Block / Deflect", n, se, {
+	responseOnly: !0,
+	block: {
+		canUse: r,
+		resolve: i
+	}
+});
+I(58, "Iron Guard", "Negate the next attack against you.", () => !0, function* () {
+	return "negate";
+}), I(59, "Riposte", "Negate an attack and deal 1 damage back to the attacker.", () => !0, function* (e, t, n) {
+	return e.damage(e.p(n.attacker), 1, t.id, "(Riposte)"), "negate";
+}), I(60, "Vanish", "Negate an attack, then move 1 space immediately after.", () => !0, function* (e, t) {
+	return yield* e.moveFree(t, 1, "Vanish: move 1 space"), "negate";
+}), I(61, "Shield Wall", "Negate an attack. Any ally sharing your tile is also protected this turn.", () => !0, function* (e, t) {
+	return t.pos && e.addEffect("shieldWall", t.id, e.s.turn ? {
+		at: "turnEnd",
+		player: e.s.turn.player
+	} : { at: "consumed" }, { square: p(t.pos) }), "negate";
+}), I(62, "Dodge", "Negate an attack and draw 1 card immediately.", () => !0, function* (e, t) {
+	return yield* e.drawOne(t), "negate";
+}), C(63, "Counterspell", "Block / Deflect", "Negate a Hand Card effect targeting you (does not apply to combat damage).", se, {
+	responseOnly: !0,
+	counterspell: !0
+}), I(64, "Steadfast", "Negate an attack, but only if your Heart Tokens are at half of your max or below.", (e, t) => t.hp <= t.maxHp / 2, function* () {
+	return "negate";
+}), I(65, "Last Stand", "Negate an attack that would reduce you to 0 Heart Tokens. You survive with 1 Heart Token instead.", (e, t, n) => n.damage >= t.hp, function* () {
+	return "survive1";
+}), w(66, "Bandit Ambush", "Dice", "Roll a die. Odd: lose 1 Wealth. Even: gain 1 Wealth.", function* (e, t, n) {
+	D(e.roll(t, n.name)) ? e.lose(t, "wealth", 1, n.name) : e.gain(t, "wealth", 1, n.name);
+}), w(67, "Duel of Honor", "Dice", "Roll against an adjacent player (if none, the player to your left). Lower roll loses 1 Heart Token.", function* (e, t, n) {
+	let r = e.adjacentTo(t), i = r.length ? yield* e.choosePlayer(t, r, "Duel of Honor: against whom?") : e.leftOf(t);
+	if (i) for (let r = 0; r < 20; r++) {
+		let r = e.roll(t, n.name), a = e.roll(i, n.name);
+		if (r === a) continue;
+		let [o, s] = r < a ? [t, i] : [i, t];
+		yield* M(e, o, 1, n.name, s);
+		return;
+	}
+}, { noSpecter: !0 }), w(68, "Omen of Fire", "Dice", "Roll a die. On a 6, gain 1 Fear.", function* (e, t, n) {
+	e.roll(t, n.name) === 6 && e.gain(t, "fear", 1, n.name);
+}), w(69, "Fickle Fate", "Dice", "Roll a die. 1-2: lose 1 Influence. 3-4: nothing. 5-6: gain 1 Influence.", function* (e, t, n) {
+	let r = e.roll(t, n.name);
+	r <= 2 ? e.lose(t, "influence", 1, n.name) : r >= 5 && e.gain(t, "influence", 1, n.name);
+}), w(70, "Gambler's Luck", "Dice", "Roll a die twice, keep the higher result. Gain that many Wealth (max 3).", function* (e, t, n) {
+	let r = Math.max(e.roll(t, n.name), e.roll(t, n.name));
+	e.gain(t, "wealth", Math.min(3, r), n.name);
+}), w(71, "Cursed Dice", "Dice", "Roll a die. On a 1, lose 1 Heart Token. Otherwise, gain 1 Wealth.", function* (e, t, n) {
+	e.roll(t, n.name) === 1 ? yield* M(e, t, 1, n.name) : e.gain(t, "wealth", 1, n.name);
+}, { noSpecter: !0 }), w(72, "Highway Robbery", "Dice", "Roll a die. Even: steal 1 Wealth from the player to your left. Odd: nothing.", function* (e, t, n) {
+	let r = e.leftOf(t);
+	!D(e.roll(t, n.name)) && r && e.steal(t, r, "wealth", 1, n.name);
+}), w(73, "Trial by Combat", "Dice", "Roll a die. On 4+, gain 1 Fear. On 1-3, lose 1 Fear.", function* (e, t, n) {
+	e.roll(t, n.name) >= 4 ? e.gain(t, "fear", 1, n.name) : e.lose(t, "fear", 1, n.name);
+}), w(74, "Storm at Sea", "Dice", "Roll a die. On 1-2, every player loses 1 Wealth.", function* (e, t, n) {
+	e.roll(t, n.name) <= 2 && (yield* j(e, t, (t) => {
+		e.lose(t, "wealth", 1, n.name);
+	}));
+}), w(75, "Lucky Find", "Dice", "Roll a die. Gain half that many Wealth, rounded down (max 3).", function* (e, t, n) {
+	e.gain(t, "wealth", Math.min(3, Math.floor(e.roll(t, n.name) / 2)), n.name);
+}), w(76, "Wildfire", "Dice", "Roll a die. On 5-6, the player with the most Fear loses 1 Heart Token.", function* (e, t, n) {
+	e.roll(t, n.name) >= 5 && (yield* M(e, e.uniqueBest((e) => e.res.fear), 1, n.name));
+}, { noSpecter: !0 }), w(77, "Coin Toss", "Dice", "Roll a die. Odd: gain 1 Influence. Even: gain 1 Fear.", function* (e, t, n) {
+	e.gain(t, D(e.roll(t, n.name)) ? "influence" : "fear", 1, n.name);
+}), w(78, "Bad Omen", "Dice", "Roll a die. On a 1, discard a random card from your hand.", function* (e, t, n) {
+	if (e.roll(t, n.name) === 1 && t.hand.length) {
+		let n = e.randomItem(t.hand);
+		e.discardFromHand(t, n), e.log(`${t.name} loses ${e.card(n).name} to the omen.`, "discard", {
+			player: t.id,
+			cards: [n]
+		});
+	}
+}), w(79, "Fortune's Wheel", "Dice", "Roll a die: 1-2 gain 1 Influence, 3-4 gain 1 Fear, 5-6 gain 1 Wealth.", function* (e, t, n) {
+	let r = e.roll(t, n.name);
+	e.gain(t, r <= 2 ? "influence" : r <= 4 ? "fear" : "wealth", 1, n.name);
+}), w(80, "Risky Crossing", "Dice", "Roll a die. On 1-3, lose 1 Heart Token. On 4-6, move 2 extra spaces immediately.", function* (e, t, n) {
+	e.roll(t, n.name) <= 3 ? yield* M(e, t, 1, n.name) : yield* e.moveFree(t, 2, "Risky Crossing: move up to 2");
+}, { noSpecter: !0 }), w(81, "Elodie's Sorrow", "Global", "Every player with more than 1 Heart Token loses 1 Heart Token.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		t.hp > 1 && e.damage(t, 1, null, `(${n.name})`);
+	});
+}, {
+	elodie: !0,
+	flavor: "The goddess weeps, and the realm bleeds with her.",
+	noSpecter: !0
+}), w(82, "The Harvest", "Global", "Every player gains 1 Wealth.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		e.gain(t, "wealth", 1, n.name);
+	});
+}), w(83, "Elodie's Blessing", "Global", "Every player gains 1 Influence.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		e.gain(t, "influence", 1, n.name);
+	});
+}, {
+	elodie: !0,
+	flavor: "Her favor touches every house at once, equally and without meaning."
+}), w(84, "Elodie's Wrath", "Global", "Every player gains 1 Fear.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		e.gain(t, "fear", 1, n.name);
+	});
+}, {
+	elodie: !0,
+	flavor: "She does not punish. She simply reminds them what they are capable of."
+}), w(85, "Famine", "Global", "Every player loses 1 Wealth.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		e.lose(t, "wealth", 1, n.name);
+	});
+}), w(86, "Uprising", "Global", "Every player with 3 or more Fear loses 1 Fear.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		t.res.fear >= 3 && e.lose(t, "fear", 1, n.name);
+	});
+}), w(87, "Grand Market", "Global", "Every player may immediately move 1 space toward the nearest Trade tile.", function* (e, t, n) {
+	yield* j(e, t, (t) => e.stepToward(t, ce(e), `${n.name}: step toward a Trade tile?`));
+}), w(88, "Night of Shadows", "Global", "Every player discards down to 2 cards this turn only (hands return to drawing up to 3 normally next turn).", function* (e, t) {
+	yield* j(e, t, (t) => e.enforceHandCap(t, 2)), e.s.turn && (e.s.turn.stopDrawing = !0);
+}), w(89, "Elodie's Exile", "Global", "Every player not currently on their owned tile, and with more than 1 Heart Token, loses 1 Heart Token.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		t.pos && t.hp > 1 && !m(t.pos, P(e, t)) && e.damage(t, 1, null, `(${n.name})`);
+	});
+}, {
+	elodie: !0,
+	flavor: "Stray too far from home, and even she cannot shield you.",
+	noSpecter: !0
+}), w(90, "Elodie's Gaze", "Global", "Every player reveals their hand to the table.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		e.reveal(t, "all", n.name);
+	});
+}, {
+	elodie: !0,
+	flavor: "Nothing is hidden from her for long."
+}), w(91, "The Crown's Gaze", "Targeted", "The player with the most Fear loses 1 Fear. (Tie: no effect.)", function* (e, t, n) {
+	let r = e.uniqueBest((e) => e.res.fear);
+	r && e.lose(r, "fear", 1, n.name);
+}), w(92, "Coup Rumors", "Targeted", "The player closest to the Throne loses 1 Influence. (Tie: no effect.)", function* (e, t, n) {
+	let r = e.uniqueBest((e) => y(e.pos), !1);
+	r && e.lose(r, "influence", 1, n.name);
+}), w(93, "Marked by the Crowd", "Targeted", "The player with the most Wealth loses 1 Wealth. (Tie: no effect.)", function* (e, t, n) {
+	let r = e.uniqueBest((e) => e.res.wealth);
+	r && e.lose(r, "wealth", 1, n.name);
+}), w(94, "Elodie's Judgment", "Targeted", "The player with the highest combined resource total loses 1 Heart Token. (Tie: no effect.)", function* (e, t, n) {
+	yield* M(e, e.uniqueBest((t) => e.total(t)), 1, n.name);
+}, {
+	elodie: !0,
+	flavor: "Ambition draws her eye first.",
+	noSpecter: !0
+}), w(95, "Elodie's Mercy", "Targeted", "The player with the lowest combined resource total gains 1 resource of their choice. (Tie: all tied players choose.)", function* (e, t, n) {
+	for (let t of e.allBest((t) => e.total(t), !1)) {
+		let r = yield* e.choosePillar(t, `${n.name}: gain 1 of`);
+		r && e.gain(t, r, 1, n.name);
+	}
+}, {
+	elodie: !0,
+	flavor: "She has not forgotten the smallest house at the table."
+}), w(96, "Elodie's Memory", "Targeted", "Any player currently holding a Grudge Token may immediately move 1 space toward the player they hold it against, for free.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		let r = t.grudges.map((t) => e.p(t)).filter((e) => !e.specter && e.pos);
+		if (r.length && t.pos) return e.stepToward(t, r.map((e) => e.pos), `${n.name}: step toward your Grudge?`);
+	});
+}, {
+	elodie: !0,
+	flavor: "She remembers every debt, even the ones the living have let go."
+}), w(97, "Eyes of the Realm", "Targeted", "The player closest to the Throne reveals their hand to the table.", function* (e, t, n) {
+	let r = e.uniqueBest((e) => y(e.pos), !1);
+	r && e.reveal(r, "all", n.name);
+}), w(98, "Elodie's Trial", "Targeted", "The player with the fewest Heart Tokens may be attacked for 1 damage by any other player of their choice (optional).", function* (e, t, n) {
+	let r = e.uniqueBest((e) => e.hp, !1);
+	if (!r) return;
+	let i = e.others(r).filter((t) => !e.attackBlockedReason(t, r, "trial"));
+	if (!i.length) return;
+	let a = yield* e.ask(t, "player", `${n.name}: who may strike ${r.name} for 1?`, [{
+		label: "No one",
+		value: null
+	}, ...i.map((e) => ({
+		label: e.name,
+		value: e.id
+	}))]);
+	a !== null && (yield* e.attack(e.p(a), r, "trial", 1));
+}, {
+	elodie: !0,
+	flavor: "The weak are tested, not spared.",
+	noSpecter: !0
+}), w(99, "Rising Tide", "Targeted", "The player with the most Influence loses 1; the player with the least gains 1. (Ties: no effect for that side.)", function* (e, t, n) {
+	let r = e.uniqueBest((e) => e.res.influence), i = e.uniqueBest((e) => e.res.influence, !1);
+	r && e.lose(r, "influence", 1, n.name), i && i !== r && e.gain(i, "influence", 1, n.name);
+}), w(100, "Scales of War", "Targeted", "The players with the most and least Fear swap 1 Fear point. (Tie on either side: no effect.)", function* (e, t, n) {
+	let r = e.uniqueBest((e) => e.res.fear), i = e.uniqueBest((e) => e.res.fear, !1);
+	r && i && r !== i && e.steal(i, r, "fear", 1, n.name);
+}), w(101, "Whispers at Court", "Targeted", "The player who most recently gained Influence loses 1 Influence.", function* (e, t, n) {
+	let r = e.s.lastInfluenceGain;
+	r !== null && !e.p(r).specter && e.lose(e.p(r), "influence", 1, n.name);
+}), w(102, "Elodie's Reckoning", "Targeted", "The most recently killed player's killer loses 1 Heart Token.", function* (e, t, n) {
+	let r = e.s.lastKill;
+	r && (yield* M(e, e.p(r.killer), 1, n.name));
+}, {
+	elodie: !0,
+	flavor: "Every death is a debt. She collects the interest herself.",
+	noSpecter: !0
+}), w(103, "Thief in the Night", "Hand Disruption", "Swap one card with the player to your left.", function* (e, t, n) {
+	let r = e.leftOf(t);
+	r && (yield* A(e, t, r, n.name));
+}), w(104, "Forced Confession", "Hand Disruption", "Reveal your hand to the whole table.", function* (e, t, n) {
+	e.reveal(t, "all", n.name);
+}), w(105, "Pickpocket", "Hand Disruption", "The player to your right discards 1 random card.", function* (e, t) {
+	let n = e.rightOf(t);
+	if (!n?.hand.length) return;
+	let r = e.randomItem(n.hand);
+	e.discardFromHand(n, r), e.log(`${n.name} loses ${e.card(r).name} to a pickpocket.`, "discard", {
+		player: n.id,
+		cards: [r]
+	});
+}), w(106, "Mind Games", "Hand Disruption", "Look at one player's hand. You may swap 1 card with them.", function* (e, t, n) {
+	let r = yield* e.choosePlayer(t, E(T(e, t)), `${n.name}: whose hand?`);
+	r && (e.reveal(r, [t.id], n.name), t.hand.length && (yield* e.confirm(t, `Swap a card with ${r.name}?`, "Swap", "No")) && (yield* A(e, t, r, n.name, !0)));
+}), w(107, "Rumor Mill", "Hand Disruption", "Each player passes 1 card of their choice to the player on their left.", function* (e, t, n) {
+	let r = [];
+	for (let i of [t, ...e.seatsAfter(t)].filter((e) => !e.specter && e.hand.length)) {
+		let t = yield* k(e, i, `${n.name}: pass a card to ${e.leftOf(i)?.name}`), a = e.leftOf(i);
+		a && r.push({
+			from: i,
+			to: a,
+			card: t
+		});
+	}
+	for (let e of r) e.from.hand = e.from.hand.filter((t) => t !== e.card), e.to.hand.push(e.card);
+	e.log("Every house passes a card to its left.", "barter");
+}), w(108, "Stolen Secrets", "Hand Disruption", "Look at the top card of the draw deck. You may take it, replacing a card in your hand (hand cap still applies).", function* (e, t, n) {
+	e.ensureDrawPile();
+	let r = e.s.drawPile.at(-1);
+	r !== void 0 && (e.log(`${n.name}: the top card is ${e.card(r).name}.`, "reveal", {
+		player: t.id,
+		cards: [r],
+		visibleTo: [t.id],
+		tag: "deck"
+	}), e.card(r).kind === "hand" && (yield* e.confirm(t, `Take ${e.card(r).name}?`, "Take it", "Leave it")) && (e.s.drawPile.pop(), t.hand.push(r), yield* e.enforceHandCap(t)));
+}), w(109, "Scramble", "Hand Disruption", "Collect all hands, shuffle together, redeal 3 cards to each player.", function* (e, t) {
+	let n = [t, ...e.seatsAfter(t)].filter((e) => !e.specter), r = n.flatMap((e) => e.hand);
+	for (let e of n) e.hand = [];
+	let a = i(r, e.rng);
+	for (let e = 0; a.length; e++) {
+		let t = n[e % n.length];
+		if (t.hand.length < 3 && t.hand.push(a.pop()), n.every((e) => e.hand.length >= 3)) break;
+	}
+	e.s.discard.push(...a), e.log("All hands are shuffled together and dealt out again.", "barter");
+}), w(110, "Loose Lips", "Hand Disruption", "The player who has played the most Hand Cards this game reveals their hand.", function* (e, t, n) {
+	let r = e.uniqueBest((e) => e.handCardsPlayed);
+	r && e.reveal(r, "all", n.name);
+}), w(111, "Caravan Passing", "Wealth", "Roll a die. Even: gain 1 Wealth. Odd: lose 1 Wealth.", function* (e, t, n) {
+	D(e.roll(t, n.name)) ? e.lose(t, "wealth", 1, n.name) : e.gain(t, "wealth", 1, n.name);
+}), w(112, "Merchant's Windfall", "Wealth", "Gain 1 Wealth.", function* (e, t, n) {
+	e.gain(t, "wealth", 1, n.name);
+}), w(113, "Toll Bridge", "Wealth", "Every player currently on a Trade tile gains 1 Wealth.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		e.onTileType(t, "trade") && e.gain(t, "wealth", 1, n.name);
+	});
+}), w(114, "Counting House", "Wealth", "The player with the least Wealth gains 1 Wealth. (Tie: all tied players gain.)", function* (e, t, n) {
+	for (let t of e.allBest((e) => e.res.wealth, !1)) e.gain(t, "wealth", 1, n.name);
+}), w(115, "Gilded Cage", "Wealth", "The player with the most Wealth loses 1 Heart Token. (Tie: no effect.)", function* (e, t, n) {
+	yield* M(e, e.uniqueBest((e) => e.res.wealth), 1, n.name);
+}, { noSpecter: !0 }), w(116, "Trade Winds", "Wealth", "Every player may move 1 extra space this turn toward a Trade tile.", function* (e, t, n) {
+	yield* j(e, t, (t) => e.stepToward(t, ce(e), `${n.name}: step toward a Trade tile?`));
+}), w(117, "Debt Collector", "Wealth", "The player with the most Wealth gives 1 Wealth to a player of their choice who has less.", function* (e, t, n) {
+	let r = e.uniqueBest((e) => e.res.wealth);
+	if (!r || r.res.wealth === 0) return;
+	let i = yield* e.choosePlayer(r, e.others(r).filter((e) => e.res.wealth < r.res.wealth), `${n.name}: give 1 Wealth to whom?`);
+	i && e.steal(i, r, "wealth", 1, n.name);
+}), w(118, "Smuggler's Luck", "Wealth", "Roll a die. On 4+, gain 2 Wealth. On 1-3, nothing.", function* (e, t, n) {
+	e.roll(t, n.name) >= 4 && e.gain(t, "wealth", 2, n.name);
+}), w(119, "Inflation", "Wealth", "Every player loses 1 Wealth. Then the player with the lowest total resources gains 2 Wealth.", function* (e, t, n) {
+	yield* j(e, t, (t) => {
+		e.lose(t, "wealth", 1, n.name);
+	});
+	let r = e.uniqueBest((t) => e.total(t), !1);
+	r && e.gain(r, "wealth", 2, n.name);
+}), w(120, "Treasure Map", "Wealth", "Reveal the top card of the discard pile. If it is Wealth-related, gain 1 Wealth.", function* (e, t, n) {
+	let r = e.s.discard.at(-1);
+	if (r === void 0) return;
+	let i = e.card(r);
+	e.log(`${n.name}: the top of the discard pile is ${i.name}.`, "info", { cards: [r] }), /wealth/i.test(i.text) && e.gain(t, "wealth", 1, n.name);
+});
+var L = (e, t, n, r, i, a) => C(e, t, "Reaction", i, se, {
+	responseOnly: !0,
+	reaction: n,
+	timing: r,
+	flavor: a
+});
+L(121, "Ill Omen", "omen", "Play when a rival rolls to move", "When another player rolls to move, cancel the move: they stay where they are this turn.", "A crow on the road, and the whole column halts."), L(122, "Embargo", "embargo", "Play when rivals trade", "When another player makes a trade or plays a Barter card, cancel it. Nothing changes hands.", "No ship leaves harbour without the right seal."), L(123, "Intercept", "intercept", "Play when a rival takes from a tile", "When another player gains resources from a tile, they gain 1 less.", "Every road has a toll, if you know who to pay."), L(124, "Interference", "interference", "Play when a rival plays a card", "When another player plays a Hand Card, cancel it. It is discarded with no effect.", "A word in the right ear, and the order is never given."), L(125, "Ambush", "ambush", "Play when a rival stops beside you", "When another player ends their move next to you, attack them at once.", "They never saw the second rider."), L(126, "Turnabout", "turnabout", "Play when a card targets you", "When a Hand Card targets you, it targets another player of your choice instead.", "The arrow was always meant for someone."), S.sort((e, t) => e.id - t.id);
+var de = S, R = class extends Error {}, z = class extends Error {}, fe = class {
+	s;
+	rng;
+	content;
+	constructor(e, t) {
+		if (e.seats.length < 2 || e.seats.length > 8) throw Error("Bloodlines needs 2-8 players");
+		this.content = t, this.rng = n(e.seed);
+		let r = {
+			suddenDeathRound: 16,
+			challengeFirstStriker: s,
+			...e.config
+		};
+		this.s = {
+			setup: e,
+			config: r,
+			players: [],
+			order: [],
+			round: 0,
+			turnNo: 0,
+			turn: null,
+			drawPile: [],
+			discard: [],
+			removed: [],
+			inPlay: [],
+			dying: [],
+			effects: [],
+			log: [],
+			seq: 0,
+			lastKill: null,
+			housesLost: [],
+			lastInfluenceGain: null,
+			winner: null,
+			endReason: null
+		}, this.setup();
+	}
+	setup() {
+		let { seats: e } = this.s.setup, t = new Set(e.map((e) => e.house).filter(Boolean)), n = i(Object.keys(this.content.houses).filter((e) => !t.has(e)), this.rng);
+		this.s.players = e.map((e, t) => {
+			let r = e.house ?? n.pop(), i = this.content.houses[r];
+			return {
+				id: t,
+				name: e.name,
+				isBot: e.isBot,
+				house: r,
+				gen: 1,
+				hp: i.hp[0],
+				maxHp: i.hp[0],
+				pos: { ...i.home },
+				specter: !1,
+				res: {
+					influence: 0,
+					fear: 0,
+					wealth: 0
+				},
+				hand: [],
+				grudges: [],
+				kills: 0,
+				reckonings: 0,
+				handCardsPlayed: 0,
+				visited: [p(i.home)],
+				lastScoredTile: null,
+				legacy: null,
+				extraPassive: null,
+				pendingExtraPassive: !1,
+				used: {},
+				mark: null,
+				extraTurn: !1
+			};
+		});
+		let r = this.s.setup.firstPlayer ?? Math.floor(this.rng() * e.length);
+		this.s.order = e.map((t, n) => (r + n) % e.length), this.s.drawPile = i(this.content.cards.map((e) => e.id), this.rng);
+		for (let e of this.s.players) for (; e.hand.length < 3;) {
+			let t = this.s.drawPile.pop();
+			if (this.card(t).kind === "instant") {
+				let e = Math.floor(this.rng() * (this.s.drawPile.length + 1));
+				this.s.drawPile.splice(e, 0, t);
+			} else e.hand.push(t);
+		}
+		this.log(`The houses take their seats. ${this.p(r).name} goes first.`, "setup");
+	}
+	p(e) {
+		return this.s.players[e];
+	}
+	card(e) {
+		return this.content.cards[e - 1];
+	}
+	house(e) {
+		return this.content.houses[typeof e == "string" ? e : e.house];
+	}
+	living() {
+		return this.s.players.filter((e) => !e.specter);
+	}
+	others(e) {
+		return this.living().filter((t) => t.id !== e.id);
+	}
+	active() {
+		return this.s.turn ? this.p(this.s.turn.player) : null;
+	}
+	isActive(e) {
+		return this.s.turn?.player === e.id;
+	}
+	total(e) {
+		return e.res.influence + e.res.fear + e.res.wealth;
+	}
+	playersOn(e) {
+		return this.living().filter((t) => t.pos && m(t.pos, e));
+	}
+	seatsAfter(e, t = !1) {
+		let n = this.s.order.indexOf(e.id), r = [];
+		for (let e = 1; e < this.s.order.length; e++) {
+			let i = this.p(this.s.order[(n + e) % this.s.order.length]);
+			(t || !i.specter) && r.push(i);
+		}
+		return r;
+	}
+	leftOf(e) {
+		return this.seatsAfter(e)[0] ?? null;
+	}
+	rightOf(e) {
+		return this.seatsAfter(e).at(-1) ?? null;
+	}
+	ensureDrawPile() {
+		!this.s.drawPile.length && this.s.discard.length && (this.s.drawPile = i(this.s.discard, this.rng), this.s.discard = [], this.log("The deck runs dry; the discard pile is shuffled into a new deck.", "deck"));
+	}
+	roll(e, t) {
+		let n = r(this.rng);
+		return this.log(`${t}: ${e ? `${e.name} rolls` : "rolled"} a ${n}.`, "roll", {
+			player: e?.id,
+			amount: n
+		}), n;
+	}
+	tilesOfType(e) {
+		return Object.values(this.content.houses).filter((t) => t.tileType === e).map((e) => e.home);
+	}
+	onTileType(e, t) {
+		let n = e.pos && this.tileAt(e.pos);
+		return !!n && n.house.tileType === t;
+	}
+	adjacentTo(e) {
+		return e.pos ? this.others(e).filter((t) => t.pos && b(e.pos, t.pos)) : [];
+	}
+	uniqueBest(e, t = !0, n = this.living()) {
+		if (!n.length) return null;
+		let r = n.map(e), i = t ? Math.max(...r) : Math.min(...r), a = n.filter((e, t) => r[t] === i);
+		return a.length === 1 ? a[0] : null;
+	}
+	allBest(e, t = !0, n = this.living()) {
+		if (!n.length) return [];
+		let r = n.map(e), i = t ? Math.max(...r) : Math.min(...r);
+		return n.filter((e, t) => r[t] === i);
+	}
+	randomItem(e) {
+		return e[Math.floor(this.rng() * e.length)];
+	}
+	tileAt(e) {
+		let t = Object.values(this.content.houses).find((t) => m(t.home, e));
+		return t ? { house: t } : null;
+	}
+	log(e, t, n = {}) {
+		this.s.log.push({
+			seq: ++this.s.seq,
+			round: this.s.round,
+			text: e,
+			kind: t,
+			...n
+		});
+	}
+	reveal(e, t, n) {
+		let r = e.hand.map((e) => this.card(e).name).join(", ") || "no cards";
+		this.log(`${n}: ${e.name}'s hand is ${r}.`, "reveal", {
+			player: e.id,
+			cards: [...e.hand],
+			visibleTo: t === "all" ? void 0 : [...t, e.id],
+			tag: "hand"
+		});
+	}
+	*ask(e, t, n, r, i) {
+		if (r.length === 0) throw Error(`No options for ${t}: ${n}`);
+		if (r.length === 1 && t !== "turn") return r[0].value;
+		let a = yield {
+			player: e.id,
+			kind: t,
+			prompt: n,
+			options: r,
+			context: i
+		};
+		if (!Number.isInteger(a) || a < 0 || a >= r.length) throw Error(`Invalid answer ${a} for ${t}`);
+		return r[a].value;
+	}
+	*confirm(e, t, n = "Yes", r = "No") {
+		return yield* this.ask(e, "confirm", t, [{
+			label: n,
+			value: !0
+		}, {
+			label: r,
+			value: !1
+		}]);
+	}
+	*choosePlayer(e, t, n, r) {
+		if (!t.length) return null;
+		let i = yield* this.ask(e, "player", n, t.map((e) => ({
+			label: e.name,
+			value: e.id
+		})), r);
+		return this.p(i);
+	}
+	*choosePillar(t, n, r = e, i) {
+		return r.length ? yield* this.ask(t, "pool", n, r.map((e) => ({
+			label: B(e),
+			value: e
+		})), i) : null;
+	}
+	*targetPlayer(e, t, n, r) {
+		if (!t.length) return null;
+		let i = this.redirectChooser(e, 2) ?? e, a = yield* this.choosePlayer(i, t, n, {
+			card: r?.id,
+			user: e.id
+		});
+		if (!a) return null;
+		if (r?.kind === "hand" && a.id !== e.id) {
+			let n = a.hand.find((e) => this.card(e).counterspell);
+			if (n && (yield* this.confirm(a, `${e.name} plays ${r.name} on you. Use Counterspell to negate it?`, "Counterspell", "Let it happen"))) return this.discardFromHand(a, n), this.queueRefill(a), this.log(`${a.name} counters ${r.name}!`, "block", {
+				player: a.id,
+				target: e.id
+			}), null;
+			let i = t.filter((e) => e.id !== a.id), o = i.length ? a.hand.find((e) => this.card(e).reaction === "turnabout") : void 0;
+			if (o !== void 0 && (yield* this.ask(a, "reaction", `${e.name} plays ${r.name} on you. Respond?`, [{
+				label: "Let it happen",
+				value: !1
+			}, {
+				label: `Play ${this.card(o).name}`,
+				value: !0
+			}], {
+				card: o,
+				reaction: "turnabout",
+				actor: e.id,
+				played: r.id
+			}))) {
+				this.discardFromHand(a, o), this.queueRefill(a), this.log(`${a.name} answers with ${this.card(o).name}!`, "block", {
+					player: a.id,
+					target: e.id,
+					cards: [o]
+				});
+				let t = yield* this.choosePlayer(a, i, `Turnabout: who does ${r.name} fall on instead?`, {
+					card: r.id,
+					user: e.id,
+					turnabout: !0
+				});
+				return t && this.log(`${r.name} turns toward ${t.name}.`, "info", { player: t.id }), t;
+			}
+		}
+		return a;
+	}
+	*reaction(e, t, n, r = {}, i = () => !0) {
+		for (let a of this.seatsAfter(t)) {
+			if (!i(a)) continue;
+			let o = a.hand.filter((t) => e.includes(this.card(t).reaction));
+			for (let e of o) {
+				let i = this.card(e);
+				if (yield* this.ask(a, "reaction", `${n} Respond?`, [{
+					label: "Let it happen",
+					value: !1
+				}, {
+					label: `Play ${i.name}`,
+					value: !0
+				}], {
+					...r,
+					card: e,
+					reaction: i.reaction,
+					actor: t.id
+				})) return this.discardFromHand(a, e), this.queueRefill(a), this.log(`${a.name} answers with ${i.name}!`, "block", {
+					player: a.id,
+					target: t.id,
+					cards: [e]
+				}), {
+					player: a,
+					card: i
+				};
+			}
+		}
+		return null;
+	}
+	addEffect(e, t, n, r = {}) {
+		let i = {
+			id: ++this.s.seq,
+			kind: e,
+			owner: t,
+			armed: !0,
+			expiry: n,
+			...r
+		};
+		return this.s.effects.push(i), i;
+	}
+	addNextTurnEffect(e, t, n = {}) {
+		return this.addEffect(e, t, {
+			at: "turnEnd",
+			player: t
+		}, {
+			armed: !1,
+			...n
+		});
+	}
+	findEffect(e, t, n = !0) {
+		return this.s.effects.find((r) => r.kind === e && r.owner === t && (!n || r.armed));
+	}
+	removeEffect(e) {
+		this.s.effects = this.s.effects.filter((t) => t !== e), e.cardId && this.s.discard.push(e.cardId);
+	}
+	redirectChooser(e, t) {
+		let n = this.findEffect("redirect", e.id);
+		if (!n || n.by === void 0 || !((n.level ?? 0) & t) || this.p(n.by).specter) return null;
+		n.level = (n.level ?? 0) & ~t, n.level || this.removeEffect(n);
+		let r = this.p(n.by);
+		return this.log(`${r.name} pulls the strings: they choose ${e.name}'s ${t === 1 ? "direction" : "target"}.`, "ability", { player: r.id }), r;
+	}
+	expire(e) {
+		for (let t of [...this.s.effects]) if (e(t.expiry)) {
+			if (t.expiry.at === "turnEnd" && !t.armed) continue;
+			if (t.expiry.at === "turnEnd" && (t.expiry.turns ?? 1) > 1) {
+				t.expiry.turns = (t.expiry.turns ?? 1) - 1;
+				continue;
+			}
+			this.removeEffect(t);
+		}
+	}
+	passives(e) {
+		let t = [{
+			house: e.house,
+			level: e.gen >= 3 ? 2 : 1
+		}];
+		e.legacy && e.legacy !== e.house && t.push({
+			house: e.legacy,
+			level: 1
+		}), e.extraPassive && t.push({
+			house: e.extraPassive,
+			level: 1
+		});
+		let n = this.findEffect("mask", e.id);
+		return n?.house && t.push({
+			house: n.house,
+			level: n.level ?? 1
+		}), t;
+	}
+	passiveLevel(e, t) {
+		return Math.max(0, ...this.passives(e).filter((e) => e.house === t).map((e) => e.level));
+	}
+	hook(e, t, ...n) {
+		let r = 0;
+		for (let { house: i, level: a } of this.passives(e)) {
+			let e = this.house(i).passive[t];
+			e && (r += t === "tileBonus" ? e(n[0], a) : e(a));
+		}
+		return r;
+	}
+	gain(e, t, n, r = "") {
+		if (n <= 0 || e.specter) return 0;
+		if (t === "influence" && this.findEffect("noInfluenceGain", e.id)) return this.log(`${e.name} cannot gain Influence this turn.`, "blocked", { player: e.id }), 0;
+		if (t === "fear") {
+			let t = this.findEffect("noFearGain", e.id);
+			if (t) return this.removeEffect(t), this.log(`War Cry: ${e.name}'s Fear gain is silenced.`, "blocked", { player: e.id }), 0;
+		}
+		if (t === "wealth" && !r.endsWith(" tile")) {
+			let t = this.hook(e, "wealthBonus"), r = `wealthBonus@t${this.s.turnNo}`;
+			t && !e.used[r] && (e.used[r] = 1, n += t);
+		}
+		return e.res[t] += n, t === "influence" && (this.s.lastInfluenceGain = e.id), this.log(`${e.name} gains ${n} ${B(t)}${r ? ` (${r})` : ""}.`, "gain", {
+			player: e.id,
+			amount: n
+		}), n;
+	}
+	lose(e, t, n, r = "") {
+		let i = Math.min(n, e.res[t]);
+		return i <= 0 ? 0 : (e.res[t] -= i, this.log(`${e.name} loses ${i} ${B(t)}${r ? ` (${r})` : ""}.`, "loss", {
+			player: e.id,
+			amount: i
+		}), i);
+	}
+	steal(e, t, n, r, i = "") {
+		let a = this.lose(t, n, r, i);
+		return a && this.gain(e, n, a, i), a;
+	}
+	thresholds(e) {
+		let t = this.s.players.length <= o.small.maxPlayers ? o.small : o.normal, n = this.house(e).claimReduction?.(e.gen) ?? 0;
+		return {
+			combined: t.combined - n,
+			minEach: t.minEach,
+			single: t.single ?? Infinity
+		};
+	}
+	claimRoute(t) {
+		if (t.specter) return null;
+		let n = this.thresholds(t);
+		return this.total(t) >= n.combined && e.every((e) => t.res[e] >= n.minEach) ? "combined" : e.some((e) => t.res[e] >= n.single) ? "single" : null;
+	}
+	eligible(e) {
+		return this.claimRoute(e) !== null;
+	}
+	takeTopCard() {
+		if (!this.s.drawPile.length) {
+			if (!this.s.discard.length) return null;
+			this.s.drawPile = i(this.s.discard, this.rng), this.s.discard = [], this.log("The deck runs dry; the discard pile is shuffled into a new deck.", "deck");
+		}
+		return this.s.drawPile.pop() ?? null;
+	}
+	discardFromHand(e, t, n = !1) {
+		e.hand = e.hand.filter((e) => e !== t), n ? this.s.discard.unshift(t) : this.s.discard.push(t);
+	}
+	*drawOne(e) {
+		let t = this.takeTopCard();
+		if (t === null) return !1;
+		let n = this.card(t);
+		return n.kind === "instant" ? (this.log(`${e.name} draws ${n.name}!`, "instant", {
+			player: e.id,
+			cards: [t]
+		}), this.s.inPlay.push(t), yield* this.resolveCard(n, e), this.s.inPlay = this.s.inPlay.filter((e) => e !== t), this.s.discard.push(t), yield* this.flushDeaths()) : (e.hand.push(t), this.log(`${e.name} draws a card.`, "draw", { player: e.id }), this.log(`You drew ${n.name}.`, "drawPrivate", {
+			player: e.id,
+			cards: [t],
+			visibleTo: [e.id]
+		}), yield* this.enforceHandCap(e)), !0;
+	}
+	*drawToHand(e) {
+		let t = 0, n = this.s.turn?.stopDrawing && this.s.turn.player === e.id;
+		for (; !e.specter && e.hand.length < 3 && !n && t++ < 200 && (yield* this.drawOne(e)););
+	}
+	*enforceHandCap(e, t = 3) {
+		for (; e.hand.length > t;) {
+			let n = yield* this.ask(e, "discard", `Too many cards: discard one (keep ${t}).`, e.hand.map((e) => ({
+				label: this.card(e).name,
+				value: e
+			})));
+			this.discardFromHand(e, n, !0), this.log(`${e.name} discards down to ${t}.`, "discard", { player: e.id });
+		}
+	}
+	*resolveCard(e, t) {
+		yield* e.effect(this, t, e);
+	}
+	canPlay(e, t) {
+		let n = this.card(t);
+		return n.kind !== "hand" || n.responseOnly ? !1 : !n.playable || n.playable(this, e);
+	}
+	*playHandCard(e, t) {
+		let n = this.card(t);
+		if (e.hand = e.hand.filter((e) => e !== t), e.handCardsPlayed++, this.queueRefill(e), this.s.turn && (this.s.turn.actions++, n.aggressive && (this.s.turn.aggressive = !0)), this.log(`${e.name} plays ${n.name}.`, "card", {
+			player: e.id,
+			cards: [t]
+		}), this.s.inPlay.push(t), yield* this.reaction(n.category === "Barter" ? ["interference", "embargo"] : ["interference"], e, `${e.name} plays ${n.name}.`, { played: t })) {
+			this.log(`${n.name} is cancelled and has no effect.`, "blocked", {
+				player: e.id,
+				cards: [t]
+			}), this.s.inPlay = this.s.inPlay.filter((e) => e !== t), this.s.discard.push(t);
+			return;
+		}
+		yield* this.resolveCard(n, e), this.s.inPlay = this.s.inPlay.filter((e) => e !== t), this.s.effects.some((e) => e.cardId === t) || this.s.discard.push(t), yield* this.flushDeaths();
+	}
+	moveTo(e, t, n, r = "move") {
+		if (!e.pos) return;
+		let i = e.pos;
+		e.pos = { ...t }, e.visited.includes(p(t)) || e.visited.push(p(t)), this.log(`${e.name} ${n} ${x(i)} → ${x(t)}.`, r, { player: e.id });
+	}
+	*moveStraight(e, t, n = {}) {
+		if (!e.pos || t <= 0) return;
+		let r = n.chooser ?? e, i = [];
+		n.full || i.push({
+			label: "Stay here",
+			value: {
+				d: "north",
+				n: 0
+			}
+		});
+		for (let r of n.dirs ?? f) {
+			let a = Math.min(t, te(e.pos, r));
+			if (n.full) a > 0 && i.push({
+				label: `${B(r)} ${a}`,
+				value: {
+					d: r,
+					n: a
+				}
+			});
+			else for (let e = 1; e <= a; e++) i.push({
+				label: `${B(r)} ${e}`,
+				value: {
+					d: r,
+					n: e
+				}
+			});
+		}
+		if (!i.length) return;
+		let a = n.why ?? (n.full ? `Move ${t} in a straight line` : `Move up to ${t} in a straight line`), o = yield* this.ask(r, "move", a, i, {
+			player: e.id,
+			max: t,
+			from: e.pos
+		});
+		o.n > 0 && this.moveTo(e, h(e.pos, o.d, o.n), "moves");
+	}
+	*moveFree(e, t, n) {
+		if (!e.pos || t <= 0) return;
+		let r = e.pos, i = [{
+			label: "Stay here",
+			value: null
+		}];
+		for (let e of oe(r, t)) i.push({
+			label: x(e),
+			value: e
+		});
+		let a = yield* this.ask(e, "move", n ?? `Move up to ${t} spaces`, i, {
+			player: e.id,
+			max: t,
+			from: r,
+			free: !0
+		});
+		a && this.moveTo(e, a, "moves");
+	}
+	*stepToward(e, t, n) {
+		if (!e.pos || !t.length) return;
+		let r = e.pos, i = t.reduce((e, t) => g(r, e) <= g(r, t) ? e : t), a = [{
+			label: "Stay",
+			value: null
+		}];
+		for (let e of f) {
+			let t = h(r, e);
+			ee(t) && g(t, i) < g(r, i) && a.push({
+				label: `Step ${e}`,
+				value: t
+			});
+		}
+		let o = yield* this.ask(e, "move", n, a, {
+			player: e.id,
+			from: r
+		});
+		o && this.moveTo(e, o, "steps");
+	}
+	teleport(e, t, n) {
+		this.moveTo(e, t, `${n}:`, "teleport");
+	}
+	*extraMove(e, t) {
+		let n = this.s.turn;
+		n && n.player === e.id && !n.moved ? (n.rollBonus += t, this.log(`${e.name} will move ${t} further this turn.`, "info", { player: e.id })) : yield* this.moveFree(e, t, `Move up to ${t} extra`);
+	}
+	*rollAndMove(e) {
+		let t = this.s.turn, n = r(this.rng), i = n, a = this.findEffect("confusion", e.id, !1);
+		if (a && (n = Math.max(1, n - 2), this.removeEffect(a)), n += t.rollBonus + this.hook(e, "moveBonus"), this.log(`${e.name} rolls a ${i}${n === i ? "" : ` (moves up to ${n})`}.`, "roll", {
+			player: e.id,
+			amount: i
+		}), t.moved = !0, yield* this.reaction(["omen"], e, `${e.name} rolls to move up to ${n}.`, { roll: n })) {
+			this.log(`Ill Omen: ${e.name} does not move this turn.`, "blocked", { player: e.id }), yield* this.resourceCheck(e);
+			return;
+		}
+		let o = this.findEffect("forcedMarch", e.id, !1), s = o ? null : this.redirectChooser(e, 1);
+		if (o && o.by !== void 0) {
+			this.removeEffect(o);
+			let t = this.p(o.by);
+			this.log(`Forced March: ${t.name} chooses ${e.name}'s direction.`, "info", { player: t.id }), yield* this.moveStraight(e, n, {
+				full: !0,
+				chooser: t.specter ? e : t,
+				why: `Forced March: move ${e.name} the full ${n}`
+			});
+		} else if (s) {
+			let t = yield* this.ask(s, "direction", `Choose the direction of ${e.name}'s move`, f.filter((t) => te(e.pos, t) > 0).map((e) => ({
+				label: B(e),
+				value: e
+			})));
+			yield* this.moveStraight(e, n, { dirs: [t] });
+		} else yield* this.moveFree(e, n);
+		yield* this.ambush(e), yield* this.resourceCheck(e);
+	}
+	*ambush(e) {
+		let t = yield* this.reaction(["ambush"], e, `${e.name} stops beside you.`, {}, (t) => !!(t.pos && e.pos && b(t.pos, e.pos) && !this.attackBlockedReason(t, e, "basic")));
+		t && (yield* this.attack(t.player, e, "basic"));
+	}
+	*resourceCheck(e) {
+		let n = this.s.turn;
+		if (!e.pos || !n) return;
+		let r = this.tileAt(e.pos);
+		if (!r) return;
+		let i = p(e.pos);
+		if (r.house.id === e.house) return this.log(`${e.name} cannot farm their own tile.`, "info", { player: e.id });
+		if (e.lastScoredTile === i) return this.log(`${e.name} already took from this land; the next score must come from a different tile.`, "info", { player: e.id });
+		if (this.findEffect("sabotage", e.id)) return this.log(`Sabotage: ${e.name} gains nothing from tiles this turn.`, "blocked", { player: e.id });
+		let a = t[r.house.tileType], o = (this.playersOn(e.pos).length === 1 ? u.tileAlone : u.tileShared) + this.hook(e, "tileBonus", a);
+		(yield* this.reaction(["intercept"], e, `${e.name} is about to gain ${o} ${B(a)} from ${r.house.name}'s tile.`, {
+			pillar: a,
+			amount: o
+		})) && (--o, this.log(`Intercepted: ${e.name} gains 1 less.`, "blocked", { player: e.id })), o > 0 && this.gain(e, a, o, `${r.house.name} ${r.house.tileType} tile`) && (n.scoredTile = i);
+	}
+	attackBlockedReason(e, t, n) {
+		return t.specter || e.id === t.id ? "invalid" : n === "challenge" ? null : c.truceRounds > 0 && this.s.round <= c.truceRounds ? "the opening truce holds" : v(t.pos) || v(e.pos) ? "no one fights on the Throne" : this.findEffect("newborn", t.id) ? `${t.name}'s heir has only just risen` : this.findEffect("noAttack", e.id) ? `${e.name} may not attack this turn` : this.s.effects.some((n) => n.kind === "truce" && n.armed && (n.owner === e.id && n.other === t.id || n.owner === t.id && n.other === e.id)) ? "truce" : this.findEffect("ceasefire", t.id) ? "ceasefire" : t.pos && this.s.effects.some((e) => e.kind === "shieldWall" && e.square === p(t.pos) && e.owner !== t.id) ? "Shield Wall" : null;
+	}
+	basicTargets(e) {
+		if (!e.pos) return [];
+		let t = this.hook(e, "reach");
+		return this.others(e).filter((n) => n.pos && (b(e.pos, n.pos) || t > 1 && ie(e.pos, n.pos, t)) && !this.attackBlockedReason(e, n, "basic"));
+	}
+	mostFeared() {
+		let e = this.living(), t = Math.max(...e.map((e) => e.res.fear)), n = e.filter((e) => e.res.fear === t);
+		return n.length === 1 ? n[0] : null;
+	}
+	*attack(e, t, n, r, i = !1) {
+		this.s.turn?.player === e.id && (this.s.turn.aggressive = !0);
+		let a = r ?? e.hp;
+		(n === "basic" || n === "challenge") && (a += this.hook(e, "basicAttackBonus"));
+		let o = this.findEffect("dreadBanner", e.id);
+		o && (a += 1, this.removeEffect(o)), e.mark === t.id && (a += 1), this.house(t).mostFearedDownside?.(t.gen) && this.mostFeared()?.id === t.id && (a += 1);
+		let s = this.findEffect("markedForDeath", t.id), c = {
+			attacker: e.id,
+			target: t.id,
+			kind: n,
+			damage: Math.min(u.maxDamage, a + +!!s)
+		};
+		this.log(`${e.name} attacks ${t.name}!`, "attack", {
+			player: e.id,
+			target: t.id,
+			amount: c.damage,
+			tag: n
+		});
+		let l = i ? [] : t.hand.filter((e) => this.card(e).block?.canUse(this, t, c)), d = null;
+		if (l.length) {
+			let n = [{
+				label: `Take ${c.damage} damage`,
+				value: null
+			}, ...l.map((e) => ({
+				label: this.card(e).name,
+				value: e
+			}))], r = yield* this.ask(t, "block", `${e.name} attacks you for ${c.damage}. Respond?`, n, { attack: c });
+			r !== null && (this.discardFromHand(t, r), this.queueRefill(t), this.log(`${t.name} answers with ${this.card(r).name}!`, "block", {
+				player: t.id,
+				target: e.id,
+				cards: [r]
+			}), d = yield* this.card(r).block.resolve(this, t, c));
+		}
+		if (d === "negate") return yield* this.flushDeaths(), {
+			landed: !1,
+			damage: 0
+		};
+		s && this.removeEffect(s);
+		let f = c.damage;
+		d === "survive1" && (f = Math.max(0, Math.min(f, t.hp - 1))), this.damage(t, f, e.id, n === "challenge" ? "in the challenge" : ""), d === "survive1" && this.log(`${t.name} refuses to fall!`, "block", { player: t.id }), this.s.turn?.player === e.id && (this.s.turn.damageDealt += f);
+		let p = this.hook(e, "fearOnLanded");
+		p && this.gain(e, "fear", p, "combat win");
+		let m = this.hook(e, "stepOnLanded");
+		return m && !e.specter && e.pos && !this.inChallenge && (yield* this.moveFree(e, m, `Agni ki Shakti: move up to ${m}`)), yield* this.flushDeaths(), {
+			landed: !0,
+			damage: f
+		};
+	}
+	*basicAttack(e, t) {
+		let n = this.s.turn;
+		(n.attacks === 0 || n.attacks >= n.attacksAllowed) && (n.attacks >= n.attacksAllowed && n.attacksAllowed++, n.actions++), n.attacks++;
+		let r = this.redirectChooser(e, 2);
+		r && (t = (yield* this.choosePlayer(r, this.basicTargets(e), `Choose who ${e.name} attacks`)) ?? t);
+		let i = yield* this.attack(e, t, "basic");
+		for (let t of this.s.effects.filter((t) => t.kind === "afterAttack" && t.owner === e.id && t.armed)) this.removeEffect(t), e.specter || (yield* this.card(t.cardId).afterAttack(this, e, i.landed ? i.damage : 0));
+	}
+	damage(e, t, n, r = "") {
+		e.specter || t <= 0 || e.hp <= 0 || !this.inChallenge && v(e.pos) && e.hp - t < 1 && (t = e.hp - 1, this.log(`The Throne's sanctuary holds: ${e.name} cannot fall here.`, "block", { player: e.id }), t <= 0) || (e.hp = Math.max(0, e.hp - t), this.log(`${e.name} loses ${t} Heart Token${t === 1 ? "" : "s"}${r ? ` ${r}` : ""}.`, "damage", {
+			player: e.id,
+			amount: t
+		}), e.hp === 0 && !this.s.dying.some((t) => t.victim === e.id) && this.s.dying.push({
+			victim: e.id,
+			killer: n
+		}));
+	}
+	*flushDeaths() {
+		let e = !1;
+		for (; this.s.dying.length;) {
+			let { victim: t, killer: n } = this.s.dying[0];
+			this.s.turn?.player === t && (e = !0), yield* this.killPlayer(this.p(t), n === null ? null : this.p(n)), this.s.dying.shift();
+		}
+		if (e && !this.inChallenge) throw new z();
+	}
+	inChallenge = !1;
+	refills = [];
+	queueRefill(e) {
+		u.refillOnPlay && !this.refills.includes(e.id) && this.refills.push(e.id);
+	}
+	*flushRefills() {
+		for (; this.refills.length;) {
+			let e = this.p(this.refills.shift());
+			yield* this.drawToHand(e);
+		}
+	}
+	*reckoningSteal(t, n) {
+		if (u.reckoningSteal === "eachPillar") {
+			let r = 0;
+			for (let i of e) n.res[i] > 0 ? this.steal(t, n, i, 1, "Reckoning") : r++;
+			for (; r > 0; r--) {
+				let r = e.filter((e) => n.res[e] > 0), i = yield* this.choosePillar(t, `Reckoning: steal 1 more from ${n.name}'s pool`, r);
+				if (!i) break;
+				this.steal(t, n, i, 1, "Reckoning");
+			}
+		} else {
+			let r = e.filter((e) => n.res[e] > 0), i = yield* this.choosePillar(t, `Reckoning: steal 1 from ${n.name}'s pool`, r);
+			i && this.steal(t, n, i, 1, "Reckoning");
+		}
+	}
+	*killPlayer(t, n) {
+		let i = this.house(t);
+		this.log(`${t.name}'s Gen ${pe(t.gen)} ${i.name} falls${n ? ` to ${n.name}` : ""}.`, "death", {
+			player: t.id,
+			target: n?.id
+		}), this.s.housesLost.includes(t.house) || this.s.housesLost.push(t.house);
+		let a = !!n && n.id !== t.id && !n.specter && n.grudges.includes(t.id), o = a;
+		if (a) {
+			this.log(`Reckoning! ${n.name} avenges their bloodline.`, "reckoning", {
+				player: n.id,
+				target: t.id
+			});
+			let e = this.hook(t, "reckoningCancels"), r = t.used.reckoningCancel ?? 0;
+			e > r && (yield* this.confirm(t, `Stillwater's Patience: cancel ${n.name}'s Reckoning bonus?`, "Cancel it", "Allow")) && (t.used.reckoningCancel = r + 1, this.log(`${t.name}'s patience denies the Reckoning bonus.`, "block", { player: t.id }), o = !1);
+		}
+		if (o && u.reckoningTiming === "before" && (yield* this.reckoningSteal(n, t), o = !1), !i.keepsOnDeath?.(t.gen)) {
+			if (u.deathLoss === "allHalfUp") for (let n of e) t.res[n] > 0 && this.lose(t, n, Math.ceil(t.res[n] / 2), "death");
+			else {
+				let r = e.filter((e) => Math.floor(t.res[e] / 2) > 0), i = yield* this.choosePillar(t, "Your character died: choose a pool to lose half of.", r);
+				if (i) {
+					let e = this.lose(t, i, Math.floor(t.res[i] / 2), "death");
+					if (o && u.reckoningTiming === "fromLoss") {
+						let t = Math.min(e, u.reckoningSteal === "eachPillar" ? 3 : 1);
+						t && this.gain(n, i, t, "Reckoning"), o = !1;
+					}
+				}
+			}
+		}
+		if (o && u.reckoningTiming === "fromLoss" && (o = !1), n && n.id !== t.id) {
+			n.kills++, a ? (n.grudges.splice(n.grudges.indexOf(t.id), 1), n.reckonings++, o && (yield* this.reckoningSteal(n, t))) : (t.grudges.push(n.id), this.log(`${t.name}'s bloodline now holds a Grudge against ${n.name}.`, "grudge", {
+				player: t.id,
+				target: n.id
+			}));
+			let e = this.hook(n, "fearOnKill");
+			e && !n.specter && this.gain(n, "fear", e, "kill"), this.s.lastKill = {
+				killer: n.id,
+				victim: t.id
+			};
+		}
+		this.s.effects = this.s.effects.filter((e) => {
+			let n = e.owner === t.id && [
+				"afterAttack",
+				"hex",
+				"markedForDeath",
+				"dreadBanner",
+				"confusion",
+				"forcedMarch",
+				"noFearGain",
+				"sabotage",
+				"noInfluenceGain"
+			].includes(e.kind);
+			return n && e.cardId && this.s.discard.push(e.cardId), !n;
+		});
+		for (let e of this.s.players) e.mark === t.id && (e.mark = null);
+		if (t.gen === 4) {
+			t.specter = !0, t.hp = 0, t.pos = null;
+			for (let e of [...t.hand]) this.discardFromHand(t, e);
+			t.grudges = [], this.log(`${t.name}'s bloodline has ended. They rise as a Specter.`, "specter", { player: t.id });
+			for (let e of this.living()) e.pendingExtraPassive && (e.pendingExtraPassive = !1, e.extraPassive = t.house, this.log(`${e.name} claims the ${this.house(t).passiveName} of the fallen ${this.house(t).name}.`, "ability", { player: e.id }));
+		} else if (t.gen += 1, t.maxHp = i.hp[t.gen - 1], t.hp = t.maxHp, t.pos = { ...i.home }, t.visited = [p(i.home)], t.lastScoredTile = null, this.log(`${t.name}'s Gen ${pe(t.gen)} heir rises at home with ${t.hp} Heart Tokens.`, "succession", { player: t.id }), this.s.effects = this.s.effects.filter((e) => e.kind !== "newborn" || e.owner !== t.id), this.addEffect("newborn", t.id, {
+			at: "turnEnd",
+			player: t.id,
+			turns: this.s.turn?.player === t.id ? 2 : 1
+		}), this.log(`${t.name}'s heir is protected from attacks until the end of their first turn.`, "info", { player: t.id }), i.legacyOnDeath && (yield* this.chooseLegacy(t)), i.extraPassiveAt && t.gen >= i.extraPassiveAt && !t.extraPassive && !t.pendingExtraPassive) {
+			let e = this.s.players.filter((e) => e.specter && e.id !== t.id).map((e) => e.house);
+			e.length ? (t.extraPassive = yield* this.ask(t, "legacy", "Song of Coaybay: take the passive of a vanished bloodline", e.map((e) => ({
+				label: `${this.house(e).name}: ${this.house(e).passiveName}`,
+				value: e
+			}))), this.log(`${t.name} gains ${this.house(t.extraPassive).passiveName} forever.`, "ability", { player: t.id })) : t.pendingExtraPassive = !0;
+		}
+		if (n && !n.specter && n.pos && this.house(n).halfMoveOnKill?.(n.gen)) {
+			let e = Math.ceil(r(this.rng) / 2);
+			yield* this.moveFree(n, e, `Thirst for Blood: move up to ${e}`);
+		}
+	}
+	*chooseLegacy(e) {
+		let t = [...this.s.housesLost];
+		if (!t.length) return;
+		let n = this.house(e).legacyDrawTwoAt;
+		n && e.gen >= n && (t = i(t, this.rng).slice(0, 2));
+		let r = yield* this.ask(e, "legacy", "Voice of the Opía: choose a Legacy from a fallen bloodline", t.map((e) => ({
+			label: `${this.house(e).name}: ${this.house(e).passiveName}`,
+			value: e
+		})));
+		e.legacy = r, this.log(`${e.name} inherits the ${this.house(r).passiveName} Legacy of ${this.house(r).name}.`, "ability", { player: e.id });
+	}
+	abilityKey(e) {
+		return e.limit === "game" ? e.id : e.limit === "round" ? `${e.id}@r${this.s.round}` : `${e.id}@t${this.s.turnNo}`;
+	}
+	abilitiesOf(e) {
+		let t = this.house(e).abilities.filter((t) => e.gen >= t.gen), n = this.passives(e).map((e) => this.house(e.house).passiveAbility).filter((e) => !!e);
+		return [...t, ...n.filter((e, t, n) => n.findIndex((t) => t.id === e.id) === t)];
+	}
+	usableAbilities(e) {
+		return this.abilitiesOf(e).filter((t) => {
+			let n = t.uses ? t.uses(this, e) : 1;
+			return (e.used[this.abilityKey(t)] ?? 0) >= n ? !1 : !t.canUse || t.canUse(this, e);
+		});
+	}
+	*useAbility(e, t) {
+		let n = this.abilityKey(t);
+		e.used[n] = (e.used[n] ?? 0) + 1, this.log(`${e.name} uses ${t.name}.`, "ability", { player: e.id }), yield* t.run(this, e), yield* this.flushDeaths();
+	}
+	turnActions(e) {
+		let t = this.s.turn, n = [];
+		t.moved || n.push({
+			label: "Roll and move",
+			value: { type: "roll" }
+		});
+		let r = t.moved || this.house(e).attackBeforeMove?.(e.gen), i = t.actions < t.actionsAllowed, a = t.attacks > 0 && t.attacks < t.attacksAllowed;
+		if (r && (a || i)) {
+			let r = t.moved && (a ? t.attacks + 1 >= t.attacksAllowed : t.attacksAllowed <= 1) && t.actions + +!a >= t.actionsAllowed;
+			for (let t of this.basicTargets(e)) n.push({
+				label: `Attack ${t.name}${r ? " (ends turn)" : ""}`,
+				value: {
+					type: "attack",
+					target: t.id
+				}
+			});
+		}
+		if (t.moved && i && !a) for (let t of e.hand) this.canPlay(e, t) && n.push({
+			label: `Play ${this.card(t).name}`,
+			value: {
+				type: "card",
+				card: t
+			}
+		});
+		l.offer && t.moved && i && !a && !t.offered && this.tradePartners(e).length && n.push({
+			label: "Offer a trade",
+			value: { type: "trade" }
+		});
+		for (let t of this.usableAbilities(e)) n.push({
+			label: t.name,
+			value: {
+				type: "ability",
+				id: t.id
+			}
+		});
+		return v(e.pos) && this.eligible(e) && n.push({
+			label: "Claim the Throne",
+			value: { type: "claim" }
+		}), t.moved && n.push({
+			label: "End turn",
+			value: { type: "end" }
+		}), n;
+	}
+	startTurn(e, t) {
+		this.s.turnNo++, this.s.turn = {
+			player: e.id,
+			moved: !1,
+			attacks: 0,
+			attacksAllowed: 1,
+			actions: 0,
+			actionsAllowed: 1,
+			rollBonus: 0,
+			aggressive: !1,
+			damageDealt: 0,
+			scoredTile: null,
+			stopDrawing: !1,
+			extraTurn: t,
+			offered: !1
+		}, this.expire((t) => t.at === "turnStart" && t.player === e.id);
+		for (let t of this.s.effects) t.owner === e.id && !t.armed && (t.armed = !0);
+	}
+	*playTurn(e, t = !1) {
+		this.startTurn(e, t), this.log(`${e.name}'s turn${t ? " (The Great Raid: second turn)" : ""}.`, "turn", { player: e.id }), t && this.findEffect("handPublic", e.id) && this.reveal(e, "all", "The Great Raid");
+		try {
+			for (let t of this.s.effects.filter((t) => t.kind === "hex" && t.owner === e.id && t.armed)) this.removeEffect(t), this.damage(e, 1, t.by ?? null, "(Hex of Withering)");
+			yield* this.flushDeaths();
+			for (let t = 0; t < 100; t++) {
+				let t = yield* this.ask(e, "turn", "Your turn: choose an action", this.turnActions(e));
+				if (t.type === "end") break;
+				if (yield* this.doAction(e, t), this.s.winner !== null) throw new R();
+				yield* this.flushRefills();
+				let n = this.s.turn;
+				if (t.type === "attack" && n.attacks >= n.attacksAllowed && n.moved && n.actions >= n.actionsAllowed) break;
+			}
+			if (this.house(e).longWatch?.(e.gen) && !this.s.turn.aggressive && this.s.turn.actions === 0) {
+				let t = yield* this.choosePillar(e, "The Long Watch: you stayed your hand. Gain 1 of which resource?");
+				t && this.gain(e, t, 1, "The Long Watch");
+			}
+			yield* this.drawToHand(e);
+		} catch (t) {
+			if (!(t instanceof z)) throw t;
+			this.log(`${e.name}'s turn ends.`, "info", { player: e.id });
+		}
+		try {
+			yield* this.flushRefills();
+		} catch (e) {
+			if (!(e instanceof z)) throw e;
+		}
+		if (this.s.turn.scoredTile && (e.lastScoredTile = this.s.turn.scoredTile), this.expire((t) => t.at === "turnEnd" && t.player === e.id), t) for (let t of this.s.effects.filter((t) => t.kind === "handPublic" && t.owner === e.id)) this.removeEffect(t);
+		this.s.turn = null;
+	}
+	*doAction(e, t) {
+		switch (t.type) {
+			case "roll":
+				yield* this.rollAndMove(e);
+				break;
+			case "attack":
+				yield* this.basicAttack(e, this.p(t.target));
+				break;
+			case "card":
+				yield* this.playHandCard(e, t.card);
+				break;
+			case "ability": {
+				let n = this.abilitiesOf(e).find((e) => e.id === t.id);
+				yield* this.useAbility(e, n);
+				break;
+			}
+			case "claim":
+				yield* this.claim(e);
+				break;
+			case "trade": yield* this.offerTrade(e);
+		}
+	}
+	tradeGives(t, n) {
+		return e.filter((r) => t.res[r] > 0 && e.some((e) => e !== r && n.res[e] > 0));
+	}
+	tradePartners(e) {
+		return this.others(e).filter((t) => this.tradeGives(e, t).length > 0);
+	}
+	*offerTrade(t) {
+		let n = this.s.turn;
+		n.offered = !0, n.actions++;
+		let r = yield* this.choosePlayer(t, this.tradePartners(t), "Offer a trade to whom?", { trade: !0 });
+		if (!r) return;
+		let i = yield* this.choosePillar(t, `Trade: give ${r.name} 1 of`, this.tradeGives(t, r), {
+			trade: !0,
+			partner: r.id
+		}), a = yield* this.choosePillar(t, `Trade: ask ${r.name} for 1`, e.filter((e) => e !== i && r.res[e] > 0), {
+			trade: !0,
+			partner: r.id,
+			give: i
+		});
+		if (this.log(`${t.name} offers ${r.name} 1 ${B(i)} for 1 ${B(a)}.`, "trade", {
+			player: t.id,
+			target: r.id
+		}), !(yield* this.ask(r, "trade", `${t.name} offers you 1 ${B(i)} for 1 of your ${B(a)}.`, [{
+			label: "Accept",
+			value: !0
+		}, {
+			label: "Refuse",
+			value: !1
+		}], {
+			from: t.id,
+			give: i,
+			take: a
+		}))) {
+			this.log(`${r.name} refuses the trade.`, "trade", {
+				player: r.id,
+				target: t.id
+			}), l.refusedUsesAction || n.actions--;
+			return;
+		}
+		if (yield* this.reaction(["embargo"], t, `${t.name} and ${r.name} trade ${B(i)} for ${B(a)}.`, {
+			trade: !0,
+			partner: r.id,
+			give: i,
+			take: a
+		}, (e) => e.id !== r.id)) {
+			this.log("Embargo: the trade is cancelled. Nothing changes hands.", "blocked", { player: t.id });
+			return;
+		}
+		this.lose(t, i, 1, "trade"), this.gain(r, i, 1, "trade"), this.lose(r, a, 1, "trade"), this.gain(t, a, 1, "trade");
+	}
+	specterChoices() {
+		return this.s.discard.length < u.specterChoices ? [] : this.s.discard.slice(-u.specterChoices).filter((e) => {
+			let t = this.card(e);
+			return t.kind === "instant" && !t.noSpecter;
+		});
+	}
+	*specterTurn(e) {
+		this.startTurn(e, !1);
+		try {
+			let t = this.specterChoices();
+			if (!t.length) this.log(`${e.name}'s Specter finds nothing to stir.`, "specter", { player: e.id });
+			else {
+				let n = yield* this.ask(e, "specter", "Specter: choose mischief from the discard pile", [{
+					label: "Pass",
+					value: null
+				}, ...t.map((e) => ({
+					label: this.card(e).name,
+					value: e
+				}))]);
+				if (n !== null) {
+					let t = yield* this.choosePlayer(e, this.living(), `${this.card(n).name}: which player does it fall on?`);
+					this.s.discard = this.s.discard.filter((e) => e !== n), this.s.removed.push(n), t && (this.log(`${e.name}'s Specter unleashes ${this.card(n).name} on ${t.name}.`, "specter", {
+						player: e.id,
+						target: t.id,
+						cards: [n]
+					}), yield* this.resolveCard(this.card(n), t), yield* this.flushDeaths());
+				}
+			}
+		} catch (e) {
+			if (!(e instanceof z)) throw e;
+		}
+		this.expire((t) => t.at === "turnEnd" && t.player === e.id), this.s.turn = null;
+	}
+	*claim(e) {
+		this.log(`${e.name} claims Elodie's Throne!`, "claim", {
+			player: e.id,
+			tag: this.claimRoute(e) ?? void 0
+		});
+		let t = [];
+		for (let n of this.seatsAfter(e)) this.eligible(n) && (yield* this.ask(n, "challenge", `${e.name} claims the Throne. Challenge them?`, [{
+			label: "Challenge!",
+			value: !0
+		}, {
+			label: "Let it stand",
+			value: !1
+		}], { claimant: e.id })) && (t.push(n), this.log(`${n.name} challenges!`, "challenge", {
+			player: n.id,
+			target: e.id
+		}));
+		for (let n of t) if (!n.specter && !(yield* this.challengeFight(e, n))) throw this.log(`${e.name}'s claim fails.`, "claim", { player: e.id }), new z();
+		this.s.winner = e.id, this.s.endReason = t.length ? `${e.name} defeated every challenger and took the Throne.` : `${e.name} claimed the Throne unchallenged.`, this.log(this.s.endReason, "win", { player: e.id });
+	}
+	*challengeFight(e, t) {
+		let n = this.s.config.challengeFirstStriker === "claimant" ? [e, t] : [t, e], r = {
+			claimant: e.gen,
+			challenger: t.gen
+		};
+		this.inChallenge = !0;
+		try {
+			for (let i = 0; i < 60; i++) {
+				let [a, o] = i % 2 == 0 ? n : [n[1], n[0]];
+				if (yield* this.attack(a, o, "challenge"), e.gen !== r.claimant || e.specter) return !1;
+				if (t.gen !== r.challenger || t.specter) return !0;
+			}
+			return !0;
+		} finally {
+			this.inChallenge = !1;
+		}
+	}
+	suddenDeath() {
+		let t = this.living();
+		t.length || (t = [...this.s.players]);
+		let n = (e) => {
+			let n = Math.max(...t.map(e));
+			t = t.filter((t) => e(t) === n);
+		};
+		n((e) => this.total(e)), t.length > 1 && n((t) => Math.max(...e.map((e) => t.res[e]))), t.length > 1 && n((e) => e.kills), t.length > 1 && n((e) => e.reckonings);
+		let r = t[0], i = "highest combined resources";
+		if (t.length > 1) {
+			i = "a final duel";
+			for (let e of t.slice(1)) r = this.duel(r, e);
+		}
+		this.s.winner = r.id, this.s.endReason = `Sudden Death after round ${this.s.round}: ${r.name} wins on ${i}.`, this.log(this.s.endReason, "win", { player: r.id });
+	}
+	duel(e, t) {
+		let [n, r] = this.s.order.indexOf(e.id) < this.s.order.indexOf(t.id) ? [e, t] : [t, e], i = {
+			[n.id]: n.hp,
+			[r.id]: r.hp
+		};
+		for (let e = 0; e < 60; e++) {
+			let [t, a] = e % 2 == 0 ? [n, r] : [r, n];
+			if (i[a.id] -= Math.max(1, i[t.id]), this.log(`Duel: ${t.name} strikes ${a.name}.`, "attack", {
+				player: t.id,
+				target: a.id
+			}), i[a.id] <= 0) return t;
+		}
+		return n;
+	}
+	*run() {
+		try {
+			for (;;) {
+				this.s.round++, this.log(`Round ${this.s.round} begins.`, "round");
+				for (let e of this.s.order) {
+					let t = this.p(e);
+					if (t.specter) yield* this.specterTurn(t);
+					else for (yield* this.playTurn(t); t.extraTurn && !t.specter;) t.extraTurn = !1, yield* this.playTurn(t, !0);
+					if (this.s.winner !== null) throw new R();
+				}
+				if (this.expire((e) => e.at === "roundEnd" && e.round <= this.s.round), this.s.round >= this.s.config.suddenDeathRound) throw this.suddenDeath(), new R();
+			}
+		} catch (e) {
+			if (!(e instanceof R)) throw e;
+		}
+	}
+}, B = (e) => e[0].toUpperCase() + e.slice(1), pe = (e) => [
+	"I",
+	"II",
+	"III",
+	"IV"
+][e - 1] ?? String(e), V = (e, t) => e.living().filter((e) => e.id !== t), H = {
+	houses: {
+		brasador: {
+			id: "brasador",
+			name: "House Brasador",
+			homeland: "Ardencia",
+			culture: "Spanish-inspired",
+			identity: "Fear/aggression",
+			curve: "Early-favored",
+			tileType: "war",
+			home: {
+				x: 8,
+				y: 0
+			},
+			lore: "Ardencia is a land of fire-cracked highlands and old wounds. House Brasador rose from conquistador-warlords who carved out their territory through open conquest. They do not need to be present to be feared; the brand alone is enough.",
+			hp: [
+				3,
+				3,
+				3,
+				3
+			],
+			passiveName: "Sangre Ardiente",
+			passiveText: ["From Gen III: +1 Fear on kill.", "+1 Fear on kill."],
+			passive: { fearOnKill: (e) => +(e >= 2) },
+			abilities: [
+				{
+					id: "laMarca",
+					name: "La Marca",
+					gen: 2,
+					limit: "turn",
+					text: "Mark an enemy: your attacks deal +1 damage to them.",
+					canUse: (e, t) => V(e, t.id).some((e) => e.id !== t.mark),
+					*run(e, t) {
+						let n = yield* e.choosePlayer(t, V(e, t.id).filter((e) => e.id !== t.mark), "La Marca: brand which rival?");
+						n && (t.mark = n.id, e.log(`${t.name} brands ${n.name}.`, "ability", {
+							player: t.id,
+							target: n.id
+						}));
+					}
+				},
+				{
+					id: "gritoDeGuerra",
+					name: "Grito de Guerra",
+					gen: 3,
+					limit: "turn",
+					text: "Target player skips their next Fear gain.",
+					canUse: (e, t) => V(e, t.id).some((t) => !e.findEffect("noFearGain", t.id, !1)),
+					*run(e, t) {
+						let n = yield* e.choosePlayer(t, V(e, t.id).filter((t) => !e.findEffect("noFearGain", t.id, !1)), "War Cry: silence whose next Fear gain?");
+						n && e.addEffect("noFearGain", n.id, { at: "consumed" }, { by: t.id });
+					}
+				},
+				{
+					id: "reinadoDeCenizas",
+					name: "Reinado de Cenizas",
+					gen: 4,
+					limit: "game",
+					text: "Once per game: gain Fear equal to your total kills.",
+					canUse: (e, t) => t.kills > 0,
+					*run(e, t) {
+						e.gain(t, "fear", t.kills, "Reign of Ashes");
+					}
+				}
+			],
+			mostFearedDownside: (e) => e >= 3,
+			downsideText: "From Gen III, while Brasador has the most Fear, attacks against them deal +1 damage."
+		},
+		dorini: {
+			id: "dorini",
+			name: "House Dorini",
+			homeland: "Al-Doria",
+			culture: "Mediterranean/Middle-Eastern-inspired",
+			identity: "Wealth/economy",
+			curve: "Late-favored",
+			tileType: "trade",
+			home: {
+				x: 17,
+				y: 9
+			},
+			lore: "Al-Doria is a sprawling entrepôt, half port city and half caravanserai. House Dorini built their power on ledgers and bazaars rather than armies, converting coin into influence or fear when the need arises.",
+			hp: [
+				3,
+				3,
+				3,
+				3
+			],
+			passiveName: "Baraka Dorini",
+			passiveText: ["+1 Wealth when you gain Wealth from a Trade tile. Once per turn, Wealth from anything else brings 1 more.", "+2 Wealth from Trade tiles. Once per turn, Wealth from anything else brings 1 more."],
+			passive: {
+				tileBonus: (e, t) => e === "wealth" ? t : 0,
+				wealthBonus: () => 1
+			},
+			abilities: [{
+				id: "daftar",
+				name: "Daftar al-Dorini",
+				gen: 2,
+				limit: "turn",
+				text: "Convert 2 Wealth into 1 Influence or 1 Fear.",
+				canUse: (e, t) => t.res.wealth >= 2,
+				*run(e, t) {
+					let n = yield* e.choosePillar(t, "The Ledger: convert 2 Wealth into", ["influence", "fear"]);
+					n && (e.lose(t, "wealth", 2, "The Ledger"), e.gain(t, n, 1, "The Ledger"));
+				}
+			}, {
+				id: "bazaar",
+				name: "Bazaar al-Dhahab",
+				gen: 4,
+				limit: "turn",
+				text: "Spend 3 Wealth: take one extra action this turn (an attack, a Hand Card or a trade offer).",
+				canUse: (e, t) => t.res.wealth >= 3 && e.isActive(t),
+				*run(e, t) {
+					e.lose(t, "wealth", 3, "Golden Bazaar"), e.s.turn.actionsAllowed++;
+				}
+			}]
+		},
+		ironvow: {
+			id: "ironvow",
+			name: "House Ironvow",
+			homeland: "Skarragol",
+			culture: "Fused Nordic/Mongolian-inspired",
+			identity: "Mobility/aggression",
+			curve: "Early-favored",
+			tileType: "war",
+			home: {
+				x: 14,
+				y: 14
+			},
+			lore: "Skarragol's warbands prize one thing above all else: speed. Their oath-bound clans strike before anyone can organize a response, whether on longship or on horseback.",
+			hp: [
+				3,
+				3,
+				3,
+				3
+			],
+			passiveName: "Ironvow's Oath",
+			passiveText: ["+1 to your movement roll.", "Also: your basic attack reaches 2 squares in a straight line."],
+			passive: {
+				moveBonus: () => 1,
+				reach: (e) => e >= 2 ? 2 : 1
+			},
+			attackBeforeMove: (e) => e >= 2,
+			abilities: [{
+				id: "greatRaid",
+				name: "The Great Raid",
+				gen: 4,
+				limit: "game",
+				text: "Once per game: take two full turns in a row. Your hand is revealed for both.",
+				canUse: (e, t) => e.isActive(t) && !e.s.turn.extraTurn,
+				*run(e, t) {
+					t.extraTurn = !0, e.addEffect("handPublic", t.id, { at: "consumed" }), e.reveal(t, "all", "The Great Raid");
+				}
+			}],
+			downsideText: "The Great Raid reveals your hand for the double turn."
+		},
+		suzumori: {
+			id: "suzumori",
+			name: "House Suzumori",
+			homeland: "Kuroshi",
+			culture: "Japanese-inspired",
+			identity: "Information/control",
+			curve: "Mid-favored",
+			tileType: "court",
+			home: {
+				x: 9,
+				y: 17
+			},
+			lore: "Kuroshi's power has never come from open strength. House Suzumori built a network of spies and whispers reaching into every court, pulling strings long before anyone realizes the game has turned.",
+			hp: [
+				3,
+				3,
+				3,
+				3
+			],
+			passiveName: "Kagemimi",
+			passiveText: ["View one player's hand once per round.", "View two players' hands per round."],
+			passive: { peeksPerRound: (e) => e },
+			passiveAbility: {
+				id: "kagemimi",
+				name: "Kagemimi",
+				gen: 1,
+				limit: "round",
+				text: "View a player's hand.",
+				uses: (e, t) => e.hook(t, "peeksPerRound"),
+				canUse: (e, t) => V(e, t.id).some((e) => e.hand.length),
+				*run(e, t) {
+					let n = yield* e.choosePlayer(t, V(e, t.id).filter((e) => e.hand.length), "Shadow's Ear: whose hand do you hear?");
+					n && e.reveal(n, [t.id], "Shadow's Ear");
+				}
+			},
+			abilities: [{
+				id: "sasayakiHa",
+				name: "Sasayaki Ha",
+				gen: 2,
+				limit: "turn",
+				text: "Force a player to discard one card of your choice.",
+				canUse: (e, t) => V(e, t.id).some((e) => e.hand.length),
+				*run(e, t) {
+					let n = yield* e.choosePlayer(t, V(e, t.id).filter((e) => e.hand.length), "Whispering Blade: whose hand?");
+					if (!n) return;
+					let r = yield* e.ask(t, "card", `Choose a card for ${n.name} to discard`, n.hand.map((t) => ({
+						label: e.card(t).name,
+						value: t
+					})));
+					e.discardFromHand(n, r), e.log(`${n.name} discards ${e.card(r).name}.`, "discard", {
+						player: n.id,
+						cards: [r]
+					});
+				}
+			}, {
+				id: "ayatsuri",
+				name: "Ayatsuri",
+				gen: 4,
+				limit: "game",
+				text: "Once per game: you choose the direction of a player's next move and the target of their next attack or targeted card.",
+				canUse: (e, t) => V(e, t.id).length > 0,
+				*run(e, t) {
+					let n = yield* e.choosePlayer(t, V(e, t.id), "Marionette's Thread: whose strings do you pull?");
+					n && e.addEffect("redirect", n.id, { at: "consumed" }, {
+						by: t.id,
+						level: 3
+					});
+				}
+			}]
+		},
+		vaitama: {
+			id: "vaitama",
+			name: "House Yaguana",
+			homeland: "Xaraguá",
+			culture: "Taíno-inspired",
+			identity: "Adaptive/chaotic",
+			curve: "Swingy",
+			tileType: "trade",
+			home: {
+				x: 3,
+				y: 3
+			},
+			lore: "In Xaraguá the dead are never far: the opía, spirits of the departed, walk the island by night, and in the areíto, the great dance of memory, every generation sings the deeds of those before it. House Yaguana's warriors carry the fallen within them, inheriting strength, memory, and secrets from the dead with every generation.",
+			hp: [
+				3,
+				3,
+				3,
+				3
+			],
+			passiveName: "Voice of the Opía",
+			passiveText: ["On death, your heir inherits a Legacy from any fallen bloodline.", "On death, draw 2 Legacies and pick one."],
+			passive: {},
+			legacyOnDeath: !0,
+			legacyDrawTwoAt: 3,
+			extraPassiveAt: 4,
+			abilities: [{
+				id: "ancestorsMask",
+				name: "Guaíza",
+				gen: 2,
+				limit: "game",
+				text: "Once per game: copy another player's passive until your next turn.",
+				canUse: (e, t) => V(e, t.id).length > 0,
+				*run(e, t) {
+					let n = yield* e.choosePlayer(t, V(e, t.id), "Guaíza: whose spirit-face do you wear?");
+					n && (e.addEffect("mask", t.id, {
+						at: "turnStart",
+						player: t.id
+					}, {
+						house: n.house,
+						level: n.gen >= 3 ? 2 : 1
+					}), e.log(`${t.name} wears the face of ${e.house(n).name}: ${e.house(n).passiveName}.`, "ability", { player: t.id }));
+				}
+			}]
+		},
+		kaysoley: {
+			id: "kaysoley",
+			name: "House Kay Soley",
+			homeland: "Zetwal",
+			culture: "Kreyol/Haitian-inspired",
+			identity: "Influence/diplomacy",
+			curve: "Late-favored",
+			tileType: "court",
+			home: {
+				x: 14,
+				y: 3
+			},
+			lore: "Zetwal's temple-court claims direct descent from Elodie's forgotten mortal children, marked at birth by a faint sun-shaped birthmark. Every other house either envies or resents them for it.",
+			hp: [
+				3,
+				3,
+				3,
+				3
+			],
+			passiveName: "Limyè Elodie",
+			passiveText: ["+1 Influence when you gain Influence from a Court tile.", "+2 Influence from Court tiles."],
+			passive: { tileBonus: (e, t) => e === "influence" ? t : 0 },
+			claimReduction: (e) => e >= 3 ? 2 : +(e >= 2),
+			abilities: [{
+				id: "semanLape",
+				name: "Sèman Lapè",
+				gen: 2,
+				limit: "game",
+				text: "Once per game: you and one player cannot attack each other for 2 rounds.",
+				canUse: (e, t) => V(e, t.id).length > 0,
+				*run(e, t) {
+					let n = yield* e.choosePlayer(t, V(e, t.id), "Peace Oath: with whom?");
+					n && (e.addEffect("truce", t.id, {
+						at: "roundEnd",
+						round: e.s.round + 1
+					}, { other: n.id }), e.log(`${t.name} and ${n.name} swear the Peace Oath.`, "truce", {
+						player: t.id,
+						target: n.id
+					}));
+				}
+			}]
+		},
+		agnivansh: {
+			id: "agnivansh",
+			name: "House Agnivansh",
+			homeland: "Jwaladesh",
+			culture: "Indian-subcontinent-inspired",
+			identity: "Aggro/tempo",
+			curve: "Early-favored",
+			tileType: "war",
+			home: {
+				x: 3,
+				y: 14
+			},
+			lore: "Jwaladesh's warriors follow the fire-god's doctrine: hesitation is the only true death. House Agnivansh trains for speed above all, trusting that momentum itself is a kind of armor.",
+			hp: [
+				3,
+				3,
+				3,
+				2
+			],
+			passiveName: "Agni ki Shakti",
+			passiveText: ["Your basic attacks deal +1 damage.", "Also: after your attack lands, you may move 1 space."],
+			passive: {
+				basicAttackBonus: () => 1,
+				stepOnLanded: (e) => +(e >= 2)
+			},
+			halfMoveOnKill: (e) => e >= 2,
+			abilities: [{
+				id: "anantaYuddha",
+				name: "Ananta Yuddha",
+				gen: 4,
+				limit: "game",
+				text: "Once per game: make up to 3 basic attacks this turn.",
+				canUse: (e) => !!e.s.turn,
+				*run(e) {
+					e.s.turn.attacksAllowed += 2;
+				}
+			}],
+			downsideText: "Gen IV drops to 2 Heart Tokens: a glass cannon."
+		},
+		stillwater: {
+			id: "stillwater",
+			name: "House Stillwater",
+			homeland: "Aldermoor",
+			culture: "English-inspired",
+			identity: "Defensive/patient",
+			curve: "Late-favored",
+			tileType: "court",
+			home: {
+				x: 0,
+				y: 8
+			},
+			lore: "Aldermoor's old families have weathered centuries of invasion and famine the same way every time: by simply outlasting everyone else.",
+			hp: [
+				3,
+				3,
+				3,
+				3
+			],
+			passiveName: "Stillwater's Patience",
+			passiveText: ["Once per game, cancel a Reckoning bonus used against you.", "One more use (two in total)."],
+			passive: { reckoningCancels: (e) => e },
+			longWatch: (e) => e >= 2,
+			abilities: []
+		}
+	},
+	cards: de
+}, me = class e {
+	game;
+	answers = [];
+	pending = null;
+	flow;
+	constructor(e, t) {
+		this.game = new fe(e, t), this.flow = this.game.run(), this.step(void 0);
+	}
+	get state() {
+		return this.game.s;
+	}
+	get over() {
+		return this.pending === null;
+	}
+	answer(e) {
+		if (!this.pending) throw Error("The game is over");
+		this.answers.push(e), this.step(e);
+	}
+	step(e) {
+		let t = e === void 0 ? this.flow.next() : this.flow.next(e);
+		this.pending = t.done ? null : t.value;
+	}
+	static replay(t, n, r) {
+		let i = new e(t, n);
+		for (let e of r) i.answer(e);
+		return i;
+	}
+}, he = {
+	1: 3,
+	2: 2,
+	3: 2.5,
+	4: 2.5,
+	5: 2,
+	6: 2,
+	7: 1.5,
+	8: 2.5,
+	9: 2,
+	10: 1.5,
+	11: 2,
+	12: 2,
+	13: 2,
+	14: 1.5,
+	15: 3,
+	16: 1.5,
+	17: 1,
+	18: 3,
+	19: 2.5,
+	20: 2.5,
+	21: 1.5,
+	22: 1.5,
+	23: 2,
+	24: 2.5,
+	25: 1.5,
+	26: 1,
+	27: 3,
+	28: 3.5,
+	29: 3,
+	30: 3,
+	31: 2,
+	32: 3.5,
+	33: 2.5,
+	34: 2,
+	35: 2,
+	36: 2,
+	37: 1.5,
+	38: 1.5,
+	39: 1,
+	40: 2,
+	41: 2,
+	42: 1.5,
+	43: 1,
+	44: 1.5,
+	45: 1,
+	46: 3,
+	47: 1.5,
+	48: 1,
+	49: 1,
+	50: 1.5,
+	51: 1.5,
+	52: .8,
+	53: 1,
+	54: 1.5,
+	55: 2,
+	56: 2,
+	57: 2,
+	58: 4.5,
+	59: 5,
+	60: 4,
+	61: 4,
+	62: 4.5,
+	63: 3.5,
+	64: 3,
+	65: 4.5,
+	121: 3,
+	122: 2,
+	123: 2.5,
+	124: 3.5,
+	125: 3,
+	126: 3.5
+}, U = (e, t) => he[t] ?? 1, ge = /* @__PURE__ */ new Set([
+	"Omen of Fire",
+	"Gambler's Luck",
+	"Lucky Find",
+	"Coin Toss",
+	"Fortune's Wheel",
+	"The Harvest",
+	"Elodie's Blessing",
+	"Elodie's Wrath",
+	"Merchant's Windfall",
+	"Smuggler's Luck",
+	"Highway Robbery",
+	"Counting House",
+	"Toll Bridge",
+	"Treasure Map"
+]);
+function W(e, t, n, r) {
+	let i = e.thresholds(t);
+	return 1 + (r.focus === n ? .3 : 0) + (t.res[n] >= i.single - 2 ? .5 : 0) + (t.res[n] < i.minEach ? .8 : 0);
+}
+var G = (e, t) => e.others(t), _e = (e, t) => G(e, t).reduce((t, n) => !t || e.total(n) > e.total(t) ? n : t, null);
+function ve(t, n, r) {
+	let i = t.thresholds(n), a = 0;
+	for (let o of t.others(n)) for (let s of e) for (let c of e) {
+		if (s === c || n.res[s] <= 0 || o.res[c] <= 0) continue;
+		let e = n.res[s] - 1 < i.minEach ? W(t, n, s, r) + .8 : 1, l = W(t, n, c, r) - e, u = {
+			...n.res,
+			[s]: n.res[s] - 1,
+			[c]: n.res[c] + 1
+		};
+		t.eligible({
+			...n,
+			res: u
+		}) && (l += 3), a = Math.max(a, l);
+	}
+	return a;
+}
+function ye(e, t, n, r) {
+	let i = (n) => W(e, t, n, r), a = e.adjacentTo(t), o = _e(e, t), s = e.s.turn, c = a.some((n) => n.hp + e.hook(n, "basicAttackBonus") >= t.hp), l = (e) => o && o.res[e] > 0 ? .9 : .1;
+	switch (n) {
+		case 1: return 2 * i("influence");
+		case 2: return (a.length ? 2 : 1) * i("influence");
+		case 3: return 1.8 * i("influence");
+		case 4: return i("influence") + l("influence");
+		case 5: return i("influence") + .2;
+		case 6: return (t.res.fear === 0 ? 2 : 1) * i("influence");
+		case 7: return e.onTileType(t, "court") ? 2 * i("influence") : 0;
+		case 8: return 2 * i("fear") - .4;
+		case 9: return i("fear") + .6;
+		case 10: return Math.min(2, a.length) * i("fear");
+		case 11: return t.hp >= 3 ? 2 * i("fear") - .8 : -1;
+		case 12: return i("fear") + .4 * r.aggression;
+		case 13: return i("fear") + .2;
+		case 14: return e.onTileType(t, "war") ? 2 * i("fear") : 0;
+		case 15: return 2 * i("wealth");
+		case 16: return a.some((e) => e.res.wealth > 0) ? i("wealth") + .6 : 0;
+		case 17: return t.pos ? Math.min(2, e.playersOn(t.pos).length - 1) * i("wealth") : 0;
+		case 18: return 2 * i("wealth");
+		case 19: return i("wealth") + .8;
+		case 20: return i("wealth") + l("wealth");
+		case 21: return e.onTileType(t, "trade") ? 2 * i("wealth") : 0;
+		case 22: return i("wealth");
+		case 23: return i("wealth") + .2;
+		case 24: return (s?.attacks ?? 0) === 0 && !e.basicTargets(t).length ? 2 * i("wealth") - .8 * r.aggression : .2;
+		case 25: return i("wealth");
+		case 26: return (s?.damageDealt ? Math.min(2, s.damageDealt) : .6 + r.aggression) * i("wealth");
+		case 27: return (t.gen >= 3 ? 3 : 2) * i("wealth");
+		case 28:
+		case 32: return G(e, t).some((e) => e.hp <= 1) ? 4 : 1.2 * r.aggression;
+		case 29:
+		case 30: return G(e, t).some((e) => e.hp <= 1) ? 3 : 1 * r.aggression + .3;
+		case 31: return .6 + .4 * r.aggression;
+		case 33: return G(e, t).some((e) => e.hand.length) ? 1.2 : 0;
+		case 34: return l("influence");
+		case 35: return l("fear");
+		case 36: return l("wealth");
+		case 37:
+		case 38: return o && e.eligible(o) ? 1.5 : .5;
+		case 39: return .2;
+		case 40: return o ? .9 : 0;
+		case 41: return s && !s.moved ? .8 : .4;
+		case 42: {
+			if (!t.pos) return 0;
+			let n = Z(e, t, t.pos, r), i = Math.max(...Object.values(e.content.houses).map((e) => e.home).filter((e) => p(e) !== p(t.pos)).map((n) => Z(e, t, n, r)));
+			return i - n > 2 ? Math.min(3, (i - n) / 3) : 0;
+		}
+		case 43: return .4;
+		case 44: return c ? 1.5 : .2;
+		case 45: return .3 + .5 * r.aggression;
+		case 46: return e.eligible(t) && t.pos && y(t.pos) <= 8 && !v(t.pos) ? 6 : .4;
+		case 47: return t.pos && g(t.pos, e.house(t).home) > 10 && c ? 1 : 0;
+		case 52: {
+			let r = e.s.discard.filter((t) => e.card(t).kind === "hand").slice(-3);
+			if (r.length < 3) return 0;
+			let i = (t) => t.reduce((t, n) => t + U(e, n), 0) / t.length, a = t.hand.filter((e) => e !== n);
+			return a.length && i(r) - i(a) > 1 ? 1 : .2;
+		}
+		case 48:
+		case 53: return .2;
+		case 49: return ve(e, t, r);
+		case 50: return +!!a.some((e) => e.hand.length);
+		case 51: return i("wealth") - .2;
+		case 54:
+		case 56: return c ? 1.8 : .1;
+		case 55: return 1.5;
+		case 57: return i("fear") - .2;
+		default: return 0;
+	}
+}
+//#endregion
+//#region src/ai/bot.ts
+var K = {
+	brasador: {
+		aggression: .9,
+		caution: .2,
+		focus: "fear",
+		noise: .1
+	},
+	dorini: {
+		aggression: .45,
+		caution: .5,
+		focus: null,
+		noise: .1
+	},
+	ironvow: {
+		aggression: .8,
+		caution: .3,
+		focus: "fear",
+		noise: .1
+	},
+	suzumori: {
+		aggression: .4,
+		caution: .5,
+		focus: "influence",
+		noise: .1
+	},
+	vaitama: {
+		aggression: .55,
+		caution: .4,
+		focus: null,
+		noise: .6
+	},
+	kaysoley: {
+		aggression: .25,
+		caution: .65,
+		focus: "influence",
+		noise: .1
+	},
+	agnivansh: {
+		aggression: 1,
+		caution: .1,
+		focus: "fear",
+		noise: .15
+	},
+	stillwater: {
+		aggression: .1,
+		caution: .9,
+		focus: "influence",
+		noise: .1
+	}
+}, be = [
+	"agnivansh",
+	"ironvow",
+	"dorini",
+	"kaysoley",
+	"brasador",
+	"suzumori",
+	"stillwater",
+	"vaitama"
+];
+function xe(e, t, n) {
+	let r = e.p(t.player), i = K[r.house], a = (e) => {
+		let t = 0;
+		for (let r = 0; r < e.length; r++) e[r] + (n() - .5) * i.noise > e[t] && (t = r);
+		return t;
+	};
+	switch (t.kind) {
+		case "turn": return we(e, r, t, i, n);
+		case "move": return a(t.options.map((n) => Me(e, r, t, n.value)));
+		case "square": return a(t.options.map((t) => Z(e, r, t.value, i)));
+		case "direction": {
+			let n = t.prompt.match(/of (.+)'s move/)?.[1], i = e.s.players.find((e) => e.name === n) ?? r;
+			return a(t.options.map((t) => {
+				let n = h(i.pos, t.value, Math.min(6, te(i.pos, t.value)));
+				return y(n) + g(n, e.house(i).home) * .1;
+			}));
+		}
+		case "player": return t.context?.trade ? ke(e, r, t, i) : Pe(e, r, t, i);
+		case "card": return Fe(e, r, t);
+		case "discard": return Ie(t.options.map((e) => e.value));
+		case "block": return Le(e, r, t, i);
+		case "counterspell":
+		case "confirm": return +!Re(e, r, t, n);
+		case "pool": return t.context?.trade ? Ae(e, r, t, i) : ze(e, r, t);
+		case "reaction": return +!!je(e, r, t, i, n);
+		case "trade": return +!De(e, r, t.context);
+		case "legacy": return a(t.options.map((e) => be.length - be.indexOf(e.value)));
+		case "challenge": return 0;
+		case "specter": return Be(e, t);
+		default: return 0;
+	}
+}
+function q(t, n) {
+	let r = t.thresholds(n), i = r.minEach ? Math.min(1, ...e.map((e) => n.res[e] / r.minEach)) : 1;
+	return Math.max(Math.min(t.total(n) / r.combined, i), ...e.map((e) => n.res[e] / r.single)) * 10 + (t.eligible(n) ? 10 : 0) + (n.pos ? Math.max(0, 10 - y(n.pos)) * .3 : 0);
+}
+function J(e, t, n) {
+	return t.hp + e.hook(t, "basicAttackBonus") + +(t.mark === n.id) + +!!e.findEffect("dreadBanner", t.id) + +!!e.findEffect("markedForDeath", n.id);
+}
+function Se(e, t, n) {
+	let r = t.hp, i = n.hp;
+	for (let a = 0; a < 20; a++) {
+		if (i -= Math.max(1, r + e.hook(t, "basicAttackBonus")), i <= 0) return !0;
+		if (r -= Math.max(1, i + e.hook(n, "basicAttackBonus")), r <= 0) return !1;
+	}
+	return !0;
+}
+function Ce(e, t, n, r) {
+	let i = e.thresholds(t), a = 1;
+	return r.focus === n && (a += .35), t.res[n] >= i.single - 2 && (a += .5), t.res[n] < i.minEach && (a += .8), a;
+}
+function we(e, t, n, r, i) {
+	let a = n.options, o = (e) => a.findIndex((t) => e(t.value)), s = o((e) => e.type === "claim");
+	if (s >= 0 && (e.others(t).filter((t) => e.eligible(t)).every((n) => Se(e, t, n)) || i() > r.caution * .8)) return s;
+	if (!e.s.turn.moved) {
+		if (e.eligible(t) && t.pos && !v(t.pos)) {
+			let n = o((t) => t.type === "card" && e.card(t.card).name === "Bridge the Gap");
+			if (n >= 0 && y(t.pos) <= 8) return n;
+		}
+		let n = Te(e, t, a, r);
+		return n !== null && n.score > 2 ? n.index : o((e) => e.type === "roll");
+	}
+	let c = -1, l = .5;
+	if (a.forEach((n, i) => {
+		if (n.value.type !== "ability") return;
+		let a = Ee(e, t, n.value.id, r);
+		a > l && (c = i, l = a);
+	}), c >= 0) return c;
+	let u = Te(e, t, a, r), d = -1, f = .3;
+	if (a.forEach((n, i) => {
+		if (n.value.type !== "card") return;
+		let a = ye(e, t, n.value.card, r);
+		a > f && (d = i, f = a);
+	}), u !== null && u.score > .4 && (d < 0 || u.score * 1.2 >= f)) return u.index;
+	let p = o((e) => e.type === "trade"), m = p >= 0 ? Oe(e, t, r) : null;
+	return m && m.score > Math.max(.6, f * .8) ? p : d >= 0 ? d : Math.max(0, o((e) => e.type === "end"));
+}
+function Te(e, t, n, r) {
+	let i = null;
+	return n.forEach((n, a) => {
+		if (n.value.type !== "attack") return;
+		let o = e.p(n.value.target), s = J(e, t, o), c = 0;
+		s >= o.hp ? c += 3 + (t.grudges.includes(o.id) ? 2 : 0) : c += r.aggression * (s / o.hp) * 2, e.eligible(o) && (c += 2), o.hand.length >= 3 && (c -= .3 * r.caution), e.house(t).longWatch?.(t.gen) && (c -= .6), (!i || c > i.score) && (i = {
+			index: a,
+			score: c
+		});
+	}), i;
+}
+function Ee(e, t, n, r) {
+	let i = e.others(t);
+	switch (n) {
+		case "laMarca": return +(t.mark === null);
+		case "gritoDeGuerra": return i.some((e) => e.res.fear >= 3) ? .8 : .2;
+		case "reinadoDeCenizas": return t.kills >= 2 || e.eligible({
+			...t,
+			res: {
+				...t.res,
+				fear: t.res.fear + t.kills
+			}
+		}) ? 2 : 0;
+		case "daftar": return t.res.wealth >= 3 ? .9 : 0;
+		case "bazaar": return t.res.wealth >= 5 && (e.eligible(t) || e.basicTargets(t).length > 0) ? 1 : 0;
+		case "greatRaid": return e.eligible(t) || r.aggression > .5 && e.s.round > 4 ? 1.5 : 0;
+		case "kagemimi": return .6;
+		case "sasayakiHa": return 1;
+		case "ayatsuri": return i.some((t) => e.eligible(t)) ? 2 : 0;
+		case "ancestorsMask": return .1;
+		case "semanLape": return e.adjacentTo(t).some((e) => e.hp >= t.hp) ? 1.2 : 0;
+		case "anantaYuddha": return e.basicTargets(t).length > 0 ? 1.5 : 0;
+		default: return .6;
+	}
+}
+function Y(e, t, n, r, i) {
+	let a = e.thresholds(t), o = t.res[n] + r;
+	return ((r > 0 ? t.res[n] < a.minEach : o < a.minEach) ? 2 : 1) + (i.focus === n ? .3 : 0);
+}
+var X = (e, t) => ({
+	...e,
+	res: t
+});
+function De(e, t, n) {
+	let r = e.p(n.from), i = {
+		...r.res,
+		[n.give]: r.res[n.give] - 1,
+		[n.take]: r.res[n.take] + 1
+	};
+	if (e.eligible(X(r, i)) || q(e, r) > q(e, t) + 4) return !1;
+	let a = K[t.house];
+	return Y(e, t, n.give, 1, a) - Y(e, t, n.take, -1, a) >= 0;
+}
+function Oe(t, n, r, i, a) {
+	let o = null, s = t.tradePartners(n).filter((e) => i === void 0 || e.id === i);
+	for (let i of s) for (let s of t.tradeGives(n, i)) if (!(a && s !== a)) for (let a of e) {
+		if (a === s || i.res[a] <= 0) continue;
+		let e = {
+			...n.res,
+			[s]: n.res[s] - 1,
+			[a]: n.res[a] + 1
+		}, c = Y(t, n, a, 1, r) - Y(t, n, s, -1, r);
+		t.eligible(X(n, e)) && (c += 2), De(t, i, {
+			from: n.id,
+			give: s,
+			take: a
+		}) || (c -= 3), c -= q(t, i) * .02, (!o || c > o.score) && (o = {
+			partner: i.id,
+			give: s,
+			take: a,
+			score: c
+		});
+	}
+	return o;
+}
+function ke(e, t, n, r) {
+	let i = Oe(e, t, r), a = n.options.findIndex((e) => e.value === i?.partner);
+	return Math.max(0, a);
+}
+function Ae(e, t, n, r) {
+	let i = n.context?.partner, a = n.context?.give, o = Oe(e, t, r, i, a), s = a ? o?.take : o?.give;
+	return Math.max(0, n.options.findIndex((e) => e.value === s));
+}
+function je(e, t, n, r, i) {
+	let a = n.context ?? {}, o = e.p(a.actor), s = e.eligible(o) ? 10 : q(e, o) - q(e, t);
+	switch (a.reaction) {
+		case "omen": {
+			let t = a.roll ?? 6;
+			return e.eligible(o) && o.pos && y(o.pos) <= t + 1 ? !0 : s > 6 && i() < .3;
+		}
+		case "intercept": {
+			let t = {
+				...o.res,
+				[a.pillar]: o.res[a.pillar] + a.amount
+			};
+			return e.eligible(X(o, t)) || s > 3;
+		}
+		case "interference": return s > 4;
+		case "embargo": {
+			if (!a.trade) return s > 3;
+			let n = e.p(a.partner);
+			return Math.max(s, q(e, n) - q(e, t)) > 3;
+		}
+		case "ambush": return J(e, t, o) >= o.hp || e.eligible(o) || r.aggression > .5 && t.hp >= o.hp;
+		case "turnabout": return !Ne.test(e.card(a.played).name);
+		default: return !1;
+	}
+}
+function Z(e, t, n, r) {
+	let i = 0, a = e.eligible(t), o = e.tileAt(n);
+	if (o && o.house.id !== t.house && p(n) !== t.lastScoredTile && !e.findEffect("sabotage", t.id)) {
+		let a = {
+			court: "influence",
+			war: "fear",
+			trade: "wealth"
+		}[o.house.tileType], s = !e.living().some((e) => e.id !== t.id && e.pos && e.pos.x === n.x && e.pos.y === n.y);
+		i += ((s ? 2 : 1) + e.hook(t, "tileBonus", a)) * Ce(e, t, a, r) * 1.5;
+	}
+	if (a) i += v(n) ? 40 : 20 - y(n) * 2;
+	else {
+		let a = Infinity;
+		for (let i of Object.values(e.content.houses)) {
+			if (i.id === t.house || p(i.home) === p(n)) continue;
+			let o = {
+				court: "influence",
+				war: "fear",
+				trade: "wealth"
+			}[i.tileType], s = g(n, i.home) / Ce(e, t, o, r);
+			a = Math.min(a, s);
+		}
+		i -= a * .25;
+		let o = e.thresholds(t);
+		e.total(t) >= o.combined - 3 && (i -= y(n) * .15);
+	}
+	for (let a of e.others(t)) if (a.pos && b(n, a.pos)) {
+		let n = J(e, t, a);
+		n >= a.hp ? i += 1 + 3 * r.aggression + (t.grudges.includes(a.id) ? 1.5 : 0) : t.hp > a.hp && (i += r.aggression), a.hp + e.hook(a, "basicAttackBonus") >= t.hp && n < a.hp && (i -= 4 * r.caution), e.eligible(a) && (i += 1.5);
+	}
+	return i;
+}
+function Me(e, t, n, r) {
+	let i = e.p(n.context?.player ?? t.id);
+	if (!i.pos) return 0;
+	let a;
+	a = r === null ? i.pos : "d" in r ? r.n === 0 ? i.pos : h(i.pos, r.d, r.n) : r;
+	let o = Z(e, i, a, K[i.house]);
+	return i.id === t.id ? o : -o;
+}
+var Ne = /Fair Exchange|Shared Purpose|Whispered Promise|give 1 Wealth|Uneasy Truce|Blood Pact|Peace Oath/;
+function Pe(e, t, n, r) {
+	let i = n.options.map((e) => e.value), a = i.map((t) => t === null ? null : e.p(t));
+	if (/may strike/.test(n.prompt)) {
+		if (n.prompt.match(/strike (.+) for/)?.[1] === t.name) return 0;
+		let e = i.indexOf(t.id);
+		return e >= 0 ? e : 0;
+	}
+	if (/does it fall on/.test(n.prompt)) {
+		let t = n.prompt.split(":")[0], r = ge.has(t), i = a.map((t) => t ? q(e, t) : -Infinity), o = r ? i.indexOf(Math.min(...i.filter((e) => e > -Infinity))) : i.indexOf(Math.max(...i));
+		return Math.max(0, o);
+	}
+	return /Truce|Peace Oath|Blood Pact/.test(n.prompt) ? Q(a.map((e) => e ? e.hp - t.hp + (e.pos && t.pos ? -g(e.pos, t.pos) * .2 : 0) : -99)) : Ne.test(n.prompt) ? Q(a.map((t) => t ? -q(e, t) : -99)) : /attack whom|Choose who/.test(n.prompt) ? Q(a.map((n) => n ? (J(e, t, n) >= n.hp || n.hp <= 1 ? 20 : 0) + q(e, n) : -99)) : Q(a.map((n) => n ? n.id === t.id ? -50 : q(e, n) + (t.grudges.includes(n.id) ? 2 * r.aggression : 0) : -99));
+}
+function Fe(e, t, n) {
+	let r = n.options.map((e) => e.value), i = r.every((e) => t.hand.includes(e));
+	return /give|pass a card|discard a card of your choice/.test(n.prompt) && i ? Ie(r) : (/goes on top|comes next/.test(n.prompt), Q(r.map((t) => U(e, t))));
+}
+function Ie(e) {
+	return e.reduce((t, n, r) => U(null, n) < U(null, e[t]) ? r : t, 0);
+}
+function Le(e, t, n, r) {
+	let i = n.context?.attack?.damage ?? 1;
+	if (!(i >= t.hp) && i <= 1 && r.caution < .5) return 0;
+	let a = [
+		"Riposte",
+		"Last Stand",
+		"Iron Guard",
+		"Dodge",
+		"Vanish",
+		"Shield Wall",
+		"Steadfast"
+	], o = 0, s = Infinity;
+	return n.options.forEach((t, n) => {
+		if (t.value === null) return;
+		let r = a.indexOf(e.card(t.value).name);
+		r >= 0 && r < s && (s = r, o = n);
+	}), o;
+}
+function Re(e, t, n, r) {
+	if (/Counterspell/.test(n.prompt)) return !/Fair Exchange/.test(n.prompt);
+	if (/cancel/i.test(n.prompt)) return !0;
+	if (/Take /.test(n.prompt)) {
+		let r = n.prompt.match(/Take (.+)\?/)?.[1], i = e.content.cards.find((e) => e.name === r);
+		return !!i && U(e, i.id) > Math.min(...t.hand.map((t) => U(e, t)), 99);
+	}
+	return !/barter/i.test(n.prompt) || r() < .3;
+}
+function ze(t, n, r) {
+	let i = r.options.map((e) => e.value);
+	if (/lose half/.test(r.prompt)) {
+		let t = Math.max(...e.map((e) => n.res[e]));
+		return Q(i.map((e) => -Math.floor(n.res[e] / 2) - (n.res[e] === t ? 1.5 : 0)));
+	}
+	if (/steal 1 from (.+)'s pool/.test(r.prompt) || /take 1 from/.test(r.prompt)) {
+		let e = r.prompt.match(/from (.+?)('s| of)/)?.[1], n = t.s.players.find((t) => t.name === e);
+		return n ? Q(i.map((e) => n.res[e])) : 0;
+	}
+	let a = t.thresholds(n);
+	return /^Uneasy Trade: give/.test(r.prompt) ? Q(i.map((e) => n.res[e] - a.minEach)) : /^Uneasy Trade: take/.test(r.prompt) ? Q(i.map((e) => a.minEach - n.res[e] + (K[n.house].focus === e ? .3 : 0))) : /give .+ 1 of/.test(r.prompt) ? Q(i.map((e) => -n.res[e])) : Q(i.map((e) => n.res[e] + (K[n.house].focus === e ? .5 : 0)));
+}
+function Be(e, t) {
+	let n = 0, r = 0;
+	return t.options.forEach((t, i) => {
+		if (t.value === null) return;
+		let a = e.card(t.value).name, o = ge.has(a) ? .5 : 2;
+		o > r && (n = i, r = o);
+	}), n;
+}
+var Q = (e) => e.reduce((t, n, r) => n > e[t] ? r : t, 0);
+//#endregion
+//#region src/engine/houseChoice.ts
+function Ve(e, t) {
+	let n = Array.from({ length: e }, (e, t) => t), i = [];
+	for (; n.length > 1;) {
+		let e = n.map(() => r(t));
+		i.push(e);
+		let a = Math.max(...e);
+		n = n.filter((t, n) => e[n] === a);
+	}
+	let a = n[0];
+	return {
+		order: Array.from({ length: e }, (t, n) => (a + n) % e),
+		rolls: i
+	};
+}
+function He(e, t, n, r) {
+	let a = new Set(n.filter((e) => !!e)), o = i(e.filter((e) => !a.has(e)), r);
+	return Array.from({ length: t }, (e, t) => n[t] ?? o.pop());
+}
+//#endregion
+//#region src/net/serverCore.ts
+var Ue = class extends Error {}, $ = (e) => {
+	throw new Ue(e);
+}, We = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", Ge = (e) => Array.from({ length: 6 }, () => We[Math.floor(e.rand() * 31)]).join(""), Ke = (e) => e.trim().toUpperCase().replace(/[^A-Z0-9]/g, ""), qe = (e) => e.trim().replace(/\s+/g, " ").slice(0, 16), Je = [
+	"elodie",
+	"lolo",
+	"lodie"
+], Ye = Object.keys(H.houses), Xe = (e) => H.houses[e].name.replace("House ", "");
+function Ze(e, t, n, r, i) {
+	(!Number.isInteger(r) || r < 2 || r > 8) && $("Choose 2 to 8 players."), (!Number.isInteger(i) || i < 1 || i > r) && $("Choose how many of them are people (at least you).");
+	let a = e.token();
+	return {
+		token: a,
+		session: {
+			code: t,
+			status: "lobby",
+			total: r,
+			humans: i,
+			seats: Array.from({ length: r }, (e, t) => ({
+				name: t === 0 ? qe(n) || "Host" : "",
+				token: t === 0 ? a : null,
+				bot: t >= i,
+				vote: !1,
+				house: null
+			})),
+			pickOrder: null,
+			pickRolls: null,
+			pickIndex: 0,
+			setup: null,
+			answers: [],
+			version: 1,
+			created: e.now()
+		}
+	};
+}
+var Qe = (e, t) => {
+	let n = e.seats.findIndex((e) => e.token && e.token === t);
+	return n < 0 ? $("You are not in this game.") : n;
+};
+function $e(e, t, n) {
+	t.status !== "lobby" && $("That game has already started.");
+	let r = t.seats.findIndex((e) => !e.bot && !e.token);
+	r < 0 && $("That game is full.");
+	let i = e.token();
+	return t.seats[r] = {
+		...t.seats[r],
+		name: qe(n) || `Player ${r + 1}`,
+		token: i
+	}, t.version++, {
+		seat: r,
+		token: i
+	};
+}
+function et(e, t) {
+	if (e.status !== "lobby" && $("The game has started; you can come back with the same link."), t === 0) {
+		e.status = "ended", e.version++;
+		return;
+	}
+	e.seats[t] = {
+		name: "",
+		token: null,
+		bot: !1,
+		vote: !1,
+		house: null
+	}, e.version++;
+}
+var tt = (e) => e.seats.every((e) => e.bot || e.token), nt = (e) => e.seats.filter((e) => !e.bot).every((e) => e.vote);
+function rt(e, t, n) {
+	e.status !== "lobby" && $("Houses are already being chosen."), e.seats[t].vote = n, e.version++;
+}
+function it(e, t, r) {
+	if (r !== 0 && $("Only the host can start the game."), t.status !== "lobby" && $("The game has already started."), tt(t) || $("Wait until every player has joined."), nt(t)) {
+		let r = n(Math.floor(e.rand() * 2 ** 31)), { order: i, rolls: a } = Ve(t.total, r);
+		t.pickOrder = i, t.pickRolls = a, t.pickIndex = 0, t.status = "picking", at(e, t);
+	} else st(e, t);
+	t.version++;
+}
+function at(e, t) {
+	for (; t.status === "picking" && t.pickOrder && t.pickIndex < t.pickOrder.length && t.seats[t.pickOrder[t.pickIndex]].bot;) {
+		let n = Ye.filter((e) => !t.seats.some((t) => t.house === e));
+		t.seats[t.pickOrder[t.pickIndex]].house = n[Math.floor(e.rand() * n.length)], t.pickIndex++;
+	}
+	t.status === "picking" && t.pickOrder && t.pickIndex >= t.pickOrder.length && st(e, t);
+}
+function ot(e, t, n, r) {
+	(t.status !== "picking" || !t.pickOrder) && $("It is not time to pick houses."), t.pickOrder[t.pickIndex] !== n && $("It is not your pick yet."), (!Ye.includes(r) || t.seats.some((e) => e.house === r)) && $("That house is taken."), t.seats[n].house = r, t.pickIndex++, at(e, t), t.version++;
+}
+function st(e, t) {
+	let r = Math.floor(e.rand() * 2 ** 31) >>> 0, i = He(Ye, t.total, t.seats.map((e) => e.house), n(r ^ 2654435769)), a = t.seats.findIndex((e) => !e.bot && Je.includes(e.name.trim().toLowerCase()));
+	t.seats.forEach((e, t) => {
+		e.house = i[t], e.bot && (e.name = Xe(i[t]));
+	}), t.setup = {
+		seed: r,
+		seats: t.seats.map((e) => ({
+			name: e.name,
+			isBot: e.bot,
+			house: e.house
+		})),
+		...a >= 0 ? { firstPlayer: a } : {}
+	}, t.answers = [], t.status = "active", ct(t, new me(t.setup, H));
+}
+function ct(e, t) {
+	let r = 0;
+	for (; t.pending && e.seats[t.pending.player].bot && r++ < 2e4;) {
+		let r = n((e.setup.seed ^ Math.imul(t.answers.length + 1, 2654435761)) >>> 0);
+		t.answer(xe(t.game, t.pending, r));
+	}
+	e.answers = [...t.answers], t.over && (e.status = "ended");
+}
+var lt = (e) => me.replay(e.setup, H, e.answers);
+function ut(e, t, n, r) {
+	(e.status !== "active" || !e.setup) && $("The game is not running."), r !== e.answers.length && $("The game moved on; try again.");
+	let i = lt(e);
+	(!i.pending || i.pending.player !== t) && $("It is not your decision."), (!Number.isInteger(n) || n < 0 || n >= i.pending.options.length) && $("That is not one of the choices."), i.answer(n), ct(e, i), e.version++;
+}
+function dt(e, t) {
+	let n = e.seats.map((e, t) => ({
+		seat: t,
+		name: e.name,
+		bot: e.bot,
+		joined: e.bot || !!e.token,
+		vote: e.vote,
+		house: e.house
+	}));
+	return {
+		code: e.code,
+		status: e.status,
+		total: e.total,
+		humans: e.humans,
+		me: t,
+		host: t === 0,
+		seats: n,
+		pickAgreed: nt(e),
+		pickOrder: e.pickOrder,
+		pickRolls: e.pickRolls,
+		pickTurn: e.status === "picking" && e.pickOrder ? e.pickOrder[e.pickIndex] ?? null : null,
+		version: e.version
+	};
+}
+var ft = [
+	"player",
+	"from",
+	"free",
+	"attack",
+	"claimant",
+	"roll",
+	"max"
+];
+function pt(e, t) {
+	let n = structuredClone(e);
+	n.setup = {
+		...n.setup,
+		seed: 0
+	}, n.drawPile = [];
+	for (let e of n.players) e.id !== t && (e.hand = []);
+	return n.log = n.log.filter((e) => !e.visibleTo || e.visibleTo.includes(t)), n;
+}
+function mt(e, t) {
+	if (!e || e.player === t) return e;
+	let n = {};
+	for (let t of ft) e.context && t in e.context && (n[t] = e.context[t]);
+	return {
+		player: e.player,
+		kind: e.kind,
+		prompt: "",
+		options: [],
+		context: n
+	};
+}
+function ht(e, t) {
+	let n = lt(e);
+	return {
+		lobby: dt(e, t),
+		state: pt(n.state, t),
+		pending: mt(n.pending, t),
+		answers: n.answers.length,
+		over: n.over
+	};
+}
+//#endregion
+//#region src/net/protocol.ts
+var gt = (e, t, n) => `${n ? `${n} invites you` : "You're invited"} to a game of Bloodlines: The Race to Elodie's Grace! Tap ${t} to join, or open the app, choose "Join a game" and enter code ${e}.`;
+//#endregion
+export { Ue as GameError, ut as answer, Ze as createSession, ht as gameView, gt as inviteText, $e as joinSession, et as leaveSession, dt as lobbyView, mt as maskDecision, pt as maskState, Ge as newCode, Ke as normCode, ot as pickHouse, lt as replay, Qe as seatOf, it as startSession, rt as vote };
