@@ -18,7 +18,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     passive: { fearOnKill: level => (level >= 2 ? 1 : 0) },
     abilities: [
       {
-        id: 'laMarca', name: 'La Marca', gen: 2, limit: 'turn',
+        id: 'laMarca', name: 'La Marca', gen: 1, limit: 'turn',   // from Gen I (rules-decisions 81)
         text: 'Mark an enemy: your attacks deal +1 damage to them.',
         canUse: (g, p) => others(g, p.id).some(o => o.id !== p.mark),
         *run(g, p) {
@@ -180,7 +180,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     passiveName: 'Limyè Elodie',
     passiveText: ['+1 Influence when you gain Influence from a Court tile.', '+2 Influence from Court tiles.'],
     passive: { tileBonus: (pillar, level) => (pillar === 'influence' ? level : 0) },
-    claimReduction: gen => (gen >= 3 ? 2 : gen >= 2 ? 1 : 0),
+    claimReduction: gen => (gen >= 3 ? 2 : 1),   // from Gen I (rules-decisions 81)
     abilities: [
       {
         id: 'semanLape', name: 'Sèman Lapè', gen: 2, limit: 'game',
@@ -236,7 +236,7 @@ export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<1 | 2 | 3 | 4, st
   stillwater: {
     2: 'The Long Watch: if you take no action on your turn (no attack, Hand Card or trade), gain 1 of any resource.',
   },
-  kaysoley: { 2: 'Rit Solèy: you need 1 less combined resource to Claim the Throne (2 less from Gen III).' },
+  kaysoley: { 1: 'Rit Solèy: you need 1 less combined resource to Claim the Throne (2 less from Gen III).' },
   vaitama: {
     1: 'Areíto: when your character dies, you lose no resources (a Reckoning against you still takes its bonus).',
     4: 'Song of Coaybay: permanently gain the passive of a bloodline that has become a Specter.',

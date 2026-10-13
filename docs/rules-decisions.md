@@ -364,6 +364,12 @@ These came up in code and weren't covered above; all confirmed as they stand.
   unchallenged), and Dorini beat Kay Soley 66–34 in that pairing. Starting the second pawn beside the first player
   did the same with fewer deaths, but the pawn no longer starts on its own house. The owner chose to keep 2 players
   as a fast race.
+- **Adopted: La Marca and Rit Solèy from Gen I [81]** (second review; 2,000 bot games per player count, with
+  [76]–[79]). A player who never dies stays Gen I all game (58% at 2 players, 33% at 3, 20% at 4), and Brasador's Gen I
+  passive does nothing ("from Gen III") while Kay Soley's Court tiles are 19 squares from home. Now Brasador has
+  **La Marca** from Gen I and Kay Soley needs **1 less** combined resource to claim from Gen I (2 less from Gen III).
+  Brasador's share is unchanged (0.95×) but La Marca is used about 50% more; Kay Soley rises from 0.92× to 0.99×
+  (0.80× → 0.89× at 2 players). Every house now wins 0.86–1.15× its fair share at every player count.
 
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about

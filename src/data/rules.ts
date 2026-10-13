@@ -216,7 +216,7 @@ export const RULES: RuleSection[] = [
     id: 'houses-rules', title: 'House Powers',
     blocks: [{
       list: [
-        'Every house has a **passive** from Gen I that upgrades at Gen III, and new **abilities** or rules at Gen II, III and IV. Each heir keeps everything earlier generations had.',
+        'Every house has a **passive** from Gen I that upgrades at Gen III, and **abilities** or house rules that arrive from Gen I to Gen IV. Each heir keeps everything earlier generations had.',
         'An ability with no stated limit can be used **once per turn, as a free action** that doesn\'t use your action.',
         '**Once-per-game powers:** when you use one (or Stillwater\'s Patience), put a Used token on it on your player board. It stays used when your heir takes over.',
         'Every house has 3 Heart Tokens in each generation, except Agnivansh Gen IV (2).',

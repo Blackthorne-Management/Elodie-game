@@ -526,8 +526,10 @@ describe('winning (Section 8)', () => {
     return { g, a, b, c };
   };
   it('needs 8 total with 1+ in every pillar at 2-3 players, 9 with 2+ above; no one-pillar route', () => {
-    expect(newGame(3).thresholds(newGame(3).p(0))).toEqual({ combined: 8, minEach: 1, single: Infinity });
-    expect(newGame(4).thresholds(newGame(4).p(0))).toEqual({ combined: 9, minEach: 2, single: Infinity });
+    const g3 = newGame(3, ['dorini', 'brasador', 'ironvow']);  // not Kay Soley, whose Rit Solèy lowers it
+    const g4 = newGame(4, ['dorini', 'brasador', 'ironvow', 'suzumori']);
+    expect(g3.thresholds(g3.p(0))).toEqual({ combined: 8, minEach: 1, single: Infinity });
+    expect(g4.thresholds(g4.p(0))).toEqual({ combined: 9, minEach: 2, single: Infinity });
   });
   it('a big total is not enough without the minimum in every pillar', () => {
     const g = newGame(4);
@@ -562,11 +564,13 @@ describe('winning (Section 8)', () => {
     expect(g.s.winner).toBe(a.id);
     expect(b.gen).toBe(2);
   });
-  it('Kay Soley needs 1 less combined from Gen II, 2 less from Gen III', () => {
+  it('Kay Soley needs 1 less combined from Gen I, 2 less from Gen III (rules-decisions 81)', () => {
     const g = newGame(4, ['kaysoley', 'brasador', 'dorini', 'ironvow']);
     const k = g.p(0);
-    k.res = { influence: 4, fear: 2, wealth: 2 };     // 8: needs 9 at Gen I
+    k.res = { influence: 3, fear: 2, wealth: 2 };     // 7: one short of 9 - 1
     expect(g.eligible(k)).toBe(false);
+    k.res = { influence: 4, fear: 2, wealth: 2 };     // 8 is enough from Gen I
+    expect(g.eligible(k)).toBe(true);
     k.gen = 2;
     expect(g.eligible(k)).toBe(true);
     k.res = { influence: 3, fear: 2, wealth: 2 };     // 7
