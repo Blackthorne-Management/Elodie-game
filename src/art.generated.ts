@@ -24,4 +24,13 @@ export const CARD_PICTURES: Record<number, string> = {
   "20": "/art/cards/card-20.webp"
 };
 export const PORTRAIT_FILES: Partial<Record<HouseId, (string | undefined)[]>> = {};
-export const CREST_FILES: Partial<Record<HouseId, string>> = {};
+export const CREST_FILES: Partial<Record<HouseId, string>> = {
+  "brasador": "/art/crests/crest-brasador.webp",
+  "dorini": "/art/crests/crest-dorini.webp",
+  "ironvow": "/art/crests/crest-ironvow.webp",
+  "suzumori": "/art/crests/crest-suzumori.webp",
+  "vaitama": "/art/crests/crest-vaitama.webp",
+  "kaysoley": "/art/crests/crest-kaysoley.webp",
+  "agnivansh": "/art/crests/crest-agnivansh.webp",
+  "stillwater": "/art/crests/crest-stillwater.webp"
+};

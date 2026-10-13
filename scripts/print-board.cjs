@@ -41,7 +41,7 @@ for (let i = 0; i <= 18; i++) {
 const seats = data.houses.map(h => {
   const x = O + h.home.x * U, y = O + h.home.y * U, t = TYPE[h.tileType];
   const art = find('art/seats', `seat-${h.id === 'vaitama' ? 'yaguana' : h.id}`);
-  const crest = find('art/crests', `crest-${h.id === 'vaitama' ? 'yaguana' : h.id}`);
+  const crest = find('art/crests', `crest-${h.id}`) ?? find('art/crests', `crest-${h.id === 'vaitama' ? 'yaguana' : h.id}`);
   const mark = art ? `<img class="seat-art" src="${uri(art)}">`
     : crest ? `<img class="crest" src="${uri(crest)}">`
     : `<div class="initial" style="background:${h.color}">${h.initial}</div>`;
