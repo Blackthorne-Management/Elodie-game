@@ -1,9 +1,20 @@
 // Bloodlines online play: the game server. Every request loads one session row (locked), applies one operation with
-// the game rules (src/net/serverCore.ts, bundled by scripts/build-server.mjs into public/server/core.js and served by
-// the website; it is fetched when the function is deployed, so bump ?v= to pick up a new build), saves it and tells
-// everyone in the game to refresh. Deploy with the Supabase MCP or `supabase functions deploy bloodlines`.
+// the game rules, saves it and tells everyone in the game to refresh. The rules (src/net/serverCore.ts with the engine)
+// are bundled by scripts/build-server.mjs into public/server/core.js on the website; the function fetches that file
+// when it starts, so pushing a rules change updates the server too. Deploy with the Supabase MCP or
+// `supabase functions deploy bloodlines`.
 import postgres from 'npm:postgres@3.4.5';
-import * as core from 'https://zesty-puffpuff-852680.netlify.app/server/core.js?v=1';
+
+const CORE_URL = 'https://zesty-puffpuff-852680.netlify.app/server/core.js';
+// deno-lint-ignore no-explicit-any
+let core: any = null;
+async function loadCore() {
+  if (core) return core;
+  const res = await fetch(`${CORE_URL}?t=${Date.now()}`);
+  if (!res.ok) throw new Error(`Could not load the game rules (${res.status})`);
+  core = new Function(`${await res.text()}\nreturn BloodlinesCore;`)();
+  return core;
+}
 
 const sql = postgres(Deno.env.get('SUPABASE_DB_URL')!, { prepare: false, max: 3 });
 const URL_ = Deno.env.get('SUPABASE_URL')!;
@@ -49,6 +60,7 @@ async function withSession<T>(code: string, fn: (s: any) => T): Promise<{ s: any
 Deno.serve(async req => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   try {
+    await loadCore();
     const r = await req.json();
     const code = r.code ? core.normCode(String(r.code)) : '';
     switch (r.op) {
@@ -94,8 +106,9 @@ Deno.serve(async req => {
         return json({ ok: false, error: 'Unknown request.' }, 400);
     }
   } catch (e) {
-    const msg = e instanceof core.GameError ? e.message : 'Something went wrong on the server.';
-    if (!(e instanceof core.GameError)) console.error(e);
-    return json({ ok: false, error: msg }, e instanceof core.GameError ? 200 : 500);
+    const known = core && e instanceof core.GameError;
+    const msg = known ? e.message : 'Something went wrong on the server.';
+    if (!known) console.error(e);
+    return json({ ok: false, error: msg }, known ? 200 : 500);
   }
 });
