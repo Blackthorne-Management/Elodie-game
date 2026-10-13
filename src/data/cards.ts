@@ -1,4 +1,4 @@
-// The 120-card Shared Action Deck (docs/bloodline-card-list.md), with rulings from docs/rules-decisions.md.
+// The 126-card Shared Action Deck (docs/bloodline-card-list.md), with rulings from docs/rules-decisions.md.
 // Card text is the printed text; `effect` carries it out through the engine's helpers.
 import type { AttackInfo, CardDef } from '../engine/content';
 import type { Game } from '../engine/game';
@@ -94,12 +94,12 @@ hand(5, 'Diplomatic Envoy', 'Influence / Court', 'Gain 1 Influence and move 1 ex
   function* (g, p) { g.gain(p, 'influence', 1); yield* g.extraMove(p, 1); });
 hand(6, 'Silver Tongue', 'Influence / Court', 'Gain 1 Influence. If you currently have 0 Fear, gain 1 more.',
   function* (g, p) { g.gain(p, 'influence', p.res.fear === 0 ? 2 : 1); });
-hand(7, 'Ancient Charter', 'Influence / Court', 'Gain 2 Influence if you are on a Court tile this turn.',
-  function* (g, p) { if (g.onTileType(p, 'court')) g.gain(p, 'influence', 2); else g.log('Not on a Court tile: no effect.', 'info'); });
+hand(7, 'Ancient Charter', 'Influence / Court', 'Gain 3 Influence if you are on a Court tile.',
+  function* (g, p) { if (g.onTileType(p, 'court')) g.gain(p, 'influence', 3); else g.log('Not on a Court tile: no effect.', 'info'); });
 
 // Fear / War
-hand(8, 'Burn the Village', 'Fear / War', 'Gain 2 Fear, but you cannot gain Influence next turn.',
-  function* (g, p) { g.gain(p, 'fear', 2); g.addNextTurnEffect('noInfluenceGain', p.id); });
+hand(8, 'Burn the Village', 'Fear / War', 'Gain 2 Fear, but you cannot gain Influence on your next turn.',
+  function* (g, p, c) { g.gain(p, 'fear', 2); g.addNextTurnEffect('noInfluenceGain', p.id, { cardId: c.id }); });
 hand(9, 'Silent Threat', 'Fear / War', 'Target player discards 1 card of their choice. Gain 1 Fear.',
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, others(g, p), 'who discards?');
@@ -114,12 +114,12 @@ hand(10, 'Show of Force', 'Fear / War', 'Gain 1 Fear for each adjacent player (m
   function* (g, p) { g.gain(p, 'fear', Math.min(2, g.adjacentTo(p).length)); });
 hand(11, 'Blood Oath', 'Fear / War', 'Gain 2 Fear. Lose 1 Heart Token.',
   function* (g, p) { g.gain(p, 'fear', 2); g.damage(p, 1, null, '(Blood Oath)'); });
-hand(12, 'Dread Banner', 'Fear / War', 'Gain 1 Fear. Mark this card: your next attack this game deals +1 damage.',
+hand(12, 'Dread Banner', 'Fear / War', 'Gain 1 Fear. Your next attack (even if blocked) deals +1 damage.',
   function* (g, p, c) { g.gain(p, 'fear', 1); g.addEffect('dreadBanner', p.id, { at: 'consumed' }, { cardId: c.id }); });
 hand(13, "Conqueror's March", 'Fear / War', 'Gain 1 Fear and move 1 extra space this turn.',
   function* (g, p) { g.gain(p, 'fear', 1); yield* g.extraMove(p, 1); });
-hand(14, 'Iron Reputation', 'Fear / War', 'Gain 2 Fear if you are on a War tile this turn.',
-  function* (g, p) { if (g.onTileType(p, 'war')) g.gain(p, 'fear', 2); else g.log('Not on a War tile: no effect.', 'info'); });
+hand(14, 'Iron Reputation', 'Fear / War', 'Gain 3 Fear if you are on a War tile.',
+  function* (g, p) { if (g.onTileType(p, 'war')) g.gain(p, 'fear', 3); else g.log('Not on a War tile: no effect.', 'info'); });
 
 // Wealth / Trade
 hand(15, "Smuggler's Route", 'Wealth / Trade', 'Gain 2 Wealth.', function* (g, p) { g.gain(p, 'wealth', 2); });
@@ -128,30 +128,61 @@ hand(16, 'Forged Ledger', 'Wealth / Trade', 'Steal 1 Wealth from an adjacent pla
     const t = yield* pickTarget(g, p, c, g.adjacentTo(p), 'steal from whom?');
     if (t) g.steal(p, t, 'wealth', 1, c.name);
   }, { aggressive: true, playable: (g, p) => g.adjacentTo(p).length > 0 });
-hand(17, 'Caravan Toll', 'Wealth / Trade', 'Gain 1 Wealth for each other player on your current tile (max 2).',
-  function* (g, p) { if (p.pos) g.gain(p, 'wealth', Math.min(2, g.playersOn(p.pos).length - 1)); });
-hand(18, 'Hidden Vault', 'Wealth / Trade', 'Gain 2 Wealth. Reveal this card to the table immediately when played.',
-  function* (g, p) { g.gain(p, 'wealth', 2); });
-hand(19, 'Market Day', 'Wealth / Trade', 'Gain 1 Wealth and draw 1 extra Hand Card this turn (hand cap of 3 still applies — discard down if needed).',
-  function* (g, p) { g.gain(p, 'wealth', 1); yield* g.drawOne(p); });
+hand(17, 'Caravan Toll', 'Wealth / Trade', 'Gain 1 Wealth, plus 1 for each other player on your square (max 2 more).',
+  function* (g, p) { g.gain(p, 'wealth', 1 + (p.pos ? Math.min(2, g.playersOn(p.pos).length - 1) : 0)); });
+hand(18, 'Hidden Vault', 'Wealth / Trade', 'Gain 2 Wealth, or 3 if you have no Wealth.',
+  function* (g, p) { g.gain(p, 'wealth', p.res.wealth === 0 ? 3 : 2); });
+// Market Day (rules-decisions 84): draw 2, keep 1 Hand Card, the other goes under the Hand Card discard pile. An Instant
+// among the two resolves as usual and counts as one of them.
+hand(19, 'Market Day', 'Wealth / Trade', 'Gain 1 Wealth. Draw 2 cards; keep 1 and put the other at the bottom of the Hand Card discard pile.',
+  function* (g, p, c) {
+    g.gain(p, 'wealth', 1);
+    let held: number | null = null;
+    for (let i = 0; i < 2; i++) {
+      const x = g.takeTopCard();
+      if (x === null) break;
+      if (g.card(x).kind === 'instant') {
+        if (held !== null) { p.hand.push(held); held = null; }
+        yield* g.resolveDrawnInstant(p, x);
+        continue;
+      }
+      g.log(`${c.name}: you drew ${g.card(x).name}.`, 'drawPrivate', { player: p.id, cards: [x], visibleTo: [p.id] });
+      if (held === null) { held = x; continue; }
+      g.s.inPlay.push(held, x);                     // both on the table while you choose
+      const keep: number = yield* g.ask(p, 'card', `${c.name}: keep which card? (the other goes under the discard pile)`,
+        [held, x].map(y => ({ label: g.card(y).name, value: y })));
+      g.s.inPlay = g.s.inPlay.filter(y => y !== held && y !== x);
+      g.toDiscard(keep === held ? x : held, true);
+      held = keep;
+    }
+    if (held !== null) p.hand.push(held);
+    g.log(`${p.name} keeps a card from the market.`, 'draw', { player: p.id });
+    yield* g.enforceHandCap(p);
+  });
 hand(20, 'Tax Collector', 'Wealth / Trade', 'Gain 1 Wealth. Target player loses 1 Wealth.',
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, others(g, p), 'who loses 1 Wealth?');
     g.gain(p, 'wealth', 1);
     if (t) g.lose(t, 'wealth', 1, c.name);
   }, { aggressive: true });
-hand(21, "Merchant's Gambit", 'Wealth / Trade', 'Gain 2 Wealth if you are on a Trade tile this turn.',
-  function* (g, p) { if (g.onTileType(p, 'trade')) g.gain(p, 'wealth', 2); else g.log('Not on a Trade tile: no effect.', 'info'); });
-hand(22, 'Counterfeit Coin', 'Wealth / Trade', 'Gain 1 Wealth.', function* (g, p) { g.gain(p, 'wealth', 1); });
+hand(21, "Merchant's Gambit", 'Wealth / Trade', 'Gain 3 Wealth if you are on a Trade tile.',
+  function* (g, p) { if (g.onTileType(p, 'trade')) g.gain(p, 'wealth', 3); else g.log('Not on a Trade tile: no effect.', 'info'); });
+hand(22, 'Counterfeit Coin', 'Wealth / Trade', 'Gain 1 Wealth and 1 resource of your choice.',
+  function* (g, p, c) {
+    g.gain(p, 'wealth', 1);
+    const x = yield* g.choosePillar(p, `${c.name}: gain 1 of`);
+    if (x) g.gain(p, x, 1);
+  });
 hand(23, 'Silk Road', 'Wealth / Trade', 'Gain 1 Wealth and move 1 extra space this turn.',
   function* (g, p) { g.gain(p, 'wealth', 1); yield* g.extraMove(p, 1); });
 // Changed (rules-decisions): the drawback now reaches your next turn, since playing a card already uses your attack.
 hand(24, 'Golden Harvest', 'Wealth / Trade', 'Gain 2 Wealth, but you may not attack this turn or on your next turn.',
-  function* (g, p) {
+  function* (g, p, c) {
     g.gain(p, 'wealth', 2);
-    if (g.s.turn) g.addEffect('noAttack', p.id, { at: 'turnEnd', player: p.id, turns: 2 });
+    if (g.s.turn) g.addEffect('noAttack', p.id, { at: 'turnEnd', player: p.id, turns: 2 }, { cardId: c.id });
   }, { playable: g => (g.s.turn?.attacks ?? 0) === 0 });
-hand(25, 'Black Market Deal', 'Wealth / Trade', 'Gain 1 Wealth. You may Barter 1 card with any player.',
+// A Barter card (rules-decisions 84), so Embargo can cancel it.
+hand(25, 'Black Market Deal', 'Barter', 'Gain 1 Wealth. You may give any player a card of your choice and take a random card from their hand.',
   function* (g, p) {
     g.gain(p, 'wealth', 1);
     const partners = withCards(others(g, p));
@@ -160,9 +191,10 @@ hand(25, 'Black Market Deal', 'Wealth / Trade', 'Gain 1 Wealth. You may Barter 1
     const t = yield* g.choosePlayer(p, partners, 'Barter with whom?');
     if (t) yield* barter(g, p, t, 'Black Market Deal');
   });
-// Changed (rules-decisions): a card is your action, so Plunder waits for your next basic attack.
-hand(26, 'Plunder', 'Wealth / Trade', 'Until the end of your next turn: when your next basic attack lands, gain 1 Wealth for each Heart Token of damage it dealt (max 2).',
+// Changed (rules-decisions): a card is your action, so Plunder waits for your next basic attack. +1 Wealth: 84.
+hand(26, 'Plunder', 'Wealth / Trade', 'Gain 1 Wealth. Your next basic attack (until the end of your next turn) also gains 1 Wealth per damage it deals (max 2).',
   function* (g, p) {
+    g.gain(p, 'wealth', 1);
     const t = g.s.turn;
     if (!t || t.player !== p.id) return;
     if (t.damageDealt > 0) return void g.gain(p, 'wealth', Math.min(2, t.damageDealt), 'Plunder');
@@ -181,7 +213,7 @@ hand(28, 'Cursed Dagger', 'Ranged / Cursed', 'Attack any player on the board reg
 hand(29, 'Hex of Withering', 'Ranged / Cursed', 'Target player loses 1 Heart Token at the start of their next turn.',
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, others(g, p), 'curse whom?');
-    if (t) g.addEffect('hex', t.id, { at: 'consumed' }, { by: p.id, armed: false });
+    if (t) g.addEffect('hex', t.id, { at: 'consumed' }, { by: p.id, armed: false, cardId: c.id });
   }, { aggressive: true });
 hand(30, 'Poisoned Chalice', 'Ranged / Cursed', 'Target any player (adjacent or not). They lose 1 Heart Token. You lose 1 Wealth.',
   function* (g, p, c) {
@@ -189,12 +221,12 @@ hand(30, 'Poisoned Chalice', 'Ranged / Cursed', 'Target any player (adjacent or 
     g.lose(p, 'wealth', 1, c.name);
     if (t) yield* hpLoss(g, t, 1, c.name, p);
   }, { aggressive: true });
-hand(31, 'Marked for Death', 'Ranged / Cursed', 'Choose a player. Mark this card: the next attack landed against them this game deals +1 damage, then discard.',
+hand(31, 'Marked for Death', 'Ranged / Cursed', 'Choose a player. The next attack that lands on them deals +1 damage.',
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, others(g, p), 'mark whom?');
     if (t) g.addEffect('markedForDeath', t.id, { at: 'consumed' }, { by: p.id, cardId: c.id });
   }, { aggressive: true });
-hand(32, 'Shadow Strike', 'Ranged / Cursed', 'Attack any player within 6 spaces. Deal 1 damage. Cannot be blocked.',
+hand(32, 'Shadow Strike', 'Ranged / Cursed', 'Attack any player within 6 spaces for 1 damage. It cannot be blocked (not even by Last Stand).',
   function* (g, p, c) { yield* cardAttack(g, p, c, attackable(g, p, o => !!o.pos && !!p.pos && manhattan(o.pos, p.pos) <= 6), true); },
   { aggressive: true, playable: (g, p) => attackable(g, p, o => !!o.pos && !!p.pos && manhattan(o.pos, p.pos) <= 6).length > 0 });
 
@@ -219,12 +251,12 @@ loseOne(36, 'Robbed Blind', 'wealth');
 hand(37, 'Confusion', 'Disruption', "Target player's next movement roll is reduced by 2 (minimum 1).",
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, others(g, p), 'confuse whom?');
-    if (t) g.addEffect('confusion', t.id, { at: 'consumed' }, { by: p.id });
+    if (t) g.addEffect('confusion', t.id, { at: 'consumed' }, { by: p.id, cardId: c.id });
   }, { aggressive: true });
-hand(38, 'Forced March', 'Disruption', 'Target player must move their full next roll, in a direction of your choice.',
+hand(38, 'Forced March', 'Disruption', "Target player's next move is their full roll in a straight line, in a direction you choose.",
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, others(g, p), 'march whom?');
-    if (t) g.addEffect('forcedMarch', t.id, { at: 'consumed' }, { by: p.id });
+    if (t) g.addEffect('forcedMarch', t.id, { at: 'consumed' }, { by: p.id, cardId: c.id });
   }, { aggressive: true });
 hand(39, 'Whispers of Doubt', 'Disruption', 'Target player reveals their hand to you only.',
   function* (g, p, c) {
@@ -234,7 +266,7 @@ hand(39, 'Whispers of Doubt', 'Disruption', 'Target player reveals their hand to
 hand(40, 'Sabotage', 'Disruption', 'Target player cannot gain resources from tiles on their next turn.',
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, others(g, p), 'sabotage whom?');
-    if (t) g.addNextTurnEffect('sabotage', t.id, { by: p.id });
+    if (t) g.addNextTurnEffect('sabotage', t.id, { by: p.id, cardId: c.id });
   }, { aggressive: true });
 
 // Movement / Positioning
@@ -270,49 +302,45 @@ hand(44, 'Forced Retreat', 'Movement', 'Move an adjacent player 2 spaces away fr
     const t = yield* pickTarget(g, p, c, g.adjacentTo(p), 'push back whom?');
     if (t?.pos && p.pos) yield* g.moveStraight(t, 2, { full: true, dirs: dirAway(p.pos, t.pos), why: `Forced Retreat: ${p.name} pushes you back 2` });
   }, { aggressive: true, playable: (g, p) => g.adjacentTo(p).length > 0 });
-// Changed (rules-decisions): a card is your action, so Vanishing Act waits for your next basic attack.
-hand(45, 'Vanishing Act', 'Movement', 'Until the end of your next turn: after your next basic attack resolves, move 1 space as a free action.',
+// Changed (rules-decisions): a card is your action, so Vanishing Act waits for your next basic attack. +1 Wealth: 84.
+hand(45, 'Vanishing Act', 'Movement', 'Gain 1 Wealth. After your next basic attack (until the end of your next turn), move 1 space.',
   function* (g, p) {
+    g.gain(p, 'wealth', 1);
     const t = g.s.turn;
     if (t && t.attacks > 0) return void (yield* g.moveFree(p, 1, 'Vanishing Act: move 1 space'));
     if (t) g.addEffect('afterAttack', p.id, { at: 'turnEnd', player: p.id, turns: 2 }, { cardId: 45 });
   }, {
     *afterAttack(g, p) { if (p.pos) yield* g.moveFree(p, 1, 'Vanishing Act: move 1 space'); },
   });
-hand(46, 'Bridge the Gap', 'Movement', 'Move directly to any tile within 8 spaces this turn, ignoring the straight-line-only movement rule.',
+// rules-decisions 84: 5 spaces (was 8). Cards are played after you move, so it never scores a tile.
+hand(46, 'Bridge the Gap', 'Movement', 'Move to any square within 5 spaces.',
   function* (g, p) {
     if (!p.pos) return;
-    const to = yield* g.ask(p, 'square', 'Bridge the Gap: move where?', squaresWithin(p.pos, 8).map(q => ({ label: `(${q.x + 1}, ${q.y + 1})`, value: q })));
-    const t = g.s.turn;
-    if (t && t.player === p.id && !t.moved) {
-      // Played before moving, it is this turn's move.
-      t.moved = true;
-      g.moveTo(p, to, 'bridges the gap');
-      yield* g.resourceCheck(p);
-    } else {
-      g.moveTo(p, to, 'bridges the gap');
-    }
+    const to = yield* g.ask(p, 'square', 'Bridge the Gap: move where?', squaresWithin(p.pos, 5).map(q => ({ label: `(${q.x + 1}, ${q.y + 1})`, value: q })));
+    g.moveTo(p, to, 'bridges the gap');
   });
 hand(47, 'Homeward Bound', 'Movement', 'Teleport to your owned tile.',
   function* (g, p) { g.teleport(p, ownTile(g, p), 'returns home'); },
   { playable: (g, p) => !!p.pos && !samePos(p.pos, ownTile(g, p)) });
 
 // Barter
-hand(48, 'Traveling Merchant', 'Barter', 'Switch one card in your hand with the player to your left.',
+hand(48, 'Traveling Merchant', 'Barter', 'Give the player to your left a card of your choice; take a random card from their hand.',
   function* (g, p) { const l = g.leftOf(p); if (l) yield* barter(g, p, l, 'Traveling Merchant'); },
   { playable: (g, p) => p.hand.length >= 2 && (g.leftOf(p)?.hand.length ?? 0) > 0 });
-hand(49, 'Uneasy Trade', 'Barter', 'Trade 1 resource point (your choice of type) with any player, one-for-one.',
+// The two resources must differ (rules-decisions 84), as in a trade offer.
+hand(49, 'Uneasy Trade', 'Barter', 'Give any player 1 resource and take 1 different resource from them (you choose both).',
   function* (g, p, c) {
-    const mine = PILLARS.filter(x => p.res[x] > 0);
-    const t = yield* pickTarget(g, p, c, others(g, p).filter(o => PILLARS.some(x => o.res[x] > 0)), 'trade with whom?');
-    if (!t || !mine.length) return;
-    const give = (yield* g.choosePillar(p, `Uneasy Trade: give ${t.name} 1 of`, mine))!;
-    const take = yield* g.choosePillar(p, `Uneasy Trade: take 1 from ${t.name} of`, PILLARS.filter(x => t.res[x] > 0));
-    if (!take) return;
+    const t = yield* pickTarget(g, p, c, others(g, p).filter(o => g.tradeGives(p, o).length > 0), 'trade with whom?');
+    if (!t) return;
+    const gives = g.tradeGives(p, t);
+    if (!gives.length) return;                     // after a Turnabout, the new partner may have nothing to swap
+    const give = (yield* g.choosePillar(p, `Uneasy Trade: give ${t.name} 1 of`, gives))!;
+    const take = (yield* g.choosePillar(p, `Uneasy Trade: take 1 from ${t.name} of`, PILLARS.filter(x => x !== give && t.res[x] > 0)))!;
     g.lose(p, give, 1, c.name); g.gain(t, give, 1, c.name);
     g.lose(t, take, 1, c.name); g.gain(p, take, 1, c.name);
-  }, { playable: (g, p) => PILLARS.some(x => p.res[x] > 0) && others(g, p).some(o => PILLARS.some(x => o.res[x] > 0)) });
-hand(50, 'Stolen Goods', 'Barter', "Take 1 random card from an adjacent player's hand. They take 1 random card from the discard pile in return.",
+  }, { playable: (g, p) => others(g, p).some(o => g.tradeGives(p, o).length > 0) });
+// Stolen Goods (rules-decisions 84): the robbed player picks any card from the Hand Card discard pile.
+hand(50, 'Stolen Goods', 'Barter', "Take a random card from an adjacent player's hand. They look through the Hand Card discard pile and take any one card.",
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, withCards(g.adjacentTo(p)), 'rob whom?');
     if (!t?.hand.length) return;
@@ -320,10 +348,11 @@ hand(50, 'Stolen Goods', 'Barter', "Take 1 random card from an adjacent player's
     t.hand = t.hand.filter(x => x !== took);
     p.hand.push(took);
     g.log(`${p.name} takes a card from ${t.name}.`, 'barter', { player: p.id, target: t.id });
-    const pile = g.s.discard.filter(x => g.card(x).kind === 'hand');
+    const pile = g.s.handDiscard;
     if (pile.length) {
-      const back = g.randomItem(pile);
-      g.s.discard = g.s.discard.filter(x => x !== back);
+      const back = yield* g.ask(t, 'card', `${c.name}: take any card from the Hand Card discard pile`,
+        [...pile].reverse().map(x => ({ label: g.card(x).name, value: x })));
+      g.s.handDiscard = pile.filter(x => x !== back);
       t.hand.push(back);
     }
     yield* g.enforceHandCap(p);
@@ -334,21 +363,23 @@ hand(51, 'Fair Exchange', 'Barter', 'You and target player each gain 1 Wealth.',
     g.gain(p, 'wealth', 1);
     if (t) g.gain(t, 'wealth', 1);
   });
-hand(52, 'Black Market Contact', 'Barter', 'Swap your entire hand for the top 3 cards of the discard pile (your choice).',
+hand(52, 'Black Market Contact', 'Barter', 'Swap your whole hand for the top 3 cards of the Hand Card discard pile.',
   function* (g, p) {
-    const top = g.s.discard.filter(x => g.card(x).kind === 'hand').slice(-3);
+    const top = g.s.handDiscard.slice(-3);
     const old = [...p.hand];
-    g.s.discard = g.s.discard.filter(x => !top.includes(x));
+    g.s.handDiscard = g.s.handDiscard.slice(0, g.s.handDiscard.length - top.length);
     p.hand = top;
-    g.s.discard.push(...old);
+    g.s.handDiscard.push(...old);
     g.log(`${p.name} swaps their hand with the discard pile.`, 'barter', { player: p.id });
-  }, { playable: g => g.s.discard.some(x => g.card(x).kind === 'hand') });
-hand(53, "Broker's Fee", 'Barter', 'Force two other players to each swap one card (your choice which cards).',
+  }, { playable: g => g.s.handDiscard.length > 0 });
+hand(53, "Broker's Fee", 'Barter', "Look at two other players' hands. Choose one card from each; they swap them.",
   function* (g, p) {
     const a = yield* g.targetPlayer(p, withCards(others(g, p)), "Broker's Fee: first player");
     if (!a) return;
     const b = yield* g.targetPlayer(p, withCards(others(g, p)).filter(o => o.id !== a.id), "Broker's Fee: second player");
     if (!b) return;
+    g.reveal(a, [p.id], "Broker's Fee");
+    g.reveal(b, [p.id], "Broker's Fee");
     const ca = yield* g.ask(p, 'card', `Card ${a.name} gives`, a.hand.map(x => ({ label: g.card(x).name, value: x })));
     const cb = yield* g.ask(p, 'card', `Card ${b.name} gives`, b.hand.map(x => ({ label: g.card(x).name, value: x })));
     a.hand = [...a.hand.filter(x => x !== ca), cb];
@@ -357,10 +388,11 @@ hand(53, "Broker's Fee", 'Barter', 'Force two other players to each swap one car
   }, { aggressive: true, playable: (g, p) => withCards(others(g, p)).length >= 2 });
 
 // Temporary Truce
-hand(54, 'Uneasy Truce', 'Truce', 'You and one chosen player cannot attack each other until your next turn.',
-  function* (g, p) {
+// Truces last a number of your own turns, not rounds, so every seat gets the same length (rules-decisions 84).
+hand(54, 'Uneasy Truce', 'Truce', 'You and one chosen player cannot attack each other until your next turn starts.',
+  function* (g, p, c) {
     const t = yield* g.choosePlayer(p, others(g, p), 'Uneasy Truce: with whom?');
-    if (t) g.addEffect('truce', p.id, { at: 'turnStart', player: p.id }, { other: t.id });
+    if (t) g.addEffect('truce', p.id, { at: 'turnStart', player: p.id }, { other: t.id, cardId: c.id });
   });
 hand(55, 'Shared Purpose', 'Truce', 'You and one adjacent player each gain 1 resource of your choice.',
   function* (g, p) {
@@ -372,38 +404,51 @@ hand(55, 'Shared Purpose', 'Truce', 'You and one adjacent player each gain 1 res
       if (theirs) g.gain(t, theirs, 1);
     }
   }, { playable: (g, p) => g.adjacentTo(p).length > 0 });
-hand(56, 'Ceasefire', 'Truce', 'No player may attack you this round.',
-  function* (g, p) { g.addEffect('ceasefire', p.id, { at: 'roundEnd', round: g.s.round }); });
-hand(57, 'Blood Pact', 'Truce', 'You and target player each gain 1 Fear. Neither of you may attack the other for 2 full rounds.',
-  function* (g, p) {
+hand(56, 'Ceasefire', 'Truce', 'No player may attack you until your next turn starts.',
+  function* (g, p, c) { g.addEffect('ceasefire', p.id, { at: 'turnStart', player: p.id }, { cardId: c.id }); });
+hand(57, 'Blood Pact', 'Truce', 'You and target player each gain 1 Fear. Neither may attack the other until your turn after next starts.',
+  function* (g, p, c) {
     const t = yield* g.choosePlayer(p, others(g, p), 'Blood Pact: with whom?');
     g.gain(p, 'fear', 1);
     if (!t) return;
     g.gain(t, 'fear', 1);
-    g.addEffect('truce', p.id, { at: 'roundEnd', round: g.s.round + 2 }, { other: t.id });
+    g.addEffect('truce', p.id, { at: 'turnStart', player: p.id, turns: 2 }, { other: t.id, cardId: c.id });
   });
 
 // Block / Deflect (played only in response)
 const block = (id: number, name: string, text: string, canUse: (g: Game, d: PlayerState, a: AttackInfo) => boolean,
   resolve: (g: Game, d: PlayerState, a: AttackInfo) => Flow<'negate' | 'survive1'>) =>
   hand(id, name, 'Block / Deflect', text, nothing, { responseOnly: true, block: { canUse, resolve } });
-block(58, 'Iron Guard', 'Negate the next attack against you.', () => true, function* () { return 'negate'; });
+block(58, 'Iron Guard', 'Negate an attack against you.', () => true, function* () { return 'negate'; });
 block(59, 'Riposte', 'Negate an attack and deal 1 damage back to the attacker.', () => true,
   function* (g, d, a) { g.damage(g.p(a.attacker), 1, d.id, '(Riposte)'); return 'negate'; });
 block(60, 'Vanish', 'Negate an attack, then move 1 space immediately after.', () => true,
   function* (g, d) { yield* g.moveFree(d, 1, 'Vanish: move 1 space'); return 'negate'; });
-block(61, 'Shield Wall', 'Negate an attack. Any ally sharing your tile is also protected this turn.', () => true,
+// Shield Wall is a lasting card: it stays face up until the end of the turn.
+block(61, 'Shield Wall', 'Negate an attack. For the rest of this turn, no one else on your square can be attacked.', () => true,
   function* (g, d) {
-    if (d.pos) g.addEffect('shieldWall', d.id, g.s.turn ? { at: 'turnEnd', player: g.s.turn.player } : { at: 'consumed' }, { square: key(d.pos) });
+    if (d.pos && g.s.turn) g.addEffect('shieldWall', d.id, { at: 'turnEnd', player: g.s.turn.player }, { square: key(d.pos), cardId: 61 });
     return 'negate';
   });
-block(62, 'Dodge', 'Negate an attack and draw 1 card immediately.', () => true,
-  function* (g, d) { yield* g.drawOne(d); return 'negate'; });
-hand(63, 'Counterspell', 'Block / Deflect', 'Negate a Hand Card effect targeting you (does not apply to combat damage).', nothing,
+// Dodge (rules-decisions 84): a draw does nothing under "always back to 3", so it gives a resource instead.
+block(62, 'Dodge', 'Negate an attack and gain 1 resource of your choice.', () => true,
+  function* (g, d) {
+    const x = yield* g.choosePillar(d, 'Dodge: gain 1 of');
+    if (x) g.gain(d, x, 1, 'Dodge');
+    return 'negate';
+  });
+hand(63, 'Counterspell', 'Block / Deflect', 'Negate a ◎ Target card played on you. (Attacks are not Target cards.)', nothing,
   { responseOnly: true, counterspell: true });
-block(64, 'Steadfast', 'Negate an attack, but only if your Heart Tokens are at half of your max or below.',
-  (_g, d) => d.hp <= d.maxHp / 2, function* () { return 'negate'; });
-block(65, 'Last Stand', 'Negate an attack that would reduce you to 0 Heart Tokens. You survive with 1 Heart Token instead.',
+// Steadfast (rules-decisions 84): any attack; at 1 Heart Token it also heals 1.
+block(64, 'Steadfast', 'Negate an attack. If you are at 1 Heart Token, also gain 1 Heart Token.', () => true,
+  function* (g, d) {
+    if (d.hp === 1 && d.maxHp > 1) {
+      d.hp += 1;
+      g.log(`Steadfast: ${d.name} gains 1 Heart Token.`, 'heal', { player: d.id, amount: 1 });
+    }
+    return 'negate';
+  });
+block(65, 'Last Stand', 'When an attack would drop you to 0 Heart Tokens, stay at 1 instead (the attack still lands).',
   (_g, d, a) => a.damage >= d.hp, function* () { return 'survive1'; });
 
 // ---------------------------------------------------------------- INSTANT / EVENT CARDS
@@ -411,7 +456,7 @@ block(65, 'Last Stand', 'Negate an attack that would reduce you to 0 Heart Token
 // Dice-Based Chaos
 instant(66, 'Bandit Ambush', 'Dice', 'Roll a die. Odd: lose 1 Wealth. Even: gain 1 Wealth.',
   function* (g, p, c) { if (odd(g.roll(p, c.name))) g.lose(p, 'wealth', 1, c.name); else g.gain(p, 'wealth', 1, c.name); });
-instant(67, 'Duel of Honor', 'Dice', 'Roll against an adjacent player (if none, the player to your left). Lower roll loses 1 Heart Token.',
+instant(67, 'Duel of Honor', 'Dice', 'Roll against an adjacent player of your choice (if none, the player to your left); re-roll ties. The lower roll loses 1 Heart Token.',
   function* (g, p, c) {
     const adj = g.adjacentTo(p);
     const foe = adj.length ? yield* g.choosePlayer(p, adj, 'Duel of Honor: against whom?') : g.leftOf(p);
@@ -428,8 +473,8 @@ instant(68, 'Omen of Fire', 'Dice', 'Roll a die. On a 6, gain 1 Fear.',
   function* (g, p, c) { if (g.roll(p, c.name) === 6) g.gain(p, 'fear', 1, c.name); });
 instant(69, 'Fickle Fate', 'Dice', 'Roll a die. 1-2: lose 1 Influence. 3-4: nothing. 5-6: gain 1 Influence.',
   function* (g, p, c) { const r = g.roll(p, c.name); if (r <= 2) g.lose(p, 'influence', 1, c.name); else if (r >= 5) g.gain(p, 'influence', 1, c.name); });
-instant(70, "Gambler's Luck", 'Dice', 'Roll a die twice, keep the higher result. Gain that many Wealth (max 3).',
-  function* (g, p, c) { const r = Math.max(g.roll(p, c.name), g.roll(p, c.name)); g.gain(p, 'wealth', Math.min(3, r), c.name); });
+instant(70, "Gambler's Luck", 'Dice', 'Roll a die twice, keep the higher result. Gain that many Wealth (max 2).',
+  function* (g, p, c) { const r = Math.max(g.roll(p, c.name), g.roll(p, c.name)); g.gain(p, 'wealth', Math.min(2, r), c.name); });
 instant(71, 'Cursed Dice', 'Dice', 'Roll a die. On a 1, lose 1 Heart Token. Otherwise, gain 1 Wealth.',
   function* (g, p, c) { if (g.roll(p, c.name) === 1) yield* hpLoss(g, p, 1, c.name); else g.gain(p, 'wealth', 1, c.name); }, { noSpecter: true });
 instant(72, 'Highway Robbery', 'Dice', 'Roll a die. Even: steal 1 Wealth from the player to your left. Odd: nothing.',
@@ -440,7 +485,7 @@ instant(74, 'Storm at Sea', 'Dice', 'Roll a die. On 1-2, every player loses 1 We
   function* (g, p, c) { if (g.roll(p, c.name) <= 2) yield* everyone(g, p, o => { g.lose(o, 'wealth', 1, c.name); }); });
 instant(75, 'Lucky Find', 'Dice', 'Roll a die. Gain half that many Wealth, rounded down (max 3).',
   function* (g, p, c) { g.gain(p, 'wealth', Math.min(3, Math.floor(g.roll(p, c.name) / 2)), c.name); });
-instant(76, 'Wildfire', 'Dice', 'Roll a die. On 5-6, the player with the most Fear loses 1 Heart Token.',
+instant(76, 'Wildfire', 'Dice', 'Roll a die. On 5-6, the player with the most Fear loses 1 Heart Token. (Tie: no effect.)',
   function* (g, p, c) { if (g.roll(p, c.name) >= 5) yield* hpLoss(g, g.uniqueBest(o => o.res.fear), 1, c.name); }, { noSpecter: true });
 instant(77, 'Coin Toss', 'Dice', 'Roll a die. Odd: gain 1 Influence. Even: gain 1 Fear.',
   function* (g, p, c) { g.gain(p, odd(g.roll(p, c.name)) ? 'influence' : 'fear', 1, c.name); });
@@ -479,7 +524,7 @@ instant(86, 'Uprising', 'Global', 'Every player with 3 or more Fear loses 1 Fear
   function* (g, p, c) { yield* everyone(g, p, o => { if (o.res.fear >= 3) g.lose(o, 'fear', 1, c.name); }); });
 instant(87, 'Grand Market', 'Global', 'Every player may immediately move 1 space toward the nearest Trade tile.',
   function* (g, p, c) { yield* everyone(g, p, o => g.stepToward(o, tradeTiles(g), `${c.name}: step toward a Trade tile?`)); });
-instant(88, 'Night of Shadows', 'Global', 'Every player discards down to 2 cards this turn only (hands return to drawing up to 3 normally next turn).',
+instant(88, 'Night of Shadows', 'Global', "Every player discards down to 2. The player whose turn it is doesn't draw back up this turn.",
   function* (g, p) {
     yield* everyone(g, p, o => g.enforceHandCap(o, 2));
     if (g.s.turn) g.s.turn.stopDrawing = true;
@@ -517,9 +562,9 @@ instant(96, "Elodie's Memory", 'Targeted', 'Any player currently holding a Grudg
       return g.stepToward(o, foes.map(f => f.pos!), `${c.name}: step toward your Grudge?`);
     });
   }, { elodie: true, flavor: 'She remembers every debt, even the ones the living have let go.' });
-instant(97, 'Eyes of the Realm', 'Targeted', 'The player closest to the Throne reveals their hand to the table.',
+instant(97, 'Eyes of the Realm', 'Targeted', 'The player closest to the Throne reveals their hand to the table. (Tie: no effect.)',
   function* (g, _p, c) { const t = g.uniqueBest(o => throneDistance(o.pos!), false); if (t) g.reveal(t, 'all', c.name); });
-instant(98, "Elodie's Trial", 'Targeted', 'The player with the fewest Heart Tokens may be attacked for 1 damage by any other player of their choice (optional).',
+instant(98, "Elodie's Trial", 'Targeted', 'You may pick a player (you included) to attack the player with the fewest Heart Tokens for 1 damage. (Tie: no effect.)',
   function* (g, p, c) {
     const weak = g.uniqueBest(o => o.hp, false);
     if (!weak) return;
@@ -535,19 +580,20 @@ instant(99, 'Rising Tide', 'Targeted', 'The player with the most Influence loses
     if (hi) g.lose(hi, 'influence', 1, c.name);
     if (lo && lo !== hi) g.gain(lo, 'influence', 1, c.name);
   });
-instant(100, 'Scales of War', 'Targeted', 'The players with the most and least Fear swap 1 Fear point. (Tie on either side: no effect.)',
+instant(100, 'Scales of War', 'Targeted', 'The player with the most Fear gives 1 Fear to the player with the least. (Tie: no effect.)',
   function* (g, _p, c) {
     const hi = g.uniqueBest(o => o.res.fear), lo = g.uniqueBest(o => o.res.fear, false);
     if (hi && lo && hi !== lo) g.steal(lo, hi, 'fear', 1, c.name);
   });
-instant(101, 'Whispers at Court', 'Targeted', 'The player who most recently gained Influence loses 1 Influence.',
-  function* (g, _p, c) { const id = g.s.lastInfluenceGain; if (id !== null && !g.p(id).specter) g.lose(g.p(id), 'influence', 1, c.name); });
+// Whispers at Court, Loose Lips (rules-decisions 84): rewritten so a table can track them.
+instant(101, 'Whispers at Court', 'Targeted', 'The player with the most Influence loses 1 Influence. (Tie: no effect.)',
+  function* (g, _p, c) { const t = g.uniqueBest(o => o.res.influence); if (t) g.lose(t, 'influence', 1, c.name); });
 instant(102, "Elodie's Reckoning", 'Targeted', "The most recently killed player's killer loses 1 Heart Token.",
   function* (g, _p, c) { const k = g.s.lastKill; if (k) yield* hpLoss(g, g.p(k.killer), 1, c.name); },
   { elodie: true, flavor: 'Every death is a debt. She collects the interest herself.', noSpecter: true });
 
 // Hand Disruption
-instant(103, 'Thief in the Night', 'Hand Disruption', 'Swap one card with the player to your left.',
+instant(103, 'Thief in the Night', 'Hand Disruption', 'Give the player to your left a card of your choice; take a random card from their hand.',
   function* (g, p, c) { const l = g.leftOf(p); if (l) yield* barter(g, p, l, c.name); });
 instant(104, 'Forced Confession', 'Hand Disruption', 'Reveal your hand to the whole table.',
   function* (g, p, c) { g.reveal(p, 'all', c.name); });
@@ -577,7 +623,7 @@ instant(107, 'Rumor Mill', 'Hand Disruption', 'Each player passes 1 card of thei
     for (const x of passes) { x.from.hand = x.from.hand.filter(y => y !== x.card); x.to.hand.push(x.card); }
     g.log('Every house passes a card to its left.', 'barter');
   });
-instant(108, 'Stolen Secrets', 'Hand Disruption', 'Look at the top card of the draw deck. You may take it, replacing a card in your hand (hand cap still applies).',
+instant(108, 'Stolen Secrets', 'Hand Disruption', "Look at the top card of the deck. If it's a Hand Card you may take it (then discard down to 3).",
   function* (g, p, c) {
     g.ensureDrawPile();
     const top = g.s.drawPile.at(-1);
@@ -601,15 +647,20 @@ instant(109, 'Scramble', 'Hand Disruption', 'Collect all hands, shuffle together
       if (x.hand.length < 3) x.hand.push(deck.pop()!);
       if (seats.every(s => s.hand.length >= 3)) break;
     }
-    g.s.discard.push(...deck);
+    g.s.handDiscard.push(...deck);
     g.log('All hands are shuffled together and dealt out again.', 'barter');
   });
-instant(110, 'Loose Lips', 'Hand Disruption', 'The player who has played the most Hand Cards this game reveals their hand.',
-  function* (g, _p, c) { const t = g.uniqueBest(o => o.handCardsPlayed); if (t) g.reveal(t, 'all', c.name); });
+instant(110, 'Loose Lips', 'Hand Disruption', 'The player to your left reveals their hand to the table.',
+  function* (g, p, c) { const l = g.leftOf(p); if (l) g.reveal(l, 'all', c.name); });
 
 // Wealth-Themed Instants
-instant(111, 'Caravan Passing', 'Wealth', 'Roll a die. Even: gain 1 Wealth. Odd: lose 1 Wealth.',
-  function* (g, p, c) { if (odd(g.roll(p, c.name))) g.lose(p, 'wealth', 1, c.name); else g.gain(p, 'wealth', 1, c.name); });
+// Caravan Passing (rules-decisions 84): no longer a copy of Bandit Ambush. The caravan stops with you or moves on.
+instant(111, 'Caravan Passing', 'Wealth', 'Roll a die. Even: gain 1 Wealth. Odd: the player to your left gains 1 Wealth.',
+  function* (g, p, c) {
+    const l = g.leftOf(p);
+    if (!odd(g.roll(p, c.name))) g.gain(p, 'wealth', 1, c.name);
+    else if (l) g.gain(l, 'wealth', 1, c.name);
+  });
 instant(112, "Merchant's Windfall", 'Wealth', 'Gain 1 Wealth.', function* (g, p, c) { g.gain(p, 'wealth', 1, c.name); });
 instant(113, 'Toll Bridge', 'Wealth', 'Every player currently on a Trade tile gains 1 Wealth.',
   function* (g, p, c) { yield* everyone(g, p, o => { if (g.onTileType(o, 'trade')) g.gain(o, 'wealth', 1, c.name); }); });
@@ -617,9 +668,9 @@ instant(114, 'Counting House', 'Wealth', 'The player with the least Wealth gains
   function* (g, _p, c) { for (const o of g.allBest(x => x.res.wealth, false)) g.gain(o, 'wealth', 1, c.name); });
 instant(115, 'Gilded Cage', 'Wealth', 'The player with the most Wealth loses 1 Heart Token. (Tie: no effect.)',
   function* (g, _p, c) { yield* hpLoss(g, g.uniqueBest(o => o.res.wealth), 1, c.name); }, { noSpecter: true });
-instant(116, 'Trade Winds', 'Wealth', 'Every player may move 1 extra space this turn toward a Trade tile.',
+instant(116, 'Trade Winds', 'Wealth', 'Every player may move 1 space toward the nearest Trade tile right away.',
   function* (g, p, c) { yield* everyone(g, p, o => g.stepToward(o, tradeTiles(g), `${c.name}: step toward a Trade tile?`)); });
-instant(117, 'Debt Collector', 'Wealth', 'The player with the most Wealth gives 1 Wealth to a player of their choice who has less.',
+instant(117, 'Debt Collector', 'Wealth', 'The player with the most Wealth gives 1 Wealth to a player of their choice who has less. (Tie: no effect.)',
   function* (g, _p, c) {
     const rich = g.uniqueBest(o => o.res.wealth);
     if (!rich || rich.res.wealth === 0) return;
@@ -628,15 +679,15 @@ instant(117, 'Debt Collector', 'Wealth', 'The player with the most Wealth gives 
   });
 instant(118, "Smuggler's Luck", 'Wealth', 'Roll a die. On 4+, gain 2 Wealth. On 1-3, nothing.',
   function* (g, p, c) { if (g.roll(p, c.name) >= 4) g.gain(p, 'wealth', 2, c.name); });
-instant(119, 'Inflation', 'Wealth', 'Every player loses 1 Wealth. Then the player with the lowest total resources gains 2 Wealth.',
+instant(119, 'Inflation', 'Wealth', 'Every player loses 1 Wealth. Then the player with the lowest total resources gains 2 Wealth. (Tie: no one gains.)',
   function* (g, p, c) {
     yield* everyone(g, p, o => { g.lose(o, 'wealth', 1, c.name); });
     const lo = g.uniqueBest(o => g.total(o), false);
     if (lo) g.gain(lo, 'wealth', 2, c.name);
   });
-instant(120, 'Treasure Map', 'Wealth', 'Reveal the top card of the discard pile. If it is Wealth-related, gain 1 Wealth.',
+instant(120, 'Treasure Map', 'Wealth', 'Reveal the top card of the Hand Card discard pile. If its text mentions Wealth, gain 1 Wealth.',
   function* (g, p, c) {
-    const top = g.s.discard.at(-1);
+    const top = g.s.handDiscard.at(-1);
     if (top === undefined) return;
     const def = g.card(top);
     g.log(`${c.name}: the top of the discard pile is ${def.name}.`, 'info', { cards: [top] });
@@ -658,13 +709,13 @@ reaction(123, 'Intercept', 'intercept', 'Play when a rival takes from a tile',
   'When another player gains resources from a tile, they gain 1 less.',
   'Every road has a toll, if you know who to pay.');
 reaction(124, 'Interference', 'interference', 'Play when a rival plays a card',
-  'When another player plays a Hand Card, cancel it. It is discarded with no effect.',
+  'When another player plays a Hand Card as their action, cancel it. It is discarded with no effect.',
   'A word in the right ear, and the order is never given.');
 reaction(125, 'Ambush', 'ambush', 'Play when a rival stops beside you',
-  'When another player ends their move next to you, attack them at once.',
+  'When another player ends their roll-and-move on or next to your square, attack them for 1 damage. (They may Block.)',
   'They never saw the second rider.');
-reaction(126, 'Turnabout', 'turnabout', 'Play when a card targets you',
-  'When a Hand Card targets you, it targets another player of your choice instead.',
+reaction(126, 'Turnabout', 'turnabout', 'Play when a ◎ card targets you',
+  'When a ◎ Target card targets you, it targets another player of your choice instead.',
   'The arrow was always meant for someone.');
 
 defs.sort((a, b) => a.id - b.id);
@@ -673,6 +724,10 @@ defs.sort((a, b) => a.id - b.id);
 // card is aimed at (rules-decisions 79). Nothing else happens before the player is named.
 const NAMES_TARGET = [3, 4, 9, 16, 20, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 44, 49, 50, 51, 53, 54, 55, 57];
 for (const d of defs) if (NAMES_TARGET.includes(d.id)) d.namesTarget = true;
+// Target cards (marked ◎, rules-decisions 84): the Hand Cards that name one player to suffer or share their effect.
+// Only these can be answered by Counterspell or Turnabout. Attack cards are answered by Block cards instead.
+export const TARGET_CARDS = [4, 9, 16, 20, 29, 30, 31, 33, 34, 35, 36, 37, 38, 39, 40, 44, 49, 50];
+for (const d of defs) if (TARGET_CARDS.includes(d.id)) d.targets = true;
 
 export const CARDS: CardDef[] = defs;
 export const THRONE_SQUARES = THRONE;

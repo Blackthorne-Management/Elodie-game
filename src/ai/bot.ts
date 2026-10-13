@@ -121,12 +121,8 @@ function turnChoice(g: Game, me: PlayerState, d: Decision<TurnAction>, pers: Per
   }
 
   const t = g.s.turn!;
-  // 2. Before rolling: a card that gets an eligible bot to the Throne this turn.
+  // 2. Before rolling (cards can't be played yet): Ironvow's Raider's Charge, then the roll.
   if (!t.moved) {
-    if (g.eligible(me) && me.pos && !onThrone(me.pos)) {
-      const bridge = idx(a => a.type === 'card' && g.card(a.card).name === 'Bridge the Gap');
-      if (bridge >= 0 && throneDistance(me.pos) <= 8) return bridge;
-    }
     const preAttack = bestAttack(g, me, opts, pers);
     if (preAttack !== null && preAttack.score > 2) return preAttack.index;  // Ironvow's Raider's Charge
     return idx(a => a.type === 'roll');
@@ -331,7 +327,7 @@ function moveScore(g: Game, me: PlayerState, d: Decision, v: { d: Dir; n: number
 
 // ---------------------------------------------------------------- targets and cards
 
-const FRIENDLY = /Fair Exchange|Shared Purpose|Whispered Promise|give 1 Wealth|Uneasy Truce|Blood Pact|Peace Oath/;
+const FRIENDLY = /Fair Exchange|Shared Purpose|Whispered Promise|give 1 Wealth|Uneasy Truce|Blood Pact|Sèman Lapè/;
 
 function choosePlayer(g: Game, me: PlayerState, d: Decision, pers: Personality): number {
   const ids = d.options.map(o => o.value as number | null);
@@ -350,7 +346,7 @@ function choosePlayer(g: Game, me: PlayerState, d: Decision, pers: Personality):
     const i = good ? scored.indexOf(Math.min(...scored.filter(x => x > -Infinity))) : scored.indexOf(Math.max(...scored));
     return Math.max(0, i);
   }
-  if (/Truce|Peace Oath|Blood Pact/.test(d.prompt)) {
+  if (/Truce|Sèman Lapè|Blood Pact/.test(d.prompt)) {
     // Make peace with whoever threatens you most.
     return argmax(players.map(p => (p ? p.hp - me.hp + (p.pos && me.pos ? -manhattan(p.pos, me.pos) * 0.2 : 0) : -99)));
   }
@@ -379,7 +375,8 @@ function chooseBlock(g: Game, me: PlayerState, d: Decision, pers: Personality): 
   const dmg = attack?.damage ?? 1;
   const lethal = dmg >= me.hp;
   if (!lethal && dmg <= 1 && pers.caution < 0.5) return 0;      // shrug off a scratch
-  const pref = ['Riposte', 'Last Stand', 'Iron Guard', 'Dodge', 'Vanish', 'Shield Wall', 'Steadfast'];
+  const pref = me.hp === 1 ? ['Steadfast', 'Riposte', 'Dodge', 'Last Stand', 'Iron Guard', 'Vanish', 'Shield Wall']
+    : ['Riposte', 'Dodge', 'Last Stand', 'Iron Guard', 'Vanish', 'Shield Wall', 'Steadfast'];
   let best = 0, rank = Infinity;
   d.options.forEach((o, i) => {
     if (o.value === null) return;

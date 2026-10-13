@@ -24,6 +24,7 @@ export interface CardDef {
   noSpecter?: boolean;       // causes HP loss, so a Specter can't play it
   responseOnly?: boolean;    // Block/Deflect and Counterspell: never played on your own turn
   namesTarget?: boolean;     // the player is named first, then others may Interfere (rules-decisions 79)
+  targets?: boolean;         // a Target card (marked ◎): Counterspell and Turnabout can answer it (rules-decisions 84)
   // Block/Deflect: can it answer this attack, and what happens when it does.
   block?: {
     canUse: (g: Game, defender: PlayerState, attack: AttackInfo) => boolean;

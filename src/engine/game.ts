@@ -17,6 +17,10 @@ import {
 } from '../config';
 
 export class GameOver extends Error {}
+// Effects on a character that end when that character dies.
+const ENDS_WITH_CHARACTER: EffectKind[] = [
+  'afterAttack', 'hex', 'markedForDeath', 'dreadBanner', 'confusion', 'forcedMarch', 'noFearGain', 'sabotage', 'noInfluenceGain', 'shieldWall',
+];
 export const REDIRECT_MOVE = 1;
 export const REDIRECT_TARGET = 2;
 export class EndTurn extends Error {}
@@ -50,8 +54,8 @@ export class Game {
     };
     this.s = {
       setup, config, players: [], order: [], round: 0, turnNo: 0, turn: null,
-      drawPile: [], discard: [], removed: [], inPlay: [], dying: [], effects: [], log: [], seq: 0,
-      lastKill: null, housesLost: [], lastInfluenceGain: null, winner: null, endReason: null,
+      drawPile: [], handDiscard: [], instantDiscard: [], removed: [], inPlay: [], dying: [], effects: [], log: [], seq: 0,
+      lastKill: null, housesLost: [], winner: null, endReason: null,
     };
     this.setup();
   }
@@ -128,13 +132,25 @@ export class Game {
   leftOf(p: PlayerState) { return this.seatsAfter(p)[0] ?? null; }
   rightOf(p: PlayerState) { return this.seatsAfter(p).at(-1) ?? null; }
 
-  // Make sure the draw pile has cards (reshuffling the discard if needed) without drawing.
+  // Make sure the draw pile has cards without drawing: when it runs out, both discard piles (Hand Cards and
+  // Instants) are shuffled together into a new one (rules-decisions 84). If both are empty, nothing is drawn.
   ensureDrawPile() {
-    if (!this.s.drawPile.length && this.s.discard.length) {
-      this.s.drawPile = shuffle(this.s.discard, this.rng);
-      this.s.discard = [];
-      this.log('The deck runs dry; the discard pile is shuffled into a new deck.', 'deck');
-    }
+    if (this.s.drawPile.length || (!this.s.handDiscard.length && !this.s.instantDiscard.length)) return;
+    this.s.drawPile = shuffle([...this.s.handDiscard, ...this.s.instantDiscard], this.rng);
+    this.s.handDiscard = [];
+    this.s.instantDiscard = [];
+    this.log('The deck runs dry; both discard piles are shuffled into a new deck.', 'deck');
+  }
+  // A card goes to its own discard pile: Hand Cards to the Hand Card pile, Instants to the Instant pile.
+  // `bottom` puts it underneath (hand-limit discards).
+  toDiscard(c: number, bottom = false) {
+    const pile = this.card(c).kind === 'instant' ? this.s.instantDiscard : this.s.handDiscard;
+    if (bottom) pile.unshift(c); else pile.push(c);
+  }
+  // A played card is discarded once it has resolved, unless it is a lasting card whose effect is still running:
+  // it stays face up until that effect ends (removeEffect discards it then).
+  settleCard(c: number) {
+    if (!this.s.effects.some(e => e.cardId === c)) this.toDiscard(c);
   }
 
   roll(p: PlayerState | null, why: string): number {
@@ -218,14 +234,15 @@ export class Game {
     return yield* this.ask(chooser, 'pool', prompt, pillars.map(x => ({ label: cap(x), value: x })), context);
   }
 
-  // A Hand Card (or ability) choosing a target. Handles Suzumori's Marionette and Counterspell.
+  // A Hand Card (or ability) choosing a target. Handles Suzumori's Ayatsuri, and Counterspell and Turnabout for the
+  // cards marked as Target cards (rules-decisions 84).
   // Returns null if the effect on that target was negated.
   *targetPlayer(user: PlayerState, candidates: PlayerState[], prompt: string, card?: CardDef): Flow<PlayerState | null> {
     if (!candidates.length) return null;
     const chooser = this.redirectChooser(user, REDIRECT_TARGET) ?? user;
     const target = yield* this.choosePlayer(chooser, candidates, prompt, { card: card?.id, user: user.id });
     if (!target) return null;
-    if (card?.kind === 'hand' && target.id !== user.id) {
+    if (card?.targets && target.id !== user.id) {
       const cs = target.hand.find(c => this.card(c).counterspell);
       if (cs && (yield* this.confirm(target, `${user.name} plays ${card.name} on you. Use Counterspell to negate it?`, 'Counterspell', 'Let it happen'))) {
         this.discardFromHand(target, cs);
@@ -254,7 +271,8 @@ export class Game {
   }
 
   // A reaction window: other players holding a matching Reaction card may play it, asked in seat order after
-  // `actor`. The first one played closes the window. Reactions themselves can't be answered.
+  // `actor`. The first one played closes the window. A Reaction can't be answered by another Reaction or a
+  // Counterspell, but the attack an Ambush makes can be Blocked like any attack.
   *reaction(kinds: ReactionKind[], actor: PlayerState, what: string, context: Record<string, unknown> = {},
     may: (o: PlayerState) => boolean = () => true): Flow<{ player: PlayerState; card: CardDef } | null> {
     for (const o of this.seatsAfter(actor)) {
@@ -291,9 +309,9 @@ export class Game {
   }
   removeEffect(e: Effect) {
     this.s.effects = this.s.effects.filter(x => x !== e);
-    if (e.cardId) this.s.discard.push(e.cardId);
+    if (e.cardId && !this.s.effects.some(x => x.cardId === e.cardId)) this.toDiscard(e.cardId);
   }
-  // Suzumori's Marionette: whoever pulls the strings chooses for this player, once for the move
+  // Suzumori's Ayatsuri: whoever pulls the strings chooses for this player, once for the move
   // and once for a target. Returns the puppeteer, or null.
   redirectChooser(p: PlayerState, part: number): PlayerState | null {
     const e = this.findEffect('redirect', p.id);
@@ -309,7 +327,7 @@ export class Game {
     for (const e of [...this.s.effects]) if (match(e.expiry)) {
       // Disarmed "next turn" effects only expire after their turn has run.
       if (e.expiry.at === 'turnEnd' && !e.armed) continue;
-      if (e.expiry.at === 'turnEnd' && (e.expiry.turns ?? 1) > 1) { e.expiry.turns = (e.expiry.turns ?? 1) - 1; continue; }
+      if (e.expiry.at !== 'roundEnd' && e.expiry.at !== 'consumed' && (e.expiry.turns ?? 1) > 1) { e.expiry.turns = (e.expiry.turns ?? 1) - 1; continue; }
       this.removeEffect(e);
     }
   }
@@ -350,7 +368,7 @@ export class Game {
       const grito = this.findEffect('noFearGain', p.id);
       if (grito) {
         this.removeEffect(grito);
-        this.log(`War Cry: ${p.name}'s Fear gain is silenced.`, 'blocked', { player: p.id });
+        this.log(`Grito de Guerra: ${p.name}'s Fear gain is silenced.`, 'blocked', { player: p.id });
         return 0;
       }
     }
@@ -361,7 +379,6 @@ export class Game {
       if (bonus && !p.used[k]) { p.used[k] = 1; n += bonus; }
     }
     p.res[pillar] += n;
-    if (pillar === 'influence') this.s.lastInfluenceGain = p.id;
     this.log(`${p.name} gains ${n} ${cap(pillar)}${why ? ` (${why})` : ''}.`, 'gain', { player: p.id, amount: n });
     return n;
   }
@@ -410,20 +427,26 @@ export class Game {
 
   // ---------------------------------------------------------------- cards and hands
 
-  // Draws one card; the draw pile reshuffles from the discard when empty (Section 7).
+  // Draws one card; the draw pile reshuffles from both discard piles when empty (Section 7).
   takeTopCard(): number | null {
-    if (!this.s.drawPile.length) {
-      if (!this.s.discard.length) return null;
-      this.s.drawPile = shuffle(this.s.discard, this.rng);
-      this.s.discard = [];
-      this.log('The deck runs dry; the discard pile is shuffled into a new deck.', 'deck');
-    }
+    this.ensureDrawPile();
     return this.s.drawPile.pop() ?? null;
   }
 
   discardFromHand(p: PlayerState, c: number, bottom = false) {
     p.hand = p.hand.filter(x => x !== c);
-    if (bottom) this.s.discard.unshift(c); else this.s.discard.push(c);
+    this.toDiscard(c, bottom);
+  }
+
+  // An Instant just drawn by p: it resolves at once and goes to the Instant discard pile.
+  *resolveDrawnInstant(p: PlayerState, c: number): Flow {
+    const def = this.card(c);
+    this.log(`${p.name} draws ${def.name}!`, 'instant', { player: p.id, cards: [c] });
+    this.s.inPlay.push(c);
+    yield* this.resolveCard(def, p);
+    this.s.inPlay = this.s.inPlay.filter(x => x !== c);
+    this.toDiscard(c);
+    yield* this.flushDeaths();
   }
 
   // Draw one card for p: Instants resolve immediately, Hand Cards join the hand.
@@ -432,12 +455,7 @@ export class Game {
     if (c === null) return false;
     const def = this.card(c);
     if (def.kind === 'instant') {
-      this.log(`${p.name} draws ${def.name}!`, 'instant', { player: p.id, cards: [c] });
-      this.s.inPlay.push(c);
-      yield* this.resolveCard(def, p);
-      this.s.inPlay = this.s.inPlay.filter(x => x !== c);
-      this.s.discard.push(c);
-      yield* this.flushDeaths();
+      yield* this.resolveDrawnInstant(p, c);
     } else {
       p.hand.push(c);
       this.log(`${p.name} draws a card.`, 'draw', { player: p.id });
@@ -498,7 +516,7 @@ export class Game {
     const cancel = () => {
       this.log(`${def.name} is cancelled and has no effect.`, 'blocked', { player: p.id, cards: [c] });
       this.s.inPlay = this.s.inPlay.filter(x => x !== c);
-      this.s.discard.push(c);
+      this.toDiscard(c);
     };
     // A card aimed at a player names its target first, then the Interference window opens (in choosePlayer).
     if (!def.namesTarget && (yield* this.interfere(p, c))) return cancel();
@@ -506,14 +524,17 @@ export class Game {
     try {
       yield* this.resolveCard(def, p);
     } catch (e) {
-      if (!(e instanceof CardCancelled)) throw e;
-      return cancel();
+      if (e instanceof CardCancelled) return cancel();
+      // The player died while it resolved (their turn ends): the card still leaves play.
+      this.s.inPlay = this.s.inPlay.filter(x => x !== c);
+      this.settleCard(c);
+      throw e;
     } finally {
       this.awaitingTarget = null;
     }
     this.s.inPlay = this.s.inPlay.filter(x => x !== c);
-    // Cards that "mark" themselves stay out until an effect returns them.
-    if (!this.s.effects.some(e => e.cardId === c)) this.s.discard.push(c);
+    // Lasting cards stay face up until their effect ends.
+    this.settleCard(c);
     yield* this.flushDeaths();
   }
 
@@ -623,11 +644,12 @@ export class Game {
     yield* this.resourceCheck(p);
   }
 
-  // Ambush: a rival next to where the mover stopped may attack them at once (if an attack is allowed).
+  // Ambush: a rival on or next to where the mover stopped may attack them at once for 1 damage, like an attack
+  // card (if an attack is allowed). They may Block it.
   *ambush(p: PlayerState): Flow {
-    const ok = (o: PlayerState) => !!(o.pos && p.pos && adjacent(o.pos, p.pos) && !this.attackBlockedReason(o, p, 'basic'));
+    const ok = (o: PlayerState) => !!(o.pos && p.pos && adjacent(o.pos, p.pos) && !this.attackBlockedReason(o, p, 'card'));
     const hit = yield* this.reaction(['ambush'], p, `${p.name} stops beside you.`, {}, ok);
-    if (hit) yield* this.attack(hit.player, p, 'basic');
+    if (hit) yield* this.attack(hit.player, p, 'card', 1);
   }
 
   // Step 2: the resource check.
@@ -705,10 +727,13 @@ export class Game {
         ...blocks.map(c => ({ label: this.card(c).name, value: c }))];
       const c = yield* this.ask(t, 'block', `${a.name} attacks you for ${info.damage}. Respond?`, opts, { attack: info });
       if (c !== null) {
-        this.discardFromHand(t, c);
+        t.hand = t.hand.filter(x => x !== c);
         this.queueRefill(t);
         this.log(`${t.name} answers with ${this.card(c).name}!`, 'block', { player: t.id, target: a.id, cards: [c] });
+        this.s.inPlay.push(c);
         outcome = yield* this.card(c).block!.resolve(this, t, info);
+        this.s.inPlay = this.s.inPlay.filter(x => x !== c);
+        this.settleCard(c);
       }
     }
     if (outcome === 'negate') {
@@ -871,12 +896,9 @@ export class Game {
       this.s.lastKill = { killer: killer.id, victim: v.id };
     }
 
-    // Effects that end with the character.
-    this.s.effects = this.s.effects.filter(e => {
-      const gone = e.owner === v.id && ['afterAttack', 'hex', 'markedForDeath', 'dreadBanner', 'confusion', 'forcedMarch', 'noFearGain', 'sabotage', 'noInfluenceGain'].includes(e.kind);
-      if (gone && e.cardId) this.s.discard.push(e.cardId);
-      return !gone;
-    });
+    // Effects that end with the character: every lasting card on them is discarded, except truces, Ceasefire and
+    // Golden Harvest, which carry over to the heir (rules-decisions 84).
+    for (const e of this.s.effects.filter(x => x.owner === v.id && ENDS_WITH_CHARACTER.includes(x.kind))) this.removeEffect(e);
     for (const o of this.s.players) if (o.mark === v.id) o.mark = null;
 
     // 3-5. Next generation, or the Specter.
@@ -923,7 +945,7 @@ export class Game {
     // Agnivansh II: a bonus half-move after landing a kill.
     if (killer && !killer.specter && killer.pos && this.house(killer).halfMoveOnKill?.(killer.gen)) {
       const n = Math.ceil(rollD6(this.rng) / 2);
-      yield* this.moveFree(killer, n, `Thirst for Blood: move up to ${n}`);
+      yield* this.moveFree(killer, n, `Rakt Ki Pyaas: move up to ${n}`);
     }
   }
 
@@ -932,7 +954,7 @@ export class Game {
     if (!pool.length) return;
     const drawTwo = this.house(v).legacyDrawTwoAt;
     if (drawTwo && v.gen >= drawTwo) pool = shuffle(pool, this.rng).slice(0, 2);
-    const h = yield* this.ask(v, 'legacy', 'Voice of the Opía: choose a Legacy from a fallen bloodline',
+    const h = yield* this.ask(v, 'legacy', 'Voice of the Opía: choose a Legacy from a house that has lost a character',
       pool.map(x => ({ label: `${this.house(x).name}: ${this.house(x).passiveName}`, value: x })));
     v.legacy = h;
     this.log(`${v.name} inherits the ${this.house(h).passiveName} Legacy of ${this.house(h).name}.`, 'ability', { player: v.id });
@@ -1103,12 +1125,10 @@ export class Game {
 
   // ---------------------------------------------------------------- the Specter (Section 10)
 
+  // The Specter picks from the top of the Instant discard pile; with fewer than 5 there, it skips.
   specterChoices(): number[] {
-    if (this.s.discard.length < TUNING.specterChoices) return [];
-    return this.s.discard.slice(-TUNING.specterChoices).filter(c => {
-      const d = this.card(c);
-      return d.kind === 'instant' && !d.noSpecter;
-    });
+    if (this.s.instantDiscard.length < TUNING.specterChoices) return [];
+    return this.s.instantDiscard.slice(-TUNING.specterChoices).filter(c => !this.card(c).noSpecter);
   }
 
   *specterTurn(p: PlayerState): Flow {
@@ -1118,11 +1138,11 @@ export class Game {
       if (!choices.length) {
         this.log(`${p.name}'s Specter finds nothing to stir.`, 'specter', { player: p.id });
       } else {
-        const c = yield* this.ask(p, 'specter', 'Specter: choose mischief from the discard pile',
+        const c = yield* this.ask(p, 'specter', 'Specter: choose mischief from the Instant discard pile',
           [{ label: 'Pass', value: null as number | null }, ...choices.map(x => ({ label: this.card(x).name, value: x as number | null }))]);
         if (c !== null) {
           const target = yield* this.choosePlayer(p, this.living(), `${this.card(c).name}: which player does it fall on?`);
-          this.s.discard = this.s.discard.filter(x => x !== c);
+          this.s.instantDiscard = this.s.instantDiscard.filter(x => x !== c);
           this.s.removed.push(c);
           if (target) {
             this.log(`${p.name}'s Specter unleashes ${this.card(c).name} on ${target.name}.`, 'specter', { player: p.id, target: target.id, cards: [c] });
@@ -1197,18 +1217,22 @@ export class Game {
     let winner = field[0];
     let reason = 'highest combined resources';
     if (field.length > 1) {
+      // The earliest seat fights the next; the winner fights on with the Heart Tokens they have left.
       reason = 'a final duel';
-      for (const next of field.slice(1)) winner = this.duel(winner, next);
+      field.sort((a, b) => this.s.order.indexOf(a.id) - this.s.order.indexOf(b.id));
+      const hp: Record<number, number> = Object.fromEntries(field.map(p => [p.id, p.hp]));
+      winner = field[0];
+      for (const next of field.slice(1)) winner = this.duel(winner, next, hp);
     }
     this.s.winner = winner.id;
     this.s.endReason = `Sudden Death after round ${this.s.round}: ${winner.name} wins on ${reason}.`;
     this.log(this.s.endReason, 'win', { player: winner.id });
   }
 
-  // Tie-break duel: trade blows (damage = current HP) until one falls. Earlier in turn order strikes first.
-  duel(a: PlayerState, b: PlayerState): PlayerState {
+  // Tie-break duel: trade blows (damage = current HP, no bonuses) until one falls. Earlier in turn order strikes
+  // first. `hp` carries the Heart Tokens left between duels (it is updated in place).
+  duel(a: PlayerState, b: PlayerState, hp: Record<number, number> = { [a.id]: a.hp, [b.id]: b.hp }): PlayerState {
     const [first, second] = this.s.order.indexOf(a.id) < this.s.order.indexOf(b.id) ? [a, b] : [b, a];
-    const hp = { [first.id]: first.hp, [second.id]: second.hp };
     for (let blow = 0; blow < MAX_FIGHT_BLOWS; blow++) {
       const [x, y] = blow % 2 === 0 ? [first, second] : [second, first];
       hp[y.id] -= Math.min(this.damageCap(), Math.max(1, hp[x.id]));

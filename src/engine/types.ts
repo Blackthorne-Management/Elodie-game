@@ -43,7 +43,8 @@ export interface PlayerState {
 
 // Ongoing effects with an expiry. All are plain data so state stays serialisable.
 export type Expiry =
-  | { at: 'turnStart'; player: number }   // expires when this player's next turn starts
+  | { at: 'turnStart'; player: number; turns?: number }  // expires when this player's next turn starts;
+                                                         // turns: 2 = survives that one and ends at the start of the one after
   | { at: 'turnEnd'; player: number; turns?: number }  // expires at the end of this player's current or next turn;
                                                        // turns: 2 = survives the current turn and ends after the next
   | { at: 'roundEnd'; round: number }
@@ -63,7 +64,7 @@ export interface Effect {
   square?: string;          // Shield Wall
   house?: HouseId;          // Guaíza copy
   level?: number;
-  cardId?: number;          // a "marked" card waiting to be discarded
+  cardId?: number;          // a lasting card: it stays face up until this effect ends, then it is discarded
   armed: boolean;           // false = waiting for the owner's next turn to begin ("next turn" effects)
   expiry: Expiry;
 }
@@ -120,7 +121,8 @@ export interface GameState {
   turnNo: number;           // increments every turn, for once-per-turn limits
   turn: TurnState | null;
   drawPile: number[];       // last element = top
-  discard: number[];        // last element = top (most recent)
+  handDiscard: number[];    // the Hand Card discard pile; last element = top (most recent)
+  instantDiscard: number[]; // the Instant discard pile (the Specter's pick); last element = top
   removed: number[];        // Specter cards, gone for good
   inPlay: number[];         // cards currently resolving
   dying: { victim: number; killer: number | null }[];  // deaths waiting to be resolved, in order
@@ -129,7 +131,6 @@ export interface GameState {
   seq: number;
   lastKill: { killer: number; victim: number } | null;
   housesLost: HouseId[];    // houses that have lost at least one character
-  lastInfluenceGain: number | null;
   winner: number | null;
   endReason: string | null;
 }

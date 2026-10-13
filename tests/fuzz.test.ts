@@ -9,7 +9,7 @@ function invariants(r: Runner) {
   const s = r.state;
   const inHands = s.players.flatMap(p => p.hand);
   const marked = s.effects.map(e => e.cardId).filter((c): c is number => c !== undefined);
-  const all = [...s.drawPile, ...s.discard, ...s.removed, ...s.inPlay, ...inHands, ...marked];
+  const all = [...s.drawPile, ...s.handDiscard, ...s.instantDiscard, ...s.removed, ...s.inPlay, ...inHands, ...marked];
   expect(all.length).toBe(CARDS.length);
   expect(new Set(all).size).toBe(CARDS.length);
   for (const p of s.players) {

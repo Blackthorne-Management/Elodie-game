@@ -272,7 +272,7 @@ describe('combat and death (Sections 6 and 9)', () => {
     const hp = b.hp;
     drive(g.basicAttack(a, b), byLabel('Iron Guard'));
     expect(b.hp).toBe(hp);
-    expect(g.s.discard).toContain(58);
+    expect(g.s.handDiscard).toContain(58);
   });
   it('Riposte negates and hits back for 1', () => {
     const { g, a, b } = duelists();
@@ -317,14 +317,15 @@ describe('combat and death (Sections 6 and 9)', () => {
     b.maxHp = b.hp = 10;
     a.hand = [26];
     drive(g.playHandCard(a, 26));
-    expect(g.s.discard).not.toContain(26);                 // in play, waiting
+    expect(a.res.wealth).toBe(1);                          // 1 Wealth at once (rules-decisions 84)
+    expect(g.s.handDiscard).not.toContain(26);                 // in play, waiting
     endTurn(g, a.id);
     startTurn(g, a.id);
     drive(g.basicAttack(a, b));
-    expect(a.res.wealth).toBe(2);
-    expect(g.s.discard).toContain(26);
+    expect(a.res.wealth).toBe(3);
+    expect(g.s.handDiscard).toContain(26);
     drive(g.basicAttack(a, b));                            // pays only once
-    expect(a.res.wealth).toBe(2);
+    expect(a.res.wealth).toBe(3);
   });
   it('Plunder lapses after your next turn, and pays nothing for a blocked attack', () => {
     const { g, a, b } = duelists();
@@ -332,12 +333,12 @@ describe('combat and death (Sections 6 and 9)', () => {
     a.hand = [26];
     drive(g.playHandCard(a, 26));
     endTurn(g, a.id); endTurn(g, a.id);
-    expect(g.s.discard).toContain(26);
-    a.hand = [26]; g.s.discard = [];
+    expect(g.s.handDiscard).toContain(26);
+    a.hand = [26]; g.s.handDiscard = [];
     drive(g.playHandCard(a, 26));
     b.hand = [58];                                         // Iron Guard
     drive(g.basicAttack(a, b), byLabel('Iron Guard'));
-    expect(a.res.wealth).toBe(0);
+    expect(a.res.wealth).toBe(2);                          // only the two plays' Wealth
     expect(g.s.effects.some(e => e.cardId === 26)).toBe(false);   // used up anyway
   });
   it("Elodie's Sorrow and Elodie's Exile can't take a player below 1 Heart Token", () => {
@@ -476,7 +477,7 @@ describe('cards', () => {
   it('Dread Banner stays marked until the next attack', () => {
     const { g } = play(12);
     expect(g.s.effects.some(e => e.cardId === 12)).toBe(true);
-    expect(g.s.discard).not.toContain(12);
+    expect(g.s.handDiscard).not.toContain(12);
   });
   it('Swift Steed after moving moves you up to 2 more squares', () => {
     const g = newGame(2, ['brasador', 'dorini']);
@@ -596,16 +597,18 @@ describe('winning (Section 8)', () => {
 describe('the Specter (Section 10)', () => {
   it('only picks harmless Instants from the top 5 of the discard pile', () => {
     const g = newGame(3);
-    g.s.discard = [83, 1, 2, 82, 81, 112];   // Blessing is 6th from the top; The Harvest, Elodie's Sorrow (barred), Merchant's Windfall
-    expect(g.specterChoices().sort((x, y) => x - y)).toEqual([82, 112]);
-    g.s.discard = [1, 2, 82, 112];
-    expect(g.specterChoices()).toEqual([]);
+    g.s.instantDiscard = [83, 85, 68, 82, 81, 112];   // Blessing is 6th from the top; Famine, Omen of Fire, The Harvest, Elodie's Sorrow (barred), Merchant's Windfall
+    g.s.handDiscard = [1, 2, 3];                       // Hand Cards have their own pile and don't count
+    expect(g.specterChoices().sort((x, y) => x - y)).toEqual([68, 82, 85, 112]);
+    g.s.instantDiscard = [68, 82, 112];
+    g.s.handDiscard = [1, 2, 3, 4, 5];
+    expect(g.specterChoices()).toEqual([]);            // fewer than 5 Instants: the Specter skips
   });
   it('a played Specter card leaves the game', () => {
     const g = newGame(3);
     const sp = g.p(2);
     sp.specter = true; sp.pos = null; sp.hand = [];
-    g.s.discard = [1, 2, 3, 4, 112];
+    g.s.instantDiscard = [68, 69, 73, 77, 112];
     drive(g.specterTurn(sp), byLabel("Merchant's Windfall", 'P0'));
     expect(g.s.removed).toEqual([112]);
     expect(g.p(0).res.wealth).toBe(1);
@@ -751,7 +754,7 @@ describe('trade offers and Reaction cards (rules-decisions 60-61)', () => {
     o.hand = [124];
     drive(g.playHandCard(p, 1), byLabel('Play Interference'));
     expect(p.res.influence).toBe(0);
-    expect(g.s.discard).toContain(1);
+    expect(g.s.handDiscard).toContain(1);
   });
   it('a card aimed at a player names its target before anyone may Interfere (rules-decisions 79)', () => {
     const { g, p, o } = two();
@@ -766,7 +769,7 @@ describe('trade offers and Reaction cards (rules-decisions 60-61)', () => {
     expect(window.prompt).toMatch(/Poisoned Chalice on P1/);
     expect(o.hp).toBe(o.maxHp);                            // cancelled: no Heart Token lost, no Wealth paid
     expect(p.res.wealth).toBe(2);
-    expect(g.s.discard).toContain(30);
+    expect(g.s.handDiscard).toContain(30);
   });
   it('Embargo can also cancel a Barter card, but not other cards', () => {
     const { g, p, o } = two();

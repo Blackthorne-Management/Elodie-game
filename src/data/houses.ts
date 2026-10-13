@@ -31,7 +31,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
         text: 'Target player skips their next Fear gain.',
         canUse: (g, p) => others(g, p.id).some(o => !g.findEffect('noFearGain', o.id, false)),
         *run(g, p) {
-          const t = yield* g.choosePlayer(p, others(g, p.id).filter(o => !g.findEffect('noFearGain', o.id, false)), 'War Cry: silence whose next Fear gain?');
+          const t = yield* g.choosePlayer(p, others(g, p.id).filter(o => !g.findEffect('noFearGain', o.id, false)), 'Grito de Guerra: silence whose next Fear gain?');
           if (t) g.addEffect('noFearGain', t.id, { at: 'consumed' }, { by: p.id });
         },
       },
@@ -39,11 +39,11 @@ export const HOUSES: Record<HouseId, HouseDef> = {
         id: 'reinadoDeCenizas', name: 'Reinado de Cenizas', gen: 4, limit: 'game',
         text: 'Once per game: gain Fear equal to your total kills.',
         canUse: (_g, p) => p.kills > 0,
-        *run(g, p) { g.gain(p, 'fear', p.kills, 'Reign of Ashes'); },
+        *run(g, p) { g.gain(p, 'fear', p.kills, 'Reinado de Cenizas'); },
       },
     ],
     mostFearedDownside: gen => gen >= 3,
-    downsideText: 'From Gen III, while Brasador has the most Fear, attacks against them deal +1 damage.',
+    downsideText: 'From Gen III, while Brasador has strictly the most Fear, attacks against them deal +1 damage.',
   },
 
   dorini: {
@@ -52,8 +52,8 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     lore: 'Al-Doria is a sprawling entrepôt, half port city and half caravanserai. House Dorini built their power on ledgers and bazaars rather than armies, converting coin into influence or fear when the need arises.',
     hp: [3, 3, 3, 3],
     passiveName: 'Baraka Dorini',
-    passiveText: ['+1 Wealth when you gain Wealth from a Trade tile. Once per turn, Wealth from anything else brings 1 more.',
-      '+2 Wealth from Trade tiles. Once per turn, Wealth from anything else brings 1 more.'],
+    passiveText: ["+1 Wealth when you gain Wealth from a Trade tile. Once in each player's turn, Wealth from anything else brings 1 more.",
+      "+2 Wealth from Trade tiles. Once in each player's turn, Wealth from anything else brings 1 more."],
     passive: { tileBonus: (pillar, level) => (pillar === 'wealth' ? level : 0), wealthBonus: () => 1 },
     abilities: [
       {
@@ -61,8 +61,8 @@ export const HOUSES: Record<HouseId, HouseDef> = {
         text: 'Convert 2 Wealth into 1 Influence or 1 Fear.',
         canUse: (_g, p) => p.res.wealth >= 2,
         *run(g, p) {
-          const x = yield* g.choosePillar(p, 'The Ledger: convert 2 Wealth into', ['influence', 'fear']);
-          if (x) { g.lose(p, 'wealth', 2, 'The Ledger'); g.gain(p, x, 1, 'The Ledger'); }
+          const x = yield* g.choosePillar(p, 'Daftar al-Dorini: convert 2 Wealth into', ['influence', 'fear']);
+          if (x) { g.lose(p, 'wealth', 2, 'Daftar al-Dorini'); g.gain(p, x, 1, 'Daftar al-Dorini'); }
         },
       },
       {
@@ -70,7 +70,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
         text: 'Spend 3 Wealth: take one extra action this turn (an attack, a Hand Card or a trade offer).',
         canUse: (g, p) => p.res.wealth >= 3 && g.isActive(p),
         *run(g, p) {
-          g.lose(p, 'wealth', 3, 'Golden Bazaar');
+          g.lose(p, 'wealth', 3, 'Bazaar al-Dhahab');
           g.s.turn!.actionsAllowed++;
         },
       },
@@ -116,18 +116,19 @@ export const HOUSES: Record<HouseId, HouseDef> = {
       uses: (g, p) => g.hook(p, 'peeksPerRound'),
       canUse: (g, p) => others(g, p.id).some(o => o.hand.length),
       *run(g, p) {
-        const t = yield* g.choosePlayer(p, others(g, p.id).filter(o => o.hand.length), "Shadow's Ear: whose hand do you hear?");
-        if (t) g.reveal(t, [p.id], "Shadow's Ear");
+        const t = yield* g.choosePlayer(p, others(g, p.id).filter(o => o.hand.length), "Kagemimi: whose hand do you hear?");
+        if (t) g.reveal(t, [p.id], 'Kagemimi');
       },
     },
     abilities: [
       {
         id: 'sasayakiHa', name: 'Sasayaki Ha', gen: 2, limit: 'turn',
-        text: 'Force a player to discard one card of your choice.',
+        text: "Look at a player's hand and choose one card for them to discard.",
         canUse: (g, p) => others(g, p.id).some(o => o.hand.length),
         *run(g, p) {
-          const t = yield* g.choosePlayer(p, others(g, p.id).filter(o => o.hand.length), 'Whispering Blade: whose hand?');
+          const t = yield* g.choosePlayer(p, others(g, p.id).filter(o => o.hand.length), 'Sasayaki Ha: whose hand?');
           if (!t) return;
+          g.reveal(t, [p.id], 'Sasayaki Ha');
           const c = yield* g.ask(p, 'card', `Choose a card for ${t.name} to discard`, t.hand.map(x => ({ label: g.card(x).name, value: x })));
           g.discardFromHand(t, c);
           g.log(`${t.name} discards ${g.card(c).name}.`, 'discard', { player: t.id, cards: [c] });
@@ -138,7 +139,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
         text: "Once per game: you choose the direction of a player's next move and the target of their next attack or targeted card.",
         canUse: (g, p) => others(g, p.id).length > 0,
         *run(g, p) {
-          const t = yield* g.choosePlayer(p, others(g, p.id), "Marionette's Thread: whose strings do you pull?");
+          const t = yield* g.choosePlayer(p, others(g, p.id), "Ayatsuri: whose strings do you pull?");
           if (t) g.addEffect('redirect', t.id, { at: 'consumed' }, { by: p.id, level: 3 });
         },
       },
@@ -187,13 +188,14 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     abilities: [
       {
         id: 'semanLape', name: 'Sèman Lapè', gen: 2, limit: 'game',
-        text: 'Once per game: you and one player cannot attack each other for 2 rounds.',
+        text: 'Once per game: you and one player cannot attack each other until your turn after next starts.',
         canUse: (g, p) => others(g, p.id).length > 0,
         *run(g, p) {
-          const t = yield* g.choosePlayer(p, others(g, p.id), 'Peace Oath: with whom?');
+          const t = yield* g.choosePlayer(p, others(g, p.id), 'Sèman Lapè: a truce with whom?');
           if (!t) return;
-          g.addEffect('truce', p.id, { at: 'roundEnd', round: g.s.round + 1 }, { other: t.id });
-          g.log(`${p.name} and ${t.name} swear the Peace Oath.`, 'truce', { player: p.id, target: t.id });
+          // Turn-based, like the truce cards (rules-decisions 84): about 2 rounds for every seat.
+          g.addEffect('truce', p.id, { at: 'turnStart', player: p.id, turns: 2 }, { other: t.id });
+          g.log(`${p.name} and ${t.name} swear Sèman Lapè.`, 'truce', { player: p.id, target: t.id });
         },
       },
     ],
@@ -205,7 +207,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     lore: "Jwaladesh's warriors follow the fire-god's doctrine: hesitation is the only true death. House Agnivansh trains for speed above all, trusting that momentum itself is a kind of armor.",
     hp: [3, 3, 3, 2],
     passiveName: 'Agni ki Shakti',
-    passiveText: ['Your basic attacks deal +1 damage.', 'Also: after your attack lands, you may move 1 space.'],
+    passiveText: ['Your basic attacks deal +1 damage.', 'Also: after your attack lands, you may move 1 space (not in a Challenge).'],
     passive: { basicAttackBonus: () => 1, stepOnLanded: level => (level >= 2 ? 1 : 0) },
     halfMoveOnKill: gen => gen >= 2,
     abilities: [
