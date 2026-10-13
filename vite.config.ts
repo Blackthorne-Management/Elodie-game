@@ -35,7 +35,11 @@ export default defineConfig({
           { src: 'icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
-      workbox: { globPatterns: ['**/*.{js,css,html,svg,png,webp}'], globIgnores: ['server/**'] },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,webp}'], globIgnores: ['server/**', 'quest/**'],
+        // The quest (a separate app at /quest/) is never answered with the board game's page.
+        navigateFallbackDenylist: [/^\/quest/],
+      },
     }),
   ],
   // The quest (quest/) is a separate project with its own tests.

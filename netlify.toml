@@ -1,7 +1,8 @@
 # Netlify builds and publishes the game on every push.
 # Tests run first, so a broken change never reaches the phone.
 [build]
-  command = "npm test && npm run build"
+  # The quest (quest/, a separate project) is built after the board game and served at /quest/.
+  command = "npm test && npm run build && cd quest && npm ci && npm test && npm run build && rm -rf ../dist/quest && cp -r dist ../dist/quest"
   publish = "dist"
 
 [build.environment]
@@ -16,3 +17,9 @@
   for = "/manifest.webmanifest"
   [headers.values]
     Content-Type = "application/manifest+json"
+
+# The quest needs its trailing slash (its files are linked relative to the folder).
+[[redirects]]
+  from = "/quest"
+  to = "/quest/"
+  status = 301
