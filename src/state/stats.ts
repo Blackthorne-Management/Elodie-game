@@ -1,5 +1,5 @@
 // Your record on this device: one small entry per finished game, summed up for the main screen.
-import type { Runner } from '../engine/runner';
+import type { Playable } from '../net/remote';
 import type { HouseId } from '../engine/types';
 
 const KEY = 'tob-stats';
@@ -28,7 +28,7 @@ export function loadRecords(): GameRecord[] {
   }
 }
 
-export function recordOf(r: Runner, me: number): GameRecord {
+export function recordOf(r: Playable, me: number): GameRecord {
   const s = r.state;
   const p = s.players[me];
   const winner = s.winner !== null ? s.players[s.winner] : null;

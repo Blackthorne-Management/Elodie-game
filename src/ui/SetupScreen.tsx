@@ -8,6 +8,8 @@ import { BUILD } from '../state/history';
 import type { HouseId } from '../engine/types';
 import { CONTENT } from '../data';
 import { Emblem } from './play/Figures';
+import { HostPanel, JoinPanel } from './OnlineScreens';
+import { savedOnline, useOnline } from '../state/onlineStore';
 
 const HOUSE_IDS = Object.keys(CONTENT.houses) as HouseId[];
 const stored = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -27,6 +29,10 @@ export function SetupScreen() {
     const h = stored('tob-house') as HouseId | null;
     return h && HOUSE_IDS.includes(h) ? h : null;
   });
+  const joinCode = typeof location !== 'undefined' ? (new URLSearchParams(location.search).get('join') ?? '') : '';
+  const [mode, setMode] = useState<'solo' | 'host' | 'join'>(joinCode ? 'join' : 'solo');
+  const resumeOnline = useOnline(s => s.resume);
+  const onlineGame = savedOnline();
   const notice = useGame(s => s.notice);
   const dismissNotice = useGame(s => s.dismissNotice);
 
@@ -54,12 +60,23 @@ export function SetupScreen() {
 
       {notice && <button type="button" className="notice" onClick={dismissNotice}>{notice} <span aria-hidden>✕</span></button>}
       {hasSave && <button type="button" className="big" onClick={() => resume()}>Continue your game</button>}
+      {onlineGame && <button type="button" className="big" onClick={() => resumeOnline()}>Return to online game {onlineGame.code}</button>}
+
+      <div className="seg mode-tabs" role="tablist">
+        <button type="button" role="tab" aria-selected={mode === 'solo'} className={mode === 'solo' ? 'on' : ''} onClick={() => setMode('solo')}>Solo</button>
+        <button type="button" role="tab" aria-selected={mode === 'host'} className={mode === 'host' ? 'on' : ''} onClick={() => setMode('host')}>Host a game</button>
+        <button type="button" role="tab" aria-selected={mode === 'join'} className={mode === 'join' ? 'on' : ''} onClick={() => setMode('join')}>Join a game</button>
+      </div>
 
       <section className="panel-card frame">
         <label className="field">
           <span>Your name</span>
-          <input value={name} onChange={e => setName(e.target.value)} placeholder="Optional: your house name is used" maxLength={16} />
+          <input value={name} onChange={e => { setName(e.target.value); try { localStorage.setItem('tob-name', e.target.value); } catch { /* ignore */ } }}
+            placeholder={mode === 'solo' ? 'Optional: your house name is used' : 'Your name for the table'} maxLength={16} />
         </label>
+        {mode === 'host' && <HostPanel name={name} />}
+        {mode === 'join' && <JoinPanel name={name} code0={joinCode.toUpperCase()} />}
+        {mode === 'solo' && <>
         <div className="field">
           <span>Players (you + {players - 1} bot{players === 2 ? '' : 's'})</span>
           <div className="seg eight">
@@ -94,6 +111,7 @@ export function SetupScreen() {
             : 'Houses are drawn blind. Unclaimed house tiles are free for anyone to farm.'}
         </p>
         <button type="button" className="big" disabled={picking && !pick} onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>
+        </>}
       </section>
 
       <StatsPanel />

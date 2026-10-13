@@ -6,6 +6,7 @@ import { makeRng } from '../engine/rng';
 import { dealHouses } from '../engine/houseChoice';
 import { BUILD, archive, archiveRaw, snapshot } from './history';
 import { addRecord, recordOf } from './stats';
+import type { RemoteRunner } from '../net/remote';
 
 const KEY = 'tob-game';
 export const HUMAN = 0;
@@ -15,8 +16,14 @@ export const SPEED_MS: Record<Speed, number> = { normal: 650, fast: 220, instant
 
 interface Saved { setup: GameSetup; answers: number[]; build?: string; startedAt?: number }
 
+// An online game hands its moves to the game server instead of the local engine (set by the online store).
+export interface RemoteControls { answer: (i: number) => void; quit: () => void; botStep: () => void; isHost: () => boolean }
+
 interface GameStore {
-  runner: Runner | null;
+  runner: Runner | RemoteRunner | null;
+  me: number;                   // your seat: 0 against bots, your seat online
+  online: boolean;
+  remote: RemoteControls | null;
   startedAt: number;
   notice: string | null;        // shown on the setup screen (e.g. a game interrupted by an update)
   version: number;              // bumps on every change so components re-render
@@ -42,6 +49,9 @@ function clear() { try { localStorage.removeItem(KEY); } catch { /* ignore */ } 
 
 export const useGame = create<GameStore>((set, get) => ({
   runner: null,
+  me: HUMAN,
+  online: false,
+  remote: null,
   startedAt: 0,
   notice: null,
   version: 0,
@@ -73,7 +83,7 @@ export const useGame = create<GameStore>((set, get) => ({
     const startedAt = Date.now();
     const runner = new Runner(setup, CONTENT);
     save(runner, startedAt);
-    set({ runner, startedAt, version: get().version + 1 });
+    set({ runner, startedAt, me: HUMAN, online: false, version: get().version + 1 });
   },
 
   resume: () => {
@@ -88,7 +98,7 @@ export const useGame = create<GameStore>((set, get) => ({
     }
     try {
       const runner = Runner.replay(s.setup, CONTENT, s.answers);
-      set({ runner, startedAt: s.startedAt ?? Date.now(), version: get().version + 1 });
+      set({ runner, startedAt: s.startedAt ?? Date.now(), me: HUMAN, online: false, version: get().version + 1 });
       return true;
     } catch {
       archiveRaw(s.setup, s.answers, s.startedAt ?? Date.now(), s.build ?? 'unknown', 'could not be resumed');
@@ -101,12 +111,15 @@ export const useGame = create<GameStore>((set, get) => ({
   answer: i => {
     const r = get().runner;
     if (!r || r.over) return;
+    if (get().online) { get().remote?.answer(i); return; }
+    if (!('answer' in r)) return;
     r.answer(i);
     if (r.over) { clear(); archive(snapshot(r, 'won', get().startedAt)); addRecord(recordOf(r, HUMAN)); } else save(r, get().startedAt);
     set({ version: get().version + 1 });
   },
 
   quit: () => {
+    if (get().online) { get().remote?.quit(); return; }
     const r = get().runner;
     if (r && !r.over) archive(snapshot(r, 'abandoned', get().startedAt));
     clear();

@@ -2,7 +2,7 @@ import type { Game } from '../../engine/game';
 import type { Decision } from '../../engine/types';
 import { Portrait } from './Figures';
 import { HOUSE_ART, ICONS } from '../../assets.config';
-import { HUMAN } from '../../state/gameStore';
+import { useGame } from '../../state/gameStore';
 
 export interface DuelShow {
   seq: number;
@@ -24,7 +24,7 @@ export function Duel({ g, duel, block, onAnswer, onClose }: {
     return (
       <div className={`fcard2 ${hit ? 'hit' : ''}`} style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
         <Portrait house={p.house} gen={p.gen} className="big" />
-        <div className="f-name">{id === HUMAN ? `${p.name} (you)` : p.name}</div>
+        <div className="f-name">{id === useGame.getState().me ? `${p.name} (you)` : p.name}</div>
         <div className="f-meta">{g.house(p).name.replace('House ', '')} · Gen {['I', 'II', 'III', 'IV'][p.gen - 1]}</div>
         <div className="f-hp">{p.specter ? ICONS.specter : `${ICONS.heart} ${p.hp}`}</div>
       </div>

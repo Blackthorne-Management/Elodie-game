@@ -7,7 +7,10 @@ import type { Decision, Dir, LogEvent, Pos } from '../../engine/types';
 import { DIR_NAMES, inBoard, key, manhattan, samePos, step } from '../../engine/board';
 import { makeRng } from '../../engine/rng';
 import { botChoose } from '../../ai/bot';
-import { HUMAN, SPEED_MS, useGame } from '../../state/gameStore';
+import { SPEED_MS, useGame } from '../../state/gameStore';
+
+// Your seat: 0 against bots, whichever seat you hold in an online game.
+const seat = () => useGame.getState().me;
 import type { Speed } from '../../state/gameStore';
 import { snapshot } from '../../state/history';
 import { Board } from '../Board';
@@ -33,7 +36,7 @@ const SHOW_MS: Record<Speed, number> = { normal: 1500, fast: 700, instant: 0 };
 
 // Rivals' cards stay hidden: the log says that they played a card, not which.
 function displayText(g: Game, e: LogEvent): string {
-  if ((e.kind === 'card' || e.kind === 'block') && e.player !== undefined && e.player !== HUMAN && e.cards) {
+  if ((e.kind === 'card' || e.kind === 'block') && e.player !== undefined && e.player !== seat() && e.cards) {
     let t = e.text;
     for (const c of e.cards) t = t.replace(g.card(c).name, 'a card');
     return t;
@@ -42,7 +45,7 @@ function displayText(g: Game, e: LogEvent): string {
 }
 // Decisions whose options are cards (picking from a hand, the deck or the discard pile).
 const CARD_CHOICES = new Set(['card', 'discard', 'specter']);
-const visible = (e: LogEvent) => !e.visibleTo || e.visibleTo.includes(HUMAN);
+const visible = (e: LogEvent) => !e.visibleTo || e.visibleTo.includes(seat());
 
 type SheetState = null | { type: 'house'; id: number } | { type: 'log' } | { type: 'card'; id: number } | { type: 'menu' };
 
@@ -53,12 +56,13 @@ export function PlayScreen() {
   const setSpeed = useGame(s => s.setSpeed);
   const answer = useGame(s => s.answer);
   const quit = useGame(s => s.quit);
+  const online = useGame(s => s.online);
   const startedAt = useGame(s => s.startedAt);
   const g = runner.game;
   const s = g.s;
   const d = runner.pending;
-  const mine = d?.player === HUMAN ? d : null;
-  const me = s.players[HUMAN];
+  const mine = d?.player === seat() ? d : null;
+  const me = s.players[seat()];
 
   const { motion, busy: walking } = useMotion(s, version, WALK_SPEED[speed], me.pos ?? { x: 9, y: 9 });
   const [sheet, setSheet] = useState<SheetState>(null);
@@ -84,7 +88,7 @@ export function PlayScreen() {
     lastSeen.current = s.seq;
     const show = SHOW_MS[speed];
     // Cards revealed to you (a rival's hand, the top of the deck) open face up, like your own hand.
-    const peeks = fresh.filter(e => e.kind === 'reveal' && visible(e) && e.cards && (e.tag === 'deck' || e.player !== HUMAN))
+    const peeks = fresh.filter(e => e.kind === 'reveal' && visible(e) && e.cards && (e.tag === 'deck' || e.player !== seat()))
       .map(e => ({ seq: e.seq, title: peekTitle(e.text), cards: e.cards! }));
     if (peeks.length) setPeek(p => [...p, ...peeks]);
     for (let i = 0; i < fresh.length; i++) {
@@ -93,7 +97,7 @@ export function PlayScreen() {
         setDice({ n: e.amount, who: e.player !== undefined ? s.players[e.player].name : '', seq: e.seq });
       }
       if (!show) continue;
-      if ((e.kind === 'card' || (e.kind === 'instant' && e.player !== HUMAN)) && e.player !== undefined && e.player !== HUMAN) {
+      if ((e.kind === 'card' || (e.kind === 'instant' && e.player !== seat())) && e.player !== undefined && e.player !== seat()) {
         setBanner({ seq: e.seq, player: e.player, text: e.kind === 'card' ? 'is playing a card…' : `draws ${displayText(g, e).split('draws ')[1] ?? 'an event'}` });
         busyUntil.current = Math.max(busyUntil.current, Date.now() + show * 0.8);
       }
@@ -115,7 +119,7 @@ export function PlayScreen() {
   useEffect(() => { if (!banner) return; const t = setTimeout(() => setBanner(null), SHOW_MS[speed] * 0.8 || 1); return () => clearTimeout(t); }, [banner, speed]);
   useEffect(() => { if (!dice) return; const t = setTimeout(() => setDice(null), speed === 'instant' ? 400 : 900); return () => clearTimeout(t); }, [dice, speed]);
   useEffect(() => {
-    if (!duel || d?.kind === 'block' && d.player === HUMAN) return;
+    if (!duel || d?.kind === 'block' && d.player === seat()) return;
     const t = setTimeout(() => setDuel(null), SHOW_MS[speed] * 1.2 || 1);
     return () => clearTimeout(t);
   }, [duel, speed, d]);
@@ -124,13 +128,16 @@ export function PlayScreen() {
   useEffect(() => {
     if (!d || !s.players[d.player].isBot) return;
     if (walking || peek.length) return;
-    const wait = Math.max(SPEED_MS[speed], busyUntil.current - Date.now());
+    // Online, the server makes the bot's choice: the host's app asks for it at this pace; anyone else's app only
+    // steps in if the host has gone quiet.
+    const remote = online ? useGame.getState().remote : null;
+    const wait = Math.max(SPEED_MS[speed], busyUntil.current - Date.now()) + (remote && !remote.isHost() ? 6000 : 0);
     const t = setTimeout(() => {
       if (busyUntil.current > Date.now()) { setTick(x => x + 1); return; }
-      answer(botChoose(g, d, botRng.current));
+      if (remote) remote.botStep(); else answer(botChoose(g, d, botRng.current));
     }, wait);
     return () => clearTimeout(t);
-  }, [version, speed, d, g, s.players, answer, walking, tick, peek.length]);
+  }, [version, speed, d, g, s.players, answer, walking, tick, peek.length, online]);
 
   // ---- your move: step with arrows or tap a destination
   const moveMode = mine?.kind === 'move' ? moveInfo(g, mine) : null;
@@ -166,7 +173,7 @@ export function PlayScreen() {
   // walking, then settles on whoever is acting.
   const activeId = s.turn?.player ?? null;
   const stepFocus = moveMode?.free && start && end ? { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 } : null;
-  const restOn = s.players[mine ? HUMAN : activeId ?? HUMAN].pos ?? me.pos ?? { x: 9, y: 9 };
+  const restOn = s.players[mine ? seat() : activeId ?? seat()].pos ?? me.pos ?? { x: 9, y: 9 };
   const focusKey = stepFocus ? `${stepFocus.x},${stepFocus.y}` : `${restOn.x},${restOn.y}`;
   useEffect(() => { motion.setFocus(stepFocus ?? restOn, !stepFocus); },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -182,7 +189,7 @@ export function PlayScreen() {
   }, [activeId]);
   // Your steps move your character on the board right away (the engine only hears about it when you confirm).
   const ghostKey = moveMode?.free && end ? `${end.x},${end.y}` : '';
-  useEffect(() => { if (moveMode?.free && end) motion.walkTo(HUMAN, end); },
+  useEffect(() => { if (moveMode?.free && end) motion.walkTo(seat(), end); },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [motion, ghostKey]);
 
@@ -208,14 +215,14 @@ export function PlayScreen() {
         </div>
         <div className="seats3" ref={trackerRef}>
           {s.order.map((id, i) => (
-            <RivalChip key={id} g={g} p={s.players[id]} n={i + 1} me={id === HUMAN} active={activeId === id} done={nowIdx >= 0 && i < nowIdx}
+            <RivalChip key={id} g={g} p={s.players[id]} n={i + 1} me={id === seat()} active={activeId === id} done={nowIdx >= 0 && i < nowIdx}
               onOpen={() => setSheet({ type: 'house', id })} />
           ))}
         </div>
         <button type="button" className="icon-btn menu-btn" onClick={() => setSheet({ type: 'menu' })} aria-label="Menu">☰</button>
       </div>
 
-      <HeroCard g={g} p={me} dim={!mine && activeId !== HUMAN} onOpen={() => setSheet({ type: 'house', id: HUMAN })} />
+      <HeroCard g={g} p={me} dim={!mine && activeId !== seat()} onOpen={() => setSheet({ type: 'house', id: seat() })} />
 
       <Stage game={g} motion={motion} lit={lit} path={path} arrows={arrows}
         active={activeId} onToken={id => setSheet({ type: 'house', id })}>
@@ -312,7 +319,7 @@ export function PlayScreen() {
       {runner.over && s.winner !== null && (
         <div className="gameover">
           <Emblem house={s.players[s.winner].house} size={64} />
-          <h1>{s.winner === HUMAN ? 'The Throne is yours' : `${s.players[s.winner].name} takes the Throne`}</h1>
+          <h1>{s.winner === seat() ? 'The Throne is yours' : `${s.players[s.winner].name} takes the Throne`}</h1>
           <p>{s.endReason}</p>
           <button type="button" className="big" onClick={quit}>New game</button>
         </div>
@@ -352,7 +359,9 @@ export function PlayScreen() {
           <h3>Report a problem</h3>
           <p className="muted small">Something odd happened? Copy or download this game's full log and send it to Claude.</p>
           <GameLogActions game={snapshot(runner, runner.over ? 'won' : 'in progress', startedAt)} />
-          <button type="button" className="big danger" onClick={() => { if (confirm("Abandon this game? It won't count toward your record.")) quit(); }}>Abandon game</button>
+          {online
+            ? <button type="button" className="big" onClick={quit}>Back to the menu (you can return to this game)</button>
+            : <button type="button" className="big danger" onClick={() => { if (confirm("Abandon this game? It won't count toward your record.")) quit(); }}>Abandon game</button>}
         </Sheet>
       )}
       {rules === 'howto' && <HowToPlay onClose={() => setRules(null)} onGuide={() => setRules('guide')} />}
@@ -369,7 +378,7 @@ function moveInfo(g: Game, d: Decision): { from: Pos; max: number; free: boolean
   const mover = g.p((d.context?.player as number | undefined) ?? d.player);
   const from = (d.context?.from as Pos | undefined) ?? mover.pos;
   if (!from) return null;
-  const free = !!d.context?.free && mover.id === HUMAN;
+  const free = !!d.context?.free && mover.id === seat();
   return { from, max: (d.context?.max as number | undefined) ?? 1, free };
 }
 

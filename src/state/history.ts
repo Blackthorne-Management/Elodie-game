@@ -1,7 +1,7 @@
 // Past games, kept on the phone for a while so problems can be investigated afterwards.
 // Each entry has the readable chronicle plus the exact setup and answers, so a game can be replayed
 // step by step on the build it was played on.
-import type { Runner } from '../engine/runner';
+import type { Playable } from '../net/remote';
 import type { GameSetup } from '../engine/types';
 import { roman } from '../engine/game';
 
@@ -45,11 +45,11 @@ function store(list: PastGame[]) {
   }
 }
 
-export function chronicleOf(r: Runner): string[] {
+export function chronicleOf(r: Playable): string[] {
   return r.state.log.map(e => `R${e.round} ${e.visibleTo ? '[private] ' : ''}${e.text}`);
 }
 
-export function standings(r: Runner): string[] {
+export function standings(r: Playable): string[] {
   const g = r.game;
   return r.state.players.map(p =>
     `${p.name} — ${g.house(p).name}, Gen ${roman(p.gen)}${p.specter ? ' (Specter)' : ''}, ` +
@@ -57,7 +57,7 @@ export function standings(r: Runner): string[] {
     `kills ${p.kills}${r.state.winner === p.id ? ' — WINNER' : ''}`);
 }
 
-export function snapshot(r: Runner, outcome: GameOutcome, startedAt: number, build = BUILD, note?: string): PastGame {
+export function snapshot(r: Playable, outcome: GameOutcome, startedAt: number, build = BUILD, note?: string): PastGame {
   const s = r.state;
   const winner = s.winner !== null ? s.players[s.winner].name : null;
   return {

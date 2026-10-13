@@ -19,11 +19,21 @@ React + TypeScript + Vite + Zustand, installable as a PWA (installing is optiona
 - Mobile-first: 390 px wide portrait, tap targets at least 44 px.
 
 ## Phases
-Phase 1 (current): rules engine + local game vs bots, 2–8 players. No Supabase, multiplayer or QR until Phase 1 is verified.
+Phase 1: rules engine + local game vs bots, 2–8 players (done).
+Phase 2 (started, at the owner's request): online play. Host a game (players and how many are people), join with a
+6-letter code or link, share an invite message.
+- `src/net/serverCore.ts` holds the server rules: sessions, masked views and bots stepped by the server.
+- `src/state/onlineStore.ts` and `src/ui/OnlineScreens.tsx` are the client.
+- The Edge Function `supabase/functions/bloodlines` runs in Supabase project `mawdkpwegsjmdqoagevi`, schema
+  `bloodlines`; it shares that project with an RSVP app, so never touch its other tables.
+- The function loads the rules from `public/server/core.js` (`npm run build:server`) on the website. Rebuild it
+  whenever the engine changes.
+- Test locally with `node scripts/dev-server.mjs` and `?server=http://localhost:8787`.
+- Not yet: QR codes, AFK bot takeover.
 
 ## Commands
 - `npm run dev` (add `-- --host` to open on a phone on the same Wi-Fi)
-- `npm test` / `npm run typecheck` / `npm run lint` / `npm run build`
+- `npm test` / `npm run typecheck` / `npm run lint` / `npm run build` / `npm run build:server` (after engine changes)
 - Deploys to Netlify via `netlify.toml` on every push; CI in `.github/workflows/ci.yml`.
 
 ## Notes

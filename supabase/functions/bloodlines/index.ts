@@ -8,11 +8,18 @@ import postgres from 'npm:postgres@3.4.5';
 const CORE_URL = 'https://zesty-puffpuff-852680.netlify.app/server/core.js';
 // deno-lint-ignore no-explicit-any
 let core: any = null;
+let loadedAt = 0;
+// The rules are re-read every few minutes, so a website deploy reaches warm servers too.
 async function loadCore() {
-  if (core) return core;
-  const res = await fetch(`${CORE_URL}?t=${Date.now()}`);
-  if (!res.ok) throw new Error(`Could not load the game rules (${res.status})`);
-  core = new Function(`${await res.text()}\nreturn BloodlinesCore;`)();
+  if (core && Date.now() - loadedAt < 5 * 60_000) return core;
+  try {
+    const res = await fetch(`${CORE_URL}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`Could not load the game rules (${res.status})`);
+    core = new Function(`${await res.text()}\nreturn BloodlinesCore;`)();
+    loadedAt = Date.now();
+  } catch (e) {
+    if (!core) throw e;                      // keep the last good copy if the website is briefly unreachable
+  }
   return core;
 }
 
@@ -87,13 +94,14 @@ Deno.serve(async req => {
         if (s.setup && (s.status === 'active' || s.status === 'ended')) return json({ ok: true, lobby: core.lobbyView(s, seat), game: core.gameView(s, seat) });
         return json({ ok: true, lobby: core.lobbyView(s, seat) });
       }
-      case 'vote': case 'start': case 'pick': case 'answer': case 'leave': {
+      case 'vote': case 'start': case 'pick': case 'answer': case 'bot': case 'leave': {
         const { s, out } = await withSession(code, s => {
           const seat = core.seatOf(s, String(r.token));
           if (r.op === 'vote') core.vote(s, seat, !!r.pick);
           if (r.op === 'start') core.startSession(env, s, seat);
           if (r.op === 'pick') core.pickHouse(env, s, seat, r.house);
           if (r.op === 'answer') core.answer(s, seat, Number(r.index), Number(r.at));
+          if (r.op === 'bot') core.botStep(s, Number(r.at));
           if (r.op === 'leave') core.leaveSession(s, seat);
           return seat;
         });

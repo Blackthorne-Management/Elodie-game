@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { answer, createSession, gameView, joinSession, lobbyView, pickHouse, startSession, vote } from '../src/net/serverCore';
+import { answer, botStep, createSession, gameView, joinSession, lobbyView, pickHouse, startSession, vote } from '../src/net/serverCore';
 import type { Env, Session } from '../src/net/serverCore';
 import { makeRng } from '../src/engine/rng';
 
@@ -14,7 +14,7 @@ function play(s: Session, tokens: string[], limit = 5000) {
   while (s.status === 'active' && steps++ < limit) {
     const views = tokens.map((_, i) => gameView(s, i));
     const who = views.findIndex(v => v.pending && v.pending.options.length > 0);
-    expect(who).toBeGreaterThanOrEqual(0);
+    if (who < 0) { botStep(s, views[0].answers); continue; }    // a bot's turn: any app asks the server to move it
     answer(s, who, 0, views[who].answers);
   }
 }
@@ -69,6 +69,7 @@ describe('online game server', () => {
     joinSession(e, s, 'Ben');
     startSession(e, s, 0);
     const v0 = gameView(s, 0), v1 = gameView(s, 1);
+    expect(() => botStep(s, v0.answers)).toThrow(/not a bot/);
     const mine = v0.pending?.options.length ? 0 : 1;
     const other = 1 - mine;
     expect(() => answer(s, other, 0, (other ? v1 : v0).answers)).toThrow(/not your decision/);

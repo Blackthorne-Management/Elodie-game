@@ -135,20 +135,13 @@ function beginGame(env: Env, s: Session) {
   };
   s.answers = [];
   s.status = 'active';
-  const r = new Runner(s.setup, CONTENT);
-  runBots(s, r);
 }
 
-// Bots answer on the server until a person has to decide (or the game ends). Their choices are recorded like anyone's.
-function runBots(s: Session, r: Runner) {
-  let guard = 0;
-  while (r.pending && s.seats[r.pending.player].bot && guard++ < 20000) {
-    const rng = makeRng((s.setup!.seed ^ Math.imul(r.answers.length + 1, 2654435761)) >>> 0);
-    r.answer(botChoose(r.game, r.pending, rng));
-  }
+const finish = (s: Session, r: Runner) => {
   s.answers = [...r.answers];
   if (r.over) s.status = 'ended';
-}
+  s.version++;
+};
 
 export const replay = (s: Session) => Runner.replay(s.setup!, CONTENT, s.answers);
 
@@ -159,8 +152,19 @@ export function answer(s: Session, seat: number, index: number, at: number) {
   if (!r.pending || r.pending.player !== seat) fail('It is not your decision.');
   if (!Number.isInteger(index) || index < 0 || index >= r.pending!.options.length) fail('That is not one of the choices.');
   r.answer(index);
-  runBots(s, r);
-  s.version++;
+  finish(s, r);
+}
+
+// A bot's decision, one at a time: the players' apps ask for it once the table has shown the last move, so bots play
+// at a watchable pace. The server makes the choice; `at` stops two apps advancing the same decision.
+export function botStep(s: Session, at: number) {
+  if (s.status !== 'active' || !s.setup) fail('The game is not running.');
+  if (at !== s.answers.length) fail('The game moved on; try again.');
+  const r = replay(s);
+  if (!r.pending || !s.seats[r.pending.player].bot) fail('It is not a bot\'s decision.');
+  const rng = makeRng((s.setup!.seed ^ Math.imul(r.answers.length + 1, 2654435761)) >>> 0);
+  r.answer(botChoose(r.game, r.pending!, rng));
+  finish(s, r);
 }
 
 // ---------------------------------------------------------------- what each player may see

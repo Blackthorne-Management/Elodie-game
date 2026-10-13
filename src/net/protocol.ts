@@ -46,6 +46,7 @@ export type Request =
   | { op: 'pick'; code: string; token: string; house: HouseId }
   | { op: 'view'; code: string; token: string }
   | { op: 'answer'; code: string; token: string; index: number; at: number }
+  | { op: 'bot'; code: string; token: string; at: number }
   | { op: 'leave'; code: string; token: string };
 
 export type Response =

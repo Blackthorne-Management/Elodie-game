@@ -7,7 +7,7 @@ import { THRONE, isSea, key } from '../../engine/board';
 import { BOARD_SIZE } from '../../config';
 import { BOARD_ART, HOUSE_ART, PORTRAITS, PORTRAIT_CROP, SEAT_ART, TILE_ART } from '../../assets.config';
 import { terrainUrl } from '../terrainSvg';
-import { HUMAN } from '../../state/gameStore';
+import { useGame } from '../../state/gameStore';
 import type { Motion } from './motion';
 import { CELL, TILT } from './motion';
 
@@ -84,14 +84,14 @@ export function Stage({ game, motion, lit, path, arrows, active, onToken, childr
             const p = s.players[id];
             const spread = ids.length > 1 ? (n - (ids.length - 1) / 2) * 20 : 0;
             const url = PORTRAITS[p.house][p.gen - 1];
-            const named = id === HUMAN || id === active;
+            const named = id === useGame.getState().me || id === active;
             // The animation loop positions each token (see motion.ts); React only draws it.
             return (
-              <div key={id} ref={el => motion.registerToken(id, el)} className={`token2 ${id === HUMAN ? 'me' : ''} ${active === id ? 'active' : ''}`}
+              <div key={id} ref={el => motion.registerToken(id, el)} className={`token2 ${id === useGame.getState().me ? 'me' : ''} ${active === id ? 'active' : ''}`}
                 style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
                 <button type="button" className="stand" onClick={() => onToken(id)} aria-label={p.name}
                   style={{ transform: `translate(calc(-50% + ${spread}px), -100%) rotateX(${-TILT}deg)` }}>
-                  {named && <span className="tag">{id === HUMAN ? 'You' : p.name}</span>}
+                  {named && <span className="tag">{id === useGame.getState().me ? 'You' : p.name}</span>}
                   <span className="disc">{url
                     ? <span className="disc-face" style={{ backgroundImage: `url("${url}")`, backgroundSize: `${PORTRAIT_CROP.pawnZoom * 100}% auto`, backgroundPosition: `50% ${PORTRAIT_CROP.pawnY}` }} />
                     : <span className="silhouette" />}<span className="badge">{HOUSE_ART[p.house].initial}</span></span>

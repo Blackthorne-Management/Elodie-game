@@ -1141,3 +1141,27 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .house-pick b { font-family: var(--display); font-size: 14px; color: var(--gold-hi); }
 .house-pick small { font-size: 12px; color: var(--muted); }
 .big:disabled { opacity: .5; }
+
+/* ---------- online: mode tabs, lobby ---------- */
+.mode-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.mode-tabs button { min-width: 0; font-size: 14px; padding: 0 4px; }
+.code-input { font-family: var(--display) !important; letter-spacing: .3em; text-transform: uppercase; font-size: 22px !important; text-align: center; }
+.lobby-title { margin: 6px 0 0; font-family: var(--display); color: var(--gold); font-size: 16px; letter-spacing: .12em; text-transform: uppercase; }
+.lobby-code { font-family: var(--display); font-weight: 700; font-size: 46px; letter-spacing: .18em; color: var(--gold-hi); text-shadow: 0 2px 4px #000, 0 0 18px rgba(243,210,122,.3); user-select: all; }
+.invite { margin: 0; padding: 8px 10px; background: rgba(0,0,0,.3); border: 1px dashed #8a6a2e88; border-radius: 4px; font-size: 15px; line-height: 1.35; text-align: left; user-select: all; }
+.lobby-h { margin: 2px 0; font-family: var(--display); color: var(--gold); font-size: 15px; letter-spacing: .06em; }
+.seats-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.seats-list li { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 8px; background: rgba(0,0,0,.25); border: 1px solid #8a6a2e44; border-radius: 4px; text-align: left; }
+.seats-list li.open { opacity: .6; border-style: dashed; }
+.seat-n { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-size: 13px; background: #0a0e16; border: 1px solid #8a6a2e; color: var(--gold); flex: none; }
+.seat-name { flex: 1; min-width: 0; }
+.seat-vote { font-size: 12px; font-family: var(--display); color: var(--muted); border: 1px solid #5a5040; border-radius: 3px; padding: 2px 6px; }
+.seat-vote.yes { color: var(--gold-hi); border-color: var(--gold); }
+.check { display: flex; align-items: center; gap: 10px; min-height: 44px; text-align: left; cursor: pointer; }
+.check input { width: 22px; height: 22px; accent-color: var(--gold); }
+.pick-order { margin: 0; padding-left: 22px; text-align: left; }
+.pick-order li { padding: 3px 0; }
+.pick-order li span { margin-right: 6px; }
+.pick-order li b { color: var(--gold-hi); font-family: var(--display); font-size: 14px; }
+.pick-order li.now { color: var(--gold-hi); }
+.house-pick button.taken { opacity: .35; }
