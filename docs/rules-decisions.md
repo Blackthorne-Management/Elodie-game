@@ -482,6 +482,14 @@ These came up in code and weren't covered above; all confirmed as they stand.
   (about 2 rounds), Kay Soley won 1.19× its fair share at 8 players (4,000 bot games), where the truce is used in 62%
   of games. Shortened to one round, like Ceasefire: Kay Soley 1.09× at 8 players, 1.06× at 6, 0.79–0.88× at 2–4
   (1,000 games each, unchanged within noise). Game length unchanged. Kay Soley stays a little weak at 2–4 players.
+- **Adopted: every generation has a name [86]** (the owner's request). Each house's four characters (Gen I to IV) are
+  the family line of the story game in docs/quest: Gen IV is the present-day hero or companion (Gianna Elise Limyè,
+  Azriel "Azzy" Rodriguez, Yari, Samira Dorini, Bayarmaa, Haru Suzumori, Vikram, Edmund Stillwater), Gen III their
+  parent, Gen II the ancestor met in the Echo, Gen I the founder. The full list is `heirs` in src/data/houses.ts and
+  the table in docs/quest/QUEST-BUILD-GUIDE.md 5.3a. The name goes on the character card's name plate (the house
+  moves to the type line), the player banner, the house sheet, the duel screen and the rule guide. Seven portrait
+  prompts in docs/art/CHARACTER-PROMPTS.md were rewritten to match (Brasador II–IV, Kay Soley IV, Yaguana IV,
+  Suzumori IV, Stillwater IV). No rule or ability changes.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

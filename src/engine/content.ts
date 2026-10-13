@@ -77,6 +77,7 @@ export interface HouseDef {
   tileType: TileType;
   home: Pos;
   hp: [number, number, number, number];
+  heirs: [string, string, string, string];         // the character of each generation, Gen I to IV (rules-decisions 86)
   passiveName: string;
   passiveText: [string, string];                   // Gen I, Gen III upgrade
   passive: PassiveHooks;

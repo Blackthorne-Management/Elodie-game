@@ -72,7 +72,7 @@ export function HeroCard({ g, p, dim, onOpen }: { g: Game; p: PlayerState; dim?:
       <Medallion house={p.house} gen={p.gen} size={58} />
       <span className="b3-mid">
         <span className="b3-name">{p.name}{g.eligible(p) && <span className="elig" title="Can claim the Throne"> {ICONS.eligible}</span>}{g.findEffect('newborn', p.id) && <span className="newborn" title="New heir: can't be attacked until the end of your first turn"> {ICONS.newborn}</span>}</span>
-        <span className="b3-house">{h.name.replace('House ', '')} · Gen {roman(p.gen)}</span>
+        <span className="b3-house">{h.heirs[p.gen - 1]} · Gen {roman(p.gen)}</span>
         <HeartRow p={p} />
         <span className="b3-goal" title={`Claim at ${claimGoal(t)}`}>Claim: {t.combined} total, {t.minEach}+ each</span>
       </span>

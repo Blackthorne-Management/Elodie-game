@@ -163,7 +163,7 @@ The war is about **power, money and fear**, not about who people are. Several ho
 | Paternal grandfather | **Benny** (locked) | Rael's father; grandfather of Gianna **and** Azzy. Lord of Ardencia in the Revolution, and head of the Spanish-inspired state before Rael. **Alive and old in the Present**, retired in the Ardencia keep (*proposal*: he is the one who knows about the tunnel and recognizes the Locket in person). Honorable; refused to sign the Seventh Clause. Swordsman. Joins the Echo party once Azzy has joined. |
 | Little sister | **Anissa** (locked) | Two years younger than Gianna; Rael's daughter too. **Very shy, never fights.** She carries the **light of the goddess Elodie**: an unimaginable reservoir of mana, far more than she can control. Not a party member. Runs the **Surge** system (6.4). Gives puzzle hints. Cannot enter the Echo. The Quiet Crown wants her. |
 | Best friend | **Yari** | Taino-inspired, House Yaguana, heir of the cacique line. Class **Archer**. Mascot: a **hutia** (a real Caribbean rodent) who steals shiny things. |
-| Yari's ancestor | **Caona** (placeholder) | Scout-commander who fought beside Patricio and Benny. Her side of the Accord is the emotional center. |
+| Yari's ancestor | **Caona** (approved; Yaguana Gen II) | Scout-commander who fought beside Patricio and Benny. Her side of the Accord is the emotional center. |
 | Mother | **Elodie Limyè** (locked) | Head of the Zetwal state and its diplomat to the Throne. Named after the goddess of light. Publicly **Limyè**, a name she says she took to honor the goddess; in truth she took it to hide that she is a Rodriguez. Patricio's daughter and **Rael's secret wife**. She hid the marriage to protect their children and their children's claim, and has never told her daughters that their father is the Lord of Ardencia. In the Parley she is under Crown eyes and can say only one true thing. Leaves for the Throne at the start; seen again at the midpoint parley and the end. |
 | Grandmother | **Anicette** (locked name, alive) | Elodie's mother and Patricio's wife. Very much alive in the Present. Keeper of the Temple of Elodie in Zetwal (*proposal*) and the person who gives Gianna the **Sun Locket** (*proposal*). She is the living memory of the Alliance War and of Ash Wars gossip, and one of the few who suspects the official histories are wrong about Rael. |
 | Half-brother | **Azriel "Azzy" Rodriguez** (locked) | Older than Gianna. Rael's son by a different mother, a royal of the Mongolian empire (*assumed Skarragol*) whom Rael married only to win support in the Ash Wars; she left and went home, and Azzy stayed. Class **Blade-Knight**. Believes in his father's honor until the escape. Joins after Ardencia. |
@@ -173,6 +173,29 @@ The war is about **power, money and fear**, not about who people are. Several ho
 | Cult leader | **The Hushed** (title) | Hidden head of the Quiet Crown, revealed to be inside the Regent's court. |
 | Carriage Guild | **Papa Wout** (placeholder) | Runs carriages and ferries. Comic relief, knows every road, sells rumors. |
 
+### 5.3a The bloodlines (approved; the same people as the board game's character cards)
+
+The board game's four generations per house are this story's family lines. **Gen IV** is the present-day hero or
+companion, **Gen III** is their parent (often the ruler or elder they defy), **Gen II** is the ancestor met in the
+Echo (the Revolution, about fifty years ago), and **Gen I** is the founder, known from lore. Abilities stay exactly
+as in the board game. Source of truth for the names: `heirs` in `src/data/houses.ts` (rules-decisions 86).
+
+| House (land) | Gen I: founder | Gen II: Echo era | Gen III: parent | Gen IV: present day |
+|---|---|---|---|---|
+| Kay Soley (Zetwal) | Mother Solange Jean-Philippe | Marshal Patricio Jean-Philippe | Elodie Limyè (born Jean-Philippe) | Gianna Elise Limyè |
+| Brasador (Ardencia) | Don Alonso Rodriguez | Benny Rodriguez | Rael the Ruthless | Azriel "Azzy" Rodriguez |
+| Yaguana (Xaraguá) | Cacique Guanín | Caona | Cacique Anaco (Yari's ailing father) | Yari |
+| Dorini (Al-Doria) | Malik Dorini | Yusuf Dorini (keeper of the ledger) | Layla Dorini (harbour banker) | Samira Dorini |
+| Ironvow (Skarragol) | Ulfgar Ironvow | Sarnai (led the raid on the Crown's supply line) | Torvald | Bayarmaa |
+| Suzumori (Kuroshi) | Lord Genzō Suzumori | Lady Sayo Suzumori (her network fed Patricio the Crown's troop movements) | Kaede Suzumori | Haru Suzumori |
+| Agnivansh (Jwaladesh) | Rani Tejaswini | Arjun (the charge at the harbour chain) | Meera | Vikram |
+| Stillwater (Aldermoor) | Dame Agatha Stillwater | Thomas Stillwater (wrote the Crown's record of the Seventh Clause) | Lady Rosalind Stillwater | Edmund Stillwater |
+
+Notes: Anissa (Gianna's sister) and Anicette (Elodie's mother) are family but not on the cards. The Yaguana names
+avoid real historical caciques; Guanín and Anaco are built from Taíno words and go on the review list with the
+phrasebook. Still placeholders: Papa Wout, Lord Regent Aldric Vane, Governor Thorne, Envoy Cresswell, the Ash
+Ledger, the Hushed, the hutia (unnamed), the working title.
+
 ### 5.4 Recruits and the places
 
 Each place provides one **capital hub**, one **ruler**, one **signature puzzle**, one **library**, one **shop**, one or two **street debates** (Section 7), an **Echo**, and a **companion**: someone from that land who disagrees with what their own leaders are doing and chooses to travel with Gianna.
@@ -181,13 +204,13 @@ Each place provides one **capital hub**, one **ruler**, one **signature puzzle**
 |---|---|---|---|---|
 | **Zetwal** (Kay Soley) | Elodie (leaves at the start). Allied by blood. | Festival of Elodie's Gaze; tutorial; the Locket; Quiet Crown recruiters in the plaza. | Patricio's war room the night before the signing. | **Gianna** and **Anissa** (home). **Yari** arrives. |
 | **Xaraguá** (Yaguana) | Cacique, ailing; the Governor holds real power. Wants **Influence**: to be heard as an equal at the Throne. | Crown ships in the harbor; the Charter. | Caona, Patricio and Benny swear the first oath at the areito. | **Yari**, who defies elders ready to accept the Charter. |
-| **Al-Doria** (Dorini) | Merchant-prince. Wants **Influence** (unlikely: the richest house wants a council seat, not gold). | Guild vault hides the signed Accord copy. | The Dorini ledger shows what they were promised for signing. | **Samira** (placeholder): appraises everything, including feelings, and invoices them. Alchemist. Defies her guild for profiteering on the war. |
+| **Al-Doria** (Dorini) | Merchant-prince. Wants **Influence** (unlikely: the richest house wants a council seat, not gold). | Guild vault hides the signed Accord copy. | The Dorini ledger shows what they were promised for signing. | **Samira Dorini** (approved): appraises everything, including feelings, and invoices them. Alchemist. Defies her guild for profiteering on the war. |
 | **Ardencia** (Brasador) | **Rael the Ruthless.** Appears to be the enemy; the Crown believes it bought him. | The duel, the reveal, the escape. | Benny's smuggler tunnel and the Brasador march. | **Azzy**, who defies his own father. |
 | **Elodie's Seat** (the Throne city, center of the realm) | The Throne is held for now by the Regent. Elodie is Zetwal's envoy. | Parley under a flag of truce; the Throne Archive holds the Accord. | The signing itself. | none |
-| **Skarragol** (Ironvow) | Clan council. Wants **Wealth**: plunder rights and compensation for blockade losses. | Great horse-fair; stolen sacred standard. | The Ironvow raid that broke the Crown's supply line. | **Bayarmaa** (placeholder): raider more devoted to her horse, who has more dialogue than she does. Cavalry. Defies a council ready to sell the fleet. |
-| **Kuroshi** (Suzumori) | Spymaster council. Wants **Influence**: recognition and legal protection for their informants. | Fog city of informants; the files that expose the buyer. | The Suzumori network that fed Patricio the Crown's troop movements. | **Haru** (placeholder): introduces himself as "definitely not a spy." Shadow agent. Defies the order to stay neutral. |
-| **Jwaladesh** (Agnivansh) | Fire-temple court. Wants **Wealth** (unlikely: zealots whose treasury is empty and whose sacred flame is running out of oil). | The sacred flame is dying; a relay of lamps. | The Agnivansh charge at the Crown's harbor chain. | **Vikram** (placeholder): must win every argument by duel, always out of breath. Fire duelist. Defies priests who want to hide the flame. |
-| **Aldermoor** (the Crown / Stillwater) | The Regent (enemy). A dissident faction wants **Fear**: protection from the Quiet Crown's purge. | Infiltrate the Regent's keep, find the Crown's pact with Rael, including a ledger of what he took and where it really went. | The Crown's own record of the Seventh Clause. | **Edmund Stillwater** (placeholder): ridiculously polite guardian who apologizes to enemies before hitting them; tea breaks heal. Tank. Defies the Regent. |
+| **Skarragol** (Ironvow) | Clan council. Wants **Wealth**: plunder rights and compensation for blockade losses. | Great horse-fair; stolen sacred standard. | The Ironvow raid that broke the Crown's supply line. | **Bayarmaa** (approved): raider more devoted to her horse, who has more dialogue than she does. Cavalry. Defies a council ready to sell the fleet. |
+| **Kuroshi** (Suzumori) | Spymaster council. Wants **Influence**: recognition and legal protection for their informants. | Fog city of informants; the files that expose the buyer. | The Suzumori network that fed Patricio the Crown's troop movements. | **Haru Suzumori** (approved): introduces himself as "definitely not a spy." Shadow agent. Defies the order to stay neutral. |
+| **Jwaladesh** (Agnivansh) | Fire-temple court. Wants **Wealth** (unlikely: zealots whose treasury is empty and whose sacred flame is running out of oil). | The sacred flame is dying; a relay of lamps. | The Agnivansh charge at the Crown's harbor chain. | **Vikram** (approved): must win every argument by duel, always out of breath. Fire duelist. Defies priests who want to hide the flame. |
+| **Aldermoor** (the Crown / Stillwater) | The Regent (enemy). A dissident faction wants **Fear**: protection from the Quiet Crown's purge. | Infiltrate the Regent's keep, find the Crown's pact with Rael, including a ledger of what he took and where it really went. | The Crown's own record of the Seventh Clause. | **Edmund Stillwater** (approved): ridiculously polite guardian who apologizes to enemies before hitting them; tea breaks heal. Tank. Defies the Regent. |
 | **Free Brasador** (Azzy's defectors) | Soldiers who followed Azzy. Want **Fear**: proof that Rael can be beaten. | Gained in the escape. | none | **Azzy** leads them. |
 
 **Unlikely alliances:** the allied groups hate each other. Dorini merchants are raided by Ironvow clans. Suzumori spies once burned an Agnivansh temple. Stillwater dissidents are the Crown's own people. Before the war the player must settle these **feuds** at the Muster (5.5) using Concord (Section 7).

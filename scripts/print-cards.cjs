@@ -105,8 +105,8 @@ function characterHtml(h, gen, art, crest) {
     <div class="medal" style="left:917px;top:141px">${crest
       ? `<img src="${uri(crest)}" style="width:74px;height:74px;border-radius:50%;object-fit:cover">`
       : `<div style="width:72px;height:72px;border-radius:50%;background:${h.color};border:3px solid #f3d27a;display:grid;place-items:center;font:700 38px Cinzel;color:#fff;text-shadow:0 2px 3px rgba(0,0,0,.5)">${h.initial}</div>`}</div>
-    <div class="title fit-w" style="left:192px;right:192px;top:92px;height:98px;font-size:52px">${esc(h.name)}</div>
-    <div class="type fit-w" style="left:146px;right:146px;top:1234px;height:42px;font-size:33px;color:${TYPE_COLOR.character}">${esc(h.homeland)} · Generation ${roman(gen)} · ${hp} Heart Token${hp === 1 ? '' : 's'}</div>
+    <div class="title fit-w" style="left:192px;right:192px;top:92px;height:98px;font-size:52px">${esc(h.heirs ? h.heirs[gen - 1] : h.name)}</div>
+    <div class="type fit-w" style="left:146px;right:146px;top:1234px;height:42px;font-size:33px;color:${TYPE_COLOR.character}">${esc(h.name.replace('House ', ''))} · ${esc(h.homeland)} · Generation ${roman(gen)} · ${hp} Heart Token${hp === 1 ? '' : 's'}</div>
     <div class="rules fit-h" style="left:130px;right:130px;top:1302px;bottom:110px;font-size:42px;gap:.35em">${lines.join('')}</div>
     <style>.rules p.down { font-style: italic; color: #cfc3ad; }</style></div>`;
 }

@@ -55,6 +55,7 @@ function House({ id }: { id: HouseId }) {
         </div>
       </header>
       <p className="rg-lore">{h.lore}</p>
+      <p className="small"><b>The bloodline:</b> {h.heirs.map((n, i) => `${['I', 'II', 'III', 'IV'][i]}. ${n}`).join(' · ')}</p>
       <ul className="rg-gens">
         {rows.map((r, i) => <li key={i}><span className="rg-gen">{roman(r.gen)}</span><span>{r.node}</span></li>)}
       </ul>

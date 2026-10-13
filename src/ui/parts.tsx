@@ -69,11 +69,11 @@ export function CharacterCard({ game, p }: { game: Game; p: PlayerState }) {
     <div className="charcard2" style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
       {art ? <img className="art" src={art} alt={`${p.name}, Gen ${roman(p.gen)}`} /> : <span className="silhouette" aria-hidden />}
       {CARD_ART.overlays.character && <img className="ov" src={CARD_ART.overlays.character} alt="" />}
-      <div className="cc-name">{h.name.replace('House ', '')}</div>
+      <div className="cc-name">{h.heirs[p.gen - 1]}</div>
       <div className="cc-gen" aria-label={`Generation ${roman(p.gen)}`}>{roman(p.gen)}</div>
       <div className="cc-crest"><Crest house={p.house} size={24} /></div>
       <div className="cc-panel">
-        <div className="cc-type">{h.homeland} · Gen {roman(p.gen)} · {h.hp[p.gen - 1]} ♥</div>
+        <div className="cc-type">{h.name.replace('House ', '')} · {h.homeland} · Gen {roman(p.gen)} · {h.hp[p.gen - 1]} ♥</div>
         <div className="cc-lines">
           <span><b>{h.passiveName}:</b> {h.passiveText[level - 1]}</span>
           {houseNotes(p.house).filter(n => n.gen <= p.gen).map(n => <span key={n.name}><b>{n.name}:</b> {n.text}</span>)}
@@ -94,6 +94,7 @@ export function HouseSheet({ game, p, onClose }: { game: Game; p: PlayerState; o
         <Crest house={p.house} size={48} />
         <div>
           <strong>{p.name}</strong>
+          <div className="muted">{h.heirs[p.gen - 1]}, Gen {roman(p.gen)}</div>
           <div className="muted">{h.homeland} · {h.culture} · {h.identity}</div>
           <div><Hearts p={p} /> · Gen {roman(p.gen)} · <Resources p={p} /></div>
         </div>

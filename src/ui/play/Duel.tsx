@@ -25,7 +25,7 @@ export function Duel({ g, duel, block, onAnswer, onClose }: {
       <div className={`fcard2 ${hit ? 'hit' : ''}`} style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
         <Portrait house={p.house} gen={p.gen} className="big" />
         <div className="f-name">{id === useGame.getState().me ? `${p.name} (you)` : p.name}</div>
-        <div className="f-meta">{g.house(p).name.replace('House ', '')} · Gen {['I', 'II', 'III', 'IV'][p.gen - 1]}</div>
+        <div className="f-meta">{g.house(p).heirs[p.gen - 1]} · Gen {['I', 'II', 'III', 'IV'][p.gen - 1]}</div>
         <div className="f-hp">{p.specter ? ICONS.specter : `${ICONS.heart} ${p.hp}`}</div>
       </div>
     );
