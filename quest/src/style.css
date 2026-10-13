@@ -1,0 +1,171 @@
+:root {
+  --bg: #000000;
+  --panel: #14101a;
+  --ink: #f4ecd8;
+  --gold: #f2d04b;
+  --line: #e8d8b0;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#game {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+}
+
+#game canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Touch overlay: D-pad bottom left, A/B bottom right, Echo/Menu top right. */
+.touch-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+.touch-overlay > * { pointer-events: auto; touch-action: none; }
+
+.touch-dpad {
+  position: absolute;
+  left: calc(16px + env(safe-area-inset-left));
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  width: var(--dpad);
+  height: var(--dpad);
+  border-radius: 50%;
+  background: rgba(244, 236, 216, 0.08);
+}
+.touch-dpad-arm {
+  position: absolute;
+  width: 34%;
+  height: 34%;
+  background: rgba(20, 16, 26, 0.72);
+  border: 2px solid rgba(232, 216, 176, 0.75);
+  border-radius: 8px;
+}
+.touch-dpad-arm.up { left: 33%; top: 0; }
+.touch-dpad-arm.down { left: 33%; bottom: 0; }
+.touch-dpad-arm.left { top: 33%; left: 0; }
+.touch-dpad-arm.right { top: 33%; right: 0; }
+.touch-dpad[data-dir="up"] .up,
+.touch-dpad[data-dir="down"] .down,
+.touch-dpad[data-dir="left"] .left,
+.touch-dpad[data-dir="right"] .right { background: rgba(242, 208, 75, 0.6); }
+
+.touch-buttons {
+  position: absolute;
+  right: calc(16px + env(safe-area-inset-right));
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  width: calc(var(--btn) * 2.3);
+  height: calc(var(--btn) * 2);
+}
+.touch-btn, .touch-small {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: rgba(20, 16, 26, 0.72);
+  border: 2px solid rgba(232, 216, 176, 0.75);
+  font: 700 20px/1 system-ui, sans-serif;
+}
+.touch-btn { width: var(--btn); height: var(--btn); border-radius: 50%; }
+.touch-a { right: 0; top: 0; }
+.touch-b { left: 0; bottom: 0; }
+.touch-btn.down, .touch-small.down { background: rgba(242, 208, 75, 0.6); }
+
+.touch-top {
+  position: absolute;
+  top: calc(8px + env(safe-area-inset-top));
+  right: calc(16px + env(safe-area-inset-right));
+  display: flex;
+  gap: 8px;
+}
+.touch-small {
+  position: static;
+  min-width: 64px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 22px;
+  font-size: 14px;
+}
+
+.rotate-hint { display: none; }
+@media (orientation: portrait) {
+  body.touch .rotate-hint {
+    display: block;
+    position: fixed;
+    top: calc(64px + env(safe-area-inset-top));
+    left: 16px;
+    right: 16px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--line);
+  }
+}
+
+/* Save code dialogs. */
+.code-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+}
+.code-panel {
+  width: min(480px, 100%);
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+.code-panel h2 { margin: 0 0 8px; font-size: 18px; color: var(--gold); }
+.code-panel p { margin: 0 0 8px; font-size: 14px; }
+.code-panel textarea {
+  width: 100%;
+  font: 14px/1.4 ui-monospace, monospace;
+  color: var(--ink);
+  background: #000;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 8px;
+  word-break: break-all;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.code-error { min-height: 1.2em; color: var(--gold); }
+.code-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.code-actions button {
+  min-width: 88px;
+  min-height: 44px;
+  font-size: 16px;
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+}
+.code-actions button.primary { background: var(--gold); color: #14101a; border-color: var(--gold); }
+
+.boot-error {
+  position: fixed;
+  inset: 16px;
+  margin: 0;
+  white-space: pre-wrap;
+  color: #ffb4b4;
+  font: 12px/1.4 ui-monospace, monospace;
+}

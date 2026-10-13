@@ -1,0 +1,23 @@
+// Boot: draw the placeholder textures, hand the Tiled maps to Phaser's cache, then start the field.
+
+import Phaser from 'phaser';
+import { getRuntime } from '../runtime.ts';
+import { makeAllTextures } from './textures.ts';
+
+export function tilemapKey(mapId: string): string {
+  return `map-${mapId}`;
+}
+
+export class BootScene extends Phaser.Scene {
+  constructor() {
+    super('boot');
+  }
+
+  create(): void {
+    makeAllTextures(this);
+    for (const [id, raw] of Object.entries(getRuntime().rawMaps)) {
+      this.cache.tilemap.add(tilemapKey(id), { format: Phaser.Tilemaps.Formats.TILED_JSON, data: raw });
+    }
+    this.scene.start('field');
+  }
+}

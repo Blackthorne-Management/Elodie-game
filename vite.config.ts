@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { execSync } from 'node:child_process';
@@ -37,4 +38,6 @@ export default defineConfig({
       workbox: { globPatterns: ['**/*.{js,css,html,svg,png,webp}'], globIgnores: ['server/**'] },
     }),
   ],
+  // The quest (quest/) is a separate project with its own tests.
+  test: { exclude: [...configDefaults.exclude, 'quest/**'] },
 });

@@ -25,3 +25,7 @@ dist-ssr
 
 # Rendered print files (npm run print)
 print
+
+# Quest (separate project in quest/)
+quest/node_modules
+quest/dist
