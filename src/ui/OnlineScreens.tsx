@@ -6,6 +6,9 @@ import { CONTENT } from '../data';
 import { inviteText } from '../net/protocol';
 import { useOnline } from '../state/onlineStore';
 import { Emblem } from './play/Figures';
+import type { TwoPlayerMode } from '../engine/houseChoice';
+import { TWO_PLAYER_MODES } from '../data/rules';
+import { TwoPlayerModeField } from './TwoPlayerMode';
 
 const HOUSE_IDS = Object.keys(CONTENT.houses) as HouseId[];
 const houseName = (h: HouseId) => CONTENT.houses[h].name.replace('House ', '');
@@ -22,6 +25,7 @@ export function HostPanel({ name }: { name: string }) {
   const busy = useOnline(s => s.busy);
   const [total, setTotal] = useState(4);
   const [humans, setHumans] = useState(2);
+  const [twoMode, setTwoMode] = useState<TwoPlayerMode>('race');
   const people = Math.min(humans, total);
   return (
     <>
@@ -41,9 +45,10 @@ export function HostPanel({ name }: { name: string }) {
           ))}
         </div>
       </div>
+      {total === 2 && <TwoPlayerModeField value={twoMode} onChange={setTwoMode} />}
       <p className="muted small">You get a game code and a message to send your friends. Bots fill the other seats.</p>
       <ErrorLine />
-      <button type="button" className="big" disabled={busy} onClick={() => void host(name, total, people)}>{busy ? 'Creating…' : 'Host a game'}</button>
+      <button type="button" className="big" disabled={busy} onClick={() => void host(name, total, people, twoMode)}>{busy ? 'Creating…' : 'Host a game'}</button>
     </>
   );
 }
@@ -99,11 +104,14 @@ export function Lobby() {
     const turn = lobby.pickTurn;
     const mine = turn === lobby.me;
     const taken = new Set(lobby.seats.map(x => x.house).filter(Boolean));
+    const open = new Set(lobby.pickable ?? []);
+    const closed = (h: HouseId) => taken.has(h) || (lobby.pickable !== null && !open.has(h));
     return (
       <main className="setup lobby">
         <h2 className="lobby-title">Choosing houses</h2>
         <section className="panel-card frame">
-          <p className="small">Everyone agreed to pick. The dice decide who picks first, then picking goes clockwise.</p>
+          <p className="small">Everyone agreed to pick. The dice decide who picks first, then picking goes clockwise.
+            {lobby.twoMode === 'battle' && ' Battle: the second house must be next to the first on the board.'}</p>
           {lobby.pickRolls && lobby.pickOrder && (
             <p className="small muted">
               Rolls: {lobby.pickRolls[0].map((n, j) => `${lobby.seats[j]?.name || `Seat ${j + 1}`} ${n}`).join(' · ')}
@@ -124,10 +132,10 @@ export function Lobby() {
           {mine ? (
             <div className="house-pick" role="radiogroup" aria-label="Your house">
               {HOUSE_IDS.map(h => (
-                <button key={h} type="button" role="radio" aria-checked={false} disabled={taken.has(h) || busy} className={taken.has(h) ? 'taken' : ''}
+                <button key={h} type="button" role="radio" aria-checked={false} disabled={closed(h) || busy} className={closed(h) ? 'taken' : ''}
                   onClick={() => void pick(h)}>
                   <Emblem house={h} size={36} ring />
-                  <span><b>{houseName(h)}</b><small>{taken.has(h) ? 'Taken' : CONTENT.houses[h].identity}</small></span>
+                  <span><b>{houseName(h)}</b><small>{taken.has(h) ? 'Taken' : closed(h) ? 'Not a neighbour' : CONTENT.houses[h].identity}</small></span>
                 </button>
               ))}
             </div>
@@ -165,6 +173,12 @@ export function Lobby() {
         </ul>
       </section>
 
+      {lobby.twoMode && (
+        <section className="panel-card frame">
+          <h3 className="lobby-h">Two-player game: {TWO_PLAYER_MODES[lobby.twoMode].name}</h3>
+          <p className="small">{TWO_PLAYER_MODES[lobby.twoMode].short}</p>
+        </section>
+      )}
       <section className="panel-card frame">
         <h3 className="lobby-h">Houses</h3>
         <p className="small">Houses are drawn by lottery unless <b>every</b> person agrees to pick. One "no" means the lottery.</p>

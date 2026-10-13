@@ -11,6 +11,20 @@ const S = THRESHOLDS.small, N = THRESHOLDS.normal;
 const truce = OPENING.truceRounds;
 const truceText = truce === 1 ? 'the first round' : `the first ${truce} rounds`;
 
+// The two ways to play with two players (rules-decisions 82), shared by the rule guide and the setup screens.
+export const TWO_PLAYER_MODES = {
+  race: {
+    name: 'Race',
+    short: 'Houses as usual, often far apart: a quick race to the Throne.',
+    text: 'Houses are drawn (or picked) as usual, so the two of you often start on opposite sides of the realm. You rarely meet: in about 4 games in 10 no one dies, and whoever is first able to claim usually wins. Fast and light.',
+  },
+  battle: {
+    name: 'Battle',
+    short: 'Your houses are neighbours: you clash from the start.',
+    text: 'Your two houses must be **neighbours** on the board, so you fight over the same ground from the first turns: about half as many deaths again as a Race, and only about 3 games in 10 without one. Longer and bloodier; the Throne race still matters.',
+  },
+} as const;
+
 export const RULES: RuleSection[] = [
   {
     id: 'story', title: 'The Story',
@@ -40,6 +54,7 @@ export const RULES: RuleSection[] = [
       steps: [
         '**Draw houses by lottery.** Shuffle the Grudge Tokens face down; each player draws one blind. That is your house for the game.',
         '**Or pick, only if everyone agrees.** Before the draw, ask the table. If **every** player agrees, players pick their houses instead; **one "no" and it is the lottery** (seven yeses and one no is still the lottery). To pick, everyone rolls the die: the highest roll picks first (ties re-roll), then picking goes **clockwise** from that player. Picking first is an advantage, which is why it must be unanimous and decided by the dice.',
+        '**Two players: choose Race or Battle** before drawing houses. **Race:** draw or pick houses as usual. **Battle:** the two houses must be neighbours on the board. By lottery, draw one crest for one player, then roll the die for the other: 1–3 takes the neighbouring house anticlockwise, 4–6 the one clockwise. When picking, the first player picks any house and the second picks one of its two neighbours. (See Two Players below for how they differ.)',
         'Take your house\'s generation cards with **Gen I** on top, and Heart Tokens equal to its Gen I Heart Tokens.',
         'Place all eight house tiles, whatever the player count. **A house not in the game leaves its tile unowned: anyone may farm it.**',
         'Put your pawn on your house\'s own tile.',
@@ -47,6 +62,17 @@ export const RULES: RuleSection[] = [
         '**First player:** if Elodie (Lolo, Lodie) is playing, she always goes first. Otherwise everyone rolls the die and the highest roll goes first (re-roll ties). Play then goes **clockwise** around the table, in seating order, for the whole game.',
       ],
     }],
+  },
+  {
+    id: 'two-players', title: 'Two Players: Race or Battle',
+    blocks: [
+      'With two players, agree before drawing houses which game you want. Both use every other rule unchanged.',
+      { list: [
+        `**${TWO_PLAYER_MODES.race.name}:** ${TWO_PLAYER_MODES.race.text}`,
+        `**${TWO_PLAYER_MODES.battle.name}:** ${TWO_PLAYER_MODES.battle.text}`,
+      ] },
+      'Can\'t agree? Play Race. With three or more players there is no choice: houses are drawn or picked as usual.',
+    ],
   },
   {
     id: 'turn', title: 'Your Turn',

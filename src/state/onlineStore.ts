@@ -5,6 +5,7 @@ import { call, listen } from '../net/client';
 import { RemoteRunner } from '../net/remote';
 import type { GameView, LobbyView, Response } from '../net/protocol';
 import type { HouseId } from '../engine/types';
+import type { TwoPlayerMode } from '../engine/houseChoice';
 import { useGame } from './gameStore';
 import { addRecord, recordOf } from './stats';
 
@@ -20,7 +21,7 @@ interface OnlineStore {
   lobby: LobbyView | null;
   error: string | null;
   busy: boolean;
-  host: (name: string, total: number, humans: number) => Promise<void>;
+  host: (name: string, total: number, humans: number, mode?: TwoPlayerMode) => Promise<void>;
   join: (code: string, name: string) => Promise<void>;
   resume: () => boolean;
   refresh: () => Promise<void>;
@@ -79,9 +80,9 @@ export const useOnline = create<OnlineStore>((set, get) => {
   return {
     code: null, token: null, me: 0, lobby: null, error: null, busy: false,
 
-    host: async (name, total, humans) => {
+    host: async (name, total, humans, mode = 'race') => {
       set({ busy: true, error: null });
-      const r = await call({ op: 'create', name, total, humans });
+      const r = await call({ op: 'create', name, total, humans, mode });
       if (r.ok && r.code && r.token) {
         set({ code: r.code, token: r.token, me: 0 });
         store({ code: r.code, token: r.token, me: 0 });

@@ -18,7 +18,7 @@ function handle(r) {
   switch (r.op) {
     case 'create': {
       const c = core.newCode(env);
-      const { session, token } = core.createSession(env, c, String(r.name ?? ''), Number(r.total), Number(r.humans));
+      const { session, token } = core.createSession(env, c, String(r.name ?? ''), Number(r.total), Number(r.humans), r.mode === 'battle' ? 'battle' : 'race');
       sessions.set(c, session);
       return { ok: true, code: c, token, seat: 0, lobby: core.lobbyView(session, 0) };
     }

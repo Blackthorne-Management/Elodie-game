@@ -63,6 +63,34 @@ describe('online game server', () => {
     expect(new Set(s.setup!.seats.map(x => x.house)).size).toBe(5);
   });
 
+  it('a 2-player Battle: the second house must be a neighbour of the first (rules-decisions 82)', () => {
+    const e = env(11);
+    const { session: s } = createSession(e, 'BAT234', 'Ana', 2, 2, 'battle');
+    joinSession(e, s, 'Ben');
+    vote(s, 0, true); vote(s, 1, true);
+    startSession(e, s, 0);
+    expect(lobbyView(s, 0).twoMode).toBe('battle');
+    const first = s.pickOrder![0];
+    pickHouse(e, s, first, 'brasador');
+    expect(lobbyView(s, 0).pickable!.sort()).toEqual(['kaysoley', 'vaitama']);
+    expect(() => pickHouse(e, s, 1 - first, 'suzumori')).toThrow(/next to/);
+    pickHouse(e, s, 1 - first, 'vaitama');
+    expect(s.status).toBe('active');
+  });
+  it('a 2-player Battle by lottery deals neighbours; Race is the default', () => {
+    for (let i = 1; i < 30; i++) {
+      const e = env(i);
+      const { session: s } = createSession(e, 'LOT234', 'Ana', 2, 1, 'battle');
+      startSession(e, s, 0);
+      const [a, b] = s.setup!.seats.map(x => x.house!);
+      const near: Record<string, string[]> = { brasador: ['vaitama', 'kaysoley'], kaysoley: ['brasador', 'dorini'], dorini: ['kaysoley', 'ironvow'],
+        ironvow: ['dorini', 'suzumori'], suzumori: ['ironvow', 'agnivansh'], agnivansh: ['suzumori', 'stillwater'],
+        stillwater: ['agnivansh', 'vaitama'], vaitama: ['stillwater', 'brasador'] };
+      expect(near[a]).toContain(b);
+    }
+    expect(lobbyView(createSession(env(1), 'RAC234', 'Ana', 2, 2).session, 0).twoMode).toBe('race');
+    expect(lobbyView(createSession(env(1), 'BIG234', 'Ana', 4, 2).session, 0).twoMode).toBeNull();
+  });
   it('rejects answers out of turn or out of date', () => {
     const e = env(9);
     const { session: s } = createSession(e, 'QQQ234', 'Ana', 2, 2);

@@ -2,6 +2,7 @@
 // answer) and sends each player only their own view: other players' hands, the draw pile, the seed and private log
 // lines never leave the server.
 import type { Decision, GameState, HouseId } from '../engine/types';
+import type { TwoPlayerMode } from '../engine/houseChoice';
 
 export type SessionStatus = 'lobby' | 'picking' | 'active' | 'ended';
 
@@ -27,6 +28,8 @@ export interface LobbyView {
   pickRolls: number[][] | null;   // the roll-off: one row of dice per round of rolling
   pickTurn: number | null; // whose pick it is (a seat)
   version: number;
+  twoMode: TwoPlayerMode | null;   // 2 players: Race or Battle (rules-decisions 82); null with more players
+  pickable: HouseId[] | null;      // while picking: the houses the next picker may take
 }
 
 export interface GameView {
@@ -38,7 +41,7 @@ export interface GameView {
 }
 
 export type Request =
-  | { op: 'create'; name: string; total: number; humans: number }
+  | { op: 'create'; name: string; total: number; humans: number; mode?: TwoPlayerMode }
   | { op: 'join'; code: string; name: string }
   | { op: 'lobby'; code: string; token: string }
   | { op: 'vote'; code: string; token: string; pick: boolean }

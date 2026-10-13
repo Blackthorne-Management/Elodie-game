@@ -1,5 +1,7 @@
 import { UI_ART } from '../assets.config';
 import { useState } from 'react';
+import type { TwoPlayerMode } from '../engine/houseChoice';
+import { TwoPlayerModeField } from './TwoPlayerMode';
 import { useGame } from '../state/gameStore';
 import { StatsPanel } from './StatsPanel';
 import { HowToPlay } from './HowToPlay';
@@ -31,6 +33,8 @@ export function SetupScreen() {
   });
   const joinCode = typeof location !== 'undefined' ? (new URLSearchParams(location.search).get('join') ?? '') : '';
   const [mode, setMode] = useState<'solo' | 'host' | 'join'>(joinCode ? 'join' : 'solo');
+  const [twoMode, setTwoMode] = useState<TwoPlayerMode>(() => (stored('tob-two-mode') === 'battle' ? 'battle' : 'race'));
+  const chooseTwoMode = (m: TwoPlayerMode) => { setTwoMode(m); try { localStorage.setItem('tob-two-mode', m); } catch { /* ignore */ } };
   const resumeOnline = useOnline(s => s.resume);
   const onlineGame = savedOnline();
   const notice = useGame(s => s.notice);
@@ -42,7 +46,7 @@ export function SetupScreen() {
       localStorage.setItem('tob-house-mode', picking ? 'pick' : 'lottery');
       if (pick) localStorage.setItem('tob-house', pick);
     } catch { /* ignore */ }
-    start(name, players, picking ? pick : null);
+    start(name, players, picking ? pick : null, twoMode);
   }
 
   return (
@@ -85,6 +89,7 @@ export function SetupScreen() {
             ))}
           </div>
         </div>
+        {players === 2 && <TwoPlayerModeField value={twoMode} onChange={chooseTwoMode} />}
         <div className="field">
           <span>Houses</span>
           <div className="seg">
@@ -107,7 +112,7 @@ export function SetupScreen() {
         )}
         <p className="muted small">
           {picking
-            ? 'You pick; the bots draw the other houses blind. At a table, picking needs every player to agree, and a dice roll decides who picks first.'
+            ? `You pick; the bots draw the other houses blind${players === 2 && twoMode === 'battle' ? ' (in Battle, the bot takes a house next to yours)' : ''}. At a table, picking needs every player to agree, and a dice roll decides who picks first.`
             : 'Houses are drawn blind. Unclaimed house tiles are free for anyone to farm.'}
         </p>
         <button type="button" className="big" disabled={picking && !pick} onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>
