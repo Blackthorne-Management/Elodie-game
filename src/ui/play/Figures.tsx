@@ -5,6 +5,7 @@ import type { HouseId, PlayerState } from '../../engine/types';
 import { PILLARS } from '../../engine/types';
 import { HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS, PORTRAIT_CROP } from '../../assets.config';
 import { claimGoal } from '../claimGoal';
+import { PillarIcon } from '../parts';
 
 // The character's full-body picture. In small spots (the hero card) it shows from the head down.
 export function Portrait({ house, gen, className = '' }: { house: HouseId; gen: number; className?: string }) {
@@ -29,9 +30,11 @@ export function Emblem({ house, size = 26, ring }: { house: HouseId; size?: numb
 
 export function Res({ p, short }: { p: PlayerState; short?: boolean }) {
   return (
-    <span className="res2">
+    <span className={`res2 ${short ? 'short' : ''}`}>
       {PILLARS.map(x => (
-        <span key={x} style={{ color: PILLAR_ART[x].color }}>{PILLAR_ART[x].glyph}{short ? '' : ' '}{p.res[x]}</span>
+        <span key={x} style={{ color: PILLAR_ART[x].color }} title={PILLAR_ART[x].label} aria-label={`${PILLAR_ART[x].label} ${p.res[x]}`}>
+          <PillarIcon pillar={x} />{p.res[x]}
+        </span>
       ))}
     </span>
   );

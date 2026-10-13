@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { CardDef } from '../engine/content';
 import type { Game } from '../engine/game';
 import { roman } from '../engine/game';
-import type { PlayerState } from '../engine/types';
+import type { Pillar, PlayerState } from '../engine/types';
 import { PILLARS } from '../engine/types';
 import { CARD_ART, HOUSE_ART, ICONS, PILLAR_ART, PORTRAITS } from '../assets.config';
 import { CardFrame } from './CardFrame';
@@ -17,12 +17,18 @@ export function Crest({ house, size = 32 }: { house: PlayerState['house']; size?
   );
 }
 
+// A resource's drawn icon. (Text symbols like ⚔ turn into colour emoji on phones while ♔ and ◈ don't, so the
+// three never matched.)
+export function PillarIcon({ pillar }: { pillar: Pillar }) {
+  return <img className="pillar-icon" src={PILLAR_ART[pillar].icon} alt="" aria-hidden />;
+}
+
 export function Resources({ p, compact }: { p: PlayerState; compact?: boolean }) {
   return (
     <span className={`res ${compact ? 'compact' : ''}`}>
       {PILLARS.map(x => (
-        <span key={x} style={{ color: PILLAR_ART[x].color }} title={PILLAR_ART[x].label}>
-          {PILLAR_ART[x].glyph}{p.res[x]}
+        <span key={x} style={{ color: PILLAR_ART[x].color }} title={PILLAR_ART[x].label} aria-label={`${PILLAR_ART[x].label} ${p.res[x]}`}>
+          <PillarIcon pillar={x} />{p.res[x]}
         </span>
       ))}
     </span>

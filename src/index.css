@@ -220,6 +220,9 @@ button:disabled { cursor: default; }
 .rival2-body { display: flex; flex-direction: column; line-height: 1.15; }
 .rival2-name { font-size: 12px; font-weight: 800; white-space: nowrap; }
 .rival2-stats { display: flex; gap: 6px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.pillar-icon { width: 1.15em; height: 1.15em; margin-right: 2px; vertical-align: -0.2em; flex: none; }
+.res > span, .res2 > span { display: inline-flex; align-items: center; }
+.res2.short { gap: 4px; }
 .res2 { display: inline-flex; gap: 7px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .emblem {
   display: inline-grid; place-items: center; border-radius: 50%; background: var(--c); color: #fff; font-weight: 900; flex: none;
