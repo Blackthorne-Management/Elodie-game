@@ -405,8 +405,8 @@ real people (guide 7.3).
    shows where the gold really went, Gianna learns Rael is good in Chapter 9, which breaks the locked rule that she
    learns only near the end. Proposal: the ledger shows the gold vanishing into coded accounts; only after the Harbor
    Turn can Haru read the code.
-7. **Chapter 1 vs Act I.** The guide's Act I is Zetwal plus Xaraguá. This pack treats Act I as two chapters. Owner to
-   confirm the chapter numbering and the chapter titles (all proposals).
+7. **Chapter 1 vs Act I.** **Settled (owner, Oct 14):** the story is told in **chapters**, not acts; Chapter 1 is
+   **The Festival of the Gaze** (Pòdlimyè). The other chapter titles stay proposals until each is built.
 8. **The slice.** Zetwal + Xaraguá + Ardencia skips Chapter 3 (Al-Doria). Owner to choose: keep the slice as the guide
    says (Chapter 4 levels scale down by about 3 when Chapter 3 was skipped), or include Chapter 3 in the slice.
 9. **The betrayer's companion.** If the Crown buys a house whose companion is in the party (Samira, Bayarmaa, Haru or
@@ -415,5 +415,4 @@ real people (guide 7.3).
 10. **Gen III rulers.** Layla (Al-Doria), Torvald (Skarragol), Kaede (Kuroshi), Meera (Jwaladesh) and Rosalind
     (Aldermoor) are proposed as the ruler or elder each companion defies, matching guide 5.3a ("Gen III is their
     parent, often the ruler or elder they defy"). Owner to confirm each.
-11. **Section 14 of the guide** still says 240 x 160; Section 9 and the built game use 320 x 180. The opening prompt is
-    stale (no action needed for the design, just a note).
+11. **Section 14 of the guide** said 240 x 160; fixed to 320 x 180 (Oct 14).

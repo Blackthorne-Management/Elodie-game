@@ -980,7 +980,7 @@ export class FieldScene extends Phaser.Scene {
     else {
       const entries = journalEntries(ACT1, flags);
       const current = entries.find((e) => e.state === 'current');
-      lines.push({ text: current ? `Now: ${current.title}` : 'Act I is complete.', color: UI.text, gap: 4 });
+      lines.push({ text: current ? `Now: ${current.title}` : 'Chapter 1 is complete.', color: UI.text, gap: 4 });
       if (current) lines.push({ text: current.detail, color: UI.dimText });
       const done = entries.filter((e) => e.state === 'done');
       if (done.length > 0) {

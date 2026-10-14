@@ -10,12 +10,15 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Tue Oct 14**.
+and ticks items off here as they land. Last updated **Tue Oct 14** (evening).
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 px map (only the 2000 px upscale is in `art/board/`), the 8 seat
   buildings (`art/seats/`, prompts in `docs/art/MAP-AND-SEATS.md`; none yet), then a proof of `print/board-24in.png`
   to approve, then order.
+- [ ] **Before the board order (Mon Oct 20):** the labelled board guide (`docs/art/board-guide-labelled.png`) still
+  names the north-west country Moa'olani, House Vai'tama; it is Xaraguá, House Yaguana now. Check that no print file
+  carries the old name.
 - [x] 8 crests.
 - [ ] Card art: 20 of 126 in `art/cards/` (anything missing on Oct 31 prints in the no-picture design).
 - [ ] Card back.
@@ -38,6 +41,22 @@ Caona, Rael.
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1
 and 2, **Sun Nov 22**. Your next quest asks: approve the intro storyboard (secret items and side quests approved Oct 14) by
 **Fri Oct 17**; art drop 1 (six character sets and three intro illustrations) by **Fri Oct 24**.
+
+**Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
+most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):
+- [ ] **By Mon Nov 3** (the battle system is built that week): Samira's *Daftar* skill spends **gold** instead of the
+  Wealth score (Wealth is never spent), and grows with the realm's Wealth. Proposal in `COMBAT.md`.
+- [ ] **By Sun Nov 15** (Milestone 2, before Chapter 3 is planned): the story slice. Zetwal + Xaraguá + Ardencia skips
+  Chapter 3 (Al-Doria). Keep it (Chapter 4 levels scale down when Chapter 3 is skipped) or include Chapter 3.
+- [ ] **By Mon Dec 1** (before the later capitals): Patricio in Aldermoor during the war (proposal: under a flag of
+  truce to negotiate the peace, where Thomas Stillwater met him).
+- [ ] **By Mon Dec 1:** the Aldermoor ledger (proposal: it shows the gold vanishing into coded accounts, so Gianna
+  does not learn Rael is good in Chapter 9; Haru reads the code after the Harbor Turn).
+- [ ] **By Mon Dec 1:** the betrayer's companion (proposal: they stay, defy their house a second time, and get a scene
+  and a stat boost in Chapter 11).
+- [ ] **By Mon Dec 1:** the Gen III rulers each companion defies: Layla (Al-Doria), Torvald (Skarragol), Kaede
+  (Kuroshi), Meera (Jwaladesh), Rosalind (Aldermoor).
+- [ ] **Wed Nov 18:** a fluent speaker checks the Kreyol and Taino words, starting with **Pòdlimyè**.
 
 ## What's in the box
 

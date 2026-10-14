@@ -1,11 +1,12 @@
-// Act I, Zetwal (guide 5.5): the objectives the Journal lists, in order, with Anissa's hints for each
+// Chapter 1, The Festival of the Gaze (Zetwal; the guide's Act I, 5.5; owner decision Oct 14: the story is
+// told in chapters). The id and flags keep the old `act1` name so saves stay valid. the objectives the Journal lists, in order, with Anissa's hints for each
 // (guide 6.2 rule 4: from a nudge to the answer), and the notes the Journal keeps.
 
 import type { JournalNote, QuestDef } from '../engine/quests.ts';
 
 export const ACT1: QuestDef = {
   id: 'act1',
-  title: 'Act I: The Mark',
+  title: 'Chapter 1: The Festival of the Gaze',
   maps: ['zetwal-town', 'zetwal-house', 'zetwal-temple'],
   objectives: [
     {

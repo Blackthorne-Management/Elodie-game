@@ -64,3 +64,5 @@ rather have all nine places by November 22 in a rougher first pass, say so and t
   environment's network settings), or audio you generate with a tool and upload, or a mix. Music in the style of
   each culture: for Pòdlimyè, twoubadou and kompa guitar for the city, rara horns for the festival.
 - **Intro content** (by Oct 17): the storyboard comes to you first.
+- **Story questions** (by Nov 3, Nov 15 and Dec 1): listed with their dates in `docs/PRODUCTION.md` under "Quest
+  story questions for the owner".

@@ -809,7 +809,7 @@ export class GameMenu {
   private drawQuests(): void {
     const entries = this.questEntries();
     const flags = this.ctx!.flags;
-    const labels = entries.map((e) => (e.kind === 'main' ? 'Main: Act I' : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`));
+    const labels = entries.map((e) => (e.kind === 'main' ? 'Main: Chapter 1' : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`));
     this.drawList(labels, this.cursor, 6, TOP + 2, ROWS, this.stage === 'top');
     if (SIDE_QUESTS.every((q) => sideQuestStatus(flags, q) === 'unknown')) this.text(6, TOP + 2 + 2 * ROW_H, '  No side quests yet.', UI.dimText);
     const e = entries[this.cursor] ?? entries[0]!;
