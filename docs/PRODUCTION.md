@@ -29,6 +29,8 @@ and ticks items off here as they land. Last updated **Tue Oct 14**.
   Suzumori at 6 about 0.86x; Kay Soley at 2 to 4 slightly low. Decide before the Oct 31 freeze.
 - [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
+- [ ] Owner to approve: 3D attack animations (`docs/art/ATTACK-ANIMATIONS.md`), aiming for Nov 22; the
+  current duel screen stays wherever a model is not ready. Needs the 32 portraits first.
 
 **Quest art waiting on the owner:** young Patricio and Anicette (prompts given Oct 14). Still to write prompts for:
 Elodie the goddess, Elodie Limyè (the mother), Anicette young (the Echo) and old, Patricio young and old; later Benny,
