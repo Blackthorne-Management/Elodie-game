@@ -411,7 +411,7 @@ const frames = (page) => page.evaluate(() => new Promise((r) => requestAnimation
 async function finishTyping(page) {
   for (let i = 0; i < 10; i++) {
     const s = await snap(page);
-    if (!s.dialogue?.typing) return s;
+    if (s.mode === 'showcase' || !s.dialogue?.typing) return s;
     await page.keyboard.press('KeyZ');
     await page.waitForFunction(() => !window.__quest.snapshot().dialogue?.typing, null, { timeout: 3000 }).catch(() => {});
   }
@@ -449,6 +449,36 @@ async function markChecks(page, sim, name) {
   if (name === 'bridge-before') check(s.flags['anchor.chain_bridge'] !== true, 'the bridge is still raised');
 }
 
+/**
+ * The item showcase is browser-only (the simulator has no screen): when one is up, check it (the first
+ * time each item shows), photograph the Locket's, skip its rise with A and close it with a tap.
+ */
+async function handleShowcase(page, seen, shots) {
+  const s = await snap(page);
+  if (s.mode !== 'showcase') return false;
+  const v = s.showcase;
+  if (!seen.has(v.id)) {
+    seen.add(v.id);
+    if (v.id === 'sun_locket') {
+      check(v.banner === 'Key item' && v.name === 'Sun Locket', 'receiving the Sun Locket pops up its showcase');
+      check(v.abilities[0]?.startsWith('Echo: '), `its known ability shows ("${v.abilities[0]}")`);
+      check(v.abilities.includes('Two halves of a promise: ???'), 'abilities not learned yet show as ???');
+      await page.waitForTimeout(700); // the rise, the rays and the words
+      await page.keyboard.up('Shift');
+      await shoot(page, 'locket-showcase', shots);
+      await page.keyboard.down('Shift');
+    }
+  }
+  await page.keyboard.press('KeyZ'); // finishes the rise (or closes it, if it had finished)
+  await frames(page);
+  if ((await snap(page)).mode === 'showcase') {
+    const at = await page.evaluate(() => window.__quest.gameToScreen(160, 90));
+    await page.mouse.click(at.x, at.y);
+  }
+  await page.waitForFunction(() => window.__quest.snapshot().mode !== 'showcase', null, { timeout: 3000 });
+  return true;
+}
+
 async function playAct(browser, errors) {
   console.log('Act I, Zetwal (scripted route, checked against the simulator after every key):');
   const route = parseRoute(readJson('routes/zetwal-act1.json'));
@@ -464,6 +494,7 @@ async function playAct(browser, errors) {
   await page.keyboard.down('Shift'); // run
 
   const shots = [];
+  const showcases = new Set();
   let anissaShot = false;
   let keys = 0;
   const started = Date.now();
@@ -478,6 +509,7 @@ async function playAct(browser, errors) {
       if (cmd === 'skip') {
         sim.press('skip');
         for (let i = 0; i < 300; i++) {
+          if (await handleShowcase(page, showcases, shots)) continue;
           const s = await finishTyping(page);
           if (s.mode !== 'dialogue') break;
           if (!anissaShot && s.dialogue?.speaker === 'Anissa') {
@@ -491,6 +523,7 @@ async function playAct(browser, errors) {
           await frames(page);
         }
       } else {
+        await handleShowcase(page, showcases, shots);
         if (mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel')) await finishTyping(page);
         sim.press(cmd);
         if (cmd.includes('-')) await pressDiagonal(page, cmd);
@@ -498,6 +531,7 @@ async function playAct(browser, errors) {
         keys++;
         await frames(page);
       }
+      await handleShowcase(page, showcases, shots);
       await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
     }
   }
@@ -506,11 +540,42 @@ async function playAct(browser, errors) {
   check(s.flags['act1.complete'] === true && s.flags['card.act1_end'] === true, `played Act I to the end card in the browser (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
   check(s.flags['anchor.chain_bridge'] === true && s.flags['story.bridge_crossed'] === true, 'the bridge puzzle was solved through the Echo and its anchor');
   check(Object.keys(s.flags).every((f) => !f.startsWith('echo.')), 'no memory-only flags leaked into the present');
+  check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
+  // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
+  await menuTab(page, 'Items');
+  for (let i = 0; i < 30; i++) {
+    const m = (await snap(page)).menu;
+    if (m.items[m.cursor]?.startsWith('Sun Locket')) break;
+    await page.keyboard.press('ArrowDown');
+    await frames(page);
+  }
+  await page.keyboard.press('KeyZ');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'showcase', null, { timeout: 2000 });
+  const replay = (await snap(page)).showcase;
+  check(replay.id === 'sun_locket' && replay.abilities.some((a) => a.startsWith('Anchors: What you change')), 'the Items page replays the Locket, with Anchors now known');
+  await page.keyboard.press('KeyZ');
+  await frames(page);
+  if ((await snap(page)).mode === 'showcase') await page.keyboard.press('KeyZ');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'menu', null, { timeout: 2000 });
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   await menuTab(page, 'Quests');
   const journal = (await snap(page)).menu.journal;
   check(journal.some((l) => l.startsWith('Something changed: The Chain Bridge')), 'the Journal notes "Something changed: The Chain Bridge ..."');
   await page.keyboard.press('x');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  // The other two tiers, for the screenshots: a legendary (secret) item and a quest reward card.
+  for (const [id, tier] of [['solange_quill', 'legendary'], ['sun_charm', 'reward']]) {
+    await page.evaluate((i) => window.__quest.showItem(i), id);
+    await page.waitForFunction(() => window.__quest.snapshot().mode === 'showcase', null, { timeout: 2000 });
+    check((await snap(page)).showcase.tier === tier, `the ${tier} showcase shows (${id})`);
+    await page.waitForTimeout(700);
+    await shoot(page, `${tier}-showcase`, shots);
+    await page.keyboard.press('KeyZ');
+    await frames(page);
+    if ((await snap(page)).mode === 'showcase') await page.keyboard.press('KeyZ');
+    await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  }
   await menuSelect(page, 'Credits');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'journal', null, { timeout: 2000 });
   check((await snap(page)).journal[0] === 'CREDITS', 'the menu has a Credits screen');

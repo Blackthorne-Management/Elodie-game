@@ -7,6 +7,7 @@ import {
   ART_FILES,
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
+  ITEM_ART,
   MARKER_TEXTURES,
   NPC_SPRITES,
   OBJECT_ART,
@@ -18,6 +19,7 @@ import {
   UI,
   characterFrame,
   textureKeyForCharacter,
+  textureKeyForItem,
   textureKeyForObject,
   textureKeyForPortrait,
   type PlaceholderPortrait,
@@ -81,6 +83,7 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
     ...Object.entries(PORTRAITS).map(([key, def]) => ART_FILES.portrait(portraitArt(key, def))),
     ...TILESET.tiles.map((t) => ART_FILES.tile(t.name)),
     ...Object.keys(OBJECT_ART).map(ART_FILES.object),
+    ...Object.keys(ITEM_ART).map(ART_FILES.item),
   ];
   for (const path of paths) {
     const url = artFile(path);
@@ -182,6 +185,19 @@ function makeObjectArt(scene: Phaser.Scene): void {
   }
 }
 
+/** Item drawings for the showcase: an art file when there is one, else the placeholder. */
+function makeItemArt(scene: Phaser.Scene): void {
+  for (const [id, art] of Object.entries(ITEM_ART)) {
+    const file = fileImage(scene, ART_FILES.item(id));
+    const w = file ? file.width : art.rows[0]!.length;
+    const h = file ? file.height : art.rows.length;
+    const { tex, ctx } = canvasTexture(scene, textureKeyForItem(id), w, h);
+    if (file) ctx.drawImage(file, 0, 0);
+    else artPix(art).draw(ctx, 0, 0);
+    tex.refresh();
+  }
+}
+
 /** A 4 x 4 ordered-dither dot pattern for the Echo filter. */
 function makeDither(scene: Phaser.Scene): void {
   const { tex, ctx } = canvasTexture(scene, ECHO_DITHER_TEXTURE, 4, 4);
@@ -274,6 +290,7 @@ function makePortraits(scene: Phaser.Scene): void {
 export function makeAllTextures(scene: Phaser.Scene): void {
   makeTileset(scene);
   makeObjectArt(scene);
+  makeItemArt(scene);
   makeDither(scene);
   makeMarkers(scene);
   makeCharacters(scene);

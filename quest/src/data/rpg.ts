@@ -12,7 +12,36 @@ const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
 
 const ITEM_LIST: ItemDef[] = [
   // Story items.
-  { id: 'sun_locket', name: 'Sun Locket', kind: 'key', price: 0, text: "Grandfather's locket: half of the token he and Lord Benny made. It hums near the past." },
+  {
+    id: 'sun_locket',
+    name: 'Sun Locket',
+    kind: 'key',
+    price: 0,
+    text: "Grandfather's locket: half of the token he and Lord Benny made. It hums near the past.",
+    showcase: 'story',
+    abilities: [
+      { name: 'Echo', text: 'Where the air shimmers, step into what that place remembers.' },
+      {
+        name: 'Anchors',
+        text: 'What you change in the past can stay changed in the present.',
+        known: { any: [{ flag: 'anchor.night_orders' }, { flag: 'anchor.chain_bridge' }] },
+      },
+      // Revealed in Ardencia (Chapter 4), when Lord Rael's signet glows beside it.
+      { name: 'Two halves of a promise', text: 'Near its other half, the Brasador signet, both halves glow.', known: { flag: 'story.signet_glowed' } },
+    ],
+  },
+  // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital.
+  {
+    id: 'solange_quill',
+    name: "Solange's Quill",
+    kind: 'key',
+    price: 0,
+    text: 'The quill Mother Solange wrote the first names with. The nib is worn to a slant by her hand.',
+    showcase: 'legendary',
+    abilities: [
+      { name: 'Say Their Names', text: 'Once per battle, every Bound or fallen ally rises with 30% HP, and Anissa gains Calm and Spark.' },
+    ],
+  },
 
   // Zetwal food and drink (guide 8: restorative soup in a clay pot).
   { id: 'soup_pot', name: 'Clay-pot soup', kind: 'consumable', price: 30, heals: 40, text: 'Squash soup in a clay pot, still warm. Restores 40 HP, a little at a time.' },
@@ -34,7 +63,7 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'padded_vest', level: 3, name: 'Padded vest', kind: 'gear', slot: 'armor', price: 140, stats: { def: 4, hp: 6 }, text: 'Quilted cotton over leather. Anyone can wear it.' },
 
   // Charms (guide 8: the sun-stitched cloth charm).
-  { id: 'sun_charm', level: 2, name: 'Sun-stitched charm', kind: 'gear', slot: 'charm', price: 90, stats: { hp: 8, def: 1 }, text: 'A cloth charm stitched with a sun. In battle it will heal a little each turn.' },
+  { id: 'sun_charm', level: 2, name: 'Sun-stitched charm', kind: 'gear', slot: 'charm', price: 90, stats: { hp: 8, def: 1 }, text: 'A cloth charm stitched with a sun. In battle it will heal a little each turn.', showcase: 'reward' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
 ];
 

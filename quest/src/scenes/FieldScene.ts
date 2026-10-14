@@ -43,6 +43,9 @@ import { GameMenu, type MenuRequest, type MenuTab } from '../ui/GameMenu.ts';
 import type { MenuItem } from '../ui/MenuPanel.ts';
 import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
+import { ItemShowcase } from '../ui/ItemShowcase.ts';
+import { itemArtKey } from '../assets.config.ts';
+import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
 import { RPG } from '../data/rpg.ts';
 import { cityOf, level, partyMembers } from '../engine/rpg.ts';
 import { rewardText, settleRewards } from '../engine/sideQuests.ts';
@@ -53,7 +56,7 @@ import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
 import { tilemapKey } from './BootScene.ts';
 
-type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop';
+type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase';
 
 /** How long the glow on an object changed through the Echo lasts. */
 const CHANGED_GLOW_MS = 3600;
@@ -87,6 +90,8 @@ export interface FieldSnapshot {
   dialogue: ReturnType<DialogueBox['snapshot']>;
   menu: ReturnType<GameMenu['snapshot']>;
   shop: ReturnType<ShopPanel['snapshot']>;
+  /** The item showcase on screen (null when none). */
+  showcase: ReturnType<ItemShowcase['snapshot']>;
   minimap: string | null;
   journal: string[] | null;
   card: string[] | null;
@@ -139,6 +144,9 @@ export class FieldScene extends Phaser.Scene {
   private dialogue!: DialogueBox;
   private menu!: GameMenu;
   private shopPanel!: ShopPanel;
+  private showcase!: ItemShowcase;
+  /** The mode to go back to when the item showcase closes. */
+  private showcaseReturn: UiMode = 'field';
   private minimap: SideMap | null = null;
   private toast!: Toast;
   private hint!: HintBubble;
@@ -244,6 +252,7 @@ export class FieldScene extends Phaser.Scene {
     this.dialogue = new DialogueBox(this);
     this.menu = new GameMenu(this);
     this.shopPanel = new ShopPanel(this);
+    this.showcase = new ItemShowcase(this);
     this.toast = new Toast(this);
     this.hint = new HintBubble(this);
     this.panel = new TextPanel(this);
@@ -259,6 +268,7 @@ export class FieldScene extends Phaser.Scene {
       snapshot: () => this.snapshot(),
       tileToScreen: (x, y) => this.tileToScreen(x, y),
       gameToScreen: (x, y) => this.gameToScreen(x, y),
+      showItem: (id) => this.openShowcase(id),
     };
 
     // Resume a dialogue or card the logic is in (after a door), then run on-enter scenes.
@@ -274,6 +284,8 @@ export class FieldScene extends Phaser.Scene {
     // Anissa's hint, menus, shops and dialogue.
     const onPicture = document.body.dataset.layout === 'overlay';
     this.minimap?.setVisible(!onPicture || (this.mode === 'field' && !this.hint.visible));
+    // A newly received important item interrupts the field or a conversation (engine/showcase.ts).
+    if (this.mode === 'field' || this.mode === 'dialogue') this.showPendingItem();
     switch (this.mode) {
       case 'field':
         this.tickHints(delta);
@@ -312,9 +324,42 @@ export class FieldScene extends Phaser.Scene {
           input.clearPresses();
         }
         break;
+      case 'showcase':
+        if (this.showcase.update(input)) this.closeShowcase();
+        break;
       case 'modal':
         break;
     }
+  }
+
+  // ---- The item showcase ---------------------------------------------------------------------
+
+  /** Show the first important item received and not yet presented, if any. */
+  private showPendingItem(): void {
+    const item = pendingShowcases(this.logic.state.flags, RPG)[0];
+    if (!item) return;
+    markShown(this.logic.state.flags, item.id);
+    this.openShowcase(item.id);
+  }
+
+  /** Show an item's showcase over whatever is on screen (also the menu's replay). */
+  private openShowcase(id: string): void {
+    const item = RPG.items[id];
+    if (!item) return;
+    this.cancelWalk();
+    this.showcaseReturn = this.mode;
+    this.mode = 'showcase';
+    this.dialogue.conceal(true);
+    this.hint.hide();
+    this.showcase.open(showcaseView(this.logic.state.flags, item), itemArtKey(item.id, item.kind));
+    this.rt.input.clearPresses();
+  }
+
+  private closeShowcase(): void {
+    this.showcase.close();
+    this.dialogue.conceal(false);
+    this.mode = this.showcaseReturn;
+    this.rt.input.clearPresses();
   }
 
   // ---- Effects -------------------------------------------------------------------------------
@@ -505,6 +550,9 @@ export class FieldScene extends Phaser.Scene {
       }
       case 'card':
         this.rt.input.inject('confirm');
+        return;
+      case 'showcase':
+        if (this.showcase.tap()) this.closeShowcase();
         return;
       case 'journal':
         this.rt.input.inject('cancel');
@@ -1108,6 +1156,7 @@ export class FieldScene extends Phaser.Scene {
       }
       if (r.kind === 'toast') this.toast.show(r.text);
       if (r.kind === 'system') this.runSystem(r.id);
+      if (r.kind === 'showcase') this.openShowcase(r.id);
     }
   }
 
@@ -1209,6 +1258,7 @@ export class FieldScene extends Phaser.Scene {
       dialogue: this.dialogue.snapshot(),
       menu: this.menu.snapshot(),
       shop: this.shopPanel.snapshot(),
+      showcase: this.showcase.snapshot(),
       minimap: this.minimap?.visible ? this.minimap.place : null,
       journal: this.mode === 'journal' ? this.panel.snapshot() : null,
       card: this.mode === 'card' ? this.panel.snapshot() : null,
@@ -1223,12 +1273,14 @@ export class FieldScene extends Phaser.Scene {
 
 declare global {
   interface Window {
-    /** Read-only test hook used by the Playwright smoke test. */
+    /** Test hook used by the Playwright smoke test (reads state; showItem only displays). */
     __quest?: {
       ready: boolean;
       snapshot: () => FieldSnapshot;
       tileToScreen: (x: number, y: number) => { x: number; y: number };
       gameToScreen: (x: number, y: number) => { x: number; y: number };
+      /** Show an item's showcase (display only: it changes no flags), for screenshots of every tier. */
+      showItem: (id: string) => void;
     };
   }
 }

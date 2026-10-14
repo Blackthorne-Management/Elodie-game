@@ -4,9 +4,9 @@
 // ART_FILES describes into quest/art/ and it is used instead of the placeholder (a missing file
 // keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
 
-import { OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt } from './assets.pixels.ts';
+import { ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
-export { OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt };
+export { ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt };
 
 /** Pattern drawn on top of a placeholder tile's base colour so tiles read at a glance. */
 export type TilePattern = 'flat' | 'dots' | 'grid' | 'stripes' | 'cross' | 'border' | 'blob' | 'wave';
@@ -290,12 +290,15 @@ export const PORTRAIT_SIZE = 48;
  *  portraits/<portrait>.png  48 x 48 dialogue portrait (the neutral face).
  *  tiles/<tile name>.png   16 x 16 tile, by TILESET name (e.g. tiles/grass.png, tiles/winch.png).
  *  objects/<kind>.png      a large object drawing by OBJECT_ART name (e.g. objects/gaze_lamp_lit.png).
+ *  items/<id>.png          an item drawing for the item showcase, by item id (e.g. items/sun_locket.png),
+ *                          any size; square, about 32 to 64 px, reads best.
  */
 export const ART_FILES = {
   character: (look: string) => `characters/${look}.png`,
   portrait: (key: string) => `portraits/${key}.png`,
   tile: (name: string) => `tiles/${name}.png`,
   object: (kind: string) => `objects/${kind}.png`,
+  item: (id: string) => `items/${id}.png`,
   /** Walk sheet layout. */
   sheetColumns: 3,
   sheetRows: ['down', 'left', 'right', 'up'] as const,
@@ -373,3 +376,31 @@ export const CHARACTER_LABEL_GAP = 2;
 
 /** The interaction marker textures. */
 export const MARKER_TEXTURES = { talk: 'marker-talk', use: 'marker-use' } as const;
+
+/** Item drawings (ITEM_ART, or a file in art/items/), one texture each. */
+export function textureKeyForItem(artKey: string): string {
+  return `item-${artKey}`;
+}
+
+/** The drawing an item uses: its own, else the fallback for its kind. */
+export function itemArtKey(id: string, kind: 'consumable' | 'gear' | 'key'): string {
+  return ITEM_ART[id] ? id : kind === 'gear' ? 'gear' : 'key';
+}
+
+/** The item showcase (ui/ItemShowcase.ts): timings in ms, sizes in screen pixels, colours. */
+export const SHOWCASE = {
+  dimAlpha: 0.9,
+  cardDimAlpha: 0.6,
+  /** The item drawing's size on screen (it is scaled up to fit this box). */
+  artPx: 36,
+  cardArtPx: 24,
+  riseMs: 520,
+  raysColor: 0xfff2a0,
+  raysAlpha: 0.22,
+  raysTurnMs: 9000,
+  glowColor: 0xfff2a0,
+  legendaryColor: '#f2d04b',
+  storyColor: '#9ad8ff',
+  rewardColor: '#7fbf7a',
+  sparkleCount: 10,
+} as const;

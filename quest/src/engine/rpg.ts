@@ -47,6 +47,22 @@ export interface ItemDef {
   /** Gear level: worn below it, the item gives only part of its bonus (GEAR_UNDERLEVEL_SHARE). */
   level?: number;
   text: string;
+  /**
+   * How the item is presented the first time it is received (engine/showcase.ts): 'story' and
+   * 'legendary' get the full showcase, 'reward' a small card. Unset: no popup (shop goods, soup).
+   */
+  showcase?: ShowcaseTier;
+  /** What the item can do, each line hidden ("???") until the story has explained it. */
+  abilities?: readonly ItemAbility[];
+}
+
+export type ShowcaseTier = 'story' | 'legendary' | 'reward';
+
+export interface ItemAbility {
+  name: string;
+  text: string;
+  /** Known once this holds (always known when unset). */
+  known?: Condition;
 }
 
 export interface MemberDef {

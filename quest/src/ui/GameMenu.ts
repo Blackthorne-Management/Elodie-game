@@ -41,6 +41,7 @@ import {
   type MemberDef,
   type Slot,
 } from '../engine/rpg.ts';
+import { canReplay } from '../engine/showcase.ts';
 import type { Era } from '../engine/types.ts';
 import type { InputManager } from '../input/actions.ts';
 import type { MenuItem } from './MenuPanel.ts';
@@ -49,7 +50,7 @@ import type { PanelLine } from './TextPanel.ts';
 export const MENU_TABS = ['Status', 'Items', 'Equip', 'Quests', 'Map', 'Foes', 'System'] as const;
 export type MenuTab = (typeof MENU_TABS)[number];
 
-export type MenuRequest = { kind: 'close' } | { kind: 'system'; id: string } | { kind: 'toast'; text: string };
+export type MenuRequest = { kind: 'close' } | { kind: 'system'; id: string } | { kind: 'toast'; text: string } | { kind: 'showcase'; id: string };
 
 export interface MenuContext {
   flags: FlagStore;
@@ -268,6 +269,8 @@ export class GameMenu {
             return [];
           }
           if (it.kind === 'consumable') return [{ kind: 'toast', text: 'Everyone is well. Keep it for a fight.' }];
+          // Story and legendary items: show the item again, with every ability learned so far.
+          if (canReplay(it)) return [{ kind: 'showcase', id: it.id }];
           return [{ kind: 'toast', text: it.text }];
         }
         const who = this.wearers(this.item!)[this.subCursor];
@@ -513,7 +516,7 @@ export class GameMenu {
       this.text(X, TOP + 84, 'Who wears it?', UI.accentText);
       this.drawList(this.wearers(this.item).map((m) => m.name), this.subCursor, X, TOP + 96, 5, true, (i) => this.tapSub(i));
     }
-    this.text(6, VIEW_HEIGHT - 12, `A: use or equip   B: back   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}`, UI.dimText);
+    this.text(6, VIEW_HEIGHT - 12, `A: use, equip or view   B: back   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}`, UI.dimText);
   }
 
   private drawEquip(): void {

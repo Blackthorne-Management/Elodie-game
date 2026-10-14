@@ -74,6 +74,8 @@ export class DialogueBox {
     scene.tweens.add({ targets: this.more, alpha: 0.2, duration: 400, yoyo: true, repeat: -1 });
   }
 
+  private concealed = false;
+
   get visible(): boolean {
     return this.root.visible;
   }
@@ -145,7 +147,19 @@ export class DialogueBox {
     this.refresh();
   }
 
+  /** Hide the box for a moment (under the item showcase) without losing its place; false brings it back. */
+  conceal(on: boolean): void {
+    if (on) {
+      this.concealed = this.root.visible;
+      this.root.setVisible(false);
+    } else if (this.concealed) {
+      this.concealed = false;
+      this.root.setVisible(true);
+    }
+  }
+
   hide(): void {
+    this.concealed = false;
     this.root.setVisible(false);
     this.view = { kind: 'end' };
   }

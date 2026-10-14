@@ -26,9 +26,9 @@ The board game comes first where they clash: its dates are fixed by the printer.
 | Fri Oct 17 | | Art prompts: Elodie the goddess, Elodie Limyè, Anicette young and old, Patricio young and old | Prompts sent |
 | Mon Oct 20 | (Board order day: no quest asks) | Chapter 1 side quests built (no fighting), each with its own NPC lines: **done Oct 14** | Playable, tested |
 | Wed Oct 22 | | The street debate corner (Gaze keeper vs. Quiet Crown recruiter), the last NPC lines, every Pòt Limyè section finished | Smoke test plays them |
-| Fri Oct 24 | **Art drop 1:** the six character sets above (reference, portrait, sprites), plus 3 intro illustrations | Convert every set the day it arrives | In the game |
+| Fri Oct 24 | **Art drop 1:** the six character sets above (reference, portrait, sprites), plus 3 intro illustrations, plus 2 item pictures for the item popup (the Sun Locket, Solange's Quill; square, 32 to 64 px, into `quest/art/items/`) | Convert every set the day it arrives | In the game |
 | Sun Oct 26 | | The animated intro (in-engine: pans, fades, parallax, text, music cue), skippable | Plays on phone and desktop |
-| Tue Oct 28 | Choose the audio source (see Open decisions) | Audio for Pòt Limyè: festival and city music, temple and Echo themes, sound effects, wordless voice sounds | You hear it |
+| Tue Oct 28 | Choose the audio source (see Open decisions) | Audio for Pòt Limyè: festival and city music, temple and Echo themes, sound effects (with an "item received" fanfare for the item popup), wordless voice sounds | You hear it |
 | Thu Oct 30 | Play Chapter 1 start to finish on your phone; send notes | Fix list from your notes; balance XP and gold | Notes closed |
 | **Sun Nov 1** | **Sign off Milestone 1** | Final checks; the build guide updated | Your sign-off |
 

@@ -910,3 +910,115 @@ export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
     ],
   },
 };
+
+/**
+ * 16 x 16 item drawings for the item showcase (engine/showcase.ts), by item id, plus the fallbacks `key`
+ * and `gear` for items with no drawing of their own (assets.config.ts itemArtKey). Shown enlarged.
+ */
+export const ITEM_ART: Readonly<Record<string, PixelArt>> = {
+  // The Sun Locket: a gold sun on a loop of chain.
+  sun_locket: {
+    rows: [
+      '.......kk.......',
+      '......kNNk......',
+      '.....kNkkNk.....',
+      '.....YkNNkY.....',
+      '......ykky......',
+      '......kkkk......',
+      '.....kYYYyk.....',
+      '..YykYYYyyykyY..',
+      '....kYYWWyyk....',
+      '...kYYyWWyyok...',
+      '....kyyWWyok....',
+      '..YykyyyyookyY..',
+      '.....kyyook.....',
+      '......kkkk......',
+      '......y..y......',
+      '.....Y....Y.....',
+    ],
+  },
+  // Solange's Quill: a cream feather with a worn gold nib.
+  solange_quill: {
+    rows: [
+      '............kk..',
+      '...........kWwk.',
+      '..........kWwk.k',
+      '.........kWwkbkG',
+      '........kWwkbkhh',
+      '.......kWwkbkhhk',
+      '......kWwkbkhhk.',
+      '......kwkbkhhk..',
+      '.....kwkbkhhk...',
+      '....kwkbkhhk....',
+      '.....kbkhkk.....',
+      '....kbkhk.......',
+      '..kkbk.k........',
+      '.kKyk...........',
+      '..kk............',
+      '................',
+    ],
+  },
+  // The Sun-stitched charm: red cloth with a gold sun, on a cord.
+  sun_charm: {
+    rows: [
+      '................',
+      '................',
+      '.......kk.......',
+      '......kNNk......',
+      '.....kNkkNk.....',
+      '....kNkkkkNk....',
+      '...krRRRRrRRk...',
+      '...kRRRYrRRRk...',
+      '...kRRYrRYRRk...',
+      '...kRYryyRRrk...',
+      '...kRrRyyRYRk...',
+      '...krRYRRYRRk...',
+      '...kRRRRYRRRk...',
+      '...kRRRrRRRRk...',
+      '....kkkkkkkk....',
+      '................',
+    ],
+  },
+  // Fallback for a key item with no drawing: an old iron key.
+  key: {
+    rows: [
+      '................',
+      '................',
+      '....kkk.........',
+      '...kIIIk........',
+      '..kIIkIIk.......',
+      '..kIk.kIk.......',
+      '..kIIkIIIk......',
+      '...kIIIkkIk.....',
+      '....kkk..kIk....',
+      '..........kIk...',
+      '...........kik..',
+      '..........kIkik.',
+      '.........kik.k..',
+      '..........k.....',
+      '................',
+      '................',
+    ],
+  },
+  // Fallback for gear with no drawing: a leather pouch.
+  gear: {
+    rows: [
+      '................',
+      '................',
+      '................',
+      '.......kk.......',
+      '......kNNk......',
+      '.....kbbbbk.....',
+      '.....kBBBBk.....',
+      '....knBBBBBk....',
+      '...knnBBBBBBk...',
+      '...knnBBBBBBk...',
+      '...knnBBBBBBk...',
+      '...knnBBBBBBk...',
+      '...knnBBBBBBk...',
+      '....knBBBBBk....',
+      '.....kkkkkk.....',
+      '................',
+    ],
+  },
+};
