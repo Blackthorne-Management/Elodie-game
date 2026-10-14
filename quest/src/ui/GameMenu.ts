@@ -74,6 +74,15 @@ const BAND_COLOURS = { trivial: '#8e8e9c', even: '#f4ecd8', hard: '#f0a040', dea
 
 type QuestEntry = { kind: 'main' } | { kind: 'side'; q: SideQuestDef };
 
+/** A tappable area (game pixels) and what a tap there does. */
+interface Hit {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  run: () => MenuRequest[];
+}
+
 export class GameMenu {
   private readonly scene: Phaser.Scene;
   private readonly root: Phaser.GameObjects.Container;
@@ -91,6 +100,8 @@ export class GameMenu {
   private mapView: 'city' | 'realm' = 'city';
   private scroll = 0;
   private journalLines: string[] = [];
+  /** Tappable areas of the current page (rebuilt on every draw). */
+  private hits: Hit[] = [];
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -151,6 +162,43 @@ export class GameMenu {
     }
     if (this.visible) this.draw();
     return out;
+  }
+
+  /**
+   * A tap (or click) at a point in game pixels: tabs switch, a row is selected (tapping the selected
+   * row again acts on it, like A), the X closes and Back goes up a step.
+   */
+  tap(x: number, y: number): MenuRequest[] {
+    const ctx = this.ctx;
+    if (!ctx) return [];
+    const hit = [...this.hits].reverse().find((h) => x >= h.x && x < h.x + h.w && y >= h.y && y < h.y + h.h);
+    if (!hit) return [];
+    const out = hit.run();
+    if (this.visible) this.draw();
+    return out;
+  }
+
+  private hit(x: number, y: number, w: number, h: number, run: () => MenuRequest[] | void): void {
+    this.hits.push({ x, y, w, h, run: () => run() ?? [] });
+  }
+
+  /** A tap on a row of the main list: select it, or act on it when it is already selected. */
+  private tapTop(i: number): MenuRequest[] {
+    if (this.stage !== 'top') {
+      this.stage = 'top';
+      this.cursor = i;
+      return [];
+    }
+    if (this.cursor === i) return this.confirm(this.ctx!);
+    this.cursor = i;
+    return [];
+  }
+
+  /** A tap on a row of a sub-list (who wears it, a slot, an item for a slot). */
+  private tapSub(i: number): MenuRequest[] {
+    if (this.subCursor === i) return this.confirm(this.ctx!);
+    this.subCursor = i;
+    return [];
   }
 
   // ---- Navigation ------------------------------------------------------------------------------
@@ -315,17 +363,28 @@ export class GameMenu {
     if (!ctx) return;
     this.content.removeAll(true);
     this.labels = [];
+    this.hits = [];
     const g = this.scene.add.graphics();
     this.content.add(g);
 
-    // Tabs.
+    // Tabs (tap one to open it), and the X that closes the menu.
     let x = 6;
     MENU_TABS.forEach((name, i) => {
       const on = i === this.tab;
       const t = this.text(x, 4, name, on ? UI.accentText : UI.dimText);
       if (on) g.fillStyle(0xf2d04b, 1).fillRect(x, 14, Math.ceil(t.width), 1);
-      x += Math.ceil(t.width) + 10;
+      this.hit(x - 4, 0, Math.ceil(t.width) + 8, 16, () => {
+        this.tab = i;
+        this.resetTab();
+      });
+      x += Math.ceil(t.width) + 8;
     });
+    this.text(VIEW_WIDTH - 12, 4, 'X', UI.text);
+    this.hit(VIEW_WIDTH - 20, 0, 20, 16, () => [{ kind: 'close' }]);
+    if (this.stage !== 'top') {
+      this.text(VIEW_WIDTH - 40, VIEW_HEIGHT - 12, '< Back', UI.accentText);
+      this.hit(VIEW_WIDTH - 46, VIEW_HEIGHT - 16, 46, 16, () => this.back());
+    }
 
     // The purse and the pillars: here (this city) and across the realm.
     const keys = Object.keys(ctx.flags.snapshot());
@@ -364,14 +423,27 @@ export class GameMenu {
   }
 
   /** A list with a cursor (scrolled so the cursor shows); records the labels for the snapshot. */
-  private drawList(labels: string[], cursor: number, x: number, y: number, rows = ROWS, active = true): void {
+  /**
+   * A list with a cursor (scrolled so the cursor shows); records the labels for the snapshot. Rows are
+   * tappable: `onTap` (default: the main list's select-then-act); arrows scroll a list too long to show.
+   */
+  private drawList(labels: string[], cursor: number, x: number, y: number, rows = ROWS, active = true, onTap?: (i: number) => MenuRequest[]): void {
     if (active) this.labels = labels;
     const first = Math.max(0, Math.min(cursor - rows + 1, labels.length - rows));
+    const tap = onTap ?? ((i: number) => this.tapTop(i));
     labels.slice(first, first + rows).forEach((l, i) => {
       const on = first + i === cursor;
-      this.text(x, y + i * ROW_H, `${on && active ? '>' : ' '} ${l}`, on && active ? UI.accentText : UI.text);
+      const t = this.text(x, y + i * ROW_H, `${on && active ? '>' : ' '} ${l}`, on && active ? UI.accentText : UI.text);
+      this.hit(x - 2, y + i * ROW_H - 1, Math.max(60, Math.ceil(t.width) + 6), ROW_H, () => tap(first + i));
     });
     if (labels.length === 0) this.text(x, y, '  (nothing)', UI.dimText);
+    if (labels.length > rows && active) {
+      const ax = x + Math.max(...labels.map((l) => l.length)) * 4.8 + 14;
+      this.text(ax, y, '▲', UI.accentText);
+      this.text(ax, y + (rows - 1) * ROW_H, '▼', UI.accentText);
+      this.hit(ax - 4, y - 2, 16, 16, () => this.move(-1));
+      this.hit(ax - 4, y + (rows - 1) * ROW_H - 2, 16, 16, () => this.move(1));
+    }
   }
 
   private drawStatus(g: Phaser.GameObjects.Graphics): void {
@@ -385,6 +457,9 @@ export class GameMenu {
       if (this.scene.textures.exists(key)) this.content.add(this.scene.add.image(8, y + 1, key).setOrigin(0, 0).setDisplaySize(22, 22));
       this.text(34, y + 2, m.name, on ? UI.accentText : UI.text);
       this.text(34, y + 12, m.support ? 'Support' : `Lv ${level(ctx.flags, RPG, m.id)}`, UI.dimText);
+      this.hit(5, y - 2, 98, 28, () => {
+        this.cursor = i;
+      });
     });
     this.labels = party.map((m) => m.name);
     const m = party[this.cursor];
@@ -436,7 +511,7 @@ export class GameMenu {
     }
     if (this.stage === 'who' && this.item) {
       this.text(X, TOP + 84, 'Who wears it?', UI.accentText);
-      this.drawList(this.wearers(this.item).map((m) => m.name), this.subCursor, X, TOP + 96, 5);
+      this.drawList(this.wearers(this.item).map((m) => m.name), this.subCursor, X, TOP + 96, 5, true, (i) => this.tapSub(i));
     }
     this.text(6, VIEW_HEIGHT - 12, `A: use or equip   B: back   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}`, UI.dimText);
   }
@@ -453,7 +528,14 @@ export class GameMenu {
       return `${SLOT_NAMES[slot].padEnd(7)} ${id ? RPG.items[id]?.name : '-'}`;
     });
     this.text(X, TOP + 2, `${m.name}'s gear`, UI.accentText);
-    this.drawList(slotLabels, this.stage === 'slot' ? this.subCursor : -1, X, TOP + 14, 3, this.stage === 'slot');
+    // Tapping a slot opens it straight away (from the member list too).
+    this.drawList(slotLabels, this.stage === 'slot' ? this.subCursor : -1, X, TOP + 14, 3, this.stage === 'slot', (i) => {
+      if (this.stage === 'slot' && this.subCursor === i) return this.confirm(this.ctx!);
+      this.member = m;
+      this.stage = 'slot';
+      this.subCursor = i;
+      return this.confirm(this.ctx!);
+    });
     const s = stats(ctx.flags, RPG, m);
     this.text(X, TOP + 52, STAT_KEYS.map((k) => `${STAT_NAMES[k]} ${s[k]}`).join('  '), UI.dimText, VIEW_WIDTH - X - 8);
     if (this.stage === 'pick' && this.slot) {
@@ -467,14 +549,17 @@ export class GameMenu {
         '(Remove)',
       ];
       this.text(X, TOP + 74, `${SLOT_NAMES[this.slot]} from the bag:`, UI.accentText);
-      this.drawList(labels, this.subCursor, X, TOP + 86, 5);
+      this.drawList(labels, this.subCursor, X, TOP + 86, 5, true, (i) => this.tapSub(i));
     }
   }
 
   private drawMap(g: Phaser.GameObjects.Graphics): void {
     const ctx = this.ctx!;
     const found = cityOf(RPG, ctx.mapId);
-    this.text(6, VIEW_HEIGHT - 12, `A: ${this.mapView === 'city' ? 'the realm' : 'the city'}`, UI.dimText);
+    this.text(6, VIEW_HEIGHT - 12, `A or tap: ${this.mapView === 'city' ? 'the realm' : 'the city'}`, UI.dimText);
+    this.hit(0, TOP, VIEW_WIDTH - 50, VIEW_HEIGHT - TOP, () => {
+      this.mapView = this.mapView === 'city' ? 'realm' : 'city';
+    });
     if (this.mapView === 'realm') return this.drawRealm(g, found?.city.id);
     if (!found) {
       this.text(8, TOP + 4, 'No city map for this place.', UI.dimText);
@@ -603,7 +688,17 @@ export class GameMenu {
     const fit = ROWS + 1;
     this.scroll = Math.min(this.scroll, Math.max(0, rows.length - fit));
     rows.slice(this.scroll, this.scroll + fit).forEach((r, i) => this.text(X, TOP + 2 + i * ROW_H, r.text, r.color ?? UI.text));
-    const hint = this.stage === 'read' ? 'Up/Down: scroll   B: back' : 'A: read   L/R: tabs';
+    // Tap the entry to read it; while reading, tap its top or bottom half to scroll.
+    const half = (fit * ROW_H) / 2;
+    this.hit(X - 4, TOP, VIEW_WIDTH - X, half, () => {
+      if (this.stage !== 'read') this.stage = 'read';
+      else this.move(-3);
+    });
+    this.hit(X - 4, TOP + half, VIEW_WIDTH - X, half, () => {
+      if (this.stage !== 'read') this.stage = 'read';
+      else this.move(3);
+    });
+    const hint = this.stage === 'read' ? 'Up/Down or tap: scroll' : 'A or tap: read';
     this.text(6, VIEW_HEIGHT - 12, hint, UI.dimText);
   }
 
@@ -638,6 +733,9 @@ export class GameMenu {
       const on = first + i === this.cursor;
       const colour = BAND_COLOURS[levelBand(RPG, yours, f.level)];
       this.text(6, TOP + 26 + i * ROW_H, `${on ? '>' : ' '} Lv ${String(f.level).padStart(2)}  ${f.name}`, on ? UI.accentText : colour);
+      this.hit(4, TOP + 25 + i * ROW_H, VIEW_WIDTH - 8, ROW_H, () => {
+        this.cursor = first + i;
+      });
       this.text(VIEW_WIDTH - 90, TOP + 26 + i * ROW_H, f.won ? 'beaten' : 'escaped', UI.dimText);
     });
   }

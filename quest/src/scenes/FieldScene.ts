@@ -39,7 +39,7 @@ import { getRuntime, saveGame, type Runtime } from '../runtime.ts';
 import { DialogueBox } from '../ui/DialogueBox.ts';
 import { HintBubble } from '../ui/HintBubble.ts';
 import { isFullscreen, isStandalone, toggleFullscreen } from '../ui/fullscreen.ts';
-import { GameMenu } from '../ui/GameMenu.ts';
+import { GameMenu, type MenuRequest, type MenuTab } from '../ui/GameMenu.ts';
 import type { MenuItem } from '../ui/MenuPanel.ts';
 import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
@@ -254,7 +254,12 @@ export class FieldScene extends Phaser.Scene {
     this.placeFollower();
 
     this.rt.input.clearPresses();
-    window.__quest = { ready: true, snapshot: () => this.snapshot(), tileToScreen: (x, y) => this.tileToScreen(x, y) };
+    window.__quest = {
+      ready: true,
+      snapshot: () => this.snapshot(),
+      tileToScreen: (x, y) => this.tileToScreen(x, y),
+      gameToScreen: (x, y) => this.gameToScreen(x, y),
+    };
 
     // Resume a dialogue or card the logic is in (after a door), then run on-enter scenes.
     if (this.logic.mode === 'dialogue') this.enterDialogueMode();
@@ -469,6 +474,13 @@ export class FieldScene extends Phaser.Scene {
 
   // ---- Tap to move ---------------------------------------------------------------------------
 
+  /** The page position of a point on the screen in game pixels (tests tap menus and boxes there). */
+  private gameToScreen(x: number, y: number): { x: number; y: number } {
+    const r = this.game.canvas.getBoundingClientRect();
+    const k = r.width / VIEW_WIDTH;
+    return { x: r.left + x * k, y: r.top + y * k };
+  }
+
   /** The page position of a tile's centre (tests tap there). */
   private tileToScreen(x: number, y: number): { x: number; y: number } {
     const r = this.game.canvas.getBoundingClientRect();
@@ -479,7 +491,39 @@ export class FieldScene extends Phaser.Scene {
 
   /** A tap or click on the picture: walk there, or up to the person or thing tapped and use it. */
   private onTap(p: Phaser.Input.Pointer): void {
-    if (this.mode !== 'field' || this.leaving) return;
+    if (this.leaving) return;
+    // Screens over the field take taps in screen pixels (game coordinates, not the camera's world).
+    switch (this.mode) {
+      case 'dialogue': {
+        const choice = this.dialogue.choiceAt(p.x, p.y);
+        if (this.dialogue.typing || this.dialogue.choiceCount === 0) this.rt.input.inject('confirm');
+        else if (choice !== null) {
+          this.dialogue.setCursor(choice);
+          this.rt.input.inject('confirm');
+        }
+        return;
+      }
+      case 'card':
+        this.rt.input.inject('confirm');
+        return;
+      case 'journal':
+        this.rt.input.inject('cancel');
+        return;
+      case 'menu':
+        this.runMenuRequests(this.menu.tap(p.x, p.y));
+        return;
+      case 'shop':
+        if (this.shopPanel.tap(p.x, p.y)) {
+          this.shopPanel.close();
+          this.mode = 'field';
+          this.rt.input.clearPresses();
+        }
+        return;
+      case 'field':
+        break;
+      default:
+        return;
+    }
     const x = p.worldX;
     const y = p.worldY;
     // A person is tapped anywhere on their sprite (it stands above their tile).
@@ -710,6 +754,10 @@ export class FieldScene extends Phaser.Scene {
   /** The minimap (a page element in the black bars) for this map and era, named after the city section. */
   private buildMinimap(era: Era): void {
     this.minimap ??= sharedSideMap();
+    // Tapping the minimap opens the full map (the menu's Map page: the city, then the realm).
+    this.minimap.onTap = () => {
+      if (this.mode === 'field' && !this.leaving) this.openMenu('Map');
+    };
     const found = cityOf(RPG, this.map.id);
     const raw = this.rt.rawMaps[this.map.id];
     if (raw) this.minimap.setMap(this.map, raw, era, found ? `${found.city.name}: ${found.section.name}` : '');
@@ -1012,7 +1060,8 @@ export class FieldScene extends Phaser.Scene {
     return items;
   }
 
-  private openMenu(): void {
+  private openMenu(tab: MenuTab = 'Status'): void {
+    this.cancelWalk();
     this.confirmNewGame = false;
     this.mode = 'menu';
     this.menu.open({
@@ -1021,7 +1070,7 @@ export class FieldScene extends Phaser.Scene {
       era: this.logic.era,
       journal: () => this.journalLines(),
       system: () => this.menuItems(),
-    });
+    }, tab);
   }
 
   private closeMenu(): void {
@@ -1041,6 +1090,11 @@ export class FieldScene extends Phaser.Scene {
     const input = this.rt.input;
     const before = this.menu.snapshot();
     const requests = this.menu.update(input);
+    this.runMenuRequests(requests, before);
+  }
+
+  /** Act on what the menu asked for (closing, a toast, a System choice). */
+  private runMenuRequests(requests: MenuRequest[], before = this.menu.snapshot()): void {
     const now = this.menu.snapshot();
     // Moving off "New game" cancels its confirmation.
     if (this.confirmNewGame && (now?.tab !== 'System' || now.items[now.cursor] !== before?.items[before.cursor])) {
@@ -1170,6 +1224,11 @@ export class FieldScene extends Phaser.Scene {
 declare global {
   interface Window {
     /** Read-only test hook used by the Playwright smoke test. */
-    __quest?: { ready: boolean; snapshot: () => FieldSnapshot; tileToScreen: (x: number, y: number) => { x: number; y: number } };
+    __quest?: {
+      ready: boolean;
+      snapshot: () => FieldSnapshot;
+      tileToScreen: (x: number, y: number) => { x: number; y: number };
+      gameToScreen: (x: number, y: number) => { x: number; y: number };
+    };
   }
 }

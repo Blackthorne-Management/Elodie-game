@@ -36,6 +36,8 @@ export class SideMap {
   private blink = true;
   private readonly timer: number;
   private pos: Pos = { x: 0, y: 0 };
+  /** Called when the minimap is tapped or clicked (the field opens the full map). */
+  onTap: (() => void) | null = null;
 
   constructor(parent: HTMLElement) {
     this.root = document.createElement('div');
@@ -47,6 +49,13 @@ export class SideMap {
     this.label = document.createElement('div');
     this.label.className = 'side-map-label';
     this.root.append(this.canvas, this.label);
+    this.root.setAttribute('role', 'button');
+    this.root.setAttribute('aria-label', 'Open the map');
+    this.root.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+    this.root.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      this.onTap?.();
+    });
     parent.appendChild(this.root);
     this.timer = window.setInterval(() => {
       this.blink = !this.blink;

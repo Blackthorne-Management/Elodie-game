@@ -75,7 +75,7 @@ export function fitToScreen(setZoom: (zoom: number) => void, touch = false): () 
 
 /** Inside the game or the touch controls, where taps must never zoom or select. */
 function onPlayArea(target: EventTarget | null): boolean {
-  return target instanceof Element && target.closest('#game, .touch-overlay, .fs-button') !== null;
+  return target instanceof Element && target.closest('#game, .touch-overlay, .fs-button, .side-map') !== null;
 }
 
 /**

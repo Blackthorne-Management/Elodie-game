@@ -79,6 +79,11 @@ export class InputManager {
     return isDiagonal(dir) ? components(dir).every((d) => this.held(d)) : this.held(dir);
   }
 
+  /** Press a button from a tap on the picture (a dialogue line, a choice): it counts on the next update. */
+  inject(button: Button): void {
+    this.carry.push(button);
+  }
+
   /** Forget presses (used when a dialogue or menu closes, so the same press does not act twice). */
   clearPresses(): void {
     this.pressedNow.clear();

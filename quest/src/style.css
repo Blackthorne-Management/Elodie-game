@@ -174,7 +174,8 @@ body[data-layout='overlay'] .touch-top { right: calc(var(--edge) + 52px + env(sa
 .side-map {
   position: fixed;
   z-index: 9;
-  pointer-events: none;
+  cursor: pointer;
+  touch-action: none;
   --map-w: min(132px, calc(var(--vv-width, 100vw) - var(--game-left, 0px) - var(--game-width, 0px) - 12px));
   width: var(--map-w);
   left: calc(var(--vv-left, 0px) + var(--game-left, 0px) + var(--game-width, 0px) + (var(--vv-width, 100vw) - var(--game-left, 0px) - var(--game-width, 0px) - var(--map-w)) / 2);

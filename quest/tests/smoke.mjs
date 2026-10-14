@@ -43,6 +43,7 @@ const { chromium } = loadPlaywright();
 // The engine, content and maps, straight from the TypeScript sources (npm run smoke runs Node with
 // --experimental-strip-types).
 const { parseRoute } = await import('../src/engine/sim.ts');
+const { encodeSave } = await import('../src/engine/save.ts');
 const { newGameSim, readJson } = await import('../tools/sim-setup.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
 
@@ -734,11 +735,36 @@ async function main() {
     await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'dialogue', null, { timeout: 8000 });
     s = await snap(ppage);
     check(Math.abs(s.x - 11) + Math.abs(s.y - 10) === 1, `tapping the villager walks up to them and talks (stopped at ${s.x},${s.y})`);
-    for (let i = 0; i < 12 && (await snap(ppage)).mode === 'dialogue'; i++) {
-      await ppage.locator('.touch-a').tap();
-      await ppage.waitForTimeout(250);
+    // Tap the dialogue box to read on (and to pick the first choice when one comes up).
+    const tapGame = async (x, y) => {
+      const p = await ppage.evaluate(([gx, gy]) => window.__quest.gameToScreen(gx, gy), [x, y]);
+      await touch('touchStart', p.x, p.y);
+      await touch('touchEnd');
+      await ppage.waitForTimeout(120);
+    };
+    let choicesTapped = 0;
+    for (let i = 0; i < 16 && (await snap(ppage)).mode === 'dialogue'; i++) {
+      const d = (await snap(ppage)).dialogue;
+      if (d?.choices && !d.typing) {
+        // The choice box sits right-aligned just above the dialogue box (box top 120, rows 11 px).
+        const top = 120 - (d.choices.length * 11 + 6) - 2;
+        await tapGame(300, top + 3 + 5);
+        choicesTapped++;
+      } else await tapGame(160, 150);
+      await ppage.waitForTimeout(200);
     }
     await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 4000 });
+    check(choicesTapped > 0, `tapping the dialogue box reads on to the end, and a tap picks a choice (${choicesTapped})`);
+    // The minimap opens the full map; tabs and the X are tappable.
+    await ppage.locator('.side-map').tap();
+    await ppage.waitForFunction(() => window.__quest.snapshot().menu?.tab === 'Map', null, { timeout: 3000 });
+    check(true, 'tapping the minimap opens the map');
+    await tapGame(14, 8); // the Status tab
+    await ppage.waitForFunction(() => window.__quest.snapshot().menu?.tab === 'Status', null, { timeout: 3000 });
+    check(true, 'tapping a tab opens it');
+    await tapGame(314, 8); // the X
+    await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 3000 });
+    check(true, "tapping the menu's X closes it");
     await ppage.locator('.touch-small.touch-menu').tap();
     await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'menu', null, { timeout: 2000 });
     check(true, 'the touch Menu button opens the menu');
@@ -750,6 +776,45 @@ async function main() {
 
     await phoneFit(browser, errors);
     await fullscreenToggle(browser, errors);
+
+    // ---- Phone: a shop by taps, with the confirmation ------------------------------------------
+    console.log('Phone shop (touch):');
+    const shopCtx = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+    const sp = await shopCtx.newPage();
+    watchErrors(sp, errors);
+    await sp.goto(URL_BASE);
+    await waitReady(sp);
+    const shopCode = encodeSave({
+      version: 2, era: 'present', settings: { textSpeed: 'instant', hints: false }, savedAt: 1,
+      flags: { 'story.festival_intro': true, 'story.heard_speech': true, 'party.anissa': true }, mapId: 'zetwal-town', x: 12, y: 13, facing: 'left',
+    });
+    await sp.evaluate((c) => localStorage.setItem('bloodlines-quest.save', c), shopCode);
+    await sp.reload();
+    await waitReady(sp);
+    const scdp = await shopCtx.newCDPSession(sp);
+    const stap = async (fn, x, y) => {
+      const p = await sp.evaluate(([f, a, b]) => window.__quest[f](a, b), [fn, x, y]);
+      await scdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: p.x, y: p.y, id: 1 }] });
+      await scdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await sp.waitForTimeout(150);
+    };
+    await stap('tileToScreen', 11, 13); // the market vendor, right beside Gianna
+    for (let i = 0; i < 10 && (await snap(sp)).mode !== 'shop'; i++) await stap('gameToScreen', 160, 150);
+    await sp.waitForFunction(() => window.__quest.snapshot().mode === 'shop', null, { timeout: 4000 });
+    check(true, 'tapping the vendor, then her lines, opens her shop');
+    const gold0 = (await snap(sp)).flags.gold ?? 150;
+    await stap('gameToScreen', 60, 42 + 2 * 12 + 5); // choose the third item (the mango)
+    await stap('gameToScreen', 60, 42 + 2 * 12 + 5); // tap it again: the confirmation
+    let shop = (await snap(sp)).shop;
+    check(shop.confirming && shop.message.startsWith('Buy Ripe mango for 10 gold?'), `tapping an item twice asks first ("${shop.message}")`);
+    check(((await snap(sp)).flags.gold ?? 150) === gold0, 'nothing is bought before Yes');
+    await stap('gameToScreen', 128, 124); // Yes
+    shop = (await snap(sp)).shop;
+    check(!shop.confirming && (await snap(sp)).flags.gold === gold0 - 10, `Yes buys it (gold ${gold0} to ${(await snap(sp)).flags.gold})`);
+    await stap('gameToScreen', 296, 8); // Leave
+    await sp.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 3000 });
+    check(true, 'tapping Leave closes the shop');
+    await shopCtx.close();
 
     // ---- Phone, portrait (still playable, with a rotate hint) -------------------------------
     const portrait = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });

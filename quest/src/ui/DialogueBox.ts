@@ -45,6 +45,7 @@ export class DialogueBox {
   private elapsed = 0;
   private cps: number = TEXT_SPEEDS.normal;
   private cursor = 0;
+  private choiceBox = { x: 0, y: 0, w: 0, h: 0 };
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -87,6 +88,25 @@ export class DialogueBox {
 
   get choiceCursor(): number {
     return this.cursor;
+  }
+
+  /** Point at a choice (a tap on it). */
+  setCursor(index: number): void {
+    if (index < 0 || index >= this.choiceCount) return;
+    this.cursor = index;
+    this.refresh();
+  }
+
+  /** The choice under a point on the screen (game pixels), or null. */
+  choiceAt(x: number, y: number): number | null {
+    if (this.view.kind !== 'choice' || !this.choiceBg.visible) return null;
+    const i = this.choiceTexts.findIndex((t) => y >= t.y - 1 && y < t.y + 10 && x >= this.choiceBox.x && x < this.choiceBox.x + this.choiceBox.w);
+    return i >= 0 ? i : null;
+  }
+
+  /** Whether a point is on the dialogue box (or its name tag). */
+  contains(x: number, y: number): boolean {
+    return this.root.visible && x >= BOX_X && x < BOX_X + BOX_W && y >= BOX_Y - 13 && y < BOX_Y + BOX_H;
   }
 
   show(view: DialogueView, speed: TextSpeed): void {
@@ -180,6 +200,7 @@ export class DialogueBox {
     const h = texts.length * lineH + 6;
     const x = BOX_X + BOX_W - w;
     const y = BOX_Y - h - 2;
+    this.choiceBox = { x, y, w, h };
     this.choiceBg.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(x, y, w, h);
     this.choiceBg.lineStyle(1, UI.boxBorder, 1).strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
     texts.forEach((t, i) => t.setPosition(x + 4, y + 3 + i * lineH));
