@@ -4,6 +4,15 @@
 
 import type { EncounterTable } from '../engine/content.ts';
 
+/**
+ * Story flags that chapters not built yet will set (owner decision, Oct 14: no fights in Chapter 1;
+ * the wild sections turn violent when the story brings the party back). Maps may read them already.
+ */
+export const LATER_STORY_FLAGS: readonly string[] = [
+  /** The party returns to Zetwal later in the story: the Cane Road's ambushes begin. */
+  'story.zetwal_return',
+];
+
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
   // Zetwal: the Cane Road beyond the east gate.
   cane_road: {

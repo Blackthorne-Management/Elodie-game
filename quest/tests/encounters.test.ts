@@ -8,6 +8,7 @@ import { GameLogic, encounterFlag, type Effect } from '../src/engine/game.ts';
 import { newGame } from '../src/engine/state.ts';
 import { parseMap } from '../src/engine/tiledMap.ts';
 import { CONTENT } from '../src/data/content.ts';
+import { loadMaps } from '../tools/sim-setup.ts';
 import { makeMap, obj } from './helpers.ts';
 
 const content: GameContent = {
@@ -120,6 +121,24 @@ describe('random encounters', () => {
     expect(paceUntilAmbush(g, 300).effects).toEqual([]);
     g.state.flags.set('story.gate_open', true);
     expect(paceUntilAmbush(g).effects[0]).toMatchObject({ kind: 'encounter' });
+  });
+
+  it('the Cane Road is peaceful in Chapter 1 and turns violent once the story returns to Zetwal', () => {
+    const maps = loadMaps();
+    const road = maps['zetwal-road']!;
+    const g = new GameLogic(maps, CONTENT, newGame(road, 'road'), 9);
+    g.state.player.pos = { x: 20, y: 12 };
+    const pace = (n: number) => {
+      for (let i = 0; i < n; i++) {
+        const a = g.tryStep(i % 20 < 10 ? 'right' : 'left');
+        if (!a.ok) continue;
+        if (g.finishStep(a.to).some((e) => e.kind === 'encounter')) return true;
+      }
+      return false;
+    };
+    expect(pace(1000)).toBe(false);
+    g.state.flags.set('story.zetwal_return', true);
+    expect(pace(1000)).toBe(true);
   });
 
   it('every zone in the game points at a table that exists, with sensible groups', () => {

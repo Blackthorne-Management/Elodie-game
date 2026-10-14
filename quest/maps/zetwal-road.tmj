@@ -555,6 +555,11 @@
           "visible": true,
           "properties": [
             {
+              "name": "if",
+              "type": "string",
+              "value": "story.zetwal_return"
+            },
+            {
               "name": "table",
               "type": "string",
               "value": "cane_road"

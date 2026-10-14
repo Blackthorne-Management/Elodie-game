@@ -42,10 +42,10 @@ export const WALK_CYCLE_PX = 32;
 /**
  * Random encounters in a capital's wild section (map layer `encounters`): the chance per step once the
  * grace steps have passed, and how many steps are always safe after arriving on a map or after a fight.
- * About one fight every 25 to 30 steps.
+ * About one fight every 50 steps (the first owner test found one every 25 to 30 far too often).
  */
-export const ENCOUNTER_CHANCE_PER_STEP = 0.06;
-export const ENCOUNTER_GRACE_STEPS = 10;
+export const ENCOUNTER_CHANCE_PER_STEP = 0.03;
+export const ENCOUNTER_GRACE_STEPS = 18;
 
 /** Typewriter speeds in characters per second. `instant` shows the whole line at once. */
 export const TEXT_SPEEDS = {

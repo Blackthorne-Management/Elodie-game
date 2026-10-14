@@ -4,6 +4,7 @@
 import { describe, expect, it } from 'vitest';
 import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
+import { LATER_STORY_FLAGS } from '../src/data/encounters.ts';
 import { GLOSSARIES } from '../src/data/lang.ts';
 import { PUZZLES } from '../src/data/puzzles.ts';
 import { ACT1, JOURNAL_NOTES } from '../src/data/quests.ts';
@@ -28,7 +29,7 @@ function flagsRead(): Map<string, string> {
   const add = (f: string, where: string) => out.set(f, where);
   for (const [id, d] of Object.entries(CONTENT.dialogue)) for (const f of flagsReadBy(d)) add(f, `dialogue ${id}`);
   for (const m of Object.values(maps)) {
-    for (const thing of [...m.npcs, ...m.triggers, ...m.objects, ...m.echoZones]) {
+    for (const thing of [...m.npcs, ...m.triggers, ...m.objects, ...m.echoZones, ...m.encounters]) {
       for (const f of flagsIn(thing.if)) add(f, `map ${m.id}`);
     }
   }
@@ -85,7 +86,7 @@ describe('dialogue content', () => {
 
   it('every flag that is read is set somewhere (no typos)', () => {
     const set = flagsSet();
-    const unknown = [...flagsRead()].filter(([f]) => !set.has(f));
+    const unknown = [...flagsRead()].filter(([f]) => !set.has(f) && !LATER_STORY_FLAGS.includes(f));
     expect(unknown).toEqual([]);
   });
 

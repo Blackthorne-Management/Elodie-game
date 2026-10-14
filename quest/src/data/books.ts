@@ -163,7 +163,7 @@ export const BOOKS: readonly Book[] = [
       'Notes of the harbor master, for merchants arriving in Zetwal. Cane, coffee and indigo leave by the south harbor; salt, iron and cloth come in. ' +
       'Since the Accord, no ship pays tribute to Aldermoor here, and the Crown has never forgiven it. ' +
       'The Carriage Guild under Papa Wout runs carriages and ferries to the other capitals. He knows every road and sells a rumor with every ticket. ' +
-      'Travelers are warned about the Cane Road beyond the east gate. The fields hide bandits and smugglers with Crown-stamped crates. Lately there are also people in grey veils, asking the young if they are lonely. ' +
+      'The Cane Road beyond the east gate has been peaceful since the war. The old cutters still tell stories of bandits in the fields. Lately a few people in grey veils walk it, asking the young if they are lonely. ' +
       'Travel in company. Travel by day.',
   },
   {

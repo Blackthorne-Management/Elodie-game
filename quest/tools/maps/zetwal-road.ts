@@ -1,8 +1,9 @@
 // The Cane Road beyond Zetwal's east gate: the city's wild section. Cane fields on both sides of the
 // road, the burned sugar mill, a smugglers' cache and the mangrove shore. Past the first stretch by
 // the gate, ambushes come out of the cane (map layer `encounters`, table `cane_road` in
-// data/encounters.ts): bandits, smugglers and Quiet Crown zealots. The Echo is the Crown's plantation
-// fifty years ago.
+// data/encounters.ts): bandits, smugglers and Quiet Crown zealots, but only when the story brings the
+// party back to Zetwal (`story.zetwal_return`); Chapter 1 has no fights. The Echo is the Crown's
+// plantation fifty years ago.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj } from './zetwal-town.ts';
@@ -46,8 +47,9 @@ export function zetwalRoad(): MapSource {
     obj('road_sign', 4, 11, { dialogue: 'road_sign', era: 'present' }),
     obj('mill_ruin', 35, 3, { dialogue: 'mill_ruin', era: 'present' }),
     obj('smuggler_crates', 23, 18, { dialogue: 'smuggler_crates', era: 'present' }),
-    // Everything past the safe stretch by the gate is wild.
-    { layer: 'encounters', name: 'cane_fields', x: 9, y: 1, w: W - 10, h: H - 2, props: { table: 'cane_road' } },
+    // Everything past the safe stretch by the gate is wild, once the story returns to Zetwal (no fights
+    // in Chapter 1).
+    { layer: 'encounters', name: 'cane_fields', x: 9, y: 1, w: W - 10, h: H - 2, props: { table: 'cane_road', if: 'story.zetwal_return' } },
   ];
   return { id: 'zetwal-road', present: g, echo: e, objects };
 }

@@ -859,11 +859,24 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     say('hall_clerk', 'Your mother left me a list of things to do while she is at the Throne. It is longer than the Accord.'),
   ]),
 
-  simple('cane_cutter_talk', [
-    say('cane_cutter', 'Going east, archivist? Keep to the road and keep moving.'),
-    say('cane_cutter', 'Bandits by day, smugglers by night. And lately those veiled folk, asking the young ones if they feel alone.'),
-    say('cane_cutter', 'If the cane goes quiet around you, run. The cane is never quiet.'),
-  ]),
+  script('cane_cutter_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.zetwal_return' }, to: 'danger' }, { to: 'calm' }] },
+    calm: {
+      speaker: 'cane_cutter',
+      lines: [
+        { text: 'Festival day, archivist! Even the cane gets a rest. The road is as peaceful as it has been in years.' },
+        { text: 'Only thing out there today is a veiled woman by the old mill, asking the young ones if they feel alone. Odd sort.' },
+      ],
+    },
+    danger: {
+      speaker: 'cane_cutter',
+      lines: [
+        { text: 'You came back at a bad time, archivist. Keep to the road and keep moving.' },
+        { text: 'Bandits by day, smugglers by night, and those veiled folk everywhere now.' },
+        { text: 'If the cane goes quiet around you, run. The cane is never quiet.' },
+      ],
+    },
+  }),
 
   script('road_watcher_talk', {
     start: {
