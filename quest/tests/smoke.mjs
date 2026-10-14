@@ -338,7 +338,7 @@ async function hintsAndJournal(browser, errors) {
   await page.waitForTimeout(2600);
   s = await snap(page);
   check(s.hint === first.hints[1] && s.mode === 'field', 'turned off in the menu, she stays quiet');
-  check(s.minimap === 'Pòt Limyè: Festival Plaza', `the minimap names the place ("${s.minimap}")`);
+  check(s.minimap === 'Pòdlimyè: Festival Plaza', `the minimap names the place ("${s.minimap}")`);
   await menuTab(page, 'Status');
   s = await snap(page);
   check(s.menu.items.join(',') === 'Gianna,Anissa', `the menu's Status page shows the party (${s.menu.items.join(', ')})`);

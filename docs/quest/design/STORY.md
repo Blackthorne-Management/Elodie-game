@@ -9,13 +9,13 @@ file is marked **(proposal)** and needs the owner's yes. Companion files: `CAPIT
 
 ## 1. How the story is cut
 
-The guide splits the game into six Acts (5.5). The owner's new rule (Oct 14) is that **Chapter 1 is Pòt Limyè only**,
+The guide splits the game into six Acts (5.5). The owner's new rule (Oct 14) is that **Chapter 1 is Pòdlimyè only**,
 ending when Gigi leaves the city with Yari. So Acts stay as the big shape and Chapters are the playable units, one
 per place (proposal for the numbering):
 
 | Act (guide 5.5) | Chapter | Place (capital) | Minutes (guide) | Party level |
 |---|---|---|---|---|
-| I: The Mark | 1. The Festival of the Gaze | Zetwal (Pòt Limyè) | 35 | 1 to 3 |
+| I: The Mark | 1. The Festival of the Gaze | Zetwal (Pòdlimyè) | 35 | 1 to 3 |
 | I: The Mark | 2. The Charter | Xaraguá (Yucayeque, proposal) | 40 | 3 to 8 |
 | II: The Alliance Road | 3. The Ledger | Al-Doria (Bab al-Dhahab, proposal) | 30 | 8 to 11 |
 | II: The Alliance Road | 4. The Trial of Blades | Ardencia (Cenizal, proposal) | 45 | 11 to 14 |
@@ -24,7 +24,7 @@ per place (proposal for the numbering):
 | III: The Debt Revealed | 7. The Fog Files (any order) | Kuroshi (Kirinoura, proposal) | 30 | 15 to 21 |
 | III: The Debt Revealed | 8. The Dying Flame (any order) | Jwaladesh (Agnipur, proposal) | 30 | 15 to 21 |
 | III: The Debt Revealed | 9. The Regent's Keep | Aldermoor (Kingsmere, proposal) | 35 | 21 to 24 |
-| IV: The Muster | 10. The Muster | Zetwal again (Pòt Limyè) | 10 (+ side content) | 24 to 25 |
+| IV: The Muster | 10. The Muster | Zetwal again (Pòdlimyè) | 10 (+ side content) | 24 to 25 |
 | V: The War of the Harbor | 11. The War of the Harbor | Xaraguá again | 30 | 25 to 28 |
 | VI: The Claim | 12. The Claim | Elodie's Seat again | 20 | 28 to 30 |
 | Epilogue | The Hearing | Elodie's Seat | 10 | 30 |
@@ -71,9 +71,9 @@ Each chapter lists: where, the beats, who joins, the Echo scenes, the boss, the 
 learns. **Built** means the beat already exists in `quest/src/data` (dialogue, quests, books). Details not in the
 guide are marked **(proposal)**.
 
-### Chapter 1: The Festival of the Gaze (Pòt Limyè, Zetwal)
+### Chapter 1: The Festival of the Gaze (Pòdlimyè, Zetwal)
 
-- **Where:** Pòt Limyè, the capital of Zetwal (owner, Oct 14). Sections: the Festival Plaza and harbor, the Limyè
+- **Where:** Pòdlimyè, the capital of Zetwal (owner, Oct 14). Sections: the Festival Plaza and harbor, the Limyè
   house, the Hall of the Accord, the Temple Island, the Temple Archive and the Cane Road. See `CAPITALS.md`.
 - **Level range:** 1 to 3. **No fights in Chapter 1** (owner decision): XP comes from story beats, lore books and
   side quests. The Cane Road is peaceful.
@@ -102,7 +102,7 @@ guide are marked **(proposal)**.
 - **Who joins:** Anissa (support, from the start), Yari (at the dock).
 - **Echo scenes:** the war room (built), the Echo plaza camp (built: the cook, scout, drummer, soldier), the Chain
   Bridge bridgehead (built), the Temple under scaffolding (built: the lampwright, the builder). Proposal: one more,
-  **the Name Stones** (side quest *The Seventh Stone*, `SIDE-QUESTS.md` Z-4), which leads to the Pòt Limyè secret item.
+  **the Name Stones** (side quest *The Seventh Stone*, `SIDE-QUESTS.md` Z-4), which leads to the Pòdlimyè secret item.
 - **Boss:** none (no fights).
 - **What the player learns:** the Echo and anchors; Anissa is far more than shy; the Accord has seven ribbons and six
   clauses, and the Marshal's stone has a blank seventh line; the Ash Wars records disagree (Cendre ford: forty dead,
@@ -288,9 +288,9 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
 - **What the player learns:** the Crown always meant to keep the harbor; Rael took the Crown's gold; the Quiet Crown
   has been bent to hunt Anissa by the Regent's people.
 
-### Chapter 10: The Muster (Pòt Limyè, return)
+### Chapter 10: The Muster (Pòdlimyè, return)
 
-- **Where:** Pòt Limyè again. The Cane Road's ambushes switch on now: `story.zetwal_return` is set on arrival (built
+- **Where:** Pòdlimyè again. The Cane Road's ambushes switch on now: `story.zetwal_return` is set on arrival (built
   flag, listed in `LATER_STORY_FLAGS`).
 - **Level range:** 24 to 25.
 - **Beats:**
@@ -384,10 +384,10 @@ real people (guide 7.3).
 
 ## 6. Conflicts and open questions found while writing (for the owner)
 
-1. **"Pòt Limyè".** In Haitian Kreyol *pòt* usually means "door" and *pò* means "port" (as in Pòtoprens). So the name
-   may read as "Door of Light" rather than "Port of Light". Both fit (Anissa "holds the door"). A fluent speaker should
-   choose between *Pòt Limyè* and *Pò Limyè*.
-2. **Where was the Accord signed?** **Settled (owner, Oct 14):** in Pòt Limyè's plaza, as the built lore says (the
+1. **The capital's name.** **Settled (owner, Oct 14): Pòdlimyè**, "Port of Light". In Kreyol *pò* is "port"
+   (*pòt* is "door"), and French port names fuse into one word (Port-de-Paix is Pòdepè). Replaces the earlier
+   "Pòt Limyè". A fluent speaker confirms the spelling (Nov 18).
+2. **Where was the Accord signed?** **Settled (owner, Oct 14):** in Pòdlimyè's plaza, as the built lore says (the
    *Alliance War* book, the Marshal's Stone, the war room). Elodie's Seat's Echo is **the sealing** of the signed
    original in the Throne Archive, where the seventh clause is hidden.
 3. **Who is the Hushed?** **Settled (owner, Oct 14):** the Regent's agent, who has taken over the cells that hunt

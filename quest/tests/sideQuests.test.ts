@@ -1,4 +1,4 @@
-// Pòt Limyè's Chapter 1 side quests (data/sideQuests.ts): each one played through its real dialogues,
+// Pòdlimyè's Chapter 1 side quests (data/sideQuests.ts): each one played through its real dialogues,
 // with the log's steps and the reward paid once. Plus the engine rules: parallel steps, and a book that
 // joins its shelf only when its quest is done.
 
@@ -45,7 +45,7 @@ function chapterOne(): FlagStore {
   return flags;
 }
 
-describe('side quests: Pòt Limyè, Chapter 1', () => {
+describe('side quests: Pòdlimyè, Chapter 1', () => {
   it('every step flag is set by some dialogue, and every giver stands on a map', () => {
     const setters = new Set(Object.values(validationContext().dialogueSets ?? {}).flat());
     for (const q of SIDE_QUESTS) {

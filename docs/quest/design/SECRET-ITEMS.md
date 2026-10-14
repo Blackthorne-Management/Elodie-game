@@ -11,7 +11,7 @@ comes after 8 minutes stuck instead of 3, and the player can always walk away: n
 
 | # | Item | Capital | Side quest (`SIDE-QUESTS.md`) | Dynamic | Effect type | Effect in one line | Difficulty |
 |---|---|---|---|---|---|---|---|
-| 1 | **Solange's Quill** | Pòt Limyè (Zetwal) | Z-4 The Seventh Stone | Sequence memory (names spoken in order) | New skill | Gianna's *Say Their Names*: every Bound or fallen ally rises at 30% HP, Anissa calms | 2 Moderate |
+| 1 | **Solange's Quill** | Pòdlimyè (Zetwal) | Z-4 The Seventh Stone | Sequence memory (names spoken in order) | New skill | Gianna's *Say Their Names*: every Bound or fallen ally rises at 30% HP, Anissa calms | 2 Moderate |
 | 2 | **The Sakk of Yusuf** | Bab al-Dhahab (Al-Doria) | A-4 The Uncashed Note | Trade chain across eras (buy low in the past) | Economy | 15% off in every shop, sell for 60%, Samira cashes 300 gold once per chapter | 3 Moderate |
 | 3 | **Caona's Conch** | Yucayeque (Xaraguá) | X-4 Where the Canoes Sleep | Tides (four tide states, a weir) | Map ability | *Conch Call*: summon a canoe at any shore; hidden coves; free sea travel | 4 Moderate-hard |
 | 4 | **The Unbroken Wick** | Agnipur (Jwaladesh) | J-4 Oil for the Little Lamps | Measures (pouring oil between jars) | Surge upgrade | Surge costs 4 Spark, Dawn Surge cleanses, Anissa's Calm never drops below 1 | 5 Moderate-hard |
@@ -32,7 +32,7 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 
 ---
 
-## 1. Solange's Quill (Pòt Limyè, Zetwal)
+## 1. Solange's Quill (Pòdlimyè, Zetwal)
 
 - **Side quest:** Z-4 *The Seventh Stone*. The widow on the Temple Island ("My husband's name is on the third stone")
   says the oldest stone has a blank seventh face, and the founder's riddle on its plinth has never been answered.

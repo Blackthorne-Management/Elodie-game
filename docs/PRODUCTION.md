@@ -34,7 +34,7 @@ and ticks items off here as they land. Last updated **Tue Oct 14**.
 Elodie the goddess, Elodie Limyè (the mother), Anicette young (the Echo) and old, Patricio young and old; later Benny,
 Caona, Rael.
 
-**The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòt Limyè and Chapter 1 finished with
+**The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòdlimyè and Chapter 1 finished with
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1
 and 2, **Sun Nov 22**. Your next quest asks: approve the intro storyboard (secret items and side quests approved Oct 14) by
 **Fri Oct 17**; art drop 1 (six character sets and three intro illustrations) by **Fri Oct 24**.

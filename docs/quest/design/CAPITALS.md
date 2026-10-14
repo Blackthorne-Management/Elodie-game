@@ -4,7 +4,7 @@
 capital has **at least four sections**, each a separate map joined by doors: the hub, the **library** (8 to 10 lore
 books), the **capital building** (3 to 5 books) and a **wild section** with random encounters (owner decision,
 Oct 14; guide 6.6). No fights in Chapter 1. Gold is separate from the Wealth score. Anything not in the guide or
-already built is a **proposal**, including every city name except Pòt Limyè.*
+already built is a **proposal**, including every city name except Pòdlimyè.*
 
 **Conventions used below.**
 - **Size** is rough, in 16 px tiles (W x H). The screen shows 20 x 11.25 tiles. Built maps give their real size.
@@ -24,7 +24,7 @@ already built is a **proposal**, including every city name except Pòt Limyè.*
 
 | Land | House | Capital | Status | Meaning and note |
 |---|---|---|---|---|
-| Zetwal | Kay Soley | **Pòt Limyè** | owner, Oct 14 | Kreyol, "Port of Light". Fluent check needed: *pòt* usually means "door" and *pò* "port"; "Door of Light" may be how it reads (`STORY.md` 6.1). |
+| Zetwal | Kay Soley | **Pòdlimyè** | owner, Oct 14 | Kreyol, "Port of Light". Fluent check needed: *pòt* usually means "door" and *pò* "port"; "Door of Light" may be how it reads (`STORY.md` 6.1). |
 | Xaraguá | Yaguana | **Yucayeque** | proposal | Taíno word recorded by the chroniclers for a town or village. Flag for a source check. Alternative: **Yaguana**, the historical capital of Xaraguá, if the owner is happy for the city and the house to share a name. |
 | Al-Doria | Dorini | **Bab al-Dhahab** | proposal | Arabic, "Gate of Gold" (matches the house's *Bazaar al-Dhahab*). |
 | Ardencia | Brasador | **Cenizal** | proposal | Spanish, "ash field". Fits "Rael the Ruthless, Warden of the Ash Road". |
@@ -38,7 +38,7 @@ already built is a **proposal**, including every city name except Pòt Limyè.*
 
 | Capital | Wild section | Table id | Turned on by (flag) | Levels | Later change |
 |---|---|---|---|---|---|
-| Pòt Limyè | The Cane Road (built) | `cane_road` (built) | `story.zetwal_return` (built) | 22 to 25 | none |
+| Pòdlimyè | The Cane Road (built) | `cane_road` (built) | `story.zetwal_return` (built) | 22 to 25 | none |
 | Yucayeque | The Mountain Path | `mountain_path` | `story.xaragua_pier_won` | 3 to 7 | `story.muster_done`: war table, 25 to 28 |
 | Bab al-Dhahab | The Desert Edge | `desert_edge` | `story.aldoria_arrived` | 8 to 11 | none |
 | Cenizal | The Cinder Flats | `cinder_flats` | `story.ardencia_arrived` | 11 to 14 | after the escape: Brasador patrols hunt the party, 13 to 15 |
@@ -52,7 +52,7 @@ already built is a **proposal**, including every city name except Pòt Limyè.*
 
 ---
 
-## 1. Pòt Limyè (Zetwal, House Kay Soley)
+## 1. Pòdlimyè (Zetwal, House Kay Soley)
 
 **Chapters:** 1 (the whole chapter) and 10 (the Muster). **Ruler:** Elodie Limyè, head of the Zetwal state (leaves for
 the Throne at the start). **Feel:** sun, lanterns, a thousand names said aloud; Kreyol/Haitian-inspired. Accent gold
@@ -409,7 +409,7 @@ breach.
 
 **Signature puzzle:** SIG-SEA (reading the Accord in both eras). **Secret:** S-SEA.
 
-**Echo scenes:** the sealing of the Accord in the Throne Archive (owner decision, Oct 14: the signing was in Pòt Limyè's plaza; see
+**Echo scenes:** the sealing of the Accord in the Throne Archive (owner decision, Oct 14: the signing was in Pòdlimyè's plaza; see
 `STORY.md` 6.2); young Thomas Stillwater in the gallery; in Chapter 12, Patricio, Benny and Caona one last time.
 
 **Companion:** none (guide).
@@ -707,7 +707,7 @@ Tea With Lady Rosalind.
 
 To check with native or fluent speakers and knowledgeable reviewers before release (guide 7.3, 8):
 
-- Kreyol: *Pòt Limyè* vs. *Pò Limyè*; "Pran, pran. Pa gen dèt."; all built Zetwal lines.
+- Kreyol: *Pòdlimyè* vs. *Pò Limyè*; "Pran, pran. Pa gen dèt."; all built Zetwal lines.
 - Taíno: *Yucayeque*, *caney*, *bohío*, *hamaca*, *guatiao*, *casabe*, *guamo* (the conch), the "zemi charm" (a sacred
   object: name and look need a reviewer's yes), *What the Opía Remember*.
 - Arabic: *Bab al-Dhahab*, *Ahlan wa sahlan*, *Tfaddal*, *Shukran*, the jinn tale.

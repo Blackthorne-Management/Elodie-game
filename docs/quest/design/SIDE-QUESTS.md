@@ -46,12 +46,12 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 
 | ID | Quest | Capital | Opens | Level band | Fights? | Echo? |
 |---|---|---|---|---|---|---|
-| Z-1 | Soup of the Free | Pòt Limyè | Ch. 1 | 1 to 3 | no | yes |
-| Z-2 | Tides of the Southern Reach | Pòt Limyè | Ch. 1 | 1 to 3 | no | no |
-| Z-3 | The Lonely Cutter | Pòt Limyè | Ch. 1 | 1 to 3 | no | no |
-| Z-4 | The Seventh Stone (secret) | Pòt Limyè | Ch. 1 | 1 to 3 | no | yes |
-| Z-5 | Bread With No Debt (safehouse) | Pòt Limyè | Ch. 1 | 1 to 3 | no | yes |
-| Z-6 | Muskets in the Cane | Pòt Limyè | Ch. 10 | 22 to 25 | yes | yes |
+| Z-1 | Soup of the Free | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
+| Z-2 | Tides of the Southern Reach | Pòdlimyè | Ch. 1 | 1 to 3 | no | no |
+| Z-3 | The Lonely Cutter | Pòdlimyè | Ch. 1 | 1 to 3 | no | no |
+| Z-4 | The Seventh Stone (secret) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
+| Z-5 | Bread With No Debt (safehouse) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
+| Z-6 | Muskets in the Cane | Pòdlimyè | Ch. 10 | 22 to 25 | yes | yes |
 | X-1 | Cut Nets | Yucayeque | Ch. 2 | 3 to 6 | yes | no |
 | X-2 | Oil From a Stranger (safehouse) | Yucayeque | Ch. 2 | 4 to 7 | optional | no |
 | X-3 | The Hutia's Hoard | Yucayeque | Ch. 2 | 3 to 8 | no | yes |
@@ -97,7 +97,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 
 ---
 
-## Pòt Limyè (Zetwal)
+## Pòdlimyè (Zetwal)
 
 **Built (owner approved, Oct 14):** the three Chapter 1 side quests in `quest/src/data/sideQuests.ts`, with their
 lines in `quest/src/data/dialogue/zetwal.ts`. None has a fight.

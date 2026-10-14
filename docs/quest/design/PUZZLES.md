@@ -19,8 +19,8 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 
 | ID | Puzzle | Place | Chapter | Kind | Verbs (guide 6.2) | Difficulty |
 |---|---|---|---|---|---|---|
-| M-ZET-1 | The Marshal's night orders | Pòt Limyè, Limyè house | 1 | tutorial (built) | Door / Cipher | 1 |
-| SIG-ZET | The Chain Bridge | Pòt Limyè, bridgehead | 1 | signature (built) | Bridge | 2 |
+| M-ZET-1 | The Marshal's night orders | Pòdlimyè, Limyè house | 1 | tutorial (built) | Door / Cipher | 1 |
+| SIG-ZET | The Chain Bridge | Pòdlimyè, bridgehead | 1 | signature (built) | Bridge | 2 |
 | SIG-XAR | The flooded cave, the sluice and the rhythm lock | Yucayeque | 2 | signature | Water, Cipher, rhythm | 3 |
 | SIG-ALD | The guild vault | Bab al-Dhahab | 3 | signature | Weight, Cipher, Door | 4 |
 | SIG-ARD | The forge channels and Benny's tunnel | Cenizal | 4 | signature | Terrain, Escape | 4 |
@@ -29,7 +29,7 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 | SIG-KUR | The fog maze, the screens and the spy map | Kirinoura | 7 | signature | Fire / light, Stealth | 5 |
 | SIG-JWA | The relay of lamps and mirrors | Agnipur | 8 | signature | Fire / light | 4 |
 | SIG-ALM | The archive and the courtroom | Kingsmere | 9 | signature | Cipher, Social | 6 |
-| M-ZET-2 | The powder cellar | Pòt Limyè, Cane Road | 10 | minor (Z-6) | Door | 2 |
+| M-ZET-2 | The powder cellar | Pòdlimyè, Cane Road | 10 | minor (Z-6) | Door | 2 |
 | M-XAR-1 | The hutia's tree | Yucayeque | 2 | minor (X-3) | Growth | 2 |
 | M-XAR-2 | The healer's grove | Yucayeque | 2 | minor (X-5) | Growth | 2 |
 | M-ALD-1 | Spot the fakes | Bab al-Dhahab | 3 | minor (A-1) | observation (present only) | 1 |
@@ -39,7 +39,7 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 | M-KUR-1 | The cipher shelf mark | Kirinoura | 7 | minor (K-2) | Cipher | 3 |
 | M-KUR-2 | The marsh lanterns | Kirinoura | 7 | minor (K-3) | Fire / light | 3 |
 | M-JWA-1 | The lamp relay | Agnipur | 8 | minor (J-2) | timing | 3 |
-| S-ZET | The Seventh Stone | Pòt Limyè | 1 | secret | sequence memory | 2 |
+| S-ZET | The Seventh Stone | Pòdlimyè | 1 | secret | sequence memory | 2 |
 | S-ALD | The Uncashed Note | Bab al-Dhahab | 3 | secret | trade chain | 3 |
 | S-XAR | Where the Canoes Sleep | Yucayeque | 2 | secret | tides | 4 |
 | S-JWA | Oil for the Little Lamps | Agnipur | 8 | secret | measures | 5 |
@@ -51,7 +51,7 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 
 ---
 
-## Pòt Limyè (Zetwal)
+## Pòdlimyè (Zetwal)
 
 ### M-ZET-1 The Marshal's night orders (built, tutorial)
 - **Present:** Patricio's study; the shimmering tiles by the map table; a loose board under the window seat (empty).

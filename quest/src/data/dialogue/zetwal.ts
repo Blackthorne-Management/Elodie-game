@@ -46,7 +46,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   simple(
     'intro_festival',
     [
-      nar("Pòt Limyè, capital of Zetwal. The Festival of Elodie's Gaze."),
+      nar("Pòdlimyè, capital of Zetwal. The Festival of Elodie's Gaze."),
       nar('Once a year the whole city remembers its dead aloud, and the goddess remembers with them.'),
       say(A, 'Gigi... there are so many people.'),
       say(G, 'Stay close. Mother speaks from the stage at noon, and tonight the names are read on the Temple island.'),

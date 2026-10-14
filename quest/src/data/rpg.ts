@@ -102,9 +102,9 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
 export const CITIES: Readonly<Record<string, CityDef>> = {
   zetwal: {
     id: 'zetwal',
-    // The capital of the island nation of Zetwal (owner decision, Oct 14; Kreyol "Port of Light",
-    // to be checked by a fluent speaker).
-    name: 'Pòt Limyè',
+    // The capital of the island nation of Zetwal (owner decision, Oct 14): Kreyol "Port of Light", one
+    // word the way Port-de-Paix is Pòdepè (pò = port). A fluent speaker checks it (Nov 18).
+    name: 'Pòdlimyè',
     house: 'Kay Soley',
     sections: [
       { map: 'zetwal-house', name: 'Limyè house', box: { x: 0, y: 0, w: 3, h: 2 } },

@@ -1,5 +1,5 @@
-// Side quests by city (engine/sideQuests.ts runs them; the menu's Quests page lists them). Pòt
-// Limyè's three Chapter 1 side quests (owner approved, Oct 14): no fighting, each with its own NPC
+// Side quests by city (engine/sideQuests.ts runs them; the menu's Quests page lists them).
+// Pòdlimyè's three Chapter 1 side quests (owner approved, Oct 14): no fighting, each with its own NPC
 // lines in data/dialogue/zetwal.ts. Every step is a flag set by a conversation.
 
 import type { Condition } from '../engine/conditions.ts';
