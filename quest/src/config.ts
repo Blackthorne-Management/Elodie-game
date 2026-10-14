@@ -1,6 +1,6 @@
 // Every tunable number for the quest lives here. Nothing in this file touches Phaser or the DOM.
 
-/** Logical screen size (Game Boy Advance). The canvas is scaled up by a whole number. */
+/** Logical screen size (Game Boy Advance). The canvas is scaled up by a whole number (see MIN_INTEGER_ZOOM). */
 export const VIEW_WIDTH = 240;
 export const VIEW_HEIGHT = 160;
 
@@ -32,6 +32,8 @@ export const GAMEPAD_DEADZONE = 0.45;
 /** Touch overlay button size in CSS pixels (well above the 44 px minimum). */
 export const TOUCH_BUTTON_PX = 64;
 export const TOUCH_DPAD_PX = 156;
+/** The D-pad shrinks to this on short screens (three 44 px arms). */
+export const TOUCH_DPAD_MIN_PX = 132;
 
 /** Save storage. Bump SAVE_VERSION when the save shape changes. */
 export const SAVE_STORAGE_KEY = 'bloodlines-quest.save';
@@ -47,6 +49,8 @@ export const TOAST_MS = 2200;
 
 /** Largest whole-number zoom we ever use (keeps very large monitors sane). */
 export const MAX_ZOOM = 8;
+/** Below this whole-number zoom the picture uses the exact (non-integer) fit instead, so it fills small screens. */
+export const MIN_INTEGER_ZOOM = 2;
 
 /** Anissa's hints (guide 6.2 rule 4): first hint after 3 minutes stuck on one objective, then every 90 s. */
 export const HINT_FIRST_MS = 3 * 60 * 1000;

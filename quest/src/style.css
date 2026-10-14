@@ -8,40 +8,74 @@
 
 * { box-sizing: border-box; }
 
+/* The page never scrolls, zooms or selects: it is exactly the visible screen. */
 html, body {
-  margin: 0;
+  position: fixed;
+  inset: 0;
+  width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
   background: var(--bg);
   color: var(--ink);
   font-family: system-ui, sans-serif;
   overflow: hidden;
   overscroll-behavior: none;
-  touch-action: none;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -webkit-user-select: none;
   user-select: none;
+  -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-#game {
+/* #game and the touch overlay cover the visible viewport (set by src/ui/screen.ts; the fallbacks
+   cover the layout viewport). The canvas is centred; the rest is letterbox. */
+#game, .touch-overlay {
   position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh;
+  left: var(--vv-left, 0px);
+  top: var(--vv-top, 0px);
+  width: var(--vv-width, 100%);
+  height: var(--vv-height, 100%);
+  overflow: hidden;
+}
+
+#game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
 }
 
 #game canvas {
+  display: block;
+  flex: none;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  touch-action: none;
 }
 
-/* Touch overlay: D-pad bottom left, A/B bottom right, Echo/Menu top right. */
-.touch-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+/* Touch overlay: D-pad bottom left, A/B bottom right, Echo/Menu (and full screen) top right, all
+   inside the safe areas. It may overlap the edges of the picture on narrow screens, so it is
+   see-through. */
+.touch-overlay {
+  pointer-events: none;
+  z-index: 10;
+  touch-action: none;
+  --dpad: clamp(var(--dpad-min, 132px), calc(var(--vv-height, 100vh) * 0.42), var(--dpad-max, 156px));
+  --edge: 12px;
+}
 .touch-overlay > * { pointer-events: auto; touch-action: none; }
+.touch-overlay * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 
 .touch-dpad {
   position: absolute;
-  left: calc(16px + env(safe-area-inset-left));
-  bottom: calc(16px + env(safe-area-inset-bottom));
+  left: calc(var(--edge) + env(safe-area-inset-left, 0px));
+  bottom: calc(var(--edge) + env(safe-area-inset-bottom, 0px));
   width: var(--dpad);
   height: var(--dpad);
   border-radius: 50%;
@@ -66,8 +100,8 @@ html, body {
 
 .touch-buttons {
   position: absolute;
-  right: calc(16px + env(safe-area-inset-right));
-  bottom: calc(16px + env(safe-area-inset-bottom));
+  right: calc(var(--edge) + env(safe-area-inset-right, 0px));
+  bottom: calc(var(--edge) + env(safe-area-inset-bottom, 0px));
   width: calc(var(--btn) * 2.3);
   height: calc(var(--btn) * 2);
 }
@@ -88,18 +122,78 @@ html, body {
 
 .touch-top {
   position: absolute;
-  top: calc(8px + env(safe-area-inset-top));
-  right: calc(16px + env(safe-area-inset-right));
+  top: calc(8px + env(safe-area-inset-top, 0px));
+  right: calc(var(--edge) + env(safe-area-inset-right, 0px));
   display: flex;
   gap: 8px;
 }
 .touch-small {
   position: static;
+  background: rgba(20, 16, 26, 0.55);
   min-width: 64px;
   height: 44px;
   padding: 0 12px;
   border-radius: 22px;
   font-size: 14px;
+}
+
+/* Room for the full-screen button to the right of Echo and Menu. */
+body.has-fs .touch-top { right: calc(var(--edge) + 52px + env(safe-area-inset-right, 0px)); }
+
+.fs-button {
+  position: fixed;
+  z-index: 11;
+  top: calc(var(--vv-top, 0px) + 8px + env(safe-area-inset-top, 0px));
+  right: calc(100% - var(--vv-left, 0px) - var(--vv-width, 100%) + 12px + env(safe-area-inset-right, 0px));
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: rgba(20, 16, 26, 0.55);
+  border: 2px solid rgba(232, 216, 176, 0.75);
+  border-radius: 22px;
+  opacity: 0.85;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.fs-button:hover, .fs-button:focus-visible { opacity: 1; }
+body.standalone .fs-button { display: none; }
+
+/* The Add to Home Screen explanation (iPhone has no full-screen API for pages). */
+.fs-help {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  touch-action: manipulation;
+}
+.fs-help-panel {
+  width: min(420px, 100%);
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+.fs-help-panel p { margin: 0 0 12px; font-size: 16px; line-height: 1.4; }
+.fs-help-panel button {
+  min-width: 88px;
+  min-height: 44px;
+  font-size: 16px;
+  color: #14101a;
+  background: var(--gold);
+  border: 2px solid var(--gold);
+  border-radius: 6px;
 }
 
 .rotate-hint { display: none; }

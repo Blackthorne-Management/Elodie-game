@@ -4,6 +4,9 @@
 //    dialogue with a choice, hit a trigger, swap into the Echo and back, save from the menu, reload
 //    and check the position and flags came back, go through a door (autosave) and reload again,
 //    export and import a save code, the touch overlay on a phone-sized landscape viewport.
+//    At several landscape phone sizes: the canvas, and every touch control, inside the visible
+//    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
+//    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
 // 3. The whole of Act I, Zetwal, from a new game, by the scripted route routes/zetwal-act1.json.
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
@@ -136,6 +139,149 @@ function watchErrors(page, errors) {
     if (m.type() === 'error') errors.push(`console.error: ${m.text()}`);
   });
 }
+
+// ---- Fitting the screen on landscape phones, and full screen -----------------------------------
+
+const PHONES = [
+  [844, 390], // iPhone 12-15
+  [932, 430], // iPhone Pro Max
+  [667, 375], // iPhone SE
+  [740, 360], // Android
+];
+
+async function phoneFit(browser, errors) {
+  for (const [width, height] of PHONES) {
+    console.log(`Phone fit (touch, landscape ${width}x${height}):`);
+    const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+    const page = await ctx.newPage();
+    watchErrors(page, errors);
+    await page.goto(VILLAGE);
+    await waitReady(page);
+    await page.waitForTimeout(150);
+    const m = await page.evaluate(() => {
+      const box = (e) => {
+        const r = e.getBoundingClientRect();
+        return { name: e.getAttribute('aria-label') ?? e.className, x: r.x, y: r.y, w: r.width, h: r.height };
+      };
+      const vv = window.visualViewport;
+      const de = document.documentElement;
+      return {
+        vw: vv ? vv.width : innerWidth,
+        vh: vv ? vv.height : innerHeight,
+        canvas: box(document.querySelector('#game canvas')),
+        scroll: [de.scrollWidth, de.scrollHeight, document.body.scrollWidth, document.body.scrollHeight, window.scrollX, window.scrollY],
+        controls: [...document.querySelectorAll('.touch-dpad, .touch-btn, .touch-small, .fs-button')].map(box),
+        fs: document.querySelector('.fs-button') !== null,
+      };
+    });
+    const inside = (b) => b.x >= 0 && b.y >= 0 && b.x + b.w <= m.vw + 0.5 && b.y + b.h <= m.vh + 0.5;
+    const c = m.canvas;
+    check(inside(c), `canvas ${Math.round(c.w)}x${Math.round(c.h)} at ${Math.round(c.x)},${Math.round(c.y)} lies inside the ${m.vw}x${m.vh} viewport`);
+    check(c.w >= m.vw * 0.5 || c.h >= m.vh * 0.75, 'the picture fills the screen height (letterbox at the sides)');
+    const [sw, sh, bw, bh, sx, sy] = m.scroll;
+    check(sw <= m.vw && sh <= m.vh && bw <= m.vw && bh <= m.vh && sx === 0 && sy === 0, `the page does not scroll (${sw}x${sh})`);
+    const out = m.controls.filter((b) => !inside(b));
+    check(m.controls.length === 6 && out.length === 0, `all ${m.controls.length} touch controls are inside the viewport${out.length ? `: ${out.map((b) => b.name).join(', ')}` : ''}`);
+    const small = m.controls.filter((b) => Math.min(b.w, b.h) < 44);
+    check(small.length === 0, `every touch control is at least 44 px (${m.controls.map((b) => Math.round(Math.min(b.w, b.h))).join(', ')})`);
+    check(m.fs, 'the full-screen button is there');
+    const dpad = m.controls[0];
+    const pad = m.controls.find((b) => b.name === 'A');
+    check(dpad.x < m.vw / 2 && dpad.y > m.vh / 2 && pad.x > m.vw / 2 && pad.y > m.vh / 2, 'D-pad bottom left, A bottom right');
+    // Quick double taps on the D-pad must not zoom the page.
+    for (let i = 0; i < 4; i++) await page.locator('.touch-dpad').tap({ position: { x: dpad.w / 2, y: dpad.h * 0.9 } });
+    const scale = await page.evaluate(() => window.visualViewport?.scale ?? 1);
+    check(scale === 1, `double taps on the D-pad leave the page unzoomed (scale ${scale})`);
+    if ((width === 844 && height === 390) || (width === 667 && height === 375)) {
+      const name = `quest-fit-${width}x${height}.png`;
+      await page.screenshot({ path: join(SHOT_DIR, name) });
+      fitShots.push(name);
+    }
+    await ctx.close();
+  }
+}
+
+async function fullscreenToggle(browser, errors) {
+  console.log('Full screen (desktop):');
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  // Headless Chromium may refuse real full screen, so count the calls and fake the state.
+  await page.addInitScript(() => {
+    window.__fsCalls = { enter: 0, exit: 0 };
+    let on = null;
+    Object.defineProperty(Document.prototype, 'fullscreenElement', { configurable: true, get: () => on });
+    Element.prototype.requestFullscreen = function () {
+      window.__fsCalls.enter++;
+      on = this;
+      document.dispatchEvent(new Event('fullscreenchange'));
+      return Promise.resolve();
+    };
+    Document.prototype.exitFullscreen = function () {
+      window.__fsCalls.exit++;
+      on = null;
+      document.dispatchEvent(new Event('fullscreenchange'));
+      return Promise.resolve();
+    };
+  });
+  await page.goto(VILLAGE);
+  await waitReady(page);
+  const button = page.locator('.fs-button');
+  check(await button.isVisible(), 'the full-screen button shows on desktop');
+  await button.click();
+  let calls = await page.evaluate(() => window.__fsCalls);
+  check(calls.enter === 1, 'the button calls requestFullscreen');
+  check((await button.getAttribute('aria-label')) === 'Exit full screen', 'the button turns into Exit full screen');
+  await button.click();
+  calls = await page.evaluate(() => window.__fsCalls);
+  check(calls.exit === 1, 'pressing it again leaves full screen');
+  await menuSelect(page, 'Full screen');
+  await page.waitForFunction(() => window.__fsCalls.enter === 2, null, { timeout: 2000 }).catch(() => {});
+  calls = await page.evaluate(() => window.__fsCalls);
+  check(calls.enter === 2 && (await snap(page)).mode === 'field', 'the Full screen menu item calls requestFullscreen and closes the menu');
+  await ctx.close();
+
+  console.log('Full screen (iPhone, no Fullscreen API):');
+  const ios = await browser.newContext({
+    viewport: { width: 844, height: 390 },
+    deviceScaleFactor: 3,
+    isMobile: true,
+    hasTouch: true,
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
+  });
+  const ip = await ios.newPage();
+  watchErrors(ip, errors);
+  await ip.addInitScript(() => {
+    delete Element.prototype.requestFullscreen;
+    delete Element.prototype.webkitRequestFullscreen;
+  });
+  await ip.goto(VILLAGE);
+  await waitReady(ip);
+  await ip.locator('.fs-button').tap();
+  const help = await ip.textContent('.fs-help');
+  check(help.includes('Add to Home Screen'), 'on iPhone the button explains Add to Home Screen');
+  await ip.locator('.fs-help button').tap();
+  check((await ip.locator('.fs-help').count()) === 0, 'the explanation closes');
+  await ios.close();
+
+  console.log('Home-screen app (standalone):');
+  const app = await browser.newContext({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true });
+  const ap = await app.newPage();
+  watchErrors(ap, errors);
+  await ap.addInitScript(() => Object.defineProperty(Navigator.prototype, 'standalone', { configurable: true, get: () => true }));
+  await ap.goto(VILLAGE);
+  await waitReady(ap);
+  check((await ap.locator('.fs-button').count()) === 0, 'opened from the home screen, there is no full-screen button');
+  const manifest = await (await fetch(new URL('manifest.webmanifest', URL_BASE))).json();
+  check(manifest.display === 'fullscreen' && manifest.orientation === 'landscape' && manifest.start_url === './', 'the manifest opens full screen, landscape, at ./');
+  for (const icon of [...manifest.icons.map((i) => i.src), 'icons/apple-touch-icon.png']) {
+    const r = await fetch(new URL(icon, URL_BASE));
+    check(r.ok && r.headers.get('content-type')?.includes('png'), `icon ${icon} is served`);
+  }
+  await app.close();
+}
+
+const fitShots = [];
 
 // ---- Anissa's hints and the Journal --------------------------------------------------------------
 
@@ -501,6 +647,9 @@ async function main() {
     await ppage.screenshot({ path: join(SHOT_DIR, 'quest-phone.png') });
     await phone.close();
 
+    await phoneFit(browser, errors);
+    await fullscreenToggle(browser, errors);
+
     // ---- Phone, portrait (still playable, with a rotate hint) -------------------------------
     const portrait = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
     const pp = await portrait.newPage();
@@ -515,7 +664,7 @@ async function main() {
     const actShots = await playAct(browser, errors);
 
     check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
-    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest-phone-portrait.png', ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
+    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest-phone-portrait.png', ...fitShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
     console.log('Smoke test passed.');
   } finally {
     await browser.close();

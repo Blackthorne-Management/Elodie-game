@@ -26,6 +26,7 @@ import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlaceme
 import { getRuntime, saveGame, type Runtime } from '../runtime.ts';
 import { DialogueBox } from '../ui/DialogueBox.ts';
 import { HintBubble } from '../ui/HintBubble.ts';
+import { isFullscreen, isStandalone, toggleFullscreen } from '../ui/fullscreen.ts';
 import { MenuPanel, type MenuItem } from '../ui/MenuPanel.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
@@ -580,6 +581,7 @@ export class FieldScene extends Phaser.Scene {
       { id: 'save', label: 'Save' },
       { id: 'speed', label: `Text speed: ${capitalise(s.textSpeed)}` },
       { id: 'hints', label: `Anissa's hints: ${s.hints ? 'On' : 'Off'}` },
+      ...(isStandalone() ? [] : [{ id: 'fullscreen', label: isFullscreen() ? 'Exit full screen' : 'Full screen' }]),
       { id: 'export', label: 'Export save code' },
       { id: 'import', label: 'Import save code' },
       { id: 'new', label: this.confirmNewGame ? 'New game? Press A again' : 'New game' },
@@ -646,6 +648,10 @@ export class FieldScene extends Phaser.Scene {
         this.menu.setItems(this.menuItems());
         break;
       }
+      case 'fullscreen':
+        if (toggleFullscreen(() => this.returnFromModal()) === 'help') this.mode = 'modal';
+        else this.closeMenu();
+        break;
       case 'export':
         this.mode = 'modal';
         openExportDialog(encodeSave(toSaveData(this.logic.state, Date.now())), () => this.returnFromModal());

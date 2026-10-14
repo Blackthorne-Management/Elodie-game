@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { InputManager, type Button, type InputSource } from '../src/input/actions.ts';
-import { integerZoom } from '../src/engine/scaling.ts';
+import { fitRect, fitZoom, integerZoom } from '../src/engine/scaling.ts';
 
 class FakeSource implements InputSource {
   held = new Set<Button>();
@@ -109,5 +109,40 @@ describe('integer scaling', () => {
     expect(integerZoom(390, 844, 240, 160, 8)).toBe(1);
     expect(integerZoom(100, 100, 240, 160, 8)).toBe(1);
     expect(integerZoom(5000, 5000, 240, 160, 8)).toBe(8);
+  });
+});
+
+describe('fitZoom and fitRect', () => {
+  const PHONES: [number, number][] = [[844, 390], [932, 430], [667, 375], [740, 360], [568, 320], [390, 844], [320, 180], [1280, 800]];
+
+  it('uses whole numbers when at least 2 fits', () => {
+    expect(fitZoom(1280, 800, 240, 160, 8, 2)).toBe(5);
+    expect(fitZoom(844, 390, 240, 160, 8, 2)).toBe(2);
+    expect(fitZoom(667, 375, 240, 160, 8, 2)).toBe(2);
+    expect(fitZoom(5000, 5000, 240, 160, 8, 2)).toBe(8);
+  });
+
+  it('falls back to the exact fit below 2, even below 1', () => {
+    expect(fitZoom(390, 844, 240, 160, 8, 2)).toBe(1.625);
+    expect(fitZoom(450, 300, 240, 160, 8, 2)).toBe(1.875);
+    expect(fitZoom(120, 80, 240, 160, 8, 2)).toBe(0.5);
+  });
+
+  it('survives an empty or broken viewport', () => {
+    expect(fitZoom(0, 0, 240, 160, 8, 2)).toBe(1);
+    expect(fitZoom(Number.NaN, 300, 240, 160, 8, 2)).toBe(1);
+  });
+
+  it('never lets the canvas leave the viewport, and centres it', () => {
+    for (const [w, h] of PHONES) {
+      const r = fitRect(w, h, 240, 160, 8, 2);
+      expect(r.width).toBeLessThanOrEqual(w);
+      expect(r.height).toBeLessThanOrEqual(h);
+      expect(r.left + r.width).toBeLessThanOrEqual(w);
+      expect(r.top + r.height).toBeLessThanOrEqual(h);
+      expect(Math.abs(r.left - (w - r.width - r.left))).toBeLessThanOrEqual(1);
+      expect(Math.abs(r.top - (h - r.height - r.top))).toBeLessThanOrEqual(1);
+    }
+    expect(fitRect(844, 390, 240, 160, 8, 2)).toEqual({ zoom: 2, width: 480, height: 320, left: 182, top: 35 });
   });
 });

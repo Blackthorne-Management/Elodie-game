@@ -1,8 +1,10 @@
 // On-screen touch overlay: a D-pad on the left, A and B on the right, plus small Echo and Menu
 // buttons. Shown on touch devices (or with ?touch=1). Buttons are DOM elements sized in CSS pixels,
-// so they stay large tap targets whatever the canvas zoom is.
+// so they stay large tap targets whatever the canvas zoom is. The overlay is pinned to the visible
+// viewport (src/ui/screen.ts) and kept inside the safe areas; touches on it never scroll, zoom or
+// select (touch-action: none, and touchstart is cancelled, which iOS needs to skip double-tap zoom).
 
-import { TOUCH_BUTTON_PX, TOUCH_DPAD_PX } from '../config.ts';
+import { TOUCH_BUTTON_PX, TOUCH_DPAD_MIN_PX, TOUCH_DPAD_PX } from '../config.ts';
 import type { Dir } from '../engine/types.ts';
 import type { Button, InputSource } from './actions.ts';
 
@@ -30,7 +32,8 @@ export class TouchSource implements InputSource {
   constructor(parent: HTMLElement) {
     this.root = el('div', 'touch-overlay');
     this.root.style.setProperty('--btn', `${TOUCH_BUTTON_PX}px`);
-    this.root.style.setProperty('--dpad', `${TOUCH_DPAD_PX}px`);
+    this.root.style.setProperty('--dpad-max', `${TOUCH_DPAD_PX}px`);
+    this.root.style.setProperty('--dpad-min', `${TOUCH_DPAD_MIN_PX}px`);
 
     const dpad = el('div', 'touch-dpad');
     dpad.setAttribute('aria-label', 'Direction pad');
@@ -66,7 +69,14 @@ export class TouchSource implements InputSource {
     for (const b of buttons) this.held.delete(b);
   }
 
+  /** Cancel the touch itself (pointer events still arrive): no double-tap zoom, callout or scroll. */
+  private guard(node: HTMLElement): void {
+    node.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+    node.addEventListener('touchend', (e) => e.preventDefault(), { passive: false });
+  }
+
   private bindButton(node: HTMLElement, buttons: Button[]): void {
+    this.guard(node);
     node.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       node.setPointerCapture?.(e.pointerId);
@@ -85,6 +95,7 @@ export class TouchSource implements InputSource {
   }
 
   private bindDpad(node: HTMLElement): void {
+    this.guard(node);
     const setDir = (dir: Dir | null) => {
       if (dir === this.dpadDir) return;
       if (this.dpadDir) this.release([this.dpadDir]);

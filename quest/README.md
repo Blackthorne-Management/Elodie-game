@@ -33,6 +33,16 @@ Controls:
 
 The touch overlay appears on touch devices (force it with `?touch=1`).
 
+**Phones.** The picture is fitted to the *visible* viewport (`window.visualViewport`, without the
+browser bars), whole-number zoom when at least 2x fits, otherwise the exact fit; centred and
+letterboxed, refitted on resize, rotation and visual viewport changes (`src/ui/screen.ts`,
+`fitZoom` / `fitRect` in `src/engine/scaling.ts`). The page never scrolls; pinch and double-tap zoom
+are cancelled (iOS ignores `user-scalable=no`). The full-screen button (top right, and Full screen in
+the menu) uses the Fullscreen API and locks landscape where allowed; Esc leaves. On iPhone, which has
+no Fullscreen API for pages, it explains Add to Home Screen instead: `public/manifest.webmanifest`
+opens the quest full screen and landscape from the home screen (no service worker). The button is
+hidden when opened from the home screen. Icons: `npm run icons` regenerates `public/icons/*.png`.
+
 ## Check
 
 ```sh
@@ -54,14 +64,16 @@ Journal, then plays the whole of Act I in the browser from a new game by the rou
 `routes/zetwal-act1.json`. The headless simulator replays the same route alongside, so after every
 key the browser must show exactly the map, tile, facing, era, mode and dialogue line the engine
 predicts. It writes `quest-*.png` (Phase 1) and `quest2-<moment>-desktop.png` /
-`quest2-<moment>-phone.png` (844 x 390) at the route's `@markers` to `SHOT_DIR` (default: the OS temp
+`quest2-<moment>-phone.png` (844 x 390) at the route's `@markers`, and `quest-fit-844x390.png` /
+`quest-fit-667x375.png` from the phone-fit checks (canvas and controls inside the viewport at four
+landscape phone sizes, no scroll, full-screen toggle, manifest), to `SHOT_DIR` (default: the OS temp
 directory): the plaza, the study in the present and in the Echo, the bridge before / in the Echo /
 after, the lit lamp, the end card, and Anissa's first line. It uses a local `playwright` if there is
 one, else the global install, and runs Node with `--experimental-strip-types` to load the engine.
 
 ## What Phase 1 contains
 
-- **Phaser 3** (`pixelArt`, 240 x 160 logical resolution, whole-number scaling, letterboxed, landscape),
+- **Phaser 3** (`pixelArt`, 240 x 160 logical resolution, whole-number scaling (exact fit below 2x), letterboxed, landscape),
   16 x 16 tiles, 16 x 24 characters. All art is placeholder colours drawn at boot from
   `src/assets.config.ts`; there are no image files.
 - **Tiled maps** (`maps/*.tmj`). Every map has both eras on one grid: `ground_present`, `deco_present`,
