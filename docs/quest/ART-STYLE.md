@@ -10,7 +10,7 @@ new file should sit next to them without looking out of place.
 |---|---|---|
 | Screen | 320 x 180 (16:9) | 20 x 11.25 tiles. Scaled up by whole numbers (x2 on a phone, x4 on a laptop, x6 on a TV). |
 | Tiles | 16 x 16 | Ground, walls, props. One file per tile. |
-| Characters | 24 x 32 | 4 directions x 3 walk frames (a 72 x 128 sheet). Chibi proportions: the head about 40 % of the figure. Feet on the bottom row of the cell, the figure centred on its torso. Children and Anissa are drawn smaller inside the same cell. |
+| Characters | 24 x 32 | 4 directions x 3 walk frames (a 72 x 128 sheet). Chibi proportions: the head about 40 % of the figure. Feet on the bottom row of the cell, the figure centred on its torso. Children and Anissa are drawn smaller inside the same cell. Grown men who must stand taller than Gianna (Azzy) use a 28 x 36 cell (an 84 x 144 sheet); the game reads the cell size from the file and stands everyone on their feet. |
 | Large objects | any multiple of 16 wide; as tall as needed | Drawn standing on the bottom edge of the object's tiles (the Gaze lamp is 32 x 32 on a 2 x 1 tile plinth). |
 | Dialogue portraits | 48 x 48 | Bust, facing the viewer. Draw masters at 64 x 64 if you like, but export 48 x 48: the box shows them at 48. |
 | Interface text | 8 px monospace | Kept as a font, not drawn. |
@@ -220,6 +220,7 @@ the script):
 |---|---|---|
 | `gianna` | `docs/quest/art-source/gianna-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` |
 | `anissa` | `docs/quest/art-source/anissa-sprites.webp` | `--grid 5x4 --rows down,_,_,up --sides 1 --cell 24x32 --colors 32 --fill 0.84` |
+| `azzy` | `docs/quest/art-source/azzy-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 28x36 --colors 32 --pixel 6.2`, run on the source warmed (figure pixels r x1.12, g x1.04, contrast 1.12) and stretched 1.2x wide (nearest); taller than Gianna |
 | `yari` | `docs/quest/art-source/yari-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (both side rows face right, so left is mirrored; grid lines found and dropped; her up frame is column 0, without the bow) |
 
 Portraits: the source's magenta becomes `rgb(42,36,56)` (the dialogue box's backdrop), then one

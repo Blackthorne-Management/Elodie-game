@@ -8,9 +8,9 @@ What the sheets in quest/art/characters were made with:
   gianna: --grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32
   anissa: --grid 5x4 --rows down,_,_,up --sides 1 --cell 24x32 --colors 32 --fill 0.84
   yari:   --grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32
-  azzy:   --grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32 --pixel 7, run on the
+  azzy:   --grid 3x4 --rows down,_,_,up --sides 1,2 --cell 28x36 --colors 32 --pixel 6.2, run on the
           source after warming it (figure pixels r x1.12, g x1.04, contrast 1.12; Gemini drew him olive)
-          and stretching it 1.2x wide (nearest), so he is as broad as the others
+          and stretching it 1.2x wide (nearest); the taller cell makes him taller than Gianna
 
 Options:
   --grid COLSxROWS   the source sheet's grid of frames (cells are cut evenly).

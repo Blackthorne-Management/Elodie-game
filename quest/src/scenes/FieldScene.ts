@@ -436,11 +436,16 @@ export class FieldScene extends Phaser.Scene {
     this.label.setPosition(Math.round(x), Math.round(y)).setVisible(true);
   }
 
+  /** How tall an NPC's frames are (a grown-up's art sheet, such as Azzy's, can be taller than the standard cell). */
+  private npcHeight(objectId: number): number {
+    return this.npcSprites.get(objectId)?.height ?? CHARACTER_HEIGHT;
+  }
+
   /** The point (bottom centre of the label) above a target. */
   private targetAnchor(target: Target): { x: number; y: number } {
     if (target.kind === 'npc') {
       const w = tileToWorld(target.npc.pos);
-      return { x: w.x, y: w.y - CHARACTER_HEIGHT - CHARACTER_LABEL_GAP };
+      return { x: w.x, y: w.y - this.npcHeight(target.npc.objectId) - CHARACTER_LABEL_GAP };
     }
     if (target.kind === 'door') return { x: target.door.pos.x * TILE_SIZE + TILE_SIZE / 2, y: target.door.pos.y * TILE_SIZE - 2 };
     const o = target.object;
@@ -470,7 +475,7 @@ export class FieldScene extends Phaser.Scene {
       if (this.markerSprites.has(m.id)) continue;
       const x = (m.pos.x + 0.5) * TILE_SIZE;
       let y: number;
-      if (m.kind === 'talk') y = (m.pos.y + 1) * TILE_SIZE - CHARACTER_HEIGHT - 3;
+      if (m.kind === 'talk') y = (m.pos.y + 1) * TILE_SIZE - this.npcHeight(Number(m.id.slice('npc:'.length))) - 3;
       else {
         const o = objects.find((ob) => `obj:${ob.id}` === m.id);
         y = (o ? this.objectTop(o) : m.pos.y * TILE_SIZE) - 2;
