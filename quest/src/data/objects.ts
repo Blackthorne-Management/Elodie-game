@@ -52,6 +52,9 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   mill_ruin: { name: 'Old sugar mill' },
   smuggler_crates: { name: 'Crown-stamped crates' },
 
+  // The Temple Archive.
+  solange_list: { name: "Mother Solange's list" },
+
   // Every bookshelf with books (data/books.ts).
   ...SHELF_OBJECTS,
 };

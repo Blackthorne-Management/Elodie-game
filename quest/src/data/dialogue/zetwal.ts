@@ -141,6 +141,16 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
 
   script('soup_vendor_talk', {
     start: {
+      lines: [],
+      next: [
+        { if: { all: [{ flag: 'side.overdue.accepted' }, { notFlag: 'side.overdue.soup' }] }, to: 'overdue' },
+        { if: { flag: 'side.soup.done' }, to: 'after' },
+        { if: { all: [{ flag: 'side.soup.elder' }, { flag: 'side.soup.guard' }, { flag: 'side.soup.ferry' }] }, to: 'finish' },
+        { if: { flag: 'side.soup.accepted' }, to: 'remind' },
+        { to: 'greet' },
+      ],
+    },
+    greet: {
       speaker: 'soup_vendor',
       lines: [
         { text: 'Bonjou! Kijan ou ye?', translation: 'Hello! How are you?' },
@@ -150,11 +160,65 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       choices: [
         { text: 'It smells wonderful.', next: 'thanks' },
         { text: 'Save me a bowl.', next: 'thanks' },
+        { text: 'You look busy.', next: 'offer' },
       ],
     },
     thanks: {
       speaker: 'soup_vendor',
       lines: [{ text: 'Mèsi! Come back when the stall is open and I will give you the good pot.', translation: 'Thank you!' }],
+    },
+    // Side quest: Soup for the Cousins.
+    offer: {
+      speaker: 'soup_vendor',
+      lines: [
+        { text: 'Busy? My nephew was meant to carry the bowls today. My nephew is asleep under a mango tree.' },
+        { text: 'Three bowls promised: the old neighbor west of the plaza, the guard by the Hall, and the ferryman at the docks.' },
+      ],
+      choices: [
+        { text: "I'll carry them.", next: 'accept' },
+        { text: 'Not right now.', next: 'not_now' },
+      ],
+    },
+    not_now: { speaker: 'soup_vendor', lines: [{ text: 'The soup will wait. It is soup. Waiting is what it does best.' }] },
+    accept: {
+      speaker: 'soup_vendor',
+      set: { 'side.soup.accepted': true },
+      lines: [
+        { text: 'Mèsi, cherie! Hot, so walk fast. Not too fast.', translation: 'Thank you, dear!' },
+        nar('(Gianna takes three bowls of soup. Soup for the Cousins is in the Quests page of the menu.)'),
+        nar('(Tap the minimap to see the whole city. Tap someone to walk over and talk.)'),
+      ],
+    },
+    remind: {
+      speaker: 'soup_vendor',
+      lines: [
+        { text: 'Still bowls in the basket? The soup is getting cold, and so am I.' },
+        { if: { notFlag: 'side.soup.elder' }, text: 'The old neighbor, west of the plaza. He will pretend he is not hungry. He is.' },
+        { if: { notFlag: 'side.soup.guard' }, text: 'The guard by the Hall. Do not let him tell you he is on duty.' },
+        { if: { notFlag: 'side.soup.ferry' }, text: 'The ferryman, down at the docks. Follow the complaining.' },
+      ],
+    },
+    finish: {
+      speaker: 'soup_vendor',
+      set: { 'side.soup.done': true },
+      lines: [
+        { text: 'All three? And not one bowl broken?' },
+        { text: 'Take these for the road. In this city, a cousin who carries soup is a cousin for life.' },
+      ],
+    },
+    after: {
+      speaker: 'soup_vendor',
+      lines: [{ text: 'Come back any time, cousin. The good pot is always on.' }],
+    },
+    // The Overdue Shelf.
+    overdue: {
+      speaker: 'soup_vendor',
+      set: { 'side.overdue.soup': true },
+      lines: [
+        say(G, 'The archive would like "Ninety Ways With Pumpkin" back.'),
+        { text: 'Ay. Here. Page forty has soup on it. It was a very good page.' },
+        nar('(Gianna got back "Ninety Ways With Pumpkin".)'),
+      ],
     },
   }),
 
@@ -196,10 +260,27 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
-  simple('town_guard_talk', [
-    say('town_guard', 'Those hooded folk hand out bread and ask for nothing back. That is exactly what worries me.'),
-    say('town_guard', 'Nobody gives bread for nothing. Not even on festival day.'),
-  ]),
+  script('town_guard_talk', {
+    start: {
+      lines: [],
+      next: [{ if: { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.guard' }] }, to: 'soup' }, { to: 'talk' }],
+    },
+    talk: {
+      speaker: 'town_guard',
+      lines: [
+        { text: 'Those hooded folk hand out bread and ask for nothing back. That is exactly what worries me.' },
+        { text: 'Nobody gives bread for nothing. Not even on festival day.' },
+      ],
+    },
+    soup: {
+      speaker: 'town_guard',
+      set: { 'side.soup.guard': true },
+      lines: [
+        { text: 'Soup? I am on duty.' },
+        { text: '...The law says nothing about soup. I checked. Twice. Thank her for me.' },
+      ],
+    },
+  }),
 
   script('festival_kid_talk', {
     start: { lines: [], next: [{ if: { flag: 'story.anissa_woke' }, to: 'after' }, { to: 'before' }] },
@@ -213,14 +294,40 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
-  simple('elder_talk', [
-    say('elder', 'Your mother? At your age she argued with the whole council, and won.'),
-    say('elder', "Then she took the name Limyè, for the goddess's light, she said. Her father's name was good enough for the rest of us."),
-    say('elder', 'Well. Jean-Philippe is a mouthful to shout at a festival.'),
-  ]),
+  script('elder_talk', {
+    start: {
+      lines: [],
+      next: [{ if: { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.elder' }] }, to: 'soup' }, { to: 'talk' }],
+    },
+    talk: {
+      speaker: 'elder',
+      lines: [
+        { text: 'Your mother? At your age she argued with the whole council, and won.' },
+        { text: "Then she took the name Limyè, for the goddess's light, she said. Her father's name was good enough for the rest of us." },
+        { text: 'Well. Jean-Philippe is a mouthful to shout at a festival.' },
+      ],
+    },
+    soup: {
+      speaker: 'elder',
+      set: { 'side.soup.elder': true },
+      lines: [
+        { text: "Soup from the plaza? I'm not hungry." },
+        { text: '...I am a little hungry. She remembered me. She always remembers me. She is my cousin, you know.' },
+        { text: 'Everyone is, today.' },
+      ],
+    },
+  }),
 
   script('ferryman_talk', {
-    start: { lines: [], next: [{ if: { flag: 'story.bridge_crossed' }, to: 'after' }, { to: 'before' }] },
+    start: {
+      lines: [],
+      next: [
+        { if: { all: [{ flag: 'side.overdue.accepted' }, { notFlag: 'side.overdue.ferry' }] }, to: 'book' },
+        { if: { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.ferry' }] }, to: 'soup' },
+        { if: { flag: 'story.bridge_crossed' }, to: 'after' },
+        { to: 'before' },
+      ],
+    },
     before: {
       speaker: 'ferryman',
       lines: [
@@ -232,6 +339,24 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     after: {
       speaker: 'ferryman',
       lines: [{ text: 'The old Chain Bridge, down after fifty years? There goes my festival trade.' }],
+    },
+    // The Overdue Shelf.
+    book: {
+      speaker: 'ferryman',
+      set: { 'side.overdue.ferry': true },
+      lines: [
+        say(G, 'The archive wants "Tides of the Southern Reach" back. Six months overdue.'),
+        { text: 'That book? The sea has it now. Tragic. Very wet.' },
+        say(G, "Ferryman. It's under the crate you're sitting on."),
+        { text: '...The crate wobbles. It is a very useful book for crates. Fine. Take it.' },
+        nar('(Gianna got back "Tides of the Southern Reach". It is only a little damp.)'),
+      ],
+    },
+    // Soup for the Cousins.
+    soup: {
+      speaker: 'ferryman',
+      set: { 'side.soup.ferry': true },
+      lines: [{ text: 'Soup! The tide can wait. The tide always waits for soup.' }],
     },
   }),
 
@@ -438,6 +563,13 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       next: [
         { if: { notFlag: 'story.elodie_left' }, to: 'early' },
         { if: { notFlag: 'item.sun_locket' }, to: 'locket' },
+        { if: { all: [{ flag: 'side.overdue.accepted' }, { notFlag: 'side.overdue.vol2' }] }, to: 'overdue' },
+        { to: 'story' },
+      ],
+    },
+    story: {
+      lines: [],
+      next: [
         { if: { notFlag: 'story.warroom_echo' }, to: 'go' },
         { if: { notFlag: 'clue.night_orders' }, to: 'after_echo' },
         { if: { notFlag: 'story.bridge_crossed' }, to: 'bridge' },
@@ -497,6 +629,51 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     later: {
       speaker: 'anicette',
       lines: [{ text: 'The whole city saw the lights, Gianna. Whatever happened over there, I am proud of you both.' }],
+    },
+    // The Overdue Shelf: Volume Two, after one pointed question.
+    overdue: {
+      speaker: 'anicette',
+      lines: [nar('Grandmother has the look she gets when she knows exactly what you are about to ask.')],
+      choices: [
+        { text: 'About your overdue book...', next: 'vol2' },
+        { text: 'Never mind.', next: 'story' },
+      ],
+    },
+    vol2: {
+      speaker: 'anicette',
+      lines: [],
+      next: [{ if: { flag: 'lore.zetwal_ash_wars_temple' }, to: 'question' }, { to: 'not_read' }],
+    },
+    not_read: {
+      speaker: 'anicette',
+      lines: [
+        { text: "My book? Hm. Have you read the temple's own record of the Ash Wars? The healers' one, on the history shelf?" },
+        say(G, 'Not yet.'),
+        { text: 'Then read theirs first. Gossip is only useful once you know the facts it is gossiping about.' },
+      ],
+    },
+    question: {
+      speaker: 'anicette',
+      lines: [{ text: 'You read it. Good. Then tell me: at the ford of Cendre, how many dead did our healers count?' }],
+      choices: [
+        { text: 'Four hundred.', next: 'wrong' },
+        { text: 'Forty.', next: 'right' },
+      ],
+    },
+    wrong: {
+      speaker: 'anicette',
+      lines: [{ text: 'Four hundred is what the Crown wrote, in Aldermoor, far from the ford. Read it again, Gianna. Slowly.' }],
+    },
+    right: {
+      speaker: 'anicette',
+      set: { 'side.overdue.vol2': true },
+      lines: [
+        { text: 'Forty. And three hundred sent home. Remember that, the next time someone sings about Rael the Ruthless.' },
+        { text: 'Here. Three years overdue. I wrote in the margins, so the archive gets back more than it lent.' },
+        say(G, 'Grandmother! You wrote in a library book?'),
+        { text: 'Somebody had to correct it, little archivist.' },
+        nar('(Gianna got back "Ash Wars Gossip, Volume Two".)'),
+      ],
     },
   }),
 
@@ -780,10 +957,24 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
-  simple('name_stones', [
-    nar('Name stones, worn smooth by hands: the dead of the Alliance War.'),
-    nar('Zetwal names and Xaraguá names, side by side.'),
-  ]),
+  script('name_stones', {
+    start: {
+      lines: [],
+      next: [{ if: { all: [{ flag: 'side.cane_name.accepted' }, { notFlag: 'side.cane_name.stones' }] }, to: 'search' }, { to: 'look' }],
+    },
+    look: {
+      lines: [nar('Name stones, worn smooth by hands: the dead of the Alliance War.'), nar('Zetwal names and Xaraguá names, side by side.')],
+    },
+    search: {
+      set: { 'side.cane_name.stones': true },
+      lines: [
+        nar('Gianna reads every stone. Soldiers, scouts, a drummer, a cook. No cutter called Grann.'),
+        nar('At the bottom, one line is carved for all of them: "And the cutters of the Cane Road, whose names the Crown did not keep."'),
+        say(G, 'The Locket shows what a place remembers. Maybe the road remembers her.'),
+        nar('(Look for shimmering air on the Cane Road, by the east gate.)'),
+      ],
+    },
+  }),
 
   once('temple_echo_enter', 'story.temple_echo_seen', [
     nar('Scaffolding and sawdust. The temple is half built, and the lamp is brand new.'),
@@ -850,13 +1041,23 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   ]),
 
   script('archivist_talk', {
-    start: { lines: [], next: [{ if: { flag: 'lore.zetwal_ash_wars_temple' }, to: 'ash' }, { to: 'first' }] },
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'side.overdue.done' }, to: 'after' },
+        { if: { all: [{ flag: 'side.overdue.ferry' }, { flag: 'side.overdue.soup' }, { flag: 'side.overdue.vol2' }] }, to: 'returned' },
+        { if: { flag: 'side.overdue.accepted' }, to: 'remind' },
+        { if: { flag: 'lore.zetwal_ash_wars_temple' }, to: 'ash' },
+        { to: 'first' },
+      ],
+    },
     first: {
       speaker: 'archivist',
       lines: [
         { text: 'Festival day, Gigi, and you come to work? The archive is open to anyone today. Read what you like.' },
         { text: 'The history shelf needs sorting. Three books on the Ash Wars, and no two agree on anything.' },
       ],
+      next: 'offer',
     },
     ash: {
       speaker: 'archivist',
@@ -864,6 +1065,50 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'You read the temple record of Cendre ford. Forty dead, not four hundred.' },
         { text: 'Somebody wanted the Lord of Ardencia feared. Your grandmother has opinions about who. She will not share them with me.' },
       ],
+      next: 'offer',
+    },
+    // Side quest: The Overdue Shelf.
+    offer: {
+      speaker: 'archivist',
+      lines: [
+        { text: 'And while you are here: your overdue list. The ferryman, the soup vendor, and your grandmother.' },
+        { text: 'Today everyone is in a good mood. Today they might even give the books back.' },
+      ],
+      choices: [
+        { text: "I'll get them back.", next: 'accept' },
+        { text: 'Not today.' },
+      ],
+    },
+    accept: {
+      speaker: 'archivist',
+      set: { 'side.overdue.accepted': true },
+      lines: [
+        { text: 'Bless you. Be firm with the ferryman. Be gentle with your grandmother. Be quick with the soup vendor, or she will feed you.' },
+        nar('(The Overdue Shelf is in the Quests page of the menu.)'),
+      ],
+    },
+    remind: {
+      speaker: 'archivist',
+      lines: [
+        { text: 'Any luck with the overdue books?' },
+        { if: { notFlag: 'side.overdue.ferry' }, text: 'The ferryman will tell you the sea has his. The sea has never borrowed a book from us.' },
+        { if: { notFlag: 'side.overdue.soup' }, text: 'The soup vendor has the pumpkin book. Brace yourself for page forty.' },
+        { if: { notFlag: 'side.overdue.vol2' }, text: 'Your grandmother has Volume Two. Three years. I have stopped asking. I have started praying.' },
+      ],
+    },
+    returned: {
+      speaker: 'archivist',
+      set: { 'side.overdue.done': true },
+      lines: [
+        { text: 'All three. Damp, souped, and... Volume Two. In your grandmother\'s hand, in every margin.' },
+        { text: 'She wrote in a library book. I should be furious. I think the margins are worth more than the book.' },
+        { text: 'It goes on the Tales shelf. Volume One is still missing, mind. Nobody has signed it out.' },
+        { text: 'Someday it will turn up somewhere strange. Books do.' },
+      ],
+    },
+    after: {
+      speaker: 'archivist',
+      lines: [{ text: "Volume Two is on the Tales shelf. Read your grandmother's margins. Then tell me who she thinks wanted Rael feared." }],
     },
   }),
 
@@ -874,12 +1119,25 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   ]),
 
   script('cane_cutter_talk', {
-    start: { lines: [], next: [{ if: { flag: 'story.zetwal_return' }, to: 'danger' }, { to: 'calm' }] },
+    start: {
+      lines: [],
+      next: [
+        { if: { all: [{ flag: 'side.cane_name.recorded' }, { notFlag: 'side.cane_name.done' }] }, to: 'finish' },
+        { if: { all: [{ flag: 'side.cane_name.accepted' }, { notFlag: 'side.cane_name.done' }] }, to: 'remind' },
+        { if: { flag: 'story.zetwal_return' }, to: 'danger' },
+        { if: { flag: 'side.cane_name.done' }, to: 'thanks' },
+        { to: 'calm' },
+      ],
+    },
     calm: {
       speaker: 'cane_cutter',
       lines: [
         { text: 'Festival day, archivist! Even the cane gets a rest. The road is as peaceful as it has been in years.' },
         { text: 'Only thing out there today is a veiled woman by the old mill, asking the young ones if they feel alone. Odd sort.' },
+      ],
+      choices: [
+        { text: 'You seem far away today.', next: 'grann' },
+        { text: 'Enjoy the rest.' },
       ],
     },
     danger: {
@@ -889,6 +1147,57 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Bandits by day, smugglers by night, and those veiled folk everywhere now.' },
         { text: 'If the cane goes quiet around you, run. The cane is never quiet.' },
       ],
+    },
+    // Side quest: A Name in the Cane.
+    grann: {
+      speaker: 'cane_cutter',
+      lines: [
+        { text: 'Far away? No. Only... the names are read tonight, and my grandmother is on no stone.' },
+        { text: 'She cut cane on this road when it was the Crown\'s. Grann, we called her. I never learned her real name.' },
+        { text: 'The Crown wrote cutters down as numbers. By the time anyone asked her name, she had stopped saying it.' },
+      ],
+      choices: [
+        { text: "I'll look for her name.", next: 'accept' },
+        { text: "I'm sorry.", next: 'sorry' },
+      ],
+    },
+    sorry: { speaker: 'cane_cutter', lines: [{ text: 'So am I, archivist. But sorry never carved a stone.' }] },
+    accept: {
+      speaker: 'cane_cutter',
+      set: { 'side.cane_name.accepted': true },
+      lines: [
+        { text: 'You would? Then start at the name stones on the Temple island. If she is anywhere, she is there.' },
+        nar('(A Name in the Cane is in the Quests page of the menu.)'),
+      ],
+    },
+    remind: {
+      speaker: 'cane_cutter',
+      lines: [
+        { if: { notFlag: 'side.cane_name.stones' }, text: 'Any luck at the name stones, archivist?' },
+        {
+          if: { all: [{ flag: 'side.cane_name.stones' }, { notFlag: 'clue.cane_name' }] },
+          text: 'Not on the stones? Then she is only in the cane now. My mother said Grann loved the flowers by the gate.',
+        },
+        {
+          if: { all: [{ flag: 'clue.cane_name' }, { notFlag: 'side.cane_name.recorded' }] },
+          speaker: G,
+          text: "I think I know her name. Let me write it down properly first, in Mother Solange's list.",
+        },
+      ],
+    },
+    finish: {
+      speaker: 'cane_cutter',
+      set: { 'side.cane_name.done': true },
+      lines: [
+        say(G, 'Her name was Rose-Aimée. Her mother named her for the roses by the gate.'),
+        { text: 'Rose-Aimée.' },
+        { text: '...Rose-Aimée. Tonight I will say it so loud the goddess has to hear it twice.' },
+        { text: 'Here. My wife stitched this for the festival. Wear it. It is a better place for it than my pocket.' },
+      ],
+    },
+    thanks: {
+      speaker: 'cane_cutter',
+      lines: [{ text: "Rose-Aimée. I've said it a hundred times today, archivist. It still sounds new." }],
     },
   }),
 
@@ -919,4 +1228,56 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   simple('mill_ruin', [
     { text: 'The old sugar mill, burned in the war and never rebuilt. Fresh ashes in the hearth: someone sleeps here.' },
   ]),
+
+  // A Name in the Cane: the Cane Road fifty years ago, and Mother Solange's list in the Archive.
+  once('cane_echo_enter', 'story.cane_echo_seen', [
+    nar("The road is narrower, and the cane is the Crown's. Overseers' lanterns bob far off between the rows."),
+    say(AF, "I've got the door, Gigi."),
+  ]),
+  script('echo_cane_worker_talk', {
+    start: { lines: [], next: [{ if: { flag: 'clue.cane_name' }, to: 'again' }, { to: 'meet' }] },
+    meet: {
+      speaker: 'echo_cane_worker',
+      lines: [
+        { text: "Marshal? On the Crown's road? They'll shoot you for it, sir. And me for talking to you." },
+        say(P, 'Then talk quickly. What is your name?'),
+        { text: 'Nobody asks that here. The overseer calls me Forty-One.' },
+        say(P, 'I did not ask what he calls you.'),
+        { text: '...Rose-Aimée. My mother named me for the roses by the gate. The only pretty thing on this road.' },
+        say(P, 'Rose-Aimée. After tomorrow, nobody on this island will be a number.'),
+        nar("(Clue: the cane cutter's grandmother was Rose-Aimée.)", { set: { 'clue.cane_name': true } }),
+      ],
+    },
+    again: {
+      speaker: 'echo_cane_worker',
+      lines: [{ text: "Rose-Aimée, sir. Don't forget it. Everyone else does." }],
+    },
+  }),
+  script('solange_list', {
+    start: {
+      lines: [],
+      next: [
+        { if: { all: [{ flag: 'clue.cane_name' }, { notFlag: 'side.cane_name.recorded' }] }, to: 'record' },
+        { if: { flag: 'side.cane_name.recorded' }, to: 'recorded' },
+        { to: 'look' },
+      ],
+    },
+    look: {
+      lines: [
+        nar("Mother Solange's list of names, brought up from the lowest shelf for the festival."),
+        nar('Fifty years of hands have added to it. The newest names are in the senior archivist\'s neat print.'),
+      ],
+    },
+    record: {
+      set: { 'side.cane_name.recorded': true },
+      lines: [
+        nar('The list ends with the line the stones carry: "the cutters of the Cane Road, whose names the Crown did not keep."'),
+        say(G, 'Then we keep them.'),
+        nar('Beneath it, in her best archive hand, Gianna writes: Rose-Aimée, cane cutter, the Cane Road.'),
+      ],
+    },
+    recorded: {
+      lines: [nar("Mother Solange's list. The newest line is in Gianna's hand: Rose-Aimée, cane cutter, the Cane Road.")],
+    },
+  }),
 ];

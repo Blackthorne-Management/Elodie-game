@@ -35,8 +35,8 @@ built `side.<quest>.rewarded` flag.
 Secret-item quests (number 4 in each capital) also give the secret item (`SECRET-ITEMS.md`).
 
 **Threads across capitals:**
-- **The Overdue Books:** Z-2 (the ferryman's book), Se-1 (*Ash Wars Gossip* Volume One), and Anicette's Volume Two in
-  Chapter 10 (main story).
+- **The Overdue Books:** The Overdue Shelf (built, Chapter 1: the ferryman's book, the soup vendor's and Anicette's
+  Volume Two), then Se-1 (*Ash Wars Gossip* Volume One).
 - **The four Ash Wars accounts** (guide 5.8): the Zetwal temple record (built), the Kuroshi spy ledger (K-2), the Crown
   chronicle (Al-2), Anicette's recollection (Chapter 10). Reading all four gives +3 Concord and a line at the Hearing.
 - **The ash thumbprint:** every rebel safehouse has the same small grey thumbprint on its door, the Ash Ledger's mark.
@@ -98,6 +98,24 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 ---
 
 ## Pòt Limyè (Zetwal)
+
+**Built (owner approved, Oct 14):** the three Chapter 1 side quests in `quest/src/data/sideQuests.ts`, with their
+lines in `quest/src/data/dialogue/zetwal.ts`. None has a fight.
+- **The Overdue Shelf** (senior archivist, Temple Archive): get back the ferryman's *Tides of the Southern Reach*,
+  the soup vendor's *Ninety Ways With Pumpkin* and Anicette's *Ash Wars Gossip, Volume Two*, in any order. Anicette
+  asks one question first: how many dead the temple healers counted at Cendre (you must have read the temple record).
+  Volume Two then joins the Tales shelf, margins and all. 60 gold, 50 XP, +1 Influence. (The approved Echo step,
+  Volume One on the shelf fifty years ago, was dropped: the Ash Wars were 25 years ago, so the book did not exist yet.)
+- **Soup for the Cousins** (soup vendor, plaza): carry bowls to the old neighbor, the town guard and the ferryman.
+  Teaches the minimap and tap to talk. 3 Clay-pot soups, 30 gold, 40 XP, +1 Influence.
+- **A Name in the Cane** (cane cutter, Cane Road): his grandmother ("Grann") is on no name stone. Read the stones
+  (a line for "the cutters whose names the Crown did not keep"), use the Echo by the east gate to meet her young
+  (Rose-Aimée, called Forty-One by the overseer), write her into Mother Solange's list in the Archive, tell him.
+  Sun-stitched charm, 50 XP, +1 Influence. (Grandmother, not great-grandmother: fifty years back she was young.)
+
+Z-1 to Z-3 below were the design pack's first proposals for the same three slots; they stay as candidates for later
+chapters (Z-3, The Lonely Cutter, fits the return in Chapter 10).
+
 
 Z-1 to Z-5 open in Chapter 1 and have **no fighting**. Most can be done before or after the Locket; the ones that need
 the Echo open after `item.sun_locket`. All can be finished in the Last Evening (with Yari) before leaving.

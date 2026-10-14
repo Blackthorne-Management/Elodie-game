@@ -298,8 +298,9 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
      whistle from Chapter 1 calls the Free Brasador to order).
   2. **Seat the feuds:** three mediations with Concord (guide 5.4): Dorini merchants against Ironvow raiders, Suzumori
      spies against Agnivansh priests (the burned temple), and the Stillwater dissidents against everyone.
-  3. Anicette finally returns *Ash Wars Gossip, Volume Two* (her own recollection: the fourth Ash Wars account).
-     Players who have read all four can tell which is false.
+  3. Anicette's *Ash Wars Gossip, Volume Two* (her own recollection: the fourth Ash Wars account) is now returned in
+     Chapter 1 by the built side quest The Overdue Shelf (owner approved, Oct 14). This beat becomes Anicette
+     talking it through with players who have read all four, who can tell which is false (proposal).
   4. **The Betrayal.** The Crown out-pays the least-paid of Al-Doria, Skarragol, Kuroshi and Jwaladesh (ties to
      Dorini). The betrayer is revealed as a secret member of the Quiet Crown. **Exposed route:** with the Kuroshi
      evidence and that house's price at least 60 percent paid, Gianna confronts them here and turns them into a late
@@ -368,7 +369,7 @@ Rael at the Hearing: "I never asked the eggs how they felt. I am asking now."
 |---|---|---|
 | The Seventh Clause | Ch. 1 (six clauses, seven ribbons, blank stone line), Ch. 2 (Xaraguá never shown it), Ch. 3 (the sealed page, Benny's note), Ch. 5 (read aloud), Ch. 9 (Thomas's record) | Ch. 12 and the Hearing (Rael as Warden of Oaths enforces it) |
 | Rael's eight clues (guide 5.8) | signet glow (Ch. 4), Elodie's two lines (Ch. 5), Kuroshi ledger trail (Ch. 7), Samira's coin (Ch. 3), Free Brasador "the arrows missed" (Ch. 4 onward), the lamp-oil seller (Ch. 2), the Ardencia debate (Ch. 4), nobody dies in his fights (all) | The Harbor Turn (Ch. 11) |
-| The four Ash Wars accounts | Zetwal temple record (Ch. 1, built), Kuroshi spy ledger (Ch. 7), Crown chronicle (Ch. 9), Anicette's recollection (Ch. 10) | A Concord bonus and a Hearing line when all four are read (proposal) |
+| The four Ash Wars accounts | Zetwal temple record (Ch. 1, built), Kuroshi spy ledger (Ch. 7), Crown chronicle (Ch. 9), Anicette's recollection (Ch. 1, The Overdue Shelf, built) | A Concord bonus and a Hearing line when all four are read (proposal) |
 | The Overdue Books (proposal) | *Ash Wars Gossip* Volume Two (Anicette) and the missing Volume One (built hints) | Volume One turns up in Elodie's rooms at the Seat (Ch. 5 side quest) |
 | Anissa finds her voice | shy lines (Ch. 1), first Surge (Ch. 2), Calm attacks by Hushers (Ch. 2 on), she speaks at the Muster (Ch. 10, proposal), she speaks at the Hearing | Her Surge animation grows more confident each chapter |
 | The rebel safehouses | one per capital (guide 5.4) | lead to the Ash Ledger and Rael's real work |

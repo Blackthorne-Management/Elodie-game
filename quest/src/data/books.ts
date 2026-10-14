@@ -5,6 +5,7 @@
 // Story facts follow docs/quest/QUEST-BUILD-GUIDE.md Section 5; the Seventh Clause and Rael's secret
 // are only hinted at.
 
+import type { Condition } from '../engine/conditions.ts';
 import type { DialogueChoice, DialogueScript, Speaker } from '../engine/dialogue.ts';
 import type { ObjectInfo } from '../engine/content.ts';
 
@@ -16,6 +17,8 @@ export interface Book {
   category: BookCategory;
   /** The text; split into pages by `bookPages`. */
   text: string;
+  /** On its shelf only once this holds (a book returned by a side quest). */
+  available?: Condition;
 }
 
 export interface Shelf {
@@ -130,6 +133,21 @@ export const BOOKS: readonly Book[] = [
       'Do not ask her for it. When I asked, she asked me why I wanted to know about the Lord of Ardencia, and then she changed the subject to my posture. ' +
       'Volume One is missing from the shelf as well. Nobody has signed it out.',
   },
+  {
+    // Returned by the side quest The Overdue Shelf: one of the four Ash Wars accounts (Anicette's).
+    id: 'zetwal_ash_wars_anicette',
+    title: 'Ash Wars Gossip, Volume Two',
+    category: 'gossip',
+    available: { flag: 'side.overdue.done' },
+    text:
+      'A gossip\'s history of the Ash Wars, printed in Aldermoor, full of Lord Rael\'s cruelties. Every margin is filled in Grandmother Anicette\'s hand. ' +
+      'Beside the burning at Cendre: "Forty, not four hundred. The healers counted. Gossips do not." ' +
+      'Beside the tale of Rael hanging his captains: "One captain. For selling the grain meant for the hungry. Nobody prints that part." ' +
+      'Beside a woodcut of Rael with horns: "Better looking than this. Sadder, too." ' +
+      'On the last page, a longer note. "Patricio met him once, after the war. He came home and said the man wears his name like armour. ' +
+      'He did not know what Rael keeps under it. Neither do I. ' +
+      'Elodie came home from the highlands that spring and would not speak of it at all."',
+  },
 
   // ---- Zetwal: the Hall of the Accord (the seat of the Zetwal state) -----------------------------
   {
@@ -183,7 +201,7 @@ export const BOOKS: readonly Book[] = [
 export const SHELVES: readonly Shelf[] = [
   { id: 'archive_history', name: 'Shelf: History and War', books: ['zetwal_founding', 'zetwal_alliance_war', 'zetwal_ash_wars_temple'] },
   { id: 'archive_faith', name: 'Shelf: Faith', books: ['zetwal_gaze_primer', 'zetwal_say_their_names', 'zetwal_four_hands'] },
-  { id: 'archive_tales', name: 'Shelf: Tales and Notes', books: ['zetwal_bridge_tale', 'zetwal_hutia_lamp', 'zetwal_overdue'] },
+  { id: 'archive_tales', name: 'Shelf: Tales and Notes', books: ['zetwal_bridge_tale', 'zetwal_hutia_lamp', 'zetwal_overdue', 'zetwal_ash_wars_anicette'] },
   { id: 'hall_law', name: 'Shelf: Law and Houses', books: ['zetwal_sun_accord', 'zetwal_eight_houses'] },
   { id: 'hall_records', name: 'Shelf: Harbor Records', books: ['zetwal_harbor_tolls', 'zetwal_quiet_tract'] },
 ];
@@ -230,8 +248,9 @@ export function shelfScript(shelf: Shelf): DialogueScript {
     const book = BY_ID.get(id);
     if (!book) throw new Error(`Shelf ${shelf.id}: unknown book ${id}`);
     const flag = loreFlag(id);
-    choices.push({ text: book.title, if: { notFlag: flag }, next: id });
-    choices.push({ text: `${book.title} (read)`, if: { flag }, next: id });
+    const here = (c: Condition): Condition => (book.available ? { all: [book.available, c] } : c);
+    choices.push({ text: book.title, if: here({ notFlag: flag }), next: id });
+    choices.push({ text: `${book.title} (read)`, if: here({ flag }), next: id });
     nodes[id] = {
       speaker: bookSpeakerId(id),
       set: { [flag]: true },

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 7,
+  "nextobjectid": 8,
   "layers": [
     {
       "id": 1,
@@ -416,6 +416,29 @@
               "name": "dialogue",
               "type": "string",
               "value": "shelf.archive_tales"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "solange_list",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 112,
+          "width": 64,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "solange_list"
             },
             {
               "name": "era",

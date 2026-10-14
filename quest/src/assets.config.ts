@@ -230,6 +230,7 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   echo_messenger: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'braid', outfit: 0x8a6a3a, trim: C.N!, legs: C.b! },
   echo_builder: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x8a7a68, trim: C.B!, legs: C.b!, headgear: 'brimmed', headgearColor: C.N! },
   echo_drummer: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x6a5230, trim: C.y!, legs: C.b!, headgear: 'cap', headgearColor: C.R!, accessories: ['drum'] },
+  echo_cane_worker: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x9a8a70, trim: C.o!, legs: C.b!, headgear: 'wrap', headgearColor: 0xc85a6a },
 
   // Test village (Phase 1).
   villager: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x6a8a3a, trim: C.w!, legs: C.B! },

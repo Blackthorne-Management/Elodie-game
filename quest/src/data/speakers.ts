@@ -47,6 +47,7 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   echo_drummer: s('echo_drummer', 'Drummer'),
   echo_aide: s('echo_aide', 'Aide'),
   echo_messenger: s('echo_messenger', 'Messenger'),
+  echo_cane_worker: s('echo_cane_worker', 'Cane worker'),
   echo_guard: s('echo_guard', 'Guard'),
   echo_builder: s('echo_builder', 'Builder'),
   echo_lampwright: s('echo_lampwright', 'Lampwright'),

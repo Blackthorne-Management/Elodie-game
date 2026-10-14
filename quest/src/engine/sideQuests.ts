@@ -31,6 +31,8 @@ export interface SideQuestDef {
   /** Holds once the player has accepted it. */
   accepted: Condition;
   steps: readonly SideQuestStep[];
+  /** The steps can be done in any order: the log shows them all at once. */
+  parallel?: boolean;
   /** Holds once it is finished (usually the last step's flag). */
   done: Condition;
   reward: SideQuestReward;
@@ -49,7 +51,7 @@ export function visibleSteps(flags: FlagReader, q: SideQuestDef): { text: string
   for (const s of q.steps) {
     const done = evaluate(s.done, flags);
     out.push({ text: s.text, done });
-    if (!done) break;
+    if (!done && !q.parallel) break;
   }
   return out;
 }

@@ -49,6 +49,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   echo_guard: n('echo_guard', 'echo_soldier', 'Guard'),
   echo_builder: n('echo_builder', 'echo_builder', 'Builder'),
   echo_lampwright: n('echo_lampwright', 'echo_builder', 'Lampwright'),
+  echo_cane_worker: n('echo_cane_worker', 'echo_cane_worker', 'Cane worker'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);
