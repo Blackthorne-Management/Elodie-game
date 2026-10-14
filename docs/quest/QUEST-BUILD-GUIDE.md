@@ -482,6 +482,13 @@ The Crown bribes with the same three currencies. **Rael** appears to have taken 
 
 - **Capital layout (owner decision, Oct 14):** every capital is at least **four sections** (separate maps joined by doors): the hub (the town or plaza), the **library**, the **capital building** (the seat of the state), and a **wild section**, either outside the city or in its rough district. Shrines, homes and puzzle sites come on top. The wild section has **random encounters**: bandits, crooks and Quiet Crown cultists, chosen per capital. They use the map layer `encounters` (property `table`), the tables in `quest/src/data/encounters.ts`, and the chance and grace steps in `quest/src/config.ts`. Until the battle system (Phase 3) exists, an encounter is a short stand-in scene: Fight always wins and Run always escapes, and both are remembered as flags. **No fights in Chapter 1 (owner decision, Oct 14):** there is no war and no banditry yet, so each wild section's ambushes are gated by a story flag that a later chapter sets when the party returns (Zetwal: `story.zetwal_return`, listed in `LATER_STORY_FLAGS`). Ambushes come about once every 50 steps.
 - **Zetwal's capital is Pòdlimyè** (owner decision, Oct 14): Kreyol "Port of Light" (*pò* is "port"), one word the way Port-de-Paix is Pòdepè. It replaces the first name, Pòt Limyè (*pòt* is "door"). A fluent speaker checks the spelling (Nov 18). Zetwal is the island nation.
+- **The menu's maps (owner decision, Oct 14):** the **city map** is drawn from the capital's real maps: each outdoor
+  section at its place on one grid (`at` in `quest/src/data/rpg.ts` CITIES), paths and bridges joining doors that lead
+  to each other, indoor places as numbered buildings at their doors, unvisited places greyed with "???", and a
+  blinking "you are here" (`quest/src/engine/cityMap.ts`). The **realm map** has the board game's shapes: coastlines,
+  borders, islands, capitals and the Throne, traced from `docs/art/board-guide.png` by `quest/tools/realm-map.py` into
+  `quest/src/data/realmMap.ts` (run it again when the board's borders change). Countries not reached yet are greyed;
+  a legend lists each place and its house.
 - **Item popup (owner decision, Oct 14):** the first time an important item is received, it is presented. Story items
   (the Sun Locket) and the secret items (gold "Legendary item" banner) get the full showcase: the screen dims, the item
   rises and grows with turning light rays, a glow and sparkles, then its name, description and abilities. Each ability

@@ -320,6 +320,26 @@ export const ECHO_FILTER = {
   flash: { duration: 280, r: 255, g: 226, b: 170 },
 } as const;
 
+/** The menu's maps (ui/GameMenu.ts): the city drawn from its tiles, the realm from data/realmMap.ts. */
+export const MAP_ART = {
+  sea: 0x2b5f7c,
+  seaLight: 0x3a7290,
+  foam: 0x6a9cb4,
+  path: 0xc8a46b,
+  /** Places not reached yet are greyed, then darkened by this much. */
+  fogDim: 0.78,
+  building: 0xf2d04b,
+  fogBuilding: 0x6e6a78,
+  buildingText: '#1a1420',
+  labelStroke: '#14101a',
+  labelBack: 0x14101a,
+  here: 0xffffff,
+  hereRim: 0x1a1420,
+  capital: 0xfff8e0,
+  throne: 0xf4ecd8,
+  throneRing: 0xd9a441,
+} as const;
+
 /** Interface colours. */
 export const UI = {
   font: 'monospace',

@@ -4,9 +4,10 @@
 // Rules come from engine/rpg.ts; content from data/rpg.ts. The Field scene runs System choices.
 
 import Phaser from 'phaser';
-import { UI, textureKeyForPortrait } from '../assets.config.ts';
+import { MAP_ART, UI, textureKeyForPortrait } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { ENCOUNTERS } from '../data/encounters.ts';
+import { REALM_MAP } from '../data/realmMap.ts';
 import { RPG } from '../data/rpg.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { encounterFlag } from '../engine/game.ts';
@@ -37,15 +38,20 @@ import {
   stats,
   unequip,
   visitedFlag,
+  type CityDef,
+  type CitySection,
   type ItemDef,
   type MemberDef,
   type Slot,
 } from '../engine/rpg.ts';
+import { cityLayout, cityPosition } from '../engine/cityMap.ts';
 import { canReplay } from '../engine/showcase.ts';
-import type { Era } from '../engine/types.ts';
+import type { GameMap, TiledMap } from '../engine/tiledMap.ts';
+import type { Era, Pos } from '../engine/types.ts';
 import type { InputManager } from '../input/actions.ts';
 import type { MenuItem } from './MenuPanel.ts';
 import type { PanelLine } from './TextPanel.ts';
+import { tileColours } from './tileColours.ts';
 
 export const MENU_TABS = ['Status', 'Items', 'Equip', 'Quests', 'Map', 'Foes', 'System'] as const;
 export type MenuTab = (typeof MENU_TABS)[number];
@@ -58,6 +64,34 @@ export interface MenuContext {
   era: Era;
   journal: () => PanelLine[];
   system: () => MenuItem[];
+  /** Every map (the city map is drawn from them), and a map's Tiled data (its tiles). */
+  maps: Readonly<Record<string, GameMap>>;
+  rawMap: (id: string) => TiledMap | undefined;
+  /** The player's tile on the current map. */
+  pos: Pos;
+}
+
+const CITY_TEXTURE = 'menu-city-map';
+const REALM_TEXTURE = 'menu-realm-map';
+
+/** Darken a colour (k < 1). */
+function shade(c: number, k: number): number {
+  return (Math.round(((c >> 16) & 255) * k) << 16) | (Math.round(((c >> 8) & 255) * k) << 8) | Math.round((c & 255) * k);
+}
+
+/** A place not reached yet: greyed and darkened. */
+function fog(c: number): number {
+  const grey = Math.round((((c >> 16) & 255) + ((c >> 8) & 255) + (c & 255)) / 3);
+  const mix = (v: number) => Math.round((v * 0.5 + grey * 0.5) * MAP_ART.fogDim);
+  return (mix((c >> 16) & 255) << 16) | (mix((c >> 8) & 255) << 8) | mix(c & 255);
+}
+
+/** The tiles on a straight line between two tiles (both ends included). */
+function line(a: Pos, b: Pos): Pos[] {
+  const n = Math.max(Math.abs(b.x - a.x), Math.abs(b.y - a.y), 1);
+  const out: Pos[] = [];
+  for (let i = 0; i <= n; i++) out.push({ x: Math.round(a.x + ((b.x - a.x) * i) / n), y: Math.round(a.y + ((b.y - a.y) * i) / n) });
+  return out;
 }
 
 const DEPTH = 6000;
@@ -103,6 +137,8 @@ export class GameMenu {
   private journalLines: string[] = [];
   /** Tappable areas of the current page (rebuilt on every draw). */
   private hits: Hit[] = [];
+  /** The map page's blinking "you are here" (stopped on every redraw). */
+  private blink: Phaser.Tweens.Tween | null = null;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -130,6 +166,8 @@ export class GameMenu {
   }
 
   close(): void {
+    this.blink?.remove();
+    this.blink = null;
     this.root.setVisible(false);
     this.ctx = null;
   }
@@ -364,6 +402,8 @@ export class GameMenu {
   private draw(): void {
     const ctx = this.ctx;
     if (!ctx) return;
+    this.blink?.remove();
+    this.blink = null;
     this.content.removeAll(true);
     this.labels = [];
     this.hits = [];
@@ -568,69 +608,158 @@ export class GameMenu {
       this.text(8, TOP + 4, 'No city map for this place.', UI.dimText);
       return;
     }
-    const { city, section } = found;
+    this.drawCity(g, found.city, found.section);
+  }
+
+  /** A blinking "you are here" marker (a square of `size` px with a dark rim). */
+  private marker(x: number, y: number, size: number): void {
+    const m = this.scene.add.rectangle(x, y, size, size, MAP_ART.here).setStrokeStyle(1, MAP_ART.hereRim);
+    this.content.add(m);
+    this.blink = this.scene.tweens.add({ targets: m, alpha: 0.15, duration: 420, yoyo: true, repeat: -1 });
+  }
+
+  /** A canvas texture drawn pixel by pixel (replacing any older one with the key). */
+  private pixels(key: string, w: number, h: number, paint: (img: ImageData) => void): void {
+    if (this.scene.textures.exists(key)) this.scene.textures.remove(key);
+    const tex = this.scene.textures.createCanvas(key, w, h)!;
+    const c = tex.getContext();
+    const img = c.createImageData(w, h);
+    paint(img);
+    c.putImageData(img, 0, 0);
+    tex.refresh();
+  }
+
+  /** The city: its outdoor sections drawn from their real tiles, buildings at their doors, paths between. */
+  private drawCity(g: Phaser.GameObjects.Graphics, city: CityDef, section: CitySection): void {
+    const ctx = this.ctx!;
     this.text(8, TOP + 1, `${city.name} (House ${city.house})`, UI.accentText);
-    const cols = Math.max(...city.sections.map((s) => s.box.x + s.box.w));
-    const rows = Math.max(...city.sections.map((s) => s.box.y + s.box.h));
-    const cw = Math.floor((VIEW_WIDTH - 20) / cols);
-    const ch = Math.floor((VIEW_HEIGHT - TOP - 30) / rows);
-    const ox = 10;
-    const oy = TOP + 12;
-    const centre = (map: string) => {
-      const b = city.sections.find((s) => s.map === map)!.box;
-      return { x: ox + (b.x + b.w / 2) * cw, y: oy + (b.y + b.h / 2) * ch };
-    };
-    g.lineStyle(2, 0xc8a46b, 0.8);
-    for (const [a, b] of city.links) {
-      const p = centre(a);
-      const q = centre(b);
-      g.lineBetween(p.x, p.y, q.x, q.y);
+    const layout = cityLayout(city, ctx.maps);
+    const seen = (map: string) => map === section.map || ctx.flags.isSet(visitedFlag(map));
+    const W = layout.width;
+    this.pixels(CITY_TEXTURE, W, layout.height, (img) => {
+      const put = (x: number, y: number, c: number) => {
+        if (x < 0 || y < 0 || x >= W || y >= layout.height) return;
+        const i = (y * W + x) * 4;
+        img.data[i] = (c >> 16) & 255;
+        img.data[i + 1] = (c >> 8) & 255;
+        img.data[i + 2] = c & 255;
+        img.data[i + 3] = 255;
+      };
+      for (let y = 0; y < layout.height; y++) for (let x = 0; x < W; x++) put(x, y, (x + y * 3) % 11 ? MAP_ART.sea : MAP_ART.seaLight);
+      for (const c of layout.connectors) for (const p of line(c.from, c.to)) put(p.x, p.y, MAP_ART.path);
+      for (const s of layout.sections) {
+        const raw = ctx.rawMap(s.map);
+        const map = ctx.maps[s.map];
+        if (!raw || !map) continue;
+        const colours = tileColours(map, raw, 'present');
+        const known = seen(s.map);
+        for (let y = 0; y < s.h; y++) {
+          for (let x = 0; x < s.w; x++) {
+            const c = parseInt(colours[y * s.w + x]!.slice(1), 16);
+            put(s.x + x, s.y + y, known ? c : fog(c));
+          }
+        }
+      }
+    });
+    // Scale to fit (whole pixels), on the left; the legend on the right.
+    const areaW = 200;
+    const areaH = VIEW_HEIGHT - TOP - 28;
+    const k = Math.max(1, Math.floor(Math.min(areaW / W, areaH / layout.height)));
+    const ox = 6 + Math.floor((areaW - W * k) / 2);
+    const oy = TOP + 13;
+    this.content.add(this.scene.add.image(ox, oy, CITY_TEXTURE).setOrigin(0).setScale(k));
+    g.lineStyle(1, UI.boxBorder, 0.7).strokeRect(ox - 1.5, oy - 1.5, W * k + 3, layout.height * k + 3);
+
+    // Section names on the map; buildings as numbered markers.
+    for (const s of layout.sections) {
+      const known = seen(s.map);
+      const t = this.text(0, 0, known ? s.name : '???', known ? UI.text : UI.dimText).setStroke(MAP_ART.labelStroke, 3);
+      t.setPosition(Math.round(ox + (s.x + s.w / 2) * k - t.width / 2), Math.round(oy + (s.y + s.h / 2) * k - t.height / 2));
     }
-    for (const s of city.sections) {
-      const seen = ctx.flags.isSet(visitedFlag(s.map));
-      const here = s === section;
-      const bx = ox + s.box.x * cw + 1;
-      const by = oy + s.box.y * ch + 1;
-      const bw = s.box.w * cw - 2;
-      const bh = s.box.h * ch - 2;
-      g.fillStyle(here ? 0x5a4a1e : seen ? 0x2e3a4a : 0x1e1a24, 1).fillRect(bx, by, bw, bh);
-      g.lineStyle(1, here ? 0xf2d04b : seen ? 0xe8d8b0 : 0x6e6a78, 1).strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1);
-      this.text(bx + 3, by + 2, seen || here ? s.name : '???', here ? UI.accentText : seen ? UI.text : UI.dimText, bw - 6);
-      if (here) this.text(bx + 3, by + bh - 11, 'You are here', UI.accentText);
-    }
+    const LX = ox + W * k + 10;
+    let ly = TOP + 13;
+    layout.buildings.forEach((b, i) => {
+      const known = seen(b.map);
+      const bx = ox + b.pos.x * k + k / 2;
+      const by = oy + b.pos.y * k + k / 2;
+      g.fillStyle(MAP_ART.labelBack, 1).fillRect(bx - 4, by - 9, 9, 9);
+      g.fillStyle(known ? MAP_ART.building : MAP_ART.fogBuilding, 1).fillRect(bx - 3, by - 8, 7, 7);
+      const n = this.text(0, 0, String(i + 1), MAP_ART.buildingText);
+      n.setPosition(Math.round(bx - n.width / 2 + 0.5), Math.round(by - 9));
+      ly += this.text(LX, ly, `${i + 1} ${known ? b.name : '???'}`, known ? UI.text : UI.dimText, VIEW_WIDTH - LX - 6).height + 3;
+    });
+    ly += 6;
+    this.text(LX, ly, 'You are here:', UI.accentText);
+    this.text(LX, ly + 10, section.name, UI.text, VIEW_WIDTH - LX - 6);
+    const here = cityPosition(layout, ctx.mapId, ctx.pos);
+    if (here) this.marker(ox + here.x * k + k / 2, oy + here.y * k + k / 2, Math.max(3, k + 1));
     this.labels = city.sections.map((s) => s.name);
   }
 
+  /** The realm, shaped like the board game's map (data/realmMap.ts). */
   private drawRealm(g: Phaser.GameObjects.Graphics, cityId?: string): void {
-    this.text(8, TOP + 1, 'The realm', UI.accentText);
-    const x0 = 40;
-    const y0 = TOP + 8;
-    const w = VIEW_WIDTH - 80;
-    const h = VIEW_HEIGHT - TOP - 28;
-    const at = (p: { x: number; y: number }) => ({ x: x0 + (p.x / 100) * w, y: y0 + (p.y / 100) * h });
-    const ring = RPG.realm.filter((p) => p.id !== 'seat');
-    const seat = RPG.realm.find((p) => p.id === 'seat');
-    g.lineStyle(1, 0xc8a46b, 0.6);
-    ring.forEach((p, i) => {
-      const a = at(p);
-      const b = at(ring[(i + 1) % ring.length]!);
-      g.lineBetween(a.x, a.y, b.x, b.y);
-      if (seat) {
-        const s = at(seat);
-        g.lineBetween(a.x, a.y, s.x, s.y);
+    const ctx = this.ctx!;
+    const M = REALM_MAP;
+    const placeAt = (x: number, y: number): string => (x < 0 || y < 0 || x >= M.width || y >= M.height ? 'sea' : M.key[M.rows[y]![x]!]!);
+    const current = RPG.realm.find((p) => p.city && p.city === cityId)?.id;
+    const visited = (id: string) =>
+      id === current || (RPG.realm.find((p) => p.id === id)?.city ? (RPG.cities[RPG.realm.find((p) => p.id === id)!.city!]?.sections ?? []).some((s) => ctx.flags.isSet(visitedFlag(s.map))) : false);
+    const known = new Map(RPG.realm.map((p) => [p.id, visited(p.id)]));
+    this.pixels(REALM_TEXTURE, M.width, M.height, (img) => {
+      for (let y = 0; y < M.height; y++) {
+        for (let x = 0; x < M.width; x++) {
+          const id = placeAt(x, y);
+          let c: number;
+          if (id === 'sea') {
+            const coast = ['sea', placeAt(x + 1, y), placeAt(x - 1, y), placeAt(x, y + 1), placeAt(x, y - 1)].some((n) => n !== 'sea');
+            c = coast ? MAP_ART.foam : (x * 7 + y * 3) % 23 === 0 ? MAP_ART.seaLight : M.colours.sea!;
+          } else {
+            c = M.colours[id]!;
+            const n = [placeAt(x + 1, y), placeAt(x - 1, y), placeAt(x, y + 1), placeAt(x, y - 1)];
+            if (n.some((o) => o === 'sea')) c = shade(c, 0.62);
+            else if (n.some((o) => o !== id)) c = shade(c, 0.45);
+            if (!known.get(id)) c = fog(c);
+          }
+          const i = (y * M.width + x) * 4;
+          img.data[i] = (c >> 16) & 255;
+          img.data[i + 1] = (c >> 8) & 255;
+          img.data[i + 2] = c & 255;
+          img.data[i + 3] = 255;
+        }
       }
     });
-    for (const p of RPG.realm) {
-      const { x, y } = at(p);
-      const here = p.id === cityId;
-      g.fillStyle(here ? 0xf2d04b : p.id === 'seat' ? 0xfff2a0 : 0xe8d8b0, 1).fillCircle(x, y, here ? 4 : 3);
-      const t = this.text(x, y + 4, p.name, here ? UI.accentText : UI.text);
-      t.setX(Math.round(x - t.width / 2));
-      if (here) {
-        const tag = this.text(x, y - 13, 'You', UI.accentText);
-        tag.setX(Math.round(x - tag.width / 2));
+    const ox = 6;
+    const oy = TOP + 1;
+    this.content.add(this.scene.add.image(ox, oy, REALM_TEXTURE).setOrigin(0));
+
+    // Capitals, the Throne, and each country's name.
+    for (const [id, p] of Object.entries(M.capitals)) {
+      if (id === 'seat') {
+        g.fillStyle(MAP_ART.throneRing, 1).fillCircle(ox + p.x + 0.5, oy + p.y + 0.5, 5);
+        g.fillStyle(MAP_ART.throne, 1).fillCircle(ox + p.x + 0.5, oy + p.y + 0.5, 4);
+      } else {
+        g.fillStyle(MAP_ART.labelBack, 1).fillRect(ox + p.x - 1, oy + p.y - 1, 3, 3);
+        g.fillStyle(MAP_ART.capital, 1).fillRect(ox + p.x, oy + p.y, 1, 1);
       }
     }
+    for (const place of RPG.realm) {
+      if (place.id === 'seat') continue;
+      const at = M.labels[place.id]!;
+      const t = this.text(0, 0, place.name, known.get(place.id) ? UI.text : UI.dimText).setStroke(MAP_ART.labelStroke, 3);
+      t.setPosition(Math.round(ox + at.x - t.width / 2), Math.round(oy + at.y - t.height - 2));
+    }
+    // The legend: every place and its house; the one you are in, marked.
+    const LX = ox + M.width + 8;
+    this.text(LX, TOP + 1, 'The realm', UI.accentText);
+    RPG.realm.forEach((place, i) => {
+      const y = TOP + 14 + i * 12;
+      const here = place.id === current;
+      g.fillStyle(MAP_ART.labelBack, 1).fillRect(LX, y + 1, 8, 8);
+      g.fillStyle(M.colours[place.id] ?? 0xffffff, 1).fillRect(LX + 1, y + 2, 6, 6);
+      this.text(LX + 12, y, `${place.name} · ${place.house}${here ? '  (here)' : ''}`, here ? UI.accentText : known.get(place.id) ? UI.text : UI.dimText);
+    });
+    const cap = current ? M.capitals[current] : undefined;
+    if (cap) this.marker(ox + cap.x + 0.5, oy + cap.y + 0.5, 5);
     this.labels = RPG.realm.map((p) => p.name);
   }
 

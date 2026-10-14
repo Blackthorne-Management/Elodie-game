@@ -4,26 +4,10 @@
 // sideways phone, the top bar on an upright one, or the picture's top-left corner when there are no
 // bars wide enough. Redrawn only when Gianna reaches a new tile.
 
-import { TILESET } from '../assets.config.ts';
 import { SIDE_MAP } from '../config.ts';
 import type { GameMap, TiledMap } from '../engine/tiledMap.ts';
-import { TILE_LAYERS, findTileLayer } from '../engine/tiledMap.ts';
 import type { Era, Pos } from '../engine/types.ts';
-
-function hex(c: number): string {
-  return `#${c.toString(16).padStart(6, '0')}`;
-}
-
-/** Each tile's colour: its decoration's (a tree, a wall) or else its ground's. */
-function tileColours(map: GameMap, raw: TiledMap, era: Era): string[] {
-  const gid = new Map(TILESET.tiles.map((t) => [t.gid, hex(t.base)]));
-  const ground = findTileLayer(raw, era === 'present' ? TILE_LAYERS.groundPresent : TILE_LAYERS.groundEcho)?.data ?? [];
-  const deco = findTileLayer(raw, era === 'present' ? TILE_LAYERS.decoPresent : TILE_LAYERS.decoEcho)?.data ?? [];
-  const out: string[] = [];
-  for (let i = 0; i < map.width * map.height; i++) out.push(gid.get(deco[i] ?? 0) ?? gid.get(ground[i] ?? 0) ?? '#000000');
-  for (const d of map.doors) out[d.pos.y * map.width + d.pos.x] = '#f2d04b';
-  return out;
-}
+import { tileColours } from './tileColours.ts';
 
 export class SideMap {
   private readonly root: HTMLElement;

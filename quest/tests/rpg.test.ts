@@ -46,7 +46,7 @@ const rpg: RpgContent = {
     { id: 'pa', name: 'Pa', role: 'Warden', house: 'K', portrait: 'pa', era: 'echo', base: { hp: 70, sp: 10, atk: 13, def: 12, mag: 3, spd: 7 }, growth: { hp: 8, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 } },
   ],
   shops: { stall: { id: 'stall', name: 'Stall', city: 'z', stock: ['soup', 'charm', 'staff2'] } },
-  cities: { z: { id: 'z', name: 'Z', house: 'K', sections: [{ map: 'z-town', name: 'Town', box: { x: 0, y: 0, w: 2, h: 2 } }], links: [] } },
+  cities: { z: { id: 'z', name: 'Z', house: 'K', sections: [{ map: 'z-town', name: 'Town', at: { x: 0, y: 0 } }] } },
   realm: [],
   pillarRules: [{ pillar: 'influence', city: 'z', flags: ['lore.a', 'lore.b'], each: 1 }],
   startingGold: 150,
@@ -166,30 +166,16 @@ describe('the game content', () => {
     }
   });
 
-  it('every city section is a real map, sections do not overlap, and links join sections', () => {
+  it('every city section is a real map, listed once', () => {
     for (const c of Object.values(RPG.cities)) {
       const maps = c.sections.map((s) => s.map);
       expect(new Set(maps).size, c.id).toBe(maps.length);
-      for (const [a, b] of c.links) expect(maps.includes(a) && maps.includes(b), `${a}-${b}`).toBe(true);
-      for (const s of c.sections) {
-        for (const t of c.sections) {
-          if (s === t) continue;
-          const apart = s.box.x + s.box.w <= t.box.x || t.box.x + t.box.w <= s.box.x || s.box.y + s.box.h <= t.box.y || t.box.y + t.box.h <= s.box.y;
-          expect(apart, `${s.name} / ${t.name}`).toBe(true);
-        }
-      }
     }
     expect(cityOf(RPG, 'zetwal-road')?.section.name).toBe('The Cane Road');
   });
 
-  it('the realm map has the eight capitals and Elodie’s Seat', () => {
+  it('the realm has the eight countries and Elodie’s Seat', () => {
     expect(RPG.realm.length).toBe(9);
-    for (const p of RPG.realm) {
-      expect(p.x).toBeGreaterThanOrEqual(0);
-      expect(p.x).toBeLessThanOrEqual(100);
-      expect(p.y).toBeGreaterThanOrEqual(0);
-      expect(p.y).toBeLessThanOrEqual(100);
-    }
   });
 });
 

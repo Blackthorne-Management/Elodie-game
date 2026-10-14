@@ -34,7 +34,7 @@ import { dirButtons } from '../input/actions.ts';
 import { currentObjective, journalEntries, journalNotes } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
 import { applySave, newGame, saveFits, toSaveData } from '../engine/state.ts';
-import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlacement } from '../engine/tiledMap.ts';
+import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlacement, type TiledMap } from '../engine/tiledMap.ts';
 import { getRuntime, saveGame, type Runtime } from '../runtime.ts';
 import { DialogueBox } from '../ui/DialogueBox.ts';
 import { HintBubble } from '../ui/HintBubble.ts';
@@ -1118,6 +1118,9 @@ export class FieldScene extends Phaser.Scene {
       era: this.logic.era,
       journal: () => this.journalLines(),
       system: () => this.menuItems(),
+      maps: this.logic.maps,
+      rawMap: (id) => (this.cache.tilemap.get(tilemapKey(id)) as { data?: TiledMap } | undefined)?.data,
+      pos: { ...this.logic.state.player.pos },
     }, tab);
   }
 

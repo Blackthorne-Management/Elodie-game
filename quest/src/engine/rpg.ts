@@ -98,7 +98,11 @@ export interface ShopDef {
 export interface CitySection {
   map: string;
   name: string;
-  box: { x: number; y: number; w: number; h: number };
+  /**
+   * Outdoor sections: where the map's top-left tile sits on the city map (engine/cityMap.ts). Indoor
+   * sections leave it out and show as a building at their door.
+   */
+  at?: { x: number; y: number };
 }
 
 export interface CityDef {
@@ -106,17 +110,13 @@ export interface CityDef {
   name: string;
   house: string;
   sections: readonly CitySection[];
-  /** Pairs of map ids joined by a door (drawn as lines). */
-  links: readonly (readonly [string, string])[];
 }
 
-/** A place on the realm map (0..100 both ways). */
+/** A place on the realm map (its shape, capital and label come from data/realmMap.ts). */
 export interface RealmPlace {
   id: string;
   name: string;
   house: string;
-  x: number;
-  y: number;
   /** The city data, when the place has been built. */
   city?: string;
   /** Known to the player (on the map) while this holds (always when omitted). */

@@ -98,7 +98,10 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   zetwal_market: { id: 'zetwal_market', name: 'Market stand', city: 'zetwal', stock: ['soup_pot', 'akasan', 'mango'] },
 };
 
-/** City maps: each section a box on a 13 x 8 grid, joined where a door joins them. */
+/**
+ * City maps (engine/cityMap.ts): outdoor sections placed on one grid at `at` (tiles), so the city
+ * map shows their real shape; indoor sections appear as buildings at their doors.
+ */
 export const CITIES: Readonly<Record<string, CityDef>> = {
   zetwal: {
     id: 'zetwal',
@@ -106,35 +109,30 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
     // word the way Port-de-Paix is Pòdepè (pò = port). A fluent speaker checks it (Nov 18).
     name: 'Pòdlimyè',
     house: 'Kay Soley',
+    // The plaza and harbor in the west; the Temple Island across the water to the north-east (the
+    // Chain Bridge); the Cane Road straight out of the east gate.
     sections: [
-      { map: 'zetwal-house', name: 'Limyè house', box: { x: 0, y: 0, w: 3, h: 2 } },
-      { map: 'zetwal-hall', name: 'Hall of the Accord', box: { x: 4, y: 0, w: 3, h: 2 } },
-      { map: 'zetwal-town', name: 'Festival Plaza', box: { x: 0, y: 3, w: 7, h: 3 } },
-      { map: 'zetwal-temple', name: 'Temple Island', box: { x: 9, y: 0, w: 4, h: 2 } },
-      { map: 'zetwal-archive', name: 'Temple Archive', box: { x: 9, y: 3, w: 4, h: 1 } },
-      { map: 'zetwal-road', name: 'The Cane Road', box: { x: 9, y: 5, w: 4, h: 2 } },
-    ],
-    links: [
-      ['zetwal-house', 'zetwal-town'],
-      ['zetwal-hall', 'zetwal-town'],
-      ['zetwal-town', 'zetwal-temple'],
-      ['zetwal-temple', 'zetwal-archive'],
-      ['zetwal-town', 'zetwal-road'],
+      { map: 'zetwal-town', name: 'Festival Plaza', at: { x: 0, y: 9 } },
+      { map: 'zetwal-temple', name: 'Temple Island', at: { x: 44, y: -4 } },
+      { map: 'zetwal-road', name: 'The Cane Road', at: { x: 40, y: 16 } },
+      { map: 'zetwal-house', name: 'Limyè house' },
+      { map: 'zetwal-hall', name: 'Hall of the Accord' },
+      { map: 'zetwal-archive', name: 'Temple Archive' },
     ],
   },
 };
 
-/** The realm around Elodie's Seat, as on the board (Ardencia north, then clockwise). */
+/** The realm around Elodie's Seat, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
 export const REALM: readonly RealmPlace[] = [
-  { id: 'seat', name: "Elodie's Seat", house: 'The Throne', x: 50, y: 50 },
-  { id: 'ardencia', name: 'Ardencia', house: 'Brasador', x: 50, y: 12 },
-  { id: 'zetwal', name: 'Zetwal', house: 'Kay Soley', x: 80, y: 22, city: 'zetwal' },
-  { id: 'al_doria', name: 'Al-Doria', house: 'Dorini', x: 88, y: 50 },
-  { id: 'skarragol', name: 'Skarragol', house: 'Ironvow', x: 80, y: 78 },
-  { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori', x: 50, y: 88 },
-  { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh', x: 20, y: 78 },
-  { id: 'aldermoor', name: 'Aldermoor', house: 'Stillwater', x: 12, y: 50 },
-  { id: 'xaragua', name: 'Xaraguá', house: 'Yaguana', x: 20, y: 22 },
+  { id: 'seat', name: "Elodie's Seat", house: 'The Throne' },
+  { id: 'ardencia', name: 'Ardencia', house: 'Brasador' },
+  { id: 'zetwal', name: 'Zetwal', house: 'Kay Soley', city: 'zetwal' },
+  { id: 'al_doria', name: 'Al-Doria', house: 'Dorini' },
+  { id: 'skarragol', name: 'Skarragol', house: 'Ironvow' },
+  { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori' },
+  { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh' },
+  { id: 'aldermoor', name: 'Aldermoor', house: 'Stillwater' },
+  { id: 'xaragua', name: 'Xaraguá', house: 'Yaguana' },
 ];
 
 export const RPG: RpgContent = {

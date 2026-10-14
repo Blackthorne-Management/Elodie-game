@@ -564,6 +564,19 @@ async function playAct(browser, errors) {
   check(journal.some((l) => l.startsWith('Something changed: The Chain Bridge')), 'the Journal notes "Something changed: The Chain Bridge ..."');
   await page.keyboard.press('x');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
+  await menuTab(page, 'Map');
+  let mapSnap = (await snap(page)).menu;
+  check(mapSnap.items.includes('Festival Plaza') && mapSnap.items.includes('Temple Archive'), 'the city map lists Pòdlimyè\'s sections');
+  await shoot(page, 'city-map', shots);
+  await page.keyboard.press('KeyZ');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
+  mapSnap = (await snap(page)).menu;
+  check(mapSnap.items.length === 9 && mapSnap.items.includes('Xaraguá'), 'A turns it to the realm map, with all nine places');
+  await shoot(page, 'realm-map', shots);
+  await page.keyboard.press('KeyZ');
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   // The other two tiers, for the screenshots: a legendary (secret) item and a quest reward card.
   for (const [id, tier] of [['solange_quill', 'legendary'], ['sun_charm', 'reward']]) {
     await page.evaluate((i) => window.__quest.showItem(i), id);
