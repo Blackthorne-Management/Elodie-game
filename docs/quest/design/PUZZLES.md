@@ -223,7 +223,7 @@ Three linked parts (guide: "flooded petroglyph cave; echo sluice; rhythm lock at
 - **Present:** the signed original lies under glass in the Throne Archive; six ribbon pages, and the seventh ribbon
   leads nowhere. The archive's seven drawers were relabelled long ago with house sigils; only the carved numbers on the
   cabinet are original.
-- **Echo** (the sealing, proposal): the Throne's clerk reads the seventh page to himself, seals it, and files it in a
+- **Echo** (the sealing, owner decision Oct 14): the Throne's clerk reads the seventh page to himself, seals it, and files it in a
   drawer, not the binding.
 - **Logic:** note the **number** carved on the drawer he uses (not the sigil, which has changed). In the Echo, tie a
   thread of the seventh ribbon round its handle.

@@ -207,7 +207,7 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
   1. Elodie is Zetwal's envoy under Crown eyes. The **Lord Regent Aldric Vane** receives them under a flag of truce,
      calm and three moves ahead.
   2. **Signature puzzle:** the Throne Archive, reading the Accord in both eras.
-  3. **Echo: the sealing of the Accord (proposal; see open question 2).** The signed original arrives at the Throne
+  3. **Echo: the sealing of the Accord (owner decision, Oct 14; see open question 2).** The signed original arrives at the Throne
      Archive; the seventh page is read to the Throne's clerk alone and sealed. Patricio signs under protest of time;
      Benny refuses aloud; Caona is not in the room.
   4. **The Seventh Clause is read aloud** for the first time in fifty years: Xaraguá's harbor to the Crown, "to be
@@ -387,10 +387,9 @@ real people (guide 7.3).
 1. **"Pòt Limyè".** In Haitian Kreyol *pòt* usually means "door" and *pò* means "port" (as in Pòtoprens). So the name
    may read as "Door of Light" rather than "Port of Light". Both fit (Anissa "holds the door"). A fluent speaker should
    choose between *Pòt Limyè* and *Pò Limyè*.
-2. **Where was the Accord signed?** The built lore says the Accord was signed in Zetwal's plaza (*The Alliance War*
-   book, the Marshal's stone "signed on this ground", the war room "tomorrow we sign"). The guide (5.4) gives Elodie's
-   Seat the Echo "the signing itself". This pack proposes the Seat Echo is **the sealing** of the signed original in
-   the Throne Archive. Owner to confirm.
+2. **Where was the Accord signed?** **Settled (owner, Oct 14):** in Pòt Limyè's plaza, as the built lore says (the
+   *Alliance War* book, the Marshal's Stone, the war room). Elodie's Seat's Echo is **the sealing** of the signed
+   original in the Throne Archive, where the seventh clause is hidden.
 3. **Who is the Hushed?** The guide calls the Hushed the "hidden head of the Quiet Crown, revealed inside the Regent's
    court", but also says Rael founded and heads the Quiet Crown and confesses it at the Hearing. Proposal: the Hushed
    is the Regent's agent who has taken over the cells that hunt Anissa and whom members *believe* to be the head; Rael

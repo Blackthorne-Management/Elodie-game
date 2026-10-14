@@ -409,7 +409,7 @@ breach.
 
 **Signature puzzle:** SIG-SEA (reading the Accord in both eras). **Secret:** S-SEA.
 
-**Echo scenes:** the sealing of the Accord in the Throne Archive (proposal; the guide says "the signing itself", see
+**Echo scenes:** the sealing of the Accord in the Throne Archive (owner decision, Oct 14: the signing was in Pòt Limyè's plaza; see
 `STORY.md` 6.2); young Thomas Stillwater in the gallery; in Chapter 12, Patricio, Benny and Caona one last time.
 
 **Companion:** none (guide).

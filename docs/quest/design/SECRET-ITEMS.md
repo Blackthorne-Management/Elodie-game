@@ -256,7 +256,7 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   ribbon was never knotted can be struck if the record of its sealing shows no witness agreed. Opens in Chapter 5;
   can only be finished after Chapter 9 (it needs Thomas's record), before the Claim in Chapter 12.
 - **Dynamic:** a conversation across eras. A dialogue puzzle where every answer is checked against evidence.
-- **The Echo** (the sealing in the Throne Archive, proposal; see `STORY.md` open question 2): the Throne's clerk writes
+- **The Echo** (the sealing in the Throne Archive, owner decision Oct 14; see `STORY.md` open question 2): the Throne's clerk writes
   the minute of the sealing and asks Patricio five questions. He is in a hurry: three wrong answers and he shuts the
   register (leave and come back to retry). Each question has a trap:
 
