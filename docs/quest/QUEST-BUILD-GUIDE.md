@@ -579,7 +579,7 @@ Implementation: a `lang/*.json` glossary with `{ word, language, translation, ve
 
 ## 9. TECHNICAL ARCHITECTURE
 
-**Rendering:** Phaser 3, `pixelArt: true`, logical resolution **240 x 160**, integer scaling, letterboxed. Tiles 16 x 16. Characters 16 x 24.
+**Rendering:** Phaser 3, `pixelArt: true`, logical resolution **320 x 180** (changed from 240 x 160 so it fills a landscape phone), whole-number scaling when it fits. Tiles 16 x 16. Characters 16 x 24.
 
 **Maps:** Tiled `.tmj`. One file per map containing:
 - Tile layers: `ground_present`, `deco_present`, `ground_echo`, `deco_echo`, `above` (shared).
@@ -641,8 +641,8 @@ Image generators, including Gemini, do **not** reliably produce true pixel-grid 
 | Tilesets | 16 x 16, about 256 tiles | 9 places x 2 eras + interiors | Echo tilesets are recolor plus damage and age variants of the same layout. |
 | Items and icons | 16 x 16 | About 100 | Gear, consumables, key items, lore, pillar icons, faith symbols. |
 | UI | Dialogue box, menus, battle frame, debate frame, Surge meter, cursor, fonts | 1 set | Echo screen filter. |
-| Title and ending stills | 240 x 160 pixel scenes | 1 title + 3 flashbacks (Gen I) + 3 endings + the Ardencia reveal | The only large "illustration" pieces. |
-| World map | 240 x 160 | 1 | Carriage Guild travel screen. |
+| Title and ending stills | 320 x 180 pixel scenes | 1 title + 3 flashbacks (Gen I) + 3 endings + the Ardencia reveal | The only large "illustration" pieces. |
+| World map | 320 x 180 | 1 | Carriage Guild travel screen. |
 
 **Music (not Gemini):** about 12 chiptune tracks and about 40 sound effects. Options: royalty-free CC0 packs, BeepBox or Furnace for original tracks, or an AI music generator if its license allows your use. Decide licensing before using anything.
 
