@@ -9,7 +9,7 @@ export function isSkin(r: number, g: number, b: number): boolean {
   const min = Math.min(r, g, b);
   if (max < 50 || r < g || g < b || r - b < 30) return false;
   const sat = (max - min) / max;
-  return sat >= 0.15 && sat <= 0.8;
+  return sat >= 0.25 && sat <= 0.8;
 }
 
 /** The average skin colour of an RGBA image (opaque pixels only), or null when it has none. */

@@ -231,6 +231,8 @@ the script):
 | `gianna` | `docs/quest/art-source/gianna-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` |
 | `anissa` | `docs/quest/art-source/anissa-sprites.webp` | `--grid 5x4 --rows down,_,_,up --sides 1 --cell 24x32 --colors 32 --fill 0.84` |
 | `azzy` | `docs/quest/art-source/azzy-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 28x36 --colors 32 --pixel 6.2`, run on the source warmed (figure pixels r x1.12, g x1.04, contrast 1.12) and stretched 1.2x wide (nearest); taller than Gianna |
+| `quiet_crown_f` | `docs/quest/art-source/quiet-crown-f-sprites.webp` | first `python3 scripts/quest-regrid.py <src> even.png --same-height` (the cells are uneven and the side views drawn smaller), then `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32 --skin-colors 5 --pixel 7 --grid-lines off` |
+| `quiet_crown_m` | `docs/quest/art-source/quiet-crown-m-sprites.webp` | the same, with `--cell 28x36` |
 | `yari` | `docs/quest/art-source/yari-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (both side rows face right, so left is mirrored; grid lines found and dropped; her up frame is column 0, without the bow) |
 
 Portraits: the source's magenta becomes `rgb(42,36,56)` (the dialogue box's backdrop), then one

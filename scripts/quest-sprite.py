@@ -11,6 +11,9 @@ What the sheets in quest/art/characters were made with:
   azzy:   --grid 3x4 --rows down,_,_,up --sides 1,2 --cell 28x36 --colors 32 --pixel 6.2, run on the
           source after warming it (figure pixels r x1.12, g x1.04, contrast 1.12; Gemini drew him olive)
           and stretching it 1.2x wide (nearest); the taller cell makes him taller than Gianna
+  quiet_crown_f / quiet_crown_m: re-laid first with scripts/quest-regrid.py --same-height, then
+          --grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 (m: 28x36) --colors 32 --skin-colors 5
+          --pixel 7 --grid-lines off
 
 Options:
   --grid COLSxROWS   the source sheet's grid of frames (cells are cut evenly).
@@ -20,6 +23,10 @@ Options:
                      frames still works. A missing left or right is mirrored from the other side.
   --cell WxH         output cell (24x32, the quest's character cell).
   --colors N         per-character palette size, including the outline colour (default 32).
+  --skin-colors K    reserve K of those colours for skin (warm, mid-saturated pixels), picked from the
+                     skin alone. For figures that are mostly one other colour (the Quiet Crown's grey
+                     robes), where a shared palette would squash all the skin into one dull shade and the
+                     game's skin recolouring (quest/src/engine/skin.ts) could no longer find it.
   --fill F           sprite height as a share of the cell (smaller characters, e.g. Anissa 0.84).
   --mode stable|raw  stable (default): one clean standing frame per direction and the step frames
                      derived from it, so the upper body never jitters. raw: the old conversion (every
@@ -65,6 +72,7 @@ ap.add_argument('--grid', default='4x4'); ap.add_argument('--rows', default='dow
 ap.add_argument('--cols', default='0,1,2', help='raw mode: source columns used as standing, step A, step B')
 ap.add_argument('--cell', default='24x32')
 ap.add_argument('--colors', type=int, default=32)
+ap.add_argument('--skin-colors', type=int, default=0)
 ap.add_argument('--resample', default='nearest', choices=['nearest', 'smooth'])
 ap.add_argument('--fill', type=float, default=1.0)
 ap.add_argument('--sides', default='')
@@ -444,7 +452,37 @@ sheet = stable_sheet() if a.mode == 'stable' else raw_sheet()
 # One palette per character keeps the pixels crisp; the outline colour comes on top of it.
 outline = None if a.outline == 'none' or a.mode == 'raw' else tuple(int(a.outline[i:i + 2], 16) for i in (0, 2, 4))
 alpha = sheet.getchannel('A')
-q = sheet.convert('RGB').quantize(colors=a.colors - (1 if outline else 0), method=Image.MEDIANCUT, dither=Image.NONE).convert('RGBA')
+def is_skin(r, g, b):
+    # The same rule as quest/src/engine/skin.ts isSkin.
+    mx, mn = max(r, g, b), min(r, g, b)
+    if mx < 50 or r < g or g < b or r - b < 30: return False
+    return 0.25 <= (mx - mn) / mx <= 0.8
+
+
+def quantize(img, n):
+    return img.quantize(colors=n, method=Image.MEDIANCUT, dither=Image.NONE)
+
+
+rgb = sheet.convert('RGB')
+n_all = a.colors - (1 if outline else 0)
+if a.skin_colors:
+    # Two palettes, skin and everything else, merged; each pixel then takes the nearest colour of its own group.
+    px = list(rgb.getdata())
+    al = list(alpha.getdata())
+    skin = [p for p, v in zip(px, al) if v and is_skin(*p)]
+    rest = [p for p, v in zip(px, al) if v and not is_skin(*p)]
+    def pal(pixels, n):
+        if not pixels: return []
+        strip = Image.new('RGB', (len(pixels), 1)); strip.putdata(pixels)
+        flat = quantize(strip, n).getpalette()[:3 * n]
+        return sorted({tuple(flat[i:i + 3]) for i in range(0, len(flat), 3)})
+    skin_pal = [c for c in pal(skin, a.skin_colors) if is_skin(*c)]
+    rest_pal = pal(rest, n_all - len(skin_pal))
+    near = lambda p, cs: min(cs, key=lambda c: (c[0] - p[0]) ** 2 + (c[1] - p[1]) ** 2 + (c[2] - p[2]) ** 2)
+    q = Image.new('RGBA', rgb.size)
+    q.putdata([(*near(p, skin_pal if is_skin(*p) and skin_pal else rest_pal), 255) for p in px])
+else:
+    q = quantize(rgb, n_all).convert('RGBA')
 q.putalpha(alpha)
 if outline:
     # Every silhouette edge pixel (an opaque pixel with a transparent 4-neighbour inside its cell)

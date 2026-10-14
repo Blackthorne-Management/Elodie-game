@@ -11,6 +11,8 @@ describe('skin recolouring', () => {
     for (const tone of Object.values(SKIN_TONES)) expect(isSkin((tone >> 16) & 255, (tone >> 8) & 255, tone & 255), tone.toString(16)).toBe(true);
     expect(isSkin(0x34, 0x30, 0x3e)).toBe(false); // charcoal robe
     expect(isSkin(0xd8, 0xd0, 0xc0)).toBe(false); // bone veil
+    expect(isSkin(208, 191, 171)).toBe(false); // the veil's warm edge (from the real sheet)
+    expect(isSkin(188, 160, 147)).toBe(false);
     expect(isSkin(0xc8, 0xc8, 0xd0)).toBe(false); // silver emblem
     expect(isSkin(0x1a, 0x14, 0x20)).toBe(false); // outline
   });
