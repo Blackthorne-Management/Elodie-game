@@ -11,6 +11,9 @@ ap.add_argument('src'); ap.add_argument('out')
 ap.add_argument('--grid', default='4x4'); ap.add_argument('--rows', default='down,left,right,up')
 ap.add_argument('--cols', default='0,1,2'); ap.add_argument('--cell', default='24x32')
 ap.add_argument('--colors', type=int, default=24)
+ap.add_argument('--resample', default='nearest', choices=['nearest', 'smooth'],
+                help='nearest keeps single pixels (eyes) from pixel-art sources; smooth blends')
+ap.add_argument('--fill', type=float, default=1.0, help='sprite height as a share of the cell (smaller characters)')
 ap.add_argument('--sides', default='', help='rows holding side views (e.g. 1,2): frames are sorted by the way they face')
 a = ap.parse_args()
 gc, gr = map(int, a.grid.split('x')); cw, ch = map(int, a.cell.split('x'))
@@ -66,11 +69,15 @@ if a.sides:
 
 tallest = max(f.size[1] for f in frames.values())
 widest = max(f.size[0] for f in frames.values())
-scale = min((ch - 1) / tallest, cw / widest)
+scale = min((ch - 1) * a.fill / tallest, cw / widest)
 
 def shrink(f):
     w, h = max(1, round(f.size[0] * scale)), max(1, round(f.size[1] * scale))
-    s = f.resize((w, h), Image.LANCZOS)
+    if a.resample == 'nearest':
+        # Sample each target pixel at the centre of its source area, so 1-pixel details survive.
+        s = f.resize((w, h), Image.NEAREST, reducing_gap=None)
+    else:
+        s = f.resize((w, h), Image.LANCZOS)
     a_ = s.getchannel('A').point(lambda v: 255 if v > 110 else 0)   # hard pixel edges
     s.putalpha(a_)
     return s
