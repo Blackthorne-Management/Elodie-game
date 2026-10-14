@@ -7,6 +7,32 @@ All print files are built by scripts in this repo from the art in `art/`, so the
 **Target:** in hand by **Sunday, November 22**. BoardGamesMaker prints in China and ships from there: allow 2–3 days
 of production plus 1–2+ weeks of shipping, and pay for expedited shipping on anything ordered after October 20.
 
+## Open items (the one checklist; keep it current)
+
+Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
+and ticks items off here as they land. Last updated **Tue Oct 14**.
+
+**Physical game (BoardGamesMaker)**
+- [ ] **Board (order A, Mon Oct 20):** the 4096 px map (only the 2000 px upscale is in `art/board/`), the 8 seat
+  buildings (`art/seats/`, prompts in `docs/art/MAP-AND-SEATS.md`; none yet), then a proof of `print/board-24in.png`
+  to approve, then order.
+- [x] 8 crests.
+- [ ] Card art: 20 of 126 in `art/cards/` (anything missing on Oct 31 prints in the no-picture design).
+- [ ] Card back.
+- [ ] 32 character portraits (none yet in `art/characters/`; prompts in `docs/art/CHARACTER-PROMPTS.md`).
+- [ ] Print files still to build: box, player boards, standees, tokens (Heart, Grudge, resource, reminder),
+  Legacy cards, score pad, rulebook PDF, reference cards.
+- [ ] **Fri Oct 31:** rules and card text freeze. **Mon Nov 3:** approve proofs, order B (expedited).
+
+**Digital game**
+- [ ] Balance watch (not retuned): Dorini at 3 players about 1.20x; Ironvow and Agnivansh at 6 about 1.13x;
+  Suzumori at 6 about 0.86x; Kay Soley at 2 to 4 slightly low. Decide before the Oct 31 freeze.
+- [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
+- [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
+
+**Quest art waiting on the owner:** young Patricio and Anicette (prompts given Oct 14); later Elodie, old Patricio,
+Benny, Caona, Rael.
+
 ## What's in the box
 
 | # | Component | Spec | Print file (built by) | Art needed |

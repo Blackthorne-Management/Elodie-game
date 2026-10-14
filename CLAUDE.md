@@ -31,6 +31,10 @@ Phase 2 (started, at the owner's request): online play. Host a game (players and
 - Test locally with `node scripts/dev-server.mjs` and `?server=http://localhost:8787`.
 - Not yet: QR codes, AFK bot takeover.
 
+## One build: keep the board game in view
+The board game (physical and digital) and the quest are one build. At every milestone, whatever the task, remind the
+owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent deadline first, and keep that list current.
+
 ## Commands
 - `npm run dev` (add `-- --host` to open on a phone on the same Wi-Fi)
 - `npm test` / `npm run typecheck` / `npm run lint` / `npm run build` / `npm run build:server` (after engine changes)
