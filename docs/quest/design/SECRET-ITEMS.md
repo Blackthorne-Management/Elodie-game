@@ -1,6 +1,7 @@
 # Secret items: one per capital
 
-*Design pack, Oct 14. **Every item here is a proposal for the owner's approval.** Each is unlocked by finding a side
+*Design pack, Oct 14. **All nine items approved by the owner (Oct 14).** Details below the summary that are
+marked (proposal) can still change while each one is built. Each is unlocked by finding a side
 quest AND solving a difficult puzzle, and every one uses the Echo. They differ in how the puzzle plays (dynamic), in
 what the item does (effect) and in difficulty (2 = moderate to 10 = very hard). Hints: Anissa gives her usual three
 hints (nudge, pointer, answer) for every puzzle here too (guide 6.2 rule 4), but for secret items her third hint only

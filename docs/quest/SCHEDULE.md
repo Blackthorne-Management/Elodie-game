@@ -22,7 +22,7 @@ The board game comes first where they clash: its dates are fixed by the printer.
 |---|---|---|---|
 | Tue Oct 14 | Approve the plans | Levelling, the quest log, gear levels (built); this schedule | Live on the site |
 | Thu Oct 16 | | Design pack: story, all capitals, side quests, puzzles, combat, secret items (`docs/quest/design/`) | Files in the repo |
-| Fri Oct 17 | Approve the secret items (side quests approved Oct 14); approve the intro storyboard | Intro storyboard (shots, text, music cue) for approval | Your yes |
+| Fri Oct 17 | Approve the intro storyboard (secret items and side quests approved Oct 14) | Intro storyboard (shots, text, music cue) for approval | Your yes |
 | Fri Oct 17 | | Art prompts: Elodie the goddess, Elodie Limyè, Anicette young and old, Patricio young and old | Prompts sent |
 | Mon Oct 20 | (Board order day: no quest asks) | Chapter 1 side quests built (no fighting), each with its own NPC lines: **done Oct 14** | Playable, tested |
 | Wed Oct 22 | | The street debate corner (Gaze keeper vs. Quiet Crown recruiter), the last NPC lines, every Pòt Limyè section finished | Smoke test plays them |
