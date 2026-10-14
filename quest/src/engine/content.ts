@@ -10,6 +10,8 @@ export interface NpcDef {
   dialogue: string;
   /** Shown on the name label when the player faces them (a name, or a role). */
   name?: string;
+  /** A vendor: after their greeting, this shop opens (data/rpg.ts SHOPS). */
+  shop?: string;
 }
 
 /**

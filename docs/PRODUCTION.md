@@ -30,8 +30,9 @@ and ticks items off here as they land. Last updated **Tue Oct 14**.
 - [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
 
-**Quest art waiting on the owner:** young Patricio and Anicette (prompts given Oct 14); later Elodie, old Patricio,
-Benny, Caona, Rael.
+**Quest art waiting on the owner:** young Patricio and Anicette (prompts given Oct 14). Still to write prompts for:
+Elodie the goddess, Elodie Limyè (the mother), Anicette young (the Echo) and old, Patricio young and old; later Benny,
+Caona, Rael. The quest's own dated schedule to Nov 22 is next (owner request, Oct 14).
 
 ## What's in the box
 

@@ -35,6 +35,10 @@ Phase 2 (started, at the owner's request): online play. Host a game (players and
 The board game (physical and digital) and the quest are one build. At every milestone, whatever the task, remind the
 owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent deadline first, and keep that list current.
 
+## Working with the owner
+- Before each build, describe what you are going to do and wait for the owner's approval before continuing.
+- Ask questions one at a time, each with the reason behind it.
+
 ## Commands
 - `npm run dev` (add `-- --host` to open on a phone on the same Wi-Fi)
 - `npm test` / `npm run typecheck` / `npm run lint` / `npm run build` / `npm run build:server` (after engine changes)

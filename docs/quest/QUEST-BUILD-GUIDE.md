@@ -413,11 +413,15 @@ The real harms are **few and non-lethal**, and he is **not redeemed in the momen
 
 | Pillar | Earned by | Used for |
 |---|---|---|
-| **Wealth** (gold) | Jobs, selling loot, trade | Spendable: carriage fares, gear, bribes. |
+| **Wealth** | Jobs, trade deals, taking spoils | Score (not spent). Opens bribery and trade options. |
 | **Fear** | Winning battles, showing force, breaking enemies | Score (not spent). Opens intimidation options. |
 | **Influence** | Library lore, artifacts, puzzles, diplomacy, sparing enemies, **resolving street debates** | Score (not spent). Opens persuasion options and the best ending. |
 
-**Motive and price:** every allied group wants **exactly one** currency (5.4). To win them, reach their **price** in that currency: Wealth is gold gifted (100 gold = 1 point); Fear and Influence are your running scores. Any other currency counts at **half value**, so there is always another route, just slower. Paying in full wins the alliance and its army; overpaying adds reinforcements for the War of the Harbor. Prices are tunable in `quest/config.ts`.
+**Gold is separate (owner decision, Oct 14):** **gold** is the money on hand, spent at shops, smiths and stands and on fares; buying never lowers the Wealth score. Each pillar is tracked **per city** (what you earned there) and **realm-wide** (all cities added up); the menu shows both, with **Armies** (soldiers pledged) as military might. Rules: `quest/src/engine/rpg.ts`; content: `quest/src/data/rpg.ts`. Reading a city's lore books earns +1 Influence there.
+
+**The menu (Oct 14):** full page, with tabs Status (party, stats, gear), Items (the bag, 24 items; key items and worn gear are free), Equip, Map (the city's sections, visited or not, and the realm), Journal and System. A **minimap** sits in the top-left corner with the city and section name. Vendors open a buy-and-sell shop after their greeting (sell price: half).
+
+**Motive and price:** every allied group wants **exactly one** currency (5.4). To win them, reach their **price** in that currency: Wealth is your Wealth score (gold gifted to them also counts, 100 gold = 1 point); Fear and Influence are your running scores. Any other currency counts at **half value**, so there is always another route, just slower. Paying in full wins the alliance and its army; overpaying adds reinforcements for the War of the Harbor. Prices are tunable in `quest/config.ts`.
 
 | Group | Motive | Price (starting values) |
 |---|---|---|

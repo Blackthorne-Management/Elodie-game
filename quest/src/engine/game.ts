@@ -64,7 +64,9 @@ export type Effect =
   /** Back from the memory with anchors newly set: these present objects changed (the scene makes them glow). */
   | { kind: 'changed'; objects: string[]; flags: string[] }
   /** An ambush in a wild section (the scene flashes; the fight follows as a dialogue until Phase 3). */
-  | { kind: 'encounter'; table: string; group: string };
+  | { kind: 'encounter'; table: string; group: string }
+  /** A vendor's greeting ended: open their shop. */
+  | { kind: 'shop'; shop: string };
 
 export type StepAttempt =
   | { ok: true; to: Pos }
@@ -221,6 +223,7 @@ export class GameLogic {
   /** Run the map's on-enter triggers. Call after every map change, new game or load (they are once-only). */
   enterMap(): Effect[] {
     this.wildSteps = 0;
+    this.state.flags.set(`visited.${this.map.id}`, true); // the city map shows where the player has been
     if (this.mode !== 'field') return [];
     const trigger = activeTriggers(this.map, this.era, this.state.flags).find((t) => t.onEnter && this.canFire(t));
     return trigger ? this.fire(trigger) : [];
@@ -240,7 +243,8 @@ export class GameLogic {
       const npc = npcs.find((n) => samePos(n.pos, tile));
       if (npc) {
         const def = this.content.npcs[npc.npc]!;
-        return [{ kind: 'talk', npc }, ...this.startDialogue(def.dialogue)];
+        const after: Effect[] = def.shop ? [{ kind: 'shop', shop: def.shop }] : [];
+        return [{ kind: 'talk', npc }, ...this.startDialogue(def.dialogue, after)];
       }
       const here = objects.filter((o) => rectContains(o.area, tile));
       const used = here.find((o) => o.dialogue);

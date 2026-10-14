@@ -30,6 +30,10 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   acolyte: n('acolyte', 'acolyte', 'Acolyte'),
   temple_porter: n('temple_porter', 'acolyte', 'Temple porter'),
   archivist: n('archivist', 'archivist', 'Senior archivist'),
+  // Vendors (data/rpg.ts SHOPS): their greeting, then the shop.
+  smith: { ...n('smith', 'smith', 'Smith'), shop: 'zetwal_forge' },
+  charm_seller: { ...n('charm_seller', 'charm_seller', 'Charm seller'), shop: 'zetwal_charms' },
+  grocer: { ...n('grocer', 'grocer', 'Market vendor'), shop: 'zetwal_market' },
   hall_clerk: n('hall_clerk', 'clerk', 'Hall clerk'),
   cane_cutter: n('cane_cutter', 'cane_cutter', 'Cane cutter'),
   road_watcher: n('road_watcher', 'quiet_crown_f_brown', 'Veiled woman'),

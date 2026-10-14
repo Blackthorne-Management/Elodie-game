@@ -47,6 +47,13 @@ export const WALK_CYCLE_PX = 32;
 export const ENCOUNTER_CHANCE_PER_STEP = 0.03;
 export const ENCOUNTER_GRACE_STEPS = 18;
 
+/** Gold in Gianna's purse at the start, and how many items the bag holds (key items and worn gear are free). */
+export const STARTING_GOLD = 150;
+export const BAG_LIMIT = 24;
+
+/** The minimap in the top-left corner: its window on screen (logical px) and pixels per tile. */
+export const MINIMAP = { x: 4, y: 4, w: 64, h: 40, scale: 2 } as const;
+
 /** Typewriter speeds in characters per second. `instant` shows the whole line at once. */
 export const TEXT_SPEEDS = {
   slow: 20,

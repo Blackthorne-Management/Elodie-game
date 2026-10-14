@@ -54,9 +54,10 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       say(G, 'He always does. He went over to the island before dawn to get ready.'),
       say(A, "...Okay. I'll stay close."),
       nar('(Arrows or WASD, the stick or the D-pad to walk, diagonals too. Hold Shift or B to run. Push the stick all the way to run.)'),
-      nar('(Z or A to talk. Esc or Menu opens the menu and your Journal.)'),
+      nar('(Z or A to talk. Esc or Menu opens the menu: your party, your bag, the maps and your Journal.)'),
     ],
-    { 'party.anissa': true },
+    // Anissa joins, and Gianna sets out with a little food in her satchel.
+    { 'party.anissa': true, 'item.soup_pot': 2, 'item.akasan': 1 },
   ),
 
   script('elodie_talk', {
@@ -835,6 +836,19 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   }),
 
   // ---- The new sections: the Temple Archive, the Hall of the Accord, the Cane Road ----------------
+  // ---- Vendors: a greeting, then their shop opens -----------------------------------------------
+  simple('smith_talk', [
+    say('smith', 'Bonjou!', { translation: 'Hello!' }),
+    say('smith', 'Festival or not, the forge stays hot. Blades, bows, a good vest. Look all you like, archivist.'),
+  ]),
+  simple('charm_seller_talk', [
+    say('charm_seller', 'Bonjou, cherie! Kijan ou ye?', { translation: 'Hello, dear! How are you?' }),
+    say('charm_seller', 'Charms stitched by hand. Every sun on them took me an hour. Every hour, I prayed.'),
+  ]),
+  simple('grocer_talk', [
+    say('grocer', 'Bonjou! Mango, soup, akasan. Festival prices, festival smiles.', { translation: 'Hello!' }),
+  ]),
+
   script('archivist_talk', {
     start: { lines: [], next: [{ if: { flag: 'lore.zetwal_ash_wars_temple' }, to: 'ash' }, { to: 'first' }] },
     first: {

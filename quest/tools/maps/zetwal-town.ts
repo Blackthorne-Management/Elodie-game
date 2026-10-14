@@ -112,6 +112,10 @@ export function zetwalTown(): MapSource {
     npc('elder', 4, 11, 'right'),
     npc('ferryman', 9, 23, 'down'),
     npc('pilgrim', 15, 14, 'up'),
+    // Vendors: the charm stand and the market stand on the plaza, the forge by the harbor road.
+    npc('charm_seller', 23, 12, 'right'),
+    npc('grocer', 11, 13, 'right'),
+    npc('smith', 9, 19, 'left'),
     // People of the memory.
     npc('echo_soldier', 14, 7, 'down', { era: 'echo' }),
     npc('echo_cook', 20, 13, 'left', { era: 'echo' }),

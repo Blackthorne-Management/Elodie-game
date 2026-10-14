@@ -53,6 +53,9 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
 
   // The new Zetwal sections: the Temple Archive, the Hall of the Accord, the Cane Road.
   archivist: s('archivist', 'Senior archivist'),
+  smith: s('smith', 'Smith'),
+  charm_seller: s('charm_seller', 'Charm seller'),
+  grocer: s('grocer', 'Market vendor'),
   hall_clerk: s('hall_clerk', 'Hall clerk', 'clerk'),
   cane_cutter: s('cane_cutter', 'Cane cutter'),
   road_watcher: s('road_watcher', 'Veiled woman', 'quiet_crown_f_brown'),

@@ -39,13 +39,18 @@ import { getRuntime, saveGame, type Runtime } from '../runtime.ts';
 import { DialogueBox } from '../ui/DialogueBox.ts';
 import { HintBubble } from '../ui/HintBubble.ts';
 import { isFullscreen, isStandalone, toggleFullscreen } from '../ui/fullscreen.ts';
-import { MenuPanel, type MenuItem } from '../ui/MenuPanel.ts';
+import { GameMenu } from '../ui/GameMenu.ts';
+import type { MenuItem } from '../ui/MenuPanel.ts';
+import { Minimap } from '../ui/Minimap.ts';
+import { ShopPanel } from '../ui/ShopPanel.ts';
+import { RPG } from '../data/rpg.ts';
+import { cityOf } from '../engine/rpg.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
 import { tilemapKey } from './BootScene.ts';
 
-type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal';
+type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop';
 
 /** How long the glow on an object changed through the Echo lasts. */
 const CHANGED_GLOW_MS = 3600;
@@ -77,7 +82,9 @@ export interface FieldSnapshot {
   glowing: string[];
   flags: Record<string, unknown>;
   dialogue: ReturnType<DialogueBox['snapshot']>;
-  menu: ReturnType<MenuPanel['snapshot']>;
+  menu: ReturnType<GameMenu['snapshot']>;
+  shop: ReturnType<ShopPanel['snapshot']>;
+  minimap: string | null;
   journal: string[] | null;
   card: string[] | null;
   toast: string;
@@ -120,7 +127,9 @@ export class FieldScene extends Phaser.Scene {
   private echoDither!: Phaser.GameObjects.TileSprite;
   private echoMatrix: Phaser.FX.ColorMatrix | null = null;
   private dialogue!: DialogueBox;
-  private menu!: MenuPanel;
+  private menu!: GameMenu;
+  private shopPanel!: ShopPanel;
+  private minimap: Minimap | null = null;
   private toast!: Toast;
   private hint!: HintBubble;
   private panel!: TextPanel;
@@ -214,7 +223,8 @@ export class FieldScene extends Phaser.Scene {
     this.label = this.add.container(0, 0, [this.labelBg, this.labelText]).setDepth(3500).setVisible(false);
 
     this.dialogue = new DialogueBox(this);
-    this.menu = new MenuPanel(this);
+    this.menu = new GameMenu(this);
+    this.shopPanel = new ShopPanel(this);
     this.toast = new Toast(this);
     this.hint = new HintBubble(this);
     this.panel = new TextPanel(this);
@@ -240,6 +250,8 @@ export class FieldScene extends Phaser.Scene {
       case 'field':
         this.tickHints(delta);
         this.updateField(delta);
+        this.minimap?.follow(this.logic.state.player.pos);
+        this.minimap?.setVisible(!this.hint.visible);
         this.updateLabel();
         this.startPendingGlow();
         break;
@@ -265,6 +277,13 @@ export class FieldScene extends Phaser.Scene {
         break;
       case 'menu':
         this.updateMenu();
+        break;
+      case 'shop':
+        if (this.shopPanel.update(input)) {
+          this.shopPanel.close();
+          this.mode = 'field';
+          input.clearPresses();
+        }
         break;
       case 'modal':
         break;
@@ -313,6 +332,15 @@ export class FieldScene extends Phaser.Scene {
         case 'card':
           this.showCard();
           break;
+        case 'shop': {
+          // A vendor's greeting ended: their shop opens over the field.
+          const shop = RPG.shops[e.shop];
+          if (!shop) break;
+          if (this.mode === 'dialogue') this.leaveDialogueMode();
+          this.shopPanel.open(shop, this.logic.state.flags);
+          this.mode = 'shop';
+          break;
+        }
         case 'encounter':
           // An ambush: a red flash before the foes speak (the battle screen replaces this in Phase 3).
           this.cameras.main.flash(250, 180, 40, 40);
@@ -534,6 +562,7 @@ export class FieldScene extends Phaser.Scene {
 
   private applyEra(): void {
     const era = this.logic.era;
+    this.buildMinimap(era);
     const visible = visibleLayersFor(era);
     for (const [name, layer] of Object.entries(this.layers)) layer.setVisible(visible.includes(name));
     const echo = era === 'echo';
@@ -549,6 +578,15 @@ export class FieldScene extends Phaser.Scene {
       this.echoMatrix = null;
     }
     setLook(this.player, this.playerLook(), this.logic.state.player.facing);
+  }
+
+  /** The minimap for this map and era, named after the city section (the test village has none). */
+  private buildMinimap(era: Era): void {
+    this.minimap?.destroy();
+    const found = cityOf(RPG, this.map.id);
+    const raw = this.rt.rawMaps[this.map.id];
+    this.minimap = raw ? new Minimap(this, this.map, raw, era, found ? `${found.city.name}: ${found.section.name}` : '') : null;
+    this.minimap?.follow(this.logic.state.player.pos);
   }
 
   private swapVisuals(_era: Era): void {
@@ -711,7 +749,8 @@ export class FieldScene extends Phaser.Scene {
     this.hint.show('Anissa', objective && index !== null ? objective.hints[index]! : 'I think we did everything, Gigi.');
   }
 
-  private openJournal(): void {
+  /** The Journal's lines (shown on the menu's Journal tab). */
+  private journalLines(): PanelLine[] {
     const flags = this.logic.state.flags;
     const lines: PanelLine[] = [{ text: `JOURNAL: ${ACT1.title}`, color: UI.accentText }];
     if (!this.questHere()) lines.push({ text: 'Nothing to note here.', gap: 4 });
@@ -731,10 +770,7 @@ export class FieldScene extends Phaser.Scene {
         for (const n of notes) lines.push({ text: `${n.title}: ${n.text}`, color: UI.dimText });
       }
     }
-    lines.push({ text: '(B to close)', color: UI.dimText, gap: 4 });
-    this.menu.close();
-    this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
-    this.mode = 'journal';
+    return lines;
   }
 
   /** The Credits screen: the art and sound the quest uses, with authors and licences (data/credits.ts). */
@@ -830,9 +866,10 @@ export class FieldScene extends Phaser.Scene {
 
   // ---- Menu ----------------------------------------------------------------------------------
 
+  /** The System tab: saving, settings, credits, a new game. */
   private menuItems(): MenuItem[] {
     const s = this.logic.state.settings;
-    const items: MenuItem[] = [{ id: 'journal', label: 'Journal' }];
+    const items: MenuItem[] = [];
     if (s.hints && this.questHere() && this.anissaWithUs()) items.push({ id: 'ask', label: 'Ask Anissa' });
     items.push(
       { id: 'save', label: 'Save' },
@@ -851,7 +888,14 @@ export class FieldScene extends Phaser.Scene {
   private openMenu(): void {
     this.confirmNewGame = false;
     this.mode = 'menu';
-    this.menu.open(this.menuItems());
+    this.minimap?.setVisible(false);
+    this.menu.open({
+      flags: this.logic.state.flags,
+      mapId: this.map.id,
+      era: this.logic.era,
+      journal: () => this.journalLines(),
+      system: () => this.menuItems(),
+    });
   }
 
   private closeMenu(): void {
@@ -864,30 +908,31 @@ export class FieldScene extends Phaser.Scene {
     const s = this.logic.state.settings;
     const i = TEXT_SPEED_ORDER.indexOf(s.textSpeed);
     s.textSpeed = TEXT_SPEED_ORDER[(i + delta + TEXT_SPEED_ORDER.length) % TEXT_SPEED_ORDER.length]!;
-    this.menu.setItems(this.menuItems());
+    this.menu.refresh();
   }
 
   private updateMenu(): void {
     const input = this.rt.input;
-    if (input.pressed('menu') || input.pressed('cancel')) {
-      this.closeMenu();
-      return;
-    }
-    if (input.pressed('up')) this.menu.moveCursor(-1);
-    if (input.pressed('down')) this.menu.moveCursor(1);
-    const item = this.menu.current;
-    if (item?.id === 'speed' && (input.pressed('left') || input.pressed('right'))) {
-      this.cycleTextSpeed(input.pressed('left') ? -1 : 1);
-    }
-    if (item?.id !== 'new' && this.confirmNewGame) {
+    const before = this.menu.snapshot();
+    const requests = this.menu.update(input);
+    const now = this.menu.snapshot();
+    // Moving off "New game" cancels its confirmation.
+    if (this.confirmNewGame && (now?.tab !== 'System' || now.items[now.cursor] !== before?.items[before.cursor])) {
       this.confirmNewGame = false;
-      this.menu.setItems(this.menuItems());
+      this.menu.refresh();
     }
-    if (!input.pressed('confirm') || !item) return;
-    switch (item.id) {
-      case 'journal':
-        this.openJournal();
-        break;
+    for (const r of requests) {
+      if (r.kind === 'close') {
+        this.closeMenu();
+        return;
+      }
+      if (r.kind === 'toast') this.toast.show(r.text);
+      if (r.kind === 'system') this.runSystem(r.id);
+    }
+  }
+
+  private runSystem(id: string): void {
+    switch (id) {
       case 'ask':
         this.closeMenu();
         this.askAnissa();
@@ -903,7 +948,7 @@ export class FieldScene extends Phaser.Scene {
         const s = this.logic.state.settings;
         s.hints = !s.hints;
         if (!s.hints) this.hint.hide();
-        this.menu.setItems(this.menuItems());
+        this.menu.refresh();
         break;
       }
       case 'fullscreen':
@@ -924,7 +969,7 @@ export class FieldScene extends Phaser.Scene {
       case 'new':
         if (!this.confirmNewGame) {
           this.confirmNewGame = true;
-          this.menu.setItems(this.menuItems());
+          this.menu.refresh();
         } else {
           deleteSave(this.rt.storage, SAVE_STORAGE_KEY);
           this.logic.reset(newGame(this.rt.maps[this.rt.start.map]!, this.rt.start.spawn));
@@ -983,6 +1028,8 @@ export class FieldScene extends Phaser.Scene {
       flags: this.logic.state.flags.snapshot(),
       dialogue: this.dialogue.snapshot(),
       menu: this.menu.snapshot(),
+      shop: this.shopPanel.snapshot(),
+      minimap: this.minimap?.visible ? this.minimap.place : null,
       journal: this.mode === 'journal' ? this.panel.snapshot() : null,
       card: this.mode === 'card' ? this.panel.snapshot() : null,
       toast: this.toast.lastMessage,

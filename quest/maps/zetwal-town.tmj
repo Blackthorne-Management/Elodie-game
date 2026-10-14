@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 43,
+  "nextobjectid": 46,
   "layers": [
     {
       "id": 1,
@@ -575,6 +575,75 @@
         },
         {
           "id": 12,
+          "name": "charm_seller",
+          "type": "npc",
+          "x": 368,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "charm_seller"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "grocer",
+          "type": "npc",
+          "x": 176,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "grocer"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "smith",
+          "type": "npc",
+          "x": 144,
+          "y": 304,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "smith"
+            }
+          ]
+        },
+        {
+          "id": 15,
           "name": "echo_soldier",
           "type": "npc",
           "x": 224,
@@ -602,7 +671,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 16,
           "name": "echo_cook",
           "type": "npc",
           "x": 320,
@@ -630,7 +699,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 17,
           "name": "echo_scout",
           "type": "npc",
           "x": 144,
@@ -658,7 +727,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 18,
           "name": "echo_sentry",
           "type": "npc",
           "x": 416,
@@ -686,7 +755,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 19,
           "name": "echo_drummer",
           "type": "npc",
           "x": 288,
@@ -726,7 +795,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 17,
+          "id": 20,
           "name": "town_house",
           "type": "door",
           "x": 80,
@@ -754,7 +823,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 21,
           "name": "town_hall",
           "type": "door",
           "x": 368,
@@ -782,7 +851,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 22,
           "name": "town_gate",
           "type": "door",
           "x": 624,
@@ -810,7 +879,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 23,
           "name": "town_temple",
           "type": "door",
           "x": 608,
@@ -850,7 +919,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 24,
           "name": "intro",
           "type": "trigger",
           "x": 128,
@@ -883,7 +952,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 25,
           "name": "bridge_cross",
           "type": "trigger",
           "x": 496,
@@ -916,7 +985,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 26,
           "name": "bridge_look",
           "type": "trigger",
           "x": 416,
@@ -961,7 +1030,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 24,
+          "id": 27,
           "name": "start",
           "type": "spawn",
           "x": 128,
@@ -984,7 +1053,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 28,
           "name": "bridgehead",
           "type": "spawn",
           "x": 400,
@@ -1019,7 +1088,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 26,
+          "id": 29,
           "name": "plaza_stone",
           "type": "echo_zone",
           "x": 176,
@@ -1042,7 +1111,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 30,
           "name": "bridgehead",
           "type": "echo_zone",
           "x": 432,
@@ -1082,7 +1151,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 28,
+          "id": 31,
           "name": "chain_bridge_pin",
           "type": "anchor",
           "x": 464,
@@ -1117,7 +1186,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 29,
+          "id": 32,
           "name": "rope_bridge",
           "type": "puzzle_object",
           "x": 480,
@@ -1140,7 +1209,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 33,
           "name": "plaque",
           "type": "puzzle_object",
           "x": 432,
@@ -1163,7 +1232,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 34,
           "name": "winch_rusted",
           "type": "puzzle_object",
           "x": 448,
@@ -1186,7 +1255,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 35,
           "name": "pawl_rusted",
           "type": "puzzle_object",
           "x": 464,
@@ -1209,7 +1278,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 36,
           "name": "pawl_pinned",
           "type": "puzzle_object",
           "x": 464,
@@ -1237,7 +1306,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 37,
           "name": "winch",
           "type": "puzzle_object",
           "x": 448,
@@ -1260,7 +1329,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 38,
           "name": "pawl",
           "type": "puzzle_object",
           "x": 464,
@@ -1283,7 +1352,7 @@
           ]
         },
         {
-          "id": 36,
+          "id": 39,
           "name": "chain_bridge_echo",
           "type": "puzzle_object",
           "x": 480,
@@ -1316,7 +1385,7 @@
           ]
         },
         {
-          "id": 37,
+          "id": 40,
           "name": "chain_bridge",
           "type": "puzzle_object",
           "x": 480,
@@ -1349,7 +1418,7 @@
           ]
         },
         {
-          "id": 38,
+          "id": 41,
           "name": "chain_bridge_raised",
           "type": "puzzle_object",
           "x": 544,
@@ -1377,7 +1446,7 @@
           ]
         },
         {
-          "id": 39,
+          "id": 42,
           "name": "chain_bridge_raised_echo",
           "type": "puzzle_object",
           "x": 544,
@@ -1405,7 +1474,7 @@
           ]
         },
         {
-          "id": 40,
+          "id": 43,
           "name": "monument",
           "type": "puzzle_object",
           "x": 192,
@@ -1428,7 +1497,7 @@
           ]
         },
         {
-          "id": 41,
+          "id": 44,
           "name": "stone_pile",
           "type": "puzzle_object",
           "x": 192,
@@ -1451,7 +1520,7 @@
           ]
         },
         {
-          "id": 42,
+          "id": 45,
           "name": "signing_stage",
           "type": "puzzle_object",
           "x": 272,
