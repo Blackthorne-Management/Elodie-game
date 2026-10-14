@@ -1,132 +1,251 @@
-// Draws every placeholder texture from assets.config.ts at boot, so the quest needs no image files yet.
+// Draws every placeholder texture from assets.config.ts at boot, so the quest needs no image files,
+// and lets real art files (artFiles.ts) replace them one by one. Everything is drawn on canvases at
+// 1 px per pixel; Phaser scales the whole picture.
 
 import Phaser from 'phaser';
 import {
+  ART_FILES,
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
-  ECHO_PLAYER_SPRITE,
+  MARKER_TEXTURES,
   NPC_SPRITES,
-  PLAYER_SPRITE,
+  OBJECT_ART,
   PORTRAITS,
   PORTRAIT_SIZE,
   TILESET,
-  textureKeyForNpc,
-  textureKeyForPlayer,
+  TILE_ART,
+  UI,
+  characterFrame,
+  textureKeyForCharacter,
+  textureKeyForObject,
   textureKeyForPortrait,
-  type PlaceholderCharacter,
   type PlaceholderTile,
 } from '../assets.config.ts';
 import { CHARACTER_HEIGHT, CHARACTER_WIDTH, TILE_SIZE } from '../config.ts';
-import { DIRS, type Dir } from '../engine/types.ts';
+import { artFile } from './artFiles.ts';
+import { Pix, artPix, characterPix, css } from './pixels.ts';
 
-function drawTile(g: Phaser.GameObjects.Graphics, ox: number, oy: number, tile: PlaceholderTile): void {
+/** A canvas texture (replacing any texture with that key). */
+function canvasTexture(scene: Phaser.Scene, key: string, w: number, h: number): { tex: Phaser.Textures.CanvasTexture; ctx: CanvasRenderingContext2D } {
+  if (scene.textures.exists(key)) scene.textures.remove(key);
+  const tex = scene.textures.createCanvas(key, w, h)!;
+  const ctx = tex.getContext();
+  ctx.imageSmoothingEnabled = false;
+  return { tex, ctx };
+}
+
+/** An art file that the Boot scene loaded, as a drawable image. */
+function fileImage(scene: Phaser.Scene, path: string): HTMLImageElement | HTMLCanvasElement | null {
+  const key = fileKey(path);
+  if (!scene.textures.exists(key)) return null;
+  return scene.textures.get(key).getSourceImage() as HTMLImageElement | HTMLCanvasElement;
+}
+
+export function fileKey(path: string): string {
+  return `file:${path}`;
+}
+
+/** Queue every art file present for loading (call from the Boot scene's preload). */
+export function preloadArtFiles(scene: Phaser.Scene): void {
+  const paths = [
+    ...Object.keys(NPC_SPRITES).map(ART_FILES.character),
+    ...Object.keys(PORTRAITS).map(ART_FILES.portrait),
+    ...TILESET.tiles.map((t) => ART_FILES.tile(t.name)),
+    ...Object.keys(OBJECT_ART).map(ART_FILES.object),
+  ];
+  for (const path of paths) {
+    const url = artFile(path);
+    if (url) scene.load.image(fileKey(path), url);
+  }
+}
+
+// ---- Tiles -----------------------------------------------------------------------------------------
+
+function drawPattern(ctx: CanvasRenderingContext2D, ox: number, oy: number, tile: PlaceholderTile): void {
   const s = TILE_SIZE;
-  g.fillStyle(tile.base, 1).fillRect(ox, oy, s, s);
-  g.fillStyle(tile.accent, 1);
+  const px = (x: number, y: number, w = 1, h = 1) => ctx.fillRect(ox + x, oy + y, w, h);
+  ctx.fillStyle = css(tile.base);
+  px(0, 0, s, s);
+  ctx.fillStyle = css(tile.accent);
   switch (tile.pattern) {
     case 'flat':
       break;
     case 'dots':
-      for (const [x, y] of [[2, 3], [9, 1], [13, 7], [5, 10], [11, 13], [1, 14], [7, 6]] as const) g.fillRect(ox + x, oy + y, 1, 1);
-      if (tile.name === 'flowers') for (const [x, y] of [[4, 4], [10, 9], [6, 12]] as const) g.fillRect(ox + x, oy + y, 2, 2);
+      for (const [x, y] of [[2, 3], [9, 1], [13, 7], [5, 10], [11, 13], [1, 14], [7, 6]] as const) px(x, y);
+      if (tile.name === 'flowers') for (const [x, y] of [[4, 4], [10, 9], [6, 12]] as const) px(x, y, 2, 2);
       break;
     case 'grid':
-      g.fillRect(ox, oy + 7, s, 1).fillRect(ox, oy + 15, s, 1);
-      g.fillRect(ox + 4, oy, 1, 7).fillRect(ox + 12, oy + 8, 1, 7);
+      px(0, 7, s, 1);
+      px(0, 15, s, 1);
+      px(4, 0, 1, 7);
+      px(12, 8, 1, 7);
       break;
     case 'stripes':
-      for (let y = 3; y < s; y += 4) g.fillRect(ox, oy + y, s, 1);
+      for (let y = 3; y < s; y += 4) px(0, y, s, 1);
       break;
     case 'cross':
       for (let i = 0; i < s; i++) {
-        g.fillRect(ox + i, oy + i, 1, 1);
-        g.fillRect(ox + s - 1 - i, oy + i, 1, 1);
+        px(i, i);
+        px(s - 1 - i, i);
       }
       break;
     case 'border':
-      g.fillRect(ox, oy, s, 1).fillRect(ox, oy + s - 1, s, 1).fillRect(ox, oy, 1, s).fillRect(ox + s - 1, oy, 1, s);
-      g.fillRect(ox + 6, oy + 6, 4, 4);
+      px(0, 0, s, 1);
+      px(0, s - 1, s, 1);
+      px(0, 0, 1, s);
+      px(s - 1, 0, 1, s);
+      px(6, 6, 4, 4);
       break;
     case 'blob':
-      g.fillCircle(ox + 8, oy + 7, 6);
-      g.fillStyle(tile.base, 1).fillRect(ox + 7, oy + 12, 2, 4);
+      ctx.beginPath();
+      ctx.arc(ox + 8, oy + 7, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = css(tile.base);
+      px(7, 12, 2, 4);
       break;
     case 'wave':
-      for (const [x, y] of [[2, 4], [9, 8], [4, 12], [11, 2]] as const) g.fillRect(ox + x, oy + y, 3, 1);
+      for (const [x, y] of [[2, 4], [9, 8], [4, 12], [11, 2]] as const) px(x, y, 3, 1);
       break;
   }
+}
+
+function drawTile(scene: Phaser.Scene, ctx: CanvasRenderingContext2D, ox: number, oy: number, tile: PlaceholderTile): void {
+  const file = fileImage(scene, ART_FILES.tile(tile.name));
+  if (file) {
+    ctx.drawImage(file, 0, 0, TILE_SIZE, TILE_SIZE, ox, oy, TILE_SIZE, TILE_SIZE);
+    return;
+  }
+  const art = TILE_ART[tile.name];
+  if (!art) {
+    drawPattern(ctx, ox, oy, tile);
+    return;
+  }
+  const under = art.under ? TILESET.tiles.find((t) => t.name === art.under) : undefined;
+  if (under) drawTile(scene, ctx, ox, oy, under);
+  artPix(art).draw(ctx, ox, oy);
 }
 
 function makeTileset(scene: Phaser.Scene): void {
   const cols = TILESET.columns;
   const rows = Math.ceil(TILESET.tiles.length / cols);
-  const g = scene.make.graphics({}, false);
+  const { tex, ctx } = canvasTexture(scene, TILESET.textureKey, cols * TILE_SIZE, rows * TILE_SIZE);
   for (const tile of TILESET.tiles) {
     const i = tile.gid - 1;
-    drawTile(g, (i % cols) * TILE_SIZE, Math.floor(i / cols) * TILE_SIZE, tile);
+    drawTile(scene, ctx, (i % cols) * TILE_SIZE, Math.floor(i / cols) * TILE_SIZE, tile);
   }
-  g.generateTexture(TILESET.textureKey, cols * TILE_SIZE, rows * TILE_SIZE);
-  g.destroy();
   // One named frame per tile, so puzzle objects can draw a tile by name.
-  const texture = scene.textures.get(TILESET.textureKey);
   for (const tile of TILESET.tiles) {
     const i = tile.gid - 1;
-    texture.add(tile.name, 0, (i % cols) * TILE_SIZE, Math.floor(i / cols) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    tex.add(tile.name, 0, (i % cols) * TILE_SIZE, Math.floor(i / cols) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  }
+  tex.refresh();
+}
+
+function makeObjectArt(scene: Phaser.Scene): void {
+  for (const [kind, art] of Object.entries(OBJECT_ART)) {
+    const file = fileImage(scene, ART_FILES.object(kind));
+    const w = file ? file.width : art.rows[0]!.length;
+    const h = file ? file.height : art.rows.length;
+    const { tex, ctx } = canvasTexture(scene, textureKeyForObject(kind), w, h);
+    if (file) ctx.drawImage(file, 0, 0);
+    else artPix(art).draw(ctx, 0, 0);
+    tex.refresh();
   }
 }
 
 /** A 4 x 4 ordered-dither dot pattern for the Echo filter. */
 function makeDither(scene: Phaser.Scene): void {
-  const g = scene.make.graphics({}, false);
-  g.fillStyle(ECHO_FILTER.ditherColor, 1);
-  for (const [x, y] of [[0, 0], [2, 2]] as const) g.fillRect(x, y, 1, 1);
-  g.generateTexture(ECHO_DITHER_TEXTURE, 4, 4);
-  g.destroy();
+  const { tex, ctx } = canvasTexture(scene, ECHO_DITHER_TEXTURE, 4, 4);
+  ctx.fillStyle = css(ECHO_FILTER.ditherColor);
+  ctx.fillRect(0, 0, 1, 1);
+  ctx.fillRect(2, 2, 1, 1);
+  tex.refresh();
 }
 
-function makeCharacter(scene: Phaser.Scene, key: string, look: PlaceholderCharacter, facing: Dir): void {
-  const g = scene.make.graphics({}, false);
-  const w = CHARACTER_WIDTH;
-  const h = CHARACTER_HEIGHT;
-  // Shadow, body, belt, head.
-  g.fillStyle(0x000000, 0.3).fillEllipse(w / 2, h - 2, 12, 4);
-  g.fillStyle(look.body, 1).fillRect(3, 10, 10, 12);
-  g.fillStyle(look.trim, 1).fillRect(3, 16, 10, 2);
-  g.fillStyle(look.head, 1).fillRect(4, 2, 8, 8);
-  // Hair or headgear on top, or a hood over the whole head with only the face showing.
-  if (look.hat !== undefined) g.fillStyle(look.hat, 1).fillRect(4, 1, 8, 3);
-  if (look.hood) {
-    g.fillStyle(look.body, 1).fillRect(3, 1, 10, 9);
-    if (facing !== 'up') g.fillStyle(0x0c0c10, 1).fillRect(facing === 'left' ? 4 : facing === 'right' ? 8 : 5, 4, 4, 5);
+/** "!" (something new to say) and a four-point sparkle (something to use), 7 x 9 with an outline. */
+function makeMarkers(scene: Phaser.Scene): void {
+  const talk = new Pix(7, 9).rect(2, 0, 3, 5, UI.markerTalk).rect(2, 6, 3, 2, UI.markerTalk).outline(UI.markerOutline);
+  const use = new Pix(7, 9)
+    .rect(3, 0, 1, 9, UI.markerUse)
+    .rect(0, 4, 7, 1, UI.markerUse)
+    .rect(2, 3, 3, 3, UI.markerUse)
+    .set(3, 4, 0xffffff)
+    .outline(UI.markerOutline);
+  for (const [key, pix] of [[MARKER_TEXTURES.talk, talk], [MARKER_TEXTURES.use, use]] as const) {
+    const { tex, ctx } = canvasTexture(scene, key, pix.w, pix.h);
+    pix.draw(ctx, 0, 0);
+    tex.refresh();
   }
-  // Facing marker: eyes (down), hair (up), one eye on the side (left/right).
-  g.fillStyle(0x101010, 1);
-  if (facing === 'down') g.fillRect(5, 6, 2, 2).fillRect(9, 6, 2, 2);
-  if (facing === 'up') g.fillStyle(look.hat ?? look.trim, 1).fillRect(4, 2, 8, 5);
-  if (facing === 'left') g.fillRect(4, 6, 2, 2);
-  if (facing === 'right') g.fillRect(10, 6, 2, 2);
-  g.lineStyle(1, 0x000000, 0.6).strokeRect(3.5, 10.5, 9, 11);
-  g.generateTexture(key, w, h);
-  g.destroy();
 }
 
-function makePortrait(scene: Phaser.Scene, key: string, bg: number, figure: number): void {
+// ---- Characters ------------------------------------------------------------------------------------
+
+/** Every look's walk sheet: 3 columns (standing, step A, step B) x 4 rows (down, left, right, up). */
+function makeCharacters(scene: Phaser.Scene): void {
+  const rows = ART_FILES.sheetRows;
+  for (const [look, def] of Object.entries(NPC_SPRITES)) {
+    const key = textureKeyForCharacter(look);
+    const file = fileImage(scene, ART_FILES.character(look));
+    const cw = file ? Math.floor(file.width / ART_FILES.sheetColumns) : CHARACTER_WIDTH;
+    const ch = file ? Math.floor(file.height / rows.length) : CHARACTER_HEIGHT;
+    const { tex, ctx } = canvasTexture(scene, key, cw * ART_FILES.sheetColumns, ch * rows.length);
+    if (file) ctx.drawImage(file, 0, 0);
+    rows.forEach((facing, r) => {
+      for (const step of [0, 1, 2] as const) {
+        const ox = step * cw;
+        const oy = r * ch;
+        if (!file) {
+          ctx.fillStyle = 'rgba(0,0,0,0.3)';
+          ctx.beginPath();
+          ctx.ellipse(ox + cw / 2, oy + ch - 2, 6, 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+          characterPix(def, facing, step).draw(ctx, ox, oy);
+        }
+        tex.add(characterFrame(facing, step), 0, ox, oy, cw, ch);
+      }
+    });
+    tex.refresh();
+  }
+}
+
+function makePortraits(scene: Phaser.Scene): void {
   const s = PORTRAIT_SIZE;
-  const g = scene.make.graphics({}, false);
-  g.fillStyle(bg, 1).fillRect(0, 0, s, s);
-  g.fillStyle(figure, 1).fillCircle(s / 2, 12, 7).fillRect(6, 21, s - 12, s - 21);
-  g.lineStyle(1, 0xe8d8b0, 1).strokeRect(0.5, 0.5, s - 1, s - 1);
-  g.generateTexture(key, s, s);
-  g.destroy();
+  for (const [key, def] of Object.entries(PORTRAITS)) {
+    const { tex, ctx } = canvasTexture(scene, textureKeyForPortrait(key), s, s);
+    const file = fileImage(scene, ART_FILES.portrait(key));
+    if (file) {
+      ctx.drawImage(file, 0, 0, file.width, file.height, 0, 0, s, s);
+    } else {
+      ctx.fillStyle = css(def.background);
+      ctx.fillRect(0, 0, s, s);
+      const scale = Math.floor(s / 16);
+      const look = def.look ? NPC_SPRITES[def.look] : undefined;
+      if (look) {
+        // Head and shoulders of the standing sprite, enlarged.
+        const pix = characterPix(look, 'down');
+        const top = look.build === 'small' ? 4 : look.build === 'tall' ? 0 : 1;
+        const crop = new Pix(16, 16);
+        for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+          const c = pix.get(x, y + top);
+          if (c !== undefined) crop.set(x, y, c);
+        }
+        crop.draw(ctx, (s - 16 * scale) / 2, s - 16 * scale + scale, scale);
+      } else if (def.art && TILE_ART[def.art]) {
+        artPix(TILE_ART[def.art]!).draw(ctx, (s - 16 * scale) / 2, (s - 16 * scale) / 2, scale);
+      }
+    }
+    ctx.strokeStyle = css(0xe8d8b0);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0.5, 0.5, s - 1, s - 1);
+    tex.refresh();
+  }
 }
 
 export function makeAllTextures(scene: Phaser.Scene): void {
   makeTileset(scene);
+  makeObjectArt(scene);
   makeDither(scene);
-  for (const facing of DIRS) {
-    makeCharacter(scene, textureKeyForPlayer(facing), PLAYER_SPRITE, facing);
-    makeCharacter(scene, textureKeyForPlayer(facing, 'echo'), ECHO_PLAYER_SPRITE, facing);
-    for (const [look, def] of Object.entries(NPC_SPRITES)) makeCharacter(scene, textureKeyForNpc(look, facing), def, facing);
-  }
-  for (const [key, p] of Object.entries(PORTRAITS)) makePortrait(scene, textureKeyForPortrait(key), p.background, p.figure);
+  makeMarkers(scene);
+  makeCharacters(scene);
+  makePortraits(scene);
 }

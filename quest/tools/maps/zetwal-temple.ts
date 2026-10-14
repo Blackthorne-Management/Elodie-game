@@ -39,9 +39,9 @@ export function zetwalTemple(): MapSource {
 
     { layer: 'echo_zones', name: 'temple_grove', x: 5, y: 12, w: 3, h: 2, props: { if: 'item.sun_locket', onEcho: 'temple_echo_enter' } },
 
-    obj('gaze_lamp', 14, 3, { dialogue: 'gaze_lamp', era: 'present' }, 2, 1),
-    obj('gaze_lamp_lit', 14, 3, { kind: 'lamp_lit', era: 'present', if: 'story.anissa_woke' }, 2, 1),
-    obj('lamp_echo', 14, 3, { dialogue: 'lamp_echo', era: 'echo' }, 2, 1),
+    obj('gaze_lamp', 14, 3, { dialogue: 'gaze_lamp', era: 'present', kind: 'gaze_lamp' }, 2, 1),
+    obj('gaze_lamp_lit', 14, 3, { kind: 'gaze_lamp_lit', era: 'present', if: 'story.anissa_woke' }, 2, 1),
+    obj('lamp_echo', 14, 3, { dialogue: 'lamp_echo', era: 'echo', kind: 'gaze_lamp' }, 2, 1),
     obj('name_stones', 6, 4, { dialogue: 'name_stones', era: 'present' }, 2, 1),
   ];
   return { id: 'zetwal-temple', present: g, echo: e, objects };

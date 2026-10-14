@@ -651,6 +651,11 @@
               "name": "era",
               "type": "string",
               "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "gaze_lamp"
             }
           ]
         },
@@ -678,7 +683,7 @@
             {
               "name": "kind",
               "type": "string",
-              "value": "lamp_lit"
+              "value": "gaze_lamp_lit"
             }
           ]
         },
@@ -702,6 +707,11 @@
               "name": "era",
               "type": "string",
               "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "gaze_lamp"
             }
           ]
         },
@@ -740,7 +750,7 @@
       "imageheight": 128,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 57,
+      "tilecount": 63,
       "columns": 8,
       "margin": 0,
       "spacing": 0

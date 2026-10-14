@@ -6,7 +6,8 @@ import { PORTRAIT_SIZE, UI, textureKeyForPortrait } from '../assets.config.ts';
 import { TEXT_SPEEDS, VIEW_HEIGHT, VIEW_WIDTH, type TextSpeed } from '../config.ts';
 import { typewriterChars, type DialogueView } from '../engine/dialogue.ts';
 
-const BOX_H = 54;
+// Tall enough for a PORTRAIT_SIZE portrait with padding.
+const BOX_H = 58;
 const BOX_X = 2;
 const BOX_Y = VIEW_HEIGHT - BOX_H - 2;
 const BOX_W = VIEW_WIDTH - 4;

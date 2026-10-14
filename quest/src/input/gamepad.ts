@@ -1,8 +1,9 @@
 // Gamepad API source (standard mapping). A = confirm, B = cancel (hold to run), X = echo,
-// Start = menu, R = run; D-pad or left stick move.
+// Start = menu, R = run; D-pad or left stick move, in eight directions (the stick by 45 degree
+// sectors, the D-pad by pressing two arms together).
 
 import { GAMEPAD_DEADZONE } from '../config.ts';
-import type { Button, InputSource } from './actions.ts';
+import { dirButtons, stickDirection, type Button, type InputSource } from './actions.ts';
 
 const BUTTON_MAP: [number, Button][] = [
   [0, 'confirm'],
@@ -28,10 +29,7 @@ export class GamepadSource implements InputSource {
       if (!pad || !pad.connected) continue;
       for (const [index, button] of BUTTON_MAP) if (pad.buttons[index]?.pressed) now.add(button);
       const [ax = 0, ay = 0] = pad.axes;
-      if (Math.abs(ax) > GAMEPAD_DEADZONE || Math.abs(ay) > GAMEPAD_DEADZONE) {
-        if (Math.abs(ax) > Math.abs(ay)) now.add(ax < 0 ? 'left' : 'right');
-        else now.add(ay < 0 ? 'up' : 'down');
-      }
+      for (const b of dirButtons(stickDirection(ax, ay, GAMEPAD_DEADZONE))) now.add(b);
     }
     for (const b of now) if (!this.held.has(b)) this.presses.push(b);
     this.held = now;

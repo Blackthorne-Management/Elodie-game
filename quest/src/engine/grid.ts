@@ -1,32 +1,82 @@
 // Grid movement and collision rules. Pure TypeScript: the Field scene animates what these decide.
 
-import type { Dir, Era, Pos } from './types.ts';
+import { DIRS, type Diagonal, type Dir, type Dir8, type Era, type Pos } from './types.ts';
 import type { Door, GameMap, Spawn, Trigger } from './tiledMap.ts';
 import { rectContains } from './tiledMap.ts';
 
-export const DIR_VECTORS: Record<Dir, Pos> = {
+export const DIR_VECTORS: Record<Dir8, Pos> = {
   up: { x: 0, y: -1 },
   down: { x: 0, y: 1 },
   left: { x: -1, y: 0 },
   right: { x: 1, y: 0 },
+  'up-left': { x: -1, y: -1 },
+  'up-right': { x: 1, y: -1 },
+  'down-left': { x: -1, y: 1 },
+  'down-right': { x: 1, y: 1 },
 };
 
-export function opposite(dir: Dir): Dir {
-  switch (dir) {
-    case 'up':
-      return 'down';
-    case 'down':
-      return 'up';
-    case 'left':
-      return 'right';
-    case 'right':
-      return 'left';
-  }
+const OPPOSITE: Record<Dir8, Dir8> = {
+  up: 'down',
+  down: 'up',
+  left: 'right',
+  right: 'left',
+  'up-left': 'down-right',
+  'up-right': 'down-left',
+  'down-left': 'up-right',
+  'down-right': 'up-left',
+};
+
+export function opposite(dir: Dir): Dir;
+export function opposite(dir: Dir8): Dir8;
+export function opposite(dir: Dir8): Dir8 {
+  return OPPOSITE[dir];
 }
 
-export function stepFrom(pos: Pos, dir: Dir): Pos {
+export function isDiagonal(dir: Dir8): dir is Diagonal {
+  return !(DIRS as readonly string[]).includes(dir);
+}
+
+/** The two orthogonal parts of a diagonal, horizontal first: 'up-right' is ['right', 'up']. */
+export function components(dir: Diagonal): [Dir, Dir] {
+  const [v, h] = dir.split('-') as [Dir, Dir];
+  return [h, v];
+}
+
+/** The diagonal (or straight) direction made of a horizontal and a vertical part; null when both are null. */
+export function combine(horizontal: 'left' | 'right' | null, vertical: 'up' | 'down' | null): Dir8 | null {
+  if (horizontal && vertical) return `${vertical}-${horizontal}`;
+  return horizontal ?? vertical;
+}
+
+/**
+ * The sprite facing for a direction: sprites have four facings, so a diagonal shows its horizontal
+ * side (walking up-right faces right). Interaction looks at the diagonal tile first, then this one.
+ */
+export function spriteFacing(dir: Dir8): Dir {
+  return isDiagonal(dir) ? components(dir)[0] : dir;
+}
+
+/** The straight facing that looks from `from` toward `to` (an NPC turning to the player). */
+export function facingToward(from: Pos, to: Pos): Dir {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  if (dx === 0 && dy === 0) return 'down';
+  return Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : dy < 0 ? 'up' : 'down';
+}
+
+export function stepFrom(pos: Pos, dir: Dir8): Pos {
   const v = DIR_VECTORS[dir];
   return { x: pos.x + v.x, y: pos.y + v.y };
+}
+
+/**
+ * The tiles the player is facing, nearest rule first: the tile in the facing direction, and for a
+ * diagonal facing also the tile the sprite faces (its horizontal side). Talking, using objects and the
+ * name label all look here.
+ */
+export function facingTiles(pos: Pos, facing: Dir8): Pos[] {
+  const front = stepFrom(pos, facing);
+  return isDiagonal(facing) ? [front, stepFrom(pos, spriteFacing(facing))] : [front];
 }
 
 export function samePos(a: Pos, b: Pos): boolean {
@@ -49,17 +99,28 @@ export function npcAt(map: GameMap, pos: Pos): GameMap['npcs'][number] | undefin
 
 export type MoveResult =
   | { moved: true; to: Pos }
-  | { moved: false; reason: 'bounds' | 'collision' | 'occupied' };
+  | { moved: false; reason: 'bounds' | 'collision' | 'occupied' | 'corner' };
 
 /**
- * Try to step one tile. `occupied` reports tiles blocked by characters (NPCs today; the party later).
- * The collision layer used is the one for the current era.
+ * Try to step one tile, straight or diagonally. `occupied` reports tiles blocked by characters (NPCs
+ * today; the party later). The collision layer used is the one for the current era.
+ *
+ * A diagonal step needs the target tile AND both straight neighbours it passes between to be walkable
+ * and unoccupied ('corner' otherwise): no cutting a wall's corner and no squeezing between two blocked
+ * tiles. So a diagonal only ever shortens a walk the two straight steps could already make; it never
+ * reaches a tile that straight steps cannot.
  */
-export function tryMove(map: GameMap, era: Era, from: Pos, dir: Dir, occupied: (p: Pos) => boolean = () => false): MoveResult {
+export function tryMove(map: GameMap, era: Era, from: Pos, dir: Dir8, occupied: (p: Pos) => boolean = () => false): MoveResult {
   const to = stepFrom(from, dir);
   if (!inBounds(map, to)) return { moved: false, reason: 'bounds' };
   if (!isWalkable(map, era, to)) return { moved: false, reason: 'collision' };
   if (occupied(to)) return { moved: false, reason: 'occupied' };
+  if (isDiagonal(dir)) {
+    for (const part of components(dir)) {
+      const side = stepFrom(from, part);
+      if (!isWalkable(map, era, side) || occupied(side)) return { moved: false, reason: 'corner' };
+    }
+  }
   return { moved: true, to };
 }
 

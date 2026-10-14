@@ -134,4 +134,17 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     title: 'Night orders (Grandfather)',
     text: 'Raise the Chain Bridge to the Temple island at dusk. To lower: turn the winch, then drive the iron pin through the pawl, or she creeps back up by morning.',
   },
+  // Changes carried back from the Echo by anchors (the changed object also glows on the way back).
+  {
+    id: 'changed_night_orders',
+    when: 'anchor.night_orders',
+    title: 'Something changed',
+    text: "Grandfather's night orders are under the loose floorboard by the study window now, where he left them fifty years ago.",
+  },
+  {
+    id: 'changed_chain_bridge',
+    when: 'anchor.chain_bridge',
+    title: 'Something changed',
+    text: 'The Chain Bridge is down in the present: young Patricio pinned the pawl, and it has held for fifty years.',
+  },
 ];

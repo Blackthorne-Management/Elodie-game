@@ -37,11 +37,11 @@ export function zetwalHouse(): MapSource {
       props: { if: 'item.sun_locket', onEcho: 'warroom_enter', onReturn: 'warroom_return' },
     },
 
-    obj('map_table', 14, 4, { dialogue: 'map_table_present', era: 'present' }, 2, 2),
-    obj('war_map', 14, 4, { dialogue: 'map_table_echo', era: 'echo' }, 2, 2),
+    obj('map_table', 14, 4, { dialogue: 'map_table_present', era: 'present', kind: 'war_table' }, 2, 2),
+    obj('war_map', 14, 4, { dialogue: 'map_table_echo', era: 'echo', kind: 'war_table_echo' }, 2, 2),
     obj('study_shelf', 11, 2, { dialogue: 'study_shelf', era: 'present' }, 3, 1),
     obj('window_seat', 17, 2, { dialogue: 'window_seat', era: 'present', if: '!anchor.night_orders' }),
-    obj('loose_board', 17, 2, { dialogue: 'loose_board', era: 'present', kind: 'paper', if: 'anchor.night_orders' }),
+    obj('loose_board', 17, 2, { dialogue: 'loose_board', era: 'present', kind: 'loose_board', if: 'anchor.night_orders' }),
     obj('floor_cache', 17, 2, { dialogue: 'floor_cache', era: 'echo' }),
     { layer: 'anchors', name: 'night_orders_cache', x: 17, y: 2, props: { object: 'floor_cache', flag: 'anchor.night_orders' } },
   ];

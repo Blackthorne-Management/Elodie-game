@@ -3,13 +3,42 @@
 // using puzzle objects, the Echo swap with anchors, dialogue, and end-of-act cards. Every action
 // returns a list of effects for the caller to show. Pure TypeScript: no Phaser, no DOM.
 
+import { flagsIn } from './conditions.ts';
 import { cardFlag, type CardDef, type GameContent } from './content.ts';
-import { DialogueRunner, type DialogueView } from './dialogue.ts';
-import { doorArrival, doorAt, inBounds, samePos, stepFrom } from './grid.ts';
+import { DialogueRunner, type DialogueScript, type DialogueView } from './dialogue.ts';
+import { FlagStore, type FlagSnapshot } from './flags.ts';
+import { components, doorArrival, doorAt, facingTiles, inBounds, isDiagonal, samePos, stepFrom } from './grid.ts';
 import type { GameState } from './state.ts';
-import { rectContains, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
-import type { Dir, Era, Pos } from './types.ts';
+import { rectContains, type Door, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
+import type { Dir8, Era, Pos } from './types.ts';
 import { ECHO_FLAG_PREFIX, activeNpcs, activeObjects, activeTriggers, checkSwap, isOpen, npcBlocks } from './world.ts';
+
+/** Flags remembering that the player has used or looked at a puzzle object (the use marker goes away). */
+export const SEEN_FLAG_PREFIX = 'seen.';
+
+export function seenFlag(mapId: string, objectId: string): string {
+  return `${SEEN_FLAG_PREFIX}${mapId}.${objectId}`;
+}
+
+/** What the player is facing, with the name its label shows. */
+export type Target =
+  | { kind: 'npc'; name: string; npc: NpcPlacement }
+  | { kind: 'object'; name: string; object: PuzzleObject }
+  | { kind: 'door'; name: string; door: Door };
+
+/**
+ * An interaction marker: `talk` over a person with something new to say (talking would change a
+ * flag), `use` over an object not used yet or with something left to do. `pos` is the tile the marker
+ * floats over (x may be a half tile, centred over a wide object).
+ */
+export interface Marker {
+  kind: 'talk' | 'use';
+  id: string;
+  pos: Pos;
+}
+
+/** How deep the marker check follows dialogue choices. */
+const NEWS_CHOICE_DEPTH = 3;
 
 export type Mode = 'field' | 'dialogue' | 'card';
 
@@ -29,11 +58,13 @@ export type Effect =
   | { kind: 'dialogue' }
   /** The player started talking to this NPC (the scene turns it to face the player). */
   | { kind: 'talk'; npc: NpcPlacement }
-  | { kind: 'card'; card: CardDef };
+  | { kind: 'card'; card: CardDef }
+  /** Back from the memory with anchors newly set: these present objects changed (the scene makes them glow). */
+  | { kind: 'changed'; objects: string[]; flags: string[] };
 
 export type StepAttempt =
   | { ok: true; to: Pos }
-  | { ok: false; reason: 'busy' | 'bounds' | 'blocked' | 'occupied' | 'door_in_echo' };
+  | { ok: false; reason: 'busy' | 'bounds' | 'blocked' | 'occupied' | 'door_in_echo' | 'corner' };
 
 export class GameLogic {
   readonly maps: Readonly<Record<string, GameMap>>;
@@ -43,6 +74,8 @@ export class GameLogic {
   card: CardDef | null = null;
   private runner: DialogueRunner | null = null;
   private afterDialogue: Effect[] = [];
+  /** Anchor flags already set when the player stepped into the memory (null: not known, e.g. loaded in the Echo). */
+  private anchorsAtEntry: Set<string> | null = null;
 
   constructor(maps: Readonly<Record<string, GameMap>>, content: GameContent, state: GameState) {
     this.maps = maps;
@@ -57,6 +90,7 @@ export class GameLogic {
     this.card = null;
     this.runner = null;
     this.afterDialogue = [];
+    this.anchorsAtEntry = null;
   }
 
   get map(): GameMap {
@@ -90,22 +124,52 @@ export class GameLogic {
 
   // ---- Field ---------------------------------------------------------------------------------
 
-  /** Face `dir` and say whether a step that way is allowed (the caller animates, then calls finishStep). */
-  tryStep(dir: Dir): StepAttempt {
+  /**
+   * Face `dir` and say whether a step that way is allowed (the caller animates, then calls finishStep).
+   * Diagonal steps follow grid.ts `tryMove`: the two straight neighbours must be open too (no corner
+   * cutting). With `slide` (held input: the stick, keys, the scene and the simulator), a refused
+   * diagonal slides along the wall instead: the horizontal part, else the vertical part; the player
+   * then faces the way they actually step.
+   */
+  tryStep(dir: Dir8, slide = false): StepAttempt {
     if (this.mode !== 'field') return { ok: false, reason: 'busy' };
     const p = this.state.player;
     p.facing = dir;
-    const to = stepFrom(p.pos, dir);
+    const attempt = this.checkStep(p.pos, dir);
+    if (attempt.ok || !slide || !isDiagonal(dir)) return attempt;
+    for (const part of components(dir)) {
+      const along = this.checkStep(p.pos, part);
+      if (along.ok) {
+        p.facing = part;
+        return along;
+      }
+    }
+    return attempt;
+  }
+
+  private checkStep(from: Pos, dir: Dir8): StepAttempt {
+    const to = stepFrom(from, dir);
     if (!inBounds(this.map, to)) return { ok: false, reason: 'bounds' };
     if (this.era === 'echo' && doorAt(this.map, to)) return { ok: false, reason: 'door_in_echo' };
     if (!this.isOpen(to)) return { ok: false, reason: 'blocked' };
     if (npcBlocks(this.map, this.era, to, this.state.flags)) return { ok: false, reason: 'occupied' };
+    if (isDiagonal(dir)) {
+      for (const part of components(dir)) {
+        const side = stepFrom(from, part);
+        if (!this.isOpen(side) || npcBlocks(this.map, this.era, side, this.state.flags)) return { ok: false, reason: 'corner' };
+      }
+    }
     return { ok: true, to };
   }
 
-  /** Land on `to`: doors, then step triggers. */
+  /** Land on `to`: doors, then step triggers. Walking onto a walkable object (a bridge) counts as using it. */
   finishStep(to: Pos): Effect[] {
     this.state.player.pos = { ...to };
+    const walkedOn = this.objects().filter(
+      (o) => o.walkable && rectContains(o.area, to) && !this.state.flags.isSet(seenFlag(this.map.id, o.id)),
+    );
+    for (const o of walkedOn) this.state.flags.set(seenFlag(this.map.id, o.id), true);
+    const seen: Effect[] = walkedOn.length > 0 ? [{ kind: 'sync' }] : [];
     const door = doorAt(this.map, to);
     if (door && this.era === 'present') {
       const targetMap = this.maps[door.targetMap];
@@ -119,7 +183,7 @@ export class GameLogic {
     const trigger = activeTriggers(this.map, this.era, this.state.flags).find(
       (t) => !t.onEnter && rectContains(t.area, to) && this.canFire(t),
     );
-    return trigger ? this.fire(trigger) : [];
+    return trigger ? [...seen, ...this.fire(trigger)] : seen;
   }
 
   /** Run the map's on-enter triggers. Call after every map change, new game or load (they are once-only). */
@@ -129,19 +193,116 @@ export class GameLogic {
     return trigger ? this.fire(trigger) : [];
   }
 
-  /** Confirm in the field: talk to the NPC or use the object in front of the player. */
+  /**
+   * Confirm in the field: talk to the NPC or use the object the player faces (grid.ts `facingTiles`:
+   * for a diagonal facing, the diagonal tile first, then the sprite's side). An object with no dialogue
+   * of its own shows its one-line description (data/objects.ts).
+   */
   interact(): Effect[] {
     if (this.mode !== 'field') return [];
     const p = this.state.player;
-    const front = stepFrom(p.pos, p.facing);
-    const npc = this.npcs().find((n) => samePos(n.pos, front));
-    if (npc) {
-      const def = this.content.npcs[npc.npc]!;
-      return [{ kind: 'talk', npc }, ...this.startDialogue(def.dialogue)];
+    const npcs = this.npcs();
+    const objects = this.objects();
+    for (const tile of facingTiles(p.pos, p.facing)) {
+      const npc = npcs.find((n) => samePos(n.pos, tile));
+      if (npc) {
+        const def = this.content.npcs[npc.npc]!;
+        return [{ kind: 'talk', npc }, ...this.startDialogue(def.dialogue)];
+      }
+      const here = objects.filter((o) => rectContains(o.area, tile));
+      const used = here.find((o) => o.dialogue);
+      if (used?.dialogue) {
+        this.state.flags.set(seenFlag(this.map.id, used.id), true);
+        return this.startDialogue(used.dialogue);
+      }
+      const looked = [...here].reverse().find((o) => this.content.objects?.[o.id]?.inspect);
+      if (looked) {
+        this.state.flags.set(seenFlag(this.map.id, looked.id), true);
+        return this.startScript(inspectScript(looked.id, this.content.objects![looked.id]!.inspect!));
+      }
     }
-    const obj = this.objects().find((o) => o.dialogue && rectContains(o.area, front));
-    if (obj?.dialogue) return this.startDialogue(obj.dialogue);
     return [];
+  }
+
+  /** The NPC, object or door the player faces, when it has a name to show. */
+  targetAhead(): Target | null {
+    if (this.mode !== 'field') return null;
+    const p = this.state.player;
+    const npcs = this.npcs();
+    const objects = this.objects();
+    for (const tile of facingTiles(p.pos, p.facing)) {
+      const npc = npcs.find((n) => samePos(n.pos, tile));
+      if (npc) {
+        const name = this.content.npcs[npc.npc]?.name;
+        if (name) return { kind: 'npc', name, npc };
+        continue;
+      }
+      // The last active object wins: later objects show a state (the lit lamp over the lamp).
+      const object = [...objects].reverse().find((o) => rectContains(o.area, tile) && this.content.objects?.[o.id]);
+      if (object) return { kind: 'object', name: this.content.objects![object.id]!.name, object };
+      const door = this.era === 'present' ? doorAt(this.map, tile) : undefined;
+      const doorName = door && (this.content.doors?.[`${this.map.id}/${door.id}`] ?? this.content.doors?.[door.id]);
+      if (door && doorName) return { kind: 'door', name: doorName, door };
+    }
+    return null;
+  }
+
+  /** Markers for this era and these flags (see Marker). */
+  markers(): Marker[] {
+    const out: Marker[] = [];
+    for (const n of this.npcs()) {
+      const def = this.content.npcs[n.npc]!;
+      if (this.hasNews(def.dialogue)) out.push({ kind: 'talk', id: `npc:${n.objectId}`, pos: { ...n.pos } });
+    }
+    const taken = new Set<string>();
+    for (const o of this.objects()) {
+      const inspect = this.content.objects?.[o.id]?.inspect;
+      if (!o.dialogue && !inspect) continue;
+      const fresh = !this.state.flags.isSet(seenFlag(this.map.id, o.id)) || (!!o.dialogue && this.hasNews(o.dialogue));
+      const pos = { x: o.area.x + (o.area.width - 1) / 2, y: o.area.y };
+      const key = `${pos.x},${pos.y}`;
+      if (!fresh || taken.has(key)) continue;
+      taken.add(key);
+      out.push({ kind: 'use', id: `obj:${o.id}`, pos });
+    }
+    return out;
+  }
+
+  /**
+   * Whether playing a dialogue now would change any flag (on some path through its choices, up to
+   * NEWS_CHOICE_DEPTH deep): the person has something new to say. A dry run on a copy of the flags.
+   */
+  hasNews(dialogueId: string): boolean {
+    const script = this.content.dialogue[dialogueId];
+    if (!script) return false;
+    const base = this.state.flags.snapshot();
+    const changed = (flags: FlagStore) => {
+      const now = flags.snapshot();
+      const keys = new Set([...Object.keys(base), ...Object.keys(now)]);
+      for (const k of keys) if (base[k] !== now[k]) return true;
+      return false;
+    };
+    const explore = (path: readonly number[]): boolean => {
+      const flags = new FlagStore(base as FlagSnapshot);
+      const runner = new DialogueRunner(script, this.content.speakers, flags);
+      let depth = 0;
+      for (let i = 0; i < 500 && !runner.done; i++) {
+        const view = runner.view();
+        if (view.kind === 'choice') {
+          if (depth < path.length) {
+            runner.choose(view.choices[path[depth]!]!.index);
+            depth++;
+            continue;
+          }
+          if (changed(flags)) return true;
+          if (depth >= NEWS_CHOICE_DEPTH) return false;
+          return view.choices.some((_, k) => explore([...path, k]));
+        }
+        runner.advance();
+      }
+      return changed(flags);
+    };
+    return explore([]);
   }
 
   /**
@@ -159,19 +320,37 @@ export class GameLogic {
       return [{ kind: 'refused', text }];
     }
     p.era = check.to;
+    let changed: Effect | null = null;
     if (check.to === 'present') {
       for (const name of Object.keys(this.state.flags.snapshot())) {
         if (name.startsWith(ECHO_FLAG_PREFIX)) this.state.flags.clear(name);
       }
+      changed = this.anchorChanges();
+      this.anchorsAtEntry = null;
+    } else {
+      this.anchorsAtEntry = new Set(this.map.anchors.map((a) => a.flag).filter((f) => this.state.flags.isSet(f)));
     }
     const effects: Effect[] = [
       { kind: 'era', era: check.to },
       { kind: 'sync' },
       { kind: 'toast', text: check.to === 'echo' ? m.enterEcho : m.leaveEcho },
     ];
+    if (changed) effects.push(changed);
     const scene = check.to === 'echo' ? check.zone.onEcho : check.zone.onReturn;
     if (scene) effects.push(...this.startDialogue(scene));
     return effects;
+  }
+
+  /** Anchors set during this visit to the memory, and the present objects that read them. */
+  private anchorChanges(): Effect | null {
+    if (!this.anchorsAtEntry) return null;
+    const before = this.anchorsAtEntry;
+    const flags = this.map.anchors.map((a) => a.flag).filter((f) => this.state.flags.isSet(f) && !before.has(f));
+    if (flags.length === 0) return null;
+    const objects = this.objects('present')
+      .filter((o) => flagsIn(o.if).some((f) => flags.includes(f)))
+      .map((o) => o.id);
+    return { kind: 'changed', objects, flags };
   }
 
   // ---- Dialogue ------------------------------------------------------------------------------
@@ -180,6 +359,10 @@ export class GameLogic {
   startDialogue(id: string, after: Effect[] = []): Effect[] {
     const script = this.content.dialogue[id];
     if (!script) throw new Error(`Unknown dialogue ${id}`);
+    return this.startScript(script, after);
+  }
+
+  private startScript(script: DialogueScript, after: Effect[] = []): Effect[] {
     this.runner = new DialogueRunner(script, this.content.speakers, this.state.flags);
     this.afterDialogue = after;
     if (this.runner.done) return this.finishDialogue();
@@ -238,4 +421,9 @@ export class GameLogic {
     }
     return effects;
   }
+}
+
+/** The one-line description an object shows when it has no dialogue of its own (no speaker). */
+function inspectScript(objectId: string, text: string): DialogueScript {
+  return { id: `inspect.${objectId}`, start: 'look', nodes: { look: { lines: [{ text }] } } };
 }

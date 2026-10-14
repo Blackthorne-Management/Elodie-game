@@ -1,24 +1,44 @@
 // The field: draws the current map for the current era and animates what the game logic
-// (engine/game.ts) decides: steps, doors, triggers, talking, puzzle objects, the Echo swap with its
-// screen filter, dialogue and end cards. It also runs Anissa (who follows Gianna, and holds the door
-// while Gianna is in the Echo), her hints, the Journal and the pause menu. All rules come from the
-// engine; all content from src/data; every visual from assets.config.ts.
+// (engine/game.ts) decides: steps (eight directions), doors, triggers, talking, puzzle objects, the
+// Echo swap with its screen filter, dialogue and end cards. It shows what can be used (markers over
+// people and things, a name label over what the player faces, a glow on what the Echo changed). It
+// also runs Anissa (who follows Gianna, and holds the door while Gianna is in the Echo), her hints,
+// the Journal, Credits and the pause menu. All rules come from the engine; all content from
+// src/data; every visual from assets.config.ts.
 
 import Phaser from 'phaser';
 import {
   ANISSA_GLOW,
+  CHARACTER_LABEL_GAP,
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
+  ECHO_PLAYER_LOOK,
+  MARKER_TEXTURES,
+  OBJECT_ART,
+  PLAYER_LOOK,
   TILESET,
   UI,
-  textureKeyForNpc,
-  textureKeyForPlayer,
+  characterFrame,
+  textureKeyForCharacter,
+  textureKeyForObject,
 } from '../assets.config.ts';
-import { RUN_MS_PER_TILE, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_MS_PER_TILE } from '../config.ts';
+import {
+  CHARACTER_HEIGHT,
+  RUN_MS_PER_TILE,
+  SAVE_STORAGE_KEY,
+  TEXT_SPEED_ORDER,
+  TILE_SIZE,
+  VIEW_HEIGHT,
+  VIEW_WIDTH,
+  WALK_MS_PER_TILE,
+} from '../config.ts';
+import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { ACT1, JOURNAL_NOTES } from '../data/quests.ts';
-import type { Effect, GameLogic } from '../engine/game.ts';
-import { DIRS, type Dir, type Era, type Pos } from '../engine/types.ts';
-import { opposite, samePos, stepFrom } from '../engine/grid.ts';
+import type { Effect, GameLogic, Target } from '../engine/game.ts';
+import { DIRS, type Dir8, type Era, type Pos } from '../engine/types.ts';
+import { facingToward, opposite, samePos, spriteFacing, stepFrom } from '../engine/grid.ts';
+import { cameraBounds } from '../engine/scaling.ts';
+import { dirButtons } from '../input/actions.ts';
 import { currentObjective, journalEntries, journalNotes } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
 import { applySave, newGame, saveFits, toSaveData } from '../engine/state.ts';
@@ -35,18 +55,23 @@ import { tilemapKey } from './BootScene.ts';
 
 type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal';
 
+/** How long the glow on an object changed through the Echo lasts. */
+const CHANGED_GLOW_MS = 3600;
+
 interface Step {
   from: Pos;
   to: Pos;
   elapsed: number;
   duration: number;
+  /** Which foot steps out (walk frames 1 and 2 alternate). */
+  foot: 1 | 2;
 }
 
 interface Follower {
   sprite: Phaser.GameObjects.Image;
   pos: Pos;
   from: Pos;
-  facing: Dir;
+  facing: Dir8;
   glow: Phaser.Tweens.Tween | null;
 }
 
@@ -55,9 +80,15 @@ export interface FieldSnapshot {
   mapId: string;
   x: number;
   y: number;
-  facing: Dir;
+  facing: Dir8;
   era: string;
   moving: boolean;
+  /** The name label over what the player faces (null when none shows). */
+  label: string | null;
+  /** Interaction markers shown (`npc:<object id>` or `obj:<object id>`). */
+  markers: string[];
+  /** Objects glowing because the Echo changed them. */
+  glowing: string[];
   flags: Record<string, unknown>;
   dialogue: ReturnType<DialogueBox['snapshot']>;
   menu: ReturnType<MenuPanel['snapshot']>;
@@ -76,6 +107,11 @@ function tileToWorld(pos: Pos): { x: number; y: number } {
   return { x: pos.x * TILE_SIZE + TILE_SIZE / 2, y: pos.y * TILE_SIZE + TILE_SIZE };
 }
 
+/** Show a character look facing a direction (diagonals show their sprite facing), at a walk frame. */
+function setLook(sprite: Phaser.GameObjects.Image, look: string, facing: Dir8, step: 0 | 1 | 2 = 0): void {
+  sprite.setTexture(textureKeyForCharacter(look), characterFrame(spriteFacing(facing), step));
+}
+
 function capitalise(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
@@ -86,7 +122,16 @@ export class FieldScene extends Phaser.Scene {
   private layers: Record<string, Phaser.Tilemaps.TilemapLayer> = {};
   private player!: Phaser.GameObjects.Image;
   private npcSprites = new Map<number, Phaser.GameObjects.Image>();
-  private objectSprites = new Map<string, Phaser.GameObjects.Image[]>();
+  private objectSprites = new Map<string, Phaser.GameObjects.GameObject[]>();
+  private markerSprites = new Map<string, Phaser.GameObjects.Image>();
+  private label!: Phaser.GameObjects.Container;
+  private labelText!: Phaser.GameObjects.Text;
+  private labelBg!: Phaser.GameObjects.Graphics;
+  private labelKey = '';
+  /** Objects the Echo changed, waiting to glow once the player is back in the field. */
+  private pendingGlow: string[] = [];
+  private glowing = new Set<string>();
+  private stepFoot: 1 | 2 = 1;
   private follower: Follower | null = null;
   private echoWash!: Phaser.GameObjects.Rectangle;
   private echoDither!: Phaser.GameObjects.TileSprite;
@@ -117,6 +162,10 @@ export class FieldScene extends Phaser.Scene {
     this.layers = {};
     this.npcSprites = new Map();
     this.objectSprites = new Map();
+    this.markerSprites = new Map();
+    this.labelKey = '';
+    this.pendingGlow = [];
+    this.glowing = new Set();
     this.follower = null;
     this.echoMatrix = null;
     this.map = this.logic.map;
@@ -142,11 +191,14 @@ export class FieldScene extends Phaser.Scene {
 
     const state = this.logic.state;
     const p = tileToWorld(state.player.pos);
-    this.player = this.add.image(p.x, p.y, textureKeyForPlayer(state.player.facing, state.player.era)).setOrigin(0.5, 1);
+    this.player = this.add.image(p.x, p.y, textureKeyForCharacter(this.playerLook())).setOrigin(0.5, 1);
+    setLook(this.player, this.playerLook(), state.player.facing);
     this.player.setDepth(10 + p.y);
 
+    // The camera follows Gianna and stops at the map's edges; a map smaller than the screen is centred.
     const cam = this.cameras.main;
-    cam.setBounds(0, 0, this.map.width * TILE_SIZE, this.map.height * TILE_SIZE);
+    const b = cameraBounds(this.map.width * TILE_SIZE, this.map.height * TILE_SIZE, VIEW_WIDTH, VIEW_HEIGHT);
+    cam.setBounds(b.x, b.y, b.width, b.height);
     cam.setRoundPixels(true);
     cam.startFollow(this.player, true, 1, 1, 0, TILE_SIZE / 2);
 
@@ -163,6 +215,11 @@ export class FieldScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setAlpha(ECHO_FILTER.ditherAlpha)
       .setDepth(4001);
+
+    // The name label over what the player faces (world space, above the actors, under the interface).
+    this.labelBg = this.add.graphics();
+    this.labelText = this.add.text(0, 0, '', { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color: UI.labelText }).setOrigin(0.5, 1);
+    this.label = this.add.container(0, 0, [this.labelBg, this.labelText]).setDepth(3500).setVisible(false);
 
     this.dialogue = new DialogueBox(this);
     this.menu = new MenuPanel(this);
@@ -191,6 +248,8 @@ export class FieldScene extends Phaser.Scene {
       case 'field':
         this.tickHints(delta);
         this.updateField(delta);
+        this.updateLabel();
+        this.startPendingGlow();
         break;
       case 'dialogue':
         this.dialogue.update(delta);
@@ -249,10 +308,13 @@ export class FieldScene extends Phaser.Scene {
         case 'talk': {
           this.talkingTo = e.npc;
           const def = this.logic.content.npcs[e.npc.npc];
-          const facing = opposite(this.logic.state.player.facing);
-          if (def) this.npcSprites.get(e.npc.objectId)?.setTexture(textureKeyForNpc(def.look, facing));
+          const sprite = this.npcSprites.get(e.npc.objectId);
+          if (def && sprite) setLook(sprite, def.look, facingToward(e.npc.pos, this.logic.state.player.pos));
           break;
         }
+        case 'changed':
+          this.pendingGlow.push(...e.objects);
+          break;
         case 'dialogue':
           this.enterDialogueMode();
           break;
@@ -279,6 +341,7 @@ export class FieldScene extends Phaser.Scene {
       const b = tileToWorld(this.step.to);
       this.player.setPosition(Math.round(a.x + (b.x - a.x) * t), Math.round(a.y + (b.y - a.y) * t));
       this.player.setDepth(10 + this.player.y);
+      setLook(this.player, this.playerLook(), this.logic.state.player.facing, t < 0.5 ? this.step.foot : 0);
       this.moveFollower(t);
       if (t < 1) return;
       const leftover = this.step.elapsed - this.step.duration;
@@ -288,7 +351,7 @@ export class FieldScene extends Phaser.Scene {
       // Keep walking smoothly while a direction is held.
       if (this.mode === 'field' && !this.step && this.scene.isActive()) {
         const dir = input.move();
-        if (dir && input.held(dir)) this.startStep(dir, leftover);
+        if (dir && input.heldDir(dir)) this.startStep(dir, leftover);
       }
       return;
     }
@@ -309,17 +372,140 @@ export class FieldScene extends Phaser.Scene {
     if (dir) this.startStep(dir, 0);
   }
 
-  private startStep(dir: Dir, carry: number): void {
-    const attempt = this.logic.tryStep(dir);
+  private startStep(dir: Dir8, carry: number): void {
+    // Held input slides along walls when a diagonal is refused (engine/game.ts tryStep).
+    const attempt = this.logic.tryStep(dir, true);
     const p = this.logic.state.player;
-    this.player.setTexture(textureKeyForPlayer(p.facing, p.era));
+    setLook(this.player, this.playerLook(), p.facing);
     if (!attempt.ok) {
-      if (attempt.reason === 'door_in_echo' && this.rt.input.pressed(dir)) this.toast.show(this.logic.content.messages.doorInEcho);
+      if (attempt.reason === 'door_in_echo' && dirButtons(dir).some((d) => this.rt.input.pressed(d))) {
+        this.toast.show(this.logic.content.messages.doorInEcho);
+      }
       return;
     }
-    const duration = this.rt.input.held('run') ? RUN_MS_PER_TILE : WALK_MS_PER_TILE;
-    this.step = { from: { ...p.pos }, to: attempt.to, elapsed: Math.min(carry, duration - 1), duration };
+    // A diagonal step is longer, so it takes longer (by the square root of two).
+    const diagonal = attempt.to.x !== p.pos.x && attempt.to.y !== p.pos.y;
+    const base = this.rt.input.held('run') ? RUN_MS_PER_TILE : WALK_MS_PER_TILE;
+    const duration = Math.round(diagonal ? base * Math.SQRT2 : base);
+    this.stepFoot = this.stepFoot === 1 ? 2 : 1;
+    this.step = { from: { ...p.pos }, to: attempt.to, elapsed: Math.min(carry, duration - 1), duration, foot: this.stepFoot };
+    this.label.setVisible(false);
     this.startFollowerStep(p.pos);
+  }
+
+  private playerLook(): string {
+    return this.logic.era === 'echo' ? ECHO_PLAYER_LOOK : PLAYER_LOOK;
+  }
+
+  // ---- Labels, markers and the Echo glow -----------------------------------------------------
+
+  /** The name label over the NPC, object or door the player faces (only while standing still). */
+  private updateLabel(): void {
+    const target = this.step ? null : this.logic.targetAhead();
+    const key = target ? `${target.kind}:${target.name}:${this.targetAnchor(target).x},${this.targetAnchor(target).y}` : '';
+    if (key === this.labelKey) return;
+    this.labelKey = key;
+    if (!target) {
+      this.label.setVisible(false);
+      return;
+    }
+    const at = this.targetAnchor(target);
+    this.labelText.setText(target.name);
+    const w = Math.ceil(this.labelText.width) + 6;
+    const h = Math.ceil(this.labelText.height) + 2;
+    // Keep the label on screen.
+    const cam = this.cameras.main;
+    const x = Phaser.Math.Clamp(at.x, cam.scrollX + w / 2 + 1, cam.scrollX + VIEW_WIDTH - w / 2 - 1);
+    const y = Math.max(at.y, cam.scrollY + h + 1);
+    this.labelBg.clear().fillStyle(UI.labelFill, UI.labelAlpha).fillRect(-w / 2, -h, w, h);
+    this.labelBg.lineStyle(1, UI.boxBorder, 0.8).strokeRect(-w / 2 + 0.5, -h + 0.5, w - 1, h - 1);
+    this.labelText.setPosition(0, 0);
+    this.label.setPosition(Math.round(x), Math.round(y)).setVisible(true);
+  }
+
+  /** The point (bottom centre of the label) above a target. */
+  private targetAnchor(target: Target): { x: number; y: number } {
+    if (target.kind === 'npc') {
+      const w = tileToWorld(target.npc.pos);
+      return { x: w.x, y: w.y - CHARACTER_HEIGHT - CHARACTER_LABEL_GAP };
+    }
+    if (target.kind === 'door') return { x: target.door.pos.x * TILE_SIZE + TILE_SIZE / 2, y: target.door.pos.y * TILE_SIZE - 2 };
+    const o = target.object;
+    return { x: (o.area.x + o.area.width / 2) * TILE_SIZE, y: this.objectTop(o) - 2 };
+  }
+
+  /** The top edge of an object as drawn (tall drawings rise above their tiles). */
+  private objectTop(o: { area: { y: number; height: number }; kind?: string }): number {
+    const art = o.kind ? OBJECT_ART[o.kind] : undefined;
+    const bottom = (o.area.y + o.area.height) * TILE_SIZE;
+    return art ? Math.min(o.area.y * TILE_SIZE, bottom - art.rows.length) : o.area.y * TILE_SIZE;
+  }
+
+  /** Markers over people with something new to say and things not used yet (engine/game.ts markers). */
+  private syncMarkers(): void {
+    const markers = this.logic.markers();
+    const keep = new Set(markers.map((m) => m.id));
+    for (const [id, sprite] of this.markerSprites) {
+      if (!keep.has(id)) {
+        this.tweens.killTweensOf(sprite);
+        sprite.destroy();
+        this.markerSprites.delete(id);
+      }
+    }
+    const objects = this.logic.objects();
+    for (const m of markers) {
+      if (this.markerSprites.has(m.id)) continue;
+      const x = (m.pos.x + 0.5) * TILE_SIZE;
+      let y: number;
+      if (m.kind === 'talk') y = (m.pos.y + 1) * TILE_SIZE - CHARACTER_HEIGHT - 3;
+      else {
+        const o = objects.find((ob) => `obj:${ob.id}` === m.id);
+        y = (o ? this.objectTop(o) : m.pos.y * TILE_SIZE) - 2;
+      }
+      const sprite = this.add
+        .image(Math.round(x), Math.round(y), m.kind === 'talk' ? MARKER_TEXTURES.talk : MARKER_TEXTURES.use)
+        .setOrigin(0.5, 1)
+        .setDepth(3400);
+      this.tweens.add({ targets: sprite, y: sprite.y - 3, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.markerSprites.set(m.id, sprite);
+    }
+  }
+
+  /** Once back in the field after an Echo change, the changed objects glow for a few seconds. */
+  private startPendingGlow(): void {
+    if (this.pendingGlow.length === 0) return;
+    const ids = this.pendingGlow;
+    this.pendingGlow = [];
+    const objects = this.logic.objects();
+    const names: string[] = [];
+    for (const id of ids) {
+      const o = objects.find((ob) => ob.id === id);
+      if (!o) continue;
+      const name = this.logic.content.objects?.[id]?.name;
+      if (name && !names.includes(name)) names.push(name);
+      const top = this.objectTop(o);
+      const bottom = (o.area.y + o.area.height) * TILE_SIZE;
+      const glow = this.add
+        .rectangle(o.area.x * TILE_SIZE - 2, top - 2, o.area.width * TILE_SIZE + 4, bottom - top + 4, UI.changedGlow, 0)
+        .setOrigin(0, 0)
+        .setDepth(3300)
+        .setBlendMode(Phaser.BlendModes.ADD);
+      glow.setStrokeStyle(1, UI.changedGlow, 1);
+      this.glowing.add(id);
+      this.tweens.add({
+        targets: glow,
+        fillAlpha: 0.55,
+        duration: CHANGED_GLOW_MS / 8,
+        yoyo: true,
+        repeat: 3,
+        ease: 'Sine.easeInOut',
+        onComplete: () => {
+          glow.destroy();
+          this.glowing.delete(id);
+        },
+      });
+    }
+    if (names.length > 0) this.toast.show(`Something changed: ${names.join(', ')}`);
   }
 
   // ---- Era and actors ------------------------------------------------------------------------
@@ -340,8 +526,7 @@ export class FieldScene extends Phaser.Scene {
       cam.postFX.clear();
       this.echoMatrix = null;
     }
-    const p = this.logic.state.player;
-    this.player.setTexture(textureKeyForPlayer(p.facing, p.era));
+    setLook(this.player, this.playerLook(), this.logic.state.player.facing);
   }
 
   private swapVisuals(_era: Era): void {
@@ -366,10 +551,11 @@ export class FieldScene extends Phaser.Scene {
       let sprite = this.npcSprites.get(n.objectId);
       if (!sprite) {
         const w = tileToWorld(n.pos);
-        sprite = this.add.image(w.x, w.y, textureKeyForNpc(def.look, n.facing)).setOrigin(0.5, 1).setDepth(10 + w.y);
+        sprite = this.add.image(w.x, w.y, textureKeyForCharacter(def.look)).setOrigin(0.5, 1).setDepth(10 + w.y);
+        setLook(sprite, def.look, n.facing);
         this.npcSprites.set(n.objectId, sprite);
       } else if (this.talkingTo?.objectId !== n.objectId) {
-        sprite.setTexture(textureKeyForNpc(def.look, n.facing));
+        setLook(sprite, def.look, n.facing);
       }
     }
 
@@ -382,12 +568,32 @@ export class FieldScene extends Phaser.Scene {
       }
     }
     for (const o of objects) {
-      if (this.objectSprites.has(o.id)) continue;
+      if (this.objectSprites.has(o.id) || !o.kind) continue;
+      const art = OBJECT_ART[o.kind];
+      if (art) {
+        // One large drawing, standing on the bottom edge of the object's area, sorted with the actors.
+        const x = (o.area.x + o.area.width / 2) * TILE_SIZE;
+        const bottom = (o.area.y + o.area.height) * TILE_SIZE;
+        const image = this.add.image(x, bottom, textureKeyForObject(o.kind)).setOrigin(0.5, 1).setDepth(o.walkable ? 1.5 : 10 + bottom - 1);
+        const parts: Phaser.GameObjects.GameObject[] = [image];
+        if (art.glow) {
+          const light = this.add
+            .circle(x, bottom - art.rows.length + art.glow.radius / 2, art.glow.radius, art.glow.color, 0.25)
+            .setDepth(image.depth + 0.1)
+            .setBlendMode(Phaser.BlendModes.ADD);
+          this.tweens.add({ targets: light, alpha: 0.45, scale: 1.12, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+          parts.push(light);
+        }
+        this.objectSprites.set(o.id, parts);
+        continue;
+      }
       const sprites = rectTiles(o.area).map((t) =>
         this.add.image(t.x * TILE_SIZE, t.y * TILE_SIZE, TILESET.textureKey, o.kind).setOrigin(0, 0).setDepth(o.walkable ? 1.5 : 5),
       );
       this.objectSprites.set(o.id, sprites);
     }
+    this.syncMarkers();
+    this.labelKey = '';
     this.placeFollower();
   }
 
@@ -406,12 +612,13 @@ export class FieldScene extends Phaser.Scene {
     }
     if (this.follower) return;
     const p = this.logic.state.player;
-    const tryDirs: Dir[] = [opposite(p.facing), ...DIRS];
+    const tryDirs: Dir8[] = [opposite(spriteFacing(p.facing)), ...DIRS];
     const spot =
       tryDirs.map((d) => stepFrom(p.pos, d)).find((t) => this.logic.isOpen(t, 'present') && !this.logic.npcs('present').some((n) => samePos(n.pos, t))) ??
       p.pos;
     const w = tileToWorld(spot);
-    const sprite = this.add.image(w.x, w.y, textureKeyForNpc(ANISSA_GLOW.look, p.facing)).setOrigin(0.5, 1).setDepth(10 + w.y - 1);
+    const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(ANISSA_GLOW.look)).setOrigin(0.5, 1).setDepth(10 + w.y - 1);
+    setLook(sprite, ANISSA_GLOW.look, p.facing);
     this.follower = { sprite, pos: spot, from: spot, facing: p.facing, glow: null };
     this.updateFollowerLook();
   }
@@ -424,7 +631,8 @@ export class FieldScene extends Phaser.Scene {
     f.glow?.stop();
     f.glow = null;
     if (echo) {
-      f.sprite.setTint(ANISSA_GLOW.tint).setAlpha(ANISSA_GLOW.alpha).setTexture(textureKeyForNpc(ANISSA_GLOW.look, 'down'));
+      f.sprite.setTint(ANISSA_GLOW.tint).setAlpha(ANISSA_GLOW.alpha);
+      setLook(f.sprite, ANISSA_GLOW.look, 'down');
       f.glow = this.tweens.add({ targets: f.sprite, alpha: ANISSA_GLOW.pulseAlpha, duration: 700, yoyo: true, repeat: -1 });
     } else {
       f.sprite.clearTint().setAlpha(1);
@@ -438,9 +646,9 @@ export class FieldScene extends Phaser.Scene {
     if (samePos(f.pos, playerFrom)) return;
     const dx = playerFrom.x - f.pos.x;
     const dy = playerFrom.y - f.pos.y;
-    f.facing = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up';
+    f.facing = facingToward({ x: 0, y: 0 }, { x: dx, y: dy });
     f.pos = { ...playerFrom };
-    f.sprite.setTexture(textureKeyForNpc(ANISSA_GLOW.look, f.facing));
+    setLook(f.sprite, ANISSA_GLOW.look, f.facing);
   }
 
   private moveFollower(t: number): void {
@@ -450,6 +658,7 @@ export class FieldScene extends Phaser.Scene {
     const b = tileToWorld(f.pos);
     f.sprite.setPosition(Math.round(a.x + (b.x - a.x) * t), Math.round(a.y + (b.y - a.y) * t));
     f.sprite.setDepth(10 + f.sprite.y - 1);
+    if (!samePos(f.from, f.pos)) setLook(f.sprite, ANISSA_GLOW.look, f.facing, t < 0.5 ? (this.stepFoot === 1 ? 2 : 1) : 0);
   }
 
   // ---- Hints and Journal ---------------------------------------------------------------------
@@ -497,6 +706,20 @@ export class FieldScene extends Phaser.Scene {
     this.mode = 'journal';
   }
 
+  /** The Credits screen: the art and sound the quest uses, with authors and licences (data/credits.ts). */
+  private openCredits(): void {
+    const lines: PanelLine[] = [{ text: 'CREDITS', color: UI.accentText }];
+    CREDITS_INTRO.forEach((t, i) => lines.push({ text: t, color: i === 0 ? UI.text : UI.dimText, gap: i === 0 ? 4 : 0 }));
+    for (const c of CREDITS) {
+      lines.push({ text: `${c.title} by ${c.author} (${c.licence})`, color: UI.text, gap: 4 });
+      lines.push({ text: `${c.use}. ${c.url}`, color: UI.dimText });
+    }
+    lines.push({ text: '(B to close)', color: UI.dimText, gap: 4 });
+    this.menu.close();
+    this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
+    this.mode = 'journal';
+  }
+
   private showCard(): void {
     const card = this.logic.card;
     if (!card) return;
@@ -516,6 +739,8 @@ export class FieldScene extends Phaser.Scene {
 
   private enterDialogueMode(): void {
     this.mode = 'dialogue';
+    this.label.setVisible(false);
+    this.labelKey = '';
     this.lastFx = undefined;
     this.showDialogueView();
   }
@@ -527,7 +752,8 @@ export class FieldScene extends Phaser.Scene {
     if (this.talkingTo) {
       const n = this.talkingTo;
       const def = this.logic.content.npcs[n.npc];
-      if (def) this.npcSprites.get(n.objectId)?.setTexture(textureKeyForNpc(def.look, n.facing));
+      const sprite = this.npcSprites.get(n.objectId);
+      if (def && sprite) setLook(sprite, def.look, n.facing);
       this.talkingTo = null;
     }
   }
@@ -584,6 +810,7 @@ export class FieldScene extends Phaser.Scene {
       ...(isStandalone() ? [] : [{ id: 'fullscreen', label: isFullscreen() ? 'Exit full screen' : 'Full screen' }]),
       { id: 'export', label: 'Export save code' },
       { id: 'import', label: 'Import save code' },
+      { id: 'credits', label: 'Credits' },
       { id: 'new', label: this.confirmNewGame ? 'New game? Press A again' : 'New game' },
       { id: 'close', label: 'Close' },
     );
@@ -660,6 +887,9 @@ export class FieldScene extends Phaser.Scene {
         this.mode = 'modal';
         this.openImport();
         break;
+      case 'credits':
+        this.openCredits();
+        break;
       case 'new':
         if (!this.confirmNewGame) {
           this.confirmNewGame = true;
@@ -716,6 +946,9 @@ export class FieldScene extends Phaser.Scene {
       facing: p.facing,
       era: p.era,
       moving: this.step !== null,
+      label: this.label.visible ? this.labelText.text : null,
+      markers: [...this.markerSprites.keys()].sort(),
+      glowing: [...this.glowing].sort(),
       flags: this.logic.state.flags.snapshot(),
       dialogue: this.dialogue.snapshot(),
       menu: this.menu.snapshot(),

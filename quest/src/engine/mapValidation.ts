@@ -3,7 +3,7 @@
 
 import { TILE_SIZE } from '../config.ts';
 import { flagsIn, parseConditionText, type Condition } from './conditions.ts';
-import { inBounds, isWalkable, samePos, stepFrom } from './grid.ts';
+import { components, inBounds, isWalkable, samePos, stepFrom } from './grid.ts';
 import {
   OBJECT_LAYERS,
   REQUIRED_OBJECT_LAYERS,
@@ -16,7 +16,8 @@ import {
   type GameMap,
   type TiledMap,
 } from './tiledMap.ts';
-import { ERAS } from './types.ts';
+import { DIAGONALS, ERAS } from './types.ts';
+import { inScope } from './world.ts';
 import { ANCHOR_FLAG_PREFIX, ECHO_FLAG_PREFIX } from './world.ts';
 
 export interface ValidationContext {
@@ -199,6 +200,36 @@ function checkObjects(id: string, raw: TiledMap, map: GameMap, ctx: ValidationCo
       if (o.solid && rectTiles(o.area).some((t) => rectContains(zone.area, t))) e(`solid puzzle object "${o.id}" overlaps ${label}`);
     }
     for (const d of [zone.onEcho, zone.onReturn]) if (d && !dialogueIds.has(d)) e(`${label} plays unknown dialogue "${d}"`);
+  }
+
+  // Diagonal steps (grid.ts tryMove) need both straight neighbours open, so they never reach a tile
+  // straight steps cannot. The one thing they could still do is slip between two step triggers that
+  // touch only at a corner, without landing on either: rule that layout out.
+  const stepTriggers = map.triggers.filter((t) => !t.onEnter);
+  for (const era of ERAS) {
+    const inEra = stepTriggers.filter((t) => inScope(t.era, era));
+    if (inEra.length < 2) continue;
+    const reported = new Set<string>();
+    for (let y = 0; y < map.height; y++) {
+      for (let x = 0; x < map.width; x++) {
+        const from = { x, y };
+        if (!isWalkable(map, era, from)) continue;
+        for (const d of DIAGONALS) {
+          const to = stepFrom(from, d);
+          const [a, b] = components(d).map((part) => stepFrom(from, part)) as [typeof from, typeof from];
+          if (![to, a, b].every((p) => isWalkable(map, era, p))) continue;
+          for (const ta of inEra.filter((t) => rectContains(t.area, a))) {
+            for (const tb of inEra.filter((t) => t !== ta && rectContains(t.area, b))) {
+              if ([from, to].some((p) => rectContains(ta.area, p) || rectContains(tb.area, p))) continue;
+              const key = [ta.id, tb.id].sort().join('|');
+              if (reported.has(key)) continue;
+              reported.add(key);
+              e(`a diagonal step from ${x},${y} (${d}, ${era}) slips between triggers "${ta.id}" and "${tb.id}" without touching either`);
+            }
+          }
+        }
+      }
+    }
   }
 
   // Anchors: each names a real Echo-era puzzle object on this map that sets the anchor's flag.

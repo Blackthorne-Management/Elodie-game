@@ -1,6 +1,12 @@
-// Every visual in the quest is defined here. Phase 1 uses placeholder colours only: the Boot scene
-// draws these into textures at start-up, so no image files are needed. When real pixel art arrives,
-// swap an entry for an image path and the scenes keep working through the same keys.
+// Every visual in the quest is defined here. The placeholders are drawn at start-up (src/scenes/
+// textures.ts): tiles from colours and patterns or from the pixel drawings in assets.pixels.ts,
+// characters from the looks below. Real art replaces them file by file: drop a PNG with the name
+// ART_FILES describes into quest/art/ and it is used instead of the placeholder (a missing file
+// keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
+
+import { OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt } from './assets.pixels.ts';
+
+export { OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt };
 
 /** Pattern drawn on top of a placeholder tile's base colour so tiles read at a glance. */
 export type TilePattern = 'flat' | 'dots' | 'grid' | 'stripes' | 'cross' | 'border' | 'blob' | 'wave';
@@ -78,93 +84,176 @@ export const TILESET = {
     { gid: 55, name: 'paper', base: 0xe8d8b0, accent: 0x7a5530, pattern: 'border' },
     { gid: 56, name: 'bridge_old', base: 0x6e5a40, accent: 0x3e3020, pattern: 'stripes' },
     { gid: 57, name: 'banner', base: 0x4f9a4a, accent: 0xf2d04b, pattern: 'stripes' },
+    // Readability pass: story objects get their own tiles (drawn from TILE_ART). Append only: a
+    // tile's gid is its place in the .tmj files.
+    { gid: 58, name: 'crate', base: 0x9c7446, accent: 0x6b4426, pattern: 'border' },
+    { gid: 59, name: 'well', base: 0xb8b8c4, accent: 0x3a6fb8, pattern: 'border' },
+    { gid: 60, name: 'pawl_rust', base: 0x8a4a2a, accent: 0x5e3418, pattern: 'border' },
+    { gid: 61, name: 'pawl_pinned', base: 0x8a4a2a, accent: 0xc8c8d0, pattern: 'border' },
+    { gid: 62, name: 'stone_pile', base: 0xb8b8c4, accent: 0x8e8e9c, pattern: 'grid' },
+    { gid: 63, name: 'loose_board', base: 0xb98d5a, accent: 0xe8d8b0, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 
 /**
- * A 16 x 24 placeholder character: a body block, a head block, a facing marker, and optional hair or
- * headgear (`hat`) or a hood. An Echo ancestor is a palette and headgear swap of the modern sprite
- * (guide 6.1), which is what ECHO_PLAYER_SPRITE does.
+ * A 16 x 24 placeholder character, drawn with a 1 px dark outline in four facings and three walk
+ * frames (src/scenes/textures.ts). The named cast differ in silhouette (build, hair, headgear) and in
+ * what they carry, not just in colour, so they read at a glance. An Echo ancestor is a palette and
+ * headgear swap of the modern sprite (guide 6.1).
  */
+export type HairStyle = 'short' | 'long' | 'curly' | 'bun' | 'puffs' | 'braid' | 'bald' | 'cropped';
+export type Headgear = 'cap' | 'bicorne' | 'circlet' | 'headband' | 'hood' | 'wrap' | 'brimmed' | 'helmet';
+export type Accessory = 'satchel' | 'locket' | 'bow' | 'hutia' | 'cane' | 'epaulettes' | 'sash' | 'emblem' | 'apron' | 'drum' | 'staff';
+
 export interface PlaceholderCharacter {
-  body: number;
-  head: number;
+  skin: number;
+  hair: number;
+  hairStyle: HairStyle;
+  /** Coat, dress or robe. */
+  outfit: number;
+  /** Collar, belt, hem and sash. */
   trim: number;
-  hat?: number;
-  hood?: boolean;
+  /** Trousers and boots (robes hide them). */
+  legs?: number;
+  /** A long dress or robe down to the ankles. */
+  robe?: boolean;
+  /** small: a child or Anissa; tall: Elodie. */
+  build?: 'normal' | 'small' | 'tall';
+  headgear?: Headgear;
+  headgearColor?: number;
+  beard?: number;
+  accessories?: readonly Accessory[];
 }
 
-/** Gianna in the present. */
-export const PLAYER_SPRITE: PlaceholderCharacter = { body: 0x3b4fa8, head: 0x8a5a3a, trim: 0xf2d04b, hat: 0x1a1414 };
-/** Young Patricio, the Echo party (a Warden: red revolutionary coat, cap). */
-export const ECHO_PLAYER_SPRITE: PlaceholderCharacter = { body: 0x7a2a26, head: 0x6a3a22, trim: 0xd8a83a, hat: 0x2a2420 };
+const C = PALETTE;
+const HAIR_BLACK = C.k!;
+const HAIR_DARK = 0x2a1a14;
+const WHITE_HAIR = C.h!;
 
-/** NPC looks, keyed by the `look` field of an NPC in data/npcs.ts (and `anissa` for the follower). */
+/**
+ * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
+ * present and `patricio_young` the player in the Echo; `anissa` is also the follower.
+ */
 export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
-  villager: { body: 0x6a8a3a, head: 0x7a4a2a, trim: 0xe0e0e0 },
-  keeper: { body: 0xe8e0c8, head: 0x6a3a22, trim: 0xd8a83a },
-  fisher: { body: 0x3a7a8a, head: 0x9a6a44, trim: 0xc8b07a },
-  anissa: { body: 0xe8a8c0, head: 0x6a3a22, trim: 0xf4ecd8, hat: 0x1a1414 },
-  elodie: { body: 0xd8a83a, head: 0x6a3a22, trim: 0xf4ecd8, hat: 0x1a1414 },
-  anicette: { body: 0x8a3050, head: 0x5a3020, trim: 0xe8e0c8, hat: 0xe8e0c8 },
-  patricio_old: { body: 0x7a2a26, head: 0x5a3a22, trim: 0xd8a83a, hat: 0xd8d8d8 },
-  yari: { body: 0x5a7a3a, head: 0x9a6a44, trim: 0xd06a3a, hat: 0x101010 },
-  gaze_keeper: { body: 0xf4ecd8, head: 0x5a3a22, trim: 0xd8a83a },
-  soup_vendor: { body: 0xd06a3a, head: 0x6a3a22, trim: 0xf2d04b, hat: 0xd06a3a },
-  recruiter: { body: 0x2a2a3a, head: 0x2a2a3a, trim: 0x6e6e7a, hood: true },
-  town_guard: { body: 0x3a5a8a, head: 0x7a4a2a, trim: 0xc8c8d0, hat: 0x3a5a8a },
-  festival_kid: { body: 0xf2d04b, head: 0x6a3a22, trim: 0x3a7a8a },
-  elder: { body: 0x7a6a8a, head: 0x5a3a22, trim: 0xe8e0c8, hat: 0xd8d8d8 },
-  ferryman: { body: 0x3a7a8a, head: 0x7a4a2a, trim: 0xc8b07a, hat: 0xc8b07a },
-  pilgrim: { body: 0xa89c86, head: 0x7a4a2a, trim: 0x6e6152 },
-  acolyte: { body: 0xe8e0c8, head: 0x7a4a2a, trim: 0xf2d04b },
-  mourner: { body: 0x3a3a4a, head: 0x6a3a22, trim: 0xe8e0c8, hat: 0x3a3a4a },
-  echo_soldier: { body: 0x6a5230, head: 0x6a3a22, trim: 0xa04040, hat: 0x5a4428 },
-  echo_cook: { body: 0x9c7a50, head: 0x6a3a22, trim: 0xe8d8b0 },
-  echo_aide: { body: 0x4a3a2a, head: 0x7a4a2a, trim: 0xd8a83a, hat: 0x4a3a2a },
-  echo_messenger: { body: 0x8a6a3a, head: 0x6a3a22, trim: 0xc8b07a },
-  echo_builder: { body: 0x8a7a68, head: 0x7a4a2a, trim: 0x5e4424, hat: 0xc8b07a },
+  // The cast (guide 5.3 / 5.3a).
+  gianna: {
+    skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: C.U!, trim: C.y!, robe: true,
+    accessories: ['satchel', 'locket'],
+  },
+  patricio_young: {
+    skin: C.s!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.R!, trim: C.y!, legs: C.u!,
+    headgear: 'bicorne', headgearColor: C.K!, accessories: ['epaulettes', 'sash'],
+  },
+  anissa: {
+    skin: C.S!, hair: HAIR_DARK, hairStyle: 'puffs', outfit: C.P!, trim: C.w!, robe: true, build: 'small',
+  },
+  elodie: {
+    skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.y!, trim: C.w!, robe: true, build: 'tall',
+    headgear: 'circlet', headgearColor: C.Y!, accessories: ['sash'],
+  },
+  anicette: {
+    skin: C.s!, hair: C.G!, hairStyle: 'short', outfit: C.p!, trim: C.y!, robe: true,
+    headgear: 'wrap', headgearColor: C.m!, accessories: ['sash'],
+  },
+  patricio_old: {
+    skin: C.s!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.r!, trim: C.y!, legs: C.u!, beard: WHITE_HAIR,
+    accessories: ['epaulettes', 'cane'],
+  },
+  yari: {
+    skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.L!, trim: C.o!, legs: C.B!,
+    headgear: 'headband', headgearColor: C.R!, accessories: ['bow', 'hutia'],
+  },
+  recruiter: {
+    skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.K!, trim: C.g!, robe: true,
+    headgear: 'hood', headgearColor: C.g!, accessories: ['emblem'],
+  },
+
+  // Zetwal, the present.
+  gaze_keeper: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true, accessories: ['staff'] },
+  soup_vendor: { skin: C.s!, hair: HAIR_DARK, hairStyle: 'cropped', outfit: C.o!, trim: C.y!, legs: C.B!, headgear: 'wrap', headgearColor: C.o!, accessories: ['apron'] },
+  town_guard: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.U!, trim: C.I!, legs: C.u!, headgear: 'helmet', headgearColor: C.I! },
+  festival_kid: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.y!, trim: C.c!, legs: C.B!, build: 'small' },
+  elder: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x7a6a8a, trim: C.w!, legs: C.K!, accessories: ['cane'] },
+  ferryman: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.c!, trim: C.N!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
+  pilgrim: { skin: C.T!, hair: C.B!, hairStyle: 'long', outfit: 0xa89c86, trim: C.g!, robe: true, accessories: ['staff'] },
+  acolyte: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.w!, trim: C.y!, robe: true },
+  mourner: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.K!, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: C.K! },
+
+  // Zetwal, the Echo (fifty years ago).
+  echo_soldier: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x6a5230, trim: C.R!, legs: C.b!, headgear: 'cap', headgearColor: 0x5a4428 },
+  echo_cook: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x9c7a50, trim: C.w!, legs: C.b!, accessories: ['apron'] },
+  echo_aide: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x4a3a2a, trim: C.y!, legs: C.b!, headgear: 'cap', headgearColor: 0x4a3a2a, accessories: ['satchel'] },
+  echo_messenger: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'braid', outfit: 0x8a6a3a, trim: C.N!, legs: C.b! },
+  echo_builder: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x8a7a68, trim: C.B!, legs: C.b!, headgear: 'brimmed', headgearColor: C.N! },
+  echo_drummer: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x6a5230, trim: C.y!, legs: C.b!, headgear: 'cap', headgearColor: C.R!, accessories: ['drum'] },
+
+  // Test village (Phase 1).
+  villager: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x6a8a3a, trim: C.w!, legs: C.B! },
+  keeper: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true },
+  fisher: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.c!, trim: C.N!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
 };
+
+/** The player's look in each era. */
+export const PLAYER_LOOK = 'gianna';
+export const ECHO_PLAYER_LOOK = 'patricio_young';
 
 /** Anissa holding the door while Gianna is in the Echo: a glowing figure (guide 6.1). */
 export const ANISSA_GLOW = { look: 'anissa', tint: 0xfff2a0, alpha: 0.85, pulseAlpha: 0.45 } as const;
 
-/** Dialogue portraits (32 x 32), keyed by the `portrait` of a speaker in data/speakers.ts. */
+/**
+ * Dialogue portraits (PORTRAIT_SIZE square), keyed by the `portrait` of a speaker in data/speakers.ts.
+ * A placeholder portrait is the head and shoulders of a character look, enlarged, on a background;
+ * `art` names a TILE_ART drawing instead (the sign).
+ */
 export interface PlaceholderPortrait {
   background: number;
-  figure: number;
-}
-
-function portraitOf(look: PlaceholderCharacter, background: number): PlaceholderPortrait {
-  return { background, figure: look.body };
+  look?: string;
+  art?: string;
 }
 
 const SKY = 0x2e3a4a;
 const SEPIA = 0x4a3a24;
 
+const portrait = (look: string, background = SKY): PlaceholderPortrait => ({ look, background });
+
 export const PORTRAITS: Record<string, PlaceholderPortrait> = {
-  villager: { background: 0x2e4a2a, figure: 0x6a8a3a },
-  keeper: { background: 0x4a3a1e, figure: 0xe8e0c8 },
-  fisher: { background: 0x1e3a4a, figure: 0x3a7a8a },
-  sign: { background: 0x3e2614, figure: 0xe8d8b0 },
-  gianna: portraitOf(PLAYER_SPRITE, SKY),
-  patricio: portraitOf(ECHO_PLAYER_SPRITE, SEPIA),
-  ...Object.fromEntries(
-    Object.entries(NPC_SPRITES)
-      .filter(([k]) => !['villager', 'keeper', 'fisher'].includes(k))
-      .map(([k, look]) => [k, portraitOf(look, k.startsWith('echo_') ? SEPIA : SKY)]),
-  ),
-  anissa_far: portraitOf(NPC_SPRITES.anissa!, 0x6a5a20),
-  temple_porter: portraitOf(NPC_SPRITES.acolyte!, SKY),
-  fisher_island: portraitOf(NPC_SPRITES.ferryman!, SKY),
-  echo_scout: portraitOf(NPC_SPRITES.echo_soldier!, SEPIA),
-  echo_sentry: portraitOf(NPC_SPRITES.echo_soldier!, SEPIA),
-  echo_guard: portraitOf(NPC_SPRITES.echo_soldier!, SEPIA),
-  echo_drummer: portraitOf(NPC_SPRITES.echo_cook!, SEPIA),
-  echo_lampwright: portraitOf(NPC_SPRITES.echo_builder!, SEPIA),
+  ...Object.fromEntries(Object.keys(NPC_SPRITES).map((k) => [k, portrait(k, k.startsWith('echo_') ? SEPIA : SKY)])),
+  sign: { background: 0x3e2614, art: 'sign' },
+  villager: portrait('villager', 0x2e4a2a),
+  keeper: portrait('keeper', 0x4a3a1e),
+  fisher: portrait('fisher', 0x1e3a4a),
+  patricio: portrait('patricio_young', SEPIA),
+  anissa_far: portrait('anissa', 0x6a5a20),
+  temple_porter: portrait('acolyte'),
+  fisher_island: portrait('ferryman'),
+  echo_scout: portrait('echo_soldier', SEPIA),
+  echo_sentry: portrait('echo_soldier', SEPIA),
+  echo_guard: portrait('echo_soldier', SEPIA),
+  echo_lampwright: portrait('echo_builder', SEPIA),
 };
 
-export const PORTRAIT_SIZE = 32;
+/** Portraits are this many pixels square in the dialogue box (real portraits: 48 x 48 files). */
+export const PORTRAIT_SIZE = 48;
+
+/**
+ * Real art, file by file (docs/quest/ART-STYLE.md). Put PNGs in quest/art/ under these names; the
+ * build picks up whatever is there (src/scenes/artFiles.ts) and each file replaces its placeholder.
+ *
+ *  characters/<look>.png   walk sheet: 3 columns x 4 rows of equal cells (16 x 24, or 16 x 32 for
+ *                          tall art). Rows: down, left, right, up. Columns: standing, step A, step B.
+ *  portraits/<portrait>.png  48 x 48 dialogue portrait (the neutral face).
+ *  tiles/<tile name>.png   16 x 16 tile, by TILESET name (e.g. tiles/grass.png, tiles/winch.png).
+ *  objects/<kind>.png      a large object drawing by OBJECT_ART name (e.g. objects/gaze_lamp_lit.png).
+ */
+export const ART_FILES = {
+  character: (look: string) => `characters/${look}.png`,
+  portrait: (key: string) => `portraits/${key}.png`,
+  tile: (name: string) => `tiles/${name}.png`,
+  object: (kind: string) => `objects/${kind}.png`,
+  /** Walk sheet layout. */
+  sheetColumns: 3,
+  sheetRows: ['down', 'left', 'right', 'up'] as const,
+} as const;
 
 /**
  * The Echo screen filter (guide 6.1): warm sepia, slightly dithered. A sepia colour matrix where the
@@ -201,18 +290,40 @@ export const UI = {
   cardFill: 0x000000,
   cardTitle: '#f2d04b',
   doneText: '#7fbf7a',
+  /** The name label over what the player faces. */
+  labelFill: 0x14101a,
+  labelAlpha: 0.88,
+  labelText: '#f4ecd8',
+  /** Interaction markers: "!" over a person with something new to say, a sparkle over a thing to use. */
+  markerTalk: 0xf2d04b,
+  markerUse: 0x9ad8ff,
+  markerOutline: 0x1a1420,
+  /** The glow on a present-day object changed through the Echo. */
+  changedGlow: 0xfff2a0,
 } as const;
-
-export function textureKeyForPlayer(facing: string, era: 'present' | 'echo' = 'present'): string {
-  return era === 'echo' ? `player-echo-${facing}` : `player-${facing}`;
-}
 
 export const ECHO_DITHER_TEXTURE = 'echo-dither';
 
-export function textureKeyForNpc(look: string, facing: string): string {
-  return `npc-${look}-${facing}`;
+/** One texture per character look; its frames are `<facing>-<0..2>` (standing, step A, step B). */
+export function textureKeyForCharacter(look: string): string {
+  return `char-${look}`;
+}
+
+export function characterFrame(facing: string, step: 0 | 1 | 2 = 0): string {
+  return `${facing}-${step}`;
 }
 
 export function textureKeyForPortrait(portrait: string): string {
   return `portrait-${portrait}`;
 }
+
+/** Large object drawings (OBJECT_ART), one texture each. */
+export function textureKeyForObject(kind: string): string {
+  return `object-${kind}`;
+}
+
+/** Pixels between a character's head and the name label over them. */
+export const CHARACTER_LABEL_GAP = 2;
+
+/** The interaction marker textures. */
+export const MARKER_TEXTURES = { talk: 'marker-talk', use: 'marker-use' } as const;

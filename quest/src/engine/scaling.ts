@@ -55,3 +55,29 @@ export function fitRect(
     top: Math.max(0, Math.floor((viewportH - height) / 2)),
   };
 }
+
+/**
+ * Camera bounds for a map in a view (both in pixels). A map larger than the view is the bounds
+ * itself (the camera follows and stops at the edges). Along a side where the map is smaller than the
+ * view, the bounds grow to the view's size, centred on the map, so the map sits in the middle of the
+ * screen instead of against the top-left corner.
+ */
+export function cameraBounds(mapW: number, mapH: number, viewW: number, viewH: number): { x: number; y: number; width: number; height: number } {
+  const width = Math.max(mapW, viewW);
+  const height = Math.max(mapH, viewH);
+  return { x: Math.floor((mapW - width) / 2), y: Math.floor((mapH - height) / 2), width, height };
+}
+
+/** Where the camera's top-left corner ends up for a target point, clamped to bounds (as Phaser does). */
+export function cameraScroll(
+  target: { x: number; y: number },
+  bounds: { x: number; y: number; width: number; height: number },
+  viewW: number,
+  viewH: number,
+): { x: number; y: number } {
+  const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), Math.max(lo, hi));
+  return {
+    x: clamp(target.x - viewW / 2, bounds.x, bounds.x + bounds.width - viewW),
+    y: clamp(target.y - viewH / 2, bounds.y, bounds.y + bounds.height - viewH),
+  };
+}

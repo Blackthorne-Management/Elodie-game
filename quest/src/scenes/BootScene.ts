@@ -1,8 +1,9 @@
-// Boot: draw the placeholder textures, hand the Tiled maps to Phaser's cache, then start the field.
+// Boot: load any real art files (quest/art/), draw the textures (placeholders where a file is
+// missing), hand the Tiled maps to Phaser's cache, then start the field.
 
 import Phaser from 'phaser';
 import { getRuntime } from '../runtime.ts';
-import { makeAllTextures } from './textures.ts';
+import { makeAllTextures, preloadArtFiles } from './textures.ts';
 
 export function tilemapKey(mapId: string): string {
   return `map-${mapId}`;
@@ -11,6 +12,10 @@ export function tilemapKey(mapId: string): string {
 export class BootScene extends Phaser.Scene {
   constructor() {
     super('boot');
+  }
+
+  preload(): void {
+    preloadArtFiles(this);
   }
 
   create(): void {

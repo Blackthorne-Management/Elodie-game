@@ -5,6 +5,9 @@
 //
 // Route text, one entry per array item:
 //   "up" "down" "left" "right" "confirm" "cancel" "echo"   one press
+//   "up-left" "up-right" "down-left" "down-right"         one diagonal press (both keys at once); a
+//                                                         refused diagonal slides along the wall, as
+//                                                         in the browser
 //   "right*4"                                             the same press 4 times
 //   "skip"                                                press A until the dialogue closes (taking the
 //                                                         first choice), so routes survive dialogue edits
@@ -13,11 +16,11 @@
 //   "@name"                                               a marker (the smoke test takes screenshots there)
 
 import type { Effect, GameLogic } from './game.ts';
-import { samePos, stepFrom } from './grid.ts';
-import { DIRS, type Dir, type Pos } from './types.ts';
+import { components, isDiagonal, samePos, stepFrom } from './grid.ts';
+import { DIRS, DIRS8, type Dir8, type Pos } from './types.ts';
 
-export type Command = Dir | 'confirm' | 'cancel' | 'echo' | 'skip';
-const COMMANDS: readonly string[] = [...DIRS, 'confirm', 'cancel', 'echo', 'skip'];
+export type Command = Dir8 | 'confirm' | 'cancel' | 'echo' | 'skip';
+const COMMANDS: readonly string[] = [...DIRS8, 'confirm', 'cancel', 'echo', 'skip'];
 
 export type RouteItem =
   | { kind: 'press'; cmd: Command; count: number }
@@ -30,7 +33,7 @@ export function parseRoute(lines: readonly string[]): RouteItem[] {
     if (line.startsWith('@')) return { kind: 'mark', name: line.slice(1) };
     const go = /^goto\s+(\d+)\s*,\s*(\d+)$/.exec(line);
     if (go) return { kind: 'goto', to: { x: Number(go[1]), y: Number(go[2]) } };
-    const m = /^([a-z]+)(?:\*(\d+))?$/.exec(line);
+    const m = /^([a-z-]+)(?:\*(\d+))?$/.exec(line);
     if (!m || !COMMANDS.includes(m[1]!)) throw new Error(`Route entry ${i + 1} is not an input: "${raw}"`);
     return { kind: 'press', cmd: m[1] as Command, count: m[2] ? Number(m[2]) : 1 };
   });
@@ -39,29 +42,34 @@ export function parseRoute(lines: readonly string[]): RouteItem[] {
 /**
  * Shortest walk to `goal` in the current era, over open tiles not blocked by NPCs, never crossing a
  * door or a trigger that would fire on the way (the goal itself may be one). Null when unreachable.
+ * Straight steps only unless `diagonal` (route files use straight steps, so they never depend on the
+ * corner rule; tests use both and compare).
  */
-export function findPath(logic: GameLogic, goal: Pos): Dir[] | null {
+export function findPath(logic: GameLogic, goal: Pos, diagonal = false): Dir8[] | null {
   const start = logic.state.player.pos;
   if (samePos(start, goal)) return [];
   const map = logic.map;
   const key = (p: Pos) => p.y * map.width + p.x;
   const npcs = logic.npcs();
-  const from = new Map<number, { prev: number; dir: Dir }>();
+  const from = new Map<number, { prev: number; dir: Dir8 }>();
+  const dirs = diagonal ? DIRS8 : DIRS;
+  const passable = (p: Pos) => logic.isOpen(p) && !npcs.some((n) => samePos(n.pos, p));
   const queue: Pos[] = [start];
   from.set(key(start), { prev: -1, dir: 'down' });
   while (queue.length > 0) {
     const cur = queue.shift()!;
-    for (const dir of DIRS) {
+    for (const dir of dirs) {
       const next = stepFrom(cur, dir);
       const k = key(next);
-      if (from.has(k) || !logic.isOpen(next) || npcs.some((n) => samePos(n.pos, next))) continue;
+      if (from.has(k) || !passable(next)) continue;
+      if (isDiagonal(dir) && !components(dir).every((part) => passable(stepFrom(cur, part)))) continue;
       const isGoal = samePos(next, goal);
       if (!isGoal && (map.doors.some((d) => samePos(d.pos, next)) || logic.wouldFire(next))) continue;
       from.set(k, { prev: key(cur), dir });
       if (isGoal) {
-        const dirs: Dir[] = [];
-        for (let at = k; at !== key(start); at = from.get(at)!.prev) dirs.push(from.get(at)!.dir);
-        return dirs.reverse();
+        const path: Dir8[] = [];
+        for (let at = k; at !== key(start); at = from.get(at)!.prev) path.push(from.get(at)!.dir);
+        return path.reverse();
       }
       queue.push(next);
     }
@@ -114,7 +122,7 @@ export class Sim {
         if (cmd === 'confirm') this.handle(logic.interact());
         else if (cmd === 'echo') this.handle(logic.swap());
         else if (cmd !== 'cancel' && cmd !== 'skip') {
-          const step = logic.tryStep(cmd);
+          const step = logic.tryStep(cmd, true);
           if (step.ok) this.handle(logic.finishStep(step.to));
           else if (step.reason === 'door_in_echo') this.log.push(logic.content.messages.doorInEcho);
         }

@@ -3,16 +3,17 @@
 
 import { DEFAULT_TEXT_SPEED, SAVE_VERSION } from '../config.ts';
 import { FlagStore } from './flags.ts';
-import { findSpawn } from './grid.ts';
+import { findSpawn, spriteFacing } from './grid.ts';
 import type { SaveData, SaveSettings } from './save.ts';
 import type { GameMap } from './tiledMap.ts';
-import type { Dir, Era, Pos } from './types.ts';
+import type { Dir8, Era, Pos } from './types.ts';
 import { isOpen } from './world.ts';
 
 export interface PlayerState {
   mapId: string;
   pos: Pos;
-  facing: Dir;
+  /** Eight directions while playing; saves keep the sprite facing (one of four), so codes stay version 2. */
+  facing: Dir8;
   era: Era;
 }
 
@@ -38,7 +39,7 @@ export function toSaveData(state: GameState, savedAt: number): SaveData {
     mapId: state.player.mapId,
     x: state.player.pos.x,
     y: state.player.pos.y,
-    facing: state.player.facing,
+    facing: spriteFacing(state.player.facing),
     era: state.player.era,
     flags: state.flags.snapshot(),
     settings: { ...state.settings },

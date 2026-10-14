@@ -59,44 +59,54 @@ html, body {
   touch-action: none;
 }
 
-/* Touch overlay: D-pad bottom left, A/B bottom right, Echo/Menu (and full screen) top right, all
-   inside the safe areas. It may overlap the edges of the picture on narrow screens, so it is
-   see-through. */
+/* Touch overlay: the analog stick bottom left (it floats to wherever the thumb lands in the left third),
+   A/B bottom right, Echo/Menu (and full screen) top right, all inside the safe areas. It may overlap
+   the edges of the picture on narrow screens, so it is see-through. */
 .touch-overlay {
   pointer-events: none;
   z-index: 10;
   touch-action: none;
-  --dpad: clamp(var(--dpad-min, 132px), calc(var(--vv-height, 100vh) * 0.42), var(--dpad-max, 156px));
+  --stick: clamp(var(--stick-min, 120px), calc(var(--vv-height, 100vh) * 0.4), var(--stick-max, 148px));
   --edge: 12px;
 }
 .touch-overlay > * { pointer-events: auto; touch-action: none; }
 .touch-overlay * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 
-.touch-dpad {
+/* The stick's zone: the left third of the screen below the top buttons' row. */
+.touch-stick-zone {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: calc(60px + env(safe-area-inset-top, 0px));
+  width: max(var(--stick-zone, 33.4%), calc(var(--stick) + 2 * var(--edge) + env(safe-area-inset-left, 0px)));
+}
+.touch-stick {
   position: absolute;
   left: calc(var(--edge) + env(safe-area-inset-left, 0px));
-  bottom: calc(var(--edge) + env(safe-area-inset-bottom, 0px));
-  width: var(--dpad);
-  height: var(--dpad);
+  top: calc(100% - var(--stick) - var(--edge) - env(safe-area-inset-bottom, 0px));
+  width: var(--stick);
+  height: var(--stick);
   border-radius: 50%;
-  background: rgba(244, 236, 216, 0.08);
+  background: rgba(20, 16, 26, 0.35);
+  border: 2px solid rgba(232, 216, 176, 0.55);
+  box-shadow: inset 0 0 0 10px rgba(244, 236, 216, 0.06);
+  opacity: 0.7;
+  pointer-events: none;
 }
-.touch-dpad-arm {
+.touch-stick.active { opacity: 1; border-color: rgba(232, 216, 176, 0.85); }
+.touch-stick.run { border-color: rgba(242, 208, 75, 0.95); }
+.touch-stick-knob {
   position: absolute;
-  width: 34%;
-  height: 34%;
-  background: rgba(20, 16, 26, 0.72);
-  border: 2px solid rgba(232, 216, 176, 0.75);
-  border-radius: 8px;
+  left: 50%;
+  top: 50%;
+  width: var(--knob, 56px);
+  height: var(--knob, 56px);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(244, 236, 216, 0.55);
+  border: 2px solid rgba(232, 216, 176, 0.9);
 }
-.touch-dpad-arm.up { left: 33%; top: 0; }
-.touch-dpad-arm.down { left: 33%; bottom: 0; }
-.touch-dpad-arm.left { top: 33%; left: 0; }
-.touch-dpad-arm.right { top: 33%; right: 0; }
-.touch-dpad[data-dir="up"] .up,
-.touch-dpad[data-dir="down"] .down,
-.touch-dpad[data-dir="left"] .left,
-.touch-dpad[data-dir="right"] .right { background: rgba(242, 208, 75, 0.6); }
+.touch-stick.active .touch-stick-knob { background: rgba(242, 208, 75, 0.6); }
 
 .touch-buttons {
   position: absolute;

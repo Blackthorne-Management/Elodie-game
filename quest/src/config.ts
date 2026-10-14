@@ -1,8 +1,11 @@
 // Every tunable number for the quest lives here. Nothing in this file touches Phaser or the DOM.
 
-/** Logical screen size (Game Boy Advance). The canvas is scaled up by a whole number (see MIN_INTEGER_ZOOM). */
-export const VIEW_WIDTH = 240;
-export const VIEW_HEIGHT = 160;
+/**
+ * Logical screen size: 16:9, so it fills landscape phones and TVs (20 x 11.25 tiles of 16 px). The
+ * canvas is scaled up by a whole number where it can be (see MIN_INTEGER_ZOOM).
+ */
+export const VIEW_WIDTH = 320;
+export const VIEW_HEIGHT = 180;
 
 /** Map grid. */
 export const TILE_SIZE = 16;
@@ -26,14 +29,24 @@ export type TextSpeed = keyof typeof TEXT_SPEEDS;
 export const TEXT_SPEED_ORDER: readonly TextSpeed[] = ['slow', 'normal', 'fast', 'instant'];
 export const DEFAULT_TEXT_SPEED: TextSpeed = 'normal';
 
-/** Gamepad stick dead zone (0..1). */
+/** Gamepad left stick dead zone (0..1, how far the stick must lean before it moves). */
 export const GAMEPAD_DEADZONE = 0.45;
 
 /** Touch overlay button size in CSS pixels (well above the 44 px minimum). */
 export const TOUCH_BUTTON_PX = 64;
-export const TOUCH_DPAD_PX = 156;
-/** The D-pad shrinks to this on short screens (three 44 px arms). */
-export const TOUCH_DPAD_MIN_PX = 132;
+
+/**
+ * The touch analog stick (src/input/touch.ts): the base ring's diameter in CSS pixels (it shrinks
+ * toward the minimum on short screens), and the knob's. The knob travels up to the ring's radius.
+ */
+export const TOUCH_STICK_PX = 148;
+export const TOUCH_STICK_MIN_PX = 120;
+export const TOUCH_KNOB_PX = 56;
+/** The stick appears under the thumb anywhere in this fraction of the screen width, from the left. */
+export const TOUCH_STICK_ZONE = 1 / 3;
+/** Dead zone and run threshold, as fractions of the knob's travel. */
+export const STICK_DEADZONE = 0.25;
+export const STICK_RUN = 0.85;
 
 /** Save storage. Bump SAVE_VERSION when the save shape changes. */
 export const SAVE_STORAGE_KEY = 'bloodlines-quest.save';

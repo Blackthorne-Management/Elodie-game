@@ -6,7 +6,9 @@ A single-player pixel RPG set in the world of the Bloodlines board game. The des
 board game app; the site's build runs `npm ci && npm test && npm run build` here and serves the result
 at `/quest/`.
 
-**Status:** Phase 1 (skeleton) and Phase 2 (the Echo, puzzles, and Act I in Zetwal) are done.
+**Status:** Phase 1 (skeleton) and Phase 2 (the Echo, puzzles, and Act I in Zetwal) are done, plus a
+playability pass from the owner's phone test: an 8-direction analog stick, a 320 x 180 (16:9) screen,
+readable drawings for every story object, interaction markers, name labels and Echo-change feedback.
 
 ## Run
 
@@ -22,16 +24,65 @@ touch overlay.
 
 Controls:
 
-| Action  | Keyboard               | Gamepad (standard) | Touch        |
-|---------|------------------------|--------------------|--------------|
-| move    | arrows / WASD          | D-pad / left stick | D-pad        |
-| confirm | Z / Enter / Space      | A                  | A            |
-| cancel  | X / Backspace          | B                  | B            |
-| run     | hold Shift (or X)      | hold B (or R)      | hold B       |
-| echo    | E                      | X                  | Echo         |
-| menu    | Escape / M             | Start              | Menu         |
+| Action  | Keyboard                        | Gamepad (standard)       | Touch                          |
+|---------|---------------------------------|--------------------------|--------------------------------|
+| move    | arrows / WASD (two = diagonal)  | left stick / D-pad       | analog stick (left third)      |
+| confirm | Z / Enter / Space               | A                        | A                              |
+| cancel  | X / Backspace                   | B                        | B                              |
+| run     | hold Shift (or X)               | hold B (or R)            | push the stick all the way, or hold B |
+| echo    | E                               | X                        | Echo                           |
+| menu    | Escape / M                      | Start                    | Menu                           |
 
 The touch overlay appears on touch devices (force it with `?touch=1`).
+
+**Moving in eight directions.** Movement is still tile by tile, but a step can be diagonal. A diagonal
+step needs the target tile and both straight tiles it passes between to be open (no cutting a wall's
+corner, no squeezing between two blocked tiles, no slipping past a person), so diagonals only shorten
+walks straight steps could already make: they never open a way around a puzzle
+(`tests/diagonal.test.ts` checks every map in both eras, and the puzzles' cheat lists include diagonal
+cheats). A diagonal step takes 1.41 times as long. When held input asks for a refused diagonal, the
+player slides along the wall (the horizontal part, else the vertical part). Diagonal steps onto a door
+or a trigger work like straight ones. Sprites have four facings, so a diagonal shows its horizontal
+side; A (and the name label) looks at the diagonal tile first, then the tile the sprite faces.
+
+**The touch stick** floats: it rests at the bottom left, and wherever a thumb lands in the left third
+of the screen the ring jumps there (kept on screen) and the knob follows the thumb inside it. A 25%
+dead zone, eight 45 degree sectors, and leaning past 85% runs (B still runs too). The gamepad's left
+stick uses the same eight sectors (`stickDirection` in `src/input/actions.ts`); its D-pad and the
+keyboard make diagonals by pressing two directions together.
+
+**What the player sees.** Every story object has its own drawing (`src/assets.pixels.ts`), with
+before and after states where the story changes it: the Gaze lamp (unlit, lit with a pulsing light),
+the chain winch and the pawl (oiled in the Echo, rusted today, pinned once Patricio drives the pin),
+the Chain Bridge (raised upright against the island, lowered across the chasm), the collapsed rope
+bridge, the map table (dust sheet today, war map in the Echo), the loose floorboard, doors, signs, the
+Marshal's Stone (and its cut stones in the Echo), name stones, shrines, wells, crates. A bobbing "!"
+floats over people with something new to say (talking would change a flag; `GameLogic.markers` dry-runs
+their dialogue), and a sparkle over things not used yet; both go away once used. Facing a person,
+object or door shows a name label ("Gaze Lamp", "Chain Winch (rusted)", "Rope Bridge (collapsed)",
+"Elodie Limyè, Mother"; names in `src/data/npcs.ts` and `src/data/objects.ts`). A on an object with no
+dialogue of its own shows a one-line description. Coming back from the Echo after an anchor changed
+something, the changed present-day objects glow for a few seconds, a toast says "Something changed:
+...", and the Journal keeps a "Something changed" note. The cast differ at a glance: Gianna (curly hair,
+blue archivist robe, satchel, the Locket), Anissa (small, two puffs, pink), Elodie (tall, gold gown and
+circlet), Anicette (purple dress, wine head wrap), old Patricio (white beard, marshal's red coat, cane),
+young Patricio (bicorne, red coat, sash), Yari (headband, bow, her hutia at her feet), and the Quiet
+Crown's hooded recruiters (grey hood, a silver crown on the chest).
+
+**Real art drops in file by file** (sizes, palette and prompts in `../docs/quest/ART-STYLE.md`). Put
+PNGs in `quest/art/` and rebuild; each replaces its placeholder, and a missing file keeps the
+placeholder (Vite lists the folder at build time, so nothing is requested that is not there):
+
+| File | Size and layout |
+|------|-----------------|
+| `art/characters/<look>.png` | walk sheet, 3 columns x 4 rows of equal cells (16 x 24, or 16 x 32): rows down, left, right, up; columns standing, step A, step B. Looks: `gianna`, `patricio_young`, `anissa`, `elodie`, `anicette`, `patricio_old`, `yari`, `recruiter`, and the others in `NPC_SPRITES` |
+| `art/portraits/<portrait>.png` | 48 x 48 dialogue portrait (the keys of `PORTRAITS`: `gianna`, `patricio`, `anissa`, ...) |
+| `art/tiles/<tile>.png` | 16 x 16 tile, by `TILESET` name (`grass`, `winch`, `bridge_old`, ...) |
+| `art/objects/<kind>.png` | a large object drawing by `OBJECT_ART` name (`gaze_lamp`, `gaze_lamp_lit`, `war_table`, `chain_bridge_up`) |
+
+**Credits.** The menu has a Credits screen (`src/data/credits.ts`, mirrored in `assets/CREDITS.md`).
+No third-party art is used yet: the build machine's network refused kenney.nl and opengameart.org, so
+every picture is drawn by the game itself.
 
 **Phones.** The picture is fitted to the *visible* viewport (`window.visualViewport`, without the
 browser bars), whole-number zoom when at least 2x fits, otherwise the exact fit; centred and
@@ -59,23 +110,29 @@ npm run audit:lang     # list phrasebook words not yet checked by a fluent speak
 npm run route:expand -- <puzzle> '["goto 3,4","confirm"]'   # turn a goto route into plain inputs
 ```
 
-`npm run smoke` keeps the Phase 1 checks (on the test village), checks Anissa's hints and the
-Journal, then plays the whole of Act I in the browser from a new game by the route in
-`routes/zetwal-act1.json`. The headless simulator replays the same route alongside, so after every
-key the browser must show exactly the map, tile, facing, era, mode and dialogue line the engine
-predicts. It writes `quest-*.png` (Phase 1) and `quest2-<moment>-desktop.png` /
-`quest2-<moment>-phone.png` (844 x 390) at the route's `@markers`, and `quest-fit-844x390.png` /
-`quest-fit-667x375.png` from the phone-fit checks (canvas and controls inside the viewport at four
-landscape phone sizes, no scroll, full-screen toggle, manifest), to `SHOT_DIR` (default: the OS temp
-directory): the plaza, the study in the present and in the Echo, the bridge before / in the Echo /
-after, the lit lamp, the end card, and Anissa's first line. It uses a local `playwright` if there is
+`npm run smoke` keeps the Phase 1 checks (on the test village), drags the touch stick on a phone-size
+screen (right, then up-right for a diagonal step; the ring floats to the thumb and returns to rest),
+checks Anissa's hints and the Journal, then plays the whole of Act I in the browser from a new game by
+the route in `routes/zetwal-act1.json` (which includes a diagonal step, pressed as two keys at once).
+The headless simulator replays the same route alongside, so after every key the browser must show
+exactly the map, tile, facing, era, mode and dialogue line the engine predicts; at the route's
+`@markers` the name label and the markers must match the engine too, and after the bridge the changed
+objects must glow and the Journal say "Something changed". It writes `quest-*.png` (Phase 1),
+`quest3-stick-phone.png`, `quest3-<moment>-desktop.png` / `quest3-<moment>-phone.png` (844 x 390) at the
+route's `@markers`, and `quest-fit-844x390.png` / `quest-fit-667x375.png` from the phone-fit checks
+(canvas and controls inside the viewport at four landscape phone sizes, no scroll, full-screen toggle,
+manifest), to `SHOT_DIR` (default: the OS temp directory): the plaza, a diagonal step, the name label,
+the study in the present and in the Echo, the rope bridge, the winch and bridge before / in the Echo /
+after, the lamp unlit and lit, the end card, and Anissa's first line. It uses a local `playwright` if there is
 one, else the global install, and runs Node with `--experimental-strip-types` to load the engine.
 
 ## What Phase 1 contains
 
-- **Phaser 3** (`pixelArt`, 240 x 160 logical resolution, whole-number scaling (exact fit below 2x), letterboxed, landscape),
-  16 x 16 tiles, 16 x 24 characters. All art is placeholder colours drawn at boot from
-  `src/assets.config.ts`; there are no image files.
+- **Phaser 3** (`pixelArt`, 320 x 180 logical resolution (16:9, 20 x 11.25 tiles; it was 240 x 160 in
+  Phases 1 and 2), whole-number scaling (exact fit below 2x), letterboxed, landscape; a map smaller
+  than the screen is centred, `cameraBounds` in `src/engine/scaling.ts`), 16 x 16 tiles, 16 x 24
+  characters. All art is placeholder pixel art drawn at boot from `src/assets.config.ts`; real art
+  files replace it one by one (above).
 - **Tiled maps** (`maps/*.tmj`). Every map has both eras on one grid: `ground_present`, `deco_present`,
   `ground_echo`, `deco_echo`, `above`, `collide_present`, `collide_echo`, and object layers `npcs`,
   `doors`, `triggers`, `spawns`, `echo_zones`, `anchors`, `puzzle_objects`. `maps/test-village.tmj`
@@ -131,15 +188,20 @@ Not yet (later phases): battles and Surge, pillars, debates, shops, other places
 ```
 src/
   config.ts            tunable numbers
-  assets.config.ts     every visual (placeholder colours for now)
+  assets.config.ts     every visual (placeholders, the palette, the art file names)
+  assets.pixels.ts     the placeholder pixel art (rows of palette keys) and the 33-colour palette
   engine/              pure TypeScript, no Phaser or DOM: grid, tiledMap, mapValidation, flags,
                        conditions, dialogue, save, state, rng, scaling, world (era rules), game
                        (the rules the scene animates), sim (headless play), quests, hints, content
   data/                maps registry, NPCs, speakers, dialogue (+ dialogue/zetwal.ts), quests,
-                       puzzles, cards, messages, lang glossary, content (everything, Node-safe)
+                       puzzles, objects (names, inspect lines, door labels), credits, cards,
+                       messages, lang glossary, content (everything, Node-safe)
   input/               input manager + keyboard, gamepad, touch sources
-  scenes/              Phaser scenes (Boot, Field) and placeholder texture drawing
+  scenes/              Phaser scenes (Boot, Field), texture drawing (textures.ts; pure pixel drawing in
+                       pixels.ts) and the art files found in quest/art (artFiles.ts)
   ui/                  dialogue box, menu, toast, hint bubble, text panel (Journal, cards), save dialogs
+art/                   drop real art here (characters/, portraits/, tiles/, objects/); see above
+assets/CREDITS.md      third-party assets and their licences (none yet)
 maps/                  Tiled .tmj files (zetwal-*.tmj are generated by npm run maps:build)
 puzzles/<id>/          solution.json and cheats.json for each puzzle
 routes/                zetwal-act1.json, the scripted route through the act (tests and smoke)

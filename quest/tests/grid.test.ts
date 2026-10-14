@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   canSwapEra,
+  combine,
+  components,
+  facingTiles,
+  facingToward,
+  spriteFacing,
   doorArrival,
   doorAt,
   findSpawn,
@@ -95,5 +100,68 @@ describe('map objects', () => {
     expect(visibleLayersFor('present')).toEqual(['ground_present', 'deco_present']);
     expect(visibleLayersFor('echo')).toEqual(['ground_echo', 'deco_echo']);
     expect(collisionLayerFor('echo')).toBe('collide_echo');
+  });
+});
+
+describe('diagonal steps (8-way movement)', () => {
+  // . . . . .
+  // . # . . .
+  // . . . . .
+  // . . # . .
+  // . . . . .
+  it('steps diagonally onto an open tile when both straight neighbours are open', () => {
+    expect(stepFrom({ x: 2, y: 2 }, 'up-right')).toEqual({ x: 3, y: 1 });
+    expect(stepFrom({ x: 2, y: 2 }, 'down-left')).toEqual({ x: 1, y: 3 });
+    expect(tryMove(map, 'present', { x: 2, y: 2 }, 'up-right')).toEqual({ moved: true, to: { x: 3, y: 1 } });
+    expect(tryMove(map, 'present', { x: 3, y: 2 }, 'down-right')).toEqual({ moved: true, to: { x: 4, y: 3 } });
+  });
+
+  it('refuses to cut a wall corner (one straight neighbour blocked)', () => {
+    // From 2,2 up-left to 1,1 is the wall itself; from 2,1 down-left to 1,2 passes the wall at 1,1.
+    expect(tryMove(map, 'present', { x: 2, y: 2 }, 'up-left')).toEqual({ moved: false, reason: 'collision' });
+    expect(tryMove(map, 'present', { x: 2, y: 1 }, 'down-left')).toEqual({ moved: false, reason: 'corner' });
+    expect(tryMove(map, 'present', { x: 1, y: 2 }, 'up-right')).toEqual({ moved: false, reason: 'corner' });
+    expect(tryMove(map, 'present', { x: 1, y: 3 }, 'up-right')).toEqual({ moved: false, reason: 'corner' });
+    expect(tryMove(map, 'present', { x: 3, y: 4 }, 'up-left')).toEqual({ moved: false, reason: 'collision' });
+  });
+
+  it('refuses to squeeze between two blocked tiles', () => {
+    const squeeze = parseMap('s', makeMap({ present: ['...', '.#.', '..#', '...'] }));
+    // From 1,2 to 2,1: the straight neighbours 1,1 and 2,2 are both walls.
+    expect(tryMove(squeeze, 'present', { x: 1, y: 2 }, 'up-right')).toEqual({ moved: false, reason: 'corner' });
+    expect(tryMove(squeeze, 'present', { x: 2, y: 1 }, 'down-left')).toEqual({ moved: false, reason: 'corner' });
+  });
+
+  it('refuses to pass a character standing on a straight neighbour, and stops at the map edge', () => {
+    const occupied = (p: { x: number; y: number }) => p.x === 3 && p.y === 2;
+    expect(tryMove(map, 'present', { x: 3, y: 1 }, 'down-right', occupied)).toEqual({ moved: false, reason: 'corner' });
+    expect(tryMove(map, 'present', { x: 0, y: 0 }, 'up-left')).toEqual({ moved: false, reason: 'bounds' });
+    expect(tryMove(map, 'present', { x: 4, y: 2 }, 'down-right')).toEqual({ moved: false, reason: 'bounds' });
+  });
+
+  it('uses the era’s own collision for the corner rule', () => {
+    // In the echo row 3 is a wall: 1,2 -> 2,3 is blocked; in the present 2,3 is the wall instead.
+    expect(tryMove(map, 'echo', { x: 2, y: 2 }, 'down-right')).toEqual({ moved: false, reason: 'collision' });
+    expect(tryMove(map, 'echo', { x: 1, y: 1 }, 'down-right')).toEqual({ moved: true, to: { x: 2, y: 2 } });
+  });
+
+  it('maps eight directions onto four sprite facings and two straight parts', () => {
+    expect(spriteFacing('up-right')).toBe('right');
+    expect(spriteFacing('down-left')).toBe('left');
+    expect(spriteFacing('up')).toBe('up');
+    expect(components('up-right')).toEqual(['right', 'up']);
+    expect(components('down-left')).toEqual(['left', 'down']);
+    expect(combine('left', 'up')).toBe('up-left');
+    expect(combine(null, 'down')).toBe('down');
+    expect(combine(null, null)).toBeNull();
+    expect(opposite('up-left')).toBe('down-right');
+  });
+
+  it('faces the diagonal tile first, then the sprite’s side', () => {
+    expect(facingTiles({ x: 2, y: 2 }, 'up')).toEqual([{ x: 2, y: 1 }]);
+    expect(facingTiles({ x: 2, y: 2 }, 'up-right')).toEqual([{ x: 3, y: 1 }, { x: 3, y: 2 }]);
+    expect(facingToward({ x: 0, y: 0 }, { x: 1, y: 1 })).toBe('right');
+    expect(facingToward({ x: 0, y: 0 }, { x: 0, y: -2 })).toBe('up');
+    expect(facingToward({ x: 5, y: 5 }, { x: 4, y: 5 })).toBe('left');
   });
 });

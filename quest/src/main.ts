@@ -1,5 +1,5 @@
 // Entry point: parse and check the maps and content, build the input layer, the game logic and its
-// state, load the save, then start Phaser at 240 x 160, fitted to the visible screen (src/ui/screen.ts).
+// state, load the save, then start Phaser at 320 x 180, fitted to the visible screen (src/ui/screen.ts).
 //
 // URL options (for development and the smoke test):
 //   ?map=<id>        a new game (when there is no save) starts on that map's first spawn

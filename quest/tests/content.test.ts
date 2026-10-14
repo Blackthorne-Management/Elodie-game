@@ -2,7 +2,7 @@
 // a condition reads is set somewhere (catches typos), the Journal, and the phrasebook.
 
 import { describe, expect, it } from 'vitest';
-import { NPC_SPRITES, PORTRAITS } from '../src/assets.config.ts';
+import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { GLOSSARIES } from '../src/data/lang.ts';
 import { PUZZLES } from '../src/data/puzzles.ts';
@@ -50,6 +50,19 @@ describe('dialogue content', () => {
       expect(NPC_SPRITES[npc.look], npc.id).toBeDefined();
     }
     for (const s of Object.values(CONTENT.speakers)) expect(PORTRAITS[s.portrait ?? ''], s.id).toBeDefined();
+  });
+
+  it('every NPC has a name for the label, and the cast have their own looks', () => {
+    for (const npc of Object.values(CONTENT.npcs)) expect(npc.name, npc.id).toBeTruthy();
+    for (const look of ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'recruiter']) {
+      expect(NPC_SPRITES[look], look).toBeDefined();
+    }
+    // At a glance: no two of the cast share hair style, headgear and outfit colour.
+    const cast = ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'recruiter'].map((k) => {
+      const l = NPC_SPRITES[k]!;
+      return `${l.hairStyle}/${l.headgear ?? '-'}/${l.outfit}`;
+    });
+    expect(new Set(cast).size).toBe(cast.length);
   });
 
   it('every line fits the dialogue box (4 lines, or 3 with a translation)', () => {
@@ -121,5 +134,46 @@ describe('phrasebook (guide 8)', () => {
         }
       }
     }
+  });
+});
+
+describe('objects and art', () => {
+  it('every puzzle object on every map has a name (and every door a label)', () => {
+    for (const m of Object.values(maps)) {
+      for (const o of m.objects) expect(CONTENT.objects?.[o.id], `${m.id} ${o.id}`).toBeDefined();
+      for (const d of m.doors) expect(CONTENT.doors?.[`${m.id}/${d.id}`] ?? CONTENT.doors?.[d.id], `${m.id} ${d.id}`).toBeTruthy();
+    }
+  });
+
+  it('every object kind is a tile or a large drawing; the story objects have drawings', () => {
+    const tiles = new Set(TILESET.tiles.map((t) => t.name));
+    for (const m of Object.values(maps)) for (const o of m.objects) if (o.kind) expect(tiles.has(o.kind) || !!OBJECT_ART[o.kind], o.kind).toBe(true);
+    for (const t of ['sign', 'shrine', 'barrel', 'crate', 'well', 'winch', 'winch_rust', 'pawl', 'pawl_rust', 'pawl_pinned', 'rope_broken', 'raised_bridge', 'bridge', 'bridge_old', 'monument', 'stone_pile', 'door', 'loose_board', 'name_stone']) {
+      expect(TILE_ART[t], t).toBeDefined();
+    }
+    for (const k of ['gaze_lamp', 'gaze_lamp_lit', 'war_table', 'war_table_echo', 'chain_bridge_up']) expect(OBJECT_ART[k], k).toBeDefined();
+  });
+
+  it('pixel drawings are rectangular, 16 x 16 for tiles, and use only the palette', () => {
+    const check = (name: string, rows: readonly string[]) => {
+      const w = rows[0]!.length;
+      for (const r of rows) {
+        expect(r.length, name).toBe(w);
+        for (const c of r) expect(c === '.' || PALETTE[c] !== undefined, `${name}: "${c}"`).toBe(true);
+      }
+    };
+    for (const [name, art] of Object.entries(TILE_ART)) {
+      expect([art.rows[0]!.length, art.rows.length], name).toEqual([16, 16]);
+      expect(TILESET.tiles.some((t) => t.name === name), `${name} is a tile`).toBe(true);
+      if (art.under) expect(TILESET.tiles.some((t) => t.name === art.under), name).toBe(true);
+      check(name, art.rows);
+    }
+    for (const [name, art] of Object.entries(OBJECT_ART)) check(name, art.rows);
+    expect(Object.keys(PALETTE).length).toBeGreaterThanOrEqual(30);
+    expect(Object.keys(PALETTE).length).toBeLessThanOrEqual(34);
+  });
+
+  it('tile gids are 1..n in order (they are positions in the .tmj files)', () => {
+    expect(TILESET.tiles.map((t) => t.gid)).toEqual(TILESET.tiles.map((_, i) => i + 1));
   });
 });

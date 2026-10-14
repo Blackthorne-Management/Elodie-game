@@ -8,6 +8,17 @@ export interface NpcDef {
   look: string;
   /** Dialogue id in data/dialogue.ts. */
   dialogue: string;
+  /** Shown on the name label when the player faces them (a name, or a role). */
+  name?: string;
+}
+
+/**
+ * What the player learns about a puzzle object (keyed by its id in the maps): the name label shown
+ * when facing it, and a one-line description that A shows when the object has no dialogue of its own.
+ */
+export interface ObjectInfo {
+  name: string;
+  inspect?: string;
 }
 
 /** A full-screen card shown once when its flag is set (e.g. the end of an act). */
@@ -39,6 +50,10 @@ export interface GameContent {
   speakers: Readonly<Record<string, Speaker>>;
   cards: readonly CardDef[];
   messages: Messages;
+  /** Names and descriptions of puzzle objects, by object id. */
+  objects?: Readonly<Record<string, ObjectInfo>>;
+  /** Name labels for doors, by `<map id>/<door id>` or a bare door id ("Limyè house"). */
+  doors?: Readonly<Record<string, string>>;
 }
 
 export function cardFlag(card: CardDef): string {

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { InputManager, type Button, type InputSource } from '../src/input/actions.ts';
-import { fitRect, fitZoom, integerZoom } from '../src/engine/scaling.ts';
+import { VIEW_HEIGHT, VIEW_WIDTH } from '../src/config.ts';
+import { InputManager, dirButtons, stickDirection, type Button, type InputSource } from '../src/input/actions.ts';
+import { knobOffset } from '../src/input/touch.ts';
+import { cameraBounds, cameraScroll, fitRect, fitZoom, integerZoom } from '../src/engine/scaling.ts';
 
 class FakeSource implements InputSource {
   held = new Set<Button>();
@@ -52,7 +54,7 @@ describe('InputManager', () => {
     expect(im.pressed('menu')).toBe(true);
   });
 
-  it('moves in the most recently pressed held direction', () => {
+  it('combines a held vertical and horizontal direction into a diagonal', () => {
     const k = new FakeSource();
     const im = new InputManager([k]);
     k.down('right');
@@ -60,11 +62,43 @@ describe('InputManager', () => {
     expect(im.move()).toBe('right');
     k.down('up');
     im.update();
-    expect(im.move()).toBe('up');
+    expect(im.move()).toBe('up-right');
+    expect(im.heldDir('up-right')).toBe(true);
     k.up('up');
     im.update();
     expect(im.move()).toBe('right');
+    expect(im.heldDir('up-right')).toBe(false);
+    k.down('down');
+    k.down('left');
+    im.update();
+    expect(im.move()).toBe('down-left');
+    k.up('left');
+    k.up('down');
     k.up('right');
+    im.update();
+    expect(im.move()).toBeNull();
+  });
+
+  it('of two opposite directions, the newer one wins', () => {
+    const k = new FakeSource();
+    const im = new InputManager([k]);
+    k.down('left');
+    im.update();
+    k.down('right');
+    im.update();
+    expect(im.move()).toBe('right');
+    k.down('up');
+    im.update();
+    expect(im.move()).toBe('up-right');
+  });
+
+  it('two keys tapped together in one frame make a diagonal step', () => {
+    const k = new FakeSource();
+    const im = new InputManager([k]);
+    k.tap('up');
+    k.tap('left');
+    im.update();
+    expect(im.move()).toBe('up-left');
     im.update();
     expect(im.move()).toBeNull();
   });
@@ -102,40 +136,113 @@ describe('InputManager', () => {
   });
 });
 
+describe('analog sticks (touch and gamepad)', () => {
+  it('map to eight 45 degree sectors outside the dead zone', () => {
+    expect(stickDirection(0.1, 0.1, 0.25)).toBeNull();
+    expect(stickDirection(0, 0, 0)).toBeNull();
+    expect(stickDirection(1, 0, 0.25)).toBe('right');
+    expect(stickDirection(-1, 0, 0.25)).toBe('left');
+    expect(stickDirection(0, -1, 0.25)).toBe('up');
+    expect(stickDirection(0, 1, 0.25)).toBe('down');
+    expect(stickDirection(0.7, -0.7, 0.25)).toBe('up-right');
+    expect(stickDirection(-0.7, -0.7, 0.25)).toBe('up-left');
+    expect(stickDirection(0.7, 0.7, 0.25)).toBe('down-right');
+    expect(stickDirection(-0.7, 0.7, 0.25)).toBe('down-left');
+    // Each straight direction owns 22.5 degrees either side of its axis.
+    const at = (deg: number) => stickDirection(Math.cos((deg * Math.PI) / 180), Math.sin((deg * Math.PI) / 180), 0.25);
+    expect(at(20)).toBe('right');
+    expect(at(25)).toBe('down-right');
+    expect(at(-20)).toBe('right');
+    expect(at(-25)).toBe('up-right');
+    expect(at(-110)).toBe('up');
+    expect(at(-160)).toBe('left');
+    expect(stickDirection(Number.NaN, 1, 0.25)).toBeNull();
+  });
+
+  it('hold the straight buttons of their direction', () => {
+    expect(dirButtons('up-right').sort()).toEqual(['right', 'up']);
+    expect(dirButtons('left')).toEqual(['left']);
+    expect(dirButtons(null)).toEqual([]);
+  });
+
+  it('the touch knob follows the thumb inside the ring', () => {
+    expect(knobOffset(10, 0, 50)).toEqual({ x: 10, y: 0, lean: 0.2 });
+    const far = knobOffset(0, -200, 50);
+    expect(far.x).toBeCloseTo(0);
+    expect(far.y).toBe(-50);
+    expect(far.lean).toBe(1);
+    expect(knobOffset(0, 0, 50)).toEqual({ x: 0, y: 0, lean: 0 });
+  });
+});
+
 describe('integer scaling', () => {
   it('uses the largest whole zoom that fits, at least 1', () => {
     expect(integerZoom(1280, 800, 240, 160, 8)).toBe(5);
     expect(integerZoom(844, 390, 240, 160, 8)).toBe(2);
-    expect(integerZoom(390, 844, 240, 160, 8)).toBe(1);
-    expect(integerZoom(100, 100, 240, 160, 8)).toBe(1);
-    expect(integerZoom(5000, 5000, 240, 160, 8)).toBe(8);
+    expect(integerZoom(1280, 800, VIEW_WIDTH, VIEW_HEIGHT, 8)).toBe(4);
+    expect(integerZoom(1920, 1080, VIEW_WIDTH, VIEW_HEIGHT, 8)).toBe(6);
+    expect(integerZoom(844, 390, VIEW_WIDTH, VIEW_HEIGHT, 8)).toBe(2);
+    expect(integerZoom(390, 844, VIEW_WIDTH, VIEW_HEIGHT, 8)).toBe(1);
+    expect(integerZoom(100, 100, VIEW_WIDTH, VIEW_HEIGHT, 8)).toBe(1);
+    expect(integerZoom(5000, 5000, VIEW_WIDTH, VIEW_HEIGHT, 8)).toBe(8);
+  });
+
+  it('the screen is 320 x 180 (16:9): 20 x 11.25 tiles', () => {
+    expect([VIEW_WIDTH, VIEW_HEIGHT]).toEqual([320, 180]);
+    expect(VIEW_WIDTH / VIEW_HEIGHT).toBeCloseTo(16 / 9);
+  });
+});
+
+describe('the camera', () => {
+  it('keeps a map larger than the screen as its bounds and stops at the edges', () => {
+    const b = cameraBounds(640, 448, 320, 180);
+    expect(b).toEqual({ x: 0, y: 0, width: 640, height: 448 });
+    expect(cameraScroll({ x: 8, y: 8 }, b, 320, 180)).toEqual({ x: 0, y: 0 });
+    expect(cameraScroll({ x: 636, y: 440 }, b, 320, 180)).toEqual({ x: 320, y: 268 });
+    expect(cameraScroll({ x: 300, y: 200 }, b, 320, 180)).toEqual({ x: 140, y: 110 });
+  });
+
+  it('centres a map smaller than the screen', () => {
+    // A 12 x 8 tile room (192 x 128) on the 320 x 180 screen: 64 px either side, 26 above and below.
+    const b = cameraBounds(192, 128, 320, 180);
+    expect(b).toEqual({ x: -64, y: -26, width: 320, height: 180 });
+    for (const t of [{ x: 0, y: 0 }, { x: 191, y: 127 }, { x: 96, y: 64 }]) expect(cameraScroll(t, b, 320, 180)).toEqual({ x: -64, y: -26 });
+    // Wider than the screen but shorter: follows across, centred up and down.
+    const house = cameraBounds(400, 160, 320, 180);
+    expect(house).toEqual({ x: 0, y: -10, width: 400, height: 180 });
+    expect(cameraScroll({ x: 390, y: 0 }, house, 320, 180)).toEqual({ x: 80, y: -10 });
   });
 });
 
 describe('fitZoom and fitRect', () => {
   const PHONES: [number, number][] = [[844, 390], [932, 430], [667, 375], [740, 360], [568, 320], [390, 844], [320, 180], [1280, 800]];
 
+  const W = VIEW_WIDTH;
+  const H = VIEW_HEIGHT;
+
   it('uses whole numbers when at least 2 fits', () => {
-    expect(fitZoom(1280, 800, 240, 160, 8, 2)).toBe(5);
-    expect(fitZoom(844, 390, 240, 160, 8, 2)).toBe(2);
-    expect(fitZoom(667, 375, 240, 160, 8, 2)).toBe(2);
-    expect(fitZoom(5000, 5000, 240, 160, 8, 2)).toBe(8);
+    expect(fitZoom(1280, 800, W, H, 8, 2)).toBe(4);
+    expect(fitZoom(844, 390, W, H, 8, 2)).toBe(2);
+    expect(fitZoom(667, 375, W, H, 8, 2)).toBe(2);
+    expect(fitZoom(932, 430, W, H, 8, 2)).toBe(2);
+    expect(fitZoom(5000, 5000, W, H, 8, 2)).toBe(8);
   });
 
   it('falls back to the exact fit below 2, even below 1', () => {
+    expect(fitZoom(390, 844, W, H, 8, 2)).toBe(1.218);
+    expect(fitZoom(450, 300, W, H, 8, 2)).toBe(1.406);
+    expect(fitZoom(160, 90, W, H, 8, 2)).toBe(0.5);
     expect(fitZoom(390, 844, 240, 160, 8, 2)).toBe(1.625);
-    expect(fitZoom(450, 300, 240, 160, 8, 2)).toBe(1.875);
-    expect(fitZoom(120, 80, 240, 160, 8, 2)).toBe(0.5);
   });
 
   it('survives an empty or broken viewport', () => {
-    expect(fitZoom(0, 0, 240, 160, 8, 2)).toBe(1);
-    expect(fitZoom(Number.NaN, 300, 240, 160, 8, 2)).toBe(1);
+    expect(fitZoom(0, 0, W, H, 8, 2)).toBe(1);
+    expect(fitZoom(Number.NaN, 300, W, H, 8, 2)).toBe(1);
   });
 
   it('never lets the canvas leave the viewport, and centres it', () => {
     for (const [w, h] of PHONES) {
-      const r = fitRect(w, h, 240, 160, 8, 2);
+      const r = fitRect(w, h, W, H, 8, 2);
       expect(r.width).toBeLessThanOrEqual(w);
       expect(r.height).toBeLessThanOrEqual(h);
       expect(r.left + r.width).toBeLessThanOrEqual(w);
@@ -143,6 +250,7 @@ describe('fitZoom and fitRect', () => {
       expect(Math.abs(r.left - (w - r.width - r.left))).toBeLessThanOrEqual(1);
       expect(Math.abs(r.top - (h - r.height - r.top))).toBeLessThanOrEqual(1);
     }
-    expect(fitRect(844, 390, 240, 160, 8, 2)).toEqual({ zoom: 2, width: 480, height: 320, left: 182, top: 35 });
+    expect(fitRect(844, 390, W, H, 8, 2)).toEqual({ zoom: 2, width: 640, height: 360, left: 102, top: 15 });
+    expect(fitRect(1280, 800, W, H, 8, 2)).toEqual({ zoom: 4, width: 1280, height: 720, left: 0, top: 40 });
   });
 });

@@ -3,7 +3,8 @@
 // 1. Phase 1 checks on the test village (?map=test-village): walk with the keyboard, talk through a
 //    dialogue with a choice, hit a trigger, swap into the Echo and back, save from the menu, reload
 //    and check the position and flags came back, go through a door (autosave) and reload again,
-//    export and import a save code, the touch overlay on a phone-sized landscape viewport.
+//    export and import a save code, the touch overlay on a phone-sized landscape viewport: the
+//    analog stick (drag right, then up-right for a diagonal step; it floats to where the thumb lands).
 //    At several landscape phone sizes: the canvas, and every touch control, inside the visible
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
@@ -11,7 +12,9 @@
 // 3. The whole of Act I, Zetwal, from a new game, by the scripted route routes/zetwal-act1.json.
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
-//    Screenshots at the route's @markers, at desktop and landscape phone (844x390) sizes.
+//    The route includes a diagonal step (two keys at once). At the route's @markers it checks the
+//    name label and markers, the lamp, the winch, the bridge before and after (and the glow the
+//    Echo change leaves), and takes screenshots at desktop and landscape phone (844x390) sizes.
 //
 // Fails on any page error.
 //
@@ -170,7 +173,7 @@ async function phoneFit(browser, errors) {
         vh: vv ? vv.height : innerHeight,
         canvas: box(document.querySelector('#game canvas')),
         scroll: [de.scrollWidth, de.scrollHeight, document.body.scrollWidth, document.body.scrollHeight, window.scrollX, window.scrollY],
-        controls: [...document.querySelectorAll('.touch-dpad, .touch-btn, .touch-small, .fs-button')].map(box),
+        controls: [...document.querySelectorAll('.touch-stick, .touch-btn, .touch-small, .fs-button')].map(box),
         fs: document.querySelector('.fs-button') !== null,
       };
     });
@@ -185,13 +188,14 @@ async function phoneFit(browser, errors) {
     const small = m.controls.filter((b) => Math.min(b.w, b.h) < 44);
     check(small.length === 0, `every touch control is at least 44 px (${m.controls.map((b) => Math.round(Math.min(b.w, b.h))).join(', ')})`);
     check(m.fs, 'the full-screen button is there');
-    const dpad = m.controls[0];
+    const stick = m.controls[0];
     const pad = m.controls.find((b) => b.name === 'A');
-    check(dpad.x < m.vw / 2 && dpad.y > m.vh / 2 && pad.x > m.vw / 2 && pad.y > m.vh / 2, 'D-pad bottom left, A bottom right');
-    // Quick double taps on the D-pad must not zoom the page.
-    for (let i = 0; i < 4; i++) await page.locator('.touch-dpad').tap({ position: { x: dpad.w / 2, y: dpad.h * 0.9 } });
+    check(stick.x < m.vw / 3 && stick.y > m.vh / 2 && pad.x > m.vw / 2 && pad.y > m.vh / 2, 'stick bottom left (left third), A bottom right');
+    // Quick double taps on the stick must not zoom the page.
+    const zone = await page.locator('.touch-stick-zone').boundingBox();
+    for (let i = 0; i < 4; i++) await page.locator('.touch-stick-zone').tap({ position: { x: zone.width / 2, y: zone.height * 0.9 } });
     const scale = await page.evaluate(() => window.visualViewport?.scale ?? 1);
-    check(scale === 1, `double taps on the D-pad leave the page unzoomed (scale ${scale})`);
+    check(scale === 1, `double taps on the stick leave the page unzoomed (scale ${scale})`);
     if ((width === 844 && height === 390) || (width === 667 && height === 375)) {
       const name = `quest-fit-${width}x${height}.png`;
       await page.screenshot({ path: join(SHOT_DIR, name) });
@@ -329,6 +333,15 @@ async function hintsAndJournal(browser, errors) {
 
 const KEYS = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight', confirm: 'KeyZ', cancel: 'KeyX', echo: 'KeyE' };
 
+/** A diagonal press: both arrow keys down in the same instant (one task, so no frame runs between), then up. */
+async function pressDiagonal(page, cmd) {
+  const codes = cmd.split('-').map((d) => KEYS[d]);
+  await page.evaluate((cs) => {
+    for (const code of cs) window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code, bubbles: true }));
+    for (const code of cs) window.dispatchEvent(new KeyboardEvent('keyup', { code, key: code, bubbles: true }));
+  }, codes);
+}
+
 /** What the browser must show once the last key has played out, from the simulator. */
 function expected(sim) {
   const p = sim.logic.state.player;
@@ -384,8 +397,8 @@ async function finishTyping(page) {
 
 async function shoot(page, name, shots) {
   await page.waitForTimeout(450); // let swaps, flashes and fades settle
-  const desktop = `quest2-${name}-desktop.png`;
-  const phone = `quest2-${name}-phone.png`;
+  const desktop = `quest3-${name}-desktop.png`;
+  const phone = `quest3-${name}-phone.png`;
   await page.screenshot({ path: join(SHOT_DIR, desktop) });
   await page.setViewportSize({ width: 844, height: 390 });
   await page.waitForTimeout(250);
@@ -393,6 +406,24 @@ async function shoot(page, name, shots) {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.waitForTimeout(150);
   shots.push(desktop, phone);
+}
+
+/** What must show at some of the route's markers (the label, markers, the bridge's states, the glow). */
+async function markChecks(page, sim, name) {
+  await page.waitForFunction(() => !window.__quest.snapshot().moving, null, { timeout: 3000 });
+  await page.waitForTimeout(80);
+  const s = await snap(page);
+  const label = sim.logic.targetAhead()?.name ?? null;
+  check(s.label === label, `@${name}: the name label shows ${label === null ? 'nothing' : `"${label}"`}`);
+  const markers = sim.logic.markers().map((m) => m.id).sort();
+  check(JSON.stringify(s.markers) === JSON.stringify(markers), `@${name}: markers over ${markers.join(', ') || 'nothing'}`);
+  if (name === 'diagonal') check(s.x === 10 && s.y === 8 && s.facing === 'up-right', 'two keys at once take diagonal steps (to 10,8)');
+  if (name === 'bridge-after') {
+    check(s.glowing.includes('chain_bridge') && s.glowing.includes('pawl_pinned'), 'back from the Echo, the lowered bridge and the pinned pawl glow');
+    check(s.toast.startsWith('Something changed'), `a toast says so ("${s.toast}")`);
+    check(s.flags['anchor.chain_bridge'] === true, 'the bridge is down in the present');
+  }
+  if (name === 'bridge-before') check(s.flags['anchor.chain_bridge'] !== true, 'the bridge is still raised');
 }
 
 async function playAct(browser, errors) {
@@ -415,6 +446,7 @@ async function playAct(browser, errors) {
   const started = Date.now();
   for (const item of route) {
     if (item.kind === 'mark') {
+      await markChecks(page, sim, item.name);
       await shoot(page, item.name, shots);
       continue;
     }
@@ -438,7 +470,8 @@ async function playAct(browser, errors) {
       } else {
         if (mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel')) await finishTyping(page);
         sim.press(cmd);
-        await page.keyboard.press(KEYS[cmd]);
+        if (cmd.includes('-')) await pressDiagonal(page, cmd);
+        else await page.keyboard.press(KEYS[cmd]);
         keys++;
         await frames(page);
       }
@@ -450,6 +483,17 @@ async function playAct(browser, errors) {
   check(s.flags['act1.complete'] === true && s.flags['card.act1_end'] === true, `played Act I to the end card in the browser (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
   check(s.flags['anchor.chain_bridge'] === true && s.flags['story.bridge_crossed'] === true, 'the bridge puzzle was solved through the Echo and its anchor');
   check(Object.keys(s.flags).every((f) => !f.startsWith('echo.')), 'no memory-only flags leaked into the present');
+  await menuSelect(page, 'Journal');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'journal', null, { timeout: 2000 });
+  const journal = (await snap(page)).journal;
+  check(journal.some((l) => l.startsWith('Something changed: The Chain Bridge')), 'the Journal notes "Something changed: The Chain Bridge ..."');
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  await menuSelect(page, 'Credits');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'journal', null, { timeout: 2000 });
+  check((await snap(page)).journal[0] === 'CREDITS', 'the menu has a Credits screen');
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
@@ -499,7 +543,7 @@ async function main() {
       const c = document.querySelector('#game canvas');
       return { w: c.getBoundingClientRect().width, h: c.getBoundingClientRect().height };
     });
-    check(zoom.w === 1200 && zoom.h === 800, `canvas is integer-scaled 240x160 x5 (${zoom.w}x${zoom.h})`);
+    check(zoom.w === 1280 && zoom.h === 720, `canvas is integer-scaled 320x180 x4 (${zoom.w}x${zoom.h})`);
 
     // Walk to the villager by the well and face them.
     await walk(page, [['ArrowDown', 1], ['ArrowRight', 5], ['ArrowDown', 2]]);
@@ -616,7 +660,7 @@ async function main() {
     await waitReady(ppage);
     check(await ppage.isVisible('.touch-overlay'), 'touch overlay shows on a touch device');
     const sizes = await ppage.evaluate(() =>
-      [...document.querySelectorAll('.touch-btn, .touch-small, .touch-dpad')].map((e) => {
+      [...document.querySelectorAll('.touch-btn, .touch-small, .touch-stick')].map((e) => {
         const r = e.getBoundingClientRect();
         return Math.min(r.width, r.height);
       }),
@@ -624,19 +668,49 @@ async function main() {
     check(sizes.every((v) => v >= 44), `every touch target is at least 44 px (${sizes.join(', ')})`);
     s = await snap(ppage);
     check(s.x === 6 && s.y === 6, 'fresh phone context starts a new game');
-    // Hold the right arm of the D-pad until one step lands.
-    const pad = await ppage.locator('.touch-dpad').boundingBox();
+    // The analog stick: put a thumb down in the left third, drag right (walk right), then up-right
+    // (a diagonal step), then release.
+    const rest = await ppage.locator('.touch-stick').boundingBox();
+    const zone = await ppage.locator('.touch-stick-zone').boundingBox();
     const cdp = await phone.newCDPSession(ppage);
     const touch = (type, x, y) =>
       cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] });
-    await touch('touchStart', pad.x + pad.width * 0.85, pad.y + pad.height / 2);
-    await ppage.waitForFunction(() => window.__quest.snapshot().x > 6, null, { timeout: 3000 });
+    const t0 = { x: zone.x + zone.width * 0.55, y: zone.y + zone.height * 0.45 };
+    await touch('touchStart', t0.x, t0.y);
+    const moved = await ppage.locator('.touch-stick').boundingBox();
+    check(
+      Math.abs(moved.x + moved.width / 2 - t0.x) < 2 && Math.abs(moved.y + moved.height / 2 - t0.y) < 2 && Math.abs(moved.x - rest.x) > 10,
+      'the stick ring jumps to where the thumb lands (floating stick)',
+    );
+    s = await snap(ppage);
+    check(s.x === 6 && s.y === 6 && !s.moving, 'a thumb resting inside the dead zone does not move');
+    // Walk right past the house corner (the wall at 8,5 would refuse a diagonal there), then lean up-right.
+    await touch('touchMove', t0.x + 30, t0.y);
+    await ppage.waitForFunction(() => window.__quest.snapshot().x >= 9, null, { timeout: 4000 });
+    await touch('touchMove', t0.x + 30, t0.y - 30);
+    const before = await snap(ppage);
+    await ppage.waitForFunction(
+      ({ x, y }) => {
+        const q = window.__quest.snapshot();
+        return q.facing === 'up-right' && q.y < y && q.x > x;
+      },
+      { x: before.x, y: before.y },
+      { timeout: 4000 },
+    );
+    check(true, 'leaning the stick up-right walks diagonally');
+    const knob = await ppage.evaluate(() => getComputedStyle(document.querySelector('.touch-stick-knob')).transform);
+    check(knob !== 'none', `the knob follows the thumb (${knob})`);
+    await ppage.screenshot({ path: join(SHOT_DIR, 'quest3-stick-phone.png') });
     await touch('touchEnd');
     await ppage.waitForFunction(() => !window.__quest.snapshot().moving, null, { timeout: 3000 });
     s = await snap(ppage);
-    check(s.y === 6 && s.x > 6 && s.facing === 'right', `the touch D-pad moves the player (to ${s.x},${s.y})`);
-    await ppage.locator('.touch-dpad').tap({ position: { x: pad.width / 2, y: pad.height * 0.9 } });
+    const back = await ppage.locator('.touch-stick').boundingBox();
+    check(Math.abs(back.x - rest.x) < 1 && Math.abs(back.y - rest.y) < 1, `released, the stick returns to rest (the player stopped at ${s.x},${s.y})`);
+    // A quick flick down still turns (and steps) the player.
+    await touch('touchStart', t0.x, t0.y);
+    await touch('touchMove', t0.x, t0.y + 40);
     await ppage.waitForFunction(() => window.__quest.snapshot().facing === 'down', null, { timeout: 3000 });
+    await touch('touchEnd');
     await ppage.waitForFunction(() => !window.__quest.snapshot().moving);
     await ppage.locator('.touch-small.touch-menu').tap();
     await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'menu', null, { timeout: 2000 });
@@ -664,7 +738,7 @@ async function main() {
     const actShots = await playAct(browser, errors);
 
     check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
-    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest-phone-portrait.png', ...fitShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
+    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
     console.log('Smoke test passed.');
   } finally {
     await browser.close();
