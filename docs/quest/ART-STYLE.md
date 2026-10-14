@@ -114,16 +114,26 @@ Haitian-inspired, Yari is Taíno-inspired, the Rodriguez line Spanish-inspired.
   iron clasps, a fur-lined collar, a sword he rarely draws. Reads as a warlord; the eyes are tired, not
   cruel.
 - **Marshal Patricio Jean-Philippe, young** (the player in the Echo, a Warden): deep brown skin, short
-  black hair, a red revolutionary coat with gold epaulettes and a gold sash, a dark bicorne, navy
-  trousers. Determined, warm.
+  black hair, a broad, solid build, a short beard, a deep red officer's coat with gold buttons and epaulettes,
+  a sky-blue sash, a black bicorne with a gold sun cockade, white breeches, tall black boots, a cutlass.
+  Determined, warm. Taller than Gianna (28 x 36 cell).
 - **Marshal Patricio Jean-Philippe, old** (the present): bald with white hair at the sides, a white
   beard, the same red coat now darker and worn, gold epaulettes, a cane.
 - **Elodie Limyè** (born Jean-Philippe), head of the Zetwal state: tall, deep brown skin, dark hair in
   a high bun, a gold gown with a cream sash, a gold circlet with a red stone. Composed; a diplomat.
-- **Anicette**, the grandmother and keeper of the Temple: grey hair under a wine-red head wrap (a
-  tignon), a purple dress with a gold sash and shawl. Shrewd, kind, gossips about the Ash Wars.
-- **Quiet Crown recruiters**: grey hooded cloaks over dark robes, faces in shadow, a small silver
-  crown on the chest. Polite and unsettling.
+- **Anicette**, the grandmother and keeper of the Temple, about 72: short grey hair under a purple
+  and gold madras head wrap (a tignon), a long plum robe with gold trim, a white shawl, a gold sash, a
+  sun pendant, a wooden staff topped with a gold sun. Shrewd, kind, gossips about the Ash Wars.
+- **The Quiet Crown** (the cult; the hooded recruiters in Zetwal, and later enemies): a deep charcoal
+  cowl and robe with a faint violet cast, the face visible under the cowl, a **bone-white veil** over
+  the mouth and chin (they "steal voices"), a small **silver crown sigil** over closed lips on the
+  chest, a silver cord belt. Men taller and broader (28 x 36 cell, like Azzy); women with a long braid
+  falling from the cowl down the back (24 x 32). Polite and unsettling. **One sheet per sex serves
+  every member:** the game recolours the skin per person (`SKIN_TONES` in `quest/src/assets.config.ts`:
+  light, tan, medium, brown, deep; looks `quiet_crown_<m|f>_<tone>`). For that to work, skin must be
+  the only warm colour on the figure: no gold, brown, orange, red or tan anywhere on the outfit, and
+  dark hair that is near-black rather than brown. Files: `characters/quiet_crown_m.png`,
+  `characters/quiet_crown_f.png`, `portraits/quiet_crown_m.png`, `portraits/quiet_crown_f.png`.
 
 ## 6. Prompts for a pixel-art generator
 

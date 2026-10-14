@@ -159,7 +159,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
 
   script('recruiter_a_talk', {
     start: {
-      speaker: 'recruiter',
+      speaker: 'recruiter_a',
       lines: [
         { text: "So much noise today. Drums, names, shouting. Doesn't it tire you?" },
         { text: 'We meet where it is quiet. No one there asks you to shout your grief.' },
@@ -171,11 +171,11 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
     price: {
-      speaker: 'recruiter',
+      speaker: 'recruiter_a',
       lines: [{ text: 'Nothing. Only quiet. One voice instead of a thousand. Is that so much to want?' }],
     },
     no: {
-      speaker: 'recruiter',
+      speaker: 'recruiter_a',
       lines: [{ text: 'The door stays open. It always does.' }],
     },
   }),
@@ -183,14 +183,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   script('recruiter_b_talk', {
     start: { lines: [], next: [{ if: { flag: 'story.anissa_woke' }, to: 'after' }, { to: 'before' }] },
     before: {
-      speaker: 'recruiter',
+      speaker: 'recruiter_b',
       lines: [
         { text: 'One hand on the Throne. One voice for the whole realm. Imagine how calm things would be.' },
         { text: 'You would be surprised who wears our hood, envoy\'s daughter.' },
       ],
     },
     after: {
-      speaker: 'recruiter',
+      speaker: 'recruiter_b',
       lines: [{ text: 'That light on the island. Such a quiet little girl, to be so bright.' }],
     },
   }),

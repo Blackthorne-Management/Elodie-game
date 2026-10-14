@@ -383,6 +383,13 @@ function drawHeadgear(p: Pix, look: PlaceholderCharacter, view: View, H: number,
         if (view === 'down') p.rect(8, H + 4, 8, 8, PALETTE.K!).set(9, H + 7, PALETTE.G!).set(14, H + 7, PALETTE.G!);
       }
       break;
+    case 'cowl':
+      // A deep hood that still shows the face (the Quiet Crown): the face is cut back out of it.
+      if (s) p.rect(5, H - 2, 14, 15, hg).rect(9, H - 3, 6, 1, hg);
+      else p.rect(4, H - 2, 16, 15, hg).rect(11, H - 3, 2, 1, hg);
+      if (s) headRows(4, 11, look.skin, 13);
+      else if (view === 'down') headRows(4, 11, look.skin, 7, 16);
+      break;
     case 'wrap':
       if (s) p.rect(6, H - 2, 13, 6, hg).rect(8, H - 3, 9, 1, hg).rect(8, H - 5, 4, 2, hg);
       else p.rect(5, H - 2, 14, 6, hg).rect(7, H - 3, 10, 1, hg).rect(10, H - 5, 4, 2, hg);
@@ -410,6 +417,8 @@ interface Frame {
   robe: boolean;
   trim: number;
 }
+
+const VEIL = 0xd8d0c0;
 
 function drawAccessory(p: Pix, a: NonNullable<PlaceholderCharacter['accessories']>[number], view: View, f: Frame): void {
   const { H, B, L, F } = f;
@@ -453,6 +462,11 @@ function drawAccessory(p: Pix, a: NonNullable<PlaceholderCharacter['accessories'
       if (view === 'down') p.line(7, B + 1, 16, B + 7, f.trim).line(7, B + 2, 15, B + 7, f.trim);
       else if (view === 'up') p.line(16, B + 1, 7, B + 7, f.trim).line(16, B + 2, 8, B + 7, f.trim);
       else p.rect(8, B + 4, 8, 2, f.trim);
+      break;
+    case 'veil':
+      // The Quiet Crown's bone-white veil over the mouth and chin ("stealing voices").
+      if (view === 'down') p.rect(7, H + 8, 10, 4, VEIL);
+      else if (s) p.rect(14, H + 8, 6, 4, VEIL);
       break;
     case 'emblem':
       // The Quiet Crown's small silver crown, low on the chest.

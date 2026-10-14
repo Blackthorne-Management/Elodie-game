@@ -67,7 +67,7 @@ describe('placeholder characters', () => {
   });
 
   it('the cast have different silhouettes facing the player', () => {
-    const cast = ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'recruiter'];
+    const cast = ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'quiet_crown_m_medium', 'quiet_crown_f_medium'];
     const shapes = cast.map((k) => silhouette(characterPix(NPC_SPRITES[k]!, 'down')));
     expect(new Set(shapes).size).toBe(cast.length);
   });

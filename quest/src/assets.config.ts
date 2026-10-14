@@ -102,8 +102,8 @@ export const TILESET = {
  * headgear swap of the modern sprite (guide 6.1).
  */
 export type HairStyle = 'short' | 'long' | 'curly' | 'bun' | 'puffs' | 'braid' | 'bald' | 'cropped';
-export type Headgear = 'cap' | 'bicorne' | 'circlet' | 'headband' | 'hood' | 'wrap' | 'brimmed' | 'helmet';
-export type Accessory = 'satchel' | 'locket' | 'bow' | 'hutia' | 'cane' | 'epaulettes' | 'sash' | 'emblem' | 'apron' | 'drum' | 'staff';
+export type Headgear = 'cap' | 'bicorne' | 'circlet' | 'headband' | 'hood' | 'cowl' | 'wrap' | 'brimmed' | 'helmet';
+export type Accessory = 'satchel' | 'locket' | 'bow' | 'hutia' | 'cane' | 'epaulettes' | 'sash' | 'emblem' | 'apron' | 'drum' | 'staff' | 'veil';
 
 export interface PlaceholderCharacter {
   skin: number;
@@ -123,7 +123,37 @@ export interface PlaceholderCharacter {
   headgearColor?: number;
   beard?: number;
   accessories?: readonly Accessory[];
+  /** The art sheet to use (quest/art/characters/<art>.png) when it is not the look's own name. */
+  art?: string;
+  /** Recolour the art sheet's skin to this tone (engine/skin.ts), so one sheet serves many people. */
+  skinTone?: SkinTone;
 }
+
+/** Skin tones for people drawn from one shared sheet (each the average skin colour). */
+export const SKIN_TONES = {
+  light: 0xe0b08c,
+  tan: 0xc48c60,
+  medium: 0xa06a42,
+  brown: 0x7a4a2c,
+  deep: 0x5a3622,
+} as const;
+export type SkinTone = keyof typeof SKIN_TONES;
+
+/**
+ * A member of the Quiet Crown (guide 7): a charcoal cowl that shows the face, a bone-white veil over the
+ * mouth (they "steal voices"), the small silver crown on the chest. Men are drawn taller and broader,
+ * women with a braid down the back. One art sheet per sex (quiet_crown_m, quiet_crown_f), any skin tone.
+ */
+function quietCrown(sex: 'm' | 'f', tone: SkinTone): PlaceholderCharacter {
+  return {
+    skin: SKIN_TONES[tone], hair: 0x2a1a14, hairStyle: sex === 'f' ? 'braid' : 'cropped', outfit: 0x34303e, trim: 0xc8c8d0,
+    robe: true, build: sex === 'm' ? 'tall' : 'normal', headgear: 'cowl', headgearColor: 0x2a2632,
+    accessories: ['veil', 'emblem'], art: `quiet_crown_${sex}`, skinTone: tone,
+  };
+}
+const QUIET_CROWN: Record<string, PlaceholderCharacter> = Object.fromEntries(
+  (['m', 'f'] as const).flatMap((sex) => (Object.keys(SKIN_TONES) as SkinTone[]).map((tone) => [`quiet_crown_${sex}_${tone}`, quietCrown(sex, tone)])),
+);
 
 const C = PALETTE;
 /** Black hair, a shade above the outline colour so the outline still reads around it. */
@@ -168,10 +198,8 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
     skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x3a2a24, trim: C.R!, legs: C.K!, build: 'tall',
     accessories: ['sash', 'epaulettes'],
   },
-  recruiter: {
-    skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.K!, trim: C.g!, robe: true,
-    headgear: 'hood', headgearColor: C.g!, accessories: ['emblem'],
-  },
+  // The Quiet Crown: quiet_crown_<m|f>_<tone>, e.g. quiet_crown_f_deep.
+  ...QUIET_CROWN,
 
   // Zetwal, the present.
   gaze_keeper: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true, accessories: ['staff'] },

@@ -12,6 +12,7 @@ import {
   OBJECT_ART,
   PORTRAITS,
   PORTRAIT_SIZE,
+  SKIN_TONES,
   TILESET,
   TILE_ART,
   UI,
@@ -19,8 +20,11 @@ import {
   textureKeyForCharacter,
   textureKeyForObject,
   textureKeyForPortrait,
+  type PlaceholderPortrait,
   type PlaceholderTile,
+  type SkinTone,
 } from '../assets.config.ts';
+import { recolorSkin } from '../engine/skin.ts';
 import { CHARACTER_HEIGHT, CHARACTER_WIDTH, TILE_SIZE } from '../config.ts';
 import { artFile } from './artFiles.ts';
 import { Pix, artPix, characterPix, css } from './pixels.ts';
@@ -35,6 +39,31 @@ function canvasTexture(scene: Phaser.Scene, key: string, w: number, h: number): 
 }
 
 /** An art file that the Boot scene loaded, as a drawable image. */
+/** A shared sheet recoloured to one skin tone (engine/skin.ts), cached per file and tone. */
+function recolored(scene: Phaser.Scene, path: string, tone: SkinTone | undefined): HTMLImageElement | HTMLCanvasElement | null {
+  const file = fileImage(scene, path);
+  if (!file || !tone) return file;
+  const key = `${fileKey(path)}@${tone}`;
+  const cached = RECOLORED.get(key);
+  if (cached) return cached;
+  const canvas = document.createElement('canvas');
+  canvas.width = file.width;
+  canvas.height = file.height;
+  const ctx = canvas.getContext('2d')!;
+  ctx.drawImage(file, 0, 0);
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  recolorSkin(img.data, SKIN_TONES[tone]);
+  ctx.putImageData(img, 0, 0);
+  RECOLORED.set(key, canvas);
+  return canvas;
+}
+const RECOLORED = new Map<string, HTMLCanvasElement>();
+
+/** The portrait file a portrait uses: a shared look's own art name (the Quiet Crown), else its key. */
+function portraitArt(key: string, def: PlaceholderPortrait): string {
+  return (def.look && NPC_SPRITES[def.look]?.art) ?? key;
+}
+
 function fileImage(scene: Phaser.Scene, path: string): HTMLImageElement | HTMLCanvasElement | null {
   const key = fileKey(path);
   if (!scene.textures.exists(key)) return null;
@@ -48,8 +77,8 @@ export function fileKey(path: string): string {
 /** Queue every art file present for loading (call from the Boot scene's preload). */
 export function preloadArtFiles(scene: Phaser.Scene): void {
   const paths = [
-    ...Object.keys(NPC_SPRITES).map(ART_FILES.character),
-    ...Object.keys(PORTRAITS).map(ART_FILES.portrait),
+    ...Object.entries(NPC_SPRITES).map(([look, def]) => ART_FILES.character(def.art ?? look)),
+    ...Object.entries(PORTRAITS).map(([key, def]) => ART_FILES.portrait(portraitArt(key, def))),
     ...TILESET.tiles.map((t) => ART_FILES.tile(t.name)),
     ...Object.keys(OBJECT_ART).map(ART_FILES.object),
   ];
@@ -188,7 +217,7 @@ function makeCharacters(scene: Phaser.Scene): void {
   const rows = ART_FILES.sheetRows;
   for (const [look, def] of Object.entries(NPC_SPRITES)) {
     const key = textureKeyForCharacter(look);
-    const file = fileImage(scene, ART_FILES.character(look));
+    const file = recolored(scene, ART_FILES.character(def.art ?? look), def.skinTone);
     const cw = file ? Math.floor(file.width / ART_FILES.sheetColumns) : CHARACTER_WIDTH;
     const ch = file ? Math.floor(file.height / rows.length) : CHARACTER_HEIGHT;
     const { tex, ctx } = canvasTexture(scene, key, cw * ART_FILES.sheetColumns, ch * rows.length);
@@ -212,7 +241,7 @@ function makePortraits(scene: Phaser.Scene): void {
   const s = PORTRAIT_SIZE;
   for (const [key, def] of Object.entries(PORTRAITS)) {
     const { tex, ctx } = canvasTexture(scene, textureKeyForPortrait(key), s, s);
-    const file = fileImage(scene, ART_FILES.portrait(key));
+    const file = recolored(scene, ART_FILES.portrait(portraitArt(key, def)), def.look ? NPC_SPRITES[def.look]?.skinTone : undefined);
     if (file) {
       ctx.drawImage(file, 0, 0, file.width, file.height, 0, 0, s, s);
     } else {

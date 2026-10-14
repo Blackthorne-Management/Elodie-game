@@ -54,11 +54,11 @@ describe('dialogue content', () => {
 
   it('every NPC has a name for the label, and the cast have their own looks', () => {
     for (const npc of Object.values(CONTENT.npcs)) expect(npc.name, npc.id).toBeTruthy();
-    for (const look of ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'recruiter']) {
+    for (const look of ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'quiet_crown_m_medium', 'quiet_crown_f_medium']) {
       expect(NPC_SPRITES[look], look).toBeDefined();
     }
     // At a glance: no two of the cast share hair style, headgear and outfit colour.
-    const cast = ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'recruiter'].map((k) => {
+    const cast = ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'quiet_crown_m_medium', 'quiet_crown_f_medium'].map((k) => {
       const l = NPC_SPRITES[k]!;
       return `${l.hairStyle}/${l.headgear ?? '-'}/${l.outfit}`;
     });

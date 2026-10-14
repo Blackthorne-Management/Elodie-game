@@ -26,7 +26,8 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   // Zetwal, the present.
   gaze_keeper: s('gaze_keeper', 'Gaze keeper'),
   soup_vendor: s('soup_vendor', 'Soup vendor'),
-  recruiter: s('recruiter', 'Hooded stranger'),
+  recruiter_a: s('recruiter_a', 'Hooded stranger', 'quiet_crown_m_brown'),
+  recruiter_b: s('recruiter_b', 'Hooded stranger', 'quiet_crown_f_tan'),
   town_guard: s('town_guard', 'Town guard'),
   festival_kid: s('festival_kid', 'Small boy'),
   elder: s('elder', 'Old neighbor'),
