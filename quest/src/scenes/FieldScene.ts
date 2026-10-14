@@ -22,22 +22,14 @@ import {
   textureKeyForCharacter,
   textureKeyForObject,
 } from '../assets.config.ts';
-import {
-  CHARACTER_HEIGHT,
-  RUN_MS_PER_TILE,
-  SAVE_STORAGE_KEY,
-  TEXT_SPEED_ORDER,
-  TILE_SIZE,
-  VIEW_HEIGHT,
-  VIEW_WIDTH,
-  WALK_MS_PER_TILE,
-} from '../config.ts';
+import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { ACT1, JOURNAL_NOTES } from '../data/quests.ts';
 import type { Effect, GameLogic, Target } from '../engine/game.ts';
 import { DIRS, type Dir8, type Era, type Pos } from '../engine/types.ts';
 import { facingToward, opposite, samePos, spriteFacing, stepFrom } from '../engine/grid.ts';
-import { cameraBounds } from '../engine/scaling.ts';
+import { Mover, restDistance, speedPx, stepLength, tileFoot, walkFrame } from '../engine/motion.ts';
+import { cameraBounds, cameraScroll } from '../engine/scaling.ts';
 import { dirButtons } from '../input/actions.ts';
 import { currentObjective, journalEntries, journalNotes } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
@@ -58,21 +50,15 @@ type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal';
 /** How long the glow on an object changed through the Echo lasts. */
 const CHANGED_GLOW_MS = 3600;
 
-interface Step {
-  from: Pos;
-  to: Pos;
-  elapsed: number;
-  duration: number;
-  /** Which foot steps out (walk frames 1 and 2 alternate). */
-  foot: 1 | 2;
-}
-
 interface Follower {
   sprite: Phaser.GameObjects.Image;
   pos: Pos;
   from: Pos;
   facing: Dir8;
   glow: Phaser.Tweens.Tween | null;
+  /** Pixels walked (her own walk cycle) and how far through the player's current step she was. */
+  distance: number;
+  lastT: number;
 }
 
 export interface FieldSnapshot {
@@ -103,9 +89,7 @@ export interface FieldSnapshot {
 
 const ERA_LAYERS = [TILE_LAYERS.groundPresent, TILE_LAYERS.decoPresent, TILE_LAYERS.groundEcho, TILE_LAYERS.decoEcho];
 
-function tileToWorld(pos: Pos): { x: number; y: number } {
-  return { x: pos.x * TILE_SIZE + TILE_SIZE / 2, y: pos.y * TILE_SIZE + TILE_SIZE };
-}
+const tileToWorld = tileFoot;
 
 /** Show a character look facing a direction (diagonals show their sprite facing), at a walk frame. */
 function setLook(sprite: Phaser.GameObjects.Image, look: string, facing: Dir8, step: 0 | 1 | 2 = 0): void {
@@ -131,7 +115,6 @@ export class FieldScene extends Phaser.Scene {
   /** Objects the Echo changed, waiting to glow once the player is back in the field. */
   private pendingGlow: string[] = [];
   private glowing = new Set<string>();
-  private stepFoot: 1 | 2 = 1;
   private follower: Follower | null = null;
   private echoWash!: Phaser.GameObjects.Rectangle;
   private echoDither!: Phaser.GameObjects.TileSprite;
@@ -142,7 +125,13 @@ export class FieldScene extends Phaser.Scene {
   private hint!: HintBubble;
   private panel!: TextPanel;
   private mode: UiMode = 'field';
-  private step: Step | null = null;
+  /** Gianna's smooth motion between tiles (engine/motion.ts). */
+  private mover = new Mover();
+  /** A direction tapped just before a step ended, taken as the next step. */
+  private buffered: Dir8 | null = null;
+  /** Set when a door changes the map: no further step on this scene. */
+  private leaving = false;
+  private camBounds = { x: 0, y: 0, width: VIEW_WIDTH, height: VIEW_HEIGHT };
   private talkingTo: NpcPlacement | null = null;
   private confirmNewGame = false;
   private lastFx: string | undefined;
@@ -158,7 +147,9 @@ export class FieldScene extends Phaser.Scene {
   create(data: { toast?: string }): void {
     this.rt = getRuntime();
     this.mode = 'field';
-    this.step = null;
+    this.mover = new Mover();
+    this.buffered = null;
+    this.leaving = false;
     this.layers = {};
     this.npcSprites = new Map();
     this.objectSprites = new Map();
@@ -196,11 +187,12 @@ export class FieldScene extends Phaser.Scene {
     this.player.setDepth(10 + p.y);
 
     // The camera follows Gianna and stops at the map's edges; a map smaller than the screen is centred.
+    // It is placed by hand every frame from her exact position, rounded to whole pixels together with
+    // her sprite, so she never shimmers against the world (placeCamera).
     const cam = this.cameras.main;
-    const b = cameraBounds(this.map.width * TILE_SIZE, this.map.height * TILE_SIZE, VIEW_WIDTH, VIEW_HEIGHT);
-    cam.setBounds(b.x, b.y, b.width, b.height);
+    this.camBounds = cameraBounds(this.map.width * TILE_SIZE, this.map.height * TILE_SIZE, VIEW_WIDTH, VIEW_HEIGHT);
     cam.setRoundPixels(true);
-    cam.startFollow(this.player, true, 1, 1, 0, TILE_SIZE / 2);
+    this.placeCamera(p);
 
     // The Echo filter: a warm wash and a dither pattern over the world (under the interface), plus a
     // sepia colour matrix on WebGL.
@@ -324,6 +316,7 @@ export class FieldScene extends Phaser.Scene {
       }
     }
     if (changeMap) {
+      this.leaving = true;
       this.scene.restart({ toast: this.toast.lastMessage });
       return;
     }
@@ -334,25 +327,14 @@ export class FieldScene extends Phaser.Scene {
 
   private updateField(delta: number): void {
     const input = this.rt.input;
-    if (this.step) {
-      this.step.elapsed += delta;
-      const t = Math.min(1, this.step.elapsed / this.step.duration);
-      const a = tileToWorld(this.step.from);
-      const b = tileToWorld(this.step.to);
-      this.player.setPosition(Math.round(a.x + (b.x - a.x) * t), Math.round(a.y + (b.y - a.y) * t));
-      this.player.setDepth(10 + this.player.y);
-      setLook(this.player, this.playerLook(), this.logic.state.player.facing, t < 0.5 ? this.step.foot : 0);
-      this.moveFollower(t);
-      if (t < 1) return;
-      const leftover = this.step.elapsed - this.step.duration;
-      const to = this.step.to;
-      this.step = null;
-      this.handle(this.logic.finishStep(to));
-      // Keep walking smoothly while a direction is held.
-      if (this.mode === 'field' && !this.step && this.scene.isActive()) {
-        const dir = input.move();
-        if (dir && input.heldDir(dir)) this.startStep(dir, leftover);
+    if (this.mover.moving) {
+      const speed = speedPx(input.held('run'));
+      // A direction tapped just before the step ends is kept for the next one.
+      if (this.mover.inBufferWindow(speed) && (['up', 'down', 'left', 'right'] as const).some((d) => input.pressed(d))) {
+        this.buffered = input.move();
       }
+      this.mover.update(delta, speed, (reached) => this.arrive(reached));
+      this.drawPlayer();
       return;
     }
 
@@ -369,28 +351,59 @@ export class FieldScene extends Phaser.Scene {
       return;
     }
     const dir = input.move();
-    if (dir) this.startStep(dir, 0);
+    if (!dir) return;
+    const from = { ...this.logic.state.player.pos };
+    const to = this.stepToward(dir);
+    if (to) this.mover.start(from, to);
+    this.drawPlayer();
   }
 
-  private startStep(dir: Dir8, carry: number): void {
+  /**
+   * A step ended on `to`: let the logic land there (doors, triggers), then, while a direction is still
+   * held (or was tapped just before), return the next tile so the walk goes on without a pause.
+   */
+  private arrive(to: Pos): Pos | null {
+    this.handle(this.logic.finishStep(to));
+    const buffered = this.buffered;
+    this.buffered = null;
+    if (this.leaving || this.mode !== 'field' || !this.scene.isActive()) return null;
+    const input = this.rt.input;
+    const held = input.move();
+    const dir = held && input.heldDir(held) ? held : buffered;
+    return dir ? this.stepToward(dir) : null;
+  }
+
+  /** Face `dir` and, if the logic allows the step, return the tile it leads to (Anissa follows). */
+  private stepToward(dir: Dir8): Pos | null {
     // Held input slides along walls when a diagonal is refused (engine/game.ts tryStep).
     const attempt = this.logic.tryStep(dir, true);
-    const p = this.logic.state.player;
-    setLook(this.player, this.playerLook(), p.facing);
     if (!attempt.ok) {
       if (attempt.reason === 'door_in_echo' && dirButtons(dir).some((d) => this.rt.input.pressed(d))) {
         this.toast.show(this.logic.content.messages.doorInEcho);
       }
-      return;
+      return null;
     }
-    // A diagonal step is longer, so it takes longer (by the square root of two).
-    const diagonal = attempt.to.x !== p.pos.x && attempt.to.y !== p.pos.y;
-    const base = this.rt.input.held('run') ? RUN_MS_PER_TILE : WALK_MS_PER_TILE;
-    const duration = Math.round(diagonal ? base * Math.SQRT2 : base);
-    this.stepFoot = this.stepFoot === 1 ? 2 : 1;
-    this.step = { from: { ...p.pos }, to: attempt.to, elapsed: Math.min(carry, duration - 1), duration, foot: this.stepFoot };
     this.label.setVisible(false);
-    this.startFollowerStep(p.pos);
+    this.startFollowerStep(this.logic.state.player.pos);
+    return attempt.to;
+  }
+
+  /** Put Gianna (and Anissa, and the camera) where the motion says, on whole pixels, with her walk frame. */
+  private drawPlayer(): void {
+    const p = this.logic.state.player;
+    const at = this.mover.point(p.pos);
+    const x = Math.round(at.x);
+    const y = Math.round(at.y);
+    this.player.setPosition(x, y).setDepth(10 + y);
+    setLook(this.player, this.playerLook(), p.facing, this.mover.frame());
+    this.moveFollower(this.mover.t);
+    this.placeCamera(at);
+  }
+
+  /** Centre the camera on a point (the middle of the player's tile), clamped to the map, whole pixels. */
+  private placeCamera(at: { x: number; y: number }): void {
+    const s = cameraScroll({ x: at.x, y: at.y - TILE_SIZE / 2 }, this.camBounds, VIEW_WIDTH, VIEW_HEIGHT);
+    this.cameras.main.setScroll(Math.round(s.x), Math.round(s.y));
   }
 
   private playerLook(): string {
@@ -401,7 +414,7 @@ export class FieldScene extends Phaser.Scene {
 
   /** The name label over the NPC, object or door the player faces (only while standing still). */
   private updateLabel(): void {
-    const target = this.step ? null : this.logic.targetAhead();
+    const target = this.mover.moving ? null : this.logic.targetAhead();
     const key = target ? `${target.kind}:${target.name}:${this.targetAnchor(target).x},${this.targetAnchor(target).y}` : '';
     if (key === this.labelKey) return;
     this.labelKey = key;
@@ -619,7 +632,8 @@ export class FieldScene extends Phaser.Scene {
     const w = tileToWorld(spot);
     const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(ANISSA_GLOW.look)).setOrigin(0.5, 1).setDepth(10 + w.y - 1);
     setLook(sprite, ANISSA_GLOW.look, p.facing);
-    this.follower = { sprite, pos: spot, from: spot, facing: p.facing, glow: null };
+    // She starts on the other foot from Gianna.
+    this.follower = { sprite, pos: spot, from: spot, facing: p.facing, glow: null, distance: WALK_CYCLE_PX / 2, lastT: 1 };
     this.updateFollowerLook();
   }
 
@@ -642,6 +656,9 @@ export class FieldScene extends Phaser.Scene {
   private startFollowerStep(playerFrom: Pos): void {
     const f = this.follower;
     if (!f || this.logic.era === 'echo') return;
+    // Count the end of her last step (her walk cycle carries on across tiles).
+    f.distance += Math.max(0, 1 - f.lastT) * stepLength(f.from, f.pos);
+    f.lastT = 0;
     f.from = f.pos;
     if (samePos(f.pos, playerFrom)) return;
     const dx = playerFrom.x - f.pos.x;
@@ -651,14 +668,19 @@ export class FieldScene extends Phaser.Scene {
     setLook(f.sprite, ANISSA_GLOW.look, f.facing);
   }
 
+  /** Anissa walks her step in time with Gianna's (`t` is how far through it Gianna is). */
   private moveFollower(t: number): void {
     const f = this.follower;
     if (!f || this.logic.era === 'echo') return;
     const a = tileToWorld(f.from);
     const b = tileToWorld(f.pos);
+    const walking = t < 1 && !samePos(f.from, f.pos);
+    if (walking) f.distance += Math.max(0, t - f.lastT) * stepLength(f.from, f.pos);
+    else if (f.lastT < 1) f.distance = restDistance(f.distance + (1 - f.lastT) * stepLength(f.from, f.pos));
+    f.lastT = t;
     f.sprite.setPosition(Math.round(a.x + (b.x - a.x) * t), Math.round(a.y + (b.y - a.y) * t));
     f.sprite.setDepth(10 + f.sprite.y - 1);
-    if (!samePos(f.from, f.pos)) setLook(f.sprite, ANISSA_GLOW.look, f.facing, t < 0.5 ? (this.stepFoot === 1 ? 2 : 1) : 0);
+    setLook(f.sprite, ANISSA_GLOW.look, f.facing, walking ? walkFrame(f.distance) : 0);
   }
 
   // ---- Hints and Journal ---------------------------------------------------------------------
@@ -945,7 +967,7 @@ export class FieldScene extends Phaser.Scene {
       y: p.pos.y,
       facing: p.facing,
       era: p.era,
-      moving: this.step !== null,
+      moving: this.mover.moving,
       label: this.label.visible ? this.labelText.text : null,
       markers: [...this.markerSprites.keys()].sort(),
       glowing: [...this.glowing].sort(),

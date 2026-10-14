@@ -4,7 +4,8 @@ Each PNG replaces one placeholder; anything missing keeps its placeholder. Rebui
 after adding files. Names, sizes and the palette: `../../docs/quest/ART-STYLE.md` and
 `src/assets.config.ts` (`ART_FILES`).
 
-- `characters/<look>.png`: walk sheet, 3 columns x 4 rows of equal cells (16 x 24 or 16 x 32).
+- `characters/<look>.png`: walk sheet, 3 columns x 4 rows of equal cells (24 x 32, a 72 x 128 sheet).
+  Gemini sheets are converted with `../../scripts/quest-sprite.py` (options in ART-STYLE.md).
   Rows: down, left, right, up. Columns: standing, step A, step B. Transparent background.
 - `portraits/<portrait>.png`: 48 x 48 dialogue portrait (neutral face).
 - `tiles/<tile>.png`: 16 x 16 tile, named after its `TILESET` entry.

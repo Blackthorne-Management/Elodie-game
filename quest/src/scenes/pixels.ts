@@ -7,6 +7,13 @@ import { CHARACTER_HEIGHT, CHARACTER_WIDTH } from '../config.ts';
 import type { Dir } from '../engine/types.ts';
 
 const OUTLINE = PALETTE.k!;
+const SHADOW = PALETTE.k!;
+
+/** A colour moved `k` (0..1) of the way toward another. */
+export function mix(a: number, b: number, k: number): number {
+  const ch = (shift: number) => Math.round(((a >> shift) & 255) * (1 - k) + ((b >> shift) & 255) * k);
+  return (ch(16) << 16) | (ch(8) << 8) | ch(0);
+}
 
 export function css(color: number, alpha = 1): string {
   return `rgba(${(color >> 16) & 255},${(color >> 8) & 255},${color & 255},${alpha})`;
@@ -58,6 +65,34 @@ export class Pix {
     return this;
   }
 
+  /** The same picture flipped left to right. */
+  mirrored(): Pix {
+    const out = new Pix(this.w, this.h);
+    for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
+      const c = this.get(x, y);
+      if (c !== undefined) out.set(this.w - 1 - x, y, c);
+    }
+    return out;
+  }
+
+  /**
+   * Three-tone shading, light from the top left: in every region of one of `colors`, the pixels on
+   * its right or bottom edge take the dark tone and those on its left or top edge the light tone.
+   */
+  bevel(colors: ReadonlySet<number>): this {
+    const src = [...this.px];
+    const at = (x: number, y: number) => (x >= 0 && y >= 0 && x < this.w && y < this.h ? src[y * this.w + x] : undefined);
+    for (let y = 0; y < this.h; y++) {
+      for (let x = 0; x < this.w; x++) {
+        const c = at(x, y);
+        if (c === undefined || !colors.has(c)) continue;
+        if (at(x + 1, y) !== c || at(x, y + 1) !== c) this.set(x, y, mix(c, SHADOW, 0.35));
+        else if (at(x - 1, y) !== c || at(x, y - 1) !== c) this.set(x, y, mix(c, 0xffffff, 0.2));
+      }
+    }
+    return this;
+  }
+
   draw(ctx: CanvasRenderingContext2D, ox: number, oy: number, scale = 1): void {
     for (let y = 0; y < this.h; y++) {
       for (let x = 0; x < this.w; x++) {
@@ -81,216 +116,360 @@ export function artPix(art: PixelArt): Pix {
   return pix;
 }
 
+
+// ---- Characters ------------------------------------------------------------------------------------
+
 /**
- * One 16 x 24 character frame. `step` 0 stands; 1 and 2 put one foot forward (the walk cycle is
- * 1, 0, 2, 0). Everything gets a 1 px dark outline; the shadow is drawn separately.
+ * Where a build's parts sit in the 24 x 32 cell (rows): head top, body top, leg top, the shoes' row,
+ * and the arm length. The head is 12 rows (about 40 % of the figure, chibi like the real art); the
+ * outline adds a row under the shoes, so the feet end on the bottom row of the cell.
+ */
+interface Build {
+  head: number;
+  body: number;
+  legs: number;
+  feet: number;
+  arm: number;
+}
+const BUILDS: Record<'normal' | 'small' | 'tall', Build> = {
+  normal: { head: 4, body: 16, legs: 25, feet: 30, arm: 5 },
+  small: { head: 8, body: 20, legs: 26, feet: 30, arm: 2 },
+  tall: { head: 3, body: 15, legs: 25, feet: 30, arm: 6 },
+};
+
+type View = 'down' | 'up' | 'right';
+
+/** The head's width, row by row (0..11 from its top), seen from the front or back, and from the side. */
+const HEAD_FRONT: readonly [number, number][] = [[7, 16], [6, 17], ...Array.from({ length: 8 }, () => [5, 18] as [number, number]), [6, 17], [7, 16]];
+const HEAD_SIDE: readonly [number, number][] = [[8, 16], [7, 17], ...Array.from({ length: 8 }, () => [6, 18] as [number, number]), [7, 17], [8, 16]];
+
+/**
+ * One 24 x 32 character frame, chibi proportions like the real art: a big head (12 of 27 rows), a 1 px
+ * dark outline, three-tone shading (light from the top left), and hair, headgear and what they carry
+ * telling the looks apart. `step` 0 stands; 1 and 2 are the two step frames (the walk cycle is 1, 0, 2,
+ * 0): one foot lifts and the body sits a pixel lower. Left is the right view mirrored. The shadow is
+ * drawn separately (textures.ts).
  */
 export function characterPix(look: PlaceholderCharacter, facing: Dir, step: 0 | 1 | 2 = 0): Pix {
-  const p = new Pix(CHARACTER_WIDTH, CHARACTER_HEIGHT);
-  const build = look.build ?? 'normal';
-  const H = build === 'small' ? 8 : build === 'tall' ? 3 : 5; // head top
-  const torsoTop = H + 7;
-  const side = facing === 'left' || facing === 'right';
-  const x0 = side ? 5 : 4;
-  const x1 = side ? 10 : 11;
-  const legs = look.legs ?? PALETTE.K!;
-  const dark = PALETTE.k!;
+  const p = drawCharacter(look, facing === 'left' ? 'right' : facing, step);
+  return facing === 'left' ? p.mirrored() : p;
+}
 
-  // Legs and feet (a step moves one foot down a pixel and the other up).
-  const footL = step === 1 ? 1 : step === 2 ? -1 : 0;
-  const footR = -footL;
-  if (!look.robe) {
-    if (side) {
-      p.rect(6, 19, 2, 3 + footL, legs).rect(8, 19, 2, 3 + footR, legs);
-    } else {
-      p.rect(5, 19, 2, 3 + footL, legs).rect(9, 19, 2, 3 + footR, legs);
+function drawCharacter(look: PlaceholderCharacter, view: View, step: 0 | 1 | 2): Pix {
+  const p = new Pix(CHARACTER_WIDTH, CHARACTER_HEIGHT);
+  const b = BUILDS[look.build ?? 'normal'];
+  const bob = step === 0 ? 0 : 1;
+  const H = b.head + bob; // head top
+  const B = b.body + bob; // body top
+  const { legs: L, feet: F } = b;
+  const side = view === 'right';
+  const legC = look.legs ?? PALETTE.K!;
+  const shoe = PALETTE.b!;
+  const far = (c: number) => mix(c, SHADOW, 0.3);
+  const head = side ? HEAD_SIDE : HEAD_FRONT;
+  const span = (r: number) => head[Math.max(0, Math.min(11, r))]!;
+  /** Fill head-shaped rows r0..r1 (offsets from the head top). */
+  const headRows = (r0: number, r1: number, c: number, x0 = -99, x1 = 99) => {
+    for (let r = r0; r <= r1; r++) {
+      const [a, z] = span(r);
+      p.rect(Math.max(a, x0), H + r, Math.min(z, x1) - Math.max(a, x0) + 1, 1, c);
     }
+  };
+  /** A rectangle and its mirror image across the middle of the cell (front and back views). */
+  const sym = (x: number, y: number, w: number, h: number, c: number) => p.rect(x, y, w, h, c).rect(CHARACTER_WIDTH - x - w, y, w, h, c);
+
+  // Legs and shoes (they do not bob), or the shoes under a robe.
+  if (!side) {
+    const lift = (leftFoot: boolean) => (step === 1 && leftFoot) || (step === 2 && !leftFoot) ? 1 : 0;
+    for (const [x, left] of [[8, true], [13, false]] as const) {
+      const up = lift(left);
+      if (!look.robe) p.rect(x, L, 3, F - L - up, legC);
+      if (!look.robe || !up) p.rect(left ? x - 1 : x, F - up, 4, 1, shoe);
+    }
+  } else if (step === 0) {
+    if (!look.robe) p.rect(10, L, 4, F - L, legC);
+    p.rect(10, F, 5, 1, shoe);
+  } else {
+    // A stride: the front foot forward, the back foot behind; the far leg is the darker one.
+    const frontFar = step === 2;
+    if (!look.robe) {
+      p.rect(8, L, 3, F - L, frontFar ? legC : far(legC));
+      p.rect(13, L, 3, F - L, frontFar ? far(legC) : legC);
+    }
+    p.rect(7, F, 4, 1, frontFar ? shoe : far(shoe));
+    p.rect(13, F, 4, 1, frontFar ? far(shoe) : shoe);
   }
-  // Torso (a robe flares to the ankles), arms, hands.
-  const bottom = look.robe ? 21 : 18;
-  p.rect(x0, torsoTop, x1 - x0 + 1, bottom - torsoTop + 1, look.outfit);
-  if (look.robe) {
-    p.rect(x0 - 1, bottom - 3, x1 - x0 + 3, 4, look.outfit);
-    p.rect(x0 - 1, bottom, x1 - x0 + 3, 1, look.trim);
-    if (step !== 0) p.rect(side ? 7 : step === 1 ? 5 : 9, 22, 2, 1, legs);
+
+  // Torso (a robe flares to the ankles), sleeves and hands.
+  const outfit = look.outfit;
+  const torsoBottom = look.robe ? F - 1 : L - 1 + bob;
+  if (side) {
+    p.rect(8, B, 8, torsoBottom - B + 1, outfit);
+    if (look.robe) p.rect(7, L, 10, F - L - 2, outfit).rect(6, F - 2, 12, 2, outfit);
+  } else {
+    p.rect(7, B, 10, torsoBottom - B + 1, outfit);
+    if (look.robe) p.rect(6, L, 12, F - L - 2, outfit).rect(5, F - 2, 14, 2, outfit);
   }
   if (side) {
-    const ax = facing === 'left' ? 6 : 8;
-    p.rect(ax, torsoTop + 1, 2, 5, shade(look.outfit));
-    p.rect(ax, torsoTop + 6, 2, 1, look.skin);
+    const swing = step === 1 ? 1 : step === 2 ? -1 : 0;
+    p.rect(11 + swing, B + 1, 3, b.arm, outfit).rect(11 + swing, B + 1 + b.arm, 3, 2, look.skin);
   } else {
-    p.rect(x0 - 1, torsoTop + 1, 1, 5, look.outfit).rect(x1 + 1, torsoTop + 1, 1, 5, look.outfit);
-    p.set(x0 - 1, torsoTop + 6, look.skin).set(x1 + 1, torsoTop + 6, look.skin);
+    sym(5, B + 1, 2, b.arm, outfit);
+    sym(5, B + 1 + b.arm, 2, 2, look.skin);
   }
-  // Collar and belt.
-  if (facing !== 'up') p.rect(side ? 7 : 6, torsoTop, side ? 2 : 4, 1, look.trim);
-  if (!look.robe) p.rect(x0, torsoTop + 5, x1 - x0 + 1, 1, look.trim);
 
-  // Head, face.
-  p.rect(x0, H, x1 - x0 + 1, 7, look.skin);
-  if (facing === 'down') p.set(6, H + 3, dark).set(9, H + 3, dark);
-  if (facing === 'left') p.set(5, H + 3, dark).set(4, H + 4, look.skin);
-  if (facing === 'right') p.set(10, H + 3, dark).set(11, H + 4, look.skin);
+  // Head and hair.
+  headRows(0, 11, look.skin);
+  if (side) p.set(19, H + 7, look.skin);
+  drawHair(p, look, view, H, headRows, sym);
+  if (look.beard !== undefined && view !== 'up') {
+    if (side) p.rect(13, H + 8, 6, 4, look.beard);
+    else headRows(8, 11, look.beard, 7, 16);
+  }
+  drawHeadgear(p, look, view, H, headRows, sym);
 
-  // Hair.
-  const hair = look.hair;
-  const back = facing === 'left' ? x1 : x0; // the back of the head, seen from the side
-  const capRows = (from: number, to: number) => p.rect(x0, from, x1 - x0 + 1, to - from + 1, hair);
-  switch (look.hairStyle) {
-    case 'bald':
-      if (facing === 'up') p.rect(x0, H + 3, x1 - x0 + 1, 2, hair);
-      else if (side) p.rect(back - (facing === 'left' ? 1 : 0), H + 2, 2, 3, hair);
-      else p.rect(x0, H + 2, 1, 3, hair).rect(x1, H + 2, 1, 3, hair);
-      break;
-    case 'cropped':
-      capRows(H - 1, H);
-      if (facing === 'up') capRows(H - 1, H + 4);
-      break;
-    case 'short':
-      capRows(H - 1, H + 1);
-      if (facing === 'up') capRows(H - 1, H + 5);
-      else if (side) p.rect(facing === 'left' ? x1 - 2 : x0, H + 1, 3, 4, hair);
-      else p.rect(x0, H + 2, 1, 2, hair).rect(x1, H + 2, 1, 2, hair);
-      break;
-    case 'long':
-    case 'curly':
-    case 'braid': {
-      capRows(H - 1, H + 1);
-      const len = look.hairStyle === 'braid' ? 3 : 9;
-      if (facing === 'up') p.rect(x0, H - 1, x1 - x0 + 1, len + 3, hair);
-      else if (side) p.rect(facing === 'left' ? x1 - 2 : x0 - 1, H, 4, len + 1, hair);
-      else p.rect(x0 - 1, H, 2, len, hair).rect(x1, H, 2, len, hair);
-      if (look.hairStyle === 'curly') {
-        for (let x = x0 - 1; x <= x1 + 1; x += 2) p.set(x, H - 2, hair);
-        if (!side && facing !== 'up') p.set(x0 - 2, H + 3, hair).set(x1 + 2, H + 5, hair).set(x0 - 2, H + 7, hair).set(x1 + 2, H + 8, hair);
-      }
-      if (look.hairStyle === 'braid') {
-        const bx = side ? back + (facing === 'left' ? 1 : -1) : facing === 'up' ? 8 : x1 + 1;
-        p.rect(bx, H + 3, 1, 8, hair);
-        p.set(bx, H + 11, look.trim);
-      }
-      break;
+  // Shading, then the details drawn flat on top.
+  const shaded = new Set([look.skin, look.hair, outfit, legC, look.headgearColor ?? outfit, look.beard ?? look.hair]);
+  p.bevel(shaded);
+  const trim = look.trim;
+  if (look.robe) p.rect(side ? 6 : 5, F - 1, side ? 12 : 14, 1, trim);
+  else p.rect(side ? 8 : 7, L - 2 + bob, side ? 8 : 10, 1, trim);
+  if (view === 'down') p.rect(9, B, 6, 1, trim).rect(11, B + 1, 2, 1, trim);
+  else if (view === 'up') p.rect(8, B, 8, 1, trim);
+  else p.rect(13, B, 3, 1, trim);
+  if (look.headgear !== 'hood') drawFace(p, look, view, H);
+  for (const a of look.accessories ?? []) drawAccessory(p, a, view, { H, B, L, F, robe: !!look.robe, trim });
+  return p.outline(OUTLINE);
+}
+
+type RowFill = (r0: number, r1: number, c: number, x0?: number, x1?: number) => void;
+type SymRect = (x: number, y: number, w: number, h: number, c: number) => void;
+
+function drawFace(p: Pix, look: PlaceholderCharacter, view: View, H: number): void {
+  const eye = PALETTE.k!;
+  const shine = PALETTE.W!;
+  const mouth = mix(look.skin, SHADOW, 0.45);
+  if (view === 'down') {
+    p.rect(8, H + 6, 2, 2, eye).rect(14, H + 6, 2, 2, eye).set(8, H + 6, shine).set(14, H + 6, shine);
+    if (look.beard === undefined) p.rect(11, H + 9, 2, 1, mouth);
+    p.set(7, H + 8, mix(look.skin, PALETTE.R!, 0.25)).set(16, H + 8, mix(look.skin, PALETTE.R!, 0.25));
+  } else if (view === 'right') {
+    p.rect(15, H + 6, 2, 2, eye).set(15, H + 6, shine);
+    if (look.beard === undefined) p.set(17, H + 9, mouth);
+  }
+}
+
+function drawHair(p: Pix, look: PlaceholderCharacter, view: View, H: number, headRows: RowFill, sym: SymRect): void {
+  const c = look.hair;
+  const style = look.hairStyle;
+  const volume = style !== 'bald' && style !== 'cropped';
+  if (view === 'up') {
+    if (style === 'bald') {
+      headRows(4, 8, c);
+      return;
     }
-    case 'bun':
-      capRows(H - 1, H + 1);
-      if (facing === 'up') capRows(H - 1, H + 4);
-      p.rect(side ? (facing === 'left' ? x1 - 3 : x0 + 1) : 6, H - 4, 4, 3, hair);
-      break;
-    case 'puffs':
-      capRows(H - 1, H + 1);
-      if (facing === 'up') capRows(H - 1, H + 4);
-      if (side) p.rect(facing === 'left' ? x1 - 1 : x0 - 2, H - 2, 3, 4, hair);
-      else p.rect(x0 - 3, H - 2, 3, 4, hair).rect(x1 + 1, H - 2, 3, 4, hair);
-      break;
+    headRows(0, style === 'short' || style === 'cropped' ? 10 : 11, c);
+    if (volume) p.rect(8, H - 1, 8, 1, c);
+    if (style === 'long') p.rect(6, H + 12, 12, 5, c);
+    if (style === 'curly') {
+      p.rect(4, H + 2, 16, 15, c);
+      for (let y = H + 3; y < H + 17; y += 3) p.set(3, y, c).set(20, y + 1, c);
+    }
+    if (style === 'braid') p.rect(11, H + 12, 2, 7, c).rect(11, H + 19, 2, 1, look.trim);
+  } else if (view === 'down') {
+    if (style === 'bald') {
+      sym(5, H + 4, 2, 4, c);
+      return;
+    }
+    headRows(0, style === 'cropped' ? 2 : style === 'curly' ? 4 : 3, c);
+    if (volume) p.rect(8, H - 1, 8, 1, c);
+    switch (style) {
+      case 'cropped':
+        sym(5, H + 3, 1, 3, c);
+        break;
+      case 'short':
+      case 'bun':
+      case 'braid':
+        sym(5, H + 4, 2, 4, c);
+        p.rect(7, H + 4, 3, 1, c);
+        break;
+      case 'long':
+        sym(4, H + 2, 3, 14, c);
+        break;
+      case 'curly':
+        p.rect(6, H - 1, 12, 1, c);
+        for (const x of [7, 10, 13, 16]) p.rect(x, H - 2, 2, 1, c);
+        sym(3, H + 1, 4, 15, c);
+        for (let y = H + 2; y < H + 16; y += 3) sym(2, y, 1, 1, c);
+        sym(4, H + 16, 2, 1, c);
+        break;
+      default:
+        break;
+    }
+  } else {
+    if (style === 'bald') {
+      p.rect(7, H + 4, 5, 4, c);
+      return;
+    }
+    headRows(0, style === 'cropped' ? 2 : 3, c);
+    if (volume) p.rect(9, H - 1, 7, 1, c);
+    switch (style) {
+      case 'cropped':
+        p.rect(6, H + 3, 4, 4, c);
+        break;
+      case 'short':
+      case 'bun':
+      case 'puffs':
+      case 'braid':
+        p.rect(6, H + 4, 5, 5, c).rect(15, H + 4, 3, 1, c);
+        break;
+      case 'long':
+        p.rect(5, H, 7, 17, c).rect(15, H + 4, 3, 1, c);
+        break;
+      case 'curly':
+        p.rect(3, H, 9, 17, c).rect(8, H - 2, 2, 1, c).rect(11, H - 2, 2, 1, c).rect(14, H - 1, 2, 1, c).rect(15, H + 4, 3, 1, c);
+        for (let y = H + 1; y < H + 17; y += 3) p.set(2, y, c);
+        break;
+      default:
+        break;
+    }
   }
-  if (look.beard !== undefined && facing !== 'up') {
-    if (side) p.rect(facing === 'left' ? x0 : x0 + 2, H + 5, 4, 3, look.beard);
-    else p.rect(x0 + 1, H + 5, x1 - x0 - 1, 3, look.beard);
+  // What rises above or stands out from the head.
+  if (style === 'bun') p.rect(side(view) ? 7 : 9, H - 3, 6, 2, c).rect(side(view) ? 8 : 10, H - 4, 4, 1, c);
+  if (style === 'puffs') {
+    if (view === 'right') p.rect(2, H - 2, 6, 5, c).rect(3, H - 3, 4, 7, c).rect(12, H - 3, 4, 2, c);
+    else {
+      sym(1, H - 2, 6, 4, c);
+      sym(2, H - 3, 4, 6, c);
+    }
   }
+  if (style === 'braid' && view !== 'up') {
+    const x = view === 'right' ? 7 : 18;
+    p.rect(x, H + 8, 2, 10, c).rect(x, H + 18, 2, 1, look.trim);
+  }
+}
 
-  // Headgear.
+function side(view: View): boolean {
+  return view === 'right';
+}
+
+function drawHeadgear(p: Pix, look: PlaceholderCharacter, view: View, H: number, headRows: RowFill, sym: SymRect): void {
   const hg = look.headgearColor ?? look.outfit;
+  const s = view === 'right';
   switch (look.headgear) {
     case 'cap':
-      capRows(H - 1, H);
-      if (facing === 'down') p.rect(x0, H + 1, x1 - x0 + 1, 1, shade(hg));
-      else if (side) p.rect(facing === 'left' ? x0 - 2 : x1, H + 1, 3, 1, shade(hg));
-      p.rect(x0, H - 1, x1 - x0 + 1, 2, hg);
+      headRows(0, 2, hg);
+      p.rect(s ? 9 : 7, H - 1, s ? 8 : 10, 1, hg);
+      if (view === 'down') p.rect(6, H + 3, 12, 1, mix(hg, SHADOW, 0.4));
+      if (s) p.rect(14, H + 3, 7, 1, mix(hg, SHADOW, 0.4));
       break;
     case 'bicorne':
-      p.rect(x0 - 2, H - 2, x1 - x0 + 5, 2, hg).rect(x0, H - 3, x1 - x0 + 1, 1, hg);
-      p.rect(x0 - 2, H, x1 - x0 + 5, 1, look.trim);
+      if (s) p.rect(7, H - 2, 11, 3, hg).rect(9, H - 3, 7, 1, hg).rect(18, H - 1, 1, 2, hg).rect(7, H + 1, 12, 1, look.trim);
+      else p.rect(2, H, 20, 2, hg).rect(6, H - 2, 12, 2, hg).rect(8, H - 3, 8, 1, hg).rect(2, H + 1, 20, 1, look.trim);
       break;
     case 'circlet':
-      if (facing !== 'up') {
-        p.rect(x0, H, x1 - x0 + 1, 1, hg);
-        if (facing === 'down') p.rect(7, H - 1, 2, 2, PALETTE.R!);
-      } else p.rect(x0, H + 1, x1 - x0 + 1, 1, hg);
+      headRows(3, 3, hg);
+      if (view === 'down') p.rect(11, H + 2, 2, 2, PALETTE.R!);
       break;
     case 'headband':
-      p.rect(x0, H + 1, x1 - x0 + 1, 1, hg);
-      if (facing === 'up' || side) p.rect(side ? back : 8, H + 2, 1, 3, hg);
+      headRows(3, 3, hg);
+      if (view === 'up') p.rect(11, H + 4, 2, 5, hg);
+      if (s) p.rect(4, H + 3, 3, 1, hg).rect(4, H + 4, 2, 4, hg);
       break;
-    case 'hood': {
-      p.rect(x0 - 1, H - 2, x1 - x0 + 3, 10, hg);
-      if (facing === 'down') p.rect(x0 + 1, H + 2, x1 - x0 - 1, 5, PALETTE.k!).set(6, H + 4, PALETTE.G!).set(9, H + 4, PALETTE.G!);
-      else if (side) p.rect(facing === 'left' ? x0 - 1 : x1 - 2, H + 2, 4, 5, PALETTE.k!);
-      p.set(8, H - 3, hg);
+    case 'hood':
+      if (s) p.rect(5, H - 2, 14, 15, hg).rect(13, H + 4, 6, 7, PALETTE.K!).set(16, H + 7, PALETTE.G!);
+      else {
+        p.rect(4, H - 2, 16, 15, hg).rect(11, H - 3, 2, 1, hg);
+        if (view === 'down') p.rect(8, H + 4, 8, 8, PALETTE.K!).set(9, H + 7, PALETTE.G!).set(14, H + 7, PALETTE.G!);
+      }
       break;
-    }
     case 'wrap':
-      p.rect(x0 - 1, H - 3, x1 - x0 + 3, 4, hg).rect(7, H - 5, 2, 2, hg).set(8, H - 5, shade(hg, 1.3));
+      if (s) p.rect(6, H - 2, 13, 6, hg).rect(8, H - 3, 9, 1, hg).rect(8, H - 5, 4, 2, hg);
+      else p.rect(5, H - 2, 14, 6, hg).rect(7, H - 3, 10, 1, hg).rect(10, H - 5, 4, 2, hg);
       break;
     case 'brimmed':
-      p.rect(x0 - 3, H, x1 - x0 + 7, 1, hg).rect(x0, H - 3, x1 - x0 + 1, 3, hg).rect(x0, H - 1, x1 - x0 + 1, 1, shade(hg));
+      if (s) p.rect(8, H - 3, 9, 4, hg).rect(4, H + 1, 18, 1, hg).rect(8, H, 9, 1, look.trim);
+      else p.rect(7, H - 3, 10, 4, hg).rect(2, H + 1, 20, 1, hg).rect(7, H, 10, 1, look.trim);
       break;
     case 'helmet':
-      p.rect(x0 - 1, H - 2, x1 - x0 + 3, 4, hg).rect(7, H - 4, 2, 2, PALETTE.R!);
+      headRows(0, 3, hg);
+      p.rect(s ? 9 : 7, H - 1, s ? 8 : 10, 1, hg).rect(11, H - 3, 2, 2, PALETTE.R!);
+      if (view === 'down') sym(5, H + 4, 2, 4, hg);
+      if (s) p.rect(6, H + 4, 4, 4, hg);
       break;
     case undefined:
       break;
   }
+}
 
-  // What they carry.
-  for (const a of look.accessories ?? []) {
-    switch (a) {
-      case 'satchel':
-        if (facing === 'down') p.line(x1, torsoTop, x0 + 1, torsoTop + 5, PALETTE.B!).rect(x0 - 1, torsoTop + 5, 3, 3, PALETTE.n!);
-        else if (facing === 'up') p.line(x0, torsoTop, x1 - 1, torsoTop + 5, PALETTE.B!).rect(x1, torsoTop + 5, 3, 3, PALETTE.n!);
-        else p.rect(facing === 'left' ? x1 - 1 : x0 - 1, torsoTop + 4, 3, 3, PALETTE.n!);
-        break;
-      case 'locket':
-        if (facing === 'down') p.set(7, torsoTop + 2, PALETTE.y!).set(8, torsoTop + 2, PALETTE.Y!);
-        break;
-      case 'bow':
-        if (facing === 'up') p.line(x0 - 1, torsoTop - 2, x1 + 1, torsoTop + 7, PALETTE.n!);
-        else if (side) p.line(back + (facing === 'left' ? 2 : -2), torsoTop - 3, back + (facing === 'left' ? 2 : -2), torsoTop + 7, PALETTE.n!);
-        else p.line(x1 + 2, torsoTop - 2, x1 + 2, torsoTop + 6, PALETTE.n!);
-        break;
-      case 'hutia': {
-        // Yari's hutia, at her feet (on the side away from where she faces).
-        const hx = facing === 'right' ? 0 : 12;
-        p.rect(hx, 20, 4, 2, PALETTE.B!).rect(hx + (facing === 'right' ? 0 : 2), 19, 2, 1, PALETTE.B!);
-        p.set(hx + (facing === 'right' ? 0 : 3), 20, PALETTE.k!).set(hx + (facing === 'right' ? 3 : 0), 21, PALETTE.n!);
-        break;
-      }
-      case 'cane': {
-        const cx = facing === 'left' ? 2 : 13;
-        p.rect(cx, torsoTop + 3, 1, 22 - torsoTop - 3, PALETTE.b!).set(cx + (facing === 'left' ? 1 : -1), torsoTop + 3, PALETTE.b!);
-        break;
-      }
-      case 'staff': {
-        const sx = facing === 'left' ? 2 : 13;
-        p.rect(sx, H, 1, 22 - H, PALETTE.n!).rect(sx, H - 2, 1, 2, PALETTE.y!);
-        break;
-      }
-      case 'epaulettes':
-        if (!side) p.rect(x0 - 1, torsoTop, 2, 1, PALETTE.y!).rect(x1, torsoTop, 2, 1, PALETTE.y!);
-        else p.rect(7, torsoTop, 2, 1, PALETTE.y!);
-        break;
-      case 'sash':
-        if (facing === 'down') p.line(x0, torsoTop + 1, x1, torsoTop + 5, look.trim);
-        else if (facing === 'up') p.line(x1, torsoTop + 1, x0, torsoTop + 5, look.trim);
-        break;
-      case 'emblem':
-        // The Quiet Crown's silver crown, low on the chest (clear of the hooded face).
-        if (facing === 'down') p.set(5, torsoTop + 4, PALETTE.I!).rect(7, torsoTop + 4, 2, 1, PALETTE.I!).set(10, torsoTop + 4, PALETTE.I!).rect(5, torsoTop + 5, 6, 2, PALETTE.I!).rect(7, torsoTop + 5, 2, 1, PALETTE.R!);
-        else if (facing === 'up') p.rect(6, torsoTop + 2, 4, 1, PALETTE.g!);
-        break;
-      case 'apron':
-        if (facing !== 'up') p.rect(side ? 6 : 5, torsoTop + 3, side ? 4 : 6, 5, PALETTE.w!);
-        break;
-      case 'drum':
-        p.rect(facing === 'left' ? 2 : 11, torsoTop + 4, 4, 3, PALETTE.R!).rect(facing === 'left' ? 2 : 11, torsoTop + 4, 4, 1, PALETTE.w!);
-        break;
+interface Frame {
+  H: number;
+  B: number;
+  L: number;
+  F: number;
+  robe: boolean;
+  trim: number;
+}
+
+function drawAccessory(p: Pix, a: NonNullable<PlaceholderCharacter['accessories']>[number], view: View, f: Frame): void {
+  const { H, B, L, F } = f;
+  const s = view === 'right';
+  switch (a) {
+    case 'satchel':
+      if (view === 'down') p.line(16, B, 8, B + 6, PALETTE.B!).rect(4, B + 6, 5, 4, PALETTE.n!).rect(4, B + 6, 5, 1, PALETTE.B!);
+      else if (view === 'up') p.line(7, B, 15, B + 6, PALETTE.B!).rect(15, B + 6, 5, 4, PALETTE.n!).rect(15, B + 6, 5, 1, PALETTE.B!);
+      else p.line(13, B, 9, B + 5, PALETTE.B!).rect(5, B + 5, 4, 4, PALETTE.n!).rect(5, B + 5, 4, 1, PALETTE.B!);
+      break;
+    case 'locket':
+      if (view === 'down') p.set(10, B + 1, PALETTE.y!).set(13, B + 1, PALETTE.y!).rect(11, B + 2, 2, 2, PALETTE.y!).set(11, B + 2, PALETTE.Y!);
+      break;
+    case 'bow':
+      if (view === 'up') p.line(4, B - 4, 19, B + 8, PALETTE.n!).line(5, B - 4, 19, B + 7, PALETTE.N!);
+      else if (s) p.rect(4, B - 4, 1, 13, PALETTE.n!).set(5, B - 5, PALETTE.n!).set(5, B + 9, PALETTE.n!);
+      else p.rect(20, B - 5, 1, 12, PALETTE.n!).set(19, B - 6, PALETTE.n!);
+      break;
+    case 'hutia': {
+      // Yari's hutia, at her feet: a small brown rodent with round ears.
+      const x = view === 'down' ? 18 : 1;
+      p.rect(x, F - 2, 5, 3, PALETTE.B!).rect(x + (view === 'down' ? 0 : 1), F - 3, 2, 1, PALETTE.B!).set(x + 3, F - 3, PALETTE.B!);
+      p.set(view === 'down' ? x + 1 : x + 3, F - 1, PALETTE.k!).set(view === 'down' ? x : x + 4, F, PALETTE.N!);
+      break;
+    }
+    case 'cane': {
+      const x = s ? 18 : view === 'up' ? 3 : 20;
+      p.rect(x, B + 5, 1, F - B - 4, PALETTE.b!).rect(x - 1, B + 5, 2, 1, PALETTE.b!);
+      break;
+    }
+    case 'staff': {
+      const x = s ? 19 : view === 'up' ? 3 : 20;
+      p.rect(x, H + 2, 1, F - H - 1, PALETTE.n!).rect(x - 1, H, 3, 2, PALETTE.y!).set(x, H - 1, PALETTE.Y!);
+      break;
+    }
+    case 'epaulettes':
+      if (s) p.rect(10, B, 5, 1, PALETTE.y!);
+      else p.rect(5, B, 4, 1, PALETTE.y!).rect(15, B, 4, 1, PALETTE.y!).rect(5, B + 1, 2, 1, PALETTE.y!).rect(17, B + 1, 2, 1, PALETTE.y!);
+      break;
+    case 'sash':
+      if (view === 'down') p.line(7, B + 1, 16, B + 7, f.trim).line(7, B + 2, 15, B + 7, f.trim);
+      else if (view === 'up') p.line(16, B + 1, 7, B + 7, f.trim).line(16, B + 2, 8, B + 7, f.trim);
+      else p.rect(8, B + 4, 8, 2, f.trim);
+      break;
+    case 'emblem':
+      // The Quiet Crown's small silver crown, low on the chest.
+      if (view === 'down') p.set(9, B + 4, PALETTE.I!).rect(11, B + 4, 2, 1, PALETTE.I!).set(14, B + 4, PALETTE.I!).rect(9, B + 5, 6, 2, PALETTE.I!).rect(11, B + 5, 2, 1, PALETTE.R!);
+      else if (view === 'up') p.rect(10, B + 2, 4, 1, PALETTE.g!);
+      break;
+    case 'apron': {
+      const bottom = f.robe ? F - 3 : L + 1;
+      if (view === 'down') p.rect(8, B + 3, 8, bottom - B - 2, PALETTE.w!);
+      else if (s) p.rect(13, B + 3, 4, bottom - B - 2, PALETTE.w!);
+      else p.rect(7, B + 3, 10, 1, PALETTE.w!);
+      break;
+    }
+    case 'drum': {
+      const x = s ? 14 : view === 'up' ? 2 : 17;
+      p.rect(x, B + 4, 5, 5, PALETTE.R!).rect(x, B + 4, 5, 1, PALETTE.w!).rect(x, B + 8, 5, 1, PALETTE.y!);
+      break;
     }
   }
-  return p.outline(OUTLINE);
 }
-
-/** A darker (or, above 1, lighter) version of a colour. */
-function shade(color: number, k = 0.75): number {
-  const c = (v: number) => Math.max(0, Math.min(255, Math.round(v * k)));
-  return (c((color >> 16) & 255) << 16) | (c((color >> 8) & 255) << 8) | c(color & 255);
-}
-

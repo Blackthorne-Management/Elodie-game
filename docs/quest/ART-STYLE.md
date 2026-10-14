@@ -10,7 +10,7 @@ new file should sit next to them without looking out of place.
 |---|---|---|
 | Screen | 320 x 180 (16:9) | 20 x 11.25 tiles. Scaled up by whole numbers (x2 on a phone, x4 on a laptop, x6 on a TV). |
 | Tiles | 16 x 16 | Ground, walls, props. One file per tile. |
-| Characters | 16 x 24 (or 16 x 32 for tall art) | 4 directions x 3 walk frames. Feet on the bottom row of the cell. |
+| Characters | 24 x 32 | 4 directions x 3 walk frames (a 72 x 128 sheet). Chibi proportions: the head about 40 % of the figure. Feet on the bottom row of the cell, the figure centred on its torso. Children and Anissa are drawn smaller inside the same cell. |
 | Large objects | any multiple of 16 wide; as tall as needed | Drawn standing on the bottom edge of the object's tiles (the Gaze lamp is 32 x 32 on a 2 x 1 tile plinth). |
 | Dialogue portraits | 48 x 48 | Bust, facing the viewer. Draw masters at 64 x 64 if you like, but export 48 x 48: the box shows them at 48. |
 | Interface text | 8 px monospace | Kept as a font, not drawn. |
@@ -133,7 +133,7 @@ palette above (guide 10.1). Fix drifting frames by hand.
 
 **Walk sheet template.** "Pixel art sprite sheet, top-down JRPG, Game Boy Advance era. [CHARACTER].
 4 rows (facing down, left, right, up), 3 columns (standing, left foot forward, right foot forward),
-each cell 16 x 24 pixels, character's feet on the bottom row of each cell. 1 pixel dark outline
+each cell 24 x 32 pixels, chibi proportions (big head), character's feet on the bottom row of each cell. 1 pixel dark outline
 #1a1420, flat colours from a 32 colour palette, hard pixel edges, no anti-aliasing, no gradients, no
 text, no shadow. Solid magenta background #FF00FF."
 
@@ -171,7 +171,7 @@ placeholder). The names come from `quest/src/assets.config.ts` (`ART_FILES`, `NP
 
 | File | What |
 |---|---|
-| `quest/art/characters/<look>.png` | walk sheet, 48 x 96 (16 x 24 cells) or 48 x 128 (16 x 32 cells); rows down, left, right, up; columns standing, step A, step B |
+| `quest/art/characters/<look>.png` | walk sheet, 72 x 128 (24 x 32 cells); rows down, left, right, up; columns standing, step A, step B |
 | `quest/art/portraits/<portrait>.png` | 48 x 48 portrait (neutral) |
 | `quest/art/tiles/<tile name>.png` | 16 x 16 tile |
 | `quest/art/objects/<kind>.png` | large object drawing |
@@ -190,3 +190,43 @@ expressions.
 Third-party art (CC0, CC-BY or OGA-BY only) is also listed in `quest/assets/CREDITS.md` and
 `quest/src/data/credits.ts` (the in-game Credits screen). Downloaded sprites are never used for the
 named cast.
+
+## 8. Converting Gemini sheets (`scripts/quest-sprite.py`)
+
+Gemini draws a walk sheet as a grid of frames on magenta, but its frames differ in size, head height
+and pose, so a sheet used as it is jitters when the character walks. The converter (Python + Pillow)
+builds a stable sheet instead (its default `--mode stable`; every option is described at the top of
+the script):
+
+1. It finds the source's own pixel grid (Gemini's "pixels" are blocks of about 5 to 8 screen pixels)
+   and samples one colour per block, so nothing is doubled or dropped (`--pixel auto`). Dark grid
+   lines between the cells are found and dropped (`--grid-lines auto`); bits of neighbouring frames
+   and stray specks are dropped too.
+2. Per direction it takes one clean standing frame: column 0 where the direction has one, else the
+   frame with the feet closest together. Side frames are sorted by the way the face looks
+   (`--sides`); a missing side is the other one mirrored.
+3. All four are scaled by one factor, never up (`--fill` makes a character smaller), centred on the
+   torso, feet on the bottom row.
+4. Step A and step B are made from that same standing frame, so the upper body is identical in all
+   three: only the feet band moves (front and back: one foot lifts 1 px; sides: the feet spread 1 px
+   each way), and on the step frames the body sits 1 px lower (`--bob`).
+5. One palette per character (`--colors 32`, nearest-pixel sampling) and a 1 px `#1a1420` outline
+   over the silhouette's edge (the soles keep their colour).
+
+`--preview DIR` writes the old and new sheets side by side (8x) and a GIF of each direction walking
+(step A, stand, step B, stand). The sheets in `quest/art/characters` were made with:
+
+| Look | Source | Options |
+|---|---|---|
+| `gianna` | `docs/quest/art-source/gianna-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` |
+| `anissa` | `docs/quest/art-source/anissa-sprites.webp` | `--grid 5x4 --rows down,_,_,up --sides 1 --cell 24x32 --colors 32 --fill 0.84` |
+| `yari` | `docs/quest/art-source/yari-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (both side rows face right, so left is mirrored; grid lines found and dropped; her up frame is column 0, without the bow) |
+
+Portraits: the source's magenta becomes `rgb(42,36,56)` (the dialogue box's backdrop), then one
+high-quality (Lanczos) downscale to 48 x 48. Gianna's and Anissa's use the whole 1024 x 1024
+picture; Yari's is first cropped to the square around her (800 x 800 from 150,110) so the hutia on
+her shoulder stays readable.
+
+The game draws the shadow under every character (real art and placeholders alike), and moves them
+smoothly between tiles at a constant speed (`quest/src/config.ts`: walk 4.5 tiles a second, run 8),
+choosing the walk frame from the distance walked (step A, stand, step B, stand every two tiles).

@@ -96,8 +96,8 @@ export const TILESET = {
 } as const;
 
 /**
- * A 16 x 24 placeholder character, drawn with a 1 px dark outline in four facings and three walk
- * frames (src/scenes/textures.ts). The named cast differ in silhouette (build, hair, headgear) and in
+ * A 24 x 32 placeholder character (chibi, like the real art), drawn with a 1 px dark outline and
+ * three-tone shading in four facings and three walk frames (src/scenes/pixels.ts). The named cast differ in silhouette (build, hair, headgear) and in
  * what they carry, not just in colour, so they read at a glance. An Echo ancestor is a palette and
  * headgear swap of the modern sprite (guide 6.1).
  */
@@ -126,7 +126,8 @@ export interface PlaceholderCharacter {
 }
 
 const C = PALETTE;
-const HAIR_BLACK = C.k!;
+/** Black hair, a shade above the outline colour so the outline still reads around it. */
+const HAIR_BLACK = 0x2b2433;
 const HAIR_DARK = 0x2a1a14;
 const WHITE_HAIR = C.h!;
 
@@ -239,8 +240,8 @@ export const PORTRAIT_SIZE = 48;
  * Real art, file by file (docs/quest/ART-STYLE.md). Put PNGs in quest/art/ under these names; the
  * build picks up whatever is there (src/scenes/artFiles.ts) and each file replaces its placeholder.
  *
- *  characters/<look>.png   walk sheet: 3 columns x 4 rows of equal cells (16 x 24, or 16 x 32 for
- *                          tall art). Rows: down, left, right, up. Columns: standing, step A, step B.
+ *  characters/<look>.png   walk sheet: 3 columns x 4 rows of equal 24 x 32 cells (a 72 x 128 sheet).
+ *                          Rows: down, left, right, up. Columns: standing, step A, step B.
  *  portraits/<portrait>.png  48 x 48 dialogue portrait (the neutral face).
  *  tiles/<tile name>.png   16 x 16 tile, by TILESET name (e.g. tiles/grass.png, tiles/winch.png).
  *  objects/<kind>.png      a large object drawing by OBJECT_ART name (e.g. objects/gaze_lamp_lit.png).

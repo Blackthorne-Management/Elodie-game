@@ -180,6 +180,9 @@ function makeMarkers(scene: Phaser.Scene): void {
 
 // ---- Characters ------------------------------------------------------------------------------------
 
+/** The shadow under a character: rows (from 3 above the cell's bottom) and their half widths. */
+const SHADOW_ROWS: readonly [number, number][] = [[0, 5], [1, 7], [2, 6]];
+
 /** Every look's walk sheet: 3 columns (standing, step A, step B) x 4 rows (down, left, right, up). */
 function makeCharacters(scene: Phaser.Scene): void {
   const rows = ART_FILES.sheetRows;
@@ -189,18 +192,15 @@ function makeCharacters(scene: Phaser.Scene): void {
     const cw = file ? Math.floor(file.width / ART_FILES.sheetColumns) : CHARACTER_WIDTH;
     const ch = file ? Math.floor(file.height / rows.length) : CHARACTER_HEIGHT;
     const { tex, ctx } = canvasTexture(scene, key, cw * ART_FILES.sheetColumns, ch * rows.length);
-    if (file) ctx.drawImage(file, 0, 0);
     rows.forEach((facing, r) => {
       for (const step of [0, 1, 2] as const) {
         const ox = step * cw;
         const oy = r * ch;
-        if (!file) {
-          ctx.fillStyle = 'rgba(0,0,0,0.3)';
-          ctx.beginPath();
-          ctx.ellipse(ox + cw / 2, oy + ch - 2, 6, 2, 0, 0, Math.PI * 2);
-          ctx.fill();
-          characterPix(def, facing, step).draw(ctx, ox, oy);
-        }
+        // The soft shadow under the feet (the same for real art and placeholders), pixel by pixel.
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        for (const [dy, half] of SHADOW_ROWS) ctx.fillRect(ox + cw / 2 - half, oy + ch - 3 + dy, half * 2, 1);
+        if (file) ctx.drawImage(file, ox, oy, cw, ch, ox, oy, cw, ch);
+        else characterPix(def, facing, step).draw(ctx, ox, oy);
         tex.add(characterFrame(facing, step), 0, ox, oy, cw, ch);
       }
     });
@@ -221,15 +221,16 @@ function makePortraits(scene: Phaser.Scene): void {
       const scale = Math.floor(s / 16);
       const look = def.look ? NPC_SPRITES[def.look] : undefined;
       if (look) {
-        // Head and shoulders of the standing sprite, enlarged.
+        // Head and shoulders of the standing sprite (a 24 x 24 crop from just above the head), enlarged.
         const pix = characterPix(look, 'down');
-        const top = look.build === 'small' ? 4 : look.build === 'tall' ? 0 : 1;
-        const crop = new Pix(16, 16);
-        for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+        const top = (look.build === 'small' ? 8 : look.build === 'tall' ? 3 : 4) - 4;
+        const zoom = s / CHARACTER_WIDTH;
+        const crop = new Pix(CHARACTER_WIDTH, CHARACTER_WIDTH);
+        for (let y = 0; y < CHARACTER_WIDTH; y++) for (let x = 0; x < CHARACTER_WIDTH; x++) {
           const c = pix.get(x, y + top);
           if (c !== undefined) crop.set(x, y, c);
         }
-        crop.draw(ctx, (s - 16 * scale) / 2, s - 16 * scale + scale, scale);
+        crop.draw(ctx, 0, 0, zoom);
       } else if (def.art && TILE_ART[def.art]) {
         artPix(TILE_ART[def.art]!).draw(ctx, (s - 16 * scale) / 2, (s - 16 * scale) / 2, scale);
       }

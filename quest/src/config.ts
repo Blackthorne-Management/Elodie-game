@@ -10,13 +10,34 @@ export const VIEW_HEIGHT = 180;
 /** Map grid. */
 export const TILE_SIZE = 16;
 
-/** Player and NPC sprite cell (wider than tall sprites stand on the bottom of their tile). */
-export const CHARACTER_WIDTH = 16;
-export const CHARACTER_HEIGHT = 24;
+/**
+ * Player and NPC sprite cell: 24 x 32, chibi proportions (the head about 40 % of the height). A
+ * character stands with the feet on the bottom row of the cell, on the bottom edge of their tile,
+ * centred on it (so they overlap the tiles beside and above, drawn in front by depth).
+ */
+export const CHARACTER_WIDTH = 24;
+export const CHARACTER_HEIGHT = 32;
 
-/** Milliseconds to cross one tile. */
-export const WALK_MS_PER_TILE = 220;
-export const RUN_MS_PER_TILE = 120;
+/**
+ * Movement speed in tiles per second (16 px tiles): walking and running. The speed is the same in
+ * pixels in every direction, so a diagonal step (16 * sqrt 2 px) takes about 1.41 times as long.
+ * Walk 4.5 = 72 px/s, run 8 = 128 px/s.
+ */
+export const WALK_TILES_PER_SECOND = 4.5;
+export const RUN_TILES_PER_SECOND = 8;
+
+/**
+ * A direction pressed this close (in ms) to the end of a step is kept and taken the moment the step
+ * ends, so a quick tap just before arriving is not lost. A held direction needs no buffer: the next
+ * step starts exactly where the last one ended, carrying the leftover distance.
+ */
+export const STEP_BUFFER_MS = 90;
+
+/**
+ * The walk cycle, by distance walked (not time): step A, stand, step B, stand, one full cycle per this
+ * many pixels (two tiles). It carries on across tiles and only stops when the walker does.
+ */
+export const WALK_CYCLE_PX = 32;
 
 /** Typewriter speeds in characters per second. `instant` shows the whole line at once. */
 export const TEXT_SPEEDS = {

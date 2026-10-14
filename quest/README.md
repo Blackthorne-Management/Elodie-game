@@ -45,6 +45,16 @@ player slides along the wall (the horizontal part, else the vertical part). Diag
 or a trigger work like straight ones. Sprites have four facings, so a diagonal shows its horizontal
 side; A (and the name label) looks at the diagonal tile first, then the tile the sprite faces.
 
+**Smooth walking.** The logic still moves one tile at a time, but the picture glides
+(`src/engine/motion.ts`, `tests/motion.test.ts`): a constant speed in pixels (walk 4.5 tiles a second,
+run 8, the same on diagonals, in `src/config.ts`), driven by the frame's delta time. While a direction
+is held, the next step starts in the very frame the last one ends and carries that frame's leftover
+distance, so there is no pause at tile edges at any frame rate; a direction tapped in the last 90 ms of
+a step is kept for the next one. A tap always walks one tile (taps are how puzzles are solved, so
+there is no turn-in-place delay). The walk frame comes from the distance walked (step A, stand, step
+B, stand every two tiles), so the cycle carries on across tiles and Anissa walks in step. The camera
+is placed by hand each frame on the same whole pixel as Gianna, so nothing shimmers.
+
 **The touch stick** floats: it rests at the bottom left, and wherever a thumb lands in the left third
 of the screen the ring jumps there (kept on screen) and the knob follows the thumb inside it. A 25%
 dead zone, eight 45 degree sectors, and leaning past 85% runs (B still runs too). The gamepad's left
@@ -75,7 +85,7 @@ placeholder (Vite lists the folder at build time, so nothing is requested that i
 
 | File | Size and layout |
 |------|-----------------|
-| `art/characters/<look>.png` | walk sheet, 3 columns x 4 rows of equal cells (16 x 24, or 16 x 32): rows down, left, right, up; columns standing, step A, step B. Looks: `gianna`, `patricio_young`, `anissa`, `elodie`, `anicette`, `patricio_old`, `yari`, `recruiter`, and the others in `NPC_SPRITES` |
+| `art/characters/<look>.png` | walk sheet, 3 columns x 4 rows of equal cells (24 x 32, so 72 x 128): rows down, left, right, up; columns standing, step A, step B. Looks: `gianna`, `patricio_young`, `anissa`, `elodie`, `anicette`, `patricio_old`, `yari`, `recruiter`, and the others in `NPC_SPRITES` |
 | `art/portraits/<portrait>.png` | 48 x 48 dialogue portrait (the keys of `PORTRAITS`: `gianna`, `patricio`, `anissa`, ...) |
 | `art/tiles/<tile>.png` | 16 x 16 tile, by `TILESET` name (`grass`, `winch`, `bridge_old`, ...) |
 | `art/objects/<kind>.png` | a large object drawing by `OBJECT_ART` name (`gaze_lamp`, `gaze_lamp_lit`, `war_table`, `chain_bridge_up`) |
@@ -130,8 +140,8 @@ one, else the global install, and runs Node with `--experimental-strip-types` to
 
 - **Phaser 3** (`pixelArt`, 320 x 180 logical resolution (16:9, 20 x 11.25 tiles; it was 240 x 160 in
   Phases 1 and 2), whole-number scaling (exact fit below 2x), letterboxed, landscape; a map smaller
-  than the screen is centred, `cameraBounds` in `src/engine/scaling.ts`), 16 x 16 tiles, 16 x 24
-  characters. All art is placeholder pixel art drawn at boot from `src/assets.config.ts`; real art
+  than the screen is centred, `cameraBounds` in `src/engine/scaling.ts`), 16 x 16 tiles, 24 x 32
+  characters (chibi: a big head, about 40 % of the height; they were 16 x 24 until the art pass). All art is placeholder pixel art drawn at boot from `src/assets.config.ts`; real art
   files replace it one by one (above).
 - **Tiled maps** (`maps/*.tmj`). Every map has both eras on one grid: `ground_present`, `deco_present`,
   `ground_echo`, `deco_echo`, `above`, `collide_present`, `collide_echo`, and object layers `npcs`,
