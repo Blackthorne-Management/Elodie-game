@@ -170,7 +170,7 @@ The war is about **power, money and fear**, not about who people are. Several ho
 | The "villain" | **Rael the Ruthless** (Lord Rael Rodriguez) | Lord of Ardencia. Elodie's secret husband. Father of Azzy, Gianna and Anissa. Appears to side with the Crown; is running a double game and a shadow government. Prefers to capture rather than kill. Can be redeemed; pardoned at the end on conditions. Full profile in 5.8. |
 | Antagonist | **Lord Regent Aldric Vane** of Aldermoor | Calm, patient, always three moves ahead. The Crown's long game personified. |
 | Local villain | **Governor Thorne** | The Crown's governor in Xaraguá. Cruel, bureaucratic. Early boss. |
-| Cult leader | **The Hushed** (title) | Hidden head of the Quiet Crown, revealed to be inside the Regent's court. |
+| Cult leader | **The Hushed** (title) | The Regent's agent (owner decision, Oct 14). The Hushed has taken over the Quiet Crown cells that hunt Anissa, and their members believe the Hushed is the head. Unmasked inside the Regent's court (Chapter 9). Rael is the true founder above every cell; no member knows it until he confesses at the Hearing. |
 | Carriage Guild | **Papa Wout** (placeholder) | Runs carriages and ferries. Comic relief, knows every road, sells rumors. |
 
 ### 5.3a The bloodlines (approved; the same people as the board game's character cards)

@@ -390,10 +390,11 @@ real people (guide 7.3).
 2. **Where was the Accord signed?** **Settled (owner, Oct 14):** in Pòt Limyè's plaza, as the built lore says (the
    *Alliance War* book, the Marshal's Stone, the war room). Elodie's Seat's Echo is **the sealing** of the signed
    original in the Throne Archive, where the seventh clause is hidden.
-3. **Who is the Hushed?** The guide calls the Hushed the "hidden head of the Quiet Crown, revealed inside the Regent's
-   court", but also says Rael founded and heads the Quiet Crown and confesses it at the Hearing. Proposal: the Hushed
-   is the Regent's agent who has taken over the cells that hunt Anissa and whom members *believe* to be the head; Rael
-   is the true founder above all cells. Owner to confirm.
+3. **Who is the Hushed?** **Settled (owner, Oct 14):** the Regent's agent, who has taken over the cells that hunt
+   Anissa and whom the members *believe* to be the head of the Quiet Crown. Rael is the true founder above all
+   cells, unknown to every member. Two reveals: the Hushed unmasked in the Regent's court (Chapter 9), Rael's
+   confession at the Hearing (late). In Chapter 1 the recruiters and the veiled woman speak of "the Hushed" as their
+   leader and never of Rael.
 4. **Patricio in every land.** The Echo party is always Patricio's (guide 6.1), so he must have been in every capital
    during the war, including the Crown's own Aldermoor. Proposal: he went to Kingsmere under a flag of truce to
    negotiate the peace (that is when Thomas Stillwater met him). Owner to confirm.
