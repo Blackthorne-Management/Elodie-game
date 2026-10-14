@@ -579,7 +579,7 @@ Implementation: a `lang/*.json` glossary with `{ word, language, translation, ve
 
 ## 9. TECHNICAL ARCHITECTURE
 
-**Rendering:** Phaser 3, `pixelArt: true`, logical resolution **320 x 180** (changed from 240 x 160 so it fills a landscape phone), whole-number scaling when it fits. Tiles 16 x 16. Characters 16 x 24.
+**Rendering:** Phaser 3, `pixelArt: true`, logical resolution **320 x 180** (changed from 240 x 160 so it fills a landscape phone), whole-number scaling when it fits. Tiles 16 x 16. Characters 24 x 32 (chibi proportions).
 
 **Maps:** Tiled `.tmj`. One file per map containing:
 - Tile layers: `ground_present`, `deco_present`, `ground_echo`, `deco_echo`, `above` (shared).
@@ -632,9 +632,9 @@ Image generators, including Gemini, do **not** reliably produce true pixel-grid 
 
 | Asset | Size | Count | Notes |
 |---|---|---|---|
-| Overworld walkers | 16 x 24, 4 directions x 3 frames | 9 modern + 6 Echo twins | Gianna, Yari, Anissa, Azzy, Rael and the other companions; Patricio, Caona, Benny as Echo. |
+| Overworld walkers | 24 x 32, 4 directions x 3 frames | 9 modern + 6 Echo twins | Gianna, Yari, Anissa, Azzy, Rael and the other companions; Patricio, Caona, Benny as Echo. |
 | Anissa follower | 16 x 16 | 1 | She follows Gianna on the field; reacts to terrain. |
-| Generic NPCs | 16 x 24 | 8 base bodies, recolored to about 40 | Per-house clothing palettes. Include street preachers, pilgrims, Quiet Crown recruiters. |
+| Generic NPCs | 24 x 32 | 8 base bodies, recolored to about 40 | Per-house clothing palettes. Include street preachers, pilgrims, Quiet Crown recruiters. |
 | Battle sprites (party) | 32 x 32, idle + attack + hurt + KO | 14 | Modern and Echo. |
 | Enemies | 32 x 32 to 64 x 64 | 22 standard + 10 bosses | Crown soldiers, wildlife, spirits, mercenaries, Quiet Crown Hushers, Rael, the Regent, the betrayer. |
 | Dialogue portraits | 48 x 48, 3 expressions | 16 characters | 48 images. Anissa gets 5 expressions. |
@@ -649,7 +649,7 @@ Image generators, including Gemini, do **not** reliably produce true pixel-grid 
 ### 10.3 Prompt templates
 
 **Character sheet:**
-> Pixel art sprite sheet for a Game Boy Advance era JRPG. [Character: house, age, clothing, hair, props]. 4 directions (down, left, right, up), 3 walk frames each, 16 x 24 pixel character cells shown on a clean grid. Flat colors, 16 color palette, hard pixel edges, no anti-aliasing, no gradients, no text. Solid magenta background #FF00FF.
+> Pixel art sprite sheet for a Game Boy Advance era JRPG. [Character: house, age, clothing, hair, props]. 4 directions (down, left, right, up), 3 walk frames each, 24 x 32 pixel character cells shown on a clean grid. Flat colors, 16 color palette, hard pixel edges, no anti-aliasing, no gradients, no text. Solid magenta background #FF00FF.
 
 **Tile set:**
 > Pixel art tileset, top-down JRPG, 16 x 16 pixel tiles on a grid, [setting]. Include ground variants, walls, doors, roofs, water edges, props. Limited 32 color palette, hard pixel edges, no anti-aliasing, no text. [Echo version: same layout, aged and sepia with cracks removed.]
