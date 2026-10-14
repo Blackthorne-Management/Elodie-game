@@ -51,8 +51,8 @@ export const ENCOUNTER_GRACE_STEPS = 18;
 export const STARTING_GOLD = 150;
 export const BAG_LIMIT = 24;
 
-/** The minimap in the top-left corner: its window on screen (logical px) and pixels per tile. */
-export const MINIMAP = { x: 4, y: 4, w: 64, h: 40, scale: 2 } as const;
+/** The minimap (src/ui/SideMap.ts): how many tiles it shows across and down (CSS sizes it per layout). */
+export const SIDE_MAP = { tilesW: 32, tilesH: 24 } as const;
 
 /** Typewriter speeds in characters per second. `instant` shows the whole line at once. */
 export const TEXT_SPEEDS = {
@@ -69,20 +69,26 @@ export const DEFAULT_TEXT_SPEED: TextSpeed = 'normal';
 export const GAMEPAD_DEADZONE = 0.45;
 
 /** Touch overlay button size in CSS pixels (well above the 44 px minimum). */
-export const TOUCH_BUTTON_PX = 64;
+export const TOUCH_BUTTON_PX = 56;
 
 /**
- * The touch analog stick (src/input/touch.ts): the base ring's diameter in CSS pixels (it shrinks
- * toward the minimum on short screens), and the knob's. The knob travels up to the ring's radius.
+ * The touch D-pad (src/input/touch.ts), in CSS pixels: eight directions (press between two arms for
+ * a diagonal). The dead zone is the fraction of its radius in the middle that does nothing.
  */
-export const TOUCH_STICK_PX = 148;
-export const TOUCH_STICK_MIN_PX = 120;
-export const TOUCH_KNOB_PX = 56;
-/** The stick appears under the thumb anywhere in this fraction of the screen width, from the left. */
-export const TOUCH_STICK_ZONE = 1 / 3;
-/** Dead zone and run threshold, as fractions of the knob's travel. */
-export const STICK_DEADZONE = 0.25;
-export const STICK_RUN = 0.85;
+export const TOUCH_PAD_PX = 132;
+export const PAD_DEADZONE = 0.22;
+
+/**
+ * Where the controls and the minimap go (engine/scaling.ts screenLayout). On a touch screen held
+ * sideways the D-pad takes the left bar and A, B, Echo, Menu and the minimap the right bar; each bar
+ * is at least TOUCH_SIDE_PX wide (the picture shrinks a little when the screen's own bars are
+ * narrower). Held upright, the controls take a bottom bar of at least TOUCH_STACK_PX and the minimap
+ * the top bar. Without touch, the minimap goes in a side bar at least MAP_BAR_PX wide, else on the
+ * picture's top-left corner.
+ */
+export const TOUCH_SIDE_PX = 150;
+export const TOUCH_STACK_PX = 176;
+export const MAP_BAR_PX = 140;
 
 /** Save storage. Bump SAVE_VERSION when the save shape changes. */
 export const SAVE_STORAGE_KEY = 'bloodlines-quest.save';

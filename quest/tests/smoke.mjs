@@ -4,7 +4,7 @@
 //    dialogue with a choice, hit a trigger, swap into the Echo and back, save from the menu, reload
 //    and check the position and flags came back, go through a door (autosave) and reload again,
 //    export and import a save code, the touch overlay on a phone-sized landscape viewport: the
-//    analog stick (drag right, then up-right for a diagonal step; it floats to where the thumb lands).
+//    D-pad (right, then between up and right for a diagonal), tap to move and tap a person to talk.
 //    At several landscape phone sizes: the canvas, and every touch control, inside the visible
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
@@ -185,14 +185,15 @@ async function phoneFit(browser, errors) {
         vh: vv ? vv.height : innerHeight,
         canvas: box(document.querySelector('#game canvas')),
         scroll: [de.scrollWidth, de.scrollHeight, document.body.scrollWidth, document.body.scrollHeight, window.scrollX, window.scrollY],
-        controls: [...document.querySelectorAll('.touch-stick, .touch-btn, .touch-small, .fs-button')].map(box),
+        controls: [...document.querySelectorAll('.touch-dpad, .touch-btn, .touch-small, .fs-button')].map(box),
+        map: document.querySelector('.side-map') ? box(document.querySelector('.side-map')) : null,
         fs: document.querySelector('.fs-button') !== null,
       };
     });
     const inside = (b) => b.x >= 0 && b.y >= 0 && b.x + b.w <= m.vw + 0.5 && b.y + b.h <= m.vh + 0.5;
     const c = m.canvas;
     check(inside(c), `canvas ${Math.round(c.w)}x${Math.round(c.h)} at ${Math.round(c.x)},${Math.round(c.y)} lies inside the ${m.vw}x${m.vh} viewport`);
-    check(c.w >= m.vw * 0.5 || c.h >= m.vh * 0.75, 'the picture fills the screen height (letterbox at the sides)');
+    check(c.w >= m.vw * 0.5 || c.h >= m.vh * 0.5, 'the picture keeps a good size beside the control bars');
     const [sw, sh, bw, bh, sx, sy] = m.scroll;
     check(sw <= m.vw && sh <= m.vh && bw <= m.vw && bh <= m.vh && sx === 0 && sy === 0, `the page does not scroll (${sw}x${sh})`);
     const out = m.controls.filter((b) => !inside(b));
@@ -200,14 +201,18 @@ async function phoneFit(browser, errors) {
     const small = m.controls.filter((b) => Math.min(b.w, b.h) < 44);
     check(small.length === 0, `every touch control is at least 44 px (${m.controls.map((b) => Math.round(Math.min(b.w, b.h))).join(', ')})`);
     check(m.fs, 'the full-screen button is there');
-    const stick = m.controls[0];
-    const pad = m.controls.find((b) => b.name === 'A');
-    check(stick.x < m.vw / 3 && stick.y > m.vh / 2 && pad.x > m.vw / 2 && pad.y > m.vh / 2, 'stick bottom left (left third), A bottom right');
-    // Quick double taps on the stick must not zoom the page.
-    const zone = await page.locator('.touch-stick-zone').boundingBox();
-    for (let i = 0; i < 4; i++) await page.locator('.touch-stick-zone').tap({ position: { x: zone.width / 2, y: zone.height * 0.9 } });
+    // Every control and the minimap sit in the black bars, never over the picture.
+    const off = (b) => b.x + b.w <= c.x + 0.5 || b.x >= c.x + c.w - 0.5 || b.y + b.h <= c.y + 0.5 || b.y >= c.y + c.h - 0.5;
+    const over = m.controls.filter((b) => !off(b));
+    check(over.length === 0, `no control covers the picture${over.length ? `: ${over.map((b) => b.name).join(', ')}` : ''}`);
+    const dpad = m.controls[0];
+    const a = m.controls.find((b) => b.name === 'A');
+    check(dpad.x + dpad.w <= c.x + 0.5 && a.x >= c.x + c.w - 0.5, 'the D-pad is in the left bar, A in the right bar');
+    check(m.map && off(m.map) && m.map.x >= c.x + c.w - 0.5 && inside(m.map), 'the minimap is in the right bar');
+    // Quick double taps on the D-pad must not zoom the page.
+    for (let i = 0; i < 4; i++) await page.locator('.touch-dpad').tap({ position: { x: dpad.w / 2, y: 8 } });
     const scale = await page.evaluate(() => window.visualViewport?.scale ?? 1);
-    check(scale === 1, `double taps on the stick leave the page unzoomed (scale ${scale})`);
+    check(scale === 1, `double taps on the D-pad leave the page unzoomed (scale ${scale})`);
     if ((width === 844 && height === 390) || (width === 667 && height === 375)) {
       const name = `quest-fit-${width}x${height}.png`;
       await page.screenshot({ path: join(SHOT_DIR, name) });
@@ -676,7 +681,7 @@ async function main() {
     await waitReady(ppage);
     check(await ppage.isVisible('.touch-overlay'), 'touch overlay shows on a touch device');
     const sizes = await ppage.evaluate(() =>
-      [...document.querySelectorAll('.touch-btn, .touch-small, .touch-stick')].map((e) => {
+      [...document.querySelectorAll('.touch-btn, .touch-small, .touch-dpad')].map((e) => {
         const r = e.getBoundingClientRect();
         return Math.min(r.width, r.height);
       }),
@@ -684,26 +689,20 @@ async function main() {
     check(sizes.every((v) => v >= 44), `every touch target is at least 44 px (${sizes.join(', ')})`);
     s = await snap(ppage);
     check(s.x === 6 && s.y === 6, 'fresh phone context starts a new game');
-    // The analog stick: put a thumb down in the left third, drag right (walk right), then up-right
-    // (a diagonal step), then release.
-    const rest = await ppage.locator('.touch-stick').boundingBox();
-    const zone = await ppage.locator('.touch-stick-zone').boundingBox();
+    // The D-pad: hold the right arm (walk right), slide to between up and right (a diagonal), release.
+    const pad = await ppage.locator('.touch-dpad').boundingBox();
     const cdp = await phone.newCDPSession(ppage);
     const touch = (type, x, y) =>
       cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] });
-    const t0 = { x: zone.x + zone.width * 0.55, y: zone.y + zone.height * 0.45 };
-    await touch('touchStart', t0.x, t0.y);
-    const moved = await ppage.locator('.touch-stick').boundingBox();
-    check(
-      Math.abs(moved.x + moved.width / 2 - t0.x) < 2 && Math.abs(moved.y + moved.height / 2 - t0.y) < 2 && Math.abs(moved.x - rest.x) > 10,
-      'the stick ring jumps to where the thumb lands (floating stick)',
-    );
+    const mid = { x: pad.x + pad.width / 2, y: pad.y + pad.height / 2 };
+    const r = pad.width / 2;
+    await touch('touchStart', mid.x, mid.y);
     s = await snap(ppage);
-    check(s.x === 6 && s.y === 6 && !s.moving, 'a thumb resting inside the dead zone does not move');
-    // Walk right past the house corner (the wall at 8,5 would refuse a diagonal there), then lean up-right.
-    await touch('touchMove', t0.x + 30, t0.y);
+    check(s.x === 6 && s.y === 6 && !s.moving, 'a thumb on the D-pad hub does not move');
+    // Walk right past the house corner (the wall at 8,5 would refuse a diagonal there), then up-right.
+    await touch('touchMove', mid.x + r * 0.8, mid.y);
     await ppage.waitForFunction(() => window.__quest.snapshot().x >= 9, null, { timeout: 4000 });
-    await touch('touchMove', t0.x + 30, t0.y - 30);
+    await touch('touchMove', mid.x + r * 0.6, mid.y - r * 0.6);
     const before = await snap(ppage);
     await ppage.waitForFunction(
       ({ x, y }) => {
@@ -713,21 +712,33 @@ async function main() {
       { x: before.x, y: before.y },
       { timeout: 4000 },
     );
-    check(true, 'leaning the stick up-right walks diagonally');
-    const knob = await ppage.evaluate(() => getComputedStyle(document.querySelector('.touch-stick-knob')).transform);
-    check(knob !== 'none', `the knob follows the thumb (${knob})`);
+    check(true, 'pressing between the up and right arms walks diagonally');
+    const lit = await ppage.evaluate(() => document.querySelector('.touch-dpad').dataset.dir);
+    check(lit === 'up-right', `the pressed arms light up (${lit})`);
     await ppage.screenshot({ path: join(SHOT_DIR, 'quest3-stick-phone.png') });
     await touch('touchEnd');
     await ppage.waitForFunction(() => !window.__quest.snapshot().moving, null, { timeout: 3000 });
+    // Tap to move: tap a tile and Gianna walks there; tap a person and she walks up and talks.
+    const tapTile = async (x, y) => {
+      const p = await ppage.evaluate(([tx, ty]) => window.__quest.tileToScreen(tx, ty), [x, y]);
+      await touch('touchStart', p.x, p.y);
+      await touch('touchEnd');
+    };
+    await tapTile(6, 6);
+    await ppage.waitForFunction(() => {
+      const q = window.__quest.snapshot();
+      return q.x === 6 && q.y === 6 && !q.moving;
+    }, null, { timeout: 8000 });
+    check(true, 'tapping a tile walks Gianna there');
+    await tapTile(11, 10);
+    await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'dialogue', null, { timeout: 8000 });
     s = await snap(ppage);
-    const back = await ppage.locator('.touch-stick').boundingBox();
-    check(Math.abs(back.x - rest.x) < 1 && Math.abs(back.y - rest.y) < 1, `released, the stick returns to rest (the player stopped at ${s.x},${s.y})`);
-    // A quick flick down still turns (and steps) the player.
-    await touch('touchStart', t0.x, t0.y);
-    await touch('touchMove', t0.x, t0.y + 40);
-    await ppage.waitForFunction(() => window.__quest.snapshot().facing === 'down', null, { timeout: 3000 });
-    await touch('touchEnd');
-    await ppage.waitForFunction(() => !window.__quest.snapshot().moving);
+    check(Math.abs(s.x - 11) + Math.abs(s.y - 10) === 1, `tapping the villager walks up to them and talks (stopped at ${s.x},${s.y})`);
+    for (let i = 0; i < 12 && (await snap(ppage)).mode === 'dialogue'; i++) {
+      await ppage.locator('.touch-a').tap();
+      await ppage.waitForTimeout(250);
+    }
+    await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 4000 });
     await ppage.locator('.touch-small.touch-menu').tap();
     await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'menu', null, { timeout: 2000 });
     check(true, 'the touch Menu button opens the menu');

@@ -59,58 +59,70 @@ html, body {
   touch-action: none;
 }
 
-/* Touch overlay: the analog stick bottom left (it floats to wherever the thumb lands in the left third),
-   A/B bottom right, Echo/Menu (and full screen) top right, all inside the safe areas. It may overlap
-   the edges of the picture on narrow screens, so it is see-through. */
+/* Touch controls in the black bars around the picture (src/input/touch.ts; the picture's place comes
+   from src/ui/screen.ts as --game-left/top/width/height and <body data-layout>). Held sideways
+   (side): the D-pad in the left bar; A, B, Echo and Menu in the right bar under the minimap. Held
+   upright (stack): the D-pad and A/B in the bottom bar, Echo and Menu in the top bar. */
 .touch-overlay {
   pointer-events: none;
   z-index: 10;
   touch-action: none;
-  --stick: clamp(var(--stick-min, 120px), calc(var(--vv-height, 100vh) * 0.4), var(--stick-max, 148px));
   --edge: 12px;
+  --right-bar: calc(var(--vv-width, 100vw) - var(--game-left, 0px) - var(--game-width, 0px));
+  --bottom-bar: calc(var(--vv-height, 100vh) - var(--game-top, 0px) - var(--game-height, 0px));
 }
 .touch-overlay > * { pointer-events: auto; touch-action: none; }
 .touch-overlay * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 
-/* The stick's zone: the left third of the screen below the top buttons' row. */
-.touch-stick-zone {
+/* The D-pad: a cross with a hub; the arm (or the two arms) being pressed lights up. */
+.touch-dpad {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  top: calc(60px + env(safe-area-inset-top, 0px));
-  width: max(var(--stick-zone, 33.4%), calc(var(--stick) + 2 * var(--edge) + env(safe-area-inset-left, 0px)));
+  width: var(--pad);
+  height: var(--pad);
+  left: max(calc(env(safe-area-inset-left, 0px) + 6px), calc((var(--game-left, 0px) - var(--pad)) / 2));
+  bottom: calc(var(--edge) + env(safe-area-inset-bottom, 0px));
+  opacity: 0.85;
 }
-.touch-stick {
+.touch-arm {
   position: absolute;
-  left: calc(var(--edge) + env(safe-area-inset-left, 0px));
-  top: calc(100% - var(--stick) - var(--edge) - env(safe-area-inset-bottom, 0px));
-  width: var(--stick);
-  height: var(--stick);
-  border-radius: 50%;
-  background: rgba(20, 16, 26, 0.35);
-  border: 2px solid rgba(232, 216, 176, 0.55);
-  box-shadow: inset 0 0 0 10px rgba(244, 236, 216, 0.06);
-  opacity: 0.7;
-  pointer-events: none;
+  background: rgba(20, 16, 26, 0.72);
+  border: 2px solid rgba(232, 216, 176, 0.75);
 }
-.touch-stick.active { opacity: 1; border-color: rgba(232, 216, 176, 0.85); }
-.touch-stick.run { border-color: rgba(242, 208, 75, 0.95); }
-.touch-stick-knob {
+.touch-arm-up, .touch-arm-down { left: 33.3%; width: 33.4%; height: 36%; }
+.touch-arm-left, .touch-arm-right { top: 33.3%; height: 33.4%; width: 36%; }
+.touch-arm-up { top: 0; border-radius: 8px 8px 0 0; border-bottom: none; }
+.touch-arm-down { bottom: 0; border-radius: 0 0 8px 8px; border-top: none; }
+.touch-arm-left { left: 0; border-radius: 8px 0 0 8px; border-right: none; }
+.touch-arm-right { right: 0; border-radius: 0 8px 8px 0; border-left: none; }
+.touch-arm::after {
+  content: '';
   position: absolute;
   left: 50%;
   top: 50%;
-  width: var(--knob, 56px);
-  height: var(--knob, 56px);
-  border-radius: 50%;
+  border: 8px solid transparent;
   transform: translate(-50%, -50%);
-  background: rgba(244, 236, 216, 0.55);
-  border: 2px solid rgba(232, 216, 176, 0.9);
 }
-.touch-stick.active .touch-stick-knob { background: rgba(242, 208, 75, 0.6); }
+.touch-arm-up::after { border-bottom-color: rgba(244, 236, 216, 0.8); margin-top: -4px; }
+.touch-arm-down::after { border-top-color: rgba(244, 236, 216, 0.8); margin-top: 4px; }
+.touch-arm-left::after { border-right-color: rgba(244, 236, 216, 0.8); margin-left: -4px; }
+.touch-arm-right::after { border-left-color: rgba(244, 236, 216, 0.8); margin-left: 4px; }
+.touch-hub {
+  position: absolute;
+  left: 33.3%;
+  top: 33.3%;
+  width: 33.4%;
+  height: 33.4%;
+  background: rgba(20, 16, 26, 0.72);
+}
+.touch-dpad.active { opacity: 1; }
+.touch-dpad[data-dir^='up'] .touch-arm-up,
+.touch-dpad[data-dir^='down'] .touch-arm-down,
+.touch-dpad[data-dir$='left'] .touch-arm-left,
+.touch-dpad[data-dir$='right'] .touch-arm-right { background: rgba(242, 208, 75, 0.6); }
 
 .touch-buttons {
   position: absolute;
-  right: calc(var(--edge) + env(safe-area-inset-right, 0px));
+  right: calc((var(--right-bar) - var(--btn) * 2.3) / 2);
   bottom: calc(var(--edge) + env(safe-area-inset-bottom, 0px));
   width: calc(var(--btn) * 2.3);
   height: calc(var(--btn) * 2);
@@ -130,25 +142,80 @@ html, body {
 .touch-b { left: 0; bottom: 0; }
 .touch-btn.down, .touch-small.down { background: rgba(242, 208, 75, 0.6); }
 
+/* Echo and Menu: in the right bar between the minimap and A/B. */
 .touch-top {
   position: absolute;
-  top: calc(8px + env(safe-area-inset-top, 0px));
-  right: calc(var(--edge) + env(safe-area-inset-right, 0px));
+  right: calc((var(--right-bar) - 128px) / 2);
+  bottom: calc(var(--edge) + var(--btn) * 2 + 14px + env(safe-area-inset-bottom, 0px));
   display: flex;
   gap: 8px;
 }
 .touch-small {
   position: static;
   background: rgba(20, 16, 26, 0.55);
-  min-width: 64px;
+  width: 60px;
   height: 44px;
-  padding: 0 12px;
   border-radius: 22px;
   font-size: 14px;
 }
 
-/* Room for the full-screen button to the right of Echo and Menu. */
-body.has-fs .touch-top { right: calc(var(--edge) + 52px + env(safe-area-inset-right, 0px)); }
+/* Upright: everything in the bottom bar (D-pad left, A/B right) and Echo/Menu in the top bar. */
+body[data-layout='stack'] .touch-dpad { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); bottom: max(calc(var(--edge) + env(safe-area-inset-bottom, 0px)), calc((var(--bottom-bar) - var(--pad)) / 2)); }
+body[data-layout='stack'] .touch-buttons { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); bottom: max(calc(var(--edge) + env(safe-area-inset-bottom, 0px)), calc((var(--bottom-bar) - var(--btn) * 2) / 2)); }
+body[data-layout='stack'] .touch-top { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); bottom: auto; top: calc(var(--game-top, 0px) - 56px); }
+
+/* No bars (a touch screen in an odd shape): the controls fall back to the picture's corners. */
+body[data-layout='overlay'] .touch-dpad { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); }
+body[data-layout='overlay'] .touch-buttons { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); }
+body[data-layout='overlay'] .touch-top { right: calc(var(--edge) + 52px + env(safe-area-inset-right, 0px)); bottom: auto; top: calc(8px + env(safe-area-inset-top, 0px)); }
+
+/* The minimap (src/ui/SideMap.ts): the right bar's top when sideways, the top bar when upright, the
+   picture's top-left corner when there are no bars. */
+.side-map {
+  position: fixed;
+  z-index: 9;
+  pointer-events: none;
+  --map-w: min(132px, calc(var(--vv-width, 100vw) - var(--game-left, 0px) - var(--game-width, 0px) - 12px));
+  width: var(--map-w);
+  left: calc(var(--vv-left, 0px) + var(--game-left, 0px) + var(--game-width, 0px) + (var(--vv-width, 100vw) - var(--game-left, 0px) - var(--game-width, 0px) - var(--map-w)) / 2);
+  top: calc(var(--vv-top, 0px) + 8px + env(safe-area-inset-top, 0px));
+}
+.side-map canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 2px solid rgba(232, 216, 176, 0.75);
+  border-radius: 4px;
+  background: #000;
+}
+.side-map-label {
+  margin-top: 4px;
+  font: 600 11px/1.25 system-ui, sans-serif;
+  color: var(--ink);
+  text-align: center;
+  text-shadow: 0 1px 0 #000;
+}
+.side-map.hidden { display: none; }
+body[data-layout='stack'] .side-map {
+  --map-w: min(160px, 40vw);
+  left: calc(var(--vv-left, 0px) + 12px + env(safe-area-inset-left, 0px));
+  top: calc(var(--vv-top, 0px) + var(--game-top, 0px) - var(--map-w) * 0.75 - 26px);
+}
+body[data-layout='overlay'] .side-map {
+  --map-w: 96px;
+  opacity: 0.9;
+  left: calc(var(--vv-left, 0px) + var(--game-left, 0px) + 6px);
+  top: calc(var(--vv-top, 0px) + var(--game-top, 0px) + 6px);
+}
+body[data-layout='overlay'] .side-map-label { text-align: left; font-size: 10px; }
+
+/* Sideways, the full-screen button moves to the top of the left bar (the minimap has the right bar). */
+body[data-layout='side'] .fs-button {
+  right: auto;
+  left: calc(var(--vv-left, 0px) + (var(--game-left, 0px) - 44px) / 2);
+}
 
 .fs-button {
   position: fixed;

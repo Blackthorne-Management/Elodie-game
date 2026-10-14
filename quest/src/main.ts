@@ -88,7 +88,8 @@ const game = new Phaser.Game({
   roundPixels: true,
   backgroundColor: '#000000',
   banner: false,
-  input: { keyboard: false, mouse: false, touch: false, gamepad: false },
+  // Keys and gamepads go through src/input; Phaser only reads taps and clicks on the picture (tap to move).
+  input: { keyboard: false, mouse: true, touch: true, gamepad: false },
   // The canvas is centred by CSS (#game is pinned to the visible viewport); src/ui/screen.ts sets the zoom.
   scale: {
     mode: Phaser.Scale.NONE,
@@ -98,5 +99,5 @@ const game = new Phaser.Game({
   scene: [BootScene, FieldScene],
 });
 
-game.events.once(Phaser.Core.Events.READY, () => fitToScreen((zoom) => game.scale.setZoom(zoom)));
+game.events.once(Phaser.Core.Events.READY, () => fitToScreen((zoom) => game.scale.setZoom(zoom), isTouchDevice()));
 mountFullscreenButton();

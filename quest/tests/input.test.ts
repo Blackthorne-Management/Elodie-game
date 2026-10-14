@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../src/config.ts';
 import { InputManager, dirButtons, stickDirection, type Button, type InputSource } from '../src/input/actions.ts';
-import { knobOffset } from '../src/input/touch.ts';
-import { cameraBounds, cameraScroll, fitRect, fitZoom, integerZoom } from '../src/engine/scaling.ts';
+import { padDirection } from '../src/input/touch.ts';
+import { cameraBounds, cameraScroll, fitRect, fitZoom, integerZoom, screenLayout } from '../src/engine/scaling.ts';
 
 class FakeSource implements InputSource {
   held = new Set<Button>();
@@ -165,13 +165,12 @@ describe('analog sticks (touch and gamepad)', () => {
     expect(dirButtons(null)).toEqual([]);
   });
 
-  it('the touch knob follows the thumb inside the ring', () => {
-    expect(knobOffset(10, 0, 50)).toEqual({ x: 10, y: 0, lean: 0.2 });
-    const far = knobOffset(0, -200, 50);
-    expect(far.x).toBeCloseTo(0);
-    expect(far.y).toBe(-50);
-    expect(far.lean).toBe(1);
-    expect(knobOffset(0, 0, 50)).toEqual({ x: 0, y: 0, lean: 0 });
+  it('the D-pad: an arm for a straight step, between two arms for a diagonal, nothing in the middle', () => {
+    expect(padDirection(60, 0, 66)).toBe('right');
+    expect(padDirection(0, -60, 66)).toBe('up');
+    expect(padDirection(45, -45, 66)).toBe('up-right');
+    expect(padDirection(-45, 45, 66)).toBe('down-left');
+    expect(padDirection(5, 5, 66)).toBeNull();
   });
 });
 
@@ -252,5 +251,30 @@ describe('fitZoom and fitRect', () => {
     }
     expect(fitRect(844, 390, W, H, 8, 2)).toEqual({ zoom: 2, width: 640, height: 360, left: 102, top: 15 });
     expect(fitRect(1280, 800, W, H, 8, 2)).toEqual({ zoom: 4, width: 1280, height: 720, left: 0, top: 40 });
+  });
+});
+
+describe('screen layout: where the controls and the minimap go', () => {
+  const bars = { side: 150, stack: 176, mapBar: 140 };
+  it('a sideways phone gives the controls both side bars, shrinking the picture only as needed', () => {
+    const l = screenLayout(844, 390, 320, 180, 8, 2, true, bars);
+    expect(l.mode).toBe('side');
+    expect(l.rect.left).toBeGreaterThanOrEqual(150);
+    expect(l.rect.left + l.rect.width).toBeLessThanOrEqual(844 - 150);
+    const wide = screenLayout(2400, 1000, 320, 180, 8, 2, true, bars);
+    expect(wide.rect).toEqual(fitRect(2400, 1000, 320, 180, 8, 2));
+  });
+
+  it('an upright phone puts the controls in the bottom bar and the map in the top bar', () => {
+    const l = screenLayout(390, 844, 320, 180, 8, 2, true, bars);
+    expect(l.mode).toBe('stack');
+    expect(l.rect.top).toBeGreaterThanOrEqual(176);
+  });
+
+  it('without touch the picture keeps its full size; the minimap uses a wide enough side bar', () => {
+    expect(screenLayout(1920, 1080, 320, 180, 8, 2, false, bars).mode).toBe('overlay');
+    const ultrawide = screenLayout(2560, 1080, 320, 180, 8, 2, false, bars);
+    expect(ultrawide.mode).toBe('side');
+    expect(ultrawide.rect).toEqual(fitRect(2560, 1080, 320, 180, 8, 2));
   });
 });

@@ -6,8 +6,8 @@
 // through CSS variables, the canvas is centred in #game, and the rest is letterbox. It is redone on
 // every resize, rotation, visual viewport change and full-screen change.
 
-import { MAX_ZOOM, MIN_INTEGER_ZOOM, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
-import { fitRect, type ScreenRect } from '../engine/scaling.ts';
+import { MAP_BAR_PX, MAX_ZOOM, MIN_INTEGER_ZOOM, TOUCH_SIDE_PX, TOUCH_STACK_PX, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { screenLayout, type ScreenRect } from '../engine/scaling.ts';
 
 export interface Viewport {
   left: number;
@@ -24,13 +24,21 @@ export function visibleViewport(): Viewport {
   return { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
 }
 
-/** Keep the canvas fitted to the visible viewport. `setZoom` hands the zoom to Phaser. */
-export function fitToScreen(setZoom: (zoom: number) => void): () => ScreenRect {
+/**
+ * Keep the canvas fitted to the visible viewport. `setZoom` hands the zoom to Phaser. The picture's
+ * place goes to CSS (--game-left/top/width/height) and the layout mode to <body data-layout> (side,
+ * stack or overlay), so the touch controls and the minimap sit in the black bars around it.
+ */
+export function fitToScreen(setZoom: (zoom: number) => void, touch = false): () => ScreenRect {
   const rootStyle = document.documentElement.style;
   let last = '';
   const layout = (): ScreenRect => {
     const vp = visibleViewport();
-    const rect = fitRect(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM);
+    const { rect, mode } = screenLayout(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM, touch, {
+      side: TOUCH_SIDE_PX,
+      stack: TOUCH_STACK_PX,
+      mapBar: MAP_BAR_PX,
+    });
     const key = `${vp.left},${vp.top},${vp.width},${vp.height}`;
     if (key !== last) {
       last = key;
@@ -38,6 +46,11 @@ export function fitToScreen(setZoom: (zoom: number) => void): () => ScreenRect {
       rootStyle.setProperty('--vv-top', `${vp.top}px`);
       rootStyle.setProperty('--vv-width', `${vp.width}px`);
       rootStyle.setProperty('--vv-height', `${vp.height}px`);
+      rootStyle.setProperty('--game-left', `${rect.left}px`);
+      rootStyle.setProperty('--game-top', `${rect.top}px`);
+      rootStyle.setProperty('--game-width', `${rect.width}px`);
+      rootStyle.setProperty('--game-height', `${rect.height}px`);
+      document.body.dataset.layout = mode;
       setZoom(rect.zoom);
     }
     // The page itself never scrolls (iOS can still nudge it when the bars move).

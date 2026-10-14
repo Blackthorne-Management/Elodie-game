@@ -41,10 +41,11 @@ import { HintBubble } from '../ui/HintBubble.ts';
 import { isFullscreen, isStandalone, toggleFullscreen } from '../ui/fullscreen.ts';
 import { GameMenu } from '../ui/GameMenu.ts';
 import type { MenuItem } from '../ui/MenuPanel.ts';
-import { Minimap } from '../ui/Minimap.ts';
+import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
 import { RPG } from '../data/rpg.ts';
 import { cityOf } from '../engine/rpg.ts';
+import { planTap } from '../engine/tap.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
@@ -103,6 +104,13 @@ function setLook(sprite: Phaser.GameObjects.Image, look: string, facing: Dir8, s
   sprite.setTexture(textureKeyForCharacter(look), characterFrame(spriteFacing(facing), step));
 }
 
+/** One minimap for the whole page (scenes restart on every map change). */
+let sideMap: SideMap | null = null;
+function sharedSideMap(): SideMap {
+  sideMap ??= new SideMap(document.body);
+  return sideMap;
+}
+
 function capitalise(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
@@ -129,7 +137,7 @@ export class FieldScene extends Phaser.Scene {
   private dialogue!: DialogueBox;
   private menu!: GameMenu;
   private shopPanel!: ShopPanel;
-  private minimap: Minimap | null = null;
+  private minimap: SideMap | null = null;
   private toast!: Toast;
   private hint!: HintBubble;
   private panel!: TextPanel;
@@ -143,6 +151,9 @@ export class FieldScene extends Phaser.Scene {
   private camBounds = { x: 0, y: 0, width: VIEW_WIDTH, height: VIEW_HEIGHT };
   private talkingTo: NpcPlacement | null = null;
   private confirmNewGame = false;
+  /** Tap to move: the steps still to walk, then the way to face and interact (engine/tap.ts). */
+  private autoPath: Dir8[] = [];
+  private autoFace: Dir8 | null = null;
   private lastFx: string | undefined;
 
   constructor() {
@@ -168,6 +179,9 @@ export class FieldScene extends Phaser.Scene {
     this.glowing = new Set();
     this.follower = null;
     this.echoMatrix = null;
+    this.autoPath = [];
+    this.autoFace = null;
+    this.input.on('pointerdown', (p: Phaser.Input.Pointer) => this.onTap(p));
     this.map = this.logic.map;
 
     const tilemap = this.make.tilemap({ key: tilemapKey(this.map.id) });
@@ -235,7 +249,7 @@ export class FieldScene extends Phaser.Scene {
     this.placeFollower();
 
     this.rt.input.clearPresses();
-    window.__quest = { ready: true, snapshot: () => this.snapshot() };
+    window.__quest = { ready: true, snapshot: () => this.snapshot(), tileToScreen: (x, y) => this.tileToScreen(x, y) };
 
     // Resume a dialogue or card the logic is in (after a door), then run on-enter scenes.
     if (this.logic.mode === 'dialogue') this.enterDialogueMode();
@@ -251,7 +265,8 @@ export class FieldScene extends Phaser.Scene {
         this.tickHints(delta);
         this.updateField(delta);
         this.minimap?.follow(this.logic.state.player.pos);
-        this.minimap?.setVisible(!this.hint.visible);
+        // On the picture (no bars), it steps aside for Anissa's hint.
+        this.minimap?.setVisible(!(this.hint.visible && document.body.dataset.layout === 'overlay'));
         this.updateLabel();
         this.startPendingGlow();
         break;
@@ -370,6 +385,7 @@ export class FieldScene extends Phaser.Scene {
       return;
     }
 
+    if (input.pressed('menu') || input.pressed('confirm') || input.pressed('echo') || input.move()) this.cancelWalk();
     if (input.pressed('menu')) {
       this.openMenu();
       return;
@@ -380,6 +396,10 @@ export class FieldScene extends Phaser.Scene {
     }
     if (input.pressed('echo')) {
       this.handle(this.logic.swap());
+      return;
+    }
+    if (this.autoPath.length > 0 || this.autoFace) {
+      this.walkOn();
       return;
     }
     const dir = input.move();
@@ -398,17 +418,94 @@ export class FieldScene extends Phaser.Scene {
     this.handle(this.logic.finishStep(to));
     const buffered = this.buffered;
     this.buffered = null;
-    if (this.leaving || this.mode !== 'field' || !this.scene.isActive()) return null;
+    if (this.leaving || this.mode !== 'field' || !this.scene.isActive()) {
+      this.cancelWalk(); // a scene or a door stops a tapped walk
+      return null;
+    }
     const input = this.rt.input;
     const held = input.move();
     const dir = held && input.heldDir(held) ? held : buffered;
-    return dir ? this.stepToward(dir) : null;
+    if (dir) {
+      this.cancelWalk();
+      return this.stepToward(dir);
+    }
+    // A tapped walk goes straight on into its next step.
+    const next = this.autoPath.shift();
+    if (!next) return null;
+    const onward = this.stepToward(next, false);
+    if (!onward) this.cancelWalk();
+    return onward;
+  }
+
+  // ---- Tap to move ---------------------------------------------------------------------------
+
+  /** The page position of a tile's centre (tests tap there). */
+  private tileToScreen(x: number, y: number): { x: number; y: number } {
+    const r = this.game.canvas.getBoundingClientRect();
+    const cam = this.cameras.main;
+    const k = r.width / VIEW_WIDTH;
+    return { x: r.left + ((x + 0.5) * TILE_SIZE - cam.scrollX) * k, y: r.top + ((y + 0.5) * TILE_SIZE - cam.scrollY) * k };
+  }
+
+  /** A tap or click on the picture: walk there, or up to the person or thing tapped and use it. */
+  private onTap(p: Phaser.Input.Pointer): void {
+    if (this.mode !== 'field' || this.leaving) return;
+    const x = p.worldX;
+    const y = p.worldY;
+    // A person is tapped anywhere on their sprite (it stands above their tile).
+    let tile: Pos | null = null;
+    for (const n of this.logic.npcs()) {
+      const s = this.npcSprites.get(n.objectId);
+      if (s?.visible && s.getBounds().contains(x, y)) tile = { ...n.pos };
+    }
+    tile ??= { x: Math.floor(x / TILE_SIZE), y: Math.floor(y / TILE_SIZE) };
+    const plan = planTap(this.logic, tile);
+    this.showTapMark(tile, !!plan);
+    if (!plan) return;
+    this.autoPath = [...plan.path];
+    this.autoFace = plan.face;
+    if (!this.mover.moving) this.walkOn();
+  }
+
+  /** Take the next tapped step, or (at the end) face the target and use it. */
+  private walkOn(): void {
+    const next = this.autoPath.shift();
+    if (next) {
+      const from = { ...this.logic.state.player.pos };
+      const to = this.stepToward(next, false);
+      if (to) this.mover.start(from, to);
+      else this.cancelWalk();
+      this.drawPlayer();
+      return;
+    }
+    const face = this.autoFace;
+    this.autoFace = null;
+    if (!face) return;
+    this.logic.state.player.facing = face;
+    this.drawPlayer();
+    this.handle(this.logic.interact());
+  }
+
+  private cancelWalk(): void {
+    this.autoPath = [];
+    this.autoFace = null;
+  }
+
+  /** Where the tap landed: a gold ring, or a red cross where Gianna cannot go. */
+  private showTapMark(tile: Pos, ok: boolean): void {
+    const g = this.add.graphics().setDepth(2900);
+    const cx = tile.x * TILE_SIZE + TILE_SIZE / 2;
+    const cy = tile.y * TILE_SIZE + TILE_SIZE / 2;
+    if (ok) g.lineStyle(1, UI.markerTalk, 1).strokeCircle(cx, cy, 5);
+    else g.lineStyle(2, 0xd04040, 1).lineBetween(cx - 4, cy - 4, cx + 4, cy + 4).lineBetween(cx - 4, cy + 4, cx + 4, cy - 4);
+    this.tweens.add({ targets: g, alpha: 0, duration: 500, onComplete: () => g.destroy() });
   }
 
   /** Face `dir` and, if the logic allows the step, return the tile it leads to (Anissa follows). */
-  private stepToward(dir: Dir8): Pos | null {
-    // Held input slides along walls when a diagonal is refused (engine/game.ts tryStep).
-    const attempt = this.logic.tryStep(dir, true);
+  private stepToward(dir: Dir8, slide = true): Pos | null {
+    // Held input slides along walls when a diagonal is refused (engine/game.ts tryStep); a tapped walk
+    // follows its planned steps exactly.
+    const attempt = this.logic.tryStep(dir, slide);
     if (!attempt.ok) {
       if (attempt.reason === 'door_in_echo' && dirButtons(dir).some((d) => this.rt.input.pressed(d))) {
         this.toast.show(this.logic.content.messages.doorInEcho);
@@ -580,13 +677,13 @@ export class FieldScene extends Phaser.Scene {
     setLook(this.player, this.playerLook(), this.logic.state.player.facing);
   }
 
-  /** The minimap for this map and era, named after the city section (the test village has none). */
+  /** The minimap (a page element in the black bars) for this map and era, named after the city section. */
   private buildMinimap(era: Era): void {
-    this.minimap?.destroy();
+    this.minimap ??= sharedSideMap();
     const found = cityOf(RPG, this.map.id);
     const raw = this.rt.rawMaps[this.map.id];
-    this.minimap = raw ? new Minimap(this, this.map, raw, era, found ? `${found.city.name}: ${found.section.name}` : '') : null;
-    this.minimap?.follow(this.logic.state.player.pos);
+    if (raw) this.minimap.setMap(this.map, raw, era, found ? `${found.city.name}: ${found.section.name}` : '');
+    this.minimap.follow(this.logic.state.player.pos);
   }
 
   private swapVisuals(_era: Era): void {
@@ -888,7 +985,7 @@ export class FieldScene extends Phaser.Scene {
   private openMenu(): void {
     this.confirmNewGame = false;
     this.mode = 'menu';
-    this.minimap?.setVisible(false);
+    if (document.body.dataset.layout === 'overlay') this.minimap?.setVisible(false);
     this.menu.open({
       flags: this.logic.state.flags,
       mapId: this.map.id,
@@ -1044,6 +1141,6 @@ export class FieldScene extends Phaser.Scene {
 declare global {
   interface Window {
     /** Read-only test hook used by the Playwright smoke test. */
-    __quest?: { ready: boolean; snapshot: () => FieldSnapshot };
+    __quest?: { ready: boolean; snapshot: () => FieldSnapshot; tileToScreen: (x: number, y: number) => { x: number; y: number } };
   }
 }

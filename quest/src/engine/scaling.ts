@@ -56,6 +56,45 @@ export function fitRect(
   };
 }
 
+export type ScreenMode = 'side' | 'stack' | 'overlay';
+
+export interface ScreenLayout {
+  rect: ScreenRect;
+  /** side: controls and map in the left and right bars; stack: in the bottom and top bars; overlay: map on the picture. */
+  mode: ScreenMode;
+}
+
+/**
+ * Fit the picture and decide where the controls and the minimap go. With touch, the controls always
+ * get their bars: sideways screens reserve `side` px left and right (shrinking the picture only when
+ * the natural bars are narrower), upright screens reserve `stack` px top and bottom. Without touch the
+ * minimap uses a side bar when the natural one is at least `mapBar` wide.
+ */
+export function screenLayout(
+  viewportW: number,
+  viewportH: number,
+  gameW: number,
+  gameH: number,
+  maxZoom: number,
+  minInteger: number,
+  touch: boolean,
+  bars: { side: number; stack: number; mapBar: number },
+): ScreenLayout {
+  const natural = fitRect(viewportW, viewportH, gameW, gameH, maxZoom, minInteger);
+  const centred = (r: ScreenRect): ScreenRect => ({
+    ...r,
+    left: Math.max(0, Math.floor((viewportW - r.width) / 2)),
+    top: Math.max(0, Math.floor((viewportH - r.height) / 2)),
+  });
+  if (!touch) return { rect: natural, mode: natural.left >= bars.mapBar ? 'side' : 'overlay' };
+  if (viewportW >= viewportH) {
+    if (natural.left >= bars.side) return { rect: natural, mode: 'side' };
+    return { rect: centred(fitRect(Math.max(gameW, viewportW - 2 * bars.side), viewportH, gameW, gameH, maxZoom, minInteger)), mode: 'side' };
+  }
+  if (natural.top >= bars.stack) return { rect: natural, mode: 'stack' };
+  return { rect: centred(fitRect(viewportW, Math.max(gameH, viewportH - 2 * bars.stack), gameW, gameH, maxZoom, minInteger)), mode: 'stack' };
+}
+
 /**
  * Camera bounds for a map in a view (both in pixels). A map larger than the view is the bounds
  * itself (the camera follows and stops at the edges). Along a side where the map is smaller than the
