@@ -4,6 +4,7 @@
 // (tests/content.test.ts).
 
 import type { ObjectInfo } from '../engine/content.ts';
+import { SHELF_OBJECTS } from './books.ts';
 
 export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   // Zetwal, the plaza and the bridgehead.
@@ -45,6 +46,14 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   // Test village (Phase 1).
   marker_echo: { name: 'Old marker' },
   marker_present: { name: 'Wayside shrine' },
+
+  // The Cane Road.
+  road_sign: { name: 'Signpost' },
+  mill_ruin: { name: 'Old sugar mill' },
+  smuggler_crates: { name: 'Crown-stamped crates' },
+
+  // Every bookshelf with books (data/books.ts).
+  ...SHELF_OBJECTS,
 };
 
 /** Door labels, by `<map id>/<door id>` (or a bare door id when it is unique). */
@@ -53,6 +62,12 @@ export const DOORS: Readonly<Record<string, string>> = {
   'zetwal-house/house_front': 'Out to the plaza',
   'zetwal-town/town_temple': 'Temple of Elodie',
   'zetwal-temple/temple_bridge': 'Back across the bridge',
+  'zetwal-temple/temple_archive': 'Temple Archive',
+  'zetwal-archive/archive_out': 'Back to the temple',
+  'zetwal-town/town_hall': 'Hall of the Accord',
+  'zetwal-hall/hall_out': 'Out to the plaza',
+  'zetwal-town/town_gate': 'East gate: the Cane Road',
+  'zetwal-road/road_gate': 'Back through the east gate',
   'test-village/house_front': 'House',
   'test-village/house_inside': 'Outside',
 };

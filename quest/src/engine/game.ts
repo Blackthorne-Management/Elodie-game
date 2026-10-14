@@ -3,10 +3,12 @@
 // using puzzle objects, the Echo swap with anchors, dialogue, and end-of-act cards. Every action
 // returns a list of effects for the caller to show. Pure TypeScript: no Phaser, no DOM.
 
-import { flagsIn } from './conditions.ts';
-import { cardFlag, type CardDef, type GameContent } from './content.ts';
+import { ENCOUNTER_CHANCE_PER_STEP, ENCOUNTER_GRACE_STEPS } from '../config.ts';
+import { evaluate, flagsIn } from './conditions.ts';
+import { cardFlag, type CardDef, type EncounterGroup, type EncounterTable, type GameContent } from './content.ts';
 import { DialogueRunner, type DialogueScript, type DialogueView } from './dialogue.ts';
 import { FlagStore, type FlagSnapshot } from './flags.ts';
+import { Rng } from './rng.ts';
 import { components, doorArrival, doorAt, facingTiles, inBounds, isDiagonal, samePos, stepFrom } from './grid.ts';
 import type { GameState } from './state.ts';
 import { rectContains, type Door, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
@@ -60,7 +62,9 @@ export type Effect =
   | { kind: 'talk'; npc: NpcPlacement }
   | { kind: 'card'; card: CardDef }
   /** Back from the memory with anchors newly set: these present objects changed (the scene makes them glow). */
-  | { kind: 'changed'; objects: string[]; flags: string[] };
+  | { kind: 'changed'; objects: string[]; flags: string[] }
+  /** An ambush in a wild section (the scene flashes; the fight follows as a dialogue until Phase 3). */
+  | { kind: 'encounter'; table: string; group: string };
 
 export type StepAttempt =
   | { ok: true; to: Pos }
@@ -76,11 +80,15 @@ export class GameLogic {
   private afterDialogue: Effect[] = [];
   /** Anchor flags already set when the player stepped into the memory (null: not known, e.g. loaded in the Echo). */
   private anchorsAtEntry: Set<string> | null = null;
+  /** Random encounters: the dice, and steps walked in a wild zone since arriving or the last fight. */
+  private readonly rng: Rng;
+  private wildSteps = 0;
 
-  constructor(maps: Readonly<Record<string, GameMap>>, content: GameContent, state: GameState) {
+  constructor(maps: Readonly<Record<string, GameMap>>, content: GameContent, state: GameState, seed = 1) {
     this.maps = maps;
     this.content = content;
     this.state = state;
+    this.rng = new Rng(seed);
   }
 
   /** Drop any running dialogue or card (after a load or a new game). */
@@ -91,6 +99,7 @@ export class GameLogic {
     this.runner = null;
     this.afterDialogue = [];
     this.anchorsAtEntry = null;
+    this.wildSteps = 0;
   }
 
   get map(): GameMap {
@@ -183,11 +192,35 @@ export class GameLogic {
     const trigger = activeTriggers(this.map, this.era, this.state.flags).find(
       (t) => !t.onEnter && rectContains(t.area, to) && this.canFire(t),
     );
-    return trigger ? [...seen, ...this.fire(trigger)] : seen;
+    if (trigger) return [...seen, ...this.fire(trigger)];
+    return [...seen, ...this.rollEncounter(to)];
+  }
+
+  /** The encounter zone active here, if any (present only: the memory has no ambushes). */
+  encounterZoneAt(pos: Pos) {
+    if (this.era !== 'present') return undefined;
+    return this.map.encounters.find((z) => rectContains(z.area, pos) && (!z.if || evaluate(z.if, this.state.flags)));
+  }
+
+  /**
+   * A step in a wild zone: after ENCOUNTER_GRACE_STEPS safe steps, each step has an
+   * ENCOUNTER_CHANCE_PER_STEP chance of an ambush from the zone's table (weighted). Until Phase 3
+   * battles exist, the fight is a short scene: fight (always won) or run.
+   */
+  private rollEncounter(pos: Pos): Effect[] {
+    const zone = this.encounterZoneAt(pos);
+    const table = zone && this.content.encounters?.[zone.table];
+    if (!zone || !table || table.groups.length === 0) return [];
+    this.wildSteps++;
+    if (this.wildSteps <= ENCOUNTER_GRACE_STEPS || this.rng.next() >= ENCOUNTER_CHANCE_PER_STEP) return [];
+    this.wildSteps = 0;
+    const group = pickGroup(table, this.rng);
+    return [{ kind: 'encounter', table: table.id, group: group.id }, ...this.startScript(encounterScript(table, group), [{ kind: 'save' }])];
   }
 
   /** Run the map's on-enter triggers. Call after every map change, new game or load (they are once-only). */
   enterMap(): Effect[] {
+    this.wildSteps = 0;
     if (this.mode !== 'field') return [];
     const trigger = activeTriggers(this.map, this.era, this.state.flags).find((t) => t.onEnter && this.canFire(t));
     return trigger ? this.fire(trigger) : [];
@@ -421,6 +454,45 @@ export class GameLogic {
     }
     return effects;
   }
+}
+
+/** A group from an encounter table, by weight. */
+function pickGroup(table: EncounterTable, rng: Rng): EncounterGroup {
+  const total = table.groups.reduce((n, g) => n + (g.weight ?? 1), 0);
+  let roll = rng.next() * total;
+  for (const g of table.groups) {
+    roll -= g.weight ?? 1;
+    if (roll < 0) return g;
+  }
+  return table.groups[table.groups.length - 1]!;
+}
+
+/** Flags an encounter sets: how often each group was beaten or escaped (`encounter.<table>.<group>.won|fled`). */
+export function encounterFlag(table: string, group: string, outcome: 'won' | 'fled'): string {
+  return `encounter.${table}.${group}.${outcome}`;
+}
+
+/**
+ * The stand-in for a fight until Phase 3 battles exist: the foes appear, Fight always wins, Run
+ * always escapes. Both outcomes are remembered as flags so later scenes (and the battle system) can
+ * read them.
+ */
+export function encounterScript(table: EncounterTable, group: EncounterGroup): DialogueScript {
+  return {
+    id: `encounter.${table.id}.${group.id}`,
+    start: 'appear',
+    nodes: {
+      appear: {
+        lines: [{ text: group.intro, fx: 'shake' }],
+        choices: [
+          { text: 'Fight', next: 'won' },
+          { text: 'Run', next: 'fled' },
+        ],
+      },
+      won: { set: { [encounterFlag(table.id, group.id, 'won')]: true }, lines: [{ text: group.won }] },
+      fled: { set: { [encounterFlag(table.id, group.id, 'fled')]: true }, lines: [{ text: group.fled }] },
+    },
+  };
 }
 
 /** The one-line description an object shows when it has no dialogue of its own (no speaker). */

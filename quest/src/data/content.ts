@@ -7,6 +7,7 @@ import type { ValidationContext } from '../engine/mapValidation.ts';
 import { OBJECT_ART, TILESET } from '../assets.config.ts';
 import { CARDS } from './cards.ts';
 import { DIALOGUE, DIALOGUE_IDS } from './dialogue.ts';
+import { ENCOUNTERS } from './encounters.ts';
 import { MESSAGES } from './messages.ts';
 import { NPCS, NPC_IDS } from './npcs.ts';
 import { DOORS, OBJECTS } from './objects.ts';
@@ -20,6 +21,7 @@ export const CONTENT: GameContent = {
   messages: MESSAGES,
   objects: OBJECTS,
   doors: DOORS,
+  encounters: ENCOUNTERS,
 };
 
 /** What the map validator needs to know about the content. */

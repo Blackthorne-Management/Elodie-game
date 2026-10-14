@@ -52,6 +52,12 @@ describe('dialogue content', () => {
     for (const s of Object.values(CONTENT.speakers)) expect(PORTRAITS[s.portrait ?? ''], s.id).toBeDefined();
   });
 
+  it('every encounter zone on a map uses a table that exists', () => {
+    for (const map of Object.values(maps)) {
+      for (const z of map.encounters) expect(CONTENT.encounters?.[z.table], `${map.id}/${z.id}`).toBeDefined();
+    }
+  });
+
   it('every NPC has a name for the label, and the cast have their own looks', () => {
     for (const npc of Object.values(CONTENT.npcs)) expect(npc.name, npc.id).toBeTruthy();
     for (const look of ['gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'quiet_crown_m_medium', 'quiet_crown_f_medium']) {

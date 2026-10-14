@@ -2,6 +2,7 @@
 // plus Act I, Zetwal (data/dialogue/zetwal.ts).
 
 import type { DialogueScript } from '../engine/dialogue.ts';
+import { SHELF_DIALOGUE } from './books.ts';
 import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
 
 const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
@@ -141,6 +142,7 @@ const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
 export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
   ...TEST_VILLAGE,
   ...Object.fromEntries(ZETWAL_DIALOGUE.map((d) => [d.id, d])),
+  ...SHELF_DIALOGUE,
 };
 
 export const DIALOGUE_IDS: readonly string[] = Object.keys(DIALOGUE);

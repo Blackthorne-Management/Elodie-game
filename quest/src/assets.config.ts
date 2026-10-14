@@ -92,6 +92,9 @@ export const TILESET = {
     { gid: 61, name: 'pawl_pinned', base: 0x8a4a2a, accent: 0xc8c8d0, pattern: 'border' },
     { gid: 62, name: 'stone_pile', base: 0xb8b8c4, accent: 0x8e8e9c, pattern: 'grid' },
     { gid: 63, name: 'loose_board', base: 0xb98d5a, accent: 0xe8d8b0, pattern: 'border' },
+    // The wild sections: tall cane you can walk through (where ambushes come from), a ruined wall.
+    { gid: 64, name: 'cane', base: 0x5e8a2e, accent: 0x9ab84a, pattern: 'stripes' },
+    { gid: 65, name: 'cane_old', base: 0x8a8a3a, accent: 0xb0a45a, pattern: 'stripes' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -201,6 +204,11 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   // The Quiet Crown: quiet_crown_<m|f>_<tone>, e.g. quiet_crown_f_deep.
   ...QUIET_CROWN,
 
+  // Zetwal, the present: the Temple Archive, the Hall of the Accord and the Cane Road.
+  archivist: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.U!, trim: C.y!, robe: true, accessories: ['satchel'] },
+  clerk: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.w!, trim: C.y!, legs: C.K!, accessories: ['sash'] },
+  cane_cutter: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xa89c86, trim: C.o!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
+
   // Zetwal, the present.
   gaze_keeper: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true, accessories: ['staff'] },
   soup_vendor: { skin: C.s!, hair: HAIR_DARK, hairStyle: 'cropped', outfit: C.o!, trim: C.y!, legs: C.B!, headgear: 'wrap', headgearColor: C.o!, accessories: ['apron'] },
@@ -252,6 +260,7 @@ const portrait = (look: string, background = SKY): PlaceholderPortrait => ({ loo
 export const PORTRAITS: Record<string, PlaceholderPortrait> = {
   ...Object.fromEntries(Object.keys(NPC_SPRITES).map((k) => [k, portrait(k, k.startsWith('echo_') ? SEPIA : SKY)])),
   sign: { background: 0x3e2614, art: 'sign' },
+  book: { background: 0x3e2614, art: 'shelf' },
   villager: portrait('villager', 0x2e4a2a),
   keeper: portrait('keeper', 0x4a3a1e),
   fisher: portrait('fisher', 0x1e3a4a),

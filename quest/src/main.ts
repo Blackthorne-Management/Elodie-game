@@ -64,7 +64,8 @@ if (isTouchDevice()) {
 const runtime: Runtime = {
   maps,
   rawMaps,
-  logic: new GameLogic(maps, CONTENT, newGame(startMap, start.spawn)),
+  // The encounter dice: a new seed each session (the engine itself never calls Math.random).
+  logic: new GameLogic(maps, CONTENT, newGame(startMap, start.spawn), Date.now() >>> 0),
   input: new InputManager(sources),
   storage: browserStorage(),
   hints: new HintTracker(

@@ -67,6 +67,10 @@ export function zetwalTown(): MapSource {
   }
   g.rect(31, 17, 2, 1, 'B');
 
+  // Doors to the new sections: the Hall of the Accord on the plaza, the east gate to the Cane Road.
+  g.set(23, 4, 'D');
+  g.set(39, 19, 'D');
+
   // ---- The Echo: fifty years ago ----------------------------------------------------------------
   const e = g.map({
     '.': '"',
@@ -116,6 +120,8 @@ export function zetwalTown(): MapSource {
     npc('echo_drummer', 18, 6, 'down', { era: 'echo' }),
 
     { layer: 'doors', name: 'town_house', x: 5, y: 5, props: { target: 'house_front', map: 'zetwal-house', exit: 'down' } },
+    { layer: 'doors', name: 'town_hall', x: 23, y: 4, props: { target: 'hall_out', map: 'zetwal-hall', exit: 'down' } },
+    { layer: 'doors', name: 'town_gate', x: 39, y: 19, props: { target: 'road_gate', map: 'zetwal-road', exit: 'left' } },
     { layer: 'doors', name: 'town_temple', x: 38, y: 9, props: { target: 'temple_bridge', map: 'zetwal-temple', exit: 'left' } },
 
     { layer: 'spawns', name: 'start', x: 8, y: 10, props: { facing: 'right', era: 'present' } },

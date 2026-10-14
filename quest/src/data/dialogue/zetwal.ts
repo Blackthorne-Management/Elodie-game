@@ -833,4 +833,63 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [{ text: "Morning tide. Don't be late, or I'll let the hutia pack for you." }],
     },
   }),
+
+  // ---- The new sections: the Temple Archive, the Hall of the Accord, the Cane Road ----------------
+  script('archivist_talk', {
+    start: { lines: [], next: [{ if: { flag: 'lore.zetwal_ash_wars_temple' }, to: 'ash' }, { to: 'first' }] },
+    first: {
+      speaker: 'archivist',
+      lines: [
+        { text: 'Festival day, Gigi, and you come to work? The archive is open to anyone today. Read what you like.' },
+        { text: 'The history shelf needs sorting. Three books on the Ash Wars, and no two agree on anything.' },
+      ],
+    },
+    ash: {
+      speaker: 'archivist',
+      lines: [
+        { text: 'You read the temple record of Cendre ford. Forty dead, not four hundred.' },
+        { text: 'Somebody wanted the Lord of Ardencia feared. Your grandmother has opinions about who. She will not share them with me.' },
+      ],
+    },
+  }),
+
+  simple('hall_clerk_talk', [
+    say('hall_clerk', 'The Hall keeps a copy of the Sun Accord for any citizen who asks. That is the law, and I am proud of it.'),
+    say('hall_clerk', 'The original? Sealed in the vault. Only the Head of State and the Marshal have ever read all of it.'),
+    say('hall_clerk', 'Your mother left me a list of things to do while she is at the Throne. It is longer than the Accord.'),
+  ]),
+
+  simple('cane_cutter_talk', [
+    say('cane_cutter', 'Going east, archivist? Keep to the road and keep moving.'),
+    say('cane_cutter', 'Bandits by day, smugglers by night. And lately those veiled folk, asking the young ones if they feel alone.'),
+    say('cane_cutter', 'If the cane goes quiet around you, run. The cane is never quiet.'),
+  ]),
+
+  script('road_watcher_talk', {
+    start: {
+      speaker: 'road_watcher',
+      lines: [
+        { text: 'Hush. The road is loud enough without us.' },
+        { text: 'Your little sister is very quiet, isn\'t she? Quiet people are precious to us.' },
+      ],
+      choices: [
+        { text: 'Stay away from her.', next: 'warn' },
+        { text: 'Who are you?', next: 'who' },
+      ],
+    },
+    warn: { speaker: 'road_watcher', lines: [{ text: 'We only ever listen. You should try it.' }] },
+    who: { speaker: 'road_watcher', lines: [{ text: 'No one. That is the point of us.' }] },
+  }),
+
+  simple('road_sign', [
+    { text: 'THE CANE ROAD. East: the old sugar mill and the mangroves. Travel in company. Travel by day.' },
+  ]),
+
+  simple('smuggler_crates', [
+    { text: 'Crates stamped with the Crown seal, hidden under cane leaves. Muskets, by the weight. Someone is waiting for a buyer.' },
+  ]),
+
+  simple('mill_ruin', [
+    { text: 'The old sugar mill, burned in the war and never rebuilt. Fresh ashes in the hearth: someone sleeps here.' },
+  ]),
 ];

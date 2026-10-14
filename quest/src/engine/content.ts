@@ -44,6 +44,27 @@ export interface Messages {
   leaveEcho: string;
 }
 
+/** One kind of ambush in a wild section: who jumps out, and how it reads before the fight. */
+export interface EncounterGroup {
+  id: string;
+  /** Relative chance within its table (default 1). */
+  weight?: number;
+  /** The foes, by name, for the battle (Phase 3) and the stand-in. */
+  foes: readonly string[];
+  /** The line shown when they appear. */
+  intro: string;
+  /** The line shown after winning (until Phase 3 battles exist, the stand-in ends here). */
+  won: string;
+  /** The line shown after running away. */
+  fled: string;
+}
+
+/** The ambushes a wild section can throw at the player (map layer `encounters`, property `table`). */
+export interface EncounterTable {
+  id: string;
+  groups: readonly EncounterGroup[];
+}
+
 export interface GameContent {
   npcs: Readonly<Record<string, NpcDef>>;
   dialogue: Readonly<Record<string, DialogueScript>>;
@@ -54,6 +75,8 @@ export interface GameContent {
   objects?: Readonly<Record<string, ObjectInfo>>;
   /** Name labels for doors, by `<map id>/<door id>` or a bare door id ("Limyè house"). */
   doors?: Readonly<Record<string, string>>;
+  /** Random encounter tables, by id. */
+  encounters?: Readonly<Record<string, EncounterTable>>;
 }
 
 export function cardFlag(card: CardDef): string {

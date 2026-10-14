@@ -71,6 +71,8 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   g: { ground: 'grass', deco: 'name_stone', solid: true },
   G: { ground: 'grass_old', deco: 'name_stone', solid: true },
   '|': { ground: 'path_old', deco: 'scaffold', solid: true },
+  i: { ground: 'cane', solid: false },
+  I: { ground: 'cane_old', solid: false },
 };
 
 export class Grid {
@@ -127,7 +129,7 @@ export class Grid {
   }
 }
 
-export type LayerName = 'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors' | 'puzzle_objects';
+export type LayerName = 'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors' | 'puzzle_objects' | 'encounters';
 
 export interface ObjSpec {
   layer: LayerName;
@@ -146,7 +148,7 @@ export interface MapSource {
   objects: ObjSpec[];
 }
 
-const OBJECT_LAYER_ORDER: readonly LayerName[] = ['npcs', 'doors', 'triggers', 'spawns', 'echo_zones', 'anchors', 'puzzle_objects'];
+const OBJECT_LAYER_ORDER: readonly LayerName[] = ['npcs', 'doors', 'triggers', 'spawns', 'echo_zones', 'anchors', 'puzzle_objects', 'encounters'];
 const TYPE_FOR: Record<LayerName, string> = {
   npcs: 'npc',
   doors: 'door',
@@ -155,6 +157,7 @@ const TYPE_FOR: Record<LayerName, string> = {
   echo_zones: 'echo_zone',
   anchors: 'anchor',
   puzzle_objects: 'puzzle_object',
+  encounters: 'encounter_zone',
 };
 
 export function gidOf(name: string): number {
@@ -213,6 +216,7 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
             }
           : {}),
       }));
+    if (name === 'encounters' && objects.length === 0) continue; // only maps with a wild section have it
     layers.push({ id: layerId++, name, type: 'objectgroup', x: 0, y: 0, opacity: 1, visible: true, draworder: 'topdown', objects } as never);
   }
   const tiled = {

@@ -313,6 +313,10 @@ export class FieldScene extends Phaser.Scene {
         case 'card':
           this.showCard();
           break;
+        case 'encounter':
+          // An ambush: a red flash before the foes speak (the battle screen replaces this in Phase 3).
+          this.cameras.main.flash(250, 180, 40, 40);
+          break;
       }
     }
     if (changeMap) {

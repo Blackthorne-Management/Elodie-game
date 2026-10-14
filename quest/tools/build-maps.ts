@@ -6,12 +6,15 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { toTiled, type MapSource } from './maps/painter.ts';
+import { zetwalArchive } from './maps/zetwal-archive.ts';
+import { zetwalHall } from './maps/zetwal-hall.ts';
 import { zetwalHouse } from './maps/zetwal-house.ts';
+import { zetwalRoad } from './maps/zetwal-road.ts';
 import { zetwalTemple } from './maps/zetwal-temple.ts';
 import { zetwalTown } from './maps/zetwal-town.ts';
 import { MAPS_DIR } from './validate-maps.ts';
 
-export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple];
+export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad];
 
 /** The generated files, as `[path, text]`. */
 export function buildMaps(dir: string = MAPS_DIR): [string, string][] {

@@ -2,6 +2,7 @@
 // Phase 2 brief); everyone else is named by role only.
 
 import type { Speaker } from '../engine/dialogue.ts';
+import { BOOK_SPEAKERS } from './books.ts';
 
 const s = (id: string, name: string, portrait: string = id): Speaker => ({ id, name, portrait });
 
@@ -49,4 +50,13 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   echo_guard: s('echo_guard', 'Guard'),
   echo_builder: s('echo_builder', 'Builder'),
   echo_lampwright: s('echo_lampwright', 'Lampwright'),
+
+  // The new Zetwal sections: the Temple Archive, the Hall of the Accord, the Cane Road.
+  archivist: s('archivist', 'Senior archivist'),
+  hall_clerk: s('hall_clerk', 'Hall clerk', 'clerk'),
+  cane_cutter: s('cane_cutter', 'Cane cutter'),
+  road_watcher: s('road_watcher', 'Veiled woman', 'quiet_crown_f_brown'),
+
+  // Every lore book reads under its own title.
+  ...BOOK_SPEAKERS,
 };

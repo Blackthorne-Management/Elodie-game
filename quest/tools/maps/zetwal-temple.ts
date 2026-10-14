@@ -19,6 +19,7 @@ export function zetwalTemple(): MapSource {
   g.rect(3, 14, 3, 1, 'f').rect(22, 13, 3, 1, 'f');
   for (const [x, y] of [[3, 4], [4, 12], [8, 15], [21, 15], [25, 9], [24, 3], [26, 14], [5, 16], [3, 6]] as const) g.set(x, y, 'T');
 
+  g.set(10, 2, 'D'); // the archive door, in the temple's north-west corner
   const e = g.map({ '.': '"', ',': ';', f: '"', T: 'Y', Q: '|', q: ';', g: 'G', l: 'l' });
   e.rect(14, 3, 2, 1, 'l');
   e.set(11, 2, ';');
@@ -34,6 +35,7 @@ export function zetwalTemple(): MapSource {
     npc('echo_lampwright', 13, 3, 'right', { era: 'echo' }),
 
     { layer: 'doors', name: 'temple_bridge', x: 1, y: 9, props: { target: 'town_temple', map: 'zetwal-town', exit: 'right' } },
+    { layer: 'doors', name: 'temple_archive', x: 10, y: 2, props: { target: 'archive_out', map: 'zetwal-archive', exit: 'down' } },
     { layer: 'spawns', name: 'temple_start', x: 3, y: 9, props: { facing: 'right', era: 'present' } },
     trigger('temple_arrive', 2, 9, { dialogue: 'temple_arrive', flag: 'story.temple_arrived', once: true, onEnter: true }),
 

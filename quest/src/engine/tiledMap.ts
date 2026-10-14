@@ -79,10 +79,12 @@ export const OBJECT_LAYERS = {
   echoZones: 'echo_zones',
   anchors: 'anchors',
   puzzleObjects: 'puzzle_objects',
+  encounters: 'encounters',
 } as const;
 
 export const REQUIRED_TILE_LAYERS: readonly string[] = Object.values(TILE_LAYERS);
-export const REQUIRED_OBJECT_LAYERS: readonly string[] = Object.values(OBJECT_LAYERS);
+/** Every object layer but `encounters`, which only maps with a wild section have. */
+export const REQUIRED_OBJECT_LAYERS: readonly string[] = Object.values(OBJECT_LAYERS).filter((l) => l !== OBJECT_LAYERS.encounters);
 
 /** The visible tile layers for an era, bottom to top (the shared `above` layer is drawn separately). */
 export function visibleLayersFor(era: Era): readonly string[] {
@@ -163,6 +165,18 @@ export interface EchoZone {
 }
 
 /**
+ * Encounter zone (the wild section of a capital: bandits, crooks, cultists): while the player walks
+ * here in the present, each step may start a fight from the encounter table `table`
+ * (data/encounters.ts). `if` gates it (for example, no ambushes before the story allows).
+ */
+export interface EncounterZone {
+  id: string;
+  area: Rect;
+  table: string;
+  if?: Condition;
+}
+
+/**
  * Anchor (guide 6.1): marks the one Echo-era puzzle object whose change carries back to the present.
  * Using that object sets `flag` (an `anchor.` flag); present-era objects read it.
  */
@@ -206,6 +220,7 @@ export interface GameMap {
   echoZones: EchoZone[];
   anchors: Anchor[];
   objects: PuzzleObject[];
+  encounters: EncounterZone[];
 }
 
 export function getProp(obj: { properties?: TiledProperty[] }, name: string): FlagValue | undefined {
@@ -332,6 +347,12 @@ export function parseMap(id: string, raw: TiledMap): GameMap {
       pos: objectTile(o, size),
       object: stringProp(o, 'object') ?? '',
       flag: stringProp(o, 'flag') ?? '',
+    })),
+    encounters: objects(raw, OBJECT_LAYERS.encounters).map((o) => ({
+      id: o.name,
+      area: objectRect(o, size),
+      table: stringProp(o, 'table') ?? '',
+      if: condProp(o),
     })),
     objects: objects(raw, OBJECT_LAYERS.puzzleObjects).map((o) => ({
       id: o.name,

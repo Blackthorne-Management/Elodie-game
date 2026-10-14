@@ -24,7 +24,7 @@ export interface MapSpec {
   /** Rows of '.' (open) and '#' (blocked) for the present collision layer. */
   present?: string[];
   echo?: string[];
-  objects?: Partial<Record<'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors' | 'puzzle_objects', TiledObject[]>>;
+  objects?: Partial<Record<'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors' | 'puzzle_objects' | 'encounters', TiledObject[]>>;
 }
 
 function collide(rows: string[] | undefined, w: number, h: number): number[] {
@@ -61,6 +61,7 @@ export function makeMap(spec: MapSpec = {}): TiledMap {
       { type: 'objectgroup', name: 'echo_zones', objects: objects.echo_zones ?? [] },
       { type: 'objectgroup', name: 'anchors', objects: objects.anchors ?? [] },
       { type: 'objectgroup', name: 'puzzle_objects', objects: objects.puzzle_objects ?? [] },
+      ...(objects.encounters ? [{ type: 'objectgroup' as const, name: 'encounters', objects: objects.encounters }] : []),
     ],
   };
 }
