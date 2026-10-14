@@ -177,7 +177,7 @@ describe('combat and death (Sections 6 and 9)', () => {
     g.s.turn!.moved = true;
     return { g, a, b };
   };
-  it('at 6+ players no attack deals more than 2 damage, bonuses included (rules-decisions 77)', () => {
+  it('at 6+ players Heart Tokens count as at most 2 when dealing damage; bonuses still add (rules-decisions 87)', () => {
     const g = newGame(6);
     const [a, b] = g.s.players;
     b.pos = { x: a.pos!.x, y: a.pos!.y + 1 };
@@ -185,11 +185,11 @@ describe('combat and death (Sections 6 and 9)', () => {
     startTurn(g, 0);
     g.s.turn!.moved = true;
     b.maxHp = b.hp = 10;
-    a.mark = b.id;                                               // La Marca would make it 4
+    a.mark = b.id;                                               // La Marca adds 1 on top of the 2
     drive(g.basicAttack(a, b));
-    expect(b.hp).toBe(8);
-    expect(g.damageCap()).toBe(2);
-    expect(newGame(4).damageCap()).toBeGreaterThan(3);
+    expect(b.hp).toBe(7);
+    expect(g.heartCap()).toBe(2);
+    expect(newGame(4).heartCap()).toBeGreaterThan(3);
   });
   it('deals damage equal to the attacker\'s Heart Tokens', () => {
     const { g, a, b } = duelists();
@@ -622,9 +622,9 @@ describe('houses', () => {
       const v = g.p(0);
       expect(v.legacy).toBeTruthy();
       expect(['vaitama', 'brasador', 'dorini']).not.toContain(v.legacy);
-      expect(g.passives(v)).toContainEqual({ house: v.legacy, level: 1 });
+      expect(g.passives(v)).toContainEqual({ house: v.legacy, level: 1, legacy: true });
       v.gen = 3;
-      expect(g.passives(v)).toContainEqual({ house: v.legacy, level: 2 });   // grows at Gen III
+      expect(g.passives(v)).toContainEqual({ house: v.legacy, level: 2, legacy: true });   // grows at Gen III
     }
     const all = newGame(8, ['vaitama', 'brasador', 'dorini', 'ironvow', 'suzumori', 'kaysoley', 'agnivansh', 'stillwater']);
     expect(all.p(0).legacy).not.toBe('vaitama');                               // all eight play: any other house
@@ -662,7 +662,7 @@ describe('houses', () => {
     expect(a.res.wealth).toBe(0);
     expect(s.used.reckoningCancel).toBe(1);
   });
-  it('Unbroken: the first killing blow on each Stillwater heir at full Heart Tokens leaves 1 (rules-decisions 83)', () => {
+  it('Unbroken: the first killing blow on each Stillwater heir leaves 1 (rules-decisions 83, 87)', () => {
     const g = newGame(2, ['brasador', 'stillwater']);
     const [a, s] = g.s.players;
     s.pos = { x: a.pos!.x, y: a.pos!.y + 1 };

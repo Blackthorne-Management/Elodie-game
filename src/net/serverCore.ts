@@ -5,7 +5,7 @@ import { CONTENT } from '../data';
 import { Runner } from '../engine/runner';
 import { makeRng } from '../engine/rng';
 import { botChoose } from '../ai/bot';
-import { dealHouses, houseRing, neighbours, pickOrder } from '../engine/houseChoice';
+import { dealHouses, houseRing, pickOrder } from '../engine/houseChoice';
 import type { TwoPlayerMode } from '../engine/houseChoice';
 import type { Decision, GameSetup, GameState, HouseId, Pos } from '../engine/types';
 import type { GameView, LobbyView, SessionStatus, SeatInfo } from './protocol';
@@ -43,12 +43,13 @@ const ELODIE = ['elodie', 'lolo', 'lodie'];
 const HOUSE_IDS = Object.keys(CONTENT.houses) as HouseId[];
 const RING = houseRing(Object.fromEntries(HOUSE_IDS.map(h => [h, CONTENT.houses[h].home])) as Record<HouseId, Pos>);
 const battle = (s: Session) => s.total === 2 && s.twoMode === 'battle';
-// The houses the next picker may take: any free house, or in Battle the neighbours of the house already picked.
+// The houses the next picker may take: any free house.
 export function pickable(s: Session): HouseId[] {
-  const free = HOUSE_IDS.filter(h => !s.seats.some(x => x.house === h));
-  const first = s.seats.find(x => x.house)?.house;
-  return battle(s) && first ? free.filter(h => neighbours(RING, first).includes(h)) : free;
+  return HOUSE_IDS.filter(h => !s.seats.some(x => x.house === h));
 }
+// How many seats pick: everyone, except in a 2-player Battle, where only the first picks and the second house comes
+// from the die (rules-decisions 87).
+const picksNeeded = (s: Session) => (battle(s) ? 1 : s.pickOrder?.length ?? 0);
 const houseName = (h: HouseId) => CONTENT.houses[h].name.replace('House ', '');
 
 export function createSession(env: Env, code: string, name: string, total: number, humans: number, twoMode: TwoPlayerMode = 'race'): { session: Session; token: string } {
@@ -117,19 +118,18 @@ export function startSession(env: Env, s: Session, seat: number) {
 }
 
 function autoPickBots(env: Env, s: Session) {
-  while (s.status === 'picking' && s.pickOrder && s.pickIndex < s.pickOrder.length && s.seats[s.pickOrder[s.pickIndex]].bot) {
+  while (s.status === 'picking' && s.pickOrder && s.pickIndex < picksNeeded(s) && s.seats[s.pickOrder[s.pickIndex]].bot) {
     const free = pickable(s);
     s.seats[s.pickOrder[s.pickIndex]].house = free[Math.floor(env.rand() * free.length)];
     s.pickIndex++;
   }
-  if (s.status === 'picking' && s.pickOrder && s.pickIndex >= s.pickOrder.length) beginGame(env, s);
+  if (s.status === 'picking' && s.pickOrder && s.pickIndex >= picksNeeded(s)) beginGame(env, s);
 }
 
 export function pickHouse(env: Env, s: Session, seat: number, house: HouseId) {
   if (s.status !== 'picking' || !s.pickOrder) fail('It is not time to pick houses.');
   if (s.pickOrder![s.pickIndex] !== seat) fail('It is not your pick yet.');
   if (!HOUSE_IDS.includes(house) || s.seats.some(x => x.house === house)) fail('That house is taken.');
-  if (!pickable(s).includes(house)) fail('In Battle, pick a house next to the first one.');
   s.seats[seat].house = house;
   s.pickIndex++;
   autoPickBots(env, s);
@@ -189,7 +189,7 @@ export function lobbyView(s: Session, seat: number): LobbyView {
   return {
     code: s.code, status: s.status, total: s.total, humans: s.humans, me: seat, host: seat === 0, seats,
     pickAgreed: pickAgreed(s), pickOrder: s.pickOrder, pickRolls: s.pickRolls,
-    pickTurn: s.status === 'picking' && s.pickOrder ? s.pickOrder[s.pickIndex] ?? null : null, version: s.version,
+    pickTurn: s.status === 'picking' && s.pickOrder && s.pickIndex < picksNeeded(s) ? s.pickOrder[s.pickIndex] ?? null : null, version: s.version,
     twoMode: s.total === 2 ? s.twoMode ?? 'race' : null, pickable: s.status === 'picking' ? pickable(s) : null,
   };
 }

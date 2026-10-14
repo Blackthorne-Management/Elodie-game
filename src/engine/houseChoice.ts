@@ -44,13 +44,14 @@ export function neighbours(ring: HouseId[], h: HouseId): [HouseId, HouseId] {
 }
 
 // Deal houses to seats: seats with a pick get it; everyone else draws blind from the houses left.
-// Battle (2 players, `ring` given): the second house is one of the first's two neighbours; a die picks which
-// (1-3 anticlockwise, 4-6 clockwise) unless a player picked it.
+// Battle (2 players, `ring` given): the first player's house is picked or drawn; the second house ALWAYS comes from the
+// die, 1-3 the anticlockwise neighbour, 4-6 the clockwise one, even when the table is picking (rules-decisions 87).
+// A pick for the second seat is ignored.
 export function dealHouses(all: HouseId[], seats: number, picks: (HouseId | null)[], rng: Rng, ring?: HouseId[]): HouseId[] {
   if (ring && seats === 2) {
-    const first = picks[0] ?? picks[1] ?? shuffle(all, rng)[0];
     const firstSeat = picks[0] || !picks[1] ? 0 : 1;
-    const other = picks[1 - firstSeat] ?? neighbours(ring, first)[rollD6(rng) <= 3 ? 0 : 1];
+    const first = picks[firstSeat] ?? shuffle(all, rng)[0];
+    const other = neighbours(ring, first)[rollD6(rng) <= 3 ? 0 : 1];
     return firstSeat === 0 ? [first, other] : [other, first];
   }
   const taken = new Set(picks.filter((h): h is HouseId => !!h));

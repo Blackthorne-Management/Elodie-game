@@ -340,13 +340,16 @@ These came up in code and weren't covered above; all confirmed as they stand.
   the Throne, but only a player eligible to claim can't be attacked there, can't attack from there and can't die
   there. Chosen over "you may only move onto the Throne while eligible" because rivals don't have to police movement
   and it also covers a player who drops below the threshold while sitting there. Switch:
-  `TUNING.sanctuaryEligibleOnly`.
+  `TUNING.sanctuaryEligibleOnly`. **Kept and extended by [87]:** you may no longer end your own move on the Throne
+  unless eligible.
 - **Adopted: no attack deals more than 2 damage at 6+ players [77]** (1,000 bot games at each of 2, 3, 4, 6 and 8
   players, three options). At 8 players a Specter appeared in 86% of games (3.1 per game, the first around round 7).
   With the cap: 70% (2.3 per game, the first around round 9); at 6 players 75% → 52% (1.6 → 1.0). Game length doesn't
   change. Capping every player count was rejected: 2-player games already have too few deaths (1.5 → 1.1 per game).
   The cap covers basic attacks, attack cards, Challenge blows and the Sudden Death duel, bonuses included; Heart Token
   loss that isn't an attack is not capped. Switches: `TUNING.bigTablePlayers`, `TUNING.bigTableMaxDamage`.
+  **Cap wording superseded by [87]:** the flat "no attack deals more than 2, bonuses included" is gone; at 6+ players
+  your Heart Tokens count as at most 2 when you deal damage and bonuses add on top (`TUNING.bigTableHeartCap`).
 - **Adopted: Ironvow's extra movement ends at Gen III [78]**, where the 2-square reach replaces it instead of adding to
   it. With the cap in [77], Ironvow became the strongest house at big tables (1.15× at 6 players, 1.26× at 8). Delaying
   the reach or Raider's Charge to Gen III did nothing; removing the +1 entirely sank it to 0.76× at 3–4 players. With
@@ -375,7 +378,8 @@ These came up in code and weren't covered above; all confirmed as they stand.
   table agrees before drawing houses. **Race:** houses as usual (often far apart; about 4 games in 10 with no death).
   **Battle:** the two houses must be neighbours on the board (deaths 1.5 → 2.3 a game; about 3 in 10 with no death).
   In Battle by lottery, one crest is drawn for one player and a die gives the other the neighbour anticlockwise (1–3)
-  or clockwise (4–6); when picking, the first picks any house and the second one of its two neighbours. Can't agree:
+  or clockwise (4–6); when picking, the first picks any house and the second one of its two neighbours (**superseded by
+  [87]:** the die always gives the second house, even when picking). Can't agree:
   Race. In the app: a Race/Battle choice on the solo screen and when hosting a 2-player game. The neighbours come
   from where the home tiles sit round the board (`houseRing` in `src/engine/houseChoice.ts`).
 - **Adopted: Yaguana's Ancestor's Voice and Stillwater's Unbroken [83]** (second review: both houses did nothing
@@ -387,7 +391,8 @@ These came up in code and weren't covered above; all confirmed as they stand.
     (any other house when all eight play), every heir keeps it, and it works at its Gen III strength from Gen III.
   - Stillwater "Quiet Hours" (no action at Gen I: +1 Influence): 1.23×. "Stone Walls" (first attack each round
     deals 1 less): 1.15×; once per heir: 1.14×; once per heir without The Long Watch: 1.04× but leaves Gen II empty.
-    **Adopted: Unbroken:** the first attack that would kill each heir while at full Heart Tokens leaves them at 1.
+    **Adopted: Unbroken:** the first attack that would kill each heir while at full Heart Tokens leaves them at 1
+    (**amended by [87]:** from 2 or more Heart Tokens, once per heir).
     Patience (cancel a Reckoning, once per game) moves to the Gen III upgrade. Stillwater 1.02× (0.97–1.05×); it saves
     a Stillwater heir about once every five games.
   With [76]–[83], every house wins 0.81–1.14× its fair share at every player count (3,000 games per count).
@@ -460,7 +465,7 @@ These came up in code and weren't covered above; all confirmed as they stand.
     - 25, 48, 103: "give a card of your choice; take a random card from their hand". 53 Broker's Fee: "Look at two
       other players' hands. Choose one card from each; they swap them." (engine: the hands are now shown).
     - 50 Stolen Goods: random card from the discard pile → "They look through the Hand Card discard pile and take any
-      one card." (engine changed).
+      one card." (engine changed). **Superseded by [87]:** no return clause.
     - 88 Night of Shadows, 108 Stolen Secrets: the review's prints.
     - 101 Whispers at Court: "most recently gained Influence" → "The player with the most Influence loses 1
       Influence. (Tie: no effect.)" 110 Loose Lips: "most Hand Cards played" → "The player to your left reveals
@@ -490,6 +495,72 @@ These came up in code and weren't covered above; all confirmed as they stand.
   moves to the type line), the player banner, the house sheet, the duel screen and the rule guide. Seven portrait
   prompts in docs/art/CHARACTER-PROMPTS.md were rewritten to match (Brasador II–IV, Kay Soley IV, Yaguana IV,
   Suzumori IV, Stillwater IV). No rule or ability changes.
+- **Adopted: the second design review [87]** (docs/REVIEW-2026-10-second.md, the owner's decisions). Old → new:
+  - **Throne entry (N3):** [76] stays (the sanctuary protects only a player eligible to claim) and now **you may not end
+    your own move on the Throne unless you are eligible to claim**: not your roll-and-move, extra moves, your own
+    movement cards (Bridge the Gap; Hidden Path and Homeward Bound never reach it), the steps an Instant offers you
+    (Grand Market, Elodie's Memory, Risky Crossing) or your abilities (Agni ki Shakti's step, Rakt Ki Pyaas, Vanish).
+    Passing through is fine and staying put is always allowed. Under Ayatsuri the puppeteer picks the direction but the
+    mover still picks where to stop, so the Throne is left out. A rival's card or effect may still put you there
+    (Forced March, Forced Retreat); you get no protection unless eligible. Engine: `Game.mayStopOn` filters the
+    options (bots and the app never see an illegal square; the app's "Stop here" button greys out on the Throne).
+    Switch: `TUNING.throneEntryEligibleOnly`. (Was: anyone could stop there.)
+  - **Big tables (N1):** "no attack deals more than 2 damage, bonuses included" ([77]) → "with 6+ players your Heart
+    Tokens count as at most 2 when you deal damage; bonuses (Agnivansh +1, La Marca, Dread Banner, Marked for Death,
+    Brasador's downside) still add". Fixed-damage card attacks (Cursed Dagger, Shadow Strike, Elodie's Trial, Ambush: 1)
+    are unchanged. Challenge blows use the same rule; the Sudden Death duel counts Heart Tokens as at most 2 (it already
+    ignored bonuses). `TUNING.bigTableMaxDamage` → `TUNING.bigTableHeartCap`; `Game.damageCap()` →
+    `Game.heartCap()` / `heartDamage()`. The bots' damage estimates use the same limit.
+  - **Unbroken (N2):** "the first attack that would kill each heir while at full Heart Tokens leaves them at 1" →
+    "Once per heir, an attack that would kill you while you hold 2 or more Heart Tokens leaves you at 1 instead. A
+    Blocked attack does not use it up."
+  - **Battle (N5):** in two-player Battle the second house **always** comes from the die (1–3 the anticlockwise
+    neighbour, 4–6 the clockwise one), even when the table is picking: the first player picks or draws any house and
+    the second never chooses. (Was: when picking, the second picked one of the two neighbours; supersedes that part of
+    [82].) `dealHouses` ignores a pick for the second seat; online, a 2-player Battle picking session has one pick turn
+    and the server deals the second house by the die.
+  - **Brasador's Legacy card (N4):** held as a Legacy, Sangre Ardiente reads "+1 Fear on kill." from the start (was:
+    "From Gen III: +1 Fear on kill", dead for two generations). Data-driven: `HouseDef.legacyPassive` (text and hooks),
+    used whenever a house's passive is held as a Legacy card: Yaguana's Ancestor's Voice and also **Song of Coaybay**
+    (Yaguana IV takes a fallen house's Gen I passive for good, the same physical card). **Guaíza** is not a Legacy: it
+    copies a living player's passive as it stands at their generation, so it keeps the normal text. Brasador's own
+    passive is unchanged. The house sheet's "Legacy:" line and the rule guide show the Legacy text.
+  - **Stolen Goods (50, N7):** "Take a random card from an adjacent player's hand. They look through the Hand Card
+    discard pile and take any one card." ([84]) → "Take a random card from an adjacent player's hand." The robbed
+    player draws back up at the end of their own turn as with any card taken. Bot value raised to match.
+  - **Wording (N8):** Turnabout adds "The new target may not Counterspell or Turnabout it." (the engine already
+    worked this way, now tested). Sanctuary adds "Eligible means that player's own number: Kay Soley needs less." The
+    Instant discard pile may be kept face up (the online view already shows it to everyone; hands and the draw pile
+    stay masked). The score pad drops the "fallen houses" column (kills and Reckonings only).
+  - **Grito de Guerra (N8):** the box has 2 Grito markers, so **Brasador can have at most 2 players marked at once**:
+    a marker goes on the silenced player and comes back when their next Fear gain is skipped (or their character
+    dies); a player carries at most one; with both out, Grito de Guerra waits for one to come back. Chosen over "move
+    a marker" because it needs no extra decision and matches the components exactly. `GRITO_MARKERS` in
+    src/config.ts. (Was: no limit.)
+  - **Rulebook split (N6, no rule change):** `src/data/rules.ts` is now a **core** part (story, components, setup,
+    your turn, first three turns, resources, cards, combat, death and succession, winning: 1,597 words, 1,527 without
+    the opening legend), an **appendix** (components in detail, choosing houses, two players, moving, trading, the deck
+    and both discard piles, Reactions, combat and death in detail, the Specter, house powers, Challenges, Sudden
+    Death, rulings: 2,852 words) and a **reference card** (the turn, the ◎ Target cards, lasting-card durations: 198
+    words) for the player reference cards. The rule guide groups its contents the same way.
+  - **Not adopted:** the last-tile crest marker (review item 5); the app keeps tracking the last tile scored.
+  - **Balance check** (2,000 bot games at each count, the same seeds before → after; win share ÷ fair share):
+
+    | Players | Agnivansh | Brasador | Dorini | Ironvow | Kay Soley | Stillwater | Suzumori | Yaguana | Rounds | Sudden Death | Deaths | Specter games | Unbroken saves per Stillwater game |
+    |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+    | 2 | 0.92 → 0.93 | 0.93 → 0.89 | 1.10 → 1.13 | 1.07 → 1.06 | 0.87 → 0.86 | 1.01 → 1.00 | 1.02 → 1.03 | 1.08 → 1.09 | 9.45 → 9.45 | 10.9% → 11.3% | 1.42 → 1.40 | 5% → 5% | 0.31 → 0.45 |
+    | 3 | 0.93 → 0.88 | 0.91 → 0.93 | 1.18 → **1.23** | 0.95 → 0.87 | 0.96 → 1.01 | 1.02 → 1.03 | 1.01 → 1.02 | 1.02 → 1.01 | 9.13 → 9.05 | 4.2% → 4.2% | 3.73 → 3.62 | 20% → 18% | 0.45 → 0.74 |
+    | 4 | 1.05 → 1.04 | 0.94 → 0.91 | 1.01 → 1.03 | 0.92 → 0.85 | 0.91 → 0.88 | 1.08 → 1.18 | 0.98 → 1.00 | 1.12 → 1.10 | 10.58 → 10.61 | 8.2% → 8.6% | 6.59 → 6.49 | 36% → 36% | 0.62 → 1.01 |
+    | 6 | 0.98 → 1.04 | 0.89 → 0.89 | 0.94 → 0.90 | 1.10 → **1.22** | 1.05 → 1.03 | 0.97 → 0.99 | 0.97 → 0.89 | 1.11 → 1.03 | 10.72 → 10.44 | 7.3% → 6.8% | 12.36 → 11.26 | 53% → 44% | 0.00 → 1.02 |
+    | 8 | 1.15 → 1.08 | 0.97 → 0.95 | 0.99 → 1.04 | 0.98 → 1.08 | 1.18 → 1.10 | 0.88 → 0.93 | 0.95 → 0.94 | 0.88 → 0.88 | 10.72 → 10.79 | 7.2% → 7.3% | 20.17 → 19.90 | 68% → 68% | 0.00 → 1.44 |
+
+    Outside 0.80–1.20×: **Dorini at 3 players (1.23×)** and **Ironvow at 6 players (1.22×)**. A second sample of
+    4,000 games on other seeds gives Dorini 1.18 → 1.19 at 3 and Ironvow 1.04 → 1.10 at 6, with Agnivansh 1.05 → 1.18
+    and Suzumori 0.94 → 0.84 at 6 (pooled 6,000 games after: Dorini 1.20 at 3; Ironvow 1.14, Agnivansh 1.13,
+    Suzumori 0.86 at 6). Dorini at 2–3 players is the standing small-table outlier (the review's N9), barely moved.
+    At 6 players the heart cap's bonuses help the two attack-bonus/mobility houses: watch Ironvow and Agnivansh at
+    6. Not retuned. Unbroken now saves a Stillwater heir about once a game at every count (it never fired at 6–8);
+    Stillwater stays 0.89–1.18×. Fewer deaths and Specter games at 6 players, game length unchanged.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

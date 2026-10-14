@@ -45,6 +45,10 @@ export const TRADE = { offer: true, refusedUsesAction: true };
 // Safety cap on blows in one Challenge fight or duel (each blow is at least 1 damage, so real fights end long before).
 export const MAX_FIGHT_BLOWS = 60;
 
+// Grito de Guerra markers in the box (rules-decisions 87): Brasador can have at most this many players marked at once;
+// with every marker out, Grito de Guerra waits until one is used up.
+export const GRITO_MARKERS = 2;
+
 // Specter (Section 10).
 export const SPECTER_CHOICES = 5;
 
@@ -53,11 +57,15 @@ export const TUNING = {
   tileAlone: 3,          // resources from a tile when you're alone on it
   tileShared: 2,         // ...when someone else is there too
   maxDamage: 99,         // cap on the damage of one attack (99 = no cap)
-  // Big tables (rules-decisions 77): from this many players, no attack or duel blow deals more than bigTableMaxDamage.
+  // Big tables (rules-decisions 77, 87): from this many players, your Heart Tokens count as at most bigTableHeartCap
+  // when you deal damage (basic attacks, Challenge blows, the Sudden Death duel); bonuses still add on top.
   bigTablePlayers: 6,
-  bigTableMaxDamage: 2,
+  bigTableHeartCap: 2,
   // The Throne's sanctuary protects only players eligible to claim (rules-decisions 76). false = everyone (the old rule).
   sanctuaryEligibleOnly: true,
+  // You may not end your own move on the Throne unless you are eligible to claim; passing through is fine and a
+  // rival's card may still put you there (rules-decisions 87). false = anyone may stop there (the old rule).
+  throneEntryEligibleOnly: true,
   // On death: 'onePool' = lose half (rounded down) of one pool you choose (the rulebook);
   // 'allHalfUp' = lose half (rounded up) of every pool (an experiment).
   deathLoss: 'onePool' as 'onePool' | 'allHalfUp',

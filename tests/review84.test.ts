@@ -241,15 +241,14 @@ describe('card fixes', () => {
     expect(a.res).toEqual({ influence: 0, fear: 1, wealth: 1 });
     expect(b.res).toEqual({ influence: 0, fear: 3, wealth: 0 });
   });
-  it('Stolen Goods: the robbed player picks any card from the Hand Card discard pile', () => {
+  it('Stolen Goods: take a random card from an adjacent player, nothing back (rules-decisions 87)', () => {
     const { g, a, b } = table();
     b.hand = [41];
     g.s.handDiscard = [1, 2, 3];
-    g.s.instantDiscard = [112];
-    play(g, 50, d => (d.player === b.id ? d.options.findIndex(o => o.value === 2) : 0));
+    play(g, 50);
     expect(a.hand).toEqual([41]);
-    expect(b.hand).toEqual([2]);
-    expect(g.s.handDiscard).toEqual([1, 3, 50]);
+    expect(b.hand).toEqual([]);
+    expect(g.s.handDiscard).toEqual([1, 2, 3, 50]);
   });
   it('Black Market Contact swaps your hand for the top 3 of the Hand Card pile', () => {
     const { g, a } = table();

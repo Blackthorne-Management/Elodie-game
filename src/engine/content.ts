@@ -52,7 +52,7 @@ export interface PassiveHooks {
   stepOnLanded?: (level: number) => number;        // free steps after landing an attack
   peeksPerRound?: (level: number) => number;
   reckoningCancels?: (level: number) => number;
-  unbroken?: (level: number) => number;            // 1: the first attack that would kill this heir from full Heart Tokens leaves 1
+  unbroken?: (level: number) => number;            // 1: once per heir, a killing attack while at 2+ Heart Tokens leaves 1
 }
 
 export interface Ability {
@@ -81,6 +81,9 @@ export interface HouseDef {
   passiveName: string;
   passiveText: [string, string];                   // Gen I, Gen III upgrade
   passive: PassiveHooks;
+  // The passive as printed on this house's Legacy card, when another house holds it as a Legacy (Yaguana's Ancestor's
+  // Voice and Song of Coaybay). Omitted: the Legacy is the Gen I passive above (rules-decisions 87).
+  legacyPassive?: { text: string; hooks: PassiveHooks };
   passiveAbility?: Ability;                        // usable by anyone holding this passive (Suzumori's peek)
   abilities: Ability[];                            // generation abilities, cumulative
   // House rules that are not passives (cannot be copied).

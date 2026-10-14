@@ -316,7 +316,10 @@ hand(45, 'Vanishing Act', 'Movement', 'Gain 1 Wealth. After your next basic atta
 hand(46, 'Bridge the Gap', 'Movement', 'Move to any square within 5 spaces.',
   function* (g, p) {
     if (!p.pos) return;
-    const to = yield* g.ask(p, 'square', 'Bridge the Gap: move where?', squaresWithin(p.pos, 5).map(q => ({ label: `(${q.x + 1}, ${q.y + 1})`, value: q })));
+    // Your own move: never ending on the Throne unless you're eligible to claim (rules-decisions 87).
+    const squares = squaresWithin(p.pos, 5).filter(q => g.mayStopOn(p, q));
+    if (!squares.length) return;
+    const to = yield* g.ask(p, 'square', 'Bridge the Gap: move where?', squares.map(q => ({ label: `(${q.x + 1}, ${q.y + 1})`, value: q })));
     g.moveTo(p, to, 'bridges the gap');
   });
 hand(47, 'Homeward Bound', 'Movement', 'Teleport to your owned tile.',
@@ -339,8 +342,9 @@ hand(49, 'Uneasy Trade', 'Barter', 'Give any player 1 resource and take 1 differ
     g.lose(p, give, 1, c.name); g.gain(t, give, 1, c.name);
     g.lose(t, take, 1, c.name); g.gain(p, take, 1, c.name);
   }, { playable: (g, p) => others(g, p).some(o => g.tradeGives(p, o).length > 0) });
-// Stolen Goods (rules-decisions 84): the robbed player picks any card from the Hand Card discard pile.
-hand(50, 'Stolen Goods', 'Barter', "Take a random card from an adjacent player's hand. They look through the Hand Card discard pile and take any one card.",
+// Stolen Goods (rules-decisions 87): a plain theft; the return clause of 84 is gone (the robbed player draws back to 3
+// at the end of their own turn).
+hand(50, 'Stolen Goods', 'Barter', "Take a random card from an adjacent player's hand.",
   function* (g, p, c) {
     const t = yield* pickTarget(g, p, c, withCards(g.adjacentTo(p)), 'rob whom?');
     if (!t?.hand.length) return;
@@ -348,13 +352,6 @@ hand(50, 'Stolen Goods', 'Barter', "Take a random card from an adjacent player's
     t.hand = t.hand.filter(x => x !== took);
     p.hand.push(took);
     g.log(`${p.name} takes a card from ${t.name}.`, 'barter', { player: p.id, target: t.id });
-    const pile = g.s.handDiscard;
-    if (pile.length) {
-      const back = yield* g.ask(t, 'card', `${c.name}: take any card from the Hand Card discard pile`,
-        [...pile].reverse().map(x => ({ label: g.card(x).name, value: x })));
-      g.s.handDiscard = pile.filter(x => x !== back);
-      t.hand.push(back);
-    }
     yield* g.enforceHandCap(p);
   }, { aggressive: true, playable: (g, p) => withCards(g.adjacentTo(p)).length > 0 });
 hand(51, 'Fair Exchange', 'Barter', 'You and target player each gain 1 Wealth.',

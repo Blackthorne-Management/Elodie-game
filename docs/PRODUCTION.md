@@ -22,11 +22,11 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 | 9 | **Resource tokens** | 180 round double-sided chipboard tokens, 60 each of Influence (crown), Fear (crossed swords) and Wealth (coins): **1** on the front, **×5** on the back | `print/tokens/*.png` (to build) | Icons ✔ |
 | 9b | **Round marker** | 1 wooden cube or pawn for the board's round track | stock piece | — |
 | 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 Grito de Guerra markers, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/*.png` (to build) | — |
-| 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive (Yaguana's Ancestor's Voice draws one blind from the houses not at the table) | `print/legacy/*.png` (to build) | Crests |
-| 10c | **Score pad** | 50-sheet pad, one column per player: kills, Reckonings, fallen houses (read by Sudden Death, Reinado de Cenizas, Elodie's Reckoning and Yaguana's Legacies) | `print/scorepad.pdf` (to build) | — |
+| 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive, except Brasador's, which reads "+1 Fear on kill." (rules-decisions 87; `legacyPassive` in `src/data/houses.ts`). Yaguana's Ancestor's Voice draws one blind from the houses not at the table | `print/legacy/*.png` (to build) | Crests |
+| 10c | **Score pad** | 50-sheet pad, one column per player: kills and Reckonings (read by Sudden Death, Reinado de Cenizas and Elodie's Reckoning; the fallen-houses column was dropped in rules-decisions 87) | `print/scorepad.pdf` (to build) | — |
 | 11 | **Dice** | 2 six-sided dice (stock, or custom-printed faces) | stock / `print/dice/*.png` | — |
-| 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`) | `print/rulebook.pdf` (to build) | Board, card and portrait art for pictures |
-| 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards) | `print/characters/reference-*.png` (to build) | — |
+| 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`): the **core rules** (about 1,600 words, what a first game needs) first, then the **appendix** (rules-decisions 87) | `print/rulebook.pdf` (to build) | Board, card and portrait art for pictures |
+| 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards), printed from the **Reference Card** section of `src/data/rules.ts`: the turn, the ◎ Target card list and the lasting-card durations (these live on the card, not in the booklet; rules-decisions 87). | `print/characters/reference-*.png` (to build) | — |
 
 ## Resource tokens: how many
 Showing a total uses (total ÷ 5) tokens on the ×5 side plus (the remainder) on the 1 side, so any total up to 24 takes

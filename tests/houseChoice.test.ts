@@ -45,6 +45,17 @@ describe('two players: Race or Battle (rules-decisions 82)', () => {
       expect(['kaysoley', 'ironvow']).toContain(d);
     }
   });
+  it('Battle: the second house always comes from the die, never a pick (rules-decisions 87)', () => {
+    const seen = new Set<string>();
+    for (let s = 1; s < 200; s++) {
+      // A pick for the second seat is ignored: the die decides between the two neighbours.
+      const [first, second] = dealHouses(ALL, 2, ['brasador', 'kaysoley'], makeRng(s), ring);
+      expect(first).toBe('brasador');
+      expect(['vaitama', 'kaysoley']).toContain(second);
+      seen.add(second);
+    }
+    expect(seen.size).toBe(2);                            // both neighbours come up
+  });
   it('Race deals as usual: any two houses', () => {
     const pairs = new Set<string>();
     for (let s = 1; s < 200; s++) pairs.add(dealHouses(ALL, 2, [null, null], makeRng(s)).sort().join());

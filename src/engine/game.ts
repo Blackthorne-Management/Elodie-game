@@ -334,23 +334,32 @@ export class Game {
 
   // ---------------------------------------------------------------- passives
 
-  // Every passive a player holds, with its level (1 = Gen I text, 2 = Gen III upgrade).
-  passives(p: PlayerState): { house: HouseId; level: number }[] {
-    const out = [{ house: p.house, level: p.gen >= 3 ? 2 : 1 }];
+  // Every passive a player holds, with its level (1 = Gen I text, 2 = Gen III upgrade). `legacy`: held as a Legacy
+  // card (Ancestor's Voice, Song of Coaybay), which reads the house's legacyPassive when it has one (rules-decisions 87).
+  // Guaíza copies a living player's passive as it stands, so it is not a Legacy.
+  passives(p: PlayerState): { house: HouseId; level: number; legacy?: boolean }[] {
+    const out: { house: HouseId; level: number; legacy?: boolean }[] = [{ house: p.house, level: p.gen >= 3 ? 2 : 1 }];
     const up = this.house(p).legacyUpgradeAt;
-    if (p.legacy && p.legacy !== p.house) out.push({ house: p.legacy, level: up && p.gen >= up ? 2 : 1 });
-    if (p.extraPassive) out.push({ house: p.extraPassive, level: 1 });
+    if (p.legacy && p.legacy !== p.house) out.push({ house: p.legacy, level: up && p.gen >= up ? 2 : 1, legacy: true });
+    if (p.extraPassive) out.push({ house: p.extraPassive, level: 1, legacy: true });
     const mask = this.findEffect('mask', p.id);
     if (mask?.house) out.push({ house: mask.house, level: mask.level ?? 1 });
     return out;
+  }
+  // The text of a house's Legacy card.
+  legacyText(h: HouseId) {
+    const def = this.house(h);
+    return def.legacyPassive?.text ?? def.passiveText[0];
   }
   passiveLevel(p: PlayerState, house: HouseId) {
     return Math.max(0, ...this.passives(p).filter(x => x.house === house).map(x => x.level));
   }
   hook<K extends keyof PassiveHooks>(p: PlayerState, name: K, ...args: unknown[]): number {
     let sum = 0;
-    for (const { house, level } of this.passives(p)) {
-      const fn = this.house(house).passive[name] as ((...a: unknown[]) => number) | undefined;
+    for (const { house, level, legacy } of this.passives(p)) {
+      const def = this.house(house);
+      const hooks = (legacy && def.legacyPassive?.hooks) || def.passive;
+      const fn = hooks[name] as ((...a: unknown[]) => number) | undefined;
       if (fn) sum += name === 'tileBonus' ? fn(args[0], level) : fn(level);
     }
     return sum;
@@ -420,9 +429,20 @@ export class Game {
     return THRONE_SANCTUARY && onThrone(p.pos) && (!TUNING.sanctuaryEligibleOnly || this.eligible(p));
   }
 
-  // The most damage one attack or duel blow can deal: no cap normally, 2 at big tables (rules-decisions 77).
-  damageCap() {
-    return this.s.players.length >= TUNING.bigTablePlayers ? Math.min(TUNING.maxDamage, TUNING.bigTableMaxDamage) : TUNING.maxDamage;
+  // Big tables (rules-decisions 87, replacing the flat cap of 77): your Heart Tokens count as at most
+  // TUNING.bigTableHeartCap when you deal damage. Bonuses add on top; fixed-damage card attacks are unaffected.
+  heartCap() {
+    return this.s.players.length >= TUNING.bigTablePlayers ? TUNING.bigTableHeartCap : Infinity;
+  }
+  // The damage your Heart Tokens deal before bonuses.
+  heartDamage(hp: number) {
+    return Math.min(hp, this.heartCap());
+  }
+
+  // Throne entry (rules-decisions 87): you may not end your own move on the Throne unless eligible to claim. Passing
+  // through is fine, and a rival's card may still put you there.
+  mayStopOn(p: PlayerState, q: Pos) {
+    return !TUNING.throneEntryEligibleOnly || !onThrone(q) || this.eligible(p);
   }
 
   // ---------------------------------------------------------------- cards and hands
@@ -559,7 +579,11 @@ export class Game {
       if (opts.full) {
         if (room > 0) options.push({ label: `${cap(d)} ${room}`, value: { d, n: room } });
       } else {
-        for (let n = 1; n <= room; n++) options.push({ label: `${cap(d)} ${n}`, value: { d, n } });
+        // A move you choose yourself can't end on the Throne unless you're eligible (rules-decisions 87).
+        for (let n = 1; n <= room; n++) {
+          if (chooser.id === p.id && !this.mayStopOn(p, step(p.pos, d, n))) continue;
+          options.push({ label: `${cap(d)} ${n}`, value: { d, n } });
+        }
       }
     }
     if (!options.length) return;
@@ -574,7 +598,8 @@ export class Game {
     if (!p.pos || max <= 0) return;
     const from = p.pos;
     const options: Option<Pos | null>[] = [{ label: 'Stay here', value: null }];
-    for (const q of squaresWithin(from, max)) options.push({ label: label(q), value: q });
+    // Pass through the Throne freely, but stop there only while eligible to claim (rules-decisions 87).
+    for (const q of squaresWithin(from, max)) if (this.mayStopOn(p, q)) options.push({ label: label(q), value: q });
     const to = yield* this.ask(p, 'move', why ?? `Move up to ${max} spaces`, options, { player: p.id, max, from, free: true });
     if (to) this.moveTo(p, to, 'moves');
   }
@@ -587,7 +612,7 @@ export class Game {
     const options: Option<Pos | null>[] = [{ label: 'Stay', value: null }];
     for (const d of DIR_NAMES) {
       const n = step(from, d);
-      if (inBoard(n) && manhattan(n, goal) < manhattan(from, goal)) options.push({ label: `Step ${d}`, value: n });
+      if (inBoard(n) && manhattan(n, goal) < manhattan(from, goal) && this.mayStopOn(p, n)) options.push({ label: `Step ${d}`, value: n });
     }
     const to = yield* this.ask(p, 'move', why, options, { player: p.id, from });
     if (to) this.moveTo(p, to, 'steps');
@@ -709,14 +734,15 @@ export class Game {
   // Resolve one attack. Returns whether it landed and how much it dealt.
   *attack(a: PlayerState, t: PlayerState, kind: AttackInfo['kind'], base?: number, unblockable = false): Flow<{ landed: boolean; damage: number }> {
     if (this.s.turn?.player === a.id) this.s.turn.aggressive = true;
-    let damage = base ?? a.hp;
+    // Damage = Heart Tokens (at most TUNING.bigTableHeartCap of them at big tables), plus bonuses; card attacks are fixed.
+    let damage = base ?? this.heartDamage(a.hp);
     if (kind === 'basic' || kind === 'challenge') damage += this.hook(a, 'basicAttackBonus');
     const dread = this.findEffect('dreadBanner', a.id);
     if (dread) { damage += 1; this.removeEffect(dread); }
     if (a.mark === t.id) damage += 1;   // La Marca
     if (this.house(t).mostFearedDownside?.(t.gen) && this.mostFeared()?.id === t.id) damage += 1;
     const marked = this.findEffect('markedForDeath', t.id);
-    const info: AttackInfo = { attacker: a.id, target: t.id, kind, damage: Math.min(this.damageCap(), damage + (marked ? 1 : 0)) };
+    const info: AttackInfo = { attacker: a.id, target: t.id, kind, damage: Math.min(TUNING.maxDamage, damage + (marked ? 1 : 0)) };
     this.log(`${a.name} attacks ${t.name}!`, 'attack', { player: a.id, target: t.id, amount: info.damage, tag: kind });
 
     // Block / Deflect window.
@@ -744,8 +770,9 @@ export class Game {
     if (marked) this.removeEffect(marked);
     let dealt = info.damage;
     if (outcome === 'survive1') dealt = Math.max(0, Math.min(dealt, t.hp - 1));
-    // Stillwater's Unbroken: the first attack that would kill this heir from full Heart Tokens leaves 1 (rules-decisions 83).
-    if (dealt >= t.hp && t.hp === t.maxHp && t.used.unbroken !== t.gen && this.hook(t, 'unbroken') > 0) {
+    // Stillwater's Unbroken: once per heir, an attack that would kill them while they hold 2 or more Heart Tokens leaves
+    // them at 1 (rules-decisions 83, 87). A negated (Blocked) attack never gets here, so it doesn't use it up.
+    if (dealt >= t.hp && t.hp >= 2 && t.used.unbroken !== t.gen && this.hook(t, 'unbroken') > 0) {
       t.used.unbroken = t.gen;
       dealt = t.hp - 1;
       this.log(`Unbroken: ${t.name} stands firm with 1 Heart Token.`, 'block', { player: t.id });
@@ -1229,13 +1256,13 @@ export class Game {
     this.log(this.s.endReason, 'win', { player: winner.id });
   }
 
-  // Tie-break duel: trade blows (damage = current HP, no bonuses) until one falls. Earlier in turn order strikes
+  // Tie-break duel: trade blows (damage = current HP, at most TUNING.bigTableHeartCap at big tables, no bonuses) until one falls. Earlier in turn order strikes
   // first. `hp` carries the Heart Tokens left between duels (it is updated in place).
   duel(a: PlayerState, b: PlayerState, hp: Record<number, number> = { [a.id]: a.hp, [b.id]: b.hp }): PlayerState {
     const [first, second] = this.s.order.indexOf(a.id) < this.s.order.indexOf(b.id) ? [a, b] : [b, a];
     for (let blow = 0; blow < MAX_FIGHT_BLOWS; blow++) {
       const [x, y] = blow % 2 === 0 ? [first, second] : [second, first];
-      hp[y.id] -= Math.min(this.damageCap(), Math.max(1, hp[x.id]));
+      hp[y.id] -= Math.min(TUNING.maxDamage, Math.max(1, this.heartDamage(hp[x.id])));
       this.log(`Duel: ${x.name} strikes ${y.name}.`, 'attack', { player: x.id, target: y.id });
       if (hp[y.id] <= 0) return x;
     }

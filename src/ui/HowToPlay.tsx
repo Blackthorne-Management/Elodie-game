@@ -167,7 +167,7 @@ const SLIDES: Slide[] = [
     'Attack a rival beside you, **or** play a Hand Card, **or** offer a rival a 1-for-1 resource trade they may refuse.',
     'Then draw back up to **3 cards**. House abilities are free extras.'] },
   { id: 'combat', title: 'Combat', pic: CombatPic, text: [
-    `**Damage equals your Heart Tokens**, so a wounded fighter hits weaker (at most ${TUNING.bigTableMaxDamage} with ${TUNING.bigTablePlayers} or more players). Attacking ends your turn.`,
+    `**Damage equals your Heart Tokens**, so a wounded fighter hits weaker (with ${TUNING.bigTablePlayers} or more players they count as at most ${TUNING.bigTableHeartCap}; bonuses still add). Attacking ends your turn.`,
     `No attacks during ${truce}, none onto or off the Throne against a player eligible to claim, and new heirs are safe for their first turn.`] },
   { id: 'cards', title: 'The Deck', pic: CardsPic, text: [
     '**Hand Cards** are held (up to 3). **Instants** resolve the moment they\'re drawn; ten are **Elodie** herself.',
@@ -179,7 +179,7 @@ const SLIDES: Slide[] = [
     'When Gen IV falls, your bloodline ends, but you haunt the game as a **Specter**.',
     'Once a round, replay an Instant from the **Instant discard pile** at any rival. Mischief only: **never damage**.'] },
   { id: 'throne', title: 'Claim the Throne', pic: ThronePic, text: [
-    'With enough resources **and** some of every pillar, stand on the Throne and **claim** it.',
+    'With enough resources **and** some of every pillar, stand on the Throne and **claim** it. Until then you may pass over it, but not stop there.',
     'Every other eligible rival may **challenge**: you fight each in turn. Survive them all and you win.'] },
   { id: 'sudden', title: 'Sudden Death', pic: SuddenPic, text: [
     `If no one has won by the end of **round ${SUDDEN_DEATH_ROUND}**, the highest combined total wins.`,

@@ -12,7 +12,7 @@ const HOLD: Record<number, number> = {
   1: 3, 2: 2, 3: 2.5, 4: 2.5, 5: 2, 6: 2, 7: 2, 8: 2.5, 9: 2, 10: 1.5, 11: 2, 12: 2, 13: 2, 14: 2,
   15: 3, 16: 1.5, 17: 2, 18: 3, 19: 2.5, 20: 2.5, 21: 2, 22: 2.5, 23: 2, 24: 2.5, 25: 1.5, 26: 2, 27: 3,
   28: 3.5, 29: 3, 30: 3, 31: 2, 32: 3.5, 33: 2.5, 34: 2, 35: 2, 36: 2, 37: 1.5, 38: 1.5, 39: 1, 40: 2,
-  41: 2, 42: 1.5, 43: 1, 44: 1.5, 45: 2, 46: 2.5, 47: 1.5, 48: 1, 49: 1, 50: 1.5, 51: 1.5, 52: 0.8, 53: 1,
+  41: 2, 42: 1.5, 43: 1, 44: 1.5, 45: 2, 46: 2.5, 47: 1.5, 48: 1, 49: 1, 50: 2, 51: 1.5, 52: 0.8, 53: 1,
   54: 1.5, 55: 2, 56: 2, 57: 2, 58: 4.5, 59: 5, 60: 4, 61: 4, 62: 4.8, 63: 3.5, 64: 4.5, 65: 4.5,
   121: 3, 122: 2, 123: 2.5, 124: 3.5, 125: 3, 126: 3.5,
 };
@@ -122,7 +122,7 @@ export function playScore(g: Game, p: PlayerState, id: number, pers: Personality
     }
     case 48: case 53: return 0.2;
     case 49: return forcedTradeGain(g, p, pers);  // Uneasy Trade: you pick both sides
-    case 50: return adj.some(o => o.hand.length) ? 1 : 0;
+    case 50: return adj.some(o => o.hand.length) ? 1.4 + 0.4 * pers.aggression : 0;   // a card for free (rules-decisions 87)
     case 51: return w('wealth') - 0.2;
     case 54: case 56: return stronger ? 1.8 : 0.1;
     case 55: return 1.5;

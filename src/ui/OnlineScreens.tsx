@@ -111,7 +111,7 @@ export function Lobby() {
         <h2 className="lobby-title">Choosing houses</h2>
         <section className="panel-card frame">
           <p className="small">Everyone agreed to pick. The dice decide who picks first, then picking goes clockwise.
-            {lobby.twoMode === 'battle' && ' Battle: the second house must be next to the first on the board.'}</p>
+            {lobby.twoMode === 'battle' && ' Battle: only the first player picks; the second house is the neighbour the die gives (1–3 anticlockwise, 4–6 clockwise).'}</p>
           {lobby.pickRolls && lobby.pickOrder && (
             <p className="small muted">
               Rolls: {lobby.pickRolls[0].map((n, j) => `${lobby.seats[j]?.name || `Seat ${j + 1}`} ${n}`).join(' · ')}
@@ -124,7 +124,7 @@ export function Lobby() {
               return (
                 <li key={seat} className={seat === turn ? 'now' : ''}>
                   <span>{x.name || `Seat ${seat + 1}`}{x.bot ? ' (bot)' : ''}{seat === lobby.me ? ' (you)' : ''}</span>
-                  <b>{x.house ? houseName(x.house) : seat === turn ? 'choosing…' : ''}</b>
+                  <b>{x.house ? houseName(x.house) : seat === turn ? 'choosing…' : lobby.twoMode === 'battle' ? 'by the die' : ''}</b>
                 </li>
               );
             })}
@@ -135,7 +135,7 @@ export function Lobby() {
                 <button key={h} type="button" role="radio" aria-checked={false} disabled={closed(h) || busy} className={closed(h) ? 'taken' : ''}
                   onClick={() => void pick(h)}>
                   <Emblem house={h} size={36} ring />
-                  <span><b>{houseName(h)}</b><small>{taken.has(h) ? 'Taken' : closed(h) ? 'Not a neighbour' : CONTENT.houses[h].identity}</small></span>
+                  <span><b>{houseName(h)}</b><small>{taken.has(h) ? 'Taken' : closed(h) ? 'Not available' : CONTENT.houses[h].identity}</small></span>
                 </button>
               ))}
             </div>
@@ -182,6 +182,7 @@ export function Lobby() {
       <section className="panel-card frame">
         <h3 className="lobby-h">Houses</h3>
         <p className="small">Houses are drawn by lottery unless <b>every</b> person agrees to pick. One "no" means the lottery.</p>
+        {lobby.twoMode === 'battle' && <p className="small">Battle: only the first house is drawn or picked. The second is always its neighbour by the die (1–3 anticlockwise, 4–6 clockwise).</p>}
         <label className="check">
           <input type="checkbox" checked={me?.vote ?? false} onChange={e => void vote(e.target.checked)} />
           <span>I'd like us to pick our houses</span>

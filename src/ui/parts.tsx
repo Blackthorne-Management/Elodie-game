@@ -102,8 +102,8 @@ export function HouseSheet({ game, p, onClose }: { game: Game; p: PlayerState; o
       <p className="lore">{h.lore}</p>
       <h3>Passive: {h.passiveName}</h3>
       <p>{h.passiveText[level - 1]}</p>
-      {p.legacy && p.legacy !== p.house && <p>Legacy: {game.house(p.legacy).passiveName} ({game.house(p.legacy).passiveText[0]})</p>}
-      {p.extraPassive && <p>Song of Coaybay: {game.house(p.extraPassive).passiveName}</p>}
+      {p.legacy && p.legacy !== p.house && <p>Legacy: {game.house(p.legacy).passiveName} ({game.legacyText(p.legacy)})</p>}
+      {p.extraPassive && <p>Song of Coaybay: {game.house(p.extraPassive).passiveName} ({game.legacyText(p.extraPassive)})</p>}
       {houseNotes(p.house).map(n => (
         <p key={n.name} className={p.gen >= n.gen ? '' : 'muted'}><b>Gen {roman(n.gen)} · {n.name}</b> — {n.text}</p>
       ))}

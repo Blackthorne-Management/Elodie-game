@@ -63,19 +63,39 @@ describe('online game server', () => {
     expect(new Set(s.setup!.seats.map(x => x.house)).size).toBe(5);
   });
 
-  it('a 2-player Battle: the second house must be a neighbour of the first (rules-decisions 82)', () => {
-    const e = env(11);
-    const { session: s } = createSession(e, 'BAT234', 'Ana', 2, 2, 'battle');
-    joinSession(e, s, 'Ben');
-    vote(s, 0, true); vote(s, 1, true);
-    startSession(e, s, 0);
-    expect(lobbyView(s, 0).twoMode).toBe('battle');
-    const first = s.pickOrder![0];
-    pickHouse(e, s, first, 'brasador');
-    expect(lobbyView(s, 0).pickable!.sort()).toEqual(['kaysoley', 'vaitama']);
-    expect(() => pickHouse(e, s, 1 - first, 'suzumori')).toThrow(/next to/);
-    pickHouse(e, s, 1 - first, 'vaitama');
-    expect(s.status).toBe('active');
+  it('a 2-player Battle: only the first player picks; the die gives the second house (rules-decisions 87)', () => {
+    const seconds = new Set<string>();
+    for (let i = 1; i < 30; i++) {
+      const e = env(10 + i);
+      const { session: s } = createSession(e, 'BAT234', 'Ana', 2, 2, 'battle');
+      joinSession(e, s, 'Ben');
+      vote(s, 0, true); vote(s, 1, true);
+      startSession(e, s, 0);
+      expect(lobbyView(s, 0).twoMode).toBe('battle');
+      const first = s.pickOrder![0];
+      expect(lobbyView(s, 0).pickTurn).toBe(first);
+      expect(() => pickHouse(e, s, 1 - first, 'suzumori')).toThrow(/not your pick/);
+      pickHouse(e, s, first, 'brasador');
+      expect(s.status).toBe('active');                     // no pick turn for the second seat
+      const second = s.setup!.seats[1 - first].house!;
+      expect(['kaysoley', 'vaitama']).toContain(second);
+      seconds.add(second);
+    }
+    expect(seconds.size).toBe(2);
+  });
+  it('a 2-player Battle with a bot picking first: the human second seat never picks', () => {
+    for (let i = 1; i < 20; i++) {
+      const e = env(40 + i);
+      const { session: s } = createSession(e, 'BOT234', 'Ana', 2, 1, 'battle');
+      vote(s, 0, true);
+      startSession(e, s, 0);
+      if (s.status === 'picking') {
+        expect(s.pickOrder![0]).toBe(0);                     // the human picks first; the bot gets the die
+        pickHouse(e, s, 0, 'dorini');
+        expect(['kaysoley', 'ironvow']).toContain(s.setup!.seats[1].house);
+      }
+      expect(s.status).toBe('active');
+    }
   });
   it('a 2-player Battle by lottery deals neighbours; Race is the default', () => {
     for (let i = 1; i < 30; i++) {

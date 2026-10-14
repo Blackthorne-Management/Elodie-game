@@ -1081,6 +1081,10 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .rg-toc ol { margin: 0; padding-left: 26px; columns: 2; column-gap: 14px; }
 .rg-toc li { color: var(--muted); font-size: 13px; }
 .rg-toc button { background: none; border: none; color: #e3d9c4; font: inherit; font-size: 15px; text-align: left; padding: 0; min-height: 36px; cursor: pointer; }
+.rg-toc-part { margin: 8px 0 0; }
+.rg-toc-part button { font-family: var(--display); color: var(--gold); font-size: 14px; letter-spacing: .06em; text-transform: uppercase; min-height: 44px; }
+.rg-part { scroll-margin-top: 8px; margin-top: 34px; text-align: center; border-top: 1px solid rgba(201, 162, 39, .35); padding-top: 14px; }
+.rg-part h2 { font-family: var(--display); color: var(--gold); font-size: 24px; margin: 0 0 4px; letter-spacing: .05em; }
 .rg-sec { scroll-margin-top: 8px; }
 .rg-sec > h2 { font-family: var(--display); color: var(--gold-hi); font-size: 21px; margin: 26px 0 8px; padding-bottom: 10px;
   background: url('/art/ui/divider.svg') left bottom / 220px 12px no-repeat; }

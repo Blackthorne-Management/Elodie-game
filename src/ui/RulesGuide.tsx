@@ -6,7 +6,7 @@ import type { HouseId } from '../engine/types';
 import { roman } from '../engine/game';
 import { CONTENT } from '../data';
 import { GEN_NOTES } from '../data/houses';
-import { RULES } from '../data/rules';
+import { RULES, RULE_PARTS } from '../data/rules';
 import type { RuleBlock } from '../data/rules';
 import { TILE_ART, UI_ART } from '../assets.config';
 import { CardFrame } from './CardFrame';
@@ -40,6 +40,8 @@ function House({ id }: { id: HouseId }) {
   const notes = Object.entries(GEN_NOTES[id] ?? {}).map(([gen, t]) => ({ gen: Number(gen), text: t as string }));
   const rows: { gen: number; node: ReactNode }[] = [
     { gen: 1, node: <><b>{h.passiveName}</b> (passive): {h.passiveText[0]}</> },
+    // The Legacy card reads differently when another house holds it (rules-decisions 87).
+    ...(h.legacyPassive ? [{ gen: 1, node: <><b>Legacy card</b> (held by House Yaguana): {h.legacyPassive.text}</> }] : []),
     { gen: 3, node: <><b>{h.passiveName}</b> upgrades: {h.passiveText[1]}</> },
     ...(h.passiveAbility ? [{ gen: h.passiveAbility.gen, node: <><b>{h.passiveAbility.name}:</b> {h.passiveAbility.text}</> }] : []),
     ...notes.map(n => ({ gen: n.gen, node: <Rich text={`**${n.text.replace(': ', ':** ')}`} /> })),
@@ -74,7 +76,14 @@ export function RulesGuide({ onClose }: { onClose: () => void }) {
     const s = q.trim().toLowerCase();
     return CONTENT.cards.filter(c => matchesKind(c, kind) && (!s || `${c.name} ${c.text} ${c.category}`.toLowerCase().includes(s)));
   }, [q, kind]);
-  const toc = [...RULES.map(r => ({ id: r.id, title: r.title })), { id: 'houses', title: 'The Eight Houses' }, { id: 'card-list', title: 'Every Card' }];
+  // Contents grouped like the booklet: the core rules, the appendix (with the houses and cards), the reference card.
+  const groups = RULE_PARTS.map(part => ({
+    ...part,
+    items: [
+      ...RULES.filter(r => r.part === part.id).map(r => ({ id: r.id, title: r.title })),
+      ...(part.id === 'appendix' ? [{ id: 'houses', title: 'The Eight Houses' }, { id: 'card-list', title: 'Every Card' }] : []),
+    ],
+  }));
   const go = (id: string) => body.current?.querySelector(`#rg-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   return (
@@ -89,15 +98,27 @@ export function RulesGuide({ onClose }: { onClose: () => void }) {
         <p className="rg-sub">The official rules</p>
         <nav className="rg-toc frame" aria-label="Contents">
           <h3>Contents</h3>
-          <ol>{toc.map(t => <li key={t.id}><button type="button" onClick={() => go(t.id)}>{t.title}</button></li>)}</ol>
+          {groups.map(gr => (
+            <Fragment key={gr.id}>
+              <h4 className="rg-toc-part"><button type="button" onClick={() => go(`part-${gr.id}`)}>{gr.title}</button></h4>
+              <ol>{gr.items.map(t => <li key={t.id}><button type="button" onClick={() => go(t.id)}>{t.title}</button></li>)}</ol>
+            </Fragment>
+          ))}
         </nav>
 
-        {RULES.map(sec => (
-          <section key={sec.id} id={`rg-${sec.id}`} className="rg-sec">
-            <h2>{sec.title}</h2>
-            {sec.blocks.map((b, i) => <Block key={i} b={b} />)}
-          </section>
-        ))}
+        {groups.map(gr => (
+          <Fragment key={gr.id}>
+            <header id={`rg-part-${gr.id}`} className="rg-part">
+              <h2>{gr.title}</h2>
+              <p className="muted small">{gr.intro}</p>
+            </header>
+            {RULES.filter(r => r.part === gr.id).map(sec => (
+              <section key={sec.id} id={`rg-${sec.id}`} className="rg-sec">
+                <h2>{sec.title}</h2>
+                {sec.blocks.map((b, i) => <Block key={i} b={b} />)}
+              </section>
+            ))}
+            {gr.id === 'appendix' && <>
 
         <section id="rg-houses" className="rg-sec">
           <h2>The Eight Houses</h2>
@@ -125,6 +146,9 @@ export function RulesGuide({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
         </section>
+            </>}
+          </Fragment>
+        ))}
         <p className="muted small rg-end">Bloodlines: The Race to Elodie's Grace</p>
       </div>
       {open && (

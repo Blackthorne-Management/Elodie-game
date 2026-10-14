@@ -145,9 +145,11 @@ export function PlayScreen() {
   const end = path.at(-1) ?? start;
   const stepsLeft = moveMode?.free ? moveMode.max - path.length : 0;
 
+  // The option that stops at `dest`, or -1 (the Throne is no stopping place unless you're eligible: rules-decisions 87).
+  const stopOption = (dest: Pos | null) => !mine || !moveMode || !dest ? -1
+    : mine.options.findIndex(o => o.value === null ? samePos(dest, moveMode.from) : 'x' in (o.value as object) ? samePos(o.value as Pos, dest) : false);
   function commitAt(dest: Pos) {
-    if (!mine || !moveMode) return;
-    const i = mine.options.findIndex(o => o.value === null ? samePos(dest, moveMode.from) : 'x' in (o.value as object) ? samePos(o.value as Pos, dest) : false);
+    const i = stopOption(dest);
     if (i >= 0) answer(i);
   }
 
@@ -255,7 +257,9 @@ export function PlayScreen() {
             </div>
             <div className="move-btns">
               <button type="button" className="act2" disabled={!path.length} onClick={() => setPath(p => p.slice(0, -1))}>↶ Undo step</button>
-              <button type="button" className="act2 gold" onClick={() => end && commitAt(end)}>{path.length ? 'Stop here' : 'Stay here'}</button>
+              <button type="button" className="act2 gold" disabled={stopOption(end) < 0} onClick={() => end && commitAt(end)}>
+                {stopOption(end) >= 0 ? (path.length ? 'Stop here' : 'Stay here') : 'Can\'t stop on the Throne'}
+              </button>
             </div>
           </>
         ) : moveMode ? (

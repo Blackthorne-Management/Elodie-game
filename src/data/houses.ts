@@ -3,6 +3,7 @@ import type { Content, HouseDef } from '../engine/content';
 import type { HouseId, Pillar } from '../engine/types';
 import { PILLARS } from '../engine/types';
 import { cap } from '../engine/game';
+import { GRITO_MARKERS } from '../config';
 
 const others = (g: Parameters<NonNullable<HouseDef['abilities'][number]['run']>>[0], id: number) =>
   g.living().filter(o => o.id !== id);
@@ -17,6 +18,8 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     passiveName: 'Sangre Ardiente',
     passiveText: ['From Gen III: +1 Fear on kill.', '+1 Fear on kill.'],
     passive: { fearOnKill: level => (level >= 2 ? 1 : 0) },
+    // Held as a Legacy (Ancestor's Voice, Song of Coaybay) it works from the start (rules-decisions 87).
+    legacyPassive: { text: '+1 Fear on kill.', hooks: { fearOnKill: () => 1 } },
     abilities: [
       {
         id: 'laMarca', name: 'La Marca', gen: 1, limit: 'turn',   // from Gen I (rules-decisions 81)
@@ -29,8 +32,10 @@ export const HOUSES: Record<HouseId, HouseDef> = {
       },
       {
         id: 'gritoDeGuerra', name: 'Grito de Guerra', gen: 3, limit: 'turn',
-        text: 'Target player skips their next Fear gain.',
-        canUse: (g, p) => others(g, p.id).some(o => !g.findEffect('noFearGain', o.id, false)),
+        // Two Grito markers (rules-decisions 87): at most GRITO_MARKERS players marked at once.
+        text: `Put a Grito marker on a player: they skip their next Fear gain, then the marker comes back. You have ${GRITO_MARKERS} markers; with all of them out, wait for one to come back.`,
+        canUse: (g, p) => g.s.effects.filter(e => e.kind === 'noFearGain' && e.by === p.id).length < GRITO_MARKERS &&
+          others(g, p.id).some(o => !g.findEffect('noFearGain', o.id, false)),
         *run(g, p) {
           const t = yield* g.choosePlayer(p, others(g, p.id).filter(o => !g.findEffect('noFearGain', o.id, false)), 'Grito de Guerra: silence whose next Fear gain?');
           if (t) g.addEffect('noFearGain', t.id, { at: 'consumed' }, { by: p.id });
@@ -236,10 +241,10 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     heirs: ['Dame Agatha Stillwater', 'Thomas Stillwater', 'Lady Rosalind Stillwater', 'Edmund Stillwater'],
     passiveName: 'Unbroken',
     passiveText: [
-      'The first attack that would kill each heir while at full Heart Tokens leaves them at 1 instead.',
+      'Once per heir, an attack that would kill you while you hold 2 or more Heart Tokens leaves you at 1 instead. A Blocked attack does not use it up.',
       "Also, Stillwater's Patience: once per game, cancel a Reckoning bonus used against you.",
     ],
-    // rules-decisions 83 (was: Patience at Gen I, a second use at Gen III)
+    // rules-decisions 83, 87 (was: Patience at Gen I, a second use at Gen III; Unbroken needed full Heart Tokens)
     passive: { unbroken: () => 1, reckoningCancels: level => (level >= 2 ? 1 : 0) },
     longWatch: gen => gen >= 2,
     abilities: [],

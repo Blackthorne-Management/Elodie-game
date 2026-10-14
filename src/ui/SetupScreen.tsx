@@ -112,7 +112,7 @@ export function SetupScreen() {
         )}
         <p className="muted small">
           {picking
-            ? `You pick; the bots draw the other houses blind${players === 2 && twoMode === 'battle' ? ' (in Battle, the bot takes a house next to yours)' : ''}. At a table, picking needs every player to agree, and a dice roll decides who picks first.`
+            ? `You pick; the bots draw the other houses blind${players === 2 && twoMode === 'battle' ? ' (in Battle, the die gives the bot a house next to yours: 1–3 anticlockwise, 4–6 clockwise)' : ''}. At a table, picking needs every player to agree, and a dice roll decides who picks first.`
             : 'Houses are drawn blind. Unclaimed house tiles are free for anyone to farm.'}
         </p>
         <button type="button" className="big" disabled={picking && !pick} onClick={begin}>{hasSave ? 'Start a new game' : 'Begin'}</button>

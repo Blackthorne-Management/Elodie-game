@@ -79,7 +79,7 @@ export const leader = (g: Game, among: PlayerState[]) =>
   among.reduce((a, b) => (danger(g, b) > danger(g, a) ? b : a));
 
 function attackDamage(g: Game, a: PlayerState, t: PlayerState) {
-  return a.hp + g.hook(a, 'basicAttackBonus') + (a.mark === t.id ? 1 : 0) +
+  return g.heartDamage(a.hp) + g.hook(a, 'basicAttackBonus') + (a.mark === t.id ? 1 : 0) +
     (g.findEffect('dreadBanner', a.id) ? 1 : 0) + (g.findEffect('markedForDeath', t.id) ? 1 : 0);
 }
 
@@ -87,9 +87,9 @@ function attackDamage(g: Game, a: PlayerState, t: PlayerState) {
 export function winsFight(g: Game, a: PlayerState, b: PlayerState): boolean {
   let ha = a.hp, hb = b.hp;
   for (let i = 0; i < 20; i++) {
-    hb -= Math.max(1, ha + g.hook(a, 'basicAttackBonus'));
+    hb -= Math.max(1, g.heartDamage(ha) + g.hook(a, 'basicAttackBonus'));
     if (hb <= 0) return true;
-    ha -= Math.max(1, hb + g.hook(b, 'basicAttackBonus'));
+    ha -= Math.max(1, g.heartDamage(hb) + g.hook(b, 'basicAttackBonus'));
     if (ha <= 0) return false;
   }
   return true;
