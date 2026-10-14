@@ -21,8 +21,8 @@ const content: GameContent = {
     road: {
       id: 'road',
       groups: [
-        { id: 'bandits', weight: 3, foes: ['Bandit', 'Bandit'], intro: 'Bandits!', won: 'They flee.', fled: 'You run.' },
-        { id: 'hushers', weight: 1, foes: ['Husher'], intro: 'A Husher!', won: 'It fades.', fled: 'You run.' },
+        { id: 'bandits', weight: 3, level: 6, foes: ['Bandit', 'Bandit'], intro: 'Bandits!', won: 'They flee.', fled: 'You run.' },
+        { id: 'hushers', weight: 1, level: 9, foes: ['Husher'], intro: 'A Husher!', won: 'It fades.', fled: 'You run.' },
       ],
     },
   },

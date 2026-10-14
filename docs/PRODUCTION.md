@@ -32,7 +32,12 @@ and ticks items off here as they land. Last updated **Tue Oct 14**.
 
 **Quest art waiting on the owner:** young Patricio and Anicette (prompts given Oct 14). Still to write prompts for:
 Elodie the goddess, Elodie Limyè (the mother), Anicette young (the Echo) and old, Patricio young and old; later Benny,
-Caona, Rael. The quest's own dated schedule to Nov 22 is next (owner request, Oct 14).
+Caona, Rael.
+
+**The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòt Limyè and Chapter 1 finished with
+the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1
+and 2, **Sun Nov 22**. Your next quest asks: approve the secret items, side quests and intro storyboard by
+**Fri Oct 17**; art drop 1 (six character sets and three intro illustrations) by **Fri Oct 24**.
 
 ## What's in the box
 

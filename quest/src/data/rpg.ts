@@ -2,9 +2,11 @@
 // (engine/rpg.ts runs the rules). Owner decision (Oct 14): gold is what you spend; Influence, Wealth
 // and Fear are reputation scores per city and realm-wide; armies are military might.
 
-import { BAG_LIMIT, STARTING_GOLD } from '../config.ts';
+import { BAG_LIMIT, LEVELS, STARTING_GOLD, XP_PER_BOOK, XP_PER_OBJECTIVE } from '../config.ts';
+import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
+import { ACT1 } from './quests.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
 
@@ -19,20 +21,20 @@ const ITEM_LIST: ItemDef[] = [
 
   // Weapons.
   { id: 'archivist_staff', name: "Archivist's staff", kind: 'gear', slot: 'weapon', price: 80, stats: { mag: 3 }, users: ['gianna'], text: 'A plain staff of temple wood. Every junior archivist gets one.' },
-  { id: 'sunwood_staff', name: 'Sunwood staff', kind: 'gear', slot: 'weapon', price: 240, stats: { mag: 6, spd: 1 }, users: ['gianna'], text: 'Gold-grained wood that warms in the hand. Spells come easier.' },
+  { id: 'sunwood_staff', level: 4, name: 'Sunwood staff', kind: 'gear', slot: 'weapon', price: 240, stats: { mag: 6, spd: 1 }, users: ['gianna'], text: 'Gold-grained wood that warms in the hand. Spells come easier.' },
   { id: 'yaguana_bow', name: 'Yaguana bow', kind: 'gear', slot: 'weapon', price: 90, stats: { atk: 4 }, users: ['yari'], text: "Yari's own bow, strung with cord she twisted herself." },
-  { id: 'ironwood_bow', name: 'Ironwood bow', kind: 'gear', slot: 'weapon', price: 260, stats: { atk: 7, spd: 1 }, users: ['yari'], text: 'Dark, heavy ironwood. It hits like a hammer.' },
+  { id: 'ironwood_bow', level: 4, name: 'Ironwood bow', kind: 'gear', slot: 'weapon', price: 260, stats: { atk: 7, spd: 1 }, users: ['yari'], text: 'Dark, heavy ironwood. It hits like a hammer.' },
   { id: 'marshal_cutlass', name: 'Cutlass', kind: 'gear', slot: 'weapon', price: 120, stats: { atk: 5 }, users: ['patricio'], text: "The Marshal's cutlass, notched from the war." },
   { id: 'cane_machete', name: 'Cane machete', kind: 'gear', slot: 'weapon', price: 70, stats: { atk: 3 }, text: 'A cane cutter\'s blade. Anyone can swing it.' },
 
   // Armor.
   { id: 'archivist_robe', name: "Archivist's robe", kind: 'gear', slot: 'armor', price: 60, stats: { def: 2, sp: 4 }, users: ['gianna'], text: 'Blue with gold trim, ink on both cuffs.' },
   { id: 'woven_tunic', name: 'Woven tunic', kind: 'gear', slot: 'armor', price: 60, stats: { def: 3, hp: 5 }, users: ['yari'], text: 'Green cotton, woven tight on a Xaraguá loom.' },
-  { id: 'officer_coat', name: "Officer's coat", kind: 'gear', slot: 'armor', price: 150, stats: { def: 5, hp: 10 }, users: ['patricio'], text: 'Red wool and gold buttons, heavy as a promise.' },
-  { id: 'padded_vest', name: 'Padded vest', kind: 'gear', slot: 'armor', price: 140, stats: { def: 4, hp: 6 }, text: 'Quilted cotton over leather. Anyone can wear it.' },
+  { id: 'officer_coat', level: 1, name: "Officer's coat", kind: 'gear', slot: 'armor', price: 150, stats: { def: 5, hp: 10 }, users: ['patricio'], text: 'Red wool and gold buttons, heavy as a promise.' },
+  { id: 'padded_vest', level: 3, name: 'Padded vest', kind: 'gear', slot: 'armor', price: 140, stats: { def: 4, hp: 6 }, text: 'Quilted cotton over leather. Anyone can wear it.' },
 
   // Charms (guide 8: the sun-stitched cloth charm).
-  { id: 'sun_charm', name: 'Sun-stitched charm', kind: 'gear', slot: 'charm', price: 90, stats: { hp: 8, def: 1 }, text: 'A cloth charm stitched with a sun. In battle it will heal a little each turn.' },
+  { id: 'sun_charm', level: 2, name: 'Sun-stitched charm', kind: 'gear', slot: 'charm', price: 90, stats: { hp: 8, def: 1 }, text: 'A cloth charm stitched with a sun. In battle it will heal a little each turn.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
 ];
 
@@ -71,7 +73,9 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
 export const CITIES: Readonly<Record<string, CityDef>> = {
   zetwal: {
     id: 'zetwal',
-    name: 'Zetwal',
+    // The capital of the island nation of Zetwal (owner decision, Oct 14; Kreyol "Port of Light",
+    // to be checked by a fluent speaker).
+    name: 'Pòt Limyè',
     house: 'Kay Soley',
     sections: [
       { map: 'zetwal-house', name: 'Limyè house', box: { x: 0, y: 0, w: 3, h: 2 } },
@@ -114,4 +118,10 @@ export const RPG: RpgContent = {
   pillarRules: [{ pillar: 'influence', city: 'zetwal', flags: BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => loreFlag(b.id)), each: 1 }],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
+  // Chapter 1 has no fights: XP comes from the story's steps and the books read.
+  xpRules: [
+    { flags: ACT1.objectives.flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
+    { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
+  ],
+  levels: LEVELS,
 };

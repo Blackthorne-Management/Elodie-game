@@ -54,7 +54,7 @@ export class SideMap {
     }, 450);
   }
 
-  /** Show a map (and era); `place` is the name under it ("Zetwal: Festival Plaza"), empty for none. */
+  /** Show a map (and era); `place` is the name under it ("Pòt Limyè: Festival Plaza"), empty for none. */
   setMap(map: GameMap, raw: TiledMap, era: Era, place: string): void {
     this.map = map;
     this.colours = tileColours(map, raw, era);

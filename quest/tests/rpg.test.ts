@@ -20,10 +20,16 @@ import {
   removeItem,
   sell,
   sellPrice,
+  level,
+  levelBand,
+  levelForXp,
   stats,
+  tooHeavy,
   unequip,
+  xpForLevel,
   type RpgContent,
 } from '../src/engine/rpg.ts';
+import { rewardText, settleRewards, sideQuestStatus, visibleSteps, type SideQuestDef } from '../src/engine/sideQuests.ts';
 import { RPG } from '../src/data/rpg.ts';
 
 const rpg: RpgContent = {
@@ -45,6 +51,8 @@ const rpg: RpgContent = {
   pillarRules: [{ pillar: 'influence', city: 'z', flags: ['lore.a', 'lore.b'], each: 1 }],
   startingGold: 150,
   bagLimit: 5,
+  xpRules: [{ flags: ['step.one', 'step.two'], each: 25 }],
+  levels: { cap: 30, xpBase: 50, xpExponent: 1.6, gearUnderlevelShare: 0.5, bands: { trivial: 3, hard: 2, deadly: 5 } },
 };
 
 describe('gold and the pillars', () => {
@@ -84,7 +92,7 @@ describe('the party', () => {
     const f = new FlagStore();
     const gi = rpg.members[0]!;
     expect(stats(f, rpg, gi).mag).toBe(18); // 14 + staff 4
-    f.set('level.gi', 3);
+    f.set('xp.gi', 152); // level 3
     expect(stats(f, rpg, gi).mag).toBe(22); // 14 + 2 x 2 + 4
     expect(stats(f, rpg, gi).hp).toBe(50);
   });
@@ -182,5 +190,79 @@ describe('the game content', () => {
       expect(p.y).toBeGreaterThanOrEqual(0);
       expect(p.y).toBeLessThanOrEqual(100);
     }
+  });
+});
+
+describe('levels', () => {
+  it('follow the XP curve to the cap; the party shares story XP, each member adds their own', () => {
+    expect([1, 2, 3, 4, 5].map((n) => xpForLevel(rpg, n))).toEqual([0, 50, 152, 290, 459]);
+    expect(levelForXp(rpg, 49)).toBe(1);
+    expect(levelForXp(rpg, 50)).toBe(2);
+    expect(levelForXp(rpg, 10 ** 9)).toBe(30);
+    const f = new FlagStore({ 'step.one': true, 'step.two': true });
+    expect(level(f, rpg, 'gi')).toBe(2);
+    f.set('xp.gi', 102);
+    expect(level(f, rpg, 'gi')).toBe(3);
+    expect(level(f, rpg, 'pa')).toBe(2);
+  });
+
+  it('colour a foe against the party: grey, white, orange, red', () => {
+    expect(levelBand(rpg, 5, 1)).toBe('trivial');
+    expect(levelBand(rpg, 5, 6)).toBe('even');
+    expect(levelBand(rpg, 5, 7)).toBe('hard');
+    expect(levelBand(rpg, 5, 10)).toBe('deadly');
+  });
+
+  it('gear above your level is too heavy: half its bonus, rounded down', () => {
+    const heavy = { ...rpg, items: { ...rpg.items, staff2: { ...rpg.items.staff2!, level: 4 } } };
+    const f = new FlagStore({ 'item.staff2': 1 });
+    const gi = heavy.members[0]!;
+    equip(f, heavy, gi, 'staff2');
+    expect(tooHeavy(f, heavy, gi, heavy.items.staff2!)).toBe(true);
+    expect(stats(f, heavy, gi).mag).toBe(14 + 3); // 7 halved, rounded down
+    f.set('xp.gi', 291);
+    expect(stats(f, heavy, gi).mag).toBe(14 + 2 * 3 + 7);
+  });
+});
+
+describe('side quests', () => {
+  const q: SideQuestDef = {
+    id: 'lost_book',
+    title: 'The Lost Book',
+    giver: 'Archivist',
+    place: 'Temple Archive',
+    level: 2,
+    summary: 'Find a book.',
+    accepted: { flag: 'side.lost_book.accepted' },
+    steps: [
+      { text: 'Ask around.', done: { flag: 'side.lost_book.asked' } },
+      { text: 'Bring it back.', done: { flag: 'side.lost_book.returned' } },
+    ],
+    done: { flag: 'side.lost_book.returned' },
+    reward: { gold: 40, xp: 60, items: [{ id: 'charm', n: 1 }], pillar: { pillar: 'influence', city: 'z', amount: 1 } },
+  };
+
+  it('move from unknown to active to done, showing steps up to the current one', () => {
+    const f = new FlagStore();
+    expect(sideQuestStatus(f, q)).toBe('unknown');
+    f.set('side.lost_book.accepted', true);
+    expect(sideQuestStatus(f, q)).toBe('active');
+    expect(visibleSteps(f, q)).toEqual([{ text: 'Ask around.', done: false }]);
+    f.set('side.lost_book.asked', true);
+    expect(visibleSteps(f, q).map((s) => s.done)).toEqual([true, false]);
+    f.set('side.lost_book.returned', true);
+    expect(sideQuestStatus(f, q)).toBe('done');
+  });
+
+  it('pay their reward exactly once', () => {
+    const f = new FlagStore({ 'side.lost_book.accepted': true, 'side.lost_book.returned': true });
+    expect(settleRewards(f, rpg, [q]).map((x) => x.id)).toEqual(['lost_book']);
+    expect(gold(f, rpg)).toBe(190);
+    expect(level(f, rpg, 'gi')).toBe(2);
+    expect(itemCount(f, 'charm')).toBe(1);
+    expect(localPillar(f, rpg, 'influence', 'z')).toBe(1);
+    expect(settleRewards(f, rpg, [q])).toEqual([]);
+    expect(gold(f, rpg)).toBe(190);
+    expect(rewardText(q, rpg)).toBe('+40 gold, +60 XP, Charm, +1 influence');
   });
 });

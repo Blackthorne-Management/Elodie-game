@@ -51,6 +51,23 @@ export const ENCOUNTER_GRACE_STEPS = 18;
 export const STARTING_GOLD = 150;
 export const BAG_LIMIT = 24;
 
+/**
+ * Levelling (engine/rpg.ts). XP to reach level n is round(XP_BASE * (n - 1) ^ XP_EXPONENT): level 2 at
+ * 50, 3 at 152, 4 at 290, 5 at 459, 10 at 1683, 30 at about 11,000. Chapter 1 gives about 380 XP
+ * (level 3 to 4). Gear worn below its level gives GEAR_UNDERLEVEL_SHARE of its bonus. A foe's level
+ * against yours: TRIVIAL or more below is grey, HARD or more above is orange, DEADLY or more is red.
+ */
+export const LEVELS = {
+  cap: 30,
+  xpBase: 50,
+  xpExponent: 1.6,
+  gearUnderlevelShare: 0.5,
+  bands: { trivial: 3, hard: 2, deadly: 5 },
+} as const;
+/** Shared XP: each main-quest step done, and each lore book read. */
+export const XP_PER_OBJECTIVE = 25;
+export const XP_PER_BOOK = 10;
+
 /** The minimap (src/ui/SideMap.ts): how many tiles it shows across and down (CSS sizes it per layout). */
 export const SIDE_MAP = { tilesW: 32, tilesH: 24 } as const;
 

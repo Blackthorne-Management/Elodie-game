@@ -337,13 +337,13 @@ async function hintsAndJournal(browser, errors) {
   await page.waitForTimeout(2600);
   s = await snap(page);
   check(s.hint === first.hints[1] && s.mode === 'field', 'turned off in the menu, she stays quiet');
-  check(s.minimap === 'Zetwal: Festival Plaza', `the minimap names the place ("${s.minimap}")`);
+  check(s.minimap === 'Pòt Limyè: Festival Plaza', `the minimap names the place ("${s.minimap}")`);
   await menuTab(page, 'Status');
   s = await snap(page);
   check(s.menu.items.join(',') === 'Gianna,Anissa', `the menu's Status page shows the party (${s.menu.items.join(', ')})`);
   await page.keyboard.press('x');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
-  await menuTab(page, 'Journal');
+  await menuTab(page, 'Quests');
   s = await snap(page);
   check(s.menu.journal.some((l) => l === `Now: ${first.title}`), `the Journal lists the current objective ("${first.title}")`);
   await page.keyboard.press('x');
@@ -505,7 +505,7 @@ async function playAct(browser, errors) {
   check(s.flags['act1.complete'] === true && s.flags['card.act1_end'] === true, `played Act I to the end card in the browser (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
   check(s.flags['anchor.chain_bridge'] === true && s.flags['story.bridge_crossed'] === true, 'the bridge puzzle was solved through the Echo and its anchor');
   check(Object.keys(s.flags).every((f) => !f.startsWith('echo.')), 'no memory-only flags leaked into the present');
-  await menuTab(page, 'Journal');
+  await menuTab(page, 'Quests');
   const journal = (await snap(page)).menu.journal;
   check(journal.some((l) => l.startsWith('Something changed: The Chain Bridge')), 'the Journal notes "Something changed: The Chain Bridge ..."');
   await page.keyboard.press('x');

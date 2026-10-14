@@ -6,7 +6,11 @@
 import Phaser from 'phaser';
 import { UI, textureKeyForPortrait } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { ENCOUNTERS } from '../data/encounters.ts';
 import { RPG } from '../data/rpg.ts';
+import { SIDE_QUESTS } from '../data/sideQuests.ts';
+import { encounterFlag } from '../engine/game.ts';
+import { rewardText, sideQuestStatus, visibleSteps, type SideQuestDef } from '../engine/sideQuests.ts';
 import type { FlagStore } from '../engine/flags.ts';
 import {
   PILLARS,
@@ -23,6 +27,11 @@ import {
   globalPillar,
   gold,
   level,
+  levelBand,
+  partyLevel,
+  tooHeavy,
+  xp,
+  xpForLevel,
   localPillar,
   partyMembers,
   stats,
@@ -37,7 +46,7 @@ import type { InputManager } from '../input/actions.ts';
 import type { MenuItem } from './MenuPanel.ts';
 import type { PanelLine } from './TextPanel.ts';
 
-export const MENU_TABS = ['Status', 'Items', 'Equip', 'Map', 'Journal', 'System'] as const;
+export const MENU_TABS = ['Status', 'Items', 'Equip', 'Quests', 'Map', 'Foes', 'System'] as const;
 export type MenuTab = (typeof MENU_TABS)[number];
 
 export type MenuRequest = { kind: 'close' } | { kind: 'system'; id: string } | { kind: 'toast'; text: string };
@@ -58,7 +67,12 @@ const PILLAR_NAMES: Record<(typeof PILLARS)[number], string> = { influence: 'Inf
 const STAT_NAMES: Record<(typeof STAT_KEYS)[number], string> = { hp: 'HP', sp: 'SP', atk: 'ATK', def: 'DEF', mag: 'MAG', spd: 'SPD' };
 const SLOT_NAMES: Record<Slot, string> = { weapon: 'Weapon', armor: 'Armor', charm: 'Charm' };
 
-type Stage = 'top' | 'who' | 'slot' | 'pick';
+type Stage = 'top' | 'who' | 'slot' | 'pick' | 'read';
+
+/** Colours for a level against the party's: grey, white, orange, red. */
+const BAND_COLOURS = { trivial: '#8e8e9c', even: '#f4ecd8', hard: '#f0a040', deadly: '#e05050' } as const;
+
+type QuestEntry = { kind: 'main' } | { kind: 'side'; q: SideQuestDef };
 
 export class GameMenu {
   private readonly scene: Phaser.Scene;
@@ -115,7 +129,7 @@ export class GameMenu {
 
   snapshot(): { tab: string; items: string[]; cursor: number; journal: string[] | null } | null {
     if (!this.visible) return null;
-    return { tab: this.currentTab, items: [...this.labels], cursor: this.stage === 'top' ? this.cursor : this.subCursor, journal: this.currentTab === 'Journal' ? this.journalLines : null };
+    return { tab: this.currentTab, items: [...this.labels], cursor: this.stage === 'top' ? this.cursor : this.subCursor, journal: this.currentTab === 'Quests' ? this.journalLines : null };
   }
 
   /** Read this frame's presses and act on them. */
@@ -153,13 +167,14 @@ export class GameMenu {
 
   private back(): void {
     if (this.stage === 'pick') this.stage = 'slot';
-    else if (this.stage === 'slot' || this.stage === 'who') this.stage = 'top';
+    else if (this.stage === 'slot' || this.stage === 'who' || this.stage === 'read') this.stage = 'top';
+    this.scroll = 0;
     this.subCursor = 0;
   }
 
   private move(delta: number): void {
-    if (this.currentTab === 'Journal') {
-      this.scroll = Math.max(0, Math.min(Math.max(0, this.journalLines.length - ROWS), this.scroll + delta));
+    if (this.stage === 'read') {
+      this.scroll = Math.max(0, this.scroll + delta); // clamped when drawn
       return;
     }
     const n = this.listLength();
@@ -179,6 +194,10 @@ export class GameMenu {
         if (this.stage === 'slot') return SLOTS.length;
         if (this.stage === 'pick') return this.candidates().length + 1;
         return this.fighters().length;
+      case 'Quests':
+        return this.questEntries().length;
+      case 'Foes':
+        return this.foes().length;
       case 'System':
         return ctx.system().length;
       default:
@@ -240,6 +259,13 @@ export class GameMenu {
       case 'Map':
         this.mapView = this.mapView === 'city' ? 'realm' : 'city';
         return [];
+      case 'Quests':
+        // A: read the whole entry (up / down scroll it; B goes back to the list).
+        if (this.stage === 'top') {
+          this.stage = 'read';
+          this.scroll = 0;
+        }
+        return [];
       case 'System': {
         const item = ctx.system()[this.cursor];
         return item ? [{ kind: 'system', id: item.id }] : [];
@@ -300,7 +326,6 @@ export class GameMenu {
       if (on) g.fillStyle(0xf2d04b, 1).fillRect(x, 14, Math.ceil(t.width), 1);
       x += Math.ceil(t.width) + 10;
     });
-    this.text(VIEW_WIDTH - 54, 4, '< L / R >', UI.dimText);
 
     // The purse and the pillars: here (this city) and across the realm.
     const keys = Object.keys(ctx.flags.snapshot());
@@ -326,8 +351,11 @@ export class GameMenu {
       case 'Map':
         this.drawMap(g);
         break;
-      case 'Journal':
-        this.drawJournal();
+      case 'Quests':
+        this.drawQuests();
+        break;
+      case 'Foes':
+        this.drawFoes();
         break;
       case 'System':
         this.drawList(ctx.system().map((i) => i.label), this.cursor, 8, TOP + 2);
@@ -356,21 +384,23 @@ export class GameMenu {
       const key = textureKeyForPortrait(m.portrait);
       if (this.scene.textures.exists(key)) this.content.add(this.scene.add.image(8, y + 1, key).setOrigin(0, 0).setDisplaySize(22, 22));
       this.text(34, y + 2, m.name, on ? UI.accentText : UI.text);
-      this.text(34, y + 12, m.support ? 'Support' : `Lv ${level(ctx.flags, m.id)}`, UI.dimText);
+      this.text(34, y + 12, m.support ? 'Support' : `Lv ${level(ctx.flags, RPG, m.id)}`, UI.dimText);
     });
     this.labels = party.map((m) => m.name);
     const m = party[this.cursor];
     if (!m) return;
     const X = 112;
     this.text(X, TOP + 2, `${m.name}: ${m.role}`, UI.accentText);
-    this.text(X, TOP + 12, `House ${m.house}${m.support ? '' : `   Level ${level(ctx.flags, m.id)}`}`, UI.dimText);
+    const lv = level(ctx.flags, RPG, m.id);
+    const next = lv < RPG.levels.cap ? `   XP ${xp(ctx.flags, RPG, m.id)}/${xpForLevel(RPG, lv + 1)}` : '   Max level';
+    this.text(X, TOP + 12, `House ${m.house}${m.support ? '' : `   Level ${lv}${next}`}`, UI.dimText);
     if (m.support) {
       this.text(X, TOP + 28, 'Spark 0/10   Calm 3/3', UI.text);
       this.text(X, TOP + 42, 'Anissa does not fight. She carries the goddess’s light, and Gianna turns her Spark into Surge.', UI.dimText, 196);
       return;
     }
     const s = stats(ctx.flags, RPG, m);
-    const b = baseStats(ctx.flags, m);
+    const b = baseStats(ctx.flags, RPG, m);
     STAT_KEYS.forEach((k, i) => {
       const bonus = s[k] - b[k];
       const col = i % 2;
@@ -379,7 +409,9 @@ export class GameMenu {
     });
     SLOTS.forEach((slot, i) => {
       const id = equipped(ctx.flags, m, slot);
-      this.text(X, TOP + 66 + i * 11, `${SLOT_NAMES[slot].padEnd(7)} ${id ? RPG.items[id]?.name : '-'}`, id ? UI.text : UI.dimText);
+      const it = id ? RPG.items[id] : undefined;
+      const heavy = it ? tooHeavy(ctx.flags, RPG, m, it) : false;
+      this.text(X, TOP + 66 + i * 11, `${SLOT_NAMES[slot].padEnd(7)} ${it ? it.name : '-'}${heavy ? ' (too heavy)' : ''}`, heavy ? BAND_COLOURS.hard : it ? UI.text : UI.dimText);
     });
   }
 
@@ -398,7 +430,7 @@ export class GameMenu {
       if (it.heals) bits.push(`+${it.heals} HP`);
       if (it.restores) bits.push(`+${it.restores} SP`);
       for (const k of STAT_KEYS) if (it.stats?.[k]) bits.push(`${STAT_NAMES[k]} +${it.stats[k]}`);
-      if (it.slot) bits.push(SLOT_NAMES[it.slot]);
+      if (it.slot) bits.push(`${SLOT_NAMES[it.slot]} Lv ${it.level ?? 1}`);
       if (it.price) bits.push(`worth ${Math.floor(it.price / 2)} gold`);
       this.text(X, TOP + 62, bits.join('  '), UI.text, VIEW_WIDTH - X - 8);
     }
@@ -426,7 +458,14 @@ export class GameMenu {
     this.text(X, TOP + 52, STAT_KEYS.map((k) => `${STAT_NAMES[k]} ${s[k]}`).join('  '), UI.dimText, VIEW_WIDTH - X - 8);
     if (this.stage === 'pick' && this.slot) {
       const options = this.candidates();
-      const labels = [...options.map((it) => `${it.name}  ${STAT_KEYS.filter((k) => it.stats?.[k]).map((k) => `${STAT_NAMES[k]}+${it.stats![k]}`).join(' ')}`), '(Remove)'];
+      const labels = [
+        ...options.map((it) => {
+          const heavy = tooHeavy(ctx.flags, RPG, m, it);
+          const bonus = STAT_KEYS.filter((k) => it.stats?.[k]).map((k) => `${STAT_NAMES[k]}+${it.stats![k]}`).join(' ');
+          return `${it.name} Lv${it.level ?? 1}${heavy ? ' (heavy: half)' : ''}  ${bonus}`;
+        }),
+        '(Remove)',
+      ];
       this.text(X, TOP + 74, `${SLOT_NAMES[this.slot]} from the bag:`, UI.accentText);
       this.drawList(labels, this.subCursor, X, TOP + 86, 5);
     }
@@ -507,26 +546,99 @@ export class GameMenu {
     this.labels = RPG.realm.map((p) => p.name);
   }
 
-  private drawJournal(): void {
+  // ---- Quests and foes -----------------------------------------------------------------------
+
+  /** The main quest, then side quests in progress, then finished ones. */
+  private questEntries(): QuestEntry[] {
+    const flags = this.ctx!.flags;
+    const active = SIDE_QUESTS.filter((q) => sideQuestStatus(flags, q) === 'active');
+    const done = SIDE_QUESTS.filter((q) => sideQuestStatus(flags, q) === 'done');
+    return [{ kind: 'main' }, ...active.map((q) => ({ kind: 'side' as const, q })), ...done.map((q) => ({ kind: 'side' as const, q }))];
+  }
+
+  private questLines(e: QuestEntry): PanelLine[] {
     const ctx = this.ctx!;
-    const lines = ctx.journal().filter((l) => !l.text.startsWith('(B to close)'));
-    this.journalLines = lines.map((l) => l.text);
-    // Wrap long lines into rows, then show the scrolled window.
+    if (e.kind === 'main') return ctx.journal();
+    const q = e.q;
+    const done = sideQuestStatus(ctx.flags, q) === 'done';
+    const band = levelBand(RPG, partyLevel(ctx.flags, RPG, ctx.era), q.level);
+    const lines: PanelLine[] = [
+      { text: q.title, color: UI.accentText },
+      { text: `${q.giver}, ${q.place}`, color: UI.dimText },
+      { text: `Level ${q.level}`, color: BAND_COLOURS[band] },
+      { text: q.summary, gap: 4 },
+    ];
+    for (const s of visibleSteps(ctx.flags, q)) lines.push({ text: `${s.done ? '[x]' : '[ ]'} ${s.text}`, color: s.done ? UI.doneText : UI.text });
+    lines.push({ text: `Reward: ${rewardText(q, RPG)}`, color: done ? UI.doneText : UI.dimText, gap: 4 });
+    return lines;
+  }
+
+  /** Wrap panel lines into rows of at most `chars` characters. */
+  private wrap(lines: PanelLine[], chars: number): { text: string; color?: string }[] {
     const rows: { text: string; color?: string }[] = [];
-    const width = Math.floor((VIEW_WIDTH - 16) / 4.8);
     for (const l of lines) {
-      const words = l.text.split(' ');
       let cur = '';
-      for (const wd of words) {
-        if ((cur + ' ' + wd).trim().length > width) {
+      for (const wd of l.text.split(' ')) {
+        if (cur && `${cur} ${wd}`.length > chars) {
           rows.push({ text: cur, color: l.color });
           cur = `  ${wd}`;
         } else cur = cur ? `${cur} ${wd}` : wd;
       }
       rows.push({ text: cur, color: l.color });
     }
-    this.scroll = Math.min(this.scroll, Math.max(0, rows.length - ROWS));
-    rows.slice(this.scroll, this.scroll + ROWS).forEach((r, i) => this.text(8, TOP + 2 + i * ROW_H, r.text, r.color ?? UI.text));
-    if (rows.length > ROWS) this.text(VIEW_WIDTH - 60, VIEW_HEIGHT - 12, 'Up/Down: scroll', UI.dimText);
+    return rows;
+  }
+
+  private drawQuests(): void {
+    const entries = this.questEntries();
+    const flags = this.ctx!.flags;
+    const labels = entries.map((e) => (e.kind === 'main' ? 'Main: Act I' : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`));
+    this.drawList(labels, this.cursor, 6, TOP + 2, ROWS, this.stage === 'top');
+    if (SIDE_QUESTS.every((q) => sideQuestStatus(flags, q) === 'unknown')) this.text(6, TOP + 2 + 2 * ROW_H, '  No side quests yet.', UI.dimText);
+    const e = entries[this.cursor] ?? entries[0]!;
+    const lines = this.questLines(e).filter((l) => !l.text.startsWith('(B to close)'));
+    this.journalLines = lines.map((l) => l.text);
+    const X = 112;
+    const rows = this.wrap(lines, Math.floor((VIEW_WIDTH - X - 6) / 4.8));
+    const fit = ROWS + 1;
+    this.scroll = Math.min(this.scroll, Math.max(0, rows.length - fit));
+    rows.slice(this.scroll, this.scroll + fit).forEach((r, i) => this.text(X, TOP + 2 + i * ROW_H, r.text, r.color ?? UI.text));
+    const hint = this.stage === 'read' ? 'Up/Down: scroll   B: back' : 'A: read   L/R: tabs';
+    this.text(6, VIEW_HEIGHT - 12, hint, UI.dimText);
+  }
+
+  /** Every group of foes met (won or fled), with its level against the party's. */
+  private foes(): { name: string; level: number; place: string; won: boolean }[] {
+    const flags = this.ctx!.flags;
+    const out: { name: string; level: number; place: string; won: boolean }[] = [];
+    for (const t of Object.values(ENCOUNTERS)) {
+      for (const g of t.groups) {
+        const won = flags.isSet(encounterFlag(t.id, g.id, 'won'));
+        if (!won && !flags.isSet(encounterFlag(t.id, g.id, 'fled'))) continue;
+        const counts = new Map<string, number>();
+        for (const f of g.foes) counts.set(f, (counts.get(f) ?? 0) + 1);
+        out.push({ name: [...counts].map(([n, c]) => (c > 1 ? `${n} x${c}` : n)).join(', '), level: g.level, place: t.id.replace(/_/g, ' '), won });
+      }
+    }
+    return out;
+  }
+
+  private drawFoes(): void {
+    const ctx = this.ctx!;
+    const foes = this.foes();
+    const yours = partyLevel(ctx.flags, RPG, ctx.era);
+    this.text(6, TOP + 2, `Your party: level ${yours}.  Grey easy, white even, orange hard, red deadly.`, UI.dimText, VIEW_WIDTH - 12);
+    this.labels = foes.map((f) => f.name);
+    if (foes.length === 0) {
+      this.text(6, TOP + 26, 'No foes met yet. (Chapter 1 is peaceful.)', UI.dimText);
+      return;
+    }
+    const first = Math.max(0, Math.min(this.cursor - 8, foes.length - 9));
+    foes.slice(first, first + 9).forEach((f, i) => {
+      const on = first + i === this.cursor;
+      const colour = BAND_COLOURS[levelBand(RPG, yours, f.level)];
+      this.text(6, TOP + 26 + i * ROW_H, `${on ? '>' : ' '} Lv ${String(f.level).padStart(2)}  ${f.name}`, on ? UI.accentText : colour);
+      this.text(VIEW_WIDTH - 90, TOP + 26 + i * ROW_H, f.won ? 'beaten' : 'escaped', UI.dimText);
+    });
   }
 }

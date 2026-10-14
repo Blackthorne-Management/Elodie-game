@@ -21,6 +21,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       {
         id: 'bandits',
         weight: 3,
+        level: 6,
         foes: ['Road Bandit', 'Road Bandit'],
         intro: 'Two bandits step out of the cane, knives low. "Festival toll, archivist. Everything you carry."',
         won: 'They drop their knives and vanish between the stalks.',
@@ -29,6 +30,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       {
         id: 'smugglers',
         weight: 2,
+        level: 7,
         foes: ['Smuggler', 'Smuggler', 'Lookout'],
         intro: 'Smugglers, hauling Crown-stamped crates through the field. "You saw nothing. Say it."',
         won: 'The smugglers abandon a crate and scatter toward the mangroves.',
@@ -37,6 +39,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       {
         id: 'hushers',
         weight: 1,
+        level: 9,
         foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
         intro: 'Two veiled figures rise from the ditch without a sound. "Hush, little archivist. Where is your sister?"',
         won: 'The veiled pair back away into the cane, still watching you.',

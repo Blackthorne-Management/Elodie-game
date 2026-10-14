@@ -8,7 +8,8 @@
 //   army.<group>                 soldiers pledged by an allied group
 //   item.<id>                    how many of an item are in the bag (key items: true)
 //   equip.<member>.<slot>        the item a member wears in a slot ('' = nothing; unset = their start gear)
-//   level.<member>               a member's level (unset: 1)
+//   xp.<member>                  XP a member earned alone (battles, later); shared XP is derived (XP_RULES)
+//   side.<quest>.rewarded        a side quest's reward was paid
 //   visited.<map>                the player has been on that map
 
 import type { Condition } from './conditions.ts';
@@ -43,6 +44,8 @@ export interface ItemDef {
   restores?: number;
   /** Members who can wear it (all who have the slot when omitted). */
   users?: readonly string[];
+  /** Gear level: worn below it, the item gives only part of its bonus (GEAR_UNDERLEVEL_SHARE). */
+  level?: number;
   text: string;
 }
 
@@ -114,6 +117,10 @@ export interface RpgContent {
   pillarRules: readonly { pillar: Pillar; city: string; flags: readonly string[]; each: number }[];
   startingGold: number;
   bagLimit: number;
+  /** XP the whole party shares: each flag set is worth `each` (story objectives, lore read, ...). */
+  xpRules: readonly { flags: readonly string[]; each: number }[];
+  /** Levelling: XP to reach level n is round(xpBase * (n - 1) ^ xpExponent), up to levelCap. */
+  levels: { cap: number; xpBase: number; xpExponent: number; gearUnderlevelShare: number; bands: { trivial: number; hard: number; deadly: number } };
 }
 
 // ---- Gold, pillars, armies --------------------------------------------------------------------
@@ -173,9 +180,58 @@ export function partyMembers(flags: FlagReader, rpg: RpgContent, era: 'present' 
   return rpg.members.filter((m) => m.era === era && (!m.joins || evaluate(m.joins, flags)));
 }
 
-export function level(flags: FlagReader, member: string): number {
-  const v = flags.get(`level.${member}`);
-  return typeof v === 'number' && v >= 1 ? v : 1;
+// ---- Levels and XP ----------------------------------------------------------------------------
+
+/** XP needed to reach a level (level 1 needs none). */
+export function xpForLevel(rpg: RpgContent, lv: number): number {
+  const { xpBase, xpExponent } = rpg.levels;
+  return lv <= 1 ? 0 : Math.round(xpBase * (lv - 1) ** xpExponent);
+}
+
+/** XP the party shares, from the rules (each story flag, book, ... counted once). */
+export function sharedXp(flags: FlagReader, rpg: RpgContent): number {
+  let total = num(flags.get('xp.shared'));
+  for (const r of rpg.xpRules) for (const f of r.flags) if (truthy(flags.get(f))) total += r.each;
+  return total;
+}
+
+/** A member's XP: what the party shares plus what they earned alone. */
+export function xp(flags: FlagReader, rpg: RpgContent, member: string): number {
+  return sharedXp(flags, rpg) + num(flags.get(`xp.${member}`));
+}
+
+export function levelForXp(rpg: RpgContent, points: number): number {
+  let lv = 1;
+  while (lv < rpg.levels.cap && points >= xpForLevel(rpg, lv + 1)) lv++;
+  return lv;
+}
+
+export function level(flags: FlagReader, rpg: RpgContent, member: string): number {
+  return levelForXp(rpg, xp(flags, rpg, member));
+}
+
+/** The party's level for comparing with foes: the average of its fighters, rounded down. */
+export function partyLevel(flags: FlagReader, rpg: RpgContent, era: 'present' | 'echo'): number {
+  const fighters = partyMembers(flags, rpg, era).filter((m) => !m.support);
+  if (fighters.length === 0) return 1;
+  return Math.floor(fighters.reduce((n, m) => n + level(flags, rpg, m.id), 0) / fighters.length);
+}
+
+export type LevelBand = 'trivial' | 'even' | 'hard' | 'deadly';
+
+/** How a foe's level compares with yours: grey (trivial), white (even), orange (hard), red (deadly). */
+export function levelBand(rpg: RpgContent, yours: number, theirs: number): LevelBand {
+  const d = theirs - yours;
+  const b = rpg.levels.bands;
+  if (d >= b.deadly) return 'deadly';
+  if (d >= b.hard) return 'hard';
+  if (d <= -b.trivial) return 'trivial';
+  return 'even';
+}
+
+/** Add XP to the shared pool (side quest rewards, ...). */
+export function addSharedXp(flags: FlagStore, amount: number): void {
+  flags.set('xp.shared', num(flags.get('xp.shared')) + amount);
 }
 
 /** The item a member wears in a slot, or null. */
@@ -185,20 +241,38 @@ export function equipped(flags: FlagReader, member: MemberDef, slot: Slot): stri
   return member.start?.[slot] ?? null;
 }
 
-export function baseStats(flags: FlagReader, member: MemberDef): Stats {
-  const lv = level(flags, member.id);
+export function baseStats(flags: FlagReader, rpg: RpgContent, member: MemberDef): Stats {
+  const lv = level(flags, rpg, member.id);
   const out = {} as Stats;
   for (const k of STAT_KEYS) out[k] = member.base[k] + member.growth[k] * (lv - 1);
   return out;
 }
 
+/** Whether a member is below an item's level (it is "too heavy": only part of its bonus counts). */
+export function tooHeavy(flags: FlagReader, rpg: RpgContent, member: MemberDef, item: ItemDef): boolean {
+  return (item.level ?? 1) > level(flags, rpg, member.id);
+}
+
+/** An item's bonus for this member: in full at or above its level, else GEAR_UNDERLEVEL_SHARE of it (rounded down). */
+export function itemBonus(flags: FlagReader, rpg: RpgContent, member: MemberDef, item: ItemDef): Partial<Stats> {
+  const heavy = tooHeavy(flags, rpg, member, item);
+  const out: Partial<Stats> = {};
+  for (const k of STAT_KEYS) {
+    const v = item.stats?.[k];
+    if (v) out[k] = heavy ? Math.floor(v * rpg.levels.gearUnderlevelShare) : v;
+  }
+  return out;
+}
+
 /** Stats with every worn item's bonus. */
 export function stats(flags: FlagReader, rpg: RpgContent, member: MemberDef): Stats {
-  const out = baseStats(flags, member);
+  const out = baseStats(flags, rpg, member);
   for (const slot of SLOTS) {
     const id = equipped(flags, member, slot);
-    const bonus = id ? rpg.items[id]?.stats : undefined;
-    if (bonus) for (const k of STAT_KEYS) out[k] += bonus[k] ?? 0;
+    const item = id ? rpg.items[id] : undefined;
+    if (!item) continue;
+    const bonus = itemBonus(flags, rpg, member, item);
+    for (const k of STAT_KEYS) out[k] += bonus[k] ?? 0;
   }
   return out;
 }

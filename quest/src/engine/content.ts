@@ -53,6 +53,8 @@ export interface EncounterGroup {
   weight?: number;
   /** The foes, by name, for the battle (Phase 3) and the stand-in. */
   foes: readonly string[];
+  /** Their level (the menu's Foes page colours it against the party's). */
+  level: number;
   /** The line shown when they appear. */
   intro: string;
   /** The line shown after winning (until Phase 3 battles exist, the stand-in ends here). */

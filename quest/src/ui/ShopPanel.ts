@@ -6,7 +6,7 @@ import { UI } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { RPG } from '../data/rpg.ts';
 import type { FlagStore } from '../engine/flags.ts';
-import { STAT_KEYS, bagContents, bagUsed, buy, gold, itemCount, sell, sellPrice, type ItemDef, type ShopDef } from '../engine/rpg.ts';
+import { STAT_KEYS, bagContents, bagUsed, buy, gold, itemCount, level, partyMembers, sell, sellPrice, type ItemDef, type ShopDef } from '../engine/rpg.ts';
 import type { InputManager } from '../input/actions.ts';
 
 const DEPTH = 6100;
@@ -121,10 +121,13 @@ export class ShopPanel {
     g.lineStyle(1, UI.boxBorder, 0.5).lineBetween(4, 37.5, VIEW_WIDTH - 4, 37.5);
 
     const list = this.list();
+    // Gear above every fighter's level is marked "!" (it would give only part of its bonus).
+    const best = Math.max(1, ...partyMembers(flags, RPG, 'present').filter((m) => !m.support).map((m) => level(flags, RPG, m.id)));
     this.labels = list.map((it) => {
       const price = this.side === 'buy' ? it.price : sellPrice(it);
       const have = itemCount(flags, it.id);
-      return `${it.name.padEnd(20)}${String(price).padStart(4)}g${have ? `  (have ${have})` : ''}`;
+      const lv = it.kind === 'gear' ? `  Lv${it.level ?? 1}${(it.level ?? 1) > best ? '!' : ''}` : '';
+      return `${it.name.padEnd(20)}${String(price).padStart(4)}g${lv}${have ? `  (have ${have})` : ''}`;
     });
     const first = Math.max(0, Math.min(this.cursor - ROWS + 1, list.length - ROWS));
     this.labels.slice(first, first + ROWS).forEach((l, i) => {
@@ -139,6 +142,6 @@ export class ShopPanel {
       if (it.restores) bits.push(`+${it.restores} SP`);
       this.text(6, VIEW_HEIGHT - 34, `${it.text}${bits.length ? `  (${bits.join(', ')})` : ''}`, UI.dimText, VIEW_WIDTH - 12);
     }
-    this.text(6, VIEW_HEIGHT - 12, 'A: buy or sell one   B: leave', UI.dimText);
+    this.text(6, VIEW_HEIGHT - 12, 'A: buy or sell one   B: leave   Lv!: above your level', UI.dimText);
   }
 }

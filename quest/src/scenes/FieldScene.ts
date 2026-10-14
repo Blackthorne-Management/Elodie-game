@@ -44,7 +44,9 @@ import type { MenuItem } from '../ui/MenuPanel.ts';
 import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
 import { RPG } from '../data/rpg.ts';
-import { cityOf } from '../engine/rpg.ts';
+import { cityOf, level, partyMembers } from '../engine/rpg.ts';
+import { rewardText, settleRewards } from '../engine/sideQuests.ts';
+import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { planTap } from '../engine/tap.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
@@ -154,6 +156,8 @@ export class FieldScene extends Phaser.Scene {
   /** Tap to move: the steps still to walk, then the way to face and interact (engine/tap.ts). */
   private autoPath: Dir8[] = [];
   private autoFace: Dir8 | null = null;
+  /** Each fighter's level when last checked (a rise shows "reached level n"). */
+  private lastLevels = new Map<string, number>();
   private lastFx: string | undefined;
 
   constructor() {
@@ -181,6 +185,7 @@ export class FieldScene extends Phaser.Scene {
     this.echoMatrix = null;
     this.autoPath = [];
     this.autoFace = null;
+    this.lastLevels = this.levelsNow();
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => this.onTap(p));
     this.map = this.logic.map;
 
@@ -260,13 +265,15 @@ export class FieldScene extends Phaser.Scene {
   update(_time: number, delta: number): void {
     const input = this.rt.input;
     input.update();
+    // In a bar the minimap always shows; on the picture (no bars) only in the field, out of the way of
+    // Anissa's hint, menus, shops and dialogue.
+    const onPicture = document.body.dataset.layout === 'overlay';
+    this.minimap?.setVisible(!onPicture || (this.mode === 'field' && !this.hint.visible));
     switch (this.mode) {
       case 'field':
         this.tickHints(delta);
         this.updateField(delta);
         this.minimap?.follow(this.logic.state.player.pos);
-        // On the picture (no bars), it steps aside for Anissa's hint.
-        this.minimap?.setVisible(!(this.hint.visible && document.body.dataset.layout === 'overlay'));
         this.updateLabel();
         this.startPendingGlow();
         break;
@@ -330,6 +337,7 @@ export class FieldScene extends Phaser.Scene {
           break;
         case 'sync':
           this.syncActors();
+          this.checkProgress();
           break;
         case 'talk': {
           this.talkingTo = e.npc;
@@ -435,6 +443,28 @@ export class FieldScene extends Phaser.Scene {
     const onward = this.stepToward(next, false);
     if (!onward) this.cancelWalk();
     return onward;
+  }
+
+  // ---- Rewards and levels --------------------------------------------------------------------
+
+  private levelsNow(): Map<string, number> {
+    const flags = this.logic.state.flags;
+    return new Map(partyMembers(flags, RPG, 'present').filter((m) => !m.support).map((m) => [m.id, level(flags, RPG, m.id)]));
+  }
+
+  /** Pay finished side quests (once) and announce level-ups. */
+  private checkProgress(): void {
+    const flags = this.logic.state.flags;
+    for (const q of settleRewards(flags, RPG, SIDE_QUESTS)) this.toast.show(`Quest complete: ${q.title} (${rewardText(q, RPG)})`);
+    const now = this.levelsNow();
+    for (const [id, lv] of now) {
+      const before = this.lastLevels.get(id);
+      if (before !== undefined && lv > before) {
+        const name = RPG.members.find((m) => m.id === id)?.name ?? id;
+        this.toast.show(`${name} reached level ${lv}!`);
+      }
+    }
+    this.lastLevels = now;
   }
 
   // ---- Tap to move ---------------------------------------------------------------------------
@@ -985,7 +1015,6 @@ export class FieldScene extends Phaser.Scene {
   private openMenu(): void {
     this.confirmNewGame = false;
     this.mode = 'menu';
-    if (document.body.dataset.layout === 'overlay') this.minimap?.setVisible(false);
     this.menu.open({
       flags: this.logic.state.flags,
       mapId: this.map.id,
