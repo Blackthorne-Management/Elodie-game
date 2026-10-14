@@ -7,6 +7,9 @@ Usage:
 What the sheets in quest/art/characters were made with:
   gianna: --grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32
   anissa: --grid 5x4 --rows down,_,_,up --sides 1 --cell 24x32 --colors 32 --fill 0.84
+  yari:   --grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32
+  azzy:   --grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32 --pixel 7.5, run on the
+          source after warming it (figure pixels r x1.18, g x1.06, then contrast 1.12; Gemini drew him olive)
 
 Options:
   --grid COLSxROWS   the source sheet's grid of frames (cells are cut evenly).

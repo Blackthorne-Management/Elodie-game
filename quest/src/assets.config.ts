@@ -164,6 +164,10 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
     skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.L!, trim: C.o!, legs: C.B!,
     headgear: 'headband', headgearColor: C.R!, accessories: ['bow', 'hutia'],
   },
+  azzy: {
+    skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x3a2a24, trim: C.R!, legs: C.K!, build: 'tall',
+    accessories: ['sash', 'epaulettes'],
+  },
   recruiter: {
     skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.K!, trim: C.g!, robe: true,
     headgear: 'hood', headgearColor: C.g!, accessories: ['emblem'],

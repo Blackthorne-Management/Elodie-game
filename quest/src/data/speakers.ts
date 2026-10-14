@@ -21,6 +21,7 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   patricio: s('patricio', 'Patricio'),
   patricio_old: s('patricio_old', 'Patricio'),
   yari: s('yari', 'Yari'),
+  azzy: s('azzy', 'Azzy'),
 
   // Zetwal, the present.
   gaze_keeper: s('gaze_keeper', 'Gaze keeper'),
