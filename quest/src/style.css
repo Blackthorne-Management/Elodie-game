@@ -370,16 +370,18 @@ body.standalone .fs-button { display: none; }
   position: absolute;
   transform: translate(-50%, -110%);
   white-space: nowrap;
-  font-size: 1em;
-  line-height: 1;
+  /* Half the game's text size (the painting is busy; names should label it, not cover it), never
+     below 10 px on a small phone. */
+  font: 600 max(10px, 0.48em)/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.02em;
   color: #a89c86;
   text-shadow: 0 0 2px #000, 0 0 2px #000, 1px 1px 0 #000;
 }
 .realm-labels span.known { color: #f4ecd8; }
 .realm-here {
   position: absolute;
-  width: 0.9em;
-  height: 0.9em;
+  width: max(10px, 0.6em);
+  height: max(10px, 0.6em);
   transform: translate(-50%, -50%);
   border: 2px solid #f2d04b;
   border-radius: 50%;
