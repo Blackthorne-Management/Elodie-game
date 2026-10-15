@@ -29,8 +29,8 @@ const U = S / 26, O = 4 * U;
 const TYPE = { court: { icon: 'cat-crown', label: 'Court' }, war: { icon: 'cat-swords', label: 'War' }, trade: { icon: 'cat-coins', label: 'Trade' } };
 // Where each homeland's name sits, as a fraction of the image (placed on open ground of the current map).
 const LABEL = {
-  brasador: [0.555, 0.305], kaysoley: [0.80, 0.335], dorini: [0.70, 0.455], ironvow: [0.80, 0.80],
-  suzumori: [0.545, 0.755], agnivansh: [0.235, 0.86], stillwater: [0.15, 0.37], vaitama: [0.27, 0.19],
+  brasador: [0.49, 0.27], kaysoley: [0.80, 0.335], dorini: [0.715, 0.505], ironvow: [0.80, 0.765],
+  suzumori: [0.545, 0.755], agnivansh: [0.30, 0.79], stillwater: [0.152, 0.405], vaitama: [0.27, 0.19],
 };
 
 const grid = [];
