@@ -18,6 +18,7 @@
     "icons": "node --experimental-strip-types tools/make-icons.ts"
   },
   "dependencies": {
+    "@fontsource/atkinson-hyperlegible": "^5.3.0",
     "phaser": "3.90.0"
   },
   "devDependencies": {

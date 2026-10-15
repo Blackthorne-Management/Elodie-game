@@ -603,6 +603,25 @@ async function playAct(browser, errors) {
     if ((await snap(page)).mode === 'showcase') await page.keyboard.press('KeyZ');
     await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   }
+  // Large text (System > Text size): the scene is rebuilt at the new size, and it is remembered.
+  await menuSelect(page, 'Text size');
+  await page.waitForFunction(() => window.__quest?.snapshot().toast === 'Text size: Large', null, { timeout: 5000 });
+  check((await page.evaluate(() => localStorage.getItem('bq.textSize'))) === 'large', 'System > Text size switches to Large and remembers it on this device');
+  await menuTab(page, 'Status');
+  await shoot(page, 'large-text-status', shots);
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  await page.evaluate(() => window.__quest.showItem('sun_locket'));
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'showcase', null, { timeout: 2000 });
+  await page.waitForTimeout(700);
+  await shoot(page, 'large-text-showcase', shots);
+  await page.keyboard.press('KeyZ');
+  await frames(page);
+  if ((await snap(page)).mode === 'showcase') await page.keyboard.press('KeyZ');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  await menuSelect(page, 'Text size');
+  await page.waitForFunction(() => window.__quest?.snapshot().toast === 'Text size: Normal', null, { timeout: 5000 });
+  check(true, 'and back to Normal');
   await menuSelect(page, 'Credits');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'journal', null, { timeout: 2000 });
   check((await snap(page)).journal[0] === 'CREDITS', 'the menu has a Credits screen');

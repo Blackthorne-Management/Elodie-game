@@ -53,6 +53,7 @@ import type { InputManager } from '../input/actions.ts';
 import type { MenuItem } from './MenuPanel.ts';
 import type { PanelLine } from './TextPanel.ts';
 import { RealmOverlay } from './RealmOverlay.ts';
+import { charPx, textStyle } from './text.ts';
 import { tileColours } from './tileColours.ts';
 
 export const MENU_TABS = ['Status', 'Items', 'Equip', 'Quests', 'Map', 'Foes', 'System'] as const;
@@ -402,7 +403,7 @@ export class GameMenu {
   // ---- Drawing ---------------------------------------------------------------------------------
 
   private text(x: number, y: number, s: string, color: string = UI.text, wrap?: number): Phaser.GameObjects.Text {
-    const t = this.scene.add.text(x, y, s, { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color, lineSpacing: UI.lineSpacingPx });
+    const t = this.scene.add.text(x, y, s, textStyle(color));
     if (wrap) t.setWordWrapWidth(wrap, true);
     this.content.add(t);
     return t;
@@ -491,7 +492,7 @@ export class GameMenu {
     });
     if (labels.length === 0) this.text(x, y, '  (nothing)', UI.dimText);
     if (labels.length > rows && active) {
-      const ax = x + Math.max(...labels.map((l) => l.length)) * 4.8 + 14;
+      const ax = x + Math.max(...labels.map((l) => l.length)) * charPx() + 14;
       this.text(ax, y, '▲', UI.accentText);
       this.text(ax, y + (rows - 1) * ROW_H, '▼', UI.accentText);
       this.hit(ax - 4, y - 2, 16, 16, () => this.move(-1));
@@ -783,7 +784,7 @@ export class GameMenu {
     const lines = this.questLines(e).filter((l) => !l.text.startsWith('(B to close)'));
     this.journalLines = lines.map((l) => l.text);
     const X = 112;
-    const rows = this.wrap(lines, Math.floor((VIEW_WIDTH - X - 6) / 4.8));
+    const rows = this.wrap(lines, Math.floor((VIEW_WIDTH - X - 6) / charPx()));
     const fit = ROWS + 1;
     this.scroll = Math.min(this.scroll, Math.max(0, rows.length - fit));
     rows.slice(this.scroll, this.scroll + fit).forEach((r, i) => this.text(X, TOP + 2 + i * ROW_H, r.text, r.color ?? UI.text));

@@ -5,18 +5,17 @@ import Phaser from 'phaser';
 import { PORTRAIT_SIZE, UI, textureKeyForPortrait } from '../assets.config.ts';
 import { TEXT_SPEEDS, VIEW_HEIGHT, VIEW_WIDTH, type TextSpeed } from '../config.ts';
 import { typewriterChars, type DialogueView } from '../engine/dialogue.ts';
+import { dialogueExtraPx, textStyle } from './text.ts';
 
 // Tall enough for a PORTRAIT_SIZE portrait with padding.
-const BOX_H = 58;
 const BOX_X = 2;
-const BOX_Y = VIEW_HEIGHT - BOX_H - 2;
+/** The box's height: four lines, one more in Large text (ui/text.ts; the scene restarts on a change). */
+const boxH = (): number => 58 + dialogueExtraPx();
+const boxY = (): number => VIEW_HEIGHT - boxH() - 2;
 const BOX_W = VIEW_WIDTH - 4;
 const PAD = 5;
 const DEPTH = 5000;
 
-function textStyle(color: string): Phaser.Types.GameObjects.Text.TextStyle {
-  return { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color };
-}
 
 export interface DialogueBoxState {
   speaker: string | null;
@@ -50,14 +49,14 @@ export class DialogueBox {
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.box = scene.add.graphics();
-    this.box.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(BOX_X, BOX_Y, BOX_W, BOX_H);
-    this.box.lineStyle(1, UI.boxBorder, 1).strokeRect(BOX_X + 0.5, BOX_Y + 0.5, BOX_W - 1, BOX_H - 1);
+    this.box.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(BOX_X, boxY(), BOX_W, boxH());
+    this.box.lineStyle(1, UI.boxBorder, 1).strokeRect(BOX_X + 0.5, boxY() + 0.5, BOX_W - 1, boxH() - 1);
     this.nameBg = scene.add.graphics();
     this.nameText = scene.add.text(0, 0, '', textStyle(UI.accentText));
-    this.portrait = scene.add.image(BOX_X + PAD, BOX_Y + PAD, '__WHITE').setOrigin(0, 0);
-    this.body = scene.add.text(0, BOX_Y + PAD, '', { ...textStyle(UI.text), lineSpacing: UI.lineSpacingPx });
+    this.portrait = scene.add.image(BOX_X + PAD, boxY() + PAD, '__WHITE').setOrigin(0, 0);
+    this.body = scene.add.text(0, boxY() + PAD, '', textStyle(UI.text));
     this.translation = scene.add.text(0, 0, '', textStyle(UI.dimText));
-    this.more = scene.add.graphics({ x: BOX_X + BOX_W - 10, y: BOX_Y + BOX_H - 8 });
+    this.more = scene.add.graphics({ x: BOX_X + BOX_W - 10, y: boxY() + boxH() - 8 });
     this.more.fillStyle(0xf2d04b, 1).fillTriangle(0, 0, 6, 0, 3, 4);
     this.choiceBg = scene.add.graphics();
     this.root = scene.add.container(0, 0, [
@@ -108,7 +107,7 @@ export class DialogueBox {
 
   /** Whether a point is on the dialogue box (or its name tag). */
   contains(x: number, y: number): boolean {
-    return this.root.visible && x >= BOX_X && x < BOX_X + BOX_W && y >= BOX_Y - 13 && y < BOX_Y + BOX_H;
+    return this.root.visible && x >= BOX_X && x < BOX_X + BOX_W && y >= boxY() - 13 && y < boxY() + boxH();
   }
 
   show(view: DialogueView, speed: TextSpeed): void {
@@ -133,16 +132,16 @@ export class DialogueBox {
     this.nameText.setText(speaker?.name ?? '').setVisible(!!speaker);
     if (speaker) {
       const w = Math.ceil(this.nameText.width) + 8;
-      this.nameText.setPosition(BOX_X + 4, BOX_Y - 11);
-      this.nameBg.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(BOX_X, BOX_Y - 13, w, 13);
-      this.nameBg.lineStyle(1, UI.boxBorder, 1).strokeRect(BOX_X + 0.5, BOX_Y - 12.5, w - 1, 13);
+      this.nameText.setPosition(BOX_X + 4, boxY() - 11);
+      this.nameBg.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(BOX_X, boxY() - 13, w, 13);
+      this.nameBg.lineStyle(1, UI.boxBorder, 1).strokeRect(BOX_X + 0.5, boxY() - 12.5, w - 1, 13);
     }
 
-    this.body.setPosition(textX, BOX_Y + PAD).setWordWrapWidth(textW, true);
+    this.body.setPosition(textX, boxY() + PAD).setWordWrapWidth(textW, true);
     this.wrapped = this.body.getWrappedText(view.text).join('\n');
     this.body.setText('');
     this.translation.setText(view.translation ? `(${view.translation})` : '').setVisible(false);
-    this.translation.setPosition(textX, BOX_Y + BOX_H - PAD - 9).setWordWrapWidth(textW, true);
+    this.translation.setPosition(textX, boxY() + boxH() - PAD - 9).setWordWrapWidth(textW, true);
     this.drawChoices();
     this.refresh();
   }
@@ -213,7 +212,7 @@ export class DialogueBox {
     const w = Math.min(BOX_W, Math.ceil(Math.max(...texts.map((t) => t.width))) + 10);
     const h = texts.length * lineH + 6;
     const x = BOX_X + BOX_W - w;
-    const y = BOX_Y - h - 2;
+    const y = boxY() - h - 2;
     this.choiceBox = { x, y, w, h };
     this.choiceBg.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(x, y, w, h);
     this.choiceBg.lineStyle(1, UI.boxBorder, 1).strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);

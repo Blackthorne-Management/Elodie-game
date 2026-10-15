@@ -2,11 +2,15 @@
 
 Every third-party asset the quest uses is listed here with its title, author, source URL and licence,
 and the same list shows in the game's menu under **Credits** (`src/data/credits.ts`). Only CC0,
-CC-BY 3.0/4.0 or OGA-BY assets may be added; CC-BY needs the attribution kept here and in the game.
+CC-BY 3.0/4.0 or OGA-BY assets may be added (and fonts under the SIL Open Font License); CC-BY needs
+the attribution kept here and in the game.
 
 ## In use
 
-None. Every picture in the quest is placeholder pixel art drawn by the game itself
+- **Atkinson Hyperlegible**, Braille Institute of America, https://www.brailleinstitute.org/freefont,
+  SIL Open Font License 1.1 (npm `@fontsource/atkinson-hyperlegible`). All text in the game (Oct 15).
+
+Every picture in the quest is still placeholder pixel art drawn by the game itself
 (`src/assets.pixels.ts`, `src/scenes/pixels.ts`), and there is no sound yet.
 
 ## Tried

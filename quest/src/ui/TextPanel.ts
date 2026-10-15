@@ -4,6 +4,7 @@
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { textStyle } from './text.ts';
 
 export interface PanelLine {
   text: string;
@@ -48,13 +49,7 @@ export class TextPanel {
     this.texts = lines.map((l) => {
       y += l.gap ?? 0;
       const t = this.scene.add
-        .text(l.center ? VIEW_WIDTH / 2 : PAD, y, l.text, {
-          fontFamily: UI.font,
-          fontSize: `${UI.fontSizePx}px`,
-          color: l.color ?? UI.text,
-          lineSpacing: UI.lineSpacingPx,
-          align: l.center ? 'center' : 'left',
-        })
+        .text(l.center ? VIEW_WIDTH / 2 : PAD, y, l.text, textStyle(l.color ?? UI.text, { align: l.center ? 'center' : 'left' }))
         .setOrigin(l.center ? 0.5 : 0, 0)
         .setWordWrapWidth(VIEW_WIDTH - PAD * 2, true);
       y += Math.ceil(t.height) + 2;

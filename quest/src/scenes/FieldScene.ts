@@ -44,6 +44,7 @@ import type { MenuItem } from '../ui/MenuPanel.ts';
 import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
 import { ItemShowcase } from '../ui/ItemShowcase.ts';
+import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
 import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
 import { RPG } from '../data/rpg.ts';
@@ -200,11 +201,13 @@ export class FieldScene extends Phaser.Scene {
     const tilemap = this.make.tilemap({ key: tilemapKey(this.map.id) });
     const tileset = tilemap.addTilesetImage(TILESET.name, TILESET.textureKey);
     if (!tileset) throw new Error(`Map ${this.map.id} has no "${TILESET.name}" tileset`);
+    // No tile culling: the camera zooms from its top-left corner (the render scale), which Phaser's
+    // culling misreads as looking elsewhere; the maps are small, so drawing every tile costs little.
     ERA_LAYERS.forEach((name, i) => {
       const layer = tilemap.createLayer(name, tileset, 0, 0);
-      if (layer) this.layers[name] = layer.setDepth(i % 2).setVisible(true);
+      if (layer) this.layers[name] = layer.setSkipCull(true).setDepth(i % 2).setVisible(true);
     });
-    tilemap.createLayer(TILE_LAYERS.above, tileset, 0, 0)?.setDepth(3000);
+    tilemap.createLayer(TILE_LAYERS.above, tileset, 0, 0)?.setSkipCull(true).setDepth(3000);
 
     // Echo Zones shimmer.
     for (const zone of this.map.echoZones) {
@@ -226,6 +229,9 @@ export class FieldScene extends Phaser.Scene {
     // It is placed by hand every frame from her exact position, rounded to whole pixels together with
     // her sprite, so she never shimmers against the world (placeCamera).
     const cam = this.cameras.main;
+    // Drawn at the render scale (ui/text.ts): the camera zooms by it from the top-left corner, so the
+    // world and the interface keep their 320 x 180 layout and only get sharper.
+    cam.setOrigin(0, 0).setZoom(renderScale());
     this.camBounds = cameraBounds(this.map.width * TILE_SIZE, this.map.height * TILE_SIZE, VIEW_WIDTH, VIEW_HEIGHT);
     cam.setRoundPixels(true);
     this.placeCamera(p);
@@ -246,7 +252,7 @@ export class FieldScene extends Phaser.Scene {
 
     // The name label over what the player faces (world space, above the actors, under the interface).
     this.labelBg = this.add.graphics();
-    this.labelText = this.add.text(0, 0, '', { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color: UI.labelText }).setOrigin(0.5, 1);
+    this.labelText = this.add.text(0, 0, '', textStyle(UI.labelText)).setOrigin(0.5, 1);
     this.label = this.add.container(0, 0, [this.labelBg, this.labelText]).setDepth(3500).setVisible(false);
 
     this.dialogue = new DialogueBox(this);
@@ -294,10 +300,14 @@ export class FieldScene extends Phaser.Scene {
         this.updateLabel();
         this.startPendingGlow();
         break;
-      case 'dialogue':
+      case 'dialogue': {
+        // A press made while the line was still typing only finishes it, even if the typing ends in
+        // this same frame (otherwise it would also pick the first answer).
+        const wasTyping = this.dialogue.typing;
         this.dialogue.update(delta);
-        this.updateDialogue();
+        this.updateDialogue(wasTyping);
         break;
+      }
       case 'card':
         if (input.pressed('confirm')) {
           this.panel.close();
@@ -535,9 +545,12 @@ export class FieldScene extends Phaser.Scene {
   }
 
   /** A tap or click on the picture: walk there, or up to the person or thing tapped and use it. */
-  private onTap(p: Phaser.Input.Pointer): void {
+  private onTap(pointer: Phaser.Input.Pointer): void {
     if (this.leaving) return;
-    // Screens over the field take taps in screen pixels (game coordinates, not the camera's world).
+    // Screens over the field take taps in game pixels (the 320 x 180 layout, not the camera's world);
+    // the canvas is drawn at the render scale.
+    const k = renderScale();
+    const p = { x: pointer.x / k, y: pointer.y / k, worldX: pointer.worldX, worldY: pointer.worldY };
     switch (this.mode) {
       case 'dialogue': {
         const choice = this.dialogue.choiceAt(p.x, p.y);
@@ -1066,10 +1079,10 @@ export class FieldScene extends Phaser.Scene {
     }
   }
 
-  private updateDialogue(): void {
+  private updateDialogue(wasTyping = false): void {
     const input = this.rt.input;
     const advance = input.pressed('confirm') || input.pressed('cancel');
-    if (this.dialogue.typing) {
+    if (this.dialogue.typing || wasTyping) {
       if (advance) this.dialogue.finishTyping();
       return;
     }
@@ -1097,6 +1110,7 @@ export class FieldScene extends Phaser.Scene {
     items.push(
       { id: 'save', label: 'Save' },
       { id: 'speed', label: `Text speed: ${capitalise(s.textSpeed)}` },
+      { id: 'textsize', label: `Text size: ${capitalise(textSize())}` },
       { id: 'hints', label: `Anissa's hints: ${s.hints ? 'On' : 'Off'}` },
       ...(isStandalone() ? [] : [{ id: 'fullscreen', label: isFullscreen() ? 'Exit full screen' : 'Full screen' }]),
       { id: 'export', label: 'Export save code' },
@@ -1175,6 +1189,11 @@ export class FieldScene extends Phaser.Scene {
         break;
       case 'speed':
         this.cycleTextSpeed(1);
+        break;
+      case 'textsize':
+        // Every text is laid out again at the new size: rebuild the scene (the game state stays).
+        setTextSize(textSize() === 'normal' ? 'large' : 'normal');
+        this.scene.restart({ toast: `Text size: ${capitalise(textSize())}` });
         break;
       case 'hints': {
         const s = this.logic.state.settings;

@@ -346,9 +346,24 @@ export const MAP_ART = {
   hereRim: 0x1a1420,
 } as const;
 
+/**
+ * Text sizes (System > Text size, kept per device). Large is a little bigger with tighter line
+ * spacing, so a line keeps about the same height and every list still fits; the dialogue box gains a
+ * line (`dialogueExtraPx`).
+ */
+export const TEXT_SIZES = {
+  normal: { px: 8, lineSpacing: 2, dialogueExtraPx: 0 },
+  large: { px: 9.5, lineSpacing: 1, dialogueExtraPx: 12 },
+} as const;
+
 /** Interface colours. */
 export const UI = {
-  font: 'monospace',
+  /**
+   * Atkinson Hyperlegible (Braille Institute, OFL; bundled, loaded by ui/text.ts before the game
+   * starts), drawn at the screen's full resolution. Sizes are in game pixels: TEXT_SIZES below.
+   */
+  font: "'Atkinson Hyperlegible', system-ui, sans-serif",
+  /** Normal text size (TEXT_SIZES.normal); Large is a setting. */
   fontSizePx: 8,
   lineSpacingPx: 2,
   boxFill: 0x14101a,

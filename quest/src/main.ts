@@ -7,7 +7,7 @@
 //   ?touch=1         force the touch overlay
 
 import Phaser from 'phaser';
-import { HINT_FIRST_MS, HINT_REPEAT_MS, MAX_ZOOM, MIN_INTEGER_ZOOM, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
+import { HINT_FIRST_MS, HINT_REPEAT_MS, MAX_ZOOM, MIN_INTEGER_ZOOM, RENDER_SCALE_MAX, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
 import { CONTENT, validationContext } from './data/content.ts';
 import { loadRawMaps } from './data/maps.ts';
 import { checkDialogue } from './engine/dialogue.ts';
@@ -15,6 +15,7 @@ import { GameLogic } from './engine/game.ts';
 import { HintTracker } from './engine/hints.ts';
 import { validateMaps } from './engine/mapValidation.ts';
 import { fitZoom } from './engine/scaling.ts';
+import { loadFonts, renderScale, setRenderScale } from './ui/text.ts';
 import { newGame } from './engine/state.ts';
 import { parseMap, type GameMap } from './engine/tiledMap.ts';
 import { InputManager, type InputSource } from './input/actions.ts';
@@ -78,12 +79,19 @@ const loaded = loadStoredGame(runtime);
 if (loaded === 'invalid') console.warn('[quest] the stored save could not be loaded; starting a new game');
 
 const vp = visibleViewport();
+const startZoom = fitZoom(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM);
+// Draw the game at the screen's sharpness (the zoom times the device's pixel ratio, in whole steps,
+// up to RENDER_SCALE_MAX): the layout stays 320 x 180, the camera zooms by the same multiple, and text
+// is rendered at it (ui/text.ts). The browser then only scales the canvas by the rest.
+setRenderScale(Math.min(RENDER_SCALE_MAX, Math.max(1, Math.ceil(startZoom * (window.devicePixelRatio || 1) - 0.01))));
+const S = renderScale();
+await loadFonts();
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
-  width: VIEW_WIDTH,
-  height: VIEW_HEIGHT,
+  width: VIEW_WIDTH * S,
+  height: VIEW_HEIGHT * S,
   pixelArt: true,
   roundPixels: true,
   backgroundColor: '#000000',
@@ -93,11 +101,11 @@ const game = new Phaser.Game({
   // The canvas is centred by CSS (#game is pinned to the visible viewport); src/ui/screen.ts sets the zoom.
   scale: {
     mode: Phaser.Scale.NONE,
-    zoom: fitZoom(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM),
+    zoom: startZoom / S,
     autoCenter: Phaser.Scale.NO_CENTER,
   },
   scene: [BootScene, FieldScene],
 });
 
-game.events.once(Phaser.Core.Events.READY, () => fitToScreen((zoom) => game.scale.setZoom(zoom), isTouchDevice()));
+game.events.once(Phaser.Core.Events.READY, () => fitToScreen((zoom) => game.scale.setZoom(zoom / S), isTouchDevice()));
 mountFullscreenButton();

@@ -124,6 +124,12 @@ export const MAX_ZOOM = 8;
 /** Below this whole-number zoom the picture uses the exact (non-integer) fit instead, so it fills small screens. */
 export const MIN_INTEGER_ZOOM = 2;
 
+/**
+ * The game is drawn at a whole multiple of 320 x 180 matched to the screen (zoom x device pixel
+ * ratio), so text is sharp (ui/text.ts); this caps it (a 4x canvas is 1280 x 720 pixels).
+ */
+export const RENDER_SCALE_MAX = 4;
+
 /** Anissa's hints (guide 6.2 rule 4): first hint after 3 minutes stuck on one objective, then every 90 s. */
 export const HINT_FIRST_MS = 3 * 60 * 1000;
 export const HINT_REPEAT_MS = 90 * 1000;

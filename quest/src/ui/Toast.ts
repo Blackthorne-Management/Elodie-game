@@ -3,6 +3,7 @@
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { TOAST_MS, VIEW_WIDTH } from '../config.ts';
+import { textStyle } from './text.ts';
 
 export class Toast {
   private readonly text: Phaser.GameObjects.Text;
@@ -13,13 +14,7 @@ export class Toast {
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.text = scene.add
-      .text(VIEW_WIDTH / 2, 4, '', {
-        fontFamily: UI.font,
-        fontSize: `${UI.fontSizePx}px`,
-        color: UI.text,
-        backgroundColor: '#14101af0',
-        padding: { x: 4, y: 2 },
-      })
+      .text(VIEW_WIDTH / 2, 4, '', textStyle(UI.text, { backgroundColor: '#14101af0', padding: { x: 4, y: 2 } }))
       .setOrigin(0.5, 0)
       .setScrollFactor(0)
       .setDepth(7000)

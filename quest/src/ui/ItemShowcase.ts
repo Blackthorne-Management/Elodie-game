@@ -9,6 +9,7 @@ import { SHOWCASE, UI, textureKeyForItem } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import type { ShowcaseView } from '../engine/showcase.ts';
 import type { InputManager } from '../input/actions.ts';
+import { textStyle } from './text.ts';
 
 const DEPTH = 6600;
 const CX = VIEW_WIDTH / 2;
@@ -105,14 +106,7 @@ export class ItemShowcase {
 
   private text(x: number, y: number, s: string, color: string, width = VIEW_WIDTH - 24, align: 'center' | 'left' = 'center'): Phaser.GameObjects.Text {
     const t = this.scene.add
-      .text(x, y, s, {
-        fontFamily: UI.font,
-        fontSize: `${UI.fontSizePx}px`,
-        color,
-        align,
-        lineSpacing: UI.lineSpacingPx,
-        wordWrap: { width, useAdvancedWrap: true },
-      })
+      .text(x, y, s, textStyle(color, { align, wordWrap: { width, useAdvancedWrap: true } }))
       .setOrigin(align === 'center' ? 0.5 : 0, 0);
     this.root.add(t);
     this.texts.push(t);

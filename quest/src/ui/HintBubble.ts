@@ -3,6 +3,7 @@
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { HINT_SHOW_MS, VIEW_WIDTH } from '../config.ts';
+import { textStyle } from './text.ts';
 
 const W = VIEW_WIDTH - 8;
 
@@ -18,9 +19,9 @@ export class HintBubble {
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.bg = scene.add.graphics();
-    this.name = scene.add.text(8, 6, '', { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color: UI.accentText });
+    this.name = scene.add.text(8, 6, '', textStyle(UI.accentText));
     this.text = scene.add
-      .text(8, 16, '', { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color: UI.text, lineSpacing: UI.lineSpacingPx })
+      .text(8, 16, '', textStyle(UI.text))
       .setWordWrapWidth(W - 10, true);
     this.root = scene.add.container(0, 0, [this.bg, this.name, this.text]).setScrollFactor(0).setDepth(6500).setVisible(false);
   }

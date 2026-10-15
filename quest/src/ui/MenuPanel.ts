@@ -3,6 +3,7 @@
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { VIEW_WIDTH } from '../config.ts';
+import { textStyle } from './text.ts';
 
 export interface MenuItem {
   id: string;
@@ -53,7 +54,7 @@ export class MenuPanel {
     this.items = items;
     for (const t of this.texts) t.destroy();
     this.texts = items.map((it) =>
-      this.scene.add.text(0, 0, `> ${it.label}`, { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color: UI.text }),
+      this.scene.add.text(0, 0, `> ${it.label}`, textStyle(UI.text)),
     );
     const w = Math.ceil(Math.max(...this.texts.map((t) => t.width))) + 10;
     const h = items.length * LINE_H + 8;

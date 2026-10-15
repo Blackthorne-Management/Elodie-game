@@ -8,6 +8,7 @@ import { RPG } from '../data/rpg.ts';
 import type { FlagStore } from '../engine/flags.ts';
 import { STAT_KEYS, bagContents, bagUsed, buy, gold, itemCount, level, partyMembers, sell, sellPrice, type ItemDef, type ShopDef } from '../engine/rpg.ts';
 import type { InputManager } from '../input/actions.ts';
+import { textStyle } from './text.ts';
 
 const DEPTH = 6100;
 const TOP = 40;
@@ -136,7 +137,7 @@ export class ShopPanel {
   }
 
   private text(x: number, y: number, s: string, color: string = UI.text, wrap?: number): Phaser.GameObjects.Text {
-    const t = this.scene.add.text(x, y, s, { fontFamily: UI.font, fontSize: `${UI.fontSizePx}px`, color, lineSpacing: UI.lineSpacingPx });
+    const t = this.scene.add.text(x, y, s, textStyle(color));
     if (wrap) t.setWordWrapWidth(wrap, true);
     this.content.add(t);
     return t;

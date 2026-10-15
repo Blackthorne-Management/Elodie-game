@@ -482,6 +482,13 @@ The Crown bribes with the same three currencies. **Rael** appears to have taken 
 
 - **Capital layout (owner decision, Oct 14):** every capital is at least **four sections** (separate maps joined by doors): the hub (the town or plaza), the **library**, the **capital building** (the seat of the state), and a **wild section**, either outside the city or in its rough district. Shrines, homes and puzzle sites come on top. The wild section has **random encounters**: bandits, crooks and Quiet Crown cultists, chosen per capital. They use the map layer `encounters` (property `table`), the tables in `quest/src/data/encounters.ts`, and the chance and grace steps in `quest/src/config.ts`. Until the battle system (Phase 3) exists, an encounter is a short stand-in scene: Fight always wins and Run always escapes, and both are remembered as flags. **No fights in Chapter 1 (owner decision, Oct 14):** there is no war and no banditry yet, so each wild section's ambushes are gated by a story flag that a later chapter sets when the party returns (Zetwal: `story.zetwal_return`, listed in `LATER_STORY_FLAGS`). Ambushes come about once every 50 steps.
 - **Zetwal's capital is Pòdlimyè** (owner decision, Oct 14): Kreyol "Port of Light" (*pò* is "port"), one word the way Port-de-Paix is Pòdepè. It replaces the first name, Pòt Limyè (*pòt* is "door"). A fluent speaker checks the spelling (Nov 18). Zetwal is the island nation.
+- **Readable text (owner decision, Oct 15):** the game is drawn at a whole multiple of 320 x 180 matched to the
+  screen (up to 4x, `RENDER_SCALE_MAX`), the camera zooms by it from its top-left corner, and every text is rendered at
+  it, so letters are sharp while the pixel art is enlarged in whole steps as before. The font is **Atkinson
+  Hyperlegible** (Braille Institute, OFL), loaded before the game starts (`quest/src/ui/text.ts`, the one place text
+  styles come from). **System > Text size** switches Normal / Large (kept per device in localStorage; Large is a
+  little bigger with tighter line spacing, and the dialogue box gains a line). Tile culling is off (the zoomed camera
+  confuses it; the maps are small). The country names on the painted world map are half size.
 - **Chapters, not acts (owner decision, Oct 14):** the story is told in chapters; **Chapter 1: The Festival of the
   Gaze** is Pòdlimyè, Chapter 2 is Xaraguá. On screen (the Journal, the end card) it says "Chapter"; the code keeps
   the `act1` id and flags so saves stay valid.
