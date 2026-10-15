@@ -26,7 +26,7 @@ const ITEM_LIST: ItemDef[] = [
         text: 'What you change in the past can stay changed in the present.',
         known: { any: [{ flag: 'anchor.night_orders' }, { flag: 'anchor.chain_bridge' }] },
       },
-      // Revealed in Ardencia (Chapter 4), when Lord Rael's signet glows beside it.
+      // Revealed in Ardencia (Chapter 3), when Lord Rael's signet glows beside it.
       { name: 'Two halves of a promise', text: 'Near its other half, the Brasador signet, both halves glow.', known: { flag: 'story.signet_glowed' } },
     ],
   },

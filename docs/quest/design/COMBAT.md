@@ -168,7 +168,7 @@ shape for colour-blind players (guide 9): grey hollow circle, white circle, oran
 **Levelling up:** stats grow by the member's growth line; HP and SP refill by the amount gained. A short fanfare and
 a line from the member.
 
-**Chapter targets** (from `STORY.md`): Ch. 1 ends at 3, Ch. 2 at 8, Ch. 3 at 11, Ch. 4 at 14, Ch. 5 at 15, the three
+**Chapter targets** (from `STORY.md`): Ch. 1 ends at 3, Ch. 2 at 8, Ch. 3 (Ardencia) at 11, Ch. 4 (Al-Doria) at 14, Ch. 5 at 15, the three
 roads 15 to 21, Ch. 9 at 24, Ch. 10 at 25, Ch. 11 at 28, Ch. 12 at 30. Roughly: about 3 to 4 standard battles per
 level plus story, books and quests. The simulation checks that a player who skips all side quests is no more than 2
 levels under the target.
@@ -438,8 +438,8 @@ Boss stats: the standard line x the multipliers in each row (`BOSS_SCALE`). Phas
 | # | Boss | Where | Level | HP x / ATK x | Phases |
 |---|---|---|---|---|---|
 | 1 | **Governor Thorne** | Xaraguá customs house (Ch. 2) | 8 | 7 / 1.1 | **1 Paperwork:** hides behind two Crown Marines; *Requisition* (steals an item). **2 (50%) The Charter:** reads the Charter aloud: Hushed on one member each turn, *Protection Fee* (power 150). Yield: Spare (he is sent home to Aldermoor), Spoils, Break. |
-| 2 | **Guildmaster Qasim** (proposal) | Al-Doria guild vault (Ch. 3) | 11 | 7 / 1.1 | **1 Ledger:** *Hire Blades*: pays gold to summon a Caravan Raider each 3 turns (Samira's Bribe on a summoned blade refunds it). **2 (40%) Foreclosure:** *Seize Assets* (Weakened on all), *Golden Wall* (DEF up until hit by a Surge). |
-| 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 4) | 14 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; leaves Anissa an opening (*Seize* telegraphed: Shield Anissa). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. |
+| 2 | **Guildmaster Qasim** (proposal) | Al-Doria guild vault (Ch. 4) | 14 | 7 / 1.1 | **1 Ledger:** *Hire Blades*: pays gold to summon a Caravan Raider each 3 turns (Samira's Bribe on a summoned blade refunds it). **2 (40%) Foreclosure:** *Seize Assets* (Weakened on all), *Golden Wall* (DEF up until hit by a Surge). |
+| 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 3) | 11 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; leaves Anissa an opening (*Seize* telegraphed: Shield Anissa). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. |
 | 3b | **Rael, the Harbor Strike** (same boss, Strike route only) | Harbor flank (Ch. 11) | 28 | 9 / 1.2 | Four phases: Measured, Unleashed, Cornered, then **Broken Army** (his guards leave; he only Binds and will not strike Gianna; the fight ends when his army breaks, at 10% HP). |
 | 4 | **Noyan Grimvald** (proposal) | Skarragol frozen fjord (Ch. 6) | tier top (17, 19 or 21) | 8 / 1.2 | **1 Mounted:** *Trample* (all), fast. **2 (50%) Unhorsed:** slower, *Stolen Standard* (Inspired on all his raiders); returning the standard to Bayarmaa (an Item use) breaks it. |
 | 5 | **The Paper Fox** (proposal) | Kuroshi file house (Ch. 7) | tier top | 7 / 1.0 | **1 Screens:** hides among three paper decoys (Haru's Kagemimi or *Lantern* shows the real one). **2 (40%) Sold Secrets:** reads a member's "file": copies their best skill and uses it on them. |

@@ -181,7 +181,7 @@ Pixel art sprite sheet of the same character, young Anicette, for a top-down 16-
 
 Shown large in the item popup when Grandmother hands it over. Grandfather made it the year of the Accord: **half of a
 token**; the other half is Ardencia's iron signet (Lord Benny's then, Lord Rael's now), which glows beside it in
-Chapter 4. Its edge is shaped
+Chapter 3. Its edge is shaped
 to meet that half, a quiet clue. A new chat is fine.
 
 ```

@@ -67,7 +67,7 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 
 - **Side quest:** A-4 *The Uncashed Note*. An old moneychanger in the bazaar swears the Dorini wrote a *sakk* (a
   written promise to pay; the word is the root of "cheque") for "the Marshal of Zetwal" during the war, and nobody ever
-  cashed it. Box 7 of the old counting house is still sealed. Opens in Chapter 3.
+  cashed it. Box 7 of the old counting house is still sealed. Opens in Chapter 4.
 - **Dynamic:** a trade chain across eras: buy low in the past, collect in the present.
 - **The present:** the bazaar's price board shows what is dear today: Zetwal **indigo** costs a fortune since the
   Crown's blockade; salt and dates are cheap. Box 7 opens only to "the bearer of the sun" and only if something was
@@ -147,7 +147,7 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 
 - **Side quest:** Ar-4 *The Old Lord's Errand*. After the escape, old Benny (in the keep, guards looking away) asks
   Gianna to bring him the promise he left in the chapel crypt "before your father was born". The party is wanted in
-  Ardencia, so this is a sneak. Opens after Chapter 4; best done in Chapter 5 or later (crypt guards, if seen, start a
+  Ardencia, so this is a sneak. Opens after Chapter 3; best done in Chapter 5 or later (crypt guards, if seen, start a
   battle at level 14).
 - **Dynamic:** stealth in two eras at once. The whole cloister is an Echo Zone, so the player can swap mid-route.
 - **The present:** Rael's guards patrol the cloister (four sight cones). The inner crypt door is bolted from inside.
@@ -270,7 +270,7 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 
   The minute is sealed in the register (**anchor**).
 - **The present:** Keeper Hollis reads the fifty-year-old minute aloud and cross-examines Gianna: for each line she
-  must show evidence from the Journal. Caona's oath (Chapter 2), Benny's refusal note and Yusuf's ledger (Chapter 3),
+  must show evidence from the Journal. Caona's oath (Chapter 2), Benny's refusal note and Yusuf's ledger (Chapter 4),
   Thomas Stillwater's record (Chapter 9) and the sun mark on the seventh Name Stone (secret item 1, optional: it lets
   her skip one question). Any line without evidence fails the hearing; go back and gather it.
 - **Solution:** the five right answers, then the four evidence items in the order the minute names them.

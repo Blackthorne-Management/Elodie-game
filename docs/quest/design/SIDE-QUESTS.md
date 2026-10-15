@@ -57,16 +57,16 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | X-3 | The Hutia's Hoard | Yucayeque | Ch. 2 | 3 to 8 | no | yes |
 | X-4 | Where the Canoes Sleep (secret) | Yucayeque | Ch. 2 | 5 to 8 | yes (cave) | yes |
 | X-5 | Medicine for the Cacique | Yucayeque | Ch. 2 | 5 to 8 | yes | yes |
-| A-1 | Appraise This | Bab al-Dhahab | Ch. 3 | 8 to 11 | no | no |
-| A-2 | The Missing Saffron | Bab al-Dhahab | Ch. 3 | 8 to 11 | yes | no |
-| A-3 | Sweet Water (safehouse) | Bab al-Dhahab | Ch. 3 | 8 to 11 | no | yes |
-| A-4 | The Uncashed Note (secret) | Bab al-Dhahab | Ch. 3 | 8 to 11 | no | yes |
-| A-5 | Invoice for the Crown | Bab al-Dhahab | Ch. 3 | 9 to 11 | optional | no |
-| Ar-1 | Bread at Night (safehouse) | Cenizal | Ch. 4 | 11 to 14 | optional | no |
-| Ar-2 | The Treasurer's Daughter | Cenizal | Ch. 4 | 11 to 14 | no | yes |
-| Ar-3 | The Elders' Feast | Cenizal | Ch. 4 | 12 to 14 | yes | no |
-| Ar-4 | The Old Lord's Errand (secret) | Cenizal | after Ch. 4 | 14 to 16 | if seen | yes |
-| Ar-5 | The Arrows Missed | Free Brasador camp | end of Ch. 4 | 14 to 16 | no | no |
+| A-1 | Appraise This | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | no |
+| A-2 | The Missing Saffron | Bab al-Dhahab | Ch. 4 | 11 to 14 | yes | no |
+| A-3 | Sweet Water (safehouse) | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | yes |
+| A-4 | The Uncashed Note (secret) | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | yes |
+| A-5 | Invoice for the Crown | Bab al-Dhahab | Ch. 4 | 12 to 14 | optional | no |
+| Ar-1 | Bread at Night (safehouse) | Cenizal | Ch. 3 | 8 to 11 | optional | no |
+| Ar-2 | The Treasurer's Daughter | Cenizal | Ch. 3 | 8 to 11 | no | yes |
+| Ar-3 | The Elders' Feast | Cenizal | Ch. 3 | 9 to 11 | yes | no |
+| Ar-4 | The Old Lord's Errand (secret) | Cenizal | after Ch. 3 | 11 to 13 | if seen | yes |
+| Ar-5 | The Arrows Missed | Free Brasador camp | end of Ch. 3 | 11 to 13 | no | no |
 | Se-1 | Volume One | Eightgate | Ch. 5 | 14 to 15 | no | no |
 | Se-2 | Four Voices | Eightgate | Ch. 5 | 14 to 15 | no | no |
 | Se-3 | Deserters' Road | Eightgate | Ch. 5 | 14 to 16 | yes | no |

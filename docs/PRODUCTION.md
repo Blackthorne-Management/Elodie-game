@@ -49,8 +49,8 @@ and 2, **Sun Nov 22**. Your next quest asks: approve the intro storyboard (secre
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):
 - [ ] **By Mon Nov 3** (the battle system is built that week): Samira's *Daftar* skill spends **gold** instead of the
   Wealth score (Wealth is never spent), and grows with the realm's Wealth. Proposal in `COMBAT.md`.
-- [ ] **By Sun Nov 15** (Milestone 2, before Chapter 3 is planned): the story slice. Zetwal + Xaraguá + Ardencia skips
-  Chapter 3 (Al-Doria). Keep it (Chapter 4 levels scale down when Chapter 3 is skipped) or include Chapter 3.
+- [x] The story slice: **settled Oct 15**. Ardencia is Chapter 3 and Al-Doria Chapter 4, so the slice (Zetwal,
+  Xaraguá, Ardencia) is the first three chapters.
 - [ ] **By Mon Dec 1** (before the later capitals): Patricio in Aldermoor during the war (proposal: under a flag of
   truce to negotiate the peace, where Thomas Stillwater met him).
 - [ ] **By Mon Dec 1:** the Aldermoor ledger (proposal: it shows the gold vanishing into coded accounts, so Gianna

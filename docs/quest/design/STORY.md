@@ -33,9 +33,10 @@ per place (proposal for the numbering):
 is set to levels 15 to 17, the second 17 to 19, the third 19 to 21. The region's level is fixed the first time the
 party steps into it, so a region never re-scales under the player's feet. See `COMBAT.md` 6.
 
-**Slice note:** the guide's slice is Zetwal + Xaraguá + Ardencia (about 2 hours), which skips Chapter 3. If the
-slice ships first, Chapter 4 must not depend on anything from Chapter 3 (Samira, the Dorini ledger). This pack keeps
-every Chapter 4 beat self-contained; Samira's Chapter 4 lines are optional extras. See the open questions in Section 6.
+**Chapter order (owner, Oct 15):** Ardencia is **Chapter 3** and Al-Doria **Chapter 4**: after Xaraguá falls, Gianna
+goes home to Zetwal and then, at old Patricio's request, to Ardencia. So the guide's slice (Zetwal + Xaraguá +
+Ardencia, about 2 hours) is simply the first three chapters. Samira joins in Chapter 4, after Ardencia, so the
+Ardencia beats never need her.
 
 **The two eras** (guide 1.2, 6.1): the **Present** (Gen IV, Gianna's party) and the **Echo** (Gen II, the Alliance
 War, about fifty years ago). In the Echo Gianna *is* young Patricio; Caona joins the Echo party when Yari is in the
@@ -169,39 +170,13 @@ owner to confirm):
 - **What the player learns:** Xaraguá was never shown the Seventh Clause; Caona fought for a promise; the Crown's
   "protection" is a land grab in a legal coat; someone unknown has armed the resistance for years.
 
-### Chapter 3: The Ledger (Al-Doria)
-
-- **Where:** Bab al-Dhahab (proposal name), the port and caravan city of House Dorini.
-- **Level range:** 8 to 11.
-- **Beats:**
-  1. The bazaar. Samira Dorini appraises the Sun Locket on sight ("half of something; the other half is worth more")
-     and invoices Gianna for the opinion.
-  2. The guild vault hides the signed Accord copy. The Merchant-Prince (proposal: the title rotates among guild
-     families and is now held by Layla Dorini, Samira's mother) refuses: the guild profits from Crown trade.
-  3. **Echo: the Dorini ledger.** Young Yusuf Dorini, keeper of the ledger, records what the Dorini were promised for
-     signing: trade preference in Crown ports, paid for with Xaraguá's harbor. The Unpaid Debt has a price tag.
-  4. **Signature puzzle:** the guild vault (weights and the ledger cipher), solved in both eras.
-  5. The vault copy has seven ribbons; the seventh page is sealed with the Throne's own wax (proposal): only the Throne
-     Archive can open it lawfully. Also in the vault: a note in Benny's hand, "I will not put my name to this page."
-  6. Samira appraises a Brasador coin found in the Xaraguá resistance's oil money: "This coin has been somewhere else"
-     (Rael clue 4).
-  7. **Boss: Guildmaster Qasim** (proposal name), the war-profiteer who runs the vault, hiring blades mid-fight.
-  8. Samira is expelled from the guild for helping; she joins. Layla says nothing in public; in private she pays
-     Samira's debts (proposal).
-  9. Next step: under Clause Six, the Throne hears any house that claims a breach. Brasador, whose lord refused to sign
-     the Seventh Clause, is the one signatory with clean hands. Gianna goes to ask the Lord of Ardencia.
-- **Who joins:** Samira Dorini (Alchemist).
-- **Echo scenes:** Yusuf's counting room the week before the signing; the vault being built.
-- **Boss:** Guildmaster Qasim (level 11).
-- **What the player learns:** the allies were paid; the Accord had a price; Benny refused in writing; Brasador money
-  is turning up where it should not be.
-
-### Chapter 4: The Trial of Blades (Ardencia)
+### Chapter 3: The Trial of Blades (Ardencia)
 
 All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
 
 - **Where:** Cenizal (proposal name), Ardencia's fortress city in the fire-cracked highlands.
-- **Level range:** 11 to 14. Rael is level 14 (orange: a hard fight by design, see `COMBAT.md`).
+- **Level range:** 8 to 11 (straight after Xaraguá, owner, Oct 15). Rael is level 11, three above the party at the
+  chapter's start (orange: a hard fight by design, see `COMBAT.md`).
 - **Beats:**
   1. Ardencia's law: no outsider gets an audience with the Lord unless she proves herself in a duel. **Envoy
      Cresswell** of the Crown watches from the gallery.
@@ -226,9 +201,38 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
   11. The dual claim opens: Gianna through Zetwal and Ardencia; Azzy through Ardencia.
 - **Who joins:** Azzy (Blade-Knight); Benny in the Echo party; Free Brasador as an allied group (Fear, price 6).
 - **Echo scenes:** Benny's smuggler tunnel; the Brasador march to the sea; young Benny's callback.
-- **Boss:** Rael the Ruthless, Fight 1 (level 14).
+- **Boss:** Rael the Ruthless, Fight 1 (level 11).
 - **What the player learns:** Rael is her father; the token is one token in two halves; the signet glows (the player
   sees it, Gianna does not understand); the shots missed; nobody died.
+
+### Chapter 4: The Ledger (Al-Doria)
+
+- **Where:** Bab al-Dhahab (proposal name), the port and caravan city of House Dorini.
+- **Level range:** 11 to 14 (after Ardencia, owner, Oct 15).
+- **Beats:**
+  1. The bazaar. Samira Dorini appraises the Sun Locket on sight ("half of something; the other half is worth more")
+     and invoices Gianna for the opinion.
+  2. The guild vault hides the signed Accord copy. The Merchant-Prince (proposal: the title rotates among guild
+     families and is now held by Layla Dorini, Samira's mother) refuses: the guild profits from Crown trade.
+  3. **Echo: the Dorini ledger.** Young Yusuf Dorini, keeper of the ledger, records what the Dorini were promised for
+     signing: trade preference in Crown ports, paid for with Xaraguá's harbor. The Unpaid Debt has a price tag.
+  4. **Signature puzzle:** the guild vault (weights and the ledger cipher), solved in both eras.
+  5. The vault copy has seven ribbons; the seventh page is sealed with the Throne's own wax (proposal): only the Throne
+     Archive can open it lawfully. Also in the vault: a note in Benny's hand, "I will not put my name to this page."
+  6. Samira appraises a Brasador coin found in the Xaraguá resistance's oil money: "This coin has been somewhere else"
+     (Rael clue 4).
+  7. **Boss: Guildmaster Qasim** (proposal name), the war-profiteer who runs the vault, hiring blades mid-fight.
+  8. Samira is expelled from the guild for helping; she joins. Layla says nothing in public; in private she pays
+     Samira's debts (proposal).
+  9. (Before the Oct 15 order, this beat sent Gianna on to Ardencia. Now Ardencia comes first, so this chapter needs a
+     new way in, from Ardencia, and a new way out, to the Parley at Eightgate. Proposal: Benny's refusal note, found in
+     Ardencia, names the Dorini as witnesses, and the vault's sealed seventh page can only be opened at the Throne
+     Archive, which leads to the Parley.)
+- **Who joins:** Samira Dorini (Alchemist).
+- **Echo scenes:** Yusuf's counting room the week before the signing; the vault being built.
+- **Boss:** Guildmaster Qasim (level 14).
+- **What the player learns:** the allies were paid; the Accord had a price; Benny refused in writing; Brasador money
+  is turning up where it should not be.
 
 ### Chapter 5: The Parley (Eightgate, the midpoint)
 
@@ -398,8 +402,8 @@ Rael at the Hearing: "I never asked the eggs how they felt. I am asking now."
 
 | Thread | Where it shows | Pays off |
 |---|---|---|
-| The Seventh Clause | Ch. 1 (six clauses, seven ribbons, blank stone line), Ch. 2 (Xaraguá never shown it), Ch. 3 (the sealed page, Benny's note), Ch. 5 (read aloud), Ch. 9 (Thomas's record) | Ch. 12 and the Hearing (Rael as Warden of Oaths enforces it) |
-| Rael's eight clues (guide 5.8) | signet glow (Ch. 4), Elodie's two lines (Ch. 5), Kuroshi ledger trail (Ch. 7), Samira's coin (Ch. 3), Free Brasador "the arrows missed" (Ch. 4 onward), the lamp-oil seller (Ch. 2), the Ardencia debate (Ch. 4), nobody dies in his fights (all) | The Harbor Turn (Ch. 11) |
+| The Seventh Clause | Ch. 1 (six clauses, seven ribbons, blank stone line), Ch. 2 (Xaraguá never shown it), Ch. 4 (the sealed page, Benny's note), Ch. 5 (read aloud), Ch. 9 (Thomas's record) | Ch. 12 and the Hearing (Rael as Warden of Oaths enforces it) |
+| Rael's eight clues (guide 5.8) | signet glow (Ch. 3), Elodie's two lines (Ch. 5), Kuroshi ledger trail (Ch. 7), Samira's coin (Ch. 4), Free Brasador "the arrows missed" (Ch. 3 onward), the lamp-oil seller (Ch. 2), the Ardencia debate (Ch. 3), nobody dies in his fights (all) | The Harbor Turn (Ch. 11) |
 | The four Ash Wars accounts | Zetwal temple record (Ch. 1, built), Kuroshi spy ledger (Ch. 7), Crown chronicle (Ch. 9), Anicette's recollection (Ch. 1, The Overdue Shelf, built) | A Concord bonus and a Hearing line when all four are read (proposal) |
 | The Overdue Books (proposal) | *Ash Wars Gossip* Volume Two (Anicette) and the missing Volume One (built hints) | Volume One turns up in Elodie's rooms at the Seat (Ch. 5 side quest) |
 | Anissa finds her voice | shy lines (Ch. 1), first Surge (Ch. 2), Calm attacks by Hushers (Ch. 2 on), she speaks at the Muster (Ch. 10, proposal), she speaks at the Hearing | Her Surge animation grows more confident each chapter |
@@ -438,8 +442,8 @@ real people (guide 7.3).
    Turn can Haru read the code.
 7. **Chapter 1 vs Act I.** **Settled (owner, Oct 14):** the story is told in **chapters**, not acts; Chapter 1 is
    **The Festival of the Gaze** (Pòdlimyè). The other chapter titles stay proposals until each is built.
-8. **The slice.** Zetwal + Xaraguá + Ardencia skips Chapter 3 (Al-Doria). Owner to choose: keep the slice as the guide
-   says (Chapter 4 levels scale down by about 3 when Chapter 3 was skipped), or include Chapter 3 in the slice.
+8. **The slice.** **Settled (owner, Oct 15):** Ardencia is Chapter 3 and Al-Doria Chapter 4, so the slice (Zetwal,
+   Xaraguá, Ardencia) is the first three chapters.
 9. **The betrayer's companion.** If the Crown buys a house whose companion is in the party (Samira, Bayarmaa, Haru or
    Vikram), the guide does not say what the companion does. Proposal: the companion stays, defies their house a second
    time, and gets one scene (and a stat boost) in Chapter 11.
@@ -447,10 +451,8 @@ real people (guide 7.3).
     (Aldermoor) are proposed as the ruler or elder each companion defies, matching guide 5.3a ("Gen III is their
     parent, often the ruler or elder they defy"). Owner to confirm each.
 11. **Section 14 of the guide** said 240 x 160; fixed to 320 x 180 (Oct 14).
-12. **Chapter order after Xaraguá (from the Oct 15 decision).** Gianna now goes Xaraguá, back to Zetwal, then to
-   Ardencia, so Chapter 3 (Al-Doria) no longer sits between them. Proposal: Ardencia becomes Chapter 3 and Al-Doria
-   moves after it (the Dorini ledger then becomes a lead the party follows from Ardencia). This would also settle question 8:
-   the slice (Zetwal, Xaraguá, Ardencia) is now simply the first three chapters.
+12. **Chapter order after Xaraguá.** **Settled (owner, Oct 15):** Ardencia is Chapter 3, Al-Doria Chapter 4. Still
+    open: how Al-Doria is reached from Ardencia (proposal in Chapter 4, beat 9).
 13. **Does old Patricio know who he is sending her to?** The Lord of Ardencia is Rael, Gianna's father (Elodie's
     secret husband). Does Patricio know about the marriage when he sends her to Ardencia?
 14. **Who is caught in the occupation?** Proposal: Cacique Anaco is held under guard in his own house; the elders are
