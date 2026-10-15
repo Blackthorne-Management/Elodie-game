@@ -44,6 +44,8 @@ import type { MenuItem } from '../ui/MenuPanel.ts';
 import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
 import { ItemShowcase } from '../ui/ItemShowcase.ts';
+import { battleSnapshot, type BattleSnapshot } from './BattleScene.ts';
+import type { BattleResult } from '../engine/battle.ts';
 import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
 import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
@@ -57,7 +59,7 @@ import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
 import { tilemapKey } from './BootScene.ts';
 
-type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase';
+type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase' | 'battle';
 
 /** How long the glow on an object changed through the Echo lasts. */
 const CHANGED_GLOW_MS = 3600;
@@ -93,6 +95,8 @@ export interface FieldSnapshot {
   shop: ReturnType<ShopPanel['snapshot']>;
   /** The item showcase on screen (null when none). */
   showcase: ReturnType<ItemShowcase['snapshot']>;
+  /** The battle on screen (null when none). */
+  battle: BattleSnapshot | null;
   minimap: string | null;
   journal: string[] | null;
   card: string[] | null;
@@ -275,7 +279,10 @@ export class FieldScene extends Phaser.Scene {
       tileToScreen: (x, y) => this.tileToScreen(x, y),
       gameToScreen: (x, y) => this.gameToScreen(x, y),
       showItem: (id) => this.openShowcase(id),
+      startBattle: (id) => this.startBattle(id),
     };
+    this.events.off('battle-done');
+    this.events.on('battle-done', (r: BattleResult | null) => this.afterBattle(r));
 
     // Resume a dialogue or card the logic is in (after a door), then run on-enter scenes.
     if (this.logic.mode === 'dialogue') this.enterDialogueMode();
@@ -340,6 +347,32 @@ export class FieldScene extends Phaser.Scene {
       case 'modal':
         break;
     }
+  }
+
+  // ---- Battles -------------------------------------------------------------------------------
+
+  /** A battle (data/battles.ts) over the paused field; the battle scene reports back with 'battle-done'. */
+  private startBattle(id: string): void {
+    if (this.mode === 'dialogue') this.leaveDialogueMode();
+    this.cancelWalk();
+    this.mode = 'battle';
+    this.minimap?.setVisible(false);
+    this.label.setVisible(false);
+    this.hint.hide();
+    this.scene.launch('battle', { battle: id });
+    this.scene.pause();
+  }
+
+  private afterBattle(result: BattleResult | null): void {
+    this.mode = 'field';
+    this.rt.input.clearPresses();
+    if (result) {
+      const items = result.items.map((i) => RPG.items[i.id]?.name ?? i.id);
+      this.toast.show(`Won! +${result.xp} XP, +${result.gold} gold${items.length ? `, ${items.join(', ')}` : ''}`);
+    }
+    this.checkProgress();
+    this.handle([{ kind: 'sync' }]);
+    saveGame(this.rt);
   }
 
   // ---- The item showcase ---------------------------------------------------------------------
@@ -414,6 +447,9 @@ export class FieldScene extends Phaser.Scene {
           break;
         case 'card':
           this.showCard();
+          break;
+        case 'battle':
+          this.startBattle(e.battle);
           break;
         case 'shop': {
           // A vendor's greeting ended: their shop opens over the field.
@@ -1281,6 +1317,7 @@ export class FieldScene extends Phaser.Scene {
       menu: this.menu.snapshot(),
       shop: this.shopPanel.snapshot(),
       showcase: this.showcase.snapshot(),
+      battle: battleSnapshot(),
       minimap: this.minimap?.visible ? this.minimap.place : null,
       journal: this.mode === 'journal' ? this.panel.snapshot() : null,
       card: this.mode === 'card' ? this.panel.snapshot() : null,
@@ -1303,6 +1340,8 @@ declare global {
       gameToScreen: (x: number, y: number) => { x: number; y: number };
       /** Show an item's showcase (display only: it changes no flags), for screenshots of every tier. */
       showItem: (id: string) => void;
+      /** Start a battle by id (the smoke test plays the first battle without walking to it). */
+      startBattle: (id: string) => void;
     };
   }
 }

@@ -2,7 +2,7 @@
 // (engine/rpg.ts runs the rules). Owner decision (Oct 14): gold is what you spend; Influence, Wealth
 // and Fear are reputation scores per city and realm-wide; armies are military might.
 
-import { BAG_LIMIT, LEVELS, STARTING_GOLD, XP_PER_BOOK, XP_PER_OBJECTIVE } from '../config.ts';
+import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SURGE_COST, XP_PER_BOOK, XP_PER_OBJECTIVE } from '../config.ts';
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
@@ -30,12 +30,18 @@ const ITEM_LIST: ItemDef[] = [
       { name: 'Two halves of a promise', text: 'Near its other half, the Brasador signet, both halves glow.', known: { flag: 'story.signet_glowed' } },
     ],
   },
-  // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital.
+  // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital: the
+  // legendary relics, worn in their own slot (owner decision, Oct 15).
   {
     id: 'solange_quill',
     name: "Solange's Quill",
-    kind: 'key',
+    // Legendary: worn in the relic slot (one per wearer), growing with its wearer's level.
+    kind: 'gear',
+    slot: 'relic',
+    rarity: 'legendary',
     price: 0,
+    stats: { mag: 2, sp: 4 },
+    growth: { mag: 0.5, sp: 1 },
     text: 'The quill Mother Solange wrote the first names with. The nib is worn to a slant by her hand.',
     showcase: 'legendary',
     abilities: [
@@ -44,34 +50,71 @@ const ITEM_LIST: ItemDef[] = [
   },
 
   // Zetwal food and drink (guide 8: restorative soup in a clay pot).
-  { id: 'soup_pot', name: 'Clay-pot soup', kind: 'consumable', price: 30, heals: 40, text: 'Squash soup in a clay pot, still warm. Restores 40 HP, a little at a time.' },
+  { id: 'soup_pot', name: 'Clay-pot soup', kind: 'consumable', price: 30, heals: 40, healTurns: 3, text: 'Squash soup in a clay pot, still warm. Restores 40 HP, a little at a time.' },
   { id: 'akasan', name: 'Akasan', kind: 'consumable', price: 25, restores: 12, text: 'Sweet cornmeal drink, thick enough to stand a spoon in. Restores 12 SP.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
 
-  // Weapons.
-  { id: 'archivist_staff', name: "Archivist's staff", kind: 'gear', slot: 'weapon', price: 80, stats: { mag: 3 }, users: ['gianna'], text: 'A plain staff of temple wood. Every junior archivist gets one.' },
-  { id: 'sunwood_staff', level: 4, name: 'Sunwood staff', kind: 'gear', slot: 'weapon', price: 240, stats: { mag: 6, spd: 1 }, users: ['gianna'], text: 'Gold-grained wood that warms in the hand. Spells come easier.' },
-  { id: 'yaguana_bow', name: 'Yaguana bow', kind: 'gear', slot: 'weapon', price: 90, stats: { atk: 4 }, users: ['yari'], text: "Yari's own bow, strung with cord she twisted herself." },
-  { id: 'ironwood_bow', level: 4, name: 'Ironwood bow', kind: 'gear', slot: 'weapon', price: 260, stats: { atk: 7, spd: 1 }, users: ['yari'], text: 'Dark, heavy ironwood. It hits like a hammer.' },
-  { id: 'marshal_cutlass', name: 'Cutlass', kind: 'gear', slot: 'weapon', price: 120, stats: { atk: 5 }, users: ['patricio'], text: "The Marshal's cutlass, notched from the war." },
-  { id: 'cane_machete', name: 'Cane machete', kind: 'gear', slot: 'weapon', price: 70, stats: { atk: 3 }, text: 'A cane cutter\'s blade. Anyone can swing it.' },
+  // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
+  // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
+  // warriors (defence, HP, slower). Rarity sets the colour behind the picture and how good it is:
+  // common and uncommon give stats, rare and epic add a special, legendary are the secret items.
+  // Each has a set level (worn below it, half its bonus counts); legendary grow with their wearer.
 
-  // Armor.
-  { id: 'archivist_robe', name: "Archivist's robe", kind: 'gear', slot: 'armor', price: 60, stats: { def: 2, sp: 4 }, users: ['gianna'], text: 'Blue with gold trim, ink on both cuffs.' },
-  { id: 'woven_tunic', name: 'Woven tunic', kind: 'gear', slot: 'armor', price: 60, stats: { def: 3, hp: 5 }, users: ['yari'], text: 'Green cotton, woven tight on a Xaraguá loom.' },
-  { id: 'officer_coat', level: 1, name: "Officer's coat", kind: 'gear', slot: 'armor', price: 150, stats: { def: 5, hp: 10 }, users: ['patricio'], text: 'Red wool and gold buttons, heavy as a promise.' },
-  { id: 'padded_vest', level: 3, name: 'Padded vest', kind: 'gear', slot: 'armor', price: 140, stats: { def: 4, hp: 6 }, text: 'Quilted cotton over leather. Anyone can wear it.' },
+  // Staffs (mages).
+  { id: 'archivist_staff', name: "Archivist's staff", kind: 'gear', slot: 'weapon', weapon: 'staff', level: 1, price: 80, stats: { mag: 3 }, text: 'A plain staff of temple wood. Every junior archivist gets one.' },
+  { id: 'sunwood_staff', level: 4, rarity: 'uncommon', name: 'Sunwood staff', kind: 'gear', slot: 'weapon', weapon: 'staff', price: 240, stats: { mag: 6, spd: 1 }, text: 'Gold-grained wood that warms in the hand. Spells come easier.' },
+  {
+    id: 'lantern_staff', level: 8, rarity: 'rare', name: 'Lantern staff', kind: 'gear', slot: 'weapon', weapon: 'staff', price: 520, stats: { mag: 9, sp: 6 },
+    special: { kind: 'spRegen', value: 5, text: 'Its lantern head relights her: +5% SP each turn.' },
+    text: 'A staff of black wood crowned with a little brass lantern that never quite goes out.',
+  },
+  // Bows (archers).
+  { id: 'yaguana_bow', name: 'Yaguana bow', kind: 'gear', slot: 'weapon', weapon: 'bow', level: 1, price: 90, stats: { atk: 4 }, text: "Yari's own bow: plain wood, strung with cord she twisted herself." },
+  { id: 'ironwood_bow', level: 4, rarity: 'uncommon', name: 'Ironwood bow', kind: 'gear', slot: 'weapon', weapon: 'bow', price: 260, stats: { atk: 7, spd: 1 }, text: 'Dark, heavy ironwood. It hits like a hammer.' },
+  {
+    id: 'goldband_bow', level: 8, rarity: 'rare', name: 'Gold-banded bow', kind: 'gear', slot: 'weapon', weapon: 'bow', price: 560, stats: { atk: 10, spd: 2 },
+    special: { kind: 'crit', value: 8, text: 'Steady in the hand: +8% critical chance.' },
+    text: 'Ironwood bound with gold bands at the grip and tips, made for a cacique\'s guard.',
+  },
+  // Blades (warriors).
+  { id: 'cane_machete', name: 'Cane machete', kind: 'gear', slot: 'weapon', weapon: 'blade', level: 1, price: 70, stats: { atk: 3 }, text: "A cane cutter's blade, iron and wood." },
+  { id: 'marshal_cutlass', name: 'Cutlass', kind: 'gear', slot: 'weapon', weapon: 'blade', level: 1, price: 120, stats: { atk: 5 }, text: "The Marshal's cutlass, notched from the war." },
+  { id: 'steel_saber', level: 4, rarity: 'uncommon', name: 'Steel saber', kind: 'gear', slot: 'weapon', weapon: 'blade', price: 280, stats: { atk: 8 }, text: 'Bright steel with a brass guard, from the harbor forge.' },
 
-  // Charms (guide 8: the sun-stitched cloth charm).
-  { id: 'sun_charm', level: 2, name: 'Sun-stitched charm', kind: 'gear', slot: 'charm', price: 90, stats: { hp: 8, def: 1 }, text: 'A cloth charm stitched with a sun. In battle it will heal a little each turn.', showcase: 'reward' },
-  { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
+  // Robes (suit mages).
+  { id: 'archivist_robe', name: "Archivist's robe", kind: 'gear', slot: 'armor', armor: 'robe', level: 1, price: 60, stats: { def: 1, sp: 4, mag: 1 }, text: 'Blue with gold trim, ink on both cuffs.' },
+  { id: 'temple_robe', level: 4, rarity: 'uncommon', name: 'Temple robe', kind: 'gear', slot: 'armor', armor: 'robe', price: 220, stats: { def: 2, sp: 8, mag: 2 }, text: "White and gold, the robe of the Gaze's keepers. It smells of lamp oil." },
+  // Leather (suits archers).
+  { id: 'woven_tunic', name: 'Woven tunic', kind: 'gear', slot: 'armor', armor: 'leather', level: 1, price: 60, stats: { def: 2, hp: 4, spd: 1 }, text: 'Green cotton, woven tight on a Xaraguá loom, leather at the shoulders.' },
+  { id: 'padded_vest', level: 3, rarity: 'uncommon', name: 'Padded vest', kind: 'gear', slot: 'armor', armor: 'leather', price: 140, stats: { def: 4, hp: 6, spd: 1, atk: 1 }, text: 'Quilted cotton over leather. Light enough to run in.' },
+  // Heavy armour (suits warriors).
+  { id: 'officer_coat', name: "Officer's coat", kind: 'gear', slot: 'armor', armor: 'heavy', level: 1, price: 150, stats: { def: 5, hp: 10 }, text: 'Red wool and gold buttons over a mail lining, heavy as a promise.' },
+  { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
+
+  // Charms (anyone).
+  { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
+  { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
+  {
+    id: 'sun_charm', level: 2, rarity: 'rare', name: 'Sun-stitched charm', kind: 'gear', slot: 'charm', price: 90, stats: { hp: 8, def: 1 },
+    special: { kind: 'regen', value: 4, text: 'Heals 4% of max HP each turn in battle.' },
+    text: 'A cloth charm stitched with a sun. In battle it heals a little each turn.', showcase: 'reward',
+  },
 ];
 
 export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(ITEM_LIST.map((i) => [i.id, i]));
 
 export const MEMBERS: readonly MemberDef[] = [
   {
-    id: 'gianna', name: 'Gianna', role: 'Archivist-Mage', house: 'Kay Soley', portrait: 'gianna', era: 'present',
+    id: 'gianna', name: 'Gianna', role: 'Archivist-Mage', house: 'Kay Soley', portrait: 'gianna', era: 'present', class: 'mage',
+    passives: [
+      {
+        name: "Anissa's Light",
+        text: `Every ${ANISSA_SP_EVERY} of Gianna's turns in battle, Anissa's light restores ${Math.round(ANISSA_SP_SHARE * 100)}% of her SP.`,
+        known: { flag: 'party.anissa' },
+      },
+      { name: 'Spark and Surge', text: `Each action gives Anissa a Spark (Guard gives 2). At ${SURGE_COST}, Gianna can Surge: her next blow or spell hits half again as hard.`, known: { flag: 'party.anissa' } },
+      { name: 'Archivist\'s thrift', text: 'Her skills cost a quarter less SP.' },
+    ],
     base: { hp: 42, sp: 30, atk: 6, def: 6, mag: 14, spd: 9 }, growth: { hp: 5, sp: 4, atk: 1, def: 1, mag: 2, spd: 1 },
     start: { weapon: 'archivist_staff', armor: 'archivist_robe' },
   },
@@ -80,20 +123,25 @@ export const MEMBERS: readonly MemberDef[] = [
     joins: { flag: 'party.anissa' }, base: zero, growth: zero,
   },
   {
-    id: 'yari', name: 'Yari', role: 'Archer', house: 'Yaguana', portrait: 'yari', era: 'present',
+    id: 'yari', name: 'Yari', role: 'Archer', house: 'Yaguana', portrait: 'yari', era: 'present', class: 'archer',
+    passives: [
+      { name: 'Voice of the Opía', text: 'When any fighter falls, her next shot hits a fifth harder (up to three times).' },
+      { name: 'The hutia', text: 'After a win, a 1 in 8 chance her hutia steals something shiny.' },
+    ],
     joins: { flag: 'act1.complete' },
     base: { hp: 50, sp: 16, atk: 12, def: 7, mag: 6, spd: 13 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'yaguana_bow', armor: 'woven_tunic' },
   },
   {
-    id: 'patricio', name: 'Patricio', role: 'Warden', house: 'Kay Soley', portrait: 'patricio', era: 'echo',
+    id: 'patricio', name: 'Patricio', role: 'Warden', house: 'Kay Soley', portrait: 'patricio', look: 'patricio_young', era: 'echo', class: 'warrior',
+    passives: [{ name: 'Hold the line', text: 'When he Guards, the allies behind him take a fifth less damage too.' }],
     base: { hp: 70, sp: 10, atk: 13, def: 12, mag: 3, spd: 7 }, growth: { hp: 8, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'marshal_cutlass', armor: 'officer_coat' },
   },
 ];
 
 export const SHOPS: Readonly<Record<string, ShopDef>> = {
-  zetwal_forge: { id: 'zetwal_forge', name: 'Harbor forge', city: 'zetwal', stock: ['cane_machete', 'sunwood_staff', 'ironwood_bow', 'padded_vest'] },
+  zetwal_forge: { id: 'zetwal_forge', name: 'Harbor forge', city: 'zetwal', stock: ['sunwood_staff', 'ironwood_bow', 'steel_saber', 'padded_vest', 'iron_cuirass', 'temple_robe', 'lantern_staff', 'goldband_bow'] },
   zetwal_charms: { id: 'zetwal_charms', name: 'Charm stand', city: 'zetwal', stock: ['sun_charm', 'sea_glass_charm'] },
   zetwal_market: { id: 'zetwal_market', name: 'Market stand', city: 'zetwal', stock: ['soup_pot', 'akasan', 'mango'] },
 };
@@ -139,6 +187,7 @@ export const REALM: readonly RealmPlace[] = [
 
 export const RPG: RpgContent = {
   items: ITEMS,
+  classWeapons: { mage: ['staff'], archer: ['bow'], warrior: ['blade'] },
   members: MEMBERS,
   shops: SHOPS,
   cities: CITIES,

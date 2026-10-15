@@ -4,7 +4,7 @@
 // Rules come from engine/rpg.ts; content from data/rpg.ts. The Field scene runs System choices.
 
 import Phaser from 'phaser';
-import { MAP_ART, UI, textureKeyForPortrait } from '../assets.config.ts';
+import { MAP_ART, RARITY_ART, UI, characterFrame, itemArtKey, textureKeyForCharacter, textureKeyForItem, textureKeyForPortrait } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { ENCOUNTERS } from '../data/encounters.ts';
 import { REALM_MAP } from '../data/realmMap.ts';
@@ -38,6 +38,10 @@ import {
   stats,
   unequip,
   visitedFlag,
+  rarityOf,
+  itemLevel,
+  itemBonus,
+  knownPassives,
   type CityDef,
   type CitySection,
   type ItemDef,
@@ -99,7 +103,7 @@ const ROWS = 11; // list rows that fit
 const ROW_H = 12;
 const PILLAR_NAMES: Record<(typeof PILLARS)[number], string> = { influence: 'Influence', wealth: 'Wealth', fear: 'Fear' };
 const STAT_NAMES: Record<(typeof STAT_KEYS)[number], string> = { hp: 'HP', sp: 'SP', atk: 'ATK', def: 'DEF', mag: 'MAG', spd: 'SPD' };
-const SLOT_NAMES: Record<Slot, string> = { weapon: 'Weapon', armor: 'Armor', charm: 'Charm' };
+const SLOT_NAMES: Record<Slot, string> = { weapon: 'Weapon', armor: 'Armor', charm: 'Charm', relic: 'Relic' };
 
 type Stage = 'top' | 'who' | 'slot' | 'pick' | 'read';
 
@@ -390,14 +394,14 @@ export class GameMenu {
   }
 
   private wearers(item: ItemDef): MemberDef[] {
-    return this.fighters().filter((m) => canWear(item, m));
+    return this.fighters().filter((m) => canWear(RPG, item, m));
   }
 
   private candidates(): ItemDef[] {
     const m = this.member!;
     return this.bag()
       .map(([it]) => it)
-      .filter((it) => it.slot === this.slot && canWear(it, m));
+      .filter((it) => it.slot === this.slot && canWear(RPG, it, m));
   }
 
   // ---- Drawing ---------------------------------------------------------------------------------
@@ -459,7 +463,7 @@ export class GameMenu {
         this.drawItems();
         break;
       case 'Equip':
-        this.drawEquip();
+        this.drawEquip(g);
         break;
       case 'Map':
         this.drawMap(g);
@@ -570,41 +574,140 @@ export class GameMenu {
     this.text(6, VIEW_HEIGHT - 12, `A: use, equip or view   B: back   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}`, UI.dimText);
   }
 
-  private drawEquip(): void {
+  /** An item's picture in a box coloured by its rarity (or an empty slot), with its level in the corner. */
+  private itemBox(g: Phaser.GameObjects.Graphics, x: number, y: number, size: number, it: ItemDef | undefined, lv?: number, selected = false): void {
+    const r = RARITY_ART[it ? rarityOf(it) : 'common'];
+    g.fillStyle(it ? r.fill : 0x1e1a24, 1).fillRect(x, y, size, size);
+    g.lineStyle(1, selected ? 0xf2d04b : it ? r.border : 0x3a3440, 1).strokeRect(x + 0.5, y + 0.5, size - 1, size - 1);
+    if (!it) return;
+    const key = textureKeyForItem(itemArtKey(it.id, it.kind));
+    if (this.scene.textures.exists(key)) this.content.add(this.scene.add.image(x + size / 2, y + size / 2, key).setDisplaySize(size - 6, size - 6));
+    if (lv !== undefined) {
+      const t = this.text(0, 0, String(lv), r.text);
+      t.setPosition(x + size - Math.ceil(t.width) - 1, y + size - 9);
+    }
+  }
+
+  /**
+   * Equip (owner decision, Oct 15): the party on the left; the chosen member drawn large with their stats
+   * and passives; their four slots as picture boxes coloured by rarity (Weapon, Armor, Charm, Relic).
+   * Choosing a slot lists what they can use there, with how each changes their stats.
+   */
+  private drawEquip(g: Phaser.GameObjects.Graphics): void {
     const ctx = this.ctx!;
     const fighters = this.fighters();
-    this.drawList(fighters.map((m) => m.name), this.cursor, 6, TOP + 2, ROWS, this.stage === 'top');
+    // The party.
+    fighters.forEach((m, i) => {
+      const y = TOP + 2 + i * 28;
+      const on = i === this.cursor;
+      if (on) g.lineStyle(1, 0xf2d04b, 1).strokeRect(4.5, y - 1.5, 62, 27);
+      const key = textureKeyForPortrait(m.portrait);
+      if (this.scene.textures.exists(key)) this.content.add(this.scene.add.image(7, y + 1, key).setOrigin(0, 0).setDisplaySize(22, 22));
+      this.text(31, y + 2, m.name, on ? UI.accentText : UI.text);
+      this.text(31, y + 12, `Lv ${level(ctx.flags, RPG, m.id)}`, UI.dimText);
+      this.hit(4, y - 2, 64, 28, () => {
+        this.cursor = i;
+        this.member = m;
+        this.stage = 'top';
+        this.subCursor = 0;
+      });
+    });
     const m = this.stage === 'top' ? fighters[this.cursor] : this.member;
     if (!m) return;
-    const X = 96;
-    const slotLabels = SLOTS.map((slot) => {
+    this.member = m;
+    const lv = level(ctx.flags, RPG, m.id);
+
+    // The member, large: their standing sprite, name and class.
+    const look = m.look ?? m.portrait;
+    const sprite = textureKeyForCharacter(look);
+    if (this.scene.textures.exists(sprite)) this.content.add(this.scene.add.image(95, TOP + 2, sprite, characterFrame('down', 0)).setOrigin(0.5, 0).setScale(2));
+
+    if (this.stage === 'pick' && this.slot) return this.drawEquipPick(g, m);
+
+    // The four slots.
+    const X = 124;
+    SLOTS.forEach((slot, i) => {
       const id = equipped(ctx.flags, m, slot);
-      return `${SLOT_NAMES[slot].padEnd(7)} ${id ? RPG.items[id]?.name : '-'}`;
+      const it = id ? RPG.items[id] : undefined;
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const x = X + col * 98;
+      const y = TOP + 2 + row * 34;
+      const selected = this.stage === 'slot' && this.subCursor === i;
+      this.itemBox(g, x, y, 24, it, it ? itemLevel(it, lv) : undefined, selected);
+      this.text(x + 28, y, SLOT_NAMES[slot], selected ? UI.accentText : UI.dimText);
+      if (it) {
+        const heavy = tooHeavy(ctx.flags, RPG, m, it);
+        this.text(x + 28, y + 10, it.name, RARITY_ART[rarityOf(it)].text, 66);
+        if (heavy) this.text(x + 28, y + 20, 'too heavy', BAND_COLOURS.hard);
+      } else this.text(x + 28, y + 10, slot === 'relic' ? '(legendary only)' : '(empty)', UI.dimText);
+      this.hit(x - 1, y - 1, 96, 32, () => {
+        this.stage = 'pick';
+        this.slot = slot;
+        this.subCursor = 0;
+      });
     });
-    this.text(X, TOP + 2, `${m.name}'s gear`, UI.accentText);
-    // Tapping a slot opens it straight away (from the member list too).
-    this.drawList(slotLabels, this.stage === 'slot' ? this.subCursor : -1, X, TOP + 14, 3, this.stage === 'slot', (i) => {
-      if (this.stage === 'slot' && this.subCursor === i) return this.confirm(this.ctx!);
-      this.member = m;
-      this.stage = 'slot';
-      this.subCursor = i;
-      return this.confirm(this.ctx!);
-    });
+    this.labels = SLOTS.map((s2) => SLOT_NAMES[s2]);
+
+    // Stats with gear, then the passives.
     const s = stats(ctx.flags, RPG, m);
-    this.text(X, TOP + 52, STAT_KEYS.map((k) => `${STAT_NAMES[k]} ${s[k]}`).join('  '), UI.dimText, VIEW_WIDTH - X - 8);
-    if (this.stage === 'pick' && this.slot) {
-      const options = this.candidates();
-      const labels = [
-        ...options.map((it) => {
-          const heavy = tooHeavy(ctx.flags, RPG, m, it);
-          const bonus = STAT_KEYS.filter((k) => it.stats?.[k]).map((k) => `${STAT_NAMES[k]}+${it.stats![k]}`).join(' ');
-          return `${it.name} Lv${it.level ?? 1}${heavy ? ' (heavy: half)' : ''}  ${bonus}`;
-        }),
-        '(Remove)',
-      ];
-      this.text(X, TOP + 74, `${SLOT_NAMES[this.slot]} from the bag:`, UI.accentText);
-      this.drawList(labels, this.subCursor, X, TOP + 86, 5, true, (i) => this.tapSub(i));
+    this.text(X, TOP + 70, STAT_KEYS.map((k) => `${STAT_NAMES[k]} ${s[k]}`).join('  '), UI.text, VIEW_WIDTH - X - 4);
+    const passives = knownPassives(ctx.flags, m);
+    let y = TOP + 84;
+    if (passives.length > 0) {
+      this.text(8, y, 'Passives', UI.accentText);
+      y += 10;
+      for (const p of passives) {
+        const t = this.text(8, y, `${p.name}: ${p.text}`, UI.text, VIEW_WIDTH - 16);
+        y += Math.ceil(t.height) + 1;
+      }
     }
+  }
+
+  /** Choosing what goes in a slot: every item the member can use there, as boxes with the stat changes. */
+  private drawEquipPick(g: Phaser.GameObjects.Graphics, m: MemberDef): void {
+    const ctx = this.ctx!;
+    const slot = this.slot!;
+    const lv = level(ctx.flags, RPG, m.id);
+    const X = 124;
+    const options = this.candidates();
+    const wornId = equipped(ctx.flags, m, slot);
+    const worn = wornId ? RPG.items[wornId] : undefined;
+    const wornBonus = worn ? itemBonus(ctx.flags, RPG, m, worn) : {};
+    this.text(X, TOP + 1, `${SLOT_NAMES[slot]}: ${worn ? worn.name : 'empty'}`, UI.accentText, VIEW_WIDTH - X - 4);
+    const rows = [...options, null];
+    const ROW = 25;
+    const visible = 5;
+    const first = Math.max(0, Math.min(this.subCursor - visible + 1, rows.length - visible));
+    rows.slice(first, first + visible).forEach((it, k) => {
+      const i = first + k;
+      const y = TOP + 13 + k * ROW;
+      const on = i === this.subCursor;
+      if (on) g.lineStyle(1, 0xf2d04b, 1).strokeRect(X - 2.5, y - 1.5, VIEW_WIDTH - X - 2, ROW - 1);
+      this.hit(X - 3, y - 2, VIEW_WIDTH - X, ROW, () => {
+        this.subCursor = i;
+        return this.confirm(this.ctx!);
+      });
+      if (!it) {
+        this.text(X + 26, y + 6, worn ? `Remove the ${worn.name}` : '(nothing to remove)', on ? UI.accentText : UI.dimText);
+        return;
+      }
+      this.itemBox(g, X, y, 22, it, itemLevel(it, lv), on);
+      const heavy = tooHeavy(ctx.flags, RPG, m, it);
+      this.text(X + 26, y, `${it.name}${heavy ? '  (too heavy: half)' : ''}`, RARITY_ART[rarityOf(it)].text, VIEW_WIDTH - X - 30);
+      // How it would change the member's stats compared with what they wear now.
+      const bonus = itemBonus(ctx.flags, RPG, m, it);
+      const parts = STAT_KEYS.map((k) => ({ k, d: (bonus[k] ?? 0) - (wornBonus[k] ?? 0) })).filter((d) => d.d !== 0);
+      let x = X + 26;
+      for (const { k, d } of parts) {
+        const t = this.text(x, y + 10, `${STAT_NAMES[k]} ${d > 0 ? '+' : ''}${d}`, d > 0 ? UI.doneText : BAND_COLOURS.deadly);
+        x += Math.ceil(t.width) + 6;
+      }
+      if (parts.length === 0) this.text(x, y + 10, 'no change', UI.dimText);
+      if (it.special) this.text(x + (parts.length ? 0 : 50), y + 10, '★', RARITY_ART[rarityOf(it)].text);
+    });
+    if (options.length === 0) this.text(X + 26, TOP + 13 + ROW + 6, slot === 'weapon' ? `Nothing ${m.name} can hold.` : 'Nothing in the bag for this slot.', UI.dimText);
+    this.labels = rows.map((it) => (it ? it.name : 'Remove'));
   }
 
   private drawMap(g: Phaser.GameObjects.Graphics): void {

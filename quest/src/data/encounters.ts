@@ -14,6 +14,21 @@ export const LATER_STORY_FLAGS: readonly string[] = [
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
+  // Scripted fights (data/battles.ts), listed here so the Foes page shows them. No map rolls on this table.
+  wilds: {
+    id: 'wilds',
+    groups: [
+      {
+        id: 'boar',
+        weight: 0,
+        level: 3,
+        foes: ['Cane-field boar'],
+        intro: 'A boar bursts out of the cane.',
+        won: 'The boar crashes away into the cane.',
+        fled: 'You back away from the boar.',
+      },
+    ],
+  },
   // Zetwal: the Cane Road beyond the east gate.
   cane_road: {
     id: 'cane_road',

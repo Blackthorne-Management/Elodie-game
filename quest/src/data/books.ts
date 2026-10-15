@@ -78,6 +78,18 @@ export const BOOKS: readonly Book[] = [
       'Kay Soley heirs carry it. The archivists are taught never to treat it as a crown.',
   },
   {
+    id: 'zetwal_blessed_seat',
+    title: 'The Blessed Seat',
+    category: 'religion',
+    text:
+      'Before there were houses, there was the Gaze. Ours is the oldest faith in the realm, and no scholar of any house disputes it. ' +
+      'When the first heirs came to the old seat where the eight roads meet, the temples teach that Elodie came with them. ' +
+      'She did not sit. She does not rule. She blessed the seat, and set her sun on the brow of those who would keep it honest. ' +
+      'That is why the faithful still call the city Elodie\'s Seat, whatever the maps say. The sun mark is her sign. ' +
+      'The kings of Aldermoor have struck this page from their copies three times. Each time, this archive copied it again. ' +
+      'A margin note in a careful hand: "Ask the Crown why it fears a story it calls false."',
+  },
+  {
     id: 'zetwal_say_their_names',
     title: 'Why We Say Their Names',
     category: 'religion',
@@ -163,6 +175,19 @@ export const BOOKS: readonly Book[] = [
       'He could only find six clauses to copy.',
   },
   {
+    id: 'zetwal_crown_chronicle',
+    title: 'The Throne: A Crown Chronicle',
+    category: 'law',
+    text:
+      'Copied from the Aldermoor chronicles for the Hall of the Accord, by order of the Regent\'s office. ' +
+      'The Throne at Eightgate was raised by the first kings, in stone and timber, with the consent of the houses. ' +
+      'Eight roads were cut to its eight gates, so that no house could say it was kept out. ' +
+      'No goddess attended. The chronicles of that year record the weather, the wages and the price of stone, and nothing else. ' +
+      'Certain temples teach that Elodie blessed the seat and marked its heirs with her sun. This is a pious tale. ' +
+      'To repeat it as law sets one faith above the consent of all, and that is close to sedition. ' +
+      'Below, someone has scratched: "Then why burn the archive that kept the older record?"',
+  },
+  {
     id: 'zetwal_eight_houses',
     title: 'The Eight Houses',
     category: 'genealogy',
@@ -200,9 +225,9 @@ export const BOOKS: readonly Book[] = [
 
 export const SHELVES: readonly Shelf[] = [
   { id: 'archive_history', name: 'Shelf: History and War', books: ['zetwal_founding', 'zetwal_alliance_war', 'zetwal_ash_wars_temple'] },
-  { id: 'archive_faith', name: 'Shelf: Faith', books: ['zetwal_gaze_primer', 'zetwal_say_their_names', 'zetwal_four_hands'] },
+  { id: 'archive_faith', name: 'Shelf: Faith', books: ['zetwal_gaze_primer', 'zetwal_blessed_seat', 'zetwal_say_their_names', 'zetwal_four_hands'] },
   { id: 'archive_tales', name: 'Shelf: Tales and Notes', books: ['zetwal_bridge_tale', 'zetwal_hutia_lamp', 'zetwal_overdue', 'zetwal_ash_wars_anicette'] },
-  { id: 'hall_law', name: 'Shelf: Law and Houses', books: ['zetwal_sun_accord', 'zetwal_eight_houses'] },
+  { id: 'hall_law', name: 'Shelf: Law and Houses', books: ['zetwal_sun_accord', 'zetwal_crown_chronicle', 'zetwal_eight_houses'] },
   { id: 'hall_records', name: 'Shelf: Harbor Records', books: ['zetwal_harbor_tolls', 'zetwal_quiet_tract'] },
 ];
 

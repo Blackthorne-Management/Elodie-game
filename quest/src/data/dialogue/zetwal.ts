@@ -1229,6 +1229,24 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     { text: 'The old sugar mill, burned in the war and never rebuilt. Fresh ashes in the hearth: someone sleeps here.' },
   ]),
 
+  // The first battle (owner decision, Oct 15): a boar out of the cane. The dialogue's last line names
+  // the battle; the scene starts it when the dialogue ends (engine/game.ts finishDialogue).
+  script('boar_ambush', {
+    start: { lines: [], next: [{ if: { flag: 'story.boar_seen' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      lines: [
+        nar('The cane rustles. Something heavy is moving through it, fast.'),
+        say(A, 'Gigi...'),
+        nar('A boar bursts onto the road, bristles up, tusks low, and plants itself between you and the gate.'),
+        say(G, 'Stay behind me, Nissa.'),
+        say(A, '...I will.', { set: { 'story.boar_seen': true, 'battle.next': 'intro_boar' } }),
+      ],
+    },
+    again: {
+      lines: [nar('The boar is back, snorting, blocking the road.'), say(G, 'Again, then. Stay behind me.', { set: { 'battle.next': 'intro_boar' } })],
+    },
+  }),
+
   // A Name in the Cane: the Cane Road fifty years ago, and Mother Solange's list in the Archive.
   once('cane_echo_enter', 'story.cane_echo_seen', [
     nar("The road is narrower, and the cane is the Crown's. Overseers' lanterns bob far off between the rows."),

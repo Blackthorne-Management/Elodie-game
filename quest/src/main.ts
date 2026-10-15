@@ -24,6 +24,7 @@ import { KeyboardSource } from './input/keyboard.ts';
 import { TouchSource, isTouchDevice } from './input/touch.ts';
 import { browserStorage, loadStoredGame, setRuntime, type Runtime } from './runtime.ts';
 import { BootScene } from './scenes/BootScene.ts';
+import { BattleScene } from './scenes/BattleScene.ts';
 import { FieldScene } from './scenes/FieldScene.ts';
 import { mountFullscreenButton } from './ui/fullscreen.ts';
 import { fitToScreen, preventBrowserZoom, visibleViewport } from './ui/screen.ts';
@@ -104,7 +105,7 @@ const game = new Phaser.Game({
     zoom: startZoom / S,
     autoCenter: Phaser.Scale.NO_CENTER,
   },
-  scene: [BootScene, FieldScene],
+  scene: [BootScene, FieldScene, BattleScene],
 });
 
 game.events.once(Phaser.Core.Events.READY, () => fitToScreen((zoom) => game.scale.setZoom(zoom / S), isTouchDevice()));

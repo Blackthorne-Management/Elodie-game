@@ -6,7 +6,7 @@
 // plantation fifty years ago, where the side quest A Name in the Cane finds Rose-Aimée.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
-import { npc, obj } from './zetwal-town.ts';
+import { npc, obj, trigger } from './zetwal-town.ts';
 
 export function zetwalRoad(): MapSource {
   const W = 44;
@@ -47,6 +47,9 @@ export function zetwalRoad(): MapSource {
     obj('road_sign', 4, 11, { dialogue: 'road_sign', era: 'present' }),
     obj('mill_ruin', 35, 3, { dialogue: 'mill_ruin', era: 'present' }),
     obj('smuggler_crates', 23, 18, { dialogue: 'smuggler_crates', era: 'present' }),
+    // The first battle (owner decision, Oct 15): where the road meets the cane, a boar charges out.
+    // It fires every time until the boar is beaten (a reload mid-fight brings it back).
+    trigger('boar_ambush', 9, 12, { dialogue: 'boar_ambush', if: 'party.anissa, !encounter.wilds.boar.won' }, 1, 2),
     // A Name in the Cane: the road fifty years ago, where Rose-Aimée worked by the roses at the gate.
     { layer: 'echo_zones', name: 'cane_roses', x: 2, y: 14, w: 3, h: 2, props: { if: 'item.sun_locket, side.cane_name.stones', onEcho: 'cane_echo_enter' } },
     npc('echo_cane_worker', 2, 16, 'up', { era: 'echo' }),

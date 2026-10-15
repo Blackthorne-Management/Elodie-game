@@ -25,8 +25,37 @@ export const STAT_KEYS = ['hp', 'sp', 'atk', 'def', 'mag', 'spd'] as const;
 export type StatKey = (typeof STAT_KEYS)[number];
 export type Stats = Record<StatKey, number>;
 
-export const SLOTS = ['weapon', 'armor', 'charm'] as const;
+export const SLOTS = ['weapon', 'armor', 'charm', 'relic'] as const;
 export type Slot = (typeof SLOTS)[number];
+
+/** Rarity, low to high (owner decision, Oct 15): the colour behind an item's picture. */
+export const RARITIES = ['common', 'uncommon', 'rare', 'epic', 'legendary'] as const;
+export type Rarity = (typeof RARITIES)[number];
+
+/** Who may hold a weapon: staffs are for mages, bows for archers, blades for warriors. */
+export type WeaponType = 'staff' | 'bow' | 'blade';
+/** Anyone may wear any armour, but each kind suits a class: robes (mages), leather (archers), heavy (warriors). */
+export type ArmorType = 'robe' | 'leather' | 'heavy';
+export type MemberClass = 'mage' | 'archer' | 'warrior';
+
+/**
+ * A special property (rare and above): shown on the item, used in battle (engine/battle.ts).
+ * regen: heals `value`% of max HP at the start of the wearer's turn; spRegen: the same for SP;
+ * crit: +`value` points of critical chance.
+ */
+export interface ItemSpecial {
+  kind: 'regen' | 'spRegen' | 'crit';
+  value: number;
+  text: string;
+}
+
+/** A member's passive, shown on the Equip screen (and used in battle when it has a battle effect). */
+export interface Passive {
+  name: string;
+  text: string;
+  /** Known once this holds (always when omitted); unknown passives are not listed. */
+  known?: Condition;
+}
 
 export interface ItemDef {
   id: string;
@@ -42,8 +71,20 @@ export interface ItemDef {
   heals?: number;
   /** SP restored. */
   restores?: number;
-  /** Members who can wear it (all who have the slot when omitted). */
+  /** Heals over this many turns in battle instead of at once (the clay-pot soup). */
+  healTurns?: number;
+  /** Members who can wear it (otherwise the class rules decide). */
   users?: readonly string[];
+  /** Gear: rarity (common when omitted). Legendary gear is the secret items, worn in the relic slot. */
+  rarity?: Rarity;
+  /** Weapons: which kind (who may hold it). */
+  weapon?: WeaponType;
+  /** Armour: which kind (who it suits). */
+  armor?: ArmorType;
+  /** Rare and above: a special property. */
+  special?: ItemSpecial;
+  /** Legendary: what each of the wearer's levels above 1 adds (fractions add up; rounded down). */
+  growth?: Partial<Stats>;
   /** Gear level: worn below it, the item gives only part of its bonus (GEAR_UNDERLEVEL_SHARE). */
   level?: number;
   text: string;
@@ -73,12 +114,18 @@ export interface MemberDef {
   house: string;
   /** Portrait key (assets.config.ts PORTRAITS). */
   portrait: string;
+  /** Walk-sheet look (assets.config.ts NPC_SPRITES), shown large on the Equip screen (default: the portrait key). */
+  look?: string;
   /** In the party while this holds (always when omitted). */
   joins?: Condition;
   /** Which era they fight in: the present party, or the Echo (Patricio's). */
   era: 'present' | 'echo';
   /** A support member (Anissa) has no stats or gear; the menu shows her Spark and Calm instead. */
   support?: boolean;
+  /** Fighters: their class (which weapons they may hold). */
+  class?: MemberClass;
+  /** Always-on traits, listed on the Equip screen. */
+  passives?: readonly Passive[];
   /** Level 1 stats, and what each level adds. */
   base: Stats;
   growth: Stats;
@@ -125,6 +172,8 @@ export interface RealmPlace {
 
 export interface RpgContent {
   items: Readonly<Record<string, ItemDef>>;
+  /** Which weapon kinds each class may hold. */
+  classWeapons: Readonly<Record<MemberClass, readonly WeaponType[]>>;
   members: readonly MemberDef[];
   shops: Readonly<Record<string, ShopDef>>;
   cities: Readonly<Record<string, CityDef>>;
@@ -266,16 +315,38 @@ export function baseStats(flags: FlagReader, rpg: RpgContent, member: MemberDef)
 
 /** Whether a member is below an item's level (it is "too heavy": only part of its bonus counts). */
 export function tooHeavy(flags: FlagReader, rpg: RpgContent, member: MemberDef, item: ItemDef): boolean {
+  if (item.rarity === 'legendary') return false; // it grows with its wearer
   return (item.level ?? 1) > level(flags, rpg, member.id);
+}
+
+export function rarityOf(item: ItemDef): Rarity {
+  return item.rarity ?? 'common';
+}
+
+/** The item's level as shown: a legendary's is its wearer's (or 1 in the bag), the rest are fixed. */
+export function itemLevel(item: ItemDef, wearerLevel?: number): number {
+  return item.rarity === 'legendary' ? Math.max(1, wearerLevel ?? 1) : (item.level ?? 1);
+}
+
+/** An item's stats at a level: its own, plus a legendary's growth for each level above 1. */
+export function itemStatsAt(item: ItemDef, lv: number): Partial<Stats> {
+  const out: Partial<Stats> = {};
+  for (const k of STAT_KEYS) {
+    const v = (item.stats?.[k] ?? 0) + Math.floor((item.growth?.[k] ?? 0) * Math.max(0, lv - 1));
+    if (v) out[k] = v;
+  }
+  return out;
 }
 
 /** An item's bonus for this member: in full at or above its level, else GEAR_UNDERLEVEL_SHARE of it (rounded down). */
 export function itemBonus(flags: FlagReader, rpg: RpgContent, member: MemberDef, item: ItemDef): Partial<Stats> {
   const heavy = tooHeavy(flags, rpg, member, item);
+  const own = itemStatsAt(item, itemLevel(item, level(flags, rpg, member.id)));
   const out: Partial<Stats> = {};
   for (const k of STAT_KEYS) {
-    const v = item.stats?.[k];
-    if (v) out[k] = heavy ? Math.floor(v * rpg.levels.gearUnderlevelShare) : v;
+    const v = own[k];
+    // Too heavy: only part of a bonus counts (a penalty, like heavy armour's speed, counts in full).
+    if (v) out[k] = heavy && v > 0 ? Math.floor(v * rpg.levels.gearUnderlevelShare) : v;
   }
   return out;
 }
@@ -293,8 +364,28 @@ export function stats(flags: FlagReader, rpg: RpgContent, member: MemberDef): St
   return out;
 }
 
-export function canWear(item: ItemDef, member: MemberDef): boolean {
-  return item.kind === 'gear' && !!item.slot && !member.support && (!item.users || item.users.includes(member.id));
+/**
+ * Whether a member may wear an item: gear, not Anissa, and for weapons the right class (staffs for mages,
+ * bows for archers, blades for warriors). Armour, charms and relics fit anyone. `users` narrows it further.
+ */
+export function canWear(rpg: RpgContent, item: ItemDef, member: MemberDef): boolean {
+  if (item.kind !== 'gear' || !item.slot || member.support) return false;
+  if (item.users && !item.users.includes(member.id)) return false;
+  if (item.slot === 'weapon') return !!item.weapon && !!member.class && rpg.classWeapons[member.class].includes(item.weapon);
+  return true;
+}
+
+const ARMOR_FOR: Readonly<Record<MemberClass, ArmorType>> = { mage: 'robe', archer: 'leather', warrior: 'heavy' };
+
+/** Whether armour matches a member's class (robes for mages, leather for archers, heavy for warriors). */
+export function suits(item: ItemDef, member: MemberDef): boolean {
+  if (!item.armor || !member.class) return true;
+  return ARMOR_FOR[member.class] === item.armor;
+}
+
+/** A member's passives the player knows about. */
+export function knownPassives(flags: FlagReader, member: MemberDef): Passive[] {
+  return (member.passives ?? []).filter((p) => evaluate(p.known, flags));
 }
 
 // ---- The bag ----------------------------------------------------------------------------------
@@ -312,9 +403,14 @@ export function bagContents(flags: FlagReader, rpg: RpgContent): [ItemDef, numbe
     .filter(([, n]) => n > 0);
 }
 
-/** Bag space used: every item but key items (worn gear is not in the bag). */
+/** Items that never take bag space: key items and relics (the secret items). */
+export function takesNoSpace(item: ItemDef): boolean {
+  return item.kind === 'key' || item.slot === 'relic';
+}
+
+/** Bag space used: every item but key items and relics (worn gear is not in the bag). */
 export function bagUsed(flags: FlagReader, rpg: RpgContent): number {
-  return bagContents(flags, rpg).reduce((n, [it, c]) => n + (it.kind === 'key' ? 0 : c), 0);
+  return bagContents(flags, rpg).reduce((n, [it, c]) => n + (takesNoSpace(it) ? 0 : c), 0);
 }
 
 export function bagFree(flags: FlagReader, rpg: RpgContent): number {
@@ -325,7 +421,7 @@ export function bagFree(flags: FlagReader, rpg: RpgContent): number {
 export function addItem(flags: FlagStore, rpg: RpgContent, id: string, n = 1): boolean {
   const item = rpg.items[id];
   if (!item || n < 1) return false;
-  if (item.kind !== 'key' && bagFree(flags, rpg) < n) return false;
+  if (!takesNoSpace(item) && bagFree(flags, rpg) < n) return false;
   flags.set(`item.${id}`, item.kind === 'key' ? true : itemCount(flags, id) + n);
   return true;
 }
@@ -345,7 +441,7 @@ export type EquipResult = 'ok' | 'cannot_wear' | 'not_in_bag' | 'bag_full';
 /** Wear an item from the bag; what was worn in that slot goes back into the bag (a swap needs no space). */
 export function equip(flags: FlagStore, rpg: RpgContent, member: MemberDef, id: string): EquipResult {
   const item = rpg.items[id];
-  if (!item || !canWear(item, member)) return 'cannot_wear';
+  if (!item || !canWear(rpg, item, member)) return 'cannot_wear';
   if (itemCount(flags, id) < 1) return 'not_in_bag';
   const slot = item.slot!;
   const old = equipped(flags, member, slot);

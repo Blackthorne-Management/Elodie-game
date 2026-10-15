@@ -627,6 +627,28 @@ async function playAct(browser, errors) {
   check((await snap(page)).journal[0] === 'CREDITS', 'the menu has a Credits screen');
   await page.keyboard.press('x');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  // The first battle (the boar on the Cane Road): Sunthread until it falls, Surge when ready.
+  await page.evaluate(() => window.__quest.startBattle('intro_boar'));
+  await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return b && !b.busy; }, null, { timeout: 15000 });
+  await shoot(page, 'battle-start', shots);
+  for (let turn = 0; turn < 40; turn++) {
+    await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
+    const bt = (await snap(page)).battle;
+    if (!bt) break;
+    if (bt.done) {
+      await shoot(page, 'battle-won', shots);
+      await page.keyboard.press('KeyZ');
+      break;
+    }
+    const want = bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith('Sunthread')) ?? 'Back') : 'Skill';
+    const idx = bt.rows.findIndex((r) => r === want || r.startsWith(want));
+    for (let i = 0; i < idx; i++) await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('KeyZ');
+    await page.waitForTimeout(120);
+  }
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 5000 });
+  const afterBattle = await snap(page);
+  check(afterBattle.flags['encounter.wilds.boar.won'] === true && (afterBattle.flags['item.boar_tusk'] ?? 0) >= 1, 'the boar battle can be won and pays out the boar-tusk charm');
   await page.reload();
   await waitReady(page);
   const back = await snap(page);

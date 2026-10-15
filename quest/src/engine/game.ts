@@ -3,6 +3,7 @@
 // using puzzle objects, the Echo swap with anchors, dialogue, and end-of-act cards. Every action
 // returns a list of effects for the caller to show. Pure TypeScript: no Phaser, no DOM.
 
+import { encounterFlag } from './encounterFlags.ts';
 import { ENCOUNTER_CHANCE_PER_STEP, ENCOUNTER_GRACE_STEPS } from '../config.ts';
 import { evaluate, flagsIn } from './conditions.ts';
 import { cardFlag, type CardDef, type EncounterGroup, type EncounterTable, type GameContent } from './content.ts';
@@ -66,7 +67,9 @@ export type Effect =
   /** An ambush in a wild section (the scene flashes; the fight follows as a dialogue until Phase 3). */
   | { kind: 'encounter'; table: string; group: string }
   /** A vendor's greeting ended: open their shop. */
-  | { kind: 'shop'; shop: string };
+  | { kind: 'shop'; shop: string }
+  /** A dialogue named a battle (flag `battle.next`): the scene runs it (data/battles.ts). */
+  | { kind: 'battle'; battle: string };
 
 export type StepAttempt =
   | { ok: true; to: Pos }
@@ -449,6 +452,11 @@ export class GameLogic {
     const effects: Effect[] = [...this.afterDialogue, { kind: 'sync' }];
     this.afterDialogue = [];
     const flags = this.state.flags;
+    const battle = flags.get('battle.next');
+    if (typeof battle === 'string' && battle) {
+      flags.clear('battle.next');
+      effects.push({ kind: 'battle', battle });
+    }
     const card = this.content.cards.find((c) => flags.isSet(c.when) && !flags.isSet(cardFlag(c)));
     if (card) {
       flags.set(cardFlag(card), true);
@@ -471,10 +479,7 @@ function pickGroup(table: EncounterTable, rng: Rng): EncounterGroup {
   return table.groups[table.groups.length - 1]!;
 }
 
-/** Flags an encounter sets: how often each group was beaten or escaped (`encounter.<table>.<group>.won|fled`). */
-export function encounterFlag(table: string, group: string, outcome: 'won' | 'fled'): string {
-  return `encounter.${table}.${group}.${outcome}`;
-}
+export { encounterFlag };
 
 /**
  * The stand-in for a fight until Phase 3 battles exist: the foes appear, Fight always wins, Run

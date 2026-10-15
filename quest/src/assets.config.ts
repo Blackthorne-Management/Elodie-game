@@ -4,9 +4,9 @@
 // ART_FILES describes into quest/art/ and it is used instead of the placeholder (a missing file
 // keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
 
-import { ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt } from './assets.pixels.ts';
+import { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
-export { ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt };
+export { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt };
 
 /** Pattern drawn on top of a placeholder tile's base colour so tiles read at a glance. */
 export type TilePattern = 'flat' | 'dots' | 'grid' | 'stripes' | 'cross' | 'border' | 'blob' | 'wave';
@@ -299,6 +299,7 @@ export const ART_FILES = {
   tile: (name: string) => `tiles/${name}.png`,
   object: (kind: string) => `objects/${kind}.png`,
   item: (id: string) => `items/${id}.png`,
+  enemy: (look: string) => `enemies/${look}.png`,
   /** Walk sheet layout. */
   sheetColumns: 3,
   sheetRows: ['down', 'left', 'right', 'up'] as const,
@@ -428,6 +429,18 @@ export function itemArtKey(id: string, kind: 'consumable' | 'gear' | 'key'): str
   return ITEM_ART[id] ? id : kind === 'gear' ? 'gear' : 'key';
 }
 
+/**
+ * Rarity colours (owner decision, Oct 15): the box behind an item's picture on the Equip screen, its
+ * border, and its name. Common grey, uncommon green, rare blue, epic purple, legendary gold.
+ */
+export const RARITY_ART = {
+  common: { fill: 0x4a4752, border: 0x8a8794, text: '#c8c6d0' },
+  uncommon: { fill: 0x24492a, border: 0x5fae58, text: '#8cc860' },
+  rare: { fill: 0x1f3460, border: 0x5a8ad8, text: '#9ab8ff' },
+  epic: { fill: 0x3e2558, border: 0xa070d8, text: '#c8a0ff' },
+  legendary: { fill: 0x5a4210, border: 0xf2d04b, text: '#f2d04b' },
+} as const;
+
 /** The item showcase (ui/ItemShowcase.ts): timings in ms, sizes in screen pixels, colours. */
 export const SHOWCASE = {
   dimAlpha: 0.9,
@@ -445,3 +458,29 @@ export const SHOWCASE = {
   rewardColor: '#7fbf7a',
   sparkleCount: 10,
 } as const;
+
+/** Enemy drawings (ENEMY_ART, or a file in art/enemies/), one texture each. */
+export function textureKeyForEnemy(look: string): string {
+  return `enemy-${look}`;
+}
+
+/** The battle screen (scenes/BattleScene.ts): colours and layout in game pixels. */
+export const BATTLE_ART = {
+  sky: 0x1e3a2a,
+  ground: 0x3f6a32,
+  groundDark: 0x2f5426,
+  cane: 0x8cc860,
+  panel: 0x14101a,
+  panelBorder: 0xe8d8b0,
+  hpBar: 0x7fbf7a,
+  hpLow: 0xd8584a,
+  spBar: 0x5a8ad8,
+  sparkBar: 0xfff2a0,
+  hit: '#ffffff',
+  crit: '#f2d04b',
+  heal: '#7fbf7a',
+  /** How long each message stays before the next (ms), and the damage number's float. */
+  messageMs: 900,
+  popMs: 700,
+} as const;
+

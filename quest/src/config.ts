@@ -135,3 +135,49 @@ export const HINT_FIRST_MS = 3 * 60 * 1000;
 export const HINT_REPEAT_MS = 90 * 1000;
 /** How long a hint stays on screen. */
 export const HINT_SHOW_MS = 7000;
+
+// ---- Battles (docs/quest/design/COMBAT.md; engine/battle.ts) ----------------------------------------
+
+/** Turn order: after acting, a fighter waits round(TURN_DELAY_K / (SPD + TURN_DELAY_OFFSET)) x the action's weight. */
+export const TURN_DELAY_K = 1200;
+export const TURN_DELAY_OFFSET = 30;
+export const ACTION_WEIGHT = { attack: 1, skill: 1, item: 0.8, guard: 0.6 } as const;
+/** Damage variance: x U(1 - v, 1 + v). */
+export const DAMAGE_VARIANCE = 0.08;
+/** Hit chance (physical): HIT_BASE + (SPD difference) / 2, clamped. Crit: CRIT_BASE + (SPD difference) / 4. */
+export const HIT_BASE = 95;
+export const HIT_MIN = 75;
+export const HIT_MAX = 99;
+export const CRIT_BASE = 5;
+export const CRIT_MIN = 2;
+export const CRIT_MAX = 25;
+export const CRIT_MULT = 1.5;
+/** A hit always does at least this share of its raw power. */
+export const MIN_DAMAGE_SHARE = 0.15;
+export const GUARD_MULT = 0.5;
+/** Anissa's Spark: per Gianna action, per Guard; a Surge spends SURGE_COST and multiplies the next hit. */
+export const SPARK_ON_ACT = 1;
+export const SPARK_ON_GUARD = 2;
+export const SPARK_MAX = 10;
+export const SURGE_COST = 5;
+export const SURGE_MULT = 1.5;
+/** Anissa's Light (owner decision, Oct 15): every N of Gianna's turns, Anissa restores this share of her max SP. */
+export const ANISSA_SP_EVERY = 3;
+export const ANISSA_SP_SHARE = 0.2;
+/** Gianna's skills cost this much less SP (rounded down, at least 1). */
+export const GIANNA_SP_DISCOUNT = 0.25;
+/** The Heir Rises: losing restarts the fight with a Grudge, +GRUDGE_STEP damage each time up to GRUDGE_MAX. */
+export const GRUDGE_STEP = 0.1;
+export const GRUDGE_MAX = 0.3;
+/** Story difficulty (the default): enemies hit softer and have less HP. */
+export const DIFFICULTY = { story: { enemyDamage: 0.7, enemyHp: 0.8 } } as const;
+/** Enemy stat lines by level: base + per level, then the role's multipliers. */
+export const ENEMY_STAT_LINE = { hp: [12, 9], atk: [7, 2.5], def: [4, 1.5], mag: [6, 2.4], spd: [8, 0.8] } as const;
+export const ENEMY_ROLE = {
+  skirmisher: { hp: 0.8, atk: 1, def: 0.8, mag: 0.6, spd: 1.3, xp: 1 },
+  brute: { hp: 1.4, atk: 1.2, def: 1, mag: 0.5, spd: 0.8, xp: 1.25 },
+  tank: { hp: 1.5, atk: 0.9, def: 1.5, mag: 0.5, spd: 0.7, xp: 1.25 },
+  caster: { hp: 0.8, atk: 0.6, def: 0.7, mag: 1.3, spd: 1, xp: 1 },
+} as const;
+/** SP back after a battle (a share of max). */
+export const SP_AFTER_BATTLE = 0.1;

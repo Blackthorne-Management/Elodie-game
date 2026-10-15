@@ -28,22 +28,30 @@ import {
   unequip,
   xpForLevel,
   type RpgContent,
+  canWear,
+  suits,
+  itemLevel,
+  itemStatsAt,
+  rarityOf,
+  itemBonus,
+  knownPassives,
 } from '../src/engine/rpg.ts';
 import { rewardText, settleRewards, sideQuestStatus, visibleSteps, type SideQuestDef } from '../src/engine/sideQuests.ts';
 import { RPG } from '../src/data/rpg.ts';
 
 const rpg: RpgContent = {
+  classWeapons: { mage: ['staff'], archer: ['bow'], warrior: ['blade'] },
   items: {
     soup: { id: 'soup', name: 'Soup', kind: 'consumable', price: 30, heals: 40, text: '' },
-    staff: { id: 'staff', name: 'Staff', kind: 'gear', slot: 'weapon', price: 100, stats: { mag: 4 }, users: ['gi'], text: '' },
-    staff2: { id: 'staff2', name: 'Better staff', kind: 'gear', slot: 'weapon', price: 200, stats: { mag: 7 }, users: ['gi'], text: '' },
+    staff: { id: 'staff', name: 'Staff', kind: 'gear', slot: 'weapon', weapon: 'staff', price: 100, stats: { mag: 4 }, text: '' },
+    staff2: { id: 'staff2', name: 'Better staff', kind: 'gear', slot: 'weapon', weapon: 'staff', price: 200, stats: { mag: 7 }, text: '' },
     charm: { id: 'charm', name: 'Charm', kind: 'gear', slot: 'charm', price: 60, stats: { def: 1, spd: 1 }, text: '' },
     locket: { id: 'locket', name: 'Locket', kind: 'key', price: 0, text: '' },
   },
   members: [
-    { id: 'gi', name: 'Gi', role: 'Mage', house: 'K', portrait: 'gi', era: 'present', base: { hp: 40, sp: 30, atk: 6, def: 6, mag: 14, spd: 9 }, growth: { hp: 5, sp: 4, atk: 1, def: 1, mag: 2, spd: 1 }, start: { weapon: 'staff' } },
+    { id: 'gi', name: 'Gi', role: 'Mage', house: 'K', portrait: 'gi', era: 'present', class: 'mage', base: { hp: 40, sp: 30, atk: 6, def: 6, mag: 14, spd: 9 }, growth: { hp: 5, sp: 4, atk: 1, def: 1, mag: 2, spd: 1 }, start: { weapon: 'staff' } },
     { id: 'an', name: 'An', role: 'Support', house: 'K', portrait: 'an', era: 'present', support: true, joins: { flag: 'party.an' }, base: { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 }, growth: { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 } },
-    { id: 'pa', name: 'Pa', role: 'Warden', house: 'K', portrait: 'pa', era: 'echo', base: { hp: 70, sp: 10, atk: 13, def: 12, mag: 3, spd: 7 }, growth: { hp: 8, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 } },
+    { id: 'pa', name: 'Pa', role: 'Warden', house: 'K', portrait: 'pa', era: 'echo', class: 'warrior', base: { hp: 70, sp: 10, atk: 13, def: 12, mag: 3, spd: 7 }, growth: { hp: 8, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 } },
   ],
   shops: { stall: { id: 'stall', name: 'Stall', city: 'z', stock: ['soup', 'charm', 'staff2'] } },
   cities: { z: { id: 'z', name: 'Z', house: 'K', sections: [{ map: 'z-town', name: 'Town', at: { x: 0, y: 0 } }] } },
@@ -159,7 +167,7 @@ describe('the game content', () => {
     for (const s of Object.values(RPG.shops)) for (const id of s.stock) expect(RPG.items[id], `${s.id}: ${id}`).toBeDefined();
     for (const m of RPG.members) for (const id of Object.values(m.start ?? {})) expect(RPG.items[id!], `${m.id}: ${id}`).toBeDefined();
     for (const it of Object.values(RPG.items)) {
-      if (it.kind === 'key') expect(it.price, it.id).toBe(0);
+      if (it.kind === 'key' || it.rarity === 'legendary') expect(it.price, it.id).toBe(0);
       else expect(it.price, it.id).toBeGreaterThan(0);
       if (it.kind === 'gear') expect(it.slot, it.id).toBeDefined();
       expect(it.name.length, it.id).toBeLessThanOrEqual(22);
@@ -250,5 +258,73 @@ describe('side quests', () => {
     expect(settleRewards(f, rpg, [q])).toEqual([]);
     expect(gold(f, rpg)).toBe(190);
     expect(rewardText(q, rpg)).toBe('+40 gold, +60 XP, Charm, +1 influence');
+  });
+});
+
+describe('gear classes, rarities and relics (owner decision, Oct 15)', () => {
+  const member = (id: string) => RPG.members.find((m) => m.id === id)!;
+  const item = (id: string) => RPG.items[id]!;
+
+  it('only mages hold staffs, only archers bows, only warriors blades; armour and charms fit anyone', () => {
+    const gianna = member('gianna');
+    const yari = member('yari');
+    const patricio = member('patricio');
+    expect(canWear(RPG, item('archivist_staff'), gianna)).toBe(true);
+    expect(canWear(RPG, item('archivist_staff'), yari)).toBe(false);
+    expect(canWear(RPG, item('yaguana_bow'), yari)).toBe(true);
+    expect(canWear(RPG, item('yaguana_bow'), gianna)).toBe(false);
+    expect(canWear(RPG, item('cane_machete'), patricio)).toBe(true);
+    expect(canWear(RPG, item('cane_machete'), gianna)).toBe(false);
+    for (const m of [gianna, yari, patricio]) {
+      expect(canWear(RPG, item('iron_cuirass'), m), m.id).toBe(true);
+      expect(canWear(RPG, item('sea_glass_charm'), m), m.id).toBe(true);
+      expect(canWear(RPG, item('solange_quill'), m), m.id).toBe(true);
+    }
+    expect(canWear(RPG, item('archivist_robe'), member('anissa'))).toBe(false);
+    expect(suits(item('archivist_robe'), gianna)).toBe(true);
+    expect(suits(item('iron_cuirass'), gianna)).toBe(false);
+    expect(suits(item('iron_cuirass'), patricio)).toBe(true);
+  });
+
+  it('every weapon has a kind, every armour a kind, every gear item a slot that matches', () => {
+    for (const it of Object.values(RPG.items)) {
+      if (it.kind !== 'gear') continue;
+      if (it.slot === 'weapon') expect(it.weapon, it.id).toBeDefined();
+      if (it.slot === 'armor') expect(it.armor, it.id).toBeDefined();
+      expect(it.slot === 'relic', it.id).toBe(it.rarity === 'legendary');
+      if (it.rarity === 'rare' || it.rarity === 'epic') expect(it.special, it.id).toBeDefined();
+    }
+  });
+
+  it('legendary relics grow with their wearer and are never too heavy; the rest keep a set level', () => {
+    const quill = item('solange_quill');
+    expect(itemLevel(quill, 7)).toBe(7);
+    expect(itemStatsAt(quill, 1)).toEqual({ mag: 2, sp: 4 });
+    expect(itemStatsAt(quill, 5)).toEqual({ mag: 4, sp: 8 });
+    const f = new FlagStore();
+    expect(tooHeavy(f, RPG, member('gianna'), quill)).toBe(false);
+    expect(itemLevel(item('sunwood_staff'), 9)).toBe(4);
+    expect(rarityOf(item('archivist_staff'))).toBe('common');
+  });
+
+  it('heavy armour costs speed even when worn too early (a penalty is never halved)', () => {
+    const f = new FlagStore();
+    const yari = member('yari');
+    expect(itemBonus(f, RPG, yari, item('iron_cuirass'))).toEqual({ def: 4, hp: 7, spd: -1 });
+  });
+
+  it('relics take no bag space and cannot be sold', () => {
+    const f = new FlagStore();
+    expect(addItem(f, RPG, 'solange_quill')).toBe(true);
+    expect(bagUsed(f, RPG)).toBe(0);
+    expect(sell(f, RPG, 'solange_quill')).toBe('cannot_sell');
+    expect(equip(f, RPG, member('yari'), 'solange_quill')).toBe('ok');
+    expect(equipped(f, member('yari'), 'relic')).toBe('solange_quill');
+  });
+
+  it('passives show once the player knows them', () => {
+    const gianna = member('gianna');
+    expect(knownPassives(new FlagStore(), gianna).map((p) => p.name)).toEqual(["Archivist's thrift"]);
+    expect(knownPassives(new FlagStore({ 'party.anissa': true }), gianna).map((p) => p.name)).toContain("Anissa's Light");
   });
 });

@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { LATER_STORY_FLAGS } from '../src/data/encounters.ts';
+import { BATTLES } from '../src/data/battles.ts';
+import { encounterFlag } from '../src/engine/encounterFlags.ts';
 import { GLOSSARIES } from '../src/data/lang.ts';
 import { PUZZLES } from '../src/data/puzzles.ts';
 import { ACT1, JOURNAL_NOTES } from '../src/data/quests.ts';
@@ -20,6 +22,8 @@ function flagsSet(): Set<string> {
   for (const d of Object.values(CONTENT.dialogue)) for (const f of flagsSetBy(d)) out.add(f);
   for (const m of Object.values(maps)) for (const t of m.triggers) if (t.flag) out.add(t.flag);
   for (const c of CONTENT.cards) out.add(`card.${c.id}`);
+  // A won battle sets its encounter flag (engine/battle.ts settleBattle).
+  for (const b of Object.values(BATTLES)) out.add(encounterFlag(b.table, b.group, 'won'));
   return out;
 }
 
