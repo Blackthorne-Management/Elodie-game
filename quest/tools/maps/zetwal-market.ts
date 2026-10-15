@@ -84,7 +84,7 @@ export function zetwalMarket(): MapSource {
     { layer: 'doors', name: 'market_plaza', x: W - 1, y: 15, props: { target: 'town_market', map: 'zetwal-town', exit: 'left' } },
     { layer: 'spawns', name: 'market', x: W - 2, y: 15, props: { facing: 'left', era: 'present' } },
 
-    obj('iron_market_hall', 13, 2, { dialogue: 'iron_market_hall', era: 'present', kind: 'iron_market_hall', walkable: true }, 10, 6),
+    obj('iron_market_hall', 13, 2, { dialogue: 'iron_market_hall', era: 'present', kind: 'iron_market_hall' }, 10, 6),
   ];
   return { id: 'zetwal-market', present: g, echo: e, objects };
 }

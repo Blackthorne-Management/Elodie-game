@@ -625,11 +625,6 @@
               "name": "kind",
               "type": "string",
               "value": "hall_of_accord"
-            },
-            {
-              "name": "walkable",
-              "type": "bool",
-              "value": true
             }
           ]
         },

@@ -74,8 +74,9 @@ export function zetwalSquare(): MapSource {
     { layer: 'doors', name: 'square_heights', x: 0, y: 9, props: { target: 'heights_square', map: 'zetwal-heights', exit: 'right' } },
     { layer: 'spawns', name: 'square', x: 17, y: H - 2, props: { facing: 'up', era: 'present' } },
 
-    // The Hall: one drawing over its solid ground (the door stays reachable at the top of the stairs).
-    obj('hall_of_accord', 13, 1, { era: 'present', kind: 'hall_of_accord', walkable: true }, 9, 8),
+    // The Hall: one drawing over its solid ground, sorted with the people (behind it, you are hidden by
+    // it); only the door at the top of the stairs is open. Never `walkable`: that opens every tile.
+    obj('hall_of_accord', 13, 1, { era: 'present', kind: 'hall_of_accord' }, 9, 8),
     obj('accord_statue', 16, 12, { dialogue: 'accord_statue', era: 'present', kind: 'accord_statue' }, 3, 2),
     obj('hall_sign', 24, 10, { dialogue: 'hall_sign', era: 'present' }),
   ];

@@ -229,3 +229,31 @@ describe('map validator: Echo and anchors (guide Section 9)', () => {
     expect(errors).toContain('m: trigger "t" runs on entering the map, so it must be once-only');
   });
 });
+
+describe('buildings drawn as one large picture (owner, Oct 15: no walking over the Hall)', async () => {
+  const { OBJECT_ART } = await import('../src/assets.pixels.ts');
+  const { loadMaps } = await import('../tools/sim-setup.ts');
+  const { isOpen } = await import('../src/engine/world.ts');
+  const { FlagStore } = await import('../src/engine/flags.ts');
+  const maps = loadMaps();
+  const flags = new FlagStore();
+
+  it('no large drawing is walkable (that would open every tile under it)', () => {
+    for (const map of Object.values(maps)) {
+      for (const o of map.objects) if (o.kind && OBJECT_ART[o.kind]) expect(o.walkable, `${map.id}/${o.id}`).toBe(false);
+    }
+  });
+
+  it('the Hall of the Accord and the Iron Market block every tile under them but the door', () => {
+    for (const [mapId, id] of [['zetwal-square', 'hall_of_accord'], ['zetwal-market', 'iron_market_hall']] as const) {
+      const map = maps[mapId]!;
+      const o = map.objects.find((x) => x.id === id)!;
+      for (let y = o.area.y; y < o.area.y + o.area.height; y++) {
+        for (let x = o.area.x; x < o.area.x + o.area.width; x++) {
+          const door = map.doors.some((d) => d.pos.x === x && d.pos.y === y);
+          expect(isOpen(map, 'present', { x, y }, flags), `${mapId} ${x},${y}`).toBe(door);
+        }
+      }
+    }
+  });
+});
