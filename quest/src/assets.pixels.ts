@@ -915,7 +915,7 @@ export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
  * 16 x 16 item drawings for the item showcase (engine/showcase.ts), by item id, plus the fallbacks `key`
  * and `gear` for items with no drawing of their own (assets.config.ts itemArtKey). Shown enlarged.
  */
-export const ITEM_ART: Readonly<Record<string, PixelArt>> = {
+const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
   // Gear (data/rpg.ts): better gear is better material (plain wood, ironwood, gold bands; iron, steel).
   archivist_staff: {
     rows: [
@@ -1403,6 +1403,36 @@ export const ITEM_ART: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
+};
+
+/** The same drawing in other colours (palette keys mapped one to one). */
+function recolor(base: PixelArt | undefined, map: Readonly<Record<string, string>>): PixelArt {
+  if (!base) throw new Error('recolor: no base drawing');
+  return { ...base, rows: base.rows.map((r) => [...r].map((c) => map[c] ?? c).join('')) };
+}
+
+/**
+ * Item pictures, plus the weapon designs (data/weapons.ts) drawn as recolours of the first designs until
+ * each has its own: the battle stances (art/battle/) already show every one properly.
+ */
+export const ITEM_ART: Readonly<Record<string, PixelArt>> = {
+  ...ITEM_ART_BASE,
+  driftwood_staff: recolor(ITEM_ART_BASE.archivist_staff, { n: 'G', N: 'h', B: 'g' }),
+  caneroot_staff: recolor(ITEM_ART_BASE.archivist_staff, { n: 'L', N: 'v', B: 'b' }),
+  coral_staff: recolor(ITEM_ART_BASE.sunwood_staff, { y: 'B', Y: 'n', o: 'R' }),
+  mahogany_staff: recolor(ITEM_ART_BASE.archivist_staff, { n: 'r', N: 'R', B: 'L' }),
+  tideglass_staff: recolor(ITEM_ART_BASE.lantern_staff, { B: 'G', K: 'G', g: 'I', o: 'c', W: 'C' }),
+  starfall_staff: recolor(ITEM_ART_BASE.lantern_staff, { B: 'I', o: 'W', W: 'Y' }),
+  archivekey_staff: recolor(ITEM_ART_BASE.sunwood_staff, { o: 'y' }),
+  cane_bow: recolor(ITEM_ART_BASE.yaguana_bow, { n: 'L', N: 'v' }),
+  fisher_bow: recolor(ITEM_ART_BASE.yaguana_bow, { n: 'g', N: 'G' }),
+  bonetipped_bow: recolor(ITEM_ART_BASE.yaguana_bow, { n: 'N', N: 'w' }),
+  mangrove_bow: recolor(ITEM_ART_BASE.ironwood_bow, { b: 'r', B: 'R' }),
+  storm_bow: recolor(ITEM_ART_BASE.ironwood_bow, { b: 'u', B: 'c' }),
+  cacique_bow: recolor(ITEM_ART_BASE.goldband_bow, { B: 'B', b: 'b', w: 'R' }),
+  sunfeather_bow: recolor(ITEM_ART_BASE.goldband_bow, { b: 'o', B: 'y' }),
+  moonshell_bow: recolor(ITEM_ART_BASE.goldband_bow, { b: 'G', B: 'w', y: 'C' }),
+  hurricane_bow: recolor(ITEM_ART_BASE.ironwood_bow, { b: 'u', B: 'U' }),
 };
 
 /** Enemy drawings for the battle screen, facing right (toward the party), by enemy look. */

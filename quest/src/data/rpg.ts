@@ -7,6 +7,7 @@ import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
 import { ACT1 } from './quests.ts';
+import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
 
@@ -61,39 +62,8 @@ const ITEM_LIST: ItemDef[] = [
   // common and uncommon give stats, rare and epic add a special, legendary are the secret items.
   // Each has a set level (worn below it, half its bonus counts); legendary grow with their wearer.
 
-  // Staffs (mages).
-  { id: 'archivist_staff', name: "Archivist's staff", kind: 'gear', slot: 'weapon', weapon: 'staff', level: 1, price: 80, stats: { mag: 3 }, text: 'A plain staff of temple wood. Every junior archivist gets one.' },
-  { id: 'sunwood_staff', level: 4, rarity: 'uncommon', name: 'Sunwood staff', kind: 'gear', slot: 'weapon', weapon: 'staff', price: 240, stats: { mag: 6, spd: 1 }, text: 'Gold-grained wood that warms in the hand. Spells come easier.' },
-  {
-    id: 'lantern_staff', level: 8, rarity: 'rare', name: 'Lantern staff', kind: 'gear', slot: 'weapon', weapon: 'staff', price: 520, stats: { mag: 9, sp: 6 },
-    special: { kind: 'spRegen', value: 5, text: 'Its lantern head relights her: +5% SP each turn.' },
-    skill: 'lantern_flare',
-    text: 'A staff of black wood crowned with a little brass lantern that never quite goes out.',
-  },
-  // Staffs with an edge (owner, Oct 15): a mage's Attack is only a bash until her staff has spikes or a blade.
-  {
-    id: 'thorn_staff', level: 6, rarity: 'rare', name: 'Thornwood staff', kind: 'gear', slot: 'weapon', weapon: 'staff', edge: 'spike', price: 480, stats: { mag: 7, atk: 5 },
-    skill: 'briar_snare',
-    text: 'Thornwood, its head bristling with iron spikes. It hits like a mace.',
-  },
-  {
-    id: 'glaive_staff', level: 12, rarity: 'epic', name: 'Sun-glaive staff', kind: 'gear', slot: 'weapon', weapon: 'staff', edge: 'blade', price: 1400, stats: { mag: 13, atk: 9, sp: 6 },
-    skill: 'dawn_glaive',
-    text: 'A temple staff with a curved gold-steel blade at its head, the sun etched on both faces.',
-  },
-  // Bows (archers).
-  { id: 'yaguana_bow', name: 'Yaguana bow', kind: 'gear', slot: 'weapon', weapon: 'bow', level: 1, price: 90, stats: { atk: 4 }, text: "Yari's own bow: plain wood, strung with cord she twisted herself." },
-  { id: 'ironwood_bow', level: 4, rarity: 'uncommon', name: 'Ironwood bow', kind: 'gear', slot: 'weapon', weapon: 'bow', price: 260, stats: { atk: 7, spd: 1 }, text: 'Dark, heavy ironwood. It hits like a hammer.' },
-  {
-    id: 'goldband_bow', level: 8, rarity: 'rare', name: 'Gold-banded bow', kind: 'gear', slot: 'weapon', weapon: 'bow', price: 560, stats: { atk: 10, spd: 2 },
-    special: { kind: 'crit', value: 8, text: 'Steady in the hand: +8% critical chance.' },
-    skill: 'sun_arrow',
-    text: 'Ironwood bound with gold bands at the grip and tips, made for a cacique\'s guard.',
-  },
-  // Blades (warriors).
-  { id: 'cane_machete', name: 'Cane machete', kind: 'gear', slot: 'weapon', weapon: 'blade', level: 1, price: 70, stats: { atk: 3 }, text: "A cane cutter's blade, iron and wood." },
-  { id: 'marshal_cutlass', name: 'Cutlass', kind: 'gear', slot: 'weapon', weapon: 'blade', level: 1, price: 120, stats: { atk: 5 }, text: "The Marshal's cutlass, notched from the war." },
-  { id: 'steel_saber', level: 4, rarity: 'uncommon', name: 'Steel saber', kind: 'gear', slot: 'weapon', weapon: 'blade', price: 280, stats: { atk: 8 }, text: 'Bright steel with a brass guard, from the harbor forge.' },
+  // Weapons: every "X of Y" (data/weapons.ts).
+  ...WEAPONS,
 
   // Robes (suit mages).
   { id: 'archivist_robe', name: "Archivist's robe", kind: 'gear', slot: 'armor', armor: 'robe', level: 1, price: 60, stats: { def: 1, sp: 4, mag: 1 }, text: 'Blue with gold trim, ink on both cuffs.' },

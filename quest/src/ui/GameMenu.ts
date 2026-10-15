@@ -590,7 +590,7 @@ export class GameMenu {
     g.fillStyle(it ? r.fill : 0x1e1a24, 1).fillRect(x, y, size, size);
     g.lineStyle(1, selected ? 0xf2d04b : it ? r.border : 0x3a3440, 1).strokeRect(x + 0.5, y + 0.5, size - 1, size - 1);
     if (!it) return;
-    const key = textureKeyForItem(itemArtKey(it.id, it.kind));
+    const key = textureKeyForItem(itemArtKey(it.art ?? it.id, it.kind));
     if (this.scene.textures.exists(key)) this.content.add(this.scene.add.image(x + size / 2, y + size / 2, key).setDisplaySize(size - 6, size - 6));
     if (lv !== undefined) {
       const t = this.text(0, 0, String(lv), r.text);
@@ -649,8 +649,14 @@ export class GameMenu {
       this.text(x + 28, y, SLOT_NAMES[slot], selected ? UI.accentText : UI.dimText);
       if (it) {
         const heavy = tooHeavy(ctx.flags, RPG, m, it);
-        this.text(x + 28, y + 10, it.name, RARITY_ART[rarityOf(it)].text, 66);
-        if (heavy) this.text(x + 28, y + 20, 'too heavy', BAND_COLOURS.hard);
+        // Named weapons on two lines: the design, then "of ..." (red when too heavy for its wearer).
+        const cut = it.name.indexOf(' of ');
+        const colour = heavy ? BAND_COLOURS.hard : RARITY_ART[rarityOf(it)].text;
+        if (cut > 0) {
+          this.text(x + 28, y + 10, it.name.slice(0, cut), colour, 70);
+          this.text(x + 28, y + 20, it.name.slice(cut + 1), colour, 70);
+        } else this.text(x + 28, y + 10, it.name, colour, 70);
+        if (heavy && cut <= 0) this.text(x + 28, y + 20, 'too heavy', BAND_COLOURS.hard);
       } else this.text(x + 28, y + 10, slot === 'relic' ? '(legendary only)' : '(empty)', UI.dimText);
       this.hit(x - 1, y - 1, 96, 32, () => {
         this.stage = 'pick';

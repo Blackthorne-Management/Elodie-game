@@ -85,6 +85,8 @@ export interface ItemDef {
   special?: ItemSpecial;
   /** Rare and above: a skill (or weapon move) that comes with it, free (never takes a spell slot). */
   skill?: string;
+  /** The picture it uses (a weapon's design; data/weapons.ts), when it is not its own id. */
+  art?: string;
   /** Staffs with a blade or spikes: the wielder's Attack is a real blow (not a bash). */
   edge?: 'blade' | 'spike';
   /** Legendary: what each of the wearer's levels above 1 adds (fractions add up; rounded down). */

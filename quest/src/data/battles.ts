@@ -75,9 +75,17 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
 
 /** Skills that come with rare or better gear (ItemDef.skill), free: they never take a spell slot. */
 export const GEAR_SKILLS: Readonly<Record<string, SkillDef>> = {
-  lantern_flare: { id: 'lantern_flare', name: 'Lantern Flare', sp: 5, kind: 'damage', power: 110, target: 'enemy', element: 'fire', text: 'The lantern flares: fire at one foe.' },
+  lantern_flare: { id: 'lantern_flare', name: 'Ember Flare', sp: 5, kind: 'damage', power: 110, target: 'enemy', element: 'fire', text: 'A flare of embers: fire at one foe.' },
   briar_snare: { id: 'briar_snare', name: 'Briar Snare', sp: 5, kind: 'damage', power: 90, target: 'enemy', element: 'earth', statuses: ['slowed'], text: 'Thorns burst from the ground and hold one foe: it is slowed.' },
-  dawn_glaive: { id: 'dawn_glaive', name: 'Dawn Glaive', sp: 9, kind: 'damage', power: 100, target: 'allEnemies', element: 'light', text: 'The glaive blade sweeps light across every foe.' },
+  dawn_glaive: { id: 'dawn_glaive', name: 'Dawnlight', sp: 9, kind: 'damage', power: 100, target: 'allEnemies', element: 'light', text: 'Dawn breaks across every foe: light at all of them.' },
+  tidewash: { id: 'tidewash', name: 'Tidewash', sp: 5, kind: 'heal', power: 90, target: 'ally', element: 'water', cleanse: true, text: 'A cool wave heals one ally and clears what ails them.' },
+  falling_star: { id: 'falling_star', name: 'Falling Star', sp: 9, kind: 'damage', power: 200, target: 'enemy', element: 'light', text: 'A star shard falls on one foe.' },
+  archive_ward: { id: 'archive_ward', name: 'Archive Ward', sp: 8, kind: 'status', power: 0, target: 'allAllies', statuses: ['warded'], text: 'The old names stand guard: the whole party takes a quarter less damage for 3 turns.' },
+  storm_shot: { id: 'storm_shot', name: 'Storm Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 120, target: 'enemy', element: 'wind', statuses: ['slowed'], text: 'A crackling shot on the wind: the foe is slowed.' },
+  spirit_arrow: { id: 'spirit_arrow', name: 'Spirit Arrow', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 110, target: 'enemy', statuses: ['marked'], text: 'An arrow the ancestors guide: the foe is marked.' },
+  sunburst_arrow: { id: 'sunburst_arrow', name: 'Sunburst Arrow', sp: 0, cooldown: 4, kind: 'damage', stat: 'atk', power: 90, target: 'allEnemies', element: 'light', text: 'An arrow that bursts like the sun over every foe.' },
+  moonlit_shot: { id: 'moonlit_shot', name: 'Moonlit Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', element: 'water', text: 'A heavy shot like the tide pulled by the moon.' },
+  hurricane_volley: { id: 'hurricane_volley', name: 'Hurricane Volley', sp: 0, cooldown: 4, kind: 'damage', stat: 'atk', power: 55, target: 'randomEnemies', hits: 5, element: 'wind', text: 'Five arrows on a storm wind, at random foes.' },
   sun_arrow: { id: 'sun_arrow', name: 'Sun Arrow', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 140, target: 'enemy', element: 'light', text: 'A gold-banded shot that burns with light.' },
   warm_thread: { id: 'warm_thread', name: 'Warm Thread', sp: 3, kind: 'status', power: 0, target: 'ally', statuses: ['regen'], text: 'The stitched sun warms one ally: they heal a little each turn.' },
   say_their_names: {

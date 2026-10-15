@@ -170,7 +170,8 @@ describe('the game content', () => {
       if (it.kind === 'key' || it.rarity === 'legendary') expect(it.price, it.id).toBe(0);
       else expect(it.price, it.id).toBeGreaterThan(0);
       if (it.kind === 'gear') expect(it.slot, it.id).toBeDefined();
-      expect(it.name.length, it.id).toBeLessThanOrEqual(22);
+      // Named weapons ("X of Y") are the longest; the menus split them into two lines.
+      expect(it.name.length, it.id).toBeLessThanOrEqual(34);
     }
   });
 

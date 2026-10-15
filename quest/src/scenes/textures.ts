@@ -24,8 +24,6 @@ import {
   textureKeyForEnemy,
   textureKeyForWeapon,
   textureKeyForBattle,
-  BATTLE_STANCE,
-  battleStanceName,
   textureKeyForItem,
   textureKeyForObject,
   textureKeyForPortrait,
@@ -35,7 +33,7 @@ import {
 } from '../assets.config.ts';
 import { recolorSkin } from '../engine/skin.ts';
 import { CHARACTER_HEIGHT, CHARACTER_WIDTH, TILE_SIZE } from '../config.ts';
-import { artFile } from './artFiles.ts';
+import { artFile, artFiles } from './artFiles.ts';
 import { Pix, artPix, characterPix, css } from './pixels.ts';
 
 /** A canvas texture (replacing any texture with that key). */
@@ -93,7 +91,7 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
     ...Object.keys(ITEM_ART).map(ART_FILES.item),
     ...Object.keys(ENEMY_ART).map(ART_FILES.enemy),
     ...Object.keys(WEAPON_ART).map(ART_FILES.weapon),
-    ...BATTLE_STANCE.looks.flatMap((look) => [look, ...Object.keys(WEAPON_ART).map((w) => battleStanceName(look, w))]).map(ART_FILES.battle),
+    ...battleFiles(),
   ];
   for (const path of paths) {
     const url = artFile(path);
@@ -234,10 +232,14 @@ function makeWeaponArt(scene: Phaser.Scene): void {
   }
 }
 
+/** Every battle stance file present (battle/<look>.png, battle/<look>-<weapon design>.png). */
+function battleFiles(): string[] {
+  return artFiles().filter((p) => p.startsWith('battle/') && p.endsWith('.png'));
+}
+
 /** Battle stances from art files only (no placeholder: without one, the walking sprite stands in). Frames 0 and 1. */
 function makeBattleStances(scene: Phaser.Scene): void {
-  const names = BATTLE_STANCE.looks.flatMap((look) => [look, ...Object.keys(WEAPON_ART).map((w) => battleStanceName(look, w))]);
-  for (const look of names) {
+  for (const look of battleFiles().map((p) => p.slice('battle/'.length, -'.png'.length))) {
     const file = fileImage(scene, ART_FILES.battle(look));
     if (!file) continue;
     const w = Math.floor(file.width / 2);

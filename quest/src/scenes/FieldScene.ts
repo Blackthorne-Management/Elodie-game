@@ -396,7 +396,7 @@ export class FieldScene extends Phaser.Scene {
     this.mode = 'showcase';
     this.dialogue.conceal(true);
     this.hint.hide();
-    this.showcase.open(showcaseView(this.logic.state.flags, item), itemArtKey(item.id, item.kind));
+    this.showcase.open(showcaseView(this.logic.state.flags, item), itemArtKey(item.art ?? item.id, item.kind));
     this.rt.input.clearPresses();
   }
 

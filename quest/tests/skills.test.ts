@@ -61,7 +61,7 @@ describe('spells grow with Gianna', () => {
     flags.set('item.lantern_staff', 1);
     expect(equip(flags, RPG, gianna, 'lantern_staff')).toBe('ok');
     const gear = gearSkills(flags, RPG, SKILL_BOOK, gianna, 1);
-    expect(gear.map((s) => [s.id, s.source])).toEqual([['lantern_flare', 'Lantern staff']]);
+    expect(gear.map((s) => [s.id, s.source])).toEqual([['lantern_flare', 'Lantern Staff of Embers']]);
     const all = battleSkills(flags, RPG, SKILL_BOOK, gianna, 1);
     expect(all.map((s) => s.id)).toEqual(['sunthread', 'limye_elodie', 'lantern_flare']);
     expect(equippedSpells(flags, SKILL_BOOK, gianna, 1)).not.toContain('lantern_flare');
@@ -162,16 +162,25 @@ describe('new effects', () => {
 });
 
 describe('battle weapons (owner, Oct 15: one empty-handed stance, the weapon drawn into the hand)', () => {
-  it('every weapon item has a battle drawing whose grip is on the weapon', async () => {
+  it('every weapon has a battle picture: a painted stance for staffs and bows, a drawing with a grip for blades', async () => {
     const { WEAPON_ART } = await import('../src/assets.config.ts');
+    const { existsSync } = await import('node:fs');
+    const holder: Record<string, string> = { staff: 'gianna', bow: 'yari' };
     for (const it of Object.values(RPG.items)) {
       if (it.slot !== 'weapon') continue;
-      const art = WEAPON_ART[it.id];
-      expect(art, it.id).toBeDefined();
-      const w = art!.rows[0]!.length;
-      expect(art!.rows.every((r) => r.length === w), it.id).toBe(true);
-      const at = art!.rows[art!.grip.y]?.[art!.grip.x];
+      const art = it.art ?? it.id;
+      const look = holder[it.weapon ?? ''];
+      if (look) {
+        expect(existsSync(`art/battle/${look}-${art}.png`), `${it.id}: art/battle/${look}-${art}.png`).toBe(true);
+        continue;
+      }
+      const drawing = WEAPON_ART[art];
+      expect(drawing, it.id).toBeDefined();
+      const w = drawing!.rows[0]!.length;
+      expect(drawing!.rows.every((r) => r.length === w), it.id).toBe(true);
+      const at = drawing!.rows[drawing!.grip.y]?.[drawing!.grip.x];
       expect(at !== undefined && at !== '.', `${it.id} grip`).toBe(true);
     }
   });
+
 });

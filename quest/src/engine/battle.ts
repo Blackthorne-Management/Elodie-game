@@ -885,7 +885,7 @@ export function battleEntry(flags: FlagReader, rpg: RpgContent, m: MemberDef, bo
     weapon: weapon?.weapon,
     // A plain staff only bashes; one with a blade or spikes strikes properly.
     bash: weapon?.weapon === 'staff' && !weapon.edge ? MAGE_BASH_POWER : 100,
-    weaponItem: weaponId ?? undefined,
+    weaponItem: weapon?.art ?? weaponId ?? undefined,
   };
 }
 
