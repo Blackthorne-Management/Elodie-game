@@ -74,8 +74,8 @@ guide are marked **(proposal)**.
 
 ### Chapter 1: The Festival of the Gaze (Pòdlimyè, Zetwal)
 
-- **Where:** Pòdlimyè, the capital of Zetwal (owner, Oct 14). Sections: the Festival Plaza, the Iron Market with the
-  Hall of the Accord, the Old Harbor, Solèy Heights, the Limyè house, the Temple Island, the Temple Archive and the
+- **Where:** Pòdlimyè, the capital of Zetwal (owner, Oct 14). Sections: the Festival Plaza, Accord Square with the
+  Hall of the Accord, the Iron Market, the Old Harbor, Solèy Heights, the Limyè house, the Temple Island, the Temple Archive and the
   Cane Road. See `CAPITALS.md`.
 - **Level range:** 1 to 3. **No fights in Chapter 1** (owner decision), **except one** (owner, Oct 15): the
   cane-field boar on the Cane Road, the battle tutorial. XP comes from story beats, lore books, side quests and that
@@ -101,8 +101,9 @@ guide are marked **(proposal)**.
      Gianna will need papers. **Built** (sets `story.yari_asked`).
   9a. **The Envoy's Papers** (owner, Oct 15: one task at the Hall of the Accord). The Hall clerk can write envoy
      papers, but they need the Head of State's seal, which Elodie sent to the engraver in the Iron Market to be
-     re-cut. The engraver hands it over ("Her eyes. Your grandfather's ink on your fingers"); the clerk writes the
-     papers and keeps the seal. Yari will not sail without them. **Built** (`story.envoy_papers`, key item
+     re-cut. The engraver hands it over ("Her eyes. Your grandfather's ink on your fingers"); the clerk writes and
+     seals the papers and keeps the seal; the Chancellor signs them in her office off the gallery. Yari will not sail
+     without them. **Built** (`story.envoy_papers`, key item
      `envoy_papers`; a Chapter 1 objective).
   10. **Before the tide. Built:** the three city side quests and the boar fight, with Yari in the party. Talking to
       Yari again asks whether you are ready (first the papers; then she names unfinished errands, and leaving is still

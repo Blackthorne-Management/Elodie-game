@@ -1030,7 +1030,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: "Then I'll help. Faster that way." },
         { text: 'Mind the Cane Road. A boar was tearing up the cane when I came in. It did not like my face.' },
         { text: 'And Gigi, you will need papers. The Crown boards every boat in our harbor now.' },
-        say(G, 'The Hall of the Accord can write them. It is in the Iron Market, west of the plaza.'),
+        say(G, 'The Hall of the Accord can write them. Up the steps at the head of the plaza.'),
         { text: "Find me here at the dock when you're ready. Not too long, Gigi.", set: { 'story.yari_asked': true } },
       ],
     },
@@ -1049,7 +1049,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'yari',
       lines: [
         { text: 'Did the Hall write your papers? No papers, no landing. The Crown turns back every boat without them.' },
-        say(A, 'The Hall of the Accord, Gigi. In the Iron Market, west of the plaza.'),
+        say(A, 'The Hall of the Accord, Gigi. Up the steps at the head of the plaza.'),
       ],
     },
     ready_errands: {
@@ -1172,13 +1172,15 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   }),
 
   // The Envoy's Papers (owner decision, Oct 15: the one task at the Hall of the Accord in Chapter 1).
-  // Crown ships search every boat at Xaraguá, so Gianna needs envoy papers under the Head of State's
-  // seal, which is at the engraver's in the Iron Market. Yari will not sail without them.
+  // Crown ships search every boat at Xaraguá, so Gianna needs envoy papers: written and sealed by the Hall
+  // clerk with the Head of State's seal (at the engraver's in the Iron Market, being re-cut), then signed
+  // by the Chancellor. Yari will not sail without them.
   script('hall_clerk_talk', {
     start: {
       lines: [],
       next: [
         { if: { flag: 'story.envoy_papers' }, to: 'after' },
+        { if: { flag: 'story.papers_sealed' }, to: 'sign' },
         { if: { flag: 'item.elodie_seal' }, to: 'issue' },
         { if: { flag: 'story.papers_asked' }, to: 'waiting' },
         { if: { flag: 'story.yari_asked' }, to: 'ask' },
@@ -1188,7 +1190,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     idle: {
       speaker: 'hall_clerk',
       lines: [
-        { text: 'The Hall keeps a copy of the Sun Accord for any citizen who asks. That is the law, and I am proud of it.' },
+        { text: 'Welcome to the Hall of the Accord. A copy of the Sun Accord for any citizen who asks: that is the law, and I am proud of it.' },
         { text: 'The original? Sealed in the vault. Only the Head of State and the Marshal have ever read all of it.' },
         { text: 'Your mother left me a list of things to do while she is at the Throne. It is longer than the Accord.' },
       ],
@@ -1196,19 +1198,19 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     ask: {
       speaker: 'hall_clerk',
       lines: [
-        say(G, "I need travelling papers. Xaraguá has asked for an envoy of Kay Soley, and Mother is at the Throne."),
+        say(G, 'I need travelling papers. Xaraguá has asked for an envoy of Kay Soley, and Mother is at the Throne.'),
         { text: 'An envoy. To Xaraguá. With Crown ships in the harbor.' },
         { text: 'Then you need papers more than courage. The Crown boards every boat now. Without papers they turn you back, or keep you.' },
-        { text: "I can write them today. But an envoy's papers carry the Head of State's seal, and the seal is not here." },
+        { text: "I write them; the Head of State's seal goes on them; the Chancellor signs. The seal is the trouble." },
         { text: 'Your mother sent it to be re-cut before she left. Fifty years of laws had worn the sun on it smooth.' },
-        { text: 'The engraver has it, at his stall across the square, east of the Hall steps. Bring it to me.', set: { 'story.papers_asked': true } },
+        { text: 'The engraver has it, in the Iron Market, west of the plaza. Bring it to me.', set: { 'story.papers_asked': true } },
         say(A, "Mother's seal... I've never even held it."),
         nar("(The Hall clerk needs Mother's seal from the engraver in the Iron Market.)"),
       ],
     },
     waiting: {
       speaker: 'hall_clerk',
-      lines: [{ text: 'The engraver is across the square, east of the Hall steps. He hums while he works. Follow the humming.' }],
+      lines: [{ text: 'The engraver works in the Iron Market, on the iron row east of the clock gate. He hums while he works. Follow the humming.' }],
     },
     issue: {
       speaker: 'hall_clerk',
@@ -1216,35 +1218,199 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         say(G, 'The seal. Re-cut.'),
         { text: 'Look at that sun. Sharp enough to cut the paper it signs.' },
         nar("The clerk writes in a careful hand, warms the wax, and presses Mother's seal into it."),
-        { text: 'Gianna Limyè, envoy of Kay Soley to Xaraguá, under the seal of the Head of State. Keep them dry.' },
+        { text: 'Gianna Limyè, envoy of Kay Soley to Xaraguá, under the seal of the Head of State. Now the Chancellor signs.' },
         {
-          text: 'The seal stays here with me. Lose it, and your mother would have my head, then the Hall, then the Accord.',
-          set: { 'item.elodie_seal': 0, 'item.envoy_papers': 1, 'story.envoy_papers': true },
+          text: "Her office is off the gallery, the first door east. The seal stays here with me; I'll sleep better.",
+          set: { 'item.elodie_seal': 0, 'item.draft_papers': 1, 'story.papers_sealed': true },
         },
-        nar('(Gianna received the envoy papers.)'),
+        nar('(Gianna received the unsigned envoy papers. The Chancellor must sign them.)'),
       ],
+    },
+    sign: {
+      speaker: 'hall_clerk',
+      lines: [{ text: "The Chancellor's office: up the gallery, the first door on the east side. She signs everything. Eventually." }],
     },
     after: {
       speaker: 'hall_clerk',
       lines: [{ text: 'Keep the papers on you, envoy. The Crown reads seals far more carefully than it reads treaties.' }],
     },
   }),
+  script('chancellor_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'story.envoy_papers' }, to: 'after' },
+        { if: { flag: 'story.papers_sealed' }, to: 'sign' },
+        { to: 'idle' },
+      ],
+    },
+    idle: {
+      speaker: 'chancellor',
+      lines: [
+        { text: 'Gianna. Your mother left me the Hall, the council and three Crown ships. I would trade any two of them for a quiet week.' },
+        { text: 'While she is at the Throne, I govern in her name. Not in her chair. Nobody sits in that chair.' },
+        { text: "The Crown's consul asks for an audience every morning. Every morning I am busy. It is becoming a long week." },
+      ],
+    },
+    sign: {
+      speaker: 'chancellor',
+      lines: [
+        { text: 'Envoy papers. Xaraguá.' },
+        nar('She reads every line. Twice. Then she looks at you over the top of the page.'),
+        { text: 'Your mother went to the Throne to speak for us. You go to Xaraguá to listen for us. Listen well.' },
+        { text: 'And write. The courier office will find you anywhere a pigeon can fly.', set: { 'item.draft_papers': 0, 'item.envoy_papers': 1, 'story.envoy_papers': true } },
+        nar("(Gianna received the envoy papers, sealed and signed.)"),
+      ],
+    },
+    after: {
+      speaker: 'chancellor',
+      lines: [{ text: 'Go carefully, envoy. Whatever you learn in Xaraguá, this Hall will want to hear it before the Crown does.' }],
+    },
+  }),
   simple('hall_seat', [
-    nar("The Head of State's chair, at the head of the council table. Mother's shawl still hangs over the back."),
-    nar('Here she hears the council, receives the envoys, and makes the laws of Zetwal.'),
-    say(A, "It's strange to see it empty."),
+    nar('The Throne of the State: a plain chair of gold-leafed mahogany on its dais, a sun carved in the back.'),
+    nar('Here the Head of State gives audience, hears the council, and makes the laws of Zetwal.'),
+    say(A, "Mother's shawl is still over the arm. It's strange to see it empty."),
   ]),
-
-  // ---- The Iron Market: the Hall of the Accord's square (more here when Gianna comes home) ---------
   simple('hall_sign', [
     nar('THE HALL OF THE ACCORD. Seat of the State of Zetwal. Open to every citizen, every day the sun rises.'),
-    nar('Below, smaller, in chalk: "Petitions at the side door. Complaints about the soup vendor, the front."'),
+    nar('Below, in chalk: "Council sits tonight. Petitions to the clerk. Complaints about the soup vendor, also the clerk."'),
+  ]),
+  simple('accord_statue', [
+    nar('Three bronze figures with their hands raised over a scroll: a soldier, a cane cutter and a scribe.'),
+    nar('The plaque: "Fifty years ago we promised that no crown would ever again decide who we are."'),
+    say(A, 'The soldier has Grandfather\'s nose.'),
+  ]),
+
+  // ---- Accord Square ----------------------------------------------------------------------------
+  simple('honor_guard_talk', [
+    say('honor_guard', 'The Hall is open to every citizen. We are here for the ones who are not citizens, archivist.'),
+  ]),
+  simple('gazette_crier_talk', [
+    say('gazette_crier', 'Gazette! Crown ships off the point! Council to sit tonight! Festival a great success, says festival committee!'),
+    say('gazette_crier', 'One sou, archivist. The truth costs more, but the gazette is cheaper.'),
+  ]),
+  simple('petitioner_talk', [
+    say('petitioner', 'Three days I have waited to see the Chancellor about my fence. My neighbor\'s goat has opinions about my fence.'),
+    say('petitioner', 'The Crown man went in ahead of me. He had no fence at all. Only papers.'),
+  ]),
+  simple('protester_talk', [
+    say('protester', 'No Charter for Zetwal! No Charter for Xaraguá! No Charter for anybody!'),
+    say('protester', 'They say the Crown only wants a harbor. That is what they said fifty years ago. Ask your grandfather.'),
+  ]),
+  simple('courier_rider_talk', [
+    say('courier_rider', 'Three days to the far coast and three back. My horse knows the road better than I do. She is better company too.'),
+  ]),
+  simple('nursemaid_talk', [
+    say('nursemaid', 'The councillors\' children, all six. I bring them to see the statue. They want to climb it. It is a matter of national dignity.'),
+  ]),
+
+  // ---- The Hall of the Accord inside -------------------------------------------------------------
+  simple('hall_guard_talk', [
+    say('hall_guard', 'Wipe your feet, archivist. The steward counts the footprints. I have seen him do it.'),
+  ]),
+  simple('hall_page_talk', [
+    say('hall_page', 'Council west, the Chancellor and the couriers east, the throne at the end. I run between all of them. Forty times a day.'),
+    say('hall_page', 'If you have a message, I am faster than a pigeon. Mostly. Not uphill.'),
+  ]),
+  simple('hall_steward_talk', [
+    say('hall_steward', 'The portraits are dusted every morning, the floors every evening, and the consul is watched at all hours.'),
+    say('hall_steward', 'The last is not my job. I do it anyway.'),
+  ]),
+  simple('throne_usher_talk', [
+    say('throne_usher', 'No one sits on the Throne of the State but the Head of State. Not the Chancellor, not the Speaker, not the cat.'),
+    say('throne_usher', 'The cat has tried. The cat has been told.'),
+  ]),
+  simple('council_speaker_talk', [
+    say('council_speaker', 'Order. Order. Oh, it is only you, Gianna. Forgive me; I say it out of habit, even at breakfast.'),
+    say('council_speaker', 'The council sits tonight about the ships. Half want peace at any price, half want the old harbor chain raised.'),
+    say('council_speaker', 'My task is to let them both be heard, then let your mother decide. Without her, we only argue louder.'),
+  ]),
+  simple('elder_dove_talk', [
+    say('elder_dove', 'Peace has kept Zetwal fed for fifty years, child. If a paper keeps those ships quiet, I will sign it twice.'),
+    say('elder_dove', 'Your grandfather fought so that you would never have to. Do not let anyone make a soldier of you. Not even him.'),
+  ]),
+  simple('elder_hawk_talk', [
+    say('elder_hawk', 'Three Crown ships off the point. I asked the council to raise the old harbor chain. They called me a warmonger.'),
+    say('elder_hawk', 'Fifty years ago they called your grandfather the same. Then they built him a statue.'),
+  ]),
+  simple('crown_consul_talk', [
+    say('crown_consul', 'Ah, the Head of State\'s daughter. His Majesty\'s consul to Zetwal, at your service. Truly.'),
+    say('crown_consul', 'I bring nothing but goodwill and a few papers to sign. Do give your mother my regards when she returns.'),
+    say('crown_consul', 'We have so much to discuss. The old treaties are so long, and so very few people have read all of them.'),
+    say(A, "Gigi... I don't like him."),
+  ]),
+  simple('foreign_envoy_talk', [
+    say('foreign_envoy', 'I came across the sea to speak with your Head of State, and she has gone to the Throne the same week. Such is diplomacy.'),
+    say('foreign_envoy', 'I will wait. The Crown\'s consul waits too, across the room. We smile at each other. Neither of us means it.'),
+    say(G, 'Where are you from?'),
+    say('foreign_envoy', 'Far enough that you will need a ship and a good reason. Perhaps one day you will have both.'),
+  ]),
+  script('seal_keeper_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.papers_sealed' }, to: 'back' }, { to: 'idle' }] },
+    idle: {
+      speaker: 'seal_keeper',
+      lines: [
+        { text: 'I am the Keeper of the Seal. I keep the seal. Usually.' },
+        { text: 'Your mother sent it to the engraver to be re-cut, and I have not slept since.' },
+        { text: 'A keeper with nothing to keep is only a man in a robe.' },
+      ],
+    },
+    back: {
+      speaker: 'seal_keeper',
+      lines: [{ text: 'The seal is home! Re-cut, too. Look at those rays. I may weep. I may already be weeping.' }],
+    },
+  }),
+  simple('chief_courier_talk', [
+    say('chief_courier', 'Pigeons to every island in a day, riders to the far coast in three. When the Hall speaks to the realm, it speaks from this room.'),
+    say('chief_courier', 'Lately more letters come in than go out. Most of them ask the same thing: what does the Crown want?'),
+  ]),
+  simple('treasurer_talk', [
+    say('treasurer', 'Every coin the state of Zetwal owns passes through these boxes, and I count it twice. Three times on festival days.'),
+    say('treasurer', 'The Crown ships pay their harbor dues in promises. Promises do not stack well.'),
+  ]),
+  simple('scribe_talk', [
+    say('scribe', 'Every law is copied six times: one for the vault, one for the Hall, one for each district. My hand has not stopped since spring.'),
+  ]),
+  simple('council_desk', [
+    nar("The Speaker's desk: a bell, an hourglass for long speeches, and a gavel worn pale where it has been banged."),
+    nar('Tonight\'s order of business, in a neat hand: "1. The Crown ships. 2. The Crown ships. 3. The festival accounts."'),
+  ]),
+  simple('pigeon_loft', [
+    nar('The pigeons of the Hall, each with a ring on its leg naming its island. They coo in a dozen accents.'),
+  ]),
+  simple('courier_map', [
+    nar("The courier routes, pinned across the realm: red threads to every capital, and new black pins off Xaraguá's coast."),
+  ]),
+  simple('treasury_chests', [
+    nar('Iron-bound strongboxes, each with three locks. The Treasurer has one key, the Chancellor another, the Head of State the third.'),
+  ]),
+  simple('portrait_patricio', [
+    nar('MARSHAL PATRICIO, THE YEAR OF THE ACCORD. Young, in his red coat, one hand on a rolled map, looking past the painter.'),
+    say(A, 'He looks so serious. He never looks that serious when he tells stories.'),
+  ]),
+  simple('portrait_solange', [
+    nar('MOTHER SOLANGE, KEEPER OF THE NAMES. An old woman with ink on her fingers, a quill in her hand, a list in her lap.'),
+  ]),
+  simple('portrait_elodie', [
+    nar('ELODIE LIMYÈ, HEAD OF STATE. Mother, painted the year she was chosen, gold at her shoulders, not quite smiling.'),
+    say(G, 'She hated sitting for this. She read the whole time.'),
+  ]),
+  simple('portrait_founders', [
+    nar('THE SIGNING OF THE SUN ACCORD. A crowded table on the plaza, the Marshal at its head, and at the far end a Crown envoy.'),
+    nar('The painter left his face in shadow. Nobody remembers why.'),
+  ]),
+
+  // ---- The Iron Market --------------------------------------------------------------------------
+  simple('iron_market_hall', [
+    nar('THE IRON MARKET. Red iron and green roofs, the clock over the gate five minutes fast since anyone can remember.'),
+    nar('Inside it is dark and loud and smells of everything: coffee, mangoes, fish, smoke, soap, rain.'),
   ]),
   script('engraver_talk', {
     start: {
       lines: [],
       next: [
-        { if: { all: [{ flag: 'story.papers_asked' }, { notFlag: 'item.elodie_seal' }, { notFlag: 'story.envoy_papers' }] }, to: 'seal' },
+        { if: { all: [{ flag: 'story.papers_asked' }, { notFlag: 'item.elodie_seal' }, { notFlag: 'story.papers_sealed' }] }, to: 'seal' },
         { if: { flag: 'item.elodie_seal' }, to: 'hurry' },
         { to: 'idle' },
       ],
@@ -1268,29 +1434,59 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
     hurry: {
       speaker: 'engraver',
-      lines: [{ text: 'Go on, to the clerk with it. A seal in a satchel is a worry in my chest.' }],
+      lines: [{ text: 'Go on, to the Hall with it. A seal in a satchel is a worry in my chest.' }],
     },
   }),
-  simple('hall_guard_talk', [
-    say('hall_guard', 'The Hall is open to every citizen. That is the law. I am only here to make sure the citizens wipe their feet.'),
-    say('hall_guard', 'With the Head of State gone to the Throne, the council meets without her. They argue twice as long and decide half as much.'),
+  simple('produce_seller_talk', [
+    say('produce_seller', 'Bonjou, cherie!', { translation: 'Hello, dear!' }),
+    say('produce_seller', 'Mango! Kasav! Cane juice pressed while you wait! What do you need?'),
+  ]),
+  simple('spice_seller_talk', [
+    say('spice_seller', 'Pikliz to wake the dead, pepper to wake the pikliz. Taste, taste. You only cry a little.'),
+  ]),
+  simple('cloth_merchant_talk', [
+    say('cloth_merchant', 'Cotton from Xaraguá, silk from who-knows-where, robes fit for a temple. Feel this. No, wash your hands first.'),
   ]),
   simple('ironmonger_talk', [
     say('ironmonger', 'Hinges, nails, hooks, chain. The whole city hangs on my iron, archivist, and nobody thanks a nail.'),
-    say('ironmonger', 'The Crown ships buy chain by the mile these days. I sell it to them. I do not ask what it is for. Lately I wonder.'),
+    say('ironmonger', 'The Crown ships buy chain by the mile these days. I do not ask what it is for. Lately I wonder.'),
+  ]),
+  simple('fishmonger_talk', [
+    say('fishmonger', 'Snapper, conch, a lobster with a bad attitude. All from this morning. The lobster from this minute.'),
+  ]),
+  simple('goat_herder_talk', [
+    say('goat_herder', 'This one is Pwofesè. He has eaten two hats and a council notice. He knows more law than the Speaker.'),
+  ]),
+  simple('lottery_seller_talk', [
+    say('lottery_seller', 'Borlette! Dream of a fish, play twelve. Dream of a boat, play thirty. Dream of the Crown, play nothing and hide.'),
   ]),
   simple('letter_writer_talk', [
     say('letter_writer', 'Letters written, read aloud, or answered. Love letters cost double. Apologies cost triple.'),
     say('letter_writer', 'Half my trade is people writing to cousins in Xaraguá. Lately the answers come slower. Some do not come at all.'),
   ]),
-  simple('foreign_envoy_talk', [
-    say('foreign_envoy', 'I came across the sea to speak with your Head of State, and she has gone to the Throne the same week. Such is diplomacy.'),
-    say('foreign_envoy', 'I will wait. My people are patient. We have had to be.'),
-    say(G, 'Where are you from?'),
-    say('foreign_envoy', 'Far enough that you will need a ship and a good reason. Perhaps one day you will have both.'),
+  simple('porter_talk', [
+    say('porter', 'Sixty sacks of rice this morning, forty of charcoal this afternoon. Tonight, one bowl of soup, very slowly.'),
   ]),
+  script('pickpocket_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.pickpocket_caught' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      speaker: 'pickpocket',
+      lines: [
+        nar('A small hand slides toward your satchel.'),
+        say(A, 'Gigi. His hand.'),
+        { text: '...I was checking if your bag was closed. It is. Very good. Safe bag. Goodbye.', set: { 'story.pickpocket_caught': true } },
+      ],
+    },
+    again: {
+      speaker: 'pickpocket',
+      lines: [{ text: 'I am not stealing, I am standing. Standing is free. Ask the Speaker.' }],
+    },
+  }),
   simple('market_kid_talk', [
     say('market_kid', "The engraver let me hold a seal once. I stamped my arm. Mama says I'm officially a law now."),
+  ]),
+  simple('market_shopper_talk', [
+    say('market_shopper', 'The spice seller charged me double. I paid. You do not argue with a woman holding that many peppers.'),
   ]),
 
   // ---- The Old Harbor (more here when Gianna comes home) ----------------------------------------

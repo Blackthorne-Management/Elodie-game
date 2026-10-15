@@ -68,7 +68,7 @@ export function zetwalTown(): MapSource {
   g.rect(31, 17, 2, 1, 'B');
 
   // Doors to the other sections: the east gate to the Cane Road, the west lane to the Iron Market (and
-  // the Hall of the Accord), the shore west to the Old Harbor, the steps north to Solèy Heights.
+  // the Hall of the Accord), the shore west to the Old Harbor, the steps north up to Accord Square and the Hall of the Accord.
   g.set(39, 19, 'D');
   g.set(0, 10, 'D');
   g.set(0, 23, 'D');
@@ -129,7 +129,7 @@ export function zetwalTown(): MapSource {
     { layer: 'doors', name: 'town_house', x: 5, y: 5, props: { target: 'house_front', map: 'zetwal-house', exit: 'down' } },
     { layer: 'doors', name: 'town_market', x: 0, y: 10, props: { target: 'market_plaza', map: 'zetwal-market', exit: 'right' } },
     { layer: 'doors', name: 'town_harbor', x: 0, y: 23, props: { target: 'harbor_plaza', map: 'zetwal-harbor', exit: 'right' } },
-    { layer: 'doors', name: 'town_heights', x: 18, y: 0, props: { target: 'heights_plaza', map: 'zetwal-heights', exit: 'down' } },
+    { layer: 'doors', name: 'town_square', x: 18, y: 0, props: { target: 'square_plaza', map: 'zetwal-square', exit: 'down' } },
     { layer: 'doors', name: 'town_gate', x: 39, y: 19, props: { target: 'road_gate', map: 'zetwal-road', exit: 'left' } },
     { layer: 'doors', name: 'town_temple', x: 38, y: 9, props: { target: 'temple_bridge', map: 'zetwal-temple', exit: 'left' } },
 

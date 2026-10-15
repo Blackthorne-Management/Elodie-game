@@ -880,7 +880,7 @@
         },
         {
           "id": 23,
-          "name": "town_heights",
+          "name": "town_square",
           "type": "door",
           "x": 288,
           "y": 0,
@@ -897,12 +897,12 @@
             {
               "name": "map",
               "type": "string",
-              "value": "zetwal-heights"
+              "value": "zetwal-square"
             },
             {
               "name": "target",
               "type": "string",
-              "value": "heights_plaza"
+              "value": "square_plaza"
             }
           ]
         },
@@ -1607,10 +1607,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 144,
+      "imageheight": 192,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 65,
+      "tilecount": 92,
       "columns": 8,
       "margin": 0,
       "spacing": 0

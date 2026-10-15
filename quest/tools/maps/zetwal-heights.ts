@@ -1,4 +1,4 @@
-// Solèy Heights, up the hill north of the plaza: old houses with deep porches, terraced gardens, the
+// Solèy Heights, up the hill west of Accord Square: old houses with deep porches, terraced gardens, the
 // well, and the lookout over the whole city and the sea. Exploration for now (owner decision, Oct 15);
 // more to do here when Gianna comes home. The Echo is the hill fifty years ago, an orchard and a
 // sentry post.
@@ -11,12 +11,13 @@ export function zetwalHeights(): MapSource {
   const H = 20;
   const g = new Grid(W, H, '.');
 
-  // Borders: trees round the hilltop, the cliff edge south with the steps down to the plaza.
+  // Borders: trees round the hilltop (the lane east to Accord Square), the cliff edge south.
   g.rect(0, 0, W, 1, 'T').rect(0, 0, 1, H, 'T').rect(W - 1, 0, 1, H, 'T');
-  g.rect(1, H - 1, W - 2, 1, 'C').set(14, H - 1, 'D');
+  g.rect(1, H - 1, W - 2, 1, 'C');
+  g.set(W - 1, 12, 'D');
 
-  // The steps up from the plaza and the lane along the hill.
-  g.rect(14, 7, 1, H - 8, ',');
+  // The lane from the square and the paths along the hill.
+  g.rect(14, 7, 1, 6, ',').rect(15, 12, W - 16, 1, ',');
   g.rect(3, 7, 24, 1, ',');
 
   // Old houses (no way in yet).
@@ -49,8 +50,8 @@ export function zetwalHeights(): MapSource {
     npc('porch_widow', 21, 6, 'down'),
     npc('lookout_keeper', 24, 16, 'up'),
 
-    { layer: 'doors', name: 'heights_plaza', x: 14, y: H - 1, props: { target: 'town_heights', map: 'zetwal-town', exit: 'up' } },
-    { layer: 'spawns', name: 'heights', x: 14, y: H - 2, props: { facing: 'up', era: 'present' } },
+    { layer: 'doors', name: 'heights_square', x: W - 1, y: 12, props: { target: 'square_heights', map: 'zetwal-square', exit: 'left' } },
+    { layer: 'spawns', name: 'heights', x: W - 2, y: 12, props: { facing: 'left', era: 'present' } },
     obj('lookout', 22, 17, { dialogue: 'lookout_view', era: 'present' }, 3, 1),
     obj('heights_well', 24, 10, { dialogue: 'heights_well', era: 'present' }),
     obj('lookout_sign', 26, 15, { dialogue: 'lookout_sign', era: 'present' }),

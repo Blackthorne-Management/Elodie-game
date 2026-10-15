@@ -195,7 +195,7 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
 });
 
 describe("The Envoy's Papers (owner, Oct 15): the task at the Hall of the Accord", () => {
-  it('the clerk needs the seal, the engraver has it, the clerk writes the papers and keeps the seal', () => {
+  it('the clerk needs the seal, the engraver has it, the clerk writes and seals the papers, the Chancellor signs', () => {
     const flags = new FlagStore({ 'party.anissa': true, 'story.yari_asked': true });
     expect(talk(flags, 'engraver_talk').join(' ')).not.toContain('Finished it this morning');
     talk(flags, 'hall_clerk_talk');
@@ -204,6 +204,11 @@ describe("The Envoy's Papers (owner, Oct 15): the task at the Hall of the Accord
     expect(itemCount(flags, 'elodie_seal')).toBe(1);
     talk(flags, 'hall_clerk_talk');
     expect(itemCount(flags, 'elodie_seal')).toBe(0);
+    expect(itemCount(flags, 'draft_papers')).toBe(1);
+    expect(flags.isSet('story.envoy_papers')).toBe(false);
+    // The Chancellor signs last.
+    talk(flags, 'chancellor_talk');
+    expect(itemCount(flags, 'draft_papers')).toBe(0);
     expect(itemCount(flags, 'envoy_papers')).toBe(1);
     expect(flags.isSet('story.envoy_papers')).toBe(true);
     expect(talk(flags, 'engraver_talk').join(' ')).not.toContain('Finished it this morning');

@@ -40,11 +40,18 @@ const ITEM_LIST: ItemDef[] = [
     text: "The Head of State's seal: a heavy brass sun, its rays fresh from the engraver's tools. For the Hall clerk.",
   },
   {
+    id: 'draft_papers',
+    name: 'Envoy papers (unsigned)',
+    kind: 'key',
+    price: 0,
+    text: "Written and sealed by the Hall clerk. They still need the Chancellor's signature.",
+  },
+  {
     id: 'envoy_papers',
     name: 'Envoy papers',
     kind: 'key',
     price: 0,
-    text: "Gianna Limyè, envoy of Kay Soley to Xaraguá, under the seal of the Head of State. Keep them dry.",
+    text: "Gianna Limyè, envoy of Kay Soley to Xaraguá: the Head of State's seal and the Chancellor's hand. Keep them dry.",
   },
   // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital: the
   // legendary relics, worn in their own slot (owner decision, Oct 15).
@@ -69,6 +76,10 @@ const ITEM_LIST: ItemDef[] = [
   // Zetwal food and drink (guide 8: restorative soup in a clay pot).
   { id: 'soup_pot', name: 'Clay-pot soup', kind: 'consumable', price: 30, heals: 40, healTurns: 3, text: 'Squash soup in a clay pot, still warm. Restores 40 HP, a little at a time.' },
   { id: 'akasan', name: 'Akasan', kind: 'consumable', price: 25, restores: 12, text: 'Sweet cornmeal drink, thick enough to stand a spoon in. Restores 12 SP.' },
+  // The Iron Market (Oct 15).
+  { id: 'kasav', name: 'Kasav', kind: 'consumable', price: 15, heals: 25, text: 'Cassava bread, flat and crisp, with peanut butter. Restores 25 HP.' },
+  { id: 'kann', name: 'Cane juice', kind: 'consumable', price: 12, heals: 12, restores: 4, text: 'Sugarcane pressed while you wait. Restores 12 HP and 4 SP.' },
+  { id: 'pikliz', name: 'Pikliz', kind: 'consumable', price: 20, restores: 10, text: 'Pickled cabbage and peppers, hot enough to wake the dead. Restores 10 SP.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
 
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
@@ -144,6 +155,10 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   zetwal_forge: { id: 'zetwal_forge', name: 'Harbor forge', city: 'zetwal', stock: ['sunwood_staff', 'ironwood_bow', 'steel_saber', 'padded_vest', 'iron_cuirass', 'temple_robe', 'lantern_staff', 'goldband_bow'] },
   zetwal_charms: { id: 'zetwal_charms', name: 'Charm stand', city: 'zetwal', stock: ['sun_charm', 'sea_glass_charm'] },
   zetwal_market: { id: 'zetwal_market', name: 'Market stand', city: 'zetwal', stock: ['soup_pot', 'akasan', 'mango'] },
+  // The Iron Market (Oct 15).
+  zetwal_produce: { id: 'zetwal_produce', name: 'Produce row', city: 'zetwal', stock: ['mango', 'kasav', 'kann'] },
+  zetwal_spices: { id: 'zetwal_spices', name: 'Spice row', city: 'zetwal', stock: ['pikliz', 'akasan'] },
+  zetwal_cloth: { id: 'zetwal_cloth', name: 'Cloth row', city: 'zetwal', stock: ['woven_tunic', 'temple_robe'] },
 };
 
 /**
@@ -157,17 +172,19 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
     // word the way Port-de-Paix is Pòdepè (pò = port). A fluent speaker checks it (Nov 18).
     name: 'Pòdlimyè',
     house: 'Kay Soley',
-    // The plaza in the middle; the Iron Market (with the Hall of the Accord) west of it, the Old Harbor
-    // along the shore south-west, Solèy Heights up the hill north (owner decision, Oct 15: at least five
-    // outdoor areas, buildings aside); the Temple Island across the water to the north-east (the Chain
+    // The plaza in the middle with Accord Square and the Hall of the Accord at its head (owner decision,
+    // Oct 15: the seat of the state central); the Iron Market west, the Old Harbor along the shore
+    // south-west, Solèy Heights up the hill west of the square (at least five outdoor areas, buildings
+    // aside); the Temple Island across the water to the north-east (the Chain
     // Bridge); the Cane Road straight out of the east gate.
     sections: [
       { map: 'zetwal-town', name: 'Festival Plaza', at: { x: 0, y: 9 } },
       { map: 'zetwal-temple', name: 'Temple Island', at: { x: 44, y: -4 } },
       { map: 'zetwal-road', name: 'The Cane Road', at: { x: 40, y: 16 } },
-      { map: 'zetwal-market', name: 'The Iron Market', at: { x: -30, y: 4 } },
+      { map: 'zetwal-market', name: 'The Iron Market', at: { x: -36, y: 4 } },
       { map: 'zetwal-harbor', name: 'The Old Harbor', at: { x: -36, y: 28 } },
-      { map: 'zetwal-heights', name: 'Solèy Heights', at: { x: 4, y: -11 } },
+      { map: 'zetwal-heights', name: 'Solèy Heights', at: { x: -29, y: -16 } },
+      { map: 'zetwal-square', name: 'Accord Square', at: { x: 1, y: -13 } },
       { map: 'zetwal-house', name: 'Limyè house' },
       { map: 'zetwal-hall', name: 'Hall of the Accord' },
       { map: 'zetwal-archive', name: 'Temple Archive' },

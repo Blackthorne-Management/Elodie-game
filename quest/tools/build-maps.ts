@@ -13,11 +13,12 @@ import { zetwalHeights } from './maps/zetwal-heights.ts';
 import { zetwalHouse } from './maps/zetwal-house.ts';
 import { zetwalMarket } from './maps/zetwal-market.ts';
 import { zetwalRoad } from './maps/zetwal-road.ts';
+import { zetwalSquare } from './maps/zetwal-square.ts';
 import { zetwalTemple } from './maps/zetwal-temple.ts';
 import { zetwalTown } from './maps/zetwal-town.ts';
 import { MAPS_DIR } from './validate-maps.ts';
 
-export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights];
+export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights, zetwalSquare];
 
 /** The generated files, as `[path, text]`. */
 export function buildMaps(dir: string = MAPS_DIR): [string, string][] {

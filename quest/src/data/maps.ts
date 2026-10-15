@@ -9,6 +9,7 @@ import zetwalHeights from '../../maps/zetwal-heights.tmj?raw';
 import zetwalHouse from '../../maps/zetwal-house.tmj?raw';
 import zetwalMarket from '../../maps/zetwal-market.tmj?raw';
 import zetwalRoad from '../../maps/zetwal-road.tmj?raw';
+import zetwalSquare from '../../maps/zetwal-square.tmj?raw';
 import zetwalTemple from '../../maps/zetwal-temple.tmj?raw';
 import zetwalTown from '../../maps/zetwal-town.tmj?raw';
 
@@ -23,6 +24,7 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'zetwal-market': zetwalMarket,
   'zetwal-harbor': zetwalHarbor,
   'zetwal-heights': zetwalHeights,
+  'zetwal-square': zetwalSquare,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

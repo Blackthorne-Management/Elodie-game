@@ -1,85 +1,90 @@
-// The Iron Market, west of the plaza: Pòdlimyè's quarter of ironmongers, engravers and letter writers,
-// and the Hall of the Accord (owner decision, Oct 15), the seat of the Zetwal state, where envoys are
-// received and Elodie makes the laws. The Hall is one large drawing (OBJECT_ART hall_of_accord) on solid
-// ground (lawn behind, paving under the porch), its door at the top of the stairs. The Echo is the same yard fifty years ago, the Crown's
-// customs yard, the Hall not yet begun.
+// The Iron Market, west of the plaza (owner decision, Oct 15: "a true market feel"): the city's great market
+// under the red iron hall with the clock tower (OBJECT_ART iron_market_hall, after Port-au-Prince's Marché en
+// Fer), and around it the rows: produce and spices, cloth, iron goods and the engraver, fish on ice, a pen of
+// goats and chickens, the lottery booth and the carts unloading. The engraver keeps the Head of State's seal
+// (The Envoy's Papers). The Echo is the same ground fifty years ago: the Crown's customs yard.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj } from './zetwal-town.ts';
 
 export function zetwalMarket(): MapSource {
-  const W = 30;
+  const W = 36;
   const H = 24;
-  const g = new Grid(W, H, '.');
+  const g = new Grid(W, H, '2');
 
-  // Borders: trees all round; the lane east to the plaza.
-  g.rect(0, 0, W, 1, 'T').rect(0, H - 1, W, 1, 'T').rect(0, 0, 1, H, 'T').rect(W - 1, 0, 1, H, 'T');
+  // Shophouses along the north, trees west and south, the lane east to the plaza.
+  g.rect(0, 0, W, 1, '^').rect(0, 1, W, 1, '#');
+  g.rect(0, 0, 1, H, 'T').rect(0, H - 1, W, 1, 'T').rect(W - 1, 0, 1, H, 'T');
   g.set(W - 1, 15, 'D');
+  g.rect(W - 4, 14, 3, 2, ',');
 
-  // The Hall of the Accord (7 x 6 tiles under its drawing), the door at the top of its stairs.
-  g.rect(11, 2, 7, 3, '1').rect(11, 5, 7, 3, '0').set(14, 7, 'D');
-  // The square before the Hall, its lanterns and banners.
-  g.rect(8, 8, 13, 6, ':');
-  g.set(9, 8, 'L').set(19, 8, 'L').set(9, 7, 'N').set(19, 7, 'N').set(18, 8, 'P');
+  // The iron hall: 10 x 6 tiles under its drawing, lamps before its gate.
+  g.rect(13, 2, 10, 6, '0');
+  g.set(12, 8, 'L').set(23, 8, 'L');
 
-  // The market lane east to the plaza, and the alleys.
-  g.rect(8, 14, W - 9, 2, ',');
-  g.rect(3, 14, 5, 1, ',').rect(3, 9, 1, 5, ',');
-  g.rect(24, 6, 1, 8, ',');
-
-  // The ironworks (north-west) and the engravers' row (north-east), houses to the south.
-  g.rect(2, 2, 6, 2, '^').rect(2, 4, 6, 2, '#');
-  g.rect(20, 2, 8, 2, '^').rect(20, 4, 8, 1, '#');
-  g.rect(2, 18, 6, 2, '^').rect(2, 20, 6, 2, '#');
-  g.rect(19, 19, 6, 1, '^').rect(19, 20, 6, 2, '#');
-
-  // Stalls: iron, engraving, ink and paper.
-  g.set(5, 11, 'S').set(6, 11, 'S');
-  g.set(22, 10, 'S').set(23, 10, 'S');
-  g.set(12, 17, 'S').set(13, 17, 'S');
-  g.set(25, 9, 'X').set(26, 9, 'X').set(8, 19, 'X').set(26, 17, 'X');
-
-  // Trees and gardens.
-  g.rect(14, 19, 3, 1, 'f').rect(2, 7, 3, 1, 'f');
-  for (const [x, y] of [[9, 3], [19, 3], [1, 16], [10, 20], [17, 21], [27, 20], [27, 12], [6, 15]] as const) g.set(x, y, 'T');
-  g.rect(26, 6, 2, 1, 'B');
+  // Produce (west) and spices (east), the first row.
+  for (const [i, x] of [2, 3, 4, 5, 6, 7, 8, 9, 10].entries()) g.set(x, 9, i % 3 === 0 ? '5' : '6');
+  for (const [i, x] of [25, 26, 27, 28, 29, 30, 31, 32, 33].entries()) g.set(x, 9, i % 3 === 0 ? '3' : '7');
+  // Cloth (west) and iron goods with the engraver (east), the second row.
+  for (const [i, x] of [2, 3, 4, 5, 6, 7, 8, 9, 10].entries()) g.set(x, 12, i % 3 === 2 ? '3' : '8');
+  for (const [i, x] of [25, 26, 27, 28, 29, 30, 31, 32, 33].entries()) g.set(x, 12, i % 4 === 1 ? '`' : '4');
+  // Fish on ice (south-east), the goat and chicken pen (south-west).
+  g.rect(25, 18, 6, 1, '9').set(31, 18, '3').set(32, 18, '`');
+  g.rect(2, 17, 8, 1, '=').rect(2, 21, 8, 1, '=').rect(2, 18, 1, 3, '=').rect(9, 18, 1, 3, '=');
+  g.rect(3, 18, 6, 3, ',');
+  g.set(4, 19, 'J').set(7, 18, 'J').set(5, 20, 'F').set(8, 20, 'F');
+  // The lottery booth, carts and barrels on the loading street (south).
+  g.set(14, 19, 'U').set(12, 21, 'V').set(21, 21, 'V').set(27, 21, 'V');
+  g.set(13, 21, '`').set(22, 21, '`').set(33, 21, '`').set(2, 15, '`').set(2, 14, '`');
+  g.rect(11, 22, 24, 1, ',');
+  for (const [x, y] of [[1, 6], [1, 11], [34, 6], [17, 17], [11, 19]] as const) g.set(x, y, 'T');
+  g.set(17, 17, 'O');
+  // A middle row of mixed stalls around the fountain.
+  for (const [i, x] of [12, 13, 14, 15, 19, 20, 21, 22].entries()) g.set(x, 17, '35674853'[i]!);
 
   const e = g.map({
-    '.': '"',
-    ',': ';',
-    ':': ';',
-    f: '"',
-    T: 'Y',
-    B: 'Y',
-    S: 't',
+    '2': ';',
+    '3': 't',
+    '4': 't',
+    '5': 't',
+    '6': 'Z',
+    '7': 'Z',
+    '8': 't',
+    '9': 't',
+    U: 'x',
+    V: 'x',
+    '`': 'Z',
     L: 'x',
-    N: 'x',
-    X: 'Z',
-    P: ';',
+    O: '&',
+    ',': ';',
+    T: 'Y',
+    '=': 'x',
     '0': '|',
-    '1': 'Y',
     '#': '%',
     D: 'D',
   });
-  // The customs yard: crates where the Hall will stand, a barricade across the square.
-  e.rect(12, 7, 5, 1, '&').set(14, 7, 'D');
-  e.rect(10, 11, 3, 1, 'x');
 
   const objects: ObjSpec[] = [
-    npc('hall_guard', 13, 8, 'down'),
-    npc('engraver', 22, 11, 'down'),
-    npc('ironmonger', 5, 12, 'up'),
-    npc('letter_writer', 13, 18, 'up'),
-    npc('foreign_envoy', 16, 10, 'left'),
-    npc('market_kid', 10, 16, 'right'),
+    // Vendors with shops, and the engraver.
+    npc('produce_seller', 6, 10, 'down'),
+    npc('spice_seller', 29, 10, 'down'),
+    npc('cloth_merchant', 5, 13, 'down'),
+    npc('engraver', 28, 13, 'down'),
+    // The market's people.
+    npc('ironmonger', 32, 13, 'down'),
+    npc('fishmonger', 27, 19, 'down'),
+    npc('goat_herder', 10, 19, 'left'),
+    npc('lottery_seller', 15, 19, 'left'),
+    npc('letter_writer', 20, 10, 'down'),
+    npc('porter', 24, 20, 'left'),
+    npc('pickpocket', 19, 15, 'right'),
+    npc('market_kid', 12, 15, 'right'),
+    npc('market_shopper', 8, 15, 'up'),
 
     { layer: 'doors', name: 'market_plaza', x: W - 1, y: 15, props: { target: 'town_market', map: 'zetwal-town', exit: 'left' } },
-    { layer: 'doors', name: 'market_hall', x: 14, y: 7, props: { target: 'hall_out', map: 'zetwal-hall', exit: 'down' } },
     { layer: 'spawns', name: 'market', x: W - 2, y: 15, props: { facing: 'left', era: 'present' } },
 
-    // The Hall: one drawing over its solid paving (the door stays reachable at the top of the stairs).
-    obj('hall_of_accord', 11, 2, { era: 'present', kind: 'hall_of_accord', walkable: true }, 7, 6),
-    obj('hall_sign', 18, 8, { dialogue: 'hall_sign', era: 'present' }),
+    obj('iron_market_hall', 13, 2, { dialogue: 'iron_market_hall', era: 'present', kind: 'iron_market_hall', walkable: true }, 10, 6),
   ];
   return { id: 'zetwal-market', present: g, echo: e, objects };
 }

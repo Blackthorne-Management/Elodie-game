@@ -6,6 +6,15 @@ books), the **capital building** (3 to 5 books) and a **wild section** with rand
 Oct 14; guide 6.6). No fights in Chapter 1. Gold is separate from the Wealth score. Anything not in the guide or
 already built is a **proposal**, including every city name except Pòdlimyè.*
 
+**Owner rules (Oct 15).** Every capital has **at least five outdoor areas, buildings aside**, so it feels grand. Its
+**seat of government is central** (at the head of or beside the main square, never out of the way), **large and
+robust** (a long hall to the ruler's seat, plus chambers: council, envoys, records and seal, messengers, treasury,
+offices), **staffed**, and home to **interesting political people** (factions that disagree, a foreign or Crown agent,
+the people who carry messages). It is where the story's diplomacy and communications happen, so every capital's seat
+gets a "Seat of government" paragraph below. Every capital's **market is unique** to its culture (no copies of a
+plaza). Pòdlimyè is built this way; the other seats are proposals until their chapter is built. People are named by
+role until the owner approves names.
+
 **Conventions used below.**
 - **Size** is rough, in 16 px tiles (W x H). The screen shows 20 x 11.25 tiles. Built maps give their real size.
 - **Books:** 100 to 150 words each (guide 6.6), split into pages by the built `bookPages`; reading one sets
@@ -59,21 +68,33 @@ the Throne at the start). **Feel:** sun, lanterns, a thousand names said aloud; 
 `#d4ac0d`.
 
 **Sections** (built unless marked). **Every capital has at least five outdoor areas, buildings aside** (owner, Oct 15:
-"so it feels more grand"); Pòdlimyè has six (plaza, Iron Market, Old Harbor, Solèy Heights, Temple Island, Cane Road).
+"so it feels more grand"); Pòdlimyè has seven (plaza, Accord Square, Iron Market, Old Harbor, Solèy Heights, Temple Island, Cane Road).
 
 | Section | Map | Size | Description |
 |---|---|---|---|
 | Festival Plaza and harbor (hub) | `zetwal-town` | 40 x 28 (built) | The stage, the fountain, vendor stands, the Marshal's stone, the bridgehead and the harbor. |
-| The Iron Market | `zetwal-market` | 30 x 24 (built Oct 15) | West of the plaza: ironmongers, the engraver, the letter writer, a foreign envoy, and the **Hall of the Accord** (its 8-bit exterior, `OBJECT_ART.hall_of_accord`, from the owner's render). Chapter 1 task: The Envoy's Papers. |
+| Accord Square | `zetwal-square` | 36 x 22 (built Oct 15) | Up the steps at the head of the plaza: the **Hall of the Accord** facing down the avenue (8-bit exterior from the owner's render, `OBJECT_ART.hall_of_accord`), the bronze Signers, honour guards, the gazette crier, petitioners and a protester, the guardhouse and the courier post. |
+| The Iron Market | `zetwal-market` | 36 x 24 (built Oct 15) | West of the plaza, after Port-au-Prince's Marché en Fer: the red iron hall with its clock gate (`OBJECT_ART.iron_market_hall`), rows of produce, spices, cloth, iron goods (the engraver: The Envoy's Papers), fish on ice, a goat and chicken pen, the lottery booth, carts unloading. Three shops (produce, spices, cloth). |
 | The Old Harbor | `zetwal-harbor` | 36 x 18 (built Oct 15) | Along the shore west: the fish market, the customs house, piers and the ferry landing. Exploration for now; more on the return. |
-| Solèy Heights | `zetwal-heights` | 30 x 20 (built Oct 15) | Up the steps north of the plaza: old houses, terraced gardens, the well, the lookout over the city. Exploration for now; more on the return. |
+| Solèy Heights | `zetwal-heights` | 30 x 20 (built Oct 15) | Up the lane west of Accord Square: old houses, terraced gardens, the well, the lookout over the city. Exploration for now; more on the return. |
 | Limyè house | `zetwal-house` | 20 x 12 (built) | Home; Patricio's study with the map table Echo Zone and the window seat. |
-| Hall of the Accord (capital building) | `zetwal-hall` | 18 x 12 (built) | The seat of the state, in the Iron Market (moved from the plaza, Oct 15): the council table, the Head of State's chair, the public Accord copy. |
+| Hall of the Accord (capital building) | `zetwal-hall` | 40 x 30 (built Oct 15) | The seat of the state on Accord Square. See "Seat of government" below. |
 | Temple Island | `zetwal-temple` | 30 x 20 (built) | The Temple of Elodie, the Gaze lamp, the Name Stones, the dock. |
 | Temple Archive (library) | `zetwal-archive` | 22 x 14 (built) | On the island; three shelves of three books. |
 | The Cane Road (wild) | `zetwal-road` | 44 x 26 (built) | Cane fields past the east gate, the burned sugar mill, the mangroves. |
 | Harbor bakery (proposal) | `zetwal-bakery` | 12 x 8 | Interior for Z-5, the rebel safehouse. |
 | Sugar mill cellar (proposal) | `zetwal-mill` | 14 x 10 | Interior for Z-6 (Chapter 10), with an Echo Zone. |
+
+**Seat of government: the Hall of the Accord (built Oct 15).** At the head of the plaza, on Accord Square. Inside
+(40 x 30): the entrance hall (honour guards, the clerk's desk, benches), the **grand gallery** of columns and portraits
+(Marshal Patricio, Mother Solange, Elodie, the signing with the Crown envoy's face in shadow) running north to the
+**Throne of the State** on its dais; west, the **Council Chamber** (the Speaker's desk and benches) and the **Envoys'
+Reception Room**; east, the **Chancellor's office**, the **Seal and Records Room** (the Hall's four books) and the
+**Courier Office** (pigeon loft, routes map); off the entrance, the **Scribes' Room** and the **Treasury**. People: the
+Chancellor (governs while Elodie is away; signs The Envoy's Papers), the Speaker of the Council, the Senior elder
+(peace at any price) and the Harbor councillor (raise the harbor chain), the Crown's consul (polite, watchful; knows
+how few have read the whole Accord), the foreign envoy, the Keeper of the Seal, the Chief courier, the Treasurer,
+scribes, the page, the steward, the usher of the throne room, the hall guards.
 
 **Library: the Temple Archive (9 books, built):**
 
@@ -158,6 +179,12 @@ plaza; Taíno-inspired. Accent teal `#17a5a5`.
 | The Mountain Path (wild) | 46 x 28 | Up through cloud forest to the resistance's hill camp. |
 | The Sea Cave (secret) | 24 x 20 | X-4; tide states; Echo Zones on the ledges. |
 
+**Seat of government (proposal, owner rule Oct 15): the Caney of Anaco**, on the terrace above the Areíto Plaza, the
+centre of the town. About 36 x 26: a long hall of carved posts to the cacique's **duho** (ceremonial seat); the elders'
+council circle; the behique's room where Anaco lies ailing; the guest house for envoys; the tribute store; the runners'
+and conch-callers' room (messages along the coast). People: Anaco, an elder for the Charter and an elder for the
+resistance, the behique, Governor Thorne's liaison officer posted inside, the head runner, guards and weavers.
+
 **Library: the Song House (9):**
 
 | Book | Category | One line |
@@ -231,6 +258,12 @@ Dorini**, Samira's mother). Wants **Influence** (price 10): the richest house wa
 | The Old Counting House | 16 x 12 | Yusuf's counting room in the Echo; box 7 (A-4). |
 | The Desert Edge (wild) | 46 x 28 | The caravan road into the dunes; a ruined caravanserai. |
 
+**Seat of government (proposal, owner rule Oct 15): the Merchant-Prince's Majlis**, at the head of the souk square.
+About 36 x 26: a long hall of arches to the prince's divan; the guild council chamber; the counting house; the envoys'
+courtyard with its fountain; the archive of contracts; the caravan couriers' post. People: the Merchant-Prince, a guild
+master who trades with the Crown and one who will not, the treasurer, the Crown's trade factor, contract scribes, the
+caravan master. Market: the covered souk of gold and spice under lanterns (unique to Al-Doria).
+
 **Library: the House of Ledgers (9):**
 
 | Book | Category | One line |
@@ -302,6 +335,11 @@ fire-cracked highlands, red stone and iron, a duel court. Spanish-inspired. Acce
 | The Forge Fortress and Benny's tunnel | 36 x 26 | SIG-ARD: the lava channels, the bellows lever, the tunnel to the sea road. |
 | The Cinder Flats (wild) | 46 x 28 | Black lava fields and hot springs below the walls. |
 | Free Brasador camp (proposal) | 24 x 16 | After the escape, on the sea road. |
+
+**Seat of government (proposal, owner rule Oct 15): the Alcázar**, over the main plaza (central, not on the edge).
+Grow it to about 40 x 30: the long hall of audience to Rael's seat, the elders' hall, Benny's quiet rooms, the cloister
+and crypt (Ar-4), the war room, the messenger tower. People: Rael, the corrupt elders, old Benny (kept out of sight),
+the captain of the guard, the Crown's envoy, the chamberlain, couriers.
 
 **Library: the Old Library (9):**
 
@@ -376,6 +414,11 @@ watched. English (formal). Palette: neutral stone with all eight accents on the 
 | The Envoys' Quarter | 24 x 16 | Elodie's rooms (Se-1); the Crown's guarded wing. |
 | The Crossroads Fields (wild) | 46 x 28 | Where the roads meet outside the walls: camps, deserters, pilgrims. |
 
+**Seat of government (proposal, owner rule Oct 15): the Throne Hall**, the centre of the city and of the realm.
+About 44 x 32: a long nave to the Throne tile, the eight council chairs, **eight embassy chambers** (one per house,
+some empty), the Regent's offices, the heralds' tower (proclamations to the realm). People: the Regent, the heralds,
+the houses' ambassadors, the Crown's legate, the archivist of the Throne.
+
 **Library: the Throne Archive (10):**
 
 | Book | Category | One line |
@@ -447,6 +490,11 @@ meet a steppe camp of great tents; horses everywhere. Fused Nordic / Mongolian-i
 | The Frozen Fjord | 40 x 26 | SIG-SKA: floes in the present, ice in the Echo; the thief's camp across it. |
 | The Winter Plateau (wild) | 46 x 30 | High grass and stone; the nine cairns (S-4); the herders' folds (S-3). |
 
+**Seat of government (proposal, owner rule Oct 15): the Great Moot Tent**, in the middle of the gathering field.
+About 36 x 26 of joined tents: a long aisle of standard poles to the chieftain's seat and the empty pole; the
+lawspeaker's tent; the skalds' and horn-riders' tent (messages); the guest-hostage tent for envoys; the plunder store.
+People: the chieftain, the lawspeaker, a raiding jarl and a trading jarl, the Crown's hostage-envoy, the horn-master.
+
 **Library: the Saga Tent (8):**
 
 | Book | Category | One line |
@@ -511,6 +559,11 @@ harbor city of lacquer, paper screens and lanterns. Japanese-inspired. Accent vi
 | The Hall of Screens (capital building) | 24 x 18 | The council's hall; the rotating screens and the file house (SIG-KUR parts 2 and 3). |
 | Lady Sayo's House | 20 x 14 | The listening room with the nightingale floor (K-4). |
 | The Fog Marsh (wild) | 46 x 28 | Reeds, causeways and fishers' huts; the rebel press (K-3). |
+
+**Seat of government (proposal, owner rule Oct 15): the Hall of Screens**, behind the main bridge at the heart of
+the town. About 36 x 26: a long corridor of rotating screens to the lord's dais; the retainers' council; the file house
+(SIG-KUR); the tea room for envoys; the signal tower (lantern and kite signals). People: the lord or lady of Suzumori,
+a retainer for neutrality and one for war, the spymaster, the Crown's observer, the keeper of files, the signal master.
 
 **Library: the Lantern Library (9):**
 
@@ -586,6 +639,11 @@ saffron `#e67e22`. (The Flame Keepers are the fictional Four Hands faith; no rea
 | The Harbor Chain | 30 x 20 | The great chain and its lamp; the oil store (J-4); boss arena (Seth Dhanraj). |
 | The Salt Flats (wild) | 46 x 28 | White flats and scrub on the caravan road. |
 
+**Seat of government (proposal, owner rule Oct 15): the Court of the Flame**, the temple court at the city's
+centre. About 36 x 28: a long colonnade to the flame altar and the ruler's seat; the priests' council; the (empty)
+treasury; the envoys' pavilion; the runners' hall. People: the high priest, the ruler, priests split over hiding the
+truth, the treasurer, a Crown agent, the chief runner.
+
 **Library: the Palm-Leaf Library (9):**
 
 | Book | Category | One line |
@@ -650,6 +708,11 @@ moorland city, polite, tired and watched; the Crown's records and courts. Englis
 | The Regent's Keep (capital building) | 32 x 24 | The archive (SIG-ALM part 1), the courtroom (part 2), the clock tower (Al-4); the Hushed's chamber. |
 | Rosalind's Townhouse | 18 x 12 | Tea with Lady Rosalind (Al-5). |
 | The Heath (wild) | 46 x 28 | Fog, heather and bog beyond the walls; the dissidents' printing barn (Al-3). |
+
+**Seat of government (proposal, owner rule Oct 15): the Regent's Keep**, on the market square. About 40 x 30: the
+great hall to the Regent's chair; the archive (SIG-ALM 1); the courtroom (2); the clock tower (Al-4); the Hushed's
+chamber; the post office. People: the Regent's steward, judges, the clerk of the court, the Crown magistrate, the
+postmaster.
 
 **Library: the Rolls House (9):**
 
