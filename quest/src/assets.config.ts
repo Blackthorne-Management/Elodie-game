@@ -4,9 +4,9 @@
 // ART_FILES describes into quest/art/ and it is used instead of the placeholder (a missing file
 // keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
 
-import { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt } from './assets.pixels.ts';
+import { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
-export { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, type ObjectArt, type PixelArt };
+export { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
 
 /** Pattern drawn on top of a placeholder tile's base colour so tiles read at a glance. */
 export type TilePattern = 'flat' | 'dots' | 'grid' | 'stripes' | 'cross' | 'border' | 'blob' | 'wave';
@@ -300,6 +300,8 @@ export const ART_FILES = {
   object: (kind: string) => `objects/${kind}.png`,
   item: (id: string) => `items/${id}.png`,
   enemy: (look: string) => `enemies/${look}.png`,
+  /** A painted battle weapon (it keeps the grip point of WEAPON_ART). */
+  weapon: (id: string) => `weapons/${id}.png`,
   /** Walk sheet layout. */
   sheetColumns: 3,
   sheetRows: ['down', 'left', 'right', 'up'] as const,
@@ -458,6 +460,26 @@ export const SHOWCASE = {
   rewardColor: '#7fbf7a',
   sparkleCount: 10,
 } as const;
+
+/** Battle weapons (WEAPON_ART, or a file in art/weapons/), one texture each, by item id. */
+export function textureKeyForWeapon(id: string): string {
+  return `weapon-${id}`;
+}
+
+/**
+ * Where a fighter's front hand is, from their feet (bottom centre), facing right: the weapon's grip goes
+ * there. One default for the stand-in walk sprites; a battle stance can set its own by look.
+ */
+export const BATTLE_HANDS: {
+  default: { dx: number; dy: number };
+  /** By weapon type: a staff stands just ahead of the body, a bow is held out in front, a blade at the hip. */
+  byWeapon: Readonly<Record<string, { dx: number; dy: number }>>;
+  byLook: Readonly<Record<string, { dx: number; dy: number }>>;
+} = {
+  default: { dx: 4, dy: -9 },
+  byWeapon: { staff: { dx: 8, dy: -9 }, bow: { dx: 10, dy: -12 }, blade: { dx: 4, dy: -9 } },
+  byLook: {},
+};
 
 /** Enemy drawings (ENEMY_ART, or a file in art/enemies/), one texture each. */
 export function textureKeyForEnemy(look: string): string {

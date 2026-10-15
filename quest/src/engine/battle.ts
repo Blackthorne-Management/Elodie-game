@@ -197,6 +197,8 @@ export interface PartyEntry {
   row?: 'front' | 'back';
   /** The power of their plain Attack (100; a mage's staff bash is less unless the staff has an edge). */
   bash?: number;
+  /** The weapon item in hand (drawn in their hand on the battle screen). */
+  weaponItem?: string;
 }
 
 export interface BattleItem {
@@ -250,6 +252,7 @@ export interface Combatant {
   cooldowns: Record<string, number>;
   /** Their plain Attack's power. */
   bash: number;
+  weaponItem?: string;
 }
 
 export interface ActiveStatus {
@@ -389,6 +392,7 @@ export class Battle {
       slot: i,
       cooldowns: {},
       bash: p.bash ?? 100,
+      weaponItem: p.weaponItem,
     }));
     const foes: Combatant[] = enemies.map((e, idx) => {
       const n = (seen.get(e.id) ?? 0) + 1;
@@ -881,6 +885,7 @@ export function battleEntry(flags: FlagReader, rpg: RpgContent, m: MemberDef, bo
     weapon: weapon?.weapon,
     // A plain staff only bashes; one with a blade or spikes strikes properly.
     bash: weapon?.weapon === 'staff' && !weapon.edge ? MAGE_BASH_POWER : 100,
+    weaponItem: weaponId ?? undefined,
   };
 }
 

@@ -160,3 +160,18 @@ describe('new effects', () => {
     expect(reachable([g, other]).map((c) => c.key)).toEqual(['gianna']);
   });
 });
+
+describe('battle weapons (owner, Oct 15: one empty-handed stance, the weapon drawn into the hand)', () => {
+  it('every weapon item has a battle drawing whose grip is on the weapon', async () => {
+    const { WEAPON_ART } = await import('../src/assets.config.ts');
+    for (const it of Object.values(RPG.items)) {
+      if (it.slot !== 'weapon') continue;
+      const art = WEAPON_ART[it.id];
+      expect(art, it.id).toBeDefined();
+      const w = art!.rows[0]!.length;
+      expect(art!.rows.every((r) => r.length === w), it.id).toBe(true);
+      const at = art!.rows[art!.grip.y]?.[art!.grip.x];
+      expect(at !== undefined && at !== '.', `${it.id} grip`).toBe(true);
+    }
+  });
+});

@@ -36,8 +36,8 @@ and ticks items off here as they land. Last updated **Wed Oct 15**.
 
 **Quest art waiting on the owner (art drop 1, Fri Oct 24):** every prompt is in `docs/quest/ART-PROMPTS.md`: Elodie
 the goddess, Elodie Limyè, Patricio young and old, Anicette young and old, the Sun Locket and Solange's Quill, and
-(added Oct 15) the battle stances for Gianna, Yari and young Patricio, one per weapon tier, Anissa's two battle
-poses, and the cane-field boar. Still to
+(added Oct 15) the battle stances for Gianna, Yari and young Patricio (one empty-handed stance each; the game draws
+the weapons), Anissa's two battle poses, and the cane-field boar. Still to
 write: the three intro illustrations (with the storyboard, Fri Oct 17); later Benny, Caona, Rael.
 
 **The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòdlimyè and Chapter 1 finished with

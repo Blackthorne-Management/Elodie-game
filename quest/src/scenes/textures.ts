@@ -8,6 +8,7 @@ import {
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
   ENEMY_ART,
+  WEAPON_ART,
   ITEM_ART,
   MARKER_TEXTURES,
   NPC_SPRITES,
@@ -21,6 +22,7 @@ import {
   characterFrame,
   textureKeyForCharacter,
   textureKeyForEnemy,
+  textureKeyForWeapon,
   textureKeyForItem,
   textureKeyForObject,
   textureKeyForPortrait,
@@ -87,6 +89,7 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
     ...Object.keys(OBJECT_ART).map(ART_FILES.object),
     ...Object.keys(ITEM_ART).map(ART_FILES.item),
     ...Object.keys(ENEMY_ART).map(ART_FILES.enemy),
+    ...Object.keys(WEAPON_ART).map(ART_FILES.weapon),
   ];
   for (const path of paths) {
     const url = artFile(path);
@@ -214,6 +217,19 @@ function makeEnemyArt(scene: Phaser.Scene): void {
   }
 }
 
+/** Battle weapons: an art file when there is one, else the drawing. */
+function makeWeaponArt(scene: Phaser.Scene): void {
+  for (const [id, art] of Object.entries(WEAPON_ART)) {
+    const file = fileImage(scene, ART_FILES.weapon(id));
+    const w = file ? file.width : art.rows[0]!.length;
+    const h = file ? file.height : art.rows.length;
+    const { tex, ctx } = canvasTexture(scene, textureKeyForWeapon(id), w, h);
+    if (file) ctx.drawImage(file, 0, 0);
+    else artPix(art).draw(ctx, 0, 0);
+    tex.refresh();
+  }
+}
+
 /** A 4 x 4 ordered-dither dot pattern for the Echo filter. */
 function makeDither(scene: Phaser.Scene): void {
   const { tex, ctx } = canvasTexture(scene, ECHO_DITHER_TEXTURE, 4, 4);
@@ -308,6 +324,7 @@ export function makeAllTextures(scene: Phaser.Scene): void {
   makeObjectArt(scene);
   makeItemArt(scene);
   makeEnemyArt(scene);
+  makeWeaponArt(scene);
   makeDither(scene);
   makeMarkers(scene);
   makeCharacters(scene);

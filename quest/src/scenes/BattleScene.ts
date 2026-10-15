@@ -13,10 +13,13 @@ import {
   ANISSA_GLOW,
   BATTLE_ART,
   BATTLE_BACKDROPS,
+  BATTLE_HANDS,
+  WEAPON_ART,
   UI,
   characterFrame,
   textureKeyForCharacter,
   textureKeyForEnemy,
+  textureKeyForWeapon,
 } from '../assets.config.ts';
 import { SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { BATTLES, ENEMIES, SKILL_BOOK } from '../data/battles.ts';
@@ -132,6 +135,8 @@ export class BattleScene extends Phaser.Scene {
   private done = false;
   private result: BattleResult | null = null;
   private sprites = new Map<string, Phaser.GameObjects.Image>();
+  /** The weapon in each fighter's hand (kept on the hand every frame, so it shivers and fades with them). */
+  private weapons = new Map<string, { img: Phaser.GameObjects.Image; hand: { dx: number; dy: number } }>();
   private anissa: Phaser.GameObjects.Image | null = null;
   private anissaLight: Phaser.GameObjects.Arc | null = null;
   private ui!: Phaser.GameObjects.Container;
@@ -155,6 +160,7 @@ export class BattleScene extends Phaser.Scene {
     this.message = '';
     this.sticky = '';
     this.sprites = new Map();
+    this.weapons = new Map();
   }
 
   create(): void {
@@ -515,6 +521,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   update(): void {
+    this.holdWeapons();
     const input = getRuntime().input;
     input.update();
     if (this.done) {
@@ -688,7 +695,34 @@ export class BattleScene extends Phaser.Scene {
     const c = this.battle.find(key)!;
     const img = this.add.image(0, 0, textureKeyForCharacter(c.look), characterFrame('right', 0)).setOrigin(0.5, 1).setScale(BATTLE_ART.partyScale);
     this.sprites.set(key, img);
+    // The equipped weapon, held at its grip in the front hand.
+    const art = c.weaponItem ? WEAPON_ART[c.weaponItem] : undefined;
+    if (c.weaponItem && art && this.textures.exists(textureKeyForWeapon(c.weaponItem))) {
+      const w = this.add.image(0, 0, textureKeyForWeapon(c.weaponItem));
+      w.setOrigin(art.grip.x / w.width, art.grip.y / w.height).setScale(BATTLE_ART.partyScale);
+      this.weapons.get(key)?.img.destroy();
+      this.weapons.set(key, { img: w, hand: BATTLE_HANDS.byLook[c.look] ?? (c.weapon ? BATTLE_HANDS.byWeapon[c.weapon] : undefined) ?? BATTLE_HANDS.default });
+    }
     return img;
+  }
+
+  /** Keep every weapon in its fighter's hand (position, depth, fade, tint); drop it with the fighter. */
+  private holdWeapons(): void {
+    for (const [key, { img, hand }] of this.weapons) {
+      const s = this.sprites.get(key);
+      if (!s || !s.active) {
+        img.destroy();
+        this.weapons.delete(key);
+        continue;
+      }
+      img
+        .setPosition(s.x + hand.dx * s.scaleX, s.y + hand.dy * s.scaleY)
+        .setDepth(s.depth + 0.5)
+        .setAlpha(s.alpha)
+        .setVisible(s.visible);
+      if (s.isTinted) img.setTint(s.tintTopLeft);
+      else img.clearTint();
+    }
   }
 
   /** Put the fighters in their rows: blades in front, mages and archers behind; a full row spills over. */
