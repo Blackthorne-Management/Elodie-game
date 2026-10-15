@@ -38,6 +38,8 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
 ## Working with the owner
 - Before each build, describe what you are going to do and wait for the owner's approval before continuing.
 - Ask questions one at a time, each with the reason behind it.
+- After every command and run, end the reply with the link to the quest: https://zesty-puffpuff-852680.netlify.app/quest/
+  (it updates a few minutes after each push, once Netlify's build and tests pass).
 
 ## Commands
 - `npm run dev` (add `-- --host` to open on a phone on the same Wi-Fi)
