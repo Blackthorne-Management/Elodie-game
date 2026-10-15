@@ -341,6 +341,24 @@ Running joke (no mechanics): he is out of breath after every battle.
   foe's one-target attack reaches the back row only when no one stands in the front row. **Area** moves reach everyone.
 - **Anissa is never a target.**
 
+## 9.10 Skills that grow (owner, Oct 15; built)
+
+- **Mages (Gianna) grow a spellbook.** Spells are learned by **level** or from **library books** (Mend: read 5 of
+  Pòdlimyè's books). Each spell can **rank up** (II, III) at set levels, adding power and sometimes an effect
+  (Sunthread II also Marks; Limyè Elodie II also clears bad statuses). Only a few can be **equipped**: 4 slots, 5 at
+  level 10, 6 at level 20 (`SPELL_SLOTS`), chosen on Equip > Spells.
+- **Rare and better gear brings a skill, free** (it never takes a slot): Lantern staff, Lantern Flare (fire);
+  Thornwood staff, Briar Snare (earth, Slowed); Sun-glaive staff, Dawn Glaive (light, all foes); Gold-banded bow,
+  Sun Arrow (a move); Sun-stitched charm, Warm Thread (Regen); Solange's Quill, Say Their Names (once per battle:
+  every fallen ally rises at 30% HP, Anissa gains Spark).
+- **Attackers have many weapon moves and few SP skills.** Attack opens the moves list. Moves cost no SP; each has a
+  **cooldown** in the user's own turns. Yari: Quick Shot (any turn), Aimed Shot (power 160, wait 2), Pinning Shot
+  (Slowed, wait 3, Lv 2), Volley (3 random arrows, wait 3, Lv 4); SP skills: Tracker's Mark, Arrow Rain (Lv 6).
+  Patricio: Slash, Heavy Blow (wait 2), Sweep (all foes, wait 3), Hold the Line (Taunting and Warded, wait 4).
+- **A mage's Attack is a bash** (power 70, `MAGE_BASH_POWER`) with a plain staff; a **spiked or bladed staff**
+  (Thornwood, Sun-glaive) adds ATK and makes it a full blow (power 100).
+- New statuses: **Slowed** (SPD x0.7) and **Taunting** (one-target attacks go to them first).
+
 ## 10. Status effects
 
 | Status | Effect | Lasts | Cleared by |

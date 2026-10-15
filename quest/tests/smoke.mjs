@@ -660,6 +660,19 @@ async function playAct(browser, errors) {
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 5000 });
   const afterBattle = await snap(page);
   check(targeted, 'the battle asks for a target before an attack or spell');
+  // Equip > Gianna > Spells: the spell slots and what gear brings (owner, Oct 15).
+  await menuTab(page, 'Equip');
+  await page.keyboard.press('z');
+  for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('z');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.items?.some((t) => t.startsWith('Sunthread')), null, { timeout: 3000 });
+  await shoot(page, 'equip-spells', shots);
+  check(true, 'Equip shows Gianna\'s spells and slots');
+  for (let i = 0; i < 4 && (await snap(page)).mode === 'menu'; i++) {
+    await page.keyboard.press('x');
+    await frames(page);
+  }
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 3000 });
   check(afterBattle.flags['encounter.wilds.boar.won'] === true && (afterBattle.flags['item.boar_tusk'] ?? 0) >= 1, 'the boar battle can be won and pays out the boar-tusk charm');
   await page.reload();
   await waitReady(page);

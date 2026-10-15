@@ -19,13 +19,14 @@ import {
   textureKeyForEnemy,
 } from '../assets.config.ts';
 import { SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
-import { BATTLES, ENEMIES, SKILLS } from '../data/battles.ts';
+import { BATTLES, ENEMIES, SKILL_BOOK } from '../data/battles.ts';
 import { RPG } from '../data/rpg.ts';
 import {
   Battle,
   battleEntry,
   battleItems,
   battleParty,
+  isMove,
   needsTarget,
   settleBattle,
   skillCost,
@@ -41,7 +42,7 @@ import { getRuntime } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
 import { playFx, type FxKind, type Point } from './battleFx.ts';
 
-type Menu = 'commands' | 'skills' | 'items' | 'swap' | 'target';
+type Menu = 'commands' | 'moves' | 'skills' | 'items' | 'swap' | 'target';
 
 interface Row {
   label: string;
@@ -86,6 +87,8 @@ const STATUS_TAGS: Readonly<Record<StatusId, { tag: string; good: boolean }>> = 
   marked: { tag: 'MARK', good: false },
   warded: { tag: 'WARD', good: true },
   regen: { tag: 'REGEN', good: true },
+  slowed: { tag: 'SLOW', good: false },
+  taunting: { tag: 'TAUNT', good: true },
 };
 
 const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
@@ -94,6 +97,8 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
   marked: 'Marked',
   warded: 'Warded',
   regen: 'Regen',
+  slowed: 'Slowed',
+  taunting: 'drawing every blow',
 };
 
 const VISIBLE_ROWS = 6;
@@ -183,10 +188,10 @@ export class BattleScene extends Phaser.Scene {
     const flags = rt.logic.state.flags;
     const def = BATTLES[this.battleId];
     if (!def) throw new Error(`No battle ${this.battleId}`);
-    const party = battleParty(flags, RPG, SKILLS);
+    const party = battleParty(flags, RPG, SKILL_BOOK);
     this.extra.forEach((id, i) => {
       const m = RPG.members.find((x) => x.id === id);
-      if (m) party.push({ ...battleEntry(flags, RPG, m, SKILLS, false), id: `${id}${i}` });
+      if (m) party.push({ ...battleEntry(flags, RPG, m, SKILL_BOOK, false), id: `${id}${i}` });
     });
     const enemies = def.enemies.map((id) => ENEMIES[id]!).filter(Boolean);
     const items = battleItems(flags, RPG);
@@ -290,7 +295,24 @@ export class BattleScene extends Phaser.Scene {
         }
         return BATTLE_ART.messageMs * 0.7;
       }
+      case 'revive': {
+        const s = this.sprites.get(e.who);
+        if (s) {
+          s.clearTint();
+          this.tweens.add({ targets: s, alpha: 1, duration: 300 });
+          playFx(this, 'light', this.centre(e.who));
+        }
+        this.pop(e.who, `+${e.hp}`, BATTLE_ART.heal);
+        this.say(`${name(e.who)} rises!`);
+        return BATTLE_ART.messageMs * 0.8;
+      }
       case 'swap': {
+        if (!e.out) {
+          // Back on the field after being revived.
+          if (!this.sprites.has(e.in)) this.addPartySprite(e.in);
+          this.arrange();
+          return 300;
+        }
         const out = this.sprites.get(e.out);
         if (out) this.tweens.add({ targets: out, alpha: 0, duration: 250, onComplete: () => out.destroy() });
         this.sprites.delete(e.out);
@@ -375,13 +397,31 @@ export class BattleScene extends Phaser.Scene {
     if (!me || me.side !== 'party') return [];
     if (this.menu === 'skills') {
       return [
-        ...me.skills.map((s) => {
-          const cost = skillCost(s, me);
+        ...me.skills
+          .filter((s) => !isMove(s))
+          .map((s) => {
+            const cost = skillCost(s, me);
+            const from = s.source ? ` From the ${s.source}.` : '';
+            return {
+              label: `${s.source ? '*' : ''}${s.name} ${cost}`,
+              enabled: b.canUse(me, s),
+              hint: `${s.text} (${cost} SP)${from}`,
+              run: () => this.aimAt(s.name, s.target, 'skills', (target) => ({ kind: 'skill', skill: s.id, target })),
+            };
+          }),
+        { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
+      ];
+    }
+    if (this.menu === 'moves') {
+      return [
+        ...me.skills.filter(isMove).map((s) => {
+          const wait = me.cooldowns[s.id] ?? 0;
+          const from = s.source ? ` From the ${s.source}.` : '';
           return {
-            label: `${s.name} ${cost}`,
-            enabled: me.sp >= cost,
-            hint: `${s.text} (${cost} SP)`,
-            run: () => this.aimAt(s.name, s.target, 'skills', (target) => ({ kind: 'skill', skill: s.id, target })),
+            label: `${s.source ? '*' : ''}${s.name}${wait > 0 ? ` (${wait})` : ''}`,
+            enabled: b.canUse(me, s),
+            hint: wait > 0 ? `${s.name} is ready again in ${wait} turn${wait > 1 ? 's' : ''}.` : `${s.text}${from}`,
+            run: () => this.aimAt(s.name, s.target, 'moves', (target) => ({ kind: 'skill', skill: s.id, target })),
           };
         }),
         { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
@@ -412,9 +452,16 @@ export class BattleScene extends Phaser.Scene {
       ];
     }
     const waiting = b.bench.filter((c) => !c.down);
+    const hasMoves = me.skills.some(isMove);
+    const spSkills = me.skills.filter((s) => !isMove(s)).length;
     const rows: Row[] = [
-      { label: 'Attack', enabled: b.enemies.some((e) => !e.down), hint: 'Strike one foe with your weapon.', run: () => this.aimAt('Attack', 'enemy', 'commands', (target) => ({ kind: 'attack', target: target! })) },
-      { label: 'Skill', enabled: me.skills.length > 0, hint: me.skills.length ? 'Spells and moves that cost SP.' : `${me.name} has no skills yet.`, run: () => this.openMenu('skills') },
+      {
+        label: 'Attack',
+        enabled: b.enemies.some((e) => !e.down),
+        hint: hasMoves ? 'Your weapon moves. Some need a few turns to ready again.' : me.bash < 100 ? 'A bash with your staff. It will not do much.' : 'Strike one foe with your weapon.',
+        run: () => (hasMoves ? this.openMenu('moves') : this.aimAt('Attack', 'enemy', 'commands', (target) => ({ kind: 'attack', target: target! }))),
+      },
+      { label: 'Skill', enabled: spSkills > 0, hint: spSkills ? 'Spells and skills that cost SP.' : `${me.name} has no SP skills yet.`, run: () => this.openMenu('skills') },
       { label: 'Guard', enabled: true, hint: 'Take half damage until your next turn.', run: () => this.act({ kind: 'guard' }) },
       { label: 'Item', enabled: b.items.some((i) => i.count > 0), hint: 'Food and drink from your bag.', run: () => this.openMenu('items') },
       {

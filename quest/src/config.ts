@@ -157,13 +157,28 @@ export const MIN_DAMAGE_SHARE = 0.15;
 export const GUARD_MULT = 0.5;
 /** Status effects (COMBAT 10): how many of the affected fighter's own turns they last, and what they do. */
 export const STATUS = {
-  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0 },
-  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0 },
-  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0 },
+  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false },
+  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true },
+  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true },
   /** Ward: damage taken x0.75 (a Chapter 1 proposal; Aldermoor's Ward of Patience is the party-wide one). */
-  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0 },
-  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08 },
+  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false },
+  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false },
+  /** Slowed (COMBAT's Chilled): SPD x0.7, so turns come later. */
+  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true },
+  /** Taunting: foes' one-target attacks go to this fighter first. */
+  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false },
 } as const;
+/**
+ * Spell slots (owner, Oct 15): a mage equips only this many of the spells she knows (the level at which
+ * each count starts). Skills that come with rare or better gear are free: they never take a slot.
+ */
+export const SPELL_SLOTS: readonly { level: number; slots: number }[] = [
+  { level: 1, slots: 4 },
+  { level: 10, slots: 5 },
+  { level: 20, slots: 6 },
+];
+/** A mage's Attack with a plain staff: a bash at this power (100 with a bladed or spiked staff). */
+export const MAGE_BASH_POWER = 70;
 /** Fighters in a battle at once (owner, Oct 15): up to 8 in the party, 4 fight, the rest wait to swap in. */
 export const BATTLE_ACTIVE = 4;
 /** A fighter who swaps in (or replaces a fallen one) waits this share of a full turn before acting. */

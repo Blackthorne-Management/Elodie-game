@@ -83,6 +83,10 @@ export interface ItemDef {
   armor?: ArmorType;
   /** Rare and above: a special property. */
   special?: ItemSpecial;
+  /** Rare and above: a skill (or weapon move) that comes with it, free (never takes a spell slot). */
+  skill?: string;
+  /** Staffs with a blade or spikes: the wielder's Attack is a real blow (not a bash). */
+  edge?: 'blade' | 'spike';
   /** Legendary: what each of the wearer's levels above 1 adds (fractions add up; rounded down). */
   growth?: Partial<Stats>;
   /** Gear level: worn below it, the item gives only part of its bonus (GEAR_UNDERLEVEL_SHARE). */

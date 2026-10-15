@@ -42,6 +42,7 @@ const ITEM_LIST: ItemDef[] = [
     price: 0,
     stats: { mag: 2, sp: 4 },
     growth: { mag: 0.5, sp: 1 },
+    skill: 'say_their_names',
     text: 'The quill Mother Solange wrote the first names with. The nib is worn to a slant by her hand.',
     showcase: 'legendary',
     abilities: [
@@ -66,7 +67,19 @@ const ITEM_LIST: ItemDef[] = [
   {
     id: 'lantern_staff', level: 8, rarity: 'rare', name: 'Lantern staff', kind: 'gear', slot: 'weapon', weapon: 'staff', price: 520, stats: { mag: 9, sp: 6 },
     special: { kind: 'spRegen', value: 5, text: 'Its lantern head relights her: +5% SP each turn.' },
+    skill: 'lantern_flare',
     text: 'A staff of black wood crowned with a little brass lantern that never quite goes out.',
+  },
+  // Staffs with an edge (owner, Oct 15): a mage's Attack is only a bash until her staff has spikes or a blade.
+  {
+    id: 'thorn_staff', level: 6, rarity: 'rare', name: 'Thornwood staff', kind: 'gear', slot: 'weapon', weapon: 'staff', edge: 'spike', price: 480, stats: { mag: 7, atk: 5 },
+    skill: 'briar_snare',
+    text: 'Thornwood, its head bristling with iron spikes. It hits like a mace.',
+  },
+  {
+    id: 'glaive_staff', level: 12, rarity: 'epic', name: 'Sun-glaive staff', kind: 'gear', slot: 'weapon', weapon: 'staff', edge: 'blade', price: 1400, stats: { mag: 13, atk: 9, sp: 6 },
+    skill: 'dawn_glaive',
+    text: 'A temple staff with a curved gold-steel blade at its head, the sun etched on both faces.',
   },
   // Bows (archers).
   { id: 'yaguana_bow', name: 'Yaguana bow', kind: 'gear', slot: 'weapon', weapon: 'bow', level: 1, price: 90, stats: { atk: 4 }, text: "Yari's own bow: plain wood, strung with cord she twisted herself." },
@@ -74,6 +87,7 @@ const ITEM_LIST: ItemDef[] = [
   {
     id: 'goldband_bow', level: 8, rarity: 'rare', name: 'Gold-banded bow', kind: 'gear', slot: 'weapon', weapon: 'bow', price: 560, stats: { atk: 10, spd: 2 },
     special: { kind: 'crit', value: 8, text: 'Steady in the hand: +8% critical chance.' },
+    skill: 'sun_arrow',
     text: 'Ironwood bound with gold bands at the grip and tips, made for a cacique\'s guard.',
   },
   // Blades (warriors).
@@ -97,6 +111,7 @@ const ITEM_LIST: ItemDef[] = [
   {
     id: 'sun_charm', level: 2, rarity: 'rare', name: 'Sun-stitched charm', kind: 'gear', slot: 'charm', price: 90, stats: { hp: 8, def: 1 },
     special: { kind: 'regen', value: 4, text: 'Heals 4% of max HP each turn in battle.' },
+    skill: 'warm_thread',
     text: 'A cloth charm stitched with a sun. In battle it heals a little each turn.', showcase: 'reward',
   },
 ];

@@ -3,7 +3,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { ANISSA_SP_SHARE, ELEMENT_WEAK, STATUS, SURGE_COST, SURGE_MULT } from '../src/config.ts';
-import { BATTLES, ENEMIES, SKILLS } from '../src/data/battles.ts';
+import { BATTLES, ENEMIES, MOVES, SKILLS, SKILL_BOOK } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { Battle, reachable, battleItems, battleParty, enemyStats, settleBattle, skillCost, turnDelay, type BattleEvent, type PartyEntry } from '../src/engine/battle.ts';
 import { encounterFlag } from '../src/engine/encounterFlags.ts';
@@ -44,7 +44,7 @@ function yari(over: Partial<PartyEntry> = {}): PartyEntry {
     look: 'yari',
     level: 1,
     stats: { hp: 50, sp: 30, atk: 12, def: 7, mag: 6, spd: 13 },
-    skills: SKILLS.yari!,
+    skills: [...MOVES.yari!, ...SKILLS.yari!],
     specials: [],
     anissaBond: false,
     ...over,
@@ -190,18 +190,18 @@ describe('the first battle (the boar on the Cane Road)', () => {
 
   it('the party comes from the save: stats with gear, skills, and the bond with Anissa', () => {
     const flags = new FlagStore({ 'party.anissa': true });
-    const party = battleParty(flags, RPG, SKILLS);
+    const party = battleParty(flags, RPG, SKILL_BOOK);
     expect(party.map((p) => p.id)).toEqual(['gianna']);
     expect(party[0]!.anissaBond).toBe(true);
     expect(party[0]!.stats.mag).toBe(14 + 3 + 1); // base + staff + robe
     flags.set('item.sun_charm', 1);
     flags.set('equip.gianna.charm', 'sun_charm');
-    expect(battleParty(flags, RPG, SKILLS)[0]!.specials.map((s) => s.kind)).toEqual(['regen']);
+    expect(battleParty(flags, RPG, SKILL_BOOK)[0]!.specials.map((s) => s.kind)).toEqual(['regen']);
   });
 
   it('winning pays XP, gold and the boar-tusk charm once, marks the Foes page, and takes the soups used', () => {
     const flags = new FlagStore({ 'party.anissa': true, 'item.soup_pot': 2 });
-    const b = new Battle(def, battleParty(flags, RPG, SKILLS), [boar], battleItems(flags, RPG), { seed: 42 });
+    const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK), [boar], battleItems(flags, RPG), { seed: 42 });
     b.start();
     b.act({ kind: 'item', item: 'soup_pot', target: 'gianna' });
     for (let i = 0; i < 60 && !b.outcome; i++) {

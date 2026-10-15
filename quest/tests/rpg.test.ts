@@ -292,7 +292,8 @@ describe('gear classes, rarities and relics (owner decision, Oct 15)', () => {
       if (it.slot === 'weapon') expect(it.weapon, it.id).toBeDefined();
       if (it.slot === 'armor') expect(it.armor, it.id).toBeDefined();
       expect(it.slot === 'relic', it.id).toBe(it.rarity === 'legendary');
-      if (it.rarity === 'rare' || it.rarity === 'epic') expect(it.special, it.id).toBeDefined();
+      // Rare and above add something: a special property, or a skill that comes with the item (owner, Oct 15).
+      if (it.rarity === 'rare' || it.rarity === 'epic' || it.rarity === 'legendary') expect(it.special ?? it.skill, it.id).toBeDefined();
     }
   });
 

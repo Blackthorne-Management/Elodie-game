@@ -9,6 +9,9 @@ import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { ENCOUNTERS } from '../data/encounters.ts';
 import { REALM_MAP } from '../data/realmMap.ts';
 import { RPG } from '../data/rpg.ts';
+import { SKILL_BOOK } from '../data/battles.ts';
+import { isMove, skillCost, type SkillDef } from '../engine/battle.ts';
+import { equippedSpells, gearSkills, howToLearn, knownMoves, knownSkills, learned, nextRank, spellSlots, toggleSpell, usesSlots } from '../engine/skills.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { encounterFlag } from '../engine/game.ts';
 import { rewardText, sideQuestStatus, visibleSteps, type SideQuestDef } from '../engine/sideQuests.ts';
@@ -105,7 +108,7 @@ const PILLAR_NAMES: Record<(typeof PILLARS)[number], string> = { influence: 'Inf
 const STAT_NAMES: Record<(typeof STAT_KEYS)[number], string> = { hp: 'HP', sp: 'SP', atk: 'ATK', def: 'DEF', mag: 'MAG', spd: 'SPD' };
 const SLOT_NAMES: Record<Slot, string> = { weapon: 'Weapon', armor: 'Armor', charm: 'Charm', relic: 'Relic' };
 
-type Stage = 'top' | 'who' | 'slot' | 'pick' | 'read';
+type Stage = 'top' | 'who' | 'slot' | 'pick' | 'skills' | 'read';
 
 /** Colours for a level against the party's: grey, white, orange, red. */
 const BAND_COLOURS = { trivial: '#8e8e9c', even: '#f4ecd8', hard: '#f0a040', deadly: '#e05050' } as const;
@@ -267,7 +270,7 @@ export class GameMenu {
   }
 
   private back(): void {
-    if (this.stage === 'pick') this.stage = 'slot';
+    if (this.stage === 'pick' || this.stage === 'skills') this.stage = 'slot';
     else if (this.stage === 'slot' || this.stage === 'who' || this.stage === 'read') this.stage = 'top';
     this.scroll = 0;
     this.subCursor = 0;
@@ -292,7 +295,8 @@ export class GameMenu {
       case 'Items':
         return this.stage === 'who' ? this.wearers(this.item!).length : this.bag().length;
       case 'Equip':
-        if (this.stage === 'slot') return SLOTS.length;
+        if (this.stage === 'slot') return SLOTS.length + 1;
+        if (this.stage === 'skills') return Math.max(1, this.skillRows().length);
         if (this.stage === 'pick') return this.candidates().length + 1;
         return this.fighters().length;
       case 'Quests':
@@ -340,7 +344,13 @@ export class GameMenu {
           this.subCursor = 0;
           return [];
         }
+        if (this.stage === 'skills') return this.toggleSkill(ctx);
         if (this.stage === 'slot') {
+          if (this.subCursor === SLOTS.length) {
+            this.stage = 'skills';
+            this.subCursor = 0;
+            return [];
+          }
           this.slot = SLOTS[this.subCursor]!;
           this.stage = 'pick';
           this.subCursor = 0;
@@ -623,6 +633,7 @@ export class GameMenu {
     if (this.scene.textures.exists(sprite)) this.content.add(this.scene.add.image(95, TOP + 2, sprite, characterFrame('down', 0)).setOrigin(0.5, 0).setScale(2));
 
     if (this.stage === 'pick' && this.slot) return this.drawEquipPick(g, m);
+    if (this.stage === 'skills') return this.drawEquipSkills(g, m);
 
     // The four slots.
     const X = 124;
@@ -647,13 +658,25 @@ export class GameMenu {
         this.subCursor = 0;
       });
     });
-    this.labels = SLOTS.map((s2) => SLOT_NAMES[s2]);
+    // Spells (a mage's slots) or moves and skills: one more row under the slots.
+    const skillsLabel = this.skillsButtonLabel(m, lv);
+    const bx = X;
+    const by = TOP + 68;
+    const onBtn = this.stage === 'slot' && this.subCursor === SLOTS.length;
+    g.fillStyle(0x2e2638, 1).fillRect(bx, by, 194, 12);
+    g.lineStyle(1, onBtn ? 0xf2d04b : 0x6e6a78, 1).strokeRect(bx + 0.5, by + 0.5, 193, 11);
+    this.text(bx + 4, by + 1, skillsLabel, onBtn ? UI.accentText : UI.text);
+    this.hit(bx, by, 194, 12, () => {
+      this.stage = 'skills';
+      this.subCursor = 0;
+    });
+    this.labels = [...SLOTS.map((s2) => SLOT_NAMES[s2]), skillsLabel];
 
     // Stats with gear, then the passives.
     const s = stats(ctx.flags, RPG, m);
-    this.text(X, TOP + 70, STAT_KEYS.map((k) => `${STAT_NAMES[k]} ${s[k]}`).join('  '), UI.text, VIEW_WIDTH - X - 4);
+    this.text(X, TOP + 82, STAT_KEYS.map((k) => `${STAT_NAMES[k]} ${s[k]}`).join('  '), UI.text, VIEW_WIDTH - X - 4);
     const passives = knownPassives(ctx.flags, m);
-    let y = TOP + 84;
+    let y = TOP + 96;
     if (passives.length > 0) {
       this.text(8, y, 'Passives', UI.accentText);
       y += 10;
@@ -662,6 +685,97 @@ export class GameMenu {
         y += Math.ceil(t.height) + 1;
       }
     }
+  }
+
+  private skillsButtonLabel(m: MemberDef, lv: number): string {
+    const flags = this.ctx!.flags;
+    if (usesSlots(m)) return `Spells  ${equippedSpells(flags, SKILL_BOOK, m, lv).length}/${spellSlots(lv)} equipped  >`;
+    const moves = knownMoves(flags, SKILL_BOOK, m, lv).length;
+    const skills = knownSkills(flags, SKILL_BOOK, m, lv).length;
+    return `Moves ${moves}, skills ${skills}  >`;
+  }
+
+  /** The rows of the skills page: known (and not yet known) skills, moves, and what gear brings. */
+  private skillRows(): { skill: SkillDef; kind: 'spell' | 'skill' | 'move' | 'gear'; known: boolean; on: boolean }[] {
+    const m = this.member;
+    if (!m) return [];
+    const flags = this.ctx!.flags;
+    const lv = level(flags, RPG, m.id);
+    const on = new Set(equippedSpells(flags, SKILL_BOOK, m, lv));
+    const known = new Set(knownSkills(flags, SKILL_BOOK, m, lv).map((s) => s.id));
+    const book = (SKILL_BOOK.skills[m.id] ?? []).map((s) => ({
+      skill: known.has(s.id) ? knownSkills(flags, SKILL_BOOK, m, lv).find((k) => k.id === s.id)! : s,
+      kind: usesSlots(m) ? ('spell' as const) : ('skill' as const),
+      known: learned(s, lv, flags),
+      on: on.has(s.id),
+    }));
+    const moves = (SKILL_BOOK.moves[m.id] ?? []).map((s) => ({
+      skill: knownMoves(flags, SKILL_BOOK, m, lv).find((k) => k.id === s.id) ?? s,
+      kind: 'move' as const,
+      known: learned(s, lv, flags),
+      on: true,
+    }));
+    const gear = gearSkills(flags, RPG, SKILL_BOOK, m, lv).map((s) => ({ skill: s, kind: 'gear' as const, known: true, on: true }));
+    return [...moves, ...book, ...gear];
+  }
+
+  /**
+   * Spells, moves and skills (owner decision, Oct 15). A mage equips only a few spells (A puts one in a
+   * slot or takes it out); moves and SP skills of attackers are all ready; gear skills are always free.
+   */
+  private drawEquipSkills(g: Phaser.GameObjects.Graphics, m: MemberDef): void {
+    const ctx = this.ctx!;
+    const lv = level(ctx.flags, RPG, m.id);
+    const X = 124;
+    const rows = this.skillRows();
+    const slots = usesSlots(m);
+    const used = equippedSpells(ctx.flags, SKILL_BOOK, m, lv).length;
+    this.text(X, TOP + 1, slots ? `Spells: ${used} of ${spellSlots(lv)} slots` : 'Moves and skills', UI.accentText, VIEW_WIDTH - X - 4);
+    const ROW = 11;
+    const visible = 8;
+    const first = Math.max(0, Math.min(this.subCursor - visible + 1, rows.length - visible));
+    rows.slice(first, first + visible).forEach((r, k) => {
+      const i = first + k;
+      const y = TOP + 13 + k * ROW;
+      const sel = i === this.subCursor;
+      if (sel) g.lineStyle(1, 0xf2d04b, 1).strokeRect(X - 2.5, y - 1.5, VIEW_WIDTH - X - 2, ROW);
+      this.hit(X - 3, y - 2, VIEW_WIDTH - X, ROW, () => {
+        this.subCursor = i;
+        return this.toggleSkill(this.ctx!);
+      });
+      const s = r.skill;
+      const mark = r.kind === 'spell' ? (r.on ? '[x] ' : r.known ? '[ ] ' : '    ') : r.kind === 'gear' ? ' *  ' : '    ';
+      // Gianna pays a quarter less with Anissa beside her (as in battle).
+      const bond = m.class === 'mage' && !!ctx.flags.get('party.anissa');
+      const cost = isMove(s) ? (s.cooldown ? `wait ${s.cooldown}` : 'any turn') : `${skillCost(s, { anissaBond: bond })} SP`;
+      const colour = !r.known ? UI.dimText : r.kind === 'gear' ? RARITY_ART.rare.text : r.on || r.kind !== 'spell' ? UI.text : UI.dimText;
+      this.text(X, y, `${mark}${s.name}`, sel ? UI.accentText : colour, 120);
+      this.text(VIEW_WIDTH - 6, y, r.known ? cost : howToLearn(s), UI.dimText).setOrigin(1, 0);
+    });
+    // The highlighted skill: what it does, where it comes from, and its next rank.
+    const r = rows[this.subCursor];
+    if (r) {
+      const s = r.skill;
+      const next = r.known ? nextRank(s, lv) : null;
+      const where = r.kind === 'gear' ? ` Comes with the ${s.source} (free: no slot).` : r.kind === 'move' ? ' A weapon move: no SP.' : '';
+      const more = next ? ` Grows stronger at Lv ${next.level}.` : '';
+      this.text(8, TOP + 13 + visible * ROW + 4, `${s.text}${where}${more}`, UI.text, VIEW_WIDTH - 16);
+    }
+    if (rows.length === 0) this.text(X, TOP + 14, 'Nothing yet.', UI.dimText);
+    this.labels = rows.map((x) => x.skill.name);
+  }
+
+  private toggleSkill(ctx: MenuContext): MenuRequest[] {
+    const m = this.member;
+    const r = this.skillRows()[this.subCursor];
+    if (!m || !r) return [];
+    if (r.kind === 'gear') return [{ kind: 'toast', text: `Comes with the ${r.skill.source}. Always ready.` }];
+    if (r.kind !== 'spell') return [{ kind: 'toast', text: r.known ? `${r.skill.name} is always ready.` : `Not learned yet (${howToLearn(r.skill)}).` }];
+    if (!r.known) return [{ kind: 'toast', text: `Not learned yet (${howToLearn(r.skill)}).` }];
+    const lv = level(ctx.flags, RPG, m.id);
+    const res = toggleSpell(ctx.flags, SKILL_BOOK, m, lv, r.skill.id);
+    if (res === 'full') return [{ kind: 'toast', text: 'Every slot is taken. Take a spell out first.' }];
+    return [{ kind: 'toast', text: res === 'on' ? `${r.skill.name} equipped.` : `${r.skill.name} taken out.` }];
   }
 
   /** Choosing what goes in a slot: every item the member can use there, as boxes with the stat changes. */
