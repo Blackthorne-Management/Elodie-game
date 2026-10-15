@@ -156,7 +156,7 @@ owner to confirm):
 - **Level range:** 3 to 8. The first battles after the Chapter 1 boar.
 - **Beats (before the Oct 15 decision; re-cut above):**
   1. Arrival by sea. Crown marines harass fishers on the pier: **the first battle** and the battle tutorial
-     (proposal): Attack, Guard, then **Shield Anissa** first (guide 6.4: the first thing taught about Anissa), then
+     (proposal): Attack, Guard, then
      Surge, then the Yield step on the marine sergeant.
   2. Cacique Anaco, Yari's father, is ailing. The elders' council is ready to accept the Charter "to keep the peace".
      Yari defies them in front of everyone. **Governor Thorne** watches from the customs house.

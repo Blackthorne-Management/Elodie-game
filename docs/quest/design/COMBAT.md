@@ -64,7 +64,7 @@ A charge-time system shown on the initiative bar (the next 8 turns).
   | Attack, most skills, Parley | 1.0 |
   | Heavy skills (Oathbreaker, Reign of Ashes, boss specials) | 1.3 |
   | Item | 0.8 |
-  | Guard, Shield Anissa | 0.6 |
+  | Guard | 0.6 |
   | Swap Member | 0.5 (the incoming member acts at once) |
 
 - **Opening times:** each fighter starts at `Delay x U(0.3, 1.0)` from the seeded Rng. An ambush (enemy first strike)
@@ -81,7 +81,6 @@ A charge-time system shown on the initiative bar (the next 8 turns).
 | **Guard** | Damage taken x0.5 until the member's next turn. For Gianna, Guard also gives Anissa +2 Spark. |
 | **Swap Member** | Swap an active fighter with a benched one. |
 | **Parley** | Only vs. human enemies. Ends the fight with no Fear gain (guide 6.4). See 7.2. |
-| **Shield Anissa** | Gianna only. A guard stance on Anissa until Gianna's next turn (Section 8). |
 
 Run is not a battle command; on the field, Run is offered in the encounter scene before the fight (as built), and
 always works in wild sections, never in boss or story fights.
@@ -215,10 +214,8 @@ in that city (`FEAR_PER_WINS = 6`). Influence and Wealth from fights come only f
   choose to feed one Surge to another member at half power, so the player sees the rule).
 - **Calm:** Hushers' **Frighten** lowers Calm by 1. At 0, Anissa goes quiet and Surge is unavailable until Gianna uses
   **Comfort** (SP 2, so 1 for her: Calm +2). No game over from this.
-- **Shield Anissa:** some enemies have moves aimed at Anissa (**Seize**, **Hush the Light**: Quiet Crown and boss
-  moves). If Gianna is shielding her, Gianna takes the hit at x0.5 and Anissa gains +1 Calm and +2 Spark. If not,
-  Anissa loses 1 Calm and 3 Spark (she is never hurt or taken in battle). This is the first thing the tutorial teaches
-  about Anissa (Chapter 2).
+- **Anissa can never be hit** (owner, Oct 15). The Shield Anissa command is dropped (Oct 15). Enemy moves once aimed
+  at her (**Seize**, **Hush the Light**) need a new design: open question for the owner.
 - **She is a person, not a battery:** she hides behind Gianna when a fight opens, says one short line on Surge, and the
   Surge gesture grows more confident with each chapter (`SURGE_ANIM_STAGE` by chapter: 1 = hesitant to 4 = sure).
 
@@ -465,12 +462,12 @@ Boss stats: the standard line x the multipliers in each row (`BOSS_SCALE`). Phas
 |---|---|---|---|---|---|
 | 1 | **Governor Thorne** | Xaraguá customs house (Ch. 2) | 8 | 7 / 1.1 | **1 Paperwork:** hides behind two Crown Marines; *Requisition* (steals an item). **2 (50%) The Charter:** reads the Charter aloud: Hushed on one member each turn, *Protection Fee* (power 150). Yield: Spare (he is sent home to Aldermoor), Spoils, Break. |
 | 2 | **Guildmaster Qasim** (proposal) | Al-Doria guild vault (Ch. 4) | 14 | 7 / 1.1 | **1 Ledger:** *Hire Blades*: pays gold to summon a Caravan Raider each 3 turns (Samira's Bribe on a summoned blade refunds it). **2 (40%) Foreclosure:** *Seize Assets* (Weakened on all), *Golden Wall* (DEF up until hit by a Surge). |
-| 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 3) | 11 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; leaves Anissa an opening (*Seize* telegraphed: Shield Anissa). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. |
+| 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 3) | 11 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; (*Seize* on Anissa: to redesign, Shield Anissa dropped Oct 15). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. |
 | 3b | **Rael, the Harbor Strike** (same boss, Strike route only) | Harbor flank (Ch. 11) | 28 | 9 / 1.2 | Four phases: Measured, Unleashed, Cornered, then **Broken Army** (his guards leave; he only Binds and will not strike Gianna; the fight ends when his army breaks, at 10% HP). |
 | 4 | **Noyan Grimvald** (proposal) | Skarragol frozen fjord (Ch. 6) | tier top (17, 19 or 21) | 8 / 1.2 | **1 Mounted:** *Trample* (all), fast. **2 (50%) Unhorsed:** slower, *Stolen Standard* (Inspired on all his raiders); returning the standard to Bayarmaa (an Item use) breaks it. |
 | 5 | **The Paper Fox** (proposal) | Kuroshi file house (Ch. 7) | tier top | 7 / 1.0 | **1 Screens:** hides among three paper decoys (Haru's Kagemimi or *Lantern* shows the real one). **2 (40%) Sold Secrets:** reads a member's "file": copies their best skill and uses it on them. |
 | 6 | **Seth Dhanraj** (proposal) | Jwaladesh oil store (Ch. 8) | tier top | 8 / 1.1 | **1 Hoard:** *Oil Wall* (fire immunity), Oil Enforcers. **2 (50%) Price Spike:** each turn the party's next item costs 1 extra turn of delay; lighting his oil (any fire skill after the wall falls) Burns him. |
-| 7 | **The Hushed** | Aldermoor Regent's keep (Ch. 9) | 24 | 9 / 1.1 | **1 Silence:** Hush on two members a turn, Hushers. **2 (60%) Hush the Light:** aims at Anissa every other turn (Shield Anissa, Comfort). **3 (25%) Unmasked:** the voice behind the veil; *Quiet Crown* (Weakened all, Calm -1). |
+| 7 | **The Hushed** | Aldermoor Regent's keep (Ch. 9) | 24 | 9 / 1.1 | **1 Silence:** Hush on two members a turn, Hushers. **2 (60%) Hush the Light:** aims at Anissa every other turn (to redesign, Shield Anissa dropped Oct 15; Comfort). **3 (25%) Unmasked:** the voice behind the veil; *Quiet Crown* (Weakened all, Calm -1). |
 | 8 | **The Betrayer** (four variants by house) | Harbor flank (Ch. 11) | 26 | 8 / 1.2 | Shared frame, house moves: Dorini *Paid Off* (Bribes your benched members' turns away), Ironvow *Warpath* (two turns in a row), Suzumori *Marionette* (redirects your action), Agnivansh *Endless War* (no SP costs for a round). Proposal names: Admiral Rashid, Chief Hrafn, Councillor Mibu, Steward Prakash. Skipped if turned at the Muster. |
 | 9 | **The Regent's Champion** (proposal: Captain-General Hale) | Regent's flagship (Ch. 11, Trust route) | 28 | 9 / 1.25 | Rael fights beside the party as a guest. **1 Boarding:** marines and musketeers. **2 (50%) Champion's Duel:** challenges one member; others are Stunned 1 turn when he does. |
 | 10 | **Lord Regent Aldric Vane** | Throne Hall (Ch. 12) | 30 | 10 / 1.25 | The Claim and Challenge. **1 The Patient Court:** two Sealbearers shield him (he cannot be hurt while both stand). **2 (66%) The Charter:** binds the realm: each turn he copies the pillar the party has most of as a shield (Wealth: gold drain; Fear: Stunned; Influence: Hushed). **3 (33%) One Hand:** Quiet Crown power; aims at Anissa each turn; Dawn Surge breaks his last shield. On defeat: Azzy's choice. |
