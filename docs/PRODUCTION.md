@@ -15,7 +15,8 @@ and ticks items off here as they land. Last updated **Wed Oct 15**.
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 px map (only the 2000 px upscale is in `art/board/`), the 8 seat
   buildings (`art/seats/`, prompts in `docs/art/MAP-AND-SEATS.md`, rewritten Oct 15 so each is its house's quest
-  capital building; none yet), then a proof of `print/board-24in.png`
+  capital building; all 8 approved Oct 15 from previews, waiting on the original files; owner kept the Agnivansh
+  banner's flame trident as generated), then a proof of `print/board-24in.png`
   to approve, then order.
 - [ ] **Before the board order (Mon Oct 20):** the labelled board guide (`docs/art/board-guide-labelled.png`) still
   names the north-west country Moa'olani, House Vai'tama; it is Xaraguá, House Yaguana now. Checked Oct 15: no text
