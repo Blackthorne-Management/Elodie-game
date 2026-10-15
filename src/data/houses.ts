@@ -10,7 +10,7 @@ const others = (g: Parameters<NonNullable<HouseDef['abilities'][number]['run']>>
 
 export const HOUSES: Record<HouseId, HouseDef> = {
   brasador: {
-    id: 'brasador', name: 'House Brasador', homeland: 'Ardencia', culture: 'Spanish-inspired',
+    id: 'brasador', name: 'House Brasador', homeland: 'Ardencia',
     identity: 'Fear/aggression', curve: 'Early-favored', tileType: 'war', home: { x: 8, y: 0 },
     lore: 'Ardencia is a land of fire-cracked highlands and old wounds. House Brasador rose from conquistador-warlords who carved out their territory through open conquest. They do not need to be present to be feared; the brand alone is enough.',
     hp: [3, 3, 3, 3],
@@ -53,7 +53,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   dorini: {
-    id: 'dorini', name: 'House Dorini', homeland: 'Al-Doria', culture: 'Mediterranean/Middle-Eastern-inspired',
+    id: 'dorini', name: 'House Dorini', homeland: 'Al-Doria',
     identity: 'Wealth/economy', curve: 'Late-favored', tileType: 'trade', home: { x: 17, y: 9 },
     lore: 'Al-Doria is a sprawling entrepôt, half port city and half caravanserai. House Dorini built their power on ledgers and bazaars rather than armies, converting coin into influence or fear when the need arises.',
     hp: [3, 3, 3, 3],
@@ -85,7 +85,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   ironvow: {
-    id: 'ironvow', name: 'House Ironvow', homeland: 'Skarragol', culture: 'Fused Nordic/Mongolian-inspired',
+    id: 'ironvow', name: 'House Ironvow', homeland: 'Skarragol',
     identity: 'Mobility/aggression', curve: 'Early-favored', tileType: 'war', home: { x: 14, y: 14 },
     lore: "Skarragol's warbands prize one thing above all else: speed. Their oath-bound clans strike before anyone can organize a response, whether on longship or on horseback.",
     hp: [3, 3, 3, 3],
@@ -111,7 +111,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   suzumori: {
-    id: 'suzumori', name: 'House Suzumori', homeland: 'Kuroshi', culture: 'Japanese-inspired',
+    id: 'suzumori', name: 'House Suzumori', homeland: 'Kuroshi',
     identity: 'Information/control', curve: 'Mid-favored', tileType: 'court', home: { x: 9, y: 17 },
     lore: "Kuroshi's power has never come from open strength. House Suzumori built a network of spies and whispers reaching into every court, pulling strings long before anyone realizes the game has turned.",
     hp: [3, 3, 3, 3],
@@ -156,7 +156,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   vaitama: {
-    id: 'vaitama', name: 'House Yaguana', homeland: 'Xaraguá', culture: 'Taíno-inspired',
+    id: 'vaitama', name: 'House Yaguana', homeland: 'Xaraguá',
     identity: 'Adaptive/chaotic', curve: 'Swingy', tileType: 'trade', home: { x: 3, y: 3 },
     lore: "In Xaraguá the dead are never far: the opía, spirits of the departed, walk the island by night, and in the areíto, the great dance of memory, every generation sings the deeds of those before it. House Yaguana's warriors carry the fallen within them, inheriting strength, memory, and secrets from the dead with every generation.",
     hp: [3, 3, 3, 3],
@@ -187,7 +187,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   kaysoley: {
-    id: 'kaysoley', name: 'House Kay Soley', homeland: 'Zetwal', culture: 'Kreyol/Haitian-inspired',
+    id: 'kaysoley', name: 'House Kay Soley', homeland: 'Zetwal',
     identity: 'Influence/diplomacy', curve: 'Late-favored', tileType: 'court', home: { x: 14, y: 3 },
     lore: "Zetwal's temple-court claims direct descent from Elodie's forgotten mortal children, marked at birth by a faint sun-shaped birthmark. Every other house either envies or resents them for it.",
     hp: [3, 3, 3, 3],
@@ -213,7 +213,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   agnivansh: {
-    id: 'agnivansh', name: 'House Agnivansh', homeland: 'Jwaladesh', culture: 'Indian-subcontinent-inspired',
+    id: 'agnivansh', name: 'House Agnivansh', homeland: 'Jwaladesh',
     identity: 'Aggro/tempo', curve: 'Early-favored', tileType: 'war', home: { x: 3, y: 14 },
     lore: "Jwaladesh's warriors follow the fire-god's doctrine: hesitation is the only true death. House Agnivansh trains for speed above all, trusting that momentum itself is a kind of armor.",
     hp: [3, 3, 3, 2],
@@ -234,7 +234,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
   },
 
   stillwater: {
-    id: 'stillwater', name: 'House Stillwater', homeland: 'Aldermoor', culture: 'English-inspired',
+    id: 'stillwater', name: 'House Stillwater', homeland: 'Aldermoor',
     identity: 'Defensive/patient', curve: 'Late-favored', tileType: 'court', home: { x: 0, y: 8 },
     lore: "Aldermoor's old families have weathered centuries of invasion and famine the same way every time: by simply outlasting everyone else.",
     hp: [3, 3, 3, 3],

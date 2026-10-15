@@ -95,7 +95,7 @@ export function HouseSheet({ game, p, onClose }: { game: Game; p: PlayerState; o
         <div>
           <strong>{p.name}</strong>
           <div className="muted">{h.heirs[p.gen - 1]}, Gen {roman(p.gen)}</div>
-          <div className="muted">{h.homeland} · {h.culture} · {h.identity}</div>
+          <div className="muted">{h.homeland} · {h.identity}</div>
           <div><Hearts p={p} /> · Gen {roman(p.gen)} · <Resources p={p} /></div>
         </div>
       </div>

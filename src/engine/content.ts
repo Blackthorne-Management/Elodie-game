@@ -70,7 +70,6 @@ export interface HouseDef {
   id: HouseId;
   name: string;
   homeland: string;
-  culture: string;
   identity: string;
   curve: string;
   lore: string;

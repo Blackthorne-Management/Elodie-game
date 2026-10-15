@@ -53,7 +53,7 @@ function House({ id }: { id: HouseId }) {
         <Emblem house={id} size={44} ring />
         <div>
           <h3>{h.name}</h3>
-          <small>{h.homeland} · {h.culture} · {TILE_ART[h.tileType].label} tile · {h.identity}</small>
+          <small>{h.homeland} · {TILE_ART[h.tileType].label} tile · {h.identity}</small>
         </div>
       </header>
       <p className="rg-lore">{h.lore}</p>
