@@ -87,13 +87,12 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 Everything rides in the game box; the board, player boards, rulebook and score pad lie flat on top, and every loose
 piece goes in its own container underneath. Owner asked Oct 15 to order the containers from BoardGamesMaker too.
 
-| Container | Holds | Size to look for |
+| Container | Holds | Size, or the print file |
 |---|---|---|
 | **Game box** (telescoping lid + base) | everything | 12.5" × 12.5" × 2" (the board folds to 12" × 12"); about 33 mm free under the board, rulebook and score pad |
 | Thin card divider (optional) | keeps the containers below from sliding | no taller than about 33 mm; no deep tray |
-| **2 Action deck boxes** (decided Oct 15) | 63 Action cards each (126 in all) | poker size (63 × 88 mm), about 65 cards (about 23 mm thick); laid flat side by side |
-| **Tarot card box** | 32 Character cards and 8 Reference cards (40 tarot cards) | tarot size (70 × 120 mm), about 40 cards |
-| Small card box or bag | 8 Legacy cards | to fit the Legacy card size (not set yet) |
+| **Action card box**: Easy Flip Game Box 140 × 96 × 24 mm, custom (decided Oct 15) | all 126 Action cards, two stacks of 63 side by side | `print/card-box-action.pdf` (`npm run print:card-boxes`) |
+| **Tarot card box**: Double Flip Game Box, tarot, magnetic, 130 × 80 × 40 mm, custom (decided Oct 15) | 32 Character, 8 Reference and 8 Legacy cards | `print/card-box-tarot.pdf`; too tall for the game box, so it travels beside it |
 | Bag or 3-part tray | 180 resource tokens (60 Influence, 60 Fear, 60 Wealth) | one bag per kind, or one tray with 3 wells |
 | Bag | 32 Heart Tokens | small zip bag |
 | Bag (or 8 small bags, one per house) | 40 Grudge Tokens | small zip bag |
