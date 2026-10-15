@@ -65,7 +65,7 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 
 | # | Component | Spec | Print file (built by) | Art needed |
 |---|---|---|---|---|
-| 1 | **Game box** | Telescoping (lid + base) about 12.5" × 12.5" × 3", fits the folded board flat on top. Side panel: **2–8 players · 60–150 min · best with 3–6** | `print/box-*.png` (to build) | Logo ✔, board map ✔ |
+| 1 | **Game box** | Telescoping (lid + base) 12.5" × 12.5" × 2" (BoardGamesMaker template, chosen Oct 15), fits the folded board flat on top; everything under it must stay within about 33 mm. Side panel: **2–8 players · 60–150 min · best with 3–6** | `print/box-*.png` (to build) | Logo ✔, board map ✔ |
 | 2 | **Game board** | 24" × 24" quad-fold, 7200 px | `print/board-24in.png` (`npm run print:board`) | Map ✔ (needs the 4096 file), seats or crests |
 | 3 | **Action deck** | 126 cards, 63 × 88 mm, one shared back | `print/cards/card-*.png` (`npm run print`) | Card art 1–126, card back |
 | 4 | **Character cards** (generation cards) | 32 tarot cards (8 houses × Gen I–IV), own back | `print/characters/*.png` (`npm run print`) | 32 portraits, crests |
@@ -89,9 +89,9 @@ piece goes in its own container underneath. Owner asked Oct 15 to order the cont
 
 | Container | Holds | Size to look for |
 |---|---|---|
-| **Game box** (telescoping lid + base) | everything | about 12.5" × 12.5" × 3" (the board folds to 12" × 12") |
-| Box insert or tray (optional) | keeps the containers below from sliding | to fit the box, under the board |
-| **Action deck box** | 126 Action cards | poker size (63 × 88 mm), about 130 cards (about 40 mm thick); or two boxes of 63 |
+| **Game box** (telescoping lid + base) | everything | 12.5" × 12.5" × 2" (the board folds to 12" × 12"); about 33 mm free under the board, rulebook and score pad |
+| Thin card divider (optional) | keeps the containers below from sliding | no taller than about 33 mm; no deep tray |
+| **2 Action deck boxes** (decided Oct 15) | 63 Action cards each (126 in all) | poker size (63 × 88 mm), about 65 cards (about 23 mm thick); laid flat side by side |
 | **Tarot card box** | 32 Character cards and 8 Reference cards (40 tarot cards) | tarot size (70 × 120 mm), about 40 cards |
 | Small card box or bag | 8 Legacy cards | to fit the Legacy card size (not set yet) |
 | Bag or 3-part tray | 180 resource tokens (60 Influence, 60 Fear, 60 Wealth) | one bag per kind, or one tray with 3 wells |
