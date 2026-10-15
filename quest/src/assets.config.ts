@@ -464,23 +464,110 @@ export function textureKeyForEnemy(look: string): string {
   return `enemy-${look}`;
 }
 
-/** The battle screen (scenes/BattleScene.ts): colours and layout in game pixels. */
+/**
+ * The battle screen (scenes/BattleScene.ts), a pulled-back side view seen a little from above (owner,
+ * Oct 15): four fighters on the left in two rows (the front row nearer the foes), Anissa behind them all,
+ * up to four foes on the right, a painted scene behind, and a strip along the bottom for the fighters'
+ * bars and the commands. Positions are feet (bottom centre) in game pixels.
+ */
 export const BATTLE_ART = {
-  sky: 0x1e3a2a,
-  ground: 0x3f6a32,
-  groundDark: 0x2f5426,
-  cane: 0x8cc860,
   panel: 0x14101a,
   panelBorder: 0xe8d8b0,
+  band: 0x14101a,
+  bandAlpha: 0.78,
   hpBar: 0x7fbf7a,
   hpLow: 0xd8584a,
   spBar: 0x5a8ad8,
   sparkBar: 0xfff2a0,
+  cursor: 0xf2d04b,
   hit: '#ffffff',
   crit: '#f2d04b',
   heal: '#7fbf7a',
+  spText: '#9ab8f0',
+  weak: '#ffb070',
+  /** The strip along the bottom. */
+  stripY: 134,
+  /** The front row (fighters with blades) and the back row (mages, archers); a full row spills into the other. */
+  partyFront: [
+    { x: 124, y: 102 },
+    { x: 116, y: 126 },
+  ],
+  partyBack: [
+    { x: 84, y: 96 },
+    { x: 74, y: 120 },
+  ],
+  enemySlots: [
+    { x: 212, y: 108 },
+    { x: 228, y: 130 },
+    { x: 262, y: 98 },
+    { x: 278, y: 122 },
+  ],
+  /** Anissa stands behind everyone (she is never a target). */
+  anissa: { x: 38, y: 112 },
+  /** The horizon of the painted scene (above eye level: the view is from a little above). */
+  horizon: 44,
+  partyScale: 1,
+  enemyScale: 1,
   /** How long each message stays before the next (ms), and the damage number's float. */
   messageMs: 900,
-  popMs: 700,
+  hitMs: 520,
+  popMs: 750,
+  /** The shake on a hit (the sprites never walk; they only shiver). */
+  shakePx: 2,
+} as const;
+
+/** The painted scene behind each battle (BattleDef.backdrop), drawn in code until painted art arrives. */
+export const BATTLE_BACKDROPS: Readonly<Record<string, {
+  sky: readonly number[];
+  cloud: number;
+  cloudShade: number;
+  mountainFar: number;
+  mountainNear: number;
+  trees: number;
+  treesDark: number;
+  field: number;
+  cane: number;
+  caneDark: number;
+  ground: number;
+  groundDark: number;
+  groundLight: number;
+}>> = {
+  // The Cane Road outside Zetwal: a blue morning, far hills, the cane, and the packed-earth road.
+  cane_road: {
+    sky: [0x3a6fc8, 0x4a82d4, 0x5d95dc, 0x74a8e2, 0x8fbbe8, 0xb2d2ee],
+    cloud: 0xf4f6fa,
+    cloudShade: 0xc8d4e6,
+    mountainFar: 0x7a8cb0,
+    mountainNear: 0x55688c,
+    trees: 0x2f5a34,
+    treesDark: 0x22442a,
+    field: 0x4f8a3e,
+    cane: 0x8cc860,
+    caneDark: 0x5a9a44,
+    ground: 0xb08a58,
+    groundDark: 0x8a6a40,
+    groundLight: 0xc8a46b,
+  },
+};
+
+/** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */
+export const BATTLE_FX = {
+  slash: 0xffffff,
+  claw: 0xffd8c8,
+  impact: 0xfff2a0,
+  arrow: 0xe8d8b0,
+  heal: 0x8ff0a0,
+  healCore: 0xfff8e0,
+  buff: 0xf2d04b,
+  debuff: 0xc070e0,
+  light: 0xfff2a0,
+  fire: 0xe0782a,
+  fireCore: 0xf2d04b,
+  water: 0x5aa8e8,
+  waterCore: 0xc8ecff,
+  wind: 0xc8f0d0,
+  earth: 0x8a6a40,
+  earthCore: 0xc8a46b,
+  surge: 0xfff2a0,
 } as const;
 

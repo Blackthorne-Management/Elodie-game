@@ -155,6 +155,22 @@ export const CRIT_MULT = 1.5;
 /** A hit always does at least this share of its raw power. */
 export const MIN_DAMAGE_SHARE = 0.15;
 export const GUARD_MULT = 0.5;
+/** Status effects (COMBAT 10): how many of the affected fighter's own turns they last, and what they do. */
+export const STATUS = {
+  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0 },
+  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0 },
+  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0 },
+  /** Ward: damage taken x0.75 (a Chapter 1 proposal; Aldermoor's Ward of Patience is the party-wide one). */
+  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0 },
+  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08 },
+} as const;
+/** Fighters in a battle at once (owner, Oct 15): up to 8 in the party, 4 fight, the rest wait to swap in. */
+export const BATTLE_ACTIVE = 4;
+/** A fighter who swaps in (or replaces a fallen one) waits this share of a full turn before acting. */
+export const SWAP_IN_DELAY = 0.5;
+/** Elemental weakness and resistance (COMBAT 5). */
+export const ELEMENT_WEAK = 1.5;
+export const ELEMENT_RESIST = 0.5;
 /** Anissa's Spark: per Gianna action, per Guard; a Surge spends SURGE_COST and multiplies the next hit. */
 export const SPARK_ON_ACT = 1;
 export const SPARK_ON_GUARD = 2;

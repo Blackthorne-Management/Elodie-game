@@ -44,7 +44,8 @@ import type { MenuItem } from '../ui/MenuPanel.ts';
 import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
 import { ItemShowcase } from '../ui/ItemShowcase.ts';
-import { battleSnapshot, type BattleSnapshot } from './BattleScene.ts';
+import { battleFx, battleSnapshot, type BattleSnapshot } from './BattleScene.ts';
+import type { FxKind } from './battleFx.ts';
 import type { BattleResult } from '../engine/battle.ts';
 import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
@@ -279,7 +280,8 @@ export class FieldScene extends Phaser.Scene {
       tileToScreen: (x, y) => this.tileToScreen(x, y),
       gameToScreen: (x, y) => this.gameToScreen(x, y),
       showItem: (id) => this.openShowcase(id),
-      startBattle: (id) => this.startBattle(id),
+      startBattle: (id, extra) => this.startBattle(id, extra),
+      battleFx: (kind, at) => battleFx(kind, at),
     };
     this.events.off('battle-done');
     this.events.on('battle-done', (r: BattleResult | null) => this.afterBattle(r));
@@ -352,14 +354,14 @@ export class FieldScene extends Phaser.Scene {
   // ---- Battles -------------------------------------------------------------------------------
 
   /** A battle (data/battles.ts) over the paused field; the battle scene reports back with 'battle-done'. */
-  private startBattle(id: string): void {
+  private startBattle(id: string, extra?: string[]): void {
     if (this.mode === 'dialogue') this.leaveDialogueMode();
     this.cancelWalk();
     this.mode = 'battle';
     this.minimap?.setVisible(false);
     this.label.setVisible(false);
     this.hint.hide();
-    this.scene.launch('battle', { battle: id });
+    this.scene.launch('battle', { battle: id, extra });
     this.scene.pause();
   }
 
@@ -1341,7 +1343,10 @@ declare global {
       /** Show an item's showcase (display only: it changes no flags), for screenshots of every tier. */
       showItem: (id: string) => void;
       /** Start a battle by id (the smoke test plays the first battle without walking to it). */
-      startBattle: (id: string) => void;
+      /** `extra`: member ids added to the party for this fight only (screenshots of a full field). */
+      startBattle: (id: string, extra?: string[]) => void;
+      /** Play one battle effect (for the effects screenshots). */
+      battleFx: (kind: FxKind, freezeAt?: number) => void;
     };
   }
 }

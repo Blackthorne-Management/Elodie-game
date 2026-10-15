@@ -128,7 +128,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Voice of the Opía', text: 'When any fighter falls, her next shot hits a fifth harder (up to three times).' },
       { name: 'The hutia', text: 'After a win, a 1 in 8 chance her hutia steals something shiny.' },
     ],
-    joins: { flag: 'act1.complete' },
+    joins: { flag: 'story.yari_asked' },
     base: { hp: 50, sp: 16, atk: 12, def: 7, mag: 6, spd: 13 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'yaguana_bow', armor: 'woven_tunic' },
   },

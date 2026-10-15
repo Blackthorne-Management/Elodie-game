@@ -161,3 +161,30 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
     for (const q of SIDE_QUESTS) expect(JSON.stringify(q)).not.toContain('zetwal_return');
   });
 });
+
+describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her work first", () => {
+  it('says "soon", Yari joins and waits at the dock, and the chapter ends only when Gianna says go', () => {
+    const flags = new FlagStore({ 'party.anissa': true });
+    const lines = talk(flags, 'yari_talk', ["Of course I'll come."]);
+    expect(lines.some((l) => l.startsWith('Soon, Yari.'))).toBe(true);
+    expect(flags.isSet('story.yari_asked')).toBe(true);
+    expect(flags.isSet('act1.complete')).toBe(false);
+    // Errands left: Yari reminds her; "Not yet" keeps the chapter open.
+    expect(talk(flags, 'yari_talk', ['Not yet'])[0]).toContain('Did you finish what you had to do?');
+    expect(flags.isSet('act1.complete')).toBe(false);
+    talk(flags, 'yari_talk', ["Let's go anyway."]);
+    expect(flags.isSet('act1.complete')).toBe(true);
+  });
+
+  it('with every errand done and the boar beaten, Yari says so', () => {
+    const flags = new FlagStore({
+      'story.yari_asked': true,
+      'side.overdue.done': true,
+      'side.soup.done': true,
+      'side.cane_name.done': true,
+      'encounter.wilds.boar.won': true,
+    });
+    expect(talk(flags, 'yari_talk', ["Let's go."])[0]).toContain('the boar sorry it met us');
+    expect(flags.isSet('act1.complete')).toBe(true);
+  });
+});

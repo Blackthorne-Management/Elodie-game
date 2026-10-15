@@ -7,9 +7,17 @@
 // (spend 5: Gianna's next blow or spell x1.5, a free action); Anissa's Light (every 3 of Gianna's
 // turns, 20% of her SP back); gear specials (regen, SP regen, crit); healing over time (the clay-pot
 // soup); enemies with a telegraphed heavy move; and The Heir Rises (losing restarts with a Grudge).
+// Added with the side-view battle screen (owner, Oct 15): every skill names its targets (one foe, every
+// foe, random foes, one ally, every ally, or the user), skills can carry an element and a status, and
+// the statuses Inspired, Weakened, Marked, Warded and Regen (COMBAT 10) change damage and healing.
+// Four fight at once (owner, Oct 15): the rest of the party waits, Swap trades the fighter whose turn it
+// is for one who is waiting, and a fallen fighter is replaced by the next one waiting. Fighters with
+// blades stand in the front row; a foe's one-target attack reaches the back row (mages, archers) only
+// once no one is standing in the front row. Area attacks reach everyone. Anissa is never a target.
 
 import {
   ACTION_WEIGHT,
+  BATTLE_ACTIVE,
   ANISSA_SP_EVERY,
   ANISSA_SP_SHARE,
   CRIT_BASE,
@@ -18,6 +26,8 @@ import {
   CRIT_MULT,
   DAMAGE_VARIANCE,
   DIFFICULTY,
+  ELEMENT_RESIST,
+  ELEMENT_WEAK,
   ENEMY_ROLE,
   ENEMY_STAT_LINE,
   GIANNA_SP_DISCOUNT,
@@ -31,6 +41,8 @@ import {
   SPARK_MAX,
   SPARK_ON_ACT,
   SPARK_ON_GUARD,
+  STATUS,
+  SWAP_IN_DELAY,
   SURGE_COST,
   SURGE_MULT,
   TURN_DELAY_K,
@@ -59,14 +71,37 @@ import {
 
 export type EnemyRole = keyof typeof ENEMY_ROLE;
 
+export type Element = 'light' | 'fire' | 'water' | 'wind' | 'earth';
+export type StatusId = keyof typeof STATUS;
+/** Who a skill reaches: one foe, every foe, `hits` foes at random, one ally, every ally, or the user. */
+export type TargetKind = 'enemy' | 'allEnemies' | 'randomEnemies' | 'ally' | 'allAllies' | 'self';
+
 export interface SkillDef {
   id: string;
   name: string;
   sp: number;
-  /** damage: a spell at an enemy (MAG); heal: restores an ally's HP (MAG). */
-  kind: 'damage' | 'heal';
+  /** damage: hurts (MAG for spells, ATK for weapon skills); heal: restores HP (MAG); status: only applies `status`. */
+  kind: 'damage' | 'heal' | 'status';
+  /** The stat behind it: 'mag' (a spell, the default) or 'atk' (a weapon skill, which can miss and crit). */
+  stat?: 'atk' | 'mag';
   power: number;
+  target: TargetKind;
+  /** randomEnemies: how many hits. */
+  hits?: number;
+  element?: Element;
+  /** Given to every target (a buff on allies, a debuff on foes). */
+  status?: StatusId;
   text: string;
+}
+
+/** Whether a skill is aimed at the party's own side. */
+export function targetsAllies(t: TargetKind): boolean {
+  return t === 'ally' || t === 'allAllies' || t === 'self';
+}
+
+/** Whether a skill needs one target picked (the rest reach a whole side, random foes or the user). */
+export function needsTarget(t: TargetKind): boolean {
+  return t === 'enemy' || t === 'ally';
 }
 
 export interface EnemyMove {
@@ -76,6 +111,8 @@ export interface EnemyMove {
   every?: number;
   /** The warning shown the turn before a heavy move. */
   tell?: string;
+  /** Hits every fighter in the party (front and back rows alike). */
+  area?: boolean;
 }
 
 export interface EnemyDef {
@@ -87,12 +124,16 @@ export interface EnemyDef {
   role: EnemyRole;
   /** The normal attack first, then any heavy moves. */
   moves: readonly EnemyMove[];
+  weak?: readonly Element[];
+  resist?: readonly Element[];
 }
 
 export interface BattleDef {
   id: string;
   /** Shown at the top of the battle screen. */
   title: string;
+  /** The painted scene behind the fight (assets.config.ts BATTLE_BACKDROPS). */
+  backdrop: string;
   enemies: readonly string[];
   /** The Foes page and the won flag: encounter.<table>.<group>.won (engine/game.ts encounterFlag). */
   table: string;
@@ -113,6 +154,10 @@ export interface PartyEntry {
   specials: readonly ItemSpecial[];
   /** Gianna: skills cost less, she feeds Anissa's Spark, and Anissa's Light reaches her. */
   anissaBond: boolean;
+  /** The weapon type in hand (staff, bow, blade), for the look of the Attack. */
+  weapon?: string;
+  /** Front: fighters with blades, who shield the back row (mages and archers). */
+  row?: 'front' | 'back';
 }
 
 export interface BattleItem {
@@ -153,14 +198,47 @@ export interface Combatant {
   skills: readonly SkillDef[];
   moves: readonly EnemyMove[];
   anissaBond: boolean;
+  weapon?: string;
+  weak: readonly Element[];
+  resist: readonly Element[];
+  statuses: ActiveStatus[];
+  /** Fighting now (the first four of the party, and every foe); false: waiting to swap in. */
+  active: boolean;
+  row: 'front' | 'back';
+  /** The place on the field (0 to 3), kept by whoever swaps in. */
+  slot: number;
+}
+
+export interface ActiveStatus {
+  id: StatusId;
+  turns: number;
+  /** Given during the fighter's own turn: that turn does not count. */
+  fresh: boolean;
 }
 
 export type BattleEvent =
   | { kind: 'turn'; who: string }
   | { kind: 'text'; text: string; speaker?: string }
-  | { kind: 'damage'; from: string; to: string; amount: number; crit: boolean; surge: boolean; move: string }
+  /** A skill or item is used (before its hits, heals or statuses). */
+  | { kind: 'use'; who: string; name: string; skill?: string; item?: string; targets: string[]; element?: Element }
+  | {
+      kind: 'damage';
+      from: string;
+      to: string;
+      amount: number;
+      crit: boolean;
+      surge: boolean;
+      move: string;
+      style: 'physical' | 'magic';
+      element?: Element;
+      /** 1: weak to it; -1: resists it. */
+      affinity?: 1 | -1;
+    }
   | { kind: 'miss'; from: string; to: string; move: string }
   | { kind: 'heal'; to: string; hp: number; sp: number; source: string }
+  | { kind: 'status'; to: string; status: StatusId; on: boolean }
+  /** `out` leaves the field and `in` takes their place (forced: `out` had fallen). */
+  | { kind: 'swap'; out: string; in: string; forced: boolean }
   | { kind: 'guard'; who: string }
   | { kind: 'spark'; value: number }
   | { kind: 'surge' }
@@ -170,9 +248,12 @@ export type BattleEvent =
 
 export type Action =
   | { kind: 'attack'; target: string }
-  | { kind: 'skill'; skill: string; target: string }
+  /** `target` for one-target skills (a foe or an ally); ignored by the rest. */
+  | { kind: 'skill'; skill: string; target?: string }
   | { kind: 'guard' }
   | { kind: 'item'; item: string; target: string }
+  /** Trade places with a party member who is waiting (takes the turn). */
+  | { kind: 'swap'; with: string }
   | { kind: 'surge' };
 
 export interface BattleOptions {
@@ -228,7 +309,7 @@ export class Battle {
     this.enemyDamage = diff.enemyDamage;
     this.items = items.map((i) => ({ ...i }));
     const seen = new Map<string, number>();
-    const members: Combatant[] = party.map((p) => ({
+    const members: Combatant[] = party.map((p, i) => ({
       key: p.id,
       name: p.name,
       side: 'party',
@@ -252,8 +333,15 @@ export class Battle {
       skills: p.skills,
       moves: [],
       anissaBond: p.anissaBond,
+      weapon: p.weapon,
+      weak: [],
+      resist: [],
+      statuses: [],
+      active: i < BATTLE_ACTIVE,
+      row: p.row ?? 'back',
+      slot: i,
     }));
-    const foes: Combatant[] = enemies.map((e) => {
+    const foes: Combatant[] = enemies.map((e, idx) => {
       const n = (seen.get(e.id) ?? 0) + 1;
       seen.set(e.id, n);
       const s = enemyStats(e);
@@ -282,6 +370,12 @@ export class Battle {
         skills: [],
         moves: e.moves,
         anissaBond: false,
+        weak: e.weak ?? [],
+        resist: e.resist ?? [],
+        statuses: [],
+        active: true,
+        row: 'front',
+        slot: idx,
       };
     });
     this.combatants = [...members, ...foes];
@@ -289,8 +383,19 @@ export class Battle {
     for (const c of this.combatants) c.next = Math.round(turnDelay(c.spd) * (0.3 + this.rng.next() * 0.7));
   }
 
+  /** Everyone in the party, fighting or waiting. */
   get party(): Combatant[] {
     return this.combatants.filter((c) => c.side === 'party');
+  }
+
+  /** The party members fighting now, by place. */
+  get fighters(): Combatant[] {
+    return this.party.filter((c) => c.active).sort((a, b) => a.slot - b.slot);
+  }
+
+  /** The party members waiting to swap in. */
+  get bench(): Combatant[] {
+    return this.party.filter((c) => !c.active);
   }
 
   get enemies(): Combatant[] {
@@ -303,7 +408,7 @@ export class Battle {
 
   /** The next turns in order (for the initiative bar), without changing anything. */
   upcoming(n = 6): Combatant[] {
-    const sim = this.combatants.filter((c) => !c.down).map((c) => ({ c, t: c.next }));
+    const sim = this.combatants.filter((c) => !c.down && c.active).map((c) => ({ c, t: c.next }));
     const out: Combatant[] = [];
     for (let i = 0; i < n && sim.length > 0; i++) {
       sim.sort((a, b) => a.t - b.t || order(a.c, b.c));
@@ -340,32 +445,33 @@ export class Battle {
     let weight: number = ACTION_WEIGHT.attack;
     if (action.kind === 'attack') {
       const t = this.find(action.target);
-      if (!t || t.down) return [];
+      if (!t || t.down || t.side !== 'enemy') return [];
       events.push(...this.hit(me, t, 'Attack', 100, 'physical'));
     } else if (action.kind === 'skill') {
       const skill = me.skills.find((s) => s.id === action.skill);
-      const t = this.find(action.target);
-      if (!skill || !t || t.down) return [];
+      if (!skill) return [];
+      const targets = this.targetsOf(me, skill, action.target);
+      if (targets.length === 0) return [];
       const cost = skillCost(skill, me);
       if (me.sp < cost) return [];
       me.sp -= cost;
       weight = ACTION_WEIGHT.skill;
-      if (skill.kind === 'damage') events.push(...this.hit(me, t, skill.name, skill.power, 'magic'));
-      else {
-        const amount = Math.min(t.maxHp - t.hp, Math.round((me.mag * skill.power) / 100 * (0.95 + this.rng.next() * 0.1)));
-        t.hp += amount;
-        events.push({ kind: 'heal', to: t.key, hp: amount, sp: 0, source: skill.name });
-      }
+      events.push(...this.useSkill(me, skill, targets));
     } else if (action.kind === 'guard') {
       me.guarding = true;
       weight = ACTION_WEIGHT.guard;
       events.push({ kind: 'guard', who: me.key });
+    } else if (action.kind === 'swap') {
+      const them = this.bench.find((c) => c.key === action.with && !c.down);
+      if (!them) return [];
+      events.push(...this.swapIn(me, them, false));
     } else if (action.kind === 'item') {
       const item = this.items.find((i) => i.id === action.item && i.count > 0);
       const t = this.find(action.target);
-      if (!item || !t || t.down) return [];
+      if (!item || !t || t.down || !t.active || t.side !== 'party') return [];
       item.count--;
       weight = ACTION_WEIGHT.item;
+      events.push({ kind: 'use', who: me.key, name: item.name, item: item.id, targets: [t.key] });
       if (item.overTurns && item.heals) {
         t.regenHp = Math.ceil(item.heals / item.overTurns);
         t.regenTurns = item.overTurns;
@@ -386,6 +492,7 @@ export class Battle {
       if (this.spark >= SURGE_COST) events.push(...this.tip('spark', this.def.tips?.spark));
     }
     me.next += turnDelay(me.spd, weight);
+    events.push(...this.endTurn(me));
     events.push(...this.check());
     if (!this.outcome) events.push(...this.advance());
     return events;
@@ -402,7 +509,7 @@ export class Battle {
   private advance(): BattleEvent[] {
     const events: BattleEvent[] = [];
     for (let guard = 0; guard < 50 && !this.outcome; guard++) {
-      const living = this.combatants.filter((c) => !c.down);
+      const living = this.combatants.filter((c) => !c.down && c.active);
       living.sort((a, b) => a.next - b.next || order(a, b));
       const c = living[0]!;
       this.actor = c;
@@ -413,6 +520,7 @@ export class Battle {
       if (this.outcome) break;
       if (c.side === 'party') return events;
       events.push(...this.enemyTurn(c));
+      events.push(...this.endTurn(c));
       events.push(...this.check());
     }
     return events;
@@ -426,6 +534,10 @@ export class Battle {
     if (c.regenTurns > 0) {
       hp += c.regenHp;
       c.regenTurns--;
+    }
+    for (const st of c.statuses) {
+      const share = STATUS[st.id].regen;
+      if (share > 0) hp += Math.max(1, Math.round(c.maxHp * share));
     }
     for (const s of c.specials) {
       if (s.kind === 'regen') hp += Math.max(1, Math.round((c.maxHp * s.value) / 100));
@@ -448,12 +560,13 @@ export class Battle {
 
   private enemyTurn(c: Combatant): BattleEvent[] {
     const events: BattleEvent[] = [];
-    const targets = this.party.filter((p) => !p.down);
+    const targets = this.fighters.filter((p) => !p.down);
     if (targets.length === 0) return events;
     const heavy = c.moves.find((m) => m.every && c.turns % m.every === 0);
-    const move = heavy ?? c.moves[0] ?? { name: 'Attack', power: 100 };
-    const target = this.rng.pick(targets);
-    events.push(...this.hit(c, target, move.name, move.power, 'physical'));
+    const move: EnemyMove = heavy ?? c.moves[0] ?? { name: 'Attack', power: 100 };
+    if (move.area) {
+      for (const t of targets) if (!t.down) events.push(...this.hit(c, t, move.name, move.power, 'physical'));
+    } else events.push(...this.hit(c, this.rng.pick(reachable(targets)), move.name, move.power, 'physical'));
     // Warn about a heavy move coming next turn.
     const nextHeavy = c.moves.find((m) => m.every && (c.turns + 1) % m.every === 0);
     if (nextHeavy?.tell) {
@@ -465,7 +578,7 @@ export class Battle {
   }
 
   /** One blow or spell from `a` to `b` (COMBAT 5). */
-  private hit(a: Combatant, b: Combatant, move: string, power: number, type: 'physical' | 'magic'): BattleEvent[] {
+  private hit(a: Combatant, b: Combatant, move: string, power: number, type: 'physical' | 'magic', element?: Element): BattleEvent[] {
     const events: BattleEvent[] = [];
     if (type === 'physical') {
       const hitChance = clamp(HIT_BASE + (a.spd - b.spd) / 2, HIT_MIN, HIT_MAX);
@@ -495,14 +608,115 @@ export class Battle {
     }
     if (a.side === 'party') dmg *= 1 + this.grudge;
     if (a.side === 'enemy') dmg *= this.enemyDamage;
+    for (const st of a.statuses) dmg *= STATUS[st.id].dealt;
+    for (const st of b.statuses) dmg *= STATUS[st.id].taken;
+    let affinity: 1 | -1 | undefined;
+    if (element && b.weak.includes(element)) {
+      affinity = 1;
+      dmg *= ELEMENT_WEAK;
+    } else if (element && b.resist.includes(element)) {
+      affinity = -1;
+      dmg *= ELEMENT_RESIST;
+    }
     if (b.guarding) dmg *= GUARD_MULT;
     const amount = Math.max(1, Math.round(dmg));
     b.hp = Math.max(0, b.hp - amount);
-    events.push({ kind: 'damage', from: a.key, to: b.key, amount, crit, surge, move });
+    events.push({ kind: 'damage', from: a.key, to: b.key, amount, crit, surge, move, style: type, element, affinity });
     if (b.hp === 0) {
       b.down = true;
       events.push({ kind: 'down', who: b.key });
+      // The next one waiting takes a fallen fighter's place.
+      const next = b.side === 'party' && b.active ? this.bench.find((c) => !c.down) : undefined;
+      if (next) events.push(...this.swapIn(b, next, true));
     } else if (b.side === 'party' && b.hp <= b.maxHp * 0.35) events.push(...this.tip('lowHp', this.def.tips?.lowHp));
+    return events;
+  }
+
+  /** `out` leaves the field (fallen, or by choice) and `them` takes the same place. */
+  private swapIn(out: Combatant, them: Combatant, forced: boolean): BattleEvent[] {
+    out.active = false;
+    them.active = true;
+    them.guarding = false;
+    const slot = out.slot;
+    out.slot = them.slot;
+    them.slot = slot;
+    // They step in now and act after a short wait.
+    const now = this.actor?.next ?? 0;
+    them.next = Math.max(them.next, now) + Math.round(turnDelay(them.spd) * SWAP_IN_DELAY);
+    return [{ kind: 'swap', out: out.key, in: them.key, forced }];
+  }
+
+  /** Who a skill reaches, living fighters only (random foes are picked as the hits land). */
+  private targetsOf(me: Combatant, skill: SkillDef, target: string | undefined): Combatant[] {
+    const foes = (me.side === 'party' ? this.enemies : this.fighters).filter((c) => !c.down);
+    const friends = (me.side === 'party' ? this.fighters : this.enemies).filter((c) => !c.down);
+    switch (skill.target) {
+      case 'enemy': {
+        const t = foes.find((c) => c.key === target) ?? (target === undefined ? foes[0] : undefined);
+        return t ? [t] : [];
+      }
+      case 'ally': {
+        const t = friends.find((c) => c.key === target) ?? (target === undefined ? me : undefined);
+        return t ? [t] : [];
+      }
+      case 'allEnemies':
+      case 'randomEnemies':
+        return foes;
+      case 'allAllies':
+        return friends;
+      case 'self':
+        return [me];
+    }
+  }
+
+  /** A skill's effect on its targets: hits, heals and statuses. */
+  private useSkill(me: Combatant, skill: SkillDef, targets: Combatant[]): BattleEvent[] {
+    const events: BattleEvent[] = [];
+    const type = skill.stat === 'atk' ? 'physical' : 'magic';
+    const random = skill.target === 'randomEnemies';
+    events.push({ kind: 'use', who: me.key, name: skill.name, skill: skill.id, targets: random ? [] : targets.map((t) => t.key), element: skill.element });
+    // A Surge powers the whole skill, not just its first hit.
+    const surge = this.surgeArmed && me.anissaBond && skill.kind === 'damage';
+    const hits = random ? (skill.hits ?? 1) : 1;
+    for (let h = 0; h < hits; h++) {
+      const pool = random ? [this.rng.pick(targets.filter((t) => !t.down).length ? targets.filter((t) => !t.down) : targets)] : targets;
+      for (const t of pool) {
+        if (t.down) continue;
+        if (skill.kind === 'damage') {
+          if (surge) this.surgeArmed = true;
+          events.push(...this.hit(me, t, skill.name, skill.power, type, skill.element));
+        } else if (skill.kind === 'heal') {
+          const amount = Math.min(t.maxHp - t.hp, Math.round(((me.mag * skill.power) / 100) * (0.95 + this.rng.next() * 0.1)));
+          t.hp += amount;
+          events.push({ kind: 'heal', to: t.key, hp: amount, sp: 0, source: skill.name });
+        }
+        if (skill.status && !t.down) events.push(...this.giveStatus(t, skill.status));
+      }
+    }
+    if (surge) this.surgeArmed = false;
+    return events;
+  }
+
+  /** Give (or renew) a status. */
+  private giveStatus(t: Combatant, id: StatusId): BattleEvent[] {
+    const fresh = this.actor === t;
+    const had = t.statuses.find((s) => s.id === id);
+    if (had) {
+      had.turns = STATUS[id].turns;
+      had.fresh = fresh;
+    } else t.statuses.push({ id, turns: STATUS[id].turns, fresh });
+    return [{ kind: 'status', to: t.key, status: id, on: true }];
+  }
+
+  /** At the end of a fighter's own turn, their statuses count down. */
+  private endTurn(c: Combatant): BattleEvent[] {
+    const events: BattleEvent[] = [];
+    for (const st of c.statuses) {
+      if (st.fresh) st.fresh = false;
+      else st.turns--;
+    }
+    for (const st of c.statuses.filter((x) => x.turns <= 0)) events.push({ kind: 'status', to: c.key, status: st.id, on: false });
+    c.statuses = c.statuses.filter((x) => x.turns > 0);
     return events;
   }
 
@@ -527,6 +741,12 @@ export class Battle {
   }
 }
 
+/** A foe's one-target attack: the front row while anyone stands in it, else anyone. */
+export function reachable(targets: readonly Combatant[]): Combatant[] {
+  const front = targets.filter((t) => t.row === 'front' && !t.down);
+  return front.length > 0 ? front : [...targets];
+}
+
 function order(a: Combatant, b: Combatant): number {
   if (a.side !== b.side) return a.side === 'party' ? -1 : 1;
   return b.spd - a.spd;
@@ -543,20 +763,28 @@ export function battleParty(flags: FlagReader, rpg: RpgContent, skills: Readonly
   const withAnissa = partyMembers(flags, rpg, 'present').some((m) => m.support);
   return partyMembers(flags, rpg, 'present')
     .filter((m: MemberDef) => !m.support)
-    .map((m) => ({
-      id: m.id,
-      name: m.name,
-      look: m.look ?? m.portrait,
-      level: level(flags, rpg, m.id),
-      stats: stats(flags, rpg, m),
-      skills: skills[m.id] ?? [],
-      specials: SLOTS.flatMap((slot) => {
-        const id = equipped(flags, m, slot);
-        const sp = id ? rpg.items[id]?.special : undefined;
-        return sp ? [sp] : [];
-      }),
-      anissaBond: m.class === 'mage' && withAnissa,
-    }));
+    .map((m) => battleEntry(flags, rpg, m, skills, withAnissa));
+}
+
+/** One member as a fighter. */
+export function battleEntry(flags: FlagReader, rpg: RpgContent, m: MemberDef, skills: Readonly<Record<string, readonly SkillDef[]>>, withAnissa: boolean): PartyEntry {
+  const weaponId = equipped(flags, m, 'weapon');
+  return {
+    id: m.id,
+    name: m.name,
+    look: m.look ?? m.portrait,
+    level: level(flags, rpg, m.id),
+    stats: stats(flags, rpg, m),
+    skills: skills[m.id] ?? [],
+    specials: SLOTS.flatMap((slot) => {
+      const id = equipped(flags, m, slot);
+      const sp = id ? rpg.items[id]?.special : undefined;
+      return sp ? [sp] : [];
+    }),
+    anissaBond: m.class === 'mage' && withAnissa,
+    row: m.class === 'warrior' ? 'front' : 'back',
+    weapon: weaponId ? rpg.items[weaponId]?.weapon : undefined,
+  };
 }
 
 /** The bag's consumables, for the Item command. */

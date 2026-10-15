@@ -19,6 +19,8 @@ item pictures go in `quest/art/items/`.
 | 6 | Anicette, young | the Echo, fifty years ago | [6](#6-anicette-young-the-echo) |
 | 7 | The Sun Locket | the item popup | [7](#7-the-sun-locket-item-picture) |
 | 8 | Solange's Quill | the item popup (the secret item) | [8](#8-solanges-quill-item-picture) |
+| 9 | Battle stances (Gianna, Yari, Patricio) | the side-view battle screen, one per weapon tier (added Oct 15) | [9](#9-battle-stances-one-per-weapon-tier) |
+| 10 | The cane-field boar | the first battle, on the Cane Road (added Oct 15) | [10](#10-the-cane-field-boar-battle-sprite) |
 
 The three intro illustrations come with the intro storyboard (for your approval by Fri Oct 17).
 
@@ -199,6 +201,44 @@ A single precious object for a fantasy game's item screen: Solange's Quill, an o
 
 ---
 
+## 9. Battle stances (one per weapon tier)
+
+The battle screen is a pulled-back side view seen a little from above (owner, Oct 15): four fighters on the left facing right in two rows, Anissa behind them, the foes on the right.
+The fighters never walk; they hold a stance and only shiver when they strike or are struck, while the effects (slash,
+arrows, light, fire...) play over them. So each character needs **one battle stance per weapon tier**, the same pose
+with a different weapon in hand, plus one **down** pose (kneeling, hurt) for when they fall. Twice the detail of the
+walk sprites, at the battle screen's pulled-back size: **32 x 40** cells. Use each character's **own chat** (the one with their reference sheet) so the face
+and clothes stay the same, and attach their walk sprite sheet too.
+
+```
+Pixel art battle sprites of the same character, [NAME], for a side-view 16-bit fantasy RPG battle screen in the style of classic Super Nintendo and Game Boy Advance RPGs. Match the attached sprite sheet's art style and colours, but draw the character a little larger and more detailed: each figure fills a 32 x 40 pixel cell. One row of [N + 1] cells, every cell the same size, with NO lines or borders between them. In every cell the character stands in the same ready battle stance, seen from the side and slightly toward the viewer (three-quarter view), facing RIGHT, feet apart, weight forward, the weapon held ready: [STANCE]. Cells 1 to [N]: the same pose, each with a different weapon: [WEAPONS]. Each weapon is clearly different in shape and material, from plain and simple to fine and precious. Last cell: the same character down on one knee, head bowed, hurt, the first weapon lowered. Bright, saturated, warm colours with clearly lit skin; eyes visible. 1-pixel dark outline, flat colours, at most 24 colours, hard pixel edges, no anti-aliasing, no gradients, no ground shadow. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels, no effects.
+```
+
+Fill in for each character:
+
+| Character | [STANCE] | [WEAPONS] (cells 1 to N, plain to precious) |
+|---|---|---|
+| **Gianna** (mage) | the staff held upright in her right hand, her left hand open and raised with a faint glow of light in the palm | 1 the archivist's staff, a plain pale wooden staff with a brass cap; 2 the sunwood staff, golden-brown polished wood carved with a spiral and a small sun at the top; 3 the lantern staff, dark wood with a small glowing brass lantern hanging from a hook at the top |
+| **Yari** (archer) | the bow held out in her left hand, an arrow nocked, the string half drawn | 1 the Yaguana bow, a plain wooden hunting bow wrapped with cord; 2 the ironwood bow, a dark, heavy, recurved bow with iron tips; 3 the gold-banded bow, a pale wood recurved bow with gold bands and a small sun charm |
+| **Patricio, young** (warrior, Echo) | the blade held forward in his right hand, his left hand open at his side, chin up | 1 the cane machete, a plain broad farm machete with a wooden grip; 2 the Marshal's cutlass, a curved cutlass with a gold guard; 3 the steel saber, a long bright steel saber with a sky-blue cord on the hilt |
+
+Then, for Anissa (support, not a fighter): one cell, standing slightly behind someone, hands clasped at her chest, a
+soft golden glow around her hands, facing right; and a second cell, the same pose with the glow bright and her eyes
+shut (her Surge).
+
+---
+
+## 10. The cane-field boar (battle sprite)
+
+The first foe in the game, on the Cane Road outside Zetwal (Chapter 1). The game uses a stand-in drawn in code until
+this arrives. A new chat is fine.
+
+```
+Pixel art battle sprite for a side-view 16-bit fantasy RPG in the style of classic Super Nintendo RPGs: a wild Caribbean boar (a feral hog from the sugar cane fields), seen from the side, facing LEFT, head low and lowered to charge, front legs braced. Big and heavy: a high bristly hump over the shoulders, a ridge of stiff dark bristles along the back, coarse dark-brown and grey-brown fur, a long snout with a pinkish-tan nose disc, two short curved ivory tusks, small angry red-brown eyes, short legs with dark hooves, a thin tufted tail. A few strands of green sugar cane leaf caught in its bristles. 56 x 40 pixels, the boar filling the image, 1-pixel dark outline, flat colours, at most 20 colours, hard pixel edges, no anti-aliasing, no gradients, no ground shadow. Solid flat magenta background (#FF00FF). No text, no other animals, no background.
+```
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |
@@ -212,3 +252,5 @@ A single precious object for a fantasy game's item screen: Solange's Quill, an o
 | Anicette young | `characters/anicette_young.png`, `portraits/anicette_young.png` (+ `_fierce`, `_tender`); new look, added when she appears in an Echo scene |
 | Sun Locket | `quest/art/items/sun_locket.png` |
 | Solange's Quill | `quest/art/items/solange_quill.png` |
+| Battle stances | `quest/art/battle/<name>.png` (one strip per character; the cells are cut per weapon tier) |
+| The boar | `quest/art/enemies/boar.png` (replaces the stand-in) |

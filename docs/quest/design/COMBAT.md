@@ -237,6 +237,8 @@ SP shown is the base; Gianna pays 25% less. "Board" names the board game ability
 | Sèman Lapè | 12 (9) | Peace Oath: one enemy and the party cannot harm each other for 2 turns, and it skips them (bosses: 1 turn; once per battle) | Sèman Lapè |
 | Rit Solèy | Resolve gauge full | Limit break: revive and heal the whole party 60%, light damage to all enemies, power 180 | Rit Solèy |
 | Say Their Names | 16 (12) | Secret item (Solange's Quill) | |
+| Limyè pou Tout | 10 (7) | **Built (Oct 15).** Light for all: heal every ally, power 80 | |
+| Benediksyon | 4 (3) | **Built (Oct 15).** Inspired on one ally (3 turns) | |
 
 **Spells from books (guide 6.5: she learns spells from lore books she reads), proposal:** reading 5 of a capital's
 library books teaches its spell: Zetwal *Mend* (regen 8% for 3 turns), Xaraguá *Tidewash* (cleanse one ally), Al-Doria
@@ -254,7 +256,9 @@ for 3 turns).
 |---|---|---|---|
 | Voice of the Opía | passive | When any fighter falls, Yari gains a charge (max 3); each charge adds +20% to her next shot | Voice of the Opía |
 | Guaíza | 8 | Once per battle: copy the last skill an enemy used and use it now | Guaíza |
-| Volley | 6 | Three arrows at random enemies, power 60 each | |
+| Volley | 6 | Three arrows at random enemies, power 60 each (**built**, ATK) | |
+| Arrow Rain | 9 | **Built (Oct 15).** Wind arrows at every enemy, power 75 (ATK) | |
+| Tracker's Mark | 4 | **Built (Oct 15).** Marked on one enemy (3 turns) | |
 | Song of Coaybay | 14 | Once per battle: gain a second passive copied from an enemy type defeated in this battle, until the end of the battle | Song of Coaybay |
 
 The hutia (proposal): a 1-in-8 chance after a win to steal one shiny extra drop.
@@ -328,6 +332,15 @@ Running joke (no mechanics): he is out of breath after every battle.
 | Benny (Swordsman) | Riposte (stance: counter the next physical hit, power 120, SP 4), Mark (as La Marca, SP 4) |
 | Caona (Scout-commander, proposal) | Pathfinder (party SPD +20% for 3 turns, SP 6), Scout's Shot (power 110, never misses, SP 3) |
 
+## 9.9 Rows and swapping (owner, Oct 15; built)
+
+- Up to **8** in the party; **4** fight at once (`BATTLE_ACTIVE`); the rest wait.
+- **Swap** (a command, takes the turn): the fighter trades places with someone waiting, who acts after half a turn
+  (`SWAP_IN_DELAY`). A fighter who falls is replaced at once by the next one waiting. Lost only when all are down.
+- **Rows:** fighters with blades (class warrior) stand in the **front row**; mages and archers in the **back row**. A
+  foe's one-target attack reaches the back row only when no one stands in the front row. **Area** moves reach everyone.
+- **Anissa is never a target.**
+
 ## 10. Status effects
 
 | Status | Effect | Lasts | Cleared by |
@@ -344,6 +357,7 @@ Running joke (no mechanics): he is out of breath after every battle.
 | **Fogged** | Physical hit chance -30 | 2 turns | |
 | **Weakened** | Damage dealt x0.75 | 3 turns | |
 | **Inspired** | Damage dealt x1.25 | 3 turns | |
+| **Warded** | Damage taken x0.75 (proposal, Oct 15; built in the engine, no skill gives it yet) | 3 turns | |
 | **Guarding** | Damage taken x0.5 | until own next turn | |
 | **Truce** | Sèman Lapè: neither side can harm the other, the enemy skips | 2 turns (1 on bosses) | ends early if the party harms it (proposal: then it cannot be used again that battle) |
 | **Regen** | Heals 8% max HP each turn | 3 turns | |

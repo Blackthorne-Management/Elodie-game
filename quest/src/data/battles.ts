@@ -8,8 +8,16 @@ import type { BattleDef, EnemyDef, SkillDef } from '../engine/battle.ts';
 /** Skills each member knows (COMBAT 9; the rest arrive with their chapters). */
 export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
   gianna: [
-    { id: 'sunthread', name: 'Sunthread', sp: 5, kind: 'damage', power: 120, text: 'A thread of light at one foe.' },
-    { id: 'limye_elodie', name: 'Limyè Elodie', sp: 6, kind: 'heal', power: 150, text: 'Elodie\'s light heals one ally.' },
+    { id: 'sunthread', name: 'Sunthread', sp: 5, kind: 'damage', power: 120, target: 'enemy', element: 'light', text: 'A thread of light at one foe.' },
+    { id: 'limye_elodie', name: 'Limyè Elodie', sp: 6, kind: 'heal', power: 150, target: 'ally', element: 'light', text: "Elodie's light heals one ally." },
+    // Chapter 1 additions (owner, Oct 15: mages heal the team and give buffs).
+    { id: 'limye_pou_tout', name: 'Limyè pou Tout', sp: 10, kind: 'heal', power: 80, target: 'allAllies', element: 'light', text: 'Light for all: heals the whole party a little.' },
+    { id: 'benediksyon', name: 'Benediksyon', sp: 4, kind: 'status', power: 0, target: 'ally', status: 'inspired', text: 'A blessing: one ally deals a quarter more damage for 3 turns.' },
+  ],
+  yari: [
+    { id: 'volley', name: 'Volley', sp: 6, kind: 'damage', stat: 'atk', power: 60, target: 'randomEnemies', hits: 3, text: 'Three arrows at random foes.' },
+    { id: 'arrow_rain', name: 'Arrow Rain', sp: 9, kind: 'damage', stat: 'atk', power: 75, target: 'allEnemies', element: 'wind', text: 'Arrows on the wind, at every foe.' },
+    { id: 'trackers_mark', name: "Tracker's Mark", sp: 4, kind: 'status', power: 0, target: 'enemy', status: 'marked', text: 'Marks one foe: it takes a quarter more damage for 3 turns.' },
   ],
 };
 
@@ -32,6 +40,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
   intro_boar: {
     id: 'intro_boar',
     title: 'The Cane Road',
+    backdrop: 'cane_road',
     enemies: ['boar'],
     table: 'wilds',
     group: 'boar',

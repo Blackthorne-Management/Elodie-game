@@ -2,10 +2,10 @@
 // the boar's warning, The Heir Rises, rewards, and that the first battle is winnable but not trivial.
 
 import { describe, expect, it } from 'vitest';
-import { ANISSA_SP_SHARE, SURGE_COST, SURGE_MULT } from '../src/config.ts';
+import { ANISSA_SP_SHARE, ELEMENT_WEAK, STATUS, SURGE_COST, SURGE_MULT } from '../src/config.ts';
 import { BATTLES, ENEMIES, SKILLS } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
-import { Battle, battleItems, battleParty, enemyStats, settleBattle, skillCost, turnDelay, type BattleEvent, type PartyEntry } from '../src/engine/battle.ts';
+import { Battle, reachable, battleItems, battleParty, enemyStats, settleBattle, skillCost, turnDelay, type BattleEvent, type PartyEntry } from '../src/engine/battle.ts';
 import { encounterFlag } from '../src/engine/encounterFlags.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { gold, itemCount, xp } from '../src/engine/rpg.ts';
@@ -36,6 +36,25 @@ function newBattle(seed = 1, party = [gianna()]): Battle {
 }
 
 const boarKey = 'boar#1';
+
+function yari(over: Partial<PartyEntry> = {}): PartyEntry {
+  return {
+    id: 'yari',
+    name: 'Yari',
+    look: 'yari',
+    level: 1,
+    stats: { hp: 50, sp: 30, atk: 12, def: 7, mag: 6, spd: 13 },
+    skills: SKILLS.yari!,
+    specials: [],
+    anissaBond: false,
+    ...over,
+  };
+}
+
+/** Run the battle until `who` has the turn (others guard). */
+function until(b: Battle, who: string): void {
+  for (let i = 0; i < 20 && b.actor?.key !== who && !b.outcome; i++) b.act({ kind: 'guard' });
+}
 
 describe('battle rules', () => {
   it('a faster fighter waits less between turns', () => {
@@ -198,5 +217,176 @@ describe('the first battle (the boar on the Cane Road)', () => {
     expect(itemCount(flags, 'boar_tusk')).toBe(1);
     expect(itemCount(flags, 'soup_pot')).toBe(1);
     expect(flags.isSet(encounterFlag('wilds', 'boar', 'won'))).toBe(true);
+  });
+});
+
+describe('targets, statuses and elements', () => {
+  const twoBoars = () => {
+    const b = new Battle(def, [gianna(), yari()], [boar, boar], [soup], { seed: 21 });
+    b.start();
+    return b;
+  };
+
+  it('two of the same foe are told apart, and Arrow Rain hits every living foe once', () => {
+    const b = twoBoars();
+    expect(b.enemies.map((e) => e.name)).toEqual(['Cane-field boar A', 'Cane-field boar B']);
+    until(b, 'yari');
+    const ev = b.act({ kind: 'skill', skill: 'arrow_rain' });
+    const struck = ev.filter((e) => (e.kind === 'damage' || e.kind === 'miss') && e.from === 'yari').map((e) => (e as { to: string }).to);
+    expect(struck.sort()).toEqual(['boar#1', 'boar#2']);
+    expect(ev.find((e) => e.kind === 'use')).toMatchObject({ who: 'yari', name: 'Arrow Rain', targets: ['boar#1', 'boar#2'] });
+  });
+
+  it('Volley looses three arrows at random foes', () => {
+    const b = twoBoars();
+    until(b, 'yari');
+    const ev = b.act({ kind: 'skill', skill: 'volley' });
+    expect(ev.filter((e) => (e.kind === 'damage' || e.kind === 'miss') && e.from === 'yari').length).toBe(3);
+  });
+
+  it('Limyè pou Tout heals the whole party; a one-target heal can pick an ally', () => {
+    const b = twoBoars();
+    until(b, 'gianna');
+    b.find('gianna')!.hp = 10;
+    b.find('yari')!.hp = 10;
+    const ev = b.act({ kind: 'skill', skill: 'limye_pou_tout' });
+    const healed = ev.filter((e) => e.kind === 'heal' && e.source === 'Limyè pou Tout').map((e) => (e as { to: string }).to);
+    expect(healed.sort()).toEqual(['gianna', 'yari']);
+    until(b, 'gianna');
+    b.find('yari')!.hp = 5;
+    const one = b.act({ kind: 'skill', skill: 'limye_elodie', target: 'yari' });
+    expect(one.some((e) => e.kind === 'heal' && e.to === 'yari' && e.hp > 0)).toBe(true);
+  });
+
+  it('a skill cannot aim at the wrong side', () => {
+    const b = twoBoars();
+    until(b, 'gianna');
+    expect(b.act({ kind: 'skill', skill: 'sunthread', target: 'yari' })).toEqual([]);
+    expect(b.act({ kind: 'skill', skill: 'limye_elodie', target: boarKey })).toEqual([]);
+  });
+
+  it('Inspired raises damage dealt by a quarter, lasts the target\'s next 3 turns, then wears off', () => {
+    const b = twoBoars();
+    until(b, 'gianna');
+    const ev = b.act({ kind: 'skill', skill: 'benediksyon', target: 'yari' });
+    expect(ev).toContainEqual({ kind: 'status', to: 'yari', status: 'inspired', on: true });
+    expect(b.find('yari')!.statuses).toEqual([{ id: 'inspired', turns: STATUS.inspired.turns, fresh: false }]);
+    let off = false;
+    let yariTurns = 0;
+    for (let i = 0; i < 20 && !off && !b.outcome; i++) {
+      if (b.actor?.key === 'yari') yariTurns++;
+      off = b.act({ kind: 'guard' }).some((e) => e.kind === 'status' && e.to === 'yari' && !e.on);
+    }
+    expect(off).toBe(true);
+    expect(yariTurns).toBe(3);
+  });
+
+  it('Marked makes a foe take a quarter more; Inspired makes its target deal a quarter more', () => {
+    const plain = twoBoars();
+    const marked = twoBoars();
+    const foe = marked.find(boarKey)!;
+    foe.statuses.push({ id: 'marked', turns: 3, fresh: false });
+    until(plain, 'gianna');
+    until(marked, 'gianna');
+    const d = (b: Battle) => (b.act({ kind: 'skill', skill: 'sunthread', target: boarKey }).find((e) => e.kind === 'damage') as { amount: number }).amount;
+    const a = d(plain);
+    const m = d(marked);
+    expect(m / a).toBeGreaterThan(1.1);
+    expect(m / a).toBeLessThan(1.4);
+  });
+
+  it('a foe weak to an element takes half again from it, and the hit says so', () => {
+    const weakBoar = { ...boar, weak: ['light' as const] };
+    const b = new Battle(def, [gianna()], [weakBoar], [soup], { seed: 21 });
+    const c = new Battle(def, [gianna()], [boar], [soup], { seed: 21 });
+    b.start();
+    c.start();
+    const hit = (x: Battle) => x.act({ kind: 'skill', skill: 'sunthread', target: boarKey }).find((e) => e.kind === 'damage') as Extract<BattleEvent, { kind: 'damage' }>;
+    const w = hit(b);
+    const n = hit(c);
+    expect(w.affinity).toBe(1);
+    expect(w.element).toBe('light');
+    expect(w.amount / n.amount).toBeCloseTo(ELEMENT_WEAK, 0);
+  });
+
+  it('items can be given to any ally and say what was used', () => {
+    const b = twoBoars();
+    until(b, 'gianna');
+    b.find('yari')!.hp = 5;
+    const ev = b.act({ kind: 'item', item: 'soup_pot', target: 'yari' });
+    expect(ev[0]).toMatchObject({ kind: 'use', who: 'gianna', item: 'soup_pot', targets: ['yari'] });
+    expect(b.find('yari')!.regenHp).toBe(Math.ceil(40 / 3)); // (Yari's own turn may already have taken the first sip)
+  });
+});
+
+describe('four at a time: swapping, the front row, area attacks', () => {
+  const member = (id: string, row: 'front' | 'back', hp = 60): PartyEntry => ({
+    id,
+    name: id,
+    look: id,
+    level: 1,
+    stats: { hp, sp: 10, atk: 10, def: 6, mag: 4, spd: 10 },
+    skills: [],
+    specials: [],
+    anissaBond: false,
+    row,
+  });
+  const five = () => [gianna({ row: 'back' }), yari({ row: 'back' }), member('azzy', 'front'), member('bayarmaa', 'front'), member('haru', 'back')];
+
+  it('only the first four fight; the fifth waits and never takes a turn', () => {
+    const b = new Battle(def, five(), [boar], [], { seed: 3 });
+    b.start();
+    expect(b.fighters.map((c) => c.key)).toEqual(['gianna', 'yari', 'azzy', 'bayarmaa']);
+    expect(b.bench.map((c) => c.key)).toEqual(['haru']);
+    for (let i = 0; i < 12 && !b.outcome; i++) {
+      expect(b.actor?.key).not.toBe('haru');
+      b.act({ kind: 'guard' });
+    }
+    expect(b.upcoming(8).some((c) => c.key === 'haru')).toBe(false);
+  });
+
+  it('Swap trades the fighter whose turn it is for one who is waiting, in the same place', () => {
+    const b = new Battle(def, five(), [boar], [], { seed: 3 });
+    b.start();
+    until(b, 'yari');
+    const ev = b.act({ kind: 'swap', with: 'haru' });
+    expect(ev[0]).toEqual({ kind: 'swap', out: 'yari', in: 'haru', forced: false });
+    expect(b.fighters.map((c) => c.key)).toEqual(['gianna', 'haru', 'azzy', 'bayarmaa']);
+    expect(b.act({ kind: 'swap', with: 'nobody' })).toEqual([]);
+  });
+
+  it('a fallen fighter is replaced by the next one waiting; the fight is lost only when everyone is down', () => {
+    const party = [member('a', 'front', 1), member('b', 'front', 1), member('c', 'front', 1), member('d', 'front', 1), member('e', 'front', 1)];
+    const b = new Battle(def, party, [boar], [], { seed: 8 });
+    const all = [...b.start()];
+    for (let i = 0; i < 30 && !b.outcome; i++) all.push(...b.act({ kind: 'guard' }));
+    expect(all.some((e) => e.kind === 'swap' && e.forced && e.in === 'e')).toBe(true);
+    expect(b.outcome).toBe('lost');
+    expect(b.party.every((c) => c.down)).toBe(true);
+  });
+
+  it("a foe's one-target attack reaches the back row only when no one stands in the front", () => {
+    const b = new Battle(def, five(), [boar], [], { seed: 3 });
+    const fighters = b.fighters;
+    expect(reachable(fighters).map((c) => c.key)).toEqual(['azzy', 'bayarmaa']);
+    fighters.find((c) => c.key === 'azzy')!.down = true;
+    fighters.find((c) => c.key === 'bayarmaa')!.down = true;
+    expect(reachable(fighters.filter((c) => !c.down)).map((c) => c.key)).toEqual(['gianna', 'yari']);
+    // In play: the boar only ever hits the front row while it stands.
+    const c = new Battle(def, five(), [boar], [], { seed: 5 });
+    const ev = [...c.start()];
+    for (let i = 0; i < 12 && !c.outcome; i++) ev.push(...c.act({ kind: 'guard' }));
+    const struck = new Set(ev.filter((e) => (e.kind === 'damage' || e.kind === 'miss') && e.from === 'boar#1').map((e) => (e as { to: string }).to));
+    expect([...struck].every((k) => k === 'azzy' || k === 'bayarmaa')).toBe(true);
+    expect(struck.size).toBeGreaterThan(0);
+  });
+
+  it('an area attack hits every fighter, front and back', () => {
+    const stomper = { ...boar, moves: [{ name: 'Stampede', power: 40, area: true }] };
+    const b = new Battle(def, five(), [stomper], [], { seed: 3 });
+    const ev = [...b.start()];
+    for (let i = 0; i < 6 && !b.outcome; i++) ev.push(...b.act({ kind: 'guard' }));
+    const struck = new Set(ev.filter((e) => (e.kind === 'damage' || e.kind === 'miss') && e.move === 'Stampede').map((e) => (e as { to: string }).to));
+    expect(struck).toEqual(new Set(['gianna', 'yari', 'azzy', 'bayarmaa']));
   });
 });

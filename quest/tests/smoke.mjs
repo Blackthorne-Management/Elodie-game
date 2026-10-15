@@ -524,7 +524,8 @@ async function playAct(browser, errors) {
         }
       } else {
         await handleShowcase(page, showcases, shots);
-        if (mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel')) await finishTyping(page);
+        // A choice only takes the cursor once its line has finished typing (the same as a player waiting).
+        if (mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel' || cmd === 'up' || cmd === 'down')) await finishTyping(page);
         sim.press(cmd);
         if (cmd.includes('-')) await pressDiagonal(page, cmd);
         else await page.keyboard.press(KEYS[cmd]);
@@ -631,7 +632,8 @@ async function playAct(browser, errors) {
   await page.evaluate(() => window.__quest.startBattle('intro_boar'));
   await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return b && !b.busy; }, null, { timeout: 15000 });
   await shoot(page, 'battle-start', shots);
-  for (let turn = 0; turn < 40; turn++) {
+  let targeted = false;
+  for (let turn = 0; turn < 60; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
     const bt = (await snap(page)).battle;
     if (!bt) break;
@@ -640,7 +642,16 @@ async function playAct(browser, errors) {
       await page.keyboard.press('KeyZ');
       break;
     }
-    const want = bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith('Sunthread')) ?? 'Back') : 'Skill';
+    if (bt.menu === 'target') {
+      if (!targeted) await shoot(page, 'battle-target', shots);
+      targeted = true;
+      await page.keyboard.press('KeyZ');
+      await page.waitForTimeout(120);
+      continue;
+    }
+    // Gianna: Surge when ready, else Sunthread; anyone else: Attack.
+    const skill = bt.actor === 'gianna' ? 'Sunthread' : null;
+    const want = bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith(skill ?? '-')) ?? 'Back') : skill ? 'Skill' : 'Attack';
     const idx = bt.rows.findIndex((r) => r === want || r.startsWith(want));
     for (let i = 0; i < idx; i++) await page.keyboard.press('ArrowDown');
     await page.keyboard.press('KeyZ');
@@ -648,6 +659,7 @@ async function playAct(browser, errors) {
   }
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 5000 });
   const afterBattle = await snap(page);
+  check(targeted, 'the battle asks for a target before an attack or spell');
   check(afterBattle.flags['encounter.wilds.boar.won'] === true && (afterBattle.flags['item.boar_tusk'] ?? 0) >= 1, 'the boar battle can be won and pays out the boar-tusk charm');
   await page.reload();
   await waitReady(page);

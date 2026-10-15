@@ -989,7 +989,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
 
   // ---- Yari -------------------------------------------------------------------------------------
   script('yari_talk', {
-    start: { lines: [], next: [{ if: { flag: 'act1.complete' }, to: 'after' }, { to: 'arrive' }] },
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'act1.complete' }, to: 'after' },
+        { if: { flag: 'story.yari_asked' }, to: 'ready' },
+        { to: 'arrive' },
+      ],
+    },
     arrive: {
       speaker: 'yari',
       lines: [
@@ -1012,12 +1019,54 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Tell me everything on the way.', next: 'yes' },
       ],
     },
+    // Owner decision (Oct 15): Gianna asks for a little time, so the player can finish the city's errands
+    // and the boar fight (learning the game while it is still gentle) before the chapter ends.
     yes: {
       speaker: 'yari',
       lines: [
         say(A, "...I'm coming too."),
         { text: 'I hoped you would, Anissa.' },
-        { text: 'We sail with the morning tide.', set: { 'act1.complete': true } },
+        say(G, "Soon, Yari. I promise. I have work at the archive, and a few things around the city to finish before I can go."),
+        { text: "Then I'll help. Faster that way." },
+        { text: 'Mind the Cane Road. A boar was tearing up the cane when I came in. It did not like my face.' },
+        { text: "Find me here at the dock when you're ready. Not too long, Gigi.", set: { 'story.yari_asked': true } },
+      ],
+    },
+    ready: {
+      lines: [],
+      next: [
+        {
+          if: { all: [{ flag: 'side.overdue.done' }, { flag: 'side.soup.done' }, { flag: 'side.cane_name.done' }, { flag: 'encounter.wilds.boar.won' }] },
+          to: 'ready_all',
+        },
+        { to: 'ready_errands' },
+      ],
+    },
+    ready_errands: {
+      speaker: 'yari',
+      lines: [{ text: 'The tide is turning. Did you finish what you had to do? Your Quests page says otherwise.' }],
+      choices: [
+        { text: 'Not yet. Soon.', next: 'later' },
+        { text: "Let's go anyway.", next: 'depart' },
+      ],
+    },
+    ready_all: {
+      speaker: 'yari',
+      lines: [{ text: 'Books back, soup delivered, a name carved, and the boar sorry it met us. Ready?' }],
+      choices: [
+        { text: "Let's go.", next: 'depart' },
+        { text: 'Not yet.', next: 'later' },
+      ],
+    },
+    later: {
+      speaker: 'yari',
+      lines: [{ text: "I'll be here. The hutia is guarding the canoe. Badly." }],
+    },
+    depart: {
+      speaker: 'yari',
+      lines: [
+        say(A, 'Goodbye, Zetwal.'),
+        { text: 'Xaraguá, then. We sail with the morning tide.', set: { 'act1.complete': true } },
       ],
     },
     after: {

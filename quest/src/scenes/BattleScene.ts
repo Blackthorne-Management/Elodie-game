@@ -1,25 +1,64 @@
-// The battle screen (engine/battle.ts has the rules). Drawn over the paused field at the same render
-// scale: the enemy on the left, Gianna on the right with Anissa behind her (glowing as her Spark grows),
-// the turn order along the top, and a command panel at the bottom (Attack, Skill, Guard, Item, and
-// Surge when Anissa is ready). Events play one at a time with damage numbers; Anissa's tips come as
-// lines from her. Winning shows the rewards; losing restarts the fight with a Grudge (The Heir Rises).
-// Keys, gamepad, the touch buttons and taps all work.
+// The battle screen (engine/battle.ts has the rules), a pulled-back side view seen a little from above
+// (owner, Oct 15): a painted scene, four fighters on the left facing right in two rows (blades in front,
+// mages and archers behind), Anissa behind them all (glowing as her Spark grows), up to four foes on the
+// right, and a strip along the bottom with the fighters' bars and the commands. Swap trades the fighter
+// whose turn it is for a party member who is waiting. Choose a command, then
+// a target (a cursor over a foe or an ally; skills that reach a whole side mark every target at once).
+// The fighters never walk: they shiver when they strike or are struck, and the effects (scenes/battleFx.ts)
+// play over them, with damage numbers floating up. Winning shows the rewards; losing restarts the fight
+// with a Grudge (The Heir Rises). Keys, gamepad, the touch buttons and taps all work.
 
 import Phaser from 'phaser';
-import { BATTLE_ART, ANISSA_GLOW, UI, characterFrame, textureKeyForCharacter, textureKeyForEnemy } from '../assets.config.ts';
+import {
+  ANISSA_GLOW,
+  BATTLE_ART,
+  BATTLE_BACKDROPS,
+  UI,
+  characterFrame,
+  textureKeyForCharacter,
+  textureKeyForEnemy,
+} from '../assets.config.ts';
 import { SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { BATTLES, ENEMIES, SKILLS } from '../data/battles.ts';
 import { RPG } from '../data/rpg.ts';
-import { Battle, battleItems, battleParty, settleBattle, skillCost, type Action, type BattleEvent, type BattleResult, type Combatant } from '../engine/battle.ts';
+import {
+  Battle,
+  battleEntry,
+  battleItems,
+  battleParty,
+  needsTarget,
+  settleBattle,
+  skillCost,
+  targetsAllies,
+  type Action,
+  type BattleEvent,
+  type BattleResult,
+  type Combatant,
+  type StatusId,
+  type TargetKind,
+} from '../engine/battle.ts';
 import { getRuntime } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
+import { playFx, type FxKind, type Point } from './battleFx.ts';
 
-type Menu = 'commands' | 'skills' | 'items';
+type Menu = 'commands' | 'skills' | 'items' | 'swap' | 'target';
 
 interface Row {
   label: string;
   enabled: boolean;
+  /** Shown in the band while the cursor is on it. */
+  hint?: string;
   run: () => void;
+}
+
+/** A command waiting for its target. */
+interface Aim {
+  name: string;
+  side: 'enemy' | 'ally';
+  /** Every living fighter on that side (Arrow Rain, Limyè pou Tout) or random foes (Volley). */
+  all: boolean;
+  back: Menu;
+  action: (target: string | undefined) => Action;
 }
 
 export interface BattleSnapshot {
@@ -29,6 +68,8 @@ export interface BattleSnapshot {
   menu: Menu;
   rows: string[];
   cursor: number;
+  /** The fighters the target cursor is on. */
+  targets: string[];
   enemyHp: number;
   hp: number;
   sp: number;
@@ -37,6 +78,25 @@ export interface BattleSnapshot {
   busy: boolean;
   done: boolean;
 }
+
+/** Short tags for statuses, by the party's bars and under a foe's name. */
+const STATUS_TAGS: Readonly<Record<StatusId, { tag: string; good: boolean }>> = {
+  inspired: { tag: 'ATK+', good: true },
+  weakened: { tag: 'ATK-', good: false },
+  marked: { tag: 'MARK', good: false },
+  warded: { tag: 'WARD', good: true },
+  regen: { tag: 'REGEN', good: true },
+};
+
+const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
+  inspired: 'Inspired',
+  weakened: 'Weakened',
+  marked: 'Marked',
+  warded: 'Warded',
+  regen: 'Regen',
+};
+
+const VISIBLE_ROWS = 6;
 
 let current: BattleScene | null = null;
 
@@ -49,39 +109,46 @@ export function battleSnapshot(): BattleSnapshot | null {
   return current?.snapshot() ?? null;
 }
 
-const PANEL_Y = 124;
-
 export class BattleScene extends Phaser.Scene {
   private battle!: Battle;
   private battleId = '';
+  /** Test hook only: extra fighters (member ids) to fill the field, for screenshots of a full party. */
+  private extra: readonly string[] = [];
   private menu: Menu = 'commands';
   private cursor = 0;
   private rows: Row[] = [];
+  private aim: Aim | null = null;
+  private aimIndex = 0;
   private queue: BattleEvent[] = [];
   private busy = false;
   private message = '';
+  /** Anissa's last tip stays up while the player chooses. */
+  private sticky = '';
   private done = false;
   private result: BattleResult | null = null;
   private sprites = new Map<string, Phaser.GameObjects.Image>();
   private anissa: Phaser.GameObjects.Image | null = null;
   private anissaLight: Phaser.GameObjects.Arc | null = null;
   private ui!: Phaser.GameObjects.Container;
-  private messageText!: Phaser.GameObjects.Text;
   private seed = 1;
+  private cursorBob = 0;
 
   constructor() {
     super('battle');
   }
 
-  init(data: { battle: string }): void {
+  init(data: { battle: string; extra?: readonly string[] }): void {
     this.battleId = data.battle;
+    this.extra = data.extra ?? [];
     this.menu = 'commands';
     this.cursor = 0;
+    this.aim = null;
     this.queue = [];
     this.busy = false;
     this.done = false;
     this.result = null;
     this.message = '';
+    this.sticky = '';
     this.sprites = new Map();
   }
 
@@ -89,13 +156,22 @@ export class BattleScene extends Phaser.Scene {
     setCurrent(this);
     const cam = this.cameras.main;
     cam.setOrigin(0, 0).setZoom(renderScale());
-    this.seed = (Date.now() >>> 0) || 1;
-    this.drawBackdrop();
-    this.ui = this.add.container(0, 0).setDepth(100);
-    this.messageText = this.add.text(VIEW_WIDTH / 2, PANEL_Y - 16, '', textStyle(UI.text, { align: 'center' })).setOrigin(0.5, 0).setDepth(200);
+    this.seed = Date.now() >>> 0 || 1;
+    const def = BATTLES[this.battleId];
+    this.drawBackdrop(def?.backdrop ?? 'cane_road');
+    this.ui = this.add.container(0, 0).setDepth(400);
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => this.onTap(p));
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       if (current === this) setCurrent(null);
+    });
+    // The target cursor bobs.
+    this.time.addEvent({
+      delay: 260,
+      loop: true,
+      callback: () => {
+        this.cursorBob = (this.cursorBob + 1) % 2;
+        if (this.menu === 'target' && !this.busy) this.redraw();
+      },
     });
     this.begin();
   }
@@ -108,6 +184,10 @@ export class BattleScene extends Phaser.Scene {
     const def = BATTLES[this.battleId];
     if (!def) throw new Error(`No battle ${this.battleId}`);
     const party = battleParty(flags, RPG, SKILLS);
+    this.extra.forEach((id, i) => {
+      const m = RPG.members.find((x) => x.id === id);
+      if (m) party.push({ ...battleEntry(flags, RPG, m, SKILLS, false), id: `${id}${i}` });
+    });
     const enemies = def.enemies.map((id) => ENEMIES[id]!).filter(Boolean);
     const items = battleItems(flags, RPG);
     this.seed = (this.seed * 1103515245 + 12345) >>> 0;
@@ -120,6 +200,8 @@ export class BattleScene extends Phaser.Scene {
     if (this.busy || this.done) return;
     this.menu = 'commands';
     this.cursor = 0;
+    this.aim = null;
+    this.sticky = '';
     this.play(this.battle.act(action));
   }
 
@@ -133,6 +215,7 @@ export class BattleScene extends Phaser.Scene {
     const e = this.queue.shift();
     if (!e) {
       this.busy = false;
+      if (!this.done) this.message = '';
       this.redraw();
       return;
     }
@@ -150,35 +233,94 @@ export class BattleScene extends Phaser.Scene {
         return 0;
       case 'text':
         this.say(e.speaker ? `${e.speaker}: ${e.text}` : e.text);
+        if (e.speaker) this.sticky = this.message;
         return BATTLE_ART.messageMs * (e.speaker ? 1.6 : 1.1);
+      case 'use':
+        this.say(`${name(e.who)}: ${e.name}!`);
+        this.shiver(e.who, 1);
+        return 300;
       case 'damage': {
-        this.say(`${name(e.from)}: ${e.move}!${e.surge ? ' (Surge)' : ''}${e.crit ? ' A critical hit!' : ''}`);
-        this.pop(e.to, String(e.amount), e.crit ? BATTLE_ART.crit : BATTLE_ART.hit);
-        this.flash(e.to);
-        return BATTLE_ART.messageMs;
+        const from = this.battle.find(e.from);
+        if (e.move === 'Attack' || from?.side === 'enemy') this.say(`${name(e.from)}: ${e.move}!${e.surge ? ' (Surge)' : ''}`);
+        if (from?.side === 'enemy') this.shiver(e.from, 1);
+        const kind = this.fxFor(e, from);
+        const lead = kind === 'arrow' ? 260 : 140;
+        playFx(this, kind, this.centre(e.to), this.centre(e.from));
+        this.time.delayedCall(lead, () => {
+          const tag = e.affinity === 1 ? ' Weak!' : e.affinity === -1 ? ' Resist' : '';
+          this.pop(e.to, `${e.amount}${e.crit ? '!' : ''}${tag}`, e.affinity === 1 ? BATTLE_ART.weak : e.crit ? BATTLE_ART.crit : BATTLE_ART.hit);
+          this.shiver(e.to, BATTLE_ART.shakePx);
+          this.flash(e.to);
+          this.redraw();
+        });
+        return BATTLE_ART.hitMs + lead;
       }
       case 'miss':
-        this.say(`${name(e.from)}: ${e.move}... it misses.`);
+        if (this.battle.find(e.from)?.side === 'enemy' || e.move === 'Attack') this.say(`${name(e.from)}: ${e.move}... it misses.`);
         this.pop(e.to, 'miss', UI.dimText);
-        return BATTLE_ART.messageMs;
+        return BATTLE_ART.hitMs;
       case 'heal': {
-        const bits = [e.hp ? `+${e.hp} HP` : '', e.sp ? `+${e.sp} SP` : ''].filter(Boolean).join(' ');
-        this.say(e.source === "Anissa's Light" ? `Anissa's light warms Gianna. ${bits}` : `${e.source}: ${name(e.to)} ${bits}`);
-        this.pop(e.to, bits, BATTLE_ART.heal);
+        const bits = [e.hp ? `+${e.hp}` : '', e.sp ? `+${e.sp} SP` : ''].filter(Boolean).join(' ');
+        if (e.source === "Anissa's Light") {
+          this.say(`Anissa's light warms ${name(e.to)}. ${bits}`);
+          playFx(this, 'light', this.centre(e.to));
+        } else {
+          if (e.source === 'gear') this.say(`${name(e.to)} recovers. ${bits}`);
+          playFx(this, 'heal', this.centre(e.to));
+        }
+        this.pop(e.to, bits, e.hp ? BATTLE_ART.heal : BATTLE_ART.spText);
+        return BATTLE_ART.messageMs * 0.8;
+      }
+      case 'status': {
+        const good = STATUS_TAGS[e.status].good;
+        if (e.on) {
+          playFx(this, good ? 'buff' : 'debuff', this.centre(e.to));
+          this.say(`${name(e.to)} is ${STATUS_NAMES[e.status]}.`);
+          return BATTLE_ART.messageMs * 0.8;
+        }
+        this.say(`${name(e.to)}: ${STATUS_NAMES[e.status]} wears off.`);
+        return BATTLE_ART.messageMs * 0.6;
+      }
+      case 'guard': {
+        this.say(`${name(e.who)} guards.`);
+        const s = this.sprites.get(e.who);
+        if (s) {
+          s.setTint(0x9ab8f0);
+          this.time.delayedCall(300, () => s.clearTint());
+        }
+        return BATTLE_ART.messageMs * 0.7;
+      }
+      case 'swap': {
+        const out = this.sprites.get(e.out);
+        if (out) this.tweens.add({ targets: out, alpha: 0, duration: 250, onComplete: () => out.destroy() });
+        this.sprites.delete(e.out);
+        this.time.delayedCall(260, () => {
+          this.addPartySprite(e.in).setAlpha(0);
+          this.arrange();
+          const img = this.sprites.get(e.in);
+          if (img) this.tweens.add({ targets: img, alpha: 1, duration: 250 });
+          playFx(this, 'buff', this.centre(e.in));
+        });
+        this.say(e.forced ? `${name(e.in)} steps in for ${name(e.out)}!` : `${name(e.out)} falls back. ${name(e.in)} steps in!`);
         return BATTLE_ART.messageMs;
       }
-      case 'guard':
-        this.say(`${name(e.who)} guards.`);
-        return BATTLE_ART.messageMs * 0.7;
       case 'spark':
         return 0;
-      case 'surge':
+      case 'surge': {
+        const g = this.battle.party.find((p) => p.anissaBond);
+        if (this.anissa) playFx(this, 'surge', { x: this.anissa.x, y: this.anissa.y - this.anissa.displayHeight / 2 });
+        if (g) this.time.delayedCall(200, () => playFx(this, 'surge', this.centre(g.key)));
         this.cameras.main.flash(250, 255, 242, 160);
-        return 300;
-      case 'down':
+        return 500;
+      }
+      case 'down': {
         this.say(`${name(e.who)} falls!`);
-        this.sprites.get(e.who)?.setAlpha(0.3);
+        const s = this.sprites.get(e.who);
+        const enemy = this.battle.find(e.who)?.side === 'enemy';
+        if (s) this.tweens.add({ targets: s, alpha: enemy ? 0 : 0.35, duration: 500, delay: 250 });
+        if (s && !enemy) s.setTint(0x6a6a7a);
         return BATTLE_ART.messageMs;
+      }
       case 'won':
         this.win();
         return 0;
@@ -186,6 +328,15 @@ export class BattleScene extends Phaser.Scene {
         this.lose();
         return 0;
     }
+  }
+
+  /** The look of a blow: its element, else the weapon (bow, blade, staff), else a beast's claws. */
+  private fxFor(e: Extract<BattleEvent, { kind: 'damage' }>, from: Combatant | undefined): FxKind {
+    if (e.element) return e.element;
+    if (from?.side === 'enemy') return from.moves[0] && e.move !== from.moves[0].name ? 'impact' : 'claw';
+    if (from?.weapon === 'bow') return 'arrow';
+    if (from?.weapon === 'blade') return 'slash';
+    return 'impact';
   }
 
   private win(): void {
@@ -203,6 +354,7 @@ export class BattleScene extends Phaser.Scene {
       this.queue = [];
       for (const s of this.sprites.values()) s.destroy();
       this.sprites.clear();
+      this.sticky = '';
       this.begin(this.battle);
     });
   }
@@ -215,22 +367,21 @@ export class BattleScene extends Phaser.Scene {
     field.events.emit('battle-done', this.result);
   }
 
-  // ---- Commands -----------------------------------------------------------------------------------
+  // ---- Commands and targets -------------------------------------------------------------------------
 
   private commandRows(): Row[] {
     const b = this.battle;
     const me = b.actor;
     if (!me || me.side !== 'party') return [];
-    const foe = b.enemies.find((e) => !e.down);
-    const ally = b.party.filter((p) => !p.down).sort((x, y) => x.hp / x.maxHp - y.hp / y.maxHp)[0]!;
     if (this.menu === 'skills') {
       return [
         ...me.skills.map((s) => {
           const cost = skillCost(s, me);
           return {
-            label: `${s.name}  ${cost} SP`,
+            label: `${s.name} ${cost}`,
             enabled: me.sp >= cost,
-            run: () => this.act({ kind: 'skill', skill: s.id, target: s.kind === 'heal' ? ally.key : foe!.key }),
+            hint: `${s.text} (${cost} SP)`,
+            run: () => this.aimAt(s.name, s.target, 'skills', (target) => ({ kind: 'skill', skill: s.id, target })),
           };
         }),
         { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
@@ -240,23 +391,79 @@ export class BattleScene extends Phaser.Scene {
       return [
         ...b.items
           .filter((i) => i.count > 0)
-          .map((i) => ({ label: `${i.name} x${i.count}`, enabled: true, run: () => this.act({ kind: 'item', item: i.id, target: ally.key }) })),
+          .map((i) => ({
+            label: `${i.name} x${i.count}`,
+            enabled: true,
+            hint: RPG.items[i.id]?.text,
+            run: () => this.aimAt(i.name, 'ally', 'items', (target) => ({ kind: 'item', item: i.id, target: target ?? me.key })),
+          })),
         { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
       ];
     }
+    if (this.menu === 'swap') {
+      return [
+        ...b.bench.map((c) => ({
+          label: `${c.name} ${c.hp}`,
+          enabled: !c.down,
+          hint: c.down ? `${c.name} is down.` : `${c.name} takes ${me.name}'s place. HP ${c.hp}/${c.maxHp}, SP ${c.sp}/${c.maxSp}.`,
+          run: () => this.act({ kind: 'swap', with: c.key }),
+        })),
+        { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
+      ];
+    }
+    const waiting = b.bench.filter((c) => !c.down);
     const rows: Row[] = [
-      { label: 'Attack', enabled: !!foe, run: () => this.act({ kind: 'attack', target: foe!.key }) },
-      { label: 'Skill', enabled: me.skills.length > 0, run: () => this.openMenu('skills') },
-      { label: 'Guard', enabled: true, run: () => this.act({ kind: 'guard' }) },
-      { label: 'Item', enabled: b.items.some((i) => i.count > 0), run: () => this.openMenu('items') },
+      { label: 'Attack', enabled: b.enemies.some((e) => !e.down), hint: 'Strike one foe with your weapon.', run: () => this.aimAt('Attack', 'enemy', 'commands', (target) => ({ kind: 'attack', target: target! })) },
+      { label: 'Skill', enabled: me.skills.length > 0, hint: me.skills.length ? 'Spells and moves that cost SP.' : `${me.name} has no skills yet.`, run: () => this.openMenu('skills') },
+      { label: 'Guard', enabled: true, hint: 'Take half damage until your next turn.', run: () => this.act({ kind: 'guard' }) },
+      { label: 'Item', enabled: b.items.some((i) => i.count > 0), hint: 'Food and drink from your bag.', run: () => this.openMenu('items') },
+      {
+        label: 'Swap',
+        enabled: waiting.length > 0,
+        hint: waiting.length ? 'Trade places with someone waiting (takes the turn).' : 'Up to four fight at once. No one is waiting to swap in yet.',
+        run: () => this.openMenu('swap'),
+      },
     ];
-    if (b.canSurge()) rows.unshift({ label: 'Surge', enabled: true, run: () => this.act({ kind: 'surge' }) });
+    if (b.canSurge()) rows.unshift({ label: 'Surge', enabled: true, hint: "Anissa's light: your next blow or spell hits half again as hard. Free.", run: () => this.act({ kind: 'surge' }) });
     return rows;
+  }
+
+  /** Pick a target for a command (or confirm a whole side); the user's own skills go at once. */
+  private aimAt(name: string, target: TargetKind, back: Menu, action: Aim['action']): void {
+    if (target === 'self') {
+      this.act(action(undefined));
+      return;
+    }
+    this.aim = { name, side: targetsAllies(target) ? 'ally' : 'enemy', all: !needsTarget(target), back, action };
+    const pool = this.aimPool();
+    // Heals start on the most hurt ally; attacks on the first standing foe.
+    this.aimIndex = this.aim.side === 'ally' ? pool.indexOf([...pool].sort((x, y) => x.hp / x.maxHp - y.hp / y.maxHp)[0]!) : 0;
+    this.menu = 'target';
+    this.cursor = 0;
+    this.redraw();
+  }
+
+  private aimPool(): Combatant[] {
+    if (!this.aim) return [];
+    return (this.aim.side === 'enemy' ? this.battle.enemies : this.battle.fighters).filter((c) => !c.down);
+  }
+
+  private aimed(): Combatant[] {
+    const pool = this.aimPool();
+    if (!this.aim) return [];
+    return this.aim.all ? pool : pool.slice(this.aimIndex, this.aimIndex + 1);
+  }
+
+  private confirmAim(): void {
+    if (!this.aim) return;
+    const t = this.aimed()[0];
+    this.act(this.aim.action(this.aim.all ? undefined : t?.key));
   }
 
   private openMenu(menu: Menu): void {
     this.menu = menu;
     this.cursor = 0;
+    this.aim = null;
     this.redraw();
   }
 
@@ -268,10 +475,22 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (this.busy) return;
+    if (this.menu === 'target' && this.aim) {
+      const n = this.aimPool().length;
+      if (!this.aim.all && n > 0) {
+        if (input.pressed('up') || input.pressed('left')) this.moveAim(-1);
+        if (input.pressed('down') || input.pressed('right')) this.moveAim(1);
+      }
+      if (input.pressed('cancel')) this.openMenu(this.aim.back);
+      else if (input.pressed('confirm')) this.confirmAim();
+      return;
+    }
     const n = this.rows.length;
     if (n === 0) return;
     if (input.pressed('up')) this.moveCursor(-1);
     if (input.pressed('down')) this.moveCursor(1);
+    if (input.pressed('left')) this.moveCursor(-3);
+    if (input.pressed('right')) this.moveCursor(3);
     if (input.pressed('cancel') && this.menu !== 'commands') this.openMenu('commands');
     else if (input.pressed('confirm')) {
       const row = this.rows[this.cursor];
@@ -281,7 +500,13 @@ export class BattleScene extends Phaser.Scene {
 
   private moveCursor(d: number): void {
     const n = this.rows.length;
-    this.cursor = (this.cursor + d + n) % n;
+    this.cursor = (((this.cursor + d) % n) + n) % n;
+    this.redraw();
+  }
+
+  private moveAim(d: number): void {
+    const n = this.aimPool().length;
+    this.aimIndex = (((this.aimIndex + d) % n) + n) % n;
     this.redraw();
   }
 
@@ -294,6 +519,16 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (this.busy) return;
+    if (this.menu === 'target' && this.aim) {
+      // Tap a fighter to choose it (a whole-side skill: tap any of them); tap the strip to go back.
+      const pool = this.aimPool();
+      const hit = pool.findIndex((c) => this.sprites.get(c.key)?.getBounds().contains(x, y));
+      if (hit >= 0) {
+        this.aimIndex = hit;
+        this.confirmAim();
+      } else if (y >= BATTLE_ART.stripY) this.openMenu(this.aim.back);
+      return;
+    }
     const i = this.rows.findIndex((_, r) => this.rowHit(r, x, y));
     if (i < 0) return;
     this.cursor = i;
@@ -302,141 +537,300 @@ export class BattleScene extends Phaser.Scene {
     else this.redraw();
   }
 
+  /** The command grid: two columns of three in the strip's right half (a page of six at a time). */
   private rowRect(i: number): { x: number; y: number; w: number; h: number } {
-    const col = Math.floor(i / 3);
-    return { x: 186 + col * 66, y: PANEL_Y + 6 + (i % 3) * 16, w: 64, h: 15 };
+    const slot = i % VISIBLE_ROWS;
+    const col = Math.floor(slot / 3);
+    return { x: 184 + col * 68, y: BATTLE_ART.stripY + 2 + (slot % 3) * 14.5, w: 66, h: 14 };
   }
 
   private rowHit(i: number, x: number, y: number): boolean {
+    if (Math.floor(i / VISIBLE_ROWS) !== Math.floor(this.cursor / VISIBLE_ROWS)) return false;
     const r = this.rowRect(i);
     return x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h;
   }
 
   // ---- Drawing ------------------------------------------------------------------------------------
 
-  private drawBackdrop(): void {
-    const g = this.add.graphics();
-    g.fillStyle(BATTLE_ART.panel, 1).fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
-    g.fillStyle(BATTLE_ART.sky, 1).fillRect(0, 0, VIEW_WIDTH, 70);
-    g.fillStyle(BATTLE_ART.ground, 1).fillRect(0, 70, VIEW_WIDTH, PANEL_Y - 70);
-    g.fillStyle(BATTLE_ART.groundDark, 1).fillRect(0, 70, VIEW_WIDTH, 4);
-    // Cane along the back of the road.
-    for (let x = 2; x < VIEW_WIDTH; x += 5) {
-      const h = 26 + ((x * 7) % 13);
-      g.fillStyle(BATTLE_ART.cane, 1).fillRect(x, 70 - h, 2, h);
-      g.fillStyle(BATTLE_ART.groundDark, 1).fillRect(x, 70 - h + 8, 2, 1);
+  /** The painted scene: sky, clouds, far hills, trees, the cane, and the road the fight stands on. */
+  private drawBackdrop(id: string): void {
+    const p = BATTLE_BACKDROPS[id] ?? BATTLE_BACKDROPS.cane_road!;
+    const g = this.add.graphics().setDepth(0);
+    const W = VIEW_WIDTH;
+    const horizon = BATTLE_ART.horizon;
+    // Sky in bands, with a dithered seam between each.
+    const band = Math.ceil(horizon / p.sky.length);
+    p.sky.forEach((c, i) => {
+      g.fillStyle(c, 1).fillRect(0, i * band, W, band);
+      const next = p.sky[i + 1];
+      if (next !== undefined) for (let x = (i % 2) * 2; x < W; x += 4) g.fillStyle(next, 1).fillRect(x, (i + 1) * band - 1, 2, 1);
+    });
+    // Clouds: clusters of rounded blocks, shaded underneath.
+    const cloud = (cx: number, cy: number, w: number) => {
+      for (let i = 0; i < 5; i++) {
+        const bx = cx + (i - 2) * (w / 5);
+        const r = w / 6 + ((i * 7) % 3) * 2 - (i === 0 || i === 4 ? 3 : 0);
+        g.fillStyle(p.cloud, 1).fillCircle(Math.round(bx), cy - Math.round(r / 2), Math.round(r));
+      }
+      g.fillStyle(p.cloudShade, 1).fillRect(Math.round(cx - w / 2), cy, Math.round(w), 3);
+    };
+    cloud(48, 24, 40);
+    cloud(160, 20, 28);
+    cloud(266, 27, 46);
+    // Far and near hills, stepped like pixel art.
+    const ridge = (base: number, amp: number, freq: number, phase: number, color: number) => {
+      for (let x = 0; x < W; x += 2) {
+        const h = Math.round(amp * (0.55 + 0.45 * Math.sin(x * freq + phase)) + amp * 0.35 * Math.sin(x * freq * 2.7 + phase * 2));
+        g.fillStyle(color, 1).fillRect(x, base - h, 2, h + 6);
+      }
+    };
+    ridge(horizon - 2, 14, 0.021, 1.3, p.mountainFar);
+    ridge(horizon + 2, 8, 0.034, 4.1, p.mountainNear);
+    // The tree line.
+    for (let x = 0; x < W; x += 3) {
+      const h = 4 + ((x * 13) % 5);
+      g.fillStyle(p.treesDark, 1).fillRect(x, horizon + 4 - h, 3, h + 2);
+      g.fillStyle(p.trees, 1).fillRect(x, horizon + 4 - h, 2, Math.max(2, h - 2));
+    }
+    // The cane field.
+    g.fillStyle(p.field, 1).fillRect(0, horizon + 4, W, 14);
+    for (let x = 1; x < W; x += 3) {
+      const h = 9 + ((x * 7) % 6);
+      const top = horizon + 18 - h;
+      g.fillStyle(p.caneDark, 1).fillRect(x, top, 1, h);
+      g.fillStyle(p.cane, 1).fillRect(x, top, 1, Math.round(h * 0.6));
+      g.fillStyle(p.cane, 1).fillRect(x + ((x >> 1) % 2 ? 1 : -1), top + 2 + (x % 5), 1, 2);
+    }
+    // The road: packed earth in rows of cobbles, wider toward the viewer.
+    const roadTop = horizon + 16;
+    const bottom = BATTLE_ART.stripY;
+    g.fillStyle(p.ground, 1).fillRect(0, roadTop, W, bottom - roadTop);
+    g.fillStyle(p.groundDark, 1).fillRect(0, roadTop, W, 2);
+    let rowH = 3;
+    for (let y = roadTop + 3, r = 0; y < bottom; y += rowH, r++) {
+      g.fillStyle(p.groundDark, 0.55).fillRect(0, y + rowH - 1, W, 1);
+      const brick = 10 + rowH * 2;
+      for (let x = (r % 2) * (brick / 2); x < W; x += brick) {
+        g.fillStyle(p.groundDark, 0.55).fillRect(Math.round(x), y, 1, rowH - 1);
+        g.fillStyle(p.groundLight, 0.5).fillRect(Math.round(x) + 1, y, Math.min(brick - 2, 6), 1);
+      }
+      rowH = Math.min(9, rowH + 1);
     }
   }
 
   private placeFighters(): void {
     const b = this.battle;
-    b.enemies.forEach((e, i) => {
-      const img = this.add.image(70 + i * 40, 100, textureKeyForEnemy(e.look)).setOrigin(0.5, 1).setScale(2).setDepth(10);
+    b.enemies.forEach((e) => {
+      const slot = BATTLE_ART.enemySlots[e.slot % BATTLE_ART.enemySlots.length]!;
+      const img = this.add.image(slot.x, slot.y, textureKeyForEnemy(e.look)).setOrigin(0.5, 1).setScale(BATTLE_ART.enemyScale).setDepth(slot.y);
       this.sprites.set(e.key, img);
     });
-    b.party.forEach((p, i) => {
-      const img = this.add.image(236 - i * 26, 104, textureKeyForCharacter(p.look), characterFrame('left', 0)).setOrigin(0.5, 1).setScale(2).setDepth(10);
-      this.sprites.set(p.key, img);
-    });
-    // Anissa, behind her sister.
+    for (const p of b.fighters) this.addPartySprite(p.key);
+    this.arrange();
+    // Anissa, behind everyone.
     this.anissa?.destroy();
     this.anissaLight?.destroy();
-    this.anissaLight = this.add.circle(284, 82, 16, ANISSA_GLOW.tint, 0.2).setDepth(8);
+    if (!b.party.some((p) => p.anissaBond)) return;
+    const { x, y } = BATTLE_ART.anissa;
+    this.anissaLight = this.add.circle(x, y - 12, 13, ANISSA_GLOW.tint, 0.2).setDepth(y - 1);
     this.tweens.add({ targets: this.anissaLight, scale: 1.15, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
-    this.anissa = this.add.image(284, 100, textureKeyForCharacter(ANISSA_GLOW.look), characterFrame('left', 0)).setOrigin(0.5, 1).setScale(1.5).setDepth(9);
+    this.anissa = this.add.image(x, y, textureKeyForCharacter(ANISSA_GLOW.look), characterFrame('right', 0)).setOrigin(0.5, 1).setScale(BATTLE_ART.partyScale).setDepth(y);
+  }
+
+  private addPartySprite(key: string): Phaser.GameObjects.Image {
+    const c = this.battle.find(key)!;
+    const img = this.add.image(0, 0, textureKeyForCharacter(c.look), characterFrame('right', 0)).setOrigin(0.5, 1).setScale(BATTLE_ART.partyScale);
+    this.sprites.set(key, img);
+    return img;
+  }
+
+  /** Put the fighters in their rows: blades in front, mages and archers behind; a full row spills over. */
+  private arrange(): void {
+    const fighters = this.battle.fighters;
+    const front = [...BATTLE_ART.partyFront];
+    const back = [...BATTLE_ART.partyBack];
+    const place = (c: Combatant, spot: { x: number; y: number } | undefined) => {
+      const img = this.sprites.get(c.key);
+      if (img && spot) img.setPosition(spot.x, spot.y).setDepth(spot.y);
+    };
+    const order = [...fighters.filter((c) => c.row === 'front'), ...fighters.filter((c) => c.row === 'back')];
+    for (const c of order) {
+      const own = c.row === 'front' ? front : back;
+      const other = c.row === 'front' ? back : front;
+      place(c, own.shift() ?? other.shift());
+    }
+  }
+
+  /** The middle of a fighter's sprite (where effects play). */
+  private centre(key: string): Point {
+    const s = this.sprites.get(key);
+    return s ? { x: s.x, y: s.y - s.displayHeight / 2 } : { x: VIEW_WIDTH / 2, y: 90 };
   }
 
   private say(text: string): void {
     this.message = text;
-    this.messageText.setText(text).setWordWrapWidth(VIEW_WIDTH - 16, true);
   }
 
   private pop(key: string, text: string, color: string): void {
     const s = this.sprites.get(key);
     if (!s || !text) return;
-    const t = this.add.text(s.x, s.y - s.displayHeight - 4, text, textStyle(color, { fontStyle: 'bold' })).setOrigin(0.5, 1).setDepth(300);
-    this.tweens.add({ targets: t, y: t.y - 14, alpha: 0, duration: BATTLE_ART.popMs, onComplete: () => t.destroy() });
+    const t = this.add.text(s.x, s.y - s.displayHeight - 2, text, textStyle(color, { fontStyle: 'bold', stroke: '#14101a', strokeThickness: 2 })).setOrigin(0.5, 1).setDepth(350);
+    this.tweens.add({ targets: t, y: t.y - 14, alpha: 0, delay: 250, duration: BATTLE_ART.popMs, onComplete: () => t.destroy() });
+  }
+
+  /** The only movement a fighter makes: a quick shiver in place. */
+  private shiver(key: string, px: number): void {
+    const s = this.sprites.get(key);
+    if (!s) return;
+    const x = s.x;
+    this.tweens.add({ targets: s, x: x + px, duration: 35, yoyo: true, repeat: 3, onComplete: () => s.setX(x) });
   }
 
   private flash(key: string): void {
     const s = this.sprites.get(key);
     if (!s) return;
-    this.tweens.add({ targets: s, alpha: 0.35, duration: 70, yoyo: true, repeat: 1 });
+    s.setTintFill(0xffffff);
+    this.time.delayedCall(70, () => {
+      if (this.battle.find(key)?.down) s.setTint(0x6a6a7a);
+      else s.clearTint();
+    });
   }
 
-  /** The panel, bars, turn order and menu. */
+  /** The top bar, the message band, names and bars, Anissa's Spark, the strip and the menu. */
   private redraw(): void {
     this.ui.removeAll(true);
     const b = this.battle;
     const g = this.add.graphics();
     this.ui.add(g);
-    const text = (x: number, y: number, s: string, color: string = UI.text) => {
-      const t = this.add.text(x, y, s, textStyle(color));
+    const text = (x: number, y: number, s: string, color: string = UI.text, extra: Phaser.Types.GameObjects.Text.TextStyle = {}) => {
+      const t = this.add.text(x, y, s, textStyle(color, extra));
       this.ui.add(t);
       return t;
     };
     const bar = (x: number, y: number, w: number, value: number, max: number, color: number) => {
-      g.fillStyle(0x000000, 0.6).fillRect(x, y, w, 3);
+      g.fillStyle(0x000000, 0.65).fillRect(x, y, w, 3);
       g.fillStyle(color, 1).fillRect(x, y, Math.round((w * value) / Math.max(1, max)), 3);
     };
+    const tags = (x: number, y: number, c: Combatant) => {
+      let tx = x;
+      for (const st of c.statuses) {
+        const info = STATUS_TAGS[st.id];
+        const t = text(tx, y, info.tag, info.good ? '#f2d04b' : '#d8a0f0', { fontSize: '6px' });
+        tx += Math.ceil(t.width) + 3;
+      }
+    };
 
-    // Title and turn order.
-    text(6, 3, b.def.title, UI.accentText);
+    // Top bar: the place and the turn order.
+    g.fillStyle(BATTLE_ART.band, 0.55).fillRect(0, 0, VIEW_WIDTH, 12);
+    text(5, 1, b.def.title, UI.accentText);
     if (!this.done) {
-      const order = b.upcoming(6).map((c) => c.name.split(' ').pop()!.slice(0, 6));
-      const t = text(0, 3, `Next: ${order.join(' > ')}`, UI.dimText);
-      t.setX(VIEW_WIDTH - 6 - Math.ceil(t.width));
+      const order = b.upcoming(6).map((c) => c.name.split(' ').pop()!.slice(0, 8));
+      const t = text(0, 1, `Next: ${order.join(' > ')}`, UI.dimText);
+      t.setX(VIEW_WIDTH - 5 - Math.ceil(t.width));
     }
 
-    // Enemies: name and HP over each.
+    this.rows = this.done || this.busy || this.menu === 'target' ? [] : this.commandRows();
+    if (this.rows.length > 0) this.cursor = Math.min(this.cursor, this.rows.length - 1);
+
+    // The message band: what is happening, or (while choosing) Anissa's tip or the highlighted command.
+    const me = b.actor;
+    let band = this.message;
+    if (!this.busy && !this.done) {
+      const row = this.rows[this.cursor];
+      if (this.menu === 'target' && this.aim) {
+        const who = this.aim.all ? (this.aim.side === 'enemy' ? 'every foe' : 'the whole party') : (this.aimed()[0]?.name ?? '');
+        band = `${this.aim.name}: ${who}?  (A to confirm, B to go back)`;
+      } else if (this.menu === 'commands' && this.sticky) band = this.sticky;
+      else if (this.menu !== 'commands' && row?.hint) band = row.hint;
+      else if (me?.side === 'party') band = `${me.name}'s turn.`;
+    }
+    if (band) {
+      const t = text(VIEW_WIDTH / 2, 16, band, UI.text, { align: 'center', wordWrap: { width: VIEW_WIDTH - 24, useAdvancedWrap: true } }).setOrigin(0.5, 0);
+      g.fillStyle(BATTLE_ART.band, BATTLE_ART.bandAlpha).fillRect(6, 14, VIEW_WIDTH - 12, Math.ceil(t.height) + 4);
+      this.ui.bringToTop(t);
+    }
+
+    // Foes: name, level and HP over each, statuses under the bar.
     for (const e of b.enemies) {
       const s = this.sprites.get(e.key);
-      if (!s) continue;
-      const x = s.x - 30;
-      text(x, 34, `${e.name}  Lv ${e.level}`, e.down ? UI.dimText : UI.text);
-      bar(x, 45, 60, e.hp, e.maxHp, e.hp / e.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
+      if (!s || e.down) continue;
+      const top = s.y - s.displayHeight - 14;
+      const label = text(s.x, top, `${e.name}  Lv ${e.level}`, UI.text, { stroke: '#14101a', strokeThickness: 2 }).setOrigin(0.5, 0);
+      const w = Math.max(40, Math.min(70, Math.ceil(label.width)));
+      bar(Math.round(s.x - w / 2), top + 10, w, e.hp, e.maxHp, e.hp / e.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
+      tags(Math.round(s.x - w / 2), top + 14, e);
     }
 
-    // Anissa's light grows as her Spark builds.
-    this.anissaLight?.setFillStyle(ANISSA_GLOW.tint, 0.12 + 0.5 * (b.spark / SPARK_MAX));
+    // Anissa's light grows with her Spark; ten pips over her head, the first five gold when a Surge is ready.
+    if (this.anissa) {
+      this.anissaLight?.setFillStyle(ANISSA_GLOW.tint, 0.12 + 0.5 * (b.spark / SPARK_MAX));
+      const sx = Math.round(this.anissa.x - (SPARK_MAX * 5) / 2);
+      const sy = Math.round(this.anissa.y - this.anissa.displayHeight - 8);
+      g.fillStyle(BATTLE_ART.panel, 0.8).fillRect(sx - 4, sy - 11, SPARK_MAX * 5 + 7, 18);
+      for (let i = 0; i < SPARK_MAX; i++) g.fillStyle(i < b.spark ? BATTLE_ART.sparkBar : 0x3a3440, 1).fillRect(sx + i * 5, sy, 4, 4);
+      const label = b.surgeArmed ? 'Surging' : b.spark >= SURGE_COST ? 'Surge!' : 'Spark';
+      text(this.anissa.x, sy - 11, label, b.spark >= SURGE_COST ? UI.accentText : UI.dimText, { fontSize: '7px' }).setOrigin(0.5, 0);
+    }
 
-    // The panel: the party's bars on the left, commands on the right.
-    g.fillStyle(BATTLE_ART.panel, 0.96).fillRect(2, PANEL_Y, VIEW_WIDTH - 4, VIEW_HEIGHT - PANEL_Y - 2);
-    g.lineStyle(1, BATTLE_ART.panelBorder, 1).strokeRect(2.5, PANEL_Y + 0.5, VIEW_WIDTH - 5, VIEW_HEIGHT - PANEL_Y - 3);
-    b.party.forEach((p, i) => {
-      const y = PANEL_Y + 5 + i * (b.party.length > 1 ? 24 : 26);
-      const on = b.actor === p && !this.busy;
-      text(8, y, p.name, on ? UI.accentText : p.down ? UI.dimText : UI.text);
-      text(60, y, `HP ${p.hp}/${p.maxHp}`, p.hp / p.maxHp < 0.35 ? '#e88a7a' : UI.text);
-      bar(60, y + 10, 56, p.hp, p.maxHp, p.hp / p.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
-      text(122, y, `SP ${p.sp}`, UI.text);
-      bar(122, y + 10, 40, p.sp, p.maxSp, BATTLE_ART.spBar);
+    // The target cursor: a bobbing arrow over each fighter it covers.
+    if (this.menu === 'target' && !this.busy) {
+      for (const c of this.aimed()) {
+        const s = this.sprites.get(c.key);
+        if (!s) continue;
+        const ax = Math.round(s.x);
+        const ay = Math.round(s.y - s.displayHeight - (c.side === 'enemy' ? 22 : 6) - this.cursorBob * 2);
+        g.fillStyle(BATTLE_ART.cursor, 1);
+        g.fillTriangle(ax - 5, ay - 6, ax + 5, ay - 6, ax, ay);
+        g.lineStyle(1, 0x14101a, 1).strokeTriangle(ax - 5, ay - 6, ax + 5, ay - 6, ax, ay);
+      }
+    }
+
+    // The strip: the party's bars on the left, the commands on the right.
+    const Y = BATTLE_ART.stripY;
+    g.fillStyle(BATTLE_ART.panel, 1).fillRect(0, Y, VIEW_WIDTH, VIEW_HEIGHT - Y);
+    g.lineStyle(1, BATTLE_ART.panelBorder, 1).lineBetween(0, Y + 0.5, VIEW_WIDTH, Y + 0.5);
+    g.lineStyle(1, BATTLE_ART.panelBorder, 0.35).lineBetween(178.5, Y + 3, 178.5, VIEW_HEIGHT - 3);
+    const shown = b.fighters;
+    const n = shown.length;
+    const rowH = Math.min(14, Math.floor((VIEW_HEIGHT - Y - 4) / Math.max(1, n)));
+    shown.forEach((p, i) => {
+      const y = Y + 3 + i * rowH;
+      const on = b.actor === p && !this.busy && !this.done;
+      const aimed = this.menu === 'target' && this.aimed().includes(p);
+      if (on || aimed) g.fillStyle(on ? 0x2e2638 : 0x3a3020, 1).fillRect(2, y - 1, 174, rowH);
+      text(6, y, `${on ? '>' : ' '}${p.name}`, on ? UI.accentText : p.down ? UI.dimText : UI.text);
+      const low = p.hp / p.maxHp < 0.35;
+      bar(54, y + 4, 38, p.hp, p.maxHp, low ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
+      text(95, y, `${p.hp}`, low ? '#e88a7a' : UI.text);
+      bar(118, y + 4, 24, p.sp, p.maxSp, BATTLE_ART.spBar);
+      text(145, y, `${p.sp}`, BATTLE_ART.spText);
+      tags(160, y + 1, p);
     });
-    // Anissa's Spark: ten pips over her head, the first five gold when a Surge is ready.
-    const sx = 284 - (SPARK_MAX * 5) / 2;
-    const sy = 44;
-    g.fillStyle(BATTLE_ART.panel, 0.85).fillRect(sx - 6, sy - 13, SPARK_MAX * 5 + 11, 21);
-    for (let i = 0; i < SPARK_MAX; i++) {
-      const on = i < b.spark;
-      g.fillStyle(on ? BATTLE_ART.sparkBar : 0x3a3440, 1).fillRect(sx + i * 5, sy, 4, 4);
-    }
-    const sparkLabel = b.surgeArmed ? 'Surging' : b.spark >= SURGE_COST ? 'Surge ready' : 'Spark';
-    text(284, sy - 12, sparkLabel, b.spark >= SURGE_COST ? UI.accentText : UI.dimText).setOrigin(0.5, 0);
 
-    // Commands (or the victory note).
-    this.rows = this.done || this.busy ? [] : this.commandRows();
     if (this.done) {
-      text(186, PANEL_Y + 22, 'A or tap: continue', UI.dimText);
+      text(248, Y + 17, 'A or tap: continue', UI.dimText).setOrigin(0.5, 0);
       return;
     }
-    if (this.rows.length > 0) this.cursor = Math.min(this.cursor, this.rows.length - 1);
+    if (this.menu === 'target') {
+      text(184, Y + 4, this.aim?.name ?? '', UI.accentText);
+      text(184, Y + 18, this.aim?.all ? 'A: use on all' : 'Arrows: choose', UI.dimText);
+      text(184, Y + 31, 'B: back', UI.dimText);
+      return;
+    }
+    const page = Math.floor(this.cursor / VISIBLE_ROWS);
     this.rows.forEach((row, i) => {
+      if (Math.floor(i / VISIBLE_ROWS) !== page) return;
       const r = this.rowRect(i);
       const on = i === this.cursor;
-      if (on) g.lineStyle(1, 0xf2d04b, 1).strokeRect(r.x - 0.5, r.y - 0.5, r.w, r.h);
+      if (on) {
+        g.fillStyle(0x2e2638, 1).fillRect(r.x, r.y, r.w, r.h - 1);
+        g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 2);
+      }
       const surge = row.label === 'Surge';
-      text(r.x + 4, r.y + 2, row.label, !row.enabled ? UI.dimText : surge ? UI.accentText : on ? UI.accentText : UI.text);
+      text(r.x + 4, r.y + 2, row.label, !row.enabled ? UI.dimText : surge || on ? UI.accentText : UI.text);
     });
+    const pages = Math.ceil(this.rows.length / VISIBLE_ROWS);
+    if (pages > 1) text(VIEW_WIDTH - 4, VIEW_HEIGHT - 9, `${page + 1}/${pages}`, UI.dimText, { fontSize: '6px' }).setOrigin(1, 0);
   }
 
   snapshot(): BattleSnapshot {
@@ -449,6 +843,7 @@ export class BattleScene extends Phaser.Scene {
       menu: this.menu,
       rows: this.rows.map((r) => r.label),
       cursor: this.cursor,
+      targets: this.menu === 'target' ? this.aimed().map((c) => c.key) : [],
       enemyHp: b.enemies.reduce((n, e) => n + e.hp, 0),
       hp: me?.hp ?? 0,
       sp: me?.sp ?? 0,
@@ -458,4 +853,18 @@ export class BattleScene extends Phaser.Scene {
       done: this.done,
     };
   }
+
+  /** Test hook: play one effect over the first foe (for the effects screenshot). */
+  showFx(kind: FxKind, freezeAt?: number): void {
+    const foe = this.battle.enemies[0];
+    const ally = this.battle.party[0];
+    if (!foe || !ally) return;
+    const healing = kind === 'heal' || kind === 'buff' || kind === 'surge';
+    playFx(this, kind, this.centre(healing ? ally.key : foe.key), this.centre(ally.key), freezeAt);
+  }
+}
+
+/** Test hook: play an effect in the battle on screen. */
+export function battleFx(kind: FxKind, freezeAt?: number): void {
+  current?.showFx(kind, freezeAt);
 }

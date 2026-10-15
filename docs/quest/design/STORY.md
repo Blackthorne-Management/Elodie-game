@@ -75,8 +75,10 @@ guide are marked **(proposal)**.
 
 - **Where:** Pòdlimyè, the capital of Zetwal (owner, Oct 14). Sections: the Festival Plaza and harbor, the Limyè
   house, the Hall of the Accord, the Temple Island, the Temple Archive and the Cane Road. See `CAPITALS.md`.
-- **Level range:** 1 to 3. **No fights in Chapter 1** (owner decision): XP comes from story beats, lore books and
-  side quests. The Cane Road is peaceful.
+- **Level range:** 1 to 3. **No fights in Chapter 1** (owner decision), **except one** (owner, Oct 15): the
+  cane-field boar on the Cane Road, the battle tutorial. XP comes from story beats, lore books, side quests and that
+  fight. Chapter 1 is the gentlest the game ever gets: every mechanic (the Echo, shops, gear, side quests, battles)
+  is taught here, before the Crown moves.
 - **Beats:**
   1. The animated intro (proposal, Section 2).
   2. The Festival of Elodie's Gaze. Anissa joins as the follower; Gianna sets out with soup and akasan. **Built.**
@@ -91,8 +93,12 @@ guide are marked **(proposal)**.
   8. Old Patricio at the Gaze lamp: it will not take a flame. Anissa's light wakes and lights every lantern in the
      city. "Are you scared of me?" "Never." **Built.**
   9. A canoe at the island dock: **Yari** brings the warning. Crown ships in Xaraguá's harbor, a Charter of
-     Protection, a clause no one in Xaraguá was shown. "We sail with the morning tide." **Built** (sets `act1.complete`).
-  10. **The Last Evening (proposal).** Free roam with Yari in the party. The city reacts to the lights (built lines).
+     Protection, a clause no one in Xaraguá was shown. Gianna agrees, but asks for time (owner, Oct 15): "Soon, Yari.
+     I have work at the archive, and a few things around the city to finish before I can go." Yari joins the party
+     and waits at the dock, warning them about the boar on the Cane Road. **Built** (sets `story.yari_asked`).
+  10. **Before the tide. Built:** the three city side quests and the boar fight, with Yari in the party. Talking to
+      Yari again asks whether you are ready (she names unfinished errands; leaving is still allowed), and "Let's go"
+      sets `act1.complete`. **The Last Evening (proposal), on top:** free roam with Yari in the party. The city reacts to the lights (built lines).
       Side quests can be finished. A Quiet Crown watcher on the Cane Road notices Anissa (built). Elodie's absence is
       felt: the Hall clerk shows Gianna the blank seventh line on the Marshal's stone and the seven-ribbon note.
   11. **Departure at dawn (proposal).** At the harbor: Anicette packs food and says "Ask them what we promised. Ask
@@ -111,10 +117,35 @@ guide are marked **(proposal)**.
 
 ### Chapter 2: The Charter (Xaraguá)
 
+**Owner decision (Oct 15), the shape of the chapter:** Xaraguá is first shown at its most beautiful: the normal,
+living city for the first half of the chapter. **Midway, the Crown attacks** and the city is **occupied**: the same
+maps change to their occupied versions (Crown soldiers, checkpoints, curfew, burned stalls, Crown banners on the
+customs house). Yari, Anissa and the Yaguana hide until the fighting is over. **Gianna can move freely as a diplomat**
+(Zetwal's envoy, under the Accord's protection), so she scouts, carries messages and gets papers while the others
+hide. She **helps Yari escape**, and they sail **back to Zetwal**; then **Patricio asks her to go to Ardencia**,
+Zetwal's greatest ally and neighbour, to ask for help for the Taíno. **The attack unsettles every other city for the
+rest of the game:** from Chapter 3 on, each capital shows unrest (patrols, refugees, prices, rumours of war).
+
+The beats below are from before this decision. They are kept where they fit, and re-cut as follows (proposal, for the
+owner to confirm):
+- **First half (the living city):** beats 2 to 5 (Anaco and the elders, the lamp-oil seller, the petroglyph cave and
+  the Echo of the first oath). Beat 1's harassment on the pier stays as a small fight; the battle tutorial itself
+  moved to Chapter 1's boar.
+- **The attack (the midpoint):** a night landing; the harbor guns; the council hall taken. The party hides in the
+  petroglyph caves with the resistance.
+- **Second half (the occupied city):** Gianna walks the occupied streets on her envoy's papers (talk past
+  checkpoints, find who is held where, carry word to the caves), while Yari cannot be seen. Beat 6's debate and beat 8's
+  suspended Charter no longer fit an occupation and are dropped (proposal); the elders' choice comes back in
+  Chapter 11, the War of the Harbor.
+- **The escape (the boss):** Gianna gets Yari out past **Governor Thorne**'s harbor blockade (beat 7's boss, now at the
+  docks), and they sail for Pòdlimyè.
+- **Back in Zetwal:** the news lands; the city is uneasy for the first time. Old Patricio asks Gianna to go to
+  Ardencia and ask its lord for help. This replaces beat 9's lead to Al-Doria (see Section 6, question 12).
+
 - **Where:** Yucayeque (proposal name), the capital of Xaraguá, House Yaguana. Green mountains, a harbor full of Crown
   ships, the areíto plaza, the petroglyph caves.
-- **Level range:** 3 to 8. First battles in the game.
-- **Beats:**
+- **Level range:** 3 to 8. The first battles after the Chapter 1 boar.
+- **Beats (before the Oct 15 decision; re-cut above):**
   1. Arrival by sea. Crown marines harass fishers on the pier: **the first battle** and the battle tutorial
      (proposal): Attack, Guard, then **Shield Anissa** first (guide 6.4: the first thing taught about Anissa), then
      Surge, then the Yield step on the marine sergeant.
@@ -416,3 +447,11 @@ real people (guide 7.3).
     (Aldermoor) are proposed as the ruler or elder each companion defies, matching guide 5.3a ("Gen III is their
     parent, often the ruler or elder they defy"). Owner to confirm each.
 11. **Section 14 of the guide** said 240 x 160; fixed to 320 x 180 (Oct 14).
+12. **Chapter order after Xaraguá (from the Oct 15 decision).** Gianna now goes Xaraguá, back to Zetwal, then to
+   Ardencia, so Chapter 3 (Al-Doria) no longer sits between them. Proposal: Ardencia becomes Chapter 3 and Al-Doria
+   moves after it (the Dorini ledger then becomes a lead the party follows from Ardencia). This would also settle question 8:
+   the slice (Zetwal, Xaraguá, Ardencia) is now simply the first three chapters.
+13. **Does old Patricio know who he is sending her to?** The Lord of Ardencia is Rael, Gianna's father (Elodie's
+    secret husband). Does Patricio know about the marriage when he sends her to Ardencia?
+14. **Who is caught in the occupation?** Proposal: Cacique Anaco is held under guard in his own house; the elders are
+    split; the resistance hides in the petroglyph caves.

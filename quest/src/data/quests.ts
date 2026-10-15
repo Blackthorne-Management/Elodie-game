@@ -112,11 +112,22 @@ export const ACT1: QuestDef = {
       id: 'dock',
       title: 'A canoe at the dock',
       detail: 'Someone has come across the water to the island dock, south of the temple.',
-      done: { flag: 'act1.complete' },
+      done: { flag: 'story.yari_asked' },
       hints: [
         'Someone came across the water. I saw a canoe.',
         'The dock is at the south end of the island.',
         'Go south from the temple to the dock and talk to whoever came.',
+      ],
+    },
+    {
+      id: 'depart',
+      title: 'Before the tide',
+      detail: 'Yari waits at the dock. Finish your work in Pòdlimyè (your Quests page lists it), then tell her you are ready to sail.',
+      done: { flag: 'act1.complete' },
+      hints: [
+        'Yari is waiting at the dock. Are we going soon, Gigi?',
+        'Finish your errands in the city first if you like. Then talk to Yari at the dock.',
+        'Go to the dock south of the temple and tell Yari you are ready.',
       ],
     },
   ],
