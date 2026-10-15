@@ -55,9 +55,19 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
               <rect x={h.home.x * C + 0.4} y={h.home.y * C + 0.4} width={C - 0.8} height={C - 0.8} rx={1}
                 fill={TILE_ART[h.tileType].color} fillOpacity={art ? 0.45 : 1} stroke={owner ? HOUSE_ART[h.id].color : '#888'} strokeWidth={owner ? 1.2 : 0.4}
                 strokeDasharray={owner ? undefined : '1.5 1'} />
-              <text x={h.home.x * C + C / 2} y={h.home.y * C + C / 2 + 2} textAnchor="middle" fontSize={5} fontWeight={700} fill="#fff" opacity={0.85}>
-                {TILE_ART[h.tileType].glyph}
-              </text>
+              {HOUSE_ART[h.id].crest ? (
+                <>
+                  {/* The house's crest on its seat; the tile type (Court, War, Trade) in the corner. */}
+                  <image href={HOUSE_ART[h.id].crest} x={h.home.x * C + 1} y={h.home.y * C + 1} width={C - 2} height={C - 2}
+                    preserveAspectRatio="xMidYMid meet" opacity={owner ? 1 : 0.7} />
+                  <text x={h.home.x * C + C - 1.6} y={h.home.y * C + C - 1.1} textAnchor="middle" fontSize={2.6} fontWeight={800} fill="#fff"
+                    stroke="#000" strokeWidth={0.4} paintOrder="stroke">{TILE_ART[h.tileType].glyph}</text>
+                </>
+              ) : (
+                <text x={h.home.x * C + C / 2} y={h.home.y * C + C / 2 + 2} textAnchor="middle" fontSize={5} fontWeight={700} fill="#fff" opacity={0.85}>
+                  {TILE_ART[h.tileType].glyph}
+                </text>
+              )}
             </g>
           );
         })}
@@ -84,7 +94,16 @@ function BoardView({ game, highlights, onPick, focus, zoom }: Props) {
               <g key={id} className="pawn" pointerEvents="none" style={{ transform: `translate(${cx}px, ${cy}px)` }}>
                 {focus === id && <circle r={r + 1.2} fill="none" stroke="#fff" strokeWidth={0.6} />}
                 <circle r={r} fill={art.color} stroke="#111" strokeWidth={0.4} />
-                <text y={r * 0.4} textAnchor="middle" fontSize={r * 1.15} fontWeight={800} fill="#fff">{art.initial}</text>
+                {art.crest ? (
+                  <>
+                    {/* The house's crest inside its pawn. */}
+                    <clipPath id={`pawn-clip-${id}`}><circle r={r - 0.5} /></clipPath>
+                    <image href={art.crest} x={-(r - 0.5)} y={-(r - 0.5)} width={(r - 0.5) * 2} height={(r - 0.5) * 2}
+                      preserveAspectRatio="xMidYMid slice" clipPath={`url(#pawn-clip-${id})`} />
+                  </>
+                ) : (
+                  <text y={r * 0.4} textAnchor="middle" fontSize={r * 1.15} fontWeight={800} fill="#fff">{art.initial}</text>
+                )}
               </g>
             );
           });
