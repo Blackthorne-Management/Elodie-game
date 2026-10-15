@@ -234,7 +234,12 @@ Then, for Anissa (support, not a fighter): one cell, standing slightly behind so
 soft golden glow around her hands, facing right; and a second cell, the same pose with the glow bright and her eyes
 shut (her Surge).
 
-**Optional, only if you want the weapons painted rather than pixel-drawn:** one picture per weapon, alone, on magenta,
+**Done (Oct 15):** Gianna's and Yari's stances and the boar are in the game (`quest/art/battle/`, `quest/art/enemies/boar.png`).
+**Next (owner, Oct 15): each stance painted holding each weapon** (Gianna: the five staffs; Yari: the three bows),
+made in one chat from the approved stance, one weapon at a time. Saved as `quest/art/battle/<look>-<item id>.png`; the
+game uses that picture whenever it exists and falls back to the empty-handed stance plus the drawn weapon.
+
+**Older option, only if you want the weapons painted on their own:** one picture per weapon, alone, on magenta,
 pointing up (staffs, bows) or up and forward (blades), named by item id (`quest/art/weapons/<item id>.png`).
 
 ---

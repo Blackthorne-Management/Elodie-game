@@ -479,6 +479,17 @@ export function textureKeyForWeapon(id: string): string {
  */
 export const BATTLE_STANCE = { looks: ['gianna', 'yari', 'patricio_young', 'anissa'], scale: 0.5 } as const;
 
+/**
+ * A stance painted holding a particular weapon (battle/<look>-<item id>.png, owner, Oct 15) is used instead of
+ * the empty-handed stance plus the drawn weapon, whenever it exists.
+ */
+export function battleStanceName(look: string, weaponItem?: string): string {
+  return weaponItem ? `${look}-${weaponItem}` : look;
+}
+
+/** A painted enemy file is drawn at twice the game's pixel density, like the stances. */
+export const ENEMY_FILE_SCALE = 0.5;
+
 export function textureKeyForBattle(look: string): string {
   return `battle-${look}`;
 }
@@ -492,7 +503,7 @@ export const BATTLE_HANDS: {
 } = {
   default: { dx: 4, dy: -9 },
   byWeapon: { staff: { dx: 8, dy: -9 }, bow: { dx: 10, dy: -12 }, blade: { dx: 4, dy: -9 } },
-  byLook: { gianna: { dx: -7, dy: -15 } },
+  byLook: { gianna: { dx: -7, dy: -15 }, yari: { dx: 10, dy: -24 } },
 };
 
 /** Enemy drawings (ENEMY_ART, or a file in art/enemies/), one texture each. */
@@ -529,8 +540,8 @@ export const BATTLE_ART = {
     { x: 116, y: 126 },
   ],
   partyBack: [
-    { x: 84, y: 96 },
-    { x: 74, y: 120 },
+    { x: 92, y: 94 },
+    { x: 60, y: 124 },
   ],
   enemySlots: [
     { x: 212, y: 108 },
@@ -539,7 +550,7 @@ export const BATTLE_ART = {
     { x: 278, y: 122 },
   ],
   /** Anissa stands behind everyone (she is never a target). */
-  anissa: { x: 38, y: 112 },
+  anissa: { x: 24, y: 108 },
   /** The horizon of the painted scene (above eye level: the view is from a little above). */
   horizon: 44,
   partyScale: 1,

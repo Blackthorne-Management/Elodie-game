@@ -17,6 +17,9 @@ import {
   BATTLE_STANCE,
   WEAPON_ART,
   textureKeyForBattle,
+  battleStanceName,
+  ENEMY_FILE_SCALE,
+  ART_FILES,
   UI,
   characterFrame,
   textureKeyForCharacter,
@@ -46,6 +49,7 @@ import {
 import { getRuntime } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
 import { playFx, type FxKind, type Point } from './battleFx.ts';
+import { fileKey } from './textures.ts';
 
 type Menu = 'commands' | 'moves' | 'skills' | 'items' | 'swap' | 'target';
 
@@ -692,7 +696,12 @@ export class BattleScene extends Phaser.Scene {
     const b = this.battle;
     b.enemies.forEach((e) => {
       const slot = BATTLE_ART.enemySlots[e.slot % BATTLE_ART.enemySlots.length]!;
-      const img = this.add.image(slot.x, slot.y, textureKeyForEnemy(e.look)).setOrigin(0.5, 1).setScale(BATTLE_ART.enemyScale).setDepth(slot.y);
+      const painted = this.textures.exists(fileKey(ART_FILES.enemy(e.look)));
+      const img = this.add
+        .image(slot.x, slot.y, textureKeyForEnemy(e.look))
+        .setOrigin(0.5, 1)
+        .setScale(painted ? ENEMY_FILE_SCALE : BATTLE_ART.enemyScale)
+        .setDepth(slot.y);
       this.sprites.set(e.key, img);
     });
     for (const p of b.fighters) this.addPartySprite(p.key);
@@ -709,11 +718,14 @@ export class BattleScene extends Phaser.Scene {
 
   private addPartySprite(key: string): Phaser.GameObjects.Image {
     const c = this.battle.find(key)!;
-    const img = this.fighterImage(c.look);
+    // A stance painted with this very weapon wins; else the empty-handed stance (or walk sprite) plus the drawn weapon.
+    const armed = c.weaponItem ? textureKeyForBattle(battleStanceName(c.look, c.weaponItem)) : '';
+    const holding = !!armed && this.textures.exists(armed);
+    const img = holding ? this.add.image(0, 0, armed, '0').setOrigin(0.5, 1).setScale(BATTLE_STANCE.scale) : this.fighterImage(c.look);
     this.sprites.set(key, img);
     // The equipped weapon, held at its grip in the front hand.
     const art = c.weaponItem ? WEAPON_ART[c.weaponItem] : undefined;
-    if (c.weaponItem && art && this.textures.exists(textureKeyForWeapon(c.weaponItem))) {
+    if (!holding && c.weaponItem && art && this.textures.exists(textureKeyForWeapon(c.weaponItem))) {
       const w = this.add.image(0, 0, textureKeyForWeapon(c.weaponItem));
       w.setOrigin(art.grip.x / w.width, art.grip.y / w.height).setScale(BATTLE_ART.partyScale);
       this.weapons.get(key)?.img.destroy();

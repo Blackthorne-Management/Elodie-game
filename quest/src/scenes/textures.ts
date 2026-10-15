@@ -25,6 +25,7 @@ import {
   textureKeyForWeapon,
   textureKeyForBattle,
   BATTLE_STANCE,
+  battleStanceName,
   textureKeyForItem,
   textureKeyForObject,
   textureKeyForPortrait,
@@ -92,7 +93,7 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
     ...Object.keys(ITEM_ART).map(ART_FILES.item),
     ...Object.keys(ENEMY_ART).map(ART_FILES.enemy),
     ...Object.keys(WEAPON_ART).map(ART_FILES.weapon),
-    ...BATTLE_STANCE.looks.map(ART_FILES.battle),
+    ...BATTLE_STANCE.looks.flatMap((look) => [look, ...Object.keys(WEAPON_ART).map((w) => battleStanceName(look, w))]).map(ART_FILES.battle),
   ];
   for (const path of paths) {
     const url = artFile(path);
@@ -235,7 +236,8 @@ function makeWeaponArt(scene: Phaser.Scene): void {
 
 /** Battle stances from art files only (no placeholder: without one, the walking sprite stands in). Frames 0 and 1. */
 function makeBattleStances(scene: Phaser.Scene): void {
-  for (const look of BATTLE_STANCE.looks) {
+  const names = BATTLE_STANCE.looks.flatMap((look) => [look, ...Object.keys(WEAPON_ART).map((w) => battleStanceName(look, w))]);
+  for (const look of names) {
     const file = fileImage(scene, ART_FILES.battle(look));
     if (!file) continue;
     const w = Math.floor(file.width / 2);
