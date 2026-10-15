@@ -67,11 +67,11 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | Ar-3 | The Elders' Feast | Cenizal | Ch. 4 | 12 to 14 | yes | no |
 | Ar-4 | The Old Lord's Errand (secret) | Cenizal | after Ch. 4 | 14 to 16 | if seen | yes |
 | Ar-5 | The Arrows Missed | Free Brasador camp | end of Ch. 4 | 14 to 16 | no | no |
-| Se-1 | Volume One | Elodie's Seat | Ch. 5 | 14 to 15 | no | no |
-| Se-2 | Four Voices | Elodie's Seat | Ch. 5 | 14 to 15 | no | no |
-| Se-3 | Deserters' Road | Elodie's Seat | Ch. 5 | 14 to 16 | yes | no |
-| Se-4 | The Unknotted Ribbon (secret) | Elodie's Seat | Ch. 5 (ends Ch. 12) | 14 to 30 | no | yes |
-| Se-5 | A Seat for Every House | Elodie's Seat | Ch. 5 (ends Ch. 12) | 14 to 30 | no | no |
+| Se-1 | Volume One | Eightgate | Ch. 5 | 14 to 15 | no | no |
+| Se-2 | Four Voices | Eightgate | Ch. 5 | 14 to 15 | no | no |
+| Se-3 | Deserters' Road | Eightgate | Ch. 5 | 14 to 16 | yes | no |
+| Se-4 | The Unknotted Ribbon (secret) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | yes |
+| Se-5 | A Seat for Every House | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | no |
 | S-1 | Salkhi Has Opinions | Ordvik | Ch. 6 | road tier | no | no |
 | S-2 | The Fleet for Sale | Ordvik | Ch. 6 | road tier | no | no |
 | S-3 | The Winter Stores (safehouse) | Ordvik | Ch. 6 | road tier | yes | yes |
@@ -294,7 +294,7 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
   best archers in Ardencia" (guide clue 5). 3) Azzy refuses to hear it ("Then they missed").
 - **Reward:** 150 XP, +2 Fear (Free Brasador: the guide's price is Fear 6). Journal clue.
 
-## Elodie's Seat
+## Eightgate
 
 ### Se-1 Volume One
 - **Giver:** Elodie, after the confrontation (Chapter 5). **Accept:** ask about the missing book.

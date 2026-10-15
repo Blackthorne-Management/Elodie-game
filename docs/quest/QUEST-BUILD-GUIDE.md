@@ -48,7 +48,7 @@
 | What the swap does | You step into the **same place** in your grandfather's time. Changes carry back to the present only through **Anchors** (things the ancestor deliberately left: caches, levers, planted seeds, carved marks, signed papers). | A clean rule players learn in minutes, with no paradox arguments. |
 | Why Anissa cannot swap | Her magic is too bright for the Echo. She stays at the Echo Site and **holds the door open**, which is the in-story reason the Echo lasts. | Keeps the Echo party small and makes her feel essential, not like a battery. |
 | Who the antagonist is | **The Aldermoor Crown** (English-inspired, House Stillwater's homeland), led by the **Lord Regent**, working with **Rael the Ruthless**, Lord of Ardencia. Ordinary Stillwater people are not villains; one becomes a party member. | Stillwater is the board game's patient, defensive house. Making the whole house evil would contradict its lore. |
-| Where she rules | Gianna claims the **Throne at Elodie's Seat** (the realm's center, as in the board game). Xaraguá is freed and **governed by its own cacica (Yari)**. Gianna does not rule Xaraguá. | Keeps a just-ruler ending without making her the new colonizer of her best friend's land. |
+| Where she rules | Gianna claims the **Throne at Eightgate** (the realm's center, as in the board game). Xaraguá is freed and **governed by its own cacica (Yari)**. Gianna does not rule Xaraguá. | Keeps a just-ruler ending without making her the new colonizer of her best friend's land. |
 | Engine | **Phaser 3 + TypeScript + Vite + Tiled**, lazy-loaded at a `/quest` route inside the existing repo. | Same language, tooling, PWA and deploy pipeline as the board game app. Claude Code can build and test it in a headless browser. |
 | Platform | **Phone and tablet first (installed PWA), controller supported, optional cast to TV.** Not Switch 2. See Section 3. | No supported sideload route for a private gift. |
 | Slice | **Zetwal + Xaraguá + the Ardencia reveal**, about 2 hours. A smaller **Slice A** (Zetwal + Xaraguá, about 75 minutes) is the fallback. | The Ardencia reveal is the best beat in the story and makes a complete mini-arc. |
@@ -206,7 +206,7 @@ Each place provides one **capital hub**, one **ruler**, one **signature puzzle**
 | **Xaraguá** (Yaguana) | Cacique, ailing; the Governor holds real power. Wants **Influence**: to be heard as an equal at the Throne. | Crown ships in the harbor; the Charter. | Caona, Patricio and Benny swear the first oath at the areito. | **Yari**, who defies elders ready to accept the Charter. |
 | **Al-Doria** (Dorini) | Merchant-prince. Wants **Influence** (unlikely: the richest house wants a council seat, not gold). | Guild vault hides the signed Accord copy. | The Dorini ledger shows what they were promised for signing. | **Samira Dorini** (approved): appraises everything, including feelings, and invoices them. Alchemist. Defies her guild for profiteering on the war. |
 | **Ardencia** (Brasador) | **Rael the Ruthless.** Appears to be the enemy; the Crown believes it bought him. | The duel, the reveal, the escape. | Benny's smuggler tunnel and the Brasador march. | **Azzy**, who defies his own father. |
-| **Elodie's Seat** (the Throne city, center of the realm) | The Throne is held for now by the Regent. Elodie is Zetwal's envoy. | Parley under a flag of truce; the Throne Archive holds the Accord. | The sealing of the signed Accord in the Throne Archive (owner decision, Oct 14: the Accord was signed in Pòdlimyè's plaza). | none |
+| **Eightgate** (the Throne city, center of the realm) | The Throne is held for now by the Regent. Elodie is Zetwal's envoy. | Parley under a flag of truce; the Throne Archive holds the Accord. | The sealing of the signed Accord in the Throne Archive (owner decision, Oct 14: the Accord was signed in Pòdlimyè's plaza). | none |
 | **Skarragol** (Ironvow) | Clan council. Wants **Wealth**: plunder rights and compensation for blockade losses. | Great horse-fair; stolen sacred standard. | The Ironvow raid that broke the Crown's supply line. | **Bayarmaa** (approved): raider more devoted to her horse, who has more dialogue than she does. Cavalry. Defies a council ready to sell the fleet. |
 | **Kuroshi** (Suzumori) | Spymaster council. Wants **Influence**: recognition and legal protection for their informants. | Fog city of informants; the files that expose the buyer. | The Suzumori network that fed Patricio the Crown's troop movements. | **Haru Suzumori** (approved): introduces himself as "definitely not a spy." Shadow agent. Defies the order to stay neutral. |
 | **Jwaladesh** (Agnivansh) | Fire-temple court. Wants **Wealth** (unlikely: zealots whose treasury is empty and whose sacred flame is running out of oil). | The sacred flame is dying; a relay of lamps. | The Agnivansh charge at the Crown's harbor chain. | **Vikram** (approved): must win every argument by duel, always out of breath. Fire duelist. Defies priests who want to hide the flame. |
@@ -225,11 +225,11 @@ Each place provides one **capital hub**, one **ruler**, one **signature puzzle**
 |---|---|---|
 | **I: The Mark** | **Zetwal (35):** festival of Elodie's Gaze, Elodie departs for the Throne, Gianna finds the Locket, first Echo as Patricio, Yari arrives with the warning, Anissa's power wakes, Quiet Crown recruiters. **Xaraguá (40):** Governor Thorne, first Caona Echo, the Charter, first boss. | 75 |
 | **II: The Alliance Road** | **Al-Doria (30):** guild vault, the Dorini ledger, Samira. **Ardencia (45):** the duel with Rael the Ruthless, the reveal, the escape through Benny's tunnel, Azzy joins. | 75 |
-| **Midpoint: The Parley** | **Elodie's Seat (20):** Elodie in her role as envoy, the Regent under a flag of truce, the Throne Archive, the Seventh Clause read aloud. Gianna confronts Elodie about Rael; Elodie explains why she hid it. | 20 |
+| **Midpoint: The Parley** | **Eightgate (20):** Elodie in her role as envoy, the Regent under a flag of truce, the Throne Archive, the Seventh Clause read aloud. Gianna confronts Elodie about Rael; Elodie explains why she hid it. | 20 |
 | **III: The Debt Revealed** | **Skarragol, Kuroshi, Jwaladesh** (30 each, any order), then **Aldermoor (35)**. Kuroshi's files reveal the Crown has bought one ally. | 125 |
 | **IV: The Muster** | Return to Zetwal. Armies assemble. **Seat the feuds** (three mediations). **The Betrayal.** | 10 |
 | **V: The War of the Harbor** | Xaraguá. Multi-stage battle with the allied armies, flank fight against the betrayer, the **Harbor Turn** (Rael's army wheels on the Regent, or does not, depending on the player's choice), the Regent's retreat. | 30 |
-| **VI: The Claim** | Elodie's Seat. The board game's **Claim and Challenge** as the climax. Gianna's Claim, the Regent's Challenge, Azzy's choice. | 20 |
+| **VI: The Claim** | Eightgate. The board game's **Claim and Challenge** as the climax. Gianna's Claim, the Regent's Challenge, Azzy's choice. | 20 |
 | Epilogue | The Hearing for Rael and the ending (5.7). | 10 |
 | **Total** | | **365 (about 6 hours)** |
 
@@ -253,14 +253,14 @@ Each place provides one **capital hub**, one **ruler**, one **signature puzzle**
 - **Exposed route:** with the Kuroshi evidence and the betrayer's price at least 60 percent paid, Gianna can confront them at the Muster and turn them into a **late ally**.
 - **On a replay** the buyer can be forced to a different house.
 
-**The Parley (midpoint):** at Elodie's Seat, Elodie is Zetwal's envoy under Crown eyes. She knows what Rael is doing and cannot say so. Gianna confronts her about him. Elodie can say only one true thing: *"Believe what your Locket tells you, not what his mouth does."* In a private moment she adds, *"He should never have tested you."* Gianna takes this to mean the duel law. It is the clue that opens the twist for observant players.
+**The Parley (midpoint):** at Eightgate, Elodie is Zetwal's envoy under Crown eyes. She knows what Rael is doing and cannot say so. Gianna confronts her about him. Elodie can say only one true thing: *"Believe what your Locket tells you, not what his mouth does."* In a private moment she adds, *"He should never have tested you."* Gianna takes this to mean the duel law. It is the clue that opens the twist for observant players.
 
 **The Harbor Turn (replaces a second duel; near the end):** in the War of the Harbor, Rael's army appears on the flank. The player expects a second father-daughter fight and is given a **trust choice**. Whichever she chooses, Gianna learns the truth here, near the end:
 - **Trust:** the party holds. Rael's army turns on the Regent's flagship and Rael fights beside Gianna against the Regent's champion. Better rewards and a stronger epilogue.
 - **Strike:** Gianna's party fights Rael's vanguard. It is a hard fight in which he only **binds** and never kills. When his army breaks, with his signet dark, he tells her the truth. The Regent's fleet escapes intact. Stability drops and Azzy is furious.
 - **Clues available beforehand:** the signet tell, Elodie's two lines, Kuroshi's ledger trail, Samira appraising the Brasador gold ("this coin has been somewhere else"), Free Brasador soldiers who whisper that the arrows missed, and the fact that nobody ever dies in his fights.
 
-**The Claim (climax):** after the War, the Regent retreats to Elodie's Seat, where the Throne stands. Per rulebook Section 8: Gianna, standing on the Throne tile, declares her **Claim**. The Regent declares a **Challenge** and they fight. Azzy, who also has a claim, chooses on the spot: renounce it in her favor, share it, or (in the dark route) Challenge her too.
+**The Claim (climax):** after the War, the Regent retreats to Eightgate, where the Throne stands. Per rulebook Section 8: Gianna, standing on the Throne tile, declares her **Claim**. The Regent declares a **Challenge** and they fight. Azzy, who also has a claim, chooses on the spot: renounce it in her favor, share it, or (in the dark route) Challenge her too.
 
 **The Hearing (epilogue):** Rael surrenders to Gianna's Throne. Witnesses speak: the Ardencian rebel leaders he fed and armed, the family of the treasurer he kept captive for years without trial, the underground cells he funded, Elodie, Azzy, Anissa. Gianna chooses a verdict:
 - **Pardon with conditions** (best, and the confirmed terms; old Benny and old Patricio may speak at the Hearing): Rael serves in a capacity that honors his father Benny and works **in the light**, as **Warden of Oaths**, the Throne's officer who ensures treaties are kept, including the Sun Accord's Seventh Clause. His shadow organization, the **Ash Ledger** (placeholder), becomes the Throne's **Office of Oaths** and may be used only to find and fight oppression in the kingdom. He publicly confesses that he is the head of the Quiet Crown and dissolves its secret chain of command. He frees every captive, makes restitution to the treasurer's family, and brings the corrupt elders to account.
@@ -403,7 +403,7 @@ The real harms are **few and non-lethal**, and he is **not redeemed in the momen
 | Xaraguá | Flooded petroglyph cave; echo sluice; rhythm lock at the areito plaza |
 | Al-Doria | Guild vault: weights and ledger cipher |
 | Ardencia | The escape through Benny's smuggler tunnel; forge fortress lava channels |
-| Elodie's Seat | Throne Archive: reading the Accord in both eras |
+| Eightgate | Throne Archive: reading the Accord in both eras |
 | Skarragol | Frozen fjord crossing plus a horse-herd stealth sequence |
 | Kuroshi | Fog maze with lantern signals; rotating screens; echo spy map |
 | Jwaladesh | Relay of lamps and mirrors; a lamp lit in the Echo stays lit |
@@ -482,6 +482,22 @@ The Crown bribes with the same three currencies. **Rael** appears to have taken 
 
 - **Capital layout (owner decision, Oct 14):** every capital is at least **four sections** (separate maps joined by doors): the hub (the town or plaza), the **library**, the **capital building** (the seat of the state), and a **wild section**, either outside the city or in its rough district. Shrines, homes and puzzle sites come on top. The wild section has **random encounters**: bandits, crooks and Quiet Crown cultists, chosen per capital. They use the map layer `encounters` (property `table`), the tables in `quest/src/data/encounters.ts`, and the chance and grace steps in `quest/src/config.ts`. Until the battle system (Phase 3) exists, an encounter is a short stand-in scene: Fight always wins and Run always escapes, and both are remembered as flags. **No fights in Chapter 1 (owner decision, Oct 14):** there is no war and no banditry yet, so each wild section's ambushes are gated by a story flag that a later chapter sets when the party returns (Zetwal: `story.zetwal_return`, listed in `LATER_STORY_FLAGS`). Ambushes come about once every 50 steps.
 - **Zetwal's capital is Pòdlimyè** (owner decision, Oct 14): Kreyol "Port of Light" (*pò* is "port"), one word the way Port-de-Paix is Pòdepè. It replaces the first name, Pòt Limyè (*pòt* is "door"). A fluent speaker checks the spelling (Nov 18). Zetwal is the island nation.
+- **Eightgate and the contested Throne (owner decision, Oct 15):** the realm's central city is **Eightgate**: eight
+  roads from the eight lands end at its eight gates, every house may enter as an equal, and by old courtesy no steel
+  is drawn inside its walls (allegedly; the story tests it). The old seat of the realm, the Throne, stands at its
+  heart; courtiers call it "the old seat" or "the Hall". The quest never names the city for Elodie: only the Gaze's
+  faithful still call it "Elodie's Seat". **Canon:** the Gaze of Elodie is the **oldest faith in the realm** (stated
+  plainly, never disputed). **Whether Elodie blessed the Throne is disputed**, and the sources must contradict each
+  other on purpose:
+  - **The Gaze temples (Zetwal, the Temple Archive):** Elodie blessed the Throne and set her sun on the brow of the
+    first heirs; the sun-mark is her sign.
+  - **The Crown chronicles (Aldermoor) and the Regent's court:** the Throne was raised by the first kings with the
+    houses' consent; the blessing is a temple tale, and repeating it is close to sedition.
+  - **Other faiths and houses:** each tells it its own way (a gift of the founders, a prize of war, a seat no god
+    touched), at the Eightgate debate corner and in their libraries.
+  - **Why it matters:** the people in power deny the blessing because it would make the sun-marked heirs' claim (and
+    so Gianna's) stronger. The truth stays open until the Claim; the board game and its books can keep the blessing as
+    lore.
 - **Readable text (owner decision, Oct 15):** the game is drawn at a whole multiple of 320 x 180 matched to the
   screen (up to 4x, `RENDER_SCALE_MAX`), the camera zooms by it from its top-left corner, and every text is rendered at
   it, so letters are sharp while the pixel art is enlarged in whole steps as before. The font is **Atkinson
@@ -509,7 +525,7 @@ The Crown bribes with the same three currencies. **Rael** appears to have taken 
   tap closes it; the Items page replays story and legendary items with what is known so far. Data: `showcase` and
   `abilities` on items in `quest/src/data/rpg.ts`; rules: `quest/src/engine/showcase.ts`; drawing:
   `quest/src/ui/ItemShowcase.ts`; pictures: `ITEM_ART` placeholders, replaced by `quest/art/items/<id>.png`.
-- **Secret items (owner decision, Oct 14):** all nine in `docs/quest/design/SECRET-ITEMS.md` are approved, one per capital and one at Elodie's Seat, each behind a side quest and a hard puzzle with an Echo part. Pòdlimyè's is Solange's Quill (Milestone 1).
+- **Secret items (owner decision, Oct 14):** all nine in `docs/quest/design/SECRET-ITEMS.md` are approved, one per capital and one at Eightgate, each behind a side quest and a hard puzzle with an Echo part. Pòdlimyè's is Solange's Quill (Milestone 1).
 - **Pòdlimyè's sections:** the festival plaza and harbor (hub), the Temple island, the **Temple Archive** (library, on the temple island), the **Hall of the Accord** (the capital building, on the plaza), the **Cane Road** beyond the east gate (wild: peaceful in Chapter 1; bandits, smugglers and Quiet Crown zealots on the return), and the Limyè house.
 - **Travel:** the **Carriage Guild**. A map screen lists unlocked destinations with fares. Unlocked by story progress, letters of introduction, or learning locations in libraries. Travel is a short cutscene. No random encounters on the road between capitals in v1 (the wild sections have them).
 - **Jobs:** 3 to 5 per capital from a **contract board**. They pay Wealth and sometimes Influence.
@@ -540,7 +556,7 @@ The Crown bribes with the same three currencies. **Rael** appears to have taken 
 
 | Faith | Core belief | Practice | Where it is strongest | Shrine boon |
 |---|---|---|---|---|
-| **The Gaze of Elodie** (the goddess faith) | Elodie wove the realm and **remembers** everything, but does not rule. Rulers are accountable because she sees. | Remembering the dead aloud, sun-marked heirs, temple libraries, a festival of the Gaze | **Zetwal** (core). Minorities in Al-Doria (merchants), Ardencia (nominal), Elodie's Seat. | Revive one fallen member once per area. |
+| **The Gaze of Elodie** (the goddess faith) | Elodie wove the realm and **remembers** everything, but does not rule. Rulers are accountable because she sees. | Remembering the dead aloud, sun-marked heirs, temple libraries, a festival of the Gaze | **Zetwal** (core). Minorities in Al-Doria (merchants), Ardencia (nominal), Eightgate. | Revive one fallen member once per area. |
 | **The Four Hands** (the elemental earth faith) | Land, water, wind and fire are living hands; no one owns what they hold. | Offerings at springs, groves, passes and flames; the areito dance of memory; regional sects (Roots and Tides, Sky-Riders, Flame Keepers) | **Xaraguá** (earth and water), **Skarragol** (wind), **Jwaladesh** (fire) | Elemental resistance for the next battles. |
 | **The Witness** (the faith of oaths) | A promise is sacred; the Witness sees every oath kept or broken. | Oath-swearing, contracts blessed by temple scribes, honor duels, the Unpaid Debt as a sin | **Al-Doria** (contracts), **Ardencia** (military oaths), **Kuroshi** (honor and balance), **Aldermoor** (law) | 10 percent off the next ally's price. |
 | **The Quiet Crown** (the cult) | The realm is ruined by noise and division; one hand on the Throne will bring the Quiet. Silence and obedience are virtue. | Masked vows, hooded recruiters, "charity" that creates debt, stealing voices (suppressing dissent). Targets lonely people. | Secret cells in **every** hub. Hidden head in the Regent's court. | A **forbidden boon** with a cost (power, but lowers Concord and Anissa's Calm). Optional. |
@@ -564,7 +580,7 @@ Every hub has at least one **Debate Corner**: two NPCs of different faiths argui
 | Xaraguá | Four Hands (Roots and Tides) elder vs. Gaze pilgrim: *Is the land owned or remembered?* |
 | Al-Doria | Witness contract-priest vs. Gaze merchant: *Is a bad bargain still sacred?* |
 | Ardencia | Witness oath-knight vs. Gaze skeptic: *What do you owe a lord who has broken his oath?* (rewrites itself after the duel) |
-| Elodie's Seat | All four, arguing over who may sit the Throne |
+| Eightgate | All four, arguing over who may sit the Throne |
 | Skarragol | Four Hands (Sky-Rider) vs. Witness elder: *Oath of blood or oath of sky?* |
 | Kuroshi | Witness (balance) vs. Quiet Crown whisperer: *Is silence virtue or concealment?* |
 | Jwaladesh | Four Hands (Flame Keeper) vs. Gaze: *Is hesitation a sin, or is remembering mercy?* |
@@ -597,7 +613,7 @@ After the Harbor Turn every hub gets a final debate corner: *a faith that began 
 | Skarragol | Old Norse and Mongolian | Greeting and thanks in each |
 | Kuroshi | Japanese | "Irasshaimase" / "Arigatou gozaimasu" |
 | Jwaladesh | Hindi / Sanskrit-flavored | "Namaste" / "Dhanyavaad" |
-| Aldermoor, Elodie's Seat | English | Formal and courtly English |
+| Aldermoor, Eightgate | English | Formal and courtly English |
 
 **Sample cultural item families:**
 
@@ -710,7 +726,7 @@ Image generators, including Gemini, do **not** reliably produce true pixel-grid 
 | **3: Battle and pillars** | Battle engine, party, skills, Yield, Heir Rises, **Anissa's Surge**, ally prices | A boss simulation passes. |
 | **4: Faith and shop** | Debate engine, Concord, shrines, one shop with a language glossary | A debate and a shop work in Zetwal. |
 | **5: Slice** | Xaraguá, then Ardencia (duel, reveal, escape, Azzy joins) | **About 2 hours playable. Playtest with Elodie.** |
-| **6: Remaining places** | Al-Doria, Elodie's Seat, Skarragol, Kuroshi, Jwaladesh, Aldermoor | All recruits and rulers. |
+| **6: Remaining places** | Al-Doria, Eightgate, Skarragol, Kuroshi, Jwaladesh, Aldermoor | All recruits and rulers. |
 | **7: Climax** | Muster, betrayal, War of the Harbor, Claim, endings, Next Generation mode (Yari) | Credits roll. |
 | **8: Polish** | Audio, balance, accessibility, phrasebook audit, bug bash, cloud save (optional) | Final playtest. |
 

@@ -19,15 +19,15 @@ per place (proposal for the numbering):
 | I: The Mark | 2. The Charter | Xaraguá (Yucayeque, proposal) | 40 | 3 to 8 |
 | II: The Alliance Road | 3. The Ledger | Al-Doria (Bab al-Dhahab, proposal) | 30 | 8 to 11 |
 | II: The Alliance Road | 4. The Trial of Blades | Ardencia (Cenizal, proposal) | 45 | 11 to 14 |
-| Midpoint | 5. The Parley | Elodie's Seat | 20 | 14 to 15 |
+| Midpoint | 5. The Parley | Eightgate | 20 | 14 to 15 |
 | III: The Debt Revealed | 6. The Stolen Standard (any order) | Skarragol (Ordvik, proposal) | 30 | 15 to 21 |
 | III: The Debt Revealed | 7. The Fog Files (any order) | Kuroshi (Kirinoura, proposal) | 30 | 15 to 21 |
 | III: The Debt Revealed | 8. The Dying Flame (any order) | Jwaladesh (Agnipur, proposal) | 30 | 15 to 21 |
 | III: The Debt Revealed | 9. The Regent's Keep | Aldermoor (Kingsmere, proposal) | 35 | 21 to 24 |
 | IV: The Muster | 10. The Muster | Zetwal again (Pòdlimyè) | 10 (+ side content) | 24 to 25 |
 | V: The War of the Harbor | 11. The War of the Harbor | Xaraguá again | 30 | 25 to 28 |
-| VI: The Claim | 12. The Claim | Elodie's Seat again | 20 | 28 to 30 |
-| Epilogue | The Hearing | Elodie's Seat | 10 | 30 |
+| VI: The Claim | 12. The Claim | Eightgate again | 20 | 28 to 30 |
+| Epilogue | The Hearing | Eightgate | 10 | 30 |
 
 **The three roads (Chapters 6 to 8) in any order (proposal for levels):** the first of the three the player enters
 is set to levels 15 to 17, the second 17 to 19, the third 19 to 21. The region's level is fixed the first time the
@@ -199,9 +199,9 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
 - **What the player learns:** Rael is her father; the token is one token in two halves; the signet glows (the player
   sees it, Gianna does not understand); the shots missed; nobody died.
 
-### Chapter 5: The Parley (Elodie's Seat, the midpoint)
+### Chapter 5: The Parley (Eightgate, the midpoint)
 
-- **Where:** Elodie's Seat, the Throne city at the centre of the realm.
+- **Where:** Eightgate, the Throne city at the centre of the realm.
 - **Level range:** 14 to 15. Under a flag of truce: no boss (proposal: one Echo skirmish in the Archive).
 - **Beats:**
   1. Elodie is Zetwal's envoy under Crown eyes. The **Lord Regent Aldric Vane** receives them under a flag of truce,
@@ -327,15 +327,15 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
      runs a shadow government against corruption, and he founded the Quiet Crown, whose autonomy let it be bent
      against Anissa. Private line: "My father kept his oath and it cost him everything. I wanted to know what would
      happen if someone kept the goal instead."
-  5. The Regent retreats to Elodie's Seat.
+  5. The Regent retreats to Eightgate.
 - **Who joins:** Rael fights as a guest in the Trust route (proposal: guest only, not a roster member).
 - **Echo scenes:** Caona's last stand at the harbor in the Revolution (proposal), the place where the debt began.
 - **Bosses:** the betrayer (level 26), then the Regent's champion (Trust, level 28) or Rael (Strike, level 28).
 - **What the player learns:** the whole truth about Rael, and that she now has to decide what to do with it.
 
-### Chapter 12: The Claim (Elodie's Seat)
+### Chapter 12: The Claim (Eightgate)
 
-- **Where:** the Throne Hall at Elodie's Seat.
+- **Where:** the Throne Hall at Eightgate.
 - **Level range:** 28 to 30.
 - **Beats** (rulebook Section 8, as the guide asks): Gianna, standing on the Throne tile, declares her **Claim**. The
   Regent declares a **Challenge**. **Boss: Lord Regent Aldric Vane.** Azzy, who also has a claim, chooses on the spot:
@@ -388,7 +388,7 @@ real people (guide 7.3).
    (*pòt* is "door"), and French port names fuse into one word (Port-de-Paix is Pòdepè). Replaces the earlier
    "Pòt Limyè". A fluent speaker confirms the spelling (Nov 18).
 2. **Where was the Accord signed?** **Settled (owner, Oct 14):** in Pòdlimyè's plaza, as the built lore says (the
-   *Alliance War* book, the Marshal's Stone, the war room). Elodie's Seat's Echo is **the sealing** of the signed
+   *Alliance War* book, the Marshal's Stone, the war room). Eightgate's Echo is **the sealing** of the signed
    original in the Throne Archive, where the seventh clause is hidden.
 3. **Who is the Hushed?** **Settled (owner, Oct 14):** the Regent's agent, who has taken over the cells that hunt
    Anissa and whom the members *believe* to be the head of the Quiet Crown. Rael is the true founder above all

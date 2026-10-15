@@ -122,9 +122,11 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
   },
 };
 
-/** The realm around Elodie's Seat, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
+/** The realm around Eightgate, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
 export const REALM: readonly RealmPlace[] = [
-  { id: 'seat', name: "Elodie's Seat", house: 'The Throne' },
+  // The realm's neutral city, where every house may come and none may draw steel (so they say). The
+  // old seat of the realm stands at its heart; whether Elodie blessed it is argued (data/books.ts).
+  { id: 'seat', name: 'Eightgate', house: 'Open to all houses' },
   { id: 'ardencia', name: 'Ardencia', house: 'Brasador' },
   { id: 'zetwal', name: 'Zetwal', house: 'Kay Soley', city: 'zetwal' },
   { id: 'al_doria', name: 'Al-Doria', house: 'Dorini' },

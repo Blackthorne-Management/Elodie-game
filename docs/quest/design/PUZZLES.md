@@ -24,7 +24,7 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 | SIG-XAR | The flooded cave, the sluice and the rhythm lock | Yucayeque | 2 | signature | Water, Cipher, rhythm | 3 |
 | SIG-ALD | The guild vault | Bab al-Dhahab | 3 | signature | Weight, Cipher, Door | 4 |
 | SIG-ARD | The forge channels and Benny's tunnel | Cenizal | 4 | signature | Terrain, Escape | 4 |
-| SIG-SEA | Reading the Accord | Elodie's Seat | 5 | signature | Cipher, Door | 3 |
+| SIG-SEA | Reading the Accord | Eightgate | 5 | signature | Cipher, Door | 3 |
 | SIG-SKA | The frozen fjord and the herd | Ordvik | 6 | signature | Terrain, Stealth | 5 |
 | SIG-KUR | The fog maze, the screens and the spy map | Kirinoura | 7 | signature | Fire / light, Stealth | 5 |
 | SIG-JWA | The relay of lamps and mirrors | Agnipur | 8 | signature | Fire / light | 4 |
@@ -47,7 +47,7 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 | S-SKA | The Cairn of Nine Riders | Ordvik | 6 | secret | star positions | 7 |
 | S-ALM | The Clock That Waits | Kingsmere | 9 | secret | clockwork | 8 |
 | S-KUR | The Letter in the Floor | Kirinoura | 7 | secret | sound | 9 |
-| S-SEA | The Unknotted Ribbon | Elodie's Seat | 5 to 12 | secret | conversation | 10 |
+| S-SEA | The Unknotted Ribbon | Eightgate | 5 to 12 | secret | conversation | 10 |
 
 ---
 
@@ -217,7 +217,7 @@ Three linked parts (guide: "flooded petroglyph cave; echo sluice; rhythm lock at
   and at the crypt steps; jam the bolt in the memory."
 - **Difficulty:** 6.
 
-## Elodie's Seat
+## Eightgate
 
 ### SIG-SEA Reading the Accord (signature)
 - **Present:** the signed original lies under glass in the Throne Archive; six ribbon pages, and the seventh ribbon

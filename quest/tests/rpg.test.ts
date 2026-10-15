@@ -174,7 +174,7 @@ describe('the game content', () => {
     expect(cityOf(RPG, 'zetwal-road')?.section.name).toBe('The Cane Road');
   });
 
-  it('the realm has the eight countries and Elodie’s Seat', () => {
+  it('the realm has the eight countries and Eightgate', () => {
     expect(RPG.realm.length).toBe(9);
   });
 });

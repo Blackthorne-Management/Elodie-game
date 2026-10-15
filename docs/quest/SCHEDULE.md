@@ -51,11 +51,11 @@ The board game comes first where they clash: its dates are fixed by the printer.
 
 ## After November 22 (honest scope)
 
-The whole game is nine places (eight capitals and Elodie's Seat) and about six hours. At the quality we are
+The whole game is nine places (eight capitals and Eightgate) and about six hours. At the quality we are
 building Pòdlimyè to, one capital takes about a week of building plus your art. So November 22 delivers
 **Chapters 1 and 2 complete and polished** (Pòdlimyè and Xaraguá, with battles). The rest follows on the same
 pattern, roughly one capital a week: Al-Doria and Ardencia (the reveal, Azzy) in late November and early
-December, then Kuroshi, Skarragol, Jwaladesh, Aldermoor and Elodie's Seat, finishing in January. If you would
+December, then Kuroshi, Skarragol, Jwaladesh, Aldermoor and Eightgate, finishing in January. If you would
 rather have all nine places by November 22 in a rougher first pass, say so and the plan changes.
 
 ## Open decisions for you

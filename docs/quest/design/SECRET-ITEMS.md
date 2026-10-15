@@ -19,7 +19,7 @@ comes after 8 minutes stuck instead of 3, and the player can always walk away: n
 | 6 | **Sarnai's Bridle Bell** | Ordvik (Skarragol) | S-4 The Cairn of Nine Riders | Star positions (a moving night sky) | Summon | *Call the Herd*: wild steppe horses stampede through every enemy, once per battle | 7 Hard |
 | 7 | **The Patient Hour** | Kingsmere (Aldermoor) | Al-4 The Clock That Waits | Clockwork (gear arithmetic, then a timed stop) | Battle tempo | Once per battle, stop the clock: the whole party acts again before any enemy | 8 Very hard |
 | 8 | **The Nightingale Key** | Kirinoura (Kuroshi) | K-4 The Letter in the Floor | Sound (a melody walked on a singing floor) | Information | Every enemy's next move shown each round; Quiet Crown members glow on maps | 9 Very hard |
-| 9 | **The Seventh Ribbon** | Elodie's Seat | Se-4 The Unknotted Ribbon | A conversation across eras (testimony and evidence) | Story change | Strike the Seventh Clause at the Claim: +15 Stability, +10 Concord, a new epilogue scene | 10 Very hard |
+| 9 | **The Seventh Ribbon** | Eightgate | Se-4 The Unknotted Ribbon | A conversation across eras (testimony and evidence) | Story change | Strike the Seventh Clause at the Claim: +15 Stability, +10 Concord, a new epilogue scene | 10 Very hard |
 
 Ordered by difficulty, which is also roughly the order the player can reach them. Effects never overlap: one skill,
 one economy perk, one map ability, one Surge upgrade, one passive, one summon, one tempo effect, one information
@@ -249,7 +249,7 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 - **Why it fits:** House Suzumori's power is listening (*Kagemimi*, the Shadow's Ear). Their real nightingale floors
   warned of intruders; here one carries a message across fifty years.
 
-## 9. The Seventh Ribbon (Elodie's Seat)
+## 9. The Seventh Ribbon (Eightgate)
 
 - **Side quest:** Se-4 *The Unknotted Ribbon*. A Throne Archive keeper (proposal name: **Keeper Hollis**) shows that
   each of the Accord's seven ribbons carries a witness knot, and the seventh has none. By Throne law a clause whose
@@ -277,5 +277,5 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 - **The item:** the Seventh Ribbon. At the **Claim** (Chapter 12) Gianna can strike the Seventh Clause before every
   house: **+15 Accord Stability**, **+10 Concord**, and a new epilogue scene where Cacica Yari receives the ribbon and
   Xaraguá's harbor is returned by law before the Hearing begins.
-- **Why it fits:** Elodie's Seat is where the realm keeps its oaths and memory. The hardest puzzle in the game is not
+- **Why it fits:** Eightgate is where the realm keeps its oaths and memory. The hardest puzzle in the game is not
   a lock but the truth, told carefully in two eras: the Unpaid Debt paid in the place it was hidden.

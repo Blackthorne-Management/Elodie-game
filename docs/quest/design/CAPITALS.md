@@ -1,6 +1,6 @@
 # Capitals: build sheets
 
-*Design pack, Oct 14. One sheet per capital (8 houses plus Elodie's Seat). Kept from the guide and the owner: every
+*Design pack, Oct 14. One sheet per capital (8 houses plus Eightgate). Kept from the guide and the owner: every
 capital has **at least four sections**, each a separate map joined by doors: the hub, the **library** (8 to 10 lore
 books), the **capital building** (3 to 5 books) and a **wild section** with random encounters (owner decision,
 Oct 14; guide 6.6). No fights in Chapter 1. Gold is separate from the Wealth score. Anything not in the guide or
@@ -28,7 +28,7 @@ already built is a **proposal**, including every city name except Pòdlimyè.*
 | Xaraguá | Yaguana | **Yucayeque** | proposal | Taíno word recorded by the chroniclers for a town or village. Flag for a source check. Alternative: **Yaguana**, the historical capital of Xaraguá, if the owner is happy for the city and the house to share a name. |
 | Al-Doria | Dorini | **Bab al-Dhahab** | proposal | Arabic, "Gate of Gold" (matches the house's *Bazaar al-Dhahab*). |
 | Ardencia | Brasador | **Cenizal** | proposal | Spanish, "ash field". Fits "Rael the Ruthless, Warden of the Ash Road". |
-| (centre) | the Throne | **Elodie's Seat** | guide | The city keeps the realm's name for it. |
+| (centre) | the Throne | **Eightgate** | guide | The city keeps the realm's name for it. |
 | Skarragol | Ironvow | **Ordvik** | proposal | A fusion: Mongolian *ord* (a royal camp, as in "horde") and Old Norse *vík* (bay). |
 | Kuroshi | Suzumori | **Kirinoura** | proposal | Japanese *kiri no ura*, "bay of mist". |
 | Jwaladesh | Agnivansh | **Agnipur** | proposal | Hindi / Sanskrit, "city of fire" (*agni* + *pur*). |
@@ -42,7 +42,7 @@ already built is a **proposal**, including every city name except Pòdlimyè.*
 | Yucayeque | The Mountain Path | `mountain_path` | `story.xaragua_pier_won` | 3 to 7 | `story.muster_done`: war table, 25 to 28 |
 | Bab al-Dhahab | The Desert Edge | `desert_edge` | `story.aldoria_arrived` | 8 to 11 | none |
 | Cenizal | The Cinder Flats | `cinder_flats` | `story.ardencia_arrived` | 11 to 14 | after the escape: Brasador patrols hunt the party, 13 to 15 |
-| Elodie's Seat | The Crossroads Fields | `crossroads` | `story.seat_arrived` | 14 to 16 | `story.harbor_won`: 28 to 30 |
+| Eightgate | The Crossroads Fields | `crossroads` | `story.seat_arrived` | 14 to 16 | `story.harbor_won`: 28 to 30 |
 | Ordvik | The Winter Plateau | `winter_plateau` | `story.skarragol_arrived` | road tier | none |
 | Kirinoura | The Fog Marsh | `fog_marsh` | `story.kuroshi_arrived` | road tier | none |
 | Agnipur | The Salt Flats | `salt_flats` | `story.jwaladesh_arrived` | road tier | none |
@@ -356,7 +356,7 @@ Errand, Ar-5 The Arrows Missed.
 
 ---
 
-## 5. Elodie's Seat (the Throne, the centre of the realm)
+## 5. Eightgate (the Throne, the centre of the realm)
 
 **Chapters:** 5 (the Parley), 12 (the Claim) and the Hearing. **Ruler:** the Throne is held for now by the Lord Regent
 Aldric Vane. Elodie is Zetwal's envoy. **Feel:** a neutral, ancient city of eight gates, one per house; grand, worn,
