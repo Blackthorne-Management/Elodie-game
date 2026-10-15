@@ -573,8 +573,22 @@ async function playAct(browser, errors) {
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
   mapSnap = (await snap(page)).menu;
   check(mapSnap.items.length === 9 && mapSnap.items.includes('Xaraguá'), 'A turns it to the realm map, with all nine places');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.realm?.loaded, null, { timeout: 5000 });
+  {
+    const r = (await snap(page)).menu.realm;
+    const canvas = await page.evaluate(() => {
+      const b = document.querySelector('canvas').getBoundingClientRect();
+      return { left: b.left, top: b.top, width: b.width };
+    });
+    const k = canvas.width / 320;
+    const near = (a, b) => Math.abs(a - b) <= 2;
+    check(near(r.left, canvas.left + 6 * k) && near(r.width, 128 * k) && near(r.height, 128 * k), 'the painted board map sits exactly over the map area, at full sharpness');
+    check(['Zetwal', 'Ardencia', 'Xaraguá', 'Kuroshi'].every((n) => r.labels.includes(n)), 'the countries are named on it');
+  }
   await shoot(page, 'realm-map', shots);
   await page.keyboard.press('KeyZ');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.realm === null, null, { timeout: 2000 });
+  check(await page.locator('.realm-map.hidden').count() === 1, 'back on the city map, the painting is gone');
   await page.keyboard.press('x');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   // The other two tiers, for the screenshots: a legendary (secret) item and a quest reward card.

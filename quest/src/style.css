@@ -341,3 +341,50 @@ body.standalone .fs-button { display: none; }
   color: #ffb4b4;
   font: 12px/1.4 ui-monospace, monospace;
 }
+
+/* The realm map's painted picture (src/ui/RealmOverlay.ts), laid over the menu's map area at full
+   screen sharpness. Taps go through to the game. */
+.realm-map {
+  position: fixed;
+  z-index: 8;
+  pointer-events: none;
+  overflow: hidden;
+  border: 1px solid rgba(232, 216, 176, 0.7);
+  /* No background: an opaque layer over the WebGL canvas makes Chrome skip (wrongly) part of the
+     picture above it. The game draws a dark square under the map instead. */
+  font-family: monospace;
+}
+.realm-map.hidden { display: none; }
+.realm-map img,
+.realm-map .realm-fog {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.realm-map .realm-fog {
+  image-rendering: auto;
+  filter: blur(3px);
+}
+.realm-labels span {
+  position: absolute;
+  transform: translate(-50%, -110%);
+  white-space: nowrap;
+  font-size: 1em;
+  line-height: 1;
+  color: #a89c86;
+  text-shadow: 0 0 2px #000, 0 0 2px #000, 1px 1px 0 #000;
+}
+.realm-labels span.known { color: #f4ecd8; }
+.realm-here {
+  position: absolute;
+  width: 0.9em;
+  height: 0.9em;
+  transform: translate(-50%, -50%);
+  border: 2px solid #f2d04b;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #f2d04b, inset 0 0 4px #f2d04b;
+  animation: realm-blink 0.9s ease-in-out infinite alternate;
+}
+@keyframes realm-blink { from { opacity: 1; } to { opacity: 0.2; } }
+@media (prefers-reduced-motion: reduce) { .realm-here { animation: none; } }

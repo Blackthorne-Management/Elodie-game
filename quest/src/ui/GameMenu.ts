@@ -41,6 +41,7 @@ import {
   type CityDef,
   type CitySection,
   type ItemDef,
+  type RealmPlace,
   type MemberDef,
   type Slot,
 } from '../engine/rpg.ts';
@@ -51,6 +52,7 @@ import type { Era, Pos } from '../engine/types.ts';
 import type { InputManager } from '../input/actions.ts';
 import type { MenuItem } from './MenuPanel.ts';
 import type { PanelLine } from './TextPanel.ts';
+import { RealmOverlay } from './RealmOverlay.ts';
 import { tileColours } from './tileColours.ts';
 
 export const MENU_TABS = ['Status', 'Items', 'Equip', 'Quests', 'Map', 'Foes', 'System'] as const;
@@ -72,12 +74,8 @@ export interface MenuContext {
 }
 
 const CITY_TEXTURE = 'menu-city-map';
-const REALM_TEXTURE = 'menu-realm-map';
-
-/** Darken a colour (k < 1). */
-function shade(c: number, k: number): number {
-  return (Math.round(((c >> 16) & 255) * k) << 16) | (Math.round(((c >> 8) & 255) * k) << 8) | Math.round((c & 255) * k);
-}
+/** The realm map's size in game pixels (square, like the board). */
+const REALM_MAP_PX = 128;
 
 /** A place not reached yet: greyed and darkened. */
 function fog(c: number): number {
@@ -139,6 +137,8 @@ export class GameMenu {
   private hits: Hit[] = [];
   /** The map page's blinking "you are here" (stopped on every redraw). */
   private blink: Phaser.Tweens.Tween | null = null;
+  /** The painted realm map, a page element over the map area. */
+  private readonly realmOverlay: RealmOverlay;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -147,6 +147,8 @@ export class GameMenu {
     bg.lineStyle(1, UI.boxBorder, 1).strokeRect(1.5, 1.5, VIEW_WIDTH - 3, VIEW_HEIGHT - 3);
     this.content = scene.add.container(0, 0);
     this.root = scene.add.container(0, 0, [bg, this.content]).setScrollFactor(0).setDepth(DEPTH).setVisible(false);
+    this.realmOverlay = new RealmOverlay(document.body, scene.game.canvas);
+    scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.realmOverlay.destroy());
   }
 
   get visible(): boolean {
@@ -168,6 +170,7 @@ export class GameMenu {
   close(): void {
     this.blink?.remove();
     this.blink = null;
+    this.realmOverlay.hide();
     this.root.setVisible(false);
     this.ctx = null;
   }
@@ -177,9 +180,15 @@ export class GameMenu {
     if (this.visible) this.draw();
   }
 
-  snapshot(): { tab: string; items: string[]; cursor: number; journal: string[] | null } | null {
+  snapshot(): { tab: string; items: string[]; cursor: number; journal: string[] | null; realm: ReturnType<RealmOverlay['snapshot']> } | null {
     if (!this.visible) return null;
-    return { tab: this.currentTab, items: [...this.labels], cursor: this.stage === 'top' ? this.cursor : this.subCursor, journal: this.currentTab === 'Quests' ? this.journalLines : null };
+    return {
+      tab: this.currentTab,
+      items: [...this.labels],
+      cursor: this.stage === 'top' ? this.cursor : this.subCursor,
+      journal: this.currentTab === 'Quests' ? this.journalLines : null,
+      realm: this.realmOverlay.snapshot(),
+    };
   }
 
   /** Read this frame's presses and act on them. */
@@ -404,6 +413,7 @@ export class GameMenu {
     if (!ctx) return;
     this.blink?.remove();
     this.blink = null;
+    this.realmOverlay.hide();
     this.content.removeAll(true);
     this.labels = [];
     this.hits = [];
@@ -696,70 +706,27 @@ export class GameMenu {
     this.labels = city.sections.map((s) => s.name);
   }
 
-  /** The realm, shaped like the board game's map (data/realmMap.ts). */
+  /** The realm: the board game's painted map (ui/RealmOverlay.ts), and a legend of places and houses. */
   private drawRealm(g: Phaser.GameObjects.Graphics, cityId?: string): void {
     const ctx = this.ctx!;
-    const M = REALM_MAP;
-    const placeAt = (x: number, y: number): string => (x < 0 || y < 0 || x >= M.width || y >= M.height ? 'sea' : M.key[M.rows[y]![x]!]!);
     const current = RPG.realm.find((p) => p.city && p.city === cityId)?.id;
-    const visited = (id: string) =>
-      id === current || (RPG.realm.find((p) => p.id === id)?.city ? (RPG.cities[RPG.realm.find((p) => p.id === id)!.city!]?.sections ?? []).some((s) => ctx.flags.isSet(visitedFlag(s.map))) : false);
-    const known = new Map(RPG.realm.map((p) => [p.id, visited(p.id)]));
-    this.pixels(REALM_TEXTURE, M.width, M.height, (img) => {
-      for (let y = 0; y < M.height; y++) {
-        for (let x = 0; x < M.width; x++) {
-          const id = placeAt(x, y);
-          let c: number;
-          if (id === 'sea') {
-            const coast = ['sea', placeAt(x + 1, y), placeAt(x - 1, y), placeAt(x, y + 1), placeAt(x, y - 1)].some((n) => n !== 'sea');
-            c = coast ? MAP_ART.foam : (x * 7 + y * 3) % 23 === 0 ? MAP_ART.seaLight : M.colours.sea!;
-          } else {
-            c = M.colours[id]!;
-            const n = [placeAt(x + 1, y), placeAt(x - 1, y), placeAt(x, y + 1), placeAt(x, y - 1)];
-            if (n.some((o) => o === 'sea')) c = shade(c, 0.62);
-            else if (n.some((o) => o !== id)) c = shade(c, 0.45);
-            if (!known.get(id)) c = fog(c);
-          }
-          const i = (y * M.width + x) * 4;
-          img.data[i] = (c >> 16) & 255;
-          img.data[i + 1] = (c >> 8) & 255;
-          img.data[i + 2] = c & 255;
-          img.data[i + 3] = 255;
-        }
-      }
-    });
-    const ox = 6;
-    const oy = TOP + 1;
-    this.content.add(this.scene.add.image(ox, oy, REALM_TEXTURE).setOrigin(0));
+    const reached = (p: RealmPlace) =>
+      p.id === current || (p.city ? (RPG.cities[p.city]?.sections ?? []).some((s) => ctx.flags.isSet(visitedFlag(s.map))) : false);
+    const known = new Set(RPG.realm.filter(reached).map((p) => p.id));
+    const area = { x: 6, y: TOP + 1, w: REALM_MAP_PX, h: REALM_MAP_PX };
+    g.fillStyle(MAP_ART.labelBack, 1).fillRect(area.x, area.y, area.w, area.h);
+    this.realmOverlay.show(area, { current, known, names: Object.fromEntries(RPG.realm.map((p) => [p.id, p.name])) });
 
-    // Capitals, the Throne, and each country's name.
-    for (const [id, p] of Object.entries(M.capitals)) {
-      if (id === 'seat') {
-        g.fillStyle(MAP_ART.throneRing, 1).fillCircle(ox + p.x + 0.5, oy + p.y + 0.5, 5);
-        g.fillStyle(MAP_ART.throne, 1).fillCircle(ox + p.x + 0.5, oy + p.y + 0.5, 4);
-      } else {
-        g.fillStyle(MAP_ART.labelBack, 1).fillRect(ox + p.x - 1, oy + p.y - 1, 3, 3);
-        g.fillStyle(MAP_ART.capital, 1).fillRect(ox + p.x, oy + p.y, 1, 1);
-      }
-    }
-    for (const place of RPG.realm) {
-      if (place.id === 'seat') continue;
-      const at = M.labels[place.id]!;
-      const t = this.text(0, 0, place.name, known.get(place.id) ? UI.text : UI.dimText).setStroke(MAP_ART.labelStroke, 3);
-      t.setPosition(Math.round(ox + at.x - t.width / 2), Math.round(oy + at.y - t.height - 2));
-    }
     // The legend: every place and its house; the one you are in, marked.
-    const LX = ox + M.width + 8;
+    const LX = area.x + area.w + 8;
     this.text(LX, TOP + 1, 'The realm', UI.accentText);
     RPG.realm.forEach((place, i) => {
       const y = TOP + 14 + i * 12;
       const here = place.id === current;
       g.fillStyle(MAP_ART.labelBack, 1).fillRect(LX, y + 1, 8, 8);
-      g.fillStyle(M.colours[place.id] ?? 0xffffff, 1).fillRect(LX + 1, y + 2, 6, 6);
-      this.text(LX + 12, y, `${place.name} · ${place.house}${here ? '  (here)' : ''}`, here ? UI.accentText : known.get(place.id) ? UI.text : UI.dimText);
+      g.fillStyle(REALM_MAP.colours[place.id] ?? 0xffffff, 1).fillRect(LX + 1, y + 2, 6, 6);
+      this.text(LX + 12, y, `${place.name} · ${place.house}${here ? '  (here)' : ''}`, here ? UI.accentText : known.has(place.id) ? UI.text : UI.dimText);
     });
-    const cap = current ? M.capitals[current] : undefined;
-    if (cap) this.marker(ox + cap.x + 0.5, oy + cap.y + 0.5, 5);
     this.labels = RPG.realm.map((p) => p.name);
   }
 

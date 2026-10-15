@@ -488,10 +488,13 @@ The Crown bribes with the same three currencies. **Rael** appears to have taken 
 - **The menu's maps (owner decision, Oct 14):** the **city map** is drawn from the capital's real maps: each outdoor
   section at its place on one grid (`at` in `quest/src/data/rpg.ts` CITIES), paths and bridges joining doors that lead
   to each other, indoor places as numbered buildings at their doors, unvisited places greyed with "???", and a
-  blinking "you are here" (`quest/src/engine/cityMap.ts`). The **realm map** has the board game's shapes: coastlines,
-  borders, islands, capitals and the Throne, traced from `docs/art/board-guide.png` by `quest/tools/realm-map.py` into
-  `quest/src/data/realmMap.ts` (run it again when the board's borders change). Countries not reached yet are greyed;
-  a legend lists each place and its house.
+  blinking "you are here" (`quest/src/engine/cityMap.ts`). The **realm map** is the board game's painted map (owner
+  decision, Oct 15: the painting, not a pixel version), shown sharp over the map area by
+  `quest/src/ui/RealmOverlay.ts` from a 1024 px copy in `quest/public/maps/realm.webp`. Each country is named on it,
+  your country's capital blinks, and countries not reached yet lie under a soft mist. Names, capitals and the mist
+  follow the borders traced from `docs/art/board-guide.png` by `quest/tools/realm-map.py` into
+  `quest/src/data/realmMap.ts` (run it again when the board's borders change). A legend lists each place and its
+  house. The city map stays pixel art, drawn from the game's own maps.
 - **Item popup (owner decision, Oct 14):** the first time an important item is received, it is presented. Story items
   (the Sun Locket) and the secret items (gold "Legendary item" banner) get the full showcase: the screen dims, the item
   rises and grows with turning light rays, a glow and sparkles, then its name, description and abilities. Each ability
