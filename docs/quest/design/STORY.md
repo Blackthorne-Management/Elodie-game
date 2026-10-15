@@ -46,6 +46,9 @@ Present party, and Benny joins it once Azzy has joined. Anissa never enters the 
 
 ## 2. The game intro (animated) (proposal)
 
+**The full shot-by-shot storyboard for the animator is `docs/quest/intro/STORYBOARD.md`** (Oct 15), with layout
+frames and style references in `docs/quest/intro/ref/`. The outline below is what it expands.
+
 The owner wants Zetwal finished first and opened by an **animated game intro**. Proposal: a 75 to 90 second pixel
 sequence, skippable after the first viewing, in the 320 x 180 frame, built from the three Gen I flashback stills the
 guide already budgets (10.2) plus simple pans, fades and sprite moves. No dialogue boxes; a few lines of narration
