@@ -33,9 +33,9 @@ and ticks items off here as they land. Last updated **Tue Oct 14** (evening).
 - [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
 
-**Quest art waiting on the owner:** young Patricio and Anicette (prompts given Oct 14). Still to write prompts for:
-Elodie the goddess, Elodie Limyè (the mother), Anicette young (the Echo) and old, Patricio young and old; later Benny,
-Caona, Rael.
+**Quest art waiting on the owner (art drop 1, Fri Oct 24):** every prompt is in `docs/quest/ART-PROMPTS.md`: Elodie
+the goddess, Elodie Limyè, Patricio young and old, Anicette young and old, the Sun Locket and Solange's Quill. Still to
+write: the three intro illustrations (with the storyboard, Fri Oct 17); later Benny, Caona, Rael.
 
 **The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòdlimyè and Chapter 1 finished with
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1

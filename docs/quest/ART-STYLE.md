@@ -13,7 +13,7 @@ new file should sit next to them without looking out of place.
 | Characters | 24 x 32 | 4 directions x 3 walk frames (a 72 x 128 sheet). Chibi proportions: the head about 40 % of the figure. Feet on the bottom row of the cell, the figure centred on its torso. Children and Anissa are drawn smaller inside the same cell. Grown men who must stand taller than Gianna (Azzy) use a 28 x 36 cell (an 84 x 144 sheet); the game reads the cell size from the file and stands everyone on their feet. |
 | Large objects | any multiple of 16 wide; as tall as needed | Drawn standing on the bottom edge of the object's tiles (the Gaze lamp is 32 x 32 on a 2 x 1 tile plinth). |
 | Dialogue portraits | 48 x 48 | Bust, facing the viewer. Draw masters at 64 x 64 if you like, but export 48 x 48: the box shows them at 48. |
-| Interface text | 8 px monospace | Kept as a font, not drawn. |
+| Interface text | 8 game px (9.5 in Large) | Atkinson Hyperlegible, drawn by the game at the screen's sharpness (`quest/src/ui/text.ts`); never drawn into art. |
 
 Pixel rules: hard pixel edges, no anti-aliasing, no gradients, no semi-transparent pixels in sprites
 (transparent or opaque only), light from the top left, no dithering inside sprites (the Echo filter
@@ -136,6 +136,9 @@ Haitian-inspired, Yari is Taíno-inspired, the Rodriguez line Spanish-inspired.
   `characters/quiet_crown_f.png`, `portraits/quiet_crown_m.png`, `portraits/quiet_crown_f.png`.
 
 ## 6. Prompts for a pixel-art generator
+
+The full Gemini prompts for art drop 1 (the goddess, Elodie, Patricio young and old, Anicette young and old, the
+Sun Locket and Solange's Quill) are in `docs/quest/ART-PROMPTS.md`. The templates below are the short versions.
 
 For PixelLab or Retro Diffusion style tools. Generate on a flat magenta background (`#FF00FF`), then
 remove the background, snap to the grid with nearest-neighbour downscaling, and quantize to the
