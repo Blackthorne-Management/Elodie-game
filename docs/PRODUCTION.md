@@ -82,6 +82,26 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 | 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`): the **core rules** (about 1,600 words, what a first game needs) first, then the **appendix** (rules-decisions 87) | `print/rulebook.pdf` (to build) | Board, card and portrait art for pictures |
 | 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards), printed from the **Reference Card** section of `src/data/rules.ts`: the turn, the ◎ Target card list and the lasting-card durations (these live on the card, not in the booklet; rules-decisions 87). | `print/characters/reference-*.png` (to build) | — |
 
+## Containers (what holds what)
+
+Everything rides in the game box; the board, player boards, rulebook and score pad lie flat on top, and every loose
+piece goes in its own container underneath. Owner asked Oct 15 to order the containers from BoardGamesMaker too.
+
+| Container | Holds | Size to look for |
+|---|---|---|
+| **Game box** (telescoping lid + base) | everything | about 12.5" × 12.5" × 3" (the board folds to 12" × 12") |
+| Box insert or tray (optional) | keeps the containers below from sliding | to fit the box, under the board |
+| **Action deck box** | 126 Action cards | poker size (63 × 88 mm), about 130 cards (about 40 mm thick); or two boxes of 63 |
+| **Tarot card box** | 32 Character cards and 8 Reference cards (40 tarot cards) | tarot size (70 × 120 mm), about 40 cards |
+| Small card box or bag | 8 Legacy cards | to fit the Legacy card size (not set yet) |
+| Bag or 3-part tray | 180 resource tokens (60 Influence, 60 Fear, 60 Wealth) | one bag per kind, or one tray with 3 wells |
+| Bag | 32 Heart Tokens | small zip bag |
+| Bag (or 8 small bags, one per house) | 40 Grudge Tokens | small zip bag |
+| Bag | 27 reminder tokens | small zip bag |
+| Bag | 8 standees and their 8 plastic stands | small zip bag |
+| Bag | round marker and 2 dice | small zip bag |
+| none (flat in the box) | game board, 8 player boards, rulebook, score pad | |
+
 ## Resource tokens: how many
 Showing a total uses (total ÷ 5) tokens on the ×5 side plus (the remainder) on the 1 side, so any total up to 24 takes
 at most 8 tokens and up to 29 takes 9. Players make change with the supply at any time. 60 of each kind lets all eight players hold 7 tokens of every kind
