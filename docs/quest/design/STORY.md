@@ -74,8 +74,9 @@ guide are marked **(proposal)**.
 
 ### Chapter 1: The Festival of the Gaze (Pòdlimyè, Zetwal)
 
-- **Where:** Pòdlimyè, the capital of Zetwal (owner, Oct 14). Sections: the Festival Plaza and harbor, the Limyè
-  house, the Hall of the Accord, the Temple Island, the Temple Archive and the Cane Road. See `CAPITALS.md`.
+- **Where:** Pòdlimyè, the capital of Zetwal (owner, Oct 14). Sections: the Festival Plaza, the Iron Market with the
+  Hall of the Accord, the Old Harbor, Solèy Heights, the Limyè house, the Temple Island, the Temple Archive and the
+  Cane Road. See `CAPITALS.md`.
 - **Level range:** 1 to 3. **No fights in Chapter 1** (owner decision), **except one** (owner, Oct 15): the
   cane-field boar on the Cane Road, the battle tutorial. XP comes from story beats, lore books, side quests and that
   fight. Chapter 1 is the gentlest the game ever gets: every mechanic (the Echo, shops, gear, side quests, battles)
@@ -96,9 +97,16 @@ guide are marked **(proposal)**.
   9. A canoe at the island dock: **Yari** brings the warning. Crown ships in Xaraguá's harbor, a Charter of
      Protection, a clause no one in Xaraguá was shown. Gianna agrees, but asks for time (owner, Oct 15): "Soon, Yari.
      I have work at the archive, and a few things around the city to finish before I can go." Yari joins the party
-     and waits at the dock, warning them about the boar on the Cane Road. **Built** (sets `story.yari_asked`).
+     and waits at the dock, warning them about the boar on the Cane Road, and that the Crown boards every boat:
+     Gianna will need papers. **Built** (sets `story.yari_asked`).
+  9a. **The Envoy's Papers** (owner, Oct 15: one task at the Hall of the Accord). The Hall clerk can write envoy
+     papers, but they need the Head of State's seal, which Elodie sent to the engraver in the Iron Market to be
+     re-cut. The engraver hands it over ("Her eyes. Your grandfather's ink on your fingers"); the clerk writes the
+     papers and keeps the seal. Yari will not sail without them. **Built** (`story.envoy_papers`, key item
+     `envoy_papers`; a Chapter 1 objective).
   10. **Before the tide. Built:** the three city side quests and the boar fight, with Yari in the party. Talking to
-      Yari again asks whether you are ready (she names unfinished errands; leaving is still allowed), and "Let's go"
+      Yari again asks whether you are ready (first the papers; then she names unfinished errands, and leaving is still
+      allowed), and "Let's go"
       sets `act1.complete`. **The Last Evening (proposal), on top:** free roam with Yari in the party. The city reacts to the lights (built lines).
       Side quests can be finished. A Quiet Crown watcher on the Cane Road notices Anissa (built). Elodie's absence is
       felt: the Hall clerk shows Gianna the blank seventh line on the Marshal's stone and the seven-ribbon note.

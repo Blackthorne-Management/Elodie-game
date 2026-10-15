@@ -212,6 +212,20 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   clerk: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.w!, trim: C.y!, legs: C.K!, accessories: ['sash'] },
   cane_cutter: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xa89c86, trim: C.o!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
 
+  // The Iron Market, the Old Harbor and Solèy Heights (owner decision, Oct 15).
+  engraver: { skin: C.s!, hair: C.G!, hairStyle: 'short', outfit: 0x5a4a3e, trim: C.y!, legs: C.K!, beard: C.G!, accessories: ['apron'] },
+  ironmonger: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.i!, trim: C.e!, legs: C.K!, accessories: ['apron'] },
+  letter_writer: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'bun', outfit: C.p!, trim: C.w!, robe: true, accessories: ['satchel'] },
+  foreign_envoy: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.m!, trim: C.y!, robe: true, build: 'tall', headgear: 'circlet', headgearColor: C.I!, accessories: ['sash'] },
+  market_kid: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'puffs', outfit: C.R!, trim: C.w!, legs: C.B!, build: 'small' },
+  fishwife: { skin: C.s!, hair: HAIR_DARK, hairStyle: 'short', outfit: C.c!, trim: C.w!, legs: C.B!, headgear: 'wrap', headgearColor: C.U!, accessories: ['apron'] },
+  net_mender: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'cropped', outfit: 0xa89c86, trim: C.c!, legs: C.B!, beard: WHITE_HAIR },
+  old_sailor: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.u!, trim: C.w!, legs: C.K!, beard: WHITE_HAIR, headgear: 'cap', headgearColor: C.u! },
+  gardener: { skin: C.s!, hair: C.G!, hairStyle: 'bun', outfit: C.L!, trim: C.y!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N!, accessories: ['apron'] },
+  poet: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'curly', outfit: C.K!, trim: C.R!, legs: C.K!, accessories: ['satchel'] },
+  porch_widow: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.K!, trim: C.w!, robe: true, accessories: ['cane'] },
+  lookout_keeper: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.B!, trim: C.o!, legs: C.K!, headgear: 'cap', headgearColor: C.R! },
+
   // Zetwal, the present.
   gaze_keeper: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true, accessories: ['staff'] },
   soup_vendor: { skin: C.s!, hair: HAIR_DARK, hairStyle: 'cropped', outfit: C.o!, trim: C.y!, legs: C.B!, headgear: 'wrap', headgearColor: C.o!, accessories: ['apron'] },

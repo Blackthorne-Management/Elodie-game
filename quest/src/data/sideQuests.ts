@@ -40,7 +40,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     parallel: true,
     steps: [
       { text: 'A bowl for the old neighbor (west of the plaza).', done: f('side.soup.elder') },
-      { text: 'A bowl for the town guard (by the Hall of the Accord).', done: f('side.soup.guard') },
+      { text: 'A bowl for the town guard (the plaza).', done: f('side.soup.guard') },
       { text: 'A bowl for the ferryman (the docks).', done: f('side.soup.ferry') },
       { text: 'Tell the soup vendor.', done: f('side.soup.done') },
     ],

@@ -630,13 +630,36 @@ async function playAct(browser, errors) {
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   // The first battle (the boar on the Cane Road): Sunthread until it falls, Surge when ready.
   await page.evaluate(() => window.__quest.startBattle('intro_boar'));
+  // The tutorial comes first (owner, Oct 15): its pages, A to turn each.
+  await page.waitForFunction(() => window.__quest.snapshot().battle?.tutorial, null, { timeout: 15000 });
+  const tut = (await snap(page)).battle.tutorial;
+  check(tut.page === 1 && tut.pages >= 8 && tut.title === 'How to fight', `the boar fight opens with the tutorial (${tut.pages} pages)`);
+  await shoot(page, 'battle-tutorial', shots);
+  const titles = [];
+  for (let i = 0; i < 20; i++) {
+    const t = (await snap(page)).battle?.tutorial;
+    if (!t) break;
+    titles.push(t.title);
+    if (t.title.startsWith('Anissa:')) await shoot(page, 'battle-tutorial-anissa', shots);
+    await page.keyboard.press('KeyZ');
+    await page.waitForFunction((n) => window.__quest.snapshot().battle?.tutorial?.page !== n, t.page, { timeout: 2000 });
+  }
+  check(['Skills and SP', 'Anissa: Spark and Surge', "Anissa's Light", 'Rows and Swap', 'Gear and spells'].every((t) => titles.includes(t)), 'it covers skills, Anissa, rows and gear');
   await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return b && !b.busy; }, null, { timeout: 15000 });
   await shoot(page, 'battle-start', shots);
   let targeted = false;
+  let spoils = false;
   for (let turn = 0; turn < 60; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
     const bt = (await snap(page)).battle;
     if (!bt) break;
+    if (bt.tutorial) {
+      spoils ||= bt.done && bt.tutorial.title === 'Spoils';
+      if (spoils) await shoot(page, 'battle-spoils', shots);
+      await page.keyboard.press('KeyZ');
+      await page.waitForTimeout(120);
+      continue;
+    }
     if (bt.done) {
       await shoot(page, 'battle-won', shots);
       await page.keyboard.press('KeyZ');
@@ -660,6 +683,7 @@ async function playAct(browser, errors) {
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 5000 });
   const afterBattle = await snap(page);
   check(targeted, 'the battle asks for a target before an attack or spell');
+  check(spoils, 'after the win, a tutorial page shows how to wear the spoils');
   // Equip > Gianna > Spells: the spell slots and what gear brings (owner, Oct 15).
   await menuTab(page, 'Equip');
   await page.keyboard.press('z');

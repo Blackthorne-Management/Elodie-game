@@ -58,13 +58,17 @@ already built is a **proposal**, including every city name except Pòdlimyè.*
 the Throne at the start). **Feel:** sun, lanterns, a thousand names said aloud; Kreyol/Haitian-inspired. Accent gold
 `#d4ac0d`.
 
-**Sections** (built unless marked):
+**Sections** (built unless marked). **Every capital has at least five outdoor areas, buildings aside** (owner, Oct 15:
+"so it feels more grand"); Pòdlimyè has six (plaza, Iron Market, Old Harbor, Solèy Heights, Temple Island, Cane Road).
 
 | Section | Map | Size | Description |
 |---|---|---|---|
 | Festival Plaza and harbor (hub) | `zetwal-town` | 40 x 28 (built) | The stage, the fountain, vendor stands, the Marshal's stone, the bridgehead and the harbor. |
+| The Iron Market | `zetwal-market` | 30 x 24 (built Oct 15) | West of the plaza: ironmongers, the engraver, the letter writer, a foreign envoy, and the **Hall of the Accord** (its 8-bit exterior, `OBJECT_ART.hall_of_accord`, from the owner's render). Chapter 1 task: The Envoy's Papers. |
+| The Old Harbor | `zetwal-harbor` | 36 x 18 (built Oct 15) | Along the shore west: the fish market, the customs house, piers and the ferry landing. Exploration for now; more on the return. |
+| Solèy Heights | `zetwal-heights` | 30 x 20 (built Oct 15) | Up the steps north of the plaza: old houses, terraced gardens, the well, the lookout over the city. Exploration for now; more on the return. |
 | Limyè house | `zetwal-house` | 20 x 12 (built) | Home; Patricio's study with the map table Echo Zone and the window seat. |
-| Hall of the Accord (capital building) | `zetwal-hall` | 18 x 12 (built) | The seat of the state on the plaza; the public Accord copy. |
+| Hall of the Accord (capital building) | `zetwal-hall` | 18 x 12 (built) | The seat of the state, in the Iron Market (moved from the plaza, Oct 15): the council table, the Head of State's chair, the public Accord copy. |
 | Temple Island | `zetwal-temple` | 30 x 20 (built) | The Temple of Elodie, the Gaze lamp, the Name Stones, the dock. |
 | Temple Archive (library) | `zetwal-archive` | 22 x 14 (built) | On the island; three shelves of three books. |
 | The Cane Road (wild) | `zetwal-road` | 44 x 26 (built) | Cane fields past the east gate, the burned sugar mill, the mangroves. |

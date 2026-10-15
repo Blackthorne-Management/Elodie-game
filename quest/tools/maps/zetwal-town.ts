@@ -1,4 +1,4 @@
-// Zetwal: the plaza on the festival of Elodie's Gaze, the family house, the harbor, the east gate, and
+// Zetwal: the plaza on the festival of Elodie's Gaze, the family house, the docks, the east gate, and
 // the bridgehead over the chasm to the Temple of Elodie's island. The Echo is the same square fifty
 // years ago, the night before the Sun Accord was signed: a revolutionary camp of tents and barricades.
 
@@ -67,9 +67,12 @@ export function zetwalTown(): MapSource {
   }
   g.rect(31, 17, 2, 1, 'B');
 
-  // Doors to the new sections: the Hall of the Accord on the plaza, the east gate to the Cane Road.
-  g.set(23, 4, 'D');
+  // Doors to the other sections: the east gate to the Cane Road, the west lane to the Iron Market (and
+  // the Hall of the Accord), the shore west to the Old Harbor, the steps north to Solèy Heights.
   g.set(39, 19, 'D');
+  g.set(0, 10, 'D');
+  g.set(0, 23, 'D');
+  g.rect(18, 1, 1, 2, ',').set(18, 0, 'D');
 
   // ---- The Echo: fifty years ago ----------------------------------------------------------------
   const e = g.map({
@@ -124,7 +127,9 @@ export function zetwalTown(): MapSource {
     npc('echo_drummer', 18, 6, 'down', { era: 'echo' }),
 
     { layer: 'doors', name: 'town_house', x: 5, y: 5, props: { target: 'house_front', map: 'zetwal-house', exit: 'down' } },
-    { layer: 'doors', name: 'town_hall', x: 23, y: 4, props: { target: 'hall_out', map: 'zetwal-hall', exit: 'down' } },
+    { layer: 'doors', name: 'town_market', x: 0, y: 10, props: { target: 'market_plaza', map: 'zetwal-market', exit: 'right' } },
+    { layer: 'doors', name: 'town_harbor', x: 0, y: 23, props: { target: 'harbor_plaza', map: 'zetwal-harbor', exit: 'right' } },
+    { layer: 'doors', name: 'town_heights', x: 18, y: 0, props: { target: 'heights_plaza', map: 'zetwal-heights', exit: 'down' } },
     { layer: 'doors', name: 'town_gate', x: 39, y: 19, props: { target: 'road_gate', map: 'zetwal-road', exit: 'left' } },
     { layer: 'doors', name: 'town_temple', x: 38, y: 9, props: { target: 'temple_bridge', map: 'zetwal-temple', exit: 'left' } },
 

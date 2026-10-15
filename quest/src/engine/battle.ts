@@ -178,6 +178,14 @@ export interface BattleDef {
   rewards: { xp: number; gold: number; items?: readonly { id: string; n: number }[] };
   /** Anissa's tips, by moment (the first battle teaches the commands). */
   tips?: { start?: string; spark?: string; tell?: string; lowHp?: string };
+  /** The tutorial (the boar fight): pages before the first turn, and after a win. */
+  tutorial?: { start: readonly TutorialPage[]; after?: readonly TutorialPage[] };
+}
+
+/** One page of the battle tutorial. */
+export interface TutorialPage {
+  title: string;
+  text: string;
 }
 
 /** What a party member brings into a fight (worked out from the save by the scene). */

@@ -18,6 +18,9 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ',': { ground: 'path', solid: false },
   ';': { ground: 'path_old', solid: false },
   ':': { ground: 'stone', solid: false },
+  // Paving under a large drawing (a puzzle object's OBJECT_ART, e.g. the Hall of the Accord): solid.
+  '0': { ground: 'stone', solid: true },
+  '1': { ground: 'grass', solid: true },
   f: { ground: 'flowers', solid: false },
   n: { ground: 'sand', solid: false },
   k: { ground: 'dock', solid: false },

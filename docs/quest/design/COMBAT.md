@@ -359,6 +359,14 @@ Running joke (no mechanics): he is out of breath after every battle.
   (Thornwood, Sun-glaive) adds ATK and makes it a full blow (power 100).
 - New statuses: **Slowed** (SPD x0.7) and **Taunting** (one-target attacks go to them first).
 
+## 9.11 The battle tutorial (owner, Oct 15; built)
+
+The boar fight on the Cane Road opens with nine pages over the battle (A or a tap turns a page, B skips the rest):
+how turns and targets work, Attack, Skill and SP, weapon moves and cooldowns, Guard and Item, Anissa's Spark and
+Surge, Anissa's Light (her passive), rows and Swap, and gear and spells (Menu > Equip, Equip > Spells). After the win
+one more page shows the spoils and how to wear the Boar-tusk charm. It shows each time the boar fight starts (not
+again after a loss). Text: `BATTLES.intro_boar.tutorial` in `quest/src/data/battles.ts`.
+
 ## 10. Status effects
 
 | Status | Effect | Lasts | Cleared by |

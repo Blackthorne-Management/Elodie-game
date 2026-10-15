@@ -895,10 +895,12 @@ export class GameMenu {
         }
       }
     });
-    // Scale to fit (whole pixels), on the left; the legend on the right.
+    // Scale to fit, on the left; the legend on the right. Whole pixels while the city is small; a grown
+    // capital (Pòdlimyè's six outdoor areas) takes the largest scale that fits, in quarter steps.
     const areaW = 200;
     const areaH = VIEW_HEIGHT - TOP - 28;
-    const k = Math.max(1, Math.floor(Math.min(areaW / W, areaH / layout.height)));
+    const fit = Math.min(areaW / W, areaH / layout.height);
+    const k = fit >= 2 ? Math.floor(fit) : Math.max(1, Math.floor(fit * 4) / 4);
     const ox = 6 + Math.floor((areaW - W * k) / 2);
     const oy = TOP + 13;
     this.content.add(this.scene.add.image(ox, oy, CITY_TEXTURE).setOrigin(0).setScale(k));

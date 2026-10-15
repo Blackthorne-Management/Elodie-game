@@ -41,6 +41,7 @@ import {
   targetsAllies,
   type Action,
   type BattleEvent,
+  type TutorialPage,
   type BattleResult,
   type Combatant,
   type StatusId,
@@ -87,6 +88,8 @@ export interface BattleSnapshot {
   message: string;
   busy: boolean;
   done: boolean;
+  /** The tutorial page on screen (the boar fight), or null. */
+  tutorial: { title: string; page: number; pages: number } | null;
 }
 
 /** Short tags for statuses, by the party's bars and under a foe's name. */
@@ -148,6 +151,10 @@ export class BattleScene extends Phaser.Scene {
   private ui!: Phaser.GameObjects.Container;
   private seed = 1;
   private cursorBob = 0;
+  /** Tutorial pages still to show (the first is on screen), and what waits behind them. */
+  private tutorial: TutorialPage[] = [];
+  private tutorialTotal = 0;
+  private afterTutorial: BattleEvent[] = [];
 
   constructor() {
     super('battle');
@@ -167,6 +174,9 @@ export class BattleScene extends Phaser.Scene {
     this.sticky = '';
     this.sprites = new Map();
     this.weapons = new Map();
+    this.tutorial = [];
+    this.tutorialTotal = 0;
+    this.afterTutorial = [];
   }
 
   create(): void {
@@ -210,7 +220,30 @@ export class BattleScene extends Phaser.Scene {
     this.seed = (this.seed * 1103515245 + 12345) >>> 0;
     this.battle = retryOf ? Battle.retry(retryOf, party, enemies, items, this.seed) : new Battle(def, party, enemies, items, { seed: this.seed });
     this.placeFighters();
-    this.play(this.battle.start());
+    // The tutorial comes first (not again after a loss); the fight waits behind it.
+    if (!retryOf && def.tutorial) this.openTutorial(def.tutorial.start, this.battle.start());
+    else this.play(this.battle.start());
+  }
+
+  private openTutorial(pages: readonly TutorialPage[], then: BattleEvent[] = []): void {
+    this.tutorial = [...pages];
+    this.tutorialTotal = pages.length;
+    this.afterTutorial = then;
+    this.redraw();
+  }
+
+  /** A or a tap turns the page; B skips the rest. */
+  private turnTutorial(skip = false): void {
+    if (skip) this.tutorial = [];
+    else this.tutorial.shift();
+    if (this.tutorial.length > 0) {
+      this.redraw();
+      return;
+    }
+    const then = this.afterTutorial;
+    this.afterTutorial = [];
+    if (then.length > 0) this.play(then);
+    else this.redraw();
   }
 
   private act(action: Action): void {
@@ -393,6 +426,8 @@ export class BattleScene extends Phaser.Scene {
     this.done = true;
     const items = this.result.items.map((i) => RPG.items[i.id]?.name ?? i.id).join(', ');
     this.say(`Victory!  +${this.result.xp} XP  +${this.result.gold} gold${items ? `  ${items}` : ''}`);
+    const after = this.battle.def.tutorial?.after;
+    if (after) this.openTutorial(after);
   }
 
   private lose(): void {
@@ -544,6 +579,11 @@ export class BattleScene extends Phaser.Scene {
     this.holdWeapons();
     const input = getRuntime().input;
     input.update();
+    if (this.tutorial.length > 0) {
+      if (input.pressed('confirm')) this.turnTutorial();
+      else if (input.pressed('cancel')) this.turnTutorial(true);
+      return;
+    }
     if (this.done) {
       if (!this.busy && (input.pressed('confirm') || input.pressed('cancel'))) this.finish();
       return;
@@ -588,8 +628,11 @@ export class BattleScene extends Phaser.Scene {
     const k = renderScale();
     const x = pointer.x / k;
     const y = pointer.y / k;
+    if (this.tutorial.length > 0) {
+      this.turnTutorial();
+      return;
+    }
     if (this.done) {
-      if (!this.busy) this.finish();
       return;
     }
     if (this.busy) return;
@@ -929,6 +972,10 @@ export class BattleScene extends Phaser.Scene {
       tags(160, y + 1, p);
     });
 
+    if (this.tutorial.length > 0) {
+      this.drawTutorial(text);
+      return;
+    }
     if (this.done) {
       text(248, Y + 17, 'A or tap: continue', UI.dimText).setOrigin(0.5, 0);
       return;
@@ -955,6 +1002,30 @@ export class BattleScene extends Phaser.Scene {
     if (pages > 1) text(VIEW_WIDTH - 4, VIEW_HEIGHT - 9, `${page + 1}/${pages}`, UI.dimText, { fontSize: '6px' }).setOrigin(1, 0);
   }
 
+  /** The tutorial page: a panel over the fight with its title, text and page count. */
+  private drawTutorial(
+    text: (x: number, y: number, s: string, color?: string, extra?: Phaser.Types.GameObjects.Text.TextStyle) => Phaser.GameObjects.Text,
+  ): void {
+    const page = this.tutorial[0]!;
+    // Its own layer, over every name and bar already drawn.
+    const g = this.add.graphics();
+    this.ui.add(g);
+    const n = this.tutorialTotal - this.tutorial.length + 1;
+    const w = VIEW_WIDTH - 40;
+    const x = 20;
+    g.fillStyle(0x000000, 0.45).fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+    const title = text(x + 8, 0, page.title, UI.accentText);
+    const body = text(x + 8, 0, page.text, UI.text, { wordWrap: { width: w - 16, useAdvancedWrap: true }, lineSpacing: 2 });
+    const foot = text(x + w - 8, 0, `${this.tutorial.length > 1 ? 'A: next   B: skip' : 'A: done'}   ${n}/${this.tutorialTotal}`, UI.dimText, { fontSize: '7px' });
+    const h = 8 + 12 + Math.ceil(body.height) + 6 + 10 + 6;
+    const y = Math.max(16, Math.round((BATTLE_ART.stripY - h) / 2) + 6);
+    g.fillStyle(BATTLE_ART.panel, 0.96).fillRect(x, y, w, h);
+    g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    title.setY(y + 6);
+    body.setY(y + 20);
+    foot.setOrigin(1, 0).setY(y + h - 13);
+  }
+
   snapshot(): BattleSnapshot {
     const b = this.battle;
     const me: Combatant | undefined = b.party[0];
@@ -973,6 +1044,7 @@ export class BattleScene extends Phaser.Scene {
       message: this.message,
       busy: this.busy,
       done: this.done,
+      tutorial: this.tutorial[0] ? { title: this.tutorial[0].title, page: this.tutorialTotal - this.tutorial.length + 1, pages: this.tutorialTotal } : null,
     };
   }
 

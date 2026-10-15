@@ -52,6 +52,15 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   mill_ruin: { name: 'Old sugar mill' },
   smuggler_crates: { name: 'Crown-stamped crates' },
 
+  // The Iron Market, the Hall of the Accord, the Old Harbor and Solèy Heights.
+  hall_of_accord: { name: 'The Hall of the Accord' },
+  hall_sign: { name: 'Hall notice board' },
+  head_seat: { name: "The Head of State's chair" },
+  customs_sign: { name: 'Customs house sign' },
+  lookout: { name: 'The lookout' },
+  lookout_sign: { name: 'Lookout sign' },
+  heights_well: { name: 'The old well' },
+
   // The Temple Archive.
   solange_list: { name: "Mother Solange's list" },
 
@@ -67,8 +76,14 @@ export const DOORS: Readonly<Record<string, string>> = {
   'zetwal-temple/temple_bridge': 'Back across the bridge',
   'zetwal-temple/temple_archive': 'Temple Archive',
   'zetwal-archive/archive_out': 'Back to the temple',
-  'zetwal-town/town_hall': 'Hall of the Accord',
-  'zetwal-hall/hall_out': 'Out to the plaza',
+  'zetwal-town/town_market': 'West lane: the Iron Market',
+  'zetwal-market/market_plaza': 'Back to the plaza',
+  'zetwal-market/market_hall': 'Hall of the Accord',
+  'zetwal-hall/hall_out': 'Out to the Iron Market',
+  'zetwal-town/town_harbor': 'Along the shore: the Old Harbor',
+  'zetwal-harbor/harbor_plaza': 'Back to the plaza',
+  'zetwal-town/town_heights': 'Up the steps: Solèy Heights',
+  'zetwal-heights/heights_plaza': 'Down to the plaza',
   'zetwal-town/town_gate': 'East gate: the Cane Road',
   'zetwal-road/road_gate': 'Back through the east gate',
   'test-village/house_front': 'House',

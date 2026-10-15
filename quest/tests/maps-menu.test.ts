@@ -24,9 +24,9 @@ describe('city map', () => {
       const pairs = layout.sections.flatMap((s) => maps[s.map]!.doors.filter((d) => outdoor.has(d.targetMap)).map(() => 1)).length;
       expect(layout.connectors.length * 2).toBe(pairs);
       for (const c of layout.connectors) expect(Math.hypot(c.to.x - c.from.x, c.to.y - c.from.y)).toBeLessThan(16);
-      // It fits the menu's map area at two pixels per tile.
-      expect(layout.width * 2).toBeLessThanOrEqual(200);
-      expect(layout.height * 2).toBeLessThanOrEqual(114);
+      // It fits the menu's map area at one and a half pixels per tile or more.
+      expect(layout.width * 1.5).toBeLessThanOrEqual(200);
+      expect(layout.height * 1.5).toBeLessThanOrEqual(114);
     });
   }
 

@@ -31,6 +31,21 @@ const ITEM_LIST: ItemDef[] = [
       { name: 'Two halves of a promise', text: 'Near its other half, the Brasador signet, both halves glow.', known: { flag: 'story.signet_glowed' } },
     ],
   },
+  // The Envoy's Papers (Chapter 1, the Hall of the Accord).
+  {
+    id: 'elodie_seal',
+    name: "Mother's seal",
+    kind: 'key',
+    price: 0,
+    text: "The Head of State's seal: a heavy brass sun, its rays fresh from the engraver's tools. For the Hall clerk.",
+  },
+  {
+    id: 'envoy_papers',
+    name: 'Envoy papers',
+    kind: 'key',
+    price: 0,
+    text: "Gianna Limyè, envoy of Kay Soley to Xaraguá, under the seal of the Head of State. Keep them dry.",
+  },
   // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital: the
   // legendary relics, worn in their own slot (owner decision, Oct 15).
   {
@@ -142,12 +157,17 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
     // word the way Port-de-Paix is Pòdepè (pò = port). A fluent speaker checks it (Nov 18).
     name: 'Pòdlimyè',
     house: 'Kay Soley',
-    // The plaza and harbor in the west; the Temple Island across the water to the north-east (the
-    // Chain Bridge); the Cane Road straight out of the east gate.
+    // The plaza in the middle; the Iron Market (with the Hall of the Accord) west of it, the Old Harbor
+    // along the shore south-west, Solèy Heights up the hill north (owner decision, Oct 15: at least five
+    // outdoor areas, buildings aside); the Temple Island across the water to the north-east (the Chain
+    // Bridge); the Cane Road straight out of the east gate.
     sections: [
       { map: 'zetwal-town', name: 'Festival Plaza', at: { x: 0, y: 9 } },
       { map: 'zetwal-temple', name: 'Temple Island', at: { x: 44, y: -4 } },
       { map: 'zetwal-road', name: 'The Cane Road', at: { x: 40, y: 16 } },
+      { map: 'zetwal-market', name: 'The Iron Market', at: { x: -30, y: 4 } },
+      { map: 'zetwal-harbor', name: 'The Old Harbor', at: { x: -36, y: 28 } },
+      { map: 'zetwal-heights', name: 'Solèy Heights', at: { x: 4, y: -11 } },
       { map: 'zetwal-house', name: 'Limyè house' },
       { map: 'zetwal-hall', name: 'Hall of the Accord' },
       { map: 'zetwal-archive', name: 'Temple Archive' },

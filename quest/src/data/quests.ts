@@ -7,7 +7,7 @@ import type { JournalNote, QuestDef } from '../engine/quests.ts';
 export const ACT1: QuestDef = {
   id: 'act1',
   title: 'Chapter 1: The Festival of the Gaze',
-  maps: ['zetwal-town', 'zetwal-house', 'zetwal-temple'],
+  maps: ['zetwal-town', 'zetwal-house', 'zetwal-temple', 'zetwal-market', 'zetwal-hall'],
   objectives: [
     {
       id: 'festival',
@@ -117,6 +117,18 @@ export const ACT1: QuestDef = {
         'Someone came across the water. I saw a canoe.',
         'The dock is at the south end of the island.',
         'Go south from the temple to the dock and talk to whoever came.',
+      ],
+    },
+    // The Envoy's Papers (owner decision, Oct 15: one task at the Hall of the Accord in Chapter 1).
+    {
+      id: 'papers',
+      title: "The envoy's papers",
+      detail: "The Crown boards every boat at Xaraguá. Ask the clerk at the Hall of the Accord, in the Iron Market west of the plaza, for envoy papers.",
+      done: { flag: 'story.envoy_papers' },
+      hints: [
+        'Yari said we need papers, Gigi. The Hall writes them.',
+        "The Hall of the Accord is in the Iron Market, through the west lane off the plaza. The clerk needs Mother's seal; the engraver has it.",
+        "Go west from the plaza to the Iron Market and into the Hall. Talk to the clerk, fetch the seal from the engraver's stall east of the steps, and bring it back.",
       ],
     },
     {

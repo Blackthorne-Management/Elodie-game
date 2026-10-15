@@ -169,6 +169,10 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
     expect(lines.some((l) => l.startsWith('Soon, Yari.'))).toBe(true);
     expect(flags.isSet('story.yari_asked')).toBe(true);
     expect(flags.isSet('act1.complete')).toBe(false);
+    // No envoy papers yet (the Hall of the Accord): Yari will not sail.
+    expect(talk(flags, 'yari_talk')[0]).toContain('No papers, no landing');
+    expect(flags.isSet('act1.complete')).toBe(false);
+    flags.set('story.envoy_papers', true);
     // Errands left: Yari reminds her; "Not yet" keeps the chapter open.
     expect(talk(flags, 'yari_talk', ['Not yet'])[0]).toContain('Did you finish what you had to do?');
     expect(flags.isSet('act1.complete')).toBe(false);
@@ -179,6 +183,7 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
   it('with every errand done and the boar beaten, Yari says so', () => {
     const flags = new FlagStore({
       'story.yari_asked': true,
+      'story.envoy_papers': true,
       'side.overdue.done': true,
       'side.soup.done': true,
       'side.cane_name.done': true,
@@ -186,5 +191,27 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
     });
     expect(talk(flags, 'yari_talk', ["Let's go."])[0]).toContain('the boar sorry it met us');
     expect(flags.isSet('act1.complete')).toBe(true);
+  });
+});
+
+describe("The Envoy's Papers (owner, Oct 15): the task at the Hall of the Accord", () => {
+  it('the clerk needs the seal, the engraver has it, the clerk writes the papers and keeps the seal', () => {
+    const flags = new FlagStore({ 'party.anissa': true, 'story.yari_asked': true });
+    expect(talk(flags, 'engraver_talk').join(' ')).not.toContain('Finished it this morning');
+    talk(flags, 'hall_clerk_talk');
+    expect(flags.isSet('story.papers_asked')).toBe(true);
+    expect(talk(flags, 'engraver_talk').join(' ')).toContain('Finished it this morning');
+    expect(itemCount(flags, 'elodie_seal')).toBe(1);
+    talk(flags, 'hall_clerk_talk');
+    expect(itemCount(flags, 'elodie_seal')).toBe(0);
+    expect(itemCount(flags, 'envoy_papers')).toBe(1);
+    expect(flags.isSet('story.envoy_papers')).toBe(true);
+    expect(talk(flags, 'engraver_talk').join(' ')).not.toContain('Finished it this morning');
+  });
+
+  it('before Yari asks, the clerk only talks about the Hall', () => {
+    const flags = new FlagStore({ 'party.anissa': true });
+    talk(flags, 'hall_clerk_talk');
+    expect(flags.isSet('story.papers_asked')).toBe(false);
   });
 });

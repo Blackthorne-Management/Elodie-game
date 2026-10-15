@@ -8,13 +8,16 @@ import { fileURLToPath } from 'node:url';
 import { toTiled, type MapSource } from './maps/painter.ts';
 import { zetwalArchive } from './maps/zetwal-archive.ts';
 import { zetwalHall } from './maps/zetwal-hall.ts';
+import { zetwalHarbor } from './maps/zetwal-harbor.ts';
+import { zetwalHeights } from './maps/zetwal-heights.ts';
 import { zetwalHouse } from './maps/zetwal-house.ts';
+import { zetwalMarket } from './maps/zetwal-market.ts';
 import { zetwalRoad } from './maps/zetwal-road.ts';
 import { zetwalTemple } from './maps/zetwal-temple.ts';
 import { zetwalTown } from './maps/zetwal-town.ts';
 import { MAPS_DIR } from './validate-maps.ts';
 
-export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad];
+export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights];
 
 /** The generated files, as `[path, text]`. */
 export function buildMaps(dir: string = MAPS_DIR): [string, string][] {

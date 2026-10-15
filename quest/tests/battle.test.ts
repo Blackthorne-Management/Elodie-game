@@ -390,3 +390,14 @@ describe('four at a time: swapping, the front row, area attacks', () => {
     expect(struck).toEqual(new Set(['gianna', 'yari', 'azzy', 'bayarmaa']));
   });
 });
+
+describe('the boar fight tutorial (owner, Oct 15)', () => {
+  it('teaches fighting, skills, Anissa (passive and Surge), rows and gear, and the spoils after', async () => {
+    const { BATTLES } = await import('../src/data/battles.ts');
+    const t = BATTLES.intro_boar!.tutorial!;
+    const all = t.start.map((p) => `${p.title}: ${p.text}`).join(' ');
+    for (const word of ['target', 'Skill', 'SP', 'Guard', 'Item', 'Spark', 'Surge', "Anissa's Light", 'Swap', 'Equip', 'Spells']) expect(all).toContain(word);
+    expect(t.after?.[0]?.text).toContain('Equip');
+    for (const p of [...t.start, ...(t.after ?? [])]) expect(p.text.length, p.title).toBeLessThanOrEqual(230);
+  });
+});
