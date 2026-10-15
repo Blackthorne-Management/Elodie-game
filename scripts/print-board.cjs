@@ -94,8 +94,8 @@ svg { position: absolute; inset: 0; }
 <div class="board">
   <img class="map" src="${uri(MAP)}">
   <svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
-    <path d="${grid.join(' ')}" stroke="rgba(10,6,2,.55)" stroke-width="${U * 0.03}" fill="none"/>
-    <path d="${grid.join(' ')}" stroke="rgba(243,210,122,.16)" stroke-width="${U * 0.008}" fill="none"/>
+    <path d="${grid.join(' ')}" stroke="rgba(10,6,2,.85)" stroke-width="${U * 0.05}" fill="none"/>
+    <path d="${grid.join(' ')}" stroke="rgba(243,210,122,.4)" stroke-width="${U * 0.012}" fill="none"/>
     <rect x="${O}" y="${O}" width="${18 * U}" height="${18 * U}" fill="none" stroke="#c99a45" stroke-width="${U * 0.05}" opacity=".85"/>
     <rect x="${O + 8 * U}" y="${O + 8 * U}" width="${2 * U}" height="${2 * U}" fill="none" stroke="#f3d27a" stroke-width="${U * 0.05}"/>
   </svg>
