@@ -300,6 +300,8 @@ export const ART_FILES = {
   object: (kind: string) => `objects/${kind}.png`,
   item: (id: string) => `items/${id}.png`,
   enemy: (look: string) => `enemies/${look}.png`,
+  /** A battle stance: two equal cells side by side (stance, down; Anissa: calm, surge), drawn at BATTLE_STANCE.scale. */
+  battle: (look: string) => `battle/${look}.png`,
   /** A painted battle weapon (it keeps the grip point of WEAPON_ART). */
   weapon: (id: string) => `weapons/${id}.png`,
   /** Walk sheet layout. */
@@ -470,15 +472,27 @@ export function textureKeyForWeapon(id: string): string {
  * Where a fighter's front hand is, from their feet (bottom centre), facing right: the weapon's grip goes
  * there. One default for the stand-in walk sprites; a battle stance can set its own by look.
  */
+/**
+ * Battle stances (owner, Oct 15; art prompt 9): one empty-handed stance and one down pose per character,
+ * drawn at twice the game's pixel density (shown at half size, so phones and computers keep their detail).
+ * A look without a stance file uses its walking sprite.
+ */
+export const BATTLE_STANCE = { looks: ['gianna', 'yari', 'patricio_young', 'anissa'], scale: 0.5 } as const;
+
+export function textureKeyForBattle(look: string): string {
+  return `battle-${look}`;
+}
+
 export const BATTLE_HANDS: {
-  default: { dx: number; dy: number };
+  default: { dx: number; dy: number; behind?: boolean };
   /** By weapon type: a staff stands just ahead of the body, a bow is held out in front, a blade at the hip. */
-  byWeapon: Readonly<Record<string, { dx: number; dy: number }>>;
-  byLook: Readonly<Record<string, { dx: number; dy: number }>>;
+  byWeapon: Readonly<Record<string, { dx: number; dy: number; behind?: boolean }>>;
+  /** Painted stances: their closed hand, in game pixels from the feet; `behind`: the back hand (weapon behind the body). */
+  byLook: Readonly<Record<string, { dx: number; dy: number; behind?: boolean }>>;
 } = {
   default: { dx: 4, dy: -9 },
   byWeapon: { staff: { dx: 8, dy: -9 }, bow: { dx: 10, dy: -12 }, blade: { dx: 4, dy: -9 } },
-  byLook: {},
+  byLook: { gianna: { dx: -7, dy: -15 } },
 };
 
 /** Enemy drawings (ENEMY_ART, or a file in art/enemies/), one texture each. */

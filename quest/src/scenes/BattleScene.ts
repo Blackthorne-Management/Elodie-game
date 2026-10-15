@@ -14,7 +14,9 @@ import {
   BATTLE_ART,
   BATTLE_BACKDROPS,
   BATTLE_HANDS,
+  BATTLE_STANCE,
   WEAPON_ART,
+  textureKeyForBattle,
   UI,
   characterFrame,
   textureKeyForCharacter,
@@ -136,7 +138,7 @@ export class BattleScene extends Phaser.Scene {
   private result: BattleResult | null = null;
   private sprites = new Map<string, Phaser.GameObjects.Image>();
   /** The weapon in each fighter's hand (kept on the hand every frame, so it shivers and fades with them). */
-  private weapons = new Map<string, { img: Phaser.GameObjects.Image; hand: { dx: number; dy: number } }>();
+  private weapons = new Map<string, { img: Phaser.GameObjects.Image; hand: { dx: number; dy: number; behind?: boolean } }>();
   private anissa: Phaser.GameObjects.Image | null = null;
   private anissaLight: Phaser.GameObjects.Arc | null = null;
   private ui!: Phaser.GameObjects.Container;
@@ -305,6 +307,7 @@ export class BattleScene extends Phaser.Scene {
         const s = this.sprites.get(e.who);
         if (s) {
           s.clearTint();
+          if (this.hasStance(s)) s.setFrame('0');
           this.tweens.add({ targets: s, alpha: 1, duration: 300 });
           playFx(this, 'light', this.centre(e.who));
         }
@@ -336,7 +339,15 @@ export class BattleScene extends Phaser.Scene {
         return 0;
       case 'surge': {
         const g = this.battle.party.find((p) => p.anissaBond);
-        if (this.anissa) playFx(this, 'surge', { x: this.anissa.x, y: this.anissa.y - this.anissa.displayHeight / 2 });
+        if (this.anissa) {
+          playFx(this, 'surge', { x: this.anissa.x, y: this.anissa.y - this.anissa.displayHeight / 2 });
+          // Her painted stance has a second pose: the glow bright, eyes shut.
+          const a = this.anissa;
+          if (this.hasStance(a)) {
+            a.setFrame('1');
+            this.time.delayedCall(1200, () => a.active && a.setFrame('0'));
+          }
+        }
         if (g) this.time.delayedCall(200, () => playFx(this, 'surge', this.centre(g.key)));
         this.cameras.main.flash(250, 255, 242, 160);
         return 500;
@@ -345,8 +356,13 @@ export class BattleScene extends Phaser.Scene {
         this.say(`${name(e.who)} falls!`);
         const s = this.sprites.get(e.who);
         const enemy = this.battle.find(e.who)?.side === 'enemy';
-        if (s) this.tweens.add({ targets: s, alpha: enemy ? 0 : 0.35, duration: 500, delay: 250 });
-        if (s && !enemy) s.setTint(0x6a6a7a);
+        if (s && !enemy && this.hasStance(s)) {
+          // A painted fighter kneels (the down pose) instead of fading.
+          this.time.delayedCall(250, () => s.setFrame('1'));
+        } else {
+          if (s) this.tweens.add({ targets: s, alpha: enemy ? 0 : 0.35, duration: 500, delay: 250 });
+          if (s && !enemy) s.setTint(0x6a6a7a);
+        }
         return BATTLE_ART.messageMs;
       }
       case 'won':
@@ -688,12 +704,12 @@ export class BattleScene extends Phaser.Scene {
     const { x, y } = BATTLE_ART.anissa;
     this.anissaLight = this.add.circle(x, y - 12, 13, ANISSA_GLOW.tint, 0.2).setDepth(y - 1);
     this.tweens.add({ targets: this.anissaLight, scale: 1.15, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
-    this.anissa = this.add.image(x, y, textureKeyForCharacter(ANISSA_GLOW.look), characterFrame('right', 0)).setOrigin(0.5, 1).setScale(BATTLE_ART.partyScale).setDepth(y);
+    this.anissa = this.fighterImage(ANISSA_GLOW.look).setPosition(x, y).setDepth(y);
   }
 
   private addPartySprite(key: string): Phaser.GameObjects.Image {
     const c = this.battle.find(key)!;
-    const img = this.add.image(0, 0, textureKeyForCharacter(c.look), characterFrame('right', 0)).setOrigin(0.5, 1).setScale(BATTLE_ART.partyScale);
+    const img = this.fighterImage(c.look);
     this.sprites.set(key, img);
     // The equipped weapon, held at its grip in the front hand.
     const art = c.weaponItem ? WEAPON_ART[c.weaponItem] : undefined;
@@ -706,6 +722,17 @@ export class BattleScene extends Phaser.Scene {
     return img;
   }
 
+  /** A fighter's picture: their painted battle stance (frame 0; 1 is the down pose), else their walking sprite. */
+  private fighterImage(look: string): Phaser.GameObjects.Image {
+    const stance = textureKeyForBattle(look);
+    if (this.textures.exists(stance)) return this.add.image(0, 0, stance, '0').setOrigin(0.5, 1).setScale(BATTLE_STANCE.scale);
+    return this.add.image(0, 0, textureKeyForCharacter(look), characterFrame('right', 0)).setOrigin(0.5, 1).setScale(BATTLE_ART.partyScale);
+  }
+
+  private hasStance(img: Phaser.GameObjects.Image): boolean {
+    return img.texture.key.startsWith('battle-');
+  }
+
   /** Keep every weapon in its fighter's hand (position, depth, fade, tint); drop it with the fighter. */
   private holdWeapons(): void {
     for (const [key, { img, hand }] of this.weapons) {
@@ -715,11 +742,13 @@ export class BattleScene extends Phaser.Scene {
         this.weapons.delete(key);
         continue;
       }
+      // Hand points are in game pixels from the feet; a weapon in the back hand goes behind the body.
+      const down = this.battle.find(key)?.down ?? false;
       img
-        .setPosition(s.x + hand.dx * s.scaleX, s.y + hand.dy * s.scaleY)
-        .setDepth(s.depth + 0.5)
+        .setPosition(s.x + hand.dx, s.y + hand.dy)
+        .setDepth(s.depth + (hand.behind ? -0.5 : 0.5))
         .setAlpha(s.alpha)
-        .setVisible(s.visible);
+        .setVisible(s.visible && !down);
       if (s.isTinted) img.setTint(s.tintTopLeft);
       else img.clearTint();
     }
@@ -772,7 +801,7 @@ export class BattleScene extends Phaser.Scene {
     if (!s) return;
     s.setTintFill(0xffffff);
     this.time.delayedCall(70, () => {
-      if (this.battle.find(key)?.down) s.setTint(0x6a6a7a);
+      if (this.battle.find(key)?.down && !this.hasStance(s)) s.setTint(0x6a6a7a);
       else s.clearTint();
     });
   }

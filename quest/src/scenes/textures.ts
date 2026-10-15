@@ -23,6 +23,8 @@ import {
   textureKeyForCharacter,
   textureKeyForEnemy,
   textureKeyForWeapon,
+  textureKeyForBattle,
+  BATTLE_STANCE,
   textureKeyForItem,
   textureKeyForObject,
   textureKeyForPortrait,
@@ -90,6 +92,7 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
     ...Object.keys(ITEM_ART).map(ART_FILES.item),
     ...Object.keys(ENEMY_ART).map(ART_FILES.enemy),
     ...Object.keys(WEAPON_ART).map(ART_FILES.weapon),
+    ...BATTLE_STANCE.looks.map(ART_FILES.battle),
   ];
   for (const path of paths) {
     const url = artFile(path);
@@ -230,6 +233,20 @@ function makeWeaponArt(scene: Phaser.Scene): void {
   }
 }
 
+/** Battle stances from art files only (no placeholder: without one, the walking sprite stands in). Frames 0 and 1. */
+function makeBattleStances(scene: Phaser.Scene): void {
+  for (const look of BATTLE_STANCE.looks) {
+    const file = fileImage(scene, ART_FILES.battle(look));
+    if (!file) continue;
+    const w = Math.floor(file.width / 2);
+    const { tex, ctx } = canvasTexture(scene, textureKeyForBattle(look), w * 2, file.height);
+    ctx.drawImage(file, 0, 0);
+    tex.add('0', 0, 0, 0, w, file.height);
+    tex.add('1', 0, w, 0, w, file.height);
+    tex.refresh();
+  }
+}
+
 /** A 4 x 4 ordered-dither dot pattern for the Echo filter. */
 function makeDither(scene: Phaser.Scene): void {
   const { tex, ctx } = canvasTexture(scene, ECHO_DITHER_TEXTURE, 4, 4);
@@ -325,6 +342,7 @@ export function makeAllTextures(scene: Phaser.Scene): void {
   makeItemArt(scene);
   makeEnemyArt(scene);
   makeWeaponArt(scene);
+  makeBattleStances(scene);
   makeDither(scene);
   makeMarkers(scene);
   makeCharacters(scene);
