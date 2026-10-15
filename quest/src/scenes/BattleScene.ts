@@ -404,7 +404,7 @@ export class BattleScene extends Phaser.Scene {
     g.fillStyle(BATTLE_ART.panel, 0.96).fillRect(2, PANEL_Y, VIEW_WIDTH - 4, VIEW_HEIGHT - PANEL_Y - 2);
     g.lineStyle(1, BATTLE_ART.panelBorder, 1).strokeRect(2.5, PANEL_Y + 0.5, VIEW_WIDTH - 5, VIEW_HEIGHT - PANEL_Y - 3);
     b.party.forEach((p, i) => {
-      const y = PANEL_Y + 5 + i * 26;
+      const y = PANEL_Y + 5 + i * (b.party.length > 1 ? 24 : 26);
       const on = b.actor === p && !this.busy;
       text(8, y, p.name, on ? UI.accentText : p.down ? UI.dimText : UI.text);
       text(60, y, `HP ${p.hp}/${p.maxHp}`, p.hp / p.maxHp < 0.35 ? '#e88a7a' : UI.text);
@@ -412,15 +412,16 @@ export class BattleScene extends Phaser.Scene {
       text(122, y, `SP ${p.sp}`, UI.text);
       bar(122, y + 10, 40, p.sp, p.maxSp, BATTLE_ART.spBar);
     });
-    // Anissa's Spark: ten pips, the first five gold when a Surge is ready.
-    const sy = PANEL_Y + 34;
-    text(8, sy, 'Spark', UI.dimText);
+    // Anissa's Spark: ten pips over her head, the first five gold when a Surge is ready.
+    const sx = 284 - (SPARK_MAX * 5) / 2;
+    const sy = 44;
+    g.fillStyle(BATTLE_ART.panel, 0.85).fillRect(sx - 6, sy - 13, SPARK_MAX * 5 + 11, 21);
     for (let i = 0; i < SPARK_MAX; i++) {
       const on = i < b.spark;
-      g.fillStyle(on ? BATTLE_ART.sparkBar : 0x3a3440, 1).fillRect(40 + i * 7, sy + 3, 5, 5);
+      g.fillStyle(on ? BATTLE_ART.sparkBar : 0x3a3440, 1).fillRect(sx + i * 5, sy, 4, 4);
     }
-    if (b.spark >= SURGE_COST && !b.surgeArmed) text(112, sy, 'Surge ready', UI.accentText);
-    if (b.surgeArmed) text(112, sy, 'Surging', UI.accentText);
+    const sparkLabel = b.surgeArmed ? 'Surging' : b.spark >= SURGE_COST ? 'Surge ready' : 'Spark';
+    text(284, sy - 12, sparkLabel, b.spark >= SURGE_COST ? UI.accentText : UI.dimText).setOrigin(0.5, 0);
 
     // Commands (or the victory note).
     this.rows = this.done || this.busy ? [] : this.commandRows();
