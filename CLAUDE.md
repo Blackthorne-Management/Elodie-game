@@ -39,12 +39,16 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
 - Before each build, describe what you are going to do and wait for the owner's approval before continuing.
 - Ask questions one at a time, each with the reason behind it.
 - After every command and run, end the reply with the link to the quest: https://zesty-puffpuff-852680.netlify.app/quest/
-  (it updates a few minutes after each push, once Netlify's build and tests pass).
+  (it updates only when a push is deployed, see below). The owner tests locally day to day: `cd quest`, `git pull`,
+  `npm run dev` (http://localhost:5180; `npm run dev -- --host` for a phone on the same Wi-Fi).
+- Netlify credits (owner decision, Oct 16; each deploy costs 15 credits, 3,000 a month): every commit message
+  carries `[skip netlify]` so pushes do not build. Deploy (a push without the tag) only after a big chunk of the
+  game is done, or when the owner asks.
 
 ## Commands
 - `npm run dev` (add `-- --host` to open on a phone on the same Wi-Fi)
 - `npm test` / `npm run typecheck` / `npm run lint` / `npm run build` / `npm run build:server` (after engine changes)
-- Deploys to Netlify via `netlify.toml` on every push; CI in `.github/workflows/ci.yml`.
+- Deploys to Netlify via `netlify.toml` on a push without `[skip netlify]` in the commit message; CI in `.github/workflows/ci.yml`.
 
 ## Notes
 - tsconfig uses `verbatimModuleSyntax`: import types with `import type`.
