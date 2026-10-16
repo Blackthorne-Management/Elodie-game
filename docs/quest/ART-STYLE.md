@@ -239,6 +239,7 @@ the script):
 | `yari` | `docs/quest/art-source/yari-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (both side rows face right, so left is mirrored; grid lines found and dropped; her up frame is column 0, without the bow) |
 | `elodie` | `docs/quest/art-source/elodie-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (Oct 16; the fourth column is ignored) |
 | `patricio_young` | `docs/quest/art-source/patricio-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 28x36 --colors 32` (Oct 16). Portrait cropped 720 x 720 from 130,40. Battle stances `battle/patricio_young-<blade>.png` by `scripts/quest-stance-patricio.py` (a fixed window, feet at the bottom centre, scale 0.20: a little larger than Gianna's) |
+| `patricio_old` | `docs/quest/art-source/patricio-old-sprites-leftfixed.png` (the source with row 2 mirrored: Gemini drew both side rows facing right, and his bald head defeats `--sides`) | `--grid 5x4 --rows down,left,right,up --cell 28x36 --colors 32 --pixel 4` (Oct 16). Portrait: 500 x 500 from 300,15, the dark-pink background replaced; the sad and stern portraits are kept in art-source for later |
 
 Portraits: the source's magenta becomes `rgb(42,36,56)` (the dialogue box's backdrop), then one
 high-quality (Lanczos) downscale to 48 x 48. Gianna's and Anissa's use the whole 1024 x 1024
