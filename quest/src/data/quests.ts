@@ -7,7 +7,7 @@ import type { JournalNote, QuestDef } from '../engine/quests.ts';
 export const ACT1: QuestDef = {
   id: 'act1',
   title: 'Chapter 1: The Festival of the Gaze',
-  maps: ['zetwal-town', 'zetwal-house', 'zetwal-temple', 'zetwal-square', 'zetwal-hall', 'zetwal-market'],
+  maps: ['zetwal-town', 'zetwal-house', 'zetwal-temple', 'zetwal-square', 'zetwal-hall', 'zetwal-market', 'zetwal-road'],
   objectives: [
     {
       id: 'festival',
@@ -129,6 +129,18 @@ export const ACT1: QuestDef = {
         'Yari said we need papers, Gigi. The Hall writes them.',
         "The Hall of the Accord is up the steps at the head of the plaza. The clerk needs Mother's seal; the engraver in the Iron Market has it.",
         'Clerk, then the engraver in the Iron Market (west of the plaza), then the clerk again, then the Chancellor\'s office off the gallery.',
+      ],
+    },
+    // The first battle is not optional (owner decision, Oct 16): Yari will not sail until the boar is beaten.
+    {
+      id: 'boar',
+      title: 'The boar on the Cane Road',
+      detail: 'A boar is charging the cane cutters on the Cane Road, past the east gate. Yari will not sail until it is dealt with.',
+      done: { flag: 'encounter.wilds.boar.won' },
+      hints: [
+        "Yari won't leave the cane cutters with that boar, Gigi. Neither will I.",
+        'The Cane Road is past the east gate, at the end of the road south-east of the plaza.',
+        'Go out through the east gate onto the Cane Road and walk east into the cane. The boar will find us.',
       ],
     },
     {

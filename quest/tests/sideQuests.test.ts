@@ -180,6 +180,12 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
     expect(talk(flags, 'yari_talk')[0]).toContain('No papers, no landing');
     expect(flags.isSet('act1.complete')).toBe(false);
     flags.set('story.envoy_papers', true);
+    // The boar still loose (owner decision, Oct 16): Yari sends her to the Cane Road first.
+    const boar = talk(flags, 'yari_talk').join(' ');
+    expect(boar).toContain('boar still loose on the Cane Road');
+    expect(boar).toContain('east gate');
+    expect(flags.isSet('act1.complete')).toBe(false);
+    flags.set('encounter.wilds.boar.won', true);
     // Errands left: Yari reminds her; "Not yet" keeps the chapter open.
     expect(talk(flags, 'yari_talk', ['Not yet'])[0]).toContain('Did you finish what you had to do?');
     expect(flags.isSet('act1.complete')).toBe(false);

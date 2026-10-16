@@ -11,6 +11,10 @@ import { renderSfx, renderVoice } from './sfx.ts';
 const VOLUME_KEY = 'bloodlines-quest.audio';
 /** How far ahead the next pass of a song is scheduled (seconds). */
 const LOOKAHEAD_S = 1.5;
+/** After a song fails to load or decode, how long before it is tried again (ms). */
+const RETRY_MS = 3000;
+/** The music files, which are kept decoded only while they play (a decoded song is about 25 MB). */
+const MUSIC_FILES: ReadonlySet<string> = new Set(Object.values(MUSIC).map((t) => t.file));
 
 interface Playing {
   id: MusicId;
@@ -49,6 +53,10 @@ class AudioPlayer {
   private playing: Playing | null = null;
   private buffers = new Map<string, Promise<AudioBuffer | null>>();
   private sounds = new Map<string, AudioBuffer>();
+  /** A song is loading for start(). */
+  private starting = false;
+  /** No new try to start the wanted song before this time (performance.now), after a failure. */
+  private retryAt = 0;
   /** The last thing asked for, for the smoke test. */
   lastSfx: string | null = null;
 
@@ -72,8 +80,15 @@ class AudioPlayer {
     return this.wanted;
   }
 
-  debugState(): { unlocked: boolean; wanted: string | null; playing: string | null; lastSfx: string | null } {
-    return { unlocked: this.unlocked, wanted: this.wanted, playing: this.playing?.id ?? null, lastSfx: this.lastSfx };
+  debugState(): { unlocked: boolean; wanted: string | null; playing: string | null; lastSfx: string | null; sources: number; gain: number } {
+    return {
+      unlocked: this.unlocked,
+      wanted: this.wanted,
+      playing: this.playing?.id ?? null,
+      lastSfx: this.lastSfx,
+      sources: this.playing?.sources.length ?? 0,
+      gain: this.playing ? Math.round(this.playing.gain.gain.value * 100) / 100 : 0,
+    };
   }
 
   get unlocked(): boolean {
@@ -110,7 +125,10 @@ class AudioPlayer {
       this.soundBus = this.ctx.createGain();
       this.soundBus.gain.value = this.curve(this.volumes.sound);
       this.soundBus.connect(this.ctx.destination);
-      window.setInterval(() => this.schedule(), 250);
+      window.setInterval(() => {
+        this.schedule();
+        this.heal();
+      }, 250);
     }
     if (this.ctx.state !== 'running') {
       void this.ctx.resume().then(() => {
@@ -197,9 +215,16 @@ class AudioPlayer {
   }
 
   private async start(id: MusicId): Promise<void> {
-    if (this.volumes.music <= 0) return;
+    if (this.volumes.music <= 0 || this.starting) return;
     const track = MUSIC[id];
-    const buffer = await this.load(track.file);
+    // Only the song starting stays decoded (the one fading out keeps its own copy until it stops).
+    for (const file of this.buffers.keys()) if (MUSIC_FILES.has(file) && file !== track.file) this.buffers.delete(file);
+    this.starting = true;
+    const buffer = await this.load(track.file).finally(() => {
+      this.starting = false;
+    });
+    // A failure is tried again by heal() in a moment.
+    if (!buffer) this.retryAt = performance.now() + RETRY_MS;
     // Something else may have been asked for while it loaded.
     if (!buffer || this.wanted !== id || this.playing || !this.ctx) return;
     const ctx = this.ctx;
@@ -211,6 +236,23 @@ class AudioPlayer {
     const playing: Playing = { id, gain, sources: [], nextAt: now, buffer };
     this.playing = playing;
     this.pass(playing, true);
+  }
+
+  /**
+   * Called every 250 ms: the wanted song plays if it should and does not (owner report, Oct 16: on a
+   * phone, no music after the first song). A load that failed is tried again, and an audio context the
+   * phone paused (a call, the intro video, the lock screen) is asked to resume.
+   */
+  private heal(): void {
+    const ctx = this.ctx;
+    if (!ctx || !this.wanted || this.playing || this.starting || document.hidden || this.volumes.music <= 0) return;
+    if (performance.now() < this.retryAt) return;
+    if (ctx.state !== 'running') {
+      this.retryAt = performance.now() + RETRY_MS;
+      void ctx.resume().catch(() => undefined);
+      return;
+    }
+    void this.start(this.wanted);
   }
 
   /** Start one pass of the song at `nextAt`, fading in from the last pass's tail (not the first). */
@@ -265,7 +307,7 @@ export const audio = new AudioPlayer();
 declare global {
   interface Window {
     /** Test hook for the smoke test: what is playing. */
-    __audio?: () => { unlocked: boolean; wanted: string | null; playing: string | null; lastSfx: string | null };
+    __audio?: () => { unlocked: boolean; wanted: string | null; playing: string | null; lastSfx: string | null; sources: number; gain: number };
   }
 }
 if (typeof window !== 'undefined') window.__audio = () => audio.debugState();

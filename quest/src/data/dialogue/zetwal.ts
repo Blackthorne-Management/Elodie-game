@@ -1069,6 +1069,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [],
       next: [
         { if: { notFlag: 'story.envoy_papers' }, to: 'ready_papers' },
+        // The boar first (owner decision, Oct 16: the first battle is not optional).
+        { if: { notFlag: 'encounter.wilds.boar.won' }, to: 'ready_boar' },
         {
           if: { all: [{ flag: 'side.overdue.done' }, { flag: 'side.soup.done' }, { flag: 'side.cane_name.done' }, { flag: 'encounter.wilds.boar.won' }] },
           to: 'ready_all',
@@ -1081,6 +1083,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         { text: 'Did the Hall write your papers? No papers, no landing. The Crown turns back every boat without them.' },
         say(A, 'The Hall of the Accord, Gigi. Up the steps at the head of the plaza.'),
+      ],
+    },
+    ready_boar: {
+      speaker: 'yari',
+      lines: [
+        { text: 'Not with that boar still loose on the Cane Road. It charged three cane cutters this morning.' },
+        { text: "We don't sail off and leave them to it. Out through the east gate, Gigi. I'll come with you." },
+        say(A, 'The Cane Road, Gigi. Past the east gate, where the cane starts.'),
       ],
     },
     ready_errands: {

@@ -6,6 +6,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTENT } from '../src/data/content.ts';
 import { PUZZLES, type PuzzleDef } from '../src/data/puzzles.ts';
+import { BATTLES } from '../src/data/battles.ts';
+import { RPG } from '../src/data/rpg.ts';
+import { battleItems, settleBattle, type Battle } from '../src/engine/battle.ts';
 import { GameLogic } from '../src/engine/game.ts';
 import { decodeSave, encodeSave } from '../src/engine/save.ts';
 import { Sim } from '../src/engine/sim.ts';
@@ -27,7 +30,23 @@ export function newGameSim(maps: Record<string, GameMap> = loadMaps(), map = STA
   return sim;
 }
 
+/**
+ * Battles in a headless run end as a won fight would (the route plays the story, not the fight; the
+ * smoke test fights it for real in the browser): the rewards and the won flag, through settleBattle.
+ */
+function winBattles(sim: Sim): void {
+  sim.onBattle = (id) => {
+    const def = BATTLES[id];
+    if (!def) throw new Error(`No battle "${id}"`);
+    const flags = sim.logic.state.flags;
+    // settleBattle reads only these fields of a finished fight.
+    const won = { def, items: battleItems(flags, RPG), outcome: 'won' } as unknown as Battle;
+    settleBattle(flags, RPG, won);
+  };
+}
+
 function enter(sim: Sim): void {
+  winBattles(sim);
   const effects = sim.logic.enterMap();
   if (effects.some((e) => e.kind === 'dialogue')) sim.cursor = 0;
 }

@@ -86,6 +86,10 @@ export class Sim {
   saves = 0;
   /** Every input pressed, after expanding repeats and `goto`. */
   readonly pressed: Command[] = [];
+  /** Battles started, in order. */
+  readonly battles: string[] = [];
+  /** Plays a battle the way the battle scene would end it (tools/sim-setup.ts wins it); unset, battles are only logged. */
+  onBattle: ((id: string) => void) | null = null;
 
   constructor(logic: GameLogic) {
     this.logic = logic;
@@ -162,6 +166,10 @@ export class Sim {
       else if (e.kind === 'save') this.saves++;
       else if (e.kind === 'dialogue') this.cursor = 0;
       else if (e.kind === 'map') this.handle(this.logic.enterMap());
+      else if (e.kind === 'battle') {
+        this.battles.push(e.battle);
+        this.onBattle?.(e.battle);
+      }
     }
   }
 }

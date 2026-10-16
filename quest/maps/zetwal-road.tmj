@@ -427,9 +427,9 @@
           "name": "boar_ambush",
           "type": "trigger",
           "x": 144,
-          "y": 192,
+          "y": 16,
           "width": 16,
-          "height": 32,
+          "height": 384,
           "rotation": 0,
           "visible": true,
           "properties": [
