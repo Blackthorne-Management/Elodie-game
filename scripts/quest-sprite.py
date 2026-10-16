@@ -85,6 +85,8 @@ ap.add_argument('--bob', type=int, default=1)
 ap.add_argument('--outline', default='1a1420')
 ap.add_argument('--preview', default='')
 ap.add_argument('--grid-lines', default='auto', choices=['auto', 'on', 'off'])
+# strict: only near-pure magenta is background (for purple or plum clothing, e.g. Anicette's headwrap)
+ap.add_argument('--key', default='loose', choices=['loose', 'strict'])
 a = ap.parse_args()
 gc, gr = map(int, a.grid.split('x')); cw, ch = map(int, a.cell.split('x'))
 names = a.rows.split(','); cols = [int(c) for c in a.cols.split(',')]
@@ -159,7 +161,10 @@ def keyed(cell):
     for y in range(cell.size[1]):
         for x in range(cell.size[0]):
             r, g, b = px[x, y][:3]
-            bg = (r - g > 55 and b - g > 55) or (r > 150 and b > 150 and g < 110)
+            if a.key == 'strict':
+                bg = r > 200 and b > 190 and g < 90 and abs(r - b) < 60
+            else:
+                bg = (r - g > 55 and b - g > 55) or (r > 150 and b > 150 and g < 110)
             op[x, y] = TRANSPARENT if bg else (r, g, b, 255)
     return out
 
