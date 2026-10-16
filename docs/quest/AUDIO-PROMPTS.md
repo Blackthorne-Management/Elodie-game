@@ -16,7 +16,7 @@ on GitHub with the file names below.
 | 4 | `temple.mp3` | The Temple and the Archive | Sacred and calm: soft hand drums, bells, low choir pad (no words), candlelit and reverent, 70 BPM |
 | 5 | `hall.mp3` | Hall of the Accord | Stately and political: slow brass and strings, dignified, a hint of tension underneath, 84 BPM |
 | 6 | `echo.mp3` | Inside a memory (the Echo) | Haunting music-box melody over a distant drum, sepia and dreamlike, like remembering, 72 BPM |
-| 7 | `cane-road.mp3` | The Cane Road | Uneasy countryside: plucked guitar, shakers, wind, something watching from the cane, 92 BPM |
+| 7 | `cane-road.mp3` | The Cane Road | Adventurous country road (owner, Oct 16: the first version was too scary): bright plucked acoustic guitar, bamboo flute, shakers and light hand drums, a sense of setting out on a journey through tall green cane, curious and a little mysterious but warm and upbeat, never dark, 104 BPM |
 | 8 | `battle.mp3` | Battles | Energetic retro battle theme: driving drums, kompa rhythm, bold horn melody, urgent but fun, 150 BPM |
 | 9 | `victory.mp3` | After winning (short, no loop) | Triumphant 5-second victory fanfare, horns and drums |
 | 10 | `farewell.mp3` | Mother leaving, story moments | Bittersweet and tender: solo guitar with soft strings, hopeful at the end, 66 BPM |
