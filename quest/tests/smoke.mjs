@@ -49,7 +49,9 @@ const { ACT1 } = await import('../src/data/quests.ts');
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
-const VILLAGE = `${URL_BASE}?map=test-village`;
+// Every check but the intro's own starts with ?intro=0 (straight into the quest).
+const GAME = `${URL_BASE}?intro=0`;
+const VILLAGE = `${URL_BASE}?intro=0&map=test-village`;
 const SHOT_DIR = process.env.SHOT_DIR ?? tmpdir();
 
 function check(cond, message) {
@@ -322,7 +324,7 @@ async function hintsAndJournal(browser, errors) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   watchErrors(page, errors);
-  await page.goto(`${URL_BASE}?hintms=1200`);
+  await page.goto(`${URL_BASE}?intro=0&hintms=1200`);
   await waitReady(page);
   let s = await snap(page);
   check(s.mapId === 'zetwal-town' && s.mode === 'dialogue', 'a new game opens in Zetwal with the festival scene');
@@ -479,6 +481,38 @@ async function handleShowcase(page, seen, shots) {
   return true;
 }
 
+/** The animated intro: it plays, Skip jumps to the title, the title loops, and A goes on into the quest. */
+async function introFlow(browser, errors) {
+  console.log('Intro:');
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  await page.goto(URL_BASE);
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.waitForSelector('.intro', { timeout: 15000 });
+  const state = () => page.evaluate(() => window.__intro?.state() ?? null);
+  // A browser that wants a tap first shows the prompt; tap the picture.
+  await page.waitForTimeout(500);
+  if (await page.isVisible('.intro-prompt')) await page.click('.intro');
+  await page.waitForFunction(() => window.__intro?.state().phase === 'film' && window.__intro.state().time > 1, null, { timeout: 15000 });
+  check(true, 'a new game opens on the intro, and it plays');
+  await page.screenshot({ path: join(SHOT_DIR, 'quest-intro.png') });
+  await page.click('.intro-skip');
+  await page.waitForFunction(() => window.__intro?.state().phase === 'title', null, { timeout: 5000 });
+  let s = await state();
+  check(s.time >= 87 && s.time < 91, `Skip jumps to the title (at ${s.time.toFixed(2)} s)`);
+  await page.waitForTimeout(5000);
+  s = await state();
+  check(s.phase === 'title' && s.time >= 87 && s.time < 91 && !s.finished, `the title loops (at ${s.time.toFixed(2)} s after 5 s more)`);
+  await page.screenshot({ path: join(SHOT_DIR, 'quest-title.png') });
+  await page.keyboard.press('z');
+  await waitReady(page);
+  check(!(await page.isVisible('.intro')), 'A on the title goes on into the quest');
+  await ctx.close();
+  return ['quest-intro.png', 'quest-title.png'];
+}
+
 async function playAct(browser, errors) {
   console.log('Act I, Zetwal (scripted route, checked against the simulator after every key):');
   const route = parseRoute(readJson('routes/zetwal-act1.json'));
@@ -486,7 +520,7 @@ async function playAct(browser, errors) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   watchErrors(page, errors);
-  await page.goto(URL_BASE);
+  await page.goto(GAME);
   await page.evaluate(() => localStorage.clear());
   await page.reload();
   await waitReady(page);
@@ -964,7 +998,7 @@ async function main() {
     const shopCtx = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
     const sp = await shopCtx.newPage();
     watchErrors(sp, errors);
-    await sp.goto(URL_BASE);
+    await sp.goto(GAME);
     await waitReady(sp);
     const shopCode = encodeSave({
       version: 2, era: 'present', settings: { textSpeed: 'instant', hints: false }, savedAt: 1,
@@ -1009,10 +1043,11 @@ async function main() {
     await portrait.close();
 
     await hintsAndJournal(browser, errors);
+    const introShots = await introFlow(browser, errors);
     const actShots = await playAct(browser, errors);
 
     check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
-    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
+    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...introShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
     console.log('Smoke test passed.');
   } finally {
     await browser.close();

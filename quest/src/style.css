@@ -390,3 +390,47 @@ body.standalone .fs-button { display: none; }
 }
 @keyframes realm-blink { from { opacity: 1; } to { opacity: 0.2; } }
 @media (prefers-reduced-motion: reduce) { .realm-here { animation: none; } }
+
+/* The animated intro and title (scenes/IntroScene.ts): the video over everything, letterboxed. */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.intro-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.intro-prompt {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 18%;
+  text-align: center;
+  color: #f4ecd8;
+  font: 700 20px 'Atkinson Hyperlegible', system-ui, sans-serif;
+  pointer-events: none;
+}
+.intro-prompt[hidden], .intro-skip[hidden] { display: none; }
+.intro-skip {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  min-width: 72px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid rgba(244, 236, 216, 0.5);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #f4ecd8;
+  font: 700 16px 'Atkinson Hyperlegible', system-ui, sans-serif;
+}

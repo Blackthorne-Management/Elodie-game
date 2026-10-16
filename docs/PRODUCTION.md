@@ -41,7 +41,8 @@ the weapons), Anissa's two battle poses, and the cane-field boar. Intro art (in
 
 **The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòdlimyè and Chapter 1 finished with
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1
-and 2, **Sun Nov 22**. The intro storyboard was **approved Oct 16** and the owner is animating it now. Your next quest asks: art drop 1 (six character sets and three intro illustrations) by **Fri Oct 24**.
+and 2, **Sun Nov 22**. The animated intro is **in the game (Oct 16)**: it opens a new game, a saved game opens on its title,
+and "Watch the intro" is in the System menu. Your next quest asks: art drop 1 (the character sets) by **Fri Oct 24**.
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

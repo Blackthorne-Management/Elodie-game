@@ -14,7 +14,7 @@ import { components, doorArrival, doorAt, facingTiles, inBounds, isDiagonal, sam
 import type { GameState } from './state.ts';
 import { rectContains, type Door, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
 import type { Dir8, Era, Pos } from './types.ts';
-import { ECHO_FLAG_PREFIX, activeNpcs, activeObjects, activeTriggers, checkSwap, isOpen, npcBlocks } from './world.ts';
+import { ECHO_FLAG_PREFIX, activeNpcs, activeObjects, activeTriggers, checkSwap, isOpen, npcBlocks, type SwapCheck } from './world.ts';
 
 /** Flags remembering that the player has used or looked at a puzzle object (the use marker goes away). */
 export const SEEN_FLAG_PREFIX = 'seen.';
@@ -350,6 +350,12 @@ export class GameLogic {
    * in the other era; the position is kept. Returning to the present wipes the memory's own `echo.`
    * flags, so only anchors (their `anchor.` flags) carry changes back.
    */
+  /** Whether an Echo would work where the player stands (and why not). */
+  swapCheck(): SwapCheck {
+    const p = this.state.player;
+    return checkSwap(this.map, p.era, p.pos, this.state.flags);
+  }
+
   swap(): Effect[] {
     if (this.mode !== 'field') return [];
     const p = this.state.player;

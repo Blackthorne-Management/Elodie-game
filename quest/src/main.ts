@@ -5,6 +5,7 @@
 //   ?map=<id>        a new game (when there is no save) starts on that map's first spawn
 //   ?hintms=<ms>     Anissa's first hint after this much stuck time instead of 3 minutes
 //   ?touch=1         force the touch overlay
+//   ?intro=0         skip the animated intro and title (the smoke test's main route)
 
 import Phaser from 'phaser';
 import { HINT_FIRST_MS, HINT_REPEAT_MS, MAX_ZOOM, MIN_INTEGER_ZOOM, RENDER_SCALE_MAX, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
@@ -13,6 +14,7 @@ import { loadRawMaps } from './data/maps.ts';
 import { checkDialogue } from './engine/dialogue.ts';
 import { GameLogic } from './engine/game.ts';
 import { HintTracker } from './engine/hints.ts';
+import { introOpening } from './engine/intro.ts';
 import { validateMaps } from './engine/mapValidation.ts';
 import { fitZoom } from './engine/scaling.ts';
 import { loadFonts, renderScale, setRenderScale } from './ui/text.ts';
@@ -26,6 +28,7 @@ import { browserStorage, loadStoredGame, setRuntime, type Runtime } from './runt
 import { BootScene } from './scenes/BootScene.ts';
 import { BattleScene } from './scenes/BattleScene.ts';
 import { FieldScene } from './scenes/FieldScene.ts';
+import { IntroScene } from './scenes/IntroScene.ts';
 import { mountFullscreenButton } from './ui/fullscreen.ts';
 import { fitToScreen, preventBrowserZoom, visibleViewport } from './ui/screen.ts';
 import './style.css';
@@ -74,10 +77,12 @@ const runtime: Runtime = {
     hintFirst > 0 ? { firstMs: hintFirst, repeatMs: hintFirst } : { firstMs: HINT_FIRST_MS, repeatMs: HINT_REPEAT_MS },
   ),
   start: { map: START_MAP_ID, spawn: START_SPAWN },
+  intro: null,
 };
 setRuntime(runtime);
 const loaded = loadStoredGame(runtime);
 if (loaded === 'invalid') console.warn('[quest] the stored save could not be loaded; starting a new game');
+runtime.intro = params.get('intro') === '0' ? null : introOpening(loaded === 'loaded');
 
 const vp = visibleViewport();
 const startZoom = fitZoom(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM);
@@ -105,7 +110,7 @@ const game = new Phaser.Game({
     zoom: startZoom / S,
     autoCenter: Phaser.Scale.NO_CENTER,
   },
-  scene: [BootScene, FieldScene, BattleScene],
+  scene: [BootScene, IntroScene, FieldScene, BattleScene],
 });
 
 game.events.once(Phaser.Core.Events.READY, () => fitToScreen((zoom) => game.scale.setZoom(zoom / S), isTouchDevice()));

@@ -71,3 +71,13 @@ export function checkSwap(map: GameMap, era: Era, pos: Pos, flags: FlagReader): 
   if (!isOpen(map, to, pos, flags) || npcBlocks(map, to, pos, flags)) return { ok: false, reason: 'blocked' };
   return { ok: true, to, zone };
 }
+
+/**
+ * What to show while the player stands where an Echo would work (owner request, Oct 16): the key to
+ * press, named as the player's controls name it. Nothing where it would not work (no zone, locked, or
+ * no room in the other era).
+ */
+export function echoPrompt(check: SwapCheck, controls: 'keys' | 'touch'): string | null {
+  if (!check.ok) return null;
+  return controls === 'touch' ? 'Press Echo to Echo' : 'Press E to Echo';
+}

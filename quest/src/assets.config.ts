@@ -449,7 +449,13 @@ export const UI = {
   dimText: '#a89c86',
   accentText: '#f2d04b',
   echoZone: 0x9ad8ff,
-  echoZoneAlpha: 0.28,
+  /** Echo spots glow (owner request, Oct 16: a bit more): the fill pulses between these, with a bright rim. */
+  echoZoneAlpha: 0.38,
+  echoZonePulseAlpha: 0.6,
+  echoZoneRim: 0xd8f2ff,
+  echoZoneRimAlpha: 0.75,
+  /** A soft added glow around the spot. */
+  echoZoneGlowAlpha: 0.22,
   letterbox: '#000000',
   hintFill: 0x2a1e30,
   hintBorder: 0xf2b8d0,

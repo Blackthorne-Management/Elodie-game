@@ -6,7 +6,7 @@ import { GameLogic, type Effect } from '../src/engine/game.ts';
 import { Sim } from '../src/engine/sim.ts';
 import { newGame } from '../src/engine/state.ts';
 import { parseMap, type GameMap } from '../src/engine/tiledMap.ts';
-import { checkSwap, isOpen } from '../src/engine/world.ts';
+import { checkSwap, echoPrompt, isOpen } from '../src/engine/world.ts';
 import { makeMap, obj } from './helpers.ts';
 
 const say = (id: string, text: string, set?: Record<string, boolean>): DialogueScript => ({
@@ -221,5 +221,17 @@ describe('route text', () => {
     sim.run(['goto 6,2']);
     expect(sim.logic.state.player.pos).toEqual({ x: 6, y: 2 });
     expect(sim.logic.state.flags.isSet('end.seen')).toBe(false);
+  });
+});
+
+describe('the Echo prompt (owner request, Oct 16)', () => {
+  it('names the key for keyboards and the button for touch, only where an Echo works', () => {
+    const ok = { ok: true, to: 'echo', zone: {} } as unknown as Parameters<typeof echoPrompt>[0];
+    expect(echoPrompt(ok, 'keys')).toBe('Press E to Echo');
+    expect(echoPrompt(ok, 'touch')).toBe('Press Echo to Echo');
+    for (const reason of ['no_zone', 'locked', 'blocked'] as const) {
+      expect(echoPrompt({ ok: false, reason }, 'keys')).toBeNull();
+      expect(echoPrompt({ ok: false, reason }, 'touch')).toBeNull();
+    }
   });
 });

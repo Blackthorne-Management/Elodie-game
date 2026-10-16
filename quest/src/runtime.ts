@@ -7,6 +7,7 @@ import type { HintTracker } from './engine/hints.ts';
 import { readSave, writeSave, type StorageLike } from './engine/save.ts';
 import { applySave, saveFits, toSaveData } from './engine/state.ts';
 import type { GameMap, TiledMap } from './engine/tiledMap.ts';
+import type { IntroOpening } from './engine/intro.ts';
 import type { InputManager } from './input/actions.ts';
 
 export interface Runtime {
@@ -18,6 +19,8 @@ export interface Runtime {
   hints: HintTracker;
   /** Where New game starts. */
   start: { map: string; spawn: string };
+  /** How the intro opens when the page loads (null: straight into the quest, `?intro=0`). */
+  intro: IntroOpening | null;
 }
 
 let runtime: Runtime | null = null;

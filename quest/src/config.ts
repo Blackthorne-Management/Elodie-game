@@ -130,6 +130,15 @@ export const MIN_INTEGER_ZOOM = 2;
  */
 export const RENDER_SCALE_MAX = 4;
 
+/**
+ * The animated intro (docs/quest/intro/STORYBOARD.md, "Delivered"): the title is complete and Press A
+ * first shows at 87.0 s; the video ends two blink cycles later at 91.0 s, so the title loops 87.0 to 91.0.
+ */
+export const INTRO_TITLE_LOOP_START_S = 87.0;
+export const INTRO_END_S = 91.0;
+/** Jump back to the loop start this close to the end (a frame and a half at 24 fps), before the video stops. */
+export const INTRO_LOOP_MARGIN_S = 0.06;
+
 /** Anissa's hints (guide 6.2 rule 4): first hint after 3 minutes stuck on one objective, then every 90 s. */
 export const HINT_FIRST_MS = 3 * 60 * 1000;
 export const HINT_REPEAT_MS = 90 * 1000;

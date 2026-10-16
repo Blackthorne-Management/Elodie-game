@@ -27,7 +27,7 @@ import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { ACT1, JOURNAL_NOTES } from '../data/quests.ts';
 import type { Effect, GameLogic, Target } from '../engine/game.ts';
 import { DIRS, type Dir8, type Era, type Pos } from '../engine/types.ts';
-import { facingToward, opposite, samePos, spriteFacing, stepFrom } from '../engine/grid.ts';
+import { combine, facingToward, opposite, samePos, spriteFacing, stepFrom } from '../engine/grid.ts';
 import { Mover, restDistance, speedPx, stepLength, tileFoot, walkFrame } from '../engine/motion.ts';
 import { cameraBounds, cameraScroll } from '../engine/scaling.ts';
 import { dirButtons } from '../input/actions.ts';
@@ -55,6 +55,9 @@ import { cityOf, level, partyMembers } from '../engine/rpg.ts';
 import { rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { planTap } from '../engine/tap.ts';
+import { echoPrompt } from '../engine/world.ts';
+import { isTouchDevice } from '../input/touch.ts';
+import { npcMoves, walkRoute } from '../engine/walkers.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
@@ -134,10 +137,16 @@ export class FieldScene extends Phaser.Scene {
   private layers: Record<string, Phaser.Tilemaps.TilemapLayer> = {};
   private player!: Phaser.GameObjects.Image;
   private npcSprites = new Map<number, Phaser.GameObjects.Image>();
+  /** Where each drawn NPC stood at the last sync (to see who moved). */
+  private npcPlaced = new Map<number, NpcPlacement>();
+  /** People walking to their new place (engine/walkers.ts), by the placement they walk to. */
+  private walkers = new Map<number, { mover: Mover; at: Pos; tiles: Pos[]; look: string; facing: Dir8 }>();
   private objectSprites = new Map<string, Phaser.GameObjects.GameObject[]>();
   private markerSprites = new Map<string, Phaser.GameObjects.Image>();
   private label!: Phaser.GameObjects.Container;
   private labelText!: Phaser.GameObjects.Text;
+  /** "Press E to Echo" while standing where an Echo works. */
+  private echoText!: Phaser.GameObjects.Text;
   private labelBg!: Phaser.GameObjects.Graphics;
   private labelKey = '';
   /** Objects the Echo changed, waiting to glow once the player is back in the field. */
@@ -190,6 +199,8 @@ export class FieldScene extends Phaser.Scene {
     this.leaving = false;
     this.layers = {};
     this.npcSprites = new Map();
+    this.npcPlaced = new Map();
+    this.walkers = new Map();
     this.objectSprites = new Map();
     this.markerSprites = new Map();
     this.labelKey = '';
@@ -217,11 +228,19 @@ export class FieldScene extends Phaser.Scene {
     // Echo Zones shimmer.
     for (const zone of this.map.echoZones) {
       const a = zone.area;
-      const r = this.add
-        .rectangle(a.x * TILE_SIZE, a.y * TILE_SIZE, a.width * TILE_SIZE, a.height * TILE_SIZE, UI.echoZone, UI.echoZoneAlpha)
+      const x = a.x * TILE_SIZE;
+      const y = a.y * TILE_SIZE;
+      const w = a.width * TILE_SIZE;
+      const h = a.height * TILE_SIZE;
+      const glow = this.add
+        .rectangle(x - 3, y - 3, w + 6, h + 6, UI.echoZone, UI.echoZoneGlowAlpha)
         .setOrigin(0, 0)
-        .setDepth(2);
-      this.tweens.add({ targets: r, alpha: 0.35, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        .setDepth(2)
+        .setBlendMode(Phaser.BlendModes.ADD);
+      const r = this.add.rectangle(x, y, w, h, UI.echoZone, UI.echoZoneAlpha).setOrigin(0, 0).setDepth(2);
+      r.setStrokeStyle(1, UI.echoZoneRim, UI.echoZoneRimAlpha);
+      this.tweens.add({ targets: r, fillAlpha: UI.echoZonePulseAlpha, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: glow, alpha: 0.35, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
 
     const state = this.logic.state;
@@ -258,6 +277,12 @@ export class FieldScene extends Phaser.Scene {
     // The name label over what the player faces (world space, above the actors, under the interface).
     this.labelBg = this.add.graphics();
     this.labelText = this.add.text(0, 0, '', textStyle(UI.labelText)).setOrigin(0.5, 1);
+    this.echoText = this.add
+      .text(VIEW_WIDTH / 2, VIEW_HEIGHT - 4, '', textStyle(UI.text, { backgroundColor: '#14101af0', padding: { x: 4, y: 2 } }))
+      .setOrigin(0.5, 1)
+      .setScrollFactor(0)
+      .setDepth(6900)
+      .setVisible(false);
     this.label = this.add.container(0, 0, [this.labelBg, this.labelText]).setDepth(3500).setVisible(false);
 
     this.dialogue = new DialogueBox(this);
@@ -295,6 +320,8 @@ export class FieldScene extends Phaser.Scene {
   update(_time: number, delta: number): void {
     const input = this.rt.input;
     input.update();
+    this.tickWalkers(delta);
+    this.updateEchoPrompt();
     // In a bar the minimap always shows; on the picture (no bars) only in the field, out of the way of
     // Anissa's hint, menus, shops and dialogue.
     const onPicture = document.body.dataset.layout === 'overlay';
@@ -715,6 +742,17 @@ export class FieldScene extends Phaser.Scene {
   // ---- Labels, markers and the Echo glow -----------------------------------------------------
 
   /** The name label over the NPC, object or door the player faces (only while standing still). */
+  /** Show which key makes the Echo while the player stands where one works (only in the field). */
+  private updateEchoPrompt(): void {
+    const text = this.mode === 'field' ? echoPrompt(this.logic.swapCheck(), isTouchDevice() ? 'touch' : 'keys') : null;
+    if (!text) {
+      if (this.echoText.visible) this.echoText.setVisible(false);
+      return;
+    }
+    if (this.echoText.text !== text) this.echoText.setText(text);
+    if (!this.echoText.visible) this.echoText.setVisible(true);
+  }
+
   private updateLabel(): void {
     const target = this.mover.moving ? null : this.logic.targetAhead();
     const key = target ? `${target.kind}:${target.name}:${this.targetAnchor(target).x},${this.targetAnchor(target).y}` : '';
@@ -870,10 +908,55 @@ export class FieldScene extends Phaser.Scene {
     this.updateFollowerLook();
   }
 
+  /** Walk each walking person a frame along their route; at the end they face the way their place says. */
+  private tickWalkers(delta: number): void {
+    for (const [id, w] of this.walkers) {
+      const sprite = this.npcSprites.get(id);
+      if (!sprite) {
+        this.walkers.delete(id);
+        continue;
+      }
+      if (!w.mover.moving) {
+        const first = w.tiles.shift();
+        if (first) w.mover.start(w.at, first);
+      }
+      w.mover.update(delta, speedPx(false), (reached) => {
+        w.at = reached;
+        return w.tiles.shift() ?? null;
+      });
+      const g = w.mover.glide;
+      if (g) {
+        const dir = combine(g.to.x > g.from.x ? 'right' : g.to.x < g.from.x ? 'left' : null, g.to.y > g.from.y ? 'down' : g.to.y < g.from.y ? 'up' : null);
+        if (dir) w.facing = dir;
+      }
+      const p = w.mover.point(w.at);
+      sprite.setPosition(p.x, p.y).setDepth(10 + p.y);
+      if (w.mover.moving) {
+        setLook(sprite, w.look, w.facing, w.mover.frame());
+      } else {
+        this.walkers.delete(id);
+        setLook(sprite, w.look, this.npcPlaced.get(id)?.facing ?? w.facing);
+      }
+    }
+  }
+
   /** Draw the NPCs and puzzle objects active in this era with the current flags. */
   private syncActors(): void {
     const npcs = this.logic.npcs();
+    // Someone who left one place for another on this map walks there instead of appearing there.
+    for (const move of npcMoves([...this.npcPlaced.values()], npcs)) {
+      const sprite = this.npcSprites.get(move.fromId);
+      const tiles = sprite ? walkRoute(this.logic, move.from, move.to) : null;
+      if (!sprite || !tiles || tiles.length === 0) continue;
+      this.npcSprites.delete(move.fromId);
+      this.npcSprites.set(move.toId, sprite);
+      const look = this.logic.content.npcs[move.npc]!.look;
+      this.walkers.delete(move.fromId);
+      this.walkers.set(move.toId, { mover: new Mover(), at: move.from, tiles, look, facing: 'down' });
+    }
+    this.npcPlaced = new Map(npcs.map((n) => [n.objectId, n]));
     const keep = new Set(npcs.map((n) => n.objectId));
+    for (const id of this.walkers.keys()) if (!keep.has(id)) this.walkers.delete(id);
     for (const [id, sprite] of this.npcSprites) {
       if (!keep.has(id)) {
         sprite.destroy();
@@ -888,7 +971,7 @@ export class FieldScene extends Phaser.Scene {
         sprite = this.add.image(w.x, w.y, textureKeyForCharacter(def.look)).setOrigin(0.5, 1).setDepth(10 + w.y);
         setLook(sprite, def.look, n.facing);
         this.npcSprites.set(n.objectId, sprite);
-      } else if (this.talkingTo?.objectId !== n.objectId) {
+      } else if (this.talkingTo?.objectId !== n.objectId && !this.walkers.has(n.objectId)) {
         setLook(sprite, def.look, n.facing);
       }
     }
@@ -1153,6 +1236,7 @@ export class FieldScene extends Phaser.Scene {
       ...(isStandalone() ? [] : [{ id: 'fullscreen', label: isFullscreen() ? 'Exit full screen' : 'Full screen' }]),
       { id: 'export', label: 'Export save code' },
       { id: 'import', label: 'Import save code' },
+      { id: 'intro', label: 'Watch the intro' },
       { id: 'credits', label: 'Credits' },
       { id: 'new', label: this.confirmNewGame ? 'New game? Press A again' : 'New game' },
       { id: 'close', label: 'Close' },
@@ -1251,6 +1335,11 @@ export class FieldScene extends Phaser.Scene {
       case 'import':
         this.mode = 'modal';
         this.openImport();
+        break;
+      case 'intro':
+        // The field starts again when the intro ends (the game state stays, as for a text size change).
+        this.closeMenu();
+        this.scene.start('intro', { opening: 'full' });
         break;
       case 'credits':
         this.openCredits();
