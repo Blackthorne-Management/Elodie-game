@@ -22,7 +22,7 @@ item pictures go in `quest/art/items/`.
 | 9 | Battle stances (Gianna, Yari, Patricio) | the battle screen: one empty-handed stance each, the weapon is added by the game (Oct 15) | [9](#9-battle-stances-one-per-character-empty-handed) |
 | 10 | The cane-field boar | the first battle, on the Cane Road (added Oct 15) | [10](#10-the-cane-field-boar-battle-sprite) |
 
-The three intro illustrations come with the intro storyboard (for your approval by Fri Oct 17).
+The intro's pictures are section 11 (the storyboard is `docs/quest/intro/STORYBOARD.md`).
 
 **For every picture:** bright, warm, well-lit skin (Azzy's first sprites came out dull olive). Deep brown skin for the
 Jean-Philippe and Limyè family. If Gemini adds text, frames or a second person, ask it to remove them.
@@ -252,6 +252,99 @@ this arrives. A new chat is fine.
 ```
 Pixel art battle sprite for a side-view 16-bit fantasy RPG in the style of classic Super Nintendo RPGs: a wild Caribbean boar (a feral hog from the sugar cane fields), seen from the side, facing LEFT, head low and lowered to charge, front legs braced. Big and heavy: a high bristly hump over the shoulders, a ridge of stiff dark bristles along the back, coarse dark-brown and grey-brown fur, a long snout with a pinkish-tan nose disc, two short curved ivory tusks, small angry red-brown eyes, short legs with dark hooves, a thin tufted tail. A few strands of green sugar cane leaf caught in its bristles. 56 x 40 pixels, the boar filling the image, 1-pixel dark outline, flat colours, at most 20 colours, hard pixel edges, no anti-aliasing, no gradients, no ground shadow. Solid flat magenta background (#FF00FF). No text, no other animals, no background.
 ```
+
+---
+
+## 11. The intro (for the animator; storyboard `docs/quest/intro/STORYBOARD.md`)
+
+Everything the intro needs that does not exist yet. **Make them all in full colour:** the animator turns the past
+(shots 2 to 5) sepia, and the same pictures can then be reused in the game. Characters: a new chat each, attach
+**Gianna's sprite sheet** (`docs/quest/art-source/gianna-sprites.webp`). Scenes: a new chat each, attach the game
+screenshot `docs/quest/intro/ref/game-plaza-present.png` (for the pixel style) and the shot's layout frame from
+`docs/quest/intro/ref/` (for the composition). Scenes are drawn **without people**; the people are separate sprites
+the animator places on top.
+
+### Characters and props (sprites on magenta)
+
+**11.1 Young Patricio, on the crate** (shot 3). First make his walk sheet with prompt 3 above (same chat), then:
+```
+Same character, Patricio, same pixel style and size as the sprite sheet you just made. One row of 2 cells, the same size, with NO lines or borders between them. He stands on a small wooden crate, facing the viewer. Cell 1: his right arm raised high above his head, fist closed, mouth open as if shouting to a crowd. Cell 2: the same, his arm a little higher and his coat-tails lifted by the wind. Deep brown skin, black bicorne hat with a gold sun cockade, red officer's coat with gold epaulettes, sky-blue sash, white breeches, black boots, cutlass at his hip. Bright, saturated, warm colours with clearly lit skin. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+**11.2 Mother Solange, writing the names** (shot 2b)
+```
+Pixel art sprite of a new character for a 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character: match its art style, pixel size and chibi proportions (big head about 40% of the figure). Mother Solange: an old Haitian-inspired Caribbean woman, a temple keeper who writes down the names of the enslaved so they are never forgotten. Deep brown skin, deeply lined kind face, small round spectacles, a grey headwrap, a long plain purple-grey robe, ink-stained fingers. One row of 3 cells, all the same size, with NO lines or borders between them. In every cell she sits on a stool behind a heavy wooden table, seen from the front and a little above, head bowed over a large open ledger, holding a quill. Cell 1: quill touching the page. Cell 2: quill moved a little to the right. Cell 3: quill lifted, dipping into an ink pot. A small clay oil lamp with a lit flame on the table to her right in every cell. Warm lamplight on her face and hands. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+**11.3 The revolutionaries** (shot 3, the crowd)
+```
+Pixel art sprites for a 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character: match its art style, pixel size and chibi proportions (big head about 40% of the figure). Four different Haitian-inspired Caribbean revolutionaries of fifty years ago, men and women, deep and medium brown skin, all facing the viewer: 1) a man in a red coat and a dark bicorne, 2) a woman in a red coat with a white headwrap, 3) a young man in a white shirt with a red sash and a straw hat, 4) an older man in a red coat with a grey beard. A grid of 2 rows and 4 columns, every cell the same size, with NO lines or borders between the cells. Row 1: each of the four standing, arms at their sides. Row 2: the same four, each with one fist raised high, shouting. Bright, saturated, warm colours with clearly lit skin. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+**11.4 Caona's scouts in a canoe** (shot 3, the shore)
+```
+Pixel art sprite for a 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character: match its pixel size and chibi proportions. Side view, facing RIGHT: a long Taíno-inspired dugout canoe carved from one tree trunk, with two Yaguana scouts kneeling in it, paddling: light brown skin, long black hair, green tunics, red headbands, a bow slung on the back of the one in front. One row of 2 cells, the same size, with NO lines or borders between them. Cell 1: both paddles forward in the water. Cell 2: both paddles pulled back, a small splash. The canoe sits on a thin line of blue water at the bottom of each cell. Bright, saturated colours with clearly lit skin. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+**11.5 The cane workers** (shot 2a)
+```
+Pixel art sprites for a 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character: match its pixel size and chibi proportions. Three different enslaved cane workers of long ago, Haitian-inspired, deep brown skin, worn plain clothes of undyed cotton, one with a straw hat, one with a headwrap, one bare-headed, all facing the viewer, standing still, tired, dignified. One row of 3 cells, the same size, with NO lines or borders between them. Show them from head to knee only (the cane will hide their legs). Soft moonlight on their faces. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+**11.6 The ships** (shots 2a and 3)
+```
+Pixel art sprites for a 16-bit fantasy RPG cutscene, side view, facing LEFT. One row of 2 cells, the same size, with NO lines or borders between them. Cell 1: a tall Crown warship of the 1790s with three masts, white sails, a dark hull with a row of gun ports, and small red pennants at the mastheads. Cell 2: a smaller two-masted Spanish-style ship from the house of Brasador, a brown hull, white sails, and a large red banner at the stern showing a gold bull's skull with three gold flames above it. Each ship fills its cell, its hull resting on a thin line of blue water. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+**11.7 Two hands and the two halves** (shot 4)
+```
+Pixel art close-up for a 16-bit fantasy RPG cutscene. Two hands meet in the middle of the image, coming in from the left and right edges at the same height. The left hand, deep brown skin, holds half of a round gold locket: a half disc with a flat edge facing right and a sun engraved on it. The right hand, light olive-brown skin, wearing a dark red sleeve with a gold cuff, holds half of a round iron signet ring: a dark iron half disc with a small red stone, flat edge facing left. The two flat edges touch in the centre and a soft gold light shines from the seam. Dark warm brown background. Style: 8-bit pixel art like a Super Nintendo or Game Boy Advance RPG cutscene, matching the attached game screenshot: chunky low-resolution pixels, each pixel clearly visible and square, a 1-pixel dark outline around objects, flat colours with three shades each, at most 32 colours, hard pixel edges, no anti-aliasing, no blur, no gradients except soft light glows. Wide 16:9 image, as if drawn at 320 x 180 pixels and scaled up. No text, no letters, no frame, no border, no people unless asked, not painterly, not photorealistic.
+```
+
+**11.8 The hand taking the seventh page** (shot 5; a cut-out the animator slides across)
+```
+Pixel art sprite for a 16-bit fantasy RPG cutscene, seen from directly above. A hand in a fine black leather glove and a dark sleeve with a thin silver cuff, entering from the right, pinching the corner of a single sheet of old cream paper. The paper has neat lines of handwriting and the Roman numeral VII written large at the top. Show only the hand, the wrist and a little of the sleeve: no arm, no body, no face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+**11.9 The Kay Soley crest, as pixel art** (shot 7; attach `art/crests/crest-kaysoley.png`)
+```
+Redraw the attached crest as tiny pixel art for a 16-bit fantasy RPG title screen: the same design and colours, simplified so it reads at 32 x 32 pixels. Bold simple shapes, a 1-pixel dark outline, flat colours, at most 12 colours, hard pixel edges, no anti-aliasing, no gradients. The crest centred and filling the square image. Solid flat magenta background (#FF00FF). No text.
+```
+
+### Scenes (backgrounds, no people)
+
+**11.10 Cane fields at night, the Crown's ships** (shot 2a; layout `shot02a-cane-and-ships.png`)
+```
+A night scene for a 16-bit fantasy RPG cutscene, long ago in a Caribbean colony: a deep night-blue sky over the top third, scattered single-pixel stars and a pale moon in the upper left. A thin strip of dark sea on the horizon. Below it, filling the lower two thirds, tall sugar cane, dense stalks with long leaves in dark and mid greens, silver-edged by the moonlight. No ships and no people (they are added separately). Style: 8-bit pixel art like a Super Nintendo or Game Boy Advance RPG cutscene, matching the attached game screenshot: chunky low-resolution pixels, each pixel clearly visible and square, a 1-pixel dark outline around objects, flat colours with three shades each, at most 32 colours, hard pixel edges, no anti-aliasing, no blur, no gradients except soft light glows. Wide 16:9 image, as if drawn at 320 x 180 pixels and scaled up. No text, no letters, no frame, no border, no people unless asked, not painterly, not photorealistic.
+```
+
+**11.11 Mother Solange's archive room** (shot 2b; layout `shot02b-solange-names.png`)
+```
+An interior for a 16-bit fantasy RPG cutscene: a small dark temple archive room long ago, lit only by one small oil lamp (draw the lamp's warm glow but leave space for the lamp and the woman, who are added separately). A heavy wooden table across the lower third, seen from the front. Behind it, shelves of tall bound ledgers fading into deep shadow, a narrow window with night outside, a hanging cloth with a sun symbol. Warm amber light near the table, deep brown and near-black shadows elsewhere. No people. Style: 8-bit pixel art like a Super Nintendo or Game Boy Advance RPG cutscene, matching the attached game screenshot: chunky low-resolution pixels, each pixel clearly visible and square, a 1-pixel dark outline around objects, flat colours with three shades each, at most 32 colours, hard pixel edges, no anti-aliasing, no blur, no gradients except soft light glows. Wide 16:9 image, as if drawn at 320 x 180 pixels and scaled up. No text, no letters, no frame, no border, no people unless asked, not painterly, not photorealistic.
+```
+
+**11.12 The first archive burns** (shot 2c; layout `shot02c-archive-burns.png`)
+```
+A scene for a 16-bit fantasy RPG cutscene: a small stone archive building with a peaked tiled roof, at night, burning. Tall jagged orange and gold flames rise in front of and through the building, black smoke above, the night sky glowing orange around it. Scraps of pale paper float up from the fire. The ground in the foreground is dark. No people. Style: 8-bit pixel art like a Super Nintendo or Game Boy Advance RPG cutscene, matching the attached game screenshot: chunky low-resolution pixels, each pixel clearly visible and square, a 1-pixel dark outline around objects, flat colours with three shades each, at most 32 colours, hard pixel edges, no anti-aliasing, no blur, no gradients except soft light glows. Wide 16:9 image, as if drawn at 320 x 180 pixels and scaled up. No text, no letters, no frame, no border, no people unless asked, not painterly, not photorealistic.
+```
+
+**11.13 Zetwal fifty years ago, the panorama** (shot 3; layout `shot03-zetwal-fifty-years-ago-pan.png`)
+```
+A very wide panorama for a 16-bit fantasy RPG cutscene (as if drawn at 640 x 180 pixels), one continuous picture: a Caribbean island town fifty years ago during its revolution, bright daylight. From left to right: a paved town square with three barricades of crossed timber beams and overturned carts, a white canvas tent, simple houses with red tiled roofs; then a sandy beach where the town meets a turquoise sea; then a harbour with a stone quay. Leave the beach and the sea empty for boats and the square empty for people (they are added separately). No people, no ships. Style: 8-bit pixel art like a Super Nintendo or Game Boy Advance RPG cutscene, matching the attached game screenshot: chunky low-resolution pixels, each pixel clearly visible and square, a 1-pixel dark outline around objects, flat colours with three shades each, at most 32 colours, hard pixel edges, no anti-aliasing, no blur, no gradients except soft light glows. Very wide panoramic image, about 3.5 times as wide as it is tall. No text, no letters, no frame, no border, no people unless asked, not painterly, not photorealistic.
+```
+
+**11.14 The Sun Accord on the table** (shot 5; layout `shot05-seventh-page.png`)
+```
+A scene for a 16-bit fantasy RPG cutscene, seen from directly above: a dark wooden table, and on it a thick old bound treaty, its open pages written in neat lines of handwriting, a wax seal with a sun in the corner. Seven silk ribbons are tied across the document from top to bottom, alternating red and gold; the seventh ribbon on the far right lies untied and loose. A candle's warm light falls from the top of the image. No hands, no people. Style: 8-bit pixel art like a Super Nintendo or Game Boy Advance RPG cutscene, matching the attached game screenshot: chunky low-resolution pixels, each pixel clearly visible and square, a 1-pixel dark outline around objects, flat colours with three shades each, at most 32 colours, hard pixel edges, no anti-aliasing, no blur, no gradients except soft light glows. Wide 16:9 image, as if drawn at 320 x 180 pixels and scaled up. No text, no letters, no frame, no border, no people unless asked, not painterly, not photorealistic.
+```
+
+**11.15 The Festival Plaza at dawn** (shot 6; layout `shot06-plaza-dawn.png`; attach the game screenshot)
+```
+The same town square as in the attached game screenshot, drawn as a wide cutscene background at dawn: the same grey stone paving, the wooden stage at the top centre, red-roofed houses, the fountain and the lanterns, now with an orange and pale-gold dawn sky across the top, every lantern lit with a small gold glow, long soft morning light. Leave the square empty for the crowd (added separately). No people. Style: 8-bit pixel art like a Super Nintendo or Game Boy Advance RPG cutscene, matching the attached game screenshot: chunky low-resolution pixels, each pixel clearly visible and square, a 1-pixel dark outline around objects, flat colours with three shades each, at most 32 colours, hard pixel edges, no anti-aliasing, no blur, no gradients except soft light glows. Wide 16:9 image, as if drawn at 320 x 180 pixels and scaled up. No text, no letters, no frame, no border, no people unless asked, not painterly, not photorealistic.
+```
+
+**When they come back:** drop them in `docs/quest/intro/art/` (or send them here). I'll cut the magenta away and
+scale them to the storyboard's pixel sizes for the animator.
 
 ---
 
