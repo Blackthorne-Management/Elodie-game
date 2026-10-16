@@ -424,7 +424,7 @@ export function widenDoors(src: MapSource): string[] {
 /**
  * Between two outdoor areas there is no door, just the path going on (owner request, Oct 16): every tile
  * of a door that leads from an outdoor map to another outdoor map takes the ground in front of it, in
- * both eras. Doors into and out of buildings (`interior` maps) stay doors. `interiors` lists those maps.
+ * both eras, and that ground carries on to the edge of the map behind it. Doors into and out of buildings (`interior` maps) stay doors. `interiors` lists those maps.
  */
 export function openPassages(src: MapSource, interiors: ReadonlySet<string>): void {
   if (src.interior) return;
@@ -437,7 +437,15 @@ export function openPassages(src: MapSource, interiors: ReadonlySet<string>): vo
       for (let dy = 0; dy < (d.h ?? 1); dy++) {
         const x = d.x + dx;
         const y = d.y + dy;
-        for (const grid of [src.present, src.echo]) grid.set(x, y, grid.get(x + ox, y + oy));
+        for (const grid of [src.present, src.echo]) {
+          const path = grid.get(x + ox, y + oy);
+          grid.set(x, y, path);
+          // The path runs on to the edge of the map (owner report, Oct 16: an exit one tile short of the
+          // edge, behind a row of trees, looked like a dead end).
+          for (let bx = x - ox, by = y - oy; bx >= 0 && by >= 0 && bx < grid.width && by < grid.height; bx -= ox, by -= oy) {
+            grid.set(bx, by, path);
+          }
+        }
       }
     }
   }

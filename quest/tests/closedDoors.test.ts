@@ -84,3 +84,22 @@ describe('open paths between outdoor areas (owner request, Oct 16)', () => {
     expect(doors).toBe(6);
   });
 });
+
+describe('exits reach the edge of the map (owner report, Oct 16)', () => {
+  it('behind every open path between outdoor areas, the path runs to the edge (no dead end of trees)', () => {
+    const sources = SOURCES.map((make) => make());
+    const interiors = new Set(sources.filter((s) => s.interior).map((s) => s.id));
+    const step: Record<string, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+    for (const src of sources) {
+      widenDoors(src);
+      openPassages(src, interiors);
+      if (src.interior) continue;
+      for (const d of src.objects.filter((o) => o.layer === 'doors' && !interiors.has(String(o.props?.map)))) {
+        const [ox, oy] = step[String(d.props?.exit)]!;
+        for (let x = d.x - ox, y = d.y - oy; x >= 0 && y >= 0 && x < src.present.width && y < src.present.height; x -= ox, y -= oy) {
+          expect(LEGEND[src.present.get(x, y)]!.solid, `${src.id}/${d.name} at ${x},${y}`).toBe(false);
+        }
+      }
+    }
+  });
+});
