@@ -10,6 +10,7 @@ const BUTTON_MAP: [number, Button][] = [
   [1, 'cancel'],
   [1, 'run'],
   [2, 'echo'],
+  [3, 'ask'],
   [5, 'run'],
   [9, 'menu'],
   [12, 'up'],

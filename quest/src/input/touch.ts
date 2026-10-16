@@ -68,7 +68,11 @@ export class TouchSource implements InputSource {
     this.bindButton(echo, ['echo']);
     this.bindButton(menu, ['menu']);
 
-    this.root.append(this.pad, right, top);
+    // Ask Anissa: in the left bar above the D-pad (the right bar is full on small phones).
+    const ask = el('div', 'touch-small touch-ask', 'Ask');
+    this.bindButton(ask, ['ask']);
+
+    this.root.append(this.pad, right, top, ask);
     parent.appendChild(this.root);
   }
 

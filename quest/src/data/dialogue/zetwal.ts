@@ -55,6 +55,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       say(A, "...Okay. I'll stay close."),
       nar('(Arrows, WASD or the D-pad to walk, diagonals too, or tap where to go. Tap people and things to talk. Hold Shift or B to run.)'),
       nar('(Z or A to talk. Esc or Menu opens the menu: your party, your bag, the maps and your Journal.)'),
+      nar('(Stuck? Q or the Ask button asks Anissa what to do next.)'),
     ],
     // Anissa joins, and Gianna sets out with a little food in her satchel.
     { 'party.anissa': true, 'item.soup_pot': 2, 'item.akasan': 1 },

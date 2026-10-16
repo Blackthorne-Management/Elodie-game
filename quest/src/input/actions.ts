@@ -5,8 +5,8 @@
 import { combine, components, isDiagonal } from '../engine/grid.ts';
 import type { Dir, Dir8 } from '../engine/types.ts';
 
-export type Button = Dir | 'confirm' | 'cancel' | 'echo' | 'menu' | 'run';
-export const BUTTONS: readonly Button[] = ['up', 'down', 'left', 'right', 'confirm', 'cancel', 'echo', 'menu', 'run'];
+export type Button = Dir | 'confirm' | 'cancel' | 'echo' | 'menu' | 'run' | 'ask';
+export const BUTTONS: readonly Button[] = ['up', 'down', 'left', 'right', 'confirm', 'cancel', 'echo', 'menu', 'run', 'ask'];
 const DIR_BUTTONS: readonly Dir[] = ['up', 'down', 'left', 'right'];
 
 export interface InputSource {

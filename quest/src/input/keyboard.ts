@@ -1,5 +1,5 @@
 // Keyboard source. Arrows or WASD move; Z / Enter / Space confirm; X / Backspace cancel;
-// E echo; Escape / M menu; Shift or X (held) run.
+// E echo; Q ask Anissa; Escape / M menu; Shift or X (held) run.
 
 import type { Button, InputSource } from './actions.ts';
 
@@ -18,6 +18,7 @@ const KEYMAP: Record<string, Button[]> = {
   KeyX: ['cancel', 'run'],
   Backspace: ['cancel'],
   KeyE: ['echo'],
+  KeyQ: ['ask'],
   Escape: ['menu'],
   KeyM: ['menu'],
   ShiftLeft: ['run'],

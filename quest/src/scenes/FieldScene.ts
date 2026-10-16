@@ -548,6 +548,15 @@ export class FieldScene extends Phaser.Scene {
       this.handle(this.logic.swap());
       return;
     }
+    // Q, the Ask button or Y on a controller: the same as "Ask Anissa" in the menu.
+    if (input.pressed('ask')) {
+      this.cancelWalk();
+      if (this.anissaWithUs()) {
+        audio.sfx('confirm');
+        this.askAnissa();
+      } else this.toast.show("Anissa isn't with you right now.");
+      return;
+    }
     if (this.autoPath.length > 0 || this.autoFace) {
       this.walkOn();
       return;

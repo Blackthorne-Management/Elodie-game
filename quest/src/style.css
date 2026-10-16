@@ -159,6 +159,15 @@ html, body {
   font-size: 14px;
 }
 
+/* Ask Anissa: in the left bar, just above the D-pad. */
+.touch-ask {
+  position: absolute;
+  left: max(calc(env(safe-area-inset-left, 0px) + 6px + (var(--pad) - 60px) / 2), calc((var(--game-left, 0px) - 60px) / 2));
+  bottom: calc(var(--edge) + var(--pad) + 14px + env(safe-area-inset-bottom, 0px));
+}
+body[data-layout='stack'] .touch-ask { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); bottom: auto; top: calc(var(--game-top, 0px) - 56px); }
+body[data-layout='overlay'] .touch-ask { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); }
+
 /* Upright: everything in the bottom bar (D-pad left, A/B right) and Echo/Menu in the top bar. */
 body[data-layout='stack'] .touch-dpad { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); bottom: max(calc(var(--edge) + env(safe-area-inset-bottom, 0px)), calc((var(--bottom-bar) - var(--pad)) / 2)); }
 body[data-layout='stack'] .touch-buttons { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); bottom: max(calc(var(--edge) + env(safe-area-inset-bottom, 0px)), calc((var(--bottom-bar) - var(--btn) * 2) / 2)); }
