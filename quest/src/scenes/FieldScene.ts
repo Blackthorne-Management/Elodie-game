@@ -55,6 +55,9 @@ import { cityOf, level, partyMembers } from '../engine/rpg.ts';
 import { rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { planTap } from '../engine/tap.ts';
+import { audio } from '../audio/player.ts';
+import { BATTLE_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, VOLUME_STEPS } from '../audio.config.ts';
+import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.ts';
 import { echoPrompt } from '../engine/world.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { npcMoves, walkRoute } from '../engine/walkers.ts';
@@ -286,6 +289,12 @@ export class FieldScene extends Phaser.Scene {
     this.label = this.add.container(0, 0, [this.labelBg, this.labelText]).setDepth(3500).setVisible(false);
 
     this.dialogue = new DialogueBox(this);
+    // Wordless voices: a blip at the speaker's pitch every other letter (a soft tick for narration).
+    this.dialogue.onType = (speaker, text, before, after) => {
+      if (!blipDue(text, before, after)) return;
+      if (speaker) audio.voice(speaker);
+      else audio.sfx('tick');
+    };
     this.menu = new GameMenu(this);
     this.shopPanel = new ShopPanel(this);
     this.showcase = new ItemShowcase(this);
@@ -322,6 +331,8 @@ export class FieldScene extends Phaser.Scene {
     input.update();
     this.tickWalkers(delta);
     this.updateEchoPrompt();
+    this.syncMusic();
+    this.uiSounds();
     // In a bar the minimap always shows; on the picture (no bars) only in the field, out of the way of
     // Anissa's hint, menus, shops and dialogue.
     const onPicture = document.body.dataset.layout === 'overlay';
@@ -418,6 +429,7 @@ export class FieldScene extends Phaser.Scene {
   private openShowcase(id: string): void {
     const item = RPG.items[id];
     if (!item) return;
+    audio.sfx('item');
     this.cancelWalk();
     this.showcaseReturn = this.mode;
     this.mode = 'showcase';
@@ -443,6 +455,7 @@ export class FieldScene extends Phaser.Scene {
       switch (e.kind) {
         case 'map':
           changeMap = true;
+          audio.sfx('door');
           break;
         case 'save':
           this.toast.show(saveGame(this.rt) ? 'Autosaved' : 'Could not save');
@@ -453,8 +466,10 @@ export class FieldScene extends Phaser.Scene {
         case 'refused':
           this.toast.show(e.text);
           this.cameras.main.shake(120, 0.004);
+          audio.sfx('bump');
           break;
         case 'era':
+          audio.sfx(e.era === 'echo' ? 'echo_in' : 'echo_out');
           this.swapVisuals(e.era);
           break;
         case 'sync':
@@ -580,13 +595,17 @@ export class FieldScene extends Phaser.Scene {
   /** Pay finished side quests (once) and announce level-ups. */
   private checkProgress(): void {
     const flags = this.logic.state.flags;
-    for (const q of settleRewards(flags, RPG, SIDE_QUESTS)) this.toast.show(`Quest complete: ${q.title} (${rewardText(q, RPG)})`);
+    for (const q of settleRewards(flags, RPG, SIDE_QUESTS)) {
+      this.toast.show(`Quest complete: ${q.title} (${rewardText(q, RPG)})`);
+      audio.sfx('quest');
+    }
     const now = this.levelsNow();
     for (const [id, lv] of now) {
       const before = this.lastLevels.get(id);
       if (before !== undefined && lv > before) {
         const name = RPG.members.find((m) => m.id === id)?.name ?? id;
         this.toast.show(`${name} reached level ${lv}!`);
+        audio.sfx('level_up');
       }
     }
     this.lastLevels = now;
@@ -713,6 +732,7 @@ export class FieldScene extends Phaser.Scene {
         this.toast.show(this.logic.content.messages.doorInEcho);
       }
       if (attempt.reason === 'door_closed' && fresh) {
+        audio.sfx('bump');
         this.cancelWalk();
         this.handle(this.logic.closedDoor(attempt.door));
       }
@@ -748,6 +768,39 @@ export class FieldScene extends Phaser.Scene {
   // ---- Labels, markers and the Echo glow -----------------------------------------------------
 
   /** The name label over the NPC, object or door the player faces (only while standing still). */
+  /** The song for where the player is and what is happening (engine/audioPlan.ts); the player keeps it if unchanged. */
+  private syncMusic(): void {
+    if (this.mode === 'battle') return;
+    const rules = { byMap: MUSIC_BY_MAP, echo: ECHO_MUSIC, battle: BATTLE_MUSIC, dialogue: DIALOGUE_MUSIC };
+    audio.playMusic(musicFor(rules, { mapId: this.map.id, era: this.logic.era, dialogue: this.logic.dialogueId }, this.logic.state.flags));
+  }
+
+  /** Menu sounds: a tick for each move, a chime for A, a lower one for B (dialogue choices too). */
+  private uiSounds(): void {
+    const input = this.rt.input;
+    const dirs = (['up', 'down', 'left', 'right'] as const).some((d) => input.pressed(d));
+    switch (this.mode) {
+      case 'field':
+        if (input.pressed('menu')) audio.sfx('confirm');
+        break;
+      case 'menu':
+      case 'shop':
+      case 'journal':
+        if (input.pressed('confirm')) audio.sfx('confirm');
+        else if (input.pressed('cancel') || input.pressed('menu')) audio.sfx('cancel');
+        else if (dirs) audio.sfx('cursor');
+        break;
+      case 'dialogue':
+        if (this.dialogue.choiceCount > 0 && !this.dialogue.typing) {
+          if (input.pressed('confirm')) audio.sfx('confirm');
+          else if (dirs) audio.sfx('cursor');
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   /** Show which key makes the Echo while the player stands where one works (only in the field). */
   private updateEchoPrompt(): void {
     const text = this.mode === 'field' ? echoPrompt(this.logic.swapCheck(), isTouchDevice() ? 'touch' : 'keys') : null;
@@ -1238,6 +1291,8 @@ export class FieldScene extends Phaser.Scene {
       { id: 'save', label: 'Save' },
       { id: 'speed', label: `Text speed: ${capitalise(s.textSpeed)}` },
       { id: 'textsize', label: `Text size: ${capitalise(textSize())}` },
+      { id: 'music', label: `Music: ${volumeLabel(audio.volume.music)}` },
+      { id: 'sound', label: `Sound: ${volumeLabel(audio.volume.sound)}` },
       { id: 'hints', label: `Anissa's hints: ${s.hints ? 'On' : 'Off'}` },
       ...(isStandalone() ? [] : [{ id: 'fullscreen', label: isFullscreen() ? 'Exit full screen' : 'Full screen' }]),
       { id: 'export', label: 'Export save code' },
@@ -1314,6 +1369,16 @@ export class FieldScene extends Phaser.Scene {
       case 'save':
         this.closeMenu();
         this.toast.show(saveGame(this.rt) ? 'Saved' : 'Could not save');
+        audio.sfx('save');
+        break;
+      case 'music':
+        audio.setVolumes({ music: nextVolume(VOLUME_STEPS, audio.volume.music) });
+        this.menu.refresh();
+        break;
+      case 'sound':
+        audio.setVolumes({ sound: nextVolume(VOLUME_STEPS, audio.volume.sound) });
+        audio.sfx('confirm');
+        this.menu.refresh();
         break;
       case 'speed':
         this.cycleTextSpeed(1);

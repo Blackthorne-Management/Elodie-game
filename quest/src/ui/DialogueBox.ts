@@ -176,11 +176,17 @@ export class DialogueBox {
     this.refresh();
   }
 
+  /** Called as the line types out: the speaker (null for narration), the text, and the characters before and after. */
+  onType: ((speakerId: string | null, text: string, before: number, after: number) => void) | null = null;
+
   update(deltaMs: number): void {
     if (!this.root.visible) return;
     if (this.typing) {
+      const before = this.shownCount();
       this.elapsed += deltaMs;
       this.refresh();
+      const after = this.shownCount();
+      if (after > before && this.view.kind !== 'end') this.onType?.(this.view.speaker?.id ?? null, this.wrapped, before, after);
     }
   }
 

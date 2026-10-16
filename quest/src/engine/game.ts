@@ -431,6 +431,11 @@ export class GameLogic {
     return [{ kind: 'dialogue' }];
   }
 
+  /** The conversation running now, if any. */
+  get dialogueId(): string | null {
+    return this.mode === 'dialogue' ? (this.runner?.scriptId ?? null) : null;
+  }
+
   view(): DialogueView {
     return this.runner?.view() ?? { kind: 'end' };
   }

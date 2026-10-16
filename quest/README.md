@@ -163,6 +163,13 @@ one, else the global install, and runs Node with `--experimental-strip-types` to
 - **Anchors.** Flags named `echo.*` belong to the memory and are wiped on the way back; only an
   anchor (an `anchors` object naming an Echo-era puzzle object) may set an `anchor.*` flag, which
   present-era objects read (the Chain Bridge is down in the present once Patricio pins it).
+- **Music and sound** (`src/audio.config.ts`, `src/audio/`, `engine/audioPlan.ts`): the owner's ten
+  Pòdlimyè songs (originals in `docs/quest/audio/`, 128 kbps copies in `public/audio/music/`), one per
+  area, the Echo theme in a memory, the battle theme and victory fanfare in fights, and the farewell when
+  seeing Mother off. Songs fade into each other and loop by fading each pass into the next. The sound
+  effects and the wordless voices (a blip per syllable at each speaker's pitch) are made in code
+  (`src/audio/sfx.ts`). Nothing plays until the first tap or key; Music and Sound volumes are in the
+  System menu.
 - **Closed doors.** A door with an `if` condition is closed until it holds; walking into it plays its
   `closed` dialogue instead (the validator requires both). The opening uses it (owner decision, Oct 16):
   every way out of the Festival Plaza is closed until Mother has left, then only home opens, and the

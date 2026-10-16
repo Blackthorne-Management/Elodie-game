@@ -509,6 +509,8 @@ async function introFlow(browser, errors) {
   await page.keyboard.press('z');
   await waitReady(page);
   check(!(await page.isVisible('.intro')), 'A on the title goes on into the quest');
+  await page.waitForFunction(() => window.__audio?.().playing === 'festival', null, { timeout: 15000 });
+  check(true, 'the festival song plays in the plaza after the title');
   await ctx.close();
   return ['quest-intro.png', 'quest-title.png'];
 }

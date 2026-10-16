@@ -8,6 +8,8 @@
 // play over them, with damage numbers floating up. Winning shows the rewards; losing restarts the fight
 // with a Grudge (The Heir Rises). Keys, gamepad, the touch buttons and taps all work.
 
+import { audio } from '../audio/player.ts';
+import { BATTLE_MUSIC, VICTORY_MUSIC } from '../audio.config.ts';
 import Phaser from 'phaser';
 import {
   ANISSA_GLOW,
@@ -186,6 +188,7 @@ export class BattleScene extends Phaser.Scene {
     this.seed = Date.now() >>> 0 || 1;
     const def = BATTLES[this.battleId];
     this.drawBackdrop(def?.backdrop ?? 'cane_road');
+    audio.playMusic(BATTLE_MUSIC);
     this.ui = this.add.container(0, 0).setDepth(400);
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => this.onTap(p));
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -248,6 +251,7 @@ export class BattleScene extends Phaser.Scene {
 
   private act(action: Action): void {
     if (this.busy || this.done) return;
+    audio.sfx('confirm');
     this.menu = 'commands';
     this.cursor = 0;
     this.aim = null;
@@ -297,6 +301,7 @@ export class BattleScene extends Phaser.Scene {
         const lead = kind === 'arrow' ? 260 : 140;
         playFx(this, kind, this.centre(e.to), this.centre(e.from));
         this.time.delayedCall(lead, () => {
+          audio.sfx(e.crit ? 'crit' : 'hit');
           const tag = e.affinity === 1 ? ' Weak!' : e.affinity === -1 ? ' Resist' : '';
           this.pop(e.to, `${e.amount}${e.crit ? '!' : ''}${tag}`, e.affinity === 1 ? BATTLE_ART.weak : e.crit ? BATTLE_ART.crit : BATTLE_ART.hit);
           this.shiver(e.to, BATTLE_ART.shakePx);
@@ -308,6 +313,7 @@ export class BattleScene extends Phaser.Scene {
       case 'miss':
         if (this.battle.find(e.from)?.side === 'enemy' || e.move === 'Attack') this.say(`${name(e.from)}: ${e.move}... it misses.`);
         this.pop(e.to, 'miss', UI.dimText);
+        audio.sfx('miss');
         return BATTLE_ART.hitMs;
       case 'heal': {
         const bits = [e.hp ? `+${e.hp}` : '', e.sp ? `+${e.sp} SP` : ''].filter(Boolean).join(' ');
@@ -319,6 +325,7 @@ export class BattleScene extends Phaser.Scene {
           playFx(this, 'heal', this.centre(e.to));
         }
         this.pop(e.to, bits, e.hp ? BATTLE_ART.heal : BATTLE_ART.spText);
+        audio.sfx('heal');
         return BATTLE_ART.messageMs * 0.8;
       }
       case 'status': {
@@ -387,12 +394,14 @@ export class BattleScene extends Phaser.Scene {
         }
         if (g) this.time.delayedCall(200, () => playFx(this, 'surge', this.centre(g.key)));
         this.cameras.main.flash(250, 255, 242, 160);
+        audio.sfx('surge');
         return 500;
       }
       case 'down': {
         this.say(`${name(e.who)} falls!`);
         const s = this.sprites.get(e.who);
         const enemy = this.battle.find(e.who)?.side === 'enemy';
+        audio.sfx(enemy ? 'enemy_down' : 'ally_down');
         if (s && !enemy && this.hasStance(s)) {
           // A painted fighter kneels (the down pose) instead of fading.
           this.time.delayedCall(250, () => s.setFrame('1'));
@@ -424,6 +433,7 @@ export class BattleScene extends Phaser.Scene {
     const flags = getRuntime().logic.state.flags;
     this.result = settleBattle(flags, RPG, this.battle);
     this.done = true;
+    audio.playMusic(VICTORY_MUSIC);
     const items = this.result.items.map((i) => RPG.items[i.id]?.name ?? i.id).join(', ');
     this.say(`Victory!  +${this.result.xp} XP  +${this.result.gold} gold${items ? `  ${items}` : ''}`);
     const after = this.battle.def.tutorial?.after;
@@ -615,12 +625,14 @@ export class BattleScene extends Phaser.Scene {
   private moveCursor(d: number): void {
     const n = this.rows.length;
     this.cursor = (((this.cursor + d) % n) + n) % n;
+    audio.sfx('cursor');
     this.redraw();
   }
 
   private moveAim(d: number): void {
     const n = this.aimPool().length;
     this.aimIndex = (((this.aimIndex + d) % n) + n) % n;
+    audio.sfx('cursor');
     this.redraw();
   }
 

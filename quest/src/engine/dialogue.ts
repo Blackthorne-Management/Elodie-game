@@ -79,6 +79,11 @@ export class DialogueRunner {
   private readonly speakers: Readonly<Record<string, Speaker>>;
   private readonly flags: FlagStore;
 
+  /** The conversation's id (the music can follow it: audio.config.ts DIALOGUE_MUSIC). */
+  get scriptId(): string {
+    return this.script.id;
+  }
+
   constructor(script: DialogueScript, speakers: Readonly<Record<string, Speaker>>, flags: FlagStore) {
     this.script = script;
     this.speakers = speakers;

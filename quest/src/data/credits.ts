@@ -24,6 +24,7 @@ export const CREDITS: readonly Credit[] = [
 /** Shown on the Credits screen above the list. */
 export const CREDITS_INTRO = [
   'Bloodlines: Echoes of Zetwal',
-  'Art: placeholder pixel art drawn by the game itself (src/assets.pixels.ts).',
-  'No third-party art or sound is used yet. Font below.',
+  'Art: the owner\'s character art and intro, and pixel art drawn by the game itself.',
+  'Music: the owner\'s original score for Pòdlimyè. Sound effects: made by the game itself.',
+  'No third-party art or sound is used. Font below.',
 ];

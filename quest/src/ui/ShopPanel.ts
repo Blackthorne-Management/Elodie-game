@@ -1,6 +1,7 @@
 // A shop: full page, Buy and Sell side by side (left / right to switch), the price of each item, gold
 // on hand and room in the bag. A buys or sells one; B leaves. Rules: engine/rpg.ts buy and sell.
 
+import { audio } from '../audio/player.ts';
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
@@ -127,10 +128,12 @@ export class ShopPanel {
     const flags = this.flags!;
     if (this.side === 'buy') {
       const r = buy(flags, RPG, this.shop!, it.id);
+      audio.sfx(r === 'ok' ? 'coins' : 'bump');
       this.message =
         r === 'ok' ? `Mèsi! One ${it.name}.` : r === 'no_gold' ? 'Not enough gold.' : r === 'bag_full' ? 'Your bag is full.' : 'Not for sale.';
     } else {
       const r = sell(flags, RPG, it.id);
+      audio.sfx(r === 'ok' ? 'coins' : 'bump');
       this.message = r === 'ok' ? `Sold for ${sellPrice(it)} gold.` : 'I cannot take that.';
       this.cursor = Math.min(this.cursor, Math.max(0, this.list().length - 1));
     }

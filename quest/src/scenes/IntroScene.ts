@@ -5,6 +5,7 @@
 
 import Phaser from 'phaser';
 import { introLoopSeek, introPhaseAt, introPress, introStartTime, type IntroOpening, type IntroPhase, type IntroPress } from '../engine/intro.ts';
+import { audio } from '../audio/player.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { getRuntime } from '../runtime.ts';
 
@@ -36,6 +37,8 @@ export class IntroScene extends Phaser.Scene {
     this.phase = 'start';
     this.finished = false;
     this.buildLayer();
+    // The film has its own sound: the game's music waits.
+    audio.playMusic(null);
     getRuntime().input.clearPresses();
     // Try to play at once; a browser that wants a tap first refuses, and the tap-to-start prompt shows.
     this.play(introStartTime(this.opening));
