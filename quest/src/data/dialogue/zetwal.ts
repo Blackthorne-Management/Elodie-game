@@ -1327,6 +1327,9 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   simple('honor_guard_talk', [
     say('honor_guard', 'The Hall is open to every citizen. We are here for the ones who are not citizens, archivist.'),
   ]),
+  simple('honor_guard_2_talk', [
+    say('honor_guard', 'Stand straight, they told me. Look proud. Nobody said for how long. It has been since sunrise, archivist.'),
+  ]),
   simple('gazette_crier_talk', [
     say('gazette_crier', 'Gazette! Crown ships off the point! Council to sit tonight! Festival a great success, says festival committee!'),
     say('gazette_crier', 'One sou, archivist. The truth costs more, but the gazette is cheaper.'),
@@ -1349,6 +1352,9 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   // ---- The Hall of the Accord inside -------------------------------------------------------------
   simple('hall_guard_talk', [
     say('hall_guard', 'Wipe your feet, archivist. The steward counts the footprints. I have seen him do it.'),
+  ]),
+  simple('hall_guard_2_talk', [
+    say('hall_guard', 'He checks your feet, I check your face. Yours will do, archivist. There is ink on your nose.'),
   ]),
   simple('hall_page_talk', [
     say('hall_page', 'Council west, the Chancellor and the couriers east, the throne at the end. I run between all of them. Forty times a day.'),
@@ -1412,6 +1418,10 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('scribe_talk', [
     say('scribe', 'Every law is copied six times: one for the vault, one for the Hall, one for each district. My hand has not stopped since spring.'),
+  ]),
+  simple('scribe_2_talk', [
+    say('scribe', 'He copies the laws. I copy the Crown\'s letters. Theirs are longer, and they say less.'),
+    say('scribe', 'Lately every letter ends the same way: "with the deepest respect." I have started to count the respect. It is going down.'),
   ]),
   simple('council_desk', [
     nar("The Speaker's desk: a bell, an hourglass for long speeches, and a gavel worn pale where it has been banged."),

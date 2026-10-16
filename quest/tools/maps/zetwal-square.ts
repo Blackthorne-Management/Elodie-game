@@ -25,7 +25,7 @@ export function zetwalSquare(): MapSource {
   g.rect(15, 17, 5, 4, ':');
   g.rect(1, 9, 4, 1, ',');
   // Flagpoles either side of the stairs, lanterns down the avenue, hedges framing the square.
-  g.set(15, 9, '-').set(19, 9, '-');
+  g.set(16, 9, '-').set(19, 9, '-');
   g.set(15, 18, 'L').set(19, 18, 'L').set(5, 9, 'L').set(29, 9, 'L');
   g.rect(5, 17, 10, 1, 'E').rect(20, 17, 10, 1, 'E');
   g.rect(9, 5, 4, 1, 'E').rect(22, 5, 4, 1, 'E');
@@ -61,9 +61,10 @@ export function zetwalSquare(): MapSource {
   e.set(8, 12, 't').set(27, 13, 't');
 
   const objects: ObjSpec[] = [
-    // Each guard outside his flagpole, so the whole path to the double doors shows (owner report, Oct 16).
-    npc('honor_guard_w', 14, 9, 'down', { npc: 'honor_guard' }),
-    npc('honor_guard_e', 20, 9, 'down', { npc: 'honor_guard' }),
+    // A flagpole and a guard either side of the double doors, the same distance out, so the whole path
+    // to the doors shows (owner report, Oct 16).
+    npc('honor_guard_w', 15, 9, 'down', { npc: 'honor_guard' }),
+    npc('honor_guard_e', 20, 9, 'down', { npc: 'honor_guard_2' }),
     npc('gazette_crier', 22, 14, 'left'),
     npc('petitioner', 12, 11, 'up'),
     npc('protester', 26, 15, 'left'),

@@ -41,6 +41,8 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   hall_clerk: n('hall_clerk', 'clerk', 'Hall clerk'),
   // Accord Square, the Hall of the Accord inside, the Iron Market rebuilt (owner decision, Oct 15).
   honor_guard: n('honor_guard', 'honor_guard', 'Honor guard'),
+  // The second of a pair says something of their own (owner report, Oct 16).
+  honor_guard_2: n('honor_guard_2', 'honor_guard', 'Honor guard'),
   gazette_crier: n('gazette_crier', 'gazette_crier', 'Gazette crier'),
   petitioner: n('petitioner', 'petitioner', 'Petitioner'),
   protester: n('protester', 'protester', 'Protester'),
@@ -58,6 +60,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   chief_courier: n('chief_courier', 'chief_courier', 'Chief courier'),
   treasurer: n('treasurer', 'treasurer', 'Treasurer'),
   scribe: n('scribe', 'scribe', 'Scribe'),
+  scribe_2: n('scribe_2', 'scribe', 'Scribe'),
   produce_seller: { ...n('produce_seller', 'produce_seller', 'Produce seller'), shop: 'zetwal_produce' },
   spice_seller: { ...n('spice_seller', 'spice_seller', 'Spice seller'), shop: 'zetwal_spices' },
   cloth_merchant: { ...n('cloth_merchant', 'cloth_merchant', 'Cloth merchant'), shop: 'zetwal_cloth' },
@@ -69,6 +72,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   market_shopper: n('market_shopper', 'market_shopper', 'Shopper'),
   // The Iron Market, the Old Harbor and Solèy Heights (owner decision, Oct 15).
   hall_guard: n('hall_guard', 'town_guard', 'Hall guard'),
+  hall_guard_2: n('hall_guard_2', 'town_guard', 'Hall guard'),
   engraver: n('engraver', 'engraver', 'Engraver'),
   ironmonger: n('ironmonger', 'ironmonger', 'Ironmonger'),
   letter_writer: n('letter_writer', 'letter_writer', 'Letter writer'),

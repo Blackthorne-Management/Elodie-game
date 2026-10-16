@@ -98,8 +98,9 @@ export function zetwalHall(): MapSource {
 
   const objects: ObjSpec[] = [
     // The entrance hall.
+    // One tile either side of the double doors (owner report, Oct 16: equal distance).
     npc('hall_guard', 17, 28, 'right'),
-    npc('hall_guard_2', 21, 28, 'left', { npc: 'hall_guard' }),
+    npc('hall_guard_2', 22, 28, 'left'),
     npc('hall_clerk', 21, 25, 'down'),
     npc('hall_page', 21, 14, 'left'),
     npc('hall_steward', 17, 11, 'right'),
@@ -118,7 +119,7 @@ export function zetwalHall(): MapSource {
     npc('chief_courier', 30, 18, 'down'),
     npc('treasurer', 34, 26, 'up'),
     npc('scribe', 5, 26, 'up'),
-    npc('scribe_2', 9, 26, 'up', { npc: 'scribe' }),
+    npc('scribe_2', 9, 26, 'up'),
 
     { layer: 'doors', name: 'hall_out', x: 19, y: H - 1, props: { target: 'square_hall', map: 'zetwal-square', exit: 'up' } },
     { layer: 'spawns', name: 'hall', x: 19, y: H - 2, props: { facing: 'up', era: 'present' } },
