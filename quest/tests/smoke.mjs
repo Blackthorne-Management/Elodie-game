@@ -200,7 +200,7 @@ async function phoneFit(browser, errors) {
     const [sw, sh, bw, bh, sx, sy] = m.scroll;
     check(sw <= m.vw && sh <= m.vh && bw <= m.vw && bh <= m.vh && sx === 0 && sy === 0, `the page does not scroll (${sw}x${sh})`);
     const out = m.controls.filter((b) => !inside(b));
-    check(m.controls.length === 6 && out.length === 0, `all ${m.controls.length} touch controls are inside the viewport${out.length ? `: ${out.map((b) => b.name).join(', ')}` : ''}`);
+    check(m.controls.length === 7 && out.length === 0, `all ${m.controls.length} touch controls are inside the viewport${out.length ? `: ${out.map((b) => b.name).join(', ')}` : ''}`);
     const small = m.controls.filter((b) => Math.min(b.w, b.h) < 44);
     check(small.length === 0, `every touch control is at least 44 px (${m.controls.map((b) => Math.round(Math.min(b.w, b.h))).join(', ')})`);
     check(m.fs, 'the full-screen button is there');
