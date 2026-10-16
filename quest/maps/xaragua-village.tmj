@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 19,
+  "nextobjectid": 24,
   "layers": [
     {
       "id": 1,
@@ -507,6 +507,90 @@
               "value": "debate_pilgrim"
             }
           ]
+        },
+        {
+          "id": 9,
+          "name": "marine_sergeant",
+          "type": "npc",
+          "x": 336,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!encounter.xaragua_story.pier.won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "marine_sergeant"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "pier_marine_a",
+          "type": "npc",
+          "x": 352,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!encounter.xaragua_story.pier.won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "pier_marine"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "pier_marine_b",
+          "type": "npc",
+          "x": 336,
+          "y": 336,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!encounter.xaragua_story.pier.won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "pier_marine"
+            }
+          ]
         }
       ]
     },
@@ -521,7 +605,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 9,
+          "id": 12,
           "name": "village_plaza",
           "type": "door",
           "x": 336,
@@ -549,7 +633,7 @@
           ]
         },
         {
-          "id": 10,
+          "id": 13,
           "name": "village_beach",
           "type": "door",
           "x": 688,
@@ -577,7 +661,7 @@
           ]
         },
         {
-          "id": 11,
+          "id": 14,
           "name": "village_conuco",
           "type": "door",
           "x": 0,
@@ -605,7 +689,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 15,
           "name": "village_customs",
           "type": "door",
           "x": 464,
@@ -643,7 +727,74 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 16,
+          "name": "xaragua_arrival",
+          "type": "trigger",
+          "x": 336,
+          "y": 400,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "xaragua_arrival"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.xaragua_arrived"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "pier_after",
+          "type": "trigger",
+          "x": 336,
+          "y": 304,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "pier_after"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.pier_thanks"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "encounter.xaragua_story.pier.won"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 11,
@@ -656,7 +807,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 18,
           "name": "pier",
           "type": "spawn",
           "x": 336,
@@ -713,7 +864,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 14,
+          "id": 19,
           "name": "xaragua_customs_sign",
           "type": "puzzle_object",
           "x": 512,
@@ -736,7 +887,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 20,
           "name": "pier_sign",
           "type": "puzzle_object",
           "x": 384,
@@ -759,7 +910,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 21,
           "name": "crown_ship_west",
           "type": "puzzle_object",
           "x": 32,
@@ -787,7 +938,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 22,
           "name": "crown_ship_east",
           "type": "puzzle_object",
           "x": 464,
@@ -815,7 +966,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 23,
           "name": "crown_ship_far",
           "type": "puzzle_object",
           "x": 576,

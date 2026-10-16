@@ -379,6 +379,9 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   bow_maker: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.l!, trim: TEAL, legs: C.B!, accessories: ['bow'] },
   lamp_oil_seller: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.o!, trim: C.k!, robe: true, headgear: 'wrap', headgearColor: C.y! },
   roots_elder: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: C.L!, trim: TEAL, robe: true, accessories: ['staff'] },
+  marine_sergeant: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.w!, beard: C.B!, headgear: 'cap', headgearColor: C.u!, accessories: ['sash'] },
+  anaco: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: COTTON, trim: C.y!, robe: true, headgear: 'circlet', headgearColor: C.y!, accessories: ['cane'] },
+  thorne: { skin: C.T!, hair: C.w!, hairStyle: 'short', outfit: C.u!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['epaulettes', 'sash'] },
   crown_clerk: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
 };
 
@@ -743,6 +746,22 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     caneDark: 0x5a9a44,
     ground: 0xb08a58,
     groundDark: 0x8a6a40,
+    groundLight: 0xc8a46b,
+  },
+  // Yucayeque's pier (Chapter 2): green mountains over a turquoise lagoon, the pier's planks underfoot.
+  yucayeque_pier: {
+    sky: [0x2f86c8, 0x3f98d4, 0x55a8dc, 0x6fbae2, 0x8ccce8, 0xb0deee],
+    cloud: 0xf6f8fa,
+    cloudShade: 0xcad8e6,
+    mountainFar: 0x3f7a5a,
+    mountainNear: 0x2e6a48,
+    trees: 0x2e8a4e,
+    treesDark: 0x1f6a3a,
+    field: 0x1fa5a8,
+    cane: 0x7fe0d6,
+    caneDark: 0x2fb3b0,
+    ground: 0x9c7446,
+    groundDark: 0x6b4426,
     groundLight: 0xc8a46b,
   },
 };

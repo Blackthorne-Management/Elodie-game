@@ -114,6 +114,11 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   carver: { ...n('carver', 'carver', 'Carver'), shop: 'xaragua_carver' },
   bow_maker: { ...n('bow_maker', 'bow_maker', 'Bow-maker'), shop: 'xaragua_bows' },
   lamp_oil_seller: n('lamp_oil_seller', 'lamp_oil_seller', 'Lamp-oil seller'),
+  // Chapter 2's story (Oct 16): the cacique, the Governor, and the marines on the pier.
+  anaco: n('anaco', 'anaco', 'Cacique Anaco'),
+  thorne: n('thorne', 'thorne', 'Governor Thorne'),
+  marine_sergeant: n('marine_sergeant', 'marine_sergeant', 'Marine sergeant'),
+  pier_marine: n('pier_marine', 'crown_marine', 'Crown marine', 'marine_sergeant_talk'),
   // The debate corner by the village fire: an elder of the Roots and Tides against a Gaze pilgrim.
   debate_roots_elder: n('debate_roots_elder', 'roots_elder', 'Elder of the springs (debating)', 'debate:xaragua_springs'),
   debate_pilgrim: n('debate_pilgrim', 'pilgrim', 'Gaze pilgrim (debating)', 'debate:xaragua_springs'),

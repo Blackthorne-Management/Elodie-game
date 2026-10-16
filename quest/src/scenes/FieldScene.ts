@@ -24,14 +24,14 @@ import {
 } from '../assets.config.ts';
 import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
-import { ACT1, JOURNAL_NOTES } from '../data/quests.ts';
+import { CHAPTERS, JOURNAL_NOTES } from '../data/quests.ts';
 import type { Effect, GameLogic, Target } from '../engine/game.ts';
 import { DIRS, type Dir8, type Era, type Pos } from '../engine/types.ts';
 import { combine, facingToward, opposite, samePos, spriteFacing, stepFrom } from '../engine/grid.ts';
 import { Mover, restDistance, speedPx, stepLength, tileFoot, walkFrame } from '../engine/motion.ts';
 import { cameraBounds, cameraScroll } from '../engine/scaling.ts';
 import { dirButtons } from '../input/actions.ts';
-import { currentObjective, journalEntries, journalNotes } from '../engine/quests.ts';
+import { currentObjective, journalEntries, journalNotes, questForMap, type QuestDef } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
 import { applySave, newGame, saveFits, toSaveData } from '../engine/state.ts';
 import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlacement, type TiledMap } from '../engine/tiledMap.ts';
@@ -1172,19 +1172,26 @@ export class FieldScene extends Phaser.Scene {
 
   // ---- Hints and Journal ---------------------------------------------------------------------
 
+  /** The chapter this map belongs to (Chapter 1 in Pòdlimyè, Chapter 2 in Yucayeque, ...). */
+  private quest(): QuestDef | null {
+    return questForMap(CHAPTERS, this.map.id);
+  }
+
   private questHere(): boolean {
-    return ACT1.maps.includes(this.map.id);
+    return this.quest() !== null;
   }
 
   private tickHints(delta: number): void {
-    if (!this.questHere() || !this.anissaWithUs()) return;
-    const objective = currentObjective(ACT1, this.logic.state.flags);
+    const quest = this.quest();
+    if (!quest || !this.anissaWithUs()) return;
+    const objective = currentObjective(quest, this.logic.state.flags);
     const index = this.rt.hints.tick(delta, objective?.id ?? null, objective?.hints.length ?? 0);
     if (index !== null && objective && this.logic.state.settings.hints) this.hint.show('Anissa', objective.hints[index]!);
   }
 
   private askAnissa(): void {
-    const objective = currentObjective(ACT1, this.logic.state.flags);
+    const quest = this.quest();
+    const objective = quest ? currentObjective(quest, this.logic.state.flags) : null;
     const index = objective ? this.rt.hints.onRequest(objective.hints.length) : null;
     this.hint.show('Anissa', objective && index !== null ? objective.hints[index]! : 'I think we did everything, Gigi.');
   }
@@ -1192,12 +1199,13 @@ export class FieldScene extends Phaser.Scene {
   /** The Journal's lines (shown on the menu's Journal tab). */
   private journalLines(): PanelLine[] {
     const flags = this.logic.state.flags;
-    const lines: PanelLine[] = [{ text: `JOURNAL: ${ACT1.title}`, color: UI.accentText }];
-    if (!this.questHere()) lines.push({ text: 'Nothing to note here.', gap: 4 });
+    const quest = this.quest();
+    const lines: PanelLine[] = [{ text: `JOURNAL${quest ? `: ${quest.title}` : ''}`, color: UI.accentText }];
+    if (!quest) lines.push({ text: 'Nothing to note here.', gap: 4 });
     else {
-      const entries = journalEntries(ACT1, flags);
+      const entries = journalEntries(quest, flags);
       const current = entries.find((e) => e.state === 'current');
-      lines.push({ text: current ? `Now: ${current.title}` : 'Chapter 1 is complete.', color: UI.text, gap: 4 });
+      lines.push({ text: current ? `Now: ${current.title}` : 'This chapter is complete.', color: UI.text, gap: 4 });
       if (current) lines.push({ text: current.detail, color: UI.dimText });
       const done = entries.filter((e) => e.state === 'done');
       if (done.length > 0) {
@@ -1485,7 +1493,8 @@ export class FieldScene extends Phaser.Scene {
 
   private snapshot(): FieldSnapshot {
     const p = this.logic.state.player;
-    const objective = this.questHere() ? currentObjective(ACT1, this.logic.state.flags) : null;
+    const quest = this.quest();
+    const objective = quest ? currentObjective(quest, this.logic.state.flags) : null;
     const f = this.follower;
     return {
       mode: this.mode,

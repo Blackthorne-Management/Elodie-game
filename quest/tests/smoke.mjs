@@ -46,6 +46,7 @@ const { parseRoute } = await import('../src/engine/sim.ts');
 const { encodeSave } = await import('../src/engine/save.ts');
 const { newGameSim, readJson } = await import('../tools/sim-setup.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
+const { BATTLES } = await import('../src/data/battles.ts');
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
@@ -654,6 +655,45 @@ async function fightBoar(page, shots) {
   check(afterBattle.flags['encounter.wilds.boar.won'] === true && (afterBattle.flags['item.boar_tusk'] ?? 0) >= 1, 'the boar battle is won and pays out the boar-tusk charm');
 }
 
+/**
+ * Any other fight on the route (Chapter 2's pier): no tutorial; Sunthread for Gianna, Surge when ready,
+ * Attack for everyone else, until it is won. Checks it is won and that the battle music plays.
+ */
+async function fightBattle(page, id, shots) {
+  await page.waitForFunction(() => window.__quest.snapshot().battle, null, { timeout: 15000 });
+  const music = await page.waitForFunction(() => window.__audio?.().playing === 'battle', null, { timeout: 15000 }).then(() => true, () => false);
+  check(music, `${id}: the battle music plays`);
+  let shot = false;
+  for (let turn = 0; turn < 80; turn++) {
+    await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
+    const bt = (await snap(page)).battle;
+    if (!bt) break;
+    if (!shot) {
+      await shoot(page, `battle-${id}`, shots);
+      shot = true;
+    }
+    if (bt.tutorial || bt.menu === 'target') {
+      await page.keyboard.press('KeyZ');
+      await page.waitForTimeout(120);
+      continue;
+    }
+    if (bt.done) {
+      await page.keyboard.press('KeyZ');
+      break;
+    }
+    const skill = bt.actor === 'gianna' ? 'Sunthread' : null;
+    const want = bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith(skill ?? '-')) ?? 'Back') : skill ? 'Skill' : 'Attack';
+    const idx = bt.rows.findIndex((r) => r === want || r.startsWith(want));
+    for (let i = 0; i < idx; i++) await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('KeyZ');
+    await page.waitForTimeout(120);
+  }
+  await page.waitForFunction(() => window.__quest.snapshot().mode !== 'battle', null, { timeout: 8000 });
+  const after = await snap(page);
+  const battle = BATTLES[id];
+  check(after.flags[`encounter.${battle.table}.${battle.group}.won`] === true, `${id}: the fight is won in the browser`);
+}
+
 async function playAct(browser, errors) {
   console.log('Act I, Zetwal (scripted route, checked against the simulator after every key):');
   const route = parseRoute(readJson('routes/zetwal-act1.json'));
@@ -701,7 +741,8 @@ async function playAct(browser, errors) {
         // The dialogue started a fight (the simulator counts it won): fight it in the browser.
         if (sim.battles.length > battles) {
           await page.keyboard.up('Shift');
-          await fightBoar(page, shots);
+          if (sim.battles.at(-1) === 'intro_boar') await fightBoar(page, shots);
+          else await fightBattle(page, sim.battles.at(-1), shots);
           await page.keyboard.down('Shift');
         }
       } else {
@@ -750,7 +791,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('Festival Plaza') && mapSnap.items.includes('Temple Archive'), 'the city map lists Pòdlimyè\'s sections');
+  check(mapSnap.items.includes('Harbor Village') && mapSnap.items.includes('Caney of Anaco'), 'the city map shows the city the party is in (Yucayeque, after the ferry)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
@@ -826,7 +867,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'zetwal-temple' && back.flags['act1.complete'] === true, 'the autosave keeps the finished act after a reload');
+  check(back.mapId === 'xaragua-customs' && back.flags['act1.complete'] === true && back.flags['story.thorne_met'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 begun after a reload');
   await ctx.close();
   return shots;
 }

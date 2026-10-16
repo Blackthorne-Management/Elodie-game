@@ -463,7 +463,25 @@ export class GameLogic {
     if (this.mode !== 'card') return [];
     this.mode = 'field';
     this.card = null;
-    return [{ kind: 'sync' }];
+    return [{ kind: 'sync' }, ...this.travel()];
+  }
+
+  /**
+   * A journey a scene asked for (flag `travel.next` = "<map>/<spawn>", e.g. the ferry to Xaraguá): the
+   * party arrives at that spawn in the present, and the caller enters the new map. After a card, the
+   * journey waits until the card is closed.
+   */
+  private travel(): Effect[] {
+    const flags = this.state.flags;
+    const next = flags.get('travel.next');
+    if (typeof next !== 'string' || !next) return [];
+    flags.clear('travel.next');
+    const [mapId, spawnId] = next.split('/');
+    const map = this.maps[mapId ?? ''];
+    const spawn = map?.spawns.find((s) => s.id === spawnId);
+    if (!map || !spawn) throw new Error(`travel.next "${next}" leads nowhere`);
+    this.state.player = { ...this.state.player, mapId: map.id, pos: { ...spawn.pos }, facing: spawn.facing, era: 'present' };
+    return [{ kind: 'map' }, { kind: 'save' }];
   }
 
   // ---- Internals -----------------------------------------------------------------------------
@@ -495,7 +513,9 @@ export class GameLogic {
       this.mode = 'card';
       this.card = card;
       effects.push({ kind: 'card', card }, { kind: 'save' }); // the end of an act is always saved
+      return effects;
     }
+    effects.push(...this.travel());
     return effects;
   }
 }

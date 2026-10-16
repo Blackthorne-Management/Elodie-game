@@ -130,6 +130,17 @@ guide are marked **(proposal)**.
 
 ### Chapter 2: The Charter (Xaraguá)
 
+**Built Oct 16 (first half, the living city):** Chapter 1's end card closes onto the ferry (`travel.next`), which
+lands at Yucayeque's pier. Crown marines are taking half the fishers' catch; the first fight here (`pier_marines`:
+two Crown Marines and a sergeant, drawn from their townsfolk sprites until art drop 2). The fisher's thanks and the
+news that Anaco is sick; the caney; Cacique Anaco (Patricio swore an oath on the stones; his unanswered letter);
+the elders' council, where the Governor's liaison names "the seventh clause of the Accord, as signed" and Yari
+defies the council, Gianna asks it to wait, and the vote is held until proof comes; Governor Thorne in the customs
+house (a veiled warning about Yari and Anissa). The Journal's last objective, *What the stones remember*, points to
+the petroglyph cave: the next build (lamp oil, the flooded cave, the Echo of the first oath). The Mountain Path's
+ambushes switch on after the pier fight. **Not built:** the Yield step (beat 1's sergeant) waits for the Yield
+mechanic.
+
 **Owner decision (Oct 15), the shape of the chapter:** Xaraguá is first shown at its most beautiful: the normal,
 living city for the first half of the chapter. **Midway, the Crown attacks** and the city is **occupied**: the same
 maps change to their occupied versions (Crown soldiers, checkpoints, curfew, burned stalls, Crown banners on the

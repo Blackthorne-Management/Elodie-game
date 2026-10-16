@@ -13,7 +13,7 @@
 // ground fifty years ago; its scenes come with the story build.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
-import { npc, obj } from './zetwal-town.ts';
+import { npc, obj, trigger } from './zetwal-town.ts';
 
 const GRASS = 'ā';
 const TRAIL = 'ē';
@@ -138,8 +138,14 @@ export function xaraguaVillage(): MapSource {
     { layer: 'doors', name: 'village_beach', x: W - 1, y: 15, h: 2, props: { target: 'beach_village', map: 'xaragua-beach', exit: 'left' } },
     { layer: 'doors', name: 'village_conuco', x: 0, y: 15, h: 2, props: { target: 'conuco_village', map: 'xaragua-conuco', exit: 'right' } },
     { layer: 'doors', name: 'village_customs', x: 29, y: 11, props: { target: 'customs_out', map: 'xaragua-customs', exit: 'down' } },
-    // The ferry lands at the end of the pier.
+    // The ferry lands at the end of the pier (Chapter 1 ends with travel.next = xaragua-village/pier).
     { layer: 'spawns', name: 'pier', x: 21, y: 25, props: { facing: 'up', era: 'present' } },
+    // Chapter 2 opens: the marines on the pier (they leave once beaten), and the walk up the pier after.
+    trigger('xaragua_arrival', 21, 25, { dialogue: 'xaragua_arrival', flag: 'story.xaragua_arrived', once: true, onEnter: true }),
+    npc('marine_sergeant', 21, 23, 'down', { if: '!encounter.xaragua_story.pier.won' }),
+    npc('pier_marine_a', 22, 22, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
+    npc('pier_marine_b', 21, 21, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
+    trigger('pier_after', 21, 19, { dialogue: 'pier_after', flag: 'story.pier_thanks', once: true, if: 'encounter.xaragua_story.pier.won' }, 2, 1),
     obj('xaragua_customs_sign', 32, 12, { dialogue: 'xaragua_customs_sign', era: 'present' }),
     obj('pier_sign', 24, 19, { dialogue: 'pier_sign', era: 'present' }),
     // The Crown's ships at anchor (one drawing each, on the lagoon), in the present only.
@@ -317,8 +323,8 @@ export function xaraguaMountain(): MapSource {
     { layer: 'doors', name: 'mountain_camp', x: 10, y: 0, w: 2, props: { target: 'camp_mountain', map: 'xaragua-camp', exit: 'down' } },
     { layer: 'spawns', name: 'mountain', x: 20, y: H - 3, props: { facing: 'up', era: 'present' } },
     obj('mountain_sign', 16, 19, { dialogue: 'mountain_sign', era: 'present' }),
-    // The wild section (guide 6.6): ambushes once the pier fight is won (the story build sets the flag).
-    { layer: 'encounters', name: 'mountain_forest', x: 1, y: 1, w: W - 2, h: H - 2, props: { table: 'mountain_path', if: 'story.xaragua_pier_won' } },
+    // The wild section (guide 6.6): ambushes once the pier fight is won.
+    { layer: 'encounters', name: 'mountain_forest', x: 1, y: 1, w: W - 2, h: H - 2, props: { table: 'mountain_path', if: 'encounter.xaragua_story.pier.won' } },
   ];
   return { id: 'xaragua-mountain', present: g, echo: e, objects };
 }
@@ -391,7 +397,11 @@ export function xaraguaCaney(): MapSource {
     npc('elder_resist', 7, 6, 'left'),
     npc('elder_undecided', 5, 7, 'up'),
     npc('behique', 30, 5, 'down'),
-    npc('crown_liaison', 22, 6, 'left'),
+    npc('crown_liaison', 22, 6, 'left', { if: '!story.council_defied' }),
+    npc('anaco', 33, 4, 'down'),
+    // Chapter 2: the welcome, and the council scene at the council circle's doorway (after meeting Anaco).
+    trigger('caney_enter', 17, 23, { dialogue: 'caney_enter', flag: 'story.caney_entered', once: true, onEnter: true, if: 'encounter.xaragua_story.pier.won' }),
+    trigger('xaragua_council', 10, 6, { dialogue: 'xaragua_council', flag: 'story.council_seen', once: true, if: 'story.anaco_met' }),
     npc('head_runner', 5, 20, 'up'),
     obj('caney_records', 5, 14, { dialogue: 'shelf.caney_records', era: 'present' }, 3, 1),
 
@@ -440,6 +450,8 @@ export function xaraguaCustoms(): MapSource {
 
   const objects: ObjSpec[] = [
     npc('crown_clerk', 5, 2, 'down'),
+    // Governor Thorne waits in his office once the council has been defied.
+    npc('thorne', 10, 3, 'down', { if: 'story.council_defied' }),
     npc('customs_marine', 12, 5, 'left'),
     { layer: 'doors', name: 'customs_out', x: 8, y: H - 1, props: { target: 'village_customs', map: 'xaragua-village', exit: 'up' } },
     { layer: 'spawns', name: 'customs', x: 8, y: H - 3, props: { facing: 'up', era: 'present' } },

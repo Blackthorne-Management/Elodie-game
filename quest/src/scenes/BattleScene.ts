@@ -752,10 +752,13 @@ export class BattleScene extends Phaser.Scene {
     b.enemies.forEach((e) => {
       const slot = BATTLE_ART.enemySlots[e.slot % BATTLE_ART.enemySlots.length]!;
       const painted = this.textures.exists(fileKey(ART_FILES.enemy(e.look)));
-      const img = this.add
-        .image(slot.x, slot.y, textureKeyForEnemy(e.look))
+      // A person with no enemy drawing (the Crown's marines) stands in as their walking sprite, facing the party.
+      const drawn = this.textures.exists(textureKeyForEnemy(e.look));
+      const img = (drawn
+        ? this.add.image(slot.x, slot.y, textureKeyForEnemy(e.look))
+        : this.add.image(slot.x, slot.y, textureKeyForCharacter(e.look), characterFrame('left', 0)))
         .setOrigin(0.5, 1)
-        .setScale(painted ? ENEMY_FILE_SCALE : BATTLE_ART.enemyScale)
+        .setScale(painted ? ENEMY_FILE_SCALE : drawn ? BATTLE_ART.enemyScale : BATTLE_ART.partyScale)
         .setDepth(slot.y);
       this.sprites.set(e.key, img);
     });

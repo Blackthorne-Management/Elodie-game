@@ -157,6 +157,79 @@ export const ACT1: QuestDef = {
   ],
 };
 
+/**
+ * Chapter 2, The Charter (Xaraguá; docs/quest/design/STORY.md). The first half (story build, Oct 16): the
+ * living city. The ferry lands, Crown marines are shaking down the fishers on the pier (the first fight
+ * here), Yari takes Gianna to her ailing father, the elders' council leans toward the Charter until Yari
+ * defies it, and Governor Thorne lets Gianna know he is watching. The last objective leads into the
+ * petroglyph cave, which the next build opens.
+ */
+export const ACT2: QuestDef = {
+  id: 'act2',
+  title: 'Chapter 2: The Charter',
+  maps: ['xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song', 'xaragua-customs'],
+  objectives: [
+    {
+      id: 'pier',
+      title: 'Trouble on the pier',
+      detail: 'Crown marines are taking the fishers\' catch at the end of the pier. Stand with Yari.',
+      done: { flag: 'encounter.xaragua_story.pier.won' },
+      hints: [
+        'Gigi, those marines are taking the fish. Yari looks ready to fight them.',
+        'The sergeant is on the pier, right in front of us. Talk to him.',
+        'Talk to the sergeant on the pier. Then Sunthread, and Surge when I am ready.',
+      ],
+    },
+    {
+      id: 'anaco',
+      title: "Yari's father",
+      detail: 'Cacique Anaco is ill. His great house, the caney, stands at the head of the Areíto Plaza, up the road from the pier.',
+      done: { flag: 'story.anaco_met' },
+      hints: [
+        'Yari keeps looking up the hill. Her father is sick, Gigi.',
+        'The caney is the long house at the top of the dance ground, north of the village.',
+        "Go up the road north to the plaza, into the caney. He's in the healer's room on the right.",
+      ],
+    },
+    {
+      id: 'council',
+      title: "The elders' council",
+      detail: 'The elders meet in the council circle, on the west side of the caney, to vote on the Crown\'s Charter.',
+      done: { flag: 'story.council_defied' },
+      hints: [
+        'The elders are deciding about the Charter tonight. Yari will want to be there.',
+        'The council circle is the room on the west side of the caney.',
+        'In the caney, go through the opening on the left wall, into the council circle.',
+      ],
+    },
+    {
+      id: 'thorne',
+      title: "The Governor's eye",
+      detail: 'Governor Thorne has asked to see the envoy\'s daughter, in the Crown Customs House on the harbor.',
+      done: { flag: 'story.thorne_met' },
+      hints: [
+        'A Governor wants to see you, Gigi. That sounds bad and important.',
+        'The customs house is the stone one by the harbor, with the red roof.',
+        'Down in the village, go into the Crown Customs House. Thorne is in his office.',
+      ],
+    },
+    {
+      id: 'oath',
+      title: 'What the stones remember',
+      detail: 'The first oath was carved in the petroglyph cave in the cassava gardens, where the water rises. You will need a light.',
+      done: { flag: 'story.oath_found' },
+      hints: [
+        'The keepers said the oath was carved in a cave. Where the water rises.',
+        'The petroglyph cave is in the cassava gardens, west of the village. It is dark inside.',
+        'The lamp-oil seller by the customs house might have a light for a cave.',
+      ],
+    },
+  ],
+};
+
+/** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2];
+
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
     id: 'locket',
@@ -182,5 +255,12 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'anchor.chain_bridge',
     title: 'Something changed',
     text: 'The Chain Bridge is down in the present: young Patricio pinned the pawl, and it has held for fifty years.',
+  },
+  // Chapter 2.
+  {
+    id: 'seventh_clause',
+    when: 'clue.seventh_clause',
+    title: 'The seventh clause',
+    text: "Thorne's Charter rests on \"the seventh clause of the Accord, as signed.\" Nobody in Xaraguá remembers agreeing to it. The first oath was carved in the petroglyph cave.",
   },
 ];

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 5,
+  "nextobjectid": 6,
   "layers": [
     {
       "id": 1,
@@ -223,6 +223,34 @@
         },
         {
           "id": 2,
+          "name": "thorne",
+          "type": "npc",
+          "x": 160,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.council_defied"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "thorne"
+            }
+          ]
+        },
+        {
+          "id": 3,
           "name": "customs_marine",
           "type": "npc",
           "x": 192,
@@ -257,7 +285,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 3,
+          "id": 4,
           "name": "customs_out",
           "type": "door",
           "x": 128,
@@ -308,7 +336,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 4,
+          "id": 5,
           "name": "customs",
           "type": "spawn",
           "x": 128,

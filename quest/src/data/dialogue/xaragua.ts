@@ -19,7 +19,120 @@ function simple(id: string, lines: DialogueLine[], set?: DialogueNode['set']): D
   return { id, start: 'start', nodes: { start: { lines, set } } };
 }
 
+function script(id: string, nodes: Record<string, DialogueNode>): DialogueScript {
+  return { id, start: 'start', nodes };
+}
+
+const G = 'gianna';
+const A = 'anissa';
+const Y = 'yari';
+const PIER_WON = 'encounter.xaragua_story.pier.won';
+
 export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
+  // ---- Chapter 2, The Charter: the story (first half, Oct 16) -------------------------------------
+  // The ferry lands: marines are shaking down the fishers at the end of the pier.
+  simple('xaragua_arrival', [
+    nar('The ferry coach bumps against the pier at dawn. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
+    say(Y, 'Yucayeque. Home.'),
+    say(Y, 'And them. There were two ships when I left. Now there are three.'),
+    say(A, 'Gigi. Look, on the pier.'),
+    nar("At the end of the pier, a Crown sergeant weighs a fisher's catch on a hand scale. His marines load the baskets into a boat."),
+    say('marine_sergeant', 'Harbor fee. Half the catch, by order of the Governor.'),
+    say('canoe_fisher', 'Half? Yesterday it was a fifth!'),
+    say('marine_sergeant', 'Yesterday the Governor was in a better mood.'),
+    say(Y, 'Put the baskets down, sergeant.'),
+    say('marine_sergeant', 'Or what, girl? You and your little friends from Zetwal?'),
+    { speaker: G, text: "The envoy's daughter from Zetwal, actually. And yes.", set: { 'battle.next': 'pier_marines' } },
+  ]),
+  // Talking to the sergeant again (after a lost fight, or a reload in the middle of it).
+  script('marine_sergeant_talk', {
+    start: { lines: [], next: [{ if: { flag: PIER_WON }, to: 'gone' }, { to: 'again' }] },
+    again: {
+      lines: [
+        say('marine_sergeant', 'Back for another lesson, girl?'),
+        { speaker: Y, text: 'Put. The baskets. Down.', set: { 'battle.next': 'pier_marines' } },
+      ],
+    },
+    gone: { lines: [say('marine_sergeant', 'The Governor will hear about this.')] },
+  }),
+  // After the fight, walking up the pier: the fisher's thanks, and Yari's father.
+  simple('pier_after', [
+    nar('The marines row back to their warship without the baskets. Along the beach, people come out of their houses to watch them go.'),
+    say('canoe_fisher', 'Guatiao, Yari. And your friends. That is the first time anyone has made them put anything back.', 'Friend, Yari.'),
+    say(Y, 'Where is my father? Why did nobody stop them?'),
+    say('canoe_fisher', 'The cacique is sick, Yari. Very sick. The elders meet without him tonight, about the Crown\'s paper.'),
+    say(Y, '...Gianna, I have to go to him. The caney is at the top of the plaza, up the road.'),
+    say(A, "We'll come with you."),
+  ]),
+  // Into the caney.
+  simple('caney_enter', [
+    nar('The caney smells of cedar smoke. Elders talk in low voices; a Crown officer in red sits among them, writing.'),
+    say(Y, 'That one is new. And he is in my father\'s house.'),
+    say(A, 'The healer is waiting by the room on the right, Gigi.'),
+  ]),
+  // Cacique Anaco, ailing.
+  script('anaco_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.council_defied' }, to: 'after' }, { if: { flag: 'story.anaco_met' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      set: { 'story.anaco_met': true },
+      lines: [
+        nar('The cacique sits propped on cushions beside his bed. His hands shake, but his eyes are sharp.'),
+        say('anaco', 'Yari. You went to Zetwal for help, and you came back with a girl with a staff, and a smaller girl who glows.'),
+        say(Y, 'Gianna Limyè, Father. The envoy\'s daughter. And her sister, Anissa.'),
+        say('anaco', 'Limyè. Patricio\'s blood. Your grandfather swore an oath on our stones, child. Did he tell you?'),
+        say(G, 'He told me about Caona and her scouts. Not about an oath.'),
+        say('anaco', 'He would not. He was always modest about the wrong things.'),
+        say('anaco', 'Tonight Thorne\'s man reads the Charter to the elders. They will count his ships instead of our promises.'),
+        say('anaco', 'I wrote to the Throne. No answer came. If they vote yes, the harbor is the Crown\'s by morning.'),
+        say(Y, 'Then I will be there.'),
+        say('anaco', 'Be there. Be quiet, if you can. You cannot. Go.'),
+      ],
+    },
+    again: { lines: [say('anaco', 'The council circle is across the hall, on the west side. Go, before they vote without you.')] },
+    after: { lines: [say('anaco', 'You shouted at the whole council. Your grandmother would have laughed. Then she would have hidden you.')] },
+  }),
+  // The elders' council: the Charter, the seventh clause, and Yari.
+  simple('xaragua_council', [
+    nar("The elders sit in a circle. The Governor's liaison stands in the middle, holding a paper with a red seal."),
+    say('crown_liaison', 'Honored elders. The Charter offers the protection of His Majesty\'s fleet, forever. In return, a small matter: the harbor.'),
+    say('elder_charter', 'We cannot fight three warships with canoes. I say we sign, and live.'),
+    say('elder_resist', 'We swore on the stones: "The harbor stays with the people who fish it." I will not unswear it.'),
+    say('elder_undecided', 'And the cacique cannot vote, so it falls to us. Two more voices and the Charter passes.'),
+    { speaker: 'crown_liaison', text: 'The Charter is lawful, elders. It rests on the seventh clause of the Accord, as signed.', set: { 'clue.seventh_clause': true } },
+    say(Y, 'Then show us the seventh clause.'),
+    say('crown_liaison', '...The Governor holds the original.'),
+    say(Y, 'My grandmother lay in the ferns for a year counting Crown boots, so this harbor would stay ours.'),
+    say(Y, 'And you would sign it away for a clause nobody here has read?'),
+    say('elder_charter', 'Yari! You do not sit on this council.'),
+    say(Y, 'No. I stand on the pier, where his marines take half the catch. Ask the fishers how the protection feels.'),
+    say(G, 'Elders, my grandfather swore that first oath with Caona. Zetwal remembers it. Please, wait before you vote.'),
+    say('elder_undecided', "Patricio's granddaughter asks us to wait. The cacique's daughter shouts at us. That is two voices."),
+    say('elder_undecided', 'The vote waits. Bring us proof that the Crown\'s clause is real, or proof that it is not.'),
+    say('crown_liaison', 'The Governor will hear of this.'),
+    nar('The liaison rolls up the Charter and leaves. Down at the harbor, a glint: someone in the customs house is watching.'),
+    { speaker: A, text: 'Gigi, the songs said the first oath was carved in a cave. Where the water rises.', set: { 'story.council_defied': true } },
+  ]),
+  // Governor Thorne.
+  script('thorne_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.thorne_met' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      set: { 'story.thorne_met': true, 'clue.seventh_clause': true },
+      lines: [
+        nar('The Governor stands at the window with a spyglass. He takes his time turning around.'),
+        say('thorne', 'Miss Limyè. The envoy\'s daughter, making a scene at a native council. Your mother would be so proud.'),
+        say(G, 'You know my mother?'),
+        say('thorne', 'Everyone at the Throne knows your mother. A charming woman. She signs what is put in front of her, for the sake of peace.'),
+        say(G, 'That is not true.'),
+        say('thorne', 'Then ask her about the seventh clause. Oh, but you cannot. She is very far away.'),
+        say('thorne', 'Let me be plain. You walk here under the Accord\'s protection. An envoy\'s family may go where it likes.'),
+        say('thorne', 'The cacique\'s daughter is not an envoy. Neither is the little one who glows. Do keep them out of trouble.'),
+        say(A, '...'),
+        say('thorne', 'Good day, Miss Limyè. Mind the step on your way out. The Crown built it, so it is level.'),
+      ],
+    },
+    again: { lines: [say('thorne', 'Still here, Miss Limyè? The ferry leaves every morning. I can have a cabin made ready.')] },
+  }),
+
   // The Harbor Village (the hub).
   simple('canoe_fisher_talk', [
     say('canoe_fisher', 'Three Crown ships in our harbor, and they still buy our fish. They pay in paper. Paper does not swim.'),
@@ -101,10 +214,21 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('conuco_kid_talk', [
     say('conuco_kid', 'I found a hutia in the cassava. It took my bead and ran. Hutias think shiny things are stars.'),
   ]),
-  simple('petroglyph_cave_mouth', [
-    nar('The petroglyph cave. Carved faces watch from the rock around the mouth.'),
-    nar('Inside, black water stands to the knee. You would need a light, and a reason.'),
-  ]),
+  script('petroglyph_cave_mouth', {
+    start: { lines: [], next: [{ if: { flag: 'story.council_defied' }, to: 'oath' }, { to: 'closed' }] },
+    closed: {
+      lines: [
+        nar('The petroglyph cave. Carved faces watch from the rock around the mouth.'),
+        nar('Inside, black water stands to the knee. You would need a light, and a reason.'),
+      ],
+    },
+    oath: {
+      lines: [
+        nar('The petroglyph cave. Somewhere inside, the first oath was carved where the water rises.'),
+        say(A, 'It is so dark in there, Gigi. We need a lamp, a real one.'),
+      ],
+    },
+  }),
 
   // The Mountain Path and the hill camp.
   simple('hill_runner_talk', [

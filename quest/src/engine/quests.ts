@@ -31,6 +31,11 @@ export interface JournalNote {
   text: string;
 }
 
+/** The chapter a map belongs to (the Journal and Anissa's hints follow it); null outside every chapter. */
+export function questForMap(quests: readonly QuestDef[], mapId: string): QuestDef | null {
+  return quests.find((q) => q.maps.includes(mapId)) ?? null;
+}
+
 export function currentObjective(quest: QuestDef, flags: FlagReader): Objective | null {
   return quest.objectives.find((o) => !evaluate(o.done, flags)) ?? null;
 }

@@ -530,7 +530,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.xaragua_pier_won"
+              "value": "encounter.xaragua_story.pier.won"
             },
             {
               "name": "table",

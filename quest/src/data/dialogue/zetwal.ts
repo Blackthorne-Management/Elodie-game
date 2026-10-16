@@ -1117,7 +1117,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'yari',
       lines: [
         say(A, 'Goodbye, Zetwal.'),
-        { text: 'Xaraguá, then. We sail with the morning tide.', set: { 'act1.complete': true } },
+        { text: 'Xaraguá, then. We sail with the morning tide.', set: { 'act1.complete': true, 'travel.next': 'xaragua-village/pier' } },
       ],
     },
     after: {

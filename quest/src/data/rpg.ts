@@ -6,7 +6,7 @@ import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SUR
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1 } from './quests.ts';
+import { ACT1, ACT2 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
@@ -262,7 +262,7 @@ export const RPG: RpgContent = {
   bagLimit: BAG_LIMIT,
   // Chapter 1 has no fights: XP comes from the story's steps and the books read.
   xpRules: [
-    { flags: ACT1.objectives.flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
+    { flags: [...ACT1.objectives, ...ACT2.objectives].flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
     { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
   ],
   levels: LEVELS,

@@ -110,9 +110,46 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Charge', power: 150, every: 3, tell: 'The boar lowers its head and paws at the dirt...' },
     ],
   },
+  // Chapter 2 (COMBAT.md 13.2): the Crown's marines on Yucayeque's pier. Drawn from their townsfolk sprites
+  // (facing left) until art drop 2 brings painted enemies.
+  crown_marine: {
+    id: 'crown_marine',
+    name: 'Crown Marine',
+    look: 'crown_marine',
+    level: 3,
+    role: 'skirmisher',
+    moves: [{ name: 'Bayonet', power: 110 }],
+  },
+  marine_sergeant: {
+    id: 'marine_sergeant',
+    name: 'Marine sergeant',
+    look: 'marine_sergeant',
+    level: 4,
+    role: 'brute',
+    moves: [
+      { name: 'Rifle butt', power: 100 },
+      { name: 'Fix bayonets', power: 150, every: 3, tell: 'The sergeant barks: "Fix bayonets!" Steel glints...' },
+    ],
+  },
 };
 
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 2: the first fight in Yucayeque, on the pier the ferry lands at.
+  pier_marines: {
+    id: 'pier_marines',
+    title: 'The Pier',
+    backdrop: 'yucayeque_pier',
+    enemies: ['crown_marine', 'crown_marine', 'marine_sergeant'],
+    table: 'xaragua_story',
+    group: 'pier',
+    rewards: { xp: 60, gold: 30, items: [{ id: 'casabe', n: 2 }] },
+    tips: {
+      start: 'Three of them, Gigi. Yari will shoot. Your light hits hardest.',
+      spark: 'Now, Gigi! Surge!',
+      tell: "The sergeant's men are fixing bayonets! Guard!",
+      lowHp: "You're hurt. Eat something, or heal.",
+    },
+  },
   intro_boar: {
     id: 'intro_boar',
     title: 'The Cane Road',

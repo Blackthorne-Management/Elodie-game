@@ -11,8 +11,8 @@ import type { EncounterTable } from '../engine/content.ts';
 export const LATER_STORY_FLAGS: readonly string[] = [
   /** The party returns to Zetwal later in the story: the Cane Road's ambushes begin. */
   'story.zetwal_return',
-  /** Chapter 2: the fight on Yucayeque's pier is won; the Mountain Path's ambushes begin. */
-  'story.xaragua_pier_won',
+  /** Chapter 2, second half: the first oath found in the petroglyph cave (the next build). */
+  'story.oath_found',
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
@@ -28,6 +28,21 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
         intro: 'A boar bursts out of the cane.',
         won: 'The boar crashes away into the cane.',
         fled: 'You back away from the boar.',
+      },
+    ],
+  },
+  // Chapter 2's scripted fights (data/battles.ts), for the Foes page. No map rolls on this table.
+  xaragua_story: {
+    id: 'xaragua_story',
+    groups: [
+      {
+        id: 'pier',
+        weight: 0,
+        level: 4,
+        foes: ['Crown Marine', 'Crown Marine', 'Marine sergeant'],
+        intro: 'Crown marines block the pier.',
+        won: 'The marines retreat to their boat.',
+        fled: 'You back away down the pier.',
       },
     ],
   },
