@@ -45,5 +45,5 @@ export function zetwalHouse(): MapSource {
     obj('floor_cache', 17, 2, { dialogue: 'floor_cache', era: 'echo' }),
     { layer: 'anchors', name: 'night_orders_cache', x: 17, y: 2, props: { object: 'floor_cache', flag: 'anchor.night_orders' } },
   ];
-  return { id: 'zetwal-house', present: g, echo: e, objects };
+  return { id: 'zetwal-house', present: g, echo: e, objects, interior: true };
 }

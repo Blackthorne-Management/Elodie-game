@@ -187,6 +187,8 @@ export interface MapSource {
   present: Grid;
   echo: Grid;
   objects: ObjSpec[];
+  /** Inside a building (its way out is a door; between two outdoor areas the way is an open path). */
+  interior?: boolean;
 }
 
 const OBJECT_LAYER_ORDER: readonly LayerName[] = ['npcs', 'doors', 'triggers', 'spawns', 'echo_zones', 'anchors', 'puzzle_objects', 'encounters'];
@@ -417,4 +419,26 @@ export function widenDoors(src: MapSource): string[] {
     if (!done) narrow.push(`${src.id}/${d.name}`);
   }
   return narrow;
+}
+
+/**
+ * Between two outdoor areas there is no door, just the path going on (owner request, Oct 16): every tile
+ * of a door that leads from an outdoor map to another outdoor map takes the ground in front of it, in
+ * both eras. Doors into and out of buildings (`interior` maps) stay doors. `interiors` lists those maps.
+ */
+export function openPassages(src: MapSource, interiors: ReadonlySet<string>): void {
+  if (src.interior) return;
+  for (const d of src.objects) {
+    if (d.layer !== 'doors') continue;
+    const target = String(d.props?.map ?? src.id);
+    if (interiors.has(target)) continue;
+    const [ox, oy] = DIR_STEP[String(d.props?.exit ?? 'down')] ?? [0, 1];
+    for (let dx = 0; dx < (d.w ?? 1); dx++) {
+      for (let dy = 0; dy < (d.h ?? 1); dy++) {
+        const x = d.x + dx;
+        const y = d.y + dy;
+        for (const grid of [src.present, src.echo]) grid.set(x, y, grid.get(x + ox, y + oy));
+      }
+    }
+  }
 }

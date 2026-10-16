@@ -28,5 +28,5 @@ export function zetwalArchive(): MapSource {
     // Mother Solange's list, open on the reading table (the side quest A Name in the Cane).
     obj('solange_list', 9, 7, { dialogue: 'solange_list', era: 'present' }, 4, 1),
   ];
-  return { id: 'zetwal-archive', present: g, echo: e, objects };
+  return { id: 'zetwal-archive', present: g, echo: e, objects, interior: true };
 }

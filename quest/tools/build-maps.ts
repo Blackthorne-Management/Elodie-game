@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { addClosedDoors, toTiled, widenDoors, type MapSource } from './maps/painter.ts';
+import { addClosedDoors, openPassages, toTiled, widenDoors, type MapSource } from './maps/painter.ts';
 import { zetwalArchive } from './maps/zetwal-archive.ts';
 import { zetwalHall } from './maps/zetwal-hall.ts';
 import { zetwalHarbor } from './maps/zetwal-harbor.ts';
@@ -22,9 +22,11 @@ export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, z
 
 /** The generated files, as `[path, text]`. */
 export function buildMaps(dir: string = MAPS_DIR): [string, string][] {
-  return SOURCES.map((make) => {
-    const src = make();
+  const sources = SOURCES.map((make) => make());
+  const interiors = new Set(sources.filter((s) => s.interior).map((s) => s.id));
+  return sources.map((src) => {
     widenDoors(src);
+    openPassages(src, interiors);
     addClosedDoors(src);
     return [join(dir, `${src.id}.tmj`), formatTmj(toTiled(src))];
   });

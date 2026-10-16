@@ -135,5 +135,5 @@ export function zetwalHall(): MapSource {
     obj('portrait_elodie', 13, 19, { dialogue: 'portrait_elodie', era: 'present' }),
     obj('portrait_founders', 26, 19, { dialogue: 'portrait_founders', era: 'present' }),
   ];
-  return { id: 'zetwal-hall', present: g, echo: e, objects };
+  return { id: 'zetwal-hall', present: g, echo: e, objects, interior: true };
 }

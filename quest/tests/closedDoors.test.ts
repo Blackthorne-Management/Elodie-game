@@ -3,7 +3,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { SOURCES } from '../tools/build-maps.ts';
-import { Grid, LEGEND, addClosedDoors, widenDoors } from '../tools/maps/painter.ts';
+import { Grid, LEGEND, addClosedDoors, openPassages, widenDoors } from '../tools/maps/painter.ts';
 
 describe('grey doors', () => {
   it('a building without a door gets one grey door in the middle of its front, and it is solid', () => {
@@ -58,5 +58,29 @@ describe('double doors (owner request, Oct 16)', () => {
     expect([g.get(2, 1), g.get(3, 1)]).toEqual(['«', '»']);
     expect([src.echo.get(2, 1), src.echo.get(3, 1)]).toEqual(['«', '»']);
     expect(LEGEND['«']!.solid || LEGEND['»']!.solid).toBe(false);
+  });
+});
+
+describe('open paths between outdoor areas (owner request, Oct 16)', () => {
+  it('a way from one outdoor area to another is open ground; only buildings have doors', () => {
+    const sources = SOURCES.map((make) => make());
+    const interiors = new Set(sources.filter((s) => s.interior).map((s) => s.id));
+    expect([...interiors].sort()).toEqual(['zetwal-archive', 'zetwal-hall', 'zetwal-house']);
+    const DOOR_ART = ['D', '«', '»', '⌈', '⌊'];
+    let passages = 0;
+    let doors = 0;
+    for (const src of sources) {
+      widenDoors(src);
+      openPassages(src, interiors);
+      for (const d of src.objects.filter((o) => o.layer === 'doors')) {
+        const ch = src.present.get(d.x, d.y);
+        const building = src.interior || interiors.has(String(d.props?.map ?? src.id));
+        if (building) doors++;
+        else passages++;
+        expect(DOOR_ART.includes(ch), `${src.id}/${d.name} shows "${ch}"`).toBe(building);
+      }
+    }
+    expect(passages).toBeGreaterThan(10);
+    expect(doors).toBe(6);
   });
 });
