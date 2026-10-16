@@ -239,6 +239,19 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
+  // The debate corner's crowd (the debate itself: data/debates.ts).
+  script('debate_onlooker_talk', {
+    start: {
+      lines: [],
+      next: [{ if: { any: [{ flag: 'debate.zetwal_corner.won' }, { flag: 'debate.zetwal_corner.mediated' }] }, to: 'after' }, { to: 'during' }],
+    },
+    during: {
+      speaker: 'villager',
+      lines: [{ text: "Shh! I want to hear this. My cousin went to one of their quiet meetings and hasn't come back to Sunday dinner since." }],
+    },
+    after: { speaker: 'villager', lines: [{ text: 'Did you hear what the envoy\'s daughter said? I am telling my cousin tonight.' }] },
+  }),
+
   script('recruiter_a_talk', {
     start: {
       speaker: 'recruiter_a',

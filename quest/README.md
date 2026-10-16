@@ -170,6 +170,12 @@ one, else the global install, and runs Node with `--experimental-strip-types` to
   effects and the wordless voices (a blip per syllable at each speaker's pitch) are made in code
   (`src/audio/sfx.ts`). Nothing plays until the first tap or key; Music and Sound volumes are in the
   System menu.
+- **Street debates** (guide 7.2; `engine/debate.ts`, `data/debates.ts`): Pòdlimyè's corner on the lawn
+  below the plaza (a Gaze keeper against a Quiet Crown speaker, "Is a goddess who only remembers any
+  use?") opens with the city. Listen (+1 Influence once), Join (three rounds; answer each claim with
+  Scripture, Reason when a lore book backs it, or Compassion; two strong answers win), Mediate (Influence 5
+  in the city) or Provoke. Concord (0 to 100, starts at 50, shown in the menu) and the rewards are in
+  `config.ts`; each outcome pays once.
 - **Closed doors.** A door with an `if` condition is closed until it holds; walking into it plays its
   `closed` dialogue instead (the validator requires both). The opening uses it (owner decision, Oct 16):
   every way out of the Festival Plaza is closed until Mother has left, then only home opens, and the

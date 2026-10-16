@@ -22,6 +22,10 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   soup_vendor: n('soup_vendor', 'soup_vendor', 'Soup vendor'),
   recruiter_a: n('recruiter_a', 'quiet_crown_m_brown', 'Hooded stranger'),
   recruiter_b: n('recruiter_b', 'quiet_crown_f_tan', 'Hooded stranger'),
+  // The debate corner below the plaza (data/debates.ts): either one starts the debate.
+  debate_keeper: n('debate_keeper', 'gaze_keeper', 'Gaze keeper (debating)', 'debate:zetwal_corner'),
+  debate_recruiter: n('debate_recruiter', 'quiet_crown_m_deep', 'Hooded speaker', 'debate:zetwal_corner'),
+  debate_onlooker: n('debate_onlooker', 'villager', 'Onlooker'),
   town_guard: n('town_guard', 'town_guard', 'Town guard'),
   festival_kid: n('festival_kid', 'festival_kid', 'Small boy'),
   elder: n('elder', 'elder', 'Old neighbor'),

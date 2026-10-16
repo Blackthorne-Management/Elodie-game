@@ -221,3 +221,20 @@ export const ENEMY_ROLE = {
 } as const;
 /** SP back after a battle (a share of max). */
 export const SP_AFTER_BATTLE = 0.1;
+
+// ---- Street debates (guide 7.2; engine/debate.ts; owner approved the numbers Oct 16) -----------------
+
+/** Concord, the realm's harmony score (0 to 100), before anything moves it. */
+export const CONCORD_START = 50;
+/** Rounds won (a strong answer) out of three to win a debate. */
+export const DEBATE_ROUNDS_TO_WIN = 2;
+/** Influence in the debate's city needed to Mediate. */
+export const DEBATE_MEDIATE_INFLUENCE = 5;
+/** Influence for listening to a debate the first time. */
+export const DEBATE_LISTEN_INFLUENCE = 1;
+/** Each outcome's reward, paid once per debate. */
+export const DEBATE_REWARDS: Readonly<Record<'won' | 'mediated' | 'provoked', { concord: number; influence?: number; fear?: number; xp?: number }>> = {
+  won: { concord: 5, influence: 1, xp: 15 },
+  mediated: { concord: 10, influence: 1, xp: 25 },
+  provoked: { concord: -5, fear: 1 },
+};

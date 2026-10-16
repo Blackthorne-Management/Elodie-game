@@ -1,6 +1,8 @@
 // Content checks: dialogue structure, speakers and looks, text that fits the dialogue box, every flag
 // a condition reads is set somewhere (catches typos), the Journal, and the phrasebook.
 
+import { DEBATES } from '../src/data/debates.ts';
+import { debateFlag } from '../src/engine/debate.ts';
 import { describe, expect, it } from 'vitest';
 import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
@@ -24,6 +26,8 @@ function flagsSet(): Set<string> {
   for (const c of CONTENT.cards) out.add(`card.${c.id}`);
   // A won battle sets its encounter flag (engine/battle.ts settleBattle).
   for (const b of Object.values(BATTLES)) out.add(encounterFlag(b.table, b.group, 'won'));
+  // A debate sets its outcome flags (engine/debate.ts).
+  for (const d of DEBATES) for (const o of ['listened', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
   return out;
 }
 
@@ -51,7 +55,7 @@ describe('dialogue content', () => {
 
   it('every NPC has a dialogue and a look; every speaker has a portrait', () => {
     for (const npc of Object.values(CONTENT.npcs)) {
-      expect(CONTENT.dialogue[npc.dialogue], npc.id).toBeDefined();
+      expect(CONTENT.dialogue[npc.dialogue] ?? CONTENT.debates?.[npc.dialogue], npc.id).toBeDefined();
       expect(NPC_SPRITES[npc.look], npc.id).toBeDefined();
     }
     for (const s of Object.values(CONTENT.speakers)) expect(PORTRAITS[s.portrait ?? ''], s.id).toBeDefined();

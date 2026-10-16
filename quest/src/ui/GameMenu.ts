@@ -3,6 +3,7 @@
 // settings, credits). The top always shows gold on hand and the three pillars, here and realm-wide.
 // Rules come from engine/rpg.ts; content from data/rpg.ts. The Field scene runs System choices.
 
+import { concord } from '../engine/debate.ts';
 import Phaser from 'phaser';
 import { MAP_ART, RARITY_ART, UI, characterFrame, itemArtKey, textureKeyForCharacter, textureKeyForItem, textureKeyForPortrait } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
@@ -461,7 +462,7 @@ export class GameMenu {
       const local = here ? localPillar(ctx.flags, RPG, p, here.id) : 0;
       return `${PILLAR_NAMES[p]} ${local}/${globalPillar(ctx.flags, RPG, p, keys)}`;
     };
-    this.text(6, 18, `Gold ${gold(ctx.flags, RPG)}   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}   Armies ${armies(ctx.flags, keys)}`, UI.accentText);
+    this.text(6, 18, `Gold ${gold(ctx.flags, RPG)}   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}   Armies ${armies(ctx.flags, keys)}   Concord ${concord(ctx.flags)}`, UI.accentText);
     this.text(6, 27, `${PILLARS.map(pill).join('  ')}   (${here ? here.name : 'here'}/realm)`, UI.text);
     g.lineStyle(1, UI.boxBorder, 0.5).lineBetween(4, 36.5, VIEW_WIDTH - 4, 36.5);
 

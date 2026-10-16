@@ -64,7 +64,9 @@ export function zetwalTown(): MapSource {
   g.rect(6, 24, 2, 2, 'k').set(8, 25, 'c').set(20, 25, 'c');
 
   // Gardens and trees.
-  g.rect(2, 7, 3, 1, 'f').rect(3, 12, 3, 1, 'f').rect(23, 17, 3, 1, 'f');
+  g.rect(2, 7, 3, 1, 'f').rect(3, 12, 3, 1, 'f');
+  // The debate corner: a paved patch on the lawn below the plaza, flowers either side.
+  g.rect(21, 16, 6, 3, ':').set(20, 17, 'f').set(27, 17, 'f');
   for (const [x, y] of [[1, 14], [9, 17], [10, 21], [18, 22], [25, 22], [28, 18], [33, 22], [35, 17], [29, 13], [27, 14]] as const) {
     g.set(x, y, 'T');
   }
@@ -113,6 +115,11 @@ export function zetwalTown(): MapSource {
     npc('soup_vendor', 11, 12, 'right'),
     npc('recruiter_a', 23, 7, 'down'),
     npc('recruiter_b', 24, 9, 'left'),
+    // The debate corner on the lawn below the plaza (data/debates.ts).
+    npc('debate_keeper', 22, 17, 'right'),
+    npc('debate_recruiter', 25, 17, 'left'),
+    npc('debate_onlooker', 23, 18, 'up'),
+    npc('debate_onlooker_2', 24, 16, 'down', { npc: 'debate_onlooker' }),
     npc('town_guard', 22, 10, 'left'),
     npc('festival_kid', 19, 13, 'up'),
     npc('elder', 4, 11, 'right'),

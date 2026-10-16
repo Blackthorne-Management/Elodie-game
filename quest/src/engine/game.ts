@@ -6,6 +6,7 @@
 import { encounterFlag } from './encounterFlags.ts';
 import { ENCOUNTER_CHANCE_PER_STEP, ENCOUNTER_GRACE_STEPS } from '../config.ts';
 import { evaluate, flagsIn } from './conditions.ts';
+import { debateScript } from './debate.ts';
 import { cardFlag, type CardDef, type EncounterGroup, type EncounterTable, type GameContent } from './content.ts';
 import { DialogueRunner, type DialogueScript, type DialogueView } from './dialogue.ts';
 import { FlagStore, type FlagSnapshot } from './flags.ts';
@@ -418,6 +419,11 @@ export class GameLogic {
 
   /** Start a dialogue; `after` effects are returned when it ends (or at once if it shows nothing). */
   startDialogue(id: string, after: Effect[] = []): Effect[] {
+    const debate = this.content.debates?.[id];
+    if (debate) {
+      const ctx = this.content.debateContext?.(this.state.flags, debate) ?? { influence: 0, mediateNeeds: Infinity };
+      return this.startScript(debateScript(debate, this.state.flags, ctx), after);
+    }
     const script = this.content.dialogue[id];
     if (!script) throw new Error(`Unknown dialogue ${id}`);
     return this.startScript(script, after);

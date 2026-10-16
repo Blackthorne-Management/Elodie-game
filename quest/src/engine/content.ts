@@ -1,6 +1,8 @@
 // The shapes of game content the engine runs (the content itself lives in src/data).
 
+import type { DebateContext, DebateDef } from './debate.ts';
 import type { DialogueScript, Speaker } from './dialogue.ts';
+import type { FlagReader } from './flags.ts';
 
 export interface NpcDef {
   id: string;
@@ -81,6 +83,10 @@ export interface GameContent {
   doors?: Readonly<Record<string, string>>;
   /** Random encounter tables, by id. */
   encounters?: Readonly<Record<string, EncounterTable>>;
+  /** Street debates, by the dialogue id an NPC uses to start one (`debate:<id>`). */
+  debates?: Readonly<Record<string, DebateDef>>;
+  /** Influence in a debate's city now, and what Mediate needs (the RPG content knows the pillars). */
+  debateContext?: (flags: FlagReader, def: DebateDef) => DebateContext;
 }
 
 export function cardFlag(card: CardDef): string {

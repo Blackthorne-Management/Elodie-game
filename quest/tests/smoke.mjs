@@ -515,6 +515,47 @@ async function introFlow(browser, errors) {
   return ['quest-intro.png', 'quest-title.png'];
 }
 
+/** The debate corner: walk up, Join, win two rounds of three, and the reward is paid. */
+async function debateFlow(browser, errors) {
+  console.log('Debate corner:');
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  await page.goto(GAME);
+  const flags = { 'story.festival_intro': true, 'story.heard_speech': true, 'story.elodie_left': true, 'item.sun_locket': 1, 'showcase.sun_locket': true, 'story.warroom_echo': true, 'party.anissa': true };
+  const code = encodeSave({ version: 2, era: 'present', settings: { textSpeed: 'instant', hints: false }, savedAt: 1, flags, mapId: 'zetwal-town', x: 21, y: 17, facing: 'right' });
+  await page.evaluate((c) => localStorage.setItem('bloodlines-quest.save', c), code);
+  await page.reload();
+  await waitReady(page);
+  for (let i = 0; i < 4 && (await snap(page)).mode !== 'field'; i++) await page.keyboard.press('z').then(() => page.waitForTimeout(400));
+  const choices = async () => (await snap(page)).dialogue?.choices ?? [];
+  /** Press A until a choice shows, then pick the one starting with `pick`. */
+  const choose = async (pick) => {
+    for (let i = 0; i < 12 && (await choices()).length === 0; i++) await page.keyboard.press('z').then(() => page.waitForTimeout(250));
+    const list = await choices();
+    const at = list.findIndex((c) => c.startsWith(pick));
+    if (at < 0) throw new Error(`Smoke check failed: no choice "${pick}" in ${list.join(' / ')}`);
+    const from = (await snap(page)).dialogue.cursor;
+    for (let i = from; i < at; i++) await page.keyboard.press('ArrowDown').then(() => page.waitForTimeout(120));
+    await page.keyboard.press('z');
+    await page.waitForTimeout(300);
+  };
+  await page.keyboard.press('z');
+  await page.waitForTimeout(400);
+  check((await choices()).join('|') === 'Listen|Join the debate|Mediate (needs Influence 5 here)|Provoke the crowd|Walk on', 'the corner offers Listen, Join, Mediate (needs Influence 5) and Provoke');
+  await choose('Join');
+  await choose('Scripture');
+  await choose('Scripture');
+  await choose('Compassion');
+  for (let i = 0; i < 12 && (await snap(page)).mode !== 'field'; i++) await page.keyboard.press('z').then(() => page.waitForTimeout(250));
+  await page.waitForTimeout(300);
+  const s = await snap(page);
+  check(s.toast?.includes('Debate won') ?? false, `winning two rounds wins the debate (${s.toast})`);
+  await page.screenshot({ path: join(SHOT_DIR, 'quest-debate-won.png') });
+  await ctx.close();
+  return ['quest-debate-won.png'];
+}
+
 async function playAct(browser, errors) {
   console.log('Act I, Zetwal (scripted route, checked against the simulator after every key):');
   const route = parseRoute(readJson('routes/zetwal-act1.json'));
@@ -1046,10 +1087,11 @@ async function main() {
 
     await hintsAndJournal(browser, errors);
     const introShots = await introFlow(browser, errors);
+    const debateShots = await debateFlow(browser, errors);
     const actShots = await playAct(browser, errors);
 
     check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
-    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...introShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
+    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...introShots, ...debateShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
     console.log('Smoke test passed.');
   } finally {
     await browser.close();

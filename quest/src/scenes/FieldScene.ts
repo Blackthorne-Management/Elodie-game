@@ -51,7 +51,9 @@ import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
 import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
 import { RPG } from '../data/rpg.ts';
-import { cityOf, level, partyMembers } from '../engine/rpg.ts';
+import { addSharedXp, cityOf, level, partyMembers, pillarFlag } from '../engine/rpg.ts';
+import { settleDebates } from '../engine/debate.ts';
+import { DEBATES } from '../data/debates.ts';
 import { rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { planTap } from '../engine/tap.ts';
@@ -595,6 +597,16 @@ export class FieldScene extends Phaser.Scene {
   /** Pay finished side quests (once) and announce level-ups. */
   private checkProgress(): void {
     const flags = this.logic.state.flags;
+    const addPillar = (p: 'influence' | 'fear', city: string, n: number) => {
+      const f = pillarFlag(p, city);
+      const v = flags.get(f);
+      flags.set(f, (typeof v === 'number' ? v : 0) + n);
+    };
+    for (const pay of settleDebates(flags, DEBATES, addPillar, (n) => addSharedXp(flags, n))) {
+      const label = pay.outcome === 'listened' ? 'Heard the debate' : pay.outcome === 'won' ? 'Debate won' : pay.outcome === 'mediated' ? 'Debate mediated' : 'Crowd provoked';
+      this.toast.show(`${label}: ${pay.text}`);
+      audio.sfx(pay.outcome === 'provoked' ? 'bump' : pay.outcome === 'listened' ? 'confirm' : 'quest');
+    }
     for (const q of settleRewards(flags, RPG, SIDE_QUESTS)) {
       this.toast.show(`Quest complete: ${q.title} (${rewardText(q, RPG)})`);
       audio.sfx('quest');
