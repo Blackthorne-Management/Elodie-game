@@ -58,6 +58,11 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   k: { ground: 'dock', solid: false },
   _: { ground: 'stage', solid: false },
   D: { ground: 'door', solid: false },
+  // The halves of a double door (widenDoors puts them in place of 'D').
+  '«': { ground: 'door_left', solid: false },
+  '»': { ground: 'door_right', solid: false },
+  '⌈': { ground: 'door_top', solid: false },
+  '⌊': { ground: 'door_bottom', solid: false },
   '@': { ground: 'door_closed', solid: true },
   o: { ground: 'floor', solid: false },
   e: { ground: 'floor_old', solid: false },
@@ -321,7 +326,7 @@ export function addClosedDoors(src: MapSource): void {
       }
       if (!cells.some(([cx, cy]) => at(cx, cy - 1) === '^')) continue;
       const hasDoor = cells.some(([cx, cy]) =>
-        [[1, 0], [-1, 0], [0, 1], [0, -1], [0, 0]].some(([dx, dy]) => ['D', '@'].includes(at(cx + dx!, cy + dy!)) || doorTiles.has(`${cx + dx!},${cy + dy!}`)),
+        [[1, 0], [-1, 0], [0, 1], [0, -1], [0, 0]].some(([dx, dy]) => ['D', '@', '«', '»', '⌈', '⌊'].includes(at(cx + dx!, cy + dy!)) || doorTiles.has(`${cx + dx!},${cy + dy!}`)),
       );
       if (hasDoor) continue;
       // The front: the lowest wall row; the door goes in the middle of its longest run.
@@ -380,8 +385,20 @@ export function widenDoors(src: MapSource): string[] {
       const front = g.get(fx, fy);
       const frontOpen = !LEGEND[front]!.solid;
       if (!frontOpen && !CLEARABLE.has(front)) continue;
-      g.set(cx, cy, g.get(d.x, d.y));
-      e.set(cx, cy, e.get(d.x, d.y));
+      // A door tile becomes the two halves of one double door; an open gateway just widens.
+      const halves = (grid: Grid) => {
+        const ch = grid.get(d.x, d.y);
+        if (ch !== 'D') {
+          grid.set(cx, cy, ch);
+          return;
+        }
+        const firstIsDoor = ox === 0 ? d.x < cx : d.y < cy;
+        const [a, b] = ox === 0 ? ['«', '»'] : ['⌈', '⌊'];
+        grid.set(d.x, d.y, firstIsDoor ? a : b);
+        grid.set(cx, cy, firstIsDoor ? b : a);
+      };
+      halves(g);
+      halves(e);
       if (!frontOpen) {
         g.set(fx, fy, g.get(d.x + ox, d.y + oy));
         e.set(fx, fy, e.get(d.x + ox, d.y + oy));

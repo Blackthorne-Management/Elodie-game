@@ -48,13 +48,15 @@ describe('double doors (owner request, Oct 16)', () => {
     }
   });
 
-  it('a door widens into the wall beside it, with open ground in front', () => {
+  it('a door widens into the wall beside it, with open ground in front, as one double door', () => {
     const g = new Grid(5, 4, '.');
     g.rect(0, 0, 5, 2, '#').set(2, 1, 'D');
     const src = { id: 't', present: g, echo: g.clone(), objects: [{ layer: 'doors' as const, name: 'd', x: 2, y: 1, props: { exit: 'down' } }] };
     expect(widenDoors(src)).toEqual([]);
     expect(src.objects[0]).toMatchObject({ x: 2, w: 2 });
-    expect(g.get(3, 1)).toBe('D');
-    expect(src.echo.get(3, 1)).toBe('D');
+    // One double door: the left leaf where the door was, the right leaf beside it (both eras).
+    expect([g.get(2, 1), g.get(3, 1)]).toEqual(['«', '»']);
+    expect([src.echo.get(2, 1), src.echo.get(3, 1)]).toEqual(['«', '»']);
+    expect(LEGEND['«']!.solid || LEGEND['»']!.solid).toBe(false);
   });
 });
