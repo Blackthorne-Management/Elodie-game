@@ -238,6 +238,7 @@ the script):
 | `quiet_crown_m` | `docs/quest/art-source/quiet-crown-m-sprites.webp` | the same, with `--cell 28x36` |
 | `yari` | `docs/quest/art-source/yari-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (both side rows face right, so left is mirrored; grid lines found and dropped; her up frame is column 0, without the bow) |
 | `elodie` | `docs/quest/art-source/elodie-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (Oct 16; the fourth column is ignored) |
+| `patricio_young` | `docs/quest/art-source/patricio-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 28x36 --colors 32` (Oct 16). Portrait cropped 720 x 720 from 130,40. Battle stances `battle/patricio_young-<blade>.png` by `scripts/quest-stance-patricio.py` (a fixed window, feet at the bottom centre, scale 0.20: a little larger than Gianna's) |
 
 Portraits: the source's magenta becomes `rgb(42,36,56)` (the dialogue box's backdrop), then one
 high-quality (Lanczos) downscale to 48 x 48. Gianna's and Anissa's use the whole 1024 x 1024
