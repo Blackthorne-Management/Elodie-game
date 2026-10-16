@@ -254,9 +254,9 @@ crowd and the sisters by 1:17.
 
 ## Shot 7: Title (1:22 to 1:24 and holding, frames 984 onward)
 
-**Not in the video** (owner decision, Oct 16): the video ends on black after shot 6, at 1:22. The game draws this
-title screen itself, as described below, using the owner's pixel crest (`art/crest-kaysoley-pixel.png`). The
-title music (the swell and the quiet waiting loop) comes as its own audio file so the game can play it here.
+**In the video** (owner decision, Oct 16: keep the animated title). This is the quest's title screen; the game
+draws no title of its own. When the video reaches the end, the game loops the last part (the finished title with
+**Press A** blinking, and the music's quiet bar) until the player presses a button.
 
 | | |
 |---|---|
@@ -278,8 +278,9 @@ bold pixel font, each line appearing letter by letter (2 frames per letter). The
 - One video file (MP4, H.264), 320 x 180, or scaled up by an exact whole number (1280 x 720 is 4x), with no
   smoothing. Or a PNG frame sequence at 320 x 180 (preferred: the game can play frames itself).
 - The music and narration as a separate audio file too, so they can be changed without redrawing.
-- The video ends on black after shot 6 (1:22); the game draws shot 7's title screen (owner decision, Oct 16).
-- The title music (shot 7's swell and its quiet loop) as a separate audio file.
+- Shot 7's title stays in the video and is the quest's title screen (owner decision, Oct 16). Say the frame where
+  the title is complete and the loop begins (Press A blinking, the quiet music bar), so the game can repeat it
+  until the player presses a button.
 
 ## Approved by the owner (Oct 16)
 
