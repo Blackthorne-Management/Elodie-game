@@ -190,6 +190,12 @@ A single precious object for a fantasy game's item screen: the Sun Locket, a sma
 
 ---
 
+**Done (Oct 16):** `quest/art/items/sun_locket.png` (source in `docs/quest/art-source/`). It is a **half** sun,
+flat toothed edge on the right, matching the intro's shot 4: the whole sun took two follow-ups ("the outline itself is
+a sun", then "show only the left half").
+
+---
+
 ## 8. Solange's Quill (item picture)
 
 The secret item of Pòdlimyè: the quill Mother Solange wrote the first names with. Legendary (gold banner in the
@@ -198,6 +204,10 @@ popup). A new chat is fine.
 ```
 A single precious object for a fantasy game's item screen: Solange's Quill, an old writing quill from a long cream-and-grey feather with a few darker bars, the feather softly worn, its tip a slanted gold nib worn down by years of writing, a thin ring of dark ink near the nib, and a tiny gold sun bound to the shaft with thread. Shown diagonally from lower left (nib) to upper right (feather tip), with a faint warm golden glow around it. Pixel art, 64 x 64 pixels, the quill filling most of the square, 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing. Solid flat magenta background (#FF00FF). No text, no hands, no ink bottle, no other objects.
 ```
+
+---
+
+**Done (Oct 16):** `quest/art/items/solange_quill.png` (its glow trimmed by hand; source in `docs/quest/art-source/`).
 
 ---
 
