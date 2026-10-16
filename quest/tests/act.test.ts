@@ -20,7 +20,13 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     const view = sim.logic.view();
     if (view.kind !== 'end' && view.speaker) speakers.add(view.speaker.name);
   };
+  /** What the party owns and knows when Chapter 1's card shows (items, gear, gold, XP, spells, members). */
+  const KEPT = /^(item\.|equip\.|gold$|xp|spells\.|party\.|lore\.)/;
+  let atChapterEnd: Record<string, unknown> = {};
   for (const item of route) {
+    if (item.kind === 'mark' && item.name === 'end-card') {
+      atChapterEnd = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => KEPT.test(k)));
+    }
     for (const cmd of sim.expand(item)) {
       if (cmd === 'skip') {
         // Press A line by line (what skip does), noting who speaks.
@@ -46,6 +52,17 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     expect(sim.logic.state.flags.isSet('card.act1_end')).toBe(true);
     expect(sim.logic.state.flags.isSet('story.xaragua_arrived')).toBe(true);
     expect(sim.logic.mode).toBe('field');
+  });
+
+  it('the party keeps everything from one chapter to the next: bag, gear, gold, XP, spells, members, books', () => {
+    expect(Object.keys(atChapterEnd).length).toBeGreaterThan(5);
+    expect(atChapterEnd['item.boar_tusk'] ?? atChapterEnd['equip.gianna.charm']).toBeTruthy();
+    const now = sim.logic.state.flags.snapshot();
+    for (const [k, v] of Object.entries(atChapterEnd)) {
+      // Counts and totals only grow on the way (the pier fight pays XP, gold and casabe); the rest is unchanged.
+      if (typeof v === 'number') expect(now[k] as number, k).toBeGreaterThanOrEqual(v);
+      else expect(now[k], k).toEqual(v);
+    }
   });
 
   it('Chapter 2 opens: the pier fight, Anaco, the council, Thorne, then the cave is next', () => {
