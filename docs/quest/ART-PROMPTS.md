@@ -244,6 +244,7 @@ Then, for Anissa (support, not a fighter): one cell, standing slightly behind so
 soft golden glow around her hands, facing right; and a second cell, the same pose with the glow bright and her eyes
 shut (her Surge).
 
+**Done (Oct 16):** Anissa's two poses (calm, and her Surge with the glow bright and eyes shut), green background, in `quest/art/battle/anissa.png` at her walking height relative to Gianna (source in `docs/quest/art-source/`).
 **Done (Oct 15):** Gianna's and Yari's stances and the boar are in the game (`quest/art/battle/`, `quest/art/enemies/boar.png`).
 **Next (owner, Oct 15): each stance painted holding each weapon** (Gianna: the five staffs; Yari: the three bows),
 made in one chat from the approved stance, one weapon at a time. Saved as `quest/art/battle/<look>-<item id>.png`; the
