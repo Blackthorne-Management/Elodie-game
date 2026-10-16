@@ -237,11 +237,12 @@ the script):
 | `quiet_crown_f` | `docs/quest/art-source/quiet-crown-f-sprites.webp` | first `python3 scripts/quest-regrid.py <src> even.png --same-height` (the cells are uneven and the side views drawn smaller), then `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32 --skin-colors 5 --pixel 7 --grid-lines off` |
 | `quiet_crown_m` | `docs/quest/art-source/quiet-crown-m-sprites.webp` | the same, with `--cell 28x36` |
 | `yari` | `docs/quest/art-source/yari-sprites.webp` | `--grid 3x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (both side rows face right, so left is mirrored; grid lines found and dropped; her up frame is column 0, without the bow) |
+| `elodie` | `docs/quest/art-source/elodie-sprites.webp` | `--grid 4x4 --rows down,_,_,up --sides 1,2 --cell 24x32 --colors 32` (Oct 16; the fourth column is ignored) |
 
 Portraits: the source's magenta becomes `rgb(42,36,56)` (the dialogue box's backdrop), then one
 high-quality (Lanczos) downscale to 48 x 48. Gianna's and Anissa's use the whole 1024 x 1024
 picture; Yari's is first cropped to the square around her (800 x 800 from 150,110) so the hutia on
-her shoulder stays readable.
+her shoulder stays readable. Elodie's is cropped to 700 x 700 from 190,80 (her face fills more of the square).
 
 The game draws the shadow under every character (real art and placeholders alike), and moves them
 smoothly between tiles at a constant speed (`quest/src/config.ts`: walk 4.5 tiles a second, run 8),
