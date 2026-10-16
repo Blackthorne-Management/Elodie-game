@@ -27,8 +27,7 @@ Later chapters add their own city tracks in the same table.
 
 Owner request (Oct 16): Yucayeque must sound, like it looks, nothing like Pòdlimyè. Taíno-inspired: the
 mayohuacán (hollow log slit drum), maracas, conch trumpet (guamo), bone and cane flutes, rain sticks; no
-guitar, no horns, no kompa. Until these arrive the game plays Pòdlimyè's tracks as stand-ins
-(`src/audio.config.ts` MUSIC_BY_MAP).
+guitar, no horns, no kompa. **In the game since Oct 16** (`src/audio.config.ts`).
 
 | # | File | Where it plays | Prompt |
 |---|---|---|---|

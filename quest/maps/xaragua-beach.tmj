@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 8,
+  "nextobjectid": 10,
   "layers": [
     {
       "id": 1,
@@ -295,8 +295,8 @@
           "id": 2,
           "name": "casabe_baker",
           "type": "npc",
-          "x": 224,
-          "y": 64,
+          "x": 208,
+          "y": 48,
           "width": 16,
           "height": 16,
           "rotation": 0,
@@ -316,6 +316,52 @@
         },
         {
           "id": 3,
+          "name": "carver",
+          "type": "npc",
+          "x": 256,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "carver"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "bow_maker",
+          "type": "npc",
+          "x": 304,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "bow_maker"
+            }
+          ]
+        },
+        {
+          "id": 5,
           "name": "canoe_maker",
           "type": "npc",
           "x": 144,
@@ -338,7 +384,7 @@
           ]
         },
         {
-          "id": 4,
+          "id": 6,
           "name": "shell_diver",
           "type": "npc",
           "x": 480,
@@ -373,7 +419,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 5,
+          "id": 7,
           "name": "beach_village",
           "type": "door",
           "x": 0,
@@ -424,7 +470,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 6,
+          "id": 8,
           "name": "beach",
           "type": "spawn",
           "x": 32,
@@ -481,7 +527,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 7,
+          "id": 9,
           "name": "sea_cave_mouth",
           "type": "puzzle_object",
           "x": 496,

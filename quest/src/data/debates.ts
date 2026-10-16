@@ -11,6 +11,8 @@ const K = 'gaze_keeper';
 const Q = 'recruiter_a';
 const G = 'gianna';
 const A = 'anissa';
+const R = 'roots_elder';
+const P = 'gaze_pilgrim';
 const say = (speaker: string, text: string): DialogueLine => ({ speaker, text });
 const nar = (text: string): DialogueLine => ({ speaker: '', text });
 
@@ -91,6 +93,82 @@ export const DEBATES: readonly DebateDef[] = [
     after: [
       say(K, 'The hooded ones have gone quiet on this corner. For now.'),
       say(K, 'Remembering is slow work, child. But it is ours.'),
+    ],
+  },
+  // Yucayeque's corner, by the village fire (Chapter 2; CAPITALS.md 2, a proposal until the owner signs it
+  // off): an elder of the Roots and Tides against a Gaze pilgrim who reads the Accord like a deed. Gianna
+  // is Gaze herself, so here she argues with her own faith's pilgrim. Open from the start (the living city).
+  {
+    id: 'xaragua_springs',
+    city: 'xaragua',
+    question: 'Is the land owned or remembered?',
+    ally: R,
+    opponent: P,
+    passing: [
+      say(P, '...and the Accord is law, elder. Law says who owns what.'),
+      say(R, 'Law says who signed what. The land was here before the ink.'),
+    ],
+    listen: [
+      say(P, 'I walked from Zetwal to honor the Gaze, and the Gaze remembers every promise. Even the ones we dislike.'),
+      say(R, 'Then let it remember the first one. "The harbor stays with the people who fish it." Sworn on those stones.'),
+      say(P, 'Sworn, yes. But the Accord was signed. A signed paper outweighs a song.'),
+      say(R, 'In Zetwal, perhaps. Here the song is older than the paper, and so is the harbor.'),
+      say(A, 'Gigi, he believes in Elodie like we do. So why does he sound like the Governor?'),
+    ],
+    reasonNeeds: [loreFlag('xaragua_first_oath'), loreFlag('xaragua_charter'), loreFlag('xaragua_roots_tides')],
+    rounds: [
+      {
+        claim: 'The Gaze remembers every promise. If the Accord was signed, the harbor was promised away. Memory cannot pick and choose.',
+        answers: {
+          scripture: { short: 'She remembers deeds', text: 'The Gaze remembers what was done, not what was written after. What was done was an oath on these stones.', strength: 1 },
+          reason: { short: 'The oath came first', text: 'The first oath was sworn before the Accord was written, and the Charter leans on a clause no one here remembers.', strength: 2 },
+          compassion: { short: "Can't you both be right?", text: 'Maybe you are both right, a little? Could the harbor be half promised?', strength: 0 },
+        },
+      },
+      {
+        claim: 'Land must belong to someone, or anyone may take it. The Crown\'s deed at least says who.',
+        answers: {
+          scripture: { short: 'It was lent, not given', text: 'The temple books say Elodie wove the realm and gave it to us to keep. Kept, pilgrim. Not owned.', strength: 2 },
+          reason: { short: 'A deed needs a seller', text: 'A deed needs someone who sold. Nobody in Yucayeque sold the harbor. Ask the receipts.', strength: 1 },
+          compassion: { short: 'Ask who fishes it', text: 'Ask the people who fish it every morning who it belongs to. They will not say the Crown.', strength: 1 },
+        },
+      },
+      {
+        claim: 'You are from Zetwal, envoy\'s daughter. What does Zetwal know about Xaraguá\'s harbor?',
+        answers: {
+          scripture: { short: 'The Gaze sees us all', text: 'The Gaze does not stop at the strait. If it sees Zetwal, it sees Xaraguá.', strength: 1 },
+          reason: { short: 'Caona fought for us too', text: "Caona's scouts won our war for us. If Zetwal forgets that, the Gaze should close its eye.", strength: 1 },
+          compassion: { short: 'Nothing. So I listen', text: 'Nothing yet. That is why I am listening to the people who fish it, and not to the paper.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The fishers nod and murmur. The elder smiles into the fire.)',
+      1: '(The crowd is split. Some look at the pilgrim\'s robe, some at the harbor.)',
+      0: '(A few people shrug and go back to their nets.)',
+    },
+    won: [
+      say(P, '...I came to honor a memory. Perhaps I was reading the wrong one.'),
+      say(R, 'Sit by the fire, pilgrim. The drums will teach you the rest.'),
+    ],
+    lost: [
+      say(P, 'You see? Even a daughter of Zetwal has no answer. The paper stands.'),
+      say(R, 'Come back when the fire is lower, child. Arguments cool, and so do pilgrims.'),
+    ],
+    mediate: [
+      say(G, 'You both want the promise kept. You just keep it in different places.'),
+      say(G, 'Pilgrim, write the first oath down as the Gaze would. Elder, sing it for him so he gets every word.'),
+      say(R, 'A pilgrim with a pen. Our songs have survived worse.'),
+      say(P, 'I would be honored. And then I will read it to the Governor, slowly.'),
+    ],
+    provoke: [
+      say(G, 'You sound like a Crown clerk in a pilgrim\'s robe!'),
+      nar('The pilgrim flinches. A few fishers laugh, but the elder does not.'),
+      say(R, 'We do not shame guests at this fire, child. Not even wrong ones.'),
+    ],
+    after: [
+      say(P, 'The elder is teaching me the first oath. It has more verses than the Accord.'),
+      say(R, 'And better ones.'),
     ],
   },
 ];

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 12,
+  "nextobjectid": 13,
   "layers": [
     {
       "id": 1,
@@ -602,6 +602,29 @@
       "objects": [
         {
           "id": 11,
+          "name": "caney_records",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 224,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shelf.caney_records"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 12,
           "name": "duho_seat",
           "type": "puzzle_object",
           "x": 272,

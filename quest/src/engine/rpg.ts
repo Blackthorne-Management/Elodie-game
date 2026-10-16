@@ -145,6 +145,8 @@ export interface ShopDef {
   /** City the shop is in (for prices later, and the journal). */
   city: string;
   stock: readonly string[];
+  /** The vendor's first words when the shop opens, in the city's language (default: Pòdlimyè's Kreyol). */
+  greeting?: string;
 }
 
 /** A section of a city: one map, drawn as a box on the city map (grid units). */

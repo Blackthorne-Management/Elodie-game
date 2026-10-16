@@ -28,6 +28,12 @@ export const MUSIC = {
   battle: { file: 'audio/music/battle.mp3', loop: true, overlapS: 2 },
   victory: { file: 'audio/music/victory.mp3', loop: false, overlapS: 0 },
   farewell: { file: 'audio/music/farewell.mp3', loop: true, overlapS: 2.5 },
+  // Yucayeque, Xaraguá (Chapter 2; the owner's tracks, Oct 16).
+  yucayeque: { file: 'audio/music/yucayeque.mp3', loop: true, overlapS: 2.5 },
+  areito: { file: 'audio/music/areito.mp3', loop: true, overlapS: 2.5 },
+  caney: { file: 'audio/music/caney.mp3', loop: true, overlapS: 3 },
+  mountain_path: { file: 'audio/music/mountain-path.mp3', loop: true, overlapS: 3 },
+  crown_customs: { file: 'audio/music/crown-customs.mp3', loop: true, overlapS: 2.5 },
 } as const satisfies Record<string, MusicTrack>;
 
 export type MusicId = keyof typeof MUSIC;
@@ -44,17 +50,16 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'zetwal-archive': 'temple',
   'zetwal-hall': 'hall',
   'zetwal-road': 'cane_road',
-  // Xaraguá: STAND-INS until Yucayeque's own songs arrive (docs/quest/AUDIO-PROMPTS.md, Chapter 2), so no
-  // section is silent (owner reports, Oct 16).
-  'xaragua-village': 'home',
-  'xaragua-plaza': 'home',
-  'xaragua-beach': 'home',
-  'xaragua-conuco': 'home',
-  'xaragua-camp': 'echo',
-  'xaragua-mountain': 'cane_road',
-  'xaragua-caney': 'temple',
-  'xaragua-song': 'temple',
-  'xaragua-customs': 'hall',
+  // Xaraguá (docs/quest/AUDIO-PROMPTS.md, tracks 11 to 15).
+  'xaragua-village': 'yucayeque',
+  'xaragua-beach': 'yucayeque',
+  'xaragua-conuco': 'yucayeque',
+  'xaragua-plaza': 'areito',
+  'xaragua-caney': 'caney',
+  'xaragua-song': 'caney',
+  'xaragua-mountain': 'mountain_path',
+  'xaragua-camp': 'mountain_path',
+  'xaragua-customs': 'crown_customs',
 };
 
 /** Inside any memory. */

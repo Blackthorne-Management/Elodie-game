@@ -125,11 +125,14 @@ export function xaraguaVillage(): MapSource {
 
   const objects: ObjSpec[] = [
     npc('canoe_fisher', 18, 20, 'down'),
-    npc('weaver', 13, 8, 'left'),
+    npc('weaver', 19, 13, 'down'),
     npc('fisher_boy', 25, 20, 'left'),
     npc('crown_marine', 27, 13, 'down'),
     npc('crown_marine_2', 36, 13, 'left'),
-    npc('gaze_pilgrim', 23, 3, 'down'),
+    npc('lamp_oil_seller', 23, 10, 'right'),
+    // The debate corner: an elder of the springs and a Gaze pilgrim, arguing across the yard's fire.
+    npc('debate_roots_elder', 9, 7, 'right'),
+    npc('debate_pilgrim', 13, 7, 'left'),
 
     { layer: 'doors', name: 'village_plaza', x: 21, y: 0, w: 2, props: { target: 'plaza_village', map: 'xaragua-plaza', exit: 'down' } },
     { layer: 'doors', name: 'village_beach', x: W - 1, y: 15, h: 2, props: { target: 'beach_village', map: 'xaragua-beach', exit: 'left' } },
@@ -227,7 +230,9 @@ export function xaraguaBeach(): MapSource {
 
   const objects: ObjSpec[] = [
     npc('salt_seller', 25, 11, 'down'),
-    npc('casabe_baker', 14, 4, 'up'),
+    npc('casabe_baker', 13, 3, 'up'),
+    npc('carver', 16, 3, 'up'),
+    npc('bow_maker', 19, 3, 'up'),
     npc('canoe_maker', 9, 13, 'left'),
     npc('shell_diver', 30, 10, 'up'),
 
@@ -388,6 +393,7 @@ export function xaraguaCaney(): MapSource {
     npc('behique', 30, 5, 'down'),
     npc('crown_liaison', 22, 6, 'left'),
     npc('head_runner', 5, 20, 'up'),
+    obj('caney_records', 5, 14, { dialogue: 'shelf.caney_records', era: 'present' }, 3, 1),
 
     { layer: 'doors', name: 'caney_out', x: 17, y: H - 1, props: { target: 'plaza_caney', map: 'xaragua-plaza', exit: 'up' } },
     { layer: 'spawns', name: 'caney', x: 17, y: H - 3, props: { facing: 'up', era: 'present' } },
@@ -403,13 +409,17 @@ export function xaraguaSongHouse(): MapSource {
   g.rect(0, 0, W, 1, 'é').rect(0, 0, 1, H, 'é').rect(W - 1, 0, 1, H, 'é').rect(0, H - 1, W, 1, 'é');
   g.set(10, H - 1, 'D');
 
-  // Shelves of accounts set down from the songs (the books come with the people-and-places build).
+  // Shelves of accounts set down from the songs.
   g.rect(2, 1, 6, 1, 'ħ').rect(14, 1, 6, 1, 'ħ');
   for (const [x, y] of [[5, 6], [8, 6], [13, 6], [16, 6]] as const) g.set(x, y, 'ŧ');
 
   const objects: ObjSpec[] = [
     npc('song_keeper', 10, 4, 'down'),
     npc('song_apprentice', 6, 8, 'up'),
+    // The accounts set down from the songs (data/books.ts).
+    obj('song_history', 2, 1, { dialogue: 'shelf.song_history', era: 'present' }, 3, 1),
+    obj('song_spirit', 5, 1, { dialogue: 'shelf.song_spirit', era: 'present' }, 3, 1),
+    obj('song_accounts', 14, 1, { dialogue: 'shelf.song_accounts', era: 'present' }, 3, 1),
     { layer: 'doors', name: 'song_out', x: 10, y: H - 1, props: { target: 'plaza_song', map: 'xaragua-plaza', exit: 'up' } },
     { layer: 'spawns', name: 'song', x: 10, y: H - 3, props: { facing: 'up', era: 'present' } },
   ];

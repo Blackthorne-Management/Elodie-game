@@ -49,7 +49,7 @@ export class ShopPanel {
     this.side = 'buy';
     this.cursor = 0;
     this.pending = null;
-    this.message = 'Bonjou! What will it be?';
+    this.message = shop.greeting ?? 'Bonjou! What will it be?';
     this.root.setVisible(true);
     this.draw();
   }

@@ -84,6 +84,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'pwason_fri', name: 'Fried snapper', kind: 'consumable', price: 35, heals: 50, text: 'Pwason fri: snapper fried whole, with pikliz on the side. Restores 50 HP.' },
   { id: 'lanbi_fritters', name: 'Conch fritters', kind: 'consumable', price: 30, restores: 15, text: 'Marinad lanbi: conch fritters, crisp and peppery. Restores 15 SP.' },
   { id: 'spiny_lobster', name: 'Spiny lobster', kind: 'consumable', price: 60, heals: 40, restores: 10, text: 'Grilled this minute, bad attitude and all. Restores 40 HP and 10 SP.' },
+  // Yucayeque's beach market (Chapter 2; CAPITALS.md 2).
+  { id: 'casabe', name: 'Casabe', kind: 'consumable', price: 20, heals: 30, text: 'Cassava bread baked flat on a clay griddle. Keeps for a month at sea. Restores 30 HP.' },
+  { id: 'guava', name: 'Guava', kind: 'consumable', price: 10, heals: 15, text: 'Pink inside, sweet and a little sour. Restores 15 HP.' },
+  { id: 'fish_stew', name: 'Fish stew', kind: 'consumable', price: 25, heals: 20, healTurns: 3, text: 'Snapper and peppers in a gourd bowl. Restores 20 HP, a little at a time.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
 
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
@@ -106,6 +110,13 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
   // Charms (anyone).
+  // Yucayeque: the carver's charms and the bow-maker's cotton (Chapter 2).
+  { id: 'shell_beads', name: 'Shell beads', kind: 'gear', slot: 'charm', level: 2, price: 90, stats: { spd: 2, hp: 3 }, text: 'A string of white and pink shell beads. They click softly when you run.' },
+  {
+    id: 'carved_charm', level: 3, rarity: 'uncommon', name: 'Carved charm', kind: 'gear', slot: 'charm', price: 150, stats: { def: 2, mag: 1 },
+    text: 'A small face carved in dark wood, worn on a cotton cord. The carver says it watches your back.',
+  },
+  { id: 'cotton_tunic', level: 4, rarity: 'uncommon', name: 'Cotton tunic', kind: 'gear', slot: 'armor', armor: 'leather', price: 230, stats: { def: 4, hp: 8, spd: 2 }, text: 'Thick Yaguana cotton, quilted twice, with a teal border. Light, cool and hard to cut.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {
@@ -163,6 +174,10 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   zetwal_produce: { id: 'zetwal_produce', name: 'Produce row', city: 'zetwal', stock: ['mango', 'kasav', 'kann'] },
   zetwal_spices: { id: 'zetwal_spices', name: 'Spice row', city: 'zetwal', stock: ['pikliz', 'akasan'] },
   zetwal_fish: { id: 'zetwal_fish', name: 'Fish stall', city: 'zetwal', stock: ['pwason_fri', 'lanbi_fritters', 'spiny_lobster'] },
+  // Yucayeque (Chapter 2): the beach market.
+  xaragua_food: { greeting: 'Guatiao! What will it be?', id: 'xaragua_food', name: 'Cassava-bread stall', city: 'xaragua', stock: ['casabe', 'guava', 'fish_stew'] },
+  xaragua_carver: { greeting: 'Guatiao! What will it be?', id: 'xaragua_carver', name: "Carver's mat", city: 'xaragua', stock: ['shell_beads', 'carved_charm'] },
+  xaragua_bows: { greeting: 'Guatiao! What will it be?', id: 'xaragua_bows', name: "Bow-maker's stall", city: 'xaragua', stock: ['ironwood_bow', 'cotton_tunic'] },
   zetwal_cloth: { id: 'zetwal_cloth', name: 'Cloth row', city: 'zetwal', stock: ['woven_tunic', 'temple_robe'] },
 };
 
@@ -239,7 +254,10 @@ export const RPG: RpgContent = {
   cities: CITIES,
   realm: REALM,
   // Each lore book read in a city: +1 Influence there (guide 6.3: library lore earns Influence).
-  pillarRules: [{ pillar: 'influence', city: 'zetwal', flags: BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => loreFlag(b.id)), each: 1 }],
+  pillarRules: [
+    { pillar: 'influence', city: 'zetwal', flags: BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => loreFlag(b.id)), each: 1 },
+    { pillar: 'influence', city: 'xaragua', flags: BOOKS.filter((b) => b.id.startsWith('xaragua_')).map((b) => loreFlag(b.id)), each: 1 },
+  ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
   // Chapter 1 has no fights: XP comes from the story's steps and the books read.

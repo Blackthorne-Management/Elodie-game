@@ -1,0 +1,84 @@
+{
+  "language": "Taíno (Xaraguá)",
+  "note": "Taíno words the quest uses, from the chroniclers' records. Every entry must be checked with a knowledgeable reviewer before release (guide 8, 7.3); verified stays false until then.",
+  "entries": [
+    {
+      "word": "Guatiao",
+      "language": "Taíno",
+      "translation": "Friend (a pledge of ritual friendship)",
+      "verified": false
+    },
+    {
+      "word": "Areíto",
+      "language": "Taíno",
+      "translation": "The sung and danced remembrance of a people's history",
+      "verified": false
+    },
+    {
+      "word": "Batey",
+      "language": "Taíno",
+      "translation": "The ceremonial plaza or dance ground",
+      "verified": false
+    },
+    {
+      "word": "Bohío",
+      "language": "Taíno",
+      "translation": "A round house",
+      "verified": false
+    },
+    {
+      "word": "Caney",
+      "language": "Taíno",
+      "translation": "The chief's great house",
+      "verified": false
+    },
+    {
+      "word": "Cacique",
+      "language": "Taíno",
+      "translation": "Chief",
+      "verified": false
+    },
+    {
+      "word": "Casabe",
+      "language": "Taíno",
+      "translation": "Cassava bread",
+      "verified": false
+    },
+    {
+      "word": "Conuco",
+      "language": "Taíno",
+      "translation": "A garden of planted mounds (cassava)",
+      "verified": false
+    },
+    {
+      "word": "Duho",
+      "language": "Taíno",
+      "translation": "A carved ceremonial seat",
+      "verified": false
+    },
+    {
+      "word": "Behique",
+      "language": "Taíno",
+      "translation": "A healer",
+      "verified": false
+    },
+    {
+      "word": "Opía",
+      "language": "Taíno",
+      "translation": "The spirits of the dead",
+      "verified": false
+    },
+    {
+      "word": "Hutia",
+      "language": "Taíno",
+      "translation": "A small island rodent",
+      "verified": false
+    },
+    {
+      "word": "Yucayeque",
+      "language": "Taíno",
+      "translation": "A town or village (the capital's name; needs a source check)",
+      "verified": false
+    }
+  ]
+}

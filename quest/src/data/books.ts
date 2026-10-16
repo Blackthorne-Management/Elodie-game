@@ -221,6 +221,156 @@ export const BOOKS: readonly Book[] = [
       'When the Quiet comes, you will not have to choose anymore. ' +
       'Below, in pencil, the guard captain wrote: "Bread that asks nothing back. Debts paid by strangers. Ask who holds the debt now."',
   },
+  // ---- Xaraguá: the Song House (accounts set down from the areíto's songs) --------------------------
+  {
+    id: 'xaragua_song_guanin',
+    title: 'The Song of Guanín',
+    category: 'history',
+    text:
+      'The song begins in the dark, with paddles. Guanín led nine canoes across open water, steering by the stars and by the birds. ' +
+      'When the birds turned for land, the people turned with them, and found a green island with a harbor shaped like a cupped hand. ' +
+      'Guanín climbed the mountain and looked down at the bay. "We will not own this," he said. "We will keep it, and it will keep us." ' +
+      'So they planted cassava, built round houses facing the sea, and cleared a dance ground where every story could be sung again. ' +
+      'The singers say the song has no last verse. Each cacique adds one. Anaco has not yet added his.',
+  },
+  {
+    id: 'xaragua_caona_road',
+    title: "Caona's Road",
+    category: 'war',
+    text:
+      'Fifty years ago the Crown marched inland to cut Zetwal from its allies, and Caona, daughter of the cacique, went to meet them. ' +
+      'She did not fight them. She watched them. Her scouts lay in the ferns for days and counted boots, carts and cannon. ' +
+      'Every road the Crown built, Caona found. Every river it forded, she had forded first, and left the bank a little softer. ' +
+      'Her runners carried the counts to Marshal Patricio across the strait. He used to say the war was won by people the Crown never saw. ' +
+      'When the war ended, Caona came home and danced the areíto for three nights. She never spoke of the fourth.',
+  },
+  {
+    id: 'xaragua_first_oath',
+    title: 'The First Oath',
+    category: 'law',
+    text:
+      'Before the Accord was written, it was sworn. Three young people stood on the stones of the areíto in Yucayeque. ' +
+      'Caona of Xaraguá, Patricio of Zetwal and Benny of Ardencia each put a hand on the oldest stone, the one with the open eyes. ' +
+      'Caona spoke first, so her words are the ones the singers keep: "The harbor stays with the people who fish it." ' +
+      'The others answered for their own lands, and the drums kept the count so no one could add a word later. ' +
+      'The keepers say the oath was carved into the petroglyph cave the same night, where the water rises. No one has read it since.',
+  },
+  {
+    id: 'xaragua_roots_tides',
+    title: 'The Roots and Tides',
+    category: 'religion',
+    text:
+      'In Xaraguá the Four Hands are honored at the springs and on the shore, not in a temple. ' +
+      'Offerings of cassava and flowers go into the water at dawn. The tide takes them, and the people say the tide answers. ' +
+      'The Roots and Tides teach that land and sea cannot be sold, because they were never given. They were lent, to be kept. ' +
+      'A keeper of the springs once told a Gaze pilgrim: "Your goddess remembers. Ours forgives. Between them, the island gets by." ' +
+      'Visitors are welcome at the springs. They are asked only to leave as quietly as they came, and to take nothing but water.',
+  },
+  {
+    id: 'xaragua_opia',
+    title: 'What the Opía Remember',
+    category: 'folklore',
+    text:
+      'The Yaguana speak of their dead as near, not gone. The opía walk the island at night and rest by day, and they are family. ' +
+      'Children are told that an opía has no navel, so you will always know one, and that they mean no harm. ' +
+      'Food is left out on the night of a remembering, and the house is swept so that visitors find their way. ' +
+      'The singers say the opía keep the memory of every promise made on the island, and grow restless when one is broken. ' +
+      'This account was set down with the keepers\' permission. They ask that it be read with care, and not told as a ghost story.',
+  },
+  {
+    id: 'xaragua_cassava_salt',
+    title: 'Cassava and Salt',
+    category: 'trade',
+    text:
+      'Xaraguá fed itself long before the Crown came to tax it. Cassava grew in mounds on every hillside and kept for a year. ' +
+      'Grated, pressed and baked on a griddle, it became casabe, the flat bread that sailors carried across the strait. ' +
+      'Salt came from the pans on the beach, dried by the sun and raked by the children for a handful of beads. ' +
+      'Casabe and salt bought tools from Zetwal, cloth from Al-Doria and, once, a horse from Skarragol that nobody could ride. ' +
+      'Since the customs house opened, every basket is counted and stamped. The bakers say the bread tastes the same. The price does not.',
+  },
+  {
+    id: 'xaragua_charter',
+    title: 'The Charter (seized copy)',
+    category: 'law',
+    text:
+      'A copy of the Crown\'s paper, taken from a marine\'s satchel and set down word for word by the keepers. ' +
+      'It offers Xaraguá "the protection of His Majesty\'s fleet, in perpetuity, against all enemies foreign and domestic." ' +
+      'In return the harbor, its fisheries and its salt pass "into the keeping of the Crown\'s Governor, as lawfully provided." ' +
+      'Lawfully provided by what, the keepers asked. The paper answers only: "under the seventh clause of the Accord, as signed." ' +
+      'No one in Yucayeque remembers a seventh clause. The singers have searched every verse of the oath. It is not there. ' +
+      'The marine wants his satchel back.',
+  },
+  {
+    id: 'xaragua_hutia',
+    title: 'Why the Hutia Steals',
+    category: 'folklore',
+    text:
+      'Once the hutia looked up at the night and fell in love with the stars. It wanted one for its burrow. ' +
+      'It climbed the ceiba, but the stars were higher. It climbed the mountain, but they were higher still. ' +
+      'So the hutia went down to the village, where people kept small shining things: beads, shells, a polished bone. ' +
+      '"These are stars that have fallen," it decided, and carried them home, one by one, while everyone slept. ' +
+      'Its burrow became the brightest in the forest. The hutia was very proud. ' +
+      'The people did not mind much. Now, when a bead goes missing, they say the sky has been visiting.',
+  },
+  {
+    id: 'xaragua_caciques',
+    title: 'The Line of the Caciques',
+    category: 'genealogy',
+    text:
+      'Guanín, who brought the canoes and cleared the dance ground, and would not own the land he kept. ' +
+      'Caona, his daughter, who counted the Crown\'s boots in the Revolution and swore the first oath on the open-eyed stone. ' +
+      'Anaco, her son, cacique in the long peace, who wrote to the Throne when the Crown ships came back and was never answered. ' +
+      'Yari, his daughter, hunter and runner, who knows every path on the mountain and argues with every elder on the council. ' +
+      'Beside each name the keepers mark the generation\'s song, so it can be sung in order at the areíto. ' +
+      'Yari\'s space is still empty. The keepers say she is not finished.',
+  },
+  // ---- Xaraguá: the Caney of Anaco (the cacique's records) ----------------------------------------
+  {
+    id: 'xaragua_council_minutes',
+    title: "The Council's Minutes",
+    category: 'law',
+    text:
+      'The runners\' record of the elders\' council, the night the Charter was read aloud. ' +
+      'The elder for the Charter: "The Crown has ships. We have canoes. Peace with a price is still peace." ' +
+      'The elder against: "We swore an oath on the stones. A paper does not unswear it." ' +
+      'The third elder asked for the vote to wait for the cacique, and the council agreed, though not all of it gladly. ' +
+      'At the end, a note in a smaller hand: the vote stands two short of accepting. ' +
+      'Below it, in charcoal, someone else has written: "Two is not many. Watch the liaison officer."',
+  },
+  {
+    id: 'xaragua_anaco_letter',
+    title: "Anaco's Letter to the Throne",
+    category: 'history',
+    text:
+      'A copy kept by the head runner, of the letter Cacique Anaco sent to Eightgate when the Crown ships returned. ' +
+      '"To the Throne of the realm, from the keeper of Xaraguá. Three warships sit in our harbor. Their Governor says the Accord allows it." ' +
+      '"We signed that Accord with our blood and our scouts. We do not remember giving our harbor away. Was it given in our name?" ' +
+      '"I ask for an answer before my council is asked to answer for me." ' +
+      'The runner\'s note: sent with the fastest canoe, by way of Pòdlimyè. Copy kept. No answer has come.',
+  },
+  {
+    id: 'xaragua_healer_notes',
+    title: "A Healer's Notes",
+    category: 'history',
+    text:
+      'The behique\'s notes on the cacique\'s fever, kept on bark strips in a cotton bag. ' +
+      'Day one: heat in the head, weakness in the hands. Gave the usual leaves. He sent them back to the cooks. ' +
+      'Day nine: the fever comes and goes with the tide. Not the usual fever. Not any fever I have seen. ' +
+      'The old cure is a bark from the grove above the cave, where Caona\'s scouts used to camp. The grove has not been found in years. ' +
+      'Day fourteen: he asked for his daughter and for the council\'s vote, in that order. Told him neither was here yet.',
+  },
+  {
+    id: 'xaragua_customs_receipts',
+    title: 'Customs Receipts',
+    category: 'trade',
+    text:
+      'A bundle of the Crown\'s receipts, copied by the runners who carry the village\'s goods past the customs house. ' +
+      'Snapper, forty baskets: one in five to the Crown. Salt, twelve sacks: one in four. Casabe, sixty rounds: one in five. ' +
+      'Cotton, by the bolt: one in three, "as the Governor shall determine." The Governor determines often. ' +
+      'Among the receipts is one strange line, in the clerk\'s neatest hand: "Lamp oil, eight jars, unknown sender. Fee waived." ' +
+      'Nothing else in the bundle is ever waived. The runner has circled it twice. ' +
+      'Beside the circle, a question in the runner\'s own hand: who can make the Governor waive anything?',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -229,6 +379,11 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'archive_tales', name: 'Shelf: Tales and Notes', books: ['zetwal_bridge_tale', 'zetwal_hutia_lamp', 'zetwal_overdue', 'zetwal_ash_wars_anicette'] },
   { id: 'hall_law', name: 'Shelf: Law and Houses', books: ['zetwal_sun_accord', 'zetwal_crown_chronicle', 'zetwal_eight_houses'] },
   { id: 'hall_records', name: 'Shelf: Harbor Records', books: ['zetwal_harbor_tolls', 'zetwal_quiet_tract'] },
+  // Xaraguá: the Song House and the Caney of Anaco (CAPITALS.md 2).
+  { id: 'song_history', name: 'Shelf: Songs of the Line', books: ['xaragua_song_guanin', 'xaragua_caona_road', 'xaragua_first_oath', 'xaragua_caciques'] },
+  { id: 'song_spirit', name: 'Shelf: Springs and Spirits', books: ['xaragua_roots_tides', 'xaragua_opia', 'xaragua_hutia'] },
+  { id: 'song_accounts', name: 'Shelf: Accounts', books: ['xaragua_cassava_salt', 'xaragua_charter'] },
+  { id: 'caney_records', name: "Shelf: The Cacique's Records", books: ['xaragua_council_minutes', 'xaragua_anaco_letter', 'xaragua_healer_notes', 'xaragua_customs_receipts'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

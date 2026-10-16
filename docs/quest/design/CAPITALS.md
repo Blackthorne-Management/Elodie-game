@@ -170,6 +170,15 @@ five-outdoor-area rule. Inside: the Caney of Anaco, the Song House, the Crown Cu
 mouths only until their puzzles are built. Owner request (Oct 16): it looks nothing like Pòdlimyè (own ground,
 plants, round houses, winding trails, oval clearings). Townsfolk are placeholders by role until the story build.
 
+**People and places, built Oct 16:** the beach market's three vendors greet with "Guatiao!" and run the Cassava-bread
+stall (casabe, guava, fish stew), the Carver's mat (shell beads, carved charm) and the Bow-maker's stall (ironwood bow,
+cotton tunic); the lamp-oil seller by the customs house (Rael clue 6); the Song House's nine books and the Caney's four
+records (Influence in Xaraguá); the debate corner by the village fire (an elder of the springs against a Gaze
+pilgrim: *Is the land owned or remembered?*); the Taíno glossary (`quest/src/data/lang/taino.json`, all unverified);
+and the owner's five Yucayeque tracks. **Not built yet:** the hamaca (no rest-anywhere mechanic exists), the contract
+board (no jobs system yet), and the carved charm's spirit resistance (battles have no spirit damage); the charm's
+name avoids *zemi* until the cultural reviewer says yes.
+
 **Chapters:** 2 and 11 (the War of the Harbor). **Ruler:** Cacique Anaco (Yari's father, ailing); Governor Thorne holds
 real power. Wants **Influence** (price 8). **Feel:** green mountains to the sea, round houses, canoes, the areíto
 plaza; Taíno-inspired. Accent teal `#17a5a5`.

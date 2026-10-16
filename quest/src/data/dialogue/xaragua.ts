@@ -7,8 +7,8 @@
 
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 
-function say(speaker: string, text: string): DialogueLine {
-  return { speaker, text };
+function say(speaker: string, text: string, translation?: string): DialogueLine {
+  return translation ? { speaker, text, translation } : { speaker, text };
 }
 
 function nar(text: string): DialogueLine {
@@ -38,8 +38,10 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('crown_marine_2_talk', [
     say('crown_marine', 'Six weeks on this island and I still can\'t find the end of the forest. Or the beginning.'),
   ]),
-  simple('gaze_pilgrim_talk', [
-    say('gaze_pilgrim', 'I walked from Zetwal to see where the first oath was sworn. The Gaze remembers it. So do the drums.'),
+  simple('lamp_oil_seller_talk', [
+    say('lamp_oil_seller', 'Guatiao!', 'Friend!'),
+    say('lamp_oil_seller', 'Lamp oil for the long nights. It comes by canoe, after dark, from someone I have never met.'),
+    say('lamp_oil_seller', 'Every jar paid for in advance. I stopped asking who. The jars stopped asking me.'),
   ]),
   simple('xaragua_customs_sign', [
     nar('CUSTOMS OF HIS MAJESTY\'S CROWN. ALL CATCH TO BE DECLARED. ALL DECLARATIONS TO BE TAXED.'),
@@ -67,7 +69,16 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say('salt_seller', 'Salt from the pans, dried in our sun. The Crown wants a tax on it. On the sun, I suppose.'),
   ]),
   simple('casabe_baker_talk', [
+    say('casabe_baker', 'Guatiao!', 'Friend!'),
     say('casabe_baker', 'Cassava bread, crisp from the griddle. It keeps for a month at sea. The marines eat it and pretend not to.'),
+  ]),
+  simple('carver_talk', [
+    say('carver', 'Guatiao.', 'Friend.'),
+    say('carver', 'Shell beads for quick feet, carved charms for a careful back. I carve what the wood already wants to be.'),
+  ]),
+  simple('bow_maker_talk', [
+    say('bow_maker', 'Guatiao!', 'Friend!'),
+    say('bow_maker', 'Ironwood bows and cotton armor. Yari bought her first bow here. She broke it in a week. Proudest week of my life.'),
   ]),
   simple('canoe_maker_talk', [
     say('canoe_maker', 'One tree, one canoe, one year. The Crown builds a ship in a month. It sinks in a storm. Mine do not.'),

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 5,
+  "nextobjectid": 8,
   "layers": [
     {
       "id": 1,
@@ -377,7 +377,77 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 5,
+          "name": "song_history",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 16,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shelf.song_history"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "song_spirit",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 16,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shelf.song_spirit"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "song_accounts",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 16,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shelf.song_accounts"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        }
+      ]
     }
   ],
   "tilesets": [

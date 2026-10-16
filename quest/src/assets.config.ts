@@ -375,6 +375,10 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   head_runner: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: TEAL, trim: C.w!, legs: C.T!, accessories: ['satchel'] },
   song_keeper: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: TEAL, trim: C.y!, robe: true, accessories: ['staff'] },
   song_apprentice: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: COTTON, trim: TEAL, robe: true, build: 'small' },
+  carver: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'cropped', outfit: C.N!, trim: C.R!, legs: C.B!, beard: WHITE_HAIR, accessories: ['satchel'] },
+  bow_maker: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.l!, trim: TEAL, legs: C.B!, accessories: ['bow'] },
+  lamp_oil_seller: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.o!, trim: C.k!, robe: true, headgear: 'wrap', headgearColor: C.y! },
+  roots_elder: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: C.L!, trim: TEAL, robe: true, accessories: ['staff'] },
   crown_clerk: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
 };
 
