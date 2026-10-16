@@ -39,6 +39,10 @@ export function zetwalHeights(): MapSource {
   for (const [x, y] of [[2, 14], [12, 11], [26, 3], [13, 3], [27, 8], [10, 17], [2, 5]] as const) g.set(x, y, 'T');
   g.rect(22, 8, 2, 1, 'B');
 
+  // The path down past the lookout to the Iron Market below (owner report, Oct 16: the city map shows them
+  // touching).
+  g.rect(17, 12, 2, 8, ',');
+
   const e = g.map({ '.': '"', ',': ';', ':': ';', f: '"', T: 'Y', B: 'Y', O: 't', P: ';', '#': '%', '=': 'x', D: 'D' });
   // An orchard where the gardens are now, and the sentry post at the lookout.
   for (const [x, y] of [[4, 15], [7, 15], [10, 15], [17, 11], [20, 11]] as const) e.set(x, y, 'Y');
@@ -50,6 +54,7 @@ export function zetwalHeights(): MapSource {
     npc('porch_widow', 21, 6, 'down'),
     npc('lookout_keeper', 24, 16, 'up'),
 
+    { layer: 'doors', name: 'heights_market', x: 17, y: H - 1, w: 2, props: { target: 'market_heights', map: 'zetwal-market', exit: 'up' } },
     { layer: 'doors', name: 'heights_square', x: W - 1, y: 12, props: { target: 'square_heights', map: 'zetwal-square', exit: 'left' } },
     { layer: 'spawns', name: 'heights', x: W - 2, y: 12, props: { facing: 'left', era: 'present' } },
     obj('lookout', 22, 17, { dialogue: 'lookout_view', era: 'present' }, 3, 1),

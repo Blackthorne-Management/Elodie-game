@@ -37,6 +37,9 @@ export function zetwalHarbor(): MapSource {
   for (const [x, y] of [[8, 1], [16, 2], [31, 2], [12, 2]] as const) g.set(x, y, 'T');
   g.rect(29, 1, 2, 1, 'B');
 
+  // The path up to the Iron Market, which the city map shows just above the harbour (owner report, Oct 16).
+  g.rect(18, 0, 2, 4, ',');
+
   const e = g.map({ '.': '"', ',': ';', ':': ';', T: 'Y', B: 'Y', S: 't', X: 'Z', P: ';', '#': '%', n: '"', k: ';', D: 'D' });
 
   const objects: ObjSpec[] = [
@@ -47,6 +50,7 @@ export function zetwalHarbor(): MapSource {
     npc('old_sailor', 17, 13, 'down'),
     npc('ferry_hand', 31, 12, 'up'),
 
+    { layer: 'doors', name: 'harbor_market', x: 18, y: 0, w: 2, props: { target: 'market_harbor', map: 'zetwal-market', exit: 'down' } },
     { layer: 'doors', name: 'harbor_plaza', x: W - 1, y: 4, props: { target: 'town_harbor', map: 'zetwal-town', exit: 'left' } },
     { layer: 'spawns', name: 'harbor', x: W - 2, y: 4, props: { facing: 'left', era: 'present' } },
     obj('customs_sign', 24, 3, { dialogue: 'customs_sign', era: 'present' }),

@@ -42,6 +42,12 @@ export function zetwalMarket(): MapSource {
   // A middle row of mixed stalls around the fountain.
   for (const [i, x] of [12, 13, 14, 15, 19, 20, 21, 22].entries()) g.set(x, 17, '35674853'[i]!);
 
+  // Two ways on, where the city map shows the market touching its neighbours (owner report, Oct 16): a lane
+  // north just right of the iron hall, up to Solèy Heights, and a gap in the trees south of the loading
+  // street, down to the Old Harbor.
+  g.rect(24, 0, 2, 2, '2');
+  g.rect(18, 23, 2, 1, ',');
+
   const e = g.map({
     '2': ';',
     '3': 't',
@@ -81,6 +87,8 @@ export function zetwalMarket(): MapSource {
     npc('market_kid', 12, 15, 'right'),
     npc('market_shopper', 8, 15, 'up'),
 
+    { layer: 'doors', name: 'market_heights', x: 24, y: 0, w: 2, props: { target: 'heights_market', map: 'zetwal-heights', exit: 'down' } },
+    { layer: 'doors', name: 'market_harbor', x: 18, y: H - 1, w: 2, props: { target: 'harbor_market', map: 'zetwal-harbor', exit: 'up' } },
     { layer: 'doors', name: 'market_plaza', x: W - 1, y: 15, props: { target: 'town_market', map: 'zetwal-town', exit: 'left' } },
     { layer: 'spawns', name: 'market', x: W - 2, y: 15, props: { facing: 'left', era: 'present' } },
 
