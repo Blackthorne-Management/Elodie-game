@@ -27,11 +27,14 @@ if (!MAP) throw new Error('No map in art/board');
 // The board fills the middle 18 of 26 squares; the painting's ocean is the 4-square margin all round.
 const U = S / 26, O = 4 * U;
 const TYPE = { court: { icon: 'cat-crown', label: 'Court' }, war: { icon: 'cat-swords', label: 'War' }, trade: { icon: 'cat-coins', label: 'Trade' } };
-// Where each homeland's name sits, as a fraction of the image (placed on open ground of the current map).
-const LABEL = {
-  brasador: [0.555, 0.305], kaysoley: [0.80, 0.335], dorini: [0.70, 0.455], ironvow: [0.80, 0.80],
-  suzumori: [0.545, 0.755], agnivansh: [0.235, 0.86], stillwater: [0.15, 0.37], vaitama: [0.27, 0.19],
+// Each homeland's name touches its capital (the seat), centred on the side that keeps the map uniform.
+const LABEL_SIDE = {
+  brasador: 'below', kaysoley: 'below', dorini: 'left', ironvow: 'below',
+  suzumori: 'above', agnivansh: 'below', stillwater: 'above', vaitama: 'above',
 };
+const seatArt = h => find('art/seats', `seat-${h.id === 'vaitama' ? 'yaguana' : h.id}`);
+// The seat art's height over width, read from the PNG header (the art is drawn 1.7 squares wide).
+const pngAspect = f => { const b = fs.readFileSync(f); return b.readUInt32BE(20) / b.readUInt32BE(16); };
 
 const grid = [];
 for (let i = 0; i <= 18; i++) {
@@ -40,7 +43,7 @@ for (let i = 0; i <= 18; i++) {
 }
 const seats = data.houses.map(h => {
   const x = O + h.home.x * U, y = O + h.home.y * U, t = TYPE[h.tileType];
-  const art = find('art/seats', `seat-${h.id === 'vaitama' ? 'yaguana' : h.id}`);
+  const art = seatArt(h);
   const crest = find('art/crests', `crest-${h.id}`) ?? find('art/crests', `crest-${h.id === 'vaitama' ? 'yaguana' : h.id}`);
   const mark = art ? `<img class="seat-art" src="${uri(art)}">`
     : crest ? `<img class="crest" src="${uri(crest)}">`
@@ -56,8 +59,16 @@ const track = `<div class="track-title" style="left:${trackX}px;top:${trackTop -
   Array.from({ length: ROUNDS }, (_, i) => `<div class="round ${i + 1 === ROUNDS ? 'last' : ''}" style="left:${trackX}px;top:${trackTop + i * step + step / 2}px;width:${step * 0.86}px;height:${step * 0.86}px">${i + 1 === ROUNDS ? `<img src="${uri(path.join(ROOT, 'public/art/icons/cat-skull.svg'))}"><b>${i + 1}</b>` : i + 1}</div>`).join('') +
   `<div class="track-note" style="left:${trackX}px;top:${trackTop + ROUNDS * step + step * 0.35}px">Sudden<br>Death</div>`;
 const labels = data.houses.map(h => {
-  const [fx, fy] = LABEL[h.id];
-  return `<div class="label" style="left:${fx * S}px;top:${fy * S}px"><b>${h.homeland}</b><small>${h.name}</small></div>`;
+  const x = O + h.home.x * U, y = O + h.home.y * U, cx = x + U / 2, gap = U * 0.04, art = seatArt(h);
+  // Top and left edge of what stands on the tile: the building (bottom 8% up, 1.7 squares wide), else the tile.
+  const top = art && /\.png$/i.test(art) ? y + U * 0.92 - 1.7 * U * pngAspect(art) : y;
+  const left = art ? cx - 0.85 * U : x;
+  const pos = {
+    below: `left:${cx}px;top:${y + U + gap}px;transform:translate(-50%,0)`,
+    above: `left:${cx}px;top:${top - gap}px;transform:translate(-50%,-100%)`,
+    left: `left:${left - gap}px;top:${y + U / 2}px;transform:translate(-100%,-50%)`,
+  }[LABEL_SIDE[h.id]];
+  return `<div class="label" style="${pos}"><b>${h.homeland}</b><small>${h.name}</small></div>`;
 }).join('');
 
 const html = `<style>
@@ -77,7 +88,7 @@ svg { position: absolute; inset: 0; }
 .type { position: absolute; left: 0; right: 0; bottom: 3%; display: flex; align-items: center; justify-content: center; gap: ${U * 0.03}px;
   font: 700 ${U * 0.12}px Cinzel; color: #f6e2a4; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 0 ${U * 0.04}px #000, 0 0 ${U * 0.04}px #000; }
 .type img { width: ${U * 0.16}px; height: ${U * 0.16}px; }
-.label { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; white-space: nowrap; }
+.label { position: absolute; display: flex; flex-direction: column; align-items: center; white-space: nowrap; }
 .label b { font: 700 ${U * 0.42}px Cinzel; letter-spacing: .12em; text-transform: uppercase;
   background: linear-gradient(180deg, #fbeec4, #e2b85c 55%, #9a6a24); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 ${U * 0.03}px #000) drop-shadow(0 ${U * 0.03}px ${U * 0.05}px rgba(0,0,0,.85)); }
@@ -94,8 +105,8 @@ svg { position: absolute; inset: 0; }
 <div class="board">
   <img class="map" src="${uri(MAP)}">
   <svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
-    <path d="${grid.join(' ')}" stroke="rgba(10,6,2,.55)" stroke-width="${U * 0.03}" fill="none"/>
-    <path d="${grid.join(' ')}" stroke="rgba(243,210,122,.16)" stroke-width="${U * 0.008}" fill="none"/>
+    <path d="${grid.join(' ')}" stroke="rgba(10,6,2,.85)" stroke-width="${U * 0.05}" fill="none"/>
+    <path d="${grid.join(' ')}" stroke="rgba(243,210,122,.4)" stroke-width="${U * 0.012}" fill="none"/>
     <rect x="${O}" y="${O}" width="${18 * U}" height="${18 * U}" fill="none" stroke="#c99a45" stroke-width="${U * 0.05}" opacity=".85"/>
     <rect x="${O + 8 * U}" y="${O + 8 * U}" width="${2 * U}" height="${2 * U}" fill="none" stroke="#f3d27a" stroke-width="${U * 0.05}"/>
   </svg>

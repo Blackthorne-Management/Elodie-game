@@ -16,7 +16,9 @@
     "analyse": "ANALYSE=1 vitest run tests/analysis.test.ts --silent=false",
     "print": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-cards.cjs",
     "print:board": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-board.cjs",
-    "build:server": "node scripts/build-server.mjs"
+    "build:server": "node scripts/build-server.mjs",
+    "print:box": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-box.cjs",
+    "print:card-boxes": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-card-boxes.cjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.3.0",

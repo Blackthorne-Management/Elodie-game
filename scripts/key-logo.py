@@ -1,5 +1,5 @@
 # Cut the title logo out of its pale background (white with a soft green glow) and age it slightly.
-# Usage: python3 -I scripts/key-logo.py art/ui/logo.jpg public/art/ui/logo.webp
+# Usage: python3 -I scripts/key-logo.py art/ui/logo.jpg public/art/ui/logo.webp [width; 0 keeps full size]
 # The lettering is warm (gold, red vines) or dark; the background and its glow are pale and neutral or green,
 # so warmth and darkness decide what stays.
 import sys
@@ -32,8 +32,8 @@ rgba = np.dstack([fg, alpha * 255]).clip(0, 255).astype(np.uint8)
 ys, xs = np.where(rgba[..., 3] > 10)
 pad = 6
 rgba = rgba[max(0, ys.min() - pad):ys.max() + pad, max(0, xs.min() - pad):xs.max() + pad]
-w = 1000
-if rgba.shape[1] > w:
+w = int(sys.argv[3]) if len(sys.argv) > 3 else 1000
+if w and rgba.shape[1] > w:
     rgba = cv2.resize(rgba, (w, round(rgba.shape[0] * w / rgba.shape[1])), interpolation=cv2.INTER_AREA)
 cv2.imwrite(out, rgba, [cv2.IMWRITE_WEBP_QUALITY, 92])
 print('wrote', out, rgba.shape)

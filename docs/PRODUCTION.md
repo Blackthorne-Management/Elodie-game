@@ -13,16 +13,17 @@ Claude brings this list up at every milestone of any work in this repo (the ques
 and ticks items off here as they land. Last updated **Thu Oct 16**.
 
 **Physical game (BoardGamesMaker)**
-- [ ] **Board (order A, Mon Oct 20):** the 4096 px map (only the 2000 px upscale is in `art/board/`), the 8 seat
-  buildings (`art/seats/`, prompts in `docs/art/MAP-AND-SEATS.md`; none yet), then a proof of `print/board-24in.png`
-  to approve, then order.
-- [x] Xaraguá on the board: checked Oct 16. `print/board-24in.png` reads XARAGUÁ, House Yaguana (seat Y), and the
-  labelled guide (`docs/art/board-guide-labelled.png`) now says Xaraguá too (it said Moa'olani). Still read it on the proof.
+- [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
+  (`art/seats/`, each its house's quest capital building, approved Oct 15) are in. Proof `print/board-24in.jpg`
+  (`npm run print:board`) rendered Oct 15: owner to approve it, then order.
+- [x] Xaraguá on the board: checked Oct 16. The proof reads XARAGUÁ, House Yaguana (seat Y), and the labelled guide
+  (`docs/art/board-guide-labelled.png`) now says Xaraguá too (it said Moa'olani).
 - [x] 8 crests.
 - [ ] Card art: 20 of 126 in `art/cards/` (anything missing on Oct 31 prints in the no-picture design).
 - [ ] Card back.
 - [ ] 32 character portraits (none yet in `art/characters/`; prompts in `docs/art/CHARACTER-PROMPTS.md`).
-- [ ] Print files still to build: box, player boards, standees, tokens (Heart, Grudge, resource, reminder),
+- [x] Box and card boxes: `print/box-12.5x12.5x2.pdf`, `print/card-box-action.pdf`, `print/card-box-tarot.pdf` (Oct 15).
+- [ ] Print files still to build: player boards, standees, tokens (Heart, Grudge, resource, reminder),
   Legacy cards, score pad, rulebook PDF, reference cards.
 - [ ] **Fri Oct 31:** rules and card text freeze. **Mon Nov 3:** approve proofs, order B (expedited).
 
@@ -62,7 +63,7 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 
 | # | Component | Spec | Print file (built by) | Art needed |
 |---|---|---|---|---|
-| 1 | **Game box** | Telescoping (lid + base) about 12.5" × 12.5" × 3", fits the folded board flat on top. Side panel: **2–8 players · 60–150 min · best with 3–6** | `print/box-*.png` (to build) | Logo ✔, board map ✔ |
+| 1 | **Game box** | Telescoping (lid + base) 12.5" × 12.5" × 2" (BoardGamesMaker template, chosen Oct 15), fits the folded board flat on top; everything under it must stay within about 33 mm. Side panel: **2–8 players · 60–150 min · best with 3–6** | `print/box-12.5x12.5x2.pdf` (`npm run print:box`; proof Oct 15) | Logo ✔ (owner upscaling it), board map ✔ |
 | 2 | **Game board** | 24" × 24" quad-fold, 7200 px | `print/board-24in.png` (`npm run print:board`) | Map ✔ (needs the 4096 file), seats or crests |
 | 3 | **Action deck** | 126 cards, 63 × 88 mm, one shared back | `print/cards/card-*.png` (`npm run print`) | Card art 1–126, card back |
 | 4 | **Character cards** (generation cards) | 32 tarot cards (8 houses × Gen I–IV), own back | `print/characters/*.png` (`npm run print`) | 32 portraits, crests |
@@ -78,6 +79,25 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 | 11 | **Dice** | 2 six-sided dice (stock, or custom-printed faces) | stock / `print/dice/*.png` | — |
 | 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`): the **core rules** (about 1,600 words, what a first game needs) first, then the **appendix** (rules-decisions 87) | `print/rulebook.pdf` (to build) | Board, card and portrait art for pictures |
 | 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards), printed from the **Reference Card** section of `src/data/rules.ts`: the turn, the ◎ Target card list and the lasting-card durations (these live on the card, not in the booklet; rules-decisions 87). | `print/characters/reference-*.png` (to build) | — |
+
+## Containers (what holds what)
+
+Everything rides in the game box; the board, player boards, rulebook and score pad lie flat on top, and every loose
+piece goes in its own container underneath. Owner asked Oct 15 to order the containers from BoardGamesMaker too.
+
+| Container | Holds | Size, or the print file |
+|---|---|---|
+| **Game box** (telescoping lid + base) | everything | 12.5" × 12.5" × 2" (the board folds to 12" × 12"); about 33 mm free under the board, rulebook and score pad |
+| Thin card divider (optional) | keeps the containers below from sliding | no taller than about 33 mm; no deep tray |
+| **Action card box**: Easy Flip Game Box 140 × 96 × 24 mm, custom (decided Oct 15) | all 126 Action cards, two stacks of 63 side by side | `print/card-box-action.pdf` (`npm run print:card-boxes`) |
+| **Tarot card box**: Double Flip Game Box, tarot, magnetic, 130 × 80 × 40 mm, custom (decided Oct 15) | 32 Character, 8 Reference and 8 Legacy cards | `print/card-box-tarot.pdf`; too tall for the game box, so it travels beside it |
+| Bag or 3-part tray | 180 resource tokens (60 Influence, 60 Fear, 60 Wealth) | one bag per kind, or one tray with 3 wells |
+| Bag | 32 Heart Tokens | small zip bag |
+| Bag (or 8 small bags, one per house) | 40 Grudge Tokens | small zip bag |
+| Bag | 27 reminder tokens | small zip bag |
+| Bag | 8 standees and their 8 plastic stands | small zip bag |
+| Bag | round marker and 2 dice | small zip bag |
+| none (flat in the box) | game board, 8 player boards, rulebook, score pad | |
 
 ## Resource tokens: how many
 Showing a total uses (total ÷ 5) tokens on the ×5 side plus (the remainder) on the 1 side, so any total up to 24 takes
