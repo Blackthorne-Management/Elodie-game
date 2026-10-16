@@ -2,6 +2,15 @@
 
 import type { TiledMap } from '../engine/tiledMap.ts';
 import testVillage from '../../maps/test-village.tmj?raw';
+import xaraguaVillage from '../../maps/xaragua-village.tmj?raw';
+import xaraguaPlaza from '../../maps/xaragua-plaza.tmj?raw';
+import xaraguaBeach from '../../maps/xaragua-beach.tmj?raw';
+import xaraguaConuco from '../../maps/xaragua-conuco.tmj?raw';
+import xaraguaMountain from '../../maps/xaragua-mountain.tmj?raw';
+import xaraguaCamp from '../../maps/xaragua-camp.tmj?raw';
+import xaraguaCaney from '../../maps/xaragua-caney.tmj?raw';
+import xaraguaSong from '../../maps/xaragua-song.tmj?raw';
+import xaraguaCustoms from '../../maps/xaragua-customs.tmj?raw';
 import zetwalArchive from '../../maps/zetwal-archive.tmj?raw';
 import zetwalHall from '../../maps/zetwal-hall.tmj?raw';
 import zetwalHarbor from '../../maps/zetwal-harbor.tmj?raw';
@@ -25,6 +34,15 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'zetwal-harbor': zetwalHarbor,
   'zetwal-heights': zetwalHeights,
   'zetwal-square': zetwalSquare,
+  'xaragua-village': xaraguaVillage,
+  'xaragua-plaza': xaraguaPlaza,
+  'xaragua-beach': xaraguaBeach,
+  'xaragua-conuco': xaraguaConuco,
+  'xaragua-mountain': xaraguaMountain,
+  'xaragua-camp': xaraguaCamp,
+  'xaragua-caney': xaraguaCaney,
+  'xaragua-song': xaraguaSong,
+  'xaragua-customs': xaraguaCustoms,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

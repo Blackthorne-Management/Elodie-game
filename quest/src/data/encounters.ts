@@ -11,6 +11,8 @@ import type { EncounterTable } from '../engine/content.ts';
 export const LATER_STORY_FLAGS: readonly string[] = [
   /** The party returns to Zetwal later in the story: the Cane Road's ambushes begin. */
   'story.zetwal_return',
+  /** Chapter 2: the fight on Yucayeque's pier is won; the Mountain Path's ambushes begin. */
+  'story.xaragua_pier_won',
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
@@ -26,6 +28,57 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
         intro: 'A boar bursts out of the cane.',
         won: 'The boar crashes away into the cane.',
         fled: 'You back away from the boar.',
+      },
+    ],
+  },
+  // Xaraguá: the Mountain Path up to the hill camp (CAPITALS.md 2; enemies and levels from COMBAT.md 13).
+  mountain_path: {
+    id: 'mountain_path',
+    groups: [
+      {
+        id: 'marines',
+        weight: 3,
+        level: 4,
+        foes: ['Crown Marine', 'Crown Marine'],
+        intro: 'Two Crown marines come down the path, muskets slung. "Papers. Now."',
+        won: 'The marines retreat down the mountain, muttering about the heat.',
+        fled: 'You slip off the path into the ferns until their boots are gone.',
+      },
+      {
+        id: 'musket',
+        weight: 2,
+        level: 6,
+        foes: ['Crown Musketeer', 'Crown Marine'],
+        intro: 'A musket barks from the trees. "Halt in the name of the Governor!"',
+        won: 'The musketeer drops his powder horn and runs.',
+        fled: 'You duck under the ferns and the shot goes wide.',
+      },
+      {
+        id: 'crabs',
+        weight: 2,
+        level: 4,
+        foes: ['Mangrove Crab', 'Mangrove Crab'],
+        intro: 'Two crabs the size of shields scuttle out of a stream, claws up.',
+        won: 'The crabs clatter back into the water.',
+        fled: 'You back away. Crabs do not chase uphill. Mostly.',
+      },
+      {
+        id: 'bandits',
+        weight: 2,
+        level: 5,
+        foes: ['Road Bandit', 'Road Bandit'],
+        intro: 'Bandits step from behind a fig tree. "Mountain toll. Everything you carry."',
+        won: 'The bandits melt into the cloud forest.',
+        fled: 'You run. The mountain is on your side.',
+      },
+      {
+        id: 'hushers',
+        weight: 1,
+        level: 6,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
+        intro: 'Two veiled figures wait on the path, utterly still. "Hush. Where is the little one?"',
+        won: 'The veiled pair step back into the mist and are gone.',
+        fled: 'You turn and climb another way. They do not follow. Yet.',
       },
     ],
   },

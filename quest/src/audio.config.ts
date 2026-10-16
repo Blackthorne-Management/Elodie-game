@@ -44,6 +44,17 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'zetwal-archive': 'temple',
   'zetwal-hall': 'hall',
   'zetwal-road': 'cane_road',
+  // Xaraguá: STAND-INS until Yucayeque's own songs arrive (docs/quest/AUDIO-PROMPTS.md, Chapter 2), so no
+  // section is silent (owner reports, Oct 16).
+  'xaragua-village': 'home',
+  'xaragua-plaza': 'home',
+  'xaragua-beach': 'home',
+  'xaragua-conuco': 'home',
+  'xaragua-camp': 'echo',
+  'xaragua-mountain': 'cane_road',
+  'xaragua-caney': 'temple',
+  'xaragua-song': 'temple',
+  'xaragua-customs': 'hall',
 };
 
 /** Inside any memory. */

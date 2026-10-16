@@ -780,6 +780,192 @@ export const TILE_ART: Readonly<Record<string, PixelArt>> = {
       '....KKKKKKKK....',
     ],
   },
+  // Xaraguá (Oct 16): a standing stone carved with a face and a spiral; a thatched market stall with
+  // fish, cassava bread and salt; the caney's woven mat floor.
+  petroglyph: {
+    rows: [
+      '................',
+      '.....kkkkkk.....',
+      '....kGGGGGGk....',
+      '...kGhGGGGhGk...',
+      '...kGkGGGGkGk...',
+      '...kGGGGGGGGk...',
+      '...kGGkkkkGGk...',
+      '...kGGGGGGGGk...',
+      '...kGkkkkGGGk...',
+      '...kGkGGkGGGk...',
+      '...kGkGkkGGGk...',
+      '...kGkGGGGGGk...',
+      '...kgkkkkkGgk...',
+      '...kggggggggk...',
+      '..kkkkkkkkkkkk..',
+      '..KKKKKKKKKKKK..',
+    ],
+  },
+  stall_thatch: {
+    rows: [
+      '.kkkkkkkkkkkkkk.',
+      'kNnNnNnNnNnNnNnk',
+      'knNnNnNnNnNnNnNk',
+      'kkkkkkkkkkkkkkkk',
+      '.kb..........bk.',
+      '.kb..........bk.',
+      '.kb..........bk.',
+      'kkkkkkkkkkkkkkkk',
+      'kIcIkwwNkhwhwhwk',
+      'kcIckNwwkwhwhwhk',
+      'kkkkkkkkkkkkkkkk',
+      'kNnnnnnnnnnnnnNk',
+      'kNbbbbbbbbbbbbNk',
+      'kNnnnnnnnnnnnnNk',
+      'kkkkkkkkkkkkkkkk',
+      '.KKKKKKKKKKKKKK.',
+    ],
+  },
+  mat: {
+    rows: [
+      'NNnnNNnnNNnnNNnn',
+      'NNnnNNnnNNnnNNnn',
+      'nnNNnnNNnnNNnnNN',
+      'nnNNnnNNnnNNnnNN',
+      'NNnnNNnnNNnnNNnn',
+      'NNnnNNnnNNnnNNnn',
+      'nnNNnnNNnnNNnnNN',
+      'nnNNnnNNnnNNnnNN',
+      'NNnnNNnnNNnnNNnn',
+      'NNnnNNnnNNnnNNnn',
+      'nnNNnnNNnnNNnnNN',
+      'nnNNnnNNnnNNnnNN',
+      'NNnnNNnnNNnnNNnn',
+      'NNnnNNnnNNnnNNnn',
+      'nnNNnnNNnnNNnnNN',
+      'nnNNnnNNnnNNnnNN',
+    ],
+  },
+  // Yucayeque's plants (Oct 16): a ceiba (flat crown, pale trunk, buttress roots), a fern, a banana plant.
+  ceiba: {
+    rows: [
+      '..kkkkkkkkkkkk..',
+      '.kLLvLLLLLvLLLk.',
+      'kLLLLLlLLLLLLvLk',
+      'kLvLLLLLLlLLLLLk',
+      'klLLLLvLLLLLLLlk',
+      '.kllLLLLLLLLllk.',
+      '..kkkkkgGkkkkk..',
+      '......kgGk......',
+      '......kgGk......',
+      '......kgGk......',
+      '......kgGk......',
+      '.....kggGGk.....',
+      '....kggkkGGk....',
+      '...kggk..kGGk...',
+      '..kkkk....kkkk..',
+      '..KKKKKKKKKKKK..',
+    ],
+  },
+  fern: {
+    rows: [
+      '................',
+      '.......k........',
+      '......kvk.......',
+      '..k...kLk...k...',
+      '.kvk..kLk..kvk..',
+      '..kLk.kLk.kLk...',
+      '...kLkkLkkLk....',
+      '.k..kLLLLLk..k..',
+      'kvkkkLLlLLkkkvk.',
+      '.kLLLLllLLLLLk..',
+      '..kkLLllLLLkk...',
+      '....kkllllk.....',
+      '.....kkkkk......',
+      '................',
+      '................',
+      '................',
+    ],
+  },
+  banana: {
+    rows: [
+      '.kk.........kk..',
+      'kvvk.......kvvk.',
+      'kvvvk.....kvvvk.',
+      '.kvvvk...kvvvk..',
+      '..kvvvk.kvvvk...',
+      '...kvvLkLvvk....',
+      '.kkkkvLLLvkkkk..',
+      'kvvvvvkLkvvvvvk.',
+      '.kkvvvkLkvvvkk..',
+      '...kkkkLkkkk....',
+      '......kLyk......',
+      '......kLyyk.....',
+      '......kLLk......',
+      '......kLLk......',
+      '.....kkLLkk.....',
+      '.....KKKKKK.....',
+    ],
+  },
+  // A dugout canoe, hollowed from one trunk, drawn over sand or lagoon.
+  dugout: {
+    rows: [
+      '................',
+      '................',
+      '................',
+      '................',
+      '.kkkkkkkkkkkkkk.',
+      'kBnnnnnnnnnnnnBk',
+      'kBkbbbbbbbbbbkBk',
+      'kBbbbbbbbbbbbbBk',
+      'kBkbbbbbbbbbbkBk',
+      '.kBnnnnnnnnnnBk.',
+      '..kkkkkkkkkkkk..',
+      '................',
+      '................',
+      '................',
+      '................',
+      '................',
+    ],
+  },
+  // The caney's woven runner: cotton with the Yaguana teal, a step pattern down the middle.
+  runner: {
+    rows: [
+      'UUwwwwwwwwwwwwUU',
+      'UUwwwwccwwwwwwUU',
+      'UUwwwccccwwwwwUU',
+      'UUwwccwwccwwwwUU',
+      'UUwwwccccwwwwwUU',
+      'UUwwwwccwwwwwwUU',
+      'UUwwwwwwwwwwwwUU',
+      'UUwwwwwwwwwwwwUU',
+      'UUwwwwwwwwccwwUU',
+      'UUwwwwwwwccccwUU',
+      'UUwwwwwwccwwccUU',
+      'UUwwwwwwwccccwUU',
+      'UUwwwwwwwwccwwUU',
+      'UUwwwwwwwwwwwwUU',
+      'UUwwwwwwwwwwwwUU',
+      'UUwwwwwwwwwwwwUU',
+    ],
+  },
+  // A coconut palm (Xaraguá, Oct 16): fronds over a leaning ringed trunk.
+  palm: {
+    rows: [
+      '...kk.....kk....',
+      '..kLLk...kLLk...',
+      '.kLvLLkkkLLvLk..',
+      'kLLk.kLvLk.kLLk.',
+      'kLk.kLLLLLk..kLk',
+      '.k.kLLkBkLLk..k.',
+      '...kLk.BBkLLk...',
+      '..kLk..bBk.kLk..',
+      '...k...kBnk..k..',
+      '.......kBnk.....',
+      '......kBnk......',
+      '......kbBk......',
+      '......kBnk......',
+      '.....kBnk.......',
+      '.....kbBk.......',
+      '....KKKKKK......',
+    ],
+  },
   bush: {
     rows: [
       '................',
@@ -1372,7 +1558,51 @@ export interface ObjectArt extends PixelArt {
   glow?: { color: number; radius: number };
 }
 
+/**
+ * A Crown ship at anchor (Xaraguá, Oct 16): 5 x 3 tiles, two masts with cream sails crossed by the
+ * Crown's red band, red pennants, a dark hull with a gold stripe and gun ports. Drawn by code (it is
+ * mostly straight lines), so the water shows round it.
+ */
+function crownShip(): ObjectArt {
+  const W = 80;
+  const H = 48;
+  const px = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  const put = (x: number, y: number, c: string) => {
+    if (x >= 0 && y >= 0 && x < W && y < H) px[y]![x] = c;
+  };
+  for (const mx of [30, 52]) {
+    for (let y = 1; y < 31; y++) {
+      put(mx, y, 'k');
+      put(mx + 1, y, 'b');
+    }
+    for (let y = 1; y <= 3; y++) for (let x = mx + 2; x <= mx + 7; x++) put(x, y, x === mx + 7 || y === 1 || y === 3 ? 'k' : 'R');
+    const x0 = mx - 10;
+    const x1 = mx + 11;
+    for (let y = 6; y <= 26; y++) {
+      for (let x = x0; x <= x1; x++) {
+        const edge = y === 6 || y === 26 || x === x0 || x === x1;
+        put(x, y, edge ? 'k' : y === 15 || y === 16 ? 'R' : (x + y) % 11 === 0 ? 'h' : 'w');
+      }
+    }
+  }
+  for (let y = 29; y <= 41; y++) {
+    const inset = Math.max(0, y - 35);
+    const x0 = 3 + inset * 2;
+    const x1 = 76 - inset * 2;
+    for (let x = x0; x <= x1; x++) {
+      const edge = x === x0 || x === x1 || y === 29 || y === 41;
+      let c = edge ? 'k' : y === 32 ? 'y' : y <= 31 ? 'B' : 'b';
+      if (!edge && (y === 34 || y === 35) && x % 9 < 2) c = 'k';
+      put(x, y, c);
+    }
+  }
+  for (let i = 0; i < 6; i++) put(77 + Math.floor(i / 2), 28 - i, 'k');
+  for (let x = 6; x < 74; x += 3) put(x, 43, 'C');
+  return { rows: px.map((r) => r.join('')) };
+}
+
 export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
+  crown_ship: crownShip(),
   // The Gaze lamp in the Temple of Elodie: a bronze post with a wide dish on a stone plinth. Unlit
   // until Anissa's light wakes it.
   gaze_lamp: {

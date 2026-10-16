@@ -162,6 +162,14 @@ the bakery interior, and the Journal's Quests tab.
 
 ## 2. Yucayeque (Xaraguá, House Yaguana)
 
+**Built Oct 16 (the maps build):** nine maps in `quest/tools/maps/xaragua.ts`, walkable from `?map=xaragua-village`.
+Outdoors: the Harbor Village (hub), the Areíto Plaza (the Caney of Anaco at its head), the **Canoe Beach** with the
+beach market, the **cassava gardens** (conuco) with the petroglyph cave mouth, the Mountain Path (wild; ambushes on
+`story.xaragua_pier_won`) and the **hill camp** (the safehouse). Bold names are proposals added for the owner's
+five-outdoor-area rule. Inside: the Caney of Anaco, the Song House, the Crown Customs House. The two caves are
+mouths only until their puzzles are built. Owner request (Oct 16): it looks nothing like Pòdlimyè (own ground,
+plants, round houses, winding trails, oval clearings). Townsfolk are placeholders by role until the story build.
+
 **Chapters:** 2 and 11 (the War of the Harbor). **Ruler:** Cacique Anaco (Yari's father, ailing); Governor Thorne holds
 real power. Wants **Influence** (price 8). **Feel:** green mountains to the sea, round houses, canoes, the areíto
 plaza; Taíno-inspired. Accent teal `#17a5a5`.

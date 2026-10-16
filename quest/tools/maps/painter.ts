@@ -114,6 +114,41 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   '|': { ground: 'path_old', deco: 'scaffold', solid: true },
   i: { ground: 'cane', solid: false },
   I: { ground: 'cane_old', solid: false },
+  // Xaraguá (Chapter 2, Oct 16).
+  á: { ground: 'thatch', solid: true },
+  é: { ground: 'cane_wall', solid: true },
+  í: { ground: 'lush_grass', deco: 'palm', solid: true },
+  ì: { ground: 'coral_sand', deco: 'palm', solid: true },
+  ó: { ground: 'conuco', solid: false },
+  ú: { ground: 'batey', solid: false },
+  ŕ: { ground: 'lush_grass', deco: 'petroglyph', solid: true },
+  ş: { ground: 'batey', deco: 'stall_thatch', solid: true },
+  ć: { ground: 'coral_sand', deco: 'dugout', solid: true },
+  ŝ: { ground: 'salt', solid: false },
+  ç: { ground: 'cave', solid: true },
+  ğ: { ground: 'batey', deco: 'firepit', solid: true },
+  ţ: { ground: 'lush_grass', deco: 'tent', solid: true },
+  ö: { ground: 'mat', solid: false },
+  ø: { ground: 'mat', deco: 'post', solid: true },
+  ů: { ground: 'mat', deco: 'duho', solid: true },
+  ħ: { ground: 'mat', deco: 'shelf', solid: true },
+  ŧ: { ground: 'mat', deco: 'seat', solid: true },
+  đ: { ground: 'mat', deco: 'bed', solid: true },
+  ŋ: { ground: 'mat', deco: 'chest', solid: true },
+  ā: { ground: 'lush_grass', solid: false },
+  ē: { ground: 'red_earth', solid: false },
+  ī: { ground: 'coral_sand', solid: false },
+  ō: { ground: 'lagoon', solid: true },
+  ū: { ground: 'limestone', solid: true },
+  ǎ: { ground: 'heliconia', solid: false },
+  č: { ground: 'lush_grass', deco: 'ceiba', solid: true },
+  ď: { ground: 'lush_grass', deco: 'fern', solid: true },
+  ě: { ground: 'lush_grass', deco: 'banana', solid: true },
+  ĉ: { ground: 'lagoon', deco: 'dugout', solid: true },
+  ŗ: { ground: 'batey', deco: 'petroglyph', solid: true },
+  ŭ: { ground: 'runner', solid: false },
+  ś: { ground: 'red_earth', deco: 'sign', solid: true },
+  ľ: { ground: 'lush_grass', deco: 'fence', solid: true },
 };
 
 export class Grid {
@@ -296,6 +331,10 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
   return tiled as TiledMap & Record<string, unknown>;
 }
 
+/** Building walls and the roofs above them: stone and tile, and Xaraguá's cane walls under thatch. */
+const WALLS = new Set(['#', 'é']);
+const ROOFS = new Set(['^', 'á']);
+
 /**
  * Every building with no way in gets a grey door you cannot open (owner request, Oct 16), in the middle
  * of its front wall. A building is a group of wall tiles ('#') with roof ('^') above it; it already has
@@ -309,7 +348,7 @@ export function addClosedDoors(src: MapSource): void {
   const at = (x: number, y: number) => (x >= 0 && y >= 0 && x < g.width && y < g.height ? g.get(x, y) : '');
   for (let y = 0; y < g.height; y++) {
     for (let x = 0; x < g.width; x++) {
-      if (at(x, y) !== '#' || seen.has(`${x},${y}`)) continue;
+      if (!WALLS.has(at(x, y)) || seen.has(`${x},${y}`)) continue;
       // The connected wall tiles of one building.
       const cells: [number, number][] = [];
       const stack: [number, number][] = [[x, y]];
@@ -320,13 +359,13 @@ export function addClosedDoors(src: MapSource): void {
         for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
           const nx = cx + dx;
           const ny = cy + dy;
-          if (at(nx, ny) === '#' && !seen.has(`${nx},${ny}`)) {
+          if (at(nx, ny) === at(cx, cy) && !seen.has(`${nx},${ny}`)) {
             seen.add(`${nx},${ny}`);
             stack.push([nx, ny]);
           }
         }
       }
-      if (!cells.some(([cx, cy]) => at(cx, cy - 1) === '^')) continue;
+      if (!cells.some(([cx, cy]) => ROOFS.has(at(cx, cy - 1)))) continue;
       const hasDoor = cells.some(([cx, cy]) =>
         [[1, 0], [-1, 0], [0, 1], [0, -1], [0, 0]].some(([dx, dy]) => ['D', '@', '«', '»', '⌈', '⌊'].includes(at(cx + dx!, cy + dy!)) || doorTiles.has(`${cx + dx!},${cy + dy!}`)),
       );
@@ -348,9 +387,9 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
-const CLEARABLE = new Set(['T', 'Y', 'B']);
+const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 
 /**
  * Every usable door becomes two tiles wide (owner request, Oct 16: walking into the wall beside a door

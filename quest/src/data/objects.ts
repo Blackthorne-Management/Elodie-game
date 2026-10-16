@@ -7,6 +7,19 @@ import type { ObjectInfo } from '../engine/content.ts';
 import { SHELF_OBJECTS } from './books.ts';
 
 export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
+  // Xaraguá, Yucayeque (Chapter 2).
+  xaragua_customs_sign: { name: 'Customs notice' },
+  pier_sign: { name: 'Ferry sign' },
+  batey_stones: { name: 'Standing stones' },
+  sea_cave_mouth: { name: 'Sea cave' },
+  petroglyph_cave_mouth: { name: 'Petroglyph cave' },
+  mountain_sign: { name: 'Signpost' },
+  ash_thumbprint: { name: 'Ash-marked post' },
+  duho_seat: { name: "The cacique's duho" },
+  crown_ship_west: { name: 'A Crown ship', inspect: 'A Crown warship at anchor, gun ports open. Its boats come and go all day.' },
+  crown_ship_east: { name: 'A Crown ship', inspect: 'The flagship. A man in a white wig watches the village through a glass.' },
+  crown_ship_far: { name: 'A Crown ship', inspect: 'A supply ship, riding low. Whatever it carries, it carries a lot.' },
+
   // Zetwal, the plaza and the bridgehead.
   monument: { name: "The Marshal's Stone" },
   stone_pile: { name: 'Cut stones' },
@@ -80,6 +93,23 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
 
 /** Door labels, by `<map id>/<door id>` (or a bare door id when it is unique). */
 export const DOORS: Readonly<Record<string, string>> = {
+  // Xaraguá, Yucayeque (Chapter 2).
+  'xaragua-village/village_plaza': 'Up to the Areíto Plaza',
+  'xaragua-village/village_beach': 'East: the Canoe Beach',
+  'xaragua-village/village_conuco': 'West: the cassava gardens',
+  'xaragua-village/village_customs': 'Crown Customs House',
+  'xaragua-plaza/plaza_village': 'Down to the Harbor Village',
+  'xaragua-plaza/plaza_caney': 'Caney of Anaco',
+  'xaragua-plaza/plaza_song': 'Song House',
+  'xaragua-beach/beach_village': 'Back to the Harbor Village',
+  'xaragua-conuco/conuco_village': 'Down to the Harbor Village',
+  'xaragua-conuco/conuco_mountain': 'Up the Mountain Path',
+  'xaragua-mountain/mountain_conuco': 'Down to the cassava gardens',
+  'xaragua-mountain/mountain_camp': 'The hill camp',
+  'xaragua-camp/camp_mountain': 'Back to the Mountain Path',
+  'xaragua-caney/caney_out': 'Out to the Areíto Plaza',
+  'xaragua-song/song_out': 'Out to the Areíto Plaza',
+  'xaragua-customs/customs_out': 'Out to the harbor',
   'zetwal-town/town_house': 'Limyè house',
   'zetwal-house/house_front': 'Out to the plaza',
   'zetwal-town/town_temple': 'Temple of Elodie',

@@ -195,6 +195,25 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'zetwal-archive', name: 'Temple Archive' },
     ],
   },
+  // Chapter 2 (maps built Oct 16; CAPITALS.md 2). The Harbor Village by the sea, the Areíto Plaza above it
+  // with the Caney of Anaco at its head, the Canoe Beach east, the cassava gardens west, and the Mountain
+  // Path climbing from the gardens to the hill camp above it.
+  xaragua: {
+    id: 'xaragua',
+    name: 'Yucayeque',
+    house: 'Yaguana',
+    sections: [
+      { map: 'xaragua-village', name: 'Harbor Village', at: { x: 0, y: 0 } },
+      { map: 'xaragua-plaza', name: 'Areíto Plaza', at: { x: 7, y: -22 } },
+      { map: 'xaragua-beach', name: 'Canoe Beach', at: { x: 44, y: 8 } },
+      { map: 'xaragua-conuco', name: 'Cassava gardens', at: { x: -32, y: 6 } },
+      { map: 'xaragua-mountain', name: 'Mountain Path', at: { x: -46, y: -22 } },
+      { map: 'xaragua-camp', name: 'Hill camp', at: { x: -48, y: -42 } },
+      { map: 'xaragua-caney', name: 'Caney of Anaco' },
+      { map: 'xaragua-song', name: 'Song House' },
+      { map: 'xaragua-customs', name: 'Crown Customs House' },
+    ],
+  },
 };
 
 /** The realm around Eightgate, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
@@ -209,7 +228,7 @@ export const REALM: readonly RealmPlace[] = [
   { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori' },
   { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh' },
   { id: 'aldermoor', name: 'Aldermoor', house: 'Stillwater' },
-  { id: 'xaragua', name: 'Xaraguá', house: 'Yaguana' },
+  { id: 'xaragua', name: 'Xaraguá', house: 'Yaguana', city: 'xaragua' },
 ];
 
 export const RPG: RpgContent = {

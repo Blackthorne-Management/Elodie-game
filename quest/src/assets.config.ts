@@ -130,6 +130,37 @@ export const TILESET = {
     { gid: 95, name: 'door_right', base: 0x6b4426, accent: 0x3e2614, pattern: 'border' },
     { gid: 96, name: 'door_top', base: 0x6b4426, accent: 0x3e2614, pattern: 'border' },
     { gid: 97, name: 'door_bottom', base: 0x6b4426, accent: 0x3e2614, pattern: 'border' },
+    // Xaraguá (Chapter 2, Oct 16): round thatched houses (bohío), cassava mounds, the areíto's dance
+    // ground, palms, petroglyph rocks, thatched market stalls, salt pans, a cave mouth,
+    // and inside the cacique's great house (caney): woven mats, carved posts and the duho seat.
+    { gid: 98, name: 'thatch', base: 0xc8a46b, accent: 0x9c7446, pattern: 'stripes' },
+    { gid: 99, name: 'cane_wall', base: 0xa8844e, accent: 0x6b4426, pattern: 'stripes' },
+    { gid: 100, name: 'palm', base: 0x4f9a4a, accent: 0x6b4426, pattern: 'blob' },
+    { gid: 101, name: 'conuco', base: 0x7a5a38, accent: 0x4f9a4a, pattern: 'dots' },
+    { gid: 102, name: 'batey', base: 0xd09050, accent: 0xb87840, pattern: 'dots' },
+    { gid: 103, name: 'petroglyph', base: 0x8e8e9c, accent: 0x3a3440, pattern: 'cross' },
+    { gid: 104, name: 'stall_thatch', base: 0xc8a46b, accent: 0x17a5a5, pattern: 'stripes' },
+    { gid: 105, name: 'salt', base: 0xf4ecd8, accent: 0xd8d0c0, pattern: 'grid' },
+    { gid: 106, name: 'cave', base: 0x1a1420, accent: 0x3a3440, pattern: 'border' },
+    { gid: 107, name: 'firepit', base: 0x6e6a78, accent: 0xe0782a, pattern: 'blob' },
+    { gid: 108, name: 'mat', base: 0xd8bf8a, accent: 0xb8955a, pattern: 'dots' },
+    { gid: 109, name: 'post', base: 0x6b4426, accent: 0x17a5a5, pattern: 'stripes' },
+    { gid: 110, name: 'duho', base: 0x3e2614, accent: 0xf2d04b, pattern: 'border' },
+    // Yucayeque's own ground and plants (owner request, Oct 16: it must look nothing like Pòdlimyè):
+    // deep tropical grass, red-earth trails, white coral sand, a turquoise lagoon, pale limestone, red
+    // heliconia flowers; ceiba trees, ferns and banana plants instead of the round trees and bushes.
+    { gid: 111, name: 'lush_grass', base: 0x2e8a4e, accent: 0x46a866, pattern: 'dots' },
+    { gid: 112, name: 'red_earth', base: 0xb0603a, accent: 0x8e4a2a, pattern: 'dots' },
+    { gid: 113, name: 'coral_sand', base: 0xf2e6c4, accent: 0xdccca0, pattern: 'dots' },
+    { gid: 114, name: 'lagoon', base: 0x1fa5a8, accent: 0x7fe0d6, pattern: 'wave' },
+    { gid: 115, name: 'limestone', base: 0xd8d4c8, accent: 0xa8a49a, pattern: 'grid' },
+    { gid: 116, name: 'heliconia', base: 0x2e8a4e, accent: 0xd8402a, pattern: 'dots' },
+    { gid: 117, name: 'ceiba', base: 0x2e8a4e, accent: 0xa8a6b4, pattern: 'blob' },
+    { gid: 118, name: 'fern', base: 0x2e8a4e, accent: 0x8cc860, pattern: 'blob' },
+    { gid: 119, name: 'banana', base: 0x2e8a4e, accent: 0xf2d04b, pattern: 'blob' },
+    // A dugout canoe that sits on whatever is under it (sand or lagoon), and the caney's woven runner.
+    { gid: 120, name: 'dugout', base: 0x6b4426, accent: 0x9c7446, pattern: 'blob' },
+    { gid: 121, name: 'runner', base: 0x17a5a5, accent: 0xe8e0c8, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -195,6 +226,9 @@ const QUIET_CROWN: Record<string, PlaceholderCharacter> = Object.fromEntries(
 
 const C = PALETTE;
 /** Black hair, a shade above the outline colour so the outline still reads around it. */
+/** Xaraguá's cotton and the Yaguana teal (Chapter 2). */
+const COTTON = 0xe8e0c8;
+const TEAL = 0x17a5a5;
 const HAIR_BLACK = 0x2b2433;
 const HAIR_DARK = 0x2a1a14;
 const WHITE_HAIR = C.h!;
@@ -314,6 +348,34 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   villager: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x6a8a3a, trim: C.w!, legs: C.B! },
   keeper: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true },
   fisher: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.c!, trim: C.N!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
+  // Xaraguá (Chapter 2, Oct 16): Yucayeque's people in cotton, annatto red and Yaguana teal; the
+  // Crown's marines and clerks in red and navy. Placeholders until art drop 2 (Nov 7).
+  canoe_fisher: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: COTTON, trim: TEAL, legs: C.T!, headgear: 'headband', headgearColor: C.R! },
+  weaver: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: TEAL, trim: C.w!, robe: true },
+  fisher_boy: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: COTTON, trim: C.R!, legs: C.T!, build: 'small' },
+  crown_marine: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: C.R!, trim: C.w!, legs: C.w!, headgear: 'cap', headgearColor: C.u!, accessories: ['sash'] },
+  salt_seller: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.w!, trim: C.G!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
+  casabe_baker: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: COTTON, trim: C.o!, robe: true, accessories: ['apron'] },
+  canoe_maker: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.N!, trim: TEAL, legs: C.B!, beard: HAIR_BLACK },
+  shell_diver: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: TEAL, trim: C.w!, legs: C.T! },
+  areito_drummer: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: COTTON, trim: C.R!, legs: C.T!, accessories: ['drum'] },
+  dancer: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: TEAL, trim: C.y!, robe: true },
+  plaza_elder: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: COTTON, trim: TEAL, robe: true, accessories: ['cane'] },
+  cassava_farmer: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.N!, trim: C.L!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
+  conuco_kid: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.L!, trim: C.w!, legs: C.T!, build: 'small' },
+  hill_runner: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: TEAL, trim: C.R!, legs: C.T!, headgear: 'headband', headgearColor: C.R! },
+  camp_leader: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.l!, trim: C.R!, legs: C.B!, accessories: ['bow'] },
+  camp_scout: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.L!, trim: C.N!, legs: C.B!, accessories: ['bow'] },
+  caney_guard: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.R!, trim: C.y!, legs: C.T!, headgear: 'headband', headgearColor: C.y!, accessories: ['staff'] },
+  elder_charter: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'short', outfit: COTTON, trim: C.y!, robe: true, accessories: ['sash'] },
+  elder_resist: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'braid', outfit: C.R!, trim: TEAL, robe: true, accessories: ['cane'] },
+  elder_undecided: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: C.G!, trim: TEAL, robe: true },
+  behique: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.p!, trim: C.w!, robe: true, headgear: 'circlet', headgearColor: C.y! },
+  crown_liaison: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.R!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['epaulettes'] },
+  head_runner: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: TEAL, trim: C.w!, legs: C.T!, accessories: ['satchel'] },
+  song_keeper: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: TEAL, trim: C.y!, robe: true, accessories: ['staff'] },
+  song_apprentice: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: COTTON, trim: TEAL, robe: true, build: 'small' },
+  crown_clerk: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
 };
 
 /** The player's look in each era. */

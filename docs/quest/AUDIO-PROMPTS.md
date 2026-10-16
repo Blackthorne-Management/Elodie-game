@@ -22,3 +22,18 @@ on GitHub with the file names below.
 | 10 | `farewell.mp3` | Mother leaving, story moments | Bittersweet and tender: solo guitar with soft strings, hopeful at the end, 66 BPM |
 
 Later chapters add their own city tracks in the same table.
+
+## Yucayeque, Xaraguá (Chapter 2)
+
+Owner request (Oct 16): Yucayeque must sound, like it looks, nothing like Pòdlimyè. Taíno-inspired: the
+mayohuacán (hollow log slit drum), maracas, conch trumpet (guamo), bone and cane flutes, rain sticks; no
+guitar, no horns, no kompa. Until these arrive the game plays Pòdlimyè's tracks as stand-ins
+(`src/audio.config.ts` MUSIC_BY_MAP).
+
+| # | File | Where it plays | Prompt |
+|---|---|---|---|
+| 11 | `yucayeque.mp3` | Harbor Village, Canoe Beach, cassava gardens | Peaceful Caribbean island village, Taíno-inspired: wooden slit drum (mayohuacán) in a gentle rhythm, maracas, soft cane flute melody, waves in the background, green and sunlit, 92 BPM |
+| 12 | `areito.mp3` | Areíto Plaza | Ceremonial community dance (areíto): steady log drum and maracas, call-and-answer flute phrases, a conch trumpet now and then, proud and joyful, 108 BPM |
+| 13 | `caney.mp3` | Caney of Anaco, Song House | Solemn great house of the chief: low slit drum, rain stick, a slow flute over a soft drone, dignified and a little worried (the chief is ill), 70 BPM |
+| 14 | `mountain-path.mp3` | The Mountain Path, the hill camp | Misty cloud-forest trail: bird-like flute calls, light shakers, a low drum pulse, adventurous and watchful, 100 BPM |
+| 15 | `crown-customs.mp3` | Crown Customs House | The Crown's foreign office: stiff harpsichord and a slow snare, cold and orderly, out of place on the island, 84 BPM |

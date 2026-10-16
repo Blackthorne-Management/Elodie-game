@@ -1,4 +1,4 @@
-// Writes the Zetwal maps (quest/maps/*.tmj) from the sources in tools/maps. `npm run maps:build`.
+// Writes the Zetwal and Xaraguá maps (quest/maps/*.tmj) from the sources in tools/maps. `npm run maps:build`.
 // With --check it writes nothing and fails if a file on disk differs (tests/maps.test.ts runs that).
 // test-village.tmj is hand-made and not generated.
 
@@ -6,6 +6,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { addClosedDoors, openPassages, toTiled, widenDoors, type MapSource } from './maps/painter.ts';
+import { XARAGUA_SOURCES } from './maps/xaragua.ts';
 import { zetwalArchive } from './maps/zetwal-archive.ts';
 import { zetwalHall } from './maps/zetwal-hall.ts';
 import { zetwalHarbor } from './maps/zetwal-harbor.ts';
@@ -18,7 +19,7 @@ import { zetwalTemple } from './maps/zetwal-temple.ts';
 import { zetwalTown } from './maps/zetwal-town.ts';
 import { MAPS_DIR } from './validate-maps.ts';
 
-export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights, zetwalSquare];
+export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights, zetwalSquare, ...XARAGUA_SOURCES];
 
 /** The generated files, as `[path, text]`. */
 export function buildMaps(dir: string = MAPS_DIR): [string, string][] {
