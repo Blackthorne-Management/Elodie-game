@@ -109,6 +109,22 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
+  // The plaza's doors stay closed until the opening is done (owner decision, Oct 16): first see Mother
+  // off, then see Grandmother, then the first Echo (the war room). Anissa says why, at any closed door.
+  script('plaza_door_closed', {
+    start: {
+      lines: [],
+      next: [
+        { if: { notFlag: 'story.elodie_left' }, to: 'mother' },
+        { if: { notFlag: 'item.sun_locket' }, to: 'grandmother' },
+        { to: 'locket' },
+      ],
+    },
+    mother: { lines: [say(A, "Wait, Gigi! Let's see Mother before she leaves.")] },
+    grandmother: { lines: [say(A, "Wait, Gigi. Grandmother's waiting for us at home. Let's see her first.")] },
+    locket: { lines: [say(A, 'Wait! The Locket... Grandmother said the study remembers. Let\'s try it there first.')] },
+  }),
+
   script('gaze_keeper_talk', {
     start: {
       lines: [],
@@ -160,7 +176,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       choices: [
         { text: 'It smells wonderful.', next: 'thanks' },
         { text: 'Save me a bowl.', next: 'thanks' },
-        { text: 'You look busy.', next: 'offer' },
+        // Side quests wait until the opening is done (owner decision, Oct 16).
+        { text: 'You look busy.', next: 'offer', if: { flag: 'story.warroom_echo' } },
       ],
     },
     thanks: {

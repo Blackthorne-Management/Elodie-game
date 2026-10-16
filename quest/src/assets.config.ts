@@ -123,6 +123,8 @@ export const TILESET = {
     { gid: 90, name: 'cart', base: 0x9c7446, accent: 0x6b4426, pattern: 'cross' },
     { gid: 91, name: 'hedge', base: 0x2a5e2f, accent: 0x4f9a4a, pattern: 'blob' },
     { gid: 92, name: 'flagpole', base: 0x3b4fa8, accent: 0xf2d04b, pattern: 'stripes' },
+    // A door you cannot open (owner request, Oct 16): grey, on every building with no way in.
+    { gid: 93, name: 'door_closed', base: 0x6e6a78, accent: 0x3a3440, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 

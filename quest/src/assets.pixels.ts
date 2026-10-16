@@ -426,6 +426,28 @@ export const TILE_ART: Readonly<Record<string, PixelArt>> = {
       '.kkkkkkkkkkkkkk.',
     ],
   },
+  // The same door, greyed: it does not open (owner request, Oct 16).
+  door_closed: {
+    under: 'wall',
+    rows: [
+      '..kkkkkkkkkkkk..',
+      '.kKKKKKKKKKKKKk.',
+      '.kKkkkkkkkkkkKk.',
+      '.kKkggGgggGgkKk.',
+      '.kKkggGgggGgkKk.',
+      '.kKkggGgggGgkKk.',
+      '.kKkkkkkkkkkkKk.',
+      '.kKkggGgggGgkKk.',
+      '.kKkggGgggGKKkKk',
+      '.kKkggGgggGKKkKk',
+      '.kKkggGgggGgkKk.',
+      '.kKkkkkkkkkkkKk.',
+      '.kKkggGgggGgkKk.',
+      '.kKkggGgggGgkKk.',
+      '.kKkggGgggGgkKk.',
+      '.kkkkkkkkkkkkkk.',
+    ],
+  },
   name_stone: {
     rows: [
       '................',

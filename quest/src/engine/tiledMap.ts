@@ -125,6 +125,10 @@ export interface Door {
   targetMap: string;
   /** Direction the player steps out when arriving at this door. */
   exit: Dir;
+  /** Open only while this holds (Tiled property `if`); closed, it does not let the player through. */
+  if?: Condition;
+  /** The dialogue played when the player walks into it while it is closed (Tiled property `closed`). */
+  closed?: string;
 }
 
 export interface Trigger {
@@ -318,6 +322,8 @@ export function parseMap(id: string, raw: TiledMap): GameMap {
       target: stringProp(o, 'target') ?? '',
       targetMap: stringProp(o, 'map') ?? id,
       exit: dirProp(o, 'exit', 'down'),
+      if: condProp(o),
+      closed: stringProp(o, 'closed'),
     })),
     triggers: objects(raw, OBJECT_LAYERS.triggers).map((o) => ({
       id: o.name,

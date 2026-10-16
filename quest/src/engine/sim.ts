@@ -125,6 +125,7 @@ export class Sim {
           const step = logic.tryStep(cmd, true);
           if (step.ok) this.handle(logic.finishStep(step.to));
           else if (step.reason === 'door_in_echo') this.log.push(logic.content.messages.doorInEcho);
+          else if (step.reason === 'door_closed') this.handle(logic.closedDoor(step.door));
         }
         break;
       case 'dialogue': {

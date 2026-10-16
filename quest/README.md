@@ -163,6 +163,11 @@ one, else the global install, and runs Node with `--experimental-strip-types` to
 - **Anchors.** Flags named `echo.*` belong to the memory and are wiped on the way back; only an
   anchor (an `anchors` object naming an Echo-era puzzle object) may set an `anchor.*` flag, which
   present-era objects read (the Chain Bridge is down in the present once Patricio pins it).
+- **Closed doors.** A door with an `if` condition is closed until it holds; walking into it plays its
+  `closed` dialogue instead (the validator requires both). The opening uses it (owner decision, Oct 16):
+  every way out of the Festival Plaza is closed until Mother has left, then only home opens, and the
+  rest open when the war room memory is done; Anissa says why (`plaza_door_closed`). Side quests are
+  not offered until then either.
 - **Puzzle objects** (`puzzle_objects` layer): examine/use dialogue, optional tile drawn while active,
   `walkable` (opens tiles, e.g. a lowered bridge) or `solid`, `era`, and an `if` condition. Condition
   text in Tiled: `a, !b` (and), `a|b` (or).

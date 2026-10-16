@@ -58,6 +58,7 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   k: { ground: 'dock', solid: false },
   _: { ground: 'stage', solid: false },
   D: { ground: 'door', solid: false },
+  '@': { ground: 'door_closed', solid: true },
   o: { ground: 'floor', solid: false },
   e: { ground: 'floor_old', solid: false },
   u: { ground: 'rug', solid: false },
@@ -286,4 +287,54 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
     ],
   };
   return tiled as TiledMap & Record<string, unknown>;
+}
+
+/**
+ * Every building with no way in gets a grey door you cannot open (owner request, Oct 16), in the middle
+ * of its front wall. A building is a group of wall tiles ('#') with roof ('^') above it; it already has
+ * a way in when a door tile ('D') or a door object touches it. Present era only (fifty years ago the
+ * buildings are drawn as they were). Interior walls have no roof above them and are left alone.
+ */
+export function addClosedDoors(src: MapSource): void {
+  const g = src.present;
+  const doorTiles = new Set(src.objects.filter((o) => o.layer === 'doors').map((o) => `${o.x},${o.y}`));
+  const seen = new Set<string>();
+  const at = (x: number, y: number) => (x >= 0 && y >= 0 && x < g.width && y < g.height ? g.get(x, y) : '');
+  for (let y = 0; y < g.height; y++) {
+    for (let x = 0; x < g.width; x++) {
+      if (at(x, y) !== '#' || seen.has(`${x},${y}`)) continue;
+      // The connected wall tiles of one building.
+      const cells: [number, number][] = [];
+      const stack: [number, number][] = [[x, y]];
+      seen.add(`${x},${y}`);
+      while (stack.length > 0) {
+        const [cx, cy] = stack.pop()!;
+        cells.push([cx, cy]);
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+          const nx = cx + dx;
+          const ny = cy + dy;
+          if (at(nx, ny) === '#' && !seen.has(`${nx},${ny}`)) {
+            seen.add(`${nx},${ny}`);
+            stack.push([nx, ny]);
+          }
+        }
+      }
+      if (!cells.some(([cx, cy]) => at(cx, cy - 1) === '^')) continue;
+      const hasDoor = cells.some(([cx, cy]) =>
+        [[1, 0], [-1, 0], [0, 1], [0, -1], [0, 0]].some(([dx, dy]) => ['D', '@'].includes(at(cx + dx!, cy + dy!)) || doorTiles.has(`${cx + dx!},${cy + dy!}`)),
+      );
+      if (hasDoor) continue;
+      // The front: the lowest wall row; the door goes in the middle of its longest run.
+      const bottom = Math.max(...cells.map(([, cy]) => cy));
+      const row = cells.filter(([, cy]) => cy === bottom).map(([cx]) => cx).sort((a, b) => a - b);
+      let best: number[] = [];
+      let run: number[] = [];
+      for (const cx of row) {
+        run = run.length > 0 && cx === run[run.length - 1]! + 1 ? [...run, cx] : [cx];
+        if (run.length > best.length) best = run;
+      }
+      if (best.length < 3) continue;
+      g.set(best[Math.floor((best.length - 1) / 2)]!, bottom, '@');
+    }
+  }
 }

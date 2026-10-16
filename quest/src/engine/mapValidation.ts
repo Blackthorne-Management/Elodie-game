@@ -152,6 +152,12 @@ function checkObjects(id: string, raw: TiledMap, map: GameMap, ctx: ValidationCo
     if (t.once && !t.flag) e(`trigger "${t.id}" is once-only but has no flag to remember it`);
     if (t.onEnter && !t.once) e(`trigger "${t.id}" runs on entering the map, so it must be once-only`);
   }
+  // A door that can be closed says why: its `closed` dialogue exists (and a `closed` needs an `if`).
+  for (const d of map.doors) {
+    if (d.if && !d.closed) e(`door "${d.id}" can be closed but has no "closed" dialogue`);
+    if (d.closed && !d.if) e(`door "${d.id}" has a "closed" dialogue but no "if"`);
+    if (d.closed && !dialogueIds.has(d.closed)) e(`door "${d.id}" plays unknown dialogue "${d.closed}"`);
+  }
 
   // `if` conditions parse and `era` values are known.
   for (const layerName of CONDITIONAL_LAYERS) {

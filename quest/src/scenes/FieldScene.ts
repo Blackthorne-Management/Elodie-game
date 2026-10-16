@@ -707,8 +707,14 @@ export class FieldScene extends Phaser.Scene {
     // follows its planned steps exactly.
     const attempt = this.logic.tryStep(dir, slide);
     if (!attempt.ok) {
-      if (attempt.reason === 'door_in_echo' && dirButtons(dir).some((d) => this.rt.input.pressed(d))) {
+      // Only a fresh press (or a tapped walk) answers, so holding the key into a wall does not repeat it.
+      const fresh = !slide || dirButtons(dir).some((d) => this.rt.input.pressed(d));
+      if (attempt.reason === 'door_in_echo' && fresh) {
         this.toast.show(this.logic.content.messages.doorInEcho);
+      }
+      if (attempt.reason === 'door_closed' && fresh) {
+        this.cancelWalk();
+        this.handle(this.logic.closedDoor(attempt.door));
       }
       return null;
     }

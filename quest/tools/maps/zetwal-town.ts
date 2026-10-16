@@ -4,6 +4,9 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 
+const OPENS_HOME = { if: 'story.elodie_left', closed: 'plaza_door_closed' };
+const OPENS_CITY = { if: 'story.warroom_echo', closed: 'plaza_door_closed' };
+
 export function zetwalTown(): MapSource {
   const W = 40;
   const H = 28;
@@ -126,12 +129,14 @@ export function zetwalTown(): MapSource {
     npc('echo_sentry', 26, 10, 'right', { era: 'echo' }),
     npc('echo_drummer', 18, 6, 'down', { era: 'echo' }),
 
-    { layer: 'doors', name: 'town_house', x: 5, y: 5, props: { target: 'house_front', map: 'zetwal-house', exit: 'down' } },
-    { layer: 'doors', name: 'town_market', x: 0, y: 10, props: { target: 'market_plaza', map: 'zetwal-market', exit: 'right' } },
-    { layer: 'doors', name: 'town_harbor', x: 0, y: 23, props: { target: 'harbor_plaza', map: 'zetwal-harbor', exit: 'right' } },
-    { layer: 'doors', name: 'town_square', x: 18, y: 0, props: { target: 'square_plaza', map: 'zetwal-square', exit: 'down' } },
-    { layer: 'doors', name: 'town_gate', x: 39, y: 19, props: { target: 'road_gate', map: 'zetwal-road', exit: 'left' } },
-    { layer: 'doors', name: 'town_temple', x: 38, y: 9, props: { target: 'temple_bridge', map: 'zetwal-temple', exit: 'left' } },
+    // The opening keeps you in the plaza (owner decision, Oct 16): home opens once Mother has left, the
+    // rest once the first Echo (the war room) is done; until then Anissa says why (plaza_door_closed).
+    { layer: 'doors', name: 'town_house', x: 5, y: 5, props: { target: 'house_front', map: 'zetwal-house', exit: 'down', ...OPENS_HOME } },
+    { layer: 'doors', name: 'town_market', x: 0, y: 10, props: { target: 'market_plaza', map: 'zetwal-market', exit: 'right', ...OPENS_CITY } },
+    { layer: 'doors', name: 'town_harbor', x: 0, y: 23, props: { target: 'harbor_plaza', map: 'zetwal-harbor', exit: 'right', ...OPENS_CITY } },
+    { layer: 'doors', name: 'town_square', x: 18, y: 0, props: { target: 'square_plaza', map: 'zetwal-square', exit: 'down', ...OPENS_CITY } },
+    { layer: 'doors', name: 'town_gate', x: 39, y: 19, props: { target: 'road_gate', map: 'zetwal-road', exit: 'left', ...OPENS_CITY } },
+    { layer: 'doors', name: 'town_temple', x: 38, y: 9, props: { target: 'temple_bridge', map: 'zetwal-temple', exit: 'left', ...OPENS_CITY } },
 
     { layer: 'spawns', name: 'start', x: 8, y: 10, props: { facing: 'right', era: 'present' } },
     { layer: 'spawns', name: 'bridgehead', x: 25, y: 10, props: { facing: 'right', era: 'present' } },

@@ -37,11 +37,12 @@ function talk(flags: FlagStore, id: string, picks: string[] = []): string[] {
 
 const quest = (id: string) => SIDE_QUESTS.find((q) => q.id === id)!;
 
-/** Flags as after the festival speech and the Sun Locket (Chapter 1, early). */
+/** Flags as after the festival speech, the Sun Locket and the first Echo (the city has opened). */
 function chapterOne(): FlagStore {
   const flags = new FlagStore();
   flags.set('story.elodie_left', true);
   flags.set('item.sun_locket', true);
+  flags.set('story.warroom_echo', true);
   return flags;
 }
 
@@ -78,8 +79,8 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
     flags.set('lore.zetwal_ash_wars_temple', true);
     talk(flags, 'anicette_talk', ['About your overdue book', 'Four hundred']);
     expect(flags.isSet('side.overdue.vol2')).toBe(false);
-    // "Never mind" falls through to her story lines.
-    expect(talk(flags, 'anicette_talk', ['Never mind']).some((t) => t.includes('shimmering tiles'))).toBe(true);
+    // "Never mind" falls through to her story lines (the war room is done by now: side quests open after it).
+    expect(talk(flags, 'anicette_talk', ['Never mind']).some((t) => t.includes('I can see it in your face'))).toBe(true);
     talk(flags, 'anicette_talk', ['About your overdue book', 'Forty']);
     expect(flags.isSet('side.overdue.vol2')).toBe(true);
 
@@ -108,6 +109,12 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
     expect(list()).not.toContain('Ash Wars Gossip, Volume Two');
     flags.set('side.overdue.done', true);
     expect(list()).toContain('Ash Wars Gossip, Volume Two');
+  });
+
+  it('side quests are not offered until the first Echo (owner decision, Oct 16)', () => {
+    const flags = chapterOne();
+    flags.set('story.warroom_echo', false);
+    expect(() => talk(flags, 'soup_vendor_talk', ['You look busy'])).toThrow(/no choice "You look busy"/);
   });
 
   it('Soup for the Cousins: three bowls, then three soups, 30 gold and Influence', () => {

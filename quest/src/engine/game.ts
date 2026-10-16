@@ -73,7 +73,9 @@ export type Effect =
 
 export type StepAttempt =
   | { ok: true; to: Pos }
-  | { ok: false; reason: 'busy' | 'bounds' | 'blocked' | 'occupied' | 'door_in_echo' | 'corner' };
+  | { ok: false; reason: 'busy' | 'bounds' | 'blocked' | 'occupied' | 'door_in_echo' | 'corner' }
+  /** A door whose `if` does not hold yet: the caller plays its `closed` dialogue (closedDoor). */
+  | { ok: false; reason: 'door_closed'; door: Door };
 
 export class GameLogic {
   readonly maps: Readonly<Record<string, GameMap>>;
@@ -165,6 +167,8 @@ export class GameLogic {
     const to = stepFrom(from, dir);
     if (!inBounds(this.map, to)) return { ok: false, reason: 'bounds' };
     if (this.era === 'echo' && doorAt(this.map, to)) return { ok: false, reason: 'door_in_echo' };
+    const door = doorAt(this.map, to);
+    if (door && !this.doorOpen(door)) return { ok: false, reason: 'door_closed', door };
     if (!this.isOpen(to)) return { ok: false, reason: 'blocked' };
     if (npcBlocks(this.map, this.era, to, this.state.flags)) return { ok: false, reason: 'occupied' };
     if (isDiagonal(dir)) {
@@ -174,6 +178,17 @@ export class GameLogic {
       }
     }
     return { ok: true, to };
+  }
+
+  /** Whether a door lets the player through now (a door with no `if` always does). */
+  doorOpen(door: Door): boolean {
+    return !door.if || evaluate(door.if, this.state.flags);
+  }
+
+  /** Walked into a closed door: play its `closed` dialogue (someone says why not). */
+  closedDoor(door: Door): Effect[] {
+    if (this.mode !== 'field' || this.doorOpen(door) || !door.closed) return [];
+    return this.startDialogue(door.closed);
   }
 
   /** Land on `to`: doors, then step triggers. Walking onto a walkable object (a bridge) counts as using it. */
