@@ -10,7 +10,7 @@ import { NPCS } from '../src/data/npcs.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { localPillar } from '../src/engine/rpg.ts';
-import { loadMaps } from '../tools/sim-setup.ts';
+import { loadMaps, newGameSim } from '../tools/sim-setup.ts';
 
 const maps = loadMaps();
 const xaraguaMaps = Object.values(maps).filter((m) => m.id.startsWith('xaragua-'));
@@ -53,5 +53,14 @@ describe('Yucayeque: people and places', () => {
     const taino = GLOSSARIES.find((g) => g.language.startsWith('Taíno'))!;
     expect(taino.entries.map((e) => e.word)).toContain('Guatiao');
     expect(taino.entries.every((e) => !e.verified)).toBe(true);
+  });
+
+  it('a conversation ends with an autosave (so a story talk is never lost to a reload)', () => {
+    const sim = newGameSim(maps, 'xaragua-beach', 'beach');
+    sim.run(['goto 25,10', 'down']);
+    const before = sim.saves;
+    sim.run(['confirm', 'skip']);
+    expect(sim.logic.mode).toBe('field');
+    expect(sim.saves).toBe(before + 1);
   });
 });

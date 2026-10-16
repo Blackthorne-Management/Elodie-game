@@ -262,14 +262,15 @@ export class GameLogic {
       const npc = npcs.find((n) => samePos(n.pos, tile));
       if (npc) {
         const def = this.content.npcs[npc.npc]!;
-        const after: Effect[] = def.shop ? [{ kind: 'shop', shop: def.shop }] : [];
+        // Every conversation ends with an autosave (a story talk, like meeting Governor Thorne, is never lost).
+        const after: Effect[] = def.shop ? [{ kind: 'shop', shop: def.shop }, { kind: 'save' }] : [{ kind: 'save' }];
         return [{ kind: 'talk', npc }, ...this.startDialogue(def.dialogue, after)];
       }
       const here = objects.filter((o) => rectContains(o.area, tile));
       const used = here.find((o) => o.dialogue);
       if (used?.dialogue) {
         this.state.flags.set(seenFlag(this.map.id, used.id), true);
-        return this.startDialogue(used.dialogue);
+        return this.startDialogue(used.dialogue, [{ kind: 'save' }]);
       }
       const looked = [...here].reverse().find((o) => this.content.objects?.[o.id]?.inspect);
       if (looked) {
