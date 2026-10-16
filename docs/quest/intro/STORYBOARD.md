@@ -273,6 +273,13 @@ bold pixel font, each line appearing letter by letter (2 frames per letter). The
 
 ---
 
+## Delivered (Oct 16)
+
+`zetwal-intro.mp4`: 1920 x 1080, 24 fps, 91 s (2,184 frames), H.264 with AAC sound, narration as captions in the
+picture. The title is complete and **Press A** first shows at **87.0 s (frame 2088)**; it blinks on 36 frames, off
+12 (a 2-second cycle), and the video ends exactly two cycles later, so the game loops **87.0 s to 91.0 s** until the
+player presses a button.
+
 ## Delivery
 
 - One video file (MP4, H.264), 320 x 180, or scaled up by an exact whole number (1280 x 720 is 4x), with no
