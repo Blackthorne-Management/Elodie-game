@@ -6,6 +6,7 @@
 //   ?hintms=<ms>     Anissa's first hint after this much stuck time instead of 3 minutes
 //   ?touch=1         force the touch overlay
 //   ?intro=0         skip the animated intro and title (the smoke test's main route)
+//   ?install=0|1     never / always show the phone install screen (engine/install.ts)
 
 import Phaser from 'phaser';
 import { HINT_FIRST_MS, HINT_REPEAT_MS, MAX_ZOOM, MIN_INTEGER_ZOOM, RENDER_SCALE_MAX, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
@@ -14,6 +15,7 @@ import { loadRawMaps } from './data/maps.ts';
 import { checkDialogue } from './engine/dialogue.ts';
 import { GameLogic } from './engine/game.ts';
 import { HintTracker } from './engine/hints.ts';
+import { installGate } from './engine/install.ts';
 import { INTRO_SEEN_KEY, introOpening } from './engine/intro.ts';
 import { validateMaps } from './engine/mapValidation.ts';
 import { fitZoom } from './engine/scaling.ts';
@@ -29,7 +31,8 @@ import { BootScene } from './scenes/BootScene.ts';
 import { BattleScene } from './scenes/BattleScene.ts';
 import { FieldScene } from './scenes/FieldScene.ts';
 import { IntroScene } from './scenes/IntroScene.ts';
-import { mountFullscreenButton } from './ui/fullscreen.ts';
+import { isStandalone, mountFullscreenButton } from './ui/fullscreen.ts';
+import { mountInstallScreen } from './ui/installScreen.ts';
 import { fitToScreen, preventBrowserZoom, visibleViewport } from './ui/screen.ts';
 import './style.css';
 
@@ -39,6 +42,19 @@ function fail(message: string): never {
   box.textContent = message;
   document.body.appendChild(box);
   throw new Error(message);
+}
+
+// A phone or tablet in the browser installs the quest first (owner decision, Oct 16); the game never starts.
+const gate = installGate({
+  userAgent: navigator.userAgent,
+  maxTouchPoints: navigator.maxTouchPoints ?? 0,
+  standalone: isStandalone(),
+  param: new URLSearchParams(location.search).get('install'),
+  dev: import.meta.env.DEV,
+});
+if (gate !== 'play') {
+  mountInstallScreen(gate);
+  await new Promise<never>(() => undefined);
 }
 
 const rawMaps = loadRawMaps();

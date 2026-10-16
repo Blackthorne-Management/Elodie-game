@@ -49,9 +49,10 @@ const { ACT1 } = await import('../src/data/quests.ts');
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
-// Every check but the intro's own starts with ?intro=0 (straight into the quest).
-const GAME = `${URL_BASE}?intro=0`;
-const VILLAGE = `${URL_BASE}?intro=0&map=test-village`;
+// Every check but the intro's own starts with ?intro=0 (straight into the quest), and with ?install=0 so
+// the phone checks play in the browser (the install screen has its own check).
+const GAME = `${URL_BASE}?intro=0&install=0`;
+const VILLAGE = `${URL_BASE}?intro=0&install=0&map=test-village`;
 const SHOT_DIR = process.env.SHOT_DIR ?? tmpdir();
 
 function check(cond, message) {
@@ -286,6 +287,28 @@ async function fullscreenToggle(browser, errors) {
   check(help.includes('Add to Home Screen'), 'on iPhone the button explains Add to Home Screen');
   await ip.locator('.fs-help button').tap();
   check((await ip.locator('.fs-help').count()) === 0, 'the explanation closes');
+  // Phones play only from the home screen (owner decision, Oct 16): in Safari, the install steps.
+  const gate = await ios.newPage();
+  watchErrors(gate, errors);
+  await gate.goto(`${URL_BASE}?intro=0`);
+  await gate.waitForSelector('.install-screen', { timeout: 15000 });
+  const steps = await gate.textContent('.install-steps');
+  check(steps.includes('Add to Home Screen') && (await gate.evaluate(() => !window.__quest)), 'an iPhone in Safari gets the install steps, and the game does not start');
+  await gate.screenshot({ path: join(SHOT_DIR, 'quest-install-iphone.png') });
+  await gate.setViewportSize({ width: 390, height: 844 });
+  const fit = await gate.evaluate(() => {
+    const de = document.documentElement;
+    const s = document.querySelector('.install-screen');
+    return { sw: de.scrollWidth, vw: window.innerWidth, overflowX: s.scrollWidth > s.clientWidth };
+  });
+  check(fit.sw <= fit.vw && !fit.overflowX, 'the install screen fits 390 px portrait without sideways scrolling');
+  await gate.screenshot({ path: join(SHOT_DIR, 'quest-install-portrait.png') });
+  const home = await ios.newPage();
+  watchErrors(home, errors);
+  await home.addInitScript(() => Object.defineProperty(Navigator.prototype, 'standalone', { configurable: true, get: () => true }));
+  await home.goto(`${URL_BASE}?intro=0&map=test-village`);
+  await waitReady(home);
+  check((await home.locator('.install-screen').count()) === 0, 'the same iPhone, opened from the home screen, plays');
   await ios.close();
 
   console.log('Home-screen app (standalone):');
@@ -324,7 +347,7 @@ async function hintsAndJournal(browser, errors) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   watchErrors(page, errors);
-  await page.goto(`${URL_BASE}?intro=0&hintms=1200`);
+  await page.goto(`${URL_BASE}?intro=0&install=0&hintms=1200`);
   await waitReady(page);
   let s = await snap(page);
   check(s.mapId === 'zetwal-town' && s.mode === 'dialogue', 'a new game opens in Zetwal with the festival scene');

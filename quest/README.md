@@ -22,6 +22,11 @@ URL options: `?map=test-village` starts a new game (when there is no save) on an
 `?hintms=3000` makes Anissa's first hint come after 3 s instead of 3 minutes; `?touch=1` forces the
 touch overlay.
 
+**Phones play from the home screen.** On a phone or tablet in the browser the quest shows how to add it to
+the home screen instead of starting (owner decision, Oct 16; `src/engine/install.ts`). Computers play in the
+browser. The dev server (`npm run dev`) skips the screen so a phone on the same Wi-Fi can test in the
+browser; `?install=1` shows it anyway, `?install=0` skips it.
+
 Controls:
 
 | Action  | Keyboard                        | Gamepad (standard)       | Touch                          |
