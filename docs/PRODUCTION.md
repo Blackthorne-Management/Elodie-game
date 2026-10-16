@@ -10,16 +10,14 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Wed Oct 15**.
+and ticks items off here as they land. Last updated **Thu Oct 16**.
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 px map (only the 2000 px upscale is in `art/board/`), the 8 seat
   buildings (`art/seats/`, prompts in `docs/art/MAP-AND-SEATS.md`; none yet), then a proof of `print/board-24in.png`
   to approve, then order.
-- [ ] **Before the board order (Mon Oct 20):** the labelled board guide (`docs/art/board-guide-labelled.png`) still
-  names the north-west country Moa'olani, House Vai'tama; it is Xaraguá, House Yaguana now. Checked Oct 15: no text
-  or data file for print carries the old name (the old mockup is fixed); the labels painted into
-  `print/board-24in.png` must still be checked by eye on the proof.
+- [x] Xaraguá on the board: checked Oct 16. `print/board-24in.png` reads XARAGUÁ, House Yaguana (seat Y), and the
+  labelled guide (`docs/art/board-guide-labelled.png`) now says Xaraguá too (it said Moa'olani). Still read it on the proof.
 - [x] 8 crests.
 - [ ] Card art: 20 of 126 in `art/cards/` (anything missing on Oct 31 prints in the no-picture design).
 - [ ] Card back.
