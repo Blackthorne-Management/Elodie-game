@@ -6,7 +6,7 @@
 
 import type { GameLogic } from './game.ts';
 import type { NpcPlacement } from './tiledMap.ts';
-import { components, isDiagonal, samePos, stepFrom } from './grid.ts';
+import { components, isDiagonal, onDoor, samePos, stepFrom } from './grid.ts';
 import { DIRS8, type Pos } from './types.ts';
 
 /** An NPC that left one placement and now stands at another. */
@@ -52,7 +52,7 @@ function route(logic: GameLogic, from: Pos, to: Pos, crowded: (p: Pos) => boolea
   const map = logic.map;
   const key = (p: Pos) => p.y * map.width + p.x;
   const open = (p: Pos) =>
-    samePos(p, to) || (logic.isOpen(p) && !crowded(p) && !map.doors.some((d) => samePos(d.pos, p)));
+    samePos(p, to) || (logic.isOpen(p) && !crowded(p) && !map.doors.some((d) => onDoor(d, p)));
   const prev = new Map<number, Pos | null>([[key(from), null]]);
   const queue: Pos[] = [from];
   while (queue.length > 0) {

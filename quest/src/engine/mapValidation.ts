@@ -3,7 +3,7 @@
 
 import { TILE_SIZE } from '../config.ts';
 import { flagsIn, parseConditionText, type Condition } from './conditions.ts';
-import { components, inBounds, isWalkable, samePos, stepFrom } from './grid.ts';
+import { components, inBounds, isWalkable, onDoor, samePos, stepFrom } from './grid.ts';
 import {
   OBJECT_LAYERS,
   REQUIRED_OBJECT_LAYERS,
@@ -140,7 +140,7 @@ function checkObjects(id: string, raw: TiledMap, map: GameMap, ctx: ValidationCo
   for (const n of map.npcs) {
     if (!npcIds.has(n.npc)) e(`npc "${n.npc}" is not defined in data/npcs.ts`);
     if (!inBounds(map, n.pos)) continue;
-    if (map.doors.some((d) => samePos(d.pos, n.pos))) e(`npc "${n.npc}" stands on a door`);
+    if (map.doors.some((d) => onDoor(d, n.pos))) e(`npc "${n.npc}" stands on a door`);
     if (map.spawns.some((s) => samePos(s.pos, n.pos))) e(`npc "${n.npc}" stands on a spawn`);
   }
 
@@ -201,7 +201,7 @@ function checkObjects(id: string, raw: TiledMap, map: GameMap, ctx: ValidationCo
       }
     }
     for (const n of map.npcs) if (rectContains(zone.area, n.pos)) e(`npc "${n.npc}" stands inside ${label}`);
-    for (const d of map.doors) if (rectContains(zone.area, d.pos)) e(`door "${d.id}" is inside ${label}`);
+    for (const d of map.doors) if (d.tiles.some((t) => rectContains(zone.area, t))) e(`door "${d.id}" is inside ${label}`);
     for (const o of map.objects) {
       if (o.solid && rectTiles(o.area).some((t) => rectContains(zone.area, t))) e(`solid puzzle object "${o.id}" overlaps ${label}`);
     }
@@ -306,7 +306,7 @@ export function validateMaps(maps: Readonly<Record<string, TiledMap>>, ctx: Vali
   for (const map of Object.values(parsed)) {
     for (const door of map.doors) {
       const where = `${map.id}: door "${door.id}"`;
-      if (!isWalkable(map, 'present', door.pos)) errors.push(`${where} is on a blocked tile`);
+      if (door.tiles.some((t) => !isWalkable(map, 'present', t))) errors.push(`${where} is on a blocked tile`);
       const arrival = stepFrom(door.pos, door.exit);
       if (!isWalkable(map, 'present', arrival)) {
         errors.push(`${where} lets the player out (${door.exit}) onto a blocked tile ${arrival.x},${arrival.y}`);

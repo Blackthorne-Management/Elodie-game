@@ -5,14 +5,18 @@
 import { INTRO_END_S, INTRO_LOOP_MARGIN_S, INTRO_TITLE_LOOP_START_S } from '../config.ts';
 
 /**
- * Where the intro opens. A new player sees the whole film; a player with a saved game opens on the title
- * (they have seen it); "Watch the intro" in the menu plays it all again.
+ * Where the intro opens. The whole film plays once on a device; after that (seen or skipped), or with a
+ * saved game, the app opens on the title (owner request, Oct 16). "Watch the intro" in the menu plays
+ * it all again.
  */
 export type IntroOpening = 'full' | 'title';
 
-export function introOpening(hasSave: boolean): IntroOpening {
-  return hasSave ? 'title' : 'full';
+export function introOpening(hasSave: boolean, seen = false): IntroOpening {
+  return hasSave || seen ? 'title' : 'full';
 }
+
+/** The device remembers that the intro was seen under this key. */
+export const INTRO_SEEN_KEY = 'bloodlines-quest.intro-seen';
 
 /** `start`: waiting for a first tap (a browser plays sound only after one); `film`: the story; `title`: the title loop. */
 export type IntroPhase = 'start' | 'film' | 'title';

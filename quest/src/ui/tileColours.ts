@@ -17,6 +17,6 @@ export function tileColours(map: GameMap, raw: TiledMap, era: Era): string[] {
   const deco = findTileLayer(raw, era === 'present' ? TILE_LAYERS.decoPresent : TILE_LAYERS.decoEcho)?.data ?? [];
   const out: string[] = [];
   for (let i = 0; i < map.width * map.height; i++) out.push(gid.get(deco[i] ?? 0) ?? gid.get(ground[i] ?? 0) ?? '#000000');
-  for (const d of map.doors) out[d.pos.y * map.width + d.pos.x] = '#f2d04b';
+  for (const d of map.doors) for (const t of d.tiles) out[t.y * map.width + t.x] = '#f2d04b';
   return out;
 }

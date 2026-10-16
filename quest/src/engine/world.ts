@@ -4,7 +4,7 @@
 
 import { evaluate } from './conditions.ts';
 import type { FlagReader } from './flags.ts';
-import { inBounds, isWalkable, otherEra, samePos } from './grid.ts';
+import { inBounds, isWalkable, onDoor, otherEra, samePos } from './grid.ts';
 import { rectContains, type EchoZone, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
 import type { Era, EraScope, Pos } from './types.ts';
 
@@ -41,7 +41,7 @@ export function zoneAt(map: GameMap, pos: Pos): EchoZone | undefined {
  */
 export function isOpen(map: GameMap, era: Era, pos: Pos, flags: FlagReader): boolean {
   if (!inBounds(map, pos)) return false;
-  if (era === 'echo' && map.doors.some((d) => samePos(d.pos, pos))) return false;
+  if (era === 'echo' && map.doors.some((d) => onDoor(d, pos))) return false;
   let open = isWalkable(map, era, pos);
   for (const o of activeObjects(map, era, flags)) {
     if (!rectContains(o.area, pos)) continue;

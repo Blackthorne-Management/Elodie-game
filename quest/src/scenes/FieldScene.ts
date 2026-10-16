@@ -858,7 +858,10 @@ export class FieldScene extends Phaser.Scene {
       const w = tileToWorld(target.npc.pos);
       return { x: w.x, y: w.y - this.npcHeight(target.npc.objectId) - CHARACTER_LABEL_GAP };
     }
-    if (target.kind === 'door') return { x: target.door.pos.x * TILE_SIZE + TILE_SIZE / 2, y: target.door.pos.y * TILE_SIZE - 2 };
+    if (target.kind === 'door') {
+      const xs = target.door.tiles.map((t) => t.x);
+      return { x: ((Math.min(...xs) + Math.max(...xs) + 1) / 2) * TILE_SIZE, y: target.door.pos.y * TILE_SIZE - 2 };
+    }
     const o = target.object;
     return { x: (o.area.x + o.area.width / 2) * TILE_SIZE, y: this.objectTop(o) - 2 };
   }

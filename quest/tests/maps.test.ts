@@ -244,13 +244,13 @@ describe('buildings drawn as one large picture (owner, Oct 15: no walking over t
     }
   });
 
-  it('the Hall of the Accord and the Iron Market block every tile under them but the door', () => {
+  it('the Hall of the Accord and the Iron Market block every tile under them but the door (two tiles wide)', () => {
     for (const [mapId, id] of [['zetwal-square', 'hall_of_accord'], ['zetwal-market', 'iron_market_hall']] as const) {
       const map = maps[mapId]!;
       const o = map.objects.find((x) => x.id === id)!;
       for (let y = o.area.y; y < o.area.y + o.area.height; y++) {
         for (let x = o.area.x; x < o.area.x + o.area.width; x++) {
-          const door = map.doors.some((d) => d.pos.x === x && d.pos.y === y);
+          const door = map.doors.some((d) => d.tiles.some((t) => t.x === x && t.y === y));
           expect(isOpen(map, 'present', { x, y }, flags), `${mapId} ${x},${y}`).toBe(door);
         }
       }

@@ -338,3 +338,66 @@ export function addClosedDoors(src: MapSource): void {
     }
   }
 }
+
+const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+/** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q']);
+/** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
+const CLEARABLE = new Set(['T', 'Y', 'B']);
+
+/**
+ * Every usable door becomes two tiles wide (owner request, Oct 16: walking into the wall beside a door
+ * was frustrating). The second tile goes beside the door along its wall (left or right of a door you
+ * walk up or down through, above or below one at the side of the map), where the wall is and the
+ * ground in front is open, or a border tree can be cleared. Both eras get the same shape, so the
+ * memory's walls match. A door with no room beside it stays one tile. Returns the doors left narrow.
+ */
+export function widenDoors(src: MapSource): string[] {
+  const g = src.present;
+  const e = src.echo;
+  const narrow: string[] = [];
+  const taken = new Set<string>();
+  for (const o of src.objects) {
+    // A building drawn as one picture (a large puzzle object) has its door inside its own area.
+    if (o.layer === 'puzzle_objects' && (o.w ?? 1) * (o.h ?? 1) >= 6) continue;
+    for (let dx = 0; dx < (o.w ?? 1); dx++) for (let dy = 0; dy < (o.h ?? 1); dy++) taken.add(`${o.x + dx},${o.y + dy}`);
+  }
+  const inside = (x: number, y: number) => x >= 0 && y >= 0 && x < g.width && y < g.height;
+  for (const d of src.objects) {
+    if (d.layer !== 'doors' || (d.w ?? 1) > 1 || (d.h ?? 1) > 1) continue;
+    const exit = String(d.props?.exit ?? 'down');
+    const [ox, oy] = DIR_STEP[exit] ?? [0, 1];
+    const sideways: [number, number][] = ox === 0 ? [[1, 0], [-1, 0]] : [[0, 1], [0, -1]];
+    let done = false;
+    for (const [sx, sy] of sideways) {
+      const cx = d.x + sx;
+      const cy = d.y + sy;
+      const fx = cx + ox;
+      const fy = cy + oy;
+      if (!inside(cx, cy) || !inside(fx, fy) || taken.has(`${cx},${cy}`) || taken.has(`${fx},${fy}`)) continue;
+      // Into the wall beside it, or onto open ground beside it (a gate in a path, a doorway by a floor).
+      if (!WIDEN_INTO.has(g.get(cx, cy)) && LEGEND[g.get(cx, cy)]!.solid) continue;
+      const front = g.get(fx, fy);
+      const frontOpen = !LEGEND[front]!.solid;
+      if (!frontOpen && !CLEARABLE.has(front)) continue;
+      g.set(cx, cy, g.get(d.x, d.y));
+      e.set(cx, cy, e.get(d.x, d.y));
+      if (!frontOpen) {
+        g.set(fx, fy, g.get(d.x + ox, d.y + oy));
+        e.set(fx, fy, e.get(d.x + ox, d.y + oy));
+      }
+      taken.add(`${cx},${cy}`);
+      if (ox === 0) {
+        d.x = Math.min(d.x, cx);
+        d.w = 2;
+      } else {
+        d.y = Math.min(d.y, cy);
+        d.h = 2;
+      }
+      done = true;
+      break;
+    }
+    if (!done) narrow.push(`${src.id}/${d.name}`);
+  }
+  return narrow;
+}

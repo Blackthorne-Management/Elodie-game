@@ -14,7 +14,7 @@ import { loadRawMaps } from './data/maps.ts';
 import { checkDialogue } from './engine/dialogue.ts';
 import { GameLogic } from './engine/game.ts';
 import { HintTracker } from './engine/hints.ts';
-import { introOpening } from './engine/intro.ts';
+import { INTRO_SEEN_KEY, introOpening } from './engine/intro.ts';
 import { validateMaps } from './engine/mapValidation.ts';
 import { fitZoom } from './engine/scaling.ts';
 import { loadFonts, renderScale, setRenderScale } from './ui/text.ts';
@@ -82,7 +82,7 @@ const runtime: Runtime = {
 setRuntime(runtime);
 const loaded = loadStoredGame(runtime);
 if (loaded === 'invalid') console.warn('[quest] the stored save could not be loaded; starting a new game');
-runtime.intro = params.get('intro') === '0' ? null : introOpening(loaded === 'loaded');
+runtime.intro = params.get('intro') === '0' ? null : introOpening(loaded === 'loaded', !!runtime.storage?.getItem(INTRO_SEEN_KEY));
 
 const vp = visibleViewport();
 const startZoom = fitZoom(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM);

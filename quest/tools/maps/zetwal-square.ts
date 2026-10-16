@@ -62,7 +62,8 @@ export function zetwalSquare(): MapSource {
 
   const objects: ObjSpec[] = [
     npc('honor_guard_w', 16, 9, 'down', { npc: 'honor_guard' }),
-    npc('honor_guard_e', 18, 9, 'down', { npc: 'honor_guard' }),
+    // Beside the flagpole, so the double doors are clear.
+    npc('honor_guard_e', 20, 9, 'down', { npc: 'honor_guard' }),
     npc('gazette_crier', 22, 14, 'left'),
     npc('petitioner', 12, 11, 'up'),
     npc('protester', 26, 15, 'left'),

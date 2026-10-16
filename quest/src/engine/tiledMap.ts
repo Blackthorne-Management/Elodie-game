@@ -118,7 +118,10 @@ export interface NpcPlacement {
 
 export interface Door {
   id: string;
+  /** The door's first tile (arrivals step out from here). */
   pos: Pos;
+  /** Every tile of the door (a door can be two tiles wide, so it is easy to walk into). */
+  tiles: readonly Pos[];
   /** Door id this door leads to. */
   target: string;
   /** Map of the target door; defaults to this map. */
@@ -319,6 +322,7 @@ export function parseMap(id: string, raw: TiledMap): GameMap {
     doors: objects(raw, OBJECT_LAYERS.doors).map((o) => ({
       id: o.name,
       pos: objectTile(o, size),
+      tiles: rectTiles(objectRect(o, size)),
       target: stringProp(o, 'target') ?? '',
       targetMap: stringProp(o, 'map') ?? id,
       exit: dirProp(o, 'exit', 'down'),

@@ -4,7 +4,7 @@
 // "Watch the intro" in the menu plays it again. If the browser cannot play the video, the quest starts.
 
 import Phaser from 'phaser';
-import { introLoopSeek, introPhaseAt, introPress, introStartTime, type IntroOpening, type IntroPhase, type IntroPress } from '../engine/intro.ts';
+import { INTRO_SEEN_KEY, introLoopSeek, introPhaseAt, introPress, introStartTime, type IntroOpening, type IntroPhase, type IntroPress } from '../engine/intro.ts';
 import { audio } from '../audio/player.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { getRuntime } from '../runtime.ts';
@@ -108,7 +108,17 @@ export class IntroScene extends Phaser.Scene {
     if (this.layer) this.layer.dataset.phase = 'start';
   }
 
+  /** Next time the app opens on the title (owner request, Oct 16): once the title is reached, watched or skipped. */
+  private markSeen(): void {
+    try {
+      getRuntime().storage?.setItem(INTRO_SEEN_KEY, '1');
+    } catch {
+      // Not remembered: the film plays again next time.
+    }
+  }
+
   private setPhase(phase: IntroPhase): void {
+    if (phase === 'title') this.markSeen();
     if (this.phase === phase) return;
     this.phase = phase;
     if (this.prompt) this.prompt.hidden = phase !== 'start';
@@ -121,6 +131,7 @@ export class IntroScene extends Phaser.Scene {
     this.finished = true;
     this.video?.pause();
     this.removeLayer();
+    this.markSeen();
     getRuntime().input.clearPresses();
     window.__intro = undefined;
     this.scene.start('field');

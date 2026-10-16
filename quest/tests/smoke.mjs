@@ -511,6 +511,15 @@ async function introFlow(browser, errors) {
   check(!(await page.isVisible('.intro')), 'A on the title goes on into the quest');
   await page.waitForFunction(() => window.__audio?.().playing === 'festival', null, { timeout: 15000 });
   check(true, 'the festival song plays in the plaza after the title');
+  // Opened again on this device: straight to the title, not the whole film (owner request, Oct 16).
+  await page.reload();
+  await page.waitForSelector('.intro', { timeout: 15000 });
+  await page.waitForTimeout(500);
+  if (await page.isVisible('.intro-prompt')) await page.click('.intro');
+  await page.waitForFunction(() => window.__intro?.state().phase === 'title', null, { timeout: 8000 });
+  check(true, 'the next visit opens on the title, not the whole film');
+  await page.keyboard.press('z');
+  await waitReady(page);
   await ctx.close();
   return ['quest-intro.png', 'quest-title.png'];
 }
@@ -522,7 +531,7 @@ async function debateFlow(browser, errors) {
   const page = await ctx.newPage();
   watchErrors(page, errors);
   await page.goto(GAME);
-  const flags = { 'story.festival_intro': true, 'story.heard_speech': true, 'story.elodie_left': true, 'item.sun_locket': 1, 'showcase.sun_locket': true, 'story.warroom_echo': true, 'party.anissa': true };
+  const flags = { 'story.festival_intro': true, 'story.heard_speech': true, 'story.elodie_left': true, 'item.sun_locket': 1, 'shown.item.sun_locket': true, 'story.warroom_echo': true, 'party.anissa': true };
   const code = encodeSave({ version: 2, era: 'present', settings: { textSpeed: 'instant', hints: false }, savedAt: 1, flags, mapId: 'zetwal-town', x: 21, y: 17, facing: 'right' });
   await page.evaluate((c) => localStorage.setItem('bloodlines-quest.save', c), code);
   await page.reload();

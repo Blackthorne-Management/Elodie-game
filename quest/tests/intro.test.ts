@@ -8,6 +8,8 @@ describe('the intro', () => {
   it('plays in full for a new player and opens on the title for a saved game', () => {
     expect(introOpening(false)).toBe('full');
     expect(introOpening(true)).toBe('title');
+    // Seen (or skipped) once on this device: the title from then on.
+    expect(introOpening(false, true)).toBe('title');
     expect(introStartTime('full')).toBe(0);
     expect(introStartTime('title')).toBe(INTRO_TITLE_LOOP_START_S);
   });

@@ -16,7 +16,7 @@
 //   "@name"                                               a marker (the smoke test takes screenshots there)
 
 import type { Effect, GameLogic } from './game.ts';
-import { components, isDiagonal, samePos, stepFrom } from './grid.ts';
+import { components, isDiagonal, onDoor, samePos, stepFrom } from './grid.ts';
 import { DIRS, DIRS8, type Dir8, type Pos } from './types.ts';
 
 export type Command = Dir8 | 'confirm' | 'cancel' | 'echo' | 'skip';
@@ -64,7 +64,7 @@ export function findPath(logic: GameLogic, goal: Pos, diagonal = false): Dir8[] 
       if (from.has(k) || !passable(next)) continue;
       if (isDiagonal(dir) && !components(dir).every((part) => passable(stepFrom(cur, part)))) continue;
       const isGoal = samePos(next, goal);
-      if (!isGoal && (map.doors.some((d) => samePos(d.pos, next)) || logic.wouldFire(next))) continue;
+      if (!isGoal && (map.doors.some((d) => onDoor(d, next)) || logic.wouldFire(next))) continue;
       from.set(k, { prev: key(cur), dir });
       if (isGoal) {
         const path: Dir8[] = [];

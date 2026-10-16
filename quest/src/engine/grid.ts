@@ -125,7 +125,12 @@ export function tryMove(map: GameMap, era: Era, from: Pos, dir: Dir8, occupied: 
 }
 
 export function doorAt(map: GameMap, pos: Pos): Door | undefined {
-  return map.doors.find((d) => samePos(d.pos, pos));
+  return map.doors.find((d) => onDoor(d, pos));
+}
+
+/** Whether a tile is part of a door (doors can be two tiles wide). */
+export function onDoor(door: Door, pos: Pos): boolean {
+  return door.tiles.some((t) => samePos(t, pos));
 }
 
 export function triggerAt(map: GameMap, pos: Pos): Trigger | undefined {

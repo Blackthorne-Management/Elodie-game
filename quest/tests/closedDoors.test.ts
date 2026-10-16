@@ -3,7 +3,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { SOURCES } from '../tools/build-maps.ts';
-import { Grid, LEGEND, addClosedDoors } from '../tools/maps/painter.ts';
+import { Grid, LEGEND, addClosedDoors, widenDoors } from '../tools/maps/painter.ts';
 
 describe('grey doors', () => {
   it('a building without a door gets one grey door in the middle of its front, and it is solid', () => {
@@ -35,5 +35,26 @@ describe('grey doors', () => {
       grey += (once.match(/@/g) ?? []).length;
     }
     expect(grey).toBeGreaterThan(10);
+  });
+});
+
+describe('double doors (owner request, Oct 16)', () => {
+  it('every usable door in Zetwal is two tiles wide, and walking into either half goes through', async () => {
+    const { loadMaps } = await import('../tools/sim-setup.ts');
+    const maps = loadMaps();
+    for (const [id, map] of Object.entries(maps)) {
+      if (id.startsWith('test-')) continue;
+      for (const d of map.doors) expect(d.tiles.length, `${id}/${d.id}`).toBe(2);
+    }
+  });
+
+  it('a door widens into the wall beside it, with open ground in front', () => {
+    const g = new Grid(5, 4, '.');
+    g.rect(0, 0, 5, 2, '#').set(2, 1, 'D');
+    const src = { id: 't', present: g, echo: g.clone(), objects: [{ layer: 'doors' as const, name: 'd', x: 2, y: 1, props: { exit: 'down' } }] };
+    expect(widenDoors(src)).toEqual([]);
+    expect(src.objects[0]).toMatchObject({ x: 2, w: 2 });
+    expect(g.get(3, 1)).toBe('D');
+    expect(src.echo.get(3, 1)).toBe('D');
   });
 });
