@@ -24,7 +24,7 @@ def cell(src, cx, foot, lo, hi):
     return s
 for path, dest in zip(sys.argv[1::2], sys.argv[2::2]):
     src = Image.open(path).convert('RGB')
-    st = cell(src, 195, 494, 0, 505); dn = cell(src, 785, 512, 518, src.width)
+    st = cell(src, 195, 494, 0, 505); dn = cell(src, 785, 522, 518, src.width)
     sheet = Image.new('RGBA', (st.width * 2, st.height), (0, 0, 0, 0)); sheet.paste(st, (0, 0), st); sheet.paste(dn, (st.width, 0), dn)
     q = sheet.convert('RGB').quantize(colors=28, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert('RGBA'); q.putalpha(sheet.split()[3]); q.save(dest)
     print(dest, q.size)

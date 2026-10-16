@@ -218,7 +218,7 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
     headgear: 'wrap', headgearColor: C.m!, accessories: ['sash'],
   },
   patricio_old: {
-    skin: C.s!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.r!, trim: C.y!, legs: C.u!, beard: WHITE_HAIR,
+    skin: C.s!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.r!, trim: C.y!, legs: C.u!, beard: C.G!,
     accessories: ['epaulettes', 'cane'],
   },
   yari: {
