@@ -3,8 +3,8 @@
 For the animator. Every shot below says exactly what is on screen, how it moves, how long it lasts, what the
 narrator says and what the music does. The pictures in `ref/` are **layout frames** (where things sit and what
 colour they are), not finished art; the **style references** (the game's own screenshots, sprites and crests)
-show the finished look. Owner approval needed before final animation (STORY.md section 2 is the outline this
-expands).
+show the finished look. **Approved by the owner on Oct 16**; being animated now (STORY.md section 2 is the outline
+this expands).
 
 ![All shots](ref/contact-sheet.png)
 
@@ -277,7 +277,7 @@ bold pixel font, each line appearing letter by letter (2 frames per letter). The
 - Shot 7's title can be left off the video: the game draws its own title screen, and the video can end on black
   after shot 6 (say which you prefer).
 
-## For the owner to approve
+## Approved by the owner (Oct 16)
 
 1. The seven shots and their order.
 2. The narration lines (all four beats of text above).
