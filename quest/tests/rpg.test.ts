@@ -37,6 +37,7 @@ import {
   knownPassives,
 } from '../src/engine/rpg.ts';
 import { rewardText, settleRewards, sideQuestStatus, visibleSteps, type SideQuestDef } from '../src/engine/sideQuests.ts';
+import { NPCS } from '../src/data/npcs.ts';
 import { RPG } from '../src/data/rpg.ts';
 
 const rpg: RpgContent = {
@@ -163,6 +164,11 @@ describe('shops', () => {
 });
 
 describe('the game content', () => {
+  it('the fishmonger runs the fish stall (owner decision, Oct 16)', () => {
+    expect(NPCS.fishmonger!.shop).toBe('zetwal_fish');
+    expect(RPG.shops.zetwal_fish!.stock).toEqual(['pwason_fri', 'lanbi_fritters', 'spiny_lobster']);
+    for (const id of RPG.shops.zetwal_fish!.stock) expect(RPG.items[id]?.kind).toBe('consumable');
+  });
   it('every shop sells real items, every start item exists, and every item has a price unless it is a key item', () => {
     for (const s of Object.values(RPG.shops)) for (const id of s.stock) expect(RPG.items[id], `${s.id}: ${id}`).toBeDefined();
     for (const m of RPG.members) for (const id of Object.values(m.start ?? {})) expect(RPG.items[id!], `${m.id}: ${id}`).toBeDefined();

@@ -80,6 +80,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'kasav', name: 'Kasav', kind: 'consumable', price: 15, heals: 25, text: 'Cassava bread, flat and crisp, with peanut butter. Restores 25 HP.' },
   { id: 'kann', name: 'Cane juice', kind: 'consumable', price: 12, heals: 12, restores: 4, text: 'Sugarcane pressed while you wait. Restores 12 HP and 4 SP.' },
   { id: 'pikliz', name: 'Pikliz', kind: 'consumable', price: 20, restores: 10, text: 'Pickled cabbage and peppers, hot enough to wake the dead. Restores 10 SP.' },
+  // The fish stall in the Iron Market (owner decision, Oct 16).
+  { id: 'pwason_fri', name: 'Fried snapper', kind: 'consumable', price: 35, heals: 50, text: 'Pwason fri: snapper fried whole, with pikliz on the side. Restores 50 HP.' },
+  { id: 'lanbi_fritters', name: 'Conch fritters', kind: 'consumable', price: 30, restores: 15, text: 'Marinad lanbi: conch fritters, crisp and peppery. Restores 15 SP.' },
+  { id: 'spiny_lobster', name: 'Spiny lobster', kind: 'consumable', price: 60, heals: 40, restores: 10, text: 'Grilled this minute, bad attitude and all. Restores 40 HP and 10 SP.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
 
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
@@ -158,6 +162,7 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   // The Iron Market (Oct 15).
   zetwal_produce: { id: 'zetwal_produce', name: 'Produce row', city: 'zetwal', stock: ['mango', 'kasav', 'kann'] },
   zetwal_spices: { id: 'zetwal_spices', name: 'Spice row', city: 'zetwal', stock: ['pikliz', 'akasan'] },
+  zetwal_fish: { id: 'zetwal_fish', name: 'Fish stall', city: 'zetwal', stock: ['pwason_fri', 'lanbi_fritters', 'spiny_lobster'] },
   zetwal_cloth: { id: 'zetwal_cloth', name: 'Cloth row', city: 'zetwal', stock: ['woven_tunic', 'temple_robe'] },
 };
 

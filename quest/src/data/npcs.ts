@@ -64,7 +64,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   produce_seller: { ...n('produce_seller', 'produce_seller', 'Produce seller'), shop: 'zetwal_produce' },
   spice_seller: { ...n('spice_seller', 'spice_seller', 'Spice seller'), shop: 'zetwal_spices' },
   cloth_merchant: { ...n('cloth_merchant', 'cloth_merchant', 'Cloth merchant'), shop: 'zetwal_cloth' },
-  fishmonger: n('fishmonger', 'fishwife', 'Fishmonger'),
+  fishmonger: { ...n('fishmonger', 'fishwife', 'Fishmonger'), shop: 'zetwal_fish' },
   goat_herder: n('goat_herder', 'goat_herder', 'Goat herder'),
   lottery_seller: n('lottery_seller', 'lottery_seller', 'Lottery seller'),
   porter: n('porter', 'porter', 'Porter'),
