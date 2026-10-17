@@ -170,6 +170,21 @@ at checkpoints, Crown banners go up, the caney is the Governor's (a captain belo
 outdoor maps take a dusk wash and play the Crown's march, and the Mountain Path's ambushes stop. The Journal's next
 objective, *Where is Anaco held?* (`story.anaco_found`), is the next build (the occupied city's second half).
 
+**Built Oct 17 (the occupied city, second half up to the blockade):** Gianna walks alone and has no fights (the
+Accord protects the envoy). Marines' barricades close the trails north (to the plaza) and east (to the beach) until
+she shows her envoy papers (`story.papers_checked`). Three people place Anaco: the lamp-oil seller in her doorway
+(four marines and a hammock, round the back of the customs house, and down the stairs), the customs clerk's register
+of detained persons, which the envoy has the right to read under the Accord's "article three" (proposal: a gold
+bribe was planned, but dialogue cannot spend gold yet), and the marine at the caney doors, who gossips. With all
+three, `story.anaco_found`. The healer in the cave asks for fever bark from the tree by the gardens' spring pond;
+Gianna demands the visit from Thorne under the Accord (`story.visit_granted`) and takes the cellar stairs behind
+the clerks (`xaragua-cellar`). Anaco, steadier for the bark, tells her the one gap in the blockade: at the lowest
+tide the sea cave on the Canoe Beach opens to the sea, where his grandmother's people hid their canoes
+(`clue.sea_cave_route`; it ties in with the secret S-XAR). Back in the cave, Yari hears it and plans the escape for
+the next low tide (`story.escape_planned`). Also: the Charter posted over the customs notice, voices behind shutters.
+The Journal's next objective, *Through the blockade* (`story.escaped`), is the next build: the Thorne boss at the
+blockade, Yari's escape, and the voyage home to Zetwal.
+
 **Owner decision (Oct 15), the shape of the chapter:** Xaraguá is first shown at its most beautiful: the normal,
 living city for the first half of the chapter. **Midway, the Crown attacks** and the city is **occupied**: the same
 maps change to their occupied versions (Crown soldiers, checkpoints, curfew, burned stalls, Crown banners on the

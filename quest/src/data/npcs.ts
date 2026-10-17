@@ -166,6 +166,11 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   refugee_fisher: n('refugee_fisher', 'canoe_fisher', 'Fisher'),
   refugee_elder: n('refugee_elder', 'elder_resist', 'Elder'),
   refugee_healer: n('refugee_healer', 'behique', 'Healer'),
+  // The occupied city, second half (Oct 17).
+  checkpoint_marine: n('checkpoint_marine', 'crown_marine', 'Crown marine'),
+  lamp_oil_shutters: n('lamp_oil_shutters', 'lamp_oil_seller', 'Lamp-oil seller'),
+  anaco_cell: n('anaco_cell', 'anaco', 'Cacique Anaco'),
+  cellar_marine: n('cellar_marine', 'crown_marine', 'Crown marine'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

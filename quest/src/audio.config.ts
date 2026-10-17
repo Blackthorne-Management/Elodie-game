@@ -62,6 +62,7 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'xaragua-customs': 'crown_customs',
   'xaragua-cave': 'mountain_path',
   'xaragua-record': 'caney',
+  'xaragua-cellar': 'crown_customs',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */

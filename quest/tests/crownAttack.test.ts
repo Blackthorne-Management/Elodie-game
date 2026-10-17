@@ -75,4 +75,25 @@ describe('the Crown attack (Chapter 2 midpoint)', () => {
     expect(npcsOn('xaragua-caney')).toContain('crown_captain');
     expect(npcsOn('xaragua-caney')).not.toContain('anaco');
   });
+
+  it('the occupied city: Anaco is placed only by all three clues; the cellar opens to the envoy\'s demand; the bark comes first', () => {
+    const sim = playTo('escape-plan');
+    const flags = sim.logic.state.flags;
+    for (const f of ['clue.held_seller', 'clue.held_ledger', 'clue.held_guard', 'story.anaco_found', 'story.visit_granted', 'story.anaco_visited', 'clue.sea_cave_route', 'story.escape_planned']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    // The bark was given to Anaco.
+    expect(flags.get('item.fever_bark')).toBe(0);
+    // The checkpoints lifted once the papers were shown.
+    expect(flags.isSet('story.papers_checked')).toBe(true);
+  });
+
+  it('two clues are not enough, and the cellar door is closed without the Governor\'s word', () => {
+    const sim = playTo('checkpoint');
+    const flags = sim.logic.state.flags;
+    expect(flags.isSet('clue.held_seller') && flags.isSet('clue.held_ledger')).toBe(true);
+    expect(flags.isSet('story.anaco_found')).toBe(false);
+    const door = maps['xaragua-customs']!.doors.find((d) => d.id === 'customs_cellar')!;
+    expect(evaluate(door.if, flags)).toBe(false);
+  });
 });

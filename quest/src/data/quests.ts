@@ -170,7 +170,7 @@ export const ACT2: QuestDef = {
   title: 'Chapter 2: The Charter',
   maps: [
     'xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song',
-    'xaragua-customs', 'xaragua-cave', 'xaragua-record',
+    'xaragua-customs', 'xaragua-cave', 'xaragua-record', 'xaragua-cellar',
   ],
   objectives: [
     {
@@ -291,7 +291,40 @@ export const ACT2: QuestDef = {
       hints: [
         'Someone in the city has seen where they took him.',
         'The marines talk. So do the people they are guarding.',
-        'Walk the occupied city and ask: the customs house, the caney, the harbor.',
+        'Ask the lamp-oil seller in the village, read the clerk\'s register in the customs house, and listen to the marine at the caney doors (show your papers at the checkpoint).',
+      ],
+    },
+    {
+      id: 'visit',
+      title: 'The envoy\'s visit',
+      detail: 'Anaco is in the customs house cellar, with his fever. The healer in the cave wants him to have fever bark. An envoy may visit a prisoner: make Thorne say yes.',
+      done: { flag: 'story.anaco_visited' },
+      hints: [
+        'The healer in the cave knows what his fever needs.',
+        'Fever bark grows on the tree by the spring pond in the cassava gardens. Then ask Thorne, as the envoy.',
+        'Get fever bark from the tree east of the gardens\' pond, ask Thorne for the visit, and take the cellar stairs to Anaco.',
+      ],
+    },
+    {
+      id: 'word',
+      title: 'Word to the cave',
+      detail: 'Anaco told Gianna the one gap in the Crown\'s blockade. Carry it to Yari and the resistance in the petroglyph cave.',
+      done: { flag: 'story.escape_planned' },
+      hints: [
+        'Yari will want to hear every word her father said.',
+        'The resistance is in the petroglyph cave, in the cassava gardens.',
+        'Go back to the petroglyph cave and tell Yari what Anaco said.',
+      ],
+    },
+    {
+      id: 'blockade',
+      title: 'Through the blockade',
+      detail: 'At the lowest tide the sea cave on the Canoe Beach opens to the sea. Get Yari out past the Crown\'s ships.',
+      done: { flag: 'story.escaped' },
+      hints: [
+        'The tide, Gigi. Everything is the tide here.',
+        'The sea cave is at the east end of the Canoe Beach.',
+        'Meet Yari at the sea cave on the Canoe Beach at low tide.',
       ],
     },
   ],
@@ -362,6 +395,18 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'story.refuge',
     title: 'The occupied city',
     text: 'Curfew at dark. Any Yaguana on the streets goes to the ships. Yari and Anissa hide in the petroglyph cave with the resistance. Under the Accord, no Crown hand may touch Zetwal\'s envoy: Gianna can still walk the city.',
+  },
+  {
+    id: 'anaco_held',
+    when: 'story.anaco_found',
+    title: 'Where Anaco is held',
+    text: 'In the cellar of the Crown Customs House: carried in by the back after midnight (the lamp-oil seller), "one guest, native, elderly" in the register (the clerk), and the marines\' talk at the caney.',
+  },
+  {
+    id: 'sea_cave_route',
+    when: 'clue.sea_cave_route',
+    title: 'The gap in the blockade',
+    text: 'Anaco: three ships across the harbor mouth and a chain between the two nearest. But at the lowest tide the sea cave on the Canoe Beach opens to the sea, where the canoes slept in his grandmother\'s time.',
   },
   {
     id: 'first_oath',

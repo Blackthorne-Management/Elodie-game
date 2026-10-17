@@ -62,6 +62,14 @@ const ITEM_LIST: ItemDef[] = [
     text: 'A clay lamp with a cotton wick and a jar of the oil that comes by canoe after dark. Enough light for a cave.',
     showcase: 'story',
   },
+  // The occupied city: the healer's medicine for Anaco's fever, from the tree by the gardens' spring.
+  {
+    id: 'fever_bark',
+    name: 'Fever bark',
+    kind: 'key',
+    price: 0,
+    text: 'Strips of bitter bark from the tree by the spring in the cassava gardens. The healer boils it for the cacique\'s fever.',
+  },
   // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital: the
   // legendary relics, worn in their own slot (owner decision, Oct 15).
   {

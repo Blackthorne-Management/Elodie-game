@@ -11,8 +11,8 @@ import type { EncounterTable } from '../engine/content.ts';
 export const LATER_STORY_FLAGS: readonly string[] = [
   /** The party returns to Zetwal later in the story: the Cane Road's ambushes begin. */
   'story.zetwal_return',
-  /** Chapter 2, the occupied city: Gianna finds where Anaco is held (the next build). */
-  'story.anaco_found',
+  /** Chapter 2: Yari slips the harbor blockade by the sea cave (the next build: the Thorne boss and the escape). */
+  'story.escaped',
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {

@@ -28,6 +28,8 @@ const FLOWERS = 'ǎ';
  */
 const PEACE = '!story.crown_attack';
 const WAR = 'story.crown_attack';
+/** The marines' checkpoints stand from the morning after the attack until the envoy shows her papers. */
+const CHECKPOINTS = 'story.refuge, !story.papers_checked';
 
 /** A Crown banner raised over the occupied city. */
 function crownBanner(name: string, x: number, y: number): ObjSpec {
@@ -152,6 +154,14 @@ export function xaraguaVillage(): MapSource {
     npc('patrol_sergeant', 8, 15, 'up', { if: 'story.anaco_taken, !encounter.xaragua_story.patrol.won' }),
     trigger('attack_village', 21, 1, { dialogue: 'attack_village', flag: 'story.attack_village_seen', once: true, onEnter: true, if: 'story.anaco_taken' }),
     crownBanner('crown_banner_village', 28, 14),
+    // The occupied city (second half): checkpoints on the trails north and east, lifted once the envoy has shown
+    // her papers; the lamp-oil seller in her doorway; voices behind shutters; the Charter posted.
+    obj('checkpoint_north', 21, 3, { dialogue: 'checkpoint', kind: 'barricade', solid: true, era: 'present', if: CHECKPOINTS }, 2, 1),
+    npc('checkpoint_marine', 23, 3, 'left', { if: CHECKPOINTS }),
+    obj('checkpoint_east', 41, 15, { dialogue: 'checkpoint', kind: 'barricade', solid: true, era: 'present', if: CHECKPOINTS }, 1, 2),
+    npc('lamp_oil_shutters', 23, 10, 'right', { if: 'story.refuge' }),
+    obj('shutters_weaver', 18, 8, { dialogue: 'shutters_weaver', era: 'present', if: 'story.refuge' }),
+    obj('shutters_family', 9, 3, { dialogue: 'shutters_family', era: 'present', if: 'story.refuge' }),
     crownBanner('crown_banner_pier', 20, 18),
 
     { layer: 'doors', name: 'village_plaza', x: 21, y: 0, w: 2, props: { target: 'plaza_village', map: 'xaragua-plaza', exit: 'down' } },
@@ -336,6 +346,8 @@ export function xaraguaConuco(): MapSource {
     npc('cassava_farmer', 20, 4, 'up', { if: PEACE }),
     npc('cassava_farmer_2', 11, 5, 'right', { if: PEACE }),
     npc('conuco_kid', 16, 14, 'down', { if: PEACE }),
+    // The occupied city: the fever-bark tree by the spring pond (the healer asks for its bark for Anaco).
+    obj('fever_bark_tree', 29, 18, { dialogue: 'fever_bark_tree', kind: 'ceiba', solid: true, era: 'present' }),
 
     { layer: 'doors', name: 'conuco_village', x: W - 1, y: 9, h: 2, props: { target: 'village_conuco', map: 'xaragua-village', exit: 'left' } },
     { layer: 'doors', name: 'conuco_mountain', x: 6, y: 0, w: 2, props: { target: 'mountain_conuco', map: 'xaragua-mountain', exit: 'down' } },
@@ -514,6 +526,8 @@ export function xaraguaCustoms(): MapSource {
   const g = new Grid(W, H, 'o');
   g.rect(0, 0, W, 1, '#').rect(0, 0, 1, H, '#').rect(W - 1, 0, 1, H, '#').rect(0, H - 1, W, 1, '#');
   g.set(8, H - 1, 'D');
+  // The cellar stairs, behind the clerks (where the Crown keeps its prisoners).
+  g.set(3, 0, 'D');
 
   // Thorne's office (the boss arena later): the clerks' desks, the Crown's flag, strongboxes, a bench.
   g.rect(3, 3, 4, 1, '$').set(1, 1, '<').set(16, 1, '<');
@@ -526,6 +540,13 @@ export function xaraguaCustoms(): MapSource {
     npc('thorne', 10, 3, 'down', { if: 'story.council_defied' }),
     npc('customs_marine', 12, 5, 'left'),
     { layer: 'doors', name: 'customs_out', x: 8, y: H - 1, props: { target: 'village_customs', map: 'xaragua-village', exit: 'up' } },
+    {
+      layer: 'doors',
+      name: 'customs_cellar',
+      x: 3,
+      y: 0,
+      props: { target: 'cellar_out', map: 'xaragua-cellar', exit: 'down', if: 'story.visit_granted', closed: 'cellar_closed' },
+    },
     { layer: 'spawns', name: 'customs', x: 8, y: H - 3, props: { facing: 'up', era: 'present' } },
   ];
   return { id: 'xaragua-customs', present: g, echo: g.clone(), objects, interior: true };
@@ -628,6 +649,26 @@ export function xaraguaRecord(): MapSource {
   return { id: 'xaragua-record', present: g, echo: g.clone(), objects, interior: true };
 }
 
+/** The customs house cellar, where the Crown holds Cacique Anaco (the occupied city). */
+export function xaraguaCellar(): MapSource {
+  const W = 14;
+  const H = 9;
+  const g = new Grid(W, H, 'o');
+  g.rect(0, 0, W, 1, '#').rect(0, 0, 1, H, '#').rect(W - 1, 0, 1, H, '#').rect(0, H - 1, W, 1, '#');
+  g.set(6, H - 1, 'D');
+  // Crates of Crown stores, a bed for the prisoner, a bench for the guard.
+  put(g, '>', [[1, 1], [2, 1], [11, 1], [12, 1], [12, 2]]);
+  g.set(5, 1, 'd').set(10, 6, '+');
+
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'cellar_out', x: 6, y: H - 1, props: { target: 'customs_cellar', map: 'xaragua-customs', exit: 'up' } },
+    { layer: 'spawns', name: 'cellar', x: 6, y: H - 3, props: { facing: 'up', era: 'present' } },
+    npc('anaco_cell', 6, 2, 'down', { if: '!story.escaped' }),
+    npc('cellar_marine', 10, 5, 'left'),
+  ];
+  return { id: 'xaragua-cellar', present: g, echo: g.clone(), objects, interior: true };
+}
+
 export const XARAGUA_SOURCES: readonly (() => MapSource)[] = [
   xaraguaVillage,
   xaraguaPlaza,
@@ -640,4 +681,5 @@ export const XARAGUA_SOURCES: readonly (() => MapSource)[] = [
   xaraguaCustoms,
   xaraguaCave,
   xaraguaRecord,
+  xaraguaCellar,
 ];

@@ -831,6 +831,8 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_taken'] === true && s.flags['story.patrol_beaten'] === true, 'the Crown attack: the caney fight and the patrol fight were won in the browser, and Anaco was taken');
   check(s.flags['story.refuge'] === true && s.flags['story.yari_hidden'] === true && s.mapId === 'xaragua-cave', 'the refuge: Yari and Anissa hide in the cave, Gianna walks on alone');
   check(s.follower === null, 'Anissa no longer follows Gianna in the occupied city');
+  check(s.flags['story.papers_checked'] === true && s.flags['story.anaco_found'] === true, 'the occupied city: papers shown at the checkpoint, and the three clues place Anaco in the customs cellar');
+  check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true, 'the envoy visited Anaco with the fever bark, and carried the escape plan to the cave');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -934,7 +936,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'xaragua-cave' && back.flags['act1.complete'] === true && back.flags['story.refuge'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 under way after a reload');
+  check(back.mapId === 'xaragua-cave' && back.flags['act1.complete'] === true && back.flags['story.escape_planned'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 under way after a reload');
   await ctx.close();
   return shots;
 }

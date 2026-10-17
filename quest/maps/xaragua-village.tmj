@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 29,
+  "nextobjectid": 35,
   "layers": [
     {
       "id": 1,
@@ -634,6 +634,62 @@
         },
         {
           "id": 12,
+          "name": "checkpoint_marine",
+          "type": "npc",
+          "x": 368,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refuge, !story.papers_checked"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "checkpoint_marine"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "lamp_oil_shutters",
+          "type": "npc",
+          "x": 368,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refuge"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "lamp_oil_shutters"
+            }
+          ]
+        },
+        {
+          "id": 14,
           "name": "marine_sergeant",
           "type": "npc",
           "x": 336,
@@ -661,7 +717,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 15,
           "name": "pier_marine_a",
           "type": "npc",
           "x": 352,
@@ -689,7 +745,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 16,
           "name": "pier_marine_b",
           "type": "npc",
           "x": 336,
@@ -729,7 +785,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 15,
+          "id": 17,
           "name": "village_plaza",
           "type": "door",
           "x": 336,
@@ -757,7 +813,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 18,
           "name": "village_beach",
           "type": "door",
           "x": 688,
@@ -785,7 +841,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 19,
           "name": "village_conuco",
           "type": "door",
           "x": 0,
@@ -813,7 +869,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 20,
           "name": "village_customs",
           "type": "door",
           "x": 464,
@@ -853,7 +909,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 19,
+          "id": 21,
           "name": "attack_village",
           "type": "trigger",
           "x": 336,
@@ -891,7 +947,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 22,
           "name": "xaragua_arrival",
           "type": "trigger",
           "x": 336,
@@ -936,7 +992,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 23,
           "name": "pier",
           "type": "spawn",
           "x": 336,
@@ -993,7 +1049,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 24,
           "name": "crown_banner_village",
           "type": "puzzle_object",
           "x": 448,
@@ -1026,7 +1082,139 @@
           ]
         },
         {
-          "id": 23,
+          "id": 25,
+          "name": "checkpoint_north",
+          "type": "puzzle_object",
+          "x": 336,
+          "y": 48,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "checkpoint"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refuge, !story.papers_checked"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "barricade"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "checkpoint_east",
+          "type": "puzzle_object",
+          "x": 656,
+          "y": 240,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "checkpoint"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refuge, !story.papers_checked"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "barricade"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "shutters_weaver",
+          "type": "puzzle_object",
+          "x": 288,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shutters_weaver"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refuge"
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "shutters_family",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shutters_family"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refuge"
+            }
+          ]
+        },
+        {
+          "id": 29,
           "name": "crown_banner_pier",
           "type": "puzzle_object",
           "x": 320,
@@ -1059,7 +1247,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 30,
           "name": "xaragua_customs_sign",
           "type": "puzzle_object",
           "x": 512,
@@ -1082,7 +1270,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 31,
           "name": "pier_sign",
           "type": "puzzle_object",
           "x": 384,
@@ -1105,7 +1293,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 32,
           "name": "crown_ship_west",
           "type": "puzzle_object",
           "x": 32,
@@ -1133,7 +1321,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 33,
           "name": "crown_ship_east",
           "type": "puzzle_object",
           "x": 464,
@@ -1161,7 +1349,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 34,
           "name": "crown_ship_far",
           "type": "puzzle_object",
           "x": 576,

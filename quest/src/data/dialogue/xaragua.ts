@@ -35,6 +35,21 @@ const BAR2 = barText(AREITO_BARS[1]!);
 const BAR3 = barText(AREITO_BARS[2]!);
 const PIER_WON = 'encounter.xaragua_story.pier.won';
 
+/** The three things that place Anaco in the customs house cellar (the occupied city). */
+const HELD_CLUES = ['clue.held_seller', 'clue.held_ledger', 'clue.held_guard'] as const;
+
+/** After a clue: once all three are known (and not yet put together), Gianna puts them together. */
+const HELD_CHECK = { if: { all: [...HELD_CLUES.map((flag) => ({ flag })), { notFlag: 'story.anaco_found' }] }, to: 'found' };
+
+const HELD_FOUND: DialogueNode = {
+  set: { 'story.anaco_found': true },
+  lines: [
+    say(G, '(Carried in by the back after midnight. "One guest, native, elderly" in the register.)'),
+    say(G, '(And the marines joke about the Governor\'s cellar.)'),
+    say(G, '(He is under the customs house. In the cellar, under Thorne\'s own floor.)'),
+  ],
+};
+
 export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   // ---- Chapter 2, The Charter: the story (first half, Oct 16) -------------------------------------
   // The ferry lands: marines are shaking down the fishers at the end of the pier. They start the fight
@@ -146,8 +161,26 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     },
     again: {
       lines: [],
-      next: [{ if: { flag: 'story.crown_attack' }, to: 'occupied' }, { to: 'still' }],
+      next: [
+        { if: { all: [{ flag: 'story.anaco_found' }, { notFlag: 'story.visit_granted' }] }, to: 'demand' },
+        { if: { flag: 'story.visit_granted' }, to: 'granted' },
+        { if: { flag: 'story.crown_attack' }, to: 'occupied' },
+        { to: 'still' },
+      ],
     },
+    // The occupied city: the envoy demands to see the prisoner, and the Accord leaves Thorne no choice.
+    demand: {
+      set: { 'story.visit_granted': true },
+      lines: [
+        say(G, 'Governor. You are holding Cacique Anaco in your cellar.'),
+        say('thorne', 'I am keeping him safe, Miss Limyè. The island is full of dangerous people.'),
+        say(G, 'Then you will not mind if I see him. The Accord: an envoy may visit any person held by a signatory house.'),
+        say('thorne', '...You have been reading.'),
+        say(G, 'I was raised in an archive.'),
+        say('thorne', 'Ten minutes. The marine at the stairs will count them. Do give the old man my regards.'),
+      ],
+    },
+    granted: { lines: [say('thorne', 'The stairs are behind the clerks, Miss Limyè. Ten minutes.')] },
     still: { lines: [say('thorne', 'Still here, Miss Limyè? The ferry leaves every morning. I can have a cabin made ready.')] },
     occupied: {
       lines: [
@@ -252,9 +285,33 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('resistance_leader_talk', [
     say('camp_leader', 'Walk like an envoy. Slow, chin up, bored. Marines never stop anyone who looks bored.'),
   ]),
-  simple('yari_hidden_talk', [
-    say(Y, 'I counted the marines from the cave mouth. Forty, at least. Find him, Gianna. Then we will count them again.'),
-  ]),
+  script('yari_hidden_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'story.escape_planned' }, to: 'planned' },
+        { if: { flag: 'story.anaco_visited' }, to: 'plan' },
+        { to: 'waiting' },
+      ],
+    },
+    waiting: { lines: [say(Y, 'I counted the marines from the cave mouth. Forty, at least. Find him, Gianna. Then we will count them again.')] },
+    // Word to the cave: the escape plan (the boss and the escape are the next build).
+    plan: {
+      set: { 'story.escape_planned': true },
+      lines: [
+        say(Y, 'You saw him? Is he...'),
+        say(G, 'Alive. The bark helped. He watched the ships from his window and told me the one way out.'),
+        say(G, 'At the lowest tide, the sea cave on the Canoe Beach opens to the sea. Your great-grandmother hid canoes there.'),
+        say(Y, 'Then we take him out the same way.'),
+        say(G, 'He says no. He would sink the canoe and bring the Governor after you. He said to tell you not to argue.'),
+        say(Y, '...He knew I would.'),
+        say('camp_leader', 'The next low tide is in two nights. Every boat Thorne has will be watching the harbor mouth, not the cliffs.'),
+        say(A, 'And I hold the lamp at the cave mouth so you can find your way back.'),
+        say(Y, 'Two nights. Then I go, and I come back with help. Zetwal\'s help. Gianna\'s grandfather owes us an oath.'),
+      ],
+    },
+    planned: { lines: [say(Y, 'Two nights. The sea cave, at the lowest tide. Then Zetwal.')] },
+  }),
   simple('anissa_hidden_talk', [
     say(A, 'I\'m keeping the lamp lit. Come back before it goes out, Gigi. Promise.'),
   ]),
@@ -264,9 +321,26 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('refugee_elder_talk', [
     say('elder_resist', 'We swore on the stones. The Crown read us a paper. We will see which lasts longer.'),
   ]),
-  simple('refugee_healer_talk', [
-    say('behique', 'The cacique\'s fever comes with the tide. Wherever they keep him, he needs his medicine.'),
-  ]),
+  script('refugee_healer_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'story.anaco_visited' }, to: 'after' },
+        { if: { flag: 'item.fever_bark' }, to: 'have' },
+        { to: 'ask' },
+      ],
+    },
+    ask: {
+      set: { 'story.bark_asked': true },
+      lines: [
+        say('behique', 'The cacique\'s fever comes with the tide. Wherever they keep him, he needs his medicine.'),
+        say('behique', 'Fever bark: the tall tree by the spring pond in the gardens, east of the water. Thin strips, from the sunny side.'),
+        say('behique', 'Crush it into his water. You can walk to him. I cannot.'),
+      ],
+    },
+    have: { lines: [say('behique', 'That is the bark. Crush it into his water, and make him drink all of it. He will complain. Good.')] },
+    after: { lines: [say('behique', 'If he complained, he is mending. Thank you, envoy.')] },
+  }),
   // The occupied city.
   simple('crown_captain_talk', [
     say('crown_captain', 'The envoy\'s daughter. You may come and go, by the Accord. The cacique\'s house is the Governor\'s house now.'),
@@ -283,8 +357,132 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('occ_marine_beach_talk', [
     say('crown_musketeer', 'The market? It caught fire. Fires happen. Move along, miss.'),
   ]),
-  simple('occ_marine_caney_talk', [
-    say('crown_marine', 'The Governor\'s caney, miss. Mind the runner. The captain likes it straight.'),
+  script('occ_marine_caney_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'clue.held_guard' }, to: 'again' },
+        { if: { flag: 'story.refuge' }, to: 'gossip' },
+        { to: 'plain' },
+      ],
+    },
+    plain: { lines: [say('crown_marine', 'The Governor\'s caney, miss. Mind the runner. The captain likes it straight.')] },
+    gossip: {
+      set: { 'clue.held_guard': true },
+      lines: [
+        say('crown_marine', 'The Governor\'s caney, miss. Mind the runner. The captain likes it straight.'),
+        say(G, 'And the man whose caney it was?'),
+        say('crown_marine', 'The old chief? Snug in the Governor\'s cellar, under the customs house. Better quarters than mine.'),
+        say('crown_marine', '...I did not say that. You are very easy to talk to, miss.'),
+      ],
+      next: [HELD_CHECK],
+    },
+    again: { lines: [say('crown_marine', 'I have said too much already, miss. That is what my sergeant says too.')] },
+    found: HELD_FOUND,
+  }),
+  // The occupied city, second half: the checkpoints, the shutters, the cellar.
+  script('checkpoint', {
+    start: { lines: [], next: [{ if: { flag: 'item.envoy_papers' }, to: 'papers' }, { to: 'none' }] },
+    papers: {
+      lines: [say('crown_marine', 'Halt. This trail is closed by order of the Governor. Nobody passes without papers.')],
+      choices: [
+        { text: 'Show the envoy papers.', next: 'shown', set: { 'story.papers_checked': true } },
+        { text: 'Not now.' },
+      ],
+    },
+    shown: {
+      lines: [
+        nar('The marine reads the seal twice, then the signature, then the seal again.'),
+        say('crown_marine', 'Envoy of Kay Soley. Under the Accord. ...Pass, miss. I will tell the other posts. Nobody stops the envoy.'),
+      ],
+    },
+    none: { lines: [say('crown_marine', 'No papers, no passing. Not even for a polite young lady.')] },
+  }),
+  script('checkpoint_marine_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.papers_checked' }, to: 'passed' }, { to: 'closed' }] },
+    closed: { lines: [say('crown_marine', 'The trail is closed. Show your papers at the barricade, or turn round.')] },
+    passed: { lines: [say('crown_marine', 'The envoy. Go where you like, miss. I am told I never saw you.')] },
+  }),
+  script('lamp_oil_shutters_talk', {
+    start: { lines: [], next: [{ if: { flag: 'clue.held_seller' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      set: { 'clue.held_seller': true },
+      lines: [
+        nar('The lamp-oil seller stands in her doorway, half behind the shutter.'),
+        say('lamp_oil_seller', 'Envoy. They have not touched you. Good. Somebody has to walk about.'),
+        say(G, 'Did you see where they took the cacique?'),
+        say('lamp_oil_seller', 'After midnight, four marines and a hammock. Not to the ships. Round the back of the customs house.'),
+        say('lamp_oil_seller', 'And down. You could hear them on the stairs. Old stairs. They complain.'),
+      ],
+      next: [HELD_CHECK],
+    },
+    again: { lines: [say('lamp_oil_seller', 'The back of the customs house, and down. My lamp is lit for him.')] },
+    found: HELD_FOUND,
+  }),
+  simple('shutters_weaver', [
+    nar('A voice behind the shutter: the weaver.'),
+    say('weaver', 'The marine wanted my hammock again. I gave it to him. I did not say which end holds.'),
+  ]),
+  simple('shutters_family', [
+    nar('Behind the shutter, a child is counting Crown boots out loud, and a mother is hushing him.'),
+    say('fisher_boy', 'Forty-one... forty-two... Mama, that one has holes in his socks.'),
+  ]),
+  simple('cellar_closed', [
+    say('crown_marine', 'The cellar? Nobody goes down without the Governor\'s say-so, miss. Not even envoys.'),
+  ]),
+  script('fever_bark_tree', {
+    start: {
+      lines: [],
+      next: [
+        { if: { any: [{ flag: 'item.fever_bark' }, { flag: 'story.anaco_visited' }] }, to: 'plain' },
+        { if: { flag: 'story.bark_asked' }, to: 'take' },
+        { to: 'plain' },
+      ],
+    },
+    plain: { lines: [nar('A tall tree by the spring, its grey bark scored where people have cut strips from it for generations.')] },
+    take: {
+      set: { 'item.fever_bark': 1 },
+      lines: [
+        nar('A tall tree by the spring, its grey bark scored where people have cut strips from it for generations.'),
+        nar('You cut three strips the way the healer showed you: thin, from the sunny side.'),
+        nar('(Gianna received the fever bark.)'),
+      ],
+    },
+  }),
+  // The cacique in the cellar: the medicine, and the one gap in the blockade.
+  script('anaco_cell_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'story.anaco_visited' }, to: 'after' },
+        { if: { flag: 'item.fever_bark' }, to: 'visit' },
+        { to: 'fever' },
+      ],
+    },
+    fever: {
+      lines: [
+        nar('The cacique lies on a cot under a high barred window, shivering. He knows you, then he does not, then he does.'),
+        say('anaco', 'Envoy... the healer. Ask the healer. My head is full of tide.'),
+      ],
+    },
+    visit: {
+      set: { 'story.anaco_visited': true, 'clue.sea_cave_route': true, 'item.fever_bark': 0 },
+      lines: [
+        nar('The cacique lies on a cot under a high barred window, shivering. You crush the bark into his water cup.'),
+        say('anaco', 'Bitter. Good. Bitter is how you know it works.'),
+        nar('After a while his hands are steadier. He pulls himself up on one elbow.'),
+        say('anaco', 'Listen, envoy. I watched the ships from that window all day. Three across the harbor mouth. A chain between the two nearest.'),
+        say('anaco', 'Nothing gets out that way. But at the lowest tide, the sea cave on the Canoe Beach opens to the open sea.'),
+        say('anaco', 'My grandmother\'s people hid their canoes in there when the Crown first came. The Crown never found them.'),
+        say(G, 'Then Yari goes out through the sea cave.'),
+        say('anaco', 'Yari goes. Not me. I would sink the canoe, and the Governor would come looking. Tell her that, so she does not argue.'),
+        say('anaco', 'She will argue anyway. Go.'),
+      ],
+    },
+    after: { lines: [say('anaco', 'The sea cave. Lowest tide. And tell her I said not to argue.')] },
+  }),
+  simple('cellar_marine_talk', [
+    say('crown_marine', 'Ten minutes, miss. I am counting. I am on six. ...Seven.'),
   ]),
 
   // The Harbor Village (the hub).
@@ -342,10 +540,22 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
   }),
-  simple('xaragua_customs_sign', [
-    nar('CUSTOMS OF HIS MAJESTY\'S CROWN. ALL CATCH TO BE DECLARED. ALL DECLARATIONS TO BE TAXED.'),
-    nar('Someone has carved a small fish underneath. It is laughing.'),
-  ]),
+  script('xaragua_customs_sign', {
+    start: { lines: [], next: [{ if: { flag: 'story.crown_attack' }, to: 'charter' }, { to: 'customs' }] },
+    customs: {
+      lines: [
+        nar('CUSTOMS OF HIS MAJESTY\'S CROWN. ALL CATCH TO BE DECLARED. ALL DECLARATIONS TO BE TAXED.'),
+        nar('Someone has carved a small fish underneath. It is laughing.'),
+      ],
+    },
+    // The occupied city: the Charter, posted.
+    charter: {
+      lines: [
+        nar('Pasted over the notice: THE CHARTER OF PROTECTION. THE HARBOR IS TAKEN INTO THE CROWN\'S CARE, PER THE SEVENTH CLAUSE.'),
+        nar('CURFEW AT DARK. NATIVES FOUND ABROAD WILL BE HELD. Underneath, the laughing fish has been carved again, fresher.'),
+      ],
+    },
+  }),
   simple('pier_sign', [nar('Ferry coach to Pòdlimyè: when the sea allows. Canoes: when the canoe allows.')]),
 
   // The Areíto Plaza and the Caney terrace.
@@ -710,9 +920,30 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   ]),
 
   // The Crown Customs House.
-  simple('crown_clerk_talk', [
-    say('crown_clerk', 'Name, cargo, purpose of visit. The Governor reads every form. Personally. Twice.'),
-  ]),
+  script('crown_clerk_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'clue.held_ledger' }, to: 'again' },
+        { if: { flag: 'story.refuge' }, to: 'register' },
+        { to: 'forms' },
+      ],
+    },
+    forms: { lines: [say('crown_clerk', 'Name, cargo, purpose of visit. The Governor reads every form. Personally. Twice.')] },
+    // The occupied city: the envoy's right to read the register of detained persons.
+    register: {
+      set: { 'clue.held_ledger': true },
+      lines: [
+        say(G, 'The register of detained persons, please. Under the Accord, Zetwal\'s envoy may read it.'),
+        say('crown_clerk', 'The... yes. Article three. I did not think anyone had read article three.'),
+        nar('He turns the heavy book round. The newest line, in his neat hand: "Cellar. One guest, native, elderly. Fever."'),
+        say('crown_clerk', 'You did not see that. Officially, I mean. Unofficially, he asks for water a great deal.'),
+      ],
+      next: [HELD_CHECK],
+    },
+    again: { lines: [say('crown_clerk', 'Article three. I have underlined it now. In pencil.')] },
+    found: HELD_FOUND,
+  }),
   simple('customs_marine_talk', [
     say('crown_marine', 'The Governor is out. If he were in, I would say he is out.'),
   ]),
