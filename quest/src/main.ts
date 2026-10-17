@@ -17,7 +17,7 @@ import { loadRawMaps } from './data/maps.ts';
 import { checkDialogue } from './engine/dialogue.ts';
 import { GameLogic } from './engine/game.ts';
 import { HintTracker } from './engine/hints.ts';
-import { installGate } from './engine/install.ts';
+import { PLAY_IN_BROWSER_KEY, installGate } from './engine/install.ts';
 import { INTRO_SEEN_KEY, introOpening } from './engine/intro.ts';
 import { validateMaps } from './engine/mapValidation.ts';
 import { fitZoom } from './engine/scaling.ts';
@@ -49,13 +49,21 @@ function fail(message: string): never {
   throw new Error(message);
 }
 
-// A phone or tablet in the browser installs the quest first (owner decision, Oct 16); the game never starts.
+// A phone or tablet in the browser is shown how to install the quest first (owner decision, Oct 16), with
+// "Play here anyway" under the steps (Oct 17).
 const gate = installGate({
   userAgent: navigator.userAgent,
   maxTouchPoints: navigator.maxTouchPoints ?? 0,
   standalone: isStandalone(),
   param: new URLSearchParams(location.search).get('install'),
   dev: import.meta.env.DEV,
+  playInBrowser: (() => {
+    try {
+      return localStorage.getItem(PLAY_IN_BROWSER_KEY) === '1';
+    } catch {
+      return false;
+    }
+  })(),
 });
 if (gate !== 'play') {
   mountInstallScreen(gate);

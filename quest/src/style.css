@@ -444,7 +444,7 @@ body.standalone .fs-button { display: none; }
   font: 700 16px 'Atkinson Hyperlegible', system-ui, sans-serif;
 }
 
-/* The install screen (ui/installScreen.ts): phones play from the home screen. Readable at 390 px. */
+/* The install screen (ui/installScreen.ts): phones are shown how to install first. Readable at 390 px. */
 body.installing #game,
 body.installing .rotate-hint { display: none; }
 .install-screen {
@@ -486,3 +486,16 @@ body.installing .rotate-hint { display: none; }
 }
 .install-steps li + li { margin-top: 10px; }
 .install-note { margin-top: 20px; font-size: 15px; color: #b8aec8; }
+.install-anyway {
+  display: block;
+  min-height: 48px;
+  width: 100%;
+  margin-top: 20px;
+  border: 1px solid #f2c14e;
+  border-radius: 10px;
+  background: transparent;
+  color: #f2c14e;
+  font: inherit;
+  font-weight: 700;
+}
+.install-anyway + .install-note { margin-top: 8px; }

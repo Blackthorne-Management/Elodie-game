@@ -65,7 +65,7 @@ export type Effect =
   | { kind: 'card'; card: CardDef }
   /** Back from the memory with anchors newly set: these present objects changed (the scene makes them glow). */
   | { kind: 'changed'; objects: string[]; flags: string[] }
-  /** An ambush in a wild section (the scene flashes; the fight follows as a dialogue until Phase 3). */
+  /** An ambush in a wild section (the scene flashes; a group with `enemies` then fights a real battle). */
   | { kind: 'encounter'; table: string; group: string }
   /** A vendor's greeting ended: open their shop. */
   | { kind: 'shop'; shop: string }
@@ -229,8 +229,8 @@ export class GameLogic {
 
   /**
    * A step in a wild zone: after ENCOUNTER_GRACE_STEPS safe steps, each step has an
-   * ENCOUNTER_CHANCE_PER_STEP chance of an ambush from the zone's table (weighted). Until Phase 3
-   * battles exist, the fight is a short scene: fight (always won) or run.
+   * ENCOUNTER_CHANCE_PER_STEP chance of an ambush from the zone's table (weighted). A group with
+   * `enemies` is a real battle; one without falls back to the text stand-in (encounterScript).
    */
   private rollEncounter(pos: Pos): Effect[] {
     const zone = this.encounterZoneAt(pos);
@@ -574,8 +574,8 @@ function pickGroup(table: EncounterTable, rng: Rng): EncounterGroup {
 export { encounterFlag };
 
 /**
- * The stand-in for a fight until Phase 3 battles exist: the foes appear, Fight always wins, Run
- * always escapes. Both outcomes are remembered as flags so later scenes (and the battle system) can
+ * The text stand-in for an ambush group with no `enemies` (every group a map rolls today has them, and
+ * fights a real battle): the foes appear, Fight always wins, Run always escapes. Both outcomes are remembered as flags so later scenes (and the battle system) can
  * read them.
  */
 export function encounterScript(table: EncounterTable, group: EncounterGroup): DialogueScript {

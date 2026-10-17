@@ -8,7 +8,7 @@ const WINDOWS = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (K
 
 const env = (over: Partial<InstallEnv>): InstallEnv => ({ userAgent: IPHONE, maxTouchPoints: 5, standalone: false, param: null, dev: false, ...over });
 
-describe('phones play only from the home screen (owner decision, Oct 16)', () => {
+describe('phones are shown how to install first (owner decisions, Oct 16 and 17)', () => {
   it('a phone or tablet in the browser gets the install steps for its kind', () => {
     expect(installGate(env({}))).toBe('ios');
     expect(installGate(env({ userAgent: IPAD }))).toBe('ios');
@@ -32,5 +32,11 @@ describe('phones play only from the home screen (owner decision, Oct 16)', () =>
     expect(installGate(env({ param: '0' }))).toBe('play');
     expect(installGate(env({ param: '1', userAgent: WINDOWS, maxTouchPoints: 0 }))).toBe('other');
     expect(installGate(env({ param: '1', dev: true }))).toBe('ios');
+  });
+
+  it('"Play here anyway" (owner decision, Oct 17) plays in the browser from then on; ?install=1 still shows the steps', () => {
+    expect(installGate(env({ playInBrowser: true }))).toBe('play');
+    expect(installGate(env({ userAgent: ANDROID, playInBrowser: true }))).toBe('play');
+    expect(installGate(env({ playInBrowser: true, param: '1' }))).toBe('ios');
   });
 });

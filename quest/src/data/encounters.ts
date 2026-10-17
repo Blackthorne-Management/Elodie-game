@@ -1,12 +1,11 @@
-// Random encounters in each capital's wild section (map layer `encounters`, property `table`). Until
-// Phase 3 battles exist, a fight is a short scene (engine/game.ts encounterScript): Fight always wins,
-// Run always escapes. `foes` name who the battle will field.
+// Random encounters in each capital's wild section (map layer `encounters`, property `table`). A group
+// with `enemies` is a real battle (engine/game.ts rollEncounter); `foes` name them for the Foes page.
 
 import type { EncounterTable } from '../engine/content.ts';
 
 /**
- * Story flags that chapters not built yet will set (owner decision, Oct 14: no fights in Chapter 1;
- * the wild sections turn violent when the story brings the party back). Maps may read them already.
+ * Story flags that chapters not built yet will set (owner decision, Oct 14: Chapter 1's only fight is the
+ * scripted boar; the wild sections turn violent when the story brings the party back). Maps may read them.
  */
 export const LATER_STORY_FLAGS: readonly string[] = [];
 

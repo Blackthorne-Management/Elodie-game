@@ -2,7 +2,7 @@
 // road, the burned sugar mill, a smugglers' cache and the mangrove shore. Past the first stretch by
 // the gate, ambushes come out of the cane (map layer `encounters`, table `cane_road` in
 // data/encounters.ts): bandits, smugglers and Quiet Crown zealots, but only when the story brings the
-// party back to Zetwal (`story.zetwal_return`); Chapter 1 has no fights. The Echo is the Crown's
+// party back to Zetwal (`story.zetwal_return`); in Chapter 1 the only fight is the scripted boar. The Echo is the Crown's
 // plantation fifty years ago, where the side quest A Name in the Cane finds Rose-Aimée.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
@@ -50,7 +50,7 @@ export function zetwalRoad(): MapSource {
     // The first battle (owner decision, Oct 15): where the road meets the cane, a boar charges out.
     // It fires every time until the boar is beaten (a reload mid-fight brings it back). The line runs the
     // whole height of the map (owner report, Oct 16: walking along the grass missed it).
-    trigger('boar_ambush', 9, 1, { dialogue: 'boar_ambush', if: 'party.anissa, !encounter.wilds.boar.won' }, 1, 24),
+    trigger('boar_ambush', 9, 1, { dialogue: 'boar_ambush', if: 'party.anissa, story.yari_asked, !encounter.wilds.boar.won' }, 1, 24),
     // A Name in the Cane: the road fifty years ago, where Rose-Aimée worked by the roses at the gate.
     { layer: 'echo_zones', name: 'cane_roses', x: 2, y: 14, w: 3, h: 2, props: { if: 'item.sun_locket, side.cane_name.stones', onEcho: 'cane_echo_enter' } },
     npc('echo_cane_worker', 2, 16, 'up', { era: 'echo' }),

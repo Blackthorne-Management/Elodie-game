@@ -6,6 +6,9 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { evaluate } from '../src/engine/conditions.ts';
+import { DialogueRunner } from '../src/engine/dialogue.ts';
+import { FlagStore } from '../src/engine/flags.ts';
+import { CONTENT } from '../src/data/content.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { PUZZLES, QUEST_ROOT, loadMaps, puzzleFiles, puzzleSim } from '../tools/sim-setup.ts';
 
@@ -55,6 +58,32 @@ for (const puzzle of PUZZLES) {
 }
 
 describe('the bridge puzzle teaches the anchor rule', () => {
+  // Demo review, Oct 17: the plaza memory reaches the bridgehead too, so the winch itself waits for the orders.
+  it('in the memory, the winch offers no choice until the night orders have been read', () => {
+    const winch = (orders: boolean) => {
+      const flags = new FlagStore();
+      if (orders) flags.set('clue.night_orders', true);
+      return new DialogueRunner(CONTENT.dialogue.winch_echo!, CONTENT.speakers, flags);
+    };
+    const before = winch(false);
+    before.advance();
+    expect(before.view()).toMatchObject({ kind: 'line', text: expect.stringContaining('until you write the order') });
+    before.advance();
+    expect(before.done).toBe(true);
+    const after = winch(true);
+    after.advance();
+    expect(after.view()).toMatchObject({ kind: 'choice' });
+  });
+
+  it('the boar on the Cane Road waits until Yari has joined (demo review, Oct 17)', () => {
+    const trigger = maps['zetwal-road']!.triggers.find((t) => t.id === 'boar_ambush')!;
+    const flags = new FlagStore();
+    flags.set('party.anissa', true);
+    expect(evaluate(trigger.if!, flags)).toBe(false);
+    flags.set('story.yari_asked', true);
+    expect(evaluate(trigger.if!, flags)).toBe(true);
+  });
+
   it('the bridgehead memory opens only once the night orders have been read (the act stays in order)', () => {
     const puzzle = PUZZLES.find((p) => p.id === 'zetwal_bridge')!;
     const early = { ...puzzle, flags: { ...puzzle.flags, 'clue.night_orders': false } };

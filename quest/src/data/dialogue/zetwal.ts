@@ -498,7 +498,16 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       next: [
         { if: { flag: 'anchor.chain_bridge' }, to: 'pinned' },
         { if: { flag: 'echo.chain_bridge_down' }, to: 'down' },
+        // The puzzle is posed by the night orders under the window seat (demo review, Oct 17): without them,
+        // the winch is just a winch.
+        { if: { notFlag: 'clue.night_orders' }, to: 'orders' },
         { to: 'up' },
+      ],
+    },
+    orders: {
+      lines: [
+        nar('The great winch. The Chain Bridge stands raised against the island gate, as you ordered at dusk.'),
+        nar('It stays up until you write the order to lower it.'),
       ],
     },
     up: {

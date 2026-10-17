@@ -288,7 +288,7 @@ async function fullscreenToggle(browser, errors) {
   check(help.includes('Add to Home Screen'), 'on iPhone the button explains Add to Home Screen');
   await ip.locator('.fs-help button').tap();
   check((await ip.locator('.fs-help').count()) === 0, 'the explanation closes');
-  // Phones play only from the home screen (owner decision, Oct 16): in Safari, the install steps.
+  // Phones are shown how to install first (owner decision, Oct 16): in Safari, the install steps.
   const gate = await ios.newPage();
   watchErrors(gate, errors);
   await gate.goto(`${URL_BASE}?intro=0`);
@@ -310,6 +310,13 @@ async function fullscreenToggle(browser, errors) {
   await home.goto(`${URL_BASE}?intro=0&map=test-village`);
   await waitReady(home);
   check((await home.locator('.install-screen').count()) === 0, 'the same iPhone, opened from the home screen, plays');
+  // "Play here anyway" (owner decision, Oct 17): a browser that cannot install (a chat app's) still plays.
+  await gate.locator('.install-anyway').tap();
+  await waitReady(gate);
+  check((await gate.locator('.install-screen').count()) === 0, '"Play here anyway" starts the game in Safari');
+  await gate.goto(`${URL_BASE}?intro=0&map=test-village`);
+  await waitReady(gate);
+  check((await gate.locator('.install-screen').count()) === 0, 'and the iPhone remembers it: the link plays in the browser from then on');
   await ios.close();
 
   console.log('Home-screen app (standalone):');

@@ -441,7 +441,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "party.anissa, !encounter.wilds.boar.won"
+              "value": "party.anissa, story.yari_asked, !encounter.wilds.boar.won"
             }
           ]
         }

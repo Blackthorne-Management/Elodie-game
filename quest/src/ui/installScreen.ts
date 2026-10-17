@@ -1,8 +1,9 @@
 // The install screen (owner decision, Oct 16): on a phone or tablet in the browser, the quest shows how
-// to put it on the home screen instead of starting (engine/install.ts decides when). Android browsers
-// that offer their own install prompt get an Install button; every phone gets the steps by hand.
+// to put it on the home screen before starting (engine/install.ts decides when). Android browsers
+// that offer their own install prompt get an Install button; every phone gets the steps by hand, and
+// "Play here anyway" under them (Oct 17) for browsers that cannot install, such as a chat app's.
 
-import type { InstallGate } from '../engine/install.ts';
+import { PLAY_IN_BROWSER_KEY, type InstallGate } from '../engine/install.ts';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -58,11 +59,31 @@ export function mountInstallScreen(gate: Exclude<InstallGate, 'play'>): void {
     list.appendChild(li);
   }
 
+  // For a browser that cannot install (a link opened inside Discord, WhatsApp or Instagram): play anyway,
+  // and remember it on this device. Saves live in the browser either way.
+  const anyway = document.createElement('button');
+  anyway.type = 'button';
+  anyway.className = 'install-anyway';
+  anyway.textContent = 'Play here anyway';
+  anyway.addEventListener('click', () => {
+    try {
+      localStorage.setItem(PLAY_IN_BROWSER_KEY, '1');
+    } catch {
+      // Storage blocked (a private tab): play this once.
+    }
+    const url = new URL(location.href);
+    url.searchParams.set('install', '0');
+    location.replace(url.toString());
+  });
+  const anywayNote = document.createElement('p');
+  anywayNote.className = 'install-note';
+  anywayNote.textContent = 'Can\'t install from here? Play in this browser instead. It works, with less screen space.';
+
   const note = document.createElement('p');
   note.className = 'install-note';
   note.textContent = 'On a computer, you can play right here in the browser.';
 
-  screen.append(icon, title, lead, button, list, note);
+  screen.append(icon, title, lead, button, list, anyway, anywayNote, note);
   document.body.appendChild(screen);
   document.body.classList.add('installing');
 

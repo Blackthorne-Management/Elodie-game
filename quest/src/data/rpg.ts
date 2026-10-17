@@ -288,7 +288,7 @@ export const RPG: RpgContent = {
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
-  // Chapter 1 has no fights: XP comes from the story's steps and the books read.
+  // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
     { flags: [...ACT1.objectives, ...ACT2.objectives].flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
     { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
