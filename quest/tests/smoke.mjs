@@ -664,7 +664,8 @@ async function fightBattle(page, id, shots) {
   const music = await page.waitForFunction(() => window.__audio?.().playing === 'battle', null, { timeout: 15000 }).then(() => true, () => false);
   check(music, `${id}: the battle music plays`);
   let shot = false;
-  for (let turn = 0; turn < 80; turn++) {
+  // A lost fight starts again with a Grudge (never a game over), so a boss may take two tries.
+  for (let turn = 0; turn < 200; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
     const bt = (await snap(page)).battle;
     if (!bt) break;
@@ -722,17 +723,18 @@ async function playRhythm(page, shots) {
 }
 
 /** A sea voyage (scenes/VoyageScene.ts) between chapters: watch both parts, then skip with B. */
-async function handleVoyage(page, shots) {
+async function handleVoyage(page, shots, landing = 'xaragua-village') {
   await frames(page);
   if (!(await page.evaluate(() => !!window.__voyage))) return false;
+  const tag = landing === 'xaragua-village' ? 'voyage' : 'voyage-home';
   await page.waitForTimeout(2500);
-  await shoot(page, 'voyage-harbor', shots);
+  await shoot(page, `${tag}-harbor`, shots);
   await page.waitForFunction(() => window.__voyage?.state().phase === 'map', null, { timeout: 10000 });
   await page.waitForTimeout(4000);
-  await shoot(page, 'voyage-map', shots);
-  check(true, 'the voyage plays: the canoe to the ship, then the route around Ardencia on the realm map');
+  await shoot(page, `${tag}-map`, shots);
+  check(true, `the voyage to ${landing} plays: the canoe to the ship, then the route around Ardencia on the realm map`);
   await page.keyboard.press('KeyX');
-  await page.waitForFunction(() => !window.__voyage && window.__quest?.snapshot().mapId === 'xaragua-village', null, { timeout: 10000 });
+  await page.waitForFunction((m) => !window.__voyage && window.__quest?.snapshot().mapId === m, landing, { timeout: 10000 });
   return true;
 }
 
@@ -793,11 +795,16 @@ async function playAct(browser, errors) {
           await frames(page);
           const want = sim.logic.state.player.mapId;
           for (let i = 0; i < 400; i++) {
+            // A scene can end in a sea voyage (the escape home): watch it as at the end of Chapter 1.
+            if (await page.evaluate(() => !!window.__voyage)) {
+              if (await handleVoyage(page, shots, want)) voyaged = true;
+              continue;
+            }
             const t = await finishTyping(page);
             if (t.mode === 'dialogue') {
               await page.keyboard.press('KeyZ');
               keys++;
-            } else if (t.mode === 'field' && t.mapId === want) break;
+            } else if ((t.mode === 'field' || t.mode === 'card') && t.mapId === want) break;
             await frames(page);
           }
           await page.keyboard.down('Shift');
@@ -833,6 +840,8 @@ async function playAct(browser, errors) {
   check(s.follower === null, 'Anissa no longer follows Gianna in the occupied city');
   check(s.flags['story.papers_checked'] === true && s.flags['story.anaco_found'] === true, 'the occupied city: papers shown at the checkpoint, and the three clues place Anaco in the customs cellar');
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true, 'the envoy visited Anaco with the fever bark, and carried the escape plan to the cave');
+  check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
+  check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.mapId === 'zetwal-harbor', 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -936,7 +945,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'xaragua-cave' && back.flags['act1.complete'] === true && back.flags['story.escape_planned'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 under way after a reload');
+  check(back.mapId === 'zetwal-harbor' && back.flags['act1.complete'] === true && back.flags['act2.complete'] === true, 'the autosave keeps Chapters 1 and 2 finished after a reload');
   await ctx.close();
   return shots;
 }

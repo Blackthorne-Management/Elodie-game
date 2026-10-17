@@ -170,7 +170,7 @@ export const ACT2: QuestDef = {
   title: 'Chapter 2: The Charter',
   maps: [
     'xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song',
-    'xaragua-customs', 'xaragua-cave', 'xaragua-record', 'xaragua-cellar',
+    'xaragua-customs', 'xaragua-cave', 'xaragua-record', 'xaragua-cellar', 'xaragua-seacave',
   ],
   objectives: [
     {

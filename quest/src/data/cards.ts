@@ -18,4 +18,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'The night the Crown came',
     lines: ['Yucayeque is occupied. Cacique Anaco is a prisoner.', 'Yari and Anissa hide in the cave with the resistance.', 'Gianna walks on alone, on her envoy\'s papers.'],
   },
+  // The end of Chapter 2: home to Zetwal, and Grandfather's request.
+  {
+    id: 'act2_end',
+    when: 'act2.complete',
+    title: 'Chapter 2 complete',
+    lines: ['The Charter', 'Next: Chapter 3, The Trial of Blades', 'Ardencia, and an oath fifty years old...'],
+  },
 ];

@@ -28,6 +28,8 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   shutters_weaver: { name: 'Shuttered house' },
   shutters_family: { name: 'Shuttered house' },
   fever_bark_tree: { name: 'Fever-bark tree' },
+  escape_canoe: { name: 'The hidden canoe' },
+  thorne_longboat: { name: "Thorne's longboat", inspect: 'A Crown longboat across the sea mouth, oars up, a lantern at the bow.' },
   // The occupied city (the Crown attack, Oct 17).
   crown_banner_village: { name: 'Crown banner', inspect: 'The Crown\'s red banner, nailed up over the village trail last night.' },
   crown_banner_pier: { name: 'Crown banner', inspect: 'The Crown\'s banner at the head of the pier. The fishers walk round it.' },
@@ -140,6 +142,8 @@ export const DOORS: Readonly<Record<string, string>> = {
   'xaragua-record/record_out': 'Out to the Areíto Plaza',
   'xaragua-customs/customs_cellar': 'Cellar stairs',
   'xaragua-cellar/cellar_out': 'Up to the customs house',
+  'xaragua-beach/beach_seacave': 'Sea cave',
+  'xaragua-seacave/seacave_out': 'Out to the Canoe Beach',
   'zetwal-town/town_house': 'Limyè house',
   'zetwal-house/house_front': 'Out to the plaza',
   'zetwal-town/town_temple': 'Temple of Elodie',

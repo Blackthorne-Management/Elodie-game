@@ -12,7 +12,7 @@ import { REALM_ART, textureKeyForObject } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { REALM_MAP } from '../data/realmMap.ts';
 import { VOYAGES } from '../data/voyages.ts';
-import { along, seaRoute, thinRoute } from '../engine/voyage.ts';
+import { along, seaRoute, thinRoute, type VoyageDef } from '../engine/voyage.ts';
 import type { Pos } from '../engine/types.ts';
 import { getRuntime } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
@@ -64,7 +64,7 @@ export class VoyageScene extends Phaser.Scene {
     getRuntime().input.clearPresses();
     this.route = thinRoute(seaRoute(REALM_MAP, voyage));
     this.layer = this.add.container(0, 0);
-    this.drawHarbor(voyage.harbor);
+    this.drawHarbor(voyage);
     this.caption = this.add
       .text(VIEW_WIDTH / 2, VIEW_HEIGHT - 10, '', textStyle('#fff2a0', { stroke: '#14101a', strokeThickness: 3, align: 'center' }))
       .setOrigin(0.5, 1)
@@ -89,24 +89,27 @@ export class VoyageScene extends Phaser.Scene {
 
   // ---- The harbor at dawn: the canoe paddles out to the ship -------------------------------------
 
-  private drawHarbor(name: string): void {
+  private drawHarbor(voyage: VoyageDef): void {
     const g = this.add.graphics();
-    // Dawn sky band, then the sea, lighter in the shallows by the shore.
-    g.fillGradientStyle(0xf2b880, 0xf2b880, 0x8fbbe8, 0x8fbbe8, 1).fillRect(0, 0, VIEW_WIDTH, 34);
-    g.fillStyle(0x2b5f7c, 1).fillRect(0, 34, VIEW_WIDTH, VIEW_HEIGHT - 34);
-    g.fillStyle(0x3a7fa0, 1).fillRect(0, 34, 120, VIEW_HEIGHT - 34);
-    // Pòdlimyè's shore on the west: sand, green, roofs, the pier.
-    g.fillStyle(0xd8c08a, 1).fillRect(0, 34, 46, VIEW_HEIGHT - 34);
-    g.fillStyle(0x4f9a4a, 1).fillRect(0, 34, 30, VIEW_HEIGHT - 34);
+    const night = !!voyage.night;
+    // Dawn (or a dark night) sky band, then the sea, lighter in the shallows by the shore.
+    if (night) g.fillGradientStyle(0x0c1024, 0x0c1024, 0x22203e, 0x22203e, 1).fillRect(0, 0, VIEW_WIDTH, 34);
+    else g.fillGradientStyle(0xf2b880, 0xf2b880, 0x8fbbe8, 0x8fbbe8, 1).fillRect(0, 0, VIEW_WIDTH, 34);
+    g.fillStyle(night ? 0x14304a : 0x2b5f7c, 1).fillRect(0, 34, VIEW_WIDTH, VIEW_HEIGHT - 34);
+    g.fillStyle(night ? 0x1c4058 : 0x3a7fa0, 1).fillRect(0, 34, 120, VIEW_HEIGHT - 34);
+    // The shore on the west: sand, green, roofs (Pòdlimyè's red tile, or Yucayeque's thatch), the pier.
+    g.fillStyle(night ? 0x6a5e48 : 0xd8c08a, 1).fillRect(0, 34, 46, VIEW_HEIGHT - 34);
+    g.fillStyle(night ? 0x24402a : 0x4f9a4a, 1).fillRect(0, 34, 30, VIEW_HEIGHT - 34);
+    const roof = voyage.shore === 'xaragua' ? 0xc8a46b : 0xa04040;
     for (const [x, y] of [[4, 44], [14, 70], [6, 104], [16, 134]] as const) {
-      g.fillStyle(0xa04040, 1).fillRect(x, y, 10, 6);
-      g.fillStyle(0x9a8a78, 1).fillRect(x + 1, y + 6, 8, 5);
+      g.fillStyle(night ? 0x5a4a30 : roof, 1).fillRect(x, y, 10, 6);
+      g.fillStyle(night ? 0x4a4038 : 0x9a8a78, 1).fillRect(x + 1, y + 6, 8, 5);
     }
     g.fillStyle(0x9c7446, 1).fillRect(46, 96, 30, 4);
     // Sparkles on the water.
     for (let i = 0; i < 40; i++) g.fillStyle(0xb2d2ee, 0.5).fillRect(50 + ((i * 53) % 260), 40 + ((i * 37) % 130), 3, 1);
     this.layer.add(g);
-    this.add.text(4, 2, name, textStyle('#14101a', { fontStyle: 'bold' })).setDepth(10);
+    this.add.text(4, 2, voyage.harbor, textStyle(night ? '#fff2a0' : '#14101a', { fontStyle: 'bold' })).setDepth(10);
 
     // The Zetwal ship waiting offshore.
     this.ship = this.add.image(262, 104, textureKeyForObject('zetwal_ship')).setOrigin(0.5, 1).setScale(0.9);
@@ -129,10 +132,11 @@ export class VoyageScene extends Phaser.Scene {
     // Out to the ship in the first 60%, aboard, then the ship sails off east.
     const reach = Math.min(1, t / 0.6);
     this.canoe.x = 70 + (226 - 70) * Phaser.Math.Easing.Sine.InOut(reach);
-    if (t < 0.6) this.caption.setText('Yari paddles out to a Zetwal ship waiting beyond the reef.');
+    const voyage = VOYAGES[this.voyageId]!;
+    if (t < 0.6) this.caption.setText(voyage.paddle);
     else {
       this.canoe.setAlpha(Math.max(0, 1 - (t - 0.6) * 6));
-      this.caption.setText('All aboard. The golden sails fill.');
+      this.caption.setText(voyage.aboard);
       this.ship.x = 262 + (t - 0.7 > 0 ? (t - 0.7) * 260 : 0);
     }
     if (this.elapsed >= HARBOR_MS) this.startMap();

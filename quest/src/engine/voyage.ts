@@ -16,6 +16,12 @@ export interface VoyageDef {
   captions: readonly { at: number; text: string }[];
   /** The harbor the canoe leaves from, named on the opening picture. */
   harbor: string;
+  /** The opening picture's captions: paddling out, then aboard. */
+  paddle: string;
+  aboard: string;
+  /** The shore it leaves (its roofs), and whether it is night. */
+  shore: 'zetwal' | 'xaragua';
+  night?: boolean;
   music: string;
 }
 

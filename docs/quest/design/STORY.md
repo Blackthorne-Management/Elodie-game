@@ -185,6 +185,19 @@ the next low tide (`story.escape_planned`). Also: the Charter posted over the cu
 The Journal's next objective, *Through the blockade* (`story.escaped`), is the next build: the Thorne boss at the
 blockade, Yari's escape, and the voyage home to Zetwal.
 
+**Built Oct 17 (the boss and the escape; Chapter 2 is complete):** in the cave Yari says "tonight" (the lowest tide
+of the month); Yari rejoins, and Anissa comes too (owner approved: the sea cave is dark and she glows). The beach's
+sea cave opens (`xaragua-seacave`): a tunnel past tide pools to the ledge where the Yaguana hid their canoes. As the
+old canoe goes into the water, Thorne's longboat bars the sea mouth: **boss, Governor Thorne** with a marine and a
+musketeer (`thorne_blockade`, level 9; sword cane, a pistol shot he takes his time aiming, and the Charter read
+aloud to the whole party). He goes over the side; his marines fish him out ("The Charter stands!"). The canoe slips
+the blockade to a Zetwal trader, and the voyage plays home (`xaragua_zetwal`, by night). On Pòdlimyè's long pier,
+Grandmother and Grandfather wait with the pigeons' news; the city is uneasy (Crown sails off the south reef);
+Patricio meets Caona's granddaughter and asks Gianna to go to Ardencia and ask Lord Rael, Benny's grandson, to stand
+with Xaraguá ("Then ask him why his grandfather said yes"). `act2.complete`; the card: *Chapter 2 complete, The
+Charter. Next: Chapter 3, The Trial of Blades*. The Cane Road's ambushes switch on (`story.zetwal_return`).
+`?chapter=3` starts here.
+
 **Owner decision (Oct 15), the shape of the chapter:** Xaraguá is first shown at its most beautiful: the normal,
 living city for the first half of the chapter. **Midway, the Crown attacks** and the city is **occupied**: the same
 maps change to their occupied versions (Crown soldiers, checkpoints, curfew, burned stalls, Crown banners on the

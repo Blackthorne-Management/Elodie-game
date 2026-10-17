@@ -274,7 +274,7 @@ export function xaraguaBeach(): MapSource {
 
   // The limestone headland east, with the sea cave's mouth (low tide only: a later puzzle).
   oval(g, 31.5, 4.5, 4, 4.5, ROCK);
-  g.set(31, 8, 'ç').set(31, 9, GRASS).set(32, 9, GRASS);
+  g.set(31, 8, 'ĝ').set(31, 9, GRASS).set(32, 9, GRASS);
 
   // The trail from the village, past the market and down to the sand.
   trail(g, [[0, 7], [8, 7], [8, 9], [14, 9], [14, 11]]);
@@ -309,7 +309,14 @@ export function xaraguaBeach(): MapSource {
 
     { layer: 'doors', name: 'beach_village', x: 0, y: 7, h: 2, props: { target: 'village_beach', map: 'xaragua-village', exit: 'right' } },
     { layer: 'spawns', name: 'beach', x: 2, y: 7, props: { facing: 'right', era: 'present' } },
-    obj('sea_cave_mouth', 31, 8, { dialogue: 'sea_cave_mouth', era: 'present' }),
+    // The sea cave: closed by the tide, until the night of the lowest tide (the escape, Chapter 2's end).
+    {
+      layer: 'doors',
+      name: 'beach_seacave',
+      x: 31,
+      y: 8,
+      props: { target: 'seacave_out', map: 'xaragua-seacave', exit: 'down', if: 'story.escape_night', closed: 'sea_cave_mouth' },
+    },
   ];
   return { id: 'xaragua-beach', present: g, echo: e, objects };
 }
@@ -649,6 +656,34 @@ export function xaraguaRecord(): MapSource {
   return { id: 'xaragua-record', present: g, echo: g.clone(), objects, interior: true };
 }
 
+/**
+ * The sea cave under the beach's headland (Chapter 2's end): at the lowest tide a tunnel past tide pools leads
+ * to a ledge where the Yaguana hid their canoes from the Crown, and out to the open sea. Thorne's longboat
+ * waits at the sea mouth (the boss). The secret S-XAR (the tides, the weir) comes later in this same cave.
+ */
+export function xaraguaSeaCave(): MapSource {
+  const W = 26;
+  const H = 14;
+  const g = new Grid(W, H, 'ǔ');
+  // The tunnel up from the beach, along past the tide pools, and up to the canoe ledge.
+  g.rect(3, 9, 3, 4, 'ǒ').set(4, 13, 'D');
+  g.rect(3, 7, 13, 2, 'ǒ').set(7, 8, 'ǐ').set(10, 7, 'ǐ');
+  g.rect(13, 3, 3, 4, 'ǒ').rect(13, 3, 8, 2, 'ǒ');
+  // The inlet below the ledge, and the channel out to the sea on the east.
+  g.rect(16, 5, 5, 3, 'ǐ').rect(21, 1, 5, 11, 'ǐ');
+
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'seacave_out', x: 4, y: 13, props: { target: 'beach_seacave', map: 'xaragua-beach', exit: 'up' } },
+    { layer: 'spawns', name: 'seacave', x: 4, y: 11, props: { facing: 'up', era: 'present' } },
+    trigger('seacave_enter', 4, 11, { dialogue: 'seacave_enter', flag: 'story.seacave_entered', once: true, onEnter: true }),
+    obj('escape_canoe', 19, 5, { dialogue: 'escape_canoe', kind: 'dugout', solid: true, era: 'present' }),
+    // Thorne in his longboat at the sea mouth, once he springs the trap (he restarts the fight after a loss).
+    obj('thorne_longboat', 22, 4, { kind: 'dugout', solid: true, era: 'present', if: 'story.thorne_ambush, !encounter.xaragua_story.thorne.won' }),
+    npc('thorne_blockade', 22, 3, 'left', { npc: 'thorne_boat', if: 'story.thorne_ambush, !encounter.xaragua_story.thorne.won' }),
+  ];
+  return { id: 'xaragua-seacave', present: g, echo: g.clone(), objects, interior: true };
+}
+
 /** The customs house cellar, where the Crown holds Cacique Anaco (the occupied city). */
 export function xaraguaCellar(): MapSource {
   const W = 14;
@@ -682,4 +717,5 @@ export const XARAGUA_SOURCES: readonly (() => MapSource)[] = [
   xaraguaCave,
   xaraguaRecord,
   xaraguaCellar,
+  xaraguaSeaCave,
 ];

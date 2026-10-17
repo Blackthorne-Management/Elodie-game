@@ -3,7 +3,7 @@
 // Gianna comes home. The Echo is the harbor fifty years ago, when the Crown's ships sat in it.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
-import { npc, obj } from './zetwal-town.ts';
+import { npc, obj, trigger } from './zetwal-town.ts';
 
 export function zetwalHarbor(): MapSource {
   const W = 36;
@@ -54,6 +54,12 @@ export function zetwalHarbor(): MapSource {
     { layer: 'doors', name: 'harbor_plaza', x: W - 1, y: 4, props: { target: 'town_harbor', map: 'zetwal-town', exit: 'left' } },
     { layer: 'spawns', name: 'harbor', x: W - 2, y: 4, props: { facing: 'left', era: 'present' } },
     obj('customs_sign', 24, 3, { dialogue: 'customs_sign', era: 'present' }),
+    // Chapter 2's end (Oct 17): the Zetwal trader lands Gianna, Anissa and Yari on the long pier, where
+    // Grandfather and Grandmother are waiting with the news.
+    { layer: 'spawns', name: 'harbor_return', x: 30, y: 13, props: { facing: 'up', era: 'present' } },
+    trigger('zetwal_return', 30, 13, { dialogue: 'zetwal_return', flag: 'story.zetwal_return', once: true, onEnter: true, if: 'story.escaped' }),
+    npc('patricio_harbor', 30, 10, 'down', { npc: 'patricio_home', if: 'story.escaped' }),
+    npc('anicette_harbor', 31, 10, 'down', { npc: 'anicette_home', if: 'story.escaped' }),
   ];
   return { id: 'zetwal-harbor', present: g, echo: e, objects };
 }

@@ -310,7 +310,29 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say(Y, 'Two nights. Then I go, and I come back with help. Zetwal\'s help. Gianna\'s grandfather owes us an oath.'),
       ],
     },
-    planned: { lines: [say(Y, 'Two nights. The sea cave, at the lowest tide. Then Zetwal.')] },
+    // The night of the lowest tide (the escape): Yari and Anissa come out of hiding.
+    planned: {
+      lines: [say(Y, 'Two nights. The sea cave, at the lowest tide. Then Zetwal.')],
+      next: [{ if: { notFlag: 'story.escape_night' }, to: 'tonight' }],
+    },
+    tonight: {
+      lines: [
+        say('camp_leader', 'The water is going out. Lowest tide of the month, before midnight. It is tonight, or a month from now.'),
+        say(Y, 'Then it is tonight.'),
+      ],
+      choices: [
+        { text: 'Tonight. Let\'s go.', next: 'go', set: { 'story.escape_night': true, 'story.yari_hidden': false, 'party.anissa': true } },
+        { text: 'Not yet.' },
+      ],
+    },
+    go: {
+      lines: [
+        say(A, 'I\'m coming. The sea cave is darker than this one, and I glow. You need me, Gigi.'),
+        say(G, '...Yes. I do. Stay right behind me.'),
+        say(Y, 'East along the Canoe Beach, to the cave under the headland. The marines are watching the harbor mouth, not the cliffs.'),
+        nar('(Yari and Anissa join you again.)'),
+      ],
+    },
   }),
   simple('anissa_hidden_talk', [
     say(A, 'I\'m keeping the lamp lit. Come back before it goes out, Gigi. Promise.'),
@@ -716,9 +738,63 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('shell_diver_talk', [
     say('shell_diver', 'The sea cave past the rocks? Only at low tide. At high tide the sea keeps what it finds.'),
   ]),
-  simple('sea_cave_mouth', [
-    nar('A dark mouth in the cliff, half full of sea. The water breathes in and out of it.'),
-    nar('Not at this tide.'),
+  // The sea cave's mouth while the tide is up (the door opens on the night of the escape).
+  script('sea_cave_mouth', {
+    start: { lines: [], next: [{ if: { flag: 'story.escape_planned' }, to: 'soon' }, { to: 'tide' }] },
+    tide: {
+      lines: [
+        nar('A dark mouth in the cliff, half full of sea. The water breathes in and out of it.'),
+        nar('Not at this tide.'),
+      ],
+    },
+    soon: {
+      lines: [
+        nar('The sea cave, half full of water. Somewhere in there is a ledge where the canoes slept.'),
+        nar('Not yet: Yari will say when the tide is lowest.'),
+      ],
+    },
+  }),
+  // The escape (Chapter 2's end): the canoes' cave, the hidden canoe, and Thorne at the sea mouth.
+  simple('seacave_enter', [
+    nar('The tide is right out. The cave floor glistens, and the pools are full of small, startled crabs.'),
+    say(A, 'I\'ll go first. Follow the light.'),
+    say(Y, 'My great-grandmother hid canoes up here when the Crown first came. If one is left...'),
+  ]),
+  script('escape_canoe', {
+    start: { lines: [], next: [{ if: { flag: 'story.thorne_ambush' }, to: 'waiting' }, { to: 'first' }] },
+    first: {
+      set: { 'story.thorne_ambush': true },
+      lines: [
+        nar('A dugout canoe, black with age, tied to a post on the ledge. Its paddles are wrapped in oiled cloth.'),
+        say(Y, 'Still here. Waiting for us, all this time.'),
+        nar('You ease it into the water. Then a lantern unshutters at the sea mouth, and a longboat slides across the way out.'),
+        say('thorne', 'Miss Limyè. I did wonder why the envoy kept walking to the beach.'),
+        say('thorne', 'The Accord protects you. It says nothing about the cacique\'s daughter, or the little one who glows.'),
+        say(G, 'Then you will have to go through me to reach them, Governor.'),
+        { speaker: 'thorne', text: 'If you insist. Marines!', set: { 'battle.next': 'thorne_blockade', 'battle.after': 'escape_after' } },
+      ],
+    },
+    waiting: { lines: [nar('The canoe rocks at the ledge. The longboat still bars the sea mouth.')] },
+  }),
+  script('thorne_again', {
+    start: { lines: [], next: [{ if: { flag: 'encounter.xaragua_story.thorne.won' }, to: 'done' }, { to: 'again' }] },
+    again: {
+      lines: [
+        say('thorne', 'Still here, Miss Limyè? The tide will not wait for you. Neither will I.'),
+        { speaker: G, text: 'Then let\'s finish it.', set: { 'battle.next': 'thorne_blockade', 'battle.after': 'escape_after' } },
+      ],
+    },
+    done: { lines: [say('thorne', '...')] },
+  }),
+  simple('escape_after', [
+    nar('Thorne staggers back against the gunwale. The longboat rocks, once, twice, and over he goes into the black water.'),
+    say('thorne', 'Get me OUT! Never mind them, get me out!'),
+    nar('His marines drop their oars to haul the Governor back aboard, wig and all.'),
+    say('thorne', 'This changes nothing, Miss Limyè! The Charter stands!'),
+    say(G, 'Then we will come back with the Accord, and read it beside your Charter.'),
+    nar('The canoe slips past the longboat and out under the cliffs, into the dark.'),
+    say(Y, 'Father. I\'ll come back. With every friend Caona ever had.'),
+    { speaker: A, text: 'Gigi, look. Lights out there. A ship with no lanterns.', set: { 'story.escaped': true, 'travel.next': 'zetwal-harbor/harbor_return', 'voyage.next': 'xaragua_zetwal' } },
   ]),
 
   // The cassava gardens (conuco) on the hill.

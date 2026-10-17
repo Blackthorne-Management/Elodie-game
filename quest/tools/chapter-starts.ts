@@ -22,6 +22,7 @@ export interface ChapterStart {
 /** Each chapter's start: the route's flags at the marker, minus the pending journey, at the chapter's landing. */
 const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string }>> = {
   '2': { mark: 'end-card', map: 'xaragua-village', spawn: 'pier' },
+  '3': { mark: 'chapter2-end', map: 'zetwal-harbor', spawn: 'harbor_return' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

@@ -268,5 +268,21 @@
   "up",
   "confirm",
   "skip",
-  "@escape-plan"
+  "@escape-plan",
+  "confirm",
+  "skip",
+  "@tonight",
+  "goto 14,21",
+  "goto 31,9",
+  "goto 43,15",
+  "goto 31,8",
+  "skip",
+  "@seacave",
+  "goto 19,4",
+  "down",
+  "confirm",
+  "skip",
+  "@thorne-boss",
+  "@chapter2-end",
+  "confirm"
 ]

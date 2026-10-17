@@ -8,12 +8,7 @@ import type { EncounterTable } from '../engine/content.ts';
  * Story flags that chapters not built yet will set (owner decision, Oct 14: no fights in Chapter 1;
  * the wild sections turn violent when the story brings the party back). Maps may read them already.
  */
-export const LATER_STORY_FLAGS: readonly string[] = [
-  /** The party returns to Zetwal later in the story: the Cane Road's ambushes begin. */
-  'story.zetwal_return',
-  /** Chapter 2: Yari slips the harbor blockade by the sea cave (the next build: the Thorne boss and the escape). */
-  'story.escaped',
-];
+export const LATER_STORY_FLAGS: readonly string[] = [];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
   // Scripted fights (data/battles.ts), listed here so the Foes page shows them. No map rolls on this table.
@@ -61,6 +56,15 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
         intro: 'A patrol blocks the trail west.',
         won: 'The patrol scatters into the smoke.',
         fled: 'You duck back between the houses.',
+      },
+      {
+        id: 'thorne',
+        weight: 0,
+        level: 9,
+        foes: ['Governor Thorne', 'Crown Marine', 'Crown Musketeer'],
+        intro: 'Governor Thorne blocks the sea mouth.',
+        won: 'Thorne goes over the side.',
+        fled: 'You fall back to the ledge.',
       },
     ],
   },

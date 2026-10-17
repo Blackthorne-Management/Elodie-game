@@ -171,6 +171,10 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   lamp_oil_shutters: n('lamp_oil_shutters', 'lamp_oil_seller', 'Lamp-oil seller'),
   anaco_cell: n('anaco_cell', 'anaco', 'Cacique Anaco'),
   cellar_marine: n('cellar_marine', 'crown_marine', 'Crown marine'),
+  // Chapter 2's end: Thorne at the blockade, and the family waiting on the pier at home.
+  thorne_boat: n('thorne_boat', 'thorne', 'Governor Thorne', 'thorne_again'),
+  patricio_home: n('patricio_home', 'patricio_old', 'Marshal Patricio, Grandfather'),
+  anicette_home: n('anicette_home', 'anicette', 'Grandmother Anicette'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

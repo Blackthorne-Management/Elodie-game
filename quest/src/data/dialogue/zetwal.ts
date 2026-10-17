@@ -40,6 +40,7 @@ const G = 'gianna';
 const A = 'anissa';
 const AF = 'anissa_far';
 const P = 'patricio';
+const Y = 'yari';
 
 export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   // ---- The festival -----------------------------------------------------------------------------
@@ -853,6 +854,30 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     nar('The Temple island. Pilgrims stranded since dawn crowd the path, staring at the bridge behind you.'),
     say(A, 'Everyone is looking at us.'),
     say(G, "They're looking at the bridge. Come on. Grandfather will be at the lamp."),
+  ]),
+
+  // ---- Chapter 2's end: home from Xaraguá (Oct 17) ----------------------------------------------
+  // Grandfather and Grandmother on the long pier; the news has come by pigeon. Patricio asks Gianna to go to
+  // Ardencia (owner decision, Oct 15: Chapter 3, Patricio's request).
+  simple('zetwal_return', [
+    nar('Dawn over Pòdlimyè. The trader ties up at the long pier, and two figures are waiting at the end of it.'),
+    say('anicette', 'Gianna! Anissa! Oh, my girls. The pigeons came yesterday. The Crown has Yucayeque.'),
+    say(A, 'Grandmother! We sailed in a canoe! And Gigi knocked a governor into the sea!'),
+    say('patricio_old', 'Did she.'),
+    say('patricio_old', 'And this is Caona\'s granddaughter. You have her eyes, child. She would have hit him too.'),
+    say(Y, 'They took my father, Marshal. They said the seventh clause gives them our harbor. Our oath stone says nothing of it.'),
+    say('patricio_old', 'Because there was no seventh clause when we swore. I would remember. I signed under Caona\'s name.'),
+    say('patricio_old', 'The whole city is uneasy. Crown ships sighted off the south reef. People ask me if we are next.'),
+    say('patricio_old', 'Gianna. Benny\'s grandson rules Ardencia now. Lord Rael. They call him ruthless. Benny swore that oath with us.'),
+    say('patricio_old', 'Go to Ardencia. Ask him to stand with Xaraguá, as his grandfather did. Take Yari. Take your papers.'),
+    say(G, 'And if he says no?'),
+    { speaker: 'patricio_old', text: 'Then ask him why his grandfather said yes.', set: { 'story.ardencia_asked': true, 'act2.complete': true } },
+  ]),
+  simple('patricio_home_talk', [
+    say('patricio_old', 'Ardencia is east, past the Cane Road. Rael will test you before he listens. Benny always did.'),
+  ]),
+  simple('anicette_home_talk', [
+    say('anicette', 'Eat something before you go anywhere. Governors and lords can wait for soup.'),
   ]),
 
   script('patricio_old_talk', {

@@ -88,6 +88,13 @@ describe('the Crown attack (Chapter 2 midpoint)', () => {
     expect(flags.isSet('story.papers_checked')).toBe(true);
   });
 
+  it('Thorne (the chapter boss) is the hardest fight yet, but a plain plan beats him most of the time', () => {
+    const tonight = playTo('tonight').logic.state.flags;
+    const runs = Array.from({ length: 40 }, (_, i) => fight('thorne_blockade', 700 + i, tonight));
+    expect(runs.filter((r) => r.won).length).toBeGreaterThanOrEqual(30);
+    expect(runs.reduce((n, r) => n + r.lost, 0) / runs.length).toBeGreaterThanOrEqual(0.5);
+  });
+
   it('two clues are not enough, and the cellar door is closed without the Governor\'s word', () => {
     const sim = playTo('checkpoint');
     const flags = sim.logic.state.flags;

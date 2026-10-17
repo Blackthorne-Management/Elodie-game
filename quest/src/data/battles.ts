@@ -205,6 +205,20 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Hold the doors', power: 160, every: 3, tell: 'The lieutenant raises his saber: "Marines! Present!"' },
     ],
   },
+  // Chapter 2's boss (Oct 17): the Governor himself, at the sea mouth of the canoes' cave.
+  thorne: {
+    id: 'thorne',
+    name: 'Governor Thorne',
+    look: 'thorne',
+    level: 8,
+    role: 'tank',
+    moves: [
+      { name: 'Sword cane', power: 110 },
+      { name: 'Pistol shot', power: 190, every: 3, tell: 'Thorne cocks a silver pistol and takes his time aiming...' },
+      { name: 'The Charter, read aloud', power: 80, area: true, every: 4, tell: 'Thorne unrolls the Charter: "Clause the seventh..."' },
+    ],
+    weak: ['light'],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     name: 'Marine sergeant',
@@ -267,6 +281,23 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       spark: 'Surge!',
       tell: 'Bayonets! Guard!',
       lowHp: "You're hurt, Gigi.",
+    },
+  },
+  // Chapter 2's boss: Thorne and his longboat's crew at the sea mouth (the escape).
+  thorne_blockade: {
+    id: 'thorne_blockade',
+    title: 'Governor Thorne',
+    backdrop: 'yucayeque_night',
+    enemies: ['thorne', 'crown_marine', 'crown_musketeer'],
+    level: 9,
+    table: 'xaragua_story',
+    group: 'thorne',
+    rewards: { xp: 220, gold: 120 },
+    tips: {
+      start: 'It\'s him, Gigi! The marines first, or Thorne first?',
+      spark: 'All my light, Gigi! Surge!',
+      tell: 'He\'s aiming! Guard!',
+      lowHp: 'Gigi, heal! Please!',
     },
   },
   intro_boar: {

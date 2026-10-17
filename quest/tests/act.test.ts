@@ -67,12 +67,13 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     }
   });
 
-  it('Chapter 2: the pier, Anaco, the council, Thorne, the cave, the lock, the proof, the attack, the occupied city; the blockade is next', () => {
-    expect(sim.battles).toEqual(['intro_boar', 'pier_marines', 'caney_breach', 'village_patrol']);
+  it('Chapter 2: the pier, Anaco, the council, Thorne, the cave, the lock, the proof, the attack, the occupied city, Thorne; home to Zetwal', () => {
+    expect(sim.battles).toEqual(['intro_boar', 'pier_marines', 'caney_breach', 'village_patrol', 'thorne_blockade']);
     expect(chapter2).toEqual(['pier', 'anaco', 'council', 'thorne', 'lamp', 'cave', 'areito', 'lock', 'proof', 'escape', 'held', 'visit', 'word', 'blockade']);
     expect(sim.logic.state.flags.isSet('clue.seventh_clause')).toBe(true);
     expect(sim.logic.state.flags.isSet('card.xaragua_falls')).toBe(true);
-    expect(sim.logic.state.player.mapId).toBe('xaragua-cave');
+    expect(sim.logic.state.flags.isSet('card.act2_end')).toBe(true);
+    expect(sim.logic.state.player.mapId).toBe('zetwal-harbor');
   });
 
   it('the petroglyph cave: the sluice opened in the memory drains it, the areíto gives the last bar, the stones open the record house', () => {
@@ -93,7 +94,8 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('visits every Zetwal map and swaps eras', () => {
-    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set(ACT1.maps));
+    // Chapter 1's maps, and (at the end of Chapter 2) home to Pòdlimyè's Old Harbor.
+    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set([...ACT1.maps, 'zetwal-harbor']));
     for (const m of ['xaragua-village', 'xaragua-plaza', 'xaragua-caney', 'xaragua-customs']) expect(maps).toContain(m);
     expect(eras.filter((e) => e === 'echo').length).toBeGreaterThanOrEqual(2);
     expect(sim.log).toContain('Something old stirs here, but it will not open to you yet.');
