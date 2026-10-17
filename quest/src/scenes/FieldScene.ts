@@ -251,6 +251,13 @@ export class FieldScene extends Phaser.Scene {
     this.npcSprites = new Map();
     this.npcPlaced = new Map();
     this.walkers = new Map();
+    // A scene can end on another map (out of the caney into the plaza): the old map's actors went with it.
+    this.stageActors = new Map();
+    this.stageQueue = [];
+    this.stageBlocking = null;
+    this.stageWaitMs = 0;
+    this.stageThen = null;
+    this.stageCamera = null;
     this.objectSprites = new Map();
     this.markerSprites = new Map();
     this.labelKey = '';
