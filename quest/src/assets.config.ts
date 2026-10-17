@@ -4,6 +4,7 @@
 // ART_FILES describes into quest/art/ and it is used instead of the placeholder (a missing file
 // keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
 
+import type { Condition } from './engine/conditions.ts';
 import { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -169,6 +170,9 @@ export const TILESET = {
     { gid: 125, name: 'carving', base: 0x3a3440, accent: 0xd8d0c0, pattern: 'cross' },
     { gid: 126, name: 'sluice', base: 0x6b4426, accent: 0x3e2614, pattern: 'stripes' },
     { gid: 127, name: 'sluice_open', base: 0x163848, accent: 0x9c7446, pattern: 'border' },
+    // The occupation (Oct 17): the Crown's banner, and a burned-out market stall.
+    { gid: 128, name: 'crown_banner', base: 0xb8403a, accent: 0xf4ecd8, pattern: 'stripes' },
+    { gid: 129, name: 'stall_burned', base: 0x3a3440, accent: 0xe0782a, pattern: 'stripes' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -405,6 +409,9 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   },
   echo_yaguana: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0x6a7a40, trim: C.R!, legs: C.S!, headgear: 'headband', headgearColor: 0x8a3a2a },
   echo_yaguana_drummer: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x8a7a50, trim: C.R!, legs: C.T!, headgear: 'headband', headgearColor: C.y!, accessories: ['drum'] },
+  // The Crown attack (Oct 17): the lieutenant who leads the marines into the caney, and the captain who takes it.
+  marine_lieutenant: { skin: C.s!, hair: C.B!, hairStyle: 'cropped', outfit: C.r!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.u!, accessories: ['sash', 'epaulettes'] },
+  crown_captain: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: C.u!, trim: C.y!, legs: C.w!, build: 'tall', beard: C.G!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['epaulettes', 'sash'] },
   crown_clerk: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
 };
 
@@ -483,6 +490,19 @@ export const ART_FILES = {
   sheetColumns: 3,
   sheetRows: ['down', 'left', 'right', 'up'] as const,
 } as const;
+
+/**
+ * A wash of colour over some maps while a condition holds, in the present only: Yucayeque occupied, under
+ * curfew and smoke after the Crown attack (Chapter 2, Oct 17). Drawn over the world, under the interface.
+ */
+export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color: number; alpha: number }[] = [
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain'],
+    if: { flag: 'story.crown_attack' },
+    color: 0x14183a,
+    alpha: 0.34,
+  },
+];
 
 /**
  * The Echo screen filter (guide 6.1): warm sepia, slightly dithered. A sepia colour matrix where the
@@ -791,6 +811,22 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     ground: 0xb0603a,
     groundDark: 0x8e4a2a,
     groundLight: 0xc8784a,
+  },
+  // Yucayeque on the night of the attack (Chapter 2): a dark sky lit orange by fires, black hills, smoke.
+  yucayeque_night: {
+    sky: [0x0c1024, 0x141a34, 0x22203e, 0x3a2a44, 0x6a3a3a, 0xa8502e],
+    cloud: 0x5a4a52,
+    cloudShade: 0x3a3040,
+    mountainFar: 0x1a2030,
+    mountainNear: 0x121824,
+    trees: 0x14281e,
+    treesDark: 0x0c1a14,
+    field: 0x1a2a34,
+    cane: 0x2a4a44,
+    caneDark: 0x1a3430,
+    ground: 0x5a3a2a,
+    groundDark: 0x3a2418,
+    groundLight: 0x7a4a2e,
   },
   // Yucayeque's pier (Chapter 2): green mountains over a turquoise lagoon, the pier's planks underfoot.
   yucayeque_pier: {

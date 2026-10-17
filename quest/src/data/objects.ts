@@ -23,6 +23,14 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   lower_sluice: { name: 'Lower sluice (to the gorge)' },
   cave_chalk: { name: 'Chalked wall' },
   oath_stone: { name: 'The oath stone' },
+  // The occupied city (the Crown attack, Oct 17).
+  crown_banner_village: { name: 'Crown banner', inspect: 'The Crown\'s red banner, nailed up over the village trail last night.' },
+  crown_banner_pier: { name: 'Crown banner', inspect: 'The Crown\'s banner at the head of the pier. The fishers walk round it.' },
+  crown_banner_batey_west: { name: 'Crown banner', inspect: 'A Crown banner at the edge of the dance ground.' },
+  crown_banner_batey_east: { name: 'Crown banner', inspect: 'A Crown banner at the edge of the dance ground. Someone has thrown mud at it.' },
+  ...Object.fromEntries(
+    Array.from({ length: 9 }, (_, i) => [`burned_stall_${i + 1}`, { name: 'Burned stall', inspect: 'Charred posts and ash. The market burned the night the Crown came.' }]),
+  ),
   record_baskets: { name: 'Record baskets' },
   mountain_sign: { name: 'Signpost' },
   ash_thumbprint: { name: 'Ash-marked post' },

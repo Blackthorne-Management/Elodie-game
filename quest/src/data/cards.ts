@@ -11,4 +11,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 1 complete',
     lines: ['The Festival of the Gaze', 'Next: Chapter 2, The Charter', 'The ferry sails for Xaraguá at dawn...'],
   },
+  // Chapter 2's midpoint (owner decision, Oct 15): the Crown attacks and the city is occupied.
+  {
+    id: 'xaragua_falls',
+    when: 'story.refuge',
+    title: 'The night the Crown came',
+    lines: ['Yucayeque is occupied. Cacique Anaco is a prisoner.', 'Yari and Anissa hide in the cave with the resistance.', 'Gianna walks on alone, on her envoy\'s papers.'],
+  },
 ];

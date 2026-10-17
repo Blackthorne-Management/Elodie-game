@@ -285,6 +285,11 @@
               "value": "up"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "cassava_farmer"
@@ -308,6 +313,11 @@
               "value": "right"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "cassava_farmer_2"
@@ -329,6 +339,11 @@
               "name": "facing",
               "type": "string",
               "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
             },
             {
               "name": "npc",
@@ -531,10 +546,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 256,
+      "imageheight": 272,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 127,
+      "tilecount": 129,
       "columns": 8,
       "margin": 0,
       "spacing": 0

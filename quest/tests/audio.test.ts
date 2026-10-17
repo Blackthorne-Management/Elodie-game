@@ -4,14 +4,14 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { BATTLE_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC, MUSIC_BY_MAP, SFX_IDS, VOICE_PITCH, VOLUME_STEPS } from '../src/audio.config.ts';
+import { BATTLE_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, SFX_IDS, VOICE_PITCH, VOLUME_STEPS } from '../src/audio.config.ts';
 import { renderSfx, renderVoice } from '../src/audio/sfx.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { blipDue, musicFor, nextVolume, voicePitch, volumeLabel } from '../src/engine/audioPlan.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { QUEST_ROOT, loadMaps } from '../tools/sim-setup.ts';
 
-const rules = { byMap: MUSIC_BY_MAP, echo: ECHO_MUSIC, battle: BATTLE_MUSIC, dialogue: DIALOGUE_MUSIC };
+const rules = { byMap: MUSIC_BY_MAP, echo: ECHO_MUSIC, battle: BATTLE_MUSIC, dialogue: DIALOGUE_MUSIC, overrides: MUSIC_OVERRIDES };
 
 describe('music', () => {
   it('every song file is in public/ and every map has a song', () => {
@@ -31,6 +31,15 @@ describe('music', () => {
     expect(musicFor(rules, { mapId: 'zetwal-house', era: 'echo' }, flags)).toBe('echo');
     expect(musicFor(rules, { mapId: 'zetwal-road', era: 'present', inBattle: true }, flags)).toBe('battle');
     expect(musicFor(rules, { mapId: 'nowhere', era: 'present' }, flags)).toBeNull();
+  });
+
+  it('occupied Yucayeque plays the Crown\'s march outdoors; the cave and the memory keep their own', () => {
+    const flags = new FlagStore();
+    expect(musicFor(rules, { mapId: 'xaragua-village', era: 'present' }, flags)).toBe('yucayeque');
+    flags.set('story.crown_attack', true);
+    expect(musicFor(rules, { mapId: 'xaragua-village', era: 'present' }, flags)).toBe('crown_customs');
+    expect(musicFor(rules, { mapId: 'xaragua-plaza', era: 'echo' }, flags)).toBe('echo');
+    expect(musicFor(rules, { mapId: 'xaragua-cave', era: 'present' }, flags)).toBe('mountain_path');
   });
 
   it("Mother's speech keeps the festival; seeing her off at the gate plays the farewell", () => {

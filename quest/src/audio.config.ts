@@ -64,6 +64,15 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'xaragua-record': 'caney',
 };
 
+/** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */
+export const MUSIC_OVERRIDES: readonly { maps: readonly string[]; if: Condition; music: MusicId }[] = [
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-caney'],
+    if: { flag: 'story.crown_attack' },
+    music: 'crown_customs',
+  },
+];
+
 /** Inside any memory. */
 export const ECHO_MUSIC: MusicId = 'echo';
 export const BATTLE_MUSIC: MusicId = 'battle';

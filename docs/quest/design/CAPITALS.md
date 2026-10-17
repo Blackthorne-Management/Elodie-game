@@ -184,6 +184,10 @@ with its Echo spot, and the carved chamber with the spring and the two sluices; 
 from the cassava gardens once the party has the oil lamp. `xaragua-record` (16 x 10), the council's record house on
 the Areíto Plaza, opens to the drum song tapped on the standing stone east of the dance ground.
 
+**The occupied city, built Oct 17 (the Crown attack):** the same maps, changed by `story.crown_attack`: townsfolk and
+vendors gone, the beach market burned, marines at checkpoints, Crown banners, a dusk wash and the Crown's march
+outdoors, a Crown captain in the caney, and the resistance (with Yari and Anissa) sheltering in the drained cave.
+
 **Chapters:** 2 and 11 (the War of the Harbor). **Ruler:** Cacique Anaco (Yari's father, ailing); Governor Thorne holds
 real power. Wants **Influence** (price 8). **Feel:** green mountains to the sea, round houses, canoes, the areíto
 plaza; Taíno-inspired. Accent teal `#17a5a5`.

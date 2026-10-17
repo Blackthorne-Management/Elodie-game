@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 16,
+  "nextobjectid": 21,
   "layers": [
     {
       "id": 1,
@@ -285,6 +285,11 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "areito_drummer"
@@ -306,6 +311,11 @@
               "name": "facing",
               "type": "string",
               "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
             },
             {
               "name": "npc",
@@ -331,6 +341,11 @@
               "value": "up"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "plaza_elder"
@@ -339,6 +354,34 @@
         },
         {
           "id": 4,
+          "name": "occ_marine_plaza",
+          "type": "npc",
+          "x": 288,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.crown_attack"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "occ_marine_plaza"
+            }
+          ]
+        },
+        {
+          "id": 5,
           "name": "echo_caona",
           "type": "npc",
           "x": 224,
@@ -366,7 +409,7 @@
           ]
         },
         {
-          "id": 5,
+          "id": 6,
           "name": "echo_benny",
           "type": "npc",
           "x": 256,
@@ -394,7 +437,7 @@
           ]
         },
         {
-          "id": 6,
+          "id": 7,
           "name": "echo_areito_drummer",
           "type": "npc",
           "x": 160,
@@ -422,7 +465,7 @@
           ]
         },
         {
-          "id": 7,
+          "id": 8,
           "name": "echo_areito_drummer_2",
           "type": "npc",
           "x": 304,
@@ -450,7 +493,7 @@
           ]
         },
         {
-          "id": 8,
+          "id": 9,
           "name": "echo_areito_singer",
           "type": "npc",
           "x": 192,
@@ -490,7 +533,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 9,
+          "id": 10,
           "name": "plaza_village",
           "type": "door",
           "x": 224,
@@ -518,7 +561,7 @@
           ]
         },
         {
-          "id": 10,
+          "id": 11,
           "name": "plaza_caney",
           "type": "door",
           "x": 224,
@@ -546,7 +589,7 @@
           ]
         },
         {
-          "id": 11,
+          "id": 12,
           "name": "plaza_song",
           "type": "door",
           "x": 48,
@@ -574,7 +617,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 13,
           "name": "plaza_record",
           "type": "door",
           "x": 400,
@@ -622,7 +665,46 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 14,
+          "name": "attack_plaza",
+          "type": "trigger",
+          "x": 112,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "attack_plaza"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.attack_plaza_seen"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_taken"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 11,
@@ -635,7 +717,30 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 15,
+          "name": "caney_back",
+          "type": "spawn",
+          "x": 112,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            }
+          ]
+        },
+        {
+          "id": 16,
           "name": "plaza",
           "type": "spawn",
           "x": 224,
@@ -670,7 +775,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 14,
+          "id": 17,
           "name": "batey_middle",
           "type": "echo_zone",
           "x": 208,
@@ -721,7 +826,73 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 15,
+          "id": 18,
+          "name": "crown_banner_batey_west",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.crown_attack"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "crown_banner"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "crown_banner_batey_east",
+          "type": "puzzle_object",
+          "x": 272,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.crown_attack"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "crown_banner"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 20,
           "name": "batey_stones",
           "type": "puzzle_object",
           "x": 352,
@@ -752,10 +923,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 256,
+      "imageheight": 272,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 127,
+      "tilecount": 129,
       "columns": 8,
       "margin": 0,
       "spacing": 0

@@ -151,6 +151,21 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   song_apprentice: n('song_apprentice', 'song_apprentice', 'Apprentice singer'),
   crown_clerk: n('crown_clerk', 'crown_clerk', 'Customs clerk'),
   customs_marine: n('customs_marine', 'crown_marine', 'Crown marine'),
+  // The Crown attack and the occupied city (Oct 17).
+  crown_captain: n('crown_captain', 'crown_captain', 'Crown captain'),
+  caney_breach_marine: n('caney_breach_marine', 'crown_marine', 'Crown marine', 'caney_breach_again'),
+  patrol_sergeant: n('patrol_sergeant', 'marine_sergeant', 'Marine sergeant', 'patrol_again'),
+  occ_marine_curfew: n('occ_marine_curfew', 'crown_marine', 'Crown marine'),
+  occ_marine_trail: n('occ_marine_trail', 'crown_musketeer', 'Crown musketeer'),
+  occ_marine_plaza: n('occ_marine_plaza', 'crown_marine', 'Crown marine'),
+  occ_marine_beach: n('occ_marine_beach', 'crown_musketeer', 'Crown musketeer'),
+  occ_marine_caney: n('occ_marine_caney', 'crown_marine', 'Crown marine'),
+  resistance_leader: n('resistance_leader', 'camp_leader', 'Camp leader'),
+  yari_hidden: n('yari_hidden', 'yari', 'Yari'),
+  anissa_hidden: n('anissa_hidden', 'anissa', 'Anissa'),
+  refugee_fisher: n('refugee_fisher', 'canoe_fisher', 'Fisher'),
+  refugee_elder: n('refugee_elder', 'elder_resist', 'Elder'),
+  refugee_healer: n('refugee_healer', 'behique', 'Healer'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

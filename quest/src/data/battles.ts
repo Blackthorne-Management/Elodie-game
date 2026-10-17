@@ -193,6 +193,18 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     role: 'skirmisher',
     moves: [{ name: 'Sling', power: 100 }],
   },
+  // The night of the attack (Oct 17): the officer leading the marines into the caney.
+  marine_lieutenant: {
+    id: 'marine_lieutenant',
+    name: 'Marine lieutenant',
+    look: 'marine_lieutenant',
+    level: 6,
+    role: 'brute',
+    moves: [
+      { name: 'Saber', power: 110 },
+      { name: 'Hold the doors', power: 160, every: 3, tell: 'The lieutenant raises his saber: "Marines! Present!"' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     name: 'Marine sergeant',
@@ -221,6 +233,40 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       spark: 'Now, Gigi! Surge!',
       tell: "The sergeant's men are fixing bayonets! Guard!",
       lowHp: "You're hurt. Eat something, or heal.",
+    },
+  },
+  // The Crown attack (Oct 17): marines storm the caney while the elders get out the back.
+  caney_breach: {
+    id: 'caney_breach',
+    title: 'The Caney',
+    backdrop: 'yucayeque_night',
+    enemies: ['crown_marine', 'crown_musketeer', 'marine_lieutenant'],
+    level: 6,
+    table: 'xaragua_story',
+    group: 'caney',
+    rewards: { xp: 120, gold: 50, items: [{ id: 'casabe', n: 1 }] },
+    tips: {
+      start: 'They are between us and the elders, Gigi! Hold them!',
+      spark: 'Surge, Gigi! Now!',
+      tell: 'The lieutenant is calling a volley! Guard!',
+      lowHp: 'Heal, Gigi, please!',
+    },
+  },
+  // The way out: the sergeant from the pier, with a patrol, on the village trail west.
+  village_patrol: {
+    id: 'village_patrol',
+    title: 'The Harbor at Night',
+    backdrop: 'yucayeque_night',
+    enemies: ['crown_marine', 'crown_musketeer', 'marine_sergeant'],
+    level: 5,
+    table: 'xaragua_story',
+    group: 'patrol',
+    rewards: { xp: 90, gold: 40 },
+    tips: {
+      start: 'The sergeant again! He never learns.',
+      spark: 'Surge!',
+      tell: 'Bayonets! Guard!',
+      lowHp: "You're hurt, Gigi.",
     },
   },
   intro_boar: {

@@ -198,5 +198,20 @@
   "up",
   "confirm",
   "skip",
-  "@oath"
+  "@oath",
+  "goto 7,9",
+  "goto 14,4",
+  "goto 9,6",
+  "skip",
+  "@attack",
+  "skip",
+  "@plaza-night",
+  "goto 14,21",
+  "skip",
+  "@patrol",
+  "goto 0,15",
+  "goto 6,17",
+  "skip",
+  "@refuge",
+  "confirm"
 ]

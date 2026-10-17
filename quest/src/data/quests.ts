@@ -272,6 +272,28 @@ export const ACT2: QuestDef = {
         'Take what the oath stone says to the elders in the caney.',
       ],
     },
+    {
+      id: 'escape',
+      title: 'The night the Crown came',
+      detail: 'The Crown has taken the caney and the cacique. Anaco said: take the girls to the cave. Get to the petroglyph cave in the cassava gardens.',
+      done: { flag: 'story.refuge' },
+      hints: [
+        'Anaco said the cave, Gigi. The one we drained.',
+        'Down through the plaza to the village, then west to the cassava gardens.',
+        'Go down to the Harbor Village, take the trail west to the gardens, and into the petroglyph cave.',
+      ],
+    },
+    {
+      id: 'held',
+      title: 'Where is Anaco held?',
+      detail: 'The Crown holds Yucayeque. Only Gianna, Zetwal\'s envoy, can walk the streets. Find out where they keep the cacique.',
+      done: { flag: 'story.anaco_found' },
+      hints: [
+        'Someone in the city has seen where they took him.',
+        'The marines talk. So do the people they are guarding.',
+        'Walk the occupied city and ask: the customs house, the caney, the harbor.',
+      ],
+    },
   ],
 };
 
@@ -328,6 +350,18 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'anchor.cave_sluice',
     title: 'Something changed',
     text: 'The petroglyph cave is dry in the present: young Patricio opened the lower sluice, and the spring has drained to the gorge for fifty years.',
+  },
+  {
+    id: 'anaco_taken',
+    when: 'story.anaco_taken',
+    title: 'The night the Crown came',
+    text: 'The night the elders heard the oath, the Crown\'s guns fired on the harbor. Marines took the caney, and a Crown captain led Cacique Anaco away in chains. "Take the girls and go. The cave."',
+  },
+  {
+    id: 'occupied',
+    when: 'story.refuge',
+    title: 'The occupied city',
+    text: 'Curfew at dark. Any Yaguana on the streets goes to the ships. Yari and Anissa hide in the petroglyph cave with the resistance. Under the Accord, no Crown hand may touch Zetwal\'s envoy: Gianna can still walk the city.',
   },
   {
     id: 'first_oath',

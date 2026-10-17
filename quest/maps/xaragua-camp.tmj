@@ -271,6 +271,11 @@
               "value": "left"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.refuge"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "camp_leader"
@@ -292,6 +297,11 @@
               "name": "facing",
               "type": "string",
               "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.refuge"
             },
             {
               "name": "npc",
@@ -452,10 +462,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 256,
+      "imageheight": 272,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 127,
+      "tilecount": 129,
       "columns": 8,
       "margin": 0,
       "spacing": 0

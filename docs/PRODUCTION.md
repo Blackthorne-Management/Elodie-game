@@ -38,7 +38,8 @@ the goddess, Elodie Limyè, Patricio young and old, Anicette young and old, the 
 (added Oct 15) the battle stances for Gianna, Yari and young Patricio (one empty-handed stance each; the game draws
 the weapons), Anissa's two battle poses, and the cane-field boar. Intro art (in
 `docs/quest/intro/art/`): complete Oct 16; later Benny, Caona, Rael. Caona and young Benny now appear in the game
-(the Echo of the first oath, Oct 17), drawn as placeholders until their art arrives.
+(the Echo of the first oath, Oct 17), drawn as placeholders until their art arrives; so do a marine lieutenant and a
+Crown captain (the Crown attack, Oct 17).
 
 **The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòdlimyè and Chapter 1 finished with
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1

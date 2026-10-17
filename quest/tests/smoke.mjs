@@ -787,13 +787,17 @@ async function playAct(browser, errors) {
           await page.keyboard.up('Shift');
           if (sim.battles.at(-1) === 'intro_boar') await fightBoar(page, shots);
           else await fightBattle(page, sim.battles.at(-1), shots);
-          // A fight can lead straight into a scene (the pier: the marines flee, the fisher speaks): read it.
+          // A fight can lead straight into a scene (the pier: the marines flee, the fisher speaks), and a scene
+          // into another map and its arrival scene (the caney: out the back into the burning plaza): read on
+          // until the browser stands where the simulator does.
           await frames(page);
-          for (let i = 0; i < 300; i++) {
+          const want = sim.logic.state.player.mapId;
+          for (let i = 0; i < 400; i++) {
             const t = await finishTyping(page);
-            if (t.mode !== 'dialogue') break;
-            await page.keyboard.press('KeyZ');
-            keys++;
+            if (t.mode === 'dialogue') {
+              await page.keyboard.press('KeyZ');
+              keys++;
+            } else if (t.mode === 'field' && t.mapId === want) break;
             await frames(page);
           }
           await page.keyboard.down('Shift');
@@ -823,7 +827,10 @@ async function playAct(browser, errors) {
   check(Object.keys(s.flags).every((f) => !f.startsWith('echo.')), 'no memory-only flags leaked into the present');
   check(s.flags['anchor.cave_sluice'] === true && s.flags['clue.drum_pattern'] === true, 'the petroglyph cave was drained through the Echo (the lower sluice) and its wall read');
   check(s.flags['story.caona_joined'] === true && s.flags['clue.drum_full'] === true, 'the areíto Echo played the whole drum song, and Caona joined the Echo party');
-  check(s.flags['story.oath_found'] === true && s.mapId === 'xaragua-record', 'the record house opened and the oath stone was read');
+  check(s.flags['story.oath_found'] === true, 'the record house opened and the oath stone was read');
+  check(s.flags['story.anaco_taken'] === true && s.flags['story.patrol_beaten'] === true, 'the Crown attack: the caney fight and the patrol fight were won in the browser, and Anaco was taken');
+  check(s.flags['story.refuge'] === true && s.flags['story.yari_hidden'] === true && s.mapId === 'xaragua-cave', 'the refuge: Yari and Anissa hide in the cave, Gianna walks on alone');
+  check(s.follower === null, 'Anissa no longer follows Gianna in the occupied city');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -927,7 +934,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'xaragua-record' && back.flags['act1.complete'] === true && back.flags['story.oath_found'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 under way after a reload');
+  check(back.mapId === 'xaragua-cave' && back.flags['act1.complete'] === true && back.flags['story.refuge'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 under way after a reload');
   await ctx.close();
   return shots;
 }

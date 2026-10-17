@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 17,
+  "nextobjectid": 21,
   "layers": [
     {
       "id": 1,
@@ -313,6 +313,11 @@
               "value": "right"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "caney_guard"
@@ -334,6 +339,11 @@
               "name": "facing",
               "type": "string",
               "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
             },
             {
               "name": "npc",
@@ -359,6 +369,11 @@
               "value": "right"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "elder_charter"
@@ -380,6 +395,11 @@
               "name": "facing",
               "type": "string",
               "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
             },
             {
               "name": "npc",
@@ -405,6 +425,11 @@
               "value": "up"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "elder_undecided"
@@ -426,6 +451,11 @@
               "name": "facing",
               "type": "string",
               "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
             },
             {
               "name": "npc",
@@ -507,6 +537,11 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "anaco"
@@ -530,9 +565,98 @@
               "value": "up"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.crown_attack"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "head_runner"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "caney_breach_marine",
+          "type": "npc",
+          "x": 144,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.crown_attack, !encounter.xaragua_story.caney.won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "caney_breach_marine"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "crown_captain",
+          "type": "npc",
+          "x": 272,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "crown_captain"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "occ_marine_caney",
+          "type": "npc",
+          "x": 256,
+          "y": 336,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "occ_marine_caney"
             }
           ]
         }
@@ -549,7 +673,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 11,
+          "id": 14,
           "name": "caney_out",
           "type": "door",
           "x": 272,
@@ -589,7 +713,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 12,
+          "id": 15,
           "name": "caney_enter",
           "type": "trigger",
           "x": 272,
@@ -627,7 +751,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 16,
           "name": "xaragua_council",
           "type": "trigger",
           "x": 160,
@@ -658,6 +782,39 @@
               "value": true
             }
           ]
+        },
+        {
+          "id": 17,
+          "name": "xaragua_proof",
+          "type": "trigger",
+          "x": 144,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "xaragua_proof"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.proof_heard"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.oath_found"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     },
@@ -672,7 +829,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 14,
+          "id": 18,
           "name": "caney",
           "type": "spawn",
           "x": 272,
@@ -729,7 +886,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 15,
+          "id": 19,
           "name": "caney_records",
           "type": "puzzle_object",
           "x": 80,
@@ -752,7 +909,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 20,
           "name": "duho_seat",
           "type": "puzzle_object",
           "x": 272,
@@ -783,10 +940,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 256,
+      "imageheight": 272,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 127,
+      "tilecount": 129,
       "columns": 8,
       "margin": 0,
       "spacing": 0

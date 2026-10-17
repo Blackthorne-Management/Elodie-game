@@ -59,17 +59,20 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     expect(atChapterEnd['item.boar_tusk'] ?? atChapterEnd['equip.gianna.charm']).toBeTruthy();
     const now = sim.logic.state.flags.snapshot();
     for (const [k, v] of Object.entries(atChapterEnd)) {
+      // The story itself moves Anissa: she hides in the cave once the Crown attacks (Chapter 2's midpoint).
+      if (k === 'party.anissa') continue;
       // Counts and totals only grow on the way (the pier fight pays XP, gold and casabe); the rest is unchanged.
       if (typeof v === 'number') expect(now[k] as number, k).toBeGreaterThanOrEqual(v);
       else expect(now[k], k).toEqual(v);
     }
   });
 
-  it('Chapter 2: the pier fight, Anaco, the council, Thorne, the lamp, the cave, the areíto, the lock; proof is next', () => {
-    expect(sim.battles).toEqual(['intro_boar', 'pier_marines']);
-    expect(chapter2).toEqual(['pier', 'anaco', 'council', 'thorne', 'lamp', 'cave', 'areito', 'lock', 'proof']);
+  it('Chapter 2: the pier, Anaco, the council, Thorne, the cave, the lock, the proof, the attack; the occupied city is next', () => {
+    expect(sim.battles).toEqual(['intro_boar', 'pier_marines', 'caney_breach', 'village_patrol']);
+    expect(chapter2).toEqual(['pier', 'anaco', 'council', 'thorne', 'lamp', 'cave', 'areito', 'lock', 'proof', 'escape', 'held']);
     expect(sim.logic.state.flags.isSet('clue.seventh_clause')).toBe(true);
-    expect(sim.logic.state.player.mapId).toBe('xaragua-record');
+    expect(sim.logic.state.flags.isSet('card.xaragua_falls')).toBe(true);
+    expect(sim.logic.state.player.mapId).toBe('xaragua-cave');
   });
 
   it('the petroglyph cave: the sluice opened in the memory drains it, the areíto gives the last bar, the stones open the record house', () => {

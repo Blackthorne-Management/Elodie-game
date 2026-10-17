@@ -12,6 +12,8 @@ export interface MusicRules<Id extends string> {
   echo: Id;
   battle: Id;
   dialogue: readonly { dialogue: string; if?: Condition; music: Id }[];
+  /** Maps whose song changes while a condition holds (an occupied city), checked before `byMap`. */
+  overrides?: readonly { maps: readonly string[]; if: Condition; music: Id }[];
 }
 
 export interface MusicSituation {
@@ -30,6 +32,8 @@ export function musicFor<Id extends string>(rules: MusicRules<Id>, s: MusicSitua
     if (rule) return rule.music;
   }
   if (s.era === 'echo') return rules.echo;
+  const override = rules.overrides?.find((o) => o.maps.includes(s.mapId) && evaluate(o.if, flags));
+  if (override) return override.music;
   return rules.byMap[s.mapId] ?? null;
 }
 

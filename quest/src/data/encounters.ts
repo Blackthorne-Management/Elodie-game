@@ -11,8 +11,8 @@ import type { EncounterTable } from '../engine/content.ts';
 export const LATER_STORY_FLAGS: readonly string[] = [
   /** The party returns to Zetwal later in the story: the Cane Road's ambushes begin. */
   'story.zetwal_return',
-  /** Chapter 2: the oath stone's proof shown to the elders (the next build). */
-  'story.proof_shown',
+  /** Chapter 2, the occupied city: Gianna finds where Anaco is held (the next build). */
+  'story.anaco_found',
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
@@ -43,6 +43,24 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
         intro: 'Crown marines block the pier.',
         won: 'The marines retreat to their boat.',
         fled: 'You back away down the pier.',
+      },
+      {
+        id: 'caney',
+        weight: 0,
+        level: 6,
+        foes: ['Crown Marine', 'Crown Musketeer', 'Marine lieutenant'],
+        intro: 'Marines storm the caney.',
+        won: 'The marines fall back to the terrace.',
+        fled: 'You fall back into the hall.',
+      },
+      {
+        id: 'patrol',
+        weight: 0,
+        level: 5,
+        foes: ['Crown Marine', 'Crown Musketeer', 'Marine sergeant'],
+        intro: 'A patrol blocks the trail west.',
+        won: 'The patrol scatters into the smoke.',
+        fled: 'You duck back between the houses.',
       },
     ],
   },

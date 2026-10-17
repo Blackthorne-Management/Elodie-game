@@ -12,6 +12,7 @@ import {
   CHARACTER_LABEL_GAP,
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
+  MAP_MOODS,
   ECHO_PLAYER_LOOK,
   MARKER_TEXTURES,
   OBJECT_ART,
@@ -25,6 +26,7 @@ import {
 import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { CHAPTERS, JOURNAL_NOTES } from '../data/quests.ts';
+import { evaluate } from '../engine/conditions.ts';
 import type { Effect, GameLogic, Target } from '../engine/game.ts';
 import { DIRS, type Dir8, type Era, type Pos } from '../engine/types.ts';
 import { combine, facingToward, opposite, samePos, spriteFacing, stepFrom } from '../engine/grid.ts';
@@ -59,7 +61,7 @@ import { rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { planTap } from '../engine/tap.ts';
 import { audio } from '../audio/player.ts';
-import { BATTLE_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, VOLUME_STEPS } from '../audio.config.ts';
+import { BATTLE_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, VOLUME_STEPS } from '../audio.config.ts';
 import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.ts';
 import { echoPrompt } from '../engine/world.ts';
 import { isTouchDevice } from '../input/touch.ts';
@@ -162,6 +164,8 @@ export class FieldScene extends Phaser.Scene {
   private glowing = new Set<string>();
   private follower: Follower | null = null;
   private echoWash!: Phaser.GameObjects.Rectangle;
+  /** The map's mood wash (assets.config.ts MAP_MOODS), when one applies. */
+  private moodWash!: Phaser.GameObjects.Rectangle;
   private echoDither!: Phaser.GameObjects.TileSprite;
   private echoMatrix: Phaser.FX.ColorMatrix | null = null;
   private dialogue!: DialogueBox;
@@ -278,6 +282,7 @@ export class FieldScene extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setDepth(4000);
+    this.moodWash = this.add.rectangle(0, 0, VIEW_WIDTH, VIEW_HEIGHT, 0x000000, 0).setOrigin(0, 0).setScrollFactor(0).setDepth(3990).setVisible(false);
     this.echoDither = this.add
       .tileSprite(0, 0, VIEW_WIDTH, VIEW_HEIGHT, ECHO_DITHER_TEXTURE)
       .setOrigin(0, 0)
@@ -503,6 +508,7 @@ export class FieldScene extends Phaser.Scene {
           break;
         case 'sync':
           this.syncActors();
+          this.applyMood();
           this.checkProgress();
           break;
         case 'talk': {
@@ -845,7 +851,7 @@ export class FieldScene extends Phaser.Scene {
   /** The song for where the player is and what is happening (engine/audioPlan.ts); the player keeps it if unchanged. */
   private syncMusic(): void {
     if (this.mode === 'battle') return;
-    const rules = { byMap: MUSIC_BY_MAP, echo: ECHO_MUSIC, battle: BATTLE_MUSIC, dialogue: DIALOGUE_MUSIC };
+    const rules = { byMap: MUSIC_BY_MAP, echo: ECHO_MUSIC, battle: BATTLE_MUSIC, dialogue: DIALOGUE_MUSIC, overrides: MUSIC_OVERRIDES };
     audio.playMusic(musicFor(rules, { mapId: this.map.id, era: this.logic.era, dialogue: this.logic.dialogueId }, this.logic.state.flags));
   }
 
@@ -1012,6 +1018,7 @@ export class FieldScene extends Phaser.Scene {
     const echo = era === 'echo';
     this.echoWash.setVisible(echo);
     this.echoDither.setVisible(echo);
+    this.applyMood();
     const cam = this.cameras.main;
     if (echo && ECHO_FILTER.sepia && this.game.renderer.type === Phaser.WEBGL && !this.echoMatrix) {
       this.echoMatrix = cam.postFX.addColorMatrix();
@@ -1022,6 +1029,13 @@ export class FieldScene extends Phaser.Scene {
       this.echoMatrix = null;
     }
     setLook(this.player, this.playerLook(), this.logic.state.player.facing);
+  }
+
+  /** The map's mood (the occupied city's dusk), in the present only. */
+  private applyMood(): void {
+    const mood = this.logic.era === 'present' ? MAP_MOODS.find((m) => m.maps.includes(this.map.id) && evaluate(m.if, this.logic.state.flags)) : undefined;
+    this.moodWash.setVisible(!!mood);
+    if (mood) this.moodWash.setFillStyle(mood.color, mood.alpha);
   }
 
   /** The minimap (a page element in the black bars) for this map and era, named after the city section. */

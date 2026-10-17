@@ -22,6 +22,18 @@ const LAGOON = 'ō';
 const ROCK = 'ū';
 const FLOWERS = 'ǎ';
 
+/**
+ * The Crown attack (Chapter 2's midpoint, owner decision Oct 15): from the night the guns fire, the same maps
+ * are occupied. Townsfolk keep indoors (PEACE), marines stand at checkpoints and Crown banners go up (WAR).
+ */
+const PEACE = '!story.crown_attack';
+const WAR = 'story.crown_attack';
+
+/** A Crown banner raised over the occupied city. */
+function crownBanner(name: string, x: number, y: number): ObjSpec {
+  return obj(name, x, y, { kind: 'crown_banner', solid: true, era: 'present', if: WAR });
+}
+
 /** Fifty years ago the customs house is older stone; the rest of the land is much as it is. */
 const OLD = { '#': '%' } as const;
 
@@ -124,15 +136,23 @@ export function xaraguaVillage(): MapSource {
   const e = g.map(OLD);
 
   const objects: ObjSpec[] = [
-    npc('canoe_fisher', 18, 20, 'down'),
-    npc('weaver', 19, 13, 'down'),
-    npc('fisher_boy', 25, 20, 'left'),
-    npc('crown_marine', 27, 13, 'down'),
-    npc('crown_marine_2', 36, 13, 'left'),
-    npc('lamp_oil_seller', 23, 10, 'right'),
+    npc('canoe_fisher', 18, 20, 'down', { if: PEACE }),
+    npc('weaver', 19, 13, 'down', { if: PEACE }),
+    npc('fisher_boy', 25, 20, 'left', { if: PEACE }),
+    npc('crown_marine', 27, 13, 'down', { if: PEACE }),
+    npc('crown_marine_2', 36, 13, 'left', { if: PEACE }),
+    npc('lamp_oil_seller', 23, 10, 'right', { if: PEACE }),
     // The debate corner: an elder of the springs and a Gaze pilgrim, arguing across the yard's fire.
-    npc('debate_roots_elder', 9, 7, 'right'),
-    npc('debate_pilgrim', 13, 7, 'left'),
+    npc('debate_roots_elder', 9, 7, 'right', { if: PEACE }),
+    npc('debate_pilgrim', 13, 7, 'left', { if: PEACE }),
+    // Occupied: checkpoints on the trails, the Crown's banners, and (on the night of the attack) the patrol
+    // on the trail west (the fight starts on arrival; the sergeant restarts it after a lost fight).
+    npc('occ_marine_curfew', 27, 13, 'down', { if: WAR }),
+    npc('occ_marine_trail', 36, 13, 'left', { if: WAR }),
+    npc('patrol_sergeant', 8, 15, 'up', { if: 'story.anaco_taken, !encounter.xaragua_story.patrol.won' }),
+    trigger('attack_village', 21, 1, { dialogue: 'attack_village', flag: 'story.attack_village_seen', once: true, onEnter: true, if: 'story.anaco_taken' }),
+    crownBanner('crown_banner_village', 28, 14),
+    crownBanner('crown_banner_pier', 20, 18),
 
     { layer: 'doors', name: 'village_plaza', x: 21, y: 0, w: 2, props: { target: 'plaza_village', map: 'xaragua-plaza', exit: 'down' } },
     { layer: 'doors', name: 'village_beach', x: W - 1, y: 15, h: 2, props: { target: 'beach_village', map: 'xaragua-beach', exit: 'left' } },
@@ -190,9 +210,16 @@ export function xaraguaPlaza(): MapSource {
   const e = g.map(OLD);
 
   const objects: ObjSpec[] = [
-    npc('areito_drummer', 12, 11, 'down'),
-    npc('dancer', 17, 12, 'left'),
-    npc('plaza_elder', 21, 18, 'up'),
+    npc('areito_drummer', 12, 11, 'down', { if: PEACE }),
+    npc('dancer', 17, 12, 'left', { if: PEACE }),
+    npc('plaza_elder', 21, 18, 'up', { if: PEACE }),
+    // Occupied: a marine on the dance ground, banners either side of the caney's steps.
+    npc('occ_marine_plaza', 18, 12, 'left', { if: WAR }),
+    crownBanner('crown_banner_batey_west', 12, 6),
+    crownBanner('crown_banner_batey_east', 17, 6),
+    // The night of the attack: out the back of the caney into a burning plaza.
+    { layer: 'spawns', name: 'caney_back', x: 7, y: 6, props: { facing: 'down', era: 'present' } },
+    trigger('attack_plaza', 7, 6, { dialogue: 'attack_plaza', flag: 'story.attack_plaza_seen', once: true, onEnter: true, if: 'story.anaco_taken' }),
 
     { layer: 'doors', name: 'plaza_village', x: 14, y: H - 1, w: 2, props: { target: 'village_plaza', map: 'xaragua-village', exit: 'up' } },
     { layer: 'doors', name: 'plaza_caney', x: 14, y: 4, props: { target: 'caney_out', map: 'xaragua-caney', exit: 'down' } },
@@ -245,8 +272,8 @@ export function xaraguaBeach(): MapSource {
   // The beach market (unique to Yucayeque, owner rule Oct 15): a crescent of thatched stalls round a
   // packed-earth clearing, where fish, salt and cassava bread are traded.
   oval(g, 16, 4, 7, 3, 'ú');
-  put(g, 'ş', around(16, 4, 6, 2.6, 7, Math.PI * 1.05, Math.PI * 1.95));
-  put(g, 'ş', [[10, 5], [22, 5]]);
+  const stalls = [...around(16, 4, 6, 2.6, 7, Math.PI * 1.05, Math.PI * 1.95), [10, 5], [22, 5]] as [number, number][];
+  put(g, 'ş', stalls);
 
   // Salt pans on the sand, canoes drawn up and afloat, palms.
   g.rect(23, 12, 5, 2, 'ŝ');
@@ -260,12 +287,15 @@ export function xaraguaBeach(): MapSource {
   const e = g.map(OLD);
 
   const objects: ObjSpec[] = [
-    npc('salt_seller', 25, 11, 'down'),
-    npc('casabe_baker', 13, 3, 'up'),
-    npc('carver', 16, 3, 'up'),
-    npc('bow_maker', 19, 3, 'up'),
-    npc('canoe_maker', 9, 13, 'left'),
-    npc('shell_diver', 30, 10, 'up'),
+    npc('salt_seller', 25, 11, 'down', { if: PEACE }),
+    npc('casabe_baker', 13, 3, 'up', { if: PEACE }),
+    npc('carver', 16, 3, 'up', { if: PEACE }),
+    npc('bow_maker', 19, 3, 'up', { if: PEACE }),
+    npc('canoe_maker', 9, 13, 'left', { if: PEACE }),
+    npc('shell_diver', 30, 10, 'up', { if: PEACE }),
+    // Occupied: the market burned on the night of the attack, a musketeer on the trail.
+    ...stalls.map(([x, y], i) => obj(`burned_stall_${i + 1}`, x, y, { kind: 'stall_burned', solid: true, era: 'present', if: WAR })),
+    npc('occ_marine_beach', 13, 8, 'down', { if: WAR }),
 
     { layer: 'doors', name: 'beach_village', x: 0, y: 7, h: 2, props: { target: 'village_beach', map: 'xaragua-village', exit: 'right' } },
     { layer: 'spawns', name: 'beach', x: 2, y: 7, props: { facing: 'right', era: 'present' } },
@@ -303,9 +333,9 @@ export function xaraguaConuco(): MapSource {
   const e = g.map(OLD);
 
   const objects: ObjSpec[] = [
-    npc('cassava_farmer', 20, 4, 'up'),
-    npc('cassava_farmer_2', 11, 5, 'right'),
-    npc('conuco_kid', 16, 14, 'down'),
+    npc('cassava_farmer', 20, 4, 'up', { if: PEACE }),
+    npc('cassava_farmer_2', 11, 5, 'right', { if: PEACE }),
+    npc('conuco_kid', 16, 14, 'down', { if: PEACE }),
 
     { layer: 'doors', name: 'conuco_village', x: W - 1, y: 9, h: 2, props: { target: 'village_conuco', map: 'xaragua-village', exit: 'left' } },
     { layer: 'doors', name: 'conuco_mountain', x: 6, y: 0, w: 2, props: { target: 'mountain_conuco', map: 'xaragua-mountain', exit: 'down' } },
@@ -356,7 +386,7 @@ export function xaraguaMountain(): MapSource {
     { layer: 'spawns', name: 'mountain', x: 20, y: H - 3, props: { facing: 'up', era: 'present' } },
     obj('mountain_sign', 16, 19, { dialogue: 'mountain_sign', era: 'present' }),
     // The wild section (guide 6.6): ambushes once the pier fight is won.
-    { layer: 'encounters', name: 'mountain_forest', x: 1, y: 1, w: W - 2, h: H - 2, props: { table: 'mountain_path', if: 'encounter.xaragua_story.pier.won' } },
+    { layer: 'encounters', name: 'mountain_forest', x: 1, y: 1, w: W - 2, h: H - 2, props: { table: 'mountain_path', if: 'encounter.xaragua_story.pier.won, !story.crown_attack' } },
   ];
   return { id: 'xaragua-mountain', present: g, echo: e, objects };
 }
@@ -385,8 +415,9 @@ export function xaraguaCamp(): MapSource {
   const e = g.map(OLD);
 
   const objects: ObjSpec[] = [
-    npc('camp_leader', 15, 11, 'left'),
-    npc('camp_scout', 19, 8, 'left'),
+    // Since the attack the camp's people shelter in the petroglyph cave.
+    npc('camp_leader', 15, 11, 'left', { if: '!story.refuge' }),
+    npc('camp_scout', 19, 8, 'left', { if: '!story.refuge' }),
 
     { layer: 'doors', name: 'camp_mountain', x: 12, y: H - 1, w: 2, props: { target: 'mountain_camp', map: 'xaragua-mountain', exit: 'up' } },
     { layer: 'spawns', name: 'camp', x: 12, y: H - 3, props: { facing: 'up', era: 'present' } },
@@ -423,21 +454,27 @@ export function xaraguaCaney(): MapSource {
 
   const objects: ObjSpec[] = [
     // One either side of the double doors (owner rule, Oct 16).
-    npc('caney_guard', 16, 23, 'right'),
-    npc('caney_guard_2', 19, 23, 'left'),
-    npc('elder_charter', 3, 6, 'right'),
-    npc('elder_resist', 7, 6, 'left'),
-    npc('elder_undecided', 5, 7, 'up'),
-    npc('behique', 30, 5, 'down'),
+    npc('caney_guard', 16, 23, 'right', { if: PEACE }),
+    npc('caney_guard_2', 19, 23, 'left', { if: PEACE }),
+    npc('elder_charter', 3, 6, 'right', { if: PEACE }),
+    npc('elder_resist', 7, 6, 'left', { if: PEACE }),
+    npc('elder_undecided', 5, 7, 'up', { if: PEACE }),
+    npc('behique', 30, 5, 'down', { if: PEACE }),
     // The Governor's liaison waits in the hall, then (once Gianna has seen Anaco) walks into the middle of the
     // elders' circle to read them the Charter (owner report, Oct 17: he must be there for the council).
     npc('crown_liaison', 22, 6, 'left', { if: '!story.anaco_met' }),
     npc('crown_liaison_council', 5, 6, 'up', { npc: 'crown_liaison', if: 'story.anaco_met, !story.council_defied' }),
-    npc('anaco', 33, 4, 'down'),
+    npc('anaco', 33, 4, 'down', { if: PEACE }),
     // Chapter 2: the welcome, and the council scene at the council circle's doorway (after meeting Anaco).
     trigger('caney_enter', 17, 23, { dialogue: 'caney_enter', flag: 'story.caney_entered', once: true, onEnter: true, if: 'encounter.xaragua_story.pier.won' }),
     trigger('xaragua_council', 10, 6, { dialogue: 'xaragua_council', flag: 'story.council_seen', once: true, if: 'story.anaco_met' }),
-    npc('head_runner', 5, 20, 'up'),
+    npc('head_runner', 5, 20, 'up', { if: PEACE }),
+    // The Crown attack: the elders hear the oath, then the guns. A marine restarts the fight after a lost one;
+    // once the caney is taken, a Crown captain sits below the duho and a marine holds the doors.
+    trigger('xaragua_proof', 9, 6, { dialogue: 'xaragua_proof', flag: 'story.proof_heard', once: true, if: 'story.oath_found' }),
+    npc('caney_breach_marine', 9, 8, 'up', { if: 'story.crown_attack, !encounter.xaragua_story.caney.won' }),
+    npc('crown_captain', 17, 3, 'down', { if: 'story.anaco_taken' }),
+    npc('occ_marine_caney', 16, 21, 'right', { if: 'story.anaco_taken' }),
     obj('caney_records', 5, 14, { dialogue: 'shelf.caney_records', era: 'present' }, 3, 1),
 
     { layer: 'doors', name: 'caney_out', x: 17, y: H - 1, props: { target: 'plaza_caney', map: 'xaragua-plaza', exit: 'up' } },
@@ -541,6 +578,14 @@ export function xaraguaCave(): MapSource {
       props: { if: 'item.sun_locket', onEcho: 'cave_echo_enter', onReturn: 'cave_echo_return' },
     },
     npc('echo_spring_keeper', 18, 5, 'left', { era: 'echo' }),
+    // The refuge (the Crown attack): the resistance shelters here, with Yari and Anissa in hiding.
+    trigger('cave_refuge', 14, 19, { dialogue: 'cave_refuge', flag: 'story.refuge_seen', once: true, onEnter: true, if: 'story.patrol_beaten' }),
+    npc('resistance_leader', 10, 14, 'right', { if: 'story.refuge' }),
+    npc('yari_hidden', 11, 17, 'up', { if: 'story.refuge' }),
+    npc('anissa_hidden', 12, 17, 'up', { if: 'story.refuge' }),
+    npc('refugee_fisher', 18, 14, 'left', { if: 'story.refuge' }),
+    npc('refugee_elder', 19, 17, 'left', { if: 'story.refuge' }),
+    npc('refugee_healer', 17, 18, 'up', { if: 'story.refuge' }),
 
     // The present: black water to the walls, and the buried outlet.
     obj('cave_flood', 14, 8, { dialogue: 'cave_flood', era: 'present', if: '!anchor.cave_sluice' }, 2, 1),

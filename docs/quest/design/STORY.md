@@ -155,6 +155,21 @@ of any crown will part us." Three names, no seventh clause (`story.oath_found`).
 *Proof for the elders* (`story.proof_shown`), is the next build. **Proposals for the owner:** the oath's wording,
 the drum song itself (three bars of long and short marks), Caona's Echo stats and moves, and young Benny's look.
 
+**Built Oct 17 (the Crown attack, the midpoint; owner decision Oct 17: Anaco is taken prisoner):** Gianna and Yari
+bring the oath stone's words to the elders in the caney (`story.proof_shown`); as the vote turns, the harbor guns
+fire (Thorne's watcher saw where they went). Marines storm the caney: a fight (`caney_breach`: marine, musketeer,
+lieutenant, level 6) while the elders get out the back. A Crown captain then takes the caney and leads **Anaco away
+a prisoner** (`story.anaco_taken`): "Take the Limyè girls and go. The cave." Out the back into the burning plaza,
+down to the village, where the sergeant from the pier blocks the trail west (`village_patrol`, level 5); the old
+fisher sends them to the resistance in the petroglyph cave, the chamber the party drained in the Echo. The refuge
+(`story.refuge`): the camp leader says every marine knows Yari's face, but no Crown hand may touch Zetwal's envoy;
+**Yari and Anissa stay hidden** (Yari leaves the active party; Anissa stops following, so her hints are quiet too),
+and Gianna walks on alone. A card closes the first half. **The occupied city:** from the night of the attack the
+same maps change (flags, not new maps): townsfolk and vendors keep indoors, the beach market is burned, marines stand
+at checkpoints, Crown banners go up, the caney is the Governor's (a captain below the duho), Thorne gloats, the
+outdoor maps take a dusk wash and play the Crown's march, and the Mountain Path's ambushes stop. The Journal's next
+objective, *Where is Anaco held?* (`story.anaco_found`), is the next build (the occupied city's second half).
+
 **Owner decision (Oct 15), the shape of the chapter:** Xaraguá is first shown at its most beautiful: the normal,
 living city for the first half of the chapter. **Midway, the Crown attacks** and the city is **occupied**: the same
 maps change to their occupied versions (Crown soldiers, checkpoints, curfew, burned stalls, Crown banners on the

@@ -144,8 +144,148 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say('thorne', 'Good day, Miss Limyè. Mind the step on your way out. The Crown built it, so it is level.'),
       ],
     },
-    again: { lines: [say('thorne', 'Still here, Miss Limyè? The ferry leaves every morning. I can have a cabin made ready.')] },
+    again: {
+      lines: [],
+      next: [{ if: { flag: 'story.crown_attack' }, to: 'occupied' }, { to: 'still' }],
+    },
+    still: { lines: [say('thorne', 'Still here, Miss Limyè? The ferry leaves every morning. I can have a cabin made ready.')] },
+    occupied: {
+      lines: [
+        say('thorne', 'Miss Limyè. You see, the Crown keeps its word: not one hair on the envoy\'s head.'),
+        say('thorne', 'The harbor is protected now. The cacique is my guest. Curfew at dark, for everyone but you.'),
+        say(G, 'Where is he?'),
+        say('thorne', 'Somewhere comfortable. Good day.'),
+      ],
+    },
   }),
+
+  // ---- Chapter 2, the Crown attack (Oct 17; owner decision Oct 15: midway, the city is occupied) ----------
+  // The elders hear the oath stone's words. Thorne's watcher saw where the party went, and the guns fire.
+  simple('xaragua_proof', [
+    nar('The elders are still in the circle, talking low by a single lamp. They look up as you come in.'),
+    say(Y, 'Elders. The record house is open. We read the oath stone.'),
+    say('elder_charter', 'The record house? Nobody has opened that door since Caona\'s time.'),
+    say(Y, '"The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us."'),
+    say(G, 'Sworn by Caona, Patricio and Benny. Three names. No seventh clause, and nothing about the harbor going to the Crown.'),
+    say('elder_resist', 'I told you. I have not unsworn it, and neither did they.'),
+    { speaker: 'elder_undecided', text: 'Then the Charter rests on a clause nobody here ever swore. The vote is...', set: { 'story.proof_shown': true } },
+    { speaker: '', text: 'BOOM. The posts shake. Dust falls from the thatch.', fx: 'shake' },
+    say(A, 'Gigi! The ships are firing!'),
+    { speaker: '', text: 'Again, and again. Below, the harbor guns. In the plaza, drums: not areíto drums. Crown drums.', fx: 'shake' },
+    say('caney_guard', 'Marines on the terrace! They are coming in!'),
+    say(Y, 'Elders, out the back! Gianna, with me. We hold them here!'),
+    { speaker: 'marine_lieutenant', text: 'By order of the Governor! Nobody leaves this house!', set: { 'story.crown_attack': true, 'battle.next': 'caney_breach', 'battle.after': 'caney_after' } },
+  ]),
+  // After a lost fight in the caney: the marines are still there.
+  script('caney_breach_again', {
+    start: { lines: [], next: [{ if: { flag: 'encounter.xaragua_story.caney.won' }, to: 'done' }, { to: 'again' }] },
+    again: {
+      lines: [
+        say('marine_lieutenant', 'Still standing? Marines, again!'),
+        { speaker: Y, text: 'The elders need more time. Hold!', set: { 'battle.next': 'caney_breach', 'battle.after': 'caney_after' } },
+      ],
+    },
+    done: { lines: [say('crown_marine', '...')] },
+  }),
+  // The fight is won, but the caney is lost: a Crown captain takes the cacique.
+  simple('caney_after', [
+    nar('The last marine stumbles back through the doors. For a moment the caney is quiet.'),
+    nar('Then boots on the terrace. Many of them. A Crown captain walks in with two ranks of muskets behind him.'),
+    say('crown_captain', 'By order of Governor Thorne, this house and this harbor are under the protection of the Crown. Where is the cacique?'),
+    nar('Anaco comes out of the healer\'s room, leaning on his cane.'),
+    say('anaco', 'Here. You want the harbor, captain? You will have to carry the old man who sits on it.'),
+    say('crown_captain', 'Gladly. Take him.'),
+    say(Y, 'Father!'),
+    say('anaco', 'Yari. No. Look at me. You are no use to me in chains. Take the Limyè girls and go. The cave. You know the one.'),
+    say('anaco', 'Envoy\'s daughter. They cannot touch you, by their own Accord. Remember that, and use it.'),
+    say(G, 'We\'ll find you. I promise.'),
+    nar('The marines lead the cacique out into the smoke. The healer pulls you through the back of the caney...'),
+    { speaker: '', text: '(Cacique Anaco was taken prisoner.)', set: { 'story.anaco_taken': true, 'travel.next': 'xaragua-plaza/caney_back' } },
+  ]),
+  simple('attack_plaza', [
+    nar('Night. The stalls\' thatch is burning. Crown drums beat on the dance ground, and red banners go up by the steps.'),
+    say(Y, 'On the batey. They are standing on the batey.'),
+    say(A, 'Gigi, I\'m scared.'),
+    say(G, 'Hold my hand. Down to the village, then west to the gardens and the cave. Quietly.'),
+  ]),
+  // The patrol on the village trail west: the sergeant from the pier.
+  simple('attack_village', [
+    nar('Smoke over the village. Doors kicked in. A patrol of marines stands across the trail west, torches up.'),
+    say('marine_sergeant', 'You! The cacique\'s girl! I told you the Governor would hear.'),
+    say(Y, 'And I told you to tell him slowly.'),
+    { speaker: 'marine_sergeant', text: 'Take her!', set: { 'battle.next': 'village_patrol', 'battle.after': 'patrol_after' } },
+  ]),
+  script('patrol_again', {
+    start: { lines: [], next: [{ if: { flag: 'encounter.xaragua_story.patrol.won' }, to: 'done' }, { to: 'again' }] },
+    again: {
+      lines: [
+        say('marine_sergeant', 'Back again? Patrol! Form up!'),
+        { speaker: Y, text: 'Out of our way.', set: { 'battle.next': 'village_patrol', 'battle.after': 'patrol_after' } },
+      ],
+    },
+    done: { lines: [say('marine_sergeant', 'Not again.')] },
+  }),
+  simple('patrol_after', [
+    say('marine_sergeant', 'Fall back! Fall back to the customs house!'),
+    nar('The patrol scatters into the smoke. A door opens a crack: the old fisher from the pier.'),
+    say('canoe_fisher', 'Yari! This way. The resistance is in the old cave in the gardens. Everyone who can still run is going there.'),
+    { speaker: Y, text: 'The cave. Come on.', set: { 'story.patrol_beaten': true } },
+  ]),
+  // The refuge in the cave the party drained: the end of the first half.
+  simple('cave_refuge', [
+    nar('The cave is full of people: fishers, farmers, children, the healer. They sit on the dry chamber floor by lamplight.'),
+    say('camp_leader', 'Envoy\'s daughter. Again. You never saw the camp. Now you are standing in it.'),
+    say('camp_leader', 'This chamber has been dry for fifty years. Luck, the old people say. Someone left the low gate open.'),
+    say(A, '(whispering) Not luck, Gigi.'),
+    say('camp_leader', 'The Crown has the harbor, the caney and the cacique. Curfew at dark. Any Yaguana on the streets goes to the ships.'),
+    say(Y, 'Then I go at night.'),
+    say('camp_leader', 'You go nowhere. Every marine on this island knows your face now.'),
+    say('camp_leader', 'But she is Zetwal\'s envoy. Under the Accord, no Crown hand may touch her. She can walk where we cannot.'),
+    say(G, 'Then I\'ll walk. I\'ll find where they are holding Anaco.'),
+    say(A, 'I\'m coming too.'),
+    say(G, 'Not this time. Thorne knows you glow, Anissa. Stay with Yari. Keep each other safe.'),
+    say(A, '...Come back before the lamp goes out.'),
+    say(Y, 'Gianna. Bring my father home.'),
+    { speaker: '', text: '(Yari and Anissa stay hidden in the cave.)', set: { 'story.refuge': true, 'story.occupied': true, 'story.yari_hidden': true, 'party.anissa': false } },
+  ]),
+  // The refuge, after.
+  simple('resistance_leader_talk', [
+    say('camp_leader', 'Walk like an envoy. Slow, chin up, bored. Marines never stop anyone who looks bored.'),
+  ]),
+  simple('yari_hidden_talk', [
+    say(Y, 'I counted the marines from the cave mouth. Forty, at least. Find him, Gianna. Then we will count them again.'),
+  ]),
+  simple('anissa_hidden_talk', [
+    say(A, 'I\'m keeping the lamp lit. Come back before it goes out, Gigi. Promise.'),
+  ]),
+  simple('refugee_fisher_talk', [
+    say('canoe_fisher', 'They took my canoe for firewood. A canoe! It took my father a year to carve.'),
+  ]),
+  simple('refugee_elder_talk', [
+    say('elder_resist', 'We swore on the stones. The Crown read us a paper. We will see which lasts longer.'),
+  ]),
+  simple('refugee_healer_talk', [
+    say('behique', 'The cacique\'s fever comes with the tide. Wherever they keep him, he needs his medicine.'),
+  ]),
+  // The occupied city.
+  simple('crown_captain_talk', [
+    say('crown_captain', 'The envoy\'s daughter. You may come and go, by the Accord. The cacique\'s house is the Governor\'s house now.'),
+  ]),
+  simple('occ_marine_curfew_talk', [
+    say('crown_marine', 'Curfew at dark, by order of the Governor. You\'re the envoy? Then... carry on, miss.'),
+  ]),
+  simple('occ_marine_trail_talk', [
+    say('crown_musketeer', 'Nobody goes to the beach. Fishing is suspended until the harbor is secure. Whenever that is.'),
+  ]),
+  simple('occ_marine_plaza_talk', [
+    say('crown_marine', 'They danced on this ground last week, they say. Not any more.'),
+  ]),
+  simple('occ_marine_beach_talk', [
+    say('crown_musketeer', 'The market? It caught fire. Fires happen. Move along, miss.'),
+  ]),
+  simple('occ_marine_caney_talk', [
+    say('crown_marine', 'The Governor\'s caney, miss. Mind the runner. The captain likes it straight.'),
+  ]),
 
   // The Harbor Village (the hub).
   simple('canoe_fisher_talk', [
