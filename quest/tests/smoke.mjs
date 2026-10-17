@@ -483,6 +483,9 @@ async function markChecks(page, sim, name) {
     check(s.flags['anchor.chain_bridge'] === true, 'the bridge is down in the present');
   }
   if (name === 'bridge-before') check(s.flags['anchor.chain_bridge'] !== true, 'the bridge is still raised');
+  // Quest arrows (owner request, Oct 17): on the Cane Road the arrow points at the boar's spot; on the plaza, the way.
+  if (name === 'cane-road') check(s.guide?.final === true && s.guide.arrow, `on the Cane Road the quest arrow points the way to the boar (${JSON.stringify(s.guide)})`);
+  if (name === 'square') check(!!s.guide && (s.guide.arrow || s.guide.mark), `in Accord Square the quest arrow shows the way (${JSON.stringify(s.guide)})`);
 }
 
 /**
@@ -961,6 +964,17 @@ async function playAct(browser, errors) {
   await menuSelect(page, 'Text size');
   await page.waitForFunction(() => window.__quest?.snapshot().toast === 'Text size: Normal', null, { timeout: 5000 });
   check(true, 'and back to Normal');
+  // Quest arrows (owner request, Oct 17): System > Quest arrows turns them off and on, remembered on this device.
+  await menuSelect(page, 'Quest arrows');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.items?.includes('Quest arrows: Off'), null, { timeout: 2000 });
+  check((await page.evaluate(() => localStorage.getItem('bq.questArrows'))) === 'off', 'System > Quest arrows turns them off, remembered on this device');
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  await menuSelect(page, 'Quest arrows');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.items?.includes('Quest arrows: On'), null, { timeout: 2000 });
+  check(true, 'and back on');
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   await menuSelect(page, 'Credits');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'journal', null, { timeout: 2000 });
   check((await snap(page)).journal[0] === 'CREDITS', 'the menu has a Credits screen');

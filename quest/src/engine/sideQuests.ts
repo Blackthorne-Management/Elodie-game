@@ -3,6 +3,7 @@
 // when done (gold, XP for the party, items, a pillar in a city). Everything is read from flags, so
 // saves need nothing new. Pure TypeScript, unit tested.
 
+import type { Goal } from './guide.ts';
 import { evaluate, type Condition } from './conditions.ts';
 import type { FlagStore, FlagReader } from './flags.ts';
 import { addSharedXp, gold, itemCount, pillarFlag, type Pillar, type RpgContent } from './rpg.ts';
@@ -10,6 +11,8 @@ import { addSharedXp, gold, itemCount, pillarFlag, type Pillar, type RpgContent 
 export interface SideQuestStep {
   text: string;
   done: Condition;
+  /** Where it is done, for the minimap's side-quest dot (engine/guide.ts). */
+  goals?: readonly Goal[];
 }
 
 export interface SideQuestReward {

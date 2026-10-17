@@ -2,6 +2,7 @@
 // condition holds. The current objective is the first one not yet done. Journal notes are clues the
 // player has found (rule 1 of every puzzle: solvable from what is in the room or in the Journal).
 
+import type { Goal } from './guide.ts';
 import { evaluate, type Condition } from './conditions.ts';
 import type { FlagReader } from './flags.ts';
 
@@ -13,6 +14,8 @@ export interface Objective {
   done: Condition;
   /** Anissa's hints, from a gentle nudge to the answer (guide 6.2 rule 4). */
   hints: string[];
+  /** Where it is done, for the quest arrow (engine/guide.ts): the first goal whose condition holds. */
+  goals?: readonly Goal[];
 }
 
 export interface QuestDef {

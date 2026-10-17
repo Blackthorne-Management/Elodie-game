@@ -10,6 +10,7 @@ import Phaser from 'phaser';
 import {
   ANISSA_GLOW,
   CARD_ART,
+  QUEST_ARROW,
   CHARACTER_LABEL_GAP,
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
@@ -60,6 +61,8 @@ import { settleDebates } from '../engine/debate.ts';
 import { DEBATES } from '../data/debates.ts';
 import { rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
+import { sideGoals, storyGoal, waypoint, type Waypoint } from '../engine/guide.ts';
+import { questArrows, setQuestArrows } from '../ui/questArrows.ts';
 import { planTap } from '../engine/tap.ts';
 import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, CARD_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, VOLUME_STEPS } from '../audio.config.ts';
@@ -154,6 +157,8 @@ export interface FieldSnapshot {
   yari: { x: number; y: number; visible: boolean } | null;
   /** How many of the festival's passers-by are on the map. */
   crowd: number;
+  /** The quest arrow: where the story points on this map, and whether the arrow or the goal's marker shows. */
+  guide: { x: number; y: number; final: boolean; arrow: boolean; mark: boolean } | null;
 }
 
 const ERA_LAYERS = [TILE_LAYERS.groundPresent, TILE_LAYERS.decoPresent, TILE_LAYERS.groundEcho, TILE_LAYERS.decoEcho];
@@ -211,6 +216,11 @@ export class FieldScene extends Phaser.Scene {
   private follower: Follower | null = null;
   /** Yari, behind Anissa (or Gianna), while she is in the party. */
   private yari: Follower | null = null;
+  /** Where the story wants the player next on this map (engine/guide.ts), and the arrow and marker for it. */
+  private guideWay: Waypoint | null = null;
+  private guideArrow: Phaser.GameObjects.Graphics | null = null;
+  private guideMark: Phaser.GameObjects.Graphics | null = null;
+  private guideT = 0;
   /** The picture behind an act's end card, while it shows (assets.config CARD_ART). */
   private cardArt: Phaser.GameObjects.Image | null = null;
   /** Where a scene last left Yari before she joined (she follows on from there, not from a jump). */
@@ -289,6 +299,9 @@ export class FieldScene extends Phaser.Scene {
     this.yari = null;
     this.crowd = [];
     this.cardArt = null;
+    this.guideWay = null;
+    this.guideArrow = null;
+    this.guideMark = null;
     this.echoMatrix = null;
     this.autoPath = [];
     this.autoFace = null;
@@ -412,6 +425,7 @@ export class FieldScene extends Phaser.Scene {
     input.update();
     this.tickWalkers(delta);
     this.tickCrowd(delta);
+    this.tickGuide(delta);
     if (this.cardArt && this.mode !== 'card') {
       this.cardArt.destroy();
       this.cardArt = null;
@@ -1129,6 +1143,7 @@ export class FieldScene extends Phaser.Scene {
     const raw = this.rt.rawMaps[this.map.id];
     if (raw) this.minimap.setMap(this.map, raw, era, found ? `${found.city.name}: ${found.section.name}` : '');
     this.minimap.follow(this.logic.state.player.pos);
+    this.refreshGuide();
   }
 
   private swapVisuals(_era: Era): void {
@@ -1137,6 +1152,7 @@ export class FieldScene extends Phaser.Scene {
     this.applyEra();
     this.updateFollowerLook();
     this.syncCrowd(); // the crowd is not part of the memory
+    this.refreshGuide(); // nor are the quest arrows
   }
 
   /** Walk each walking person a frame along their route; at the end they face the way their place says. */
@@ -1250,6 +1266,64 @@ export class FieldScene extends Phaser.Scene {
     this.placeYari(yariStood ?? (onStage && onStage.borrowed === undefined ? onStage.at : undefined) ?? this.yariStaged ?? undefined);
     this.yariStaged = null;
     this.syncCrowd();
+    this.refreshGuide();
+  }
+
+  // ---- Quest arrows (engine/guide.ts) -------------------------------------------------------
+
+  /** Where to go from this map now: the story's next stop for the arrow, and every stop for the minimap. */
+  private refreshGuide(): void {
+    const flags = this.logic.state.flags;
+    const maps = this.logic.maps;
+    const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags);
+    this.guideWay = goal ? waypoint(maps, this.map.id, goal, flags) : null;
+    const on = questArrows() && this.logic.era === 'present';
+    const sides = sideGoals(SIDE_QUESTS, flags)
+      .map((s) => waypoint(maps, this.map.id, s.goal, flags))
+      .filter((w): w is Waypoint => w !== null);
+    this.minimap?.setTargets(on ? [...sides.map((w) => ({ pos: w.at, story: false })), ...(this.guideWay ? [{ pos: this.guideWay.at, story: true }] : [])] : []);
+  }
+
+  /** The arrow by Gianna points the story's way; close to the goal, a marker bobs over it instead. */
+  private tickGuide(delta: number): void {
+    const way = this.guideWay;
+    const show = !!way && questArrows() && this.mode === 'field' && this.logic.era === 'present' && !this.staging && !this.leaving;
+    if (!show || !way) {
+      this.guideArrow?.setVisible(false);
+      this.guideMark?.setVisible(false);
+      return;
+    }
+    this.guideT += delta;
+    const p = this.logic.state.player.pos;
+    const goal = tileToWorld(way.at);
+    const close = way.final && Math.max(Math.abs(p.x - way.at.x), Math.abs(p.y - way.at.y)) <= QUEST_ARROW.near;
+    if (close) {
+      this.guideArrow?.setVisible(false);
+      const mark = (this.guideMark ??= this.add.graphics().setDepth(3200));
+      if (mark.getData('drawn') !== true) {
+        // A small gold chevron pointing down at the goal.
+        mark.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(-5, -5, 5, -5, 0, 2);
+        mark.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(-3.5, -4, 3.5, -4, 0, 0.5);
+        mark.setData('drawn', true);
+      }
+      const bob = Math.round(Math.sin(this.guideT / 220) * 2);
+      mark.setPosition(goal.x, goal.y - CHARACTER_HEIGHT - 6 + bob).setVisible(true);
+      return;
+    }
+    this.guideMark?.setVisible(false);
+    const arrow = (this.guideArrow ??= this.add.graphics().setDepth(3200));
+    if (arrow.getData('drawn') !== true) {
+      // A gold arrowhead pointing right (rotated towards the way).
+      arrow.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(7, 0, -4, -5, -4, 5);
+      arrow.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(5.5, 0, -2.8, -3.6, -2.8, 3.6);
+      arrow.setData('drawn', true);
+    }
+    const me = this.mover.point(p);
+    const cx = me.x;
+    const cy = me.y - TILE_SIZE / 2;
+    const angle = Math.atan2(goal.y - TILE_SIZE / 2 - cy, goal.x - cx);
+    const r = QUEST_ARROW.radius + Math.sin(this.guideT / 260) * 1.5;
+    arrow.setPosition(Math.round(cx + Math.cos(angle) * r), Math.round(cy + Math.sin(angle) * r)).setRotation(angle).setVisible(true);
   }
 
   // ---- The crowd -----------------------------------------------------------------------------
@@ -1856,6 +1930,7 @@ export class FieldScene extends Phaser.Scene {
       { id: 'music', label: `Music: ${volumeLabel(audio.volume.music)}` },
       { id: 'sound', label: `Sound: ${volumeLabel(audio.volume.sound)}` },
       { id: 'hints', label: `Anissa's hints: ${s.hints ? 'On' : 'Off'}` },
+      { id: 'arrows', label: `Quest arrows: ${questArrows() ? 'On' : 'Off'}` },
       ...(isStandalone() ? [] : [{ id: 'fullscreen', label: isFullscreen() ? 'Exit full screen' : 'Full screen' }]),
       { id: 'export', label: 'Export save code' },
       { id: 'import', label: 'Import save code' },
@@ -1950,6 +2025,12 @@ export class FieldScene extends Phaser.Scene {
         setTextSize(textSize() === 'normal' ? 'large' : 'normal');
         this.scene.restart({ toast: `Text size: ${capitalise(textSize())}` });
         break;
+      case 'arrows': {
+        setQuestArrows(!questArrows());
+        this.refreshGuide();
+        this.menu.refresh();
+        break;
+      }
       case 'hints': {
         const s = this.logic.state.settings;
         s.hints = !s.hints;
@@ -2058,6 +2139,7 @@ export class FieldScene extends Phaser.Scene {
       },
       follower: f ? { x: f.pos.x, y: f.pos.y, glowing: f.glow !== null } : null,
       yari: this.yari ? { x: this.yari.pos.x, y: this.yari.pos.y, visible: this.yari.sprite.visible } : null,
+      guide: this.guideWay ? { ...this.guideWay.at, final: this.guideWay.final, arrow: !!this.guideArrow?.visible, mark: !!this.guideMark?.visible } : null,
       crowd: this.crowd.length,
     };
   }

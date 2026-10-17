@@ -1,10 +1,12 @@
 // The minimap: the tiles around Gianna (one colour per tile, from the tileset), doors as gold dots and
-// Gianna as a blinking dot, with the city and section name under it. It is a page element, not part
+// Gianna as a blinking dot, with the city and section name under it. Where to go (engine/guide.ts): the
+// story's next stop pulses gold, accepted side quests show silver; off the edge, they sit on the edge. It is a page element, not part
 // of the picture, so it can sit in the black bars (CSS, by <body data-layout>): the right bar on a
 // sideways phone, the top bar on an upright one, or the picture's top-left corner when there are no
 // bars wide enough. Redrawn only when Gianna reaches a new tile.
 
 import { SIDE_MAP } from '../config.ts';
+import { SIDE_MAP_TARGET } from '../assets.config.ts';
 import type { GameMap, TiledMap } from '../engine/tiledMap.ts';
 import type { Era, Pos } from '../engine/types.ts';
 import { tileColours } from './tileColours.ts';
@@ -20,6 +22,7 @@ export class SideMap {
   private blink = true;
   private readonly timer: number;
   private pos: Pos = { x: 0, y: 0 };
+  private targets: readonly { pos: Pos; story: boolean }[] = [];
   /** Called when the minimap is tapped or clicked (the field opens the full map). */
   onTap: (() => void) | null = null;
 
@@ -57,6 +60,13 @@ export class SideMap {
 
   follow(pos: Pos): void {
     this.pos = pos;
+    this.draw(false);
+  }
+
+  /** Where to go on this map: the story's next stop and the side quests' (empty: none). */
+  setTargets(targets: readonly { pos: Pos; story: boolean }[]): void {
+    this.targets = targets;
+    this.last = '';
     this.draw(false);
   }
 
@@ -98,6 +108,24 @@ export class SideMap {
           ctx.fillStyle = this.colours[my * map.width + mx]!;
           ctx.fillRect(x, y, 1, 1);
         }
+      }
+    }
+    // Side quests silver, the story gold (pulsing with Gianna's dot), clamped to the window's edge.
+    for (const t of [...this.targets].sort((a, b) => Number(a.story) - Number(b.story))) {
+      const tx = Math.max(0, Math.min(tw - 1, t.pos.x - ox));
+      const ty = Math.max(0, Math.min(th - 1, t.pos.y - oy));
+      if (!t.story) {
+        ctx.fillStyle = SIDE_MAP_TARGET.side;
+        ctx.fillRect(tx, ty, 1, 1);
+        continue;
+      }
+      // The story's stop: a small plus, so it reads at a glance; it pulses with Gianna's dot.
+      for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+        const x = tx + dx;
+        const y = ty + dy;
+        if (x < 0 || y < 0 || x >= tw || y >= th) continue;
+        ctx.fillStyle = this.blink ? SIDE_MAP_TARGET.story : (this.colours[(y + oy) * map.width + (x + ox)] ?? '#000000');
+        ctx.fillRect(x, y, 1, 1);
       }
     }
     const px = this.pos.x - ox;
