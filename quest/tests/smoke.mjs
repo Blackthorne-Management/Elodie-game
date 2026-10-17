@@ -869,7 +869,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('Harbor Village') && mapSnap.items.includes('Caney of Anaco'), 'the city map shows the city the party is in (Yucayeque, after the ferry)');
+  check(mapSnap.items.includes('The Old Harbor') && mapSnap.items.includes('Festival Plaza'), 'the city map shows the city the party is in (Pòdlimyè, home after Chapter 2)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
