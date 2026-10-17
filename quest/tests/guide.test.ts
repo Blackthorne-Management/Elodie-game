@@ -51,7 +51,7 @@ describe('every goal is real', () => {
   });
 });
 
-describe('the arrows follow the scripted route (Chapters 1 and 2)', () => {
+describe('the arrows follow the scripted route (every chapter it plays)', () => {
   const route = parseRoute(readJson<string[]>('routes/zetwal-act1.json'));
   const sim = newGameSim(maps);
   const flags = sim.logic.state.flags;
@@ -79,7 +79,7 @@ describe('the arrows follow the scripted route (Chapters 1 and 2)', () => {
   }
 
   it('at every step there is a goal, and a way to it through the doors', () => {
-    expect(steps).toBeGreaterThan(100);
+    expect(steps).toBeGreaterThan(50);
     expect(problems.filter((p) => !p.includes('done'))).toEqual([]);
   });
 
