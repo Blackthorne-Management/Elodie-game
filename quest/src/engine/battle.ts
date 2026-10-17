@@ -163,6 +163,8 @@ export interface EnemyDef {
   moves: readonly EnemyMove[];
   weak?: readonly Element[];
   resist?: readonly Element[];
+  /** HP times this (a teaching foe that lasts long enough to show its moves: the boar). */
+  hpScale?: number;
 }
 
 export interface BattleDef {
@@ -180,9 +182,19 @@ export interface BattleDef {
   rewards: { xp: number; gold: number; items?: readonly { id: string; n: number }[] };
   /** Anissa's tips, by moment (the first battle teaches the commands). */
   tips?: { start?: string; spark?: string; tell?: string; lowHp?: string };
-  /** The tutorial (the boar fight): pages before the first turn, and after a win. */
-  tutorial?: { start: readonly TutorialPage[]; after?: readonly TutorialPage[] };
+  /**
+   * The tutorial (the boar fight): a few pages before the first turn, pages shown the first time a moment
+   * comes up in the fight (demo review, Oct 17: teach Surge when Anissa is ready, not before a button is
+   * pressed), and pages after a win.
+   */
+  tutorial?: { start: readonly TutorialPage[]; moments?: Partial<Record<LessonMoment, readonly TutorialPage[]>>; after?: readonly TutorialPage[] };
 }
+
+/**
+ * When a tutorial lesson can show: Anissa's Spark is full, a foe warns of a heavy blow, Anissa's Light
+ * first gives SP back, or a fighter with weapon moves takes a first turn.
+ */
+export type LessonMoment = 'spark' | 'tell' | 'light' | 'moves';
 
 /** One page of the battle tutorial. */
 export interface TutorialPage {
@@ -274,6 +286,8 @@ export interface ActiveStatus {
 
 export type BattleEvent =
   | { kind: 'turn'; who: string }
+  /** Open the tutorial's pages for this moment (BattleDef.tutorial.moments), once per fight. */
+  | { kind: 'lesson'; moment: LessonMoment }
   | { kind: 'text'; text: string; speaker?: string }
   /** A skill or item is used (before its hits, heals or statuses). */
   | { kind: 'use'; who: string; name: string; skill?: string; item?: string; targets: string[]; element?: Element }
@@ -325,7 +339,7 @@ export function enemyStats(def: EnemyDef): { hp: number; atk: number; def: numbe
   const role = ENEMY_ROLE[def.role];
   const line = (k: keyof typeof ENEMY_STAT_LINE) => ENEMY_STAT_LINE[k][0] + ENEMY_STAT_LINE[k][1] * def.level;
   return {
-    hp: Math.round(line('hp') * role.hp),
+    hp: Math.round(line('hp') * role.hp * (def.hpScale ?? 1)),
     atk: Math.round(line('atk') * role.atk),
     def: Math.round(line('def') * role.def),
     mag: Math.round(line('mag') * role.mag),
@@ -594,7 +608,10 @@ export class Battle {
       events.push({ kind: 'turn', who: c.key }, ...this.beginTurn(c));
       events.push(...this.check());
       if (this.outcome) break;
-      if (c.side === 'party') return events;
+      if (c.side === 'party') {
+        if (c.skills.some(isMove)) events.push(...this.tip('moves', undefined));
+        return events;
+      }
       events.push(...this.enemyTurn(c));
       events.push(...this.endTurn(c));
       events.push(...this.check());
@@ -630,6 +647,7 @@ export class Battle {
       c.hp += hp;
       c.sp += sp;
       events.push({ kind: 'heal', to: c.key, hp, sp, source });
+      if (source === "Anissa's Light" && sp > 0) events.push(...this.tip('light', undefined));
     }
     return events;
   }
@@ -834,10 +852,15 @@ export class Battle {
   }
 
   /** Anissa's tip for a moment, the first time it comes (none when the battle has no tip for it). */
+  /** Anissa's tip for a moment, and the tutorial's lesson for it, the first time it comes up. */
   private tip(moment: string, text: string | undefined): BattleEvent[] {
-    if (!text || this.tipsShown.has(moment)) return [];
+    const lesson = this.def.tutorial?.moments?.[moment as LessonMoment];
+    if ((!text && !lesson) || this.tipsShown.has(moment)) return [];
     this.tipsShown.add(moment);
-    return [{ kind: 'text', text, speaker: 'Anissa' }];
+    const events: BattleEvent[] = [];
+    if (text) events.push({ kind: 'text', text, speaker: 'Anissa' });
+    if (lesson) events.push({ kind: 'lesson', moment: moment as LessonMoment });
+    return events;
   }
 }
 

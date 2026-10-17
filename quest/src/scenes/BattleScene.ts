@@ -157,6 +157,8 @@ export class BattleScene extends Phaser.Scene {
   private tutorial: TutorialPage[] = [];
   private tutorialTotal = 0;
   private afterTutorial: BattleEvent[] = [];
+  /** Lessons already shown this fight (a retry after a loss does not show them again). */
+  private lessonsSeen = new Set<string>();
 
   constructor() {
     super('battle');
@@ -178,6 +180,7 @@ export class BattleScene extends Phaser.Scene {
     this.weapons = new Map();
     this.tutorial = [];
     this.tutorialTotal = 0;
+    this.lessonsSeen = new Set();
     this.afterTutorial = [];
   }
 
@@ -274,6 +277,18 @@ export class BattleScene extends Phaser.Scene {
       this.redraw();
       return;
     }
+    // A lesson (the boar fight's tutorial, when its moment comes): its pages, then the rest of the turn.
+    if (e.kind === 'lesson') {
+      const pages = this.battle.def.tutorial?.moments?.[e.moment];
+      if (pages?.length && !this.lessonsSeen.has(e.moment)) {
+        this.lessonsSeen.add(e.moment);
+        this.busy = false;
+        this.openTutorial(pages, this.queue.splice(0));
+        return;
+      }
+      this.next();
+      return;
+    }
     this.busy = true;
     const wait = this.show(e);
     this.redraw();
@@ -285,6 +300,7 @@ export class BattleScene extends Phaser.Scene {
     const name = (key: string) => this.battle.find(key)?.name ?? key;
     switch (e.kind) {
       case 'turn':
+      case 'lesson':
         return 0;
       case 'text':
         this.say(e.speaker ? `${e.speaker}: ${e.text}` : e.text);

@@ -111,6 +111,10 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     look: 'boar',
     level: 3,
     role: 'brute',
+    // The first fight teaches (demo review, Oct 17): it lasts about four of Gianna's turns, long enough
+    // for its Charge warning, Anissa's Light and, for a player who Guards, a Surge (tools: the boar
+    // balance check in tests/battle.test.ts).
+    hpScale: 4,
     moves: [
       { name: 'Tusk', power: 100 },
       { name: 'Charge', power: 150, every: 3, tell: 'The boar lowers its head and paws at the dirt...' },
@@ -314,37 +318,47 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       tell: "It's going to charge! Guard, Gigi!",
       lowHp: "You're hurt. Heal yourself, or drink the soup.",
     },
-    // The tutorial (owner, Oct 15): how to fight, skills, Anissa, rows and gear. Shown when the boar
-    // fight begins (not again after a loss), and a page on the spoils after the win.
+    // The tutorial (owner, Oct 15; split after the demo review, Oct 17): three pages before the first turn,
+    // each of Anissa's gifts and weapon moves the first time they come up, rows and gear after the win.
     tutorial: {
       start: [
         {
           title: 'How to fight',
-          text: 'Fights go in turns; who acts next is shown top right. On your turn, choose a command (bottom right), then a target. Tap them, or use the arrows and A.',
+          text: 'Fights go in turns; who acts next is shown top right. On your turn, choose a command (bottom right), then a target: an arrow shows who. Tap them, or use the arrows and A; B goes back.',
         },
         {
-          title: 'Attack and targets',
-          text: 'Attack strikes one foe with your weapon. An arrow shows who you are aiming at: arrows move it, A confirms, B goes back. A staff barely hurts. A bladed one does.',
-        },
-        {
-          title: 'Skills and SP',
-          text: "Skill opens spells that cost SP (the blue bar). Gianna's Sunthread is a ray of light, far stronger than her staff. Some skills hit every foe, heal, protect, or add a status: ATK+, WARD, MARK.",
-        },
-        {
-          title: 'Weapon moves',
-          text: 'Fighters with weapons (Yari\'s bow, later blades) get moves under Attack. Strong moves need time to ready again: the number beside one is the turns left.',
+          title: 'Attack and Skill',
+          text: "Attack strikes with your weapon; a staff barely hurts. Skill opens spells that cost SP (the blue bar). Gianna's Sunthread is a ray of light, far stronger than her staff.",
         },
         {
           title: 'Guard and Item',
           text: 'Guard halves the damage you take until your next turn. Use it when a foe warns of a big blow. Item gives food and drink from your bag to anyone: soup heals, akasan restores SP.',
         },
+      ],
+      moments: {
+        moves: [
+          {
+            title: 'Weapon moves',
+            text: 'Fighters with weapons (Yari\'s bow, later blades) get moves under Attack. Strong moves need time to ready again: the number beside one is the turns left.',
+          },
+        ],
+        light: [
+          {
+            title: "Anissa's Light",
+            text: `Her gift is always on: every ${ANISSA_SP_EVERY} of Gianna's turns, Anissa's light gives back a fifth of Gianna's SP. The pips over Anissa's head are her Spark.`,
+          },
+        ],
+        spark: [
+          {
+            title: 'Anissa: Spark and Surge',
+            text: `Anissa never fights and can never be hit. Each thing Gianna does gives her a Spark (Guard gives ${SPARK_ON_GUARD}). At ${SURGE_COST}, Surge appears: free, and Gianna's next blow or spell hits half again as hard.`,
+          },
+        ],
+      },
+      after: [
         {
-          title: 'Anissa: Spark and Surge',
-          text: `Anissa never fights and can never be hit. Each thing Gianna does gives her a Spark (Guard gives ${SPARK_ON_GUARD}). At ${SURGE_COST}, Surge appears: free, and Gianna's next blow or spell hits half again as hard.`,
-        },
-        {
-          title: "Anissa's Light",
-          text: `Her gift is always on: every ${ANISSA_SP_EVERY} of Gianna's turns, Anissa's light gives back a fifth of Gianna's SP. The pips over Anissa's head are her Spark.`,
+          title: 'Spoils',
+          text: 'Wins bring XP, gold, and sometimes gear. New levels raise stats and teach spells. The boar left a tusk on a cord: wear it from Menu > Equip > Gianna > Charm.',
         },
         {
           title: 'Rows and Swap',
@@ -353,12 +367,6 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
         {
           title: 'Gear and spells',
           text: 'Outside a fight, open Menu > Equip and choose someone, then a slot, to change weapon, armor, charm or relic. Rare gear brings its own skill (* in battle). Mages choose which spells to carry under Spells.',
-        },
-      ],
-      after: [
-        {
-          title: 'Spoils',
-          text: 'Wins bring XP, gold, and sometimes gear. New levels raise stats and teach spells. The boar left a tusk on a cord: wear it from Menu > Equip > Gianna > Charm.',
         },
       ],
     },

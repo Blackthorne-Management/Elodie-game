@@ -356,13 +356,19 @@ Running joke (no mechanics): he is out of breath after every battle.
   (Thornwood, Sun-glaive) adds ATK and makes it a full blow (power 100).
 - New statuses: **Slowed** (SPD x0.7) and **Taunting** (one-target attacks go to them first).
 
-## 9.11 The battle tutorial (owner, Oct 15; built)
+## 9.11 The battle tutorial (owner, Oct 15; built; split after the demo review, Oct 17)
 
-The boar fight on the Cane Road opens with nine pages over the battle (A or a tap turns a page, B skips the rest):
-how turns and targets work, Attack, Skill and SP, weapon moves and cooldowns, Guard and Item, Anissa's Spark and
-Surge, Anissa's Light (her passive), rows and Swap, and gear and spells (Menu > Equip, Equip > Spells). After the win
-one more page shows the spoils and how to wear the Boar-tusk charm. It shows each time the boar fight starts (not
-again after a loss). Text: `BATTLES.intro_boar.tutorial` in `quest/src/data/battles.ts`.
+The boar fight on the Cane Road opens with three pages over the battle (A or a tap turns a page, B skips the rest):
+how turns and targets work, Attack and Skill (SP, Sunthread), and Guard and Item. The rest comes when it matters,
+once per fight (not again after a loss): weapon moves and cooldowns on the first turn of a fighter who has them
+(Yari), Anissa's Light the first time it gives SP back, Anissa's Spark and Surge when the Spark is full. After the
+win: the spoils and the Boar-tusk charm, rows and Swap, and gear and spells (Menu > Equip, Equip > Spells). Text:
+`BATTLES.intro_boar.tutorial` (`start`, `moments`, `after`) in `quest/src/data/battles.ts`.
+
+The boar is a teaching foe (`hpScale: 4`, about 218 HP before Story difficulty) so the fight lasts long enough to
+teach: with Gianna (level 3 by then) and Yari, Anissa's plan (Sunthread, Guard on the warning, Surge when it
+appears) wins every time over about four of Gianna's turns, and its Charge warning, Anissa's Light and a Surge all
+come up (tests/battle.test.ts). Attacking alone still wins with Yari but costs over half the party's HP.
 
 ## 10. Status effects
 

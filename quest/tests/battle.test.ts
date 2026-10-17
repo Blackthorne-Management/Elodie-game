@@ -2,13 +2,15 @@
 // the boar's warning, The Heir Rises, rewards, and that the first battle is winnable but not trivial.
 
 import { describe, expect, it } from 'vitest';
-import { ANISSA_SP_SHARE, ELEMENT_WEAK, STATUS, SURGE_COST, SURGE_MULT } from '../src/config.ts';
+import { ANISSA_SP_SHARE, DIFFICULTY, ELEMENT_WEAK, STATUS, SURGE_COST, SURGE_MULT } from '../src/config.ts';
 import { BATTLES, ENEMIES, MOVES, SKILLS, SKILL_BOOK } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { Battle, reachable, battleItems, battleParty, enemyStats, settleBattle, skillCost, turnDelay, type BattleEvent, type PartyEntry } from '../src/engine/battle.ts';
 import { encounterFlag } from '../src/engine/encounterFlags.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { gold, itemCount, xp } from '../src/engine/rpg.ts';
+import { parseRoute } from '../src/engine/sim.ts';
+import { loadMaps, newGameSim, readJson } from '../tools/sim-setup.ts';
 
 const def = BATTLES.intro_boar!;
 const boar = ENEMIES.boar!;
@@ -63,9 +65,11 @@ describe('battle rules', () => {
   });
 
   it('enemy stats follow the level line and role, softened by Story difficulty', () => {
-    expect(enemyStats(boar)).toEqual({ hp: 55, atk: 17, def: 9, mag: 7, spd: 8 });
+    expect(enemyStats({ ...boar, hpScale: undefined })).toEqual({ hp: 55, atk: 17, def: 9, mag: 7, spd: 8 });
+    // The boar is a teaching foe: four times the HP, so the fight lasts long enough to show its moves.
+    expect(enemyStats(boar).hp).toBe(218);
     const b = newBattle();
-    expect(b.find(boarKey)!.maxHp).toBe(44);
+    expect(b.find(boarKey)!.maxHp).toBe(Math.round(218 * DIFFICULTY.story.enemyHp));
   });
 
   it("Gianna's skills cost a quarter less SP (rounded down, at least 1)", () => {
@@ -155,37 +159,79 @@ describe('battle rules', () => {
 });
 
 describe('the first battle (the boar on the Cane Road)', () => {
-  /** A plain strategy: guard on the warning, heal when low, Surge when ready, else Sunthread (or Attack). */
-  function play(seed: number): { won: boolean; turns: number; hurt: number } {
-    const b = new Battle(def, [gianna()], [boar], [soup], { seed });
-    let events = b.start();
-    let warned = false;
-    let turns = 0;
-    let lowest = 42;
-    for (; turns < 60 && !b.outcome; turns++) {
-      const me = b.find('gianna')!;
-      lowest = Math.min(lowest, me.hp);
-      warned = events.some((e) => e.kind === 'text' && e.text.includes('paws'));
-      if (b.canSurge()) events = b.act({ kind: 'surge' });
-      else if (warned) events = b.act({ kind: 'guard' });
-      else if (me.hp < 16 && me.sp >= 4) events = b.act({ kind: 'skill', skill: 'limye_elodie', target: 'gianna' });
-      else if (me.sp >= 3) events = b.act({ kind: 'skill', skill: 'sunthread', target: boarKey });
-      else events = b.act({ kind: 'attack', target: boarKey });
+  // Demo review, Oct 17: the boar comes once Yari has joined, so the fight is Gianna (level 3 by then)
+  // and Yari, as the scripted route brings them. It must last long enough to teach what it says it teaches.
+  const routeFlags = (() => {
+    const sim = newGameSim(loadMaps());
+    for (const item of parseRoute(readJson<string[]>('routes/zetwal-act1.json'))) {
+      if (item.kind === 'mark' && item.name === 'cane-road') break;
+      sim.run([item]);
     }
-    return { won: b.outcome === 'won', turns, hurt: 42 - lowest };
-  }
+    return sim.logic.state.flags;
+  })();
+  const routeParty = () => battleParty(routeFlags, RPG, SKILL_BOOK);
 
-  it('is winnable at level 1 with a sensible plan on nearly every roll of the dice', () => {
-    const runs = Array.from({ length: 40 }, (_, i) => play(100 + i));
-    expect(runs.filter((r) => r.won).length).toBeGreaterThanOrEqual(38);
+  interface Run { won: boolean; giannaTurns: number; hurt: number; warned: boolean; light: boolean; surged: boolean; lessons: string[] }
+
+  /** Anissa's plan: Sunthread (Skill), Guard when she warns of the Charge, Surge when it appears, heal when low. */
+  function play(seed: number, attackOnly = false): Run {
+    const party = routeParty();
+    const b = new Battle(def, party, [boar], [soup], { seed });
+    let events = b.start();
+    const maxHp = b.party.reduce((n, c) => n + c.maxHp, 0);
+    const run: Run = { won: false, giannaTurns: 0, hurt: 0, warned: false, light: false, surged: false, lessons: [] };
+    const note = (ev: BattleEvent[]) => {
+      for (const e of ev) {
+        if (e.kind === 'text' && e.text.includes('paws')) run.warned = true;
+        if (e.kind === 'heal' && e.source === "Anissa's Light") run.light = true;
+        if (e.kind === 'lesson') run.lessons.push(e.moment);
+      }
+    };
+    note(events);
+    let guardNext = false; // the warning stays with the player until Gianna's turn
+    for (let t = 0; t < 200 && !b.outcome; t++) {
+      const me = b.actor!;
+      if (events.some((e) => e.kind === 'text' && e.text.includes('paws'))) guardNext = true;
+      const warned = me.key === 'gianna' && guardNext;
+      if (warned) guardNext = false;
+      if (me.key === 'gianna') run.giannaTurns++;
+      if (attackOnly) events = b.act({ kind: 'attack', target: boarKey });
+      else if (b.canSurge()) {
+        events = b.act({ kind: 'surge' });
+        run.surged = true;
+      } else if (me.key === 'gianna' && warned) events = b.act({ kind: 'guard' });
+      else if (me.key === 'gianna' && me.hp < me.maxHp * 0.35 && me.sp >= 4) events = b.act({ kind: 'skill', skill: 'limye_elodie', target: 'gianna' });
+      else if (me.key === 'gianna' && me.sp >= 4) events = b.act({ kind: 'skill', skill: 'sunthread', target: boarKey });
+      else events = b.act({ kind: 'attack', target: boarKey });
+      note(events);
+    }
+    run.won = b.outcome === 'won';
+    run.hurt = 1 - b.party.reduce((n, c) => n + c.hp, 0) / maxHp;
+    return run;
+  }
+  const runs = Array.from({ length: 60 }, (_, i) => play(100 + i));
+  const avg = (rs: Run[], f: (r: Run) => number) => rs.reduce((n, r) => n + f(r), 0) / rs.length;
+
+  it("is winnable with Anissa's plan on every roll of the dice", () => {
+    expect(runs.filter((r) => r.won).length).toBe(runs.length);
   });
 
-  it('is not a pushover: the boar gets to hurt her, and it takes several turns', () => {
-    const runs = Array.from({ length: 40 }, (_, i) => play(500 + i));
-    const avgTurns = runs.reduce((n, r) => n + r.turns, 0) / runs.length;
-    const avgHurt = runs.reduce((n, r) => n + r.hurt, 0) / runs.length;
-    expect(avgTurns).toBeGreaterThanOrEqual(4);
-    expect(avgHurt).toBeGreaterThanOrEqual(10);
+  it("is not a pushover: it lasts several of Gianna's turns and the boar gets to hurt the party", () => {
+    expect(avg(runs, (r) => r.giannaTurns)).toBeGreaterThanOrEqual(4);
+    expect(avg(runs, (r) => r.hurt)).toBeGreaterThanOrEqual(0.15);
+  });
+
+  it("teaches what it says: the Charge warning, Anissa's Light and a Surge come up in (nearly) every fight", () => {
+    expect(runs.every((r) => r.warned && r.light)).toBe(true);
+    expect(runs.filter((r) => r.surged).length).toBeGreaterThanOrEqual(54);
+    // Each lesson shows once, when its moment comes.
+    for (const r of runs) for (const m of ['light', 'spark']) expect(r.lessons.filter((l) => l === m)).toHaveLength(1);
+  });
+
+  it('attacking alone still wins with Yari, but costs the party far more', () => {
+    const plain = Array.from({ length: 30 }, (_, i) => play(700 + i, true));
+    expect(plain.filter((r) => r.won).length).toBeGreaterThanOrEqual(27);
+    expect(avg(plain, (r) => r.hurt)).toBeGreaterThan(avg(runs, (r) => r.hurt));
   });
 
   it('the party comes from the save: stats with gear, skills, and the bond with Anissa', () => {
@@ -201,12 +247,13 @@ describe('the first battle (the boar on the Cane Road)', () => {
 
   it('winning pays XP, gold and the boar-tusk charm once, marks the Foes page, and takes the soups used', () => {
     const flags = new FlagStore({ 'party.anissa': true, 'item.soup_pot': 2 });
-    const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK), [boar], battleItems(flags, RPG), { seed: 42 });
+    const b = new Battle(def, routeParty(), [boar], battleItems(flags, RPG), { seed: 42 });
     b.start();
+    while (b.actor?.key !== 'gianna' && !b.outcome) b.act({ kind: 'attack', target: boarKey });
     b.act({ kind: 'item', item: 'soup_pot', target: 'gianna' });
-    for (let i = 0; i < 60 && !b.outcome; i++) {
-      const me = b.find('gianna')!;
-      b.act(me.sp >= 3 ? { kind: 'skill', skill: 'sunthread', target: boarKey } : { kind: 'attack', target: boarKey });
+    for (let i = 0; i < 100 && !b.outcome; i++) {
+      const me = b.actor!;
+      b.act(me.key === 'gianna' && me.sp >= 4 ? { kind: 'skill', skill: 'sunthread', target: boarKey } : { kind: 'attack', target: boarKey });
     }
     expect(b.outcome).toBe('won');
     const before = gold(flags, RPG);
@@ -395,9 +442,16 @@ describe('the boar fight tutorial (owner, Oct 15)', () => {
   it('teaches fighting, skills, Anissa (passive and Surge), rows and gear, and the spoils after', async () => {
     const { BATTLES } = await import('../src/data/battles.ts');
     const t = BATTLES.intro_boar!.tutorial!;
-    const all = t.start.map((p) => `${p.title}: ${p.text}`).join(' ');
-    for (const word of ['target', 'Skill', 'SP', 'Guard', 'Item', 'Spark', 'Surge', "Anissa's Light", 'Swap', 'Equip', 'Spells']) expect(all).toContain(word);
+    // Demo review, Oct 17: three pages before the first turn; the rest when they come up, or after the win.
+    expect(t.start.length).toBeLessThanOrEqual(3);
+    const start = t.start.map((p) => `${p.title}: ${p.text}`).join(' ');
+    for (const word of ['target', 'Skill', 'SP', 'Guard', 'Item']) expect(start).toContain(word);
+    const moments = t.moments ?? {};
+    expect(Object.keys(moments).sort()).toEqual(['light', 'moves', 'spark']);
+    const pages = [...t.start, ...Object.values(moments).flat(), ...(t.after ?? [])];
+    const all = pages.map((p) => `${p.title}: ${p.text}`).join(' ');
+    for (const word of ['Spark', 'Surge', "Anissa's Light", 'Swap', 'Equip', 'Spells']) expect(all).toContain(word);
     expect(t.after?.[0]?.text).toContain('Equip');
-    for (const p of [...t.start, ...(t.after ?? [])]) expect(p.text.length, p.title).toBeLessThanOrEqual(230);
+    for (const p of pages) expect(p.text.length, p.title).toBeLessThanOrEqual(230);
   });
 });

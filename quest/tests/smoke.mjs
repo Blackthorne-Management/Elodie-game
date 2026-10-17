@@ -611,27 +611,32 @@ async function fightBoar(page, shots) {
   const music = await page.waitForFunction(() => window.__audio?.().playing === 'battle', null, { timeout: 15000 }).then(() => true, () => false);
   check(music, `the battle music plays (${JSON.stringify(await page.evaluate(() => window.__audio?.()))})`);
   const tut = (await snap(page)).battle.tutorial;
-  check(tut.page === 1 && tut.pages >= 8 && tut.title === 'How to fight', `the boar fight opens with the tutorial (${tut.pages} pages)`);
+  // Demo review, Oct 17: three pages first; Anissa's gifts and weapon moves when they come up; rows and gear after.
+  check(tut.page === 1 && tut.pages === 3 && tut.title === 'How to fight', `the boar fight opens with three tutorial pages (${tut.pages})`);
   await shoot(page, 'battle-tutorial', shots);
   const titles = [];
   for (let i = 0; i < 20; i++) {
     const t = (await snap(page)).battle?.tutorial;
     if (!t) break;
     titles.push(t.title);
-    if (t.title.startsWith('Anissa:')) await shoot(page, 'battle-tutorial-anissa', shots);
     await page.keyboard.press('KeyZ');
     await page.waitForFunction((n) => window.__quest.snapshot().battle?.tutorial?.page !== n, t.page, { timeout: 2000 });
   }
-  check(['Skills and SP', 'Anissa: Spark and Surge', "Anissa's Light", 'Rows and Swap', 'Gear and spells'].every((t) => titles.includes(t)), 'it covers skills, Anissa, rows and gear');
+  check(['How to fight', 'Attack and Skill', 'Guard and Item'].every((t) => titles.includes(t)), 'they cover turns, targets, Skill, Guard and Item');
   await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return b && !b.busy; }, null, { timeout: 15000 });
   await shoot(page, 'battle-start', shots);
   let targeted = false;
   let spoils = false;
-  for (let turn = 0; turn < 60; turn++) {
+  const later = [];
+  for (let turn = 0; turn < 160; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
     const bt = (await snap(page)).battle;
     if (!bt) break;
     if (bt.tutorial) {
+      if (!later.includes(bt.tutorial.title)) {
+        later.push(bt.tutorial.title);
+        if (!bt.done) await shoot(page, `battle-lesson-${later.length}`, shots);
+      }
       spoils ||= bt.done && bt.tutorial.title === 'Spoils';
       if (spoils) await shoot(page, 'battle-spoils', shots);
       await page.keyboard.press('KeyZ');
@@ -662,6 +667,8 @@ async function fightBoar(page, shots) {
   const afterBattle = await snap(page);
   check(targeted, 'the battle asks for a target before an attack or spell');
   check(spoils, 'after the win, a tutorial page shows how to wear the spoils');
+  check(["Anissa's Light", 'Weapon moves'].every((t) => later.includes(t)), `lessons come up during the fight when they matter (${later.join(', ')})`);
+  check(['Rows and Swap', 'Gear and spells'].every((t) => later.includes(t)), 'rows and gear are taught after the win');
   check(afterBattle.flags['encounter.wilds.boar.won'] === true && (afterBattle.flags['item.boar_tusk'] ?? 0) >= 1, 'the boar battle is won and pays out the boar-tusk charm');
 }
 

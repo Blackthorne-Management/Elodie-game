@@ -60,3 +60,8 @@ only Chapter 1 difference found, the Journal on the harbor, archive and heights 
     song.
 - Found while checking: the smoke test's "the bridge and pawl glow" check raced a 3.6 s glow on a busy machine;
   it now reads what glowed last.
+- Batch C, done (the boar, 3): the boar has four times the HP (`hpScale`, a teaching foe). With the party the
+  route brings (Gianna level 3 and Yari), Anissa's plan wins every time over about four of Gianna's turns, and the
+  Charge warning, Anissa's Light and a Surge all come up (measured over 300 fights; tested over 60). The tutorial
+  opens with three pages; weapon moves, Anissa's Light and Spark/Surge are taught when they first happen; rows and
+  gear after the win.
