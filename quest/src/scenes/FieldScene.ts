@@ -1542,7 +1542,7 @@ export class FieldScene extends Phaser.Scene {
 
   /** Walk everyone on stage a frame; count down a pause; keep the camera on whoever the scene follows. */
   private tickStage(delta: number): void {
-    for (const a of [...this.stageActors.values()]) {
+    for (const a of this.stageActors.values()) {
       if (!a.mover.moving) {
         const first = a.tiles.shift();
         if (!first) continue;
