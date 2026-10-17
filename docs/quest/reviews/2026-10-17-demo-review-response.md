@@ -65,3 +65,8 @@ only Chapter 1 difference found, the Journal on the harbor, archive and heights 
   Charge warning, Anissa's Light and a Surge all come up (measured over 300 fights; tested over 60). The tutorial
   opens with three pages; weapon moves, Anissa's Light and Spark/Surge are taught when they first happen; rows and
   gear after the win.
+- Batch E, done (phones): finding 1 was "Play here anyway" (above). Finding 10 (portrait), the owner chose the
+  tidy option (Oct 17): the picture already fills the width (the view is 16:9), so upright the D-pad and A/B are
+  bigger (168 and 72 px), Ask, Echo and Menu stack top right (Ask no longer covers the minimap), the minimap is
+  bigger, and the "turn sideways" tip is a small line under the picture (hidden on short phones). A taller view
+  in portrait is a larger change, left for after the release if testers mostly play upright.

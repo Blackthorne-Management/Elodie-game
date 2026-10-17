@@ -94,6 +94,9 @@ export const TOUCH_BUTTON_PX = 56;
  */
 export const TOUCH_PAD_PX = 132;
 export const PAD_DEADZONE = 0.22;
+/** Held upright the bottom bar has room to spare, so the D-pad and A/B are bigger (demo review, Oct 17). */
+export const TOUCH_PAD_STACK_PX = 168;
+export const TOUCH_BUTTON_STACK_PX = 72;
 
 /**
  * Where the controls and the minimap go (engine/scaling.ts screenLayout). On a touch screen held
@@ -104,7 +107,7 @@ export const PAD_DEADZONE = 0.22;
  * picture's top-left corner.
  */
 export const TOUCH_SIDE_PX = 150;
-export const TOUCH_STACK_PX = 176;
+export const TOUCH_STACK_PX = 196;
 export const MAP_BAR_PX = 140;
 
 /** Save storage. Bump SAVE_VERSION when the save shape changes. */

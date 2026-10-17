@@ -8,7 +8,7 @@
 // The D-pad gives eight directions: press an arm for a straight step, press between two arms for a
 // diagonal, and slide the thumb across it to turn without lifting. B (held) runs.
 
-import { PAD_DEADZONE, TOUCH_BUTTON_PX, TOUCH_PAD_PX } from '../config.ts';
+import { PAD_DEADZONE, TOUCH_BUTTON_PX, TOUCH_PAD_PX, TOUCH_PAD_STACK_PX, TOUCH_BUTTON_STACK_PX } from '../config.ts';
 import type { Dir8 } from '../engine/types.ts';
 import { dirButtons, stickDirection, type Button, type InputSource } from './actions.ts';
 
@@ -47,6 +47,8 @@ export class TouchSource implements InputSource {
     this.root = el('div', 'touch-overlay');
     this.root.style.setProperty('--btn', `${TOUCH_BUTTON_PX}px`);
     this.root.style.setProperty('--pad', `${TOUCH_PAD_PX}px`);
+    this.root.style.setProperty('--btn-stack', `${TOUCH_BUTTON_STACK_PX}px`);
+    this.root.style.setProperty('--pad-stack', `${TOUCH_PAD_STACK_PX}px`);
 
     this.pad = el('div', 'touch-dpad');
     this.pad.setAttribute('aria-label', 'Direction pad');

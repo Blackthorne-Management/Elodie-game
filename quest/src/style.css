@@ -165,13 +165,16 @@ html, body {
   left: max(calc(env(safe-area-inset-left, 0px) + 6px + (var(--pad) - 60px) / 2), calc((var(--game-left, 0px) - 60px) / 2));
   bottom: calc(var(--edge) + var(--pad) + 14px + env(safe-area-inset-bottom, 0px));
 }
-body[data-layout='stack'] .touch-ask { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); bottom: auto; top: calc(var(--game-top, 0px) - 56px); }
+body[data-layout='stack'] .touch-ask { left: auto; right: calc(var(--edge) + env(safe-area-inset-right, 0px)); bottom: calc(var(--vv-height, 100vh) - var(--game-top, 0px) + 8px + 2 * 44px + 2 * 8px); }
 body[data-layout='overlay'] .touch-ask { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); }
 
-/* Upright: everything in the bottom bar (D-pad left, A/B right) and Echo/Menu in the top bar. */
+/* Upright: everything in the bottom bar (D-pad left, A/B right), bigger there (it has room); the minimap
+   top left; Ask, Echo and Menu in a column top right, just above the picture (demo review, Oct 17). */
+body[data-layout='stack'] .touch-overlay > * { --pad: var(--pad-stack); --btn: var(--btn-stack); }
+body[data-layout='stack'] .touch-small { width: 72px; }
 body[data-layout='stack'] .touch-dpad { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); bottom: max(calc(var(--edge) + env(safe-area-inset-bottom, 0px)), calc((var(--bottom-bar) - var(--pad)) / 2)); }
 body[data-layout='stack'] .touch-buttons { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); bottom: max(calc(var(--edge) + env(safe-area-inset-bottom, 0px)), calc((var(--bottom-bar) - var(--btn) * 2) / 2)); }
-body[data-layout='stack'] .touch-top { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); bottom: auto; top: calc(var(--game-top, 0px) - 56px); }
+body[data-layout='stack'] .touch-top { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); bottom: calc(var(--vv-height, 100vh) - var(--game-top, 0px) + 8px); flex-direction: column; }
 
 /* No bars (a touch screen in an odd shape): the controls fall back to the picture's corners. */
 body[data-layout='overlay'] .touch-dpad { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); }
@@ -209,7 +212,7 @@ body[data-layout='overlay'] .touch-top { right: calc(var(--edge) + 52px + env(sa
 }
 .side-map.hidden { display: none; }
 body[data-layout='stack'] .side-map {
-  --map-w: min(160px, 40vw);
+  --map-w: min(200px, 50vw);
   left: calc(var(--vv-left, 0px) + 12px + env(safe-area-inset-left, 0px));
   top: calc(var(--vv-top, 0px) + var(--game-top, 0px) - var(--map-w) * 0.75 - 26px);
 }
@@ -288,13 +291,19 @@ body.standalone .fs-button { display: none; }
   body.touch .rotate-hint {
     display: block;
     position: fixed;
-    top: calc(64px + env(safe-area-inset-top));
+    /* A small line under the picture (it was a big one at the top). */
+    top: calc(var(--vv-top, 0px) + var(--game-top, 0px) + var(--game-height, 0px) + 6px);
     left: 16px;
     right: 16px;
     text-align: center;
-    font-size: 14px;
+    font-size: 11px;
     color: var(--line);
+    opacity: 0.75;
   }
+}
+/* On a short phone the controls need the room: no tip. */
+@media (orientation: portrait) and (max-height: 700px) {
+  body.touch .rotate-hint { display: none; }
 }
 
 /* Save code dialogs. */

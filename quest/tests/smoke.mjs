@@ -1286,6 +1286,19 @@ async function main() {
     await pp.goto(VILLAGE);
     await waitReady(pp);
     check(await pp.isVisible('.rotate-hint'), 'portrait shows the rotate hint');
+    // Demo review, Oct 17: upright, nothing sits on anything else (Ask used to cover the minimap).
+    const clash = await pp.evaluate(() => {
+      const parts = ['.touch-dpad', '.touch-buttons', '.touch-ask', '.touch-top', '.side-map', '#game canvas', '.rotate-hint'];
+      const r = parts.map((sel) => [sel, document.querySelector(sel)?.getBoundingClientRect()]).filter(([, b]) => b && b.width > 0);
+      const out = [];
+      for (let i = 0; i < r.length; i++) for (let j = i + 1; j < r.length; j++) {
+        const [a, A] = r[i];
+        const [b, B] = r[j];
+        if (A.left < B.right && B.left < A.right && A.top < B.bottom && B.top < A.bottom) out.push(`${a} / ${b}`);
+      }
+      return out;
+    });
+    check(clash.length === 0, `upright, the controls, the minimap and the picture do not overlap${clash.length ? ` (${clash.join(', ')})` : ''}`);
     await pp.screenshot({ path: join(SHOT_DIR, 'quest-phone-portrait.png') });
     await portrait.close();
 
