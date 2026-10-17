@@ -11,7 +11,7 @@ import { DialogueRunner } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { gold, itemCount, pillarFlag, xp } from '../src/engine/rpg.ts';
 import { rewardFlag, settleRewards, sideQuestStatus, visibleSteps } from '../src/engine/sideQuests.ts';
-import { loadMaps } from '../tools/sim-setup.ts';
+import { loadMaps, newGameSim } from '../tools/sim-setup.ts';
 
 /** Talk to `id`, picking the choices whose text starts with each of `picks` in turn; returns every line shown. */
 function talk(flags: FlagStore, id: string, picks: string[] = []): string[] {
@@ -233,3 +233,16 @@ describe("The Envoy's Papers (owner, Oct 15): the task at the Hall of the Accord
     expect(flags.isSet('story.papers_asked')).toBe(false);
   });
 });
+
+describe('a save that finished Chapter 1 before the ferry existed (owner report, Oct 17)', () => {
+  it('Yari still offers to sail, and the ferry lands in Yucayeque', () => {
+    const sim = newGameSim(loadMaps(), 'zetwal-temple', 'temple_start');
+    const f = sim.logic.state.flags;
+    for (const k of ['party.anissa', 'story.anissa_woke', 'story.yari_asked', 'story.envoy_papers', 'encounter.wilds.boar.won', 'act1.complete', 'card.act1_end']) f.set(k, true);
+    if (sim.logic.mode === 'dialogue') sim.run(['skip']); // the temple's welcome
+    sim.run(['goto 14,16', 'down', 'confirm', 'skip']);
+    expect(sim.logic.state.player.mapId).toBe('xaragua-village');
+    expect(f.isSet('story.xaragua_arrived')).toBe(true);
+  });
+});
+

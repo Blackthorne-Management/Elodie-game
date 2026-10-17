@@ -1121,6 +1121,24 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
     after: {
+      lines: [],
+      // A save that finished Chapter 1 before the ferry existed (the demo build) still needs a way to sail
+      // (owner report, Oct 17: "it won't let me leave with Yari").
+      next: [{ if: { notFlag: 'story.xaragua_arrived' }, to: 'sail' }, { to: 'tide' }],
+    },
+    sail: {
+      speaker: 'yari',
+      lines: [{ text: 'The tide is right, Gigi. The canoe is loaded and the hutia is aboard. Ready?' }],
+      choices: [
+        { text: "Let's go.", next: 'sail_go' },
+        { text: 'Not yet.', next: 'later' },
+      ],
+    },
+    sail_go: {
+      speaker: 'yari',
+      lines: [{ text: 'Xaraguá, then.', set: { 'travel.next': 'xaragua-village/pier' } }],
+    },
+    tide: {
       speaker: 'yari',
       lines: [{ text: "Morning tide. Don't be late, or I'll let the hutia pack for you." }],
     },
