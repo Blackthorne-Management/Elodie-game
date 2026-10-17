@@ -36,6 +36,14 @@ export function questForMap(quests: readonly QuestDef[], mapId: string): QuestDe
   return quests.find((q) => q.maps.includes(mapId)) ?? null;
 }
 
+/**
+ * The chapter the Journal shows: the one this map belongs to, else (on a map no chapter lists, such as home
+ * after a voyage) the latest chapter with an objective done. Null before any.
+ */
+export function questForJournal(quests: readonly QuestDef[], mapId: string, flags: FlagReader): QuestDef | null {
+  return questForMap(quests, mapId) ?? [...quests].reverse().find((q) => q.objectives.some((o) => evaluate(o.done, flags))) ?? null;
+}
+
 export function currentObjective(quest: QuestDef, flags: FlagReader): Objective | null {
   return quest.objectives.find((o) => !evaluate(o.done, flags)) ?? null;
 }

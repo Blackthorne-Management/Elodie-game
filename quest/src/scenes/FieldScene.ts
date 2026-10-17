@@ -33,7 +33,7 @@ import { combine, facingToward, opposite, samePos, spriteFacing, stepFrom } from
 import { Mover, restDistance, speedPx, stepLength, tileFoot, walkFrame } from '../engine/motion.ts';
 import { cameraBounds, cameraScroll } from '../engine/scaling.ts';
 import { dirButtons } from '../input/actions.ts';
-import { currentObjective, journalEntries, journalNotes, questForMap, type QuestDef } from '../engine/quests.ts';
+import { currentObjective, journalEntries, journalNotes, questForJournal, questForMap, type QuestDef } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
 import { applySave, newGame, saveFits, toSaveData } from '../engine/state.ts';
 import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlacement, type TiledMap } from '../engine/tiledMap.ts';
@@ -1266,7 +1266,7 @@ export class FieldScene extends Phaser.Scene {
   /** The Journal's lines (shown on the menu's Journal tab). */
   private journalLines(): PanelLine[] {
     const flags = this.logic.state.flags;
-    const quest = this.quest();
+    const quest = questForJournal(CHAPTERS, this.map.id, flags);
     const lines: PanelLine[] = [{ text: `JOURNAL${quest ? `: ${quest.title}` : ''}`, color: UI.accentText }];
     if (!quest) lines.push({ text: 'Nothing to note here.', gap: 4 });
     else {

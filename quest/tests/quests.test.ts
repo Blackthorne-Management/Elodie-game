@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { parseConditionText } from '../src/engine/conditions.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { HintTracker, hintsDue } from '../src/engine/hints.ts';
-import { currentObjective, journalEntries, journalNotes, type QuestDef } from '../src/engine/quests.ts';
+import { currentObjective, journalEntries, journalNotes, questForJournal, type QuestDef } from '../src/engine/quests.ts';
 
 const quest: QuestDef = {
   id: 'q',
@@ -24,6 +24,17 @@ describe('quests and the Journal', () => {
     expect(journalEntries(quest, flags).map((e) => e.state)).toEqual(['done', 'current']);
     flags.set('b', true);
     expect(currentObjective(quest, flags)).toBeNull();
+  });
+
+  it('on a map no chapter lists (home after a voyage), the Journal shows the latest chapter begun', () => {
+    const second: QuestDef = { ...quest, id: 'q2', maps: ['m2'], objectives: [{ id: 'c', title: 'C', detail: '', done: { flag: 'c' }, hints: [] }] };
+    const flags = new FlagStore();
+    expect(questForJournal([quest, second], 'elsewhere', flags)).toBeNull();
+    expect(questForJournal([quest, second], 'm2', flags)?.id).toBe('q2');
+    flags.set('a', true);
+    expect(questForJournal([quest, second], 'elsewhere', flags)?.id).toBe('q');
+    flags.set('c', true);
+    expect(questForJournal([quest, second], 'elsewhere', flags)?.id).toBe('q2');
   });
 
   it('notes appear once their flag is set', () => {
