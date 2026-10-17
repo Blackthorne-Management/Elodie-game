@@ -7,6 +7,8 @@
 //   ?touch=1         force the touch overlay
 //   ?intro=0         skip the animated intro and title (the smoke test's main route)
 //   ?install=0|1     never / always show the phone install screen (engine/install.ts)
+//   ?chapter=2       dev server only: a new game at the start of that chapter, with the party, bag, gear and
+//                    story the scripted route leaves at the end of the one before (src/data/starts/chapters.json)
 
 import Phaser from 'phaser';
 import { HINT_FIRST_MS, HINT_REPEAT_MS, MAX_ZOOM, MIN_INTEGER_ZOOM, RENDER_SCALE_MAX, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
@@ -34,6 +36,8 @@ import { IntroScene } from './scenes/IntroScene.ts';
 import { isStandalone, mountFullscreenButton } from './ui/fullscreen.ts';
 import { mountInstallScreen } from './ui/installScreen.ts';
 import { fitToScreen, preventBrowserZoom, visibleViewport } from './ui/screen.ts';
+import chapterStarts from './data/starts/chapters.json' with { type: 'json' };
+import type { FlagSnapshot } from './engine/flags.ts';
 import './style.css';
 
 function fail(message: string): never {
@@ -99,6 +103,19 @@ setRuntime(runtime);
 const loaded = loadStoredGame(runtime);
 if (loaded === 'invalid') console.warn('[quest] the stored save could not be loaded; starting a new game');
 runtime.intro = params.get('intro') === '0' ? null : introOpening(loaded === 'loaded', !!runtime.storage?.getItem(INTRO_SEEN_KEY));
+
+// The owner's test shortcut (Oct 17): jump straight to a chapter on the dev server. Never on the website.
+const askedChapter = params.get('chapter');
+if (import.meta.env.DEV && askedChapter) {
+  const at = (chapterStarts as Record<string, { map: string; spawn: string; flags: FlagSnapshot } | undefined>)[askedChapter];
+  const map = at && maps[at.map];
+  if (at && map) {
+    const state = newGame(map, at.spawn);
+    state.flags.load(at.flags);
+    runtime.logic.reset(state);
+    runtime.intro = null;
+  } else console.warn(`[quest] no start for chapter ${askedChapter}`);
+}
 
 const vp = visibleViewport();
 const startZoom = fitZoom(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM);
