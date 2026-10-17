@@ -21,6 +21,7 @@ item pictures go in `quest/art/items/`.
 | 8 | Solange's Quill | the item popup (the secret item) | [8](#8-solanges-quill-item-picture) |
 | 9 | Battle stances (Gianna, Yari, Patricio) | the battle screen: one empty-handed stance each, the weapon is added by the game (Oct 15) | [9](#9-battle-stances-one-per-character-empty-handed) |
 | 10 | The cane-field boar | the first battle, on the Cane Road (added Oct 15) | [10](#10-the-cane-field-boar-battle-sprite) |
+| 12 | Cacique Anaco | Chapter 2: Yari's father, ailing, in the caney (owner request, Oct 17) | [12](#12-cacique-anaco-chapter-2) |
 
 The intro's pictures are section 11 (the storyboard is `docs/quest/intro/STORYBOARD.md`).
 
@@ -402,6 +403,34 @@ scale them to the storyboard's pixel sizes for the animator.
 
 ---
 
+## 12. Cacique Anaco (Chapter 2)
+
+Owner request (Oct 17): Anaco gets his own art. Cacique of Xaraguá and keeper of House Yaguana's line (Guanín,
+Caona, Anaco, Yari): Caona's son and Yari's father, about 68. Ill with a fever that comes and goes with the tide, but
+sharp-eyed, dry-humoured and proud; he wrote to the Throne and was never answered. Taíno-inspired: dress him with care
+and without costume clichés (no feather headdress, no war paint). The cultural reviewer checks him with the rest of
+Xaraguá (`docs/quest/design/CAPITALS.md`, Cultural review list).
+
+**1. Character reference sheet** (attach Gianna's sheet; a new chat)
+```
+Character design reference sheet for a fantasy adventure game character named Anaco. The attached image shows the art style to match (it is a different character). He is the elderly chief (cacique) of a green Caribbean island people, inspired by the Taíno of Hispaniola: about 68, tall but thinner than he once was, a little stooped from illness, still dignified and proud. Warm medium-brown skin, a lean, lined, kind face with high cheekbones and sharp dark eyes, long straight white hair tied back at the nape with a cotton cord, no beard. Outfit: a simple knee-length tunic of undyed white cotton with a woven band of teal and annatto red at the hem, a light cotton mantle over his shoulders edged in the same teal and red weave, and on his chest a round polished gold-copper disc pendant (a guanín) on a cord of small white shell beads. Barefoot or simple woven sandals. He leans on a dark carved wooden staff whose top is carved as a small face with round eyes. Show his full body three times on one sheet: front view, side view and back view, standing and leaning slightly on the staff, same scale, evenly spaced, plus one small close-up of his face. Style: hand-painted fantasy storybook illustration matching the attached image, crisp clean outlines, bright warm saturated colours (white cotton, teal, annatto red, gold, warm brown skin), well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No feather headdress, no face or body paint, no weapons. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
+```
+
+**2. Dialogue portrait** (same chat)
+```
+Same character as the reference sheet: Anaco, about 68, with the same face as on the reference sheet. Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Warm medium-brown skin, long white hair tied back, the cotton mantle with its teal and annatto-red edge, the round gold-copper guanín pendant on white shell beads. Expression: tired but sharp, a faint dry smile, a man who is ill and refuses to let it show. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat magenta background (#FF00FF) filling the whole square. No text, no frame, no border, no other people.
+```
+Then two more expressions, one at a time:
+- *"Same portrait, same framing, expression: **stern**, jaw set, eyes hard, the chief speaking to his council."*
+- *"... expression: **tender**, eyes soft, looking at his daughter, a father's proud, worried smile."*
+
+**3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**)
+```
+Pixel art sprite sheet of the same character, Anaco, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character: match its art style, pixel size and chibi proportions (big head about 40% of the figure), but draw him a little taller and thinner. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Warm brown skin, long white hair tied back, white cotton tunic and mantle with teal and red edges, a gold disc pendant on the chest, the dark carved staff held in one hand and visible in every frame; he walks slowly, slightly stooped. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+```
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |
@@ -417,3 +446,4 @@ scale them to the storyboard's pixel sizes for the animator.
 | Solange's Quill | `quest/art/items/solange_quill.png` |
 | Battle stances | `quest/art/battle/<name>.png` (stance and down pose; the weapon is drawn in by the game) |
 | The boar | `quest/art/enemies/boar.png` (replaces the stand-in) |
+| Cacique Anaco | `characters/anaco.png` (28 x 36 cells, a tall man), `portraits/anaco.png` (+ `anaco_stern`, `anaco_tender`) |

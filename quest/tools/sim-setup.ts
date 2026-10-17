@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTENT } from '../src/data/content.ts';
 import { PUZZLES, type PuzzleDef } from '../src/data/puzzles.ts';
-import { BATTLES } from '../src/data/battles.ts';
+import { battleDef } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { battleItems, settleBattle, type Battle } from '../src/engine/battle.ts';
 import { GameLogic } from '../src/engine/game.ts';
@@ -36,12 +36,13 @@ export function newGameSim(maps: Record<string, GameMap> = loadMaps(), map = STA
  */
 function winBattles(sim: Sim): void {
   sim.onBattle = (id) => {
-    const def = BATTLES[id];
+    const def = battleDef(id);
     if (!def) throw new Error(`No battle "${id}"`);
     const flags = sim.logic.state.flags;
     // settleBattle reads only these fields of a finished fight.
     const won = { def, items: battleItems(flags, RPG), outcome: 'won' } as unknown as Battle;
     settleBattle(flags, RPG, won);
+    return sim.logic.battleOver(true);
   };
 }
 

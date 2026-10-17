@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 24,
+  "nextobjectid": 23,
   "layers": [
     {
       "id": 1,
@@ -760,39 +760,6 @@
               "value": true
             }
           ]
-        },
-        {
-          "id": 17,
-          "name": "pier_after",
-          "type": "trigger",
-          "x": 336,
-          "y": 304,
-          "width": 32,
-          "height": 16,
-          "rotation": 0,
-          "visible": true,
-          "properties": [
-            {
-              "name": "dialogue",
-              "type": "string",
-              "value": "pier_after"
-            },
-            {
-              "name": "flag",
-              "type": "string",
-              "value": "story.pier_thanks"
-            },
-            {
-              "name": "if",
-              "type": "string",
-              "value": "encounter.xaragua_story.pier.won"
-            },
-            {
-              "name": "once",
-              "type": "bool",
-              "value": true
-            }
-          ]
         }
       ]
     },
@@ -807,7 +774,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 18,
+          "id": 17,
           "name": "pier",
           "type": "spawn",
           "x": 336,
@@ -864,7 +831,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 19,
+          "id": 18,
           "name": "xaragua_customs_sign",
           "type": "puzzle_object",
           "x": 512,
@@ -887,7 +854,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 19,
           "name": "pier_sign",
           "type": "puzzle_object",
           "x": 384,
@@ -910,7 +877,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 20,
           "name": "crown_ship_west",
           "type": "puzzle_object",
           "x": 32,
@@ -938,7 +905,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 21,
           "name": "crown_ship_east",
           "type": "puzzle_object",
           "x": 464,
@@ -966,7 +933,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 22,
           "name": "crown_ship_far",
           "type": "puzzle_object",
           "x": 576,

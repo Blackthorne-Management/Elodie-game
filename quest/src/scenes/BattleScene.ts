@@ -29,7 +29,7 @@ import {
   textureKeyForWeapon,
 } from '../assets.config.ts';
 import { SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
-import { BATTLES, ENEMIES, SKILL_BOOK } from '../data/battles.ts';
+import { ENEMIES, SKILL_BOOK, battleDef } from '../data/battles.ts';
 import { RPG } from '../data/rpg.ts';
 import {
   Battle,
@@ -186,7 +186,7 @@ export class BattleScene extends Phaser.Scene {
     const cam = this.cameras.main;
     cam.setOrigin(0, 0).setZoom(renderScale());
     this.seed = Date.now() >>> 0 || 1;
-    const def = BATTLES[this.battleId];
+    const def = battleDef(this.battleId);
     this.drawBackdrop(def?.backdrop ?? 'cane_road');
     audio.playMusic(BATTLE_MUSIC);
     this.ui = this.add.container(0, 0).setDepth(400);
@@ -211,14 +211,15 @@ export class BattleScene extends Phaser.Scene {
   private begin(retryOf?: Battle): void {
     const rt = getRuntime();
     const flags = rt.logic.state.flags;
-    const def = BATTLES[this.battleId];
+    const def = battleDef(this.battleId);
     if (!def) throw new Error(`No battle ${this.battleId}`);
     const party = battleParty(flags, RPG, SKILL_BOOK);
     this.extra.forEach((id, i) => {
       const m = RPG.members.find((x) => x.id === id);
       if (m) party.push({ ...battleEntry(flags, RPG, m, SKILL_BOOK, false), id: `${id}${i}` });
     });
-    const enemies = def.enemies.map((id) => ENEMIES[id]!).filter(Boolean);
+    // A random ambush fights at its group's level.
+    const enemies = def.enemies.map((id) => ENEMIES[id]!).filter(Boolean).map((e) => (def.level ? { ...e, level: def.level } : e));
     const items = battleItems(flags, RPG);
     this.seed = (this.seed * 1103515245 + 12345) >>> 0;
     this.battle = retryOf ? Battle.retry(retryOf, party, enemies, items, this.seed) : new Battle(def, party, enemies, items, { seed: this.seed });

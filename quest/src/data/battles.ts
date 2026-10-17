@@ -3,7 +3,8 @@
 // Anissa run into a boar, which teaches the commands, Anissa's Spark and Surge, and her light.
 // Numbers follow docs/quest/design/COMBAT.md.
 
-import { ANISSA_SP_EVERY, BATTLE_ACTIVE, SPARK_ON_GUARD, SURGE_COST } from '../config.ts';
+import { ANISSA_SP_EVERY, BATTLE_ACTIVE, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST } from '../config.ts';
+import { ENCOUNTERS } from './encounters.ts';
 import type { BattleDef, EnemyDef, SkillDef } from '../engine/battle.ts';
 import type { SkillBook } from '../engine/skills.ts';
 import { BOOKS } from './books.ts';
@@ -120,6 +121,73 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     role: 'skirmisher',
     moves: [{ name: 'Bayonet', power: 110 }],
   },
+  // The ambushes (COMBAT.md 13.2; owner rule Oct 17: nothing harmless, every foe can hurt). Levels come from
+  // the encounter group. People are drawn from their walking sprites until art drop 2.
+  crown_musketeer: {
+    id: 'crown_musketeer',
+    name: 'Crown Musketeer',
+    look: 'crown_musketeer',
+    level: 5,
+    role: 'caster',
+    moves: [
+      { name: 'Bayonet jab', power: 90 },
+      { name: 'Volley', power: 180, every: 2, tell: 'The musketeer kneels and takes aim...' },
+    ],
+  },
+  road_bandit: {
+    id: 'road_bandit',
+    name: 'Road Bandit',
+    look: 'road_bandit',
+    level: 4,
+    role: 'skirmisher',
+    moves: [
+      { name: 'Knife', power: 110 },
+      { name: 'Dirty trick', power: 150, every: 3, tell: 'The bandit grins and palms a fistful of sand...' },
+    ],
+  },
+  mangrove_crab: {
+    id: 'mangrove_crab',
+    name: 'Mangrove Crab',
+    look: 'mangrove_crab',
+    level: 4,
+    role: 'tank',
+    moves: [
+      { name: 'Pinch', power: 100 },
+      { name: 'Crushing claw', power: 160, every: 3, tell: 'The crab raises its great claw, very slowly...' },
+    ],
+    weak: ['fire', 'light'],
+  },
+  qc_zealot: {
+    id: 'qc_zealot',
+    name: 'Quiet Crown Zealot',
+    look: 'quiet_crown_m_deep',
+    level: 6,
+    role: 'caster',
+    moves: [
+      { name: 'Frighten', power: 70, area: true },
+      { name: 'Hush', power: 140, every: 3, tell: 'The zealot raises one finger to his veil. "Hush..."' },
+    ],
+    resist: ['light'],
+  },
+  smuggler: {
+    id: 'smuggler',
+    name: 'Smuggler',
+    look: 'smuggler',
+    level: 7,
+    role: 'brute',
+    moves: [
+      { name: 'Cudgel', power: 110 },
+      { name: 'Crate throw', power: 140, every: 3, tell: 'The smuggler hoists a Crown-stamped crate overhead...' },
+    ],
+  },
+  lookout: {
+    id: 'lookout',
+    name: 'Lookout',
+    look: 'lookout',
+    level: 6,
+    role: 'skirmisher',
+    moves: [{ name: 'Sling', power: 100 }],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     name: 'Marine sergeant',
@@ -214,3 +282,36 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     },
   },
 };
+
+/** The wild sections' battles: their title and the painted scene behind them. */
+const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
+  mountain_path: { title: 'The Mountain Path', backdrop: 'mountain_path' },
+  cane_road: { title: 'The Cane Road', backdrop: 'cane_road' },
+};
+
+/**
+ * Any battle by id: a scripted one (BATTLES), or a random ambush, `encounter:<table>/<group>`, built from its
+ * encounter group: its enemies at the group's level, paying ENCOUNTER_XP_PER_LEVEL and ENCOUNTER_GOLD_PER_LEVEL
+ * per foe and level.
+ */
+export function battleDef(id: string): BattleDef | undefined {
+  const scripted = BATTLES[id];
+  if (scripted) return scripted;
+  const m = /^encounter:([^/]+)\/(.+)$/.exec(id);
+  if (!m) return undefined;
+  const [, tableId, groupId] = m;
+  const group = ENCOUNTERS[tableId!]?.groups.find((g) => g.id === groupId);
+  if (!group?.enemies?.length) return undefined;
+  const wild = WILDS[tableId!] ?? { title: 'Ambush', backdrop: 'cane_road' };
+  const foes = group.enemies.length;
+  return {
+    id,
+    title: wild.title,
+    backdrop: wild.backdrop,
+    enemies: group.enemies,
+    level: group.level,
+    table: tableId!,
+    group: groupId!,
+    rewards: { xp: ENCOUNTER_XP_PER_LEVEL * group.level * foes, gold: ENCOUNTER_GOLD_PER_LEVEL * group.level * foes },
+  };
+}

@@ -30,7 +30,8 @@ const PIER_WON = 'encounter.xaragua_story.pier.won';
 
 export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   // ---- Chapter 2, The Charter: the story (first half, Oct 16) -------------------------------------
-  // The ferry lands: marines are shaking down the fishers at the end of the pier.
+  // The ferry lands: marines are shaking down the fishers at the end of the pier. They start the fight
+  // (owner report, Oct 17: the reason to fight must be clear), and the aftermath plays at once (battle.after).
   simple('xaragua_arrival', [
     nar('The ferry coach bumps against the pier at dawn. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
     say(Y, 'Yucayeque. Home.'),
@@ -38,31 +39,37 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say(A, 'Gigi. Look, on the pier.'),
     nar("At the end of the pier, a Crown sergeant weighs a fisher's catch on a hand scale. His marines load the baskets into a boat."),
     say('marine_sergeant', 'Harbor fee. Half the catch, by order of the Governor.'),
-    say('canoe_fisher', 'Half? Yesterday it was a fifth!'),
-    say('marine_sergeant', 'Yesterday the Governor was in a better mood.'),
-    say(Y, 'Put the baskets down, sergeant.'),
-    say('marine_sergeant', 'Or what, girl? You and your little friends from Zetwal?'),
-    { speaker: G, text: "The envoy's daughter from Zetwal, actually. And yes.", set: { 'battle.next': 'pier_marines' } },
+    say('canoe_fisher', 'Half? Yesterday it was a fifth! I have six children!'),
+    nar('The sergeant shoves the old man. He stumbles back to the very edge of the pier.'),
+    say(Y, 'Put your hands on him again, sergeant. I dare you.'),
+    say('marine_sergeant', 'The cacique\'s girl. Back from Zetwal with friends.'),
+    say('marine_sergeant', 'Marines! Fix bayonets. Teach the natives what the Charter protects.'),
+    say(A, 'Gigi, they are coming at Yari!'),
+    { speaker: G, text: 'Anissa, behind me. Yari, with me!', set: { 'battle.next': 'pier_marines', 'battle.after': 'pier_after' } },
   ]),
   // Talking to the sergeant again (after a lost fight, or a reload in the middle of it).
   script('marine_sergeant_talk', {
     start: { lines: [], next: [{ if: { flag: PIER_WON }, to: 'gone' }, { to: 'again' }] },
     again: {
       lines: [
-        say('marine_sergeant', 'Back for another lesson, girl?'),
-        { speaker: Y, text: 'Put. The baskets. Down.', set: { 'battle.next': 'pier_marines' } },
+        say('marine_sergeant', 'Back for another lesson, girl? Marines!'),
+        { speaker: Y, text: 'Not this time.', set: { 'battle.next': 'pier_marines', 'battle.after': 'pier_after' } },
       ],
     },
     gone: { lines: [say('marine_sergeant', 'The Governor will hear about this.')] },
   }),
-  // After the fight, walking up the pier: the fisher's thanks, and Yari's father.
+  // Straight after the fight: the marines flee, and the fisher they were robbing speaks.
   simple('pier_after', [
-    nar('The marines row back to their warship without the baskets. Along the beach, people come out of their houses to watch them go.'),
+    say('marine_sergeant', 'Fall back! Back to the boat!'),
+    nar('The marines scramble down the ladder into their boat and row hard for the warship, leaving the baskets behind.'),
+    say('marine_sergeant', 'You\'ve raised a hand to the Crown, girl! The Governor will hear of this, every word!'),
+    say(Y, 'Tell him slowly. He reads every form twice.'),
+    nar('Along the beach, people come out of their houses to watch the boat go. The old fisher gathers his baskets.'),
     say('canoe_fisher', 'Guatiao, Yari. And your friends. That is the first time anyone has made them put anything back.', 'Friend, Yari.'),
     say(Y, 'Where is my father? Why did nobody stop them?'),
     say('canoe_fisher', 'The cacique is sick, Yari. Very sick. The elders meet without him tonight, about the Crown\'s paper.'),
     say(Y, '...Gianna, I have to go to him. The caney is at the top of the plaza, up the road.'),
-    say(A, "We'll come with you."),
+    { speaker: A, text: "We'll come with you.", set: { 'story.pier_thanks': true } },
   ]),
   // Into the caney.
   simple('caney_enter', [

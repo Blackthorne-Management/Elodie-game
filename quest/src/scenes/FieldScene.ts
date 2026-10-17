@@ -415,6 +415,8 @@ export class FieldScene extends Phaser.Scene {
     this.checkProgress();
     this.handle([{ kind: 'sync' }]);
     saveGame(this.rt);
+    // The scene a fight leads into (the pier: the marines flee, the fisher speaks), at once.
+    this.handle(this.logic.battleOver(result !== null));
   }
 
   // ---- The item showcase ---------------------------------------------------------------------

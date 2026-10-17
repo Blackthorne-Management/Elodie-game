@@ -172,6 +172,8 @@ export interface BattleDef {
   /** The painted scene behind the fight (assets.config.ts BATTLE_BACKDROPS). */
   backdrop: string;
   enemies: readonly string[];
+  /** Every enemy fights at this level (a random ambush uses its group's level); omitted: each enemy's own. */
+  level?: number;
   /** The Foes page and the won flag: encounter.<table>.<group>.won (engine/game.ts encounterFlag). */
   table: string;
   group: string;

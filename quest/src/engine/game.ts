@@ -236,6 +236,12 @@ export class GameLogic {
     if (this.wildSteps <= ENCOUNTER_GRACE_STEPS || this.rng.next() >= ENCOUNTER_CHANCE_PER_STEP) return [];
     this.wildSteps = 0;
     const group = pickGroup(table, this.rng);
+    // Owner rule (Oct 17): an ambush is always a real fight. The foes appear, then the battle starts.
+    if (group.enemies?.length) {
+      this.state.flags.set('battle.next', `encounter:${table.id}/${group.id}`);
+      const intro: DialogueScript = { id: `encounter.${table.id}.${group.id}`, start: 'appear', nodes: { appear: { lines: [{ text: group.intro, fx: 'shake' }] } } };
+      return [{ kind: 'encounter', table: table.id, group: group.id }, ...this.startScript(intro, [{ kind: 'save' }])];
+    }
     return [{ kind: 'encounter', table: table.id, group: group.id }, ...this.startScript(encounterScript(table, group), [{ kind: 'save' }])];
   }
 
@@ -458,6 +464,19 @@ export class GameLogic {
     if (this.mode !== 'dialogue' || !this.runner) return [];
     this.runner.choose(index);
     return this.runner.done ? this.finishDialogue() : [];
+  }
+
+  /**
+   * A battle has ended. After a win, the scene a dialogue queued for it (flag `battle.after`) plays at once:
+   * the pier's marines flee and the fisher speaks. After a loss it is dropped (talking to the foes again
+   * queues it again).
+   */
+  battleOver(won: boolean): Effect[] {
+    const flags = this.state.flags;
+    const after = flags.get('battle.after');
+    flags.clear('battle.after');
+    if (!won || typeof after !== 'string' || !after || this.mode !== 'field') return [];
+    return this.startDialogue(after, [{ kind: 'save' }]);
   }
 
   closeCard(): Effect[] {

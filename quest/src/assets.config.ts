@@ -379,6 +379,10 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   bow_maker: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.l!, trim: TEAL, legs: C.B!, accessories: ['bow'] },
   lamp_oil_seller: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.o!, trim: C.k!, robe: true, headgear: 'wrap', headgearColor: C.y! },
   roots_elder: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: C.L!, trim: TEAL, robe: true, accessories: ['staff'] },
+  crown_musketeer: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: C.R!, trim: C.w!, legs: C.w!, headgear: 'bicorne', headgearColor: C.u!, accessories: ['sash'] },
+  road_bandit: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x5a4a3e, trim: C.R!, legs: C.K!, beard: HAIR_BLACK, headgear: 'wrap', headgearColor: C.R! },
+  smuggler: { skin: C.T!, hair: C.B!, hairStyle: 'bald', outfit: 0x3a3440, trim: C.N!, legs: C.B!, beard: C.B!, accessories: ['satchel'] },
+  lookout: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.l!, trim: C.N!, legs: C.K!, headgear: 'hood', headgearColor: C.l!, build: 'small' },
   marine_sergeant: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.w!, beard: C.B!, headgear: 'cap', headgearColor: C.u!, accessories: ['sash'] },
   anaco: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: COTTON, trim: C.y!, robe: true, headgear: 'circlet', headgearColor: C.y!, accessories: ['cane'] },
   thorne: { skin: C.T!, hair: C.w!, hairStyle: 'short', outfit: C.u!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['epaulettes', 'sash'] },
@@ -747,6 +751,22 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     ground: 0xb08a58,
     groundDark: 0x8a6a40,
     groundLight: 0xc8a46b,
+  },
+  // The Mountain Path (Chapter 2): cloud forest, mist on the peaks, the red-earth trail.
+  mountain_path: {
+    sky: [0x7fa8b8, 0x8fb6c4, 0xa2c4ce, 0xb6d2d8, 0xcadede, 0xdce8e6],
+    cloud: 0xf2f6f6,
+    cloudShade: 0xc8d6d8,
+    mountainFar: 0x5a8a78,
+    mountainNear: 0x3f7a5a,
+    trees: 0x2e8a4e,
+    treesDark: 0x1f6a3a,
+    field: 0x2e7a46,
+    cane: 0x46a866,
+    caneDark: 0x2e8a4e,
+    ground: 0xb0603a,
+    groundDark: 0x8e4a2a,
+    groundLight: 0xc8784a,
   },
   // Yucayeque's pier (Chapter 2): green mountains over a turquoise lagoon, the pier's planks underfoot.
   yucayeque_pier: {

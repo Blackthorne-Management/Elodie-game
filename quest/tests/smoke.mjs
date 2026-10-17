@@ -46,7 +46,7 @@ const { parseRoute } = await import('../src/engine/sim.ts');
 const { encodeSave } = await import('../src/engine/save.ts');
 const { newGameSim, readJson } = await import('../tools/sim-setup.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
-const { BATTLES } = await import('../src/data/battles.ts');
+const { battleDef } = await import('../src/data/battles.ts');
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
@@ -690,7 +690,7 @@ async function fightBattle(page, id, shots) {
   }
   await page.waitForFunction(() => window.__quest.snapshot().mode !== 'battle', null, { timeout: 8000 });
   const after = await snap(page);
-  const battle = BATTLES[id];
+  const battle = battleDef(id);
   check(after.flags[`encounter.${battle.table}.${battle.group}.won`] === true, `${id}: the fight is won in the browser`);
 }
 
@@ -743,6 +743,15 @@ async function playAct(browser, errors) {
           await page.keyboard.up('Shift');
           if (sim.battles.at(-1) === 'intro_boar') await fightBoar(page, shots);
           else await fightBattle(page, sim.battles.at(-1), shots);
+          // A fight can lead straight into a scene (the pier: the marines flee, the fisher speaks): read it.
+          await frames(page);
+          for (let i = 0; i < 300; i++) {
+            const t = await finishTyping(page);
+            if (t.mode !== 'dialogue') break;
+            await page.keyboard.press('KeyZ');
+            keys++;
+            await frames(page);
+          }
           await page.keyboard.down('Shift');
         }
       } else {

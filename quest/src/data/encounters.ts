@@ -52,6 +52,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
     groups: [
       {
         id: 'marines',
+        enemies: ['crown_marine', 'crown_marine'],
         weight: 3,
         level: 4,
         foes: ['Crown Marine', 'Crown Marine'],
@@ -61,6 +62,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
       {
         id: 'musket',
+        enemies: ['crown_musketeer', 'crown_marine'],
         weight: 2,
         level: 6,
         foes: ['Crown Musketeer', 'Crown Marine'],
@@ -70,6 +72,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
       {
         id: 'crabs',
+        enemies: ['mangrove_crab', 'mangrove_crab'],
         weight: 2,
         level: 4,
         foes: ['Mangrove Crab', 'Mangrove Crab'],
@@ -79,6 +82,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
       {
         id: 'bandits',
+        enemies: ['road_bandit', 'road_bandit'],
         weight: 2,
         level: 5,
         foes: ['Road Bandit', 'Road Bandit'],
@@ -88,6 +92,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
       {
         id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot'],
         weight: 1,
         level: 6,
         foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
@@ -103,6 +108,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
     groups: [
       {
         id: 'bandits',
+        enemies: ['road_bandit', 'road_bandit'],
         weight: 3,
         level: 6,
         foes: ['Road Bandit', 'Road Bandit'],
@@ -112,6 +118,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
       {
         id: 'smugglers',
+        enemies: ['smuggler', 'smuggler', 'lookout'],
         weight: 2,
         level: 7,
         foes: ['Smuggler', 'Smuggler', 'Lookout'],
@@ -121,6 +128,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
       {
         id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot'],
         weight: 1,
         level: 9,
         foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],

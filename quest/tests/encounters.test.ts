@@ -151,3 +151,39 @@ describe('random encounters', () => {
     }
   });
 });
+
+describe('every ambush is a real battle (owner rule, Oct 17)', () => {
+  it('an ambush with enemies shows the foes, then the battle starts (no Fight / Run text box)', () => {
+    const real: GameContent = {
+      ...content,
+      encounters: { road: { id: 'road', groups: [{ id: 'bandits', level: 5, foes: ['Road Bandit', 'Road Bandit'], enemies: ['road_bandit', 'road_bandit'], intro: 'Bandits!', won: '', fled: '' }] } },
+    };
+    const map = parseMap('w', makeMap({ present: ['............', '............', '............'], objects: { spawns: [obj('start', 0, 1)], encounters: [obj('wild', 6, 0, { table: 'road' }, 6, 3)] } }));
+    const g = new GameLogic({ w: map }, real, newGame(map, 'start'), 7);
+    walkInto(g);
+    const { effects } = paceUntilAmbush(g);
+    expect(effects.some((e) => e.kind === 'encounter')).toBe(true);
+    expect(g.view().kind === 'line' && g.view()).toBeTruthy();
+    expect(g.view()).not.toHaveProperty('choices');
+    const after = g.advance();
+    expect(after).toContainEqual({ kind: 'battle', battle: 'encounter:road/bandits' });
+  });
+
+  it('every wild group fights at least two foes that can all hurt you, at the group level, with real pay', async () => {
+    const { ENEMIES, battleDef } = await import('../src/data/battles.ts');
+    for (const table of ['mountain_path', 'cane_road']) {
+      for (const group of CONTENT.encounters![table]!.groups) {
+        const def = battleDef(`encounter:${table}/${group.id}`);
+        expect(def, `${table}/${group.id}`).toBeDefined();
+        expect(def!.enemies.length, `${table}/${group.id}`).toBeGreaterThanOrEqual(2);
+        expect(def!.level).toBe(group.level);
+        expect(def!.rewards.xp).toBeGreaterThan(0);
+        for (const id of def!.enemies) {
+          const e = ENEMIES[id]!;
+          expect(e, id).toBeDefined();
+          expect(Math.max(...e.moves.map((m) => m.power)), id).toBeGreaterThanOrEqual(100);
+        }
+      }
+    }
+  });
+});

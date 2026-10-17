@@ -53,8 +53,10 @@ export interface EncounterGroup {
   id: string;
   /** Relative chance within its table (default 1). */
   weight?: number;
-  /** The foes, by name, for the battle (Phase 3) and the stand-in. */
+  /** The foes, by name, for the menu's Foes page. */
   foes: readonly string[];
+  /** The foes in battle (data/battles.ts ENEMIES ids, at this group's level). An ambush is always a real fight. */
+  enemies?: readonly string[];
   /** Their level (the menu's Foes page colours it against the party's). */
   level: number;
   /** The line shown when they appear. */

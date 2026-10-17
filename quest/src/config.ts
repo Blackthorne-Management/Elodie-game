@@ -238,3 +238,9 @@ export const DEBATE_REWARDS: Readonly<Record<'won' | 'mediated' | 'provoked', { 
   mediated: { concord: 10, influence: 1, xp: 25 },
   provoked: { concord: -5, fear: 1 },
 };
+
+// ---- Random ambushes (owner rule, Oct 17: every ambush is a real battle) ---------------------------------
+
+/** What a won ambush pays, per foe and per level of the group (a level-4 pair: 80 XP, 32 gold). */
+export const ENCOUNTER_XP_PER_LEVEL = 10;
+export const ENCOUNTER_GOLD_PER_LEVEL = 4;

@@ -140,12 +140,11 @@ export function xaraguaVillage(): MapSource {
     { layer: 'doors', name: 'village_customs', x: 29, y: 11, props: { target: 'customs_out', map: 'xaragua-customs', exit: 'down' } },
     // The ferry lands at the end of the pier (Chapter 1 ends with travel.next = xaragua-village/pier).
     { layer: 'spawns', name: 'pier', x: 21, y: 25, props: { facing: 'up', era: 'present' } },
-    // Chapter 2 opens: the marines on the pier (they leave once beaten), and the walk up the pier after.
+    // Chapter 2 opens: the marines on the pier (they flee once beaten; the fight's aftermath plays at once).
     trigger('xaragua_arrival', 21, 25, { dialogue: 'xaragua_arrival', flag: 'story.xaragua_arrived', once: true, onEnter: true }),
     npc('marine_sergeant', 21, 23, 'down', { if: '!encounter.xaragua_story.pier.won' }),
     npc('pier_marine_a', 22, 22, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
     npc('pier_marine_b', 21, 21, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
-    trigger('pier_after', 21, 19, { dialogue: 'pier_after', flag: 'story.pier_thanks', once: true, if: 'encounter.xaragua_story.pier.won' }, 2, 1),
     obj('xaragua_customs_sign', 32, 12, { dialogue: 'xaragua_customs_sign', era: 'present' }),
     obj('pier_sign', 24, 19, { dialogue: 'pier_sign', era: 'present' }),
     // The Crown's ships at anchor (one drawing each, on the lagoon), in the present only.

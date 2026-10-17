@@ -2617,6 +2617,39 @@ export const ITEM_ART: Readonly<Record<string, PixelArt>> = {
 
 /** Enemy drawings for the battle screen, facing right (toward the party), by enemy look. */
 export const ENEMY_ART: Readonly<Record<string, PixelArt>> = {
+  // The mangrove crab (Xaraguá's wild sections): a heavy shell, one great claw raised. 44 x 28, facing left.
+  mangrove_crab: {
+    rows: [
+      '...kkkk.....................................',
+      '..kRRRRk....................................',
+      '.kRrrRRRk...................................',
+      '.kRrkkRRRk..................................',
+      '.kRk..kRRk......kk....kk....................',
+      '.kRRk.kRRk.....kYk...kYk....................',
+      '..kRRkRRk......kkk...kkk....................',
+      '...kRRRRk.......kk...kk.....................',
+      '....kRRRk.....kkkkkkkkkkkk..................',
+      '.....kRRk...kkRRRRRRRRRRRRkk................',
+      '......kRk..kRRRRRRRRRRRRRRRRk...............',
+      '......kRRkkRRrRRRRRRRRRRrRRRRk..............',
+      '.......kRRRRrRRRRRRRRRRRRRrRRRk.............',
+      '........kRRRRRRRRRRRRRRRRRRRRRk.............',
+      '........kRrRRRRRRRRRRRRRRRRRrRRk............',
+      '........krrRRRRRRRRRRRRRRRRRRrRk............',
+      '.........krrrRRRRRRRRRRRRRRRrrrk............',
+      '..........krrrrrrrrrrrrrrrrrrrk.............',
+      '...........kkkkkkkkkkkkkkkkkkk..............',
+      '..........kRk.kRk.kRk.kRk.kRk.kRk...........',
+      '.........kRk..kRk..kRk.kRk..kRk..kRk........',
+      '........kRk..kRk...kRk.kRk...kRk..kRk.......',
+      '.......kRk..kRk....kRk.kRk....kRk..kRk......',
+      '.......kk...kk.....kk...kk.....kk...kk......',
+      '............................................',
+      '............................................',
+      '............................................',
+      '............................................',
+    ],
+  },
   // The cane-field boar (kochon mawon): the first battle, on the Cane Road.
   // 52 x 36, facing left (enemies stand on the right of the battle screen). A stand-in until the painted art.
   boar: {
