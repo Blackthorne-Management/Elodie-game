@@ -7,19 +7,22 @@ import { GEN_NOTES, HOUSES } from '../src/data/houses';
 import { CATEGORY_ART, HOUSE_ART } from '../src/assets.config';
 import { SUDDEN_DEATH_ROUND } from '../src/config';
 import { cardTiming } from '../src/ui/cardKind';
+import { RULES } from '../src/data/rules';
 
 declare const process: { env: Record<string, string | undefined> };
 
 it.skipIf(!process.env.PRINT)('export card and house text', () => {
   const data = {
     suddenDeathRound: SUDDEN_DEATH_ROUND,
+    // the in-app Reference Card, printed inside the Action card box lid
+    reference: RULES.find(r => r.id === 'reference')?.blocks ?? [],
     cards: CARDS.map(c => ({
       id: c.id, name: c.name, kind: c.elodie ? 'elodie' : c.kind, category: c.category, text: c.text, flavor: c.flavor ?? '',
       icon: CATEGORY_ART[c.category]?.icon ?? '',
       when: cardTiming(c),
     })),
     houses: Object.values(HOUSES).map(h => ({
-      id: h.id, name: h.name, heirs: h.heirs, homeland: h.homeland, hp: h.hp, passiveName: h.passiveName, passiveText: h.passiveText,
+      id: h.id, name: h.name, heirs: h.heirs, homeland: h.homeland, identity: h.identity, hp: h.hp, passiveName: h.passiveName, passiveText: h.passiveText,
       downsideText: h.downsideText ?? '', notes: GEN_NOTES[h.id] ?? {}, abilities: h.abilities.map(a => ({ gen: a.gen, name: a.name, text: a.text })),
       color: HOUSE_ART[h.id].color, initial: HOUSE_ART[h.id].initial, home: h.home, tileType: h.tileType,
     })),
