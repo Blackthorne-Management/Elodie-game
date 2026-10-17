@@ -92,6 +92,11 @@ export const DIALOGUE_MUSIC: readonly DialogueMusic[] = [
   { dialogue: 'elodie_talk', if: { flag: 'story.heard_speech' }, music: 'farewell' },
 ];
 
+/** The song under an act's end card, by card id (data/cards.ts). */
+export const CARD_MUSIC: Readonly<Record<string, MusicId>> = {
+  act1_end: 'farewell',
+};
+
 /** Seconds a song takes to fade out when another takes over (and the new one to fade in). */
 export const MUSIC_FADE_S = 0.8;
 

@@ -240,7 +240,7 @@ describe('a save that finished Chapter 1 before the ferry existed (owner report,
     const f = sim.logic.state.flags;
     for (const k of ['party.anissa', 'story.anissa_woke', 'story.yari_asked', 'story.envoy_papers', 'encounter.wilds.boar.won', 'act1.complete', 'card.act1_end']) f.set(k, true);
     if (sim.logic.mode === 'dialogue') sim.run(['skip']); // the temple's welcome
-    sim.run(['goto 14,16', 'down', 'confirm', 'skip']);
+    sim.run(['goto 16,17', 'down', 'confirm', 'skip']); // Yari's canoe at the dock
     expect(sim.logic.state.player.mapId).toBe('xaragua-village');
     expect(f.isSet('story.xaragua_arrived')).toBe(true);
   });

@@ -9,6 +9,7 @@
 import Phaser from 'phaser';
 import {
   ANISSA_GLOW,
+  CARD_ART,
   CHARACTER_LABEL_GAP,
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
@@ -61,11 +62,13 @@ import { rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { planTap } from '../engine/tap.ts';
 import { audio } from '../audio/player.ts';
-import { BATTLE_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, VOLUME_STEPS } from '../audio.config.ts';
+import { BATTLE_MUSIC, CARD_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, VOLUME_STEPS } from '../audio.config.ts';
 import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.ts';
 import { echoPrompt } from '../engine/world.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { npcMoves, walkRoute } from '../engine/walkers.ts';
+import { crowdSpots, crowdStep } from '../engine/crowd.ts';
+import { Rng } from '../engine/rng.ts';
 import { STAGE_FOLLOWER, STAGE_NPC, STAGE_PLAYER, type StageCue } from '../engine/stage.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
@@ -107,8 +110,8 @@ interface StageActor {
   endFacing?: Dir8;
   /** Leave the stage on arrival. */
   leaving: boolean;
-  /** Borrowed from the map: an NPC's placement (by object id), or Anissa following. Never destroyed here. */
-  borrowed?: number | 'follower';
+  /** Borrowed from the map: an NPC's placement (by object id), Anissa following, or Yari. Never destroyed here. */
+  borrowed?: number | 'follower' | 'yari';
 }
 
 export interface FieldSnapshot {
@@ -125,6 +128,8 @@ export interface FieldSnapshot {
   markers: string[];
   /** Objects glowing because the Echo changed them. */
   glowing: string[];
+  /** The objects that glowed after the last Echo change (the glow itself fades after a few seconds). */
+  glowed: string[];
   flags: Record<string, unknown>;
   dialogue: ReturnType<DialogueBox['snapshot']>;
   menu: ReturnType<GameMenu['snapshot']>;
@@ -145,6 +150,10 @@ export interface FieldSnapshot {
   objective: string | null;
   echoFilter: boolean;
   follower: { x: number; y: number; glowing: boolean } | null;
+  /** Yari walking behind Anissa, once she is in the party (demo review, Oct 17). */
+  yari: { x: number; y: number; visible: boolean } | null;
+  /** How many of the festival's passers-by are on the map. */
+  crowd: number;
 }
 
 const ERA_LAYERS = [TILE_LAYERS.groundPresent, TILE_LAYERS.decoPresent, TILE_LAYERS.groundEcho, TILE_LAYERS.decoEcho];
@@ -197,7 +206,19 @@ export class FieldScene extends Phaser.Scene {
   /** Objects the Echo changed, waiting to glow once the player is back in the field. */
   private pendingGlow: string[] = [];
   private glowing = new Set<string>();
+  /** What glowed last after an Echo (the smoke test reads it: the glow itself lasts only a few seconds). */
+  private lastGlowed: string[] = [];
   private follower: Follower | null = null;
+  /** Yari, behind Anissa (or Gianna), while she is in the party. */
+  private yari: Follower | null = null;
+  /** The picture behind an act's end card, while it shows (assets.config CARD_ART). */
+  private cardArt: Phaser.GameObjects.Image | null = null;
+  /** Where a scene last left Yari before she joined (she follows on from there, not from a jump). */
+  private yariStaged: Pos | null = null;
+  /** The festival's passers-by (engine/crowd.ts): pictures that stroll, by crowd zone. */
+  private crowd: { zone: string; sprite: Phaser.GameObjects.Image; at: Pos; mover: Mover; look: string; facing: Dir8; waitMs: number }[] = [];
+  /** Only for where the crowd strolls (looks, not the game: the simulator never sees them). */
+  private crowdRng = new Rng(Date.now() >>> 0);
   private echoWash!: Phaser.GameObjects.Rectangle;
   /** The map's mood wash (assets.config.ts MAP_MOODS), when one applies. */
   private moodWash!: Phaser.GameObjects.Rectangle;
@@ -263,7 +284,11 @@ export class FieldScene extends Phaser.Scene {
     this.labelKey = '';
     this.pendingGlow = [];
     this.glowing = new Set();
+    this.lastGlowed = [];
     this.follower = null;
+    this.yari = null;
+    this.crowd = [];
+    this.cardArt = null;
     this.echoMatrix = null;
     this.autoPath = [];
     this.autoFace = null;
@@ -386,6 +411,11 @@ export class FieldScene extends Phaser.Scene {
     const input = this.rt.input;
     input.update();
     this.tickWalkers(delta);
+    this.tickCrowd(delta);
+    if (this.cardArt && this.mode !== 'card') {
+      this.cardArt.destroy();
+      this.cardArt = null;
+    }
     this.tickStage(delta);
     this.updateEchoPrompt();
     this.syncMusic();
@@ -894,6 +924,11 @@ export class FieldScene extends Phaser.Scene {
   /** The song for where the player is and what is happening (engine/audioPlan.ts); the player keeps it if unchanged. */
   private syncMusic(): void {
     if (this.mode === 'battle') return;
+    const cardSong = this.mode === 'card' && this.logic.card ? CARD_MUSIC[this.logic.card.id] : undefined;
+    if (cardSong) {
+      audio.playMusic(cardSong);
+      return;
+    }
     const rules = { byMap: MUSIC_BY_MAP, echo: ECHO_MUSIC, battle: BATTLE_MUSIC, dialogue: DIALOGUE_MUSIC, overrides: MUSIC_OVERRIDES };
     audio.playMusic(musicFor(rules, { mapId: this.map.id, era: this.logic.era, dialogue: this.logic.dialogueId }, this.logic.state.flags));
   }
@@ -1019,6 +1054,7 @@ export class FieldScene extends Phaser.Scene {
     if (this.pendingGlow.length === 0) return;
     const ids = this.pendingGlow;
     this.pendingGlow = [];
+    this.lastGlowed = [];
     const objects = this.logic.objects();
     const names: string[] = [];
     for (const id of ids) {
@@ -1035,6 +1071,7 @@ export class FieldScene extends Phaser.Scene {
         .setBlendMode(Phaser.BlendModes.ADD);
       glow.setStrokeStyle(1, UI.changedGlow, 1);
       this.glowing.add(id);
+      this.lastGlowed.push(id);
       this.tweens.add({
         targets: glow,
         fillAlpha: 0.55,
@@ -1099,6 +1136,7 @@ export class FieldScene extends Phaser.Scene {
     this.cameras.main.flash(f.duration, f.r, f.g, f.b);
     this.applyEra();
     this.updateFollowerLook();
+    this.syncCrowd(); // the crowd is not part of the memory
   }
 
   /** Walk each walking person a frame along their route; at the end they face the way their place says. */
@@ -1136,6 +1174,8 @@ export class FieldScene extends Phaser.Scene {
   /** Draw the NPCs and puzzle objects active in this era with the current flags. */
   private syncActors(): void {
     const npcs = this.logic.npcs();
+    // Yari leaving her spot to join the party starts following from there (no jump).
+    const yariStood = [...this.npcPlaced.values()].find((n) => n.npc === 'yari')?.pos;
     // Someone who left one place for another on this map walks there instead of appearing there.
     for (const move of npcMoves([...this.npcPlaced.values()], npcs)) {
       const sprite = this.npcSprites.get(move.fromId);
@@ -1205,6 +1245,73 @@ export class FieldScene extends Phaser.Scene {
     this.syncMarkers();
     this.labelKey = '';
     this.placeFollower();
+    // (A scene that brought her on may still be on stage: she follows on from where it left her.)
+    const onStage = this.stageActors.get('yari');
+    this.placeYari(yariStood ?? (onStage && onStage.borrowed === undefined ? onStage.at : undefined) ?? this.yariStaged ?? undefined);
+    this.yariStaged = null;
+    this.syncCrowd();
+  }
+
+  // ---- The crowd -----------------------------------------------------------------------------
+
+  /** Who stands on a tile now or is stepping onto it: Gianna, her party, the map's people, the crowd. */
+  private crowdTaken(p: Pos): boolean {
+    if (samePos(p, this.logic.state.player.pos)) return true;
+    if (this.follower && samePos(p, this.follower.pos)) return true;
+    if (this.yari && samePos(p, this.yari.pos)) return true;
+    if (this.logic.npcs().some((n) => samePos(n.pos, p))) return true;
+    return this.crowd.some((c) => samePos(c.at, p) || (c.mover.glide !== null && samePos(c.mover.glide.to, p)));
+  }
+
+  /** Bring on the crowds the story has now, and send off the ones it has not (the festival ends). */
+  private syncCrowd(): void {
+    const zones = this.logic.crowds();
+    const active = new Set(zones.map((z) => z.id));
+    this.crowd = this.crowd.filter((c) => {
+      if (active.has(c.zone)) return true;
+      c.sprite.destroy();
+      return false;
+    });
+    for (const zone of zones) {
+      if (this.crowd.some((c) => c.zone === zone.id) || zone.looks.length === 0) continue;
+      const open = (p: Pos) => this.logic.isOpen(p, 'present') && !this.crowdTaken(p) && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p)));
+      for (const at of crowdSpots(zone, open, this.crowdRng)) {
+        const look = this.crowdRng.pick(zone.looks);
+        const facing = this.crowdRng.pick(['down', 'left', 'right', 'up'] as const);
+        const w = tileToWorld(at);
+        const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(look)).setOrigin(0.5, 1).setDepth(10 + w.y);
+        setLook(sprite, look, facing);
+        this.crowd.push({ zone: zone.id, sprite, at, mover: new Mover(), look, facing, waitMs: this.crowdRng.int(0, 4000) });
+      }
+    }
+  }
+
+  /** Stroll: now and then someone takes a step to a free tile nearby, never into anyone's way. */
+  private tickCrowd(delta: number): void {
+    if (this.crowd.length === 0) return;
+    const zones = new Map(this.logic.crowds().map((z) => [z.id, z]));
+    for (const c of this.crowd) {
+      if (c.mover.moving) {
+        c.mover.update(delta, speedPx(false) * 0.5, (reached) => {
+          c.at = reached;
+          return null;
+        });
+      } else {
+        c.waitMs -= delta;
+        const zone = zones.get(c.zone);
+        if (c.waitMs <= 0 && zone && this.mode === 'field') {
+          c.waitMs = this.crowdRng.int(1500, 5000);
+          const next = crowdStep(zone, c.at, (p) => this.logic.isOpen(p, 'present') && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p))), (p) => this.crowdTaken(p), this.crowdRng);
+          if (next) {
+            c.facing = facingToward(c.at, next);
+            c.mover.start(c.at, next);
+          }
+        }
+      }
+      const p = c.mover.point(c.at);
+      c.sprite.setPosition(p.x, p.y).setDepth(10 + p.y);
+      setLook(c.sprite, c.look, c.facing, c.mover.moving ? c.mover.frame() : 0);
+    }
   }
 
   // ---- Anissa --------------------------------------------------------------------------------
@@ -1234,8 +1341,40 @@ export class FieldScene extends Phaser.Scene {
     this.updateFollowerLook();
   }
 
+  private yariWithUs(): boolean {
+    return partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'yari');
+  }
+
+  /**
+   * Yari walks behind Anissa (or Gianna) while she is in the party (demo review, Oct 17: she fought the boar
+   * but was never seen on the map). She starts where she stood when she joined, or one step behind.
+   */
+  private placeYari(stood?: Pos): void {
+    if (!this.yariWithUs()) {
+      this.yari?.sprite.destroy();
+      this.yari = null;
+      return;
+    }
+    if (this.yari) return;
+    const p = this.logic.state.player;
+    const lead = this.follower?.pos ?? p.pos;
+    const taken = (t: Pos) => samePos(t, p.pos) || (this.follower !== null && samePos(t, this.follower.pos));
+    const tryDirs: Dir8[] = [opposite(spriteFacing(p.facing)), ...DIRS];
+    const spot =
+      stood ??
+      tryDirs.map((d) => stepFrom(lead, d)).find((t) => !taken(t) && this.logic.isOpen(t, 'present') && !this.logic.npcs('present').some((n) => samePos(n.pos, t))) ??
+      lead;
+    const w = tileToWorld(spot);
+    const sprite = this.add.image(w.x, w.y, textureKeyForCharacter('yari')).setOrigin(0.5, 1).setDepth(10 + w.y - 1);
+    setLook(sprite, 'yari', p.facing);
+    this.yari = { sprite, pos: spot, from: spot, facing: p.facing, glow: null, distance: 0, lastT: 1 };
+    this.updateFollowerLook();
+  }
+
   /** In the present she walks behind Gianna; in the Echo she stays put, glowing, holding the door. */
   private updateFollowerLook(): void {
+    // Yari is not part of the memory: she waits out of sight until it ends.
+    this.yari?.sprite.setVisible(this.logic.era !== 'echo');
     const f = this.follower;
     if (!f) return;
     const echo = this.logic.era === 'echo';
@@ -1251,24 +1390,40 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private startFollowerStep(playerFrom: Pos): void {
-    const f = this.follower;
-    if (!f || this.logic.era === 'echo') return;
+    if (this.logic.era === 'echo') return;
+    // Anissa steps where Gianna was; Yari steps where Anissa was (or where Gianna was, without her).
+    const anissaWas = this.follower ? { ...this.follower.pos } : null;
+    const anissaMoved = this.follower ? this.stepFollower(this.follower, playerFrom, ANISSA_GLOW.look) : false;
+    if (this.yari) {
+      if (!this.follower) this.stepFollower(this.yari, playerFrom, 'yari');
+      else if (anissaMoved && anissaWas) this.stepFollower(this.yari, anissaWas, 'yari');
+      else this.stepFollower(this.yari, this.yari.pos, 'yari');
+    }
+  }
+
+  /** One follower's step towards `to` (where the one ahead was). Whether they moved. */
+  private stepFollower(f: Follower, to: Pos, look: string): boolean {
     // Count the end of her last step (her walk cycle carries on across tiles).
     f.distance += Math.max(0, 1 - f.lastT) * stepLength(f.from, f.pos);
     f.lastT = 0;
     f.from = f.pos;
-    if (samePos(f.pos, playerFrom)) return;
-    const dx = playerFrom.x - f.pos.x;
-    const dy = playerFrom.y - f.pos.y;
+    if (samePos(f.pos, to)) return false;
+    const dx = to.x - f.pos.x;
+    const dy = to.y - f.pos.y;
     f.facing = facingToward({ x: 0, y: 0 }, { x: dx, y: dy });
-    f.pos = { ...playerFrom };
-    setLook(f.sprite, ANISSA_GLOW.look, f.facing);
+    f.pos = { ...to };
+    setLook(f.sprite, look, f.facing);
+    return true;
   }
 
   /** Anissa walks her step in time with Gianna's (`t` is how far through it Gianna is). */
   private moveFollower(t: number): void {
-    const f = this.follower;
-    if (!f || this.logic.era === 'echo') return;
+    if (this.logic.era === 'echo') return;
+    if (this.follower) this.moveOneFollower(this.follower, t, ANISSA_GLOW.look);
+    if (this.yari) this.moveOneFollower(this.yari, t, 'yari');
+  }
+
+  private moveOneFollower(f: Follower, t: number, look: string): void {
     const a = tileToWorld(f.from);
     const b = tileToWorld(f.pos);
     const walking = t < 1 && !samePos(f.from, f.pos);
@@ -1277,7 +1432,7 @@ export class FieldScene extends Phaser.Scene {
     f.lastT = t;
     f.sprite.setPosition(Math.round(a.x + (b.x - a.x) * t), Math.round(a.y + (b.y - a.y) * t));
     f.sprite.setDepth(10 + f.sprite.y - 1);
-    setLook(f.sprite, ANISSA_GLOW.look, f.facing, walking ? walkFrame(f.distance) : 0);
+    setLook(f.sprite, look, f.facing, walking ? walkFrame(f.distance) : 0);
   }
 
   // ---- Hints and Journal ---------------------------------------------------------------------
@@ -1356,8 +1511,26 @@ export class FieldScene extends Phaser.Scene {
       ...card.lines.map((t, i) => ({ text: t, center: true, gap: i === 0 ? 10 : 2 })),
       { text: '(A to continue)', color: UI.dimText, center: true, gap: 16 },
     ];
-    this.panel.open(lines, { fill: UI.cardFill, alpha: 1, border: false, top: 48 });
+    const art = CARD_ART[card.id];
+    // Over a picture, the text sits on a veil so it still reads; without one, on black as before.
+    this.panel.open(lines, { fill: UI.cardFill, alpha: art ? 0.55 : 1, border: false, top: 48 });
+    if (art) this.showCardArt(`card-${card.id}`, art);
     this.rt.input.clearPresses();
+  }
+
+  /** The end card's picture, filling the screen under the text (loaded the first time it is needed). */
+  private showCardArt(key: string, file: string): void {
+    const place = () => {
+      if (this.mode !== 'card' || !this.textures.exists(key)) return;
+      this.cardArt?.destroy();
+      const img = this.add.image(VIEW_WIDTH / 2, VIEW_HEIGHT / 2, key).setScrollFactor(0).setDepth(7099);
+      img.setScale(Math.max(VIEW_WIDTH / img.width, VIEW_HEIGHT / img.height));
+      this.cardArt = img;
+    };
+    if (this.textures.exists(key)) return place();
+    this.load.image(key, file);
+    this.load.once(Phaser.Loader.Events.COMPLETE, place);
+    this.load.start();
   }
 
   // ---- Dialogue ------------------------------------------------------------------------------
@@ -1484,6 +1657,13 @@ export class FieldScene extends Phaser.Scene {
   private borrowActor(id: string): StageActor | undefined {
     const on = this.stageActors.get(id);
     if (on) return on;
+    if (id === 'yari' && this.yari) {
+      // Yari walking with the party: a scene that names her moves her own sprite (never a second Yari).
+      const f = this.yari;
+      const a: StageActor = { sprite: f.sprite, look: 'yari', at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'yari' };
+      this.stageActors.set(id, a);
+      return a;
+    }
     if (id === STAGE_FOLLOWER && this.follower) {
       const f = this.follower;
       const a: StageActor = { sprite: f.sprite, look: ANISSA_GLOW.look, at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'follower' };
@@ -1504,7 +1684,8 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private stageActor(id: string, look: string, at: Pos, facing: Dir8): StageActor {
-    let a = this.stageActors.get(id);
+    let a = this.stageActors.get(id) ?? (id === 'yari' && this.yari ? this.borrowActor(id) : undefined);
+    if (a?.borrowed !== undefined) a.sprite.setVisible(true);
     const w = tileToWorld(at);
     if (!a) {
       const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(look)).setOrigin(0.5, 1);
@@ -1588,15 +1769,17 @@ export class FieldScene extends Phaser.Scene {
 
   /** The scene is over: everyone on stage leaves the picture, and the camera goes back to Gianna. */
   private clearStage(): void {
-    for (const a of this.stageActors.values()) {
+    for (const [id, a] of this.stageActors) {
+      if (id === 'yari' && a.borrowed === undefined && a.sprite.visible) this.yariStaged = { ...a.at };
       if (a.borrowed === undefined) a.sprite.destroy();
-      else if (a.borrowed === 'follower') {
-        // Anissa follows on from wherever the scene left her.
-        if (this.follower) {
-          this.follower.pos = { ...a.at };
-          this.follower.from = { ...a.at };
-          this.follower.facing = a.facing;
-          a.sprite.setVisible(true);
+      else if (a.borrowed === 'follower' || a.borrowed === 'yari') {
+        // Anissa (or Yari) follows on from wherever the scene left her.
+        const f = a.borrowed === 'follower' ? this.follower : this.yari;
+        if (f) {
+          f.pos = { ...a.at };
+          f.from = { ...a.at };
+          f.facing = a.facing;
+          a.sprite.setVisible(this.logic.era !== 'echo' || a.borrowed === 'follower');
         }
       } else {
         // Someone from the map walks back to their place (or is put back, if they had left the stage).
@@ -1854,6 +2037,7 @@ export class FieldScene extends Phaser.Scene {
       label: this.label.visible ? this.labelText.text : null,
       markers: [...this.markerSprites.keys()].sort(),
       glowing: [...this.glowing].sort(),
+      glowed: [...this.lastGlowed].sort(),
       flags: this.logic.state.flags.snapshot(),
       dialogue: this.dialogue.snapshot(),
       menu: this.menu.snapshot(),
@@ -1873,6 +2057,8 @@ export class FieldScene extends Phaser.Scene {
         actors: [...this.stageActors].map(([id, a]) => ({ id, x: a.at.x, y: a.at.y, moving: a.mover.moving || a.tiles.length > 0 })),
       },
       follower: f ? { x: f.pos.x, y: f.pos.y, glowing: f.glow !== null } : null,
+      yari: this.yari ? { x: this.yari.pos.x, y: this.yari.pos.y, visible: this.yari.sprite.visible } : null,
+      crowd: this.crowd.length,
     };
   }
 }

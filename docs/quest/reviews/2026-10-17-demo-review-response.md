@@ -36,3 +36,27 @@ Batches, in the order proposed:
 
 After each batch: the unit tests, the full smoke test, a port to the demo, and one demo deploy at the end
 (or sooner if the owner asks).
+
+## Status (Oct 17)
+
+Both repos carry every change below, identical up to the departure from Zetwal (checked file by file; the
+only Chapter 1 difference found, the Journal on the harbor, archive and heights maps, was fixed in the demo).
+
+- Finding 1, done: "Play here anyway" under the install steps (owner decision, Oct 17), remembered per device.
+- Batch A, done: the Echo winch waits for the night orders (6); the boar waits for Yari (9); the comments
+  are corrected (13). The reviewer's point that the Cane Road bandits are a text stand-in is out of date for the
+  full game (every rolled ambush is a real battle) and moot in the demo (the ambushes switch on after Chapter 2).
+- Batch B, done:
+  - Crowds (2): a new `crowds` map layer (engine/crowd.ts). 18 festival-goers stroll the plaza until
+    the lamp, then 6; 7 pilgrims on the temple path until the lamp. They are pictures: nobody talks to them
+    and they never block.
+  - Yari (4): she walks behind Anissa from the moment she joins, in both chapters; staged scenes that name
+    her move her own sprite. The departure moved from her dock spot to her canoe.
+  - Staging (7): the lamp and the island's lanterns catch on screen (the city's lanterns stay lit after);
+    pilgrims come in to read the names, and the night passes; the hooded figure watches Anissa, then walks
+    down to the dock; Yari comes up from her canoe to meet the party. The rope bridge's fall happened at
+    dawn, off screen, so its line stays (the owner's rule covers what happens in front of the party).
+  - End card (12): Chapter 1's card shows over the intro's last frame (the plaza at dawn) with the farewell
+    song.
+- Found while checking: the smoke test's "the bridge and pawl glow" check raced a 3.6 s glow on a busy machine;
+  it now reads what glowed last.

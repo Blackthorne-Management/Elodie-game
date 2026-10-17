@@ -152,6 +152,15 @@ export function zetwalTown(): MapSource {
     trigger('bridge_cross', 31, 9, { dialogue: 'bridge_cross', flag: 'story.bridge_crossed', once: true, if: 'anchor.chain_bridge' }),
     trigger('bridge_look', 26, 4, { dialogue: 'bridge_look', flag: 'story.bridge_seen', once: true, if: '!anchor.chain_bridge' }, 1, 1),
 
+    // The festival crowd on the plaza (demo review, Oct 17: the intro ends on a packed plaza); after the lamp,
+    // the evening's last few. Pictures only: they stroll, never block, and nobody talks to them.
+    // "Then, across the water, every lantern in Zetwal" (gaze_lamp.wake): lit from then on.
+    obj('plaza_lantern_nw', 14, 4, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
+    obj('plaza_lantern_ne', 21, 4, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
+    obj('plaza_lantern_sw', 10, 15, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
+    obj('plaza_lantern_se', 25, 15, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
+    { layer: 'crowds', name: 'plaza_festival', x: 11, y: 6, w: 14, h: 9, props: { count: '18', looks: 'festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h', if: '!story.anissa_woke' } },
+    { layer: 'crowds', name: 'plaza_evening', x: 11, y: 6, w: 14, h: 9, props: { count: '6', looks: 'festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h', if: 'story.anissa_woke' } },
     { layer: 'echo_zones', name: 'plaza_stone', x: 11, y: 9, w: 3, h: 2, props: { if: 'item.sun_locket', onEcho: 'plaza_echo_enter' } },
     {
       layer: 'echo_zones',

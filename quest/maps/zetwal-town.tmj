@@ -10,8 +10,8 @@
   "type": "map",
   "version": "1.8",
   "tiledversion": "1.8.2",
-  "nextlayerid": 15,
-  "nextobjectid": 52,
+  "nextlayerid": 16,
+  "nextobjectid": 58,
   "layers": [
     {
       "id": 1,
@@ -1395,6 +1395,118 @@
       "objects": [
         {
           "id": 38,
+          "name": "plaza_lantern_nw",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anissa_woke"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lantern_glow"
+            }
+          ]
+        },
+        {
+          "id": 39,
+          "name": "plaza_lantern_ne",
+          "type": "puzzle_object",
+          "x": 336,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anissa_woke"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lantern_glow"
+            }
+          ]
+        },
+        {
+          "id": 40,
+          "name": "plaza_lantern_sw",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anissa_woke"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lantern_glow"
+            }
+          ]
+        },
+        {
+          "id": 41,
+          "name": "plaza_lantern_se",
+          "type": "puzzle_object",
+          "x": 400,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anissa_woke"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lantern_glow"
+            }
+          ]
+        },
+        {
+          "id": 42,
           "name": "rope_bridge",
           "type": "puzzle_object",
           "x": 480,
@@ -1417,7 +1529,7 @@
           ]
         },
         {
-          "id": 39,
+          "id": 43,
           "name": "plaque",
           "type": "puzzle_object",
           "x": 432,
@@ -1440,7 +1552,7 @@
           ]
         },
         {
-          "id": 40,
+          "id": 44,
           "name": "winch_rusted",
           "type": "puzzle_object",
           "x": 448,
@@ -1463,7 +1575,7 @@
           ]
         },
         {
-          "id": 41,
+          "id": 45,
           "name": "pawl_rusted",
           "type": "puzzle_object",
           "x": 464,
@@ -1486,7 +1598,7 @@
           ]
         },
         {
-          "id": 42,
+          "id": 46,
           "name": "pawl_pinned",
           "type": "puzzle_object",
           "x": 464,
@@ -1514,7 +1626,7 @@
           ]
         },
         {
-          "id": 43,
+          "id": 47,
           "name": "winch",
           "type": "puzzle_object",
           "x": 448,
@@ -1537,7 +1649,7 @@
           ]
         },
         {
-          "id": 44,
+          "id": 48,
           "name": "pawl",
           "type": "puzzle_object",
           "x": 464,
@@ -1560,7 +1672,7 @@
           ]
         },
         {
-          "id": 45,
+          "id": 49,
           "name": "chain_bridge_echo",
           "type": "puzzle_object",
           "x": 480,
@@ -1593,7 +1705,7 @@
           ]
         },
         {
-          "id": 46,
+          "id": 50,
           "name": "chain_bridge",
           "type": "puzzle_object",
           "x": 480,
@@ -1626,7 +1738,7 @@
           ]
         },
         {
-          "id": 47,
+          "id": 51,
           "name": "chain_bridge_raised",
           "type": "puzzle_object",
           "x": 544,
@@ -1654,7 +1766,7 @@
           ]
         },
         {
-          "id": 48,
+          "id": 52,
           "name": "chain_bridge_raised_echo",
           "type": "puzzle_object",
           "x": 544,
@@ -1682,7 +1794,7 @@
           ]
         },
         {
-          "id": 49,
+          "id": 53,
           "name": "monument",
           "type": "puzzle_object",
           "x": 192,
@@ -1705,7 +1817,7 @@
           ]
         },
         {
-          "id": 50,
+          "id": 54,
           "name": "stone_pile",
           "type": "puzzle_object",
           "x": 192,
@@ -1728,7 +1840,7 @@
           ]
         },
         {
-          "id": 51,
+          "id": 55,
           "name": "signing_stage",
           "type": "puzzle_object",
           "x": 272,
@@ -1747,6 +1859,74 @@
               "name": "era",
               "type": "string",
               "value": "echo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "crowds",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 56,
+          "name": "plaza_festival",
+          "type": "crowd_zone",
+          "x": 176,
+          "y": 96,
+          "width": 224,
+          "height": 144,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "count",
+              "type": "string",
+              "value": "18"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.anissa_woke"
+            },
+            {
+              "name": "looks",
+              "type": "string",
+              "value": "festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h"
+            }
+          ]
+        },
+        {
+          "id": 57,
+          "name": "plaza_evening",
+          "type": "crowd_zone",
+          "x": 176,
+          "y": 96,
+          "width": 224,
+          "height": 144,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "count",
+              "type": "string",
+              "value": "6"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anissa_woke"
+            },
+            {
+              "name": "looks",
+              "type": "string",
+              "value": "festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h"
             }
           ]
         }

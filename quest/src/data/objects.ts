@@ -78,6 +78,13 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
 
   // The Temple of Elodie.
   gaze_lamp: { name: 'Gaze Lamp' },
+  yari_canoe: { name: "Yari's canoe" },
+  island_lantern_west: { name: 'Lantern' },
+  island_lantern_east: { name: 'Lantern' },
+  plaza_lantern_nw: { name: 'Lantern' },
+  plaza_lantern_ne: { name: 'Lantern' },
+  plaza_lantern_sw: { name: 'Lantern' },
+  plaza_lantern_se: { name: 'Lantern' },
   gaze_lamp_lit: { name: 'Gaze Lamp (lit)' },
   lamp_echo: { name: 'Gaze Lamp (being built)' },
   name_stones: { name: 'Name stones' },

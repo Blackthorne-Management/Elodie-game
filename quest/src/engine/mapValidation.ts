@@ -32,7 +32,7 @@ export interface ValidationContext {
 }
 
 /** Layers whose objects may carry an `if` condition or an `era`. */
-const CONDITIONAL_LAYERS = [OBJECT_LAYERS.npcs, OBJECT_LAYERS.triggers, OBJECT_LAYERS.echoZones, OBJECT_LAYERS.puzzleObjects];
+const CONDITIONAL_LAYERS = [OBJECT_LAYERS.npcs, OBJECT_LAYERS.triggers, OBJECT_LAYERS.echoZones, OBJECT_LAYERS.puzzleObjects, OBJECT_LAYERS.crowds];
 
 function checkStructure(id: string, raw: TiledMap, errors: string[]): boolean {
   const e = (msg: string) => errors.push(`${id}: ${msg}`);

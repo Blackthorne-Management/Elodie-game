@@ -976,17 +976,52 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         say(A, "It's calling me. Like someone saying my name from very far away."),
         say(G, 'Anissa? Stay back. Let me...'),
         say(A, "I can't stop it. I'm sorry, I can't..."),
-        nar('Light pours out of Anissa. Not fire: light, the color of morning through water.', { fx: 'flash' }),
-        nar('The lamp catches. Then every lantern on the island. Then, across the water, every lantern in Zetwal.', { fx: 'flash' }),
+        nar('Light pours out of Anissa. Not fire: light, the color of morning through water.', { fx: 'flash', set: { 'story.lamp_lit': true } }),
+        // Staged (demo review, Oct 17): the lamp and the island's lanterns catch in front of everyone.
+        nar('The lamp catches. Then every lantern on the island. Then, across the water, every lantern in Zetwal.', {
+          fx: 'flash',
+          stage: [{ do: 'sync' }],
+        }),
         say(A, "I'm sorry. I didn't mean to. I didn't mean anything."),
         say(G, "Look at me. You didn't break anything. You lit it."),
         say(A, '...Are you scared of me?'),
         say(G, 'Never. Not for one second.'),
         say('patricio_old', 'Anicette always said you carried something, little one. I thought it was only a grandmother talking.'),
         say('patricio_old', 'Now. Read with me, all of you. Say their names.'),
-        nar('The names are read until the moon is high. Nobody leaves early.'),
-        nar('At the back of the crowd, a hooded figure watches Anissa for a long moment, then slips away toward the dock.', {
+        // The pilgrims come in from the path to read the names with him; the night passes.
+        nar('The names are read until the moon is high. Nobody leaves early.', {
+          fx: 'fade',
+          stage: [
+            { do: 'enter', actor: 'pilgrim_a', look: 'pilgrim', from: { x: 14, y: 7 }, to: { x: 11, y: 5 }, facing: 'up', async: true },
+            { do: 'enter', actor: 'pilgrim_b', look: 'festival_c', from: { x: 15, y: 7 }, to: { x: 18, y: 6 }, facing: 'up', async: true },
+            { do: 'wait', ms: 500 },
+            { do: 'enter', actor: 'pilgrim_c', look: 'festival_e', from: { x: 14, y: 7 }, to: { x: 12, y: 6 }, facing: 'up', async: true },
+            { do: 'enter', actor: 'pilgrim_d', look: 'festival_h', from: { x: 15, y: 7 }, to: { x: 16, y: 6 }, facing: 'up' },
+            { do: 'wait', ms: 400 },
+          ],
+        }),
+        // The hooded stranger from the plaza, at the back of the crowd, then away down the path to the dock.
+        nar('At the back of the crowd, a hooded figure watches Anissa for a long moment...', {
+          stage: [
+            { do: 'enter', actor: 'hooded', look: 'quiet_crown_f_tan', from: { x: 15, y: 7 }, to: { x: 15, y: 6 }, facing: 'up-left' },
+            { do: 'wait', ms: 1200 },
+          ],
+        }),
+        nar('...then slips away toward the dock.', {
+          stage: [
+            { do: 'look', actor: 'hooded' },
+            { do: 'exit', actor: 'hooded', to: { x: 15, y: 18 } },
+            { do: 'look', actor: 'player' },
+          ],
+        }),
+        nar("The pilgrims go home with the lamp's light on their faces.", {
           set: { 'story.anissa_woke': true },
+          stage: [
+            { do: 'exit', actor: 'pilgrim_a', to: { x: 14, y: 7 }, async: true },
+            { do: 'exit', actor: 'pilgrim_c', to: { x: 14, y: 7 }, async: true },
+            { do: 'exit', actor: 'pilgrim_b', to: { x: 15, y: 7 }, async: true },
+            { do: 'exit', actor: 'pilgrim_d', to: { x: 15, y: 7 } },
+          ],
         }),
       ],
     },
@@ -1084,7 +1119,17 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     arrive: {
       speaker: 'yari',
       lines: [
-        { text: 'Gigi! I saw the lights from the water. Half the coast must have seen them.' },
+        // Staged (demo review, Oct 17): Yari ties up at the dock and comes up the path to meet them.
+        {
+          text: 'Gigi! I saw the lights from the water. Half the coast must have seen them.',
+          stage: [
+            { do: 'look', actor: 'yari' },
+            { do: 'enter', actor: 'yari', look: 'yari', from: { x: 16, y: 18 }, to: { x: 15, y: 14 }, run: true },
+            { do: 'face', actor: 'yari', facing: 'player' },
+            { do: 'face', actor: 'player', facing: 'down' },
+            { do: 'look', actor: 'player' },
+          ],
+        },
         say(G, 'Yari? You came all the way from Xaraguá?'),
         { text: 'Sailed most of it. Paddled the embarrassing part.' },
         nar("A hutia pokes its nose out of Yari's satchel and sniffs hopefully at your Locket."),
@@ -1115,7 +1160,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Mind the Cane Road. A boar was tearing up the cane when I came in. It did not like my face.' },
         { text: 'And Gigi, you will need papers. The Crown boards every boat in our harbor now.' },
         say(G, 'The Hall of the Accord can write them. Up the steps at the head of the plaza.'),
-        { text: "Find me here at the dock when you're ready. Not too long, Gigi.", set: { 'story.yari_asked': true } },
+        // She walks with the party from here (demo review, Oct 17); the canoe is where they sail from.
+        { text: "I'll walk with you. The hutia can mind the canoe. When you're ready, we sail from here.", set: { 'story.yari_asked': true } },
       ],
     },
     ready: {
@@ -1164,7 +1210,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
     later: {
       speaker: 'yari',
-      lines: [{ text: "I'll be here. The hutia is guarding the canoe. Badly." }],
+      lines: [{ text: 'Then we wait. The hutia is guarding the canoe. Badly.' }],
     },
     depart: {
       speaker: 'yari',

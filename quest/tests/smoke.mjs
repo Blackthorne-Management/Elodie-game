@@ -477,7 +477,8 @@ async function markChecks(page, sim, name) {
   check(JSON.stringify(s.markers) === JSON.stringify(markers), `@${name}: markers over ${markers.join(', ') || 'nothing'}`);
   if (name === 'diagonal') check(s.x === 10 && s.y === 8 && s.facing === 'up-right', 'two keys at once take diagonal steps (to 10,8)');
   if (name === 'bridge-after') {
-    check(s.glowing.includes('chain_bridge') && s.glowing.includes('pawl_pinned'), 'back from the Echo, the lowered bridge and the pinned pawl glow');
+    // `glowed`, not `glowing`: the glow lasts 3.6 s, and reading the return lines can take longer on a busy machine.
+    check(s.glowed.includes('chain_bridge') && s.glowed.includes('pawl_pinned'), 'back from the Echo, the lowered bridge and the pinned pawl glow');
     check(s.toast.startsWith('Something changed'), `a toast says so ("${s.toast}")`);
     check(s.flags['anchor.chain_bridge'] === true, 'the bridge is down in the present');
   }

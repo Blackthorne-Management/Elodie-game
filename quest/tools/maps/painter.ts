@@ -213,7 +213,7 @@ export class Grid {
   }
 }
 
-export type LayerName = 'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors' | 'puzzle_objects' | 'encounters';
+export type LayerName = 'npcs' | 'doors' | 'triggers' | 'spawns' | 'echo_zones' | 'anchors' | 'puzzle_objects' | 'encounters' | 'crowds';
 
 export interface ObjSpec {
   layer: LayerName;
@@ -234,7 +234,7 @@ export interface MapSource {
   interior?: boolean;
 }
 
-const OBJECT_LAYER_ORDER: readonly LayerName[] = ['npcs', 'doors', 'triggers', 'spawns', 'echo_zones', 'anchors', 'puzzle_objects', 'encounters'];
+const OBJECT_LAYER_ORDER: readonly LayerName[] = ['npcs', 'doors', 'triggers', 'spawns', 'echo_zones', 'anchors', 'puzzle_objects', 'encounters', 'crowds'];
 const TYPE_FOR: Record<LayerName, string> = {
   npcs: 'npc',
   doors: 'door',
@@ -244,6 +244,7 @@ const TYPE_FOR: Record<LayerName, string> = {
   anchors: 'anchor',
   puzzle_objects: 'puzzle_object',
   encounters: 'encounter_zone',
+  crowds: 'crowd_zone',
 };
 
 export function gidOf(name: string): number {
@@ -302,7 +303,7 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
             }
           : {}),
       }));
-    if (name === 'encounters' && objects.length === 0) continue; // only maps with a wild section have it
+    if ((name === 'encounters' || name === 'crowds') && objects.length === 0) continue; // only some maps have them
     layers.push({ id: layerId++, name, type: 'objectgroup', x: 0, y: 0, opacity: 1, visible: true, draworder: 'topdown', objects } as never);
   }
   const tiled = {

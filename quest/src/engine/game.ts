@@ -13,7 +13,7 @@ import { FlagStore, type FlagSnapshot } from './flags.ts';
 import { Rng } from './rng.ts';
 import { components, doorArrival, doorAt, facingTiles, inBounds, isDiagonal, samePos, stepFrom } from './grid.ts';
 import type { GameState } from './state.ts';
-import { rectContains, type Door, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
+import { rectContains, type CrowdZone, type Door, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
 import type { Dir8, Era, Pos } from './types.ts';
 import { ECHO_FLAG_PREFIX, activeNpcs, activeObjects, activeTriggers, checkSwap, isOpen, npcBlocks, type SwapCheck } from './world.ts';
 
@@ -130,6 +130,12 @@ export class GameLogic {
 
   objects(era: Era = this.era): PuzzleObject[] {
     return activeObjects(this.map, era, this.state.flags);
+  }
+
+  /** The crowds walking this map now (the present only; pictures, never in the way). */
+  crowds(): CrowdZone[] {
+    if (this.era !== 'present') return [];
+    return (this.map.crowds ?? []).filter((c) => !c.if || evaluate(c.if, this.state.flags));
   }
 
   isOpen(pos: Pos, era: Era = this.era): boolean {

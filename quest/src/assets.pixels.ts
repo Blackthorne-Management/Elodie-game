@@ -1684,6 +1684,11 @@ export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
       '..KKKKKKKKKKKKKKKKKKKKKKKKKKKK..',
     ],
   },
+  // The light of a lantern lit by Anissa's light (demo review, Oct 17): only the glow; the lantern is the tile.
+  lantern_glow: {
+    glow: { color: 0xfff2a0, radius: 9 },
+    rows: Array.from({ length: 16 }, () => '................'),
+  },
   gaze_lamp_lit: {
     glow: { color: 0xfff2a0, radius: 22 },
     rows: [

@@ -80,11 +80,12 @@ export const OBJECT_LAYERS = {
   anchors: 'anchors',
   puzzleObjects: 'puzzle_objects',
   encounters: 'encounters',
+  crowds: 'crowds',
 } as const;
 
 export const REQUIRED_TILE_LAYERS: readonly string[] = Object.values(TILE_LAYERS);
-/** Every object layer but `encounters`, which only maps with a wild section have. */
-export const REQUIRED_OBJECT_LAYERS: readonly string[] = Object.values(OBJECT_LAYERS).filter((l) => l !== OBJECT_LAYERS.encounters);
+/** Every object layer but `encounters` and `crowds`, which only some maps have. */
+export const REQUIRED_OBJECT_LAYERS: readonly string[] = Object.values(OBJECT_LAYERS).filter((l) => l !== OBJECT_LAYERS.encounters && l !== OBJECT_LAYERS.crowds);
 
 /** The visible tile layers for an era, bottom to top (the shared `above` layer is drawn separately). */
 export function visibleLayersFor(era: Era): readonly string[] {
@@ -184,6 +185,19 @@ export interface EncounterZone {
 }
 
 /**
+ * Crowd (demo review, Oct 17: the festival needs its people): `count` passers-by in `looks`, wandering
+ * inside the area in the present while `if` holds. Pictures only: nobody to talk to, nothing that
+ * blocks the way (engine/crowd.ts picks where they stand and step; scenes/FieldScene.ts draws them).
+ */
+export interface CrowdZone {
+  id: string;
+  area: Rect;
+  count: number;
+  looks: string[];
+  if?: Condition;
+}
+
+/**
  * Anchor (guide 6.1): marks the one Echo-era puzzle object whose change carries back to the present.
  * Using that object sets `flag` (an `anchor.` flag); present-era objects read it.
  */
@@ -228,6 +242,7 @@ export interface GameMap {
   anchors: Anchor[];
   objects: PuzzleObject[];
   encounters: EncounterZone[];
+  crowds: CrowdZone[];
 }
 
 export function getProp(obj: { properties?: TiledProperty[] }, name: string): FlagValue | undefined {
@@ -362,6 +377,13 @@ export function parseMap(id: string, raw: TiledMap): GameMap {
       id: o.name,
       area: objectRect(o, size),
       table: stringProp(o, 'table') ?? '',
+      if: condProp(o),
+    })),
+    crowds: objects(raw, OBJECT_LAYERS.crowds).map((o) => ({
+      id: o.name,
+      area: objectRect(o, size),
+      count: Number(stringProp(o, 'count') ?? 0),
+      looks: (stringProp(o, 'looks') ?? '').split(',').map((l) => l.trim()).filter(Boolean),
       if: condProp(o),
     })),
     objects: objects(raw, OBJECT_LAYERS.puzzleObjects).map((o) => ({

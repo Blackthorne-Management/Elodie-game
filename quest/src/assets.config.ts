@@ -346,6 +346,15 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   pilgrim: { skin: C.T!, hair: C.B!, hairStyle: 'long', outfit: 0xa89c86, trim: C.g!, robe: true, accessories: ['staff'] },
   acolyte: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.w!, trim: C.y!, robe: true },
   mourner: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.K!, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: C.K! },
+  // The festival's passers-by (demo review, Oct 17): the crowd on the plaza and the temple path. Pictures only.
+  festival_a: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.y!, trim: C.R!, robe: true, headgear: 'wrap', headgearColor: C.R! },
+  festival_b: { skin: C.s!, hair: HAIR_DARK, hairStyle: 'short', outfit: C.c!, trim: C.w!, legs: C.B! },
+  festival_c: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.p!, trim: C.y!, robe: true },
+  festival_d: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.w!, trim: C.o!, legs: C.K!, headgear: 'cap', headgearColor: C.o! },
+  festival_e: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.U!, trim: C.y!, legs: C.K!, accessories: ['staff'] },
+  festival_f: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'curly', outfit: C.L!, trim: C.w!, legs: C.B! },
+  festival_g: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'puffs', outfit: C.R!, trim: C.y!, legs: C.B!, build: 'small' },
+  festival_h: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.o!, trim: C.c!, robe: true, headgear: 'headband', headgearColor: C.y! },
 
   // Zetwal, the Echo (fifty years ago).
   echo_soldier: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x6a5230, trim: C.R!, legs: C.b!, headgear: 'cap', headgearColor: 0x5a4428 },
@@ -529,6 +538,14 @@ export const REALM_ART = {
   image: 'maps/realm.webp',
   mist: 0.72,
 } as const;
+
+/**
+ * A picture behind an act's end card (demo review, Oct 17: not three lines on black), by card id
+ * (data/cards.ts). Chapter 1 ends over the intro film's last frame, the plaza at dawn.
+ */
+export const CARD_ART: Readonly<Record<string, string>> = {
+  act1_end: 'art/cards/act1-end.webp',
+};
 
 /** The menu's maps (ui/GameMenu.ts): the city drawn from its tiles, the realm from data/realmMap.ts. */
 export const MAP_ART = {
