@@ -161,6 +161,14 @@ export const TILESET = {
     // A dugout canoe that sits on whatever is under it (sand or lagoon), and the caney's woven runner.
     { gid: 120, name: 'dugout', base: 0x6b4426, accent: 0x9c7446, pattern: 'blob' },
     { gid: 121, name: 'runner', base: 0x17a5a5, accent: 0xe8e0c8, pattern: 'border' },
+    // The petroglyph cave (Oct 17): rock floor and walls, the spring's water, a carved wall, and the two
+    // sluice gates (shut: planks across the channel; open: the gate hauled up and water running).
+    { gid: 122, name: 'cave_floor', base: 0x5a5260, accent: 0x6e6a78, pattern: 'dots' },
+    { gid: 123, name: 'cave_wall', base: 0x2a2430, accent: 0x3a3440, pattern: 'grid' },
+    { gid: 124, name: 'cave_water', base: 0x163848, accent: 0x2a6070, pattern: 'wave' },
+    { gid: 125, name: 'carving', base: 0x3a3440, accent: 0xd8d0c0, pattern: 'cross' },
+    { gid: 126, name: 'sluice', base: 0x6b4426, accent: 0x3e2614, pattern: 'stripes' },
+    { gid: 127, name: 'sluice_open', base: 0x163848, accent: 0x9c7446, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -386,6 +394,17 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   marine_sergeant: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.w!, beard: C.B!, headgear: 'cap', headgearColor: C.u!, accessories: ['sash'] },
   anaco: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: COTTON, trim: C.y!, robe: true, headgear: 'circlet', headgearColor: C.y!, accessories: ['cane'] },
   thorne: { skin: C.T!, hair: C.w!, hairStyle: 'short', outfit: C.u!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['epaulettes', 'sash'] },
+  // The Echo of the first oath (Oct 17): Caona, young Lord Benny of Ardencia, and the areíto fifty years ago.
+  caona: {
+    skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.L!, trim: C.R!, legs: C.T!,
+    headgear: 'headband', headgearColor: C.R!, accessories: ['bow', 'sash'],
+  },
+  benny_young: {
+    skin: C.s!, hair: HAIR_DARK, hairStyle: 'cropped', outfit: C.r!, trim: C.o!, legs: C.K!, build: 'tall',
+    accessories: ['epaulettes', 'emblem'],
+  },
+  echo_yaguana: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0x6a7a40, trim: C.R!, legs: C.S!, headgear: 'headband', headgearColor: 0x8a3a2a },
+  echo_yaguana_drummer: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x8a7a50, trim: C.R!, legs: C.T!, headgear: 'headband', headgearColor: C.y!, accessories: ['drum'] },
   crown_clerk: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
 };
 
@@ -427,6 +446,11 @@ export const PORTRAITS: Record<string, PlaceholderPortrait> = {
   echo_sentry: portrait('echo_soldier', SEPIA),
   echo_guard: portrait('echo_soldier', SEPIA),
   echo_lampwright: portrait('echo_builder', SEPIA),
+  caona: portrait('caona', SEPIA),
+  benny: portrait('benny_young', SEPIA),
+  echo_spring_keeper: portrait('echo_yaguana', SEPIA),
+  echo_areito_drummer: portrait('echo_yaguana_drummer', SEPIA),
+  echo_areito_singer: portrait('echo_yaguana', SEPIA),
 };
 
 /** Portraits are this many pixels square in the dialogue box (real portraits: 48 x 48 files). */

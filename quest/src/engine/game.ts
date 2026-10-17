@@ -71,6 +71,8 @@ export type Effect =
   | { kind: 'shop'; shop: string }
   /** A dialogue named a battle (flag `battle.next`): the scene runs it (data/battles.ts). */
   | { kind: 'battle'; battle: string }
+  /** A rhythm lock to play (flag `rhythm.next` = "<id>" or "<id>:slow"); the scene reports back with finishRhythm. */
+  | { kind: 'rhythm'; lock: string; slow: boolean }
   /** A sea voyage plays before the party lands (data/voyages.ts; flag `voyage.next` beside `travel.next`). */
   | { kind: 'voyage'; voyage: string };
 
@@ -481,6 +483,14 @@ export class GameLogic {
     return this.startDialogue(after, [{ kind: 'save' }]);
   }
 
+  /** A rhythm lock was played (scenes/FieldScene.ts, or the simulator): set its flags on success, then its scene. */
+  finishRhythm(lock: string, ok: boolean): Effect[] {
+    const def = this.content.rhythms?.[lock];
+    if (!def || this.mode !== 'field') return [];
+    if (ok) for (const [k, v] of Object.entries(def.success)) this.state.flags.set(k, v);
+    return this.startDialogue(ok ? def.successDialogue : def.failDialogue, [{ kind: 'save' }]);
+  }
+
   closeCard(): Effect[] {
     if (this.mode !== 'card') return [];
     this.mode = 'field';
@@ -530,6 +540,12 @@ export class GameLogic {
     if (typeof battle === 'string' && battle) {
       flags.clear('battle.next');
       effects.push({ kind: 'battle', battle });
+    }
+    const rhythm = flags.get('rhythm.next');
+    if (typeof rhythm === 'string' && rhythm) {
+      flags.clear('rhythm.next');
+      const [lock, tempo] = rhythm.split(':');
+      effects.push({ kind: 'rhythm', lock: lock!, slow: tempo === 'slow' });
     }
     const card = this.content.cards.find((c) => flags.isSet(c.when) && !flags.isSet(cardFlag(c)));
     if (card) {

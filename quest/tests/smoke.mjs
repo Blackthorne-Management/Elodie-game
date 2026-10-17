@@ -694,6 +694,30 @@ async function fightBattle(page, id, shots) {
   check(after.flags[`encounter.${battle.table}.${battle.group}.won`] === true, `${id}: the fight is won in the browser`);
 }
 
+/**
+ * The rhythm lock (ui/RhythmPanel.ts): tap A as each drum mark reaches the line, the way a player follows
+ * the markers, timed from the panel's own clock. Checks the song is judged right and the door opens.
+ */
+async function playRhythm(page, shots) {
+  await page.waitForFunction(() => window.__quest.snapshot().rhythm, null, { timeout: 5000 });
+  const { due } = (await snap(page)).rhythm;
+  for (let i = 0; i < due.length; i++) {
+    await page.waitForFunction((t) => (window.__quest.snapshot().rhythm?.elapsed ?? Infinity) >= t, due[i] - 25, { timeout: 15000, polling: 'raf' });
+    await page.keyboard.press('KeyZ');
+    if (i === 5) await shoot(page, 'rhythm-lock', shots);
+  }
+  const r = (await snap(page)).rhythm;
+  check(r && r.hits === due.length, `the drum song: ${r?.hits ?? '?'} of ${due.length} marks tapped in time`);
+  await page.waitForFunction(() => window.__quest.snapshot().mode !== 'rhythm', null, { timeout: 15000 });
+  for (let i = 0; i < 300; i++) {
+    const t = await finishTyping(page);
+    if (t.mode !== 'dialogue') break;
+    await page.keyboard.press('KeyZ');
+    await frames(page);
+  }
+  check((await snap(page)).flags['story.lock_opened'] === true, 'the stones open the record house to the whole drum song');
+}
+
 /** A sea voyage (scenes/VoyageScene.ts) between chapters: watch both parts, then skip with B. */
 async function handleVoyage(page, shots) {
   await frames(page);
@@ -739,6 +763,7 @@ async function playAct(browser, errors) {
       const mode = sim.logic.mode;
       if (cmd === 'skip') {
         const battles = sim.battles.length;
+        const rhythms = sim.rhythms.length;
         sim.press('skip');
         for (let i = 0; i < 300; i++) {
           if (await handleShowcase(page, showcases, shots)) continue;
@@ -770,6 +795,8 @@ async function playAct(browser, errors) {
           }
           await page.keyboard.down('Shift');
         }
+        // The dialogue opened a rhythm lock (the simulator plays it right): tap it in the browser.
+        if (sim.rhythms.length > rhythms) await playRhythm(page, shots);
       } else {
         await handleShowcase(page, showcases, shots);
         // A choice only takes the cursor once its line has finished typing (the same as a player waiting).
@@ -791,6 +818,9 @@ async function playAct(browser, errors) {
   check(s.flags['act1.complete'] === true && s.flags['card.act1_end'] === true, `played Act I to the end card in the browser (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
   check(s.flags['anchor.chain_bridge'] === true && s.flags['story.bridge_crossed'] === true, 'the bridge puzzle was solved through the Echo and its anchor');
   check(Object.keys(s.flags).every((f) => !f.startsWith('echo.')), 'no memory-only flags leaked into the present');
+  check(s.flags['anchor.cave_sluice'] === true && s.flags['clue.drum_pattern'] === true, 'the petroglyph cave was drained through the Echo (the lower sluice) and its wall read');
+  check(s.flags['story.caona_joined'] === true && s.flags['clue.drum_full'] === true, 'the areíto Echo played the whole drum song, and Caona joined the Echo party');
+  check(s.flags['story.oath_found'] === true && s.mapId === 'xaragua-record', 'the record house opened and the oath stone was read');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -894,7 +924,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'xaragua-customs' && back.flags['act1.complete'] === true && back.flags['story.thorne_met'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 begun after a reload');
+  check(back.mapId === 'xaragua-record' && back.flags['act1.complete'] === true && back.flags['story.oath_found'] === true, 'the autosave keeps Chapter 1 finished and Chapter 2 under way after a reload');
   await ctx.close();
   return shots;
 }

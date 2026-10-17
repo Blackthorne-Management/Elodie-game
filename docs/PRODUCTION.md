@@ -10,7 +10,7 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Thu Oct 16**.
+and ticks items off here as they land. Last updated **Fri Oct 17**.
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -37,7 +37,8 @@ and ticks items off here as they land. Last updated **Thu Oct 16**.
 the goddess, Elodie Limyè, Patricio young and old, Anicette young and old, the Sun Locket and Solange's Quill, and
 (added Oct 15) the battle stances for Gianna, Yari and young Patricio (one empty-handed stance each; the game draws
 the weapons), Anissa's two battle poses, and the cane-field boar. Intro art (in
-`docs/quest/intro/art/`): complete Oct 16; later Benny, Caona, Rael.
+`docs/quest/intro/art/`): complete Oct 16; later Benny, Caona, Rael. Caona and young Benny now appear in the game
+(the Echo of the first oath, Oct 17), drawn as placeholders until their art arrives.
 
 **The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòdlimyè and Chapter 1 finished with
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1

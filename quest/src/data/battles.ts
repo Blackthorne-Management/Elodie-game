@@ -67,6 +67,11 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'pinning_shot', name: 'Pinning Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'enemy', statuses: ['slowed'], learn: { level: 2 }, text: 'Pins a foe: its turns come slower for 3 turns.' },
     { id: 'volley', name: 'Volley', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 60, target: 'randomEnemies', hits: 3, learn: { level: 4 }, text: 'Three arrows at random foes.' },
   ],
+  caona: [
+    { id: 'quick_shot', name: 'Quick Shot', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A fast arrow. Ready every turn.' },
+    { id: 'pinning_shot', name: 'Pinning Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'enemy', statuses: ['slowed'], text: 'Pins a foe: its turns come slower for 3 turns.' },
+    { id: 'scouts_mark', name: "Scout's Mark", sp: 0, cooldown: 3, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'She has watched this foe for a week: it takes a quarter more damage for 3 turns.' },
+  ],
   patricio: [
     { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
     { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },

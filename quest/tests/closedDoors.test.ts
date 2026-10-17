@@ -65,8 +65,9 @@ describe('open paths between outdoor areas (owner request, Oct 16)', () => {
   it('a way from one outdoor area to another is open ground; only buildings have doors', () => {
     const sources = SOURCES.map((make) => make());
     const interiors = new Set(sources.filter((s) => s.interior).map((s) => s.id));
-    expect([...interiors].sort()).toEqual(['xaragua-caney', 'xaragua-customs', 'xaragua-song', 'zetwal-archive', 'zetwal-hall', 'zetwal-house']);
-    const DOOR_ART = ['D', '«', '»', '⌈', '⌊'];
+    expect([...interiors].sort()).toEqual(['xaragua-caney', 'xaragua-cave', 'xaragua-customs', 'xaragua-record', 'xaragua-song', 'zetwal-archive', 'zetwal-hall', 'zetwal-house']);
+    // A cave's way in is its dark mouth (ĝ), the door of a cave.
+    const DOOR_ART = ['D', '«', '»', '⌈', '⌊', 'ĝ'];
     let passages = 0;
     let doors = 0;
     for (const src of sources) {
@@ -81,7 +82,7 @@ describe('open paths between outdoor areas (owner request, Oct 16)', () => {
       }
     }
     expect(passages).toBeGreaterThan(10);
-    expect(doors).toBe(12);
+    expect(doors).toBe(16);
   });
 });
 

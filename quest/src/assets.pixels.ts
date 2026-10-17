@@ -2501,6 +2501,27 @@ const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
       '.....Y....Y.....',
     ],
   },
+  // The oil lamp: a clay lamp with a flame at the spout and a cotton wick.
+  oil_lamp: {
+    rows: [
+      '................',
+      '.........kk.....',
+      '........kWYk....',
+      '........kYok....',
+      '.........kok....',
+      '..........k.....',
+      '....kkkkkkkk....',
+      '..kkEEEEEEEEk...',
+      '.kEeEEEEEEnnEk..',
+      'kEekbbbbbbkEnEk.',
+      'kEeEEEEEEEEEEk..',
+      '.kEeeeeeeeeEk...',
+      '..kkEEEEEEkk....',
+      '....kkkkkk......',
+      '................',
+      '................',
+    ],
+  },
   // Solange's Quill: a cream feather with a worn gold nib.
   solange_quill: {
     rows: [

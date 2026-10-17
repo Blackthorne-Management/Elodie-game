@@ -28,6 +28,8 @@ function flagsSet(): Set<string> {
   for (const b of Object.values(BATTLES)) out.add(encounterFlag(b.table, b.group, 'won'));
   // A debate sets its outcome flags (engine/debate.ts).
   for (const d of DEBATES) for (const o of ['listened', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
+  // A rhythm lock played right sets its success flags (engine/game.ts finishRhythm).
+  for (const r of Object.values(CONTENT.rhythms ?? {})) for (const f of Object.keys(r.success)) out.add(f);
   return out;
 }
 
@@ -96,6 +98,23 @@ describe('dialogue content', () => {
     const set = flagsSet();
     const unknown = [...flagsRead()].filter(([f]) => !set.has(f) && !LATER_STORY_FLAGS.includes(f));
     expect(unknown).toEqual([]);
+  });
+
+  it('every rhythm lock plays scenes that exist, and every rhythm.next names a lock', () => {
+    const rhythms = CONTENT.rhythms ?? {};
+    for (const r of Object.values(rhythms)) {
+      expect(CONTENT.dialogue[r.successDialogue], r.id).toBeDefined();
+      expect(CONTENT.dialogue[r.failDialogue], r.id).toBeDefined();
+    }
+    for (const d of Object.values(CONTENT.dialogue)) {
+      for (const node of Object.values(d.nodes)) {
+        const sets = [node.set, ...node.lines.map((l) => l.set), ...(node.choices ?? []).map((c) => c.set)];
+        for (const set of sets) {
+          const next = set?.['rhythm.next'];
+          if (typeof next === 'string') expect(rhythms[next.split(':')[0]!], `${d.id}: ${next}`).toBeDefined();
+        }
+      }
+    }
   });
 
   it('memory-only flags are set only in the memory and anchors only by anchor objects', () => {

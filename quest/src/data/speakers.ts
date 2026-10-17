@@ -51,6 +51,11 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   echo_guard: s('echo_guard', 'Guard'),
   echo_builder: s('echo_builder', 'Builder'),
   echo_lampwright: s('echo_lampwright', 'Lampwright'),
+  echo_spring_keeper: s('echo_spring_keeper', 'Spring keeper'),
+  echo_areito_drummer: s('echo_areito_drummer', 'Drummer'),
+  echo_areito_singer: s('echo_areito_singer', 'Singer'),
+  caona: s('caona', 'Caona'),
+  benny: s('benny', 'Benny'),
 
   // The new Zetwal sections: the Temple Archive, the Hall of the Accord, the Cane Road.
   archivist: s('archivist', 'Senior archivist'),

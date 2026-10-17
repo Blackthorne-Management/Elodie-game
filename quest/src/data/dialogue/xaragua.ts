@@ -6,6 +6,7 @@
 // design names them and are checked in the phrasebook pass (Nov 18).
 
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
+import { AREITO_BARS, barText } from '../rhythms.ts';
 
 function say(speaker: string, text: string, translation?: string): DialogueLine {
   return translation ? { speaker, text, translation } : { speaker, text };
@@ -26,6 +27,12 @@ function script(id: string, nodes: Record<string, DialogueNode>): DialogueScript
 const G = 'gianna';
 const A = 'anissa';
 const Y = 'yari';
+const P = 'patricio';
+const AF = 'anissa_far';
+const C = 'caona';
+const BAR1 = barText(AREITO_BARS[0]!);
+const BAR2 = barText(AREITO_BARS[1]!);
+const BAR3 = barText(AREITO_BARS[2]!);
 const PIER_WON = 'encounter.xaragua_story.pier.won';
 
 export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
@@ -158,11 +165,43 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('crown_marine_2_talk', [
     say('crown_marine', 'Six weeks on this island and I still can\'t find the end of the forest. Or the beginning.'),
   ]),
-  simple('lamp_oil_seller_talk', [
-    say('lamp_oil_seller', 'Guatiao!', 'Friend!'),
-    say('lamp_oil_seller', 'Lamp oil for the long nights. It comes by canoe, after dark, from someone I have never met.'),
-    say('lamp_oil_seller', 'Every jar paid for in advance. I stopped asking who. The jars stopped asking me.'),
-  ]),
+  // The lamp-oil seller (STORY.md beat 3, Rael clue 6): once Thorne has warned Gianna off, she lends the lamp
+  // for the petroglyph cave.
+  script('lamp_oil_seller_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'item.oil_lamp' }, to: 'after' },
+        { if: { flag: 'story.thorne_met' }, to: 'lamp' },
+        { to: 'oil' },
+      ],
+    },
+    oil: {
+      lines: [
+        say('lamp_oil_seller', 'Guatiao!', 'Friend!'),
+        say('lamp_oil_seller', 'Lamp oil for the long nights. It comes by canoe, after dark, from someone I have never met.'),
+        say('lamp_oil_seller', 'Every jar paid for in advance. I stopped asking who. The jars stopped asking me.'),
+      ],
+    },
+    lamp: {
+      set: { 'item.oil_lamp': true },
+      lines: [
+        say('lamp_oil_seller', 'You came out of the Governor\'s house with your chin up. That is rare. Most come out looking at their feet.'),
+        say(A, 'We need a light for the petroglyph cave. A real one.'),
+        say('lamp_oil_seller', 'The cave! Nobody has been in there since the water rose. My grandmother said the stones inside could sing.'),
+        say('lamp_oil_seller', 'Take this lamp. The oil is the good kind, from the canoe that comes after dark.'),
+        say(G, 'Who sends it?'),
+        say('lamp_oil_seller', 'Twenty years I have asked that. Someone who wants the Yaguana to see in the dark. Go on.'),
+        nar('(Gianna received the oil lamp.)'),
+      ],
+    },
+    after: {
+      lines: [
+        say('lamp_oil_seller', 'The cave is in the cassava gardens, west of the village, under the rocks. Mind the water.'),
+        say('lamp_oil_seller', 'And bring my lamp back. Or do not. Another one will come by canoe.'),
+      ],
+    },
+  }),
   simple('xaragua_customs_sign', [
     nar('CUSTOMS OF HIS MAJESTY\'S CROWN. ALL CATCH TO BE DECLARED. ALL DECLARATIONS TO BE TAXED.'),
     nar('Someone has carved a small fish underneath. It is laughing.'),
@@ -180,9 +219,130 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say('plaza_elder', 'Fifty years ago, three young fools swore an oath on these stones. One of them was Yaguana.'),
     say('plaza_elder', 'The other two were yours, I think. Zetwal always sends fools in pairs.'),
   ]),
-  simple('batey_stones', [
-    nar('Standing stones ring the dance ground, carved with faces and spirals worn soft by rain.'),
+  // The rhythm lock (SIG-XAR part 3): the whole drum song, tapped on the stones, opens the record house.
+  script('batey_stones', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'story.lock_opened' }, to: 'open' },
+        { if: { flag: 'clue.drum_full' }, to: 'ready' },
+        { if: { flag: 'clue.drum_pattern' }, to: 'partial' },
+        { to: 'plain' },
+      ],
+    },
+    plain: { lines: [nar('Standing stones ring the dance ground, carved with faces and spirals worn soft by rain.')] },
+    partial: {
+      lines: [
+        nar('The standing stones. Each one is carved with a drum, and its top is worn smooth by hands.'),
+        say(A, 'The cave showed the drum song, Gigi. But the last part was worn away.'),
+        say(A, 'We need to hear it played. The whole song, the way they played it on the night of the oath.'),
+      ],
+    },
+    ready: {
+      lines: [
+        nar('The standing stones. Each is carved with a drum, its top worn smooth by hands that tapped it.'),
+        say(A, `The whole song, Gigi: ${BAR1}; ${BAR2}; ${BAR3}.`),
+        nar('Tap A (or the screen) at the start of each mark. A long mark lasts two beats, a short one one.'),
+      ],
+      choices: [
+        { text: 'Tap the drum song.', set: { 'rhythm.next': 'record_lock' } },
+        { text: 'Tap it slowly.', set: { 'rhythm.next': 'record_lock:slow' } },
+        { text: 'Not now.' },
+      ],
+    },
+    open: { lines: [nar('The stones are quiet. The record house door stands open.')] },
+  }),
+  simple('record_lock_open', [
+    nar('The last beat rings out over the dance ground. Something heavy slides and falls inside the record house.'),
+    nar('Its door swings open.'),
+    say(A, 'You played it, Gigi! The stones remembered!'),
+    say(Y, 'Nobody has opened that door since my grandmother died. Go in. Carefully.'),
   ]),
+  simple('record_lock_fail', [
+    nar('The stones are silent. The door does not move.'),
+    say(A, 'Close! Try again. Long marks are two beats, short ones one. Start on each mark, not between them.'),
+  ]),
+  simple('record_house_closed', [
+    nar('The record house door is barred from inside. On the lintel, a carved drum faces the dance ground.'),
+    say(A, 'It is locked from the inside, Gigi. How do you lock a door from the inside and then leave?'),
+    say(Y, 'You do not. The stones open it. Only the song does.'),
+  ]),
+  // The record house: the first oath's stone.
+  script('oath_stone', {
+    start: { lines: [], next: [{ if: { flag: 'story.oath_found' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      set: { 'story.oath_found': true, 'clue.first_oath': true },
+      lines: [
+        nar('A smooth stone on a woven runner. Three marks are cut into its face: a canoe, a sun, and a hand holding a spark.'),
+        nar('Under them, in the old signs, the words of the first oath.'),
+        say(Y, 'I know these signs. My grandmother taught me on her knee.'),
+        say(Y, '"The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us."'),
+        say(Y, '"Sworn by Caona of the Yaguana, Patricio of Zetwal, Benny of Ardencia."'),
+        say(G, 'Three names and one promise. Nothing about the harbor ever going to the Crown.'),
+        say(A, 'So the Crown\'s seventh clause is not in the oath. Gigi, this is the proof the elders wanted!'),
+        say(Y, 'It is a stone, Anissa. The Crown will say stones lie.'),
+        say(G, 'Then we make the elders read it before the Crown can say anything.'),
+      ],
+    },
+    again: { lines: [nar('The first oath: a canoe, a sun, a hand holding a spark. Three names, and no seventh clause.')] },
+  }),
+  simple('record_baskets', [
+    nar('Baskets of knotted cords and carved tallies: harvests, births, canoes built, fifty years of them.'),
+    nar('The newest basket is half empty. The last knot was tied the week the Crown\'s ships came.'),
+  ]),
+
+  // The areíto of the first oath (the Echo, STORY.md Chapter 2 beat 5): fifty years ago, the same dance
+  // ground. The drummers play the whole song, last bar included (information, not an anchor).
+  script('areito_echo_enter', {
+    start: { lines: [], next: [{ if: { flag: 'story.oath_echo' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      set: { 'story.oath_echo': true, 'clue.drum_full': true, 'story.caona_joined': true },
+      lines: [
+        nar('Night. Torches round the dance ground, and the whole of Yucayeque packed in to watch.'),
+        nar('Two drummers face each other across the batey. A young woman with a bow on her back steps into the firelight.'),
+        say(C, 'Patricio of Zetwal. Benny of Ardencia. You came across the sea to ask for my scouts.'),
+        say('benny', 'And your bows, and your canoes, and your roads. I will not pretend we came for the dancing.'),
+        say(C, 'Then you will swear on our stones before you get any of them.'),
+        say(P, 'Name the oath.'),
+        say(C, 'The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us.'),
+        say('benny', 'I have read it twice. I will sign it. I do not sign what I have not read.'),
+        say(P, 'Sworn. On my name and on Zetwal\'s.'),
+        nar(`The drummers begin. ${BAR1}.`),
+        nar(`${BAR2}.`),
+        nar(`And then the bar the cave wall lost: ${BAR3}.`),
+        say(AF, 'Gigi, I can hear it from here! The last part: short, short, long, long!'),
+        say(C, 'Every Yaguana child knows that song. Now so do you, Marshal. Do not forget it.'),
+        say(C, 'And where you go next, my scouts go. So do I.'),
+        nar('(Caona joined the Echo party.)'),
+      ],
+    },
+    again: {
+      lines: [
+        nar(`The drums go round again: ${BAR1}; ${BAR2}; ${BAR3}.`),
+      ],
+    },
+  }),
+  script('areito_echo_return', {
+    start: { lines: [], next: [{ if: { notFlag: 'story.areito_returned' }, to: 'first' }] },
+    first: {
+      set: { 'story.areito_returned': true },
+      lines: [
+        say(A, 'You were humming it on the way back, Gigi. All three parts.'),
+        say(Y, 'Caona. You saw my grandmother. ...Was she as loud as me?'),
+        say(G, 'Louder. And the stones by the record house are carved with drums.'),
+      ],
+    },
+  }),
+  script('caona_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.caona_joined' }, to: 'joined' }, { to: 'before' }] },
+    before: { lines: [say(C, 'Swear first, Marshal. Then we talk about roads.')] },
+    joined: { lines: [say(C, 'My scouts are ready. Tell me which road and I will tell you who is waiting on it.')] },
+  }),
+  simple('benny_talk', [
+    say('benny', 'Patricio. Every page of every treaty, I read twice. Remind me of that, if I ever forget.'),
+  ]),
+  simple('echo_areito_drummer_talk', [say('echo_areito_drummer', `${BAR1}. ${BAR2}. ${BAR3}. Again and again until sunrise.`)]),
+  simple('echo_areito_singer_talk', [say('echo_areito_singer', 'We sing the oath tonight so our grandchildren can sing it back to the Crown.')]),
 
   // The Canoe Beach and its market.
   simple('salt_seller_talk', [
@@ -221,6 +381,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('conuco_kid_talk', [
     say('conuco_kid', 'I found a hutia in the cassava. It took my bead and ran. Hutias think shiny things are stars.'),
   ]),
+  // The cave mouth while there is no lamp (the door into xaragua-cave opens once Gianna has one).
   script('petroglyph_cave_mouth', {
     start: { lines: [], next: [{ if: { flag: 'story.council_defied' }, to: 'oath' }, { to: 'closed' }] },
     closed: {
@@ -233,9 +394,130 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         nar('The petroglyph cave. Somewhere inside, the first oath was carved where the water rises.'),
         say(A, 'It is so dark in there, Gigi. We need a lamp, a real one.'),
+        say(Y, 'The lamp-oil seller by the customs house. Everyone in the village buys from her.'),
       ],
     },
   }),
+
+  // The petroglyph cave (SIG-XAR parts 1 and 2).
+  simple('cave_enter', [
+    nar('The lamp throws long shadows up the rock. Water drips somewhere ahead, slow as a heartbeat.'),
+    say(Y, 'My grandmother brought me to the mouth once. She would never go further. She said the cave was "full".'),
+    say(A, 'Full of what?'),
+    say(Y, 'She never said.'),
+  ]),
+  script('cave_flood', {
+    start: { lines: [], next: [{ if: { flag: 'story.cave_flood_seen' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      set: { 'story.cave_flood_seen': true },
+      lines: [
+        nar('The passage ends in black water. The lamp shows a wide chamber beyond, flooded to the walls.'),
+        nar('On the far wall, just above the water, carved shapes: drums, and rows of long and short marks.'),
+        say(Y, 'Full. Full of water. She meant it.'),
+        say(A, 'The water comes from somewhere, Gigi. And it has to go somewhere. Except it can\'t, can it?'),
+        say(G, 'Not now. But the air by the rocks back there is shimmering.'),
+      ],
+    },
+    again: { lines: [nar('Black water, wall to wall. The carvings on the far side are out of reach.')] },
+  }),
+  script('cave_rubble', {
+    start: { lines: [], next: [{ if: { flag: 'anchor.cave_sluice' }, to: 'after' }, { to: 'before' }] },
+    before: { lines: [nar('Fallen rock fills the channel where the upper gate stood. A landslide, years ago.')] },
+    after: { lines: [nar('Fallen rock fills the channel where the upper gate stood. The spring found the other way out.')] },
+  }),
+  simple('lower_sluice_old', [
+    nar('The lower gate stands hauled up and pinned, its wood black with age. The spring runs out under it, down to the gorge.'),
+    nar('Someone opened it a long time ago, and nobody ever closed it.'),
+  ]),
+  script('cave_carvings', {
+    start: { lines: [], next: [{ if: { flag: 'clue.drum_pattern' }, to: 'again' }, { to: 'first' }] },
+    first: {
+      set: { 'clue.drum_pattern': true },
+      lines: [
+        nar('The carved wall. A ring of standing stones, each with a drum on it, and a door in the middle of the ring.'),
+        nar(`Under it, rows of long and short marks. The first bar: ${BAR1}.`),
+        nar(`The second bar: ${BAR2}.`),
+        nar('The third bar is worn away. Water has polished the rock smooth.'),
+        say(Y, 'That is the areíto plaza. The stones round the dance ground, and the record house.'),
+        say(A, 'So the song opens the door. But we only have two thirds of a song, Gigi.'),
+        say(G, 'Then we need to hear someone play it. Someone from fifty years ago.'),
+        nar('(The Journal notes the drum song.)'),
+      ],
+    },
+    again: { lines: [nar(`The drum song on the wall: ${BAR1}; ${BAR2}; and a bar worn smooth.`)] },
+  }),
+
+  // The cave fifty years ago: dry, both gates working.
+  script('cave_echo_enter', {
+    start: { lines: [], next: [{ if: { notFlag: 'story.cave_echo_seen' }, to: 'first' }] },
+    first: {
+      set: { 'story.cave_echo_seen': true },
+      lines: [
+        nar('Torchlight. The chamber is dry, its floor swept. Water from the spring runs off along two channels in the rock.'),
+        say(AF, 'Gigi? I\'m at the door. I can\'t see the water any more!'),
+      ],
+    },
+  }),
+  script('cave_echo_return', {
+    start: {
+      lines: [],
+      next: [{ if: { all: [{ flag: 'anchor.cave_sluice' }, { notFlag: 'story.cave_drained_seen' }] }, to: 'carried' }],
+    },
+    carried: {
+      set: { 'story.cave_drained_seen': true },
+      lines: [
+        nar('The present settles around you. The lamp shows the chamber...'),
+        nar('...dry. A ridged rock floor where the black water stood, and a channel running away under the open lower gate.'),
+        say(A, 'Gigi! The water\'s gone! It went down the other way!'),
+        say(Y, 'Fifty years of it. My grandmother would have wanted to see this.'),
+      ],
+    },
+  }),
+  script('echo_spring_keeper_talk', {
+    start: { lines: [], next: [{ if: { flag: 'anchor.cave_sluice' }, to: 'after' }, { to: 'before' }] },
+    before: {
+      speaker: 'echo_spring_keeper',
+      lines: [
+        { text: 'Marshal. The spring rises here and goes out two ways.' },
+        { text: 'The upper gate, east, lets it out to the sea. We never shut that one.' },
+        { text: 'The lower gate, west, sends it down to the gorge and the river. We shut it in the dry season, to keep the water for the gardens.' },
+        { text: 'If the upper channel ever fell in, this whole chamber would fill to the roof. But rock does not fall. Not in my lifetime.' },
+      ],
+    },
+    after: {
+      speaker: 'echo_spring_keeper',
+      lines: [
+        { text: 'You opened the low gate? In the dry season? The gardens will be thirsty.' },
+        { text: '...But if the Marshal says it stays open, I will pin it open. Both ways out, then.' },
+      ],
+    },
+  }),
+  simple('upper_sluice', [
+    nar('The upper gate, hauled up and tied. The spring runs out under it along a channel to the sea.'),
+    nar('The rock above the channel is cracked. It would not take much to bring it down.'),
+  ]),
+  script('lower_sluice', {
+    start: { lines: [], next: [{ if: { flag: 'anchor.cave_sluice' }, to: 'open' }, { to: 'shut' }] },
+    shut: {
+      lines: [nar('The lower gate, shut for the dry season. Planks of mahogany across the channel to the gorge, held by a wooden bar.')],
+      choices: [
+        { text: 'Lift the bar and haul the gate open.', next: 'opened', set: { 'anchor.cave_sluice': true } },
+        { text: 'Leave it shut.' },
+      ],
+    },
+    opened: {
+      lines: [
+        nar('The bar comes free. The gate grinds up its grooves and you pin it high. Water runs down the second channel.'),
+        say(P, 'Two ways out. If one falls in, the water still has somewhere to go.'),
+        nar('(Anchor: this change will last into the present.)'),
+      ],
+    },
+    open: { lines: [nar('The lower gate, pinned open. Water runs down both channels.')] },
+  }),
+  simple('cave_chalk', [
+    nar('Smooth rock, chalked in outline: a ring of stones, a door, rows of long and short marks.'),
+    nar('Nothing is cut yet. The carvers will cut it after the oath is sworn.'),
+  ]),
 
   // The Mountain Path and the hill camp.
   simple('hill_runner_talk', [

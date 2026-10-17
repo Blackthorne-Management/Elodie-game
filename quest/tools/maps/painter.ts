@@ -149,6 +149,14 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ŭ: { ground: 'runner', solid: false },
   ś: { ground: 'red_earth', deco: 'sign', solid: true },
   ľ: { ground: 'lush_grass', deco: 'fence', solid: true },
+  // The petroglyph cave (Oct 17): rock floor, rock walls, the spring's black water, the carved wall,
+  // rubble from the landslide, and the cave mouth you can walk into once you have a lamp.
+  ǒ: { ground: 'cave_floor', solid: false },
+  ǔ: { ground: 'cave_wall', solid: true },
+  ǐ: { ground: 'cave_water', solid: true },
+  ǖ: { ground: 'cave_wall', deco: 'carving', solid: true },
+  ǘ: { ground: 'cave_floor', deco: 'stone_pile', solid: true },
+  ĝ: { ground: 'cave', solid: false },
 };
 
 export class Grid {
@@ -387,7 +395,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

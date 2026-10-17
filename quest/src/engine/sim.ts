@@ -90,6 +90,8 @@ export class Sim {
   readonly battles: string[] = [];
   /** Plays a battle the way the battle scene would end it (tools/sim-setup.ts wins it) and returns what follows. */
   onBattle: ((id: string) => Effect[] | void) | null = null;
+  /** Rhythm locks played (the simulator plays them right; the smoke test taps them in the browser). */
+  readonly rhythms: string[] = [];
 
   constructor(logic: GameLogic) {
     this.logic = logic;
@@ -166,7 +168,10 @@ export class Sim {
       else if (e.kind === 'save') this.saves++;
       else if (e.kind === 'dialogue') this.cursor = 0;
       else if (e.kind === 'map') this.handle(this.logic.enterMap());
-      else if (e.kind === 'battle') {
+      else if (e.kind === 'rhythm') {
+        this.rhythms.push(e.lock);
+        this.handle(this.logic.finishRhythm(e.lock, true));
+      } else if (e.kind === 'battle') {
         this.battles.push(e.battle);
         const after = this.onBattle?.(e.battle);
         if (after) this.handle(after);

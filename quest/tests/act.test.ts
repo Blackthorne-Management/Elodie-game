@@ -65,11 +65,24 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     }
   });
 
-  it('Chapter 2 opens: the pier fight, Anaco, the council, Thorne, then the cave is next', () => {
+  it('Chapter 2: the pier fight, Anaco, the council, Thorne, the lamp, the cave, the areíto, the lock; proof is next', () => {
     expect(sim.battles).toEqual(['intro_boar', 'pier_marines']);
-    expect(chapter2).toEqual(['pier', 'anaco', 'council', 'thorne', 'oath']);
+    expect(chapter2).toEqual(['pier', 'anaco', 'council', 'thorne', 'lamp', 'cave', 'areito', 'lock', 'proof']);
     expect(sim.logic.state.flags.isSet('clue.seventh_clause')).toBe(true);
-    expect(sim.logic.state.player.mapId).toBe('xaragua-customs');
+    expect(sim.logic.state.player.mapId).toBe('xaragua-record');
+  });
+
+  it('the petroglyph cave: the sluice opened in the memory drains it, the areíto gives the last bar, the stones open the record house', () => {
+    const flags = sim.logic.state.flags;
+    expect(flags.isSet('anchor.cave_sluice')).toBe(true);
+    expect(flags.isSet('clue.drum_pattern')).toBe(true);
+    expect(flags.isSet('clue.drum_full')).toBe(true);
+    expect(sim.rhythms).toEqual(['record_lock']);
+    expect(flags.isSet('story.lock_opened')).toBe(true);
+    expect(flags.isSet('story.oath_found')).toBe(true);
+    // Caona joins the Echo party at the areíto.
+    expect(flags.isSet('story.caona_joined')).toBe(true);
+    expect(speakers.has('Caona')).toBe(true);
   });
 
   it('meets every objective, in order', () => {

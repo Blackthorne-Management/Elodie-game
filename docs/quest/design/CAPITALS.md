@@ -179,6 +179,11 @@ and the owner's five Yucayeque tracks. **Not built yet:** the hamaca (no rest-an
 board (no jobs system yet), and the carved charm's spirit resistance (battles have no spirit damage); the charm's
 name avoids *zemi* until the cultural reviewer says yes.
 
+**The petroglyph cave and the record house, built Oct 17:** `xaragua-cave` (30 x 22, one level: the antechamber
+with its Echo spot, and the carved chamber with the spring and the two sluices; the second level is dropped) opens
+from the cassava gardens once the party has the oil lamp. `xaragua-record` (16 x 10), the council's record house on
+the Areíto Plaza, opens to the drum song tapped on the standing stone east of the dance ground.
+
 **Chapters:** 2 and 11 (the War of the Harbor). **Ruler:** Cacique Anaco (Yari's father, ailing); Governor Thorne holds
 real power. Wants **Influence** (price 8). **Feel:** green mountains to the sea, round houses, canoes, the areíto
 plaza; Taíno-inspired. Accent teal `#17a5a5`.
@@ -192,7 +197,8 @@ plaza; Taíno-inspired. Accent teal `#17a5a5`.
 | The Song House (library) | 22 x 14 | Keepers of the areíto's songs, with a scribe's shelf of accounts set down from them. (The Yaguana keep history in song; the library honours that.) |
 | The Caney of Anaco (capital building) | 20 x 14 | The cacique's great house (Taíno: *caney*, the chief's house; flag for a source check). |
 | The Crown Customs House | 18 x 12 | Thorne's office; boss arena. |
-| The Petroglyph Cave | 30 x 24 | Two levels; the flooded chamber; the sluices (SIG-XAR). |
+| The Petroglyph Cave | 30 x 22 | The flooded chamber; the sluices (SIG-XAR). Built Oct 17. |
+| The record house | 16 x 10 | The council's records and the first oath's stone, behind the rhythm lock. Built Oct 17. |
 | The Mountain Path (wild) | 46 x 28 | Up through cloud forest to the resistance's hill camp. |
 | The Sea Cave (secret) | 24 x 20 | X-4; tide states; Echo Zones on the ledges. |
 

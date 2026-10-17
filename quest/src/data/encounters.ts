@@ -11,8 +11,8 @@ import type { EncounterTable } from '../engine/content.ts';
 export const LATER_STORY_FLAGS: readonly string[] = [
   /** The party returns to Zetwal later in the story: the Cane Road's ambushes begin. */
   'story.zetwal_return',
-  /** Chapter 2, second half: the first oath found in the petroglyph cave (the next build). */
-  'story.oath_found',
+  /** Chapter 2: the oath stone's proof shown to the elders (the next build). */
+  'story.proof_shown',
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {

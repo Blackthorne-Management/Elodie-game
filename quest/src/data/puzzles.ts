@@ -48,4 +48,21 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { flag: 'story.bridge_crossed' },
   },
+  {
+    id: 'xaragua_cave',
+    title: 'The flooded petroglyph cave (signature puzzle: water; PUZZLES.md SIG-XAR parts 1 and 2)',
+    map: 'xaragua-cave',
+    spawn: 'cave',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.anissa': true,
+      'story.yari_asked': true,
+      'story.council_defied': true,
+      'story.thorne_met': true,
+      'item.oil_lamp': true,
+      'story.cave_entered': true,
+    },
+    goal: { flag: 'clue.drum_pattern' },
+  },
 ];

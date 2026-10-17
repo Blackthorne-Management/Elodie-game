@@ -103,6 +103,12 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   echo_builder: n('echo_builder', 'echo_builder', 'Builder'),
   echo_lampwright: n('echo_lampwright', 'echo_builder', 'Lampwright'),
   echo_cane_worker: n('echo_cane_worker', 'echo_cane_worker', 'Cane worker'),
+  // Xaraguá fifty years ago (the cave and the areíto of the first oath).
+  echo_spring_keeper: n('echo_spring_keeper', 'echo_yaguana', 'Spring keeper'),
+  echo_areito_drummer: n('echo_areito_drummer', 'echo_yaguana_drummer', 'Drummer'),
+  echo_areito_singer: n('echo_areito_singer', 'echo_yaguana', 'Singer'),
+  caona: n('caona', 'caona', 'Caona'),
+  benny: n('benny', 'benny_young', 'Lord Benny'),
   // Xaraguá, Yucayeque (Chapter 2, Oct 16): townsfolk by role until the story build names them.
   canoe_fisher: n('canoe_fisher', 'canoe_fisher', 'Fisher'),
   weaver: n('weaver', 'weaver', 'Weaver'),

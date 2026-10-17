@@ -178,7 +178,9 @@ export function xaraguaPlaza(): MapSource {
   g.set(2, 8, 'á').set(3, 8, 'á').set(4, 8, 'á');
   g.rect(1, 9, 5, 1, 'á').rect(1, 10, 5, 1, 'é').set(3, 10, 'D');
   trail(g, [[3, 11], [3, 12], [6, 12]]);
+  // The council's record house: shut, until the drum song is tapped on the stones (SIG-XAR part 3).
   bohio(g, 24, 8);
+  g.set(25, 10, 'D');
 
   put(g, 'í', [[3, 3], [26, 3], [5, 17], [24, 18], [27, 14]]);
   put(g, 'ě', [[2, 15], [26, 6]]);
@@ -195,8 +197,32 @@ export function xaraguaPlaza(): MapSource {
     { layer: 'doors', name: 'plaza_village', x: 14, y: H - 1, w: 2, props: { target: 'village_plaza', map: 'xaragua-village', exit: 'up' } },
     { layer: 'doors', name: 'plaza_caney', x: 14, y: 4, props: { target: 'caney_out', map: 'xaragua-caney', exit: 'down' } },
     { layer: 'doors', name: 'plaza_song', x: 3, y: 10, props: { target: 'song_out', map: 'xaragua-song', exit: 'down' } },
+    {
+      layer: 'doors',
+      name: 'plaza_record',
+      x: 25,
+      y: 10,
+      props: { target: 'record_out', map: 'xaragua-record', exit: 'down', if: 'story.lock_opened', closed: 'record_house_closed' },
+    },
     { layer: 'spawns', name: 'plaza', x: 14, y: 19, props: { facing: 'up', era: 'present' } },
     obj('batey_stones', stones[0]![0], stones[0]![1], { dialogue: 'batey_stones', era: 'present' }),
+
+    // The Echo of the first oath (STORY.md Chapter 2, beat 5): the areíto fifty years ago, on the night
+    // Caona, Patricio and Benny swore it. Open once the cave has shown the drum song (its last bar worn).
+    {
+      layer: 'echo_zones',
+      name: 'batey_middle',
+      x: 13,
+      y: 13,
+      w: 4,
+      h: 2,
+      props: { if: 'item.sun_locket, clue.drum_pattern', onEcho: 'areito_echo_enter', onReturn: 'areito_echo_return' },
+    },
+    npc('echo_caona', 14, 9, 'down', { npc: 'caona', era: 'echo' }),
+    npc('echo_benny', 16, 9, 'down', { npc: 'benny', era: 'echo' }),
+    npc('echo_areito_drummer', 10, 11, 'right', { era: 'echo' }),
+    npc('echo_areito_drummer_2', 19, 11, 'left', { npc: 'echo_areito_drummer', era: 'echo' }),
+    npc('echo_areito_singer', 12, 15, 'up', { era: 'echo' }),
   ];
   return { id: 'xaragua-plaza', present: g, echo: e, objects };
 }
@@ -266,7 +292,7 @@ export function xaraguaConuco(): MapSource {
   // puzzle, later): carved stones flank its mouth.
   oval(g, 25, 17.5, 3, 2, LAGOON);
   oval(g, 6, 19.5, 4.5, 2.5, ROCK);
-  g.set(6, 17, 'ç');
+  g.set(6, 17, 'ĝ');
   put(g, 'ŕ', [[2, 16], [10, 16]]);
 
   put(g, 'ě', [[14, 7], [21, 6], [3, 8], [29, 5]]);
@@ -284,7 +310,14 @@ export function xaraguaConuco(): MapSource {
     { layer: 'doors', name: 'conuco_village', x: W - 1, y: 9, h: 2, props: { target: 'village_conuco', map: 'xaragua-village', exit: 'left' } },
     { layer: 'doors', name: 'conuco_mountain', x: 6, y: 0, w: 2, props: { target: 'mountain_conuco', map: 'xaragua-mountain', exit: 'down' } },
     { layer: 'spawns', name: 'conuco', x: W - 3, y: 9, props: { facing: 'left', era: 'present' } },
-    obj('petroglyph_cave_mouth', 6, 17, { dialogue: 'petroglyph_cave_mouth', era: 'present' }),
+    // The petroglyph cave (SIG-XAR): dark and flooded; it opens once the lamp-oil seller has lent a lamp.
+    {
+      layer: 'doors',
+      name: 'conuco_cave',
+      x: 6,
+      y: 17,
+      props: { target: 'cave_out', map: 'xaragua-cave', exit: 'up', if: 'item.oil_lamp', closed: 'petroglyph_cave_mouth' },
+    },
   ];
   return { id: 'xaragua-conuco', present: g, echo: e, objects };
 }
@@ -461,6 +494,95 @@ export function xaraguaCustoms(): MapSource {
   return { id: 'xaragua-customs', present: g, echo: g.clone(), objects, interior: true };
 }
 
+/**
+ * The petroglyph cave (SIG-XAR parts 1 and 2), under the cassava gardens. A spring rises at the back of
+ * the carved chamber and leaves by two sluice gates: the upper one to the sea, the lower one to the river
+ * gorge. In the present a landslide has buried the upper outlet and the chamber is flooded; fifty years
+ * ago it was dry, the upper gate open and the lower one shut for the dry season. Opening the lower gate
+ * in the Echo is the anchor: the water has drained that way ever since. The carved wall shows the
+ * areíto's drum song, its last bar worn away.
+ */
+export function xaraguaCave(): MapSource {
+  const W = 30;
+  const H = 22;
+  const g = new Grid(W, H, 'ǔ');
+
+  // The antechamber, with the Echo spot, and the way up to the chamber.
+  g.rect(9, 12, 12, 8, 'ǒ').rect(14, 20, 2, 1, 'ǒ').set(14, 21, 'D');
+  g.rect(14, 9, 2, 3, 'ǒ');
+  // Rocks fallen in the antechamber, then and now.
+  put(g, 'ǘ', [[9, 12], [20, 13], [10, 19]]);
+
+  // The chamber: the carved wall along the back, the spring rising in the middle of it.
+  g.rect(4, 3, 22, 6, 'ǐ');
+  g.rect(5, 2, 8, 1, 'ǖ').rect(17, 2, 8, 1, 'ǖ').rect(13, 2, 4, 1, 'ǐ');
+  // The lower sluice (west, to the gorge) and the upper one (east, to the sea), each with its channel.
+  g.rect(1, 7, 3, 1, 'ǐ');
+  g.rect(26, 5, 3, 1, 'ǐ');
+
+  // Fifty years ago: the chamber dry, the spring and the channels running.
+  const e = g.map({});
+  e.rect(4, 3, 22, 6, 'ǒ');
+  e.rect(5, 2, 8, 1, 'ǔ').rect(17, 2, 8, 1, 'ǔ');
+  // Now: the landslide fills the upper outlet.
+  g.rect(26, 5, 3, 1, 'ǘ');
+
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'cave_out', x: 14, y: 21, props: { target: 'conuco_cave', map: 'xaragua-conuco', exit: 'up' } },
+    { layer: 'spawns', name: 'cave', x: 14, y: 19, props: { facing: 'up', era: 'present' } },
+    trigger('cave_enter', 14, 19, { dialogue: 'cave_enter', flag: 'story.cave_entered', once: true, onEnter: true }),
+    {
+      layer: 'echo_zones',
+      name: 'cave_antechamber',
+      x: 13,
+      y: 14,
+      w: 4,
+      h: 2,
+      props: { if: 'item.sun_locket', onEcho: 'cave_echo_enter', onReturn: 'cave_echo_return' },
+    },
+    npc('echo_spring_keeper', 18, 5, 'left', { era: 'echo' }),
+
+    // The present: black water to the walls, and the buried outlet.
+    obj('cave_flood', 14, 8, { dialogue: 'cave_flood', era: 'present', if: '!anchor.cave_sluice' }, 2, 1),
+    obj('cave_rubble', 26, 5, { dialogue: 'cave_rubble', era: 'present' }),
+    // Drained since the lower gate was left open fifty years ago: the chamber floor, walkable.
+    obj('cave_drained', 4, 3, { era: 'present', kind: 'cave_floor', walkable: true, if: 'anchor.cave_sluice' }, 22, 6),
+    obj('lower_sluice_old', 3, 7, { dialogue: 'lower_sluice_old', era: 'present', kind: 'sluice_open', if: 'anchor.cave_sluice' }),
+    obj('cave_carvings', 5, 2, { dialogue: 'cave_carvings', era: 'present' }, 8, 1),
+    obj('cave_carvings_east', 17, 2, { dialogue: 'cave_carvings', era: 'present' }, 8, 1),
+
+    // Fifty years ago: the two gates, and the smooth wall chalked for carving.
+    obj('upper_sluice', 26, 5, { dialogue: 'upper_sluice', era: 'echo', kind: 'sluice_open' }),
+    obj('lower_sluice', 3, 7, { dialogue: 'lower_sluice', era: 'echo', kind: 'sluice' }),
+    obj('cave_chalk', 5, 2, { dialogue: 'cave_chalk', era: 'echo' }, 8, 1),
+    { layer: 'anchors', name: 'cave_sluice_gate', x: 3, y: 7, props: { object: 'lower_sluice', flag: 'anchor.cave_sluice' } },
+  ];
+  return { id: 'xaragua-cave', present: g, echo: e, objects, interior: true };
+}
+
+/** The council's record house on the Areíto Plaza, where the first oath's stone is kept. */
+export function xaraguaRecord(): MapSource {
+  const W = 16;
+  const H = 10;
+  const g = new Grid(W, H, 'ö');
+  g.rect(0, 0, W, 1, 'é').rect(0, 0, 1, H, 'é').rect(W - 1, 0, 1, H, 'é').rect(0, H - 1, W, 1, 'é');
+  g.set(7, H - 1, 'D');
+
+  // Baskets of records on the shelves; the oath stone on a woven runner in the middle.
+  g.rect(2, 1, 4, 1, 'ħ').rect(10, 1, 4, 1, 'ħ');
+  g.rect(7, 3, 2, 4, 'ŭ');
+  g.set(7, 2, 'ŗ');
+  put(g, 'ŋ', [[1, 5], [14, 5]]);
+
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'record_out', x: 7, y: H - 1, props: { target: 'plaza_record', map: 'xaragua-plaza', exit: 'up' } },
+    { layer: 'spawns', name: 'record', x: 7, y: H - 3, props: { facing: 'up', era: 'present' } },
+    obj('oath_stone', 7, 2, { dialogue: 'oath_stone', era: 'present' }),
+    obj('record_baskets', 2, 1, { dialogue: 'record_baskets', era: 'present' }, 4, 1),
+  ];
+  return { id: 'xaragua-record', present: g, echo: g.clone(), objects, interior: true };
+}
+
 export const XARAGUA_SOURCES: readonly (() => MapSource)[] = [
   xaraguaVillage,
   xaraguaPlaza,
@@ -471,4 +593,6 @@ export const XARAGUA_SOURCES: readonly (() => MapSource)[] = [
   xaraguaCaney,
   xaraguaSongHouse,
   xaraguaCustoms,
+  xaraguaCave,
+  xaraguaRecord,
 ];

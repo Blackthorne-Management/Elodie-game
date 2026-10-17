@@ -43,6 +43,7 @@ import { GameMenu, type MenuRequest, type MenuTab } from '../ui/GameMenu.ts';
 import type { MenuItem } from '../ui/MenuPanel.ts';
 import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
+import { RhythmPanel } from '../ui/RhythmPanel.ts';
 import { ItemShowcase } from '../ui/ItemShowcase.ts';
 import { battleFx, battleSnapshot, type BattleSnapshot } from './BattleScene.ts';
 import type { FxKind } from './battleFx.ts';
@@ -68,7 +69,7 @@ import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
 import { tilemapKey } from './BootScene.ts';
 
-type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase' | 'battle';
+type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase' | 'battle' | 'rhythm';
 
 /** How long the glow on an object changed through the Echo lasts. */
 const CHANGED_GLOW_MS = 3600;
@@ -102,6 +103,8 @@ export interface FieldSnapshot {
   dialogue: ReturnType<DialogueBox['snapshot']>;
   menu: ReturnType<GameMenu['snapshot']>;
   shop: ReturnType<ShopPanel['snapshot']>;
+  /** The rhythm lock on screen (null when none). */
+  rhythm: ReturnType<RhythmPanel['snapshot']>;
   /** The item showcase on screen (null when none). */
   showcase: ReturnType<ItemShowcase['snapshot']>;
   /** The battle on screen (null when none). */
@@ -164,9 +167,12 @@ export class FieldScene extends Phaser.Scene {
   private dialogue!: DialogueBox;
   private menu!: GameMenu;
   private shopPanel!: ShopPanel;
+  private rhythmPanel!: RhythmPanel;
   private showcase!: ItemShowcase;
   /** The mode to go back to when the item showcase closes. */
   private showcaseReturn: UiMode = 'field';
+  /** The rhythm lock being played. */
+  private rhythmLock = '';
   private minimap: SideMap | null = null;
   private toast!: Toast;
   private hint!: HintBubble;
@@ -299,6 +305,7 @@ export class FieldScene extends Phaser.Scene {
     };
     this.menu = new GameMenu(this);
     this.shopPanel = new ShopPanel(this);
+    this.rhythmPanel = new RhythmPanel(this);
     this.showcase = new ItemShowcase(this);
     this.toast = new Toast(this);
     this.hint = new HintBubble(this);
@@ -386,6 +393,11 @@ export class FieldScene extends Phaser.Scene {
       case 'showcase':
         if (this.showcase.update(input)) this.closeShowcase();
         break;
+      case 'rhythm': {
+        const out = this.rhythmPanel.update(input, delta);
+        if (out) this.finishRhythm('ok' in out ? out.ok : null);
+        break;
+      }
       case 'modal':
         break;
     }
@@ -417,6 +429,18 @@ export class FieldScene extends Phaser.Scene {
     saveGame(this.rt);
     // The scene a fight leads into (the pier: the marines flee, the fisher speaks), at once.
     this.handle(this.logic.battleOver(result !== null));
+  }
+
+  // ---- The rhythm lock -----------------------------------------------------------------------
+
+  /** The song is over (ok: played right or not) or given up (null: nothing happens). */
+  private finishRhythm(ok: boolean | null): void {
+    this.rhythmPanel.close();
+    this.mode = 'field';
+    this.rt.input.clearPresses();
+    if (ok === null) return;
+    audio.sfx(ok ? 'quest' : 'bump');
+    this.handle(this.logic.finishRhythm(this.rhythmLock, ok));
   }
 
   // ---- The item showcase ---------------------------------------------------------------------
@@ -507,6 +531,20 @@ export class FieldScene extends Phaser.Scene {
           if (this.mode === 'dialogue') this.leaveDialogueMode();
           this.shopPanel.open(shop, this.logic.state.flags);
           this.mode = 'shop';
+          break;
+        }
+        case 'rhythm': {
+          // A rhythm lock (the drum song on the stones): the panel plays it over the field.
+          const def = this.logic.content.rhythms?.[e.lock];
+          if (!def) break;
+          if (this.mode === 'dialogue') this.leaveDialogueMode();
+          this.cancelWalk();
+          this.hint.hide();
+          this.label.setVisible(false);
+          this.rhythmLock = e.lock;
+          this.rhythmPanel.open(def, e.slow);
+          this.mode = 'rhythm';
+          this.rt.input.clearPresses();
           break;
         }
         case 'encounter':
@@ -683,6 +721,9 @@ export class FieldScene extends Phaser.Scene {
         return;
       case 'showcase':
         if (this.showcase.tap()) this.closeShowcase();
+        return;
+      case 'rhythm':
+        this.rhythmPanel.tap();
         return;
       case 'journal':
         this.rt.input.inject('cancel');
@@ -1523,6 +1564,7 @@ export class FieldScene extends Phaser.Scene {
       dialogue: this.dialogue.snapshot(),
       menu: this.menu.snapshot(),
       shop: this.shopPanel.snapshot(),
+      rhythm: this.rhythmPanel.snapshot(),
       showcase: this.showcase.snapshot(),
       battle: battleSnapshot(),
       minimap: this.minimap?.visible ? this.minimap.place : null,

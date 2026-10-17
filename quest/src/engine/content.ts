@@ -1,5 +1,6 @@
 // The shapes of game content the engine runs (the content itself lives in src/data).
 
+import type { RhythmDef } from './rhythm.ts';
 import type { DebateContext, DebateDef } from './debate.ts';
 import type { DialogueScript, Speaker } from './dialogue.ts';
 import type { FlagReader } from './flags.ts';
@@ -87,6 +88,8 @@ export interface GameContent {
   encounters?: Readonly<Record<string, EncounterTable>>;
   /** Street debates, by the dialogue id an NPC uses to start one (`debate:<id>`). */
   debates?: Readonly<Record<string, DebateDef>>;
+  /** Rhythm locks (engine/rhythm.ts), by id; a dialogue opens one with flag `rhythm.next`. */
+  rhythms?: Readonly<Record<string, RhythmDef>>;
   /** Influence in a debate's city now, and what Mediate needs (the RPG content knows the pillars). */
   debateContext?: (flags: FlagReader, def: DebateDef) => DebateContext;
 }

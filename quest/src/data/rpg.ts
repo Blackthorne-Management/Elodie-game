@@ -53,6 +53,15 @@ const ITEM_LIST: ItemDef[] = [
     price: 0,
     text: "Gianna Limyè, envoy of Kay Soley to Xaraguá: the Head of State's seal and the Chancellor's hand. Keep them dry.",
   },
+  // Chapter 2: the petroglyph cave is dark (the lamp-oil seller lends one once Thorne has spoken to Gianna).
+  {
+    id: 'oil_lamp',
+    name: 'Oil lamp',
+    kind: 'key',
+    price: 0,
+    text: 'A clay lamp with a cotton wick and a jar of the oil that comes by canoe after dark. Enough light for a cave.',
+    showcase: 'story',
+  },
   // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital: the
   // legendary relics, worn in their own slot (owner decision, Oct 15).
   {
@@ -164,6 +173,14 @@ export const MEMBERS: readonly MemberDef[] = [
     base: { hp: 70, sp: 10, atk: 13, def: 12, mag: 3, spd: 7 }, growth: { hp: 8, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'marshal_cutlass', armor: 'officer_coat' },
   },
+  // Caona joins the Echo party at the areíto of the first oath (STORY.md Chapter 2, beat 5).
+  {
+    id: 'caona', name: 'Caona', role: 'Scout', house: 'Yaguana', portrait: 'caona', era: 'echo', class: 'archer',
+    passives: [{ name: 'Every road', text: 'Her scouts found every road for the revolution: she always acts first in the opening turn.' }],
+    joins: { flag: 'story.caona_joined' },
+    base: { hp: 56, sp: 14, atk: 13, def: 8, mag: 6, spd: 15 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 1, spd: 2 },
+    start: { weapon: 'yaguana_bow', armor: 'woven_tunic' },
+  },
 ];
 
 export const SHOPS: Readonly<Record<string, ShopDef>> = {
@@ -227,6 +244,8 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'xaragua-caney', name: 'Caney of Anaco' },
       { map: 'xaragua-song', name: 'Song House' },
       { map: 'xaragua-customs', name: 'Crown Customs House' },
+      { map: 'xaragua-cave', name: 'Petroglyph cave' },
+      { map: 'xaragua-record', name: 'Record house' },
     ],
   },
 };

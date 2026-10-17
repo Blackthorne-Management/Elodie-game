@@ -3,6 +3,7 @@
 // (guide 6.2 rule 4: from a nudge to the answer), and the notes the Journal keeps.
 
 import type { JournalNote, QuestDef } from '../engine/quests.ts';
+import { AREITO_BARS, barText } from './rhythms.ts';
 
 export const ACT1: QuestDef = {
   id: 'act1',
@@ -167,7 +168,10 @@ export const ACT1: QuestDef = {
 export const ACT2: QuestDef = {
   id: 'act2',
   title: 'Chapter 2: The Charter',
-  maps: ['xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song', 'xaragua-customs'],
+  maps: [
+    'xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song',
+    'xaragua-customs', 'xaragua-cave', 'xaragua-record',
+  ],
   objectives: [
     {
       id: 'pier',
@@ -214,14 +218,58 @@ export const ACT2: QuestDef = {
       ],
     },
     {
-      id: 'oath',
+      id: 'lamp',
+      title: 'A light for the cave',
+      detail: 'The first oath was carved in the petroglyph cave in the cassava gardens, and the cave is dark. Find a lamp.',
+      done: { flag: 'item.oil_lamp' },
+      hints: [
+        'The keepers said the oath was carved in a cave. It is dark in caves, Gigi.',
+        'Everyone in the village buys lamp oil from the same seller. She stands by the customs house.',
+        'Talk to the lamp-oil seller beside the Crown Customs House in the Harbor Village.',
+      ],
+    },
+    {
+      id: 'cave',
       title: 'What the stones remember',
-      detail: 'The first oath was carved in the petroglyph cave in the cassava gardens, where the water rises. You will need a light.',
+      detail: 'The petroglyph cave is under the rocks in the cassava gardens, west of the village. Its carved chamber is flooded.',
+      done: { flag: 'clue.drum_pattern' },
+      hints: [
+        'The water came from somewhere, and it has to go somewhere.',
+        'In the memory the cave was dry. Look at both gates. The high one is buried now, isn\'t it?',
+        'Step into the memory in the cave, open the lower sluice on the west side, then come back and read the carved wall.',
+      ],
+    },
+    {
+      id: 'areito',
+      title: 'The last bar',
+      detail: 'The cave wall shows the areíto\'s drum song, but its last bar is worn away. Hear it played on the dance ground, fifty years ago.',
+      done: { flag: 'clue.drum_full' },
+      hints: [
+        'Two thirds of a song is not a song, Gigi. Someone has to play it for us.',
+        'The air shimmers in the middle of the dance ground on the Areíto Plaza.',
+        'Stand in the middle of the batey on the Areíto Plaza and step into the memory: the drummers play the whole song.',
+      ],
+    },
+    {
+      id: 'lock',
+      title: 'The record house',
+      detail: 'The standing stones round the dance ground open the council\'s record house to the whole drum song.',
       done: { flag: 'story.oath_found' },
       hints: [
-        'The keepers said the oath was carved in a cave. Where the water rises.',
-        'The petroglyph cave is in the cassava gardens, west of the village. It is dark inside.',
-        'The lamp-oil seller by the customs house might have a light for a cave.',
+        'The stones round the dance ground are carved with drums. Drums are for tapping.',
+        'Tap the whole song on the standing stone by the record house: long marks are two beats, short marks one.',
+        'At the stone east of the batey, tap the song (choose the slow tempo if you like), then read the stone inside the record house.',
+      ],
+    },
+    {
+      id: 'proof',
+      title: 'Proof for the elders',
+      detail: 'The oath stone names Caona, Patricio and Benny, and says nothing about giving the harbor away. The elders asked for proof.',
+      done: { flag: 'story.proof_shown' },
+      hints: [
+        'The elders said: bring proof. We have it now, Gigi.',
+        'The elders meet in the council circle in the caney.',
+        'Take what the oath stone says to the elders in the caney.',
       ],
     },
   ],
@@ -262,5 +310,29 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'clue.seventh_clause',
     title: 'The seventh clause',
     text: "Thorne's Charter rests on \"the seventh clause of the Accord, as signed.\" Nobody in Xaraguá remembers agreeing to it. The first oath was carved in the petroglyph cave.",
+  },
+  {
+    id: 'drum_pattern',
+    when: 'clue.drum_pattern',
+    title: 'The drum song (cave wall)',
+    text: `The petroglyph cave shows the standing stones and the record house, and the areíto's drum song. Bar 1: ${barText(AREITO_BARS[0]!)}. Bar 2: ${barText(AREITO_BARS[1]!)}. Bar 3: worn away.`,
+  },
+  {
+    id: 'drum_full',
+    when: 'clue.drum_full',
+    title: 'The drum song (the areíto)',
+    text: `As the drummers played it on the night of the first oath: ${AREITO_BARS.map((b) => barText(b)).join('; ')}. A long mark is two beats, a short one one.`,
+  },
+  {
+    id: 'changed_cave_sluice',
+    when: 'anchor.cave_sluice',
+    title: 'Something changed',
+    text: 'The petroglyph cave is dry in the present: young Patricio opened the lower sluice, and the spring has drained to the gorge for fifty years.',
+  },
+  {
+    id: 'first_oath',
+    when: 'clue.first_oath',
+    title: 'The first oath',
+    text: '"The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us." Sworn by Caona, Patricio and Benny. No seventh clause.',
   },
 ];

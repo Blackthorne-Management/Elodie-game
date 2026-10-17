@@ -100,7 +100,8 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 ## Yucayeque (Xaraguá)
 
 ### SIG-XAR The flooded cave, the sluice and the rhythm lock (signature)
-Three linked parts (guide: "flooded petroglyph cave; echo sluice; rhythm lock at the areíto plaza").
+**Built Oct 17** (`xaragua-cave`, the plaza's stones, `xaragua-record`; replay: `quest/puzzles/xaragua_cave/`; the
+whole of it is on the scripted route). Three linked parts (guide: "flooded petroglyph cave; echo sluice; rhythm lock at the areíto plaza").
 
 1. **The flooded cave.**
    - **Present:** the petroglyph chamber is under water. A landslide blocked the cave's sea outlet years ago.

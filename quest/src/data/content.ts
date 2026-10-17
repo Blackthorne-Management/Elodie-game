@@ -11,6 +11,7 @@ import { localPillar } from '../engine/rpg.ts';
 import { DEBATE_DIALOGUES } from './debates.ts';
 import { DIALOGUE, DIALOGUE_IDS } from './dialogue.ts';
 import { RPG } from './rpg.ts';
+import { RHYTHMS } from './rhythms.ts';
 import { ENCOUNTERS } from './encounters.ts';
 import { MESSAGES } from './messages.ts';
 import { NPCS, NPC_IDS } from './npcs.ts';
@@ -27,6 +28,7 @@ export const CONTENT: GameContent = {
   doors: DOORS,
   encounters: ENCOUNTERS,
   debates: DEBATE_DIALOGUES,
+  rhythms: RHYTHMS,
   debateContext: (flags, def) => ({ influence: localPillar(flags, RPG, 'influence', def.city), mediateNeeds: DEBATE_MEDIATE_INFLUENCE }),
 };
 

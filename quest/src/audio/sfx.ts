@@ -157,6 +157,11 @@ const RECIPES: Record<SfxId, () => Note[]> = {
   run: () => [0, 0.09, 0.18, 0.27].map((at) => ({ at, dur: 0.05, wave: 'noise' as const, from: 0, gain: 0.3 })),
   // Narration typing out (no speaker): a soft tick.
   tick: () => [{ at: 0, dur: 0.02, wave: 'triangle', from: 1800, gain: 0.12 }],
+  // A hand on the skin of a drum (the rhythm lock's taps).
+  drum: () => [
+    { at: 0, dur: 0.18, wave: 'sine', from: 160, to: 70, gain: 0.7, release: 0.12 },
+    { at: 0, dur: 0.03, wave: 'noise', from: 0, gain: 0.25 },
+  ],
 };
 
 /** The samples of a sound effect at a sample rate (mono, -1 to 1). */

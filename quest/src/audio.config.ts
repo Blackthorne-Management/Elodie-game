@@ -60,6 +60,8 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'xaragua-mountain': 'mountain_path',
   'xaragua-camp': 'mountain_path',
   'xaragua-customs': 'crown_customs',
+  'xaragua-cave': 'mountain_path',
+  'xaragua-record': 'caney',
 };
 
 /** Inside any memory. */
@@ -105,6 +107,7 @@ export const SFX_IDS = [
   'surge',
   'run',
   'tick',
+  'drum',
 ] as const;
 
 export type SfxId = (typeof SFX_IDS)[number];

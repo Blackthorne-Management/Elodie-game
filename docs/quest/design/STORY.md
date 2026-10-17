@@ -141,6 +141,20 @@ the petroglyph cave: the next build (lamp oil, the flooded cave, the Echo of the
 ambushes switch on after the pier fight. **Not built:** the Yield step (beat 1's sergeant) waits for the Yield
 mechanic.
 
+**Built Oct 17 (the petroglyph cave, beats 3 to 5):** once Thorne has spoken to Gianna, the lamp-oil seller lends
+an oil lamp (key item; she still has never met her supplier, Rael clue 6). The lamp opens the petroglyph cave in the
+cassava gardens (`xaragua-cave`): the carved chamber is flooded. In the Echo it is dry, a spring keeper explains the
+two sluice gates, and young Patricio opens the lower one (`anchor.cave_sluice`); back in the present the chamber has
+drained for fifty years, and the wall shows the drum song with its last bar worn away (`clue.drum_pattern`). The
+**Echo of the first oath** plays on the Areíto Plaza's dance ground: Caona, Patricio and Benny swear it, the drummers
+play the whole song (`clue.drum_full`), and **Caona joins the Echo party** (`story.caona_joined`; an archer, moves in
+`data/battles.ts`). The **rhythm lock**: tap the song on the standing stone by the record house (A or a tap on
+each mark, normal or slow tempo; `engine/rhythm.ts`, `ui/RhythmPanel.ts`); the record house (`xaragua-record`)
+opens, and the oath stone reads: "The harbor stays with the people who fish it. We fight for each other, and no paper
+of any crown will part us." Three names, no seventh clause (`story.oath_found`). The Journal's next objective,
+*Proof for the elders* (`story.proof_shown`), is the next build. **Proposals for the owner:** the oath's wording,
+the drum song itself (three bars of long and short marks), Caona's Echo stats and moves, and young Benny's look.
+
 **Owner decision (Oct 15), the shape of the chapter:** Xaraguá is first shown at its most beautiful: the normal,
 living city for the first half of the chapter. **Midway, the Crown attacks** and the city is **occupied**: the same
 maps change to their occupied versions (Crown soldiers, checkpoints, curfew, burned stalls, Crown banners on the

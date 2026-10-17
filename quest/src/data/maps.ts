@@ -11,6 +11,8 @@ import xaraguaCamp from '../../maps/xaragua-camp.tmj?raw';
 import xaraguaCaney from '../../maps/xaragua-caney.tmj?raw';
 import xaraguaSong from '../../maps/xaragua-song.tmj?raw';
 import xaraguaCustoms from '../../maps/xaragua-customs.tmj?raw';
+import xaraguaCave from '../../maps/xaragua-cave.tmj?raw';
+import xaraguaRecord from '../../maps/xaragua-record.tmj?raw';
 import zetwalArchive from '../../maps/zetwal-archive.tmj?raw';
 import zetwalHall from '../../maps/zetwal-hall.tmj?raw';
 import zetwalHarbor from '../../maps/zetwal-harbor.tmj?raw';
@@ -43,6 +45,8 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'xaragua-caney': xaraguaCaney,
   'xaragua-song': xaraguaSong,
   'xaragua-customs': xaraguaCustoms,
+  'xaragua-cave': xaraguaCave,
+  'xaragua-record': xaraguaRecord,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

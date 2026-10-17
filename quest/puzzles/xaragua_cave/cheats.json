@@ -1,0 +1,7 @@
+{
+  "wade into the flooded chamber in the present": ["up*10", "confirm", "skip", "up*5", "left*8", "up", "confirm", "skip"],
+  "press Echo away from the shimmering tiles": ["echo", "up*12", "left*8", "up", "confirm", "skip"],
+  "read the chalked wall inside the memory": ["up*5", "echo", "skip", "up*11", "left*8", "up", "confirm", "skip"],
+  "open only the upper sluice, then come back": ["up*5", "echo", "skip", "up*9", "right*11", "right", "confirm", "skip", "left*11", "down*9", "echo", "skip", "up*11", "left*8", "up", "confirm", "skip"],
+  "leave the lower sluice shut, then come back": ["up*5", "echo", "skip", "up*7", "left*10", "left", "confirm", "down", "confirm", "right*10", "down*7", "echo", "skip", "up*11", "left*8", "up", "confirm", "skip"]
+}
