@@ -6,6 +6,7 @@
 // design names them and are checked in the phrasebook pass (Nov 18).
 
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
+import type { StageCue } from '../../engine/stage.ts';
 import { AREITO_BARS, barText } from '../rhythms.ts';
 
 function say(speaker: string, text: string, translation?: string): DialogueLine {
@@ -22,6 +23,16 @@ function simple(id: string, lines: DialogueLine[], set?: DialogueNode['set']): D
 
 function script(id: string, nodes: Record<string, DialogueNode>): DialogueScript {
   return { id, start: 'start', nodes };
+}
+
+/** A line with stage directions (engine/stage.ts): the cues are acted out on the map, then the line shows. */
+function act(stage: StageCue[], speaker: string, text: string, set?: DialogueLine['set']): DialogueLine {
+  return set ? { speaker, text, stage, set } : { speaker, text, stage };
+}
+
+/** A tile on the map the scene plays on. */
+function at(x: number, y: number): { x: number; y: number } {
+  return { x, y };
 }
 
 const G = 'gianna';
@@ -194,8 +205,9 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
 
   // ---- Chapter 2, the Crown attack (Oct 17; owner decision Oct 15: midway, the city is occupied) ----------
   // The elders hear the oath stone's words. Thorne's watcher saw where the party went, and the guns fire.
+  // Staged (owner rule, Oct 17): the marines march in from the doors, up the hall, to Gianna's face.
   simple('xaragua_proof', [
-    nar('The elders are still in the circle, talking low by a single lamp. They look up as you come in.'),
+    act([{ do: 'place', actor: 'yari', look: 'yari', at: at(9, 5), facing: 'left' }], '', 'The elders are still in the circle, talking low by a single lamp. They look up as you come in.'),
     say(Y, 'Elders. The record house is open. We read the oath stone.'),
     say('elder_charter', 'The record house? Nobody has opened that door since Caona\'s time.'),
     say(Y, '"The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us."'),
@@ -206,8 +218,28 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say(A, 'Gigi! The ships are firing!'),
     { speaker: '', text: 'Again, and again. Below, the harbor guns. In the plaza, drums: not areíto drums. Crown drums.', fx: 'shake' },
     say('caney_guard', 'Marines on the terrace! They are coming in!'),
-    say(Y, 'Elders, out the back! Gianna, with me. We hold them here!'),
-    { speaker: 'marine_lieutenant', text: 'By order of the Governor! Nobody leaves this house!', set: { 'story.crown_attack': true, 'battle.next': 'caney_breach', 'battle.after': 'caney_after' } },
+    act(
+      [
+        { do: 'face', actor: 'player', facing: 'right' },
+        { do: 'face', actor: 'yari', facing: 'right' },
+      ],
+      Y,
+      'Elders, get behind us! Gianna, with me. We hold them here!',
+    ),
+    // Through the doors, up the hall together, and right up to Gianna.
+    act(
+      [
+        { do: 'enter', actor: 'marine', look: 'crown_marine', from: at(17, 24), to: at(12, 5), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'musketeer', look: 'crown_musketeer', from: at(18, 24), to: at(12, 7), facing: 'left', run: true, async: true },
+        { do: 'look', actor: 'lieutenant' },
+        { do: 'enter', actor: 'lieutenant', look: 'marine_lieutenant', from: at(17, 23), to: at(11, 6), facing: 'left', run: true },
+        { do: 'face', actor: 'player', facing: 'right' },
+      ],
+      'marine_lieutenant',
+      'By order of the Governor! Nobody leaves this house. Least of all a pack of children.',
+    ),
+    act([{ do: 'look', actor: 'player' }], Y, 'Come and take it, then.'),
+    { speaker: 'marine_lieutenant', text: 'Marines! At them!', set: { 'story.crown_attack': true, 'battle.next': 'caney_breach', 'battle.after': 'caney_after' } },
   ]),
   // After a lost fight in the caney: the marines are still there.
   script('caney_breach_again', {
@@ -221,19 +253,82 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     done: { lines: [say('crown_marine', '...')] },
   }),
   // The fight is won, but the caney is lost: a Crown captain takes the cacique.
+  // Staged: the beaten marines run off; a captain and two marines march in; Anaco walks out to meet them, and
+  // is led away down the hall and out of the doors.
   simple('caney_after', [
-    nar('The last marine stumbles back through the doors. For a moment the caney is quiet.'),
-    nar('Then boots on the terrace. Many of them. A Crown captain walks in with two ranks of muskets behind him.'),
-    say('crown_captain', 'By order of Governor Thorne, this house and this harbor are under the protection of the Crown. Where is the cacique?'),
-    nar('Anaco comes out of the healer\'s room, leaning on his cane.'),
-    say('anaco', 'Here. You want the harbor, captain? You will have to carry the old man who sits on it.'),
-    say('crown_captain', 'Gladly. Take him.'),
-    say(Y, 'Father!'),
-    say('anaco', 'Yari. No. Look at me. You are no use to me in chains. Take the Limyè girls and go. The cave. You know the one.'),
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(9, 5), facing: 'right' },
+        { do: 'face', actor: 'player', facing: 'right' },
+        { do: 'place', actor: 'lieutenant', look: 'marine_lieutenant', at: at(11, 6), facing: 'left' },
+        { do: 'place', actor: 'marine', look: 'crown_marine', at: at(12, 5), facing: 'left' },
+        { do: 'place', actor: 'musketeer', look: 'crown_musketeer', at: at(12, 7), facing: 'left' },
+      ],
+      'marine_lieutenant',
+      'Fall back! Fall back!',
+    ),
+    act(
+      [
+        { do: 'exit', actor: 'marine', to: at(17, 25), run: true, async: true },
+        { do: 'exit', actor: 'musketeer', to: at(18, 25), run: true, async: true },
+        { do: 'exit', actor: 'lieutenant', to: at(17, 25), run: true, async: true },
+      ],
+      'marine_lieutenant',
+      'Beaten by children! This is insane! We will be back, all of us!',
+    ),
+    act([{ do: 'wait', ms: 900 }], Y, 'They ran. Gianna, they ran!'),
+    // The captain and his men: through the doors and up the hall.
+    act(
+      [
+        { do: 'enter', actor: 'guard_a', look: 'crown_marine', from: at(17, 24), to: at(13, 5), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_b', look: 'crown_musketeer', from: at(18, 24), to: at(13, 7), facing: 'left', run: true, async: true },
+        { do: 'look', actor: 'captain' },
+        { do: 'enter', actor: 'captain', look: 'crown_captain', from: at(17, 23), to: at(12, 6), facing: 'left' },
+      ],
+      'crown_captain',
+      'By order of Governor Thorne, this house and this harbor are under the protection of the Crown. Where is the cacique?',
+    ),
+    // Anaco comes out of the healer's room on his cane, all the way up to the captain.
+    act(
+      [
+        { do: 'place', actor: 'anaco', look: 'anaco', at: at(31, 5), facing: 'left' },
+        { do: 'look', actor: 'anaco' },
+        { do: 'walk', actor: 'anaco', to: at(14, 6), facing: 'left' },
+        { do: 'face', actor: 'captain', facing: 'right' },
+        { do: 'face', actor: 'guard_a', facing: 'right' },
+        { do: 'face', actor: 'guard_b', facing: 'right' },
+      ],
+      'anaco',
+      'Here. You want the harbor, captain? You will have to carry the old man who sits on it.',
+    ),
+    act(
+      [
+        { do: 'walk', actor: 'guard_a', to: at(14, 5), facing: 'down', async: true },
+        { do: 'walk', actor: 'guard_b', to: at(14, 7), facing: 'up' },
+      ],
+      'crown_captain',
+      'Gladly. Take him.',
+    ),
+    act([{ do: 'look', actor: 'player' }, { do: 'walk', actor: 'yari', to: at(10, 5), facing: 'right', run: true }], Y, 'Father!'),
+    act([{ do: 'face', actor: 'anaco', facing: 'left' }], 'anaco', 'Yari. No. Look at me. You are no use to me in chains. Take the Limyè girls and go. The cave. You know the one.'),
     say('anaco', 'Envoy\'s daughter. They cannot touch you, by their own Accord. Remember that, and use it.'),
     say(G, 'We\'ll find you. I promise.'),
-    nar('The marines lead the cacique out into the smoke. The healer pulls you through the back of the caney...'),
-    { speaker: '', text: '(Cacique Anaco was taken prisoner.)', set: { 'story.anaco_taken': true, 'travel.next': 'xaragua-plaza/caney_back' } },
+    // Led away: down the hall between the two marines, the captain behind, out of the doors.
+    act(
+      [
+        { do: 'look', actor: 'anaco' },
+        { do: 'exit', actor: 'guard_a', to: at(17, 25), async: true },
+        { do: 'exit', actor: 'anaco', to: at(18, 25), async: true },
+        { do: 'exit', actor: 'guard_b', to: at(18, 25), async: true },
+        { do: 'wait', ms: 700 },
+        { do: 'exit', actor: 'captain', to: at(17, 25) },
+        { do: 'look', actor: 'player' },
+        { do: 'face', actor: 'yari', facing: 'left' },
+      ],
+      Y,
+      '...Father.',
+    ),
+    { speaker: Y, text: 'He said the cave. Out the back, Gianna. Now.', set: { 'story.anaco_taken': true, 'travel.next': 'xaragua-plaza/caney_back' } },
   ]),
   simple('attack_plaza', [
     nar('Night. The stalls\' thatch is burning. Crown drums beat on the dance ground, and red banners go up by the steps.'),

@@ -435,6 +435,8 @@ const frames = (page) => page.evaluate(() => new Promise((r) => requestAnimation
 
 /** Press A until the typewriter has finished the current line. */
 async function finishTyping(page) {
+  // A scene being acted out (stage directions): wait until the actors are in place and the line shows.
+  await page.waitForFunction(() => !window.__quest.snapshot().stage?.busy, null, { timeout: 30000 });
   for (let i = 0; i < 10; i++) {
     const s = await snap(page);
     if (s.mode === 'showcase' || !s.dialogue?.typing) return s;
@@ -755,6 +757,8 @@ async function playAct(browser, errors) {
   const shots = [];
   const showcases = new Set();
   let anissaShot = false;
+  /** The staged scenes already photographed. */
+  const stagedShots = new Set();
   let voyaged = false;
   let keys = 0;
   const started = Date.now();
@@ -774,6 +778,13 @@ async function playAct(browser, errors) {
           if (await handleShowcase(page, showcases, shots)) continue;
           const s = await finishTyping(page);
           if (s.mode !== 'dialogue') break;
+          // The staged Crown attack (owner rule: shown, not told): the marines stand at Gianna's face.
+          const lt = s.stage?.actors.find((a) => a.id === 'lieutenant');
+          if (lt && !stagedShots.has('marines') && s.dialogue?.speaker === 'Marine lieutenant') {
+            stagedShots.add('marines');
+            check(Math.abs(lt.x - s.x) + Math.abs(lt.y - s.y) <= 2, 'the Crown attack is acted out: the marines march up the hall to Gianna before the lieutenant speaks');
+            await shoot(page, 'staged-marines', shots);
+          }
           if (!anissaShot && s.dialogue?.speaker === 'Anissa') {
             anissaShot = true;
             await page.keyboard.up('Shift');
@@ -795,6 +806,12 @@ async function playAct(browser, errors) {
           await frames(page);
           const want = sim.logic.state.player.mapId;
           for (let i = 0; i < 400; i++) {
+            const st = await snap(page);
+            if (!stagedShots.has('anaco') && st.stage?.actors.some((a) => a.id === 'anaco') && st.stage.actors.some((a) => a.id === 'captain') && !st.stage.busy) {
+              stagedShots.add('anaco');
+              check(true, 'after the fight the marines run off, and the captain\'s men come up the hall for Anaco (acted out on the map)');
+              await shoot(page, 'staged-anaco', shots);
+            }
             // A scene can end in a sea voyage (the escape home): watch it as at the end of Chapter 1.
             if (await page.evaluate(() => !!window.__voyage)) {
               if (await handleVoyage(page, shots, want)) voyaged = true;

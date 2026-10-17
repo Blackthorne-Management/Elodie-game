@@ -4,6 +4,7 @@
 import type { Condition } from './conditions.ts';
 import { evaluate, flagsIn } from './conditions.ts';
 import type { FlagSnapshot, FlagStore } from './flags.ts';
+import type { StageCue } from './stage.ts';
 
 export interface Speaker {
   id: string;
@@ -25,6 +26,8 @@ export interface DialogueLine {
   speaker?: string;
   /** A screen effect the field plays when the line appears (e.g. 'flash', 'shake', 'fade'). */
   fx?: string;
+  /** Stage directions acted out on the map before the line appears (engine/stage.ts). */
+  stage?: readonly StageCue[];
 }
 
 export interface DialogueChoice {
@@ -64,8 +67,8 @@ export interface ChoiceView {
 }
 
 export type DialogueView =
-  | { kind: 'line'; speaker: Speaker | null; text: string; translation?: string; fx?: string }
-  | { kind: 'choice'; speaker: Speaker | null; text: string; translation?: string; fx?: string; choices: ChoiceView[] }
+  | { kind: 'line'; speaker: Speaker | null; text: string; translation?: string; fx?: string; stage?: readonly StageCue[] }
+  | { kind: 'choice'; speaker: Speaker | null; text: string; translation?: string; fx?: string; stage?: readonly StageCue[]; choices: ChoiceView[] }
   | { kind: 'end' };
 
 const MAX_NODE_HOPS = 64;
@@ -103,6 +106,7 @@ export class DialogueRunner {
     const text = line?.text ?? '';
     const translation = line?.translation;
     const fx = line?.fx;
+    const stage = line?.stage;
     const isLast = this.lineIndex >= this.lines.length - 1;
     if (isLast && this.choices && this.choices.length > 0) {
       return {
@@ -111,10 +115,11 @@ export class DialogueRunner {
         text,
         translation,
         fx,
+        stage,
         choices: this.choices.map((c, index) => ({ text: c.text, index })),
       };
     }
-    return { kind: 'line', speaker, text, translation, fx };
+    return { kind: 'line', speaker, text, translation, fx, stage };
   }
 
   /** Move past the current line. Does nothing while a choice is waiting. */

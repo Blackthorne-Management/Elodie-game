@@ -66,6 +66,7 @@ import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.
 import { echoPrompt } from '../engine/world.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { npcMoves, walkRoute } from '../engine/walkers.ts';
+import { STAGE_PLAYER, type StageCue } from '../engine/stage.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
@@ -87,6 +88,21 @@ interface Follower {
   lastT: number;
 }
 
+/** Someone on stage: a sprite walking a route like the walkers, gone when an exit reaches its door. */
+interface StageActor {
+  sprite: Phaser.GameObjects.Image;
+  look: string;
+  at: Pos;
+  facing: Dir8;
+  mover: Mover;
+  tiles: Pos[];
+  run: boolean;
+  /** Turn this way on arrival. */
+  endFacing?: Dir8;
+  /** Leave the stage on arrival. */
+  leaving: boolean;
+}
+
 export interface FieldSnapshot {
   mode: UiMode;
   mapId: string;
@@ -105,6 +121,8 @@ export interface FieldSnapshot {
   dialogue: ReturnType<DialogueBox['snapshot']>;
   menu: ReturnType<GameMenu['snapshot']>;
   shop: ReturnType<ShopPanel['snapshot']>;
+  /** A scene being acted out (engine/stage.ts): busy until the line can show; who is on stage, and where. */
+  stage: { busy: boolean; actors: { id: string; x: number; y: number; moving: boolean }[] };
   /** The rhythm lock on screen (null when none). */
   rhythm: ReturnType<RhythmPanel['snapshot']>;
   /** The item showcase on screen (null when none). */
@@ -151,6 +169,15 @@ export class FieldScene extends Phaser.Scene {
   private npcPlaced = new Map<number, NpcPlacement>();
   /** People walking to their new place (engine/walkers.ts), by the placement they walk to. */
   private walkers = new Map<number, { mover: Mover; at: Pos; tiles: Pos[]; look: string; facing: Dir8 }>();
+  /** The people a scene's stage directions put on the map (engine/stage.ts), by actor name. */
+  private stageActors = new Map<string, StageActor>();
+  /** The cues still to start for the current line, and what to do once the blocking ones have finished. */
+  private stageQueue: StageCue[] = [];
+  private stageBlocking: StageActor | null = null;
+  private stageWaitMs = 0;
+  private stageThen: (() => void) | null = null;
+  /** Whom the camera follows during a scene (an actor's name), or null for the player. */
+  private stageCamera: string | null = null;
   private objectSprites = new Map<string, Phaser.GameObjects.GameObject[]>();
   private markerSprites = new Map<string, Phaser.GameObjects.Image>();
   private label!: Phaser.GameObjects.Container;
@@ -344,6 +371,7 @@ export class FieldScene extends Phaser.Scene {
     const input = this.rt.input;
     input.update();
     this.tickWalkers(delta);
+    this.tickStage(delta);
     this.updateEchoPrompt();
     this.syncMusic();
     this.uiSounds();
@@ -1329,6 +1357,7 @@ export class FieldScene extends Phaser.Scene {
 
   private leaveDialogueMode(): void {
     this.dialogue.hide();
+    this.clearStage();
     this.mode = this.logic.mode === 'card' ? 'card' : 'field';
     this.rt.input.clearPresses();
     if (this.talkingTo) {
@@ -1343,9 +1372,178 @@ export class FieldScene extends Phaser.Scene {
   private showDialogueView(): void {
     const view = this.logic.view();
     if (view.kind === 'end') return;
-    if (view.fx && view.fx !== this.lastFx) this.playFx(view.fx);
-    this.lastFx = view.fx;
-    this.dialogue.show(view, this.logic.state.settings.textSpeed);
+    const show = () => {
+      if (view.fx && view.fx !== this.lastFx) this.playFx(view.fx);
+      this.lastFx = view.fx;
+      this.dialogue.show(view, this.logic.state.settings.textSpeed);
+    };
+    if (view.stage && view.stage.length > 0) {
+      // Act the scene out first (the box steps aside), then the line.
+      this.dialogue.hide();
+      this.perform(view.stage, show);
+    } else show();
+  }
+
+  // ---- Stage directions (engine/stage.ts) ----------------------------------------------------
+
+  /** Whether a scene is being acted out and the line is waiting for it. */
+  private get staging(): boolean {
+    return this.stageThen !== null;
+  }
+
+  private perform(cues: readonly StageCue[], then: () => void): void {
+    this.stageQueue = [...cues];
+    this.stageThen = then;
+    this.stageBlocking = null;
+    this.stageWaitMs = 0;
+    this.runStage();
+  }
+
+  /** Start cues until one has to finish first; when none are left, show the line. */
+  private runStage(): void {
+    while (!this.stageBlocking && this.stageWaitMs <= 0) {
+      const c = this.stageQueue.shift();
+      if (!c) {
+        const then = this.stageThen;
+        this.stageThen = null;
+        this.rt.input.clearPresses();
+        then?.();
+        return;
+      }
+      this.startCue(c);
+    }
+  }
+
+  private startCue(c: StageCue): void {
+    switch (c.do) {
+      case 'place':
+        this.stageActor(c.actor, c.look, c.at, c.facing ?? 'down');
+        return;
+      case 'enter': {
+        const a = this.stageActor(c.actor, c.look, c.from, c.facing ?? 'down');
+        this.walkActor(a, c.to, c.run ?? false, c.facing, false);
+        if (!c.async) this.stageBlocking = a;
+        return;
+      }
+      case 'walk':
+      case 'exit': {
+        const a = this.stageActors.get(c.actor);
+        if (!a) return;
+        this.walkActor(a, c.to, c.run ?? false, c.do === 'walk' ? c.facing : undefined, c.do === 'exit');
+        if (!c.async) this.stageBlocking = a;
+        return;
+      }
+      case 'face':
+        if (c.actor === STAGE_PLAYER) setLook(this.player, this.playerLook(), c.facing);
+        else {
+          const a = this.stageActors.get(c.actor);
+          if (a) {
+            a.facing = c.facing;
+            setLook(a.sprite, a.look, c.facing);
+          }
+        }
+        return;
+      case 'look':
+        this.stageCamera = c.actor === STAGE_PLAYER ? null : c.actor;
+        return;
+      case 'wait':
+        this.stageWaitMs = c.ms;
+        return;
+    }
+  }
+
+  private stageActor(id: string, look: string, at: Pos, facing: Dir8): StageActor {
+    let a = this.stageActors.get(id);
+    const w = tileToWorld(at);
+    if (!a) {
+      const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(look)).setOrigin(0.5, 1);
+      a = { sprite, look, at: { ...at }, facing, mover: new Mover(), tiles: [], run: false, leaving: false };
+      this.stageActors.set(id, a);
+    }
+    a.look = look;
+    a.at = { ...at };
+    a.facing = facing;
+    a.tiles = [];
+    a.sprite.setPosition(w.x, w.y).setDepth(10 + w.y);
+    setLook(a.sprite, look, facing);
+    return a;
+  }
+
+  private walkActor(a: StageActor, to: Pos, run: boolean, endFacing: Dir8 | undefined, leaving: boolean): void {
+    // Along a route like any walker; with no way at all, they simply arrive.
+    a.tiles = walkRoute(this.logic, a.at, to) ?? [{ ...to }];
+    a.run = run;
+    a.endFacing = endFacing;
+    a.leaving = leaving;
+    if (a.tiles.length === 0) this.arriveActor(a);
+  }
+
+  private arriveActor(a: StageActor): void {
+    if (a.endFacing) {
+      a.facing = a.endFacing;
+      setLook(a.sprite, a.look, a.facing);
+    }
+    if (a.leaving) {
+      a.sprite.destroy();
+      for (const [id, x] of this.stageActors) if (x === a) this.stageActors.delete(id);
+      if (this.stageCamera && !this.stageActors.has(this.stageCamera)) this.stageCamera = null;
+    }
+    if (this.stageBlocking === a) {
+      this.stageBlocking = null;
+      this.runStage();
+    }
+  }
+
+  /** Walk everyone on stage a frame; count down a pause; keep the camera on whoever the scene follows. */
+  private tickStage(delta: number): void {
+    for (const a of [...this.stageActors.values()]) {
+      if (!a.mover.moving) {
+        const first = a.tiles.shift();
+        if (!first) continue;
+        a.mover.start(a.at, first);
+      }
+      a.mover.update(delta, speedPx(a.run), (reached) => {
+        a.at = reached;
+        return a.tiles.shift() ?? null;
+      });
+      const g = a.mover.glide;
+      if (g) {
+        const dir = combine(g.to.x > g.from.x ? 'right' : g.to.x < g.from.x ? 'left' : null, g.to.y > g.from.y ? 'down' : g.to.y < g.from.y ? 'up' : null);
+        if (dir) a.facing = dir;
+      }
+      const p = a.mover.point(a.at);
+      a.sprite.setPosition(p.x, p.y).setDepth(10 + p.y);
+      setLook(a.sprite, a.look, a.facing, a.mover.moving ? a.mover.frame() : 0);
+      if (!a.mover.moving) this.arriveActor(a);
+    }
+    if (this.stageWaitMs > 0) {
+      this.stageWaitMs -= delta;
+      if (this.stageWaitMs <= 0) this.runStage();
+    }
+    if (this.mode === 'dialogue') {
+      const followed = this.stageCamera ? this.stageActors.get(this.stageCamera) : undefined;
+      const target = followed ? followed.mover.point(followed.at) : this.mover.point(this.logic.state.player.pos);
+      // Glide towards the target rather than jump (a cut feels like a teleport).
+      const cam = this.cameras.main;
+      const want = cameraScroll({ x: target.x, y: target.y - TILE_SIZE / 2 }, this.camBounds, VIEW_WIDTH, VIEW_HEIGHT);
+      const k = Math.min(1, delta / 180);
+      if (this.stageActors.size > 0 || Math.abs(cam.scrollX - want.x) > 0.5 || Math.abs(cam.scrollY - want.y) > 0.5) {
+        cam.setScroll(Math.round(cam.scrollX + (want.x - cam.scrollX) * k), Math.round(cam.scrollY + (want.y - cam.scrollY) * k));
+      }
+    }
+  }
+
+  /** The scene is over: everyone on stage leaves the picture, and the camera goes back to Gianna. */
+  private clearStage(): void {
+    for (const a of this.stageActors.values()) a.sprite.destroy();
+    this.stageActors.clear();
+    this.stageQueue = [];
+    this.stageBlocking = null;
+    this.stageWaitMs = 0;
+    this.stageThen = null;
+    this.stageCamera = null;
+    setLook(this.player, this.playerLook(), this.logic.state.player.facing);
+    this.placeCamera(this.mover.point(this.logic.state.player.pos));
   }
 
   private playFx(fx: string): void {
@@ -1360,6 +1558,8 @@ export class FieldScene extends Phaser.Scene {
 
   private updateDialogue(wasTyping = false): void {
     const input = this.rt.input;
+    // While a scene is acted out, presses wait (the line is not on screen yet).
+    if (this.staging) return;
     const advance = input.pressed('confirm') || input.pressed('cancel');
     if (this.dialogue.typing || wasTyping) {
       if (advance) this.dialogue.finishTyping();
@@ -1588,6 +1788,10 @@ export class FieldScene extends Phaser.Scene {
       hint: this.hint.lastHint,
       objective: objective?.id ?? null,
       echoFilter: this.echoWash.visible,
+      stage: {
+        busy: this.staging,
+        actors: [...this.stageActors].map(([id, a]) => ({ id, x: a.at.x, y: a.at.y, moving: a.mover.moving || a.tiles.length > 0 })),
+      },
       follower: f ? { x: f.pos.x, y: f.pos.y, glowing: f.glow !== null } : null,
     };
   }
