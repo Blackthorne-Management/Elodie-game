@@ -35,7 +35,7 @@ export function chapterStarts(): Record<string, ChapterStart> {
     }
     // The browser shows each item's popup as it arrives; a player reaching this point has seen them all.
     for (const item of pendingShowcases(sim.logic.state.flags, RPG)) markShown(sim.logic.state.flags, item.id);
-    const flags = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => k !== 'travel.next').sort(([a], [b]) => a.localeCompare(b)));
+    const flags = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => k !== 'travel.next' && k !== 'voyage.next').sort(([a], [b]) => a.localeCompare(b)));
     out[chapter] = { map: at.map, spawn: at.spawn, flags };
   }
   return out;

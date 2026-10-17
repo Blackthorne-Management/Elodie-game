@@ -455,6 +455,7 @@ export class FieldScene extends Phaser.Scene {
   /** Show what the logic did. */
   private handle(effects: Effect[]): void {
     let changeMap = false;
+    let voyage = '';
     for (const e of effects) {
       switch (e.kind) {
         case 'map':
@@ -509,10 +510,19 @@ export class FieldScene extends Phaser.Scene {
           break;
         }
         case 'encounter':
-          // An ambush: a red flash before the foes speak (the battle screen replaces this in Phase 3).
+          // An ambush: a red flash before the foes speak, then the battle.
           this.cameras.main.flash(250, 180, 40, 40);
           break;
+        case 'voyage':
+          voyage = e.voyage;
+          break;
       }
+    }
+    if (changeMap && voyage) {
+      // The party has already landed in the logic; the voyage plays, then the field opens on the new map.
+      this.leaving = true;
+      this.scene.start('voyage', { voyage });
+      return;
     }
     if (changeMap) {
       this.leaving = true;

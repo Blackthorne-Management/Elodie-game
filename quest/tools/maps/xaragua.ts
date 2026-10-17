@@ -396,7 +396,10 @@ export function xaraguaCaney(): MapSource {
     npc('elder_resist', 7, 6, 'left'),
     npc('elder_undecided', 5, 7, 'up'),
     npc('behique', 30, 5, 'down'),
-    npc('crown_liaison', 22, 6, 'left', { if: '!story.council_defied' }),
+    // The Governor's liaison waits in the hall, then (once Gianna has seen Anaco) walks into the middle of the
+    // elders' circle to read them the Charter (owner report, Oct 17: he must be there for the council).
+    npc('crown_liaison', 22, 6, 'left', { if: '!story.anaco_met' }),
+    npc('crown_liaison_council', 5, 6, 'up', { npc: 'crown_liaison', if: 'story.anaco_met, !story.council_defied' }),
     npc('anaco', 33, 4, 'down'),
     // Chapter 2: the welcome, and the council scene at the council circle's doorway (after meeting Anaco).
     trigger('caney_enter', 17, 23, { dialogue: 'caney_enter', flag: 'story.caney_entered', once: true, onEnter: true, if: 'encounter.xaragua_story.pier.won' }),

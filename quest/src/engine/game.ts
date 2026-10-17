@@ -70,7 +70,9 @@ export type Effect =
   /** A vendor's greeting ended: open their shop. */
   | { kind: 'shop'; shop: string }
   /** A dialogue named a battle (flag `battle.next`): the scene runs it (data/battles.ts). */
-  | { kind: 'battle'; battle: string };
+  | { kind: 'battle'; battle: string }
+  /** A sea voyage plays before the party lands (data/voyages.ts; flag `voyage.next` beside `travel.next`). */
+  | { kind: 'voyage'; voyage: string };
 
 export type StepAttempt =
   | { ok: true; to: Pos }
@@ -501,7 +503,9 @@ export class GameLogic {
     const spawn = map?.spawns.find((s) => s.id === spawnId);
     if (!map || !spawn) throw new Error(`travel.next "${next}" leads nowhere`);
     this.state.player = { ...this.state.player, mapId: map.id, pos: { ...spawn.pos }, facing: spawn.facing, era: 'present' };
-    return [{ kind: 'map' }, { kind: 'save' }];
+    const voyage = flags.get('voyage.next');
+    flags.clear('voyage.next');
+    return [...(typeof voyage === 'string' && voyage ? [{ kind: 'voyage', voyage } as Effect] : []), { kind: 'map' }, { kind: 'save' }];
   }
 
   // ---- Internals -----------------------------------------------------------------------------

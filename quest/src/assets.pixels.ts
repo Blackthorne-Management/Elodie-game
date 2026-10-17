@@ -1563,7 +1563,7 @@ export interface ObjectArt extends PixelArt {
  * Crown's red band, red pennants, a dark hull with a gold stripe and gun ports. Drawn by code (it is
  * mostly straight lines), so the water shows round it.
  */
-function crownShip(): ObjectArt {
+function crownShip(colors: { sail: string; band: string; flag: string } = { sail: 'w', band: 'R', flag: 'R' }): ObjectArt {
   const W = 80;
   const H = 48;
   const px = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
@@ -1575,13 +1575,13 @@ function crownShip(): ObjectArt {
       put(mx, y, 'k');
       put(mx + 1, y, 'b');
     }
-    for (let y = 1; y <= 3; y++) for (let x = mx + 2; x <= mx + 7; x++) put(x, y, x === mx + 7 || y === 1 || y === 3 ? 'k' : 'R');
+    for (let y = 1; y <= 3; y++) for (let x = mx + 2; x <= mx + 7; x++) put(x, y, x === mx + 7 || y === 1 || y === 3 ? 'k' : colors.flag);
     const x0 = mx - 10;
     const x1 = mx + 11;
     for (let y = 6; y <= 26; y++) {
       for (let x = x0; x <= x1; x++) {
         const edge = y === 6 || y === 26 || x === x0 || x === x1;
-        put(x, y, edge ? 'k' : y === 15 || y === 16 ? 'R' : (x + y) % 11 === 0 ? 'h' : 'w');
+        put(x, y, edge ? 'k' : y === 15 || y === 16 ? colors.band : (x + y) % 11 === 0 ? 'h' : colors.sail);
       }
     }
   }
@@ -1603,6 +1603,8 @@ function crownShip(): ObjectArt {
 
 export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
   crown_ship: crownShip(),
+  // The Zetwal merchant ship Yari's canoe meets off the coast (the voyage, Oct 17): golden sails, the sun's band.
+  zetwal_ship: crownShip({ sail: 'Y', band: 'o', flag: 'y' }),
   // The Gaze lamp in the Temple of Elodie: a bronze post with a wide dish on a stone plinth. Unlit
   // until Anissa's light wakes it.
   gaze_lamp: {

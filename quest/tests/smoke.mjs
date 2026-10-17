@@ -694,6 +694,21 @@ async function fightBattle(page, id, shots) {
   check(after.flags[`encounter.${battle.table}.${battle.group}.won`] === true, `${id}: the fight is won in the browser`);
 }
 
+/** A sea voyage (scenes/VoyageScene.ts) between chapters: watch both parts, then skip with B. */
+async function handleVoyage(page, shots) {
+  await frames(page);
+  if (!(await page.evaluate(() => !!window.__voyage))) return false;
+  await page.waitForTimeout(2500);
+  await shoot(page, 'voyage-harbor', shots);
+  await page.waitForFunction(() => window.__voyage?.state().phase === 'map', null, { timeout: 10000 });
+  await page.waitForTimeout(4000);
+  await shoot(page, 'voyage-map', shots);
+  check(true, 'the voyage plays: the canoe to the ship, then the route around Ardencia on the realm map');
+  await page.keyboard.press('KeyX');
+  await page.waitForFunction(() => !window.__voyage && window.__quest?.snapshot().mapId === 'xaragua-village', null, { timeout: 10000 });
+  return true;
+}
+
 async function playAct(browser, errors) {
   console.log('Act I, Zetwal (scripted route, checked against the simulator after every key):');
   const route = parseRoute(readJson('routes/zetwal-act1.json'));
@@ -711,6 +726,7 @@ async function playAct(browser, errors) {
   const shots = [];
   const showcases = new Set();
   let anissaShot = false;
+  let voyaged = false;
   let keys = 0;
   const started = Date.now();
   for (const item of route) {
@@ -765,11 +781,13 @@ async function playAct(browser, errors) {
         await frames(page);
       }
       await handleShowcase(page, showcases, shots);
+      if (sim.logic.state.player.mapId === 'xaragua-village' && (await handleVoyage(page, shots))) voyaged = true;
       await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
     }
   }
   await page.keyboard.up('Shift');
   const s = await snap(page);
+  check(voyaged, 'Chapter 1 ends with the voyage to Xaraguá, not a jump');
   check(s.flags['act1.complete'] === true && s.flags['card.act1_end'] === true, `played Act I to the end card in the browser (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
   check(s.flags['anchor.chain_bridge'] === true && s.flags['story.bridge_crossed'] === true, 'the bridge puzzle was solved through the Echo and its anchor');
   check(Object.keys(s.flags).every((f) => !f.startsWith('echo.')), 'no memory-only flags leaked into the present');
