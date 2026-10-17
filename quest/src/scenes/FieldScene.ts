@@ -66,7 +66,7 @@ import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.
 import { echoPrompt } from '../engine/world.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { npcMoves, walkRoute } from '../engine/walkers.ts';
-import { STAGE_PLAYER, type StageCue } from '../engine/stage.ts';
+import { STAGE_FOLLOWER, STAGE_NPC, STAGE_PLAYER, type StageCue } from '../engine/stage.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
 import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
@@ -88,6 +88,12 @@ interface Follower {
   lastT: number;
 }
 
+/** The tiles from `a` to `b` in a straight line (not including `a`), for a boat gliding over water. */
+function straightLine(a: Pos, b: Pos): Pos[] {
+  const n = Math.max(Math.abs(b.x - a.x), Math.abs(b.y - a.y));
+  return Array.from({ length: n }, (_, i) => ({ x: Math.round(a.x + ((b.x - a.x) * (i + 1)) / n), y: Math.round(a.y + ((b.y - a.y) * (i + 1)) / n) }));
+}
+
 /** Someone on stage: a sprite walking a route like the walkers, gone when an exit reaches its door. */
 interface StageActor {
   sprite: Phaser.GameObjects.Image;
@@ -101,6 +107,8 @@ interface StageActor {
   endFacing?: Dir8;
   /** Leave the stage on arrival. */
   leaving: boolean;
+  /** Borrowed from the map: an NPC's placement (by object id), or Anissa following. Never destroyed here. */
+  borrowed?: number | 'follower';
 }
 
 export interface FieldSnapshot {
@@ -1416,9 +1424,18 @@ export class FieldScene extends Phaser.Scene {
 
   private startCue(c: StageCue): void {
     switch (c.do) {
-      case 'place':
-        this.stageActor(c.actor, c.look, c.at, c.facing ?? 'down');
+      case 'place': {
+        const borrowed = this.borrowActor(c.actor);
+        if (borrowed) {
+          borrowed.at = { ...c.at };
+          borrowed.tiles = [];
+          if (c.facing) borrowed.facing = c.facing;
+          const w = tileToWorld(c.at);
+          borrowed.sprite.setVisible(true).setPosition(w.x, w.y).setDepth(10 + w.y);
+          setLook(borrowed.sprite, borrowed.look, borrowed.facing);
+        } else this.stageActor(c.actor, c.look ?? 'villager', c.at, c.facing ?? 'down');
         return;
+      }
       case 'enter': {
         const a = this.stageActor(c.actor, c.look, c.from, c.facing ?? 'down');
         this.walkActor(a, c.to, c.run ?? false, c.facing, false);
@@ -1427,19 +1444,20 @@ export class FieldScene extends Phaser.Scene {
       }
       case 'walk':
       case 'exit': {
-        const a = this.stageActors.get(c.actor);
+        const a = this.borrowActor(c.actor);
         if (!a) return;
         this.walkActor(a, c.to, c.run ?? false, c.do === 'walk' ? c.facing : undefined, c.do === 'exit');
         if (!c.async) this.stageBlocking = a;
         return;
       }
       case 'face':
-        if (c.actor === STAGE_PLAYER) setLook(this.player, this.playerLook(), c.facing);
-        else {
-          const a = this.stageActors.get(c.actor);
+        if (c.actor === STAGE_PLAYER) {
+          if (c.facing !== 'player') setLook(this.player, this.playerLook(), c.facing);
+        } else {
+          const a = this.borrowActor(c.actor);
           if (a) {
-            a.facing = c.facing;
-            setLook(a.sprite, a.look, c.facing);
+            a.facing = c.facing === 'player' ? facingToward(a.at, this.logic.state.player.pos) : c.facing;
+            setLook(a.sprite, a.look, a.facing);
           }
         }
         return;
@@ -1449,7 +1467,33 @@ export class FieldScene extends Phaser.Scene {
       case 'wait':
         this.stageWaitMs = c.ms;
         return;
+      case 'sync':
+        this.syncActors();
+        return;
     }
+  }
+
+  /** An actor by name: one already on stage, or someone borrowed from the map (an NPC, or Anissa following). */
+  private borrowActor(id: string): StageActor | undefined {
+    const on = this.stageActors.get(id);
+    if (on) return on;
+    if (id === STAGE_FOLLOWER && this.follower) {
+      const f = this.follower;
+      const a: StageActor = { sprite: f.sprite, look: ANISSA_GLOW.look, at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'follower' };
+      this.stageActors.set(id, a);
+      return a;
+    }
+    if (id.startsWith(STAGE_NPC)) {
+      const placed = [...this.npcPlaced.values()].find((n) => n.npc === id.slice(STAGE_NPC.length));
+      const sprite = placed ? this.npcSprites.get(placed.objectId) : undefined;
+      if (!placed || !sprite) return undefined;
+      this.walkers.delete(placed.objectId);
+      const look = this.logic.content.npcs[placed.npc]!.look;
+      const a: StageActor = { sprite, look, at: { ...placed.pos }, facing: placed.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: placed.objectId };
+      this.stageActors.set(id, a);
+      return a;
+    }
+    return undefined;
   }
 
   private stageActor(id: string, look: string, at: Pos, facing: Dir8): StageActor {
@@ -1470,8 +1514,8 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private walkActor(a: StageActor, to: Pos, run: boolean, endFacing: Dir8 | undefined, leaving: boolean): void {
-    // Along a route like any walker; with no way at all, they simply arrive.
-    a.tiles = walkRoute(this.logic, a.at, to) ?? [{ ...to }];
+    // Along a route like any walker; with no way on foot (a boat on the water), straight there.
+    a.tiles = walkRoute(this.logic, a.at, to) ?? straightLine(a.at, to);
     a.run = run;
     a.endFacing = endFacing;
     a.leaving = leaving;
@@ -1484,8 +1528,10 @@ export class FieldScene extends Phaser.Scene {
       setLook(a.sprite, a.look, a.facing);
     }
     if (a.leaving) {
-      a.sprite.destroy();
-      for (const [id, x] of this.stageActors) if (x === a) this.stageActors.delete(id);
+      if (a.borrowed !== undefined) a.sprite.setVisible(false);
+      else a.sprite.destroy();
+      a.leaving = false;
+      if (a.borrowed === undefined) for (const [id, x] of this.stageActors) if (x === a) this.stageActors.delete(id);
       if (this.stageCamera && !this.stageActors.has(this.stageCamera)) this.stageCamera = null;
     }
     if (this.stageBlocking === a) {
@@ -1535,7 +1581,34 @@ export class FieldScene extends Phaser.Scene {
 
   /** The scene is over: everyone on stage leaves the picture, and the camera goes back to Gianna. */
   private clearStage(): void {
-    for (const a of this.stageActors.values()) a.sprite.destroy();
+    for (const a of this.stageActors.values()) {
+      if (a.borrowed === undefined) a.sprite.destroy();
+      else if (a.borrowed === 'follower') {
+        // Anissa follows on from wherever the scene left her.
+        if (this.follower) {
+          this.follower.pos = { ...a.at };
+          this.follower.from = { ...a.at };
+          this.follower.facing = a.facing;
+          a.sprite.setVisible(true);
+        }
+      } else {
+        // Someone from the map walks back to their place (or is put back, if they had left the stage).
+        const placed = this.npcPlaced.get(a.borrowed);
+        if (!placed) continue;
+        if (!a.sprite.visible) {
+          const w = tileToWorld(placed.pos);
+          a.sprite.setVisible(true).setPosition(w.x, w.y);
+          setLook(a.sprite, a.look, placed.facing);
+        } else if (!samePos(a.at, placed.pos)) {
+          const tiles = walkRoute(this.logic, a.at, placed.pos);
+          if (tiles && tiles.length > 0) this.walkers.set(a.borrowed, { mover: new Mover(), at: { ...a.at }, tiles, look: a.look, facing: a.facing });
+          else {
+            const w = tileToWorld(placed.pos);
+            a.sprite.setPosition(w.x, w.y);
+          }
+        }
+      }
+    }
     this.stageActors.clear();
     this.stageQueue = [];
     this.stageBlocking = null;

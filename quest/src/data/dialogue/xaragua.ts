@@ -26,8 +26,8 @@ function script(id: string, nodes: Record<string, DialogueNode>): DialogueScript
 }
 
 /** A line with stage directions (engine/stage.ts): the cues are acted out on the map, then the line shows. */
-function act(stage: StageCue[], speaker: string, text: string, set?: DialogueLine['set']): DialogueLine {
-  return set ? { speaker, text, stage, set } : { speaker, text, stage };
+function act(stage: StageCue[], speaker: string, text: string, set?: DialogueLine['set'], translation?: string): DialogueLine {
+  return { speaker, text, stage, ...(set ? { set } : {}), ...(translation ? { translation } : {}) };
 }
 
 /** A tile on the map the scene plays on. */
@@ -69,13 +69,27 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     nar('The ferry coach bumps against the pier at dawn. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
     say(Y, 'Yucayeque. Home.'),
     say(Y, 'And them. There were two ships when I left. Now there are three.'),
-    say(A, 'Gigi. Look, on the pier.'),
-    nar("At the end of the pier, a Crown sergeant weighs a fisher's catch on a hand scale. His marines load the baskets into a boat."),
-    say('marine_sergeant', 'Harbor fee. Half the catch, by order of the Governor.'),
+    act([{ do: 'place', actor: 'yari', look: 'yari', at: at(22, 25), facing: 'up' }], A, 'Gigi. Look, on the pier.'),
+    // Staged (owner rule, Oct 17): the fisher is up at the sergeant's scale, and gets shoved back.
+    act(
+      [
+        { do: 'place', actor: 'npc:canoe_fisher', at: at(22, 23), facing: 'left' },
+        { do: 'face', actor: 'npc:marine_sergeant', facing: 'right' },
+      ],
+      'marine_sergeant',
+      'Harbor fee. Half the catch, by order of the Governor.',
+    ),
     say('canoe_fisher', 'Half? Yesterday it was a fifth! I have six children!'),
-    nar('The sergeant shoves the old man. He stumbles back to the very edge of the pier.'),
+    act(
+      [
+        { do: 'walk', actor: 'npc:canoe_fisher', to: at(22, 24), facing: 'up', run: true },
+        { do: 'face', actor: 'npc:canoe_fisher', facing: 'up' },
+      ],
+      'marine_sergeant',
+      'Then feed them less. Out of my way, old man.',
+    ),
     say(Y, 'Put your hands on him again, sergeant. I dare you.'),
-    say('marine_sergeant', 'The cacique\'s girl. Back from Zetwal with friends.'),
+    act([{ do: 'face', actor: 'npc:marine_sergeant', facing: 'down' }], 'marine_sergeant', 'The cacique\'s girl. Back from Zetwal with friends.'),
     say('marine_sergeant', 'Marines! Fix bayonets. Teach the natives what the Charter protects.'),
     say(A, 'Gigi, they are coming at Yari!'),
     { speaker: G, text: 'Anissa, behind me. Yari, with me!', set: { 'battle.next': 'pier_marines', 'battle.after': 'pier_after' } },
@@ -93,12 +107,34 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   }),
   // Straight after the fight: the marines flee, and the fisher they were robbing speaks.
   simple('pier_after', [
-    say('marine_sergeant', 'Fall back! Back to the boat!'),
-    nar('The marines scramble down the ladder into their boat and row hard for the warship, leaving the baskets behind.'),
-    say('marine_sergeant', 'You\'ve raised a hand to the Crown, girl! The Governor will hear of this, every word!'),
-    say(Y, 'Tell him slowly. He reads every form twice.'),
-    nar('Along the beach, people come out of their houses to watch the boat go. The old fisher gathers his baskets.'),
-    say('canoe_fisher', 'Guatiao, Yari. And your friends. That is the first time anyone has made them put anything back.', 'Friend, Yari.'),
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 25), facing: 'up' },
+        { do: 'place', actor: 'sergeant', look: 'marine_sergeant', at: at(21, 23), facing: 'down' },
+        { do: 'place', actor: 'marine_a', look: 'crown_marine', at: at(22, 22), facing: 'down' },
+        { do: 'place', actor: 'marine_b', look: 'crown_marine', at: at(21, 21), facing: 'down' },
+      ],
+      'marine_sergeant',
+      'Fall back! Back to the customs house!',
+    ),
+    // Up the pier and away along the shore to the customs house, the sergeant shouting over his shoulder.
+    act(
+      [
+        { do: 'exit', actor: 'marine_b', to: at(29, 11), run: true, async: true },
+        { do: 'exit', actor: 'marine_a', to: at(29, 11), run: true, async: true },
+        { do: 'exit', actor: 'sergeant', to: at(29, 11), run: true, async: true },
+      ],
+      'marine_sergeant',
+      'You\'ve raised a hand to the Crown, girl! The Governor will hear of this, every word!',
+    ),
+    act([{ do: 'wait', ms: 1200 }], Y, 'Tell him slowly. He reads every form twice.'),
+    act(
+      [{ do: 'walk', actor: 'npc:canoe_fisher', to: at(21, 24), facing: 'down' }],
+      'canoe_fisher',
+      'Guatiao, Yari. And your friends. That is the first time anyone has made them put anything back.',
+      undefined,
+      'Friend, Yari.',
+    ),
     say(Y, 'Where is my father? Why did nobody stop them?'),
     say('canoe_fisher', 'The cacique is sick, Yari. Very sick. The elders meet without him tonight, about the Crown\'s paper.'),
     say(Y, '...Gianna, I have to go to him. The caney is at the top of the plaza, up the road.'),
@@ -133,7 +169,11 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   }),
   // The elders' council: the Charter, the seventh clause, and Yari.
   simple('xaragua_council', [
-    nar("The elders sit in a circle. The Governor's liaison stands in the middle, holding a paper with a red seal."),
+    act(
+      [{ do: 'place', actor: 'yari', look: 'yari', at: at(9, 5), facing: 'left' }],
+      '',
+      "The elders sit in a circle. The Governor's liaison stands in the middle, holding a paper with a red seal.",
+    ),
     say('crown_liaison', 'Honored elders. The Charter offers the protection of His Majesty\'s fleet, forever. In return, a small matter: the harbor.'),
     say('elder_charter', 'We cannot fight three warships with canoes. I say we sign, and live.'),
     say('elder_resist', 'We swore on the stones: "The harbor stays with the people who fish it." I will not unswear it.'),
@@ -149,7 +189,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say('elder_undecided', "Patricio's granddaughter asks us to wait. The cacique's daughter shouts at us. That is two voices."),
     say('elder_undecided', 'The vote waits. Bring us proof that the Crown\'s clause is real, or proof that it is not.'),
     say('crown_liaison', 'The Governor will hear of this.'),
-    nar('The liaison rolls up the Charter and leaves. Down at the harbor, a glint: someone in the customs house is watching.'),
+    // He rolls up the Charter and walks out, past Gianna, down the hall and out of the doors.
+    act([{ do: 'exit', actor: 'npc:crown_liaison', to: at(17, 25) }, { do: 'face', actor: 'yari', facing: 'right' }], Y, 'Run along to the Governor, then. Someone in the customs house has been watching us all day. I saw the glass.'),
     { speaker: A, text: 'Gigi, the songs said the first oath was carved in a cave. Where the water rises.', set: { 'story.council_defied': true } },
   ]),
   // Governor Thorne.
@@ -158,8 +199,16 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     first: {
       set: { 'story.thorne_met': true, 'clue.seventh_clause': true },
       lines: [
-        nar('The Governor stands at the window with a spyglass. He takes his time turning around.'),
-        say('thorne', 'Miss Limyè. The envoy\'s daughter, making a scene at a native council. Your mother would be so proud.'),
+        // He keeps his back turned at the window, spyglass up, and takes his time turning round.
+        act(
+          [
+            { do: 'face', actor: 'npc:thorne', facing: 'up' },
+            { do: 'wait', ms: 1400 },
+            { do: 'face', actor: 'npc:thorne', facing: 'down' },
+          ],
+          'thorne',
+          'Miss Limyè. The envoy\'s daughter, making a scene at a native council. Your mother would be so proud.',
+        ),
         say(G, 'You know my mother?'),
         say('thorne', 'Everyone at the Throne knows your mother. A charming woman. She signs what is put in front of her, for the sake of peace.'),
         say(G, 'That is not true.'),
@@ -331,15 +380,36 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     { speaker: Y, text: 'He said the cave. Out the back, Gianna. Now.', set: { 'story.anaco_taken': true, 'travel.next': 'xaragua-plaza/caney_back' } },
   ]),
   simple('attack_plaza', [
-    nar('Night. The stalls\' thatch is burning. Crown drums beat on the dance ground, and red banners go up by the steps.'),
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(8, 6), facing: 'right' },
+        { do: 'enter', actor: 'drummer', look: 'crown_marine', from: at(14, 5), to: at(13, 11), run: true, async: true },
+        { do: 'enter', actor: 'bannerman', look: 'crown_musketeer', from: at(15, 5), to: at(16, 11), run: true },
+        { do: 'face', actor: 'drummer', facing: 'down' },
+        { do: 'face', actor: 'bannerman', facing: 'down' },
+      ],
+      '',
+      'Night. The stalls\' thatch is burning. Crown drums beat on the dance ground, and red banners go up by the steps.',
+    ),
     say(Y, 'On the batey. They are standing on the batey.'),
     say(A, 'Gigi, I\'m scared.'),
     say(G, 'Hold my hand. Down to the village, then west to the gardens and the cave. Quietly.'),
   ]),
   // The patrol on the village trail west: the sergeant from the pier.
+  // Staged: the sergeant from the pier spots them and runs up the trail with his patrol.
   simple('attack_village', [
-    nar('Smoke over the village. Doors kicked in. A patrol of marines stands across the trail west, torches up.'),
-    say('marine_sergeant', 'You! The cacique\'s girl! I told you the Governor would hear.'),
+    act([{ do: 'place', actor: 'yari', look: 'yari', at: at(22, 1), facing: 'down' }], '', 'Smoke over the village. Doors kicked in. Torches moving on the trail west.'),
+    act(
+      [
+        { do: 'enter', actor: 'marine_a', look: 'crown_marine', from: at(0, 15), to: at(20, 5), facing: 'up', run: true, async: true },
+        { do: 'enter', actor: 'marine_b', look: 'crown_musketeer', from: at(0, 16), to: at(22, 5), facing: 'up', run: true, async: true },
+        { do: 'look', actor: 'npc:patrol_sergeant' },
+        { do: 'walk', actor: 'npc:patrol_sergeant', to: at(21, 4), facing: 'up', run: true },
+        { do: 'look', actor: 'player' },
+      ],
+      'marine_sergeant',
+      'You! The cacique\'s girl! I told you the Governor would hear.',
+    ),
     say(Y, 'And I told you to tell him slowly.'),
     { speaker: 'marine_sergeant', text: 'Take her!', set: { 'battle.next': 'village_patrol', 'battle.after': 'patrol_after' } },
   ]),
@@ -354,15 +424,49 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     done: { lines: [say('marine_sergeant', 'Not again.')] },
   }),
   simple('patrol_after', [
-    say('marine_sergeant', 'Fall back! Fall back to the customs house!'),
-    nar('The patrol scatters into the smoke. A door opens a crack: the old fisher from the pier.'),
-    say('canoe_fisher', 'Yari! This way. The resistance is in the old cave in the gardens. Everyone who can still run is going there.'),
-    { speaker: Y, text: 'The cave. Come on.', set: { 'story.patrol_beaten': true } },
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 1), facing: 'down' },
+        { do: 'place', actor: 'sergeant', look: 'marine_sergeant', at: at(21, 4), facing: 'up' },
+        { do: 'place', actor: 'marine_a', look: 'crown_marine', at: at(20, 5), facing: 'up' },
+        { do: 'place', actor: 'marine_b', look: 'crown_musketeer', at: at(22, 5), facing: 'up' },
+      ],
+      'marine_sergeant',
+      'Not again! Fall back! Fall back to the customs house!',
+    ),
+    act(
+      [
+        { do: 'exit', actor: 'marine_a', to: at(29, 11), run: true, async: true },
+        { do: 'exit', actor: 'marine_b', to: at(29, 11), run: true, async: true },
+        { do: 'exit', actor: 'sergeant', to: at(29, 11), run: true },
+      ],
+      Y,
+      'And stay there!',
+    ),
+    // The old fisher from the pier comes out of his door and hurries over.
+    act(
+      [{ do: 'enter', actor: 'fisher', look: 'canoe_fisher', from: at(18, 8), to: at(21, 2), facing: 'up' }],
+      'canoe_fisher',
+      'Yari! This way. The resistance is in the old cave in the gardens. Everyone who can still run is going there.',
+    ),
+    act([{ do: 'exit', actor: 'fisher', to: at(18, 8), async: true }], Y, 'The cave. Come on.', { 'story.patrol_beaten': true }),
   ]),
   // The refuge in the cave the party drained: the end of the first half.
+  // Staged: the resistance is already here; the camp leader comes up to Gianna; at the end Yari and Anissa
+  // go over to the wall where they will hide.
   simple('cave_refuge', [
-    nar('The cave is full of people: fishers, farmers, children, the healer. They sit on the dry chamber floor by lamplight.'),
-    say('camp_leader', 'Envoy\'s daughter. Again. You never saw the camp. Now you are standing in it.'),
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(15, 20), facing: 'up' },
+        { do: 'place', actor: 'leader', look: 'camp_leader', at: at(10, 14), facing: 'right' },
+        { do: 'place', actor: 'fisher', look: 'canoe_fisher', at: at(18, 14), facing: 'left' },
+        { do: 'place', actor: 'elder', look: 'elder_resist', at: at(19, 17), facing: 'left' },
+        { do: 'place', actor: 'healer', look: 'behique', at: at(17, 18), facing: 'up' },
+      ],
+      '',
+      'The cave is full of people: fishers, farmers, children, the healer. They sit on the dry chamber floor by lamplight.',
+    ),
+    act([{ do: 'walk', actor: 'leader', to: at(14, 18), facing: 'down' }], 'camp_leader', 'Envoy\'s daughter. Again. You never saw the camp. Now you are standing in it.'),
     say('camp_leader', 'This chamber has been dry for fifty years. Luck, the old people say. Someone left the low gate open.'),
     say(A, '(whispering) Not luck, Gigi.'),
     say('camp_leader', 'The Crown has the harbor, the caney and the cacique. Curfew at dark. Any Yaguana on the streets goes to the ships.'),
@@ -374,7 +478,18 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say(G, 'Not this time. Thorne knows you glow, Anissa. Stay with Yari. Keep each other safe.'),
     say(A, '...Come back before the lamp goes out.'),
     say(Y, 'Gianna. Bring my father home.'),
-    { speaker: '', text: '(Yari and Anissa stay hidden in the cave.)', set: { 'story.refuge': true, 'story.occupied': true, 'story.yari_hidden': true, 'party.anissa': false } },
+    act(
+      [
+        { do: 'walk', actor: 'leader', to: at(10, 14), facing: 'right', async: true },
+        { do: 'walk', actor: 'yari', to: at(11, 17), facing: 'up', async: true },
+        { do: 'walk', actor: 'follower', to: at(12, 17), facing: 'up' },
+        { do: 'face', actor: 'yari', facing: 'down' },
+        { do: 'face', actor: 'follower', facing: 'down' },
+      ],
+      A,
+      'We\'ll be right here, Gigi. Go.',
+      { 'story.refuge': true, 'story.occupied': true, 'story.yari_hidden': true, 'party.anissa': false },
+    ),
   ]),
   // The refuge, after.
   simple('resistance_leader_talk', [
@@ -860,10 +975,25 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     first: {
       set: { 'story.thorne_ambush': true },
       lines: [
-        nar('A dugout canoe, black with age, tied to a post on the ledge. Its paddles are wrapped in oiled cloth.'),
+        act(
+          [{ do: 'place', actor: 'yari', look: 'yari', at: at(18, 4), facing: 'down' }],
+          '',
+          'A dugout canoe, black with age, tied to a post on the ledge. Its paddles are wrapped in oiled cloth.',
+        ),
         say(Y, 'Still here. Waiting for us, all this time.'),
-        nar('You ease it into the water. Then a lantern unshutters at the sea mouth, and a longboat slides across the way out.'),
-        say('thorne', 'Miss Limyè. I did wonder why the envoy kept walking to the beach.'),
+        // A lantern opens at the sea mouth: the Governor's longboat, across the way out.
+        {
+          speaker: 'thorne',
+          text: 'Miss Limyè. I did wonder why the envoy kept walking to the beach.',
+          fx: 'flash',
+          stage: [
+            { do: 'sync' },
+            { do: 'place', actor: 'marine', look: 'crown_marine', at: at(23, 3), facing: 'left' },
+            { do: 'place', actor: 'musketeer', look: 'crown_musketeer', at: at(23, 5), facing: 'left' },
+            { do: 'face', actor: 'player', facing: 'right' },
+            { do: 'face', actor: 'yari', facing: 'right' },
+          ],
+        },
         say('thorne', 'The Accord protects you. It says nothing about the cacique\'s daughter, or the little one who glows.'),
         say(G, 'Then you will have to go through me to reach them, Governor.'),
         { speaker: 'thorne', text: 'If you insist. Marines!', set: { 'battle.next': 'thorne_blockade', 'battle.after': 'escape_after' } },
@@ -881,14 +1011,31 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     },
     done: { lines: [say('thorne', '...')] },
   }),
+  // Staged: Thorne reels back on his longboat and goes over the side; his marines haul him out.
   simple('escape_after', [
-    nar('Thorne staggers back against the gunwale. The longboat rocks, once, twice, and over he goes into the black water.'),
-    say('thorne', 'Get me OUT! Never mind them, get me out!'),
-    nar('His marines drop their oars to haul the Governor back aboard, wig and all.'),
-    say('thorne', 'This changes nothing, Miss Limyè! The Charter stands!'),
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(18, 4), facing: 'right' },
+        { do: 'face', actor: 'player', facing: 'right' },
+        { do: 'place', actor: 'thorne', look: 'thorne', at: at(22, 3), facing: 'left' },
+        { do: 'place', actor: 'marine', look: 'crown_marine', at: at(23, 3), facing: 'left' },
+        { do: 'place', actor: 'musketeer', look: 'crown_musketeer', at: at(23, 5), facing: 'left' },
+      ],
+      'thorne',
+      'Impossible. I am the Governor of this whole...',
+    ),
+    { speaker: 'thorne', text: 'Get me OUT! Never mind them, get me out!', fx: 'shake', stage: [{ do: 'exit', actor: 'thorne', to: at(22, 6) }] },
+    act(
+      [
+        { do: 'walk', actor: 'marine', to: at(22, 5), async: true },
+        { do: 'walk', actor: 'musketeer', to: at(23, 6) },
+        { do: 'place', actor: 'thorne', look: 'thorne', at: at(22, 4), facing: 'left' },
+      ],
+      'thorne',
+      'This changes nothing, Miss Limyè! The Charter stands!',
+    ),
     say(G, 'Then we will come back with the Accord, and read it beside your Charter.'),
-    nar('The canoe slips past the longboat and out under the cliffs, into the dark.'),
-    say(Y, 'Father. I\'ll come back. With every friend Caona ever had.'),
+    act([{ do: 'face', actor: 'yari', facing: 'down' }], Y, 'Into the canoe. Father. I\'ll come back. With every friend Caona ever had.'),
     { speaker: A, text: 'Gigi, look. Lights out there. A ship with no lanterns.', set: { 'story.escaped': true, 'travel.next': 'zetwal-harbor/harbor_return', 'voyage.next': 'xaragua_zetwal' } },
   ]),
 

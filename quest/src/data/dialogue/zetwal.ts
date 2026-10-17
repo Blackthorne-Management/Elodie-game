@@ -106,7 +106,12 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Anissa. Stay close to your sister.' },
         say(A, '...I will.'),
         { text: 'The Gaze sees you both. So do I.' },
-        nar("Mother's carriage rolls out through the east gate, toward the Throne.", { fx: 'fade', set: { 'story.elodie_left': true } }),
+        // Staged (owner rule, Oct 17): she walks out through the gate to her carriage.
+        nar("Mother's carriage rolls out through the east gate, toward the Throne.", {
+          fx: 'fade',
+          set: { 'story.elodie_left': true },
+          stage: [{ do: 'exit', actor: 'npc:elodie', to: { x: 39, y: 19 } }],
+        }),
       ],
     },
   }),
@@ -621,7 +626,13 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'There you are. Did your mother get away?' },
         say(G, 'Her carriage just left.'),
         { text: "Good. Then she can't scold me for this." },
-        nar('Grandmother opens a drawer in the map table and takes out a small gold locket shaped like the sun.'),
+        nar('Grandmother opens a drawer in the map table and takes out a small gold locket shaped like the sun.', {
+          stage: [
+            { do: 'face', actor: 'npc:anicette', facing: 'right' },
+            { do: 'wait', ms: 1100 },
+            { do: 'face', actor: 'npc:anicette', facing: 'player' },
+          ],
+        }),
         { text: 'Your grandfather made this the year of the Accord. Two halves of a promise, he said. This half is ours.' },
         { text: 'It remembers, Gianna. Where the air shimmers, it will show you what that place remembers.' },
         say(G, 'Grandmother, that sounds like a story for children.'),
@@ -860,8 +871,16 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   // Grandfather and Grandmother on the long pier; the news has come by pigeon. Patricio asks Gianna to go to
   // Ardencia (owner decision, Oct 15: Chapter 3, Patricio's request).
   simple('zetwal_return', [
-    nar('Dawn over Pòdlimyè. The trader ties up at the long pier, and two figures are waiting at the end of it.'),
-    say('anicette', 'Gianna! Anissa! Oh, my girls. The pigeons came yesterday. The Crown has Yucayeque.'),
+    nar('Dawn over Pòdlimyè. The trader ties up at the long pier, and two figures are waiting at the end of it.', {
+      stage: [{ do: 'place', actor: 'yari', look: 'yari', at: { x: 31, y: 13 }, facing: 'up' }],
+    }),
+    // Staged: Grandmother hurries down the pier, Grandfather follows on his cane.
+    say('anicette', 'Gianna! Anissa! Oh, my girls. The pigeons came yesterday. The Crown has Yucayeque.', {
+      stage: [
+        { do: 'walk', actor: 'npc:anicette_home', to: { x: 31, y: 12 }, facing: 'down', run: true, async: true },
+        { do: 'walk', actor: 'npc:patricio_home', to: { x: 30, y: 12 }, facing: 'down' },
+      ],
+    }),
     say(A, 'Grandmother! We sailed in a canoe! And Gigi knocked a governor into the sea!'),
     say('patricio_old', 'Did she.'),
     say('patricio_old', 'And this is Caona\'s granddaughter. You have her eyes, child. She would have hit him too.'),

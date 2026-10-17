@@ -778,7 +778,12 @@ async function playAct(browser, errors) {
           if (await handleShowcase(page, showcases, shots)) continue;
           const s = await finishTyping(page);
           if (s.mode !== 'dialogue') break;
-          // The staged Crown attack (owner rule: shown, not told): the marines stand at Gianna's face.
+          // Every staged scene (owner rule: shown, not told): one picture of the actors in place, per map.
+          if (s.stage?.actors.length && !stagedShots.has(`map:${s.mapId}`)) {
+            stagedShots.add(`map:${s.mapId}`);
+            await shoot(page, `staged-${s.mapId}`, shots);
+          }
+          // The staged Crown attack: the marines stand at Gianna's face.
           const lt = s.stage?.actors.find((a) => a.id === 'lieutenant');
           if (lt && !stagedShots.has('marines') && s.dialogue?.speaker === 'Marine lieutenant') {
             stagedShots.add('marines');

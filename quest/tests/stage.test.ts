@@ -12,7 +12,7 @@ const script = (id: string): DialogueScript => CONTENT.dialogue[id]!;
 
 describe('stage directions', () => {
   it('every staged scene uses looks that exist and moves only people on stage', () => {
-    const problems = Object.values(CONTENT.dialogue).flatMap((d) => stageProblems(d, looks));
+    const problems = Object.values(CONTENT.dialogue).flatMap((d) => stageProblems(d, looks, new Set(Object.keys(CONTENT.npcs))));
     expect(problems).toEqual([]);
   });
 
