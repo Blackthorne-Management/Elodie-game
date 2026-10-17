@@ -836,8 +836,8 @@ async function playAct(browser, errors) {
   check(s.flags['story.caona_joined'] === true && s.flags['clue.drum_full'] === true, 'the areíto Echo played the whole drum song, and Caona joined the Echo party');
   check(s.flags['story.oath_found'] === true, 'the record house opened and the oath stone was read');
   check(s.flags['story.anaco_taken'] === true && s.flags['story.patrol_beaten'] === true, 'the Crown attack: the caney fight and the patrol fight were won in the browser, and Anaco was taken');
-  check(s.flags['story.refuge'] === true && s.flags['story.yari_hidden'] === true && s.mapId === 'xaragua-cave', 'the refuge: Yari and Anissa hide in the cave, Gianna walks on alone');
-  check(s.follower === null, 'Anissa no longer follows Gianna in the occupied city');
+  check(s.flags['story.refuge'] === true && s.flags['story.escape_night'] === true, 'the refuge: Yari and Anissa hid in the cave, then came out for the escape');
+  check(s.flags['story.yari_hidden'] === false && s.flags['party.anissa'] === true && s.follower !== null, 'Yari is back in the party, and Anissa follows Gianna again');
   check(s.flags['story.papers_checked'] === true && s.flags['story.anaco_found'] === true, 'the occupied city: papers shown at the checkpoint, and the three clues place Anaco in the customs cellar');
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true, 'the envoy visited Anaco with the fever bark, and carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
