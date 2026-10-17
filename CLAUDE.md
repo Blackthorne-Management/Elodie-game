@@ -52,6 +52,16 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
   the characters physically walk in, walk up to whoever they speak to, act it out and walk off on the map, with their
   lines spoken there. Sounds and screen shake are fine for off-screen events (cannon fire); narration text alone is not
   enough for anything that happens in front of the party.
+- Model split (owner decision, Oct 17): one central session plans, builds and checks everything, and hands
+  subtasks to helpers on the model that fits:
+  - Fable: the hardest design and review work (a chapter's story and puzzle outline, a bug that survives two
+    fixes, a review before a deploy). Use it sparingly; it costs the most.
+  - Opus: the main builder and coordinator (planning with the owner, engine work, cross-file changes, judging
+    test runs).
+  - Sonnet: routine content once a pattern exists (staged dialogue, map edits, tests, porting to the demo, docs).
+  - Haiku: mechanical work (searches, scanning smoke logs, content checks, renames, data tables).
+  For a big decision, have two models review the plan separately and bring the owner where they agree and differ.
+  Save every review in full to a file the owner can read; never summarize one away.
 - Netlify credits (owner decision, Oct 16; each deploy costs 15 credits, 3,000 a month): every commit message
   carries `[skip netlify]` so pushes do not build. Deploy (a push without the tag) only after a big chunk of the
   game is done, or when the owner asks.
