@@ -48,6 +48,10 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
   ```
   then http://localhost:5180 (`npm.cmd run dev -- --host` for a phone on the same Wi-Fi; `?chapter=2` jumps to
   Chapter 2, in a private window).
+- Quest story moments are shown, not told (owner rule, Oct 17): when people arrive, fight, flee, are taken or leave,
+  the characters physically walk in, walk up to whoever they speak to, act it out and walk off on the map, with their
+  lines spoken there. Sounds and screen shake are fine for off-screen events (cannon fire); narration text alone is not
+  enough for anything that happens in front of the party.
 - Netlify credits (owner decision, Oct 16; each deploy costs 15 credits, 3,000 a month): every commit message
   carries `[skip netlify]` so pushes do not build. Deploy (a push without the tag) only after a big chunk of the
   game is done, or when the owner asks.
