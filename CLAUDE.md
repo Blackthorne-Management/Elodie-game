@@ -39,8 +39,15 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
 - Before each build, describe what you are going to do and wait for the owner's approval before continuing.
 - Ask questions one at a time, each with the reason behind it.
 - After every command and run, end the reply with the link to the quest: https://zesty-puffpuff-852680.netlify.app/quest/
-  (it updates only when a push is deployed, see below). The owner tests locally day to day: `cd quest`, `git pull`,
-  `npm run dev` (http://localhost:5180; `npm run dev -- --host` for a phone on the same Wi-Fi).
+  (it updates only when a push is deployed, see below), then the exact commands to play it locally (owner request,
+  Oct 17). The owner uses Windows PowerShell, where `npm` is blocked by the execution policy, so give them as:
+  ```
+  cd "D:\Blackthorne Management\Projects\elodie-game\quest"
+  git pull
+  npm.cmd run dev
+  ```
+  then http://localhost:5180 (`npm.cmd run dev -- --host` for a phone on the same Wi-Fi; `?chapter=2` jumps to
+  Chapter 2, in a private window).
 - Netlify credits (owner decision, Oct 16; each deploy costs 15 credits, 3,000 a month): every commit message
   carries `[skip netlify]` so pushes do not build. Deploy (a push without the tag) only after a big chunk of the
   game is done, or when the owner asks.
