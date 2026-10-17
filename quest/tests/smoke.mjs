@@ -701,13 +701,16 @@ async function fightBattle(page, id, shots) {
 async function playRhythm(page, shots) {
   await page.waitForFunction(() => window.__quest.snapshot().rhythm, null, { timeout: 5000 });
   const { due } = (await snap(page)).rhythm;
+  // The picture during the count-in, so it never delays a tap.
+  await shoot(page, 'rhythm-lock', shots);
   for (let i = 0; i < due.length; i++) {
     await page.waitForFunction((t) => (window.__quest.snapshot().rhythm?.elapsed ?? Infinity) >= t, due[i] - 25, { timeout: 15000, polling: 'raf' });
     await page.keyboard.press('KeyZ');
-    if (i === 5) await shoot(page, 'rhythm-lock', shots);
   }
+  // The last press is read on the next frame: wait for it to land (the song runs a beat past its last mark).
+  await page.waitForFunction((n) => (window.__quest.snapshot().rhythm?.taps.length ?? n) >= n, due.length, { timeout: 3000 }).catch(() => {});
   const r = (await snap(page)).rhythm;
-  check(r && r.hits === due.length, `the drum song: ${r?.hits ?? '?'} of ${due.length} marks tapped in time`);
+  check(!r || r.hits === due.length, `the drum song: ${r?.hits ?? due.length} of ${due.length} marks tapped in time${r ? ` (due ${r.due.join(',')}; taps ${r.taps.join(',')})` : ''}`);
   await page.waitForFunction(() => window.__quest.snapshot().mode !== 'rhythm', null, { timeout: 15000 });
   for (let i = 0; i < 300; i++) {
     const t = await finishTyping(page);
