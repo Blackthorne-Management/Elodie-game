@@ -15,6 +15,7 @@ export const ACT1: QuestDef = {
       title: "Mother's address",
       detail: 'Mother speaks from the stage at the north of the plaza. Go and listen.',
       done: { flag: 'story.heard_speech' },
+      goals: [{ map: 'zetwal-town', at: { x: 17, y: 4 } }],
       hints: [
         "Gigi... isn't Mother about to speak? Everyone's going north.",
         'The stage is at the top of the plaza, past the fountain.',
@@ -26,6 +27,7 @@ export const ACT1: QuestDef = {
       title: 'See Mother off',
       detail: 'Her carriage waits at the east gate, at the end of the road south-east of the plaza.',
       done: { flag: 'story.elodie_left' },
+      goals: [{ map: 'zetwal-town', at: { x: 36, y: 20 } }],
       hints: [
         'Mother said the east gate. She will not wait forever.',
         'The road goes east from below the plaza, all the way to the gate.',
@@ -37,6 +39,7 @@ export const ACT1: QuestDef = {
       title: 'Grandmother is waiting',
       detail: "Mother says Grandmother Anicette has something for you, at home in Grandfather's study.",
       done: { flag: 'item.sun_locket' },
+      goals: [{ map: 'zetwal-house', at: { x: 12, y: 4 } }],
       hints: [
         'Grandmother is at home. I want to see what she has for you.',
         'Home is the house on the north-west side of the plaza.',
@@ -48,6 +51,7 @@ export const ACT1: QuestDef = {
       title: 'What the Locket remembers',
       detail: 'Stand on the shimmering tiles by the map table and press Echo. Then talk to the people there.',
       done: { flag: 'story.warroom_echo' },
+      goals: [{ map: 'zetwal-house', at: { x: 14, y: 6 } }],
       hints: [
         'The air by the map table is shimmering, Gigi. Do you see it?',
         'Stand on the shimmering tiles and press Echo. I will hold the door.',
@@ -59,6 +63,7 @@ export const ACT1: QuestDef = {
       title: 'Leave word for later',
       detail: 'Grandfather keeps copies of his papers under the loose board by the window seat. Leave the night orders there.',
       done: { flag: 'anchor.night_orders' },
+      goals: [{ map: 'zetwal-house', at: { x: 17, y: 2 } }],
       hints: [
         "Grandfather hid things for later, didn't he? Grandmother always says so.",
         'The aide said where the copy goes: the loose board by the window.',
@@ -70,6 +75,10 @@ export const ACT1: QuestDef = {
       title: 'Fifty years under the floor',
       detail: 'Return to the present on the shimmering tiles, then look under the window seat.',
       done: { flag: 'clue.night_orders' },
+      goals: [
+        { if: { notFlag: 'story.warroom_returned' }, map: 'zetwal-house', at: { x: 14, y: 6 } },
+        { map: 'zetwal-house', at: { x: 17, y: 2 } },
+      ],
       hints: [
         'Come back, Gigi. I want to see if it is still there.',
         'Press Echo on the shimmering tiles to come back, then look under the window seat.',
@@ -81,6 +90,12 @@ export const ACT1: QuestDef = {
       title: 'Cross to the Temple island',
       detail: 'The rope bridge has fallen. The night orders: turn the winch to lower the Chain Bridge, then drive the iron pin through the pawl.',
       done: { flag: 'story.bridge_crossed' },
+      goals: [
+        { if: { flag: 'anchor.chain_bridge' }, map: 'zetwal-town', at: { x: 31, y: 9 } },
+        { if: { flag: 'story.winch_lowered' }, map: 'zetwal-town', at: { x: 29, y: 8 } },
+        { if: { flag: 'story.bridge_echo_seen' }, map: 'zetwal-town', at: { x: 28, y: 8 } },
+        { map: 'zetwal-town', at: { x: 28, y: 10 } },
+      ],
       hints: [
         'Gigi, what if the old bridge could just... go back?',
         'The air shimmers at the bridgehead, by the old winch. Grandfather was there that night.',
@@ -92,6 +107,7 @@ export const ACT1: QuestDef = {
       title: 'Find Grandfather',
       detail: 'Grandfather is at the Gaze lamp, inside the temple.',
       done: { flag: 'story.met_patricio' },
+      goals: [{ map: 'zetwal-temple', at: { x: 13, y: 3 } }],
       hints: [
         'Grandfather will be at the lamp. He always is, on this night.',
         "The temple is north of the landing. He'll be inside, by the lamp.",
@@ -103,6 +119,7 @@ export const ACT1: QuestDef = {
       title: 'The reading of the names',
       detail: 'The Gaze lamp will not take a flame. Grandfather asks you to try.',
       done: { flag: 'story.anissa_woke' },
+      goals: [{ map: 'zetwal-temple', at: { x: 14, y: 3 } }],
       hints: [
         'Will you try the lamp, Gigi? Grandfather asked you.',
         'Stand in front of the lamp and try to light it.',
@@ -114,6 +131,7 @@ export const ACT1: QuestDef = {
       title: 'A canoe at the dock',
       detail: 'Someone has come across the water to the island dock, south of the temple.',
       done: { flag: 'story.yari_asked' },
+      goals: [{ map: 'zetwal-temple', at: { x: 14, y: 12 } }],
       hints: [
         'Someone came across the water. I saw a canoe.',
         'The dock is at the south end of the island.',
@@ -126,6 +144,12 @@ export const ACT1: QuestDef = {
       title: "The envoy's papers",
       detail: "The Crown boards every boat at Xaraguá. Ask the clerk at the Hall of the Accord, up the steps at the head of the plaza, for envoy papers.",
       done: { flag: 'story.envoy_papers' },
+      goals: [
+        { if: { flag: 'story.papers_sealed' }, map: 'zetwal-hall', at: { x: 32, y: 5 } },
+        { if: { flag: 'item.elodie_seal' }, map: 'zetwal-hall', at: { x: 21, y: 25 } },
+        { if: { flag: 'story.papers_asked' }, map: 'zetwal-market', at: { x: 28, y: 13 } },
+        { map: 'zetwal-hall', at: { x: 21, y: 25 } },
+      ],
       hints: [
         'Yari said we need papers, Gigi. The Hall writes them.',
         "The Hall of the Accord is up the steps at the head of the plaza. The clerk needs Mother's seal; the engraver in the Iron Market has it.",
@@ -138,6 +162,7 @@ export const ACT1: QuestDef = {
       title: 'The boar on the Cane Road',
       detail: 'A boar is charging the cane cutters on the Cane Road, past the east gate. Yari will not sail until it is dealt with.',
       done: { flag: 'encounter.wilds.boar.won' },
+      goals: [{ map: 'zetwal-road', at: { x: 9, y: 12 } }],
       hints: [
         "Yari won't leave the cane cutters with that boar, Gigi. Neither will I.",
         'The Cane Road is past the east gate, at the end of the road south-east of the plaza.',
@@ -149,6 +174,7 @@ export const ACT1: QuestDef = {
       title: 'Before the tide',
       detail: "Yari's canoe waits at the island dock. Finish your work in Pòdlimyè (your Quests page lists it), then go to the canoe and sail.",
       done: { flag: 'act1.complete' },
+      goals: [{ map: 'zetwal-temple', at: { x: 16, y: 18 } }],
       hints: [
         "Yari's canoe is at the island dock. Are we going soon, Gigi?",
         'Finish your errands in the city first if you like. Then go to the canoe at the dock.',
@@ -178,6 +204,7 @@ export const ACT2: QuestDef = {
       title: 'Trouble on the pier',
       detail: 'Crown marines are taking the fishers\' catch at the end of the pier. Stand with Yari.',
       done: { flag: 'encounter.xaragua_story.pier.won' },
+      goals: [{ map: 'xaragua-village', at: { x: 21, y: 23 } }],
       hints: [
         'Gigi, those marines are taking the fish. Yari looks ready to fight them.',
         'The sergeant is on the pier, right in front of us. Talk to him.',
@@ -189,6 +216,7 @@ export const ACT2: QuestDef = {
       title: "Yari's father",
       detail: 'Cacique Anaco is ill. His great house, the caney, stands at the head of the Areíto Plaza, up the road from the pier.',
       done: { flag: 'story.anaco_met' },
+      goals: [{ map: 'xaragua-caney', at: { x: 33, y: 4 } }],
       hints: [
         'Yari keeps looking up the hill. Her father is sick, Gigi.',
         'The caney is the long house at the top of the dance ground, north of the village.',
@@ -200,6 +228,7 @@ export const ACT2: QuestDef = {
       title: "The elders' council",
       detail: 'The elders meet in the council circle, on the west side of the caney, to vote on the Crown\'s Charter.',
       done: { flag: 'story.council_defied' },
+      goals: [{ map: 'xaragua-caney', at: { x: 7, y: 6 } }],
       hints: [
         'The elders are deciding about the Charter tonight. Yari will want to be there.',
         'The council circle is the room on the west side of the caney.',
@@ -211,6 +240,7 @@ export const ACT2: QuestDef = {
       title: "The Governor's eye",
       detail: 'Governor Thorne has asked to see the envoy\'s daughter, in the Crown Customs House on the harbor.',
       done: { flag: 'story.thorne_met' },
+      goals: [{ map: 'xaragua-customs', at: { x: 10, y: 3 } }],
       hints: [
         'A Governor wants to see you, Gigi. That sounds bad and important.',
         'The customs house is the stone one by the harbor, with the red roof.',
@@ -222,6 +252,7 @@ export const ACT2: QuestDef = {
       title: 'A light for the cave',
       detail: 'The first oath was carved in the petroglyph cave in the cassava gardens, and the cave is dark. Find a lamp.',
       done: { flag: 'item.oil_lamp' },
+      goals: [{ map: 'xaragua-village', at: { x: 23, y: 10 } }],
       hints: [
         'The keepers said the oath was carved in a cave. It is dark in caves, Gigi.',
         'Everyone in the village buys lamp oil from the same seller. She stands by the customs house.',
@@ -233,6 +264,12 @@ export const ACT2: QuestDef = {
       title: 'What the stones remember',
       detail: 'The petroglyph cave is under the rocks in the cassava gardens, west of the village. Its carved chamber is flooded.',
       done: { flag: 'clue.drum_pattern' },
+      goals: [
+        { if: { flag: 'story.cave_drained_seen' }, map: 'xaragua-cave', at: { x: 5, y: 2 } },
+        { if: { flag: 'anchor.cave_sluice' }, map: 'xaragua-cave', at: { x: 14, y: 14 } },
+        { if: { flag: 'story.cave_echo_seen' }, map: 'xaragua-cave', at: { x: 3, y: 7 } },
+        { map: 'xaragua-cave', at: { x: 14, y: 14 } },
+      ],
       hints: [
         'The water came from somewhere, and it has to go somewhere.',
         'In the memory the cave was dry. Look at both gates. The high one is buried now, isn\'t it?',
@@ -244,6 +281,7 @@ export const ACT2: QuestDef = {
       title: 'The last bar',
       detail: 'The cave wall shows the areíto\'s drum song, but its last bar is worn away. Hear it played on the dance ground, fifty years ago.',
       done: { flag: 'clue.drum_full' },
+      goals: [{ map: 'xaragua-plaza', at: { x: 14, y: 13 } }],
       hints: [
         'Two thirds of a song is not a song, Gigi. Someone has to play it for us.',
         'The air shimmers in the middle of the dance ground on the Areíto Plaza.',
@@ -255,6 +293,10 @@ export const ACT2: QuestDef = {
       title: 'The record house',
       detail: 'The standing stones round the dance ground open the council\'s record house to the whole drum song.',
       done: { flag: 'story.oath_found' },
+      goals: [
+        { if: { flag: 'story.lock_opened' }, map: 'xaragua-record', at: { x: 7, y: 2 } },
+        { map: 'xaragua-plaza', at: { x: 21, y: 12 } },
+      ],
       hints: [
         'The stones round the dance ground are carved with drums. Drums are for tapping.',
         'Tap the whole song on the standing stone by the record house: long marks are two beats, short marks one.',
@@ -266,6 +308,7 @@ export const ACT2: QuestDef = {
       title: 'Proof for the elders',
       detail: 'The oath stone names Caona, Patricio and Benny, and says nothing about giving the harbor away. The elders asked for proof.',
       done: { flag: 'story.proof_shown' },
+      goals: [{ map: 'xaragua-caney', at: { x: 9, y: 6 } }],
       hints: [
         'The elders said: bring proof. We have it now, Gigi.',
         'The elders meet in the council circle in the caney.',
@@ -277,6 +320,7 @@ export const ACT2: QuestDef = {
       title: 'The night the Crown came',
       detail: 'The Crown has taken the caney and the cacique. Anaco said: take the girls to the cave. Get to the petroglyph cave in the cassava gardens.',
       done: { flag: 'story.refuge' },
+      goals: [{ map: 'xaragua-cave', at: { x: 14, y: 19 } }],
       hints: [
         'Anaco said the cave, Gigi. The one we drained.',
         'Down through the plaza to the village, then west to the cassava gardens.',
@@ -288,6 +332,12 @@ export const ACT2: QuestDef = {
       title: 'Where is Anaco held?',
       detail: 'The Crown holds Yucayeque. Only Gianna, Zetwal\'s envoy, can walk the streets. Find out where they keep the cacique.',
       done: { flag: 'story.anaco_found' },
+      goals: [
+        { if: { notFlag: 'clue.held_seller' }, map: 'xaragua-village', at: { x: 23, y: 10 } },
+        { if: { notFlag: 'clue.held_ledger' }, map: 'xaragua-customs', at: { x: 5, y: 2 } },
+        { if: { notFlag: 'story.papers_checked' }, map: 'xaragua-village', at: { x: 23, y: 3 } },
+        { map: 'xaragua-caney', at: { x: 16, y: 21 } },
+      ],
       hints: [
         'Someone in the city has seen where they took him.',
         'The marines talk. So do the people they are guarding.',
@@ -299,6 +349,12 @@ export const ACT2: QuestDef = {
       title: 'The envoy\'s visit',
       detail: 'Anaco is in the customs house cellar, with his fever. The healer in the cave wants him to have fever bark. An envoy may visit a prisoner: make Thorne say yes.',
       done: { flag: 'story.anaco_visited' },
+      goals: [
+        { if: { flag: 'story.visit_granted' }, map: 'xaragua-cellar', at: { x: 6, y: 2 } },
+        { if: { flag: 'item.fever_bark' }, map: 'xaragua-customs', at: { x: 10, y: 3 } },
+        { if: { flag: 'story.bark_asked' }, map: 'xaragua-conuco', at: { x: 29, y: 18 } },
+        { map: 'xaragua-cave', at: { x: 17, y: 18 } },
+      ],
       hints: [
         'The healer in the cave knows what his fever needs.',
         'Fever bark grows on the tree by the spring pond in the cassava gardens. Then ask Thorne, as the envoy.',
@@ -310,6 +366,7 @@ export const ACT2: QuestDef = {
       title: 'Word to the cave',
       detail: 'Anaco told Gianna the one gap in the Crown\'s blockade. Carry it to Yari and the resistance in the petroglyph cave.',
       done: { flag: 'story.escape_planned' },
+      goals: [{ map: 'xaragua-cave', at: { x: 11, y: 17 } }],
       hints: [
         'Yari will want to hear every word her father said.',
         'The resistance is in the petroglyph cave, in the cassava gardens.',
@@ -321,6 +378,10 @@ export const ACT2: QuestDef = {
       title: 'Through the blockade',
       detail: 'At the lowest tide the sea cave on the Canoe Beach opens to the sea. Get Yari out past the Crown\'s ships.',
       done: { flag: 'story.escaped' },
+      goals: [
+        { if: { notFlag: 'story.escape_night' }, map: 'xaragua-cave', at: { x: 11, y: 17 } },
+        { map: 'xaragua-seacave', at: { x: 19, y: 5 } },
+      ],
       hints: [
         'The tide, Gigi. Everything is the tide here.',
         'The sea cave is at the east end of the Canoe Beach.',

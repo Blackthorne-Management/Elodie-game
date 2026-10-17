@@ -1318,12 +1318,15 @@ export class FieldScene extends Phaser.Scene {
       arrow.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(5.5, 0, -2.8, -3.6, -2.8, 3.6);
       arrow.setData('drawn', true);
     }
+    // Round Gianna on an oval: beside her going sideways, over her head going up, by her feet going down.
     const me = this.mover.point(p);
     const cx = me.x;
-    const cy = me.y - TILE_SIZE / 2;
+    const cy = me.y - CHARACTER_HEIGHT / 2;
     const angle = Math.atan2(goal.y - TILE_SIZE / 2 - cy, goal.x - cx);
-    const r = QUEST_ARROW.radius + Math.sin(this.guideT / 260) * 1.5;
-    arrow.setPosition(Math.round(cx + Math.cos(angle) * r), Math.round(cy + Math.sin(angle) * r)).setRotation(angle).setVisible(true);
+    const pulse = Math.sin(this.guideT / 260) * 1.5;
+    const rx = QUEST_ARROW.radius + pulse;
+    const ry = CHARACTER_HEIGHT / 2 + 6 + pulse;
+    arrow.setPosition(Math.round(cx + Math.cos(angle) * rx), Math.round(cy + Math.sin(angle) * ry)).setRotation(angle).setVisible(true);
   }
 
   // ---- The crowd -----------------------------------------------------------------------------
