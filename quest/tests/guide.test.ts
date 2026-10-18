@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { CHAPTERS } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { FlagStore } from '../src/engine/flags.ts';
-import { goalFor, sideGoals, storyGoal, waypoint, type Goal } from '../src/engine/guide.ts';
+import { goalFor, mysteryGoals, mysteryQuests, sideGoals, sideNudges, storyGoal, waypoint, type Goal } from '../src/engine/guide.ts';
 import { currentObjective, questForJournal } from '../src/engine/quests.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from '../tools/sim-setup.ts';
@@ -90,7 +90,37 @@ describe('the arrows follow the scripted route (every chapter it plays)', () => 
   it('side quests point the way once accepted', () => {
     const f = new FlagStore();
     for (const q of SIDE_QUESTS) {
-      expect(sideGoals([q], f), q.id).toEqual([]); // not accepted yet: no dot
+      expect(sideGoals([q], f), q.id).toEqual([]); // not accepted yet: no step dot
     }
+  });
+});
+
+// Owner request, Oct 18: a side quest not started yet shows as a mystery quest, with Anissa's nudge and a dot.
+describe('side quests not started yet are mystery quests', () => {
+  it('each has a giver to point at, a nudge from Anissa and a time it becomes available', () => {
+    for (const q of SIDE_QUESTS) {
+      expect(q.start?.length, q.id).toBeGreaterThan(0);
+      expect(q.nudge, q.id).toBeTruthy();
+      expect(q.nudge!.length, q.id).toBeLessThanOrEqual(128);
+      expect(q.available, q.id).toBeDefined();
+    }
+  });
+
+  it('shows once available, with its nudge and its giver; never once accepted', () => {
+    const overdue = SIDE_QUESTS.find((q) => q.id === 'overdue')!;
+    const f = new FlagStore();
+    expect(mysteryQuests([overdue], f)).toEqual([]); // the island is not open yet
+    f.set('story.bridge_crossed', true);
+    expect(mysteryQuests([overdue], f)).toEqual([overdue]);
+    expect(sideNudges([overdue], f)[0]).toContain('temple archive');
+    expect(mysteryGoals([overdue], f)[0]?.goal.map).toBe('zetwal-archive');
+    f.set('side.overdue.accepted', true);
+    expect(mysteryQuests([overdue], f)).toEqual([]);
+  });
+
+  it("each giver can be reached through the doors once the quest is available (the archive from the plaza)", () => {
+    const f = new FlagStore({ 'story.warroom_echo': true, 'story.elodie_left': true, 'story.bridge_crossed': true, 'anchor.chain_bridge': true });
+    for (const { id, goal } of mysteryGoals(SIDE_QUESTS, f)) expect(waypoint(maps, 'zetwal-town', goal, f), id).not.toBeNull();
+    expect(mysteryGoals(SIDE_QUESTS, f).map((m) => m.id).sort()).toEqual(['cane_name', 'overdue', 'soup']);
   });
 });

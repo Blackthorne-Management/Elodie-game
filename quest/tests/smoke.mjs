@@ -483,8 +483,8 @@ async function markChecks(page, sim, name) {
     check(s.flags['anchor.chain_bridge'] === true, 'the bridge is down in the present');
   }
   if (name === 'bridge-before') check(s.flags['anchor.chain_bridge'] !== true, 'the bridge is still raised');
-  // Quest arrows (owner request, Oct 17): on the Cane Road the arrow points at the boar's spot; on the plaza, the way.
-  if (name === 'cane-road') check(s.guide?.final === true && s.guide.arrow, `on the Cane Road the quest arrow points the way to the boar (${JSON.stringify(s.guide)})`);
+  // Quest arrows (owner requests, Oct 17 and 18): an arrow at the screen's edge, or a marker over the stop on screen.
+  if (name === 'cane-road') check(s.guide?.final === true && (s.guide.arrow || s.guide.mark), `on the Cane Road the quest arrow or marker shows the way to the boar (${JSON.stringify(s.guide)})`);
   if (name === 'square') check(!!s.guide && (s.guide.arrow || s.guide.mark), `in Accord Square the quest arrow shows the way (${JSON.stringify(s.guide)})`);
 }
 

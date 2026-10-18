@@ -65,6 +65,26 @@ export function storyGoal(quest: QuestDef | null, flags: FlagReader): Goal | nul
   return objective ? goalFor(objective.goals, flags) : null;
 }
 
+/** Side quests not started yet that the player could start now (`available`): mystery quests. */
+export function mysteryQuests(quests: readonly SideQuestDef[], flags: FlagReader): SideQuestDef[] {
+  return quests.filter((q) => sideQuestStatus(flags, q) === 'unknown' && (!q.available || evaluate(q.available, flags)));
+}
+
+/** Where each mystery quest starts (its giver). */
+export function mysteryGoals(quests: readonly SideQuestDef[], flags: FlagReader): { id: string; goal: Goal }[] {
+  const out: { id: string; goal: Goal }[] = [];
+  for (const q of mysteryQuests(quests, flags)) {
+    const goal = goalFor(q.start, flags);
+    if (goal) out.push({ id: q.id, goal });
+  }
+  return out;
+}
+
+/** Anissa's nudges towards the mystery quests (after her hints for the story's objective). */
+export function sideNudges(quests: readonly SideQuestDef[], flags: FlagReader): string[] {
+  return mysteryQuests(quests, flags).flatMap((q) => (q.nudge ? [q.nudge] : []));
+}
+
 /** Each accepted, unfinished side quest's goal now (its first step not done yet). */
 export function sideGoals(quests: readonly SideQuestDef[], flags: FlagReader): { id: string; goal: Goal }[] {
   const out: { id: string; goal: Goal }[] = [];

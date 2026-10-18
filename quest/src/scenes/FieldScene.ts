@@ -61,7 +61,7 @@ import { settleDebates } from '../engine/debate.ts';
 import { DEBATES } from '../data/debates.ts';
 import { rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
-import { sideGoals, storyGoal, waypoint, type Waypoint } from '../engine/guide.ts';
+import { mysteryGoals, sideGoals, sideNudges, storyGoal, waypoint, type Waypoint } from '../engine/guide.ts';
 import { questArrows, setQuestArrows } from '../ui/questArrows.ts';
 import { planTap } from '../engine/tap.ts';
 import { audio } from '../audio/player.ts';
@@ -1278,13 +1278,16 @@ export class FieldScene extends Phaser.Scene {
     const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags);
     this.guideWay = goal ? waypoint(maps, this.map.id, goal, flags) : null;
     const on = questArrows() && this.logic.era === 'present';
-    const sides = sideGoals(SIDE_QUESTS, flags)
+    const sides = [...sideGoals(SIDE_QUESTS, flags), ...mysteryGoals(SIDE_QUESTS, flags)]
       .map((s) => waypoint(maps, this.map.id, s.goal, flags))
       .filter((w): w is Waypoint => w !== null);
     this.minimap?.setTargets(on ? [...sides.map((w) => ({ pos: w.at, story: false })), ...(this.guideWay ? [{ pos: this.guideWay.at, story: true }] : [])] : []);
   }
 
-  /** The arrow by Gianna points the story's way; close to the goal, a marker bobs over it instead. */
+  /**
+   * The story's way (owner request, Oct 18: not attached to Gigi): when the stop is on screen, a marker bobs over
+   * it; when it is off screen, a gold arrow floats at the edge of the screen on its side, pointing at it.
+   */
   private tickGuide(delta: number): void {
     const way = this.guideWay;
     const show = !!way && questArrows() && this.mode === 'field' && this.logic.era === 'present' && !this.staging && !this.leaving;
@@ -1294,39 +1297,48 @@ export class FieldScene extends Phaser.Scene {
       return;
     }
     this.guideT += delta;
-    const p = this.logic.state.player.pos;
-    const goal = tileToWorld(way.at);
-    const close = way.final && Math.max(Math.abs(p.x - way.at.x), Math.abs(p.y - way.at.y)) <= QUEST_ARROW.near;
-    if (close) {
+    const foot = tileToWorld(way.at);
+    const goal = { x: foot.x, y: foot.y - TILE_SIZE / 2 };
+    // What is on screen: the camera's scroll is the view's top-left (origin 0; Phaser's worldView assumes the
+    // middle, so it is off by half the zoomed-out width), and the view is VIEW_WIDTH x VIEW_HEIGHT.
+    const cam = this.cameras.main;
+    const view = { x: cam.scrollX, y: cam.scrollY, right: cam.scrollX + VIEW_WIDTH, bottom: cam.scrollY + VIEW_HEIGHT };
+    const pad = QUEST_ARROW.edge;
+    const onScreen = goal.x > view.x + pad && goal.x < view.right - pad && goal.y > view.y + pad && goal.y < view.bottom - pad;
+    if (onScreen) {
       this.guideArrow?.setVisible(false);
       const mark = (this.guideMark ??= this.add.graphics().setDepth(3200));
       if (mark.getData('drawn') !== true) {
-        // A small gold chevron pointing down at the goal.
+        // A small gold chevron pointing down at the stop.
         mark.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(-5, -5, 5, -5, 0, 2);
         mark.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(-3.5, -4, 3.5, -4, 0, 0.5);
         mark.setData('drawn', true);
       }
       const bob = Math.round(Math.sin(this.guideT / 220) * 2);
-      mark.setPosition(goal.x, goal.y - CHARACTER_HEIGHT - 6 + bob).setVisible(true);
+      mark.setPosition(foot.x, foot.y - CHARACTER_HEIGHT - 6 + bob).setVisible(true);
       return;
     }
     this.guideMark?.setVisible(false);
     const arrow = (this.guideArrow ??= this.add.graphics().setDepth(3200));
     if (arrow.getData('drawn') !== true) {
-      // A gold arrowhead pointing right (rotated towards the way).
-      arrow.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(7, 0, -4, -5, -4, 5);
-      arrow.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(5.5, 0, -2.8, -3.6, -2.8, 3.6);
+      // A gold arrowhead on a dark disc, pointing right (rotated towards the stop).
+      arrow.fillStyle(QUEST_ARROW.outline, 0.55).fillCircle(0, 0, 8);
+      arrow.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(8, 0, -4, -6, -4, 6);
+      arrow.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(6, 0, -2.5, -4.2, -2.5, 4.2);
       arrow.setData('drawn', true);
     }
-    // Round Gianna on an oval: beside her going sideways, over her head going up, by her feet going down.
-    const me = this.mover.point(p);
-    const cx = me.x;
-    const cy = me.y - CHARACTER_HEIGHT / 2;
-    const angle = Math.atan2(goal.y - TILE_SIZE / 2 - cy, goal.x - cx);
-    const pulse = Math.sin(this.guideT / 260) * 1.5;
-    const rx = QUEST_ARROW.radius + pulse;
-    const ry = CHARACTER_HEIGHT / 2 + 6 + pulse;
-    arrow.setPosition(Math.round(cx + Math.cos(angle) * rx), Math.round(cy + Math.sin(angle) * ry)).setRotation(angle).setVisible(true);
+    // From the middle of the screen towards the stop, to where that line meets the screen's inner edge.
+    const cx = view.x + VIEW_WIDTH / 2;
+    const cy = view.y + VIEW_HEIGHT / 2;
+    const dx = goal.x - cx;
+    const dy = goal.y - cy;
+    const half = { x: VIEW_WIDTH / 2 - pad, y: VIEW_HEIGHT / 2 - pad };
+    const t = Math.min(dx !== 0 ? half.x / Math.abs(dx) : Infinity, dy !== 0 ? half.y / Math.abs(dy) : Infinity);
+    const nudge = 1 + Math.sin(this.guideT / 260) * 0.02;
+    arrow
+      .setPosition(Math.round(cx + dx * t * nudge), Math.round(cy + dy * t * nudge))
+      .setRotation(Math.atan2(dy, dx))
+      .setVisible(true);
   }
 
   // ---- The crowd -----------------------------------------------------------------------------
@@ -1529,19 +1541,29 @@ export class FieldScene extends Phaser.Scene {
     return this.quest() !== null;
   }
 
-  private tickHints(delta: number): void {
+  /**
+   * What Anissa can say now: her hints for the story's objective, then a nudge towards each side quest not
+   * started yet (owner request, Oct 18: "shouldn't you check in at the temple archive before we leave?").
+   */
+  private anissaLines(): { key: string | null; lines: string[] } {
     const quest = this.quest();
-    if (!quest || !this.anissaWithUs()) return;
-    const objective = currentObjective(quest, this.logic.state.flags);
-    const index = this.rt.hints.tick(delta, objective?.id ?? null, objective?.hints.length ?? 0);
-    if (index !== null && objective && this.logic.state.settings.hints) this.hint.show('Anissa', objective.hints[index]!);
+    const flags = this.logic.state.flags;
+    const objective = quest ? currentObjective(quest, flags) : null;
+    const nudges = quest ? sideNudges(SIDE_QUESTS, flags) : [];
+    return { key: objective || nudges.length ? `${objective?.id ?? 'done'}+${nudges.length}` : null, lines: [...(objective?.hints ?? []), ...nudges] };
+  }
+
+  private tickHints(delta: number): void {
+    if (!this.quest() || !this.anissaWithUs()) return;
+    const { key, lines } = this.anissaLines();
+    const index = this.rt.hints.tick(delta, key, lines.length);
+    if (index !== null && lines[index] && this.logic.state.settings.hints) this.hint.show('Anissa', lines[index]);
   }
 
   private askAnissa(): void {
-    const quest = this.quest();
-    const objective = quest ? currentObjective(quest, this.logic.state.flags) : null;
-    const index = objective ? this.rt.hints.onRequest(objective.hints.length) : null;
-    this.hint.show('Anissa', objective && index !== null ? objective.hints[index]! : 'I think we did everything, Gigi.');
+    const { lines } = this.anissaLines();
+    const index = lines.length > 0 ? this.rt.hints.onRequest(lines.length) : null;
+    this.hint.show('Anissa', index !== null && lines[index] ? lines[index] : 'I think we did everything, Gigi.');
   }
 
   /** The Journal's lines (shown on the menu's Journal tab). */

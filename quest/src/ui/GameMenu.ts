@@ -16,6 +16,7 @@ import { equippedSpells, gearSkills, howToLearn, knownMoves, knownSkills, learne
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { encounterFlag } from '../engine/game.ts';
 import { rewardText, sideQuestStatus, visibleSteps, type SideQuestDef } from '../engine/sideQuests.ts';
+import { mysteryQuests } from '../engine/guide.ts';
 import type { FlagStore } from '../engine/flags.ts';
 import {
   PILLARS,
@@ -114,7 +115,7 @@ type Stage = 'top' | 'who' | 'slot' | 'pick' | 'skills' | 'read';
 /** Colours for a level against the party's: grey, white, orange, red. */
 const BAND_COLOURS = { trivial: '#8e8e9c', even: '#f4ecd8', hard: '#f0a040', deadly: '#e05050' } as const;
 
-type QuestEntry = { kind: 'main' } | { kind: 'side'; q: SideQuestDef };
+type QuestEntry = { kind: 'main' } | { kind: 'side'; q: SideQuestDef } | { kind: 'mystery'; q: SideQuestDef };
 
 /** A tappable area (game pixels) and what a tap there does. */
 interface Hit {
@@ -959,18 +960,30 @@ export class GameMenu {
 
   // ---- Quests and foes -----------------------------------------------------------------------
 
-  /** The main quest, then side quests in progress, then finished ones. */
+  /** The main quest, side quests in progress, mystery quests (not started yet, owner request Oct 18), finished ones. */
   private questEntries(): QuestEntry[] {
     const flags = this.ctx!.flags;
     const active = SIDE_QUESTS.filter((q) => sideQuestStatus(flags, q) === 'active');
     const done = SIDE_QUESTS.filter((q) => sideQuestStatus(flags, q) === 'done');
-    return [{ kind: 'main' }, ...active.map((q) => ({ kind: 'side' as const, q })), ...done.map((q) => ({ kind: 'side' as const, q }))];
+    return [
+      { kind: 'main' },
+      ...active.map((q) => ({ kind: 'side' as const, q })),
+      ...mysteryQuests(SIDE_QUESTS, flags).map((q) => ({ kind: 'mystery' as const, q })),
+      ...done.map((q) => ({ kind: 'side' as const, q })),
+    ];
   }
 
   private questLines(e: QuestEntry): PanelLine[] {
     const ctx = this.ctx!;
     if (e.kind === 'main') return ctx.journal();
     const q = e.q;
+    if (e.kind === 'mystery') {
+      return [
+        { text: '??? A quest not started', color: UI.accentText },
+        { text: `Where: ${q.place}`, color: UI.dimText },
+        { text: `Someone at ${q.place.startsWith('The ') ? 'the' + q.place.slice(3) : 'the ' + q.place} may need Gianna's help. Look for the silver dot on the map, or ask Anissa.`, gap: 4 },
+      ];
+    }
     const done = sideQuestStatus(ctx.flags, q) === 'done';
     const band = levelBand(RPG, partyLevel(ctx.flags, RPG, ctx.era), q.level);
     const lines: PanelLine[] = [
@@ -1003,9 +1016,11 @@ export class GameMenu {
   private drawQuests(): void {
     const entries = this.questEntries();
     const flags = this.ctx!.flags;
-    const labels = entries.map((e) => (e.kind === 'main' ? 'Main: Chapter 1' : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`));
+    const labels = entries.map((e) =>
+      e.kind === 'main' ? 'Main: Chapter 1' : e.kind === 'mystery' ? `??? ${e.q.place}` : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`,
+    );
     this.drawList(labels, this.cursor, 6, TOP + 2, ROWS, this.stage === 'top');
-    if (SIDE_QUESTS.every((q) => sideQuestStatus(flags, q) === 'unknown')) this.text(6, TOP + 2 + 2 * ROW_H, '  No side quests yet.', UI.dimText);
+    if (entries.length === 1) this.text(6, TOP + 2 + 2 * ROW_H, '  No side quests yet.', UI.dimText);
     const e = entries[this.cursor] ?? entries[0]!;
     const lines = this.questLines(e).filter((l) => !l.text.startsWith('(B to close)'));
     this.journalLines = lines.map((l) => l.text);

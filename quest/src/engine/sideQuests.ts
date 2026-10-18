@@ -33,6 +33,14 @@ export interface SideQuestDef {
   summary: string;
   /** Holds once the player has accepted it. */
   accepted: Condition;
+  /**
+   * Before it is accepted it shows as a mystery quest (owner request, Oct 18: players missed the ones they never
+   * stumbled on): in the Quests page while `available` holds, with a dot on the minimap at `start` (the giver),
+   * and Anissa's `nudge` among her hints.
+   */
+  available?: Condition;
+  start?: readonly Goal[];
+  nudge?: string;
   steps: readonly SideQuestStep[];
   /** The steps can be done in any order: the log shows them all at once. */
   parallel?: boolean;

@@ -548,10 +548,16 @@ export const CARD_ART: Readonly<Record<string, string>> = {
 };
 
 /**
- * Quest arrows (engine/guide.ts; owner request, Oct 17): the gold arrow by Gianna that points the story's way,
- * the marker over the goal once close, and the minimap's dots (the story gold, side quests silver).
+ * Quest arrows (engine/guide.ts; owner requests, Oct 17 and 18): the gold arrow at the screen's edge that points
+ * the story's way, the marker over the stop once it is on screen, and the minimap's dots (the story gold, side
+ * quests silver, those not started yet too).
  */
-export const QUEST_ARROW = { fill: 0xf2c14e, outline: 0x14101a, radius: 15, near: 4 } as const;
+export const QUEST_ARROW = {
+  fill: 0xf2c14e,
+  outline: 0x14101a,
+  /** How far inside the screen's edge the arrow floats, and the stop counts as on screen (world pixels). */
+  edge: 14,
+} as const;
 export const SIDE_MAP_TARGET = { story: '#f2c14e', side: '#c8d0dc' } as const;
 
 /** The menu's maps (ui/GameMenu.ts): the city drawn from its tiles, the realm from data/realmMap.ts. */

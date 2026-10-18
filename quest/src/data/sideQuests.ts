@@ -18,6 +18,10 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     summary:
       'Three books are long overdue, and Gianna wrote the list herself. Get them back from the ferryman, the soup vendor and Grandmother Anicette.',
     accepted: f('side.overdue.accepted'),
+    // The archive is in the temple's north-west corner, on the island past the Chain Bridge.
+    available: f('story.bridge_crossed'),
+    start: [{ map: 'zetwal-archive', at: { x: 14, y: 4 } }],
+    nudge: "Gigi, shouldn't you check in at the temple archive before we leave? It's through the door at the back of the temple.",
     parallel: true,
     steps: [
       { text: 'Get "Tides of the Southern Reach" back from the ferryman (the docks).', done: f('side.overdue.ferry'), goals: [{ map: 'zetwal-town', at: { x: 9, y: 23 } }] },
@@ -37,6 +41,9 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     summary:
       "The soup vendor's nephew is asleep under a mango tree. Carry her festival bowls to the old neighbor, the town guard and the ferryman.",
     accepted: f('side.soup.accepted'),
+    available: f('story.warroom_echo'),
+    start: [{ map: 'zetwal-town', at: { x: 11, y: 12 } }],
+    nudge: 'The soup vendor on the plaza looks worried, Gigi. Maybe she needs a hand with something?',
     parallel: true,
     steps: [
       { text: 'A bowl for the old neighbor (west of the plaza).', done: f('side.soup.elder'), goals: [{ map: 'zetwal-town', at: { x: 4, y: 11 } }] },
@@ -56,6 +63,9 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     summary:
       'The cane cutter\'s grandmother cut cane on this road when it was the Crown\'s. He only knew her as "Grann", and her name is on no stone.',
     accepted: f('side.cane_name.accepted'),
+    available: f('story.warroom_echo'),
+    start: [{ map: 'zetwal-road', at: { x: 6, y: 10 } }],
+    nudge: 'There was a cane cutter on the road past the east gate. He looked like he wanted to ask us something.',
     steps: [
       { text: 'Look for her on the name stones (the Temple island).', done: f('side.cane_name.stones'), goals: [{ map: 'zetwal-temple', at: { x: 6, y: 4 } }] },
       { text: 'Find where the road remembers her: the shimmer by the east gate, on the Cane Road.', done: f('clue.cane_name'), goals: [{ map: 'zetwal-road', at: { x: 3, y: 14 } }] },
