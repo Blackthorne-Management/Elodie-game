@@ -21,10 +21,28 @@ export class Toast {
       .setVisible(false);
   }
 
+  private waiting: string[] = [];
+
+  /** Show a message now, replacing whatever is showing (and anything waiting). */
   show(message: string): void {
+    this.waiting = [];
+    this.display(message);
+  }
+
+  /** Show a message after the ones already showing or waiting, each for its full time (rewards, level-ups). */
+  queue(message: string): void {
+    if (this.text.visible) this.waiting.push(message);
+    else this.display(message);
+  }
+
+  private display(message: string): void {
     this.lastMessage = message;
     this.text.setText(message).setVisible(true).setAlpha(1);
     this.timer?.remove();
-    this.timer = this.scene.time.delayedCall(TOAST_MS, () => this.text.setVisible(false));
+    this.timer = this.scene.time.delayedCall(TOAST_MS, () => {
+      const next = this.waiting.shift();
+      if (next !== undefined) this.display(next);
+      else this.text.setVisible(false);
+    });
   }
 }

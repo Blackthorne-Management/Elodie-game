@@ -770,11 +770,11 @@ export class FieldScene extends Phaser.Scene {
     };
     for (const pay of settleDebates(flags, DEBATES, addPillar, (n) => addSharedXp(flags, n))) {
       const label = pay.outcome === 'listened' ? 'Heard the debate' : pay.outcome === 'won' ? 'Debate won' : pay.outcome === 'mediated' ? 'Debate mediated' : 'Crowd provoked';
-      this.toast.show(`${label}: ${pay.text}`);
+      this.toast.queue(`${label}: ${pay.text}`);
       audio.sfx(pay.outcome === 'provoked' ? 'bump' : pay.outcome === 'listened' ? 'confirm' : 'quest');
     }
     for (const q of settleRewards(flags, RPG, SIDE_QUESTS)) {
-      this.toast.show(`Quest complete: ${q.title} (${rewardText(q, RPG)})`);
+      this.toast.queue(`Quest complete: ${q.title} (${rewardText(q, RPG)})`);
       audio.sfx('quest');
     }
     const now = this.levelsNow();
@@ -782,7 +782,7 @@ export class FieldScene extends Phaser.Scene {
       const before = this.lastLevels.get(id);
       if (before !== undefined && lv > before) {
         const name = RPG.members.find((m) => m.id === id)?.name ?? id;
-        this.toast.show(`${name} reached level ${lv}!`);
+        this.toast.queue(`${name} reached level ${lv}!`);
         audio.sfx('level_up');
       }
     }
