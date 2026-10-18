@@ -21,28 +21,37 @@ export class Toast {
       .setVisible(false);
   }
 
-  private waiting: string[] = [];
+  /** Messages waiting their turn; `kept` ones (rewards, level-ups) are never cut short. */
+  private waiting: { message: string; kept: boolean }[] = [];
+  private keeping = false;
 
-  /** Show a message now, replacing whatever is showing (and anything waiting). */
+  /** Show a message now, unless a reward is showing or waiting: then it follows them. */
   show(message: string): void {
-    this.waiting = [];
-    this.display(message);
+    this.add(message, false);
   }
 
-  /** Show a message after the ones already showing or waiting, each for its full time (rewards, level-ups). */
+  /** Show a message for its full time, after any reward already showing or waiting (rewards, level-ups). */
   queue(message: string): void {
-    if (this.text.visible) this.waiting.push(message);
-    else this.display(message);
+    this.add(message, true);
   }
 
-  private display(message: string): void {
+  private add(message: string, kept: boolean): void {
+    if (this.text.visible && (this.keeping || this.waiting.length > 0)) this.waiting.push({ message, kept });
+    else this.display(message, kept);
+  }
+
+  private display(message: string, kept: boolean): void {
     this.lastMessage = message;
+    this.keeping = kept;
     this.text.setText(message).setVisible(true).setAlpha(1);
     this.timer?.remove();
     this.timer = this.scene.time.delayedCall(TOAST_MS, () => {
       const next = this.waiting.shift();
-      if (next !== undefined) this.display(next);
-      else this.text.setVisible(false);
+      if (next) this.display(next.message, next.kept);
+      else {
+        this.keeping = false;
+        this.text.setVisible(false);
+      }
     });
   }
 }
