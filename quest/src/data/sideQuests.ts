@@ -75,4 +75,29 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     done: f('side.cane_name.done'),
     reward: { xp: 50, items: [{ id: 'sun_charm', n: 1 }], pillar: INFLUENCE_ZETWAL },
   },
+  // Taking part in the plaza's debate on faith (owner decision, Oct 18): a quest that must be done before Yari
+  // sails. Listening, then arguing all three rounds (won or lost), or mediating, finishes it (data/debates.ts).
+  {
+    id: 'faith',
+    title: 'A Question of Faith',
+    giver: 'Gaze keeper',
+    place: 'Festival Plaza',
+    level: 1,
+    summary:
+      'On the lawn below the plaza, a Gaze keeper and a hooded recruiter argue: is a goddess who only remembers any use? Hear them out, then make your own case.',
+    accepted: { any: [f('debate.zetwal_corner.listened'), f('debate.zetwal_corner.joined'), f('debate.zetwal_corner.mediated')] },
+    available: f('story.warroom_echo'),
+    start: [{ map: 'zetwal-town', at: { x: 22, y: 17 } }],
+    nudge: 'The Gaze keeper is still arguing with that hooded man below the plaza, Gigi. Will you speak for her before we go?',
+    steps: [
+      { text: 'Listen to the debate on the lawn below the plaza.', done: f('debate.zetwal_corner.listened'), goals: [{ map: 'zetwal-town', at: { x: 22, y: 17 } }] },
+      {
+        text: 'Join the debate and argue all three rounds, or mediate.',
+        done: { any: [f('debate.zetwal_corner.joined'), f('debate.zetwal_corner.mediated')] },
+        goals: [{ map: 'zetwal-town', at: { x: 22, y: 17 } }],
+      },
+    ],
+    done: { any: [f('debate.zetwal_corner.joined'), f('debate.zetwal_corner.mediated')] },
+    reward: { xp: 30 },
+  },
 ];

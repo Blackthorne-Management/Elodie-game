@@ -276,7 +276,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     title: 'The Harbor at Night',
     backdrop: 'yucayeque_night',
     enemies: ['crown_marine', 'crown_musketeer', 'marine_sergeant'],
-    level: 5,
+    level: 6,
     table: 'xaragua_story',
     group: 'patrol',
     rewards: { xp: 90, gold: 40 },

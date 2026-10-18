@@ -60,7 +60,11 @@ export interface DebateDef {
 
 export type DebateOutcome = 'won' | 'mediated' | 'provoked';
 
-export const debateFlag = (id: string, what: 'listened' | DebateOutcome) => `debate.${id}.${what}`;
+/**
+ * `joined`: Gianna argued all three rounds, won or lost (owner decision, Oct 18: Chapter 1's debate must be taken
+ * part in before Yari sails; a lost debate counts as taking part).
+ */
+export const debateFlag = (id: string, what: 'listened' | 'joined' | DebateOutcome) => `debate.${id}.${what}`;
 const paidFlag = (id: string, what: 'listened' | DebateOutcome) => `debate.${id}.paid.${what}`;
 
 /** The realm's Concord (0 to 100). */
@@ -135,8 +139,8 @@ export function debateScript(def: DebateDef, flags: FlagReader, ctx: DebateConte
       }
     }
   }
-  nodes.won = { lines: [...def.won], set: { [debateFlag(def.id, 'won')]: true } };
-  nodes.lost = { lines: [...def.lost] };
+  nodes.won = { lines: [...def.won], set: { [debateFlag(def.id, 'won')]: true, [debateFlag(def.id, 'joined')]: true } };
+  nodes.lost = { lines: [...def.lost], set: { [debateFlag(def.id, 'joined')]: true } };
   return { id, start: 'menu', nodes };
 }
 

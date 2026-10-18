@@ -94,8 +94,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('visits every Zetwal map and swaps eras', () => {
-    // Chapter 1's maps, and (at the end of Chapter 2) home to Pòdlimyè's Old Harbor.
-    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set([...ACT1.maps, 'zetwal-harbor']));
+    // Chapter 1's maps, the temple archive (the Overdue Shelf, required before sailing), and (at the end of
+    // Chapter 2) home to Pòdlimyè's Old Harbor.
+    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set([...ACT1.maps, 'zetwal-archive', 'zetwal-harbor']));
     for (const m of ['xaragua-village', 'xaragua-plaza', 'xaragua-caney', 'xaragua-customs']) expect(maps).toContain(m);
     expect(eras.filter((e) => e === 'echo').length).toBeGreaterThanOrEqual(2);
     expect(sim.log).toContain('Something old stirs here, but it will not open to you yet.');

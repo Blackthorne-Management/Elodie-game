@@ -7,6 +7,9 @@ import { RPG } from '../src/data/rpg.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { CONTENT, validationContext } from '../src/data/content.ts';
 import { shelfDialogueId } from '../src/data/books.ts';
+import { DEBATES } from '../src/data/debates.ts';
+import type { Condition } from '../src/engine/conditions.ts';
+import { debateFlag } from '../src/engine/debate.ts';
 import { DialogueRunner } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { gold, itemCount, pillarFlag, xp } from '../src/engine/rpg.ts';
@@ -49,10 +52,14 @@ function chapterOne(): FlagStore {
 describe('side quests: Pòdlimyè, Chapter 1', () => {
   it('every step flag is set by some dialogue, and every giver stands on a map', () => {
     const setters = new Set(Object.values(validationContext().dialogueSets ?? {}).flat());
+    // A debate sets its outcome flags itself (engine/debate.ts), not a static dialogue.
+    for (const d of DEBATES) for (const o of ['listened', 'joined', 'won', 'mediated', 'provoked'] as const) setters.add(debateFlag(d.id, o));
+    const flagsOf = (c: Condition): string[] => ('flag' in c ? [c.flag] : 'any' in c ? c.any.flatMap(flagsOf) : []);
     for (const q of SIDE_QUESTS) {
       for (const s of q.steps) {
-        const flag = (s.done as { flag: string }).flag;
-        expect(setters.has(flag), `${q.id}: ${flag}`).toBe(true);
+        const flags = flagsOf(s.done);
+        expect(flags.length, `${q.id}: ${JSON.stringify(s.done)}`).toBeGreaterThan(0);
+        for (const flag of flags) expect(setters.has(flag), `${q.id}: ${flag}`).toBe(true);
       }
     }
     const npcs = Object.values(loadMaps()).flatMap((m) => m.npcs.map((n) => n.npc));
@@ -186,10 +193,18 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
     expect(boar).toContain('east gate');
     expect(flags.isSet('act1.complete')).toBe(false);
     flags.set('encounter.wilds.boar.won', true);
-    // Errands left: Yari reminds her; "Not yet" keeps the chapter open.
-    expect(talk(flags, 'yari_talk', ['Not yet'])[0]).toContain('Did you finish what you had to do?');
+    // Errands left (owner, Oct 18): Yari will not sail until all three Pòdlimyè quests are done.
+    const waiting = talk(flags, 'yari_talk').join(' ');
+    expect(waiting).toContain('Not with work still waiting in Pòdlimyè');
     expect(flags.isSet('act1.complete')).toBe(false);
-    talk(flags, 'yari_talk', ["Let's go anyway."]);
+    for (const done of ['side.overdue.done', 'side.soup.done', 'side.cane_name.done']) {
+      flags.set(done, true);
+      expect(talk(flags, 'yari_talk').join(' ')).toContain('Not with work still waiting in Pòdlimyè');
+      expect(flags.isSet('act1.complete')).toBe(false);
+    }
+    // The plaza's debate too (a lost one counts, mediating counts).
+    flags.set('debate.zetwal_corner.joined', true);
+    talk(flags, 'yari_talk', ["Let's go."]);
     expect(flags.isSet('act1.complete')).toBe(true);
   });
 
@@ -200,6 +215,7 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
       'side.overdue.done': true,
       'side.soup.done': true,
       'side.cane_name.done': true,
+      'debate.zetwal_corner.joined': true,
       'encounter.wilds.boar.won': true,
     });
     expect(talk(flags, 'yari_talk', ["Let's go."])[0]).toContain('the boar sorry it met us');

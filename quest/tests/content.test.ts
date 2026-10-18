@@ -27,7 +27,7 @@ function flagsSet(): Set<string> {
   // A won battle sets its encounter flag (engine/battle.ts settleBattle).
   for (const b of Object.values(BATTLES)) out.add(encounterFlag(b.table, b.group, 'won'));
   // A debate sets its outcome flags (engine/debate.ts).
-  for (const d of DEBATES) for (const o of ['listened', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
+  for (const d of DEBATES) for (const o of ['listened', 'joined', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
   // A rhythm lock played right sets its success flags (engine/game.ts finishRhythm).
   for (const r of Object.values(CONTENT.rhythms ?? {})) for (const f of Object.keys(r.success)) out.add(f);
   return out;

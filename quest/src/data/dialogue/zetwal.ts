@@ -1171,7 +1171,15 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         // The boar first (owner decision, Oct 16: the first battle is not optional).
         { if: { notFlag: 'encounter.wilds.boar.won' }, to: 'ready_boar' },
         {
-          if: { all: [{ flag: 'side.overdue.done' }, { flag: 'side.soup.done' }, { flag: 'side.cane_name.done' }, { flag: 'encounter.wilds.boar.won' }] },
+          if: {
+            all: [
+              { flag: 'side.overdue.done' },
+              { flag: 'side.soup.done' },
+              { flag: 'side.cane_name.done' },
+              { any: [{ flag: 'debate.zetwal_corner.joined' }, { flag: 'debate.zetwal_corner.mediated' }] },
+              { flag: 'encounter.wilds.boar.won' },
+            ],
+          },
           to: 'ready_all',
         },
         { to: 'ready_errands' },
@@ -1192,17 +1200,17 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         say(A, 'The Cane Road, Gigi. Past the east gate, where the cane starts.'),
       ],
     },
+    // Chapter 1 ends only once Pòdlimyè's quests are done (owner decision, Oct 18): no leaving them behind.
     ready_errands: {
       speaker: 'yari',
-      lines: [{ text: 'The tide is turning. Did you finish what you had to do? Your Quests page says otherwise.' }],
-      choices: [
-        { text: 'Not yet. Soon.', next: 'later' },
-        { text: "Let's go anyway.", next: 'depart' },
+      lines: [
+        { text: 'Not with work still waiting in Pòdlimyè, Gigi. Your Quests page says otherwise.' },
+        { text: "Finish it. The tide comes back twice a day. I'll be here." },
       ],
     },
     ready_all: {
       speaker: 'yari',
-      lines: [{ text: 'Books back, soup delivered, a name carved, and the boar sorry it met us. Ready?' }],
+      lines: [{ text: 'Books back, soup delivered, a name carved, a recruiter answered, and the boar sorry it met us. Ready?' }],
       choices: [
         { text: "Let's go.", next: 'depart' },
         { text: 'Not yet.', next: 'later' },

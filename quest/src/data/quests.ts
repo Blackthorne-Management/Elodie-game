@@ -169,15 +169,36 @@ export const ACT1: QuestDef = {
         'Go out through the east gate onto the Cane Road and walk east into the cane. The boar will find us.',
       ],
     },
+    // Every side quest in Pòdlimyè must be done before Yari sails (owner decision, Oct 18). The gold arrow
+    // follows them (engine/guide.ts `followSide`).
+    {
+      id: 'errands',
+      title: 'Unfinished business',
+      detail: 'Yari will not sail while Pòdlimyè still needs Gianna. Finish every quest on your Quests page first.',
+      done: {
+        all: [
+          { flag: 'side.overdue.done' },
+          { flag: 'side.soup.done' },
+          { flag: 'side.cane_name.done' },
+          { any: [{ flag: 'debate.zetwal_corner.joined' }, { flag: 'debate.zetwal_corner.mediated' }] },
+        ],
+      },
+      followSide: true,
+      hints: [
+        'We cannot leave yet, Gigi. Your Quests page still has work on it.',
+        'Follow the arrow, Gigi. It knows what is left better than I do.',
+        'The archivist, the soup vendor, the cane cutter, and the debate below the plaza. All of it, before we sail.',
+      ],
+    },
     {
       id: 'depart',
       title: 'Before the tide',
-      detail: "Yari's canoe waits at the island dock. Finish your work in Pòdlimyè (your Quests page lists it), then go to the canoe and sail.",
+      detail: "Yari's canoe waits at the island dock. Go to the canoe and tell Yari you are ready to sail.",
       done: { flag: 'act1.complete' },
       goals: [{ map: 'zetwal-temple', at: { x: 16, y: 18 } }],
       hints: [
         "Yari's canoe is at the island dock. Are we going soon, Gigi?",
-        'Finish your errands in the city first if you like. Then go to the canoe at the dock.',
+        'Everything is done in Pòdlimyè. Go to the canoe at the dock.',
         'Go to the dock south of the temple, to the canoe, and tell Yari you are ready.',
       ],
     },
