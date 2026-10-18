@@ -1428,6 +1428,12 @@ export class FieldScene extends Phaser.Scene {
    */
   private placeYari(stood?: Pos): void {
     if (!this.yariWithUs()) {
+      // A scene that borrowed her lets go first (she leaves the party: hidden in the cave, say).
+      for (const [id, a] of this.stageActors) {
+        if (a.borrowed !== 'yari') continue;
+        this.stageActors.delete(id);
+        if (this.stageBlocking === a) this.stageBlocking = null;
+      }
       this.yari?.sprite.destroy();
       this.yari = null;
       return;
@@ -1580,6 +1586,9 @@ export class FieldScene extends Phaser.Scene {
   private showCard(): void {
     const card = this.logic.card;
     if (!card) return;
+    // A card ends the scene: anyone still walking off is gone (Oct 18: the refuge card froze when Yari,
+    // hidden by the scene, was still being drawn).
+    this.clearStage();
     this.dialogue.hide();
     this.hint.hide();
     this.mode = 'card';
@@ -1807,7 +1816,13 @@ export class FieldScene extends Phaser.Scene {
 
   /** Walk everyone on stage a frame; count down a pause; keep the camera on whoever the scene follows. */
   private tickStage(delta: number): void {
-    for (const a of this.stageActors.values()) {
+    for (const [id, a] of this.stageActors) {
+      // A picture gone from the scene (its owner left the map's people): drop it, never draw it.
+      if (!a.sprite.scene) {
+        this.stageActors.delete(id);
+        if (this.stageBlocking === a) this.stageBlocking = null;
+        continue;
+      }
       if (!a.mover.moving) {
         const first = a.tiles.shift();
         if (!first) continue;
