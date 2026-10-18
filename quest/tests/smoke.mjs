@@ -855,6 +855,8 @@ async function playAct(browser, errors) {
         await handleShowcase(page, showcases, shots);
         // A choice only takes the cursor once its line has finished typing (the same as a player waiting).
         if (mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel' || cmd === 'up' || cmd === 'down')) await finishTyping(page);
+        // A card closes on A only once it shows (a press while the scene before it ends is not for the card).
+        if (sim.logic.mode === 'card') await page.waitForFunction(() => window.__quest.snapshot().mode === 'card', null, { timeout: 15000 });
         sim.press(cmd);
         if (cmd.includes('-')) await pressDiagonal(page, cmd);
         else await page.keyboard.press(KEYS[cmd]);
