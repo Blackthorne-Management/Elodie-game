@@ -117,6 +117,16 @@ interface StageActor {
   borrowed?: number | 'follower' | 'yari';
 }
 
+/** The quest pointers: the story's (gold) and a side quest's (silver). */
+type PointerKind = 'story' | 'side';
+interface PointerSnapshot {
+  x: number;
+  y: number;
+  final: boolean;
+  arrow: boolean;
+  mark: boolean;
+}
+
 export interface FieldSnapshot {
   mode: UiMode;
   mapId: string;
@@ -158,7 +168,9 @@ export interface FieldSnapshot {
   /** How many of the festival's passers-by are on the map. */
   crowd: number;
   /** The quest arrow: where the story points on this map, and whether the arrow or the goal's marker shows. */
-  guide: { x: number; y: number; final: boolean; arrow: boolean; mark: boolean } | null;
+  guide: PointerSnapshot | null;
+  /** The side-quest pointer (silver), the same way. */
+  sideGuide: PointerSnapshot | null;
 }
 
 const ERA_LAYERS = [TILE_LAYERS.groundPresent, TILE_LAYERS.decoPresent, TILE_LAYERS.groundEcho, TILE_LAYERS.decoEcho];
@@ -216,10 +228,14 @@ export class FieldScene extends Phaser.Scene {
   private follower: Follower | null = null;
   /** Yari, behind Anissa (or Gianna), while she is in the party. */
   private yari: Follower | null = null;
-  /** Where the story wants the player next on this map (engine/guide.ts), and the arrow and marker for it. */
-  private guideWay: Waypoint | null = null;
-  private guideArrow: Phaser.GameObjects.Graphics | null = null;
-  private guideMark: Phaser.GameObjects.Graphics | null = null;
+  /**
+   * The quest pointers (engine/guide.ts): the story's next stop in gold, a side quest's in silver (owner, Oct 18).
+   * Each has an arrow for the screen's edge and a marker for over the stop.
+   */
+  private pointers: Record<PointerKind, { way: Waypoint | null; arrow: Phaser.GameObjects.Graphics | null; mark: Phaser.GameObjects.Graphics | null }> = {
+    story: { way: null, arrow: null, mark: null },
+    side: { way: null, arrow: null, mark: null },
+  };
   private guideT = 0;
   /** The picture behind an act's end card, while it shows (assets.config CARD_ART). */
   private cardArt: Phaser.GameObjects.Image | null = null;
@@ -299,9 +315,7 @@ export class FieldScene extends Phaser.Scene {
     this.yari = null;
     this.crowd = [];
     this.cardArt = null;
-    this.guideWay = null;
-    this.guideArrow = null;
-    this.guideMark = null;
+    this.pointers = { story: { way: null, arrow: null, mark: null }, side: { way: null, arrow: null, mark: null } };
     this.echoMatrix = null;
     this.autoPath = [];
     this.autoFace = null;
@@ -1271,32 +1285,47 @@ export class FieldScene extends Phaser.Scene {
 
   // ---- Quest arrows (engine/guide.ts) -------------------------------------------------------
 
-  /** Where to go from this map now: the story's next stop for the arrow, and every stop for the minimap. */
+  /**
+   * Where to go from this map now: the story's next stop (gold), and a side quest's (silver: the nearest on
+   * this map, else through a door; accepted or not started yet), plus every side quest's for the minimap.
+   */
   private refreshGuide(): void {
     const flags = this.logic.state.flags;
     const maps = this.logic.maps;
     const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags);
-    this.guideWay = goal ? waypoint(maps, this.map.id, goal, flags) : null;
+    this.pointers.story.way = goal ? waypoint(maps, this.map.id, goal, flags) : null;
     const on = questArrows() && this.logic.era === 'present';
     const sides = [...sideGoals(SIDE_QUESTS, flags), ...mysteryGoals(SIDE_QUESTS, flags)]
       .map((s) => waypoint(maps, this.map.id, s.goal, flags))
       .filter((w): w is Waypoint => w !== null);
-    this.minimap?.setTargets(on ? [...sides.map((w) => ({ pos: w.at, story: false })), ...(this.guideWay ? [{ pos: this.guideWay.at, story: true }] : [])] : []);
+    // The silver pointer: a side quest's stop on this map before one through a door, the nearest first.
+    const me = this.logic.state.player.pos;
+    const far = (w: Waypoint) => (w.final ? 0 : 1000) + Math.max(Math.abs(w.at.x - me.x), Math.abs(w.at.y - me.y));
+    this.pointers.side.way = [...sides].sort((a, b) => far(a) - far(b))[0] ?? null;
+    const story = this.pointers.story.way;
+    this.minimap?.setTargets(on ? [...sides.map((w) => ({ pos: w.at, story: false })), ...(story ? [{ pos: story.at, story: true }] : [])] : []);
+  }
+
+  /** Both pointers, each frame: hidden off the field, in the Echo, in a scene, or with the setting off. */
+  private tickGuide(delta: number): void {
+    this.guideT += delta;
+    const show = questArrows() && this.mode === 'field' && this.logic.era === 'present' && !this.staging && !this.leaving;
+    for (const kind of ['story', 'side'] as const) this.tickPointer(kind, show);
   }
 
   /**
-   * The story's way (owner request, Oct 18: not attached to Gigi): when the stop is on screen, a marker bobs over
-   * it; when it is off screen, a gold arrow floats at the edge of the screen on its side, pointing at it.
+   * One pointer (owner requests, Oct 18: not attached to Gigi): when its stop is on screen, a marker bobs over
+   * it; when it is off screen, an arrow floats at the edge of the screen on its side, pointing at it.
    */
-  private tickGuide(delta: number): void {
-    const way = this.guideWay;
-    const show = !!way && questArrows() && this.mode === 'field' && this.logic.era === 'present' && !this.staging && !this.leaving;
+  private tickPointer(kind: PointerKind, show: boolean): void {
+    const p = this.pointers[kind];
+    const way = p.way;
     if (!show || !way) {
-      this.guideArrow?.setVisible(false);
-      this.guideMark?.setVisible(false);
+      p.arrow?.setVisible(false);
+      p.mark?.setVisible(false);
       return;
     }
-    this.guideT += delta;
+    const fill = kind === 'story' ? QUEST_ARROW.fill : QUEST_ARROW.side;
     const foot = tileToWorld(way.at);
     const goal = { x: foot.x, y: foot.y - TILE_SIZE / 2 };
     // What is on screen: the camera's scroll is the view's top-left (origin 0; Phaser's worldView assumes the
@@ -1306,26 +1335,26 @@ export class FieldScene extends Phaser.Scene {
     const pad = QUEST_ARROW.edge;
     const onScreen = goal.x > view.x + pad && goal.x < view.right - pad && goal.y > view.y + pad && goal.y < view.bottom - pad;
     if (onScreen) {
-      this.guideArrow?.setVisible(false);
-      const mark = (this.guideMark ??= this.add.graphics().setDepth(3200));
-      if (mark.getData('drawn') !== true) {
-        // A small gold chevron pointing down at the stop.
-        mark.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(-5, -5, 5, -5, 0, 2);
-        mark.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(-3.5, -4, 3.5, -4, 0, 0.5);
-        mark.setData('drawn', true);
+      p.arrow?.setVisible(false);
+      if (!p.mark) {
+        // A small chevron pointing down at the stop.
+        p.mark = this.add.graphics().setDepth(kind === 'story' ? 3201 : 3200);
+        p.mark.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(-5, -5, 5, -5, 0, 2);
+        p.mark.fillStyle(fill, 1).fillTriangle(-3.5, -4, 3.5, -4, 0, 0.5);
       }
-      const bob = Math.round(Math.sin(this.guideT / 220) * 2);
-      mark.setPosition(foot.x, foot.y - CHARACTER_HEIGHT - 6 + bob).setVisible(true);
+      const bob = Math.round(Math.sin(this.guideT / 220 + (kind === 'side' ? 1.5 : 0)) * 2);
+      // Above the "!" or sparkle when the stop already has one.
+      const lift = this.markerSprites.size > 0 && this.logic.markers().some((m) => Math.round(m.pos.x) === way.at.x && m.pos.y === way.at.y) ? 10 : 0;
+      p.mark.setPosition(foot.x, foot.y - CHARACTER_HEIGHT - 6 - lift + bob).setVisible(true);
       return;
     }
-    this.guideMark?.setVisible(false);
-    const arrow = (this.guideArrow ??= this.add.graphics().setDepth(3200));
-    if (arrow.getData('drawn') !== true) {
-      // A gold arrowhead on a dark disc, pointing right (rotated towards the stop).
-      arrow.fillStyle(QUEST_ARROW.outline, 0.55).fillCircle(0, 0, 8);
-      arrow.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(8, 0, -4, -6, -4, 6);
-      arrow.fillStyle(QUEST_ARROW.fill, 1).fillTriangle(6, 0, -2.5, -4.2, -2.5, 4.2);
-      arrow.setData('drawn', true);
+    p.mark?.setVisible(false);
+    if (!p.arrow) {
+      // An arrowhead on a dark disc, pointing right (rotated towards the stop).
+      p.arrow = this.add.graphics().setDepth(kind === 'story' ? 3201 : 3200);
+      p.arrow.fillStyle(QUEST_ARROW.outline, 0.55).fillCircle(0, 0, 8);
+      p.arrow.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(8, 0, -4, -6, -4, 6);
+      p.arrow.fillStyle(fill, 1).fillTriangle(6, 0, -2.5, -4.2, -2.5, 4.2);
     }
     // From the middle of the screen towards the stop, to where that line meets the screen's inner edge.
     const cx = view.x + VIEW_WIDTH / 2;
@@ -1335,7 +1364,7 @@ export class FieldScene extends Phaser.Scene {
     const half = { x: VIEW_WIDTH / 2 - pad, y: VIEW_HEIGHT / 2 - pad };
     const t = Math.min(dx !== 0 ? half.x / Math.abs(dx) : Infinity, dy !== 0 ? half.y / Math.abs(dy) : Infinity);
     const nudge = 1 + Math.sin(this.guideT / 260) * 0.02;
-    arrow
+    p.arrow
       .setPosition(Math.round(cx + dx * t * nudge), Math.round(cy + dy * t * nudge))
       .setRotation(Math.atan2(dy, dx))
       .setVisible(true);
@@ -1542,15 +1571,22 @@ export class FieldScene extends Phaser.Scene {
   }
 
   /**
-   * What Anissa can say now: her hints for the story's objective, then a nudge towards each side quest not
-   * started yet (owner request, Oct 18: "shouldn't you check in at the temple archive before we leave?").
+   * What Anissa can say now: her hints for the story's objective and a nudge towards each side quest not started
+   * yet, in turn (owner requests, Oct 18: "shouldn't you check in at the temple archive before we leave?").
    */
   private anissaLines(): { key: string | null; lines: string[] } {
     const quest = this.quest();
     const flags = this.logic.state.flags;
     const objective = quest ? currentObjective(quest, flags) : null;
     const nudges = quest ? sideNudges(SIDE_QUESTS, flags) : [];
-    return { key: objective || nudges.length ? `${objective?.id ?? 'done'}+${nudges.length}` : null, lines: [...(objective?.hints ?? []), ...nudges] };
+    // Back and forth (owner, Oct 18): a story hint, a nudge, the next story hint, the next nudge...
+    const hints = objective?.hints ?? [];
+    const lines: string[] = [];
+    for (let i = 0; i < Math.max(hints.length, nudges.length); i++) {
+      if (hints[i]) lines.push(hints[i]!);
+      if (nudges[i]) lines.push(nudges[i]!);
+    }
+    return { key: objective || nudges.length ? `${objective?.id ?? 'done'}+${nudges.length}` : null, lines };
   }
 
   private tickHints(delta: number): void {
@@ -2142,6 +2178,11 @@ export class FieldScene extends Phaser.Scene {
 
   // ---- Debug / tests -------------------------------------------------------------------------
 
+  private pointerSnapshot(kind: PointerKind): PointerSnapshot | null {
+    const p = this.pointers[kind];
+    return p.way ? { ...p.way.at, final: p.way.final, arrow: !!p.arrow?.visible, mark: !!p.mark?.visible } : null;
+  }
+
   private snapshot(): FieldSnapshot {
     const p = this.logic.state.player;
     const quest = this.quest();
@@ -2179,7 +2220,8 @@ export class FieldScene extends Phaser.Scene {
       },
       follower: f ? { x: f.pos.x, y: f.pos.y, glowing: f.glow !== null } : null,
       yari: this.yari ? { x: this.yari.pos.x, y: this.yari.pos.y, visible: this.yari.sprite.visible } : null,
-      guide: this.guideWay ? { ...this.guideWay.at, final: this.guideWay.final, arrow: !!this.guideArrow?.visible, mark: !!this.guideMark?.visible } : null,
+      guide: this.pointerSnapshot('story'),
+      sideGuide: this.pointerSnapshot('side'),
       crowd: this.crowd.length,
     };
   }

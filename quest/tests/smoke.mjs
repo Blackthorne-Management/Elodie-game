@@ -486,6 +486,7 @@ async function markChecks(page, sim, name) {
   // Quest arrows (owner requests, Oct 17 and 18): an arrow at the screen's edge, or a marker over the stop on screen.
   if (name === 'cane-road') check(s.guide?.final === true && (s.guide.arrow || s.guide.mark), `on the Cane Road the quest arrow or marker shows the way to the boar (${JSON.stringify(s.guide)})`);
   if (name === 'square') check(!!s.guide && (s.guide.arrow || s.guide.mark), `in Accord Square the quest arrow shows the way (${JSON.stringify(s.guide)})`);
+  if (name === 'square') check(!!s.sideGuide && (s.sideGuide.arrow || s.sideGuide.mark), `and a silver one shows a side quest's way (${JSON.stringify(s.sideGuide)})`);
 }
 
 /**

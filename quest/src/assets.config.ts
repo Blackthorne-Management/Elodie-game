@@ -553,7 +553,9 @@ export const CARD_ART: Readonly<Record<string, string>> = {
  * quests silver, those not started yet too).
  */
 export const QUEST_ARROW = {
+  /** The story's pointer is gold; a side quest's is silver (owner, Oct 18). */
   fill: 0xf2c14e,
+  side: 0xc8d0dc,
   outline: 0x14101a,
   /** How far inside the screen's edge the arrow floats, and the stop counts as on screen (world pixels). */
   edge: 14,
