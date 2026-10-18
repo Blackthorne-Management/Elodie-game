@@ -61,7 +61,7 @@ describe('the arrows follow the scripted route (every chapter it plays)', () => 
     const mapId = sim.logic.state.player.mapId;
     const quest = questForJournal(CHAPTERS, mapId, flags);
     const before = quest ? currentObjective(quest, flags) : null;
-    const goal = storyGoal(quest, flags);
+    const goal = storyGoal(quest, flags, SIDE_QUESTS);
     if (before && sim.logic.mode === 'field') {
       steps++;
       if (!goal) problems.push(`${before.id}: no goal holds (on ${mapId})`);

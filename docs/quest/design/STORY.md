@@ -109,9 +109,9 @@ guide are marked **(proposal)**.
      without them. **Built** (`story.envoy_papers`, key item
      `envoy_papers`; a Chapter 1 objective).
   10. **Before the tide. Built:** the three city side quests and the boar fight, with Yari in the party. Talking to
-      Yari again asks whether you are ready (first the papers; then she names unfinished errands, and leaving is still
-      allowed), and "Let's go"
-      sets `act1.complete`. **The Last Evening (proposal), on top:** free roam with Yari in the party. The city reacts to the lights (built lines).
+      Yari again asks whether you are ready (first the papers, then the boar; then the three side quests, which must
+      all be done before she sails: owner decision, Oct 18; the objective "Unfinished business" and the gold arrow
+      lead through them), and "Let's go" sets `act1.complete`. **The Last Evening (proposal), on top:** free roam with Yari in the party. The city reacts to the lights (built lines).
       Side quests can be finished. A Quiet Crown watcher on the Cane Road notices Anissa (built). Elodie's absence is
       felt: the Hall clerk shows Gianna the blank seventh line on the Marshal's stone and the seven-ribbon note.
   11. **Departure at dawn (proposal).** At the harbor: Anicette packs food and says "Ask them what we promised. Ask

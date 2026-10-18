@@ -59,10 +59,15 @@ export function waypoint(maps: Readonly<Record<string, GameMap>>, fromMap: strin
   return null;
 }
 
-/** The story's goal now: the current objective of the chapter the Journal shows. */
-export function storyGoal(quest: QuestDef | null, flags: FlagReader): Goal | null {
+/**
+ * The story's goal now: the current objective of the chapter the Journal shows. An objective done through the
+ * side quests (`followSide`) leads to the next side quest's stop: one in progress first, else one not started.
+ */
+export function storyGoal(quest: QuestDef | null, flags: FlagReader, sideQuests: readonly SideQuestDef[] = []): Goal | null {
   const objective = quest ? currentObjective(quest, flags) : null;
-  return objective ? goalFor(objective.goals, flags) : null;
+  if (!objective) return null;
+  if (objective.followSide) return sideGoals(sideQuests, flags)[0]?.goal ?? mysteryGoals(sideQuests, flags)[0]?.goal ?? null;
+  return goalFor(objective.goals, flags);
 }
 
 /** Side quests not started yet that the player could start now (`available`): mystery quests. */

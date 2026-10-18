@@ -1292,7 +1292,7 @@ export class FieldScene extends Phaser.Scene {
   private refreshGuide(): void {
     const flags = this.logic.state.flags;
     const maps = this.logic.maps;
-    const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags);
+    const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags, SIDE_QUESTS);
     this.pointers.story.way = goal ? waypoint(maps, this.map.id, goal, flags) : null;
     const on = questArrows() && this.logic.era === 'present';
     const sides = [...sideGoals(SIDE_QUESTS, flags), ...mysteryGoals(SIDE_QUESTS, flags)]
@@ -1301,8 +1301,10 @@ export class FieldScene extends Phaser.Scene {
     // The silver pointer: a side quest's stop on this map before one through a door, the nearest first.
     const me = this.logic.state.player.pos;
     const far = (w: Waypoint) => (w.final ? 0 : 1000) + Math.max(Math.abs(w.at.x - me.x), Math.abs(w.at.y - me.y));
-    this.pointers.side.way = [...sides].sort((a, b) => far(a) - far(b))[0] ?? null;
+    const nearest = [...sides].sort((a, b) => far(a) - far(b))[0] ?? null;
+    // While the story itself is the side quests (Pòdlimyè's errands), one arrow is enough: the gold one.
     const story = this.pointers.story.way;
+    this.pointers.side.way = nearest && story && nearest.at.x === story.at.x && nearest.at.y === story.at.y ? null : nearest;
     this.minimap?.setTargets(on ? [...sides.map((w) => ({ pos: w.at, story: false })), ...(story ? [{ pos: story.at, story: true }] : [])] : []);
   }
 
