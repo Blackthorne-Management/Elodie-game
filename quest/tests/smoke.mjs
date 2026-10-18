@@ -447,7 +447,9 @@ async function finishTyping(page) {
   for (let i = 0; i < 10; i++) {
     const s = await snap(page);
     if (s.mode === 'showcase' || !s.dialogue?.typing) return s;
-    await page.keyboard.press('KeyZ');
+    // A line nearly typed out is left to finish by itself: A pressed just as it finishes would turn the
+    // page instead, one line ahead of the simulator (a short line, "Bonjou! Kijan ou ye?", on a busy machine).
+    if (s.dialogue.text.length - s.dialogue.shown.length > 25) await page.keyboard.press('KeyZ');
     await page.waitForFunction(() => !window.__quest.snapshot().dialogue?.typing, null, { timeout: 3000 }).catch(() => {});
   }
   return snap(page);
