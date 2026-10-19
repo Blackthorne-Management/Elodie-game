@@ -1572,14 +1572,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
     // The envoy's paper (decision D, revised Oct 19). Late at night the Crown's consul, waiting in the gallery,
-    // walks in to ask why every lamp in the city lit an hour ago, and lays his own paper on the desk. No clause
+    // walks in to ask why every lamp in the city lit tonight, and lays his own paper on the desk. No clause
     // and no Throne: Chapter 2's council keeps those. He leaves the Hall for good (zetwal-hall.ts `if`).
     sign: {
       speaker: 'chancellor',
       lines: [
         { text: 'Envoy papers. Xaraguá.' },
         nar('She reads every line. Twice. Then she looks past you, at the door.'),
-        say('crown_consul', 'Chancellor. Forgive the hour. Every lamp in Pòdlimyè lit itself at once, an hour ago. His Majesty would like to know why.', {
+        say('crown_consul', 'Chancellor. Forgive the hour. Every lamp in Pòdlimyè lit itself at once tonight. His Majesty would like to know why.', {
           stage: [
             { do: 'look', actor: 'npc:crown_consul' },
             { do: 'walk', actor: 'npc:crown_consul', to: { x: 33, y: 6 }, facing: 'up' },
