@@ -330,3 +330,12 @@ Each step ends with `npm test`, and the route replay numbers are recorded after 
   Anicette hands over food: "Ask them what we promised. Ask them, not the Crown." Old Patricio gives Gianna his
   Marshal's whistle (a key item, no stats; it matters again in Chapter 10). They wave from the dock; Yari's canoe
   and the existing voyage stay the way out (no ferry).
+- **The choices (Oct 19): yes.** The farewell, Yari and soup-vendor answers are remembered with the payoff lines
+  above (including Yari's Chapter 2 "Count them" line and the veiled-woman callback). The envoy's choice is now
+  "Zetwal's waters are its own." / "Say nothing." ("Spoken like your mother, Miss Limyè. She says it more quietly."
+  / "Wise. Not everyone in this city is."), and if Gianna spoke up, at Chapter 2's council she adds: "They asked
+  Zetwal to thank them for protecting our waters too. We didn't." Anissa stays out of all of it.
+
+All decisions are made; the build follows the reordered plan in the second review (papers in one visit, the envoy,
+the cane cutter, the farewell, the choices, then the route and every test once, then the review and the hand-merged
+demo port).

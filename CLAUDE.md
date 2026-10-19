@@ -38,6 +38,8 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
 ## Working with the owner
 - Before each build, describe what you are going to do and wait for the owner's approval before continuing.
 - Ask questions one at a time, each with the reason behind it.
+- Recommend only what is just and genuinely helps the story or the gameplay; never recommend for its own sake
+  (owner rule, Oct 19).
 - After every command and run, end the reply with the link to the quest: https://zesty-puffpuff-852680.netlify.app/quest/
   (it updates only when a push is deployed, see below), then the exact commands to play it locally (owner request,
   Oct 17). The owner uses Windows PowerShell, where `npm` is blocked by the execution policy, so give them as:
