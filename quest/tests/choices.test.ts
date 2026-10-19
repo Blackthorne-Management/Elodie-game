@@ -142,7 +142,7 @@ describe("The Crown's consul in the Chancellor's office (decision D, revised Oct
 
   it('asks about the lamps, wants Zetwal to acknowledge His Majesty\'s protection of the southern waters, and is refused', () => {
     const lines = text(talk(sealed(), 'chancellor_talk', ['Say nothing']));
-    expect(lines).toContain('Every lamp in Pòdlimyè lit itself at once, an hour ago');
+    expect(lines).toContain('Every lamp in Pòdlimyè lit itself at once tonight');
     expect(lines).toContain("acknowledge His Majesty's protection of the southern waters");
     expect(lines).toContain('Nobody signs in that chair while she is away');
     expect(lines).toContain('That is the paper. They nailed it to our customs house.');
