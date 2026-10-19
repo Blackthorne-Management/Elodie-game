@@ -969,10 +969,9 @@ export class Game {
       }
     }
 
-    // Agnivansh II: a bonus half-move after landing a kill.
-    if (killer && !killer.specter && killer.pos && this.house(killer).halfMoveOnKill?.(killer.gen)) {
-      const n = Math.ceil(rollD6(this.rng) / 2);
-      yield* this.moveFree(killer, n, `Rakt Ki Pyaas: move up to ${n}`);
+    // Agnivansh II, Rakt Ki Pyaas: a bonus step after landing a kill (rules-decisions 88; was half a d6).
+    if (killer && !killer.specter && killer.pos && this.house(killer).moveOnKill?.(killer.gen)) {
+      yield* this.moveFree(killer, 1, 'Rakt Ki Pyaas: move up to 1');
     }
   }
 

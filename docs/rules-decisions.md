@@ -561,6 +561,16 @@ These came up in code and weren't covered above; all confirmed as they stand.
     At 6 players the heart cap's bonuses help the two attack-bonus/mobility houses: watch Ironvow and Agnivansh at
     6. Not retuned. Unbroken now saves a Stillwater heir about once a game at every count (it never fired at 6–8);
     Stillwater stays 0.89–1.18×. Fewer deaths and Specter games at 6 players, game length unchanged.
+- **Adopted: Rakt Ki Pyaas is one step [88]** (third design review, docs/REVIEW-2026-10-second.md follow-up; owner,
+  Oct 20). Agnivansh II: "after landing a kill, move up to half a d6 roll (rounded up)" → "after landing a kill, move
+  up to 1 space" (any path, like Agni ki Shakti's step). No second die inside a death. Balance (24,000 bot games each
+  way: 3,000 at 2, 3 and 4 players, 1,500 at 6 and 8, on two seed sets; win share ÷ fair share), Agnivansh before →
+  after: 2 players 0.93/0.87 → 0.94/0.89; 3: 0.89/0.99 → 0.89/0.98; 4: 0.98/1.00 → 0.89/0.95; **6: 1.11/1.16 →
+  0.98/1.06; 8: 1.11/1.22 → 1.10/0.97**. Every house stays within 0.83–1.22× at every count, as before. Engine:
+  `moveOnKill` (was `halfMoveOnKill`).
+  - **Tested, not adopted (same review): Baraka Dorini only on Dorini's own turn.** 3 players 1.18/1.15 → 1.09/1.08,
+    but 6 players 1.00/1.07 → 0.90/0.84 and 8 players 1.07/1.07 → 0.82/0.73, and Ironvow at 6 rose to 1.16/1.23.
+    Dorini stays as printed; watch it at 2–3 players in human play.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

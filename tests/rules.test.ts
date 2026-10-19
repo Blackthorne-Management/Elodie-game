@@ -222,6 +222,19 @@ describe('combat and death (Sections 6 and 9)', () => {
     expect(prompts.some(x => x.startsWith('Agni ki Shakti: move up to 1'))).toBe(true);
     expect(a.res.fear).toBe(0);
   });
+  it('Rakt Ki Pyaas II: one free step after landing a kill (rules-decisions 88)', () => {
+    const g = newGame(2, ['agnivansh', 'kaysoley']);
+    const [a, b] = g.s.players;
+    b.pos = { x: a.pos!.x, y: a.pos!.y + 1 };
+    a.hand = []; b.hand = [];
+    a.gen = 2; b.hp = 1;
+    startTurn(g, 0);
+    g.s.turn!.moved = true;
+    const prompts: string[] = [];
+    drive(g.basicAttack(a, b), d => { prompts.push(d.prompt); return 0; });
+    expect(a.kills).toBe(1);
+    expect(prompts).toContain('Rakt Ki Pyaas: move up to 1');
+  });
   it('Bazaar al-Dhahab costs 3 Wealth for an extra action', () => {
     const g = newGame(2, ['dorini', 'kaysoley']);
     const d = g.p(0);

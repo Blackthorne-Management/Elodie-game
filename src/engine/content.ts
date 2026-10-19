@@ -87,7 +87,7 @@ export interface HouseDef {
   abilities: Ability[];                            // generation abilities, cumulative
   // House rules that are not passives (cannot be copied).
   attackBeforeMove?: (gen: Gen) => boolean;
-  halfMoveOnKill?: (gen: Gen) => boolean;
+  moveOnKill?: (gen: Gen) => boolean;
   longWatch?: (gen: Gen) => boolean;
   claimReduction?: (gen: Gen) => number;
   mostFearedDownside?: (gen: Gen) => boolean;

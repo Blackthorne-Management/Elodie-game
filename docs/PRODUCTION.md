@@ -35,6 +35,8 @@ and ticks items off here as they land. Last updated **Wed Oct 15**.
     games, two seed sets): 3 players 1.18/1.15 to 1.09/1.08, but 6 players 0.90/0.84 and 8 players 0.82/0.73, and
     Ironvow at 6 rose to 1.16/1.23. Not applied. Watch Dorini at 2 to 3 players in the human playtests.
   - Also seen in those runs: Yaguana at 4 players about 1.14 to 1.21 on both seed sets (bots never use Guaíza).
+  - **Agnivansh: Rakt Ki Pyaas is now a 1-space move (rules-decisions 88, Oct 20):** 6 players 1.11/1.16 to
+    0.98/1.06, 8 players 1.11/1.22 to 1.10/0.97; every house still within 0.83 to 1.22.
 - [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
 

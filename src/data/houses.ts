@@ -221,7 +221,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
     passiveName: 'Agni ki Shakti',
     passiveText: ['Your basic attacks deal +1 damage.', 'Also: after your attack lands, you may move 1 space (not in a Challenge).'],
     passive: { basicAttackBonus: () => 1, stepOnLanded: level => (level >= 2 ? 1 : 0) },
-    halfMoveOnKill: gen => gen >= 2,
+    moveOnKill: gen => gen >= 2,
     abilities: [
       {
         id: 'anantaYuddha', name: 'Ananta Yuddha', gen: 4, limit: 'game',
@@ -254,7 +254,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
 // Text for the generation cards (Gen II-IV rules that are not abilities).
 export const GEN_NOTES: Partial<Record<HouseId, Partial<Record<1 | 2 | 3 | 4, string>>>> = {
   ironvow: { 2: "Raider's Charge: your basic attack may come before you move." },
-  agnivansh: { 2: 'Rakt Ki Pyaas: after landing a kill, move up to half a d6 roll (rounded up).' },
+  agnivansh: { 2: 'Rakt Ki Pyaas: after landing a kill, move up to 1 space.' },
   stillwater: {
     2: 'The Long Watch: if you take no action on your turn (no attack, Hand Card or trade), gain 1 of any resource.',
   },
