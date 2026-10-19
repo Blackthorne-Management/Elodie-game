@@ -305,3 +305,13 @@ Each step ends with `npm test`, and the route replay numbers are recorded after 
 6. **Docs** (Sonnet): `STORY.md` beats 9a, 10, 11; `SIDE-QUESTS.md`; `docs/PRODUCTION.md` open items.
 7. **Review before the port** (Fable, once): the whole Chapter 1 route replayed and read end to end.
 8. **Port to the demo** (Sonnet) and one smoke run there. No deploy until the owner asks.
+
+---
+
+## Owner decisions (recorded as they are made)
+
+- **Decision B (Oct 19): yes.** The engraver brings the seal to the Hall himself and hands it to Gianna at the
+  clerk's desk, keeping his lines.
+- **Technical points, settled by Claude after the second review (Oct 19):** the Journal is reordered so the gold
+  arrow leads the short way; old saves in the middle of the papers errand keep working; the build keeps the tests
+  green step by step (or says when they are not); the demo port is merged by hand.
