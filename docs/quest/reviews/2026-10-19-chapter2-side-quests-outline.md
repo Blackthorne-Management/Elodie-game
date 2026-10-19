@@ -361,3 +361,16 @@ harder boss.
 
 *Open items reminder (`docs/PRODUCTION.md`): the board order (A) is due Mon Oct 20, the owner still has to
 approve `print/board-24in.jpg`; art drop 1 Fri Oct 24; rules and card text freeze Fri Oct 31.*
+
+---
+
+## Owner decisions (recorded as they are made)
+
+- **The gate (Oct 19): after Thorne's watching scene, before the cave** (the second review's D3). The lamp-oil seller
+  lends the cave lamp at dusk, when the night canoe brings oil and the Governor's glass is off them ("Let him watch
+  us do ordinary things all day"); the cave, the areíto, the lock, the proof and the attack then play without a break.
+- **Settled by Claude from the second review (no owner decision needed):** rewards of 20 to 30 XP a quest and the
+  gate objective gives no XP, so the party reaches Thorne at the planned level; one mountain climb for both mountain
+  quests, the hutia's trail kept inside the gardens and a net on ground the story already walks; every quest closes
+  at the Crown attack (`!story.crown_attack`) so later saves show no dead "???" entries; Cut Nets has no fight (the
+  Yield step is not built, and the party is already strong enough).
