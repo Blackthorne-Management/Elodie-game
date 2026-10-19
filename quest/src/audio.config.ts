@@ -79,6 +79,13 @@ export const MUSIC_OVERRIDES: readonly { maps: readonly string[]; if: Condition;
 export const ECHO_MUSIC: MusicId = 'echo';
 export const BATTLE_MUSIC: MusicId = 'battle';
 export const VICTORY_MUSIC: MusicId = 'victory';
+/** Under the goddess on the Game Over screen (the Temple's song until she has a track of her own). */
+export const GAME_OVER_MUSIC: MusicId = 'temple';
+/**
+ * The animator's bell for the Game Over screen (shot 3 and the Rise), by path under quest/art/ (like
+ * assets.config.ts GAME_OVER_ART). Until the file is there, the made sound `bell` plays.
+ */
+export const GAME_OVER_BELL_FILE = 'gameover/gameover-bell.wav';
 
 /** A song for the length of a conversation (while its condition holds when it starts). */
 export interface DialogueMusic {
@@ -124,6 +131,9 @@ export const SFX_IDS = [
   'run',
   'tick',
   'drum',
+  // The Game Over screen: the low note as the party falls, and the goddess's soft bell.
+  'fall',
+  'bell',
 ] as const;
 
 export type SfxId = (typeof SFX_IDS)[number];

@@ -34,7 +34,11 @@ Jean-Philippe and Limyè family. If Gemini adds text, frames or a second person,
 
 The board game's rule holds here too: **Elodie is never shown with a full face**, only as a vast, serene presence:
 glowing hands, an eye, or a silhouette woven of stars and gold light (`docs/art/CARD-PROMPTS.md`). She wove the realm
-and remembers everything; she does not rule. No sprite or dialogue portrait: she never speaks.
+and remembers everything; she does not rule. No sprite or dialogue portrait. **She speaks only to her descendants**
+(Gianna and her line; owner decision, Oct 19): today only on the Game Over screen, where she catches a fallen heir
+and gives back the moment before the fight (`docs/quest/intro/GAME-OVER-STORYBOARD.md`). Her words show as gold text
+with no name box, portrait or voice; the first time, she names herself Elodie. Anywhere else she is "the goddess",
+never a label reading "Elodie" (Gianna's mother has the same name).
 
 **1a. Key illustration** (16:9; the intro's first shot and the title screen)
 ```

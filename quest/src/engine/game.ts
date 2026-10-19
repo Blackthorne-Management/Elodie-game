@@ -24,6 +24,14 @@ export function seenFlag(mapId: string, objectId: string): string {
   return `${SEEN_FLAG_PREFIX}${mapId}.${objectId}`;
 }
 
+/**
+ * Where the party goes back to after a lost fight (engine/gameOver.ts): set when a fight starts, as
+ * "<map>/<x>,<y>", and cleared when it ends. A Game Over's Rise and a reload in the middle of a fight both use it.
+ */
+export const FIGHT_RETURN_FLAG = 'fight.return';
+/** The scene a dialogue queued for after its fight is won (the pier: the marines flee, the fisher speaks). */
+export const BATTLE_AFTER_FLAG = 'battle.after';
+
 /** What the player is facing, with the name its label shows. */
 export type Target =
   | { kind: 'npc'; name: string; npc: NpcPlacement }
@@ -95,6 +103,8 @@ export class GameLogic {
   /** Random encounters: the dice, and steps walked in a wild zone since arriving or the last fight. */
   private readonly rng: Rng;
   private wildSteps = 0;
+  /** The tile the last step left (the way back from a fight trigger), or null after a load or a new game. */
+  private prevStep: { mapId: string; era: Era; pos: Pos } | null = null;
 
   constructor(maps: Readonly<Record<string, GameMap>>, content: GameContent, state: GameState, seed = 1) {
     this.maps = maps;
@@ -112,6 +122,10 @@ export class GameLogic {
     this.afterDialogue = [];
     this.anchorsAtEntry = null;
     this.wildSteps = 0;
+    this.prevStep = null;
+    // A save taken as a fight began (closed in the middle of it, or on the Game Over screen): the moment
+    // before the fight, off the trigger's tile, and no stale after-fight scene to play at the next win.
+    this.leaveLostFight();
   }
 
   get map(): GameMap {
@@ -204,6 +218,7 @@ export class GameLogic {
 
   /** Land on `to`: doors, then step triggers. Walking onto a walkable object (a bridge) counts as using it. */
   finishStep(to: Pos): Effect[] {
+    this.prevStep = { mapId: this.state.player.mapId, era: this.era, pos: { ...this.state.player.pos } };
     this.state.player.pos = { ...to };
     const walkedOn = this.objects().filter(
       (o) => o.walkable && rectContains(o.area, to) && !this.state.flags.isSet(seenFlag(this.map.id, o.id)),
@@ -481,12 +496,72 @@ export class GameLogic {
    * the pier's marines flee and the fisher speaks. After a loss it is dropped (talking to the foes again
    * queues it again).
    */
-  battleOver(won: boolean): Effect[] {
+  battleOver(won: boolean, then?: string): Effect[] {
     const flags = this.state.flags;
-    const after = flags.get('battle.after');
-    flags.clear('battle.after');
-    if (!won || typeof after !== 'string' || !after || this.mode !== 'field') return [];
+    const after = flags.get(BATTLE_AFTER_FLAG);
+    flags.clear(BATTLE_AFTER_FLAG);
+    this.forgetFightReturn();
+    if (this.mode !== 'field') return [];
+    // A fight meant to be lost: its scene, after a loss or a win alike.
+    if (then) return this.startDialogue(then, [{ kind: 'save' }]);
+    if (!won || typeof after !== 'string' || !after) return [];
     return this.startDialogue(after, [{ kind: 'save' }]);
+  }
+
+  /** The fight is over: a reload must not step the party back any more. */
+  forgetFightReturn(): void {
+    this.state.flags.clear(FIGHT_RETURN_FLAG);
+  }
+
+  /**
+   * After a Game Over (engine/gameOver.ts): the moment before the fight. The party stands where it began (one
+   * step back off a fight trigger, so walking on fights again), the after-fight scene is dropped (talking to the
+   * foes again queues it again), and the field is free. A lost fight changed nothing else (items, gold and XP
+   * only change on a win), so the game in memory already is that moment. The caller saves and redraws.
+   */
+  riseFromFight(): void {
+    this.mode = 'field';
+    this.card = null;
+    this.runner = null;
+    this.afterDialogue = [];
+    this.leaveLostFight();
+  }
+
+  /** Back to the fight's return tile (when one is set and still open), and clear the fight's markers. */
+  private leaveLostFight(): void {
+    const flags = this.state.flags;
+    const ret = flags.get(FIGHT_RETURN_FLAG);
+    flags.clear(FIGHT_RETURN_FLAG);
+    flags.clear(BATTLE_AFTER_FLAG);
+    flags.clear('battle.next');
+    const at = typeof ret === 'string' ? parseFightReturn(ret) : null;
+    const p = this.state.player;
+    const map = at && this.maps[at.mapId];
+    if (at && map && at.mapId === p.mapId && isOpen(map, p.era, at.pos, flags)) p.pos = { ...at.pos };
+  }
+
+  /**
+   * Where a fight starting now sends the party back to: where they stand, or, when that tile would fire a
+   * trigger again (the boar's line across the Cane Road), the tile they stepped from, if it is open, on this map
+   * and in this era, and is neither a door nor another trigger. Otherwise they stay put: the fight's foe
+   * waits on the map (tests/gameOver.test.ts checks every fight has a way back in).
+   */
+  fightReturn(): { mapId: string; pos: Pos } {
+    const p = this.state.player;
+    const prev = this.prevStep;
+    const back = this.wouldFire(p.pos) && prev && prev.mapId === p.mapId && prev.era === p.era && this.safeReturn(prev.pos);
+    return { mapId: p.mapId, pos: { ...(back ? prev.pos : p.pos) } };
+  }
+
+  private safeReturn(pos: Pos): boolean {
+    return (
+      inBounds(this.map, pos) &&
+      this.isOpen(pos) &&
+      !npcBlocks(this.map, this.era, pos, this.state.flags) &&
+      !doorAt(this.map, pos) &&
+      !this.wouldFire(pos) &&
+      !activeTriggers(this.map, this.era, this.state.flags).some((t) => rectContains(t.area, pos))
+    );
   }
 
   /** A rhythm lock was played (scenes/FieldScene.ts, or the simulator): set its flags on success, then its scene. */
@@ -545,6 +620,9 @@ export class GameLogic {
     const battle = flags.get('battle.next');
     if (typeof battle === 'string' && battle) {
       flags.clear('battle.next');
+      // Remember the moment before the fight (set before the autosave above is written by the caller).
+      const back = this.fightReturn();
+      flags.set(FIGHT_RETURN_FLAG, `${back.mapId}/${back.pos.x},${back.pos.y}`);
       effects.push({ kind: 'battle', battle });
     }
     const rhythm = flags.get('rhythm.next');
@@ -564,6 +642,12 @@ export class GameLogic {
     effects.push(...this.travel());
     return effects;
   }
+}
+
+/** Reads FIGHT_RETURN_FLAG ("<map>/<x>,<y>"); null when it is not one. */
+export function parseFightReturn(value: string): { mapId: string; pos: Pos } | null {
+  const m = /^(.+)\/(-?\d+),(-?\d+)$/.exec(value);
+  return m ? { mapId: m[1]!, pos: { x: Number(m[2]), y: Number(m[3]) } } : null;
 }
 
 /** A group from an encounter table, by weight. */

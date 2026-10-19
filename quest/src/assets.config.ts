@@ -548,6 +548,38 @@ export const CARD_ART: Readonly<Record<string, string>> = {
 };
 
 /**
+ * The Game Over screen (docs/quest/intro/GAME-OVER-STORYBOARD.md): the animator's films and still, by path
+ * under quest/art/ (src/scenes/artFiles.ts finds them). Each one replaces its part of the code-drawn
+ * placeholder (scenes/gameOverArt.ts) when its file is there; a missing file keeps the placeholder.
+ * The bell is in audio.config.ts (GAME_OVER_BELL_FILE); the timings are in config.ts (GAME_OVER).
+ *
+ *  gameover/gameover-fall.mp4   6 s: from the lost battle into her presence, ending on the held pose.
+ *  gameover-loop.mp4            4 s, seamless: her presence, breathing, while the player reads.
+ *  gameover-rise.mp4            1.5 s: the threads draw up, the gold flash, ending on solid cream.
+ *  gameover-still.png           the held pose, for players whose device asks for less motion.
+ */
+export const GAME_OVER_ART = {
+  fall: 'gameover/gameover-fall.mp4',
+  loop: 'gameover/gameover-loop.mp4',
+  rise: 'gameover/gameover-rise.mp4',
+  still: 'gameover/gameover-still.png',
+  /** The placeholder's colours: the intro's palette, with the game's navy for her sky. */
+  colors: {
+    night: '#1a1420',
+    grey: '#3a3440',
+    navy: '#2a3a78',
+    gold: '#f2d04b',
+    paleGold: '#fff2a0',
+    cream: '#f4ecd8',
+    sky: '#9ad8ff',
+    blue: '#3b4fa8',
+  },
+  /** How many gold threads the placeholder's loom strings, and how many stars light. */
+  threads: 20,
+  stars: 24,
+} as const;
+
+/**
  * Quest arrows (engine/guide.ts; owner requests, Oct 17 and 18): the gold arrow at the screen's edge that points
  * the story's way, the marker over the stop once it is on screen, and the minimap's dots (the story gold, side
  * quests silver, those not started yet too).

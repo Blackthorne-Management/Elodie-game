@@ -51,7 +51,9 @@ import { SideMap } from '../ui/SideMap.ts';
 import { ShopPanel } from '../ui/ShopPanel.ts';
 import { RhythmPanel } from '../ui/RhythmPanel.ts';
 import { ItemShowcase } from '../ui/ItemShowcase.ts';
-import { battleFx, battleSnapshot, type BattleSnapshot } from './BattleScene.ts';
+import { battleFx, battleLoseNow, battleSnapshot, type BattleSnapshot } from './BattleScene.ts';
+import { gameOverSnapshot, type GameOverSnapshot } from './GameOverScene.ts';
+import { BATTLE_AFTER_FLAG, FIGHT_RETURN_FLAG } from '../engine/game.ts';
 import type { FxKind } from './battleFx.ts';
 import type { BattleResult } from '../engine/battle.ts';
 import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
@@ -80,7 +82,7 @@ import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
 import { tilemapKey } from './BootScene.ts';
 
-type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase' | 'battle' | 'rhythm';
+type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase' | 'battle' | 'rhythm' | 'gameover';
 
 /** How long the glow on an object changed through the Echo lasts. */
 const CHANGED_GLOW_MS = 3600;
@@ -157,6 +159,8 @@ export interface FieldSnapshot {
   showcase: ReturnType<ItemShowcase['snapshot']>;
   /** The battle on screen (null when none). */
   battle: BattleSnapshot | null;
+  /** The goddess's Game Over screen (null when it is not up). */
+  gameOver: GameOverSnapshot | null;
   minimap: string | null;
   journal: string[] | null;
   card: string[] | null;
@@ -281,6 +285,8 @@ export class FieldScene extends Phaser.Scene {
   /** Each fighter's level when last checked (a rise shows "reached level n"). */
   private lastLevels = new Map<string, number>();
   private lastFx: string | undefined;
+  /** The fight started last and the scene its dialogue queued after it (the smoke test's rematch hook). */
+  private static lastFight: { battle: string; after: string | null } | null = null;
 
   constructor() {
     super('field');
@@ -443,9 +449,13 @@ export class FieldScene extends Phaser.Scene {
       showItem: (id) => this.openShowcase(id),
       startBattle: (id, extra) => this.startBattle(id, extra),
       battleFx: (kind, at) => battleFx(kind, at),
+      loseBattle: () => battleLoseNow(),
+      rematch: () => this.rematch(),
     };
     this.events.off('battle-done');
-    this.events.on('battle-done', (r: BattleResult | null) => this.afterBattle(r));
+    this.events.on('battle-done', (r: BattleResult | null, then?: string) => this.afterBattle(r, then));
+    this.events.off('battle-lost');
+    this.events.on('battle-lost', (count: number) => this.openGameOver(count));
 
     // Resume a dialogue or card the logic is in (after a door), then run on-enter scenes.
     if (this.logic.mode === 'dialogue') this.enterDialogueMode();
@@ -542,7 +552,7 @@ export class FieldScene extends Phaser.Scene {
     this.scene.pause();
   }
 
-  private afterBattle(result: BattleResult | null): void {
+  private afterBattle(result: BattleResult | null, then?: string): void {
     this.mode = 'field';
     this.rt.input.clearPresses();
     if (result) {
@@ -551,9 +561,39 @@ export class FieldScene extends Phaser.Scene {
     }
     this.checkProgress();
     this.handle([{ kind: 'sync' }]);
+    // The fight is over: a reload from this save must not step the party back to before it.
+    this.logic.forgetFightReturn();
     saveGame(this.rt);
-    // The scene a fight leads into (the pier: the marines flee, the fisher speaks), at once.
-    this.handle(this.logic.battleOver(result !== null));
+    // The scene a fight leads into (the pier: the marines flee, the fisher speaks), at once; a fight meant to
+    // be lost goes on with its own scene.
+    this.handle(this.logic.battleOver(result !== null, then));
+  }
+
+  /**
+   * The party fell (scenes/BattleScene.ts has counted it, put the party back before the fight and saved): the
+   * goddess's screen opens over the paused field, and Rise restarts the field where the party now stands.
+   */
+  private openGameOver(count: number): void {
+    this.mode = 'gameover';
+    this.minimap?.setVisible(false);
+    this.label.setVisible(false);
+    this.hint.hide();
+    this.scene.launch('gameover', { count });
+  }
+
+  /**
+   * Test hook (the smoke test, after an accidental Game Over on the scripted route): fight the last fight again
+   * from where the party stands, as talking to its waiting foe would (its after-fight scene queued again).
+   */
+  private rematch(): boolean {
+    const last = FieldScene.lastFight;
+    if (!last || this.mode !== 'field' || this.logic.mode !== 'field') return false;
+    const flags = this.logic.state.flags;
+    if (last.after) flags.set(BATTLE_AFTER_FLAG, last.after);
+    const p = this.logic.state.player;
+    flags.set(FIGHT_RETURN_FLAG, `${p.mapId}/${p.pos.x},${p.pos.y}`);
+    this.startBattle(last.battle);
+    return true;
   }
 
   // ---- The rhythm lock -----------------------------------------------------------------------
@@ -647,9 +687,12 @@ export class FieldScene extends Phaser.Scene {
         case 'card':
           this.showCard();
           break;
-        case 'battle':
+        case 'battle': {
+          const after = this.logic.state.flags.get(BATTLE_AFTER_FLAG);
+          FieldScene.lastFight = { battle: e.battle, after: typeof after === 'string' && after ? after : null };
           this.startBattle(e.battle);
           break;
+        }
         case 'shop': {
           // A vendor's greeting ended: their shop opens over the field.
           const shop = RPG.shops[e.shop];
@@ -2228,6 +2271,7 @@ export class FieldScene extends Phaser.Scene {
       rhythm: this.rhythmPanel.snapshot(),
       showcase: this.showcase.snapshot(),
       battle: battleSnapshot(),
+      gameOver: gameOverSnapshot(),
       minimap: this.minimap?.visible ? this.minimap.place : null,
       journal: this.mode === 'journal' ? this.panel.snapshot() : null,
       card: this.mode === 'card' ? this.panel.snapshot() : null,
@@ -2263,6 +2307,10 @@ declare global {
       startBattle: (id: string, extra?: string[]) => void;
       /** Play one battle effect (for the effects screenshots). */
       battleFx: (kind: FxKind, freezeAt?: number) => void;
+      /** The smoke test's switch to lose on purpose: the party in the battle on screen falls now. */
+      loseBattle: () => boolean;
+      /** After an accidental Game Over on the scripted route: fight the last fight again from here. */
+      rematch: () => boolean;
     };
   }
 }

@@ -453,6 +453,119 @@ body.standalone .fs-button { display: none; }
   font: 700 16px 'Atkinson Hyperlegible', system-ui, sans-serif;
 }
 
+/*
+ * The Game Over screen (scenes/GameOverScene.ts): the goddess's picture letterboxed like the intro, her words,
+ * the count and Rise in its lower third, on a dark band. Held upright, the words go under the picture.
+ */
+.gameover {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: #1a1420;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  color: #f4ecd8;
+  transition-property: opacity, background-color;
+  transition-timing-function: ease-out;
+}
+.gameover-frame {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  width: min(100vw, calc(100dvh * 16 / 9));
+  aspect-ratio: 16 / 9;
+}
+.gameover-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #1a1420;
+}
+.gameover-art, .gameover-video, .gameover-still, .gameover-veil {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.gameover-art, .gameover-still { image-rendering: pixelated; object-fit: contain; }
+.gameover-video { object-fit: contain; image-rendering: pixelated; }
+.gameover-veil { background: #f4ecd8; opacity: 0; }
+.gameover [hidden] { display: none !important; }
+.gameover-words {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 33.4%;
+  padding: 10px max(16px, 6%) max(10px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(to bottom, rgba(26, 20, 32, 0.55), rgba(26, 20, 32, 0.92) 30%);
+  font-size: clamp(16px, min(2.2vw, 4.4vh), 24px);
+  line-height: 1.35;
+  text-align: center;
+}
+.gameover-line {
+  margin: 0;
+  max-width: 46em;
+  color: #f2d04b;
+  font-weight: 700;
+  text-shadow: 0 1px 0 #1a1420, 0 0 6px rgba(26, 20, 32, 0.9);
+  min-height: 1.35em;
+}
+.gameover-words[data-speaker='gianna'] .gameover-line { color: #f4ecd8; font-style: italic; }
+.gameover-name { color: #a89c86; font-size: 0.8em; letter-spacing: 0.04em; }
+.gameover-row { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.gameover-count { display: flex; align-items: baseline; gap: 8px; }
+.gameover-count-num { color: #f2d04b; font-size: 2em; font-weight: 700; line-height: 1; }
+.gameover-count-label { color: #e8d8b0; font-size: 0.8em; }
+.gameover-rise, .gameover-skip {
+  min-width: 88px;
+  min-height: 44px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font: 700 18px 'Atkinson Hyperlegible', system-ui, sans-serif;
+  cursor: pointer;
+}
+.gameover-rise {
+  border: 2px solid #fff2a0;
+  background: #f2d04b;
+  color: #1a1420;
+  box-shadow: 0 0 12px rgba(242, 208, 75, 0.55);
+}
+.gameover-skip {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  min-width: 72px;
+  border: 1px solid rgba(244, 236, 216, 0.5);
+  background: rgba(0, 0, 0, 0.55);
+  color: #f4ecd8;
+  font-size: 16px;
+}
+.gameover-leaving { background: #f4ecd8; pointer-events: none; }
+.gameover-leaving > * { visibility: hidden; }
+@media (orientation: portrait) {
+  .gameover-frame { width: 100vw; aspect-ratio: auto; display: flex; flex-direction: column; }
+  .gameover-stage { position: relative; inset: auto; width: 100%; aspect-ratio: 16 / 9; }
+  .gameover-words {
+    position: static;
+    min-height: 13em;
+    justify-content: flex-start;
+    padding: 18px 16px 16px;
+    background: #1a1420;
+    font-size: clamp(17px, 4.6vw, 22px);
+  }
+}
+
 /* The install screen (ui/installScreen.ts): phones are shown how to install first. Readable at 390 px. */
 body.installing #game,
 body.installing .rotate-hint { display: none; }

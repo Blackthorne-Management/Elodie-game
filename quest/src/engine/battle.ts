@@ -6,7 +6,7 @@
 // skills at a quarter less SP; Anissa's Spark (+1 when Gianna acts, +2 when she guards) and Surge
 // (spend 5: Gianna's next blow or spell x1.5, a free action); Anissa's Light (every 3 of Gianna's
 // turns, 20% of her SP back); gear specials (regen, SP regen, crit); healing over time (the clay-pot
-// soup); enemies with a telegraphed heavy move; and The Heir Rises (losing restarts with a Grudge).
+// soup); enemies with a telegraphed heavy move; and the Grudge (each Game Over at a fight helps the next try).
 // Added with the side-view battle screen (owner, Oct 15): every skill names its targets (one foe, every
 // foe, random foes, one ally, every ally, or the user), skills can carry an element and a status, and
 // the statuses Inspired, Weakened, Marked, Warded and Regen (COMBAT 10) change damage and healing.
@@ -188,6 +188,12 @@ export interface BattleDef {
    * pressed), and pages after a win.
    */
   tutorial?: { start: readonly TutorialPage[]; moments?: Partial<Record<LessonMoment, readonly TutorialPage[]>>; after?: readonly TutorialPage[] };
+  /**
+   * A fight the story means the party to lose (engine/gameOver.ts): falling never shows the goddess, never
+   * counts and gives no Grudge; `scene` (a dialogue) plays instead, after a loss or a win alike, and a win
+   * sets no won flag. Never on a random ambush (tests/gameOver.test.ts).
+   */
+  meantToLose?: { scene: string };
 }
 
 /**
@@ -329,7 +335,7 @@ export type Action =
 
 export interface BattleOptions {
   seed: number;
-  /** The Heir Rises: +GRUDGE_STEP per lost attempt, up to GRUDGE_MAX. */
+  /** The Grudge: +GRUDGE_STEP per earlier Game Over at this fight, up to GRUDGE_MAX (engine/gameOver.ts). */
   grudge?: number;
   difficulty?: keyof typeof DIFFICULTY;
 }
@@ -588,7 +594,10 @@ export class Battle {
     return true;
   }
 
-  /** Lost: restart from the first turn with a Grudge (The Heir Rises). */
+  /**
+   * The next try with one more step of Grudge. The battle screen no longer restarts a lost fight (a loss opens
+   * the Game Over screen, and the next try takes its Grudge from the save: engine/gameOver.ts grudgeFor).
+   */
   static retry(prev: Battle, party: readonly PartyEntry[], enemies: readonly EnemyDef[], items: readonly BattleItem[], seed: number): Battle {
     return new Battle(prev.def, party, enemies, items, { seed, grudge: Math.min(GRUDGE_MAX, prev.grudge + GRUDGE_STEP) });
   }
@@ -959,6 +968,7 @@ export function settleBattle(flags: FlagStore, rpg: RpgContent, battle: Battle):
     const def = rpg.items[it.id];
     if (def) flags.set(`item.${it.id}`, itemCount(flags, it.id) + it.n);
   }
-  flags.set(encounterFlag(battle.def.table, battle.def.group, 'won'), true);
+  // A fight meant to be lost goes on with its story scene either way; it is never marked won.
+  if (!battle.def.meantToLose) flags.set(encounterFlag(battle.def.table, battle.def.group, 'won'), true);
   return { xp: r.xp, gold: r.gold, items: [...(r.items ?? [])] };
 }

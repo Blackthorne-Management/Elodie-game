@@ -5,8 +5,10 @@
 // whose turn it is for a party member who is waiting. Choose a command, then
 // a target (a cursor over a foe or an ally; skills that reach a whole side mark every target at once).
 // The fighters never walk: they shiver when they strike or are struck, and the effects (scenes/battleFx.ts)
-// play over them, with damage numbers floating up. Winning shows the rewards; losing restarts the fight
-// with a Grudge (The Heir Rises). Keys, gamepad, the touch buttons and taps all work.
+// play over them, with damage numbers floating up. Winning shows the rewards. Losing opens the goddess's
+// Game Over screen (scenes/GameOverScene.ts; engine/gameOver.ts), and the next try at that fight starts with
+// its Grudge; a fight meant to be lost goes on with its scene instead. Keys, gamepad, the touch buttons and
+// taps all work.
 
 import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, VICTORY_MUSIC } from '../audio.config.ts';
@@ -28,7 +30,9 @@ import {
   textureKeyForEnemy,
   textureKeyForWeapon,
 } from '../assets.config.ts';
-import { SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { GAME_OVER, SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { GAME_OVER_TEXT } from '../data/gameOver.ts';
+import { clearLosses, grudgeFor, recordLoss } from '../engine/gameOver.ts';
 import { ENEMIES, SKILL_BOOK, battleDef } from '../data/battles.ts';
 import { RPG } from '../data/rpg.ts';
 import {
@@ -49,7 +53,7 @@ import {
   type StatusId,
   type TargetKind,
 } from '../engine/battle.ts';
-import { getRuntime } from '../runtime.ts';
+import { getRuntime, saveGame } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
 import { playFx, type FxKind, type Point } from './battleFx.ts';
 import { fileKey } from './textures.ts';
@@ -92,6 +96,10 @@ export interface BattleSnapshot {
   done: boolean;
   /** The tutorial page on screen (the boar fight), or null. */
   tutorial: { title: string; page: number; pages: number } | null;
+  /** The Grudge this try started with (0.1 per earlier Game Over at this fight). */
+  grudge: number;
+  /** The party has fallen: the Game Over screen (or a lost fight's scene) is coming. */
+  fallen: boolean;
 }
 
 /** Short tags for statuses, by the party's bars and under a foe's name. */
@@ -128,6 +136,16 @@ export function battleSnapshot(): BattleSnapshot | null {
   return current?.snapshot() ?? null;
 }
 
+/** Test hook (the smoke test's switch to lose on purpose): the whole party falls now. */
+export function battleLoseNow(): boolean {
+  return current?.loseNow() ?? false;
+}
+
+/** A tutorial page set seen on this save (start pages, or a lesson): never shown again on a later try. */
+function tutorialFlag(battle: string, part: string): string {
+  return `tutorial.${battle}.${part}`;
+}
+
 export class BattleScene extends Phaser.Scene {
   private battle!: Battle;
   private battleId = '';
@@ -157,8 +175,8 @@ export class BattleScene extends Phaser.Scene {
   private tutorial: TutorialPage[] = [];
   private tutorialTotal = 0;
   private afterTutorial: BattleEvent[] = [];
-  /** Lessons already shown this fight (a retry after a loss does not show them again). */
-  private lessonsSeen = new Set<string>();
+  /** The party has fallen: input waits for the Game Over screen. */
+  private fallen = false;
 
   constructor() {
     super('battle');
@@ -180,7 +198,7 @@ export class BattleScene extends Phaser.Scene {
     this.weapons = new Map();
     this.tutorial = [];
     this.tutorialTotal = 0;
-    this.lessonsSeen = new Set();
+    this.fallen = false;
     this.afterTutorial = [];
   }
 
@@ -211,7 +229,7 @@ export class BattleScene extends Phaser.Scene {
 
   // ---- The fight ----------------------------------------------------------------------------------
 
-  private begin(retryOf?: Battle): void {
+  private begin(): void {
     const rt = getRuntime();
     const flags = rt.logic.state.flags;
     const def = battleDef(this.battleId);
@@ -225,11 +243,19 @@ export class BattleScene extends Phaser.Scene {
     const enemies = def.enemies.map((id) => ENEMIES[id]!).filter(Boolean).map((e) => (def.level ? { ...e, level: def.level } : e));
     const items = battleItems(flags, RPG);
     this.seed = (this.seed * 1103515245 + 12345) >>> 0;
-    this.battle = retryOf ? Battle.retry(retryOf, party, enemies, items, this.seed) : new Battle(def, party, enemies, items, { seed: this.seed });
+    // The Grudge: each earlier Game Over at this fight makes the party's blows land harder (engine/gameOver.ts).
+    const grudge = grudgeFor(flags, def);
+    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge });
     this.placeFighters();
-    // The tutorial comes first (not again after a loss); the fight waits behind it.
-    if (!retryOf && def.tutorial) this.openTutorial(def.tutorial.start, this.battle.start());
-    else this.play(this.battle.start());
+    const opening: BattleEvent[] = [];
+    if (grudge > 0) opening.push({ kind: 'text', text: GAME_OVER_TEXT.grudge.replace('{p}', String(Math.round(grudge * 100))) });
+    opening.push(...this.battle.start());
+    // The tutorial comes first (not again on a later try: the pages are remembered on the save); the fight waits behind it.
+    const startFlag = tutorialFlag(def.id, 'start');
+    if (def.tutorial && !rt.logic.state.flags.isSet(startFlag)) {
+      rt.logic.state.flags.set(startFlag, true);
+      this.openTutorial(def.tutorial.start, opening);
+    } else this.play(opening);
   }
 
   private openTutorial(pages: readonly TutorialPage[], then: BattleEvent[] = []): void {
@@ -280,8 +306,10 @@ export class BattleScene extends Phaser.Scene {
     // A lesson (the boar fight's tutorial, when its moment comes): its pages, then the rest of the turn.
     if (e.kind === 'lesson') {
       const pages = this.battle.def.tutorial?.moments?.[e.moment];
-      if (pages?.length && !this.lessonsSeen.has(e.moment)) {
-        this.lessonsSeen.add(e.moment);
+      const flags = getRuntime().logic.state.flags;
+      const seen = tutorialFlag(this.battle.def.id, e.moment);
+      if (pages?.length && !flags.isSet(seen)) {
+        flags.set(seen, true);
         this.busy = false;
         this.openTutorial(pages, this.queue.splice(0));
         return;
@@ -449,6 +477,7 @@ export class BattleScene extends Phaser.Scene {
   private win(): void {
     const flags = getRuntime().logic.state.flags;
     this.result = settleBattle(flags, RPG, this.battle);
+    clearLosses(flags, this.battle.def);
     this.done = true;
     audio.playMusic(VICTORY_MUSIC);
     const items = this.result.items.map((i) => RPG.items[i.id]?.name ?? i.id).join(', ');
@@ -457,24 +486,65 @@ export class BattleScene extends Phaser.Scene {
     if (after) this.openTutorial(after);
   }
 
+  /**
+   * Every fighter is down. A fight meant to be lost goes straight on to its scene (no goddess, no count). Any
+   * other: Anissa cries out, the battle music cuts to one low note and the battle fades to near-black, and the
+   * goddess's screen opens. Before it opens the fall is counted, the party is put back where the fight began
+   * (off a fight trigger) and the game is saved, so closing the app on her screen loses nothing.
+   */
   private lose(): void {
-    // The Heir Rises: never a game over; the fight starts again with a Grudge.
-    this.queue.push({ kind: 'text', text: 'Gigi! Get up! Please!', speaker: 'Anissa' }, { kind: 'text', text: 'Gianna rises. "Again. For them."' });
-    this.time.delayedCall(BATTLE_ART.messageMs * 3.5, () => {
-      this.queue = [];
-      for (const s of this.sprites.values()) s.destroy();
-      this.sprites.clear();
-      this.sticky = '';
-      this.begin(this.battle);
+    if (this.fallen) return;
+    this.fallen = true;
+    this.done = true;
+    this.queue = [];
+    this.tutorial = [];
+    const rt = getRuntime();
+    const outcome = recordLoss(rt.logic.state.flags, this.battle.def);
+    if (outcome.kind === 'scripted') {
+      this.time.delayedCall(BATTLE_ART.messageMs * 1.5, () => this.finish(outcome.scene));
+      return;
+    }
+    rt.logic.riseFromFight();
+    saveGame(rt);
+    audio.playMusic(null);
+    audio.sfx('fall');
+    this.sticky = '';
+    this.say('Anissa: Gigi! Get up! Please!');
+    this.redraw();
+    this.time.delayedCall(GAME_OVER.cryMs, () => {
+      const cam = this.cameras.main;
+      cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+        const field = this.scene.get('field');
+        this.scene.stop();
+        field.events.emit('battle-lost', outcome.count);
+      });
+      cam.fadeOut(GAME_OVER.battleFadeMs, 0x1a, 0x14, 0x20);
     });
   }
 
-  /** Leave: back to the field, which shows the rewards and saves. */
-  private finish(): void {
+  /** Test hook: the whole party falls at once (the smoke test's Game Over on purpose). */
+  loseNow(): boolean {
+    if (this.fallen || !this.battle) return false;
+    for (const p of this.battle.party) {
+      p.hp = 0;
+      p.down = true;
+      // Kneel, as a fighter who falls does (the down pose), or fade.
+      const s = this.sprites.get(p.key);
+      if (s && this.hasStance(s)) s.setFrame('1');
+      else s?.setAlpha(0.35).setTint(0x6a6a7a);
+    }
+    this.battle.outcome = 'lost';
+    this.redraw();
+    this.lose();
+    return true;
+  }
+
+  /** Leave: back to the field, which shows the rewards and saves (and a lost fight's scene, `then`). */
+  private finish(then?: string): void {
     const field = this.scene.get('field');
     this.scene.stop();
     this.scene.resume('field');
-    field.events.emit('battle-done', this.result);
+    field.events.emit('battle-done', this.result, then ?? this.battle.def.meantToLose?.scene);
   }
 
   // ---- Commands and targets -------------------------------------------------------------------------
@@ -606,6 +676,7 @@ export class BattleScene extends Phaser.Scene {
     this.holdWeapons();
     const input = getRuntime().input;
     input.update();
+    if (this.fallen) return;
     if (this.tutorial.length > 0) {
       if (input.pressed('confirm')) this.turnTutorial();
       else if (input.pressed('cancel')) this.turnTutorial(true);
@@ -657,6 +728,7 @@ export class BattleScene extends Phaser.Scene {
     const k = renderScale();
     const x = pointer.x / k;
     const y = pointer.y / k;
+    if (this.fallen) return;
     if (this.tutorial.length > 0) {
       this.turnTutorial();
       return;
@@ -919,7 +991,9 @@ export class BattleScene extends Phaser.Scene {
 
     // Top bar: the place and the turn order.
     g.fillStyle(BATTLE_ART.band, 0.55).fillRect(0, 0, VIEW_WIDTH, 12);
-    text(5, 1, b.def.title, UI.accentText);
+    const title = text(5, 1, b.def.title, UI.accentText);
+    // The Grudge stays in view for the whole try (shown, so the help is honest).
+    if (b.grudge > 0) text(9 + Math.ceil(title.width), 1, `Grudge +${Math.round(b.grudge * 100)}%`, '#f2b8d0');
     if (!this.done) {
       const order = b.upcoming(6).map((c) => c.name.split(' ').pop()!.slice(0, 8));
       const t = text(0, 1, `Next: ${order.join(' > ')}`, UI.dimText);
@@ -1009,7 +1083,7 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (this.done) {
-      text(248, Y + 17, 'A or tap: continue', UI.dimText).setOrigin(0.5, 0);
+      if (!this.fallen) text(248, Y + 17, 'A or tap: continue', UI.dimText).setOrigin(0.5, 0);
       return;
     }
     if (this.menu === 'target') {
@@ -1077,6 +1151,8 @@ export class BattleScene extends Phaser.Scene {
       busy: this.busy,
       done: this.done,
       tutorial: this.tutorial[0] ? { title: this.tutorial[0].title, page: this.tutorialTotal - this.tutorial.length + 1, pages: this.tutorialTotal } : null,
+      grudge: b.grudge,
+      fallen: this.fallen,
     };
   }
 

@@ -15,6 +15,13 @@
 //    The route includes a diagonal step (two keys at once). At the route's @markers it checks the
 //    name label and markers, the lamp, the winch, the bridge before and after (and the glow the
 //    Echo change leaves), and takes screenshots at desktop and landscape phone (844x390) sizes.
+//    The route wins every fight; if the bot loses one by accident (each battle's dice come from the clock),
+//    the goddess's Game Over screen opens: the bot skips to Rise, walks back on (or meets the foe again) and
+//    fights it again, and says so in the log.
+// 4. Game Over on purpose (scenes/GameOverScene.ts): on a phone, lose the boar (a test-only switch makes the
+//    party fall), see the goddess's first meeting (the six lines, the count 1), screenshots both ways, Rise
+//    (44 px), stand one tile west of the boar's line, reload (the count kept), walk on: no tutorial pages, the
+//    Grudge +10%; lose again and Skip: the count 2; Rise, and win with +20%.
 //
 // Fails on any page error.
 //
@@ -43,10 +50,11 @@ const { chromium } = loadPlaywright();
 // The engine, content and maps, straight from the TypeScript sources (npm run smoke runs Node with
 // --experimental-strip-types).
 const { parseRoute } = await import('../src/engine/sim.ts');
-const { encodeSave } = await import('../src/engine/save.ts');
+const { decodeSave, encodeSave } = await import('../src/engine/save.ts');
 const { newGameSim, readJson } = await import('../tools/sim-setup.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
 const { battleDef } = await import('../src/data/battles.ts');
+const { GODDESS_WORDS } = await import('../src/data/gameOver.ts');
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
@@ -634,9 +642,15 @@ async function fightBoar(page, shots) {
   let targeted = false;
   let spoils = false;
   const later = [];
+  const at = await snap(page);
   for (let turn = 0; turn < 160; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
-    const bt = (await snap(page)).battle;
+    const st = await snap(page);
+    if (st.gameOver || st.battle?.fallen) {
+      await riseAndRetry(page, 'intro_boar', at);
+      continue;
+    }
+    const bt = st.battle;
     if (!bt) break;
     if (bt.tutorial) {
       if (!later.includes(bt.tutorial.title)) {
@@ -687,10 +701,16 @@ async function fightBattle(page, id, shots) {
   const music = await page.waitForFunction(() => window.__audio?.().playing === 'battle', null, { timeout: 15000 }).then(() => true, () => false);
   check(music, `${id}: the battle music plays`);
   let shot = false;
-  // A lost fight starts again with a Grudge (never a game over), so a boss may take two tries.
-  for (let turn = 0; turn < 200; turn++) {
+  // A lost fight opens the goddess's Game Over screen: Rise, then back into the fight (riseAndRetry).
+  const at = await snap(page);
+  for (let turn = 0; turn < 260; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
-    const bt = (await snap(page)).battle;
+    const st = await snap(page);
+    if (st.gameOver || st.battle?.fallen) {
+      await riseAndRetry(page, id, at);
+      continue;
+    }
+    const bt = st.battle;
     if (!bt) break;
     if (!shot) {
       await shoot(page, `battle-${id}`, shots);
@@ -716,6 +736,184 @@ async function fightBattle(page, id, shots) {
   const after = await snap(page);
   const battle = battleDef(id);
   check(after.flags[`encounter.${battle.table}.${battle.group}.won`] === true, `${id}: the fight is won in the browser`);
+}
+
+/** Game Overs the scripted route met by accident (each is logged; more than three fails the run). */
+let accidentalFalls = 0;
+
+/**
+ * The bot lost a fight on the scripted route (the dice come from the clock): the goddess's screen opens. Skip
+ * (B) to the last screen, Rise (A), and fight again from the moment before: a fight started by stepping on a
+ * trigger (the boar's line) is one step back, so step on again; any other waits where it began, so meet the
+ * foe again from the same tile (the rematch hook: what talking to the waiting foe does, without walking away
+ * from where the simulator expects Gianna). `at` is the field as the fight began.
+ */
+async function riseAndRetry(page, id, at) {
+  accidentalFalls++;
+  console.log(`  note - ${id}: the party fell by accident (${accidentalFalls}); the goddess's screen, Rise, and the fight again`);
+  check(accidentalFalls <= 3, 'the scripted route loses at most three fights by accident');
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver, null, { timeout: 15000 });
+  await page.keyboard.press('KeyX');
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver?.countShown, null, { timeout: 15000 });
+  await page.keyboard.press('KeyZ');
+  // Back on the map (an item received before the fight may show its showcase first: close it).
+  await page.waitForFunction(() => { const s = window.__quest?.snapshot(); return s && !s.gameOver && !s.moving && (s.mode === 'field' || s.mode === 'showcase'); }, null, { timeout: 15000 });
+  for (let i = 0; i < 5 && (await handleShowcase(page, new Set(), [])); i++) await frames(page);
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 5000 });
+  await frames(page);
+  const s = await snap(page);
+  if (s.mapId === at.mapId && (s.x !== at.x || s.y !== at.y)) {
+    // Back off a fight trigger: step on again, the way the party came.
+    const dx = Math.sign(at.x - s.x);
+    const dy = Math.sign(at.y - s.y);
+    const dir = [dy < 0 ? 'up' : dy > 0 ? 'down' : '', dx < 0 ? 'left' : dx > 0 ? 'right' : ''].filter(Boolean).join('-');
+    if (dir.includes('-')) await pressDiagonal(page, dir);
+    else await page.keyboard.press(KEYS[dir]);
+    await page.waitForFunction(() => window.__quest.snapshot().mode === 'dialogue', null, { timeout: 5000 });
+    for (let i = 0; i < 40; i++) {
+      const t = await finishTyping(page);
+      if (t.mode !== 'dialogue') break;
+      await page.keyboard.press('KeyZ');
+      await frames(page);
+    }
+  } else check(await page.evaluate(() => window.__quest.rematch()), `${id}: the fight starts again from where it began`);
+  await page.waitForFunction(() => window.__quest.snapshot().battle, null, { timeout: 15000 });
+  check((await snap(page)).battle.grudge > 0 || id.startsWith('encounter:'), `${id}: the second try starts with a Grudge`);
+}
+
+/**
+ * Game Over on purpose (owner request, Oct 19; docs/quest/intro/GAME-OVER-STORYBOARD.md), on a phone held
+ * sideways: lose the boar with the test-only switch, read the goddess's first meeting, Rise, and win it later.
+ */
+async function gameOverFlow(browser, errors) {
+  console.log('Game Over (the goddess, on purpose):');
+  const ctx = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  const shots = [];
+  const both = async (name) => {
+    await page.screenshot({ path: join(SHOT_DIR, `${name}-landscape.png`) });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(250);
+    await page.screenshot({ path: join(SHOT_DIR, `${name}-portrait.png`) });
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.waitForTimeout(150);
+    shots.push(`${name}-landscape.png`, `${name}-portrait.png`);
+  };
+  await page.goto(GAME);
+  await waitReady(page);
+  // On the Cane Road one tile west of the boar's line (x 9), with Anissa, Yari asked.
+  const code = encodeSave({
+    version: 2, era: 'present', settings: { textSpeed: 'fast', hints: false }, savedAt: 1,
+    flags: { 'story.festival_intro': true, 'story.heard_speech': true, 'party.anissa': true, 'story.yari_asked': true },
+    mapId: 'zetwal-road', x: 8, y: 12, facing: 'right',
+  });
+  await page.evaluate((c) => localStorage.setItem('bloodlines-quest.save', c), code);
+  await page.reload();
+  await waitReady(page);
+  const readOn = async () => {
+    await page.waitForFunction(() => window.__quest.snapshot().mode === 'dialogue', null, { timeout: 5000 });
+    for (let i = 0; i < 40; i++) {
+      const t = await finishTyping(page);
+      if (t.mode !== 'dialogue') break;
+      await page.keyboard.press('KeyZ');
+      await frames(page);
+    }
+    await page.waitForFunction(() => window.__quest.snapshot().battle, null, { timeout: 15000 });
+  };
+  await page.keyboard.press('ArrowRight');
+  await readOn();
+  check((await snap(page)).battle.grudge === 0, 'the first try at the boar has no Grudge');
+  check(await page.evaluate(() => window.__quest.loseBattle()), 'the test switch makes the party fall');
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver, null, { timeout: 10000 });
+  let g = (await snap(page)).gameOver;
+  check(g.phase === 'fall' && g.count === 1, `the goddess's screen opens on the fall, the first time (${g.phase}, ${g.count})`);
+  check((await snap(page)).flags['gameover.count'] === 1, 'the count is saved as the screen opens');
+  const stored = decodeSave(await page.evaluate(() => localStorage.getItem('bloodlines-quest.save')));
+  check(stored.ok && stored.data.flags['gameover.count'] === 1 && stored.data.x === 8, 'the save holds the count, and the moment before the fight');
+  // A or a tap during the fall does nothing.
+  await page.keyboard.press('KeyZ');
+  await page.locator('.gameover').tap({ position: { x: 40, y: 200 } });
+  await frames(page);
+  check((await snap(page)).gameOver.phase === 'fall', 'A or a tap during the fall does nothing');
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver?.phase === 'words', null, { timeout: 12000 });
+  await page.waitForTimeout(300);
+  await both('quest-gameover-first-line');
+  // Her words, one per tap (none moves on by itself), the first meeting exactly.
+  const seen = [];
+  const layerTap = () => page.locator('.gameover').tap({ position: { x: 40, y: 200 } });
+  // A tap while her first (long) line types shows the rest of it, and stays on it.
+  g = (await snap(page)).gameOver;
+  if (g.typing) {
+    await layerTap();
+    await frames(page);
+    g = (await snap(page)).gameOver;
+    check(g.line === 0 && !g.typing, 'a tap while a line types shows the whole line');
+  }
+  for (let i = 0; i < 12; i++) {
+    await page.waitForFunction(() => !window.__quest.snapshot().gameOver?.typing, null, { timeout: 5000 });
+    g = (await snap(page)).gameOver;
+    seen[g.line] = g.text;
+    if (g.speaker === 'gianna') await both('quest-gameover-gianna');
+    if (g.countShown) break;
+    // Nothing moves on by itself: the line waits for the next tap.
+    await page.waitForTimeout(400);
+    check((await snap(page)).gameOver.line === g.line, `line ${g.line + 1} waits for a tap`);
+    await layerTap();
+    await page.waitForFunction((n) => window.__quest.snapshot().gameOver?.line !== n, g.line, { timeout: 3000 });
+  }
+  check(JSON.stringify(seen) === JSON.stringify(GODDESS_WORDS.firstMeeting.map((l) => l.text)), `the first meeting: she names herself, Gianna asks "Like my mother?" (${seen.length} lines)`);
+  g = (await snap(page)).gameOver;
+  check(g.countShown && g.count === 1 && !g.skipVisible, 'the last screen shows the count, 1, and Rise');
+  const tap = await page.evaluate(() => {
+    const r = document.querySelector('.gameover-rise').getBoundingClientRect();
+    const k = document.querySelector('.gameover-count-num').textContent;
+    return { w: r.width, h: r.height, k, inside: r.bottom <= innerHeight && r.right <= innerWidth };
+  });
+  check(tap.w >= 44 && tap.h >= 44 && tap.inside && tap.k === '1', `Rise is a 44 px target on screen (${tap.w}x${tap.h}), under the count ${tap.k}`);
+  // A stray tap on the last screen does not rise.
+  await page.locator('.gameover').tap({ position: { x: 40, y: 40 } });
+  await frames(page);
+  check((await snap(page)).gameOver?.phase === 'words', 'a stray tap on the last screen does not rise');
+  await both('quest-gameover-last');
+  await page.locator('.gameover-rise').tap();
+  await page.waitForFunction(() => { const s = window.__quest?.snapshot(); return s && s.mode === 'field' && !s.gameOver; }, null, { timeout: 10000 });
+  await page.waitForTimeout(1200);
+  let s = await snap(page);
+  check(s.mapId === 'zetwal-road' && s.x === 8 && s.y === 12, `Rise: back before the fight, one tile west of the boar's line (${s.x},${s.y})`);
+  check(s.flags['gameover.count'] === 1 && s.flags['gameover.wilds.boar'] === 1 && !('battle.after' in s.flags) && !('fight.return' in s.flags), 'the count and the boar\'s Grudge are kept; the fight\'s markers are gone');
+  await both('quest-gameover-back');
+  await page.reload();
+  await waitReady(page);
+  s = await snap(page);
+  check(s.x === 8 && s.y === 12 && s.flags['gameover.count'] === 1, 'after a reload: still 1 fallen, still before the fight');
+  // Walk on: the boar charges again, with the Grudge, and no tutorial pages this time.
+  await page.keyboard.press('ArrowRight');
+  await readOn();
+  await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return b && !b.busy; }, null, { timeout: 15000 });
+  let b = (await snap(page)).battle;
+  check(Math.abs(b.grudge - 0.1) < 1e-9 && b.tutorial?.title !== 'How to fight', `the second try: Grudge +10%, the opening tutorial not shown again (${b.grudge}, ${b.tutorial?.title ?? 'none'})`);
+  await shoot(page, 'gameover-grudge', shots);
+  // Lose again and Skip (B): straight to the last screen, the count 2.
+  check(await page.evaluate(() => window.__quest.loseBattle()), 'the party falls again');
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver, null, { timeout: 10000 });
+  await page.locator('.gameover-skip').tap();
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver?.countShown, null, { timeout: 3000 });
+  g = (await snap(page)).gameOver;
+  check(g.count === 2 && g.lines === 2 && g.text === GODDESS_WORDS.closing, `Skip goes straight to her last line and the count, 2 (${g.count})`);
+  await page.keyboard.press('KeyZ');
+  await page.waitForFunction(() => { const q = window.__quest?.snapshot(); return q && q.mode === 'field' && !q.gameOver; }, null, { timeout: 10000 });
+  await page.waitForTimeout(1200);
+  await page.keyboard.press('ArrowRight');
+  await readOn();
+  await page.waitForFunction(() => { const q = window.__quest.snapshot().battle; return q && !q.busy; }, null, { timeout: 15000 });
+  b = (await snap(page)).battle;
+  check(Math.abs(b.grudge - 0.2) < 1e-9, `the third try: Grudge +20% (${b.grudge})`);
+  await fightBattle(page, 'intro_boar', shots);
+  s = await snap(page);
+  check(!('gameover.wilds.boar' in s.flags) && s.flags['gameover.count'] === 2, 'the win clears the boar\'s Grudge; the count stays 2');
+  await ctx.close();
+  return shots;
 }
 
 /**
@@ -1324,10 +1522,11 @@ async function main() {
     await hintsAndJournal(browser, errors);
     const introShots = await introFlow(browser, errors);
     const debateShots = await debateFlow(browser, errors);
+    const gameOverShots = await gameOverFlow(browser, errors);
     const actShots = await playAct(browser, errors);
 
     check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
-    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...introShots, ...debateShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
+    console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...introShots, ...debateShots, ...gameOverShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
     console.log('Smoke test passed.');
   } finally {
     await browser.close();

@@ -2,7 +2,7 @@
 
 *Design pack, Oct 14. Built on the guide (6.4 battle system, 6.5 classes, 5.8 Rael) and the owner's levelling
 decision of Oct 14. Kept from the guide: the four-member party with Anissa as a support system, the visible
-speed-based initiative bar, the six commands, the Yield step, Echo Battles and Memories, The Heir Rises with Grudge,
+speed-based initiative bar, the six commands, the Yield step, Echo Battles and Memories, Game Over with the goddess and the Grudge,
 Anissa's Surge with Spark and Calm, Rael's Bound rule, Story / Normal / Hard with Story as the default, and minimal
 animations. **Every number here is a proposal** and is tuned by the battle simulation (guide 9, check 3).*
 
@@ -21,7 +21,8 @@ the numbers it reads from `rpg.levels`.
   Patricio, plus Caona when Yari is in the present party, plus Benny once Azzy has joined.
 - **Enemies:** 1 to 5 per battle (wild sections: 2 or 3; bosses: the boss plus 0 to 3 adds).
 - **Field:** side view, party right, enemies left (proposal); the initiative bar runs across the top.
-- **Win:** every enemy down, spared, bribed, parleyed or fled. **Lose:** every fighter down (or Bound): The Heir Rises.
+- **Win:** every enemy down, spared, bribed, parleyed or fled. **Lose:** every fighter down (or Bound): Game Over with
+  the goddess (section 12).
 
 ## 2. Stats
 
@@ -404,12 +405,50 @@ Durations count the affected fighter's own turns. Lengths are `STATUS_DURATION` 
   volley (power 150 to all enemies) in the next stage (`ARMY_VOLLEY_PER = 10`, proposal). Overpaying an ally's price
   adds soldiers (guide 6.3).
 
-## 12. The Heir Rises (no death spiral, guide 6.4)
+## 12. Game Over: the goddess's second chance (owner decisions, Oct 19; built)
 
-If every fighter is Down or Bound, the battle restarts at once from its first turn with a **Grudge**: +10% damage
-against that enemy group, stacking to +30% (`GRUDGE_STEP = 0.1`, `GRUDGE_MAX = 0.3`). Story and Normal: unlimited
-retries. Hard: 2 retries per battle, then the game reloads the last autosave (`HARD_MAX_RETRIES = 2`). The retry
-screen shows the heir's line ("Again. For them.") and offers **Retreat** in non-story fights.
+Replaces The Heir Rises' instant restart. Design: `docs/quest/reviews/2026-10-19-game-over-outline.md` with its review
+and the owner's decisions at its end; the screen: `docs/quest/intro/GAME-OVER-STORYBOARD.md`.
+
+- **When every fighter is down** in a fight that is meant to be won (story fights, bosses, and random fights in the
+  wild), Anissa cries "Gigi! Get up! Please!", the battle music cuts to one low note and the battle fades to
+  near-black. Then the **goddess** catches the party: GAME OVER, the loom of gold threads, her half-closed eye, her
+  words, the count ("Times fallen") and **Rise**. Every part is skippable (B or Skip goes straight to her last line,
+  the count and Rise; the count is never skipped past). Lines move on only with a tap or A, at the player's text
+  speed. Reduced motion: the still and plain fades.
+- **Her words** (owner-approved, `quest/src/data/gameOver.ts`): the first time, she introduces herself as Elodie and
+  Gianna asks "Like my mother?"; after that her first line says the count ("I have caught you {n} times now...", from
+  10: "{n} times..."), then "Go. Walk, mend, make ready. The fight will wait for you." Her name is never a label: in
+  code and files she is "the goddess" (Gianna's mother is also Elodie).
+- **Rise: the moment before the fight.** The party is free on the map (walk, shop, change gear) and goes back to fight
+  again when ready. A lost fight changes nothing (items used in it, gold and XP only change on a win), so the game in
+  memory already is that moment. Where the party stands: where the fight began; if that tile starts the fight again
+  (the boar's line), **one step back the way they came** (open, same map and era, not a door or another trigger),
+  else they stay put. The return tile is saved as the fight starts (`fight.return`), so a reload in the middle of a
+  fight or on the goddess's screen also lands there (this closed the old hole of reloading on the boar's line and
+  walking past). The after-fight scene marker (`battle.after`) is cleared on a loss and on every load.
+- **Order when the party falls:** count it, step back and clear the markers, save, then show the screen. Closing the
+  app on her screen loses nothing.
+- **The count** is per save, in the flags: `gameover.count`. A save code carries it.
+- **The Grudge stays** (owner decision): each Game Over at one fight adds +10% damage at the next try of that fight,
+  up to +30% (`GRUDGE_STEP = 0.1`, `GRUDGE_MAX = 0.3`), saved per fight (`gameover.<table>.<group>`) and cleared by a
+  win. The battle shows it at the start ("Grudge +20%: every blow lands harder this time.") and in its top bar.
+  **Random ambushes give no Grudge** (owner correction, Oct 19) but do show the goddess and count.
+- **The battle tutorial** (the boar's pages) shows once per save: a later try skips the pages already seen.
+- **Every story fight has a way back in** (a test): a foe waiting on the map whose talk starts it again, or a step
+  trigger that fires again; no fight trigger fires on entering a map again; a fight trigger never covers a spawn or a
+  door's arrival tile. Today: the boar (its line), the pier sergeant, the caney marine, the patrol sergeant, Thorne's
+  longboat.
+- **Fights meant to be lost** (`meantToLose: { scene }` on the battle entry, for the Chapter 3 Trial of Blades with
+  Rael): falling never shows the goddess, never counts and gives no Grudge; the named scene plays after a loss or a
+  win alike, and a win sets no won flag. Never on a random fight. Only the mark and its tests exist (no Chapter 3
+  content until the Chapter gate opens); the Chapter 3 outline still has to settle how such a fight ends early
+  (review: a story moment such as two members Bound, Rael never below 1 HP, a round cap only as a backup).
+- **Not fights, never a Game Over:** street debates and rhythm locks (a test checks neither starts a battle).
+- **Dropped:** the Hard-mode retry limit (`HARD_MAX_RETRIES`) and the Retreat button were never built; Game Over makes
+  them unnecessary.
+- **Numbers** in `GAME_OVER` (`quest/src/config.ts`): the battle fade, the fall (6 s, its shots), the loop (4 s), the
+  rise (1.5 s), the reduced-motion fades, and the count where her first line changes (10).
 
 ## 13. Enemies
 
@@ -482,11 +521,11 @@ Boss stats: the standard line x the multipliers in each row (`BOSS_SCALE`). Phas
 
 ## 14. Difficulty
 
-| Setting | Enemy damage | Enemy HP | Heir Rises retries | Hints | XP and gold |
+| Setting | Enemy damage | Enemy HP | Retries after a Game Over | Hints | XP and gold |
 |---|---|---|---|---|---|
 | **Story** (default, guide 6.4) | x0.7 | x0.8 | unlimited | Anissa after 3 min | x1.0 |
 | Normal | x1.0 | x1.0 | unlimited | Anissa after 3 min | x1.0 |
-| Hard | x1.25 | x1.2 | 2 per battle | Anissa after 5 min | x1.1 |
+| Hard | x1.25 | x1.2 | unlimited (the old limit of 2 was dropped with Game Over, section 12) | Anissa after 5 min | x1.1 |
 
 `DIFFICULTY` in config. Difficulty can be changed from the System menu at any time outside battle.
 
@@ -523,7 +562,7 @@ aspirational buys whose half bonus is shown honestly.)
 `TURN_DELAY_OFFSET`, `ACTION_WEIGHT`, `DAMAGE_VARIANCE`, `HIT_BASE`, `HIT_MIN`, `HIT_MAX`, `CRIT_BASE`, `CRIT_MULT`,
 `MIN_DAMAGE_SHARE`, `GUARD_MULT`, `YIELD_THRESHOLD`, `YIELD_REWARDS`, `PARLEY_CHANCE`, `FEAR_PER_WINS`, `SPARK_ON_ACT`,
 `SPARK_ON_GUARD`, `SURGE_COST`, `DAWN_SURGE_COST`, `SURGE_MULT`, `SURGE_SPLASH`, `DAWN_HEAL`, `GIANNA_SP_DISCOUNT`,
-`COMFORT_CALM`, `RESOLVE_*`, `STATUS_DURATION`, `GRUDGE_STEP`, `GRUDGE_MAX`, `HARD_MAX_RETRIES`, `ENEMY_STAT_LINE`,
+`COMFORT_CALM`, `RESOLVE_*`, `STATUS_DURATION`, `GRUDGE_STEP`, `GRUDGE_MAX`, `GAME_OVER`, `ENEMY_STAT_LINE`,
 `ENEMY_ROLE`, `BOSS_SCALE`, `GOLD_ENEMY`, `GEAR_TIERS`, `DIFFICULTY`, `ARMY_VOLLEY_PER`, `SP_AFTER_BATTLE`,
 `SECRET_ITEMS`. The existing `ENCOUNTER_CHANCE_PER_STEP` and `ENCOUNTER_GRACE_STEPS` stay as built.
 

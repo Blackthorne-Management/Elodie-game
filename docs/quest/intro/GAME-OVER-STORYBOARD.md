@@ -82,8 +82,7 @@ player's phone asks for less motion.
 The words appear in gold in the lower third, one line per tap. They have no name box or portrait, and no talking
 sounds.
 
-**The first time Gianna falls, she introduces herself** (owner decision, Oct 19). **These lines are a draft for the
-owner to approve:**
+**The first time Gianna falls, she introduces herself** (owner decision, Oct 19). **Approved by the owner (Oct 19):**
 
 - Goddess: "Rise, child of the Limyè line. You do not know me, but I have known you since your first breath."
 - Goddess: "I am Elodie. I wove this realm, and I remember all of it."
@@ -128,3 +127,20 @@ If it adds a face, a body, text or a frame, ask it to remove them.
   entry in `quest/src/assets.config.ts`.
 - **Until they arrive:** the game draws a placeholder in code (gold threads, stars and a half-closed eye) with the same
   timing. When the files come, they replace it with no other change.
+
+---
+
+## In the game (built Oct 19)
+
+The screen is built with a placeholder drawn in code on the same clock (`quest/src/scenes/gameOverArt.ts`: the
+threads, the stars, her shape, the half-closed eye and the GAME OVER letters). Each delivered file replaces its part
+with no other change, by dropping it into `quest/art/gameover/` under the name above (then rebuild):
+
+| File | Entry |
+|---|---|
+| `gameover-fall.mp4`, `gameover-loop.mp4`, `gameover-rise.mp4`, `gameover-still.png` | `GAME_OVER_ART` in `quest/src/assets.config.ts` (`fall`, `loop`, `rise`, `still`) |
+| `gameover-bell.wav` | `GAME_OVER_BELL_FILE` in `quest/src/audio.config.ts` |
+
+The timings are `GAME_OVER` in `quest/src/config.ts`; her lines are in `quest/src/data/gameOver.ts`. Use H.264 MP4s
+(every phone plays them); a film the browser cannot play falls back to the placeholder for that part.
+

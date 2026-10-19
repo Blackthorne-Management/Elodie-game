@@ -1,8 +1,13 @@
-// Real art dropped into quest/art/ (names in assets.config.ts ART_FILES). Vite lists the files at
+// Real art dropped into quest/art/ (names in assets.config.ts ART_FILES and GAME_OVER_ART). Vite lists the files at
 // build time, so only files that exist are ever requested: a missing file simply keeps its procedural
 // placeholder, and nothing 404s. Browser-only (import.meta.glob); the engine never imports this.
 
-const FILES = import.meta.glob('../../art/**/*.png', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+// The pictures, and the Game Over films and bell (assets.config.ts GAME_OVER_ART, audio.config.ts GAME_OVER_BELL_FILE).
+const FILES = import.meta.glob(['../../art/**/*.png', '../../art/gameover/*.{mp4,webm,wav,mp3,ogg}'], {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>;
 
 const BY_PATH: ReadonlyMap<string, string> = new Map(
   Object.entries(FILES).map(([path, url]) => [path.replace(/^.*?\/art\//, ''), url]),

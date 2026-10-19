@@ -209,7 +209,10 @@ export const ANISSA_SP_EVERY = 3;
 export const ANISSA_SP_SHARE = 0.2;
 /** Gianna's skills cost this much less SP (rounded down, at least 1). */
 export const GIANNA_SP_DISCOUNT = 0.25;
-/** The Heir Rises: losing restarts the fight with a Grudge, +GRUDGE_STEP damage each time up to GRUDGE_MAX. */
+/**
+ * The Grudge (owner decision, Oct 19): each Game Over at one fight adds GRUDGE_STEP to the party's damage the
+ * next time they fight it, up to GRUDGE_MAX. Saved per fight, cleared by a win; random ambushes give none.
+ */
 export const GRUDGE_STEP = 0.1;
 export const GRUDGE_MAX = 0.3;
 /** Story difficulty (the default): enemies hit softer and have less HP. */
@@ -247,3 +250,32 @@ export const DEBATE_REWARDS: Readonly<Record<'won' | 'mediated' | 'provoked', { 
 /** What a won ambush pays, per foe and per level of the group (a level-4 pair: 80 XP, 32 gold). */
 export const ENCOUNTER_XP_PER_LEVEL = 10;
 export const ENCOUNTER_GOLD_PER_LEVEL = 4;
+
+// ---- Game Over (docs/quest/intro/GAME-OVER-STORYBOARD.md; engine/gameOver.ts; scenes/GameOverScene.ts) ----
+
+/**
+ * The goddess's second chance. Times in seconds unless named Ms. The fall, loop and rise are the animator's
+ * three films (assets.config.ts GAME_OVER_ART); the placeholder drawn in code keeps the same clock.
+ */
+export const GAME_OVER = {
+  /** In the battle: Anissa's cry stays up this long (shot 1), then the battle fades to near-black. */
+  cryMs: 1500,
+  battleFadeMs: 700,
+  /** gameover-fall.mp4: from the lost battle into her presence. */
+  fallS: 6,
+  /** Inside the fall: deep blue rises (shot 2), GAME OVER (3), the letters unravel (4), the loom and her shape (5). */
+  shots: { dusk: 1, letters: 1.5, unravel: 3, loom: 4.5 },
+  /** GAME OVER fades in over 6 frames at 24 fps. */
+  lettersFadeS: 0.25,
+  /** gameover-loop.mp4: her presence, breathing, repeated while the player reads. */
+  loopS: 4,
+  /** gameover-rise.mp4: the threads draw up (0 to 1 s), then the gold flash to cream. */
+  riseS: 1.5,
+  riseFlashS: 1,
+  /** After Rise the map fades in from cream. */
+  mapFadeMs: 1000,
+  /** With reduced motion (the device asks for less): the still and plain fades, no falling threads or flash. */
+  reduced: { fallS: 2.4, lettersS: 0.6, stillS: 1.6, riseS: 0.8 },
+  /** Her first line changes from "I have caught you {n} times" to "{n} times..." at this count. */
+  manyFrom: 10,
+} as const;

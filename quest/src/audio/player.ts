@@ -145,6 +145,15 @@ class AudioPlayer {
     if (id && this.ctx?.state === 'running') void this.start(id);
   }
 
+  /** Play a sound file (a URL), or the made sound `fallback` when there is none (the Game Over bell). */
+  sfxFile(url: string | undefined, fallback: SfxId): void {
+    if (!url) return this.sfx(fallback);
+    this.lastSfx = fallback;
+    const ctx = this.ctx;
+    if (!ctx || ctx.state !== 'running' || this.volumes.sound <= 0) return;
+    void this.load(url).then((b) => (b ? this.fire(b) : this.sfx(fallback)));
+  }
+
   /** Play a sound effect. */
   sfx(id: SfxId): void {
     this.lastSfx = id;

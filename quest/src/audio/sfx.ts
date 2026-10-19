@@ -162,6 +162,17 @@ const RECIPES: Record<SfxId, () => Note[]> = {
     { at: 0, dur: 0.18, wave: 'sine', from: 160, to: 70, gain: 0.7, release: 0.12 },
     { at: 0, dur: 0.03, wave: 'noise', from: 0, gain: 0.25 },
   ],
+  // The party falls (Game Over, shot 1): one low note as the battle music cuts.
+  fall: () => [
+    { at: 0, dur: 1.4, wave: 'triangle', from: 98, to: 92, gain: 0.5, attack: 0.02, release: 0.9 },
+    { at: 0, dur: 1.2, wave: 'sine', from: 196, to: 185, gain: 0.18, attack: 0.02, release: 0.8 },
+  ],
+  // The goddess's soft bell, with a long tail (a recorded one replaces it: GAME_OVER_BELL_FILE).
+  bell: () => [
+    { at: 0, dur: 1.9, wave: 'sine', from: 784, gain: 0.32, attack: 0.005, release: 1.7 },
+    { at: 0, dur: 1.6, wave: 'sine', from: 1568, gain: 0.12, attack: 0.005, release: 1.4 },
+    { at: 0, dur: 1.2, wave: 'sine', from: 2352, gain: 0.06, attack: 0.005, release: 1.0, vibrato: [3, 5] },
+  ],
 };
 
 /** The samples of a sound effect at a sample rate (mono, -1 to 1). */
