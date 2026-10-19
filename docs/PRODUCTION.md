@@ -15,7 +15,8 @@ and ticks items off here as they land. Last updated **Wed Oct 15**.
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
   (`art/seats/`, each its house's quest capital building, approved Oct 15) are in. Proof `print/board-24in.png`
-  (`npm run print:board`) rendered Oct 15: owner to approve it, then order.
+  (`npm run print:board`): bolder grid, each homeland name touching its capital; **approved Oct 20** (Aldermoor's
+  name stays centred over its capital though its last letter reaches into Xaraguá). Ready to order.
 - [ ] **Before the board order (Mon Oct 20):** the labelled board guide (`docs/art/board-guide-labelled.png`) still
   names the north-west country Moa'olani, House Vai'tama; it is Xaraguá, House Yaguana now. Checked Oct 15: no text
   or data file for print carries the old name (the old mockup is fixed); the labels painted into
