@@ -374,3 +374,7 @@ approve `print/board-24in.jpg`; art drop 1 Fri Oct 24; rules and card text freez
   quests, the hutia's trail kept inside the gardens and a net on ground the story already walks; every quest closes
   at the Crown attack (`!story.crown_attack`) so later saves show no dead "???" entries; Cut Nets has no fight (the
   Yield step is not built, and the party is already strong enough).
+- **The secret items (Oct 19): Claude's recommendation, for now.** Solange's Quill (Chapter 1) and Caona's Conch
+  (Chapter 2) stay in their own chapters, optional, built as one secret-items pass (each with its own outline first)
+  after the Chapter 2 side quests and before the Chapter 2 acceptance playthrough. The owner asks the objective
+  reviewer to weigh in on this once Chapter 2 is done (`questions-for-the-reviewer.md`).

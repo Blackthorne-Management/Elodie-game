@@ -260,3 +260,7 @@ Steps 2 to 4 are rules work (Opus); tests and docs can go to Sonnet; the content
 3. **Random encounters count (corrected by the owner, Oct 19):** losing a random fight in the wild shows the goddess
    and adds to the game-over count like any other fight, and you go back to just before it; the only difference is
    that random fights give **no Grudge** buff.
+4. **Her name (Oct 19):** the first time Gianna loses a fight, the goddess introduces herself and says her name is
+   Elodie. Gianna asks "Like my mother?" and the goddess talks about it (lines drafted for the owner before the
+   build; they must not give away what Chapter 3 reveals about Gianna's parents). After that first meeting she is
+   named, so the screen no longer reads as Gianna's mother speaking.
