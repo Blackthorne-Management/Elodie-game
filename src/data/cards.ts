@@ -1,4 +1,5 @@
-// The 126-card Shared Action Deck (docs/bloodline-card-list.md), with rulings from docs/rules-decisions.md.
+// The 126-card Shared Action Deck: what each card does (the source of truth for the app, the bots, the online server and
+// the printed cards). Why each card is what it is: docs/rules-decisions.md (the retired draft was docs/bloodline-card-list.md).
 // Card text is the printed text; `effect` carries it out through the engine's helpers.
 import type { AttackInfo, CardDef } from '../engine/content';
 import type { Game } from '../engine/game';

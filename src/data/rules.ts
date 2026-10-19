@@ -1,6 +1,6 @@
-// The official rule guide shown in the app: the rulebook with every later decision folded in
-// (docs/bloodline-rulebook-draft.md + docs/rules-decisions.md). Numbers come from src/config.ts so the guide always
-// matches the game. The houses and the full card list are drawn from src/data by the guide screen itself.
+// The official rule guide shown in the app and printed: the rulebook written from what the game does (src/data/houses.ts,
+// cards.ts, config.ts and the engine; where prose here restates them, they win). Numbers come from src/config.ts so the
+// guide always matches the game. The houses and the full card list are drawn from src/data by the guide screen itself.
 // Inline **bold** is the only markup.
 //
 // The booklet is in three parts (rules-decisions 87, no rule change): the CORE rules a first game needs, the APPENDIX

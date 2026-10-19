@@ -1,7 +1,10 @@
 # Rules decisions (approved)
 
-These settle every gap found in `rules-questions.md`. Where this file and the three source documents
-differ, **this file wins**. Numbers in brackets refer to the question list.
+The change log: why each rule is what it is, with the test numbers. Everything here is folded into
+`src/data/houses.ts`, `src/data/cards.ts`, `src/config.ts` and the engine (what the game does) and `src/data/rules.ts`
+(the rulebook written from them), so this file no longer overrides anything. The three draft documents it cites by
+section were superseded on 2026-10-19 and are kept for history. Numbers in brackets refer to the question list
+(`rules-questions.md`).
 
 ## Board and setup
 - **Tile types [1]:** War = Brasador, Ironvow, Agnivansh. Trade = Dorini, Yaguana. Court = Kay Soley,

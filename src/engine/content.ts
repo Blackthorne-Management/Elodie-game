@@ -73,6 +73,9 @@ export interface HouseDef {
   identity: string;
   curve: string;
   lore: string;
+  homelandNote?: string;           // a few words on the homeland (lore only)
+  culture?: string;                // the real-world inspiration (lore only)
+  nameMeanings?: Record<string, string>;   // English meaning of each house-language power name (lore only)
   tileType: TileType;
   home: Pos;
   hp: [number, number, number, number];

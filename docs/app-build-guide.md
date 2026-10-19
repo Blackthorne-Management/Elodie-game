@@ -1,4 +1,6 @@
 # BLOODLINES: THE RACE TO ELODIE'S GRACE — APP BUILD GUIDE
+
+> **Note (2026-10-19):** the three draft documents this guide names were superseded by `src/data/rules.ts`, `src/data/houses.ts` and `src/data/cards.ts` (see `CLAUDE.md`). This guide is kept as the original engineering spec.
 ### A prompt for Claude Code, written to be pasted in as the opening instruction
 
 **How to use this file:** paste this entire document as your first message to Claude Code, with `bloodline-rulebook-draft.md`, `bloodline-card-list.md`, and `bloodline-houses.md` available in the project folder. Those three files are the single source of truth for every rule, card, and ability; this document is the engineering spec for turning them into a working app.

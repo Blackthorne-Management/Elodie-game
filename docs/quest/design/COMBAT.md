@@ -225,7 +225,7 @@ in that city (`FEAR_PER_WINS = 6`). Influence and Wealth from fights come only f
 ## 9. Skills by member
 
 SP shown is the base; Gianna pays 25% less. "Board" names the board game ability each skill comes from
-(`docs/bloodline-houses.md`).
+(`src/data/houses.ts`).
 
 ### 9.1 Gianna (Archivist-Mage, Kay Soley)
 

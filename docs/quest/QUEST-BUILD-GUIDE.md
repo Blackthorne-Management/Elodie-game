@@ -10,7 +10,7 @@
 
 **What it is not:** a rewrite of the board game, or a reason to touch the board game's rules engine. The board game ships first (rules freeze Oct 31, 2026; birthday Nov 22, 2026). Nothing in this guide should be started until that is printed and out the door.
 
-**Source of truth for lore and names:** the repo's `docs/bloodline-houses.md`, `docs/bloodline-rulebook-draft.md` and `docs/rules-decisions.md`. If this guide and those files disagree about a house name, homeland or ability, those files win. Family names and relationships that are **proposals** are marked and listed for confirmation in Section 13.
+**Source of truth for lore and names:** the repo's `src/data/houses.ts` (names, homelands, lore, culture, ability names and their meanings) and `src/data/rules.ts`; `docs/rules-decisions.md` explains why. (The draft `docs/bloodline-*.md` files are retired.) If this guide and those files disagree about a house name, homeland or ability, those files win. Family names and relationships that are **proposals** are marked and listed for confirmation in Section 13.
 
 ---
 
@@ -286,7 +286,7 @@ Endings are decided by an **Accord Stability** score (0 to 100) built from: alli
 **One line:** a man who wears a monster's name because a monster's name is a weapon, and who will cage a person before he will kill one.
 
 **The mask (what the realm sees)**
-- A Spanish-inspired warlord of fire-cracked highlands, built on **Fear and aggression** (see `bloodline-houses.md`). He earned "the Ruthless" in the Ash Wars and has cultivated the name ever since. Fear is a currency he spends on purpose. The **recorded histories of the Ash Wars are written wrong** to make him look crueler than he was: the Crown and Ardencia's elders each had reasons to paint him a butcher, and he let the lie stand because it protects his family and his work. Library lore books about the Ash Wars (the false version was spread by Rael and the elders to scare the people) **contradict each other** (a Crown chronicle, a Kuroshi spy ledger, a Zetwal temple record, Anicette's own recollection). Players who read all four can tell which is false. This is the game's slow-burn clue that Rael is not what he seems.
+- A Spanish-inspired warlord of fire-cracked highlands, built on **Fear and aggression** (see `src/data/houses.ts`). He earned "the Ruthless" in the Ash Wars and has cultivated the name ever since. Fear is a currency he spends on purpose. The **recorded histories of the Ash Wars are written wrong** to make him look crueler than he was: the Crown and Ardencia's elders each had reasons to paint him a butcher, and he let the lie stand because it protects his family and his work. Library lore books about the Ash Wars (the false version was spread by Rael and the elders to scare the people) **contradict each other** (a Crown chronicle, a Kuroshi spy ledger, a Zetwal temple record, Anicette's own recollection). Players who read all four can tell which is false. This is the game's slow-burn clue that Rael is not what he seems.
 - Ardencia under him looks corrupt: fat elders, a poor who seem neglected, soldiers who obey and do not love. He sides with the Crown, takes its gold and promises. In truth **rebel groups across the realm** feed the poor with his money, and he keeps the royal class in line from the inside.
 
 **The man (what is true)**
@@ -467,7 +467,7 @@ The Crown bribes with the same three currencies. **Rael** appears to have taken 
 
 **Gear (owner decision, Oct 15):** four slots: **weapon, armour, charm** and **relic**. Five rarities, each with a box colour: common (grey), uncommon (green), rare (blue), **epic** (purple), legendary (gold). Ordinary gear has a fixed level and set stats; rarer pieces add a special (regeneration, SP regeneration, critical chance). The nine **secret items are legendary relics**: they sit in the relic slot, are never too heavy, take no bag space and **scale with the wearer's level**. Class rules: only mages use staffs, only archers use bows, warriors use blades; anyone wears any armour, but robes suit mages, leather suits archers and heavy armour suits fighters (the Equip screen marks what suits). The **Equip screen** shows the chosen person, their four slot boxes (rarity background, item art, level), their stats, and their **passives** (Anissa's Light, Spark and Surge, and so on). Rules: `quest/src/engine/rpg.ts`; catalogue: `quest/src/data/rpg.ts`; art: `quest/src/assets.config.ts`.
 
-### 6.5 Classes by house (follows `bloodline-houses.md`)
+### 6.5 Classes by house (follows `src/data/houses.ts`)
 
 | Character | House | Class | Role | Signature skills (from the board game) |
 |---|---|---|---|---|
@@ -775,7 +775,7 @@ Image generators, including Gemini, do **not** reliably produce true pixel-grid 
 
 ## 14. PASTE-READY OPENING PROMPT FOR CLAUDE CODE
 
-> You are building a single-player pixel JRPG called "Bloodlines: Echoes of Zetwal" inside the existing `elodie-game` repo (React + TypeScript + Vite PWA, deploys to Netlify). Read `CLAUDE.md`, `docs/bloodline-houses.md`, `docs/bloodline-rulebook-draft.md`, `docs/rules-decisions.md`, `docs/art/ART-GUIDE.md` and `docs/quest/QUEST-BUILD-GUIDE.md` fully before writing code. The houses file is the source of truth for house names, homelands and abilities; the quest guide is the source of truth for the RPG design. If they conflict, stop and ask.
+> You are building a single-player pixel JRPG called "Bloodlines: Echoes of Zetwal" inside the existing `elodie-game` repo (React + TypeScript + Vite PWA, deploys to Netlify). Read `CLAUDE.md`, `src/data/houses.ts`, `src/data/rules.ts`, `docs/rules-decisions.md`, `docs/art/ART-GUIDE.md` and `docs/quest/QUEST-BUILD-GUIDE.md` fully before writing code. The houses file is the source of truth for house names, homelands and abilities; the quest guide is the source of truth for the RPG design. If they conflict, stop and ask.
 >
 > **Rules:** do not modify the board game's `src/engine`, `src/net` or the Supabase Edge Function. Create everything under `quest/` and route it at `/quest`, lazy-loaded. Follow the repo's conventions: pure TypeScript engines with a seeded Rng and unit tests, content in data files, all art through `quest/assets.config.ts`, tunable numbers in `quest/config.ts`, `import type` for types, mobile-first.
 >
