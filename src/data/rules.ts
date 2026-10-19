@@ -354,6 +354,7 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
         '**House Yaguana\'s Legacy:** at setup, shuffle the Legacy cards of the houses not at the table (all the others when eight play) and draw one blind: its Ancestor\'s Voice. A Legacy card is read as printed; Brasador\'s works from the start.',
         `**Grito de Guerra** uses the ${GRITO_MARKERS} Grito markers: put one on the player you silence, and take it back when their next Fear gain is skipped (or their character dies). A marker stays on its target even if Brasador's own character has fallen in the meantime. A player carries at most one. With every marker out, Grito de Guerra waits until one comes back.`,
         '**Guaíza** (Yaguana) copies a passive at the strength the copied player has it (their Gen III upgrade included), with its own limits (once per turn, per round or per heir), counted for the Yaguana player.',
+        '**Ayatsuri** (Suzumori) pulls two strings, each lasting until it is used: the direction of the player\'s next move, and the player named by their next attack **or** card, whichever comes first. That covers every card that names a player, friendly or hostile, not only ◎ Target cards: Suzumori chooses who shares a Fair Exchange, a truce or Shared Purpose. **Your house powers and trade offers are still yours.** The strings end when the puppet\'s character dies, and are cut if Suzumori\'s own bloodline has ended.',
         'The full list of every house and generation is below, under **The Eight Houses**.',
       ],
     }],

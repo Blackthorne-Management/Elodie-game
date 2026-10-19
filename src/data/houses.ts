@@ -145,7 +145,7 @@ export const HOUSES: Record<HouseId, HouseDef> = {
       },
       {
         id: 'ayatsuri', name: 'Ayatsuri', gen: 4, limit: 'game',
-        text: "Once per game: you choose the direction of a player's next move and the target of their next attack or targeted card.",
+        text: "Once per game: you choose the direction of a player's next move, and the player their next attack or card names, friendly or hostile.",
         canUse: (g, p) => others(g, p.id).length > 0,
         *run(g, p) {
           const t = yield* g.choosePlayer(p, others(g, p.id), "Ayatsuri: whose strings do you pull?");

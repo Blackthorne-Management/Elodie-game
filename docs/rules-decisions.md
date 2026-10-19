@@ -580,6 +580,16 @@ These came up in code and weren't covered above; all confirmed as they stand.
     survives the caster's death; one trigger to track at the table; dying should not also cost Brasador its pressure.
   - **Guaíza:** the copy has the copied player's strength (their Gen III upgrade included) and its own limits (once
     per turn, per round or per heir), counted for the Yaguana player (the engine's behaviour).
+- **Ayatsuri reaches every card [90]** (third design review; owner, Oct 20). The engine redirected attacks and the
+  cards that pick through `targetPlayer`, but not Whispered Promise, Black Market Deal's barter, Uneasy Truce, Shared
+  Purpose, Blood Pact, Duel of Honor or Mind Games. Now **every card that names a player**, friendly or hostile, goes
+  through Ayatsuri; **house abilities and trade offers never do** ("Suzumori picks for your dice, your attack and your
+  cards; your house powers are still yours"). Two strings, each lasting until it is used: the next move's direction,
+  and the player named by the next attack or card (whichever comes first). **The strings end when the puppet's
+  character dies** (`redirect` joins `ENDS_WITH_CHARACTER`, like Hex and Confusion), and stay cut if Suzumori's
+  bloodline has ended. `tests/ayatsuri.test.ts` walks every card and house ability with the strings pulled, so the
+  printed rule and the engine can't drift. Balance (24,000 bot games, two seed sets): no change beyond noise
+  (Suzumori 0.86/0.93 → 0.85/0.91 at 6 players, 0.83/1.01 → 0.81/1.02 at 8; bots rarely reach Gen IV Ayatsuri).
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

@@ -80,7 +80,7 @@ hand(2, 'Noble Alliance', 'Influence / Court', 'Gain 1 Influence. If you are adj
   function* (g, p) { g.gain(p, 'influence', g.adjacentTo(p).length ? 2 : 1); });
 hand(3, 'Whispered Promise', 'Influence / Court', 'Gain 2 Influence, but reveal your hand to one player of your choice.',
   function* (g, p) {
-    const to = yield* g.choosePlayer(p, others(g, p), 'Whispered Promise: reveal your hand to whom?');
+    const to = yield* g.targetPlayer(p, others(g, p), 'Whispered Promise: reveal your hand to whom?');
     g.gain(p, 'influence', 2);
     if (to) g.reveal(p, [to.id], 'Whispered Promise');
   });
@@ -188,7 +188,7 @@ hand(25, 'Black Market Deal', 'Barter', 'Gain 1 Wealth. You may give any player 
     const partners = withCards(others(g, p));
     if (!p.hand.length || !partners.length) return;
     if (!(yield* g.confirm(p, 'Black Market Deal: barter a card with another player?', 'Barter', 'Skip'))) return;
-    const t = yield* g.choosePlayer(p, partners, 'Barter with whom?');
+    const t = yield* g.targetPlayer(p, partners, 'Barter with whom?');
     if (t) yield* barter(g, p, t, 'Black Market Deal');
   });
 // Changed (rules-decisions): a card is your action, so Plunder waits for your next basic attack. +1 Wealth: 84.
@@ -388,12 +388,12 @@ hand(53, "Broker's Fee", 'Barter', "Look at two other players' hands. Choose one
 // Truces last a number of your own turns, not rounds, so every seat gets the same length (rules-decisions 84).
 hand(54, 'Uneasy Truce', 'Truce', 'You and one chosen player cannot attack each other until your next turn starts.',
   function* (g, p, c) {
-    const t = yield* g.choosePlayer(p, others(g, p), 'Uneasy Truce: with whom?');
+    const t = yield* g.targetPlayer(p, others(g, p), 'Uneasy Truce: with whom?');
     if (t) g.addEffect('truce', p.id, { at: 'turnStart', player: p.id }, { other: t.id, cardId: c.id });
   });
 hand(55, 'Shared Purpose', 'Truce', 'You and one adjacent player each gain 1 resource of your choice.',
   function* (g, p) {
-    const t = yield* g.choosePlayer(p, g.adjacentTo(p), 'Shared Purpose: with whom?');
+    const t = yield* g.targetPlayer(p, g.adjacentTo(p), 'Shared Purpose: with whom?');
     const mine = yield* g.choosePillar(p, 'Shared Purpose: gain 1 of');
     if (mine) g.gain(p, mine, 1);
     if (t) {
@@ -405,7 +405,7 @@ hand(56, 'Ceasefire', 'Truce', 'No player may attack you until your next turn st
   function* (g, p, c) { g.addEffect('ceasefire', p.id, { at: 'turnStart', player: p.id }, { cardId: c.id }); });
 hand(57, 'Blood Pact', 'Truce', 'You and target player each gain 1 Fear. Neither may attack the other until your turn after next starts.',
   function* (g, p, c) {
-    const t = yield* g.choosePlayer(p, others(g, p), 'Blood Pact: with whom?');
+    const t = yield* g.targetPlayer(p, others(g, p), 'Blood Pact: with whom?');
     g.gain(p, 'fear', 1);
     if (!t) return;
     g.gain(t, 'fear', 1);
@@ -456,7 +456,7 @@ instant(66, 'Bandit Ambush', 'Dice', 'Roll a die. Odd: lose 1 Wealth. Even: gain
 instant(67, 'Duel of Honor', 'Dice', 'Roll against an adjacent player you choose (none: the player to your left); re-roll ties. The lower roll loses 1 Heart Token.',
   function* (g, p, c) {
     const adj = g.adjacentTo(p);
-    const foe = adj.length ? yield* g.choosePlayer(p, adj, 'Duel of Honor: against whom?') : g.leftOf(p);
+    const foe = adj.length ? yield* g.targetPlayer(p, adj, 'Duel of Honor: against whom?') : g.leftOf(p);
     if (!foe) return;
     for (let i = 0; i < 20; i++) {
       const a = g.roll(p, c.name), b = g.roll(foe, c.name);
@@ -604,7 +604,7 @@ instant(105, 'Pickpocket', 'Hand Disruption', 'The player to your right discards
   });
 instant(106, 'Mind Games', 'Hand Disruption', "Look at one player's hand. You may swap 1 card with them.",
   function* (g, p, c) {
-    const t = yield* g.choosePlayer(p, withCards(others(g, p)), `${c.name}: whose hand?`);
+    const t = yield* g.targetPlayer(p, withCards(others(g, p)), `${c.name}: whose hand?`);
     if (!t) return;
     g.reveal(t, [p.id], c.name);
     if (p.hand.length && (yield* g.confirm(p, `Swap a card with ${t.name}?`, 'Swap', 'No'))) yield* barter(g, p, t, c.name, true);

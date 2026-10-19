@@ -20,6 +20,7 @@ export class GameOver extends Error {}
 // Effects on a character that end when that character dies.
 const ENDS_WITH_CHARACTER: EffectKind[] = [
   'afterAttack', 'hex', 'markedForDeath', 'dreadBanner', 'confusion', 'forcedMarch', 'noFearGain', 'sabotage', 'noInfluenceGain', 'shieldWall',
+  'redirect',   // Ayatsuri's strings end with the puppet's character (rules-decisions 90)
 ];
 export const REDIRECT_MOVE = 1;
 export const REDIRECT_TARGET = 2;
@@ -234,8 +235,8 @@ export class Game {
     return yield* this.ask(chooser, 'pool', prompt, pillars.map(x => ({ label: cap(x), value: x })), context);
   }
 
-  // A Hand Card (or ability) choosing a target. Handles Suzumori's Ayatsuri, and Counterspell and Turnabout for the
-  // cards marked as Target cards (rules-decisions 84).
+  // A card naming a player, friendly or hostile. Handles Suzumori's Ayatsuri (every card, never a house ability:
+  // rules-decisions 90), and Counterspell and Turnabout for the cards marked as Target cards (rules-decisions 84).
   // Returns null if the effect on that target was negated.
   *targetPlayer(user: PlayerState, candidates: PlayerState[], prompt: string, card?: CardDef): Flow<PlayerState | null> {
     if (!candidates.length) return null;
