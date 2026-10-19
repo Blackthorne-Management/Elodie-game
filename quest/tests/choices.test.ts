@@ -145,7 +145,7 @@ describe("The Crown's consul in the Chancellor's office (decision D, revised Oct
     expect(lines).toContain('Every lamp in Pòdlimyè lit itself at once tonight');
     expect(lines).toContain("acknowledge His Majesty's protection of the southern waters");
     expect(lines).toContain('Nobody signs in that chair while she is away');
-    expect(lines).toContain('That is the paper. They nailed it to our customs house.');
+    expect(lines).toContain('That is their paper. They nailed one like it to our customs house.');
     // Chapter 2's council keeps its reveal, and Thorne keeps his lines.
     for (const no of ['seventh', 'clause', 'Throne, under seal', 'just arrived', 'my regards', "he's looking at me"]) expect(lines).not.toContain(no);
   });
@@ -224,6 +224,45 @@ describe('the departure at dawn (decision C with the whistle, Oct 19)', () => {
   it("Grandfather's later farewell mentions the whistle only if Gianna has it", () => {
     expect(text(talk(new FlagStore({ 'act1.complete': true, 'item.marshal_whistle': true }), 'patricio_old_talk'))).toContain('keep the whistle close');
     expect(text(talk(new FlagStore({ 'act1.complete': true }), 'patricio_old_talk'))).toContain('Ask them, not the Crown');
+  });
+});
+
+describe('small continuity fixes after the pre-port review (Oct 19)', () => {
+  it('Grandfather at the lamp stops sending Gianna to see who came once Yari has joined', () => {
+    const before = text(talk(new FlagStore({ 'story.anissa_woke': true }), 'patricio_old_talk'));
+    expect(before).toContain('Go and see who it is.');
+    const joined = text(talk(new FlagStore({ 'story.anissa_woke': true, 'story.yari_asked': true }), 'patricio_old_talk'));
+    expect(joined).not.toContain('Go and see who it is.');
+    expect(joined).toContain('Finish what you owe this city');
+  });
+
+  it('the archivist says festival night after the lamp, festival day before it', () => {
+    expect(text(talk(new FlagStore(), 'archivist_talk', ['Not today.']))).toContain('Festival day, Gigi');
+    const night = text(talk(new FlagStore({ 'story.anissa_woke': true }), 'archivist_talk', ['Not today.']));
+    expect(night).toContain('Festival night, Gigi');
+    expect(night).not.toContain('Festival day');
+  });
+
+  it('the cane cutter at the stones: no second introduction after "Goodnight.", and a greeting for the road acceptance', () => {
+    const AT_STONES = { 'story.anissa_woke': true };
+    const flags = new FlagStore(AT_STONES);
+    const first = text(talk(flags, 'cane_cutter_talk', ['Goodnight.']));
+    expect(first).toContain('I crossed the Chain Bridge the moment it came down');
+    expect(flags.isSet('story.cutter_stones_met')).toBe(true);
+    const again = text(talk(flags, 'cane_cutter_talk', ['Goodnight.']));
+    expect(again).not.toContain('I crossed the Chain Bridge');
+    expect(again).toContain('Still no name for her, archivist.');
+    // The same choices still lead to the quest.
+    talk(flags, 'cane_cutter_talk', ['Who were you listening for?', "I'll look for her name."]);
+    expect(flags.isSet('side.cane_name.accepted')).toBe(true);
+    // Accepted on the Cane Road, stones read alone: at the stones he says why he is there.
+    const road = new FlagStore({ ...AT_STONES, 'side.cane_name.accepted': true, 'side.cane_name.stones': true });
+    expect(text(talk(road, 'cane_cutter_talk'))).toContain('I crossed the bridge the moment it came down');
+  });
+
+  it('the Hall steward knows the consul is gone once the papers are signed', () => {
+    expect(text(talk(new FlagStore(), 'hall_steward_talk'))).toContain('the consul is watched at all hours');
+    expect(text(talk(new FlagStore({ 'story.envoy_papers': true }), 'hall_steward_talk'))).toContain('until tonight, was watched');
   });
 });
 

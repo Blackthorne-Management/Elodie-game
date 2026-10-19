@@ -984,6 +984,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [],
       next: [
         { if: { flag: 'act1.complete' }, to: 'farewell' },
+        { if: { flag: 'story.yari_asked' }, to: 'joined' },
         { if: { flag: 'story.anissa_woke' }, to: 'after' },
         { if: { flag: 'story.met_patricio' }, to: 'waiting' },
         { to: 'meet' },
@@ -1016,6 +1017,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         { text: 'In fifty years I never saw it burn like that.' },
         { text: 'The lookouts say a canoe has come in from Xaraguá. Go and see who it is.' },
+      ],
+    },
+    // Yari is walking behind Gianna now: he no longer sends her to see who it is.
+    joined: {
+      speaker: 'patricio_old',
+      lines: [
+        { text: 'Xaraguá. So that is where the lights were seen from.' },
+        { text: 'Finish what you owe this city, Gianna. Then go.' },
       ],
     },
     // Grandmother says "Ask them, not the Crown" at the dock now (decision C, Oct 19).
@@ -1395,7 +1404,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     first: {
       speaker: 'archivist',
       lines: [
-        { text: 'Festival day, Gigi, and you come to work? The archive is open to anyone today. Read what you like.' },
+        { if: { notFlag: 'story.anissa_woke' }, text: 'Festival day, Gigi, and you come to work? The archive is open to anyone today. Read what you like.' },
+        { if: { flag: 'story.anissa_woke' }, text: 'Festival night, Gigi, and you come to work? The archive is open to anyone tonight. Read what you like.' },
         { text: 'The history shelf needs sorting. Three books on the Ash Wars, and no two agree on anything.' },
       ],
       next: 'offer',
@@ -1591,7 +1601,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         say('crown_consul', "Then, since I am here. Zetwal need only acknowledge His Majesty's protection of the southern waters."),
         say('crown_consul', 'One signature. A courtesy between old friends.'),
         { text: 'Nobody signs in that chair while she is away, consul. Least of all that.' },
-        say(Y, 'That is the paper. They nailed it to our customs house.'),
+        say(Y, 'That is their paper. They nailed one like it to our customs house.'),
         // He glances at Anissa, and moves on (no line about it: only the Quiet Crown's watcher notices her aloud).
         say('crown_consul', 'And the envoy herself. Has Zetwal\'s new envoy anything to say to His Majesty?', {
           stage: [
@@ -1692,7 +1702,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     say('hall_page', 'If you have a message, I am faster than a pigeon. Mostly. Not uphill.'),
   ]),
   simple('hall_steward_talk', [
-    say('hall_steward', 'The portraits are dusted every morning, the floors every evening, and the consul is watched at all hours.'),
+    { speaker: 'hall_steward', if: { notFlag: 'story.envoy_papers' }, text: 'The portraits are dusted every morning, the floors every evening, and the consul is watched at all hours.' },
+    { speaker: 'hall_steward', if: { flag: 'story.envoy_papers' }, text: 'The portraits are dusted every morning, the floors every evening, and the consul, until tonight, was watched at all hours.' },
     say('hall_steward', 'The last is not my job. I do it anyway.'),
   ]),
   simple('throne_usher_talk', [
@@ -1975,6 +1986,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { if: { all: [{ flag: 'side.cane_name.accepted' }, { notFlag: 'side.cane_name.done' }] }, to: 'remind' },
         { if: { flag: 'story.zetwal_return' }, to: 'danger' },
         { if: { flag: 'side.cane_name.done' }, to: 'thanks' },
+        { if: { all: [CUTTER_AT_STONES, { flag: 'story.cutter_stones_met' }] }, to: 'island_again' },
         { if: CUTTER_AT_STONES, to: 'island' },
         { to: 'calm' },
       ],
@@ -1993,11 +2005,21 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     // After the lamp, at the name stones on the Temple island (decision A, Oct 19).
     island: {
       speaker: 'cane_cutter',
+      set: { 'story.cutter_stones_met': true },
       lines: [
         { text: 'Archivist. I crossed the Chain Bridge the moment it came down. I wanted to hear the names read.' },
         { text: 'They read every stone tonight. I listened for one name, and it never came.' },
         { text: 'Before I came over, a veiled woman by the old mill was asking the young ones if they feel alone. Odd sort.' },
       ],
+      choices: [
+        { text: 'Who were you listening for?', next: 'grann_island' },
+        { text: 'Goodnight.' },
+      ],
+    },
+    // Talked to again at the stones after "Goodnight." or "I'm sorry.": no second introduction.
+    island_again: {
+      speaker: 'cane_cutter',
+      lines: [{ text: 'Still no name for her, archivist. Will you read them with me?' }],
       choices: [
         { text: 'Who were you listening for?', next: 'grann_island' },
         { text: 'Goodnight.' },
@@ -2064,6 +2086,10 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     remind_lines: {
       speaker: 'cane_cutter',
       lines: [
+        {
+          if: { all: [CUTTER_AT_STONES, { flag: 'side.cane_name.stones' }, { notFlag: 'clue.cane_name' }] },
+          text: 'Archivist. I crossed the bridge the moment it came down, to hear her name read. It was not.',
+        },
         { if: { notFlag: 'side.cane_name.stones' }, text: 'Any luck at the name stones, archivist?' },
         {
           if: { all: [{ flag: 'side.cane_name.stones' }, { notFlag: 'clue.cane_name' }] },
