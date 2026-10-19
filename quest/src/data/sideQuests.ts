@@ -100,4 +100,31 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     done: { any: [f('debate.zetwal_corner.joined'), f('debate.zetwal_corner.mediated')] },
     reward: { xp: 30 },
   },
+  // Yucayeque's debate by the village fire, as a quest (owner request, Oct 19), like Pòdlimyè's "faith": hear the
+  // elder and the Gaze pilgrim out, then argue all three rounds (won or lost) or mediate. The debate is held only
+  // while the city is free (tools/maps/xaragua.ts PEACE); when it must be done by is the Chapter 2 side quests'
+  // outline to settle (docs/quest/reviews/2026-10-19-chapter2-side-quests-outline.md).
+  {
+    id: 'springs',
+    title: 'Owned or Remembered',
+    giver: 'Elder of the springs',
+    place: 'Yucayeque',
+    level: 4,
+    summary:
+      'By the village fire, an elder of the Roots and Tides argues with a pilgrim of the Gaze from Zetwal: is the land owned, or remembered? Hear them out, then make your own case.',
+    accepted: { any: [f('debate.xaragua_springs.listened'), f('debate.xaragua_springs.joined'), f('debate.xaragua_springs.mediated')] },
+    available: { all: [f('encounter.xaragua_story.pier.won'), { not: f('story.crown_attack') }] },
+    start: [{ map: 'xaragua-village', at: { x: 11, y: 7 } }],
+    nudge: 'That pilgrim by the fire came from home, Gigi, and says this land is only a deed. Will you answer for the elder?',
+    steps: [
+      { text: 'Listen to the debate by the village fire.', done: f('debate.xaragua_springs.listened'), goals: [{ map: 'xaragua-village', at: { x: 11, y: 7 } }] },
+      {
+        text: 'Join the debate and argue all three rounds, or mediate.',
+        done: { any: [f('debate.xaragua_springs.joined'), f('debate.xaragua_springs.mediated')] },
+        goals: [{ map: 'xaragua-village', at: { x: 11, y: 7 } }],
+      },
+    ],
+    done: { any: [f('debate.xaragua_springs.joined'), f('debate.xaragua_springs.mediated')] },
+    reward: { xp: 60 },
+  },
 ];
