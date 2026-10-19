@@ -315,3 +315,7 @@ Each step ends with `npm test`, and the route replay numbers are recorded after 
 - **Technical points, settled by Claude after the second review (Oct 19):** the Journal is reordered so the gold
   arrow leads the short way; old saves in the middle of the papers errand keep working; the build keeps the tests
   green step by step (or says when they are not); the demo port is merged by hand.
+- **Decision A, with the review's gaps closed (Oct 19): yes.** Before the lamp the cane cutter stays on the Cane
+  Road (the quest can still start early); after the lamp he waits at the name stones on the island, his lines
+  rewritten for after the reading, keeping a pointer to the veiled woman by the mill; on the return at the end of
+  Chapter 2 he is back on the Cane Road with his warning.
