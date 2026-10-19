@@ -80,6 +80,8 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   L: { ground: 'stone', deco: 'lantern', solid: true },
   N: { ground: 'stone', deco: 'banner', solid: true },
   O: { ground: 'fountain', solid: true },
+  // Paving under a drawn object that blocks the way (the plaza fountain, OBJECT_ART).
+  'ŵ': { ground: 'stone', solid: true },
   M: { ground: 'stone', deco: 'monument', solid: true },
   w: { ground: 'path_old', deco: 'winch', solid: true },
   W: { ground: 'path', deco: 'winch_rust', solid: true },

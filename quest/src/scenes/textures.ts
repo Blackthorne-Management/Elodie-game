@@ -6,6 +6,7 @@ import Phaser from 'phaser';
 import {
   ART_FILES,
   ECHO_DITHER_TEXTURE,
+  ECHO_SHIMMER,
   ECHO_FILTER,
   ENEMY_ART,
   WEAPON_ART,
@@ -27,6 +28,7 @@ import {
   textureKeyForItem,
   textureKeyForObject,
   textureKeyForPortrait,
+  textureKeyForShimmer,
   type PlaceholderPortrait,
   type PlaceholderTile,
   type SkinTone,
@@ -260,6 +262,15 @@ function makeDither(scene: Phaser.Scene): void {
   tex.refresh();
 }
 
+/** The Echo spots' sparkle frames. */
+function makeShimmer(scene: Phaser.Scene): void {
+  ECHO_SHIMMER.forEach((art, i) => {
+    const { tex, ctx } = canvasTexture(scene, textureKeyForShimmer(i), 16, 16);
+    artPix(art).draw(ctx, 0, 0);
+    tex.refresh();
+  });
+}
+
 /** "!" (something new to say) and a four-point sparkle (something to use), 7 x 9 with an outline. */
 function makeMarkers(scene: Phaser.Scene): void {
   const talk = new Pix(7, 9).rect(2, 0, 3, 5, UI.markerTalk).rect(2, 6, 3, 2, UI.markerTalk).outline(UI.markerOutline);
@@ -348,6 +359,7 @@ export function makeAllTextures(scene: Phaser.Scene): void {
   makeWeaponArt(scene);
   makeBattleStances(scene);
   makeDither(scene);
+  makeShimmer(scene);
   makeMarkers(scene);
   makeCharacters(scene);
   makePortraits(scene);

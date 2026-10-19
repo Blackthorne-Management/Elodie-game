@@ -70,3 +70,7 @@ only Chapter 1 difference found, the Journal on the harbor, archive and heights 
   bigger (168 and 72 px), Ask, Echo and Menu stack top right (Ask no longer covers the minimap), the minimap is
   bigger, and the "turn sideways" tip is a small line under the picture (hidden on short phones). A taller view
   in portrait is a larger change, left for after the release if testers mostly play upright.
+- Batch F, done (art, 8), Oct 19: the Echo spots now sparkle (two frames of sparkles tiled over the spot,
+  swapped and drifting upward, over the glow and rim they had); the plaza fountain is a drawing on its 2 x 2
+  tiles (a two-tier stone fountain with its spray), and the one-tile fountains (the heights' garden) have a
+  small drawn basin.

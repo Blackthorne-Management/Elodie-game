@@ -24,6 +24,8 @@ import {
   characterFrame,
   textureKeyForCharacter,
   textureKeyForObject,
+  textureKeyForShimmer,
+  ECHO_SHIMMER,
 } from '../assets.config.ts';
 import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
@@ -350,6 +352,23 @@ export class FieldScene extends Phaser.Scene {
       r.setStrokeStyle(1, UI.echoZoneRim, UI.echoZoneRimAlpha);
       this.tweens.add({ targets: r, fillAlpha: UI.echoZonePulseAlpha, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.tweens.add({ targets: glow, alpha: 0.35, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      // Sparkles over the spot: two frames swapped, drifting upward like heat over stone.
+      const sparkle = this.add
+        .tileSprite(x, y, w, h, textureKeyForShimmer(0))
+        .setOrigin(0, 0)
+        .setDepth(2)
+        .setAlpha(UI.echoShimmerAlpha)
+        .setBlendMode(Phaser.BlendModes.ADD);
+      let frame = 0;
+      this.time.addEvent({
+        delay: UI.echoShimmerFrameMs,
+        loop: true,
+        callback: () => {
+          frame = (frame + 1) % ECHO_SHIMMER.length;
+          sparkle.setTexture(textureKeyForShimmer(frame));
+          sparkle.tilePositionY += (UI.echoShimmerDrift * UI.echoShimmerFrameMs) / 1000;
+        },
+      });
     }
 
     const state = this.logic.state;

@@ -40,7 +40,7 @@ export function zetwalTown(): MapSource {
   g.rect(15, 3, 6, 2, '_');
   g.set(14, 4, 'L').set(21, 4, 'L').set(10, 15, 'L').set(25, 15, 'L');
   g.set(14, 3, 'N').set(21, 3, 'N');
-  g.rect(17, 10, 2, 2, 'O');
+  g.rect(17, 10, 2, 2, 'ŵ'); // the fountain (drawn as an object below)
   g.set(12, 8, 'M');
   g.set(10, 12, 'S').set(10, 13, 'S');
   g.set(24, 12, 'S').set(25, 12, 'S');
@@ -90,7 +90,7 @@ export function zetwalTown(): MapSource {
     S: 't',
     L: 'x',
     N: 'x',
-    O: 't',
+    'ŵ': 't',
     M: '&',
     W: 'w',
     p: 'y',
@@ -186,6 +186,7 @@ export function zetwalTown(): MapSource {
     // The bridge's far end standing upright while it is raised (a picture only; the water blocks).
     obj('chain_bridge_raised', 34, 9, { era: 'present', kind: 'chain_bridge_up', if: '!anchor.chain_bridge' }),
     obj('chain_bridge_raised_echo', 34, 9, { era: 'echo', kind: 'chain_bridge_up', if: '!echo.chain_bridge_down, !anchor.chain_bridge' }),
+    obj('plaza_fountain', 17, 10, { kind: 'fountain', era: 'present' }, 2, 2),
     obj('monument', 12, 8, { dialogue: 'marshal_stone', era: 'present' }),
     obj('stone_pile', 12, 8, { dialogue: 'marshal_stone_echo', era: 'echo' }),
     obj('signing_stage', 17, 3, { dialogue: 'signing_stage_echo', era: 'echo' }),

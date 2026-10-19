@@ -82,6 +82,7 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   island_lantern_west: { name: 'Lantern' },
   island_lantern_east: { name: 'Lantern' },
   plaza_lantern_nw: { name: 'Lantern' },
+  plaza_fountain: { name: 'Fountain' },
   plaza_lantern_ne: { name: 'Lantern' },
   plaza_lantern_sw: { name: 'Lantern' },
   plaza_lantern_se: { name: 'Lantern' },
