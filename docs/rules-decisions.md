@@ -571,6 +571,15 @@ These came up in code and weren't covered above; all confirmed as they stand.
   - **Tested, not adopted (same review): Baraka Dorini only on Dorini's own turn.** 3 players 1.18/1.15 → 1.09/1.08,
     but 6 players 1.00/1.07 → 0.90/0.84 and 8 players 1.07/1.07 → 0.82/0.73, and Ironvow at 6 rose to 1.16/1.23.
     Dorini stays as printed; watch it at 2–3 players in human play.
+- **Wording only [89]** (third design review; owner, Oct 20; no rule or engine change):
+  - **Kay Soley's numbers on the reference card**, derived from `THRESHOLDS` and its `claimReduction`: eligible at 7
+    total (6 from Gen III) with 2–3 players, 8 (7 from Gen III) with 4 or more; the per-pillar minimum is unchanged.
+  - **Forced March example:** it may march you onto the Throne; you stop there, and get no protection unless eligible.
+  - **Grito markers:** a marker stays on its target even if Brasador's own character has fallen in the meantime (the
+    engine's behaviour: the effect sits on the target). Owner's reasons: every other lasting effect put on a rival
+    survives the caster's death; one trigger to track at the table; dying should not also cost Brasador its pressure.
+  - **Guaíza:** the copy has the copied player's strength (their Gen III upgrade included) and its own limits (once
+    per turn, per round or per heir), counted for the Yaguana player (the engine's behaviour).
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

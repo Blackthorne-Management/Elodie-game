@@ -21,6 +21,9 @@ export const RULE_PARTS: { id: RulePart; title: string; intro: string }[] = [
 ];
 
 const S = THRESHOLDS.small, N = THRESHOLDS.normal;
+// Kay Soley's own claim numbers (Rit Solèy), from the thresholds and its house data.
+const ksCut = (g: 1 | 3) => HOUSES.kaysoley.claimReduction?.(g) ?? 0;
+const KAY_SOLEY_NUMBERS = `**Kay Soley** is eligible at ${S.combined - ksCut(1)} total (${S.combined - ksCut(3)} from Gen III) with 2–3 players, and ${N.combined - ksCut(1)} (${N.combined - ksCut(3)} from Gen III) with 4 or more; the per-pillar minimum is unchanged.`;
 const truce = OPENING.truceRounds;
 const truceText = truce === 1 ? 'the first round' : `the first ${truce} rounds`;
 const big = `${TUNING.bigTablePlayers}+ players`;
@@ -147,7 +150,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         list: [
           `**Everyone** during the opening truce (${truceText}).`,
           '**A new heir,** until the end of their first turn.',
-          '**A player eligible to claim who stands on the Throne:** no one can attack them there, they can\'t attack from there and they can\'t die there (other Heart Token loss stops at 1). Eligible means that player\'s own number: Kay Soley needs less. **Anyone else on the Throne gets no protection.** You can only end your own move there while eligible, but a rival\'s card may still put you there.',
+          '**A player eligible to claim who stands on the Throne:** no one can attack them there, they can\'t attack from there and they can\'t die there (other Heart Token loss stops at 1). Eligible means that player\'s own number: Kay Soley needs less (see the reference card). **Anyone else on the Throne gets no protection.** You can only end your own move there while eligible, but a rival\'s card may still put you there.',
           'Challenge fights for the Throne ignore all of these.',
         ],
       },
@@ -238,7 +241,7 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
         '**Play on the grid only.** The 18 × 18 grid is the whole play area: the ocean and islands outside it are scenery, and no move may leave the grid.',
         'Extra movement from a card moves you straight away, with no second resource check, so a card never scores a tile.',
         'Some cards name a straight line or a direction (Forced March, Forced Retreat, Suzumori\'s Ayatsuri); those keep to it.',
-        '**The Throne:** you may not **end** your own move on the Throne unless you are eligible to claim: not your roll-and-move, extra moves, your own movement cards, the steps an Instant offers you, or your house abilities. Passing through is fine, and staying where you are is always allowed. Under Ayatsuri the puppeteer picks the direction but you still pick where you stop. **A rival\'s card or effect may still put you there** (Forced March, Forced Retreat); you get no protection unless eligible.',
+        '**The Throne:** you may not **end** your own move on the Throne unless you are eligible to claim: not your roll-and-move, extra moves, your own movement cards, the steps an Instant offers you, or your house abilities. Passing through is fine, and staying where you are is always allowed. Under Ayatsuri the puppeteer picks the direction but you still pick where you stop. **A rival\'s card or effect may still put you there** (Forced March, Forced Retreat); you get no protection unless eligible. For example, Forced March may march you onto the Throne: you stop there, and get no protection unless eligible.',
       ],
     }],
   },
@@ -349,7 +352,8 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
         '**Once-per-game powers:** when you use one (or Stillwater\'s Patience, from Gen III), put a Used token on it on your player board. It stays used when your heir takes over.',
         'Every house has 3 Heart Tokens in each generation, except Agnivansh Gen IV (2).',
         '**House Yaguana\'s Legacy:** at setup, shuffle the Legacy cards of the houses not at the table (all the others when eight play) and draw one blind: its Ancestor\'s Voice. A Legacy card is read as printed; Brasador\'s works from the start.',
-        `**Grito de Guerra** uses the ${GRITO_MARKERS} Grito markers: put one on the player you silence, and take it back when their next Fear gain is skipped (or their character dies). A player carries at most one. With every marker out, Grito de Guerra waits until one comes back.`,
+        `**Grito de Guerra** uses the ${GRITO_MARKERS} Grito markers: put one on the player you silence, and take it back when their next Fear gain is skipped (or their character dies). A marker stays on its target even if Brasador's own character has fallen in the meantime. A player carries at most one. With every marker out, Grito de Guerra waits until one comes back.`,
+        '**Guaíza** (Yaguana) copies a passive at the strength the copied player has it (their Gen III upgrade included), with its own limits (once per turn, per round or per heir), counted for the Yaguana player.',
         'The full list of every house and generation is below, under **The Eight Houses**.',
       ],
     }],
@@ -419,6 +423,7 @@ const REFERENCE: Omit<RuleSection, 'part'>[] = [
         ],
       },
       'Free at any time in your turn: house abilities, and a claim while on the Throne and eligible.',
+      KAY_SOLEY_NUMBERS,
       `**◎ Target cards** (answered by Counterspell or Turnabout): ${names(targetCards)}.`,
       '**Lasting cards stay out:**',
       {
