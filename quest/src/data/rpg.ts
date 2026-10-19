@@ -31,7 +31,8 @@ const ITEM_LIST: ItemDef[] = [
       { name: 'Two halves of a promise', text: 'Near its other half, the Brasador signet, both halves glow.', known: { flag: 'story.signet_glowed' } },
     ],
   },
-  // The Envoy's Papers (Chapter 1, the Hall of the Accord).
+  // The Envoy's Papers (Chapter 1, the Hall of the Accord). Since Batch D (Oct 19) the engraver hands the seal to
+  // the clerk himself; `elodie_seal` stays so a save made while carrying it still shows it in the bag.
   {
     id: 'elodie_seal',
     name: "Mother's seal",
@@ -52,6 +53,15 @@ const ITEM_LIST: ItemDef[] = [
     kind: 'key',
     price: 0,
     text: "Gianna Limyè, envoy of Kay Soley to Xaraguá: the Head of State's seal and the Chancellor's hand. Keep them dry.",
+  },
+  // The departure at dawn (Chapter 1, decision C, Oct 19): Grandfather's whistle. No stats; it matters again in
+  // Chapter 10, when he musters Zetwal with it.
+  {
+    id: 'marshal_whistle',
+    name: "The Marshal's whistle",
+    kind: 'key',
+    price: 0,
+    text: "Grandfather's brass whistle from the year of the Accord, worn smooth on its cord. Every company in Zetwal knew its note.",
   },
   // Chapter 2: the petroglyph cave is dark (the lamp-oil seller lends one once Thorne has spoken to Gianna).
   {
@@ -94,6 +104,8 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'soup_pot', name: 'Clay-pot soup', kind: 'consumable', price: 30, heals: 40, healTurns: 3, text: 'Squash soup in a clay pot, still warm. Restores 40 HP, a little at a time.' },
   { id: 'akasan', name: 'Akasan', kind: 'consumable', price: 25, restores: 12, text: 'Sweet cornmeal drink, thick enough to stand a spoon in. Restores 12 SP.' },
   // The Iron Market (Oct 15).
+  // Grandmother's food for the voyage (Chapter 1's departure at dawn, Oct 19): only she gives it.
+  { id: 'anicette_kasav', name: "Grandmother's kasav", kind: 'consumable', price: 15, heals: 30, text: 'Kasav from Grandmother\'s own griddle, wrapped in a banana leaf for the water. Restores 30 HP.' },
   { id: 'kasav', name: 'Kasav', kind: 'consumable', price: 15, heals: 25, text: 'Cassava bread, flat and crisp, with peanut butter. Restores 25 HP.' },
   { id: 'kann', name: 'Cane juice', kind: 'consumable', price: 12, heals: 12, restores: 4, text: 'Sugarcane pressed while you wait. Restores 12 HP and 4 SP.' },
   { id: 'pikliz', name: 'Pikliz', kind: 'consumable', price: 20, restores: 10, text: 'Pickled cabbage and peppers, hot enough to wake the dead. Restores 10 SP.' },
@@ -290,7 +302,7 @@ export const RPG: RpgContent = {
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
-    { flags: [...ACT1.objectives, ...ACT2.objectives].flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
+    { flags: [...ACT1.objectives, ...ACT2.objectives].filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
     { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
   ],
   levels: LEVELS,

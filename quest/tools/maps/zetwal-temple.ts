@@ -31,6 +31,8 @@ export function zetwalTemple(): MapSource {
     npc('temple_porter', 16, 8, 'down'),
     npc('mourner', 19, 3, 'down'),
     npc('fisher_island', 22, 16, 'up'),
+    // After the lamp the cane cutter waits at the name stones (decision A, Oct 19; on the Cane Road otherwise).
+    npc('cane_cutter_stones', 8, 4, 'left', { npc: 'cane_cutter', if: 'story.anissa_woke, !story.zetwal_return' }),
     // After the lamp, Yari comes up from her canoe to meet the party on the dock path (demo review, Oct 17:
     // shown, not told); then she walks with them, and her canoe is where they sail from.
     trigger('yari_lands', 14, 12, { dialogue: 'yari_talk', flag: 'story.yari_landed', once: true, if: 'story.anissa_woke, !story.yari_asked' }, 2, 1),

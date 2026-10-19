@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { LATER_STORY_FLAGS } from '../src/data/encounters.ts';
+import { OLD_SAVE_FLAGS } from '../src/data/dialogue/zetwal.ts';
 import { BATTLES } from '../src/data/battles.ts';
 import { encounterFlag } from '../src/engine/encounterFlags.ts';
 import { GLOSSARIES } from '../src/data/lang.ts';
@@ -96,7 +97,8 @@ describe('dialogue content', () => {
 
   it('every flag that is read is set somewhere (no typos)', () => {
     const set = flagsSet();
-    const unknown = [...flagsRead()].filter(([f]) => !set.has(f) && !LATER_STORY_FLAGS.includes(f));
+    // Flags only old saves carry (data/dialogue/zetwal.ts OLD_SAVE_FLAGS) are read so those saves can finish.
+    const unknown = [...flagsRead()].filter(([f]) => !set.has(f) && !LATER_STORY_FLAGS.includes(f) && !OLD_SAVE_FLAGS.includes(f));
     expect(unknown).toEqual([]);
   });
 

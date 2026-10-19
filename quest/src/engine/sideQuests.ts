@@ -41,6 +41,11 @@ export interface SideQuestDef {
   available?: Condition;
   start?: readonly Goal[];
   nudge?: string;
+  /**
+   * Where the giver stands once the story has moved them (the first whose `if` holds; owner decision, Oct 19:
+   * the cane cutter crosses to the name stones after the lamp): a `place` and a `nudge` instead of the usual.
+   */
+  moved?: readonly { if: Condition; place: string; nudge?: string }[];
   steps: readonly SideQuestStep[];
   /** The steps can be done in any order: the log shows them all at once. */
   parallel?: boolean;
@@ -50,6 +55,20 @@ export interface SideQuestDef {
 }
 
 export type SideQuestStatus = 'unknown' | 'active' | 'done';
+
+function movedNow(q: SideQuestDef, flags: FlagReader) {
+  return q.moved?.find((m) => evaluate(m.if, flags));
+}
+
+/** Where the quest's giver is now (the log's "Where"). */
+export function questPlace(q: SideQuestDef, flags: FlagReader): string {
+  return movedNow(q, flags)?.place ?? q.place;
+}
+
+/** Anissa's nudge towards the quest now (it follows the giver when the story moves them). */
+export function questNudge(q: SideQuestDef, flags: FlagReader): string | undefined {
+  return movedNow(q, flags)?.nudge ?? q.nudge;
+}
 
 export function sideQuestStatus(flags: FlagReader, q: SideQuestDef): SideQuestStatus {
   if (evaluate(q.done, flags)) return 'done';

@@ -99,7 +99,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 
 ## Pòdlimyè (Zetwal)
 
-**Built (owner approved, Oct 14):** the three Chapter 1 side quests in `quest/src/data/sideQuests.ts`, with their
+**Built (owner approved, Oct 14; the debate added Oct 18):** the Chapter 1 side quests in `quest/src/data/sideQuests.ts`, with their
 lines in `quest/src/data/dialogue/zetwal.ts`. None has a fight.
 - **The Overdue Shelf** (senior archivist, Temple Archive): get back the ferryman's *Tides of the Southern Reach*,
   the soup vendor's *Ninety Ways With Pumpkin* and Anicette's *Ash Wars Gossip, Volume Two*, in any order. Anicette
@@ -112,6 +112,18 @@ lines in `quest/src/data/dialogue/zetwal.ts`. None has a fight.
   (a line for "the cutters whose names the Crown did not keep"), use the Echo by the east gate to meet her young
   (Rose-Aimée, called Forty-One by the overseer), write her into Mother Solange's list in the Archive, tell him.
   Sun-stitched charm, 50 XP, +1 Influence. (Grandmother, not great-grandmother: fifty years back she was young.)
+  **Where he stands (decision A, Oct 19):** on the Cane Road until the lamp is lit (the quest can still be taken
+  early, from the war room on); after the lamp, at the name stones on the Temple island (he crossed the Chain Bridge
+  to hear the names, and listened for one that never came), where accepting the quest reads the stones with him on
+  the spot; and back on the Cane Road, with his warning, when Gianna comes home at the end of Chapter 2. His lines
+  at the stones are written for after the reading and keep his pointer to the veiled woman by the old mill; told
+  her name there, he walks up to the lamp and says it. The quest's start, its last step, its place in the log and
+  Anissa's nudge follow him (`moved` in `sideQuests.ts`).
+- **A Question of Faith** (Gaze keeper, the lawn below the plaza; owner decision, Oct 18): hear the debate on faith,
+  then argue all three rounds or mediate. 30 XP. Required before Yari sails, like the other three.
+- **The order (Batch D, Oct 19).** All four must be done before Yari sails (owner decision, Oct 18). The Journal
+  leads through them the short way: the island first (the cutter at the stones, the archivist, the temple record),
+  then, after the Hall and the Cane Road, the city's errands on the way back, then the island again.
 
 Z-1 to Z-3 below were the design pack's first proposals for the same three slots; they stay as candidates for later
 chapters (Z-3, The Lonely Cutter, fits the return in Chapter 10).
@@ -143,7 +155,8 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
   discount (the Carriage Guild fare from Zetwal is halved for the rest of the game).
 
 ### Z-3 The Lonely Cutter
-- **Giver:** the cane cutter on the Cane Road (built NPC) mentions the veiled woman at the old mill (built). **Accept:**
+- **Giver:** the cane cutter (built NPC; on the Cane Road, and at the name stones after the lamp) mentions the veiled
+  woman at the old mill (built). **Accept:**
   after the lamp lights (`story.anissa_woke`), a young cutter named **Ti Jak** (proposal) is missing from work.
 - **Steps:** 1) Find Ti Jak at the mill with the veiled woman (the built road watcher). 2) A conversation, not a
   fight: she offers him bread and his debt paid. Gianna can use **Compassion** (he lost his mother last year; say her

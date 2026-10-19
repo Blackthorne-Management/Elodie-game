@@ -15,7 +15,7 @@ import { isMove, skillCost, type SkillDef } from '../engine/battle.ts';
 import { equippedSpells, gearSkills, howToLearn, knownMoves, knownSkills, learned, nextRank, spellSlots, toggleSpell, usesSlots } from '../engine/skills.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { encounterFlag } from '../engine/game.ts';
-import { rewardText, sideQuestStatus, visibleSteps, type SideQuestDef } from '../engine/sideQuests.ts';
+import { questPlace, rewardText, sideQuestStatus, visibleSteps, type SideQuestDef } from '../engine/sideQuests.ts';
 import { mysteryQuests } from '../engine/guide.ts';
 import type { FlagStore } from '../engine/flags.ts';
 import {
@@ -977,18 +977,19 @@ export class GameMenu {
     const ctx = this.ctx!;
     if (e.kind === 'main') return ctx.journal();
     const q = e.q;
+    const place = questPlace(q, ctx.flags);
     if (e.kind === 'mystery') {
       return [
         { text: '??? A quest not started', color: UI.accentText },
-        { text: `Where: ${q.place}`, color: UI.dimText },
-        { text: `Someone at ${q.place.startsWith('The ') ? 'the' + q.place.slice(3) : 'the ' + q.place} may need Gianna's help. Look for the silver dot on the map, or ask Anissa.`, gap: 4 },
+        { text: `Where: ${place}`, color: UI.dimText },
+        { text: `Someone at ${place.startsWith('The ') ? 'the' + place.slice(3) : 'the ' + place} may need Gianna's help. Look for the silver dot on the map, or ask Anissa.`, gap: 4 },
       ];
     }
     const done = sideQuestStatus(ctx.flags, q) === 'done';
     const band = levelBand(RPG, partyLevel(ctx.flags, RPG, ctx.era), q.level);
     const lines: PanelLine[] = [
       { text: q.title, color: UI.accentText },
-      { text: `${q.giver}, ${q.place}`, color: UI.dimText },
+      { text: `${q.giver}, ${place}`, color: UI.dimText },
       { text: `Level ${q.level}`, color: BAND_COLOURS[band] },
       { text: q.summary, gap: 4 },
     ];
@@ -1017,7 +1018,7 @@ export class GameMenu {
     const entries = this.questEntries();
     const flags = this.ctx!.flags;
     const labels = entries.map((e) =>
-      e.kind === 'main' ? 'Main: Chapter 1' : e.kind === 'mystery' ? `??? ${e.q.place}` : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`,
+      e.kind === 'main' ? 'Main: Chapter 1' : e.kind === 'mystery' ? `??? ${questPlace(e.q, flags)}` : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`,
     );
     this.drawList(labels, this.cursor, 6, TOP + 2, ROWS, this.stage === 'top');
     if (entries.length === 1) this.text(6, TOP + 2 + 2 * ROW_H, '  No side quests yet.', UI.dimText);

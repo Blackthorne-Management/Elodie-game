@@ -7,7 +7,7 @@
 import { evaluate, type Condition } from './conditions.ts';
 import type { FlagReader } from './flags.ts';
 import { currentObjective, type QuestDef } from './quests.ts';
-import { sideQuestStatus, type SideQuestDef } from './sideQuests.ts';
+import { questNudge, sideQuestStatus, type SideQuestDef } from './sideQuests.ts';
 import type { GameMap } from './tiledMap.ts';
 import type { Pos } from './types.ts';
 
@@ -87,7 +87,10 @@ export function mysteryGoals(quests: readonly SideQuestDef[], flags: FlagReader)
 
 /** Anissa's nudges towards the mystery quests (after her hints for the story's objective). */
 export function sideNudges(quests: readonly SideQuestDef[], flags: FlagReader): string[] {
-  return mysteryQuests(quests, flags).flatMap((q) => (q.nudge ? [q.nudge] : []));
+  return mysteryQuests(quests, flags).flatMap((q) => {
+    const nudge = questNudge(q, flags);
+    return nudge ? [nudge] : [];
+  });
 }
 
 /** Each accepted, unfinished side quest's goal now (its first step not done yet). */

@@ -40,7 +40,9 @@ export function zetwalRoad(): MapSource {
   const e = g.map({ '.': '"', ',': ';', i: 'I', T: 'Y', f: '"', P: '"', X: 'Z', n: '"', k: ';', '&': '&', D: 'D' });
 
   const objects: ObjSpec[] = [
-    npc('cane_cutter', 6, 10, 'right'),
+    // The cane cutter (decision A, Oct 19): on the road until the lamp is lit, then at the name stones on the Temple
+    // island (zetwal-temple.ts) for the rest of Chapter 1, and back here when Gianna comes home from Xaraguá.
+    npc('cane_cutter', 6, 10, 'right', { if: '!story.anissa_woke|story.zetwal_return' }),
     npc('road_watcher', 36, 8, 'down'),
     { layer: 'doors', name: 'road_gate', x: 0, y: 12, props: { target: 'town_gate', map: 'zetwal-town', exit: 'right' } },
     { layer: 'spawns', name: 'road', x: 2, y: 12, props: { facing: 'right', era: 'present' } },

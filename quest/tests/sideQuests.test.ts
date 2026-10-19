@@ -13,7 +13,15 @@ import { debateFlag } from '../src/engine/debate.ts';
 import { DialogueRunner } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { gold, itemCount, pillarFlag, xp } from '../src/engine/rpg.ts';
-import { rewardFlag, settleRewards, sideQuestStatus, visibleSteps } from '../src/engine/sideQuests.ts';
+import { questPlace, rewardFlag, settleRewards, sideQuestStatus, visibleSteps } from '../src/engine/sideQuests.ts';
+import { activeNpcs } from '../src/engine/world.ts';
+import { ACT1 } from '../src/data/quests.ts';
+import type { FlagSnapshot } from '../src/engine/flags.ts';
+import { GameLogic } from '../src/engine/game.ts';
+import { goalFor, mysteryGoals, sideGoals, sideNudges } from '../src/engine/guide.ts';
+import { decodeSave, encodeSave } from '../src/engine/save.ts';
+import { Sim } from '../src/engine/sim.ts';
+import { applySave, newGame, toSaveData } from '../src/engine/state.ts';
 import { loadMaps, newGameSim } from '../tools/sim-setup.ts';
 
 /** Talk to `id`, picking the choices whose text starts with each of `picks` in turn; returns every line shown. */
@@ -75,7 +83,8 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
     expect(sideQuestStatus(flags, q)).toBe('active');
     expect(visibleSteps(flags, q)).toHaveLength(4); // parallel: every step at once
 
-    talk(flags, 'soup_vendor_talk');
+    // One conversation (Oct 19): her greeting, the book, then her own errand (declined here).
+    talk(flags, 'soup_vendor_talk', ['It smells wonderful', 'Not right now']);
     expect(flags.isSet('side.overdue.soup')).toBe(true);
     talk(flags, 'ferryman_talk');
     expect(flags.isSet('side.overdue.ferry')).toBe(true);
@@ -121,13 +130,17 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
   it('side quests are not offered until the first Echo (owner decision, Oct 16)', () => {
     const flags = chapterOne();
     flags.set('story.warroom_echo', false);
-    expect(() => talk(flags, 'soup_vendor_talk', ['You look busy'])).toThrow(/no choice "You look busy"/);
+    const lines = talk(flags, 'soup_vendor_talk', ['Save me a bowl']);
+    expect(lines.join(' ')).toContain('Come back when the stall is open');
+    expect(lines.join(' ')).not.toContain('My nephew');
+    expect(flags.isSet('side.soup.accepted')).toBe(false);
   });
 
   it('Soup for the Cousins: three bowls, then three soups, 30 gold and Influence', () => {
     const flags = chapterOne();
     const q = quest('soup');
-    talk(flags, 'soup_vendor_talk', ['You look busy', "I'll carry them"]);
+    // Her greeting flows straight into the errand (Oct 19: no second talk needed).
+    talk(flags, 'soup_vendor_talk', ['Save me a bowl', "I'll carry them"]);
     expect(sideQuestStatus(flags, q)).toBe('active');
     talk(flags, 'town_guard_talk');
     talk(flags, 'elder_talk');
@@ -138,7 +151,8 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
     talk(flags, 'ferryman_talk');
     // The second time each one talks normally again.
     expect(talk(flags, 'elder_talk').some((t) => t.includes('argued with the whole council'))).toBe(true);
-    talk(flags, 'soup_vendor_talk');
+    // "Save me a bowl", remembered: she keeps her promise when the soup is delivered.
+    expect(talk(flags, 'soup_vendor_talk').join(' ')).toContain("cousin's bowl, off the shelf, as promised");
     expect(sideQuestStatus(flags, q)).toBe('done');
     const soups = itemCount(flags, 'soup_pot');
     const before = gold(flags, RPG);
@@ -171,8 +185,75 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
     expect(talk(flags, 'cane_cutter_talk').join(' ')).toContain('still sounds new');
   });
 
+  // Decision A (Oct 19): the cutter is on the Cane Road before the lamp, at the name stones on the island after
+  // it, and back on the road when Gianna comes home; the quest's arrows, place and nudge follow him.
+  describe("the cane cutter's schedule", () => {
+    const maps = loadMaps();
+    const where = (flags: FlagStore) =>
+      ['zetwal-road', 'zetwal-temple'].filter((m) => activeNpcs(maps[m]!, 'present', flags).some((n) => n.npc === 'cane_cutter'));
+    const q = quest('cane_name');
+
+    it('stands in one place at a time: the road, then the stones, then the road again', () => {
+      const flags = chapterOne();
+      expect(where(flags)).toEqual(['zetwal-road']);
+      flags.set('story.anissa_woke', true);
+      expect(where(flags)).toEqual(['zetwal-temple']);
+      flags.set('story.zetwal_return', true);
+      expect(where(flags)).toEqual(['zetwal-road']);
+    });
+
+    it('the quest points where he is: its start, the last step, the log and Anissa\'s nudge', () => {
+      const flags = chapterOne();
+      expect(mysteryGoals([q], flags)[0]?.goal.map).toBe('zetwal-road');
+      expect(questPlace(q, flags)).toBe('The Cane Road');
+      flags.set('story.anissa_woke', true);
+      expect(mysteryGoals([q], flags)[0]?.goal).toMatchObject({ map: 'zetwal-temple', at: { x: 8, y: 4 } });
+      expect(questPlace(q, flags)).toBe('The Temple island');
+      expect(sideNudges([q], flags)[0]).toContain('name stones');
+      for (const f of ['side.cane_name.accepted', 'side.cane_name.stones', 'clue.cane_name', 'side.cane_name.recorded']) flags.set(f, true);
+      expect(sideGoals([q], flags)[0]?.goal.map).toBe('zetwal-temple');
+      flags.set('story.zetwal_return', true);
+      expect(sideGoals([q], flags)[0]?.goal.map).toBe('zetwal-road');
+    });
+
+    it('at the stones after the reading: he asks, and they read the stones together (step 1 on the spot)', () => {
+      const flags = chapterOne();
+      flags.set('story.bridge_crossed', true);
+      flags.set('story.anissa_woke', true);
+      const lines = talk(flags, 'cane_cutter_talk', ['Who were you listening for', "I'll look for her name"]).join(' ');
+      expect(lines).toContain('I listened for one name');
+      expect(lines).toContain('a veiled woman by the old mill'); // the pointer to the Quiet Crown's watcher stays
+      expect(lines).not.toContain('names are read tonight');
+      expect(flags.isSet('side.cane_name.stones')).toBe(true);
+      expect(lines).toContain('the cutters of the Cane Road');
+    });
+
+    it('accepted on the road before the lamp, stones not read: at the stones he reads them with her', () => {
+      const flags = chapterOne();
+      talk(flags, 'cane_cutter_talk', ['You seem far away', "I'll look for her name"]);
+      expect(flags.isSet('side.cane_name.stones')).toBe(false);
+      flags.set('story.anissa_woke', true);
+      talk(flags, 'cane_cutter_talk');
+      expect(flags.isSet('side.cane_name.stones')).toBe(true);
+    });
+
+    it('told at the stones: he says her name to the lamp; on the road, he says it tonight', () => {
+      const done = (atStones: boolean) => {
+        const flags = chapterOne();
+        for (const f of ['side.cane_name.accepted', 'side.cane_name.stones', 'clue.cane_name', 'side.cane_name.recorded']) flags.set(f, true);
+        if (atStones) flags.set('story.anissa_woke', true);
+        return talk(flags, 'cane_cutter_talk').join(' ');
+      };
+      expect(done(true)).toContain('The reading is over, but the lamp is still lit');
+      expect(done(true)).toContain('says her name to it');
+      expect(done(false)).toContain('Tonight I will say it so loud');
+      expect(done(false)).not.toContain('says her name to it');
+    });
+  });
+
   it('no quest step starts a fight: Chapter 1 quests never need story.zetwal_return', () => {
-    for (const q of SIDE_QUESTS) expect(JSON.stringify(q)).not.toContain('zetwal_return');
+    // (The cane cutter's placement reads it only to say where he is: on the road again once Gianna is home.)
+    for (const q of SIDE_QUESTS) expect(JSON.stringify(q).replaceAll('{"notFlag":"story.zetwal_return"}', ''), q.id).not.toContain('zetwal_return');
   });
 });
 
@@ -223,32 +304,113 @@ describe("Yari's request (owner, Oct 15): Gianna asks for time to finish her wor
   });
 });
 
-describe("The Envoy's Papers (owner, Oct 15): the task at the Hall of the Accord", () => {
-  it('the clerk needs the seal, the engraver has it, the clerk writes and seals the papers, the Chancellor signs', () => {
-    const flags = new FlagStore({ 'party.anissa': true, 'story.yari_asked': true });
+describe("The Envoy's Papers (owner, Oct 15): the task at the Hall of the Accord, in one visit (Batch D, Oct 19)", () => {
+  const AFTER_LAMP = { 'party.anissa': true, 'story.anissa_woke': true, 'story.yari_asked': true };
+
+  it('the clerk explains, the engraver walks the seal in, the clerk writes and seals the papers, the Chancellor signs', () => {
+    const flags = new FlagStore(AFTER_LAMP);
     expect(talk(flags, 'engraver_talk').join(' ')).not.toContain('Finished it this morning');
-    talk(flags, 'hall_clerk_talk');
-    expect(flags.isSet('story.papers_asked')).toBe(true);
-    expect(talk(flags, 'engraver_talk').join(' ')).toContain('Finished it this morning');
-    expect(itemCount(flags, 'elodie_seal')).toBe(1);
-    talk(flags, 'hall_clerk_talk');
+    const hall = talk(flags, 'hall_clerk_talk').join(' ');
+    // He comes because the lamps lit (review, Oct 19: a reason to walk in now), and hands the seal to the clerk.
+    expect(hall).toContain('every lamp in the city lit at once');
+    expect(hall).toContain('Here, clerk.');
     expect(itemCount(flags, 'elodie_seal')).toBe(0);
     expect(itemCount(flags, 'draft_papers')).toBe(1);
+    expect(flags.isSet('story.papers_sealed')).toBe(true);
+    expect(flags.isSet('story.papers_asked')).toBe(false);
     expect(flags.isSet('story.envoy_papers')).toBe(false);
-    // The Chancellor signs last.
-    talk(flags, 'chancellor_talk');
+    // The Chancellor signs last, in front of the Crown's consul.
+    talk(flags, 'chancellor_talk', ['Say nothing']);
     expect(itemCount(flags, 'draft_papers')).toBe(0);
     expect(itemCount(flags, 'envoy_papers')).toBe(1);
     expect(flags.isSet('story.envoy_papers')).toBe(true);
-    expect(talk(flags, 'engraver_talk').join(' ')).not.toContain('Finished it this morning');
+    // Back in the Iron Market, the engraver says he delivered it himself.
+    expect(talk(flags, 'engraver_talk').join(' ')).toContain('Delivered it myself');
+  });
+
+  it('the papers objective never sends anyone to the Iron Market', () => {
+    const papers = ACT1.objectives.find((o) => o.id === 'papers')!;
+    expect(papers.goals!.every((g) => g.map === 'zetwal-hall')).toBe(true);
+    expect(papers.hints.join(' ')).not.toContain('Market');
   });
 
   it('before Yari asks, the clerk only talks about the Hall', () => {
     const flags = new FlagStore({ 'party.anissa': true });
     talk(flags, 'hall_clerk_talk');
-    expect(flags.isSet('story.papers_asked')).toBe(false);
+    expect(flags.isSet('story.papers_sealed')).toBe(false);
+  });
+
+  // Saves made mid-errand before Batch D (review risk 6): every state still finishes.
+  describe('old saves in the middle of the errand', () => {
+    it('sent to the Market for the seal: at the clerk, the engraver walks in with it', () => {
+      const flags = new FlagStore({ ...AFTER_LAMP, 'story.papers_asked': true });
+      const lines = talk(flags, 'hall_clerk_talk').join(' ');
+      expect(lines).toContain('Back from the Iron Market already?');
+      expect(lines).toContain('Here, clerk.');
+      expect(flags.isSet('story.papers_sealed')).toBe(true);
+      talk(flags, 'chancellor_talk', ["Zetwal's waters"]);
+      expect(flags.isSet('story.envoy_papers')).toBe(true);
+    });
+
+    it('sent to the Market for the seal: the engraver there still hands it over, and the clerk takes it', () => {
+      const flags = new FlagStore({ ...AFTER_LAMP, 'story.papers_asked': true });
+      expect(talk(flags, 'engraver_talk').join(' ')).toContain('Finished it this morning');
+      expect(itemCount(flags, 'elodie_seal')).toBe(1);
+      expect(talk(flags, 'engraver_talk').join(' ')).toContain('to the Hall with it');
+      talk(flags, 'hall_clerk_talk');
+      expect(itemCount(flags, 'elodie_seal')).toBe(0);
+      expect(itemCount(flags, 'draft_papers')).toBe(1);
+    });
+
+    it('holding the seal: the clerk takes it and writes the papers', () => {
+      const flags = new FlagStore({ ...AFTER_LAMP, 'story.papers_asked': true, 'item.elodie_seal': 1 });
+      expect(talk(flags, 'hall_clerk_talk')[0]).toBe('The seal. Re-cut.');
+      expect(itemCount(flags, 'elodie_seal')).toBe(0);
+      expect(flags.isSet('story.papers_sealed')).toBe(true);
+    });
+
+    it('papers sealed: the Chancellor signs them (and the consul walks in)', () => {
+      const flags = new FlagStore({ ...AFTER_LAMP, 'story.papers_asked': true, 'item.elodie_seal': 0, 'item.draft_papers': 1, 'story.papers_sealed': true });
+      expect(talk(flags, 'chancellor_talk', ['Say nothing']).join(' ')).toContain('protection of the southern waters');
+      expect(itemCount(flags, 'envoy_papers')).toBe(1);
+    });
+
+    it('each state, loaded from a save code in the Hall, plays through to signed papers; the arrow stays in the Hall', () => {
+      const states: Record<string, unknown>[] = [
+        { 'story.papers_asked': true },
+        { 'story.papers_asked': true, 'item.elodie_seal': 1 },
+        { 'story.papers_asked': true, 'item.elodie_seal': 0, 'item.draft_papers': 1, 'story.papers_sealed': true },
+      ];
+      const papers = ACT1.objectives.find((o) => o.id === 'papers')!;
+      for (const extra of states) {
+        const sim = hallSave({ ...AFTER_LAMP, 'item.sun_locket': true, ...extra });
+        const f = sim.logic.state.flags;
+        // (The Journal may first ask for the island's work, new since then; the papers' own arrow is in the Hall.)
+        expect(goalFor(papers.goals, f)?.map, JSON.stringify(extra)).toBe('zetwal-hall');
+        if (!f.isSet('story.papers_sealed')) sim.run(['goto 21,26', 'up', 'confirm', 'skip']);
+        expect(goalFor(papers.goals, f)?.at).toEqual({ x: 32, y: 5 });
+        sim.run(['goto 32,6', 'up', 'confirm', 'skip']);
+        expect(f.isSet('story.envoy_papers'), JSON.stringify(extra)).toBe(true);
+        expect(itemCount(f, 'envoy_papers')).toBe(1);
+      }
+    });
   });
 });
+
+/** A save in the Hall's entrance with these flags, written to a save code and read back, as a player loads it. */
+function hallSave(flags: Record<string, unknown>): Sim {
+  const maps = loadMaps();
+  const state = newGame(maps['zetwal-hall']!, 'hall');
+  state.flags.load(flags as FlagSnapshot);
+  const decoded = decodeSave(encodeSave(toSaveData(state, 0)));
+  if (!decoded.ok) throw new Error(decoded.error);
+  const fresh = newGame(maps['zetwal-hall']!, 'hall');
+  applySave(fresh, decoded.data);
+  const sim = new Sim(new GameLogic(maps, CONTENT, fresh));
+  sim.onBattle = () => [];
+  sim.logic.enterMap();
+  return sim;
+}
 
 describe('a save that finished Chapter 1 before the ferry existed (owner report, Oct 17)', () => {
   it('Yari still offers to sail, and the ferry lands in Yucayeque', () => {

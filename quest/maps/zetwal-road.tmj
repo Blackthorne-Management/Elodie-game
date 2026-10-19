@@ -313,6 +313,11 @@
               "value": "right"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.anissa_woke|story.zetwal_return"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "cane_cutter"

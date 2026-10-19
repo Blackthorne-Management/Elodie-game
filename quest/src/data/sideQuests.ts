@@ -7,6 +7,8 @@ import type { SideQuestDef } from '../engine/sideQuests.ts';
 
 const f = (flag: string): Condition => ({ flag });
 const INFLUENCE_ZETWAL = { pillar: 'influence', city: 'zetwal', amount: 1 } as const;
+/** The cane cutter waits at the name stones from the lamp until Chapter 1 ends (decision A, Oct 19). */
+const CUTTER_AT_STONES: Condition = { all: [f('story.anissa_woke'), { notFlag: 'story.zetwal_return' }] };
 
 export const SIDE_QUESTS: readonly SideQuestDef[] = [
   {
@@ -61,16 +63,35 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     place: 'The Cane Road',
     level: 3,
     summary:
-      'The cane cutter\'s grandmother cut cane on this road when it was the Crown\'s. He only knew her as "Grann", and her name is on no stone.',
+      'The cane cutter\'s grandmother cut cane on the Cane Road when it was the Crown\'s. He only knew her as "Grann", and her name is on no stone.',
     accepted: f('side.cane_name.accepted'),
     available: f('story.warroom_echo'),
-    start: [{ map: 'zetwal-road', at: { x: 6, y: 10 } }],
+    // Where he stands (decision A, Oct 19): on the Cane Road, at the name stones on the Temple island from the
+    // lamp until Chapter 1 ends, and on the road again when Gianna comes home (zetwal-road.ts, zetwal-temple.ts).
+    start: [
+      { if: CUTTER_AT_STONES, map: 'zetwal-temple', at: { x: 8, y: 4 } },
+      { map: 'zetwal-road', at: { x: 6, y: 10 } },
+    ],
     nudge: 'There was a cane cutter on the road past the east gate. He looked like he wanted to ask us something.',
+    moved: [
+      {
+        if: CUTTER_AT_STONES,
+        place: 'The Temple island',
+        nudge: 'That cane cutter from the road is at the name stones, Gigi. He crossed over to hear the names. He looks lost.',
+      },
+    ],
     steps: [
       { text: 'Look for her on the name stones (the Temple island).', done: f('side.cane_name.stones'), goals: [{ map: 'zetwal-temple', at: { x: 6, y: 4 } }] },
       { text: 'Find where the road remembers her: the shimmer by the east gate, on the Cane Road.', done: f('clue.cane_name'), goals: [{ map: 'zetwal-road', at: { x: 3, y: 14 } }] },
       { text: "Write her name in Mother Solange's list (the Temple Archive).", done: f('side.cane_name.recorded'), goals: [{ map: 'zetwal-archive', at: { x: 9, y: 7 } }] },
-      { text: 'Tell the cane cutter.', done: f('side.cane_name.done'), goals: [{ map: 'zetwal-road', at: { x: 6, y: 10 } }] },
+      {
+        text: 'Tell the cane cutter.',
+        done: f('side.cane_name.done'),
+        goals: [
+          { if: CUTTER_AT_STONES, map: 'zetwal-temple', at: { x: 8, y: 4 } },
+          { map: 'zetwal-road', at: { x: 6, y: 10 } },
+        ],
+      },
     ],
     done: f('side.cane_name.done'),
     reward: { xp: 50, items: [{ id: 'sun_charm', n: 1 }], pillar: INFLUENCE_ZETWAL },

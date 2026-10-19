@@ -68,7 +68,9 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('xaragua_arrival', [
     nar('The ferry coach bumps against the pier at dawn. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
     say(Y, 'Yucayeque. Home.'),
-    say(Y, 'And them. There were two ships when I left. Now there are three.'),
+    // Gianna asked Yari to tell her everything on the way (Chapter 1, the island dock): remembered (Oct 19).
+    { speaker: Y, text: 'And them. There were two ships when I left. Now there are three.', if: { notFlag: 'choice.yari_everything' } },
+    { speaker: Y, text: 'And them. I told you about the two ships. Count them.', if: { flag: 'choice.yari_everything' } },
     act([{ do: 'place', actor: 'yari', look: 'yari', at: at(22, 25), facing: 'up' }], A, 'Gigi. Look, on the pier.'),
     // Staged (owner rule, Oct 17): the fisher is up at the sergeant's scale, and gets shoved back.
     act(
@@ -175,6 +177,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       "The elders sit in a circle. The Governor's liaison stands in the middle, holding a paper with a red seal.",
     ),
     say('crown_liaison', 'Honored elders. The Charter offers the protection of His Majesty\'s fleet, forever. In return, a small matter: the harbor.'),
+    // Gianna told the Crown's consul "Zetwal's waters are its own" (Chapter 1, Oct 19).
+    { speaker: G, text: "They asked Zetwal to thank them for protecting our waters too. We didn't.", if: { flag: 'choice.envoy_waters' } },
     say('elder_charter', 'We cannot fight three warships with canoes. I say we sign, and live.'),
     say('elder_resist', 'We swore on the stones: "The harbor stays with the people who fish it." I will not unswear it.'),
     say('elder_undecided', 'And the cacique cannot vote, so it falls to us. Two more voices and the Charter passes.'),
@@ -515,19 +519,19 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say(Y, 'Then we take him out the same way.'),
         say(G, 'He says no. He would sink the canoe and bring the Governor after you. He said to tell you not to argue.'),
         say(Y, '...He knew I would.'),
-        say('camp_leader', 'The next low tide is in two nights. Every boat Thorne has will be watching the harbor mouth, not the cliffs.'),
+        say('camp_leader', 'The lowest tide of the month is tonight, before midnight. Every boat Thorne has will watch the harbor mouth, not the cliffs.'),
         say(A, 'And I hold the lamp at the cave mouth so you can find your way back.'),
-        say(Y, 'Two nights. Then I go, and I come back with help. Zetwal\'s help. Gianna\'s grandfather owes us an oath.'),
+        say(Y, 'Tonight. Then I go, and I come back with help. Zetwal\'s help. Gianna\'s grandfather owes us an oath.'),
       ],
     },
     // The night of the lowest tide (the escape): Yari and Anissa come out of hiding.
     planned: {
-      lines: [say(Y, 'Two nights. The sea cave, at the lowest tide. Then Zetwal.')],
+      lines: [say(Y, 'Tonight. The sea cave, at the lowest tide. Then Zetwal.')],
       next: [{ if: { notFlag: 'story.escape_night' }, to: 'tonight' }],
     },
     tonight: {
       lines: [
-        say('camp_leader', 'The water is going out. Lowest tide of the month, before midnight. It is tonight, or a month from now.'),
+        say('camp_leader', 'The water is going out. It is now, or a month from now.'),
         say(Y, 'Then it is tonight.'),
       ],
       choices: [

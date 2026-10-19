@@ -98,26 +98,48 @@ guide are marked **(proposal)**.
   8. Old Patricio at the Gaze lamp: it will not take a flame. Anissa's light wakes and lights every lantern in the
      city. "Are you scared of me?" "Never." **Built.**
   9. A canoe at the island dock: **Yari** brings the warning. Crown ships in Xaraguá's harbor, a Charter of
-     Protection, a clause no one in Xaraguá was shown. Gianna agrees, but asks for time (owner, Oct 15): "Soon, Yari.
+     Protection, a clause no one in Xaraguá was shown. Gianna agrees ("Of course I'll come." / "Tell me everything
+     on the way.", remembered), but asks for time (owner, Oct 15): "Soon, Yari.
      I have work at the archive, and a few things around the city to finish before I can go." Yari joins the party
      and waits at the dock, warning them about the boar on the Cane Road, and that the Crown boards every boat:
      Gianna will need papers. **Built** (sets `story.yari_asked`).
-  9a. **The Envoy's Papers** (owner, Oct 15: one task at the Hall of the Accord). The Hall clerk can write envoy
-     papers, but they need the Head of State's seal, which Elodie sent to the engraver in the Iron Market to be
-     re-cut. The engraver hands it over ("Her eyes. Your grandfather's ink on your fingers"); the clerk writes and
-     seals the papers and keeps the seal; the Chancellor signs them in her office off the gallery. Yari will not sail
-     without them. **Built** (`story.envoy_papers`, key item
-     `envoy_papers`; a Chapter 1 objective).
-  10. **Before the tide. Built:** the three city side quests and the boar fight, with Yari in the party. Talking to
-      Yari again asks whether you are ready (first the papers, then the boar; then the three side quests, which must
-      all be done before she sails: owner decision, Oct 18; the objective "Unfinished business" and the gold arrow
-      lead through them), and "Let's go" sets `act1.complete`. **The Last Evening (proposal), on top:** free roam with Yari in the party. The city reacts to the lights (built lines).
-      Side quests can be finished. A Quiet Crown watcher on the Cane Road notices Anissa (built). Elodie's absence is
-      felt: the Hall clerk shows Gianna the blank seventh line on the Marshal's stone and the seven-ribbon note.
-  11. **Departure at dawn (proposal).** At the harbor: Anicette packs food and says "Ask them what we promised. Ask
-      them, not the Crown" (echoing old Patricio's built line). Old Patricio gives Gianna his old Marshal's whistle
-      (a key item, no stats; it matters again in Chapter 10). Papa Wout's ferry coach takes them, Yari's canoe towed
-      behind. The city shrinks. Card: **Chapter 1 complete.** Chapter 1 ends here (owner rule).
+  9a. **The Envoy's Papers** (owner, Oct 15: one task at the Hall of the Accord; in one visit since Batch D, Oct 19).
+     The Hall clerk can write envoy papers, but they need the Head of State's seal, which Elodie sent to the
+     engraver to be re-cut. The engraver walks it in himself (decision B, Oct 19): he finished it at sundown, and
+     when every lamp in the city lit at once he thought "tonight, somebody is going to need a seal". He looks
+     Gianna over ("Her eyes. Your grandfather's ink on your fingers"), hands the seal to the clerk, who writes and
+     seals the papers on the spot and keeps it, and walks out. The Chancellor signs them in her office off the
+     gallery, late that night, in front of the Crown's consul (decision D, revised Oct 19): he walks in from the
+     gallery to ask why the lamps lit an hour ago, and lays his own paper on her desk: Zetwal should "acknowledge
+     His Majesty's protection of the southern waters". No clause is named and the Throne is not mentioned (Chapter
+     2's council keeps its reveal). The Chancellor refuses ("Nobody signs in that chair while she is away") and
+     signs Gianna's papers in front of him. Yari: "That is the paper. They nailed it to our customs house." He
+     glances at Anissa and moves on (no line about it), asks Gianna if Zetwal's envoy has anything to say
+     ("Zetwal's waters are its own." / "Say nothing."), and leaves the Hall for good. Yari will not sail without
+     the papers. **Built** (`story.envoy_papers`, key item `envoy_papers`; a Chapter 1 objective). Saves from
+     before Oct 19, made mid-errand (sent to the Iron Market, or holding the seal), still finish.
+  10. **Before the tide. Built:** the city's side quests and the boar fight, with Yari in the party, in the order
+      the city lies (Batch D, Oct 19), which the Journal and the gold arrow follow: the island first (*Work on the
+      island*: the cane cutter at the name stones, the archivist, the temple's Ash Wars record), then the papers at
+      the Hall, the Cane Road (the shimmer by the gate, then the boar), the city's errands on the way back (*Errands
+      on the way back*: the debate on the lawn, the soup vendor, the old neighbor, Grandmother, the guard, the
+      ferryman), and the island again (*Unfinished business*: the books back, Rose-Aimée written into the list, the
+      cutter told). Talking to Yari again asks whether you are ready (first the papers, then the boar; then every
+      side quest, which must all be done before she sails: owner decision, Oct 18), and "Let's go" starts the
+      departure. Chapter 1's choices are remembered (`choice.*`) and come back later: Mother's farewell (at
+      Grandmother's and at the dock), Yari's answer (at the canoe, and "I told you about the two ships. Count
+      them." in Yucayeque), the soup vendor's greeting (when the soup is delivered), the envoy's answer (at
+      Xaraguá's council: "They asked Zetwal to thank them for protecting our waters too. We didn't."), and "Stay
+      away from her" to the veiled woman (the hooded stranger on the plaza). **The Last Evening (proposal), on
+      top:** the city reacts to the lights (built lines). A Quiet Crown watcher on the Cane Road notices Anissa
+      (built). Elodie's absence is felt: the Hall clerk shows Gianna the blank seventh line on the Marshal's stone
+      and the seven-ribbon note.
+  11. **Departure at dawn. Built** (decision C with the whistle, Oct 19). At first light both grandparents walk
+      down to Yari's dock on the Temple island, acted out: Anicette across from the bridge with food for the water
+      (Grandmother's kasav) and "Ask them what we promised. Ask them, not the Crown"; old Patricio down from the
+      temple with his old Marshal's whistle (key item `marshal_whistle`, no stats; it matters again in Chapter 10).
+      Anissa: "Goodbye, Zetwal." Yari and Anissa board, the grandparents wave from the dock, and Yari's canoe and
+      the voyage scene take them out (no ferry). Card: **Chapter 1 complete.** Chapter 1 ends here (owner rule).
 - **Who joins:** Anissa (support, from the start), Yari (at the dock).
 - **Echo scenes:** the war room (built), the Echo plaza camp (built: the cook, scout, drummer, soldier), the Chain
   Bridge bridgehead (built), the Temple under scaffolding (built: the lampwright, the builder). Proposal: one more,

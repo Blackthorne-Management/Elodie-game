@@ -5,6 +5,7 @@
 //
 // Tone (owner brief): serious with light comic touches; no jokes in Anissa's scenes.
 
+import type { Condition } from '../../engine/conditions.ts';
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
@@ -38,9 +39,33 @@ function once(id: string, flag: string, lines: DialogueLine[]): DialogueScript {
 
 const G = 'gianna';
 const A = 'anissa';
+
+/**
+ * Where the cane cutter stands (decision A, Oct 19): on the Cane Road before the lamp, at the name stones on
+ * the Temple island after it (he crossed to hear the names read), and back on the road once Gianna comes home
+ * from Xaraguá (zetwal-road.ts and zetwal-temple.ts place him; data/sideQuests.ts points the arrows there).
+ */
+const CUTTER_AT_STONES: Condition = { all: [{ flag: 'story.anissa_woke' }, { notFlag: 'story.zetwal_return' }] };
+
+/** A Name in the Cane, step 1: Gianna reads the name stones (alone, or beside the cutter). */
+const STONES_READ: DialogueLine[] = [
+  { speaker: '', text: 'Gianna reads every stone. Soldiers, scouts, a drummer, a cook. No cutter called Grann.' },
+  { speaker: '', text: 'At the bottom, one line is carved for all of them: "And the cutters of the Cane Road, whose names the Crown did not keep."' },
+  { speaker: 'gianna', text: 'The Locket shows what a place remembers. Maybe the road remembers her.' },
+  { speaker: '', text: '(Look for shimmering air on the Cane Road, by the east gate.)' },
+];
 const AF = 'anissa_far';
 const P = 'patricio';
 const Y = 'yari';
+
+/**
+ * Flags only saves from before Batch D (Oct 19) carry: nothing sets them any more, but the conversations still
+ * read them so a save made mid-errand finishes (tests/content.test.ts knows them).
+ */
+export const OLD_SAVE_FLAGS: readonly string[] = [
+  // The Hall clerk sent Gianna to the engraver in the Iron Market for the seal (he brings it to the Hall now).
+  'story.papers_asked',
+];
 
 export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   // ---- The festival -----------------------------------------------------------------------------
@@ -83,9 +108,10 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'There you are.' },
         { text: 'A few weeks. Maybe longer. The Regent likes to keep envoys waiting.' },
       ],
+      // Remembered (Oct 19): Grandmother and the dock bring it up again.
       choices: [
-        { text: 'Why do you have to go now?', next: 'why' },
-        { text: "We'll be fine.", next: 'fine' },
+        { text: 'Why do you have to go now?', next: 'why', set: { 'choice.farewell_why': true } },
+        { text: "We'll be fine.", next: 'fine', set: { 'choice.farewell_fine': true } },
       ],
     },
     why: {
@@ -162,14 +188,18 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
+  // The soup vendor (Oct 19): her greeting's two answers are remembered (the first one given counts) and pay off
+  // when the soup is delivered; once the city has opened, the talk flows straight into the errand, and a
+  // borrowed book is asked for in the same conversation.
   script('soup_vendor_talk', {
     start: {
       lines: [],
       next: [
-        { if: { all: [{ flag: 'side.overdue.accepted' }, { notFlag: 'side.overdue.soup' }] }, to: 'overdue' },
+        { if: { all: [{ flag: 'side.overdue.accepted' }, { notFlag: 'side.overdue.soup' }, { any: [{ flag: 'side.soup.accepted' }, { flag: 'side.soup.done' }] }] }, to: 'overdue' },
         { if: { flag: 'side.soup.done' }, to: 'after' },
         { if: { all: [{ flag: 'side.soup.elder' }, { flag: 'side.soup.guard' }, { flag: 'side.soup.ferry' }] }, to: 'finish' },
         { if: { flag: 'side.soup.accepted' }, to: 'remind' },
+        { if: { any: [{ flag: 'choice.soup_smell' }, { flag: 'choice.soup_bowl' }] }, to: 'again' },
         { to: 'greet' },
       ],
     },
@@ -181,10 +211,33 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'All of my cousins. On festival day the whole city is my cousin.' },
       ],
       choices: [
-        { text: 'It smells wonderful.', next: 'thanks' },
-        { text: 'Save me a bowl.', next: 'thanks' },
-        // Side quests wait until the opening is done (owner decision, Oct 16).
-        { text: 'You look busy.', next: 'offer', if: { flag: 'story.warroom_echo' } },
+        { text: 'It smells wonderful.', next: 'smell', set: { 'choice.soup_smell': true } },
+        { text: 'Save me a bowl.', next: 'bowl', set: { 'choice.soup_bowl': true } },
+      ],
+    },
+    smell: {
+      speaker: 'soup_vendor',
+      lines: [{ text: 'Wonderful? It is my grandmother\'s. Wonderful is the least it is allowed to be.' }],
+      next: 'after_greet',
+    },
+    bowl: {
+      speaker: 'soup_vendor',
+      lines: [{ text: "Saved. Cousin's bowl, on the shelf, with your name on it. Do not make me eat it myself." }],
+      next: 'after_greet',
+    },
+    again: {
+      speaker: 'soup_vendor',
+      lines: [{ text: 'Back again, cousin? The pot is still hot.' }],
+      next: 'after_greet',
+    },
+    // After the greeting: a borrowed book first, then the errand (side quests wait for the first Echo: owner
+    // decision, Oct 16), or a promise of the good pot.
+    after_greet: {
+      lines: [],
+      next: [
+        { if: { all: [{ flag: 'side.overdue.accepted' }, { notFlag: 'side.overdue.soup' }] }, to: 'overdue' },
+        { if: { flag: 'story.warroom_echo' }, to: 'offer' },
+        { to: 'thanks' },
       ],
     },
     thanks: {
@@ -195,7 +248,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     offer: {
       speaker: 'soup_vendor',
       lines: [
-        { text: 'Busy? My nephew was meant to carry the bowls today. My nephew is asleep under a mango tree.' },
+        { text: 'Though today I have a problem. My nephew was meant to carry the bowls. My nephew is asleep under a mango tree.' },
         { text: 'Three bowls promised: the old neighbor west of the plaza, the guard by the Hall, and the ferryman at the docks.' },
       ],
       choices: [
@@ -226,7 +279,13 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'soup_vendor',
       set: { 'side.soup.done': true },
       lines: [
-        { text: 'All three? And not one bowl broken?' },
+        // Her greeting's answer, remembered (the first one given; the bowl wins if a save somehow has both).
+        { if: { flag: 'choice.soup_bowl' }, text: "All three, and not one broken? Then here is yours: cousin's bowl, off the shelf, as promised." },
+        {
+          if: { all: [{ flag: 'choice.soup_smell' }, { notFlag: 'choice.soup_bowl' }] },
+          text: "All three, and not one broken? You said it smelled wonderful before you'd tasted a spoon. Now you can say it knowing.",
+        },
+        { if: { all: [{ notFlag: 'choice.soup_smell' }, { notFlag: 'choice.soup_bowl' }] }, text: 'All three? And not one bowl broken?' },
         { text: 'Take these for the road. In this city, a cousin who carries soup is a cousin for life.' },
       ],
     },
@@ -234,7 +293,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'soup_vendor',
       lines: [{ text: 'Come back any time, cousin. The good pot is always on.' }],
     },
-    // The Overdue Shelf.
+    // The Overdue Shelf (then, if the errand is still to come, straight on to it).
     overdue: {
       speaker: 'soup_vendor',
       set: { 'side.overdue.soup': true },
@@ -243,6 +302,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Ay. Here. Page forty has soup on it. It was a very good page.' },
         nar('(Gianna got back "Ninety Ways With Pumpkin".)'),
       ],
+      next: [{ if: { all: [{ flag: 'story.warroom_echo' }, { notFlag: 'side.soup.accepted' }, { notFlag: 'side.soup.done' }] }, to: 'offer' }],
     },
   }),
 
@@ -293,7 +353,10 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
     after: {
       speaker: 'recruiter_b',
-      lines: [{ text: 'That light on the island. Such a quiet little girl, to be so bright.' }],
+      lines: [
+        { text: 'That light on the island. Such a quiet little girl, to be so bright.' },
+        { if: { flag: 'choice.warned_watcher' }, text: 'The woman by the mill says you told her to stay away. We always do. We only ever listen.' },
+      ],
     },
   }),
 
@@ -633,8 +696,16 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'anicette',
       lines: [
         { text: 'There you are. Did your mother get away?' },
-        say(G, 'Her carriage just left.'),
-        { text: "Good. Then she can't scold me for this." },
+        // What Gianna said to Mother at the gate (elodie_talk), remembered.
+        { if: { all: [{ notFlag: 'choice.farewell_why' }, { notFlag: 'choice.farewell_fine' }] }, speaker: G, text: 'Her carriage just left.' },
+        { if: { all: [{ notFlag: 'choice.farewell_why' }, { notFlag: 'choice.farewell_fine' }] }, text: "Good. Then she can't scold me for this." },
+        { if: { flag: 'choice.farewell_why' }, speaker: G, text: 'Her carriage just left. She said the Crown is talking about Xaraguá again.' },
+        { if: { flag: 'choice.farewell_why' }, text: 'Is it. Then she told you more than she told me. You are old enough to be told things.' },
+        { if: { flag: 'choice.farewell_why' }, text: 'So here is one more. And now she cannot scold me for it.' },
+        { if: { flag: 'choice.farewell_fine' }, speaker: G, text: "Her carriage just left. I told her we'd be fine." },
+        { if: { flag: 'choice.farewell_fine' }, text: 'And did she believe you?' },
+        { if: { flag: 'choice.farewell_fine' }, speaker: G, text: 'No.' },
+        { if: { flag: 'choice.farewell_fine' }, text: 'Neither do I. That is why you get this.' },
         nar('Grandmother opens a drawer in the map table and takes out a small gold locket shaped like the sun.', {
           stage: [
             { do: 'face', actor: 'npc:anicette', facing: 'right' },
@@ -947,11 +1018,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'The lookouts say a canoe has come in from Xaraguá. Go and see who it is.' },
       ],
     },
+    // Grandmother says "Ask them, not the Crown" at the dock now (decision C, Oct 19).
     farewell: {
       speaker: 'patricio_old',
       lines: [
         { text: 'Go carefully, both of you.' },
-        { text: 'And Gianna: in Xaraguá, ask them what we promised. Ask them, not the Crown.' },
+        { if: { flag: 'item.marshal_whistle' }, text: 'And Gianna: keep the whistle close. Somebody in Zetwal will always remember its note.' },
+        // A save that finished Chapter 1 before the dawn farewell existed.
+        { if: { notFlag: 'item.marshal_whistle' }, text: 'And Gianna: in Xaraguá, ask them what we promised. Ask them, not the Crown.' },
       ],
     },
   }),
@@ -1084,15 +1158,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     look: {
       lines: [nar('Name stones, worn smooth by hands: the dead of the Alliance War.'), nar('Zetwal names and Xaraguá names, side by side.')],
     },
-    search: {
-      set: { 'side.cane_name.stones': true },
-      lines: [
-        nar('Gianna reads every stone. Soldiers, scouts, a drummer, a cook. No cutter called Grann.'),
-        nar('At the bottom, one line is carved for all of them: "And the cutters of the Cane Road, whose names the Crown did not keep."'),
-        say(G, 'The Locket shows what a place remembers. Maybe the road remembers her.'),
-        nar('(Look for shimmering air on the Cane Road, by the east gate.)'),
-      ],
-    },
+    search: { set: { 'side.cane_name.stones': true }, lines: STONES_READ },
   }),
 
   once('temple_echo_enter', 'story.temple_echo_seen', [
@@ -1138,15 +1204,27 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: "Gigi, I didn't come for the festival." },
         { text: 'Crown ships are anchored in our harbor. They brought a paper they call a Charter of Protection.' },
         { text: 'They say an old treaty gives them the right. A clause nobody in Xaraguá was ever shown.' },
+        say(G, "Mother said the Crown was talking about Xaraguá again. She didn't say it had already sailed.", { if: { flag: 'choice.farewell_why' } }),
         say(G, 'The Sun Accord. The seventh clause...'),
         { text: "That's what they called it. My elders are ready to sign anything that keeps the peace. I'm not." },
         { text: "Your mother's gone to the Throne. You're the closest thing to a Kay Soley envoy I know." },
         { text: 'Come to Xaraguá. Please.' },
       ],
+      // Remembered (Oct 19): at the canoe, and when the ferry lands in Yucayeque (Chapter 2).
       choices: [
-        { text: "Of course I'll come.", next: 'yes' },
-        { text: 'Tell me everything on the way.', next: 'yes' },
+        { text: "Of course I'll come.", next: 'sure', set: { 'choice.yari_sure': true } },
+        { text: 'Tell me everything on the way.', next: 'everything', set: { 'choice.yari_everything': true } },
       ],
+    },
+    sure: {
+      speaker: 'yari',
+      lines: [{ text: "I told my father you'd say that. He said I was a fool to sail this far on a guess. I like being right." }],
+      next: 'yes',
+    },
+    everything: {
+      speaker: 'yari',
+      lines: [{ text: "On the way? Gigi, it's two days of water. I'll start with the ships. Stop me when you've heard enough." }],
+      next: 'yes',
     },
     // Owner decision (Oct 15): Gianna asks for a little time, so the player can finish the city's errands
     // and the boar fight (learning the game while it is still gentle) before the chapter ends.
@@ -1220,11 +1298,49 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'yari',
       lines: [{ text: 'Then we wait. The hutia is guarding the canoe. Badly.' }],
     },
+    // Departure at dawn (decision C with the whistle, Oct 19): both grandparents walk down to Yari's dock.
+    // Grandmother brings food and Grandfather's words; Grandfather gives Gianna his Marshal's whistle. They wave
+    // from the dock; the voyage scene (data/voyages.ts) shows the canoe putting out.
     depart: {
       speaker: 'yari',
       lines: [
+        nar('The island sleeps. At first light the tide turns, and Yari loads the canoe.', { fx: 'fade' }),
+        say('anicette', 'Gianna! Anissa! Not one step into that canoe until I have seen you both.', {
+          stage: [
+            { do: 'look', actor: 'anicette' },
+            { do: 'walk', actor: 'npc:patricio_old', to: { x: 14, y: 16 }, facing: 'right', async: true },
+            { do: 'enter', actor: 'anicette', look: 'anicette', from: { x: 2, y: 9 }, to: { x: 14, y: 17 }, facing: 'right' },
+            { do: 'look', actor: 'player' },
+            { do: 'face', actor: 'player', facing: 'left' },
+          ],
+        }),
+        say('anicette', 'Kasav from my own griddle, for the water. Eat it before the hutia does.', { set: { 'item.anicette_kasav': 3 } }),
+        nar("(Gianna received Grandmother's kasav.)"),
+        say('anicette', 'And in Xaraguá, listen first. Ask them what we promised. Ask them, not the Crown.'),
+        say('patricio_old', 'Your grandmother says it better than I ever did. So I will only give you this.'),
+        nar("Grandfather presses a small brass whistle into Gianna's hand, worn smooth on its cord.", { set: { 'item.marshal_whistle': true } }),
+        say('patricio_old', 'My whistle, from the year of the Accord. Every company in Zetwal knew its note.'),
+        say('patricio_old', 'Keep it close. One day Zetwal may need to hear it again.'),
+        nar("(Gianna received the Marshal's whistle.)"),
         say(A, 'Goodbye, Zetwal.'),
-        { text: 'Xaraguá, then. We sail with the morning tide.', set: { 'act1.complete': true, 'travel.next': 'xaragua-village/pier', 'voyage.next': 'zetwal_xaragua' } },
+        // Yari's answer at the dock (yari_talk arrive), remembered.
+        { if: { flag: 'choice.yari_sure' }, text: "'Of course,' you said. Hold on to that when you see the harbor." },
+        { if: { flag: 'choice.yari_everything' }, text: 'Everything, on the way. I hope you like ships. Out there, there is nothing else to talk about.' },
+        {
+          text: 'Xaraguá, then. Before the tide changes its mind.',
+          stage: [
+            { do: 'exit', actor: 'yari', to: { x: 16, y: 18 }, async: true },
+            { do: 'wait', ms: 300 },
+            { do: 'exit', actor: 'follower', to: { x: 16, y: 18 } },
+          ],
+        },
+        nar('On the dock, Grandmother and Grandfather lift their hands, and keep them raised as the canoe pulls away.', {
+          set: { 'act1.complete': true, 'travel.next': 'xaragua-village/pier', 'voyage.next': 'zetwal_xaragua' },
+          stage: [
+            { do: 'face', actor: 'anicette', facing: 'down' },
+            { do: 'face', actor: 'npc:patricio_old', facing: 'down' },
+          ],
+        }),
       ],
     },
     after: {
@@ -1337,10 +1453,12 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
-  // The Envoy's Papers (owner decision, Oct 15: the one task at the Hall of the Accord in Chapter 1).
-  // Crown ships search every boat at Xaraguá, so Gianna needs envoy papers: written and sealed by the Hall
-  // clerk with the Head of State's seal (at the engraver's in the Iron Market, being re-cut), then signed
-  // by the Chancellor. Yari will not sail without them.
+  // The Envoy's Papers (owner decision, Oct 15: the one task at the Hall of the Accord in Chapter 1; Batch D,
+  // Oct 19: in one visit). Crown ships search every boat at Xaraguá, so Gianna needs envoy papers: written by
+  // the Hall clerk, sealed with the Head of State's seal (re-cut by the engraver, who walks it in himself the
+  // night the lamps light), then signed by the Chancellor. Yari will not sail without them.
+  // Saves from before Batch D still finish: a seal fetched from the Iron Market (`item.elodie_seal`) is taken
+  // as before (`issue`), and a player sent to the market (`story.papers_asked`) meets the engraver here too.
   script('hall_clerk_talk', {
     start: {
       lines: [],
@@ -1348,7 +1466,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { if: { flag: 'story.envoy_papers' }, to: 'after' },
         { if: { flag: 'story.papers_sealed' }, to: 'sign' },
         { if: { flag: 'item.elodie_seal' }, to: 'issue' },
-        { if: { flag: 'story.papers_asked' }, to: 'waiting' },
+        { if: { flag: 'story.papers_asked' }, to: 'sent' },
         { if: { flag: 'story.yari_asked' }, to: 'ask' },
         { to: 'idle' },
       ],
@@ -1369,15 +1487,50 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Then you need papers more than courage. The Crown boards every boat now. Without papers they turn you back, or keep you.' },
         { text: "I write them; the Head of State's seal goes on them; the Chancellor signs. The seal is the trouble." },
         { text: 'Your mother sent it to be re-cut before she left. Fifty years of laws had worn the sun on it smooth.' },
-        { text: 'The engraver has it, in the Iron Market, west of the plaza. Bring it to me.', set: { 'story.papers_asked': true } },
-        say(A, "Mother's seal... I've never even held it."),
-        nar("(The Hall clerk needs Mother's seal from the engraver in the Iron Market.)"),
+      ],
+      next: 'engraver',
+    },
+    // An old save: sent to the Iron Market for the seal before the engraver brought it himself.
+    sent: {
+      speaker: 'hall_clerk',
+      lines: [{ text: 'Back from the Iron Market already? Then you passed him on the way. The engraver sent word: he is bringing it himself.' }],
+      next: 'engraver',
+    },
+    // Staged (owner rule, Oct 17; decision B, Oct 19): the engraver walks the seal in through the front doors,
+    // looks Gianna over, hands it to the clerk (it is his to keep), and walks out again.
+    engraver: {
+      speaker: 'hall_clerk',
+      lines: [
+        nar("Behind you, the Hall's front doors swing open.", {
+          stage: [
+            { do: 'look', actor: 'engraver' },
+            { do: 'enter', actor: 'engraver', look: 'engraver', from: { x: 19, y: 28 }, to: { x: 22, y: 26 }, facing: 'up' },
+            { do: 'look', actor: 'player' },
+          ],
+        }),
+        say('engraver', "Clerk! The Head of State's seal, re-cut. I finished it at sundown."),
+        say('engraver', 'Then every lamp in the city lit at once, and I thought: tonight, somebody is going to need a seal.'),
+        nar("He unwraps a cloth. Mother's seal: a heavy brass sun, its rays cut fresh and sharp."),
+        say(A, "Mother's seal... I've never even seen it up close."),
+        say('engraver', "Who is it for? Let me see you... Her eyes. Your grandfather's ink on your fingers.", {
+          stage: [{ do: 'face', actor: 'engraver', facing: 'left' }],
+        }),
+        say('engraver', 'Here, clerk. For her papers, and nobody else tonight.', { stage: [{ do: 'face', actor: 'engraver', facing: 'up' }] }),
+        { text: 'Look at that sun. Sharp enough to cut the paper it signs.' },
+        nar("The clerk writes in a careful hand, warms the wax, and presses Mother's seal into it."),
+        { text: 'Gianna Limyè, envoy of Kay Soley to Xaraguá, under the seal of the Head of State. Now the Chancellor signs.' },
+        say('engraver', "Goodnight, envoy. I'll sleep tonight. First time this week.", {
+          stage: [{ do: 'face', actor: 'engraver', facing: 'left' }],
+        }),
+        {
+          text: "Her office is off the gallery, the first door east. The seal stays here with me; I'll sleep better too.",
+          set: { 'item.draft_papers': 1, 'story.papers_sealed': true },
+          stage: [{ do: 'exit', actor: 'engraver', to: { x: 19, y: 28 }, async: true }],
+        },
+        nar('(Gianna received the unsigned envoy papers. The Chancellor must sign them.)'),
       ],
     },
-    waiting: {
-      speaker: 'hall_clerk',
-      lines: [{ text: 'The engraver works in the Iron Market, on the iron row east of the clock gate. He hums while he works. Follow the humming.' }],
-    },
+    // An old save: Gianna carries the seal from the Iron Market.
     issue: {
       speaker: 'hall_clerk',
       lines: [
@@ -1418,14 +1571,67 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: "The Crown's consul asks for an audience every morning. Every morning I am busy. It is becoming a long week." },
       ],
     },
+    // The envoy's paper (decision D, revised Oct 19). Late at night the Crown's consul, waiting in the gallery,
+    // walks in to ask why every lamp in the city lit an hour ago, and lays his own paper on the desk. No clause
+    // and no Throne: Chapter 2's council keeps those. He leaves the Hall for good (zetwal-hall.ts `if`).
     sign: {
       speaker: 'chancellor',
       lines: [
         { text: 'Envoy papers. Xaraguá.' },
-        nar('She reads every line. Twice. Then she looks at you over the top of the page.'),
+        nar('She reads every line. Twice. Then she looks past you, at the door.'),
+        say('crown_consul', 'Chancellor. Forgive the hour. Every lamp in Pòdlimyè lit itself at once, an hour ago. His Majesty would like to know why.', {
+          stage: [
+            { do: 'look', actor: 'npc:crown_consul' },
+            { do: 'walk', actor: 'npc:crown_consul', to: { x: 33, y: 6 }, facing: 'up' },
+            { do: 'look', actor: 'player' },
+          ],
+        }),
+        { text: 'So would I, consul. Ask the goddess. She keeps later hours than I do.' },
+        nar("He lays a paper of his own on the desk, over Gianna's."),
+        say('crown_consul', "Then, since I am here. Zetwal need only acknowledge His Majesty's protection of the southern waters."),
+        say('crown_consul', 'One signature. A courtesy between old friends.'),
+        { text: 'Nobody signs in that chair while she is away, consul. Least of all that.' },
+        say(Y, 'That is the paper. They nailed it to our customs house.'),
+        // He glances at Anissa, and moves on (no line about it: only the Quiet Crown's watcher notices her aloud).
+        say('crown_consul', 'And the envoy herself. Has Zetwal\'s new envoy anything to say to His Majesty?', {
+          stage: [
+            { do: 'face', actor: 'npc:crown_consul', facing: 'down-left' },
+            { do: 'wait', ms: 1000 },
+            { do: 'face', actor: 'npc:crown_consul', facing: 'player' },
+          ],
+        }),
+      ],
+      choices: [
+        { text: "Zetwal's waters are its own.", next: 'waters', set: { 'choice.envoy_waters': true } },
+        { text: 'Say nothing.', next: 'quiet' },
+      ],
+    },
+    waters: {
+      speaker: 'crown_consul',
+      lines: [{ text: 'Spoken like your mother, Miss Limyè. She says it more quietly.' }],
+      next: 'signed',
+    },
+    quiet: {
+      speaker: 'crown_consul',
+      lines: [{ text: 'Wise. Not everyone in this city is.' }],
+      next: 'signed',
+    },
+    signed: {
+      speaker: 'chancellor',
+      lines: [
+        nar("The Chancellor slides Gianna's papers out from under his, and signs them while he watches."),
         { text: 'Your mother went to the Throne to speak for us. You go to Xaraguá to listen for us. Listen well.' },
         { text: 'And write. The courier office will find you anywhere a pigeon can fly.', set: { 'item.draft_papers': 0, 'item.envoy_papers': 1, 'story.envoy_papers': true } },
         nar("(Gianna received the envoy papers, sealed and signed.)"),
+        { text: 'Goodnight, consul. Take your paper with you.' },
+        nar('He rolls it up, bows to the Chancellor, and walks out of the Hall.', {
+          stage: [
+            { do: 'face', actor: 'npc:crown_consul', facing: 'up' },
+            { do: 'wait', ms: 400 },
+            { do: 'exit', actor: 'npc:crown_consul', to: { x: 26, y: 6 } },
+            { do: 'sync' },
+          ],
+        }),
       ],
     },
     after: {
@@ -1506,18 +1712,52 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     say('elder_hawk', 'Three Crown ships off the point. I asked the council to raise the old harbor chain. They called me a warmonger.'),
     say('elder_hawk', 'Fifty years ago they called your grandfather the same. Then they built him a statue.'),
   ]),
-  simple('crown_consul_talk', [
-    say('crown_consul', 'Ah, the Head of State\'s daughter. His Majesty\'s consul to Zetwal, at your service. Truly.'),
-    say('crown_consul', 'I bring nothing but goodwill and a few papers to sign. Do give your mother my regards when she returns.'),
-    say('crown_consul', 'We have so much to discuss. The old treaties are so long, and so very few people have read all of them.'),
-    say(A, "Gigi... I don't like him."),
-  ]),
-  simple('foreign_envoy_talk', [
-    say('foreign_envoy', 'I came across the sea to speak with your Head of State, and she has gone to the Throne the same week. Such is diplomacy.'),
-    say('foreign_envoy', 'I will wait. The Crown\'s consul waits too, across the room. We smile at each other. Neither of us means it.'),
-    say(G, 'Where are you from?'),
-    say('foreign_envoy', 'Far enough that you will need a ship and a good reason. Perhaps one day you will have both.'),
-  ]),
+  script('crown_consul_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.anissa_woke' }, to: 'late' }, { to: 'day' }] },
+    day: {
+      lines: [
+        say('crown_consul', 'Ah, the Head of State\'s daughter. His Majesty\'s consul to Zetwal, at your service. Truly.'),
+        say('crown_consul', 'I bring nothing but goodwill and a few papers to sign. The Chancellor will see me tonight, I am sure.'),
+        say('crown_consul', 'We have so much to discuss. The old treaties are so long, and so very few people have read all of them.'),
+        say(A, "Gigi... I don't like him."),
+      ],
+    },
+    // After the lamp he waits outside the Chancellor's office (decision D, Oct 19), until her scene.
+    late: {
+      lines: [
+        say('crown_consul', 'Every lamp in the city lit at once tonight, Miss Limyè. Someone must know why.'),
+        say('crown_consul', 'The Chancellor keeps late hours. Tonight, so does His Majesty\'s consul.'),
+      ],
+    },
+  }),
+  script('foreign_envoy_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: 'story.envoy_papers' }, to: 'gone' },
+        { if: { flag: 'story.anissa_woke' }, to: 'late' },
+        { to: 'day' },
+      ],
+    },
+    day: {
+      lines: [
+        say('foreign_envoy', 'I came across the sea to speak with your Head of State, and she has gone to the Throne the same week. Such is diplomacy.'),
+        say('foreign_envoy', 'I will wait. The Crown\'s consul waits too, across the room. We smile at each other. Neither of us means it.'),
+        say(G, 'Where are you from?'),
+        say('foreign_envoy', 'Far enough that you will need a ship and a good reason. Perhaps one day you will have both.'),
+      ],
+    },
+    late: {
+      lines: [
+        say('foreign_envoy', 'The Crown\'s consul went to wait at the Chancellor\'s door the moment the lamps lit. He did not invite me.'),
+      ],
+    },
+    gone: {
+      lines: [
+        say('foreign_envoy', 'The Crown\'s consul came back from the Chancellor without his smile, and left the Hall. I kept mine.'),
+      ],
+    },
+  }),
   script('seal_keeper_talk', {
     start: { lines: [], next: [{ if: { flag: 'story.papers_sealed' }, to: 'back' }, { to: 'idle' }] },
     idle: {
@@ -1582,12 +1822,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     nar('THE IRON MARKET. Red iron and green roofs, the clock over the gate five minutes fast since anyone can remember.'),
     nar('Inside it is dark and loud and smells of everything: coffee, mangoes, fish, smoke, soap, rain.'),
   ]),
+  // Before Batch D (Oct 19) Gianna fetched the seal here (`seal`, `hurry`); old saves mid-errand still can.
   script('engraver_talk', {
     start: {
       lines: [],
       next: [
         { if: { all: [{ flag: 'story.papers_asked' }, { notFlag: 'item.elodie_seal' }, { notFlag: 'story.papers_sealed' }] }, to: 'seal' },
         { if: { flag: 'item.elodie_seal' }, to: 'hurry' },
+        { if: { flag: 'story.papers_sealed' }, to: 'delivered' },
         { to: 'idle' },
       ],
     },
@@ -1611,6 +1853,11 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     hurry: {
       speaker: 'engraver',
       lines: [{ text: 'Go on, to the Hall with it. A seal in a satchel is a worry in my chest.' }],
+    },
+    // He walked the seal to the Hall himself (Batch D, Oct 19).
+    delivered: {
+      speaker: 'engraver',
+      lines: [{ text: 'Delivered it myself, archivist. Some things you do not trust to a satchel. Not on a night like this one.' }],
     },
   }),
   simple('produce_seller_talk', [
@@ -1728,6 +1975,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { if: { all: [{ flag: 'side.cane_name.accepted' }, { notFlag: 'side.cane_name.done' }] }, to: 'remind' },
         { if: { flag: 'story.zetwal_return' }, to: 'danger' },
         { if: { flag: 'side.cane_name.done' }, to: 'thanks' },
+        { if: CUTTER_AT_STONES, to: 'island' },
         { to: 'calm' },
       ],
     },
@@ -1740,6 +1988,19 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       choices: [
         { text: 'You seem far away today.', next: 'grann' },
         { text: 'Enjoy the rest.' },
+      ],
+    },
+    // After the lamp, at the name stones on the Temple island (decision A, Oct 19).
+    island: {
+      speaker: 'cane_cutter',
+      lines: [
+        { text: 'Archivist. I crossed the Chain Bridge the moment it came down. I wanted to hear the names read.' },
+        { text: 'They read every stone tonight. I listened for one name, and it never came.' },
+        { text: 'Before I came over, a veiled woman by the old mill was asking the young ones if they feel alone. Odd sort.' },
+      ],
+      choices: [
+        { text: 'Who were you listening for?', next: 'grann_island' },
+        { text: 'Goodnight.' },
       ],
     },
     danger: {
@@ -1763,16 +2024,44 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: "I'm sorry.", next: 'sorry' },
       ],
     },
+    grann_island: {
+      speaker: 'cane_cutter',
+      lines: [
+        { text: 'My grandmother. She cut cane on the Cane Road when it was the Crown\'s. Grann, we called her. I never learned her name.' },
+        { text: 'The Crown wrote cutters down as numbers. By the time anyone asked her name, she had stopped saying it.' },
+      ],
+      choices: [
+        { text: "I'll look for her name.", next: 'accept' },
+        { text: "I'm sorry.", next: 'sorry' },
+      ],
+    },
     sorry: { speaker: 'cane_cutter', lines: [{ text: 'So am I, archivist. But sorry never carved a stone.' }] },
     accept: {
       speaker: 'cane_cutter',
       set: { 'side.cane_name.accepted': true },
       lines: [
-        { text: 'You would? Then start at the name stones on the Temple island. If she is anywhere, she is there.' },
+        { if: { not: CUTTER_AT_STONES }, text: 'You would? Then start at the name stones on the Temple island. If she is anywhere, she is there.' },
+        { if: CUTTER_AT_STONES, text: 'You would? Then read them with me. I have read them twice. I may have missed her.' },
         nar('(A Name in the Cane is in the Quests page of the menu.)'),
+      ],
+      next: [{ if: CUTTER_AT_STONES, to: 'together' }],
+    },
+    // At the stones, Gianna reads them beside him: step 1 done on the spot.
+    together: {
+      speaker: 'cane_cutter',
+      set: { 'side.cane_name.stones': true },
+      lines: [
+        { ...STONES_READ[0]!, stage: [{ do: 'face', actor: 'npc:cane_cutter', facing: 'left' }] },
+        ...STONES_READ.slice(1, 3),
+        { text: 'My mother always said Grann loved the flowers by the east gate. The roses.', stage: [{ do: 'face', actor: 'npc:cane_cutter', facing: 'player' }] },
+        STONES_READ[3]!,
       ],
     },
     remind: {
+      lines: [],
+      next: [{ if: { all: [CUTTER_AT_STONES, { notFlag: 'side.cane_name.stones' }] }, to: 'together' }, { to: 'remind_lines' }],
+    },
+    remind_lines: {
       speaker: 'cane_cutter',
       lines: [
         { if: { notFlag: 'side.cane_name.stones' }, text: 'Any luck at the name stones, archivist?' },
@@ -1793,13 +2082,29 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         say(G, 'Her name was Rose-Aimée. Her mother named her for the roses by the gate.'),
         { text: 'Rose-Aimée.' },
-        { text: '...Rose-Aimée. Tonight I will say it so loud the goddess has to hear it twice.' },
+        { if: { not: CUTTER_AT_STONES }, text: '...Rose-Aimée. Tonight I will say it so loud the goddess has to hear it twice.' },
+        { if: CUTTER_AT_STONES, text: '...Rose-Aimée. The reading is over, but the lamp is still lit. I will say it to her myself.' },
         { text: 'Here. My wife stitched this for the festival. Wear it. It is a better place for it than my pocket.' },
+        // Staged: he walks into the temple, hat in his hands, and says it to the lamp.
+        {
+          if: CUTTER_AT_STONES,
+          speaker: '',
+          text: 'He walks up to the Gaze lamp with his hat in his hands, and says her name to it.',
+          stage: [
+            { do: 'look', actor: 'npc:cane_cutter' },
+            { do: 'walk', actor: 'npc:cane_cutter', to: { x: 15, y: 4 }, facing: 'up' },
+            { do: 'wait', ms: 900 },
+            { do: 'look', actor: 'player' },
+          ],
+        },
       ],
     },
     thanks: {
       speaker: 'cane_cutter',
-      lines: [{ text: "Rose-Aimée. I've said it a hundred times today, archivist. It still sounds new." }],
+      lines: [
+        { if: { not: CUTTER_AT_STONES }, text: "Rose-Aimée. I've said it a hundred times today, archivist. It still sounds new." },
+        { if: CUTTER_AT_STONES, text: "Rose-Aimée. I've said it a hundred times tonight, archivist. It still sounds new." },
+      ],
     },
   }),
 
@@ -1811,7 +2116,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Your little sister is very quiet, isn\'t she? Quiet people are precious to us.' },
       ],
       choices: [
-        { text: 'Stay away from her.', next: 'warn' },
+        // Remembered (Oct 19): the hooded stranger on the plaza brings it up after the lamp.
+        { text: 'Stay away from her.', next: 'warn', set: { 'choice.warned_watcher': true } },
         { text: 'Who are you?', next: 'who' },
       ],
     },

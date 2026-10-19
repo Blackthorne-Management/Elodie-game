@@ -2675,6 +2675,27 @@ const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
+  // The Marshal's whistle: a brass whistle on a grey cord, its mouth cut on the right.
+  marshal_whistle: {
+    rows: [
+      '................',
+      '......kkkk......',
+      '.....kG..Gk.....',
+      '....kG....Gk....',
+      '....kG....Gk....',
+      '.....kG..Gk.....',
+      '......kGGk......',
+      '.......kk.......',
+      '...kkkkkykkkk...',
+      '..kYYyyyyyyyyk..',
+      '.kYWYyyyyyokkyk.',
+      '.kyyyyyyyyook.yk',
+      '..kooooooooook.k',
+      '...kkkkkkkkkk.k.',
+      '..............k.',
+      '................',
+    ],
+  },
   // Fallback for a key item with no drawing: an old iron key.
   key: {
     rows: [

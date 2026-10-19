@@ -18,6 +18,11 @@ export interface Objective {
   goals?: readonly Goal[];
   /** Done through the side quests (Pòdlimyè's errands): the arrow leads to the next side quest's stop instead. */
   followSide?: boolean;
+  /**
+   * Only orders work the side quests already pay for (the Journal walks the city the short way): its flags give
+   * no story XP (data/rpg.ts), so the order costs the party's levels nothing.
+   */
+  noXp?: boolean;
 }
 
 export interface QuestDef {

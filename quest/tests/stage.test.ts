@@ -71,6 +71,37 @@ describe('Chapter 1 is acted out on the map', () => {
     expect(exits.find((c) => c.actor === 'hooded')).toMatchObject({ to: { x: 15, y: 18 } }); // down to the dock
   });
 
+  // Batch D (Oct 19): the back third's moments are acted out too.
+  it('the engraver walks in through the front doors to the clerk\'s desk, turns to Gianna, and walks out', () => {
+    const cues = stageCues(script('hall_clerk_talk'));
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'enter', actor: 'engraver', look: 'engraver', from: { x: 19, y: 28 } }));
+    expect(cues).toContainEqual({ do: 'face', actor: 'engraver', facing: 'left' }); // "Let me see you..."
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'exit', actor: 'engraver', to: { x: 19, y: 28 } }));
+  });
+
+  it("the Crown's consul walks in from the gallery, glances away, and walks out of the Hall for good", () => {
+    const cues = stageCues(script('chancellor_talk'));
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'walk', actor: 'npc:crown_consul', to: { x: 33, y: 6 } }));
+    expect(cues).toContainEqual({ do: 'face', actor: 'npc:crown_consul', facing: 'down-left' });
+    const exit = cues.findIndex((c) => c.do === 'exit' && c.actor === 'npc:crown_consul');
+    expect(exit).toBeGreaterThan(0);
+    expect(cues[exit + 1]).toEqual({ do: 'sync' }); // gone from the map at once (zetwal-hall.ts `if`)
+  });
+
+  it('at dawn Grandmother walks across to the dock and Grandfather walks down from the temple; Yari and Anissa board', () => {
+    const cues = stageCues(script('yari_talk'));
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'enter', actor: 'anicette', look: 'anicette' }));
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'walk', actor: 'npc:patricio_old' }));
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'exit', actor: 'yari', to: { x: 16, y: 18 } }));
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'exit', actor: 'follower', to: { x: 16, y: 18 } }));
+  });
+
+  it('the cane cutter turns to the stones to read them with Gianna, and walks up to the lamp to say her name', () => {
+    const cues = stageCues(script('cane_cutter_talk'));
+    expect(cues).toContainEqual({ do: 'face', actor: 'npc:cane_cutter', facing: 'left' });
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'walk', actor: 'npc:cane_cutter', to: { x: 15, y: 4 } }));
+  });
+
   it("Yari comes up from her canoe to meet them, and turns to Gianna", () => {
     const cues = stageCues(script('yari_talk'));
     expect(cues).toContainEqual(expect.objectContaining({ do: 'enter', actor: 'yari', from: { x: 16, y: 18 } }));

@@ -138,7 +138,29 @@ export const ACT1: QuestDef = {
         'Go south from the temple to the dock and talk to whoever came.',
       ],
     },
-    // The Envoy's Papers (owner decision, Oct 15: one task at the Hall of the Accord in Chapter 1).
+    // Batch D (Oct 19): after Yari, the Journal walks the city the short way, so the gold arrow does too: the
+    // island's work first ("I have work at the archive"), then the Hall, the Cane Road, the city's errands on the
+    // way back, and the island again to sail. `island` and `town` only order what the side quests already reward
+    // (no story XP), and the boar is still met at level 3, as the battle tutorial expects (tests/battle.test.ts).
+    {
+      id: 'island',
+      title: 'Work on the island',
+      detail: 'Before crossing back: the cane cutter is waiting by the name stones, and the senior archivist is in the Temple Archive.',
+      done: { all: [{ flag: 'side.cane_name.stones' }, { flag: 'side.overdue.accepted' }, { flag: 'lore.zetwal_ash_wars_temple' }] },
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'side.cane_name.stones' }, map: 'zetwal-temple', at: { x: 8, y: 4 } },
+        { if: { notFlag: 'side.overdue.accepted' }, map: 'zetwal-archive', at: { x: 14, y: 4 } },
+        { map: 'zetwal-archive', at: { x: 2, y: 2 } },
+      ],
+      hints: [
+        'You told Yari you had work at the archive, Gigi. And that cane cutter by the name stones looks lost.',
+        'The name stones are west of the temple. The archive is through the door at the back of the temple.',
+        "Talk to the cane cutter at the name stones, then the senior archivist. Read the temple's Ash Wars record on the history shelf.",
+      ],
+    },
+    // The Envoy's Papers (owner decision, Oct 15: one task at the Hall of the Accord in Chapter 1; in one visit
+    // since Batch D, Oct 19: the engraver brings the seal to the clerk's desk).
     {
       id: 'papers',
       title: "The envoy's papers",
@@ -146,31 +168,72 @@ export const ACT1: QuestDef = {
       done: { flag: 'story.envoy_papers' },
       goals: [
         { if: { flag: 'story.papers_sealed' }, map: 'zetwal-hall', at: { x: 32, y: 5 } },
-        { if: { flag: 'item.elodie_seal' }, map: 'zetwal-hall', at: { x: 21, y: 25 } },
-        { if: { flag: 'story.papers_asked' }, map: 'zetwal-market', at: { x: 28, y: 13 } },
         { map: 'zetwal-hall', at: { x: 21, y: 25 } },
       ],
       hints: [
         'Yari said we need papers, Gigi. The Hall writes them.',
-        "The Hall of the Accord is up the steps at the head of the plaza. The clerk needs Mother's seal; the engraver in the Iron Market has it.",
-        'Clerk, then the engraver in the Iron Market (west of the plaza), then the clerk again, then the Chancellor\'s office off the gallery.',
+        "The Hall of the Accord is up the steps at the head of the plaza. The clerk's desk is just inside the doors.",
+        "The clerk at his desk inside the Hall's doors, then up the gallery to the Chancellor's office, the first door east.",
       ],
     },
     // The first battle is not optional (owner decision, Oct 16): Yari will not sail until the boar is beaten.
+    // On the way in, the shimmer by the gate, if the cane cutter's quest is waiting on it.
     {
       id: 'boar',
       title: 'The boar on the Cane Road',
       detail: 'A boar is charging the cane cutters on the Cane Road, past the east gate. Yari will not sail until it is dealt with.',
       done: { flag: 'encounter.wilds.boar.won' },
-      goals: [{ map: 'zetwal-road', at: { x: 9, y: 12 } }],
+      goals: [
+        { if: { all: [{ flag: 'side.cane_name.stones' }, { notFlag: 'clue.cane_name' }] }, map: 'zetwal-road', at: { x: 3, y: 14 } },
+        { map: 'zetwal-road', at: { x: 9, y: 12 } },
+      ],
       hints: [
         "Yari won't leave the cane cutters with that boar, Gigi. Neither will I.",
         'The Cane Road is past the east gate, at the end of the road south-east of the plaza.',
         'Go out through the east gate onto the Cane Road and walk east into the cane. The boar will find us.',
       ],
     },
+    {
+      id: 'town',
+      title: 'Errands on the way back',
+      detail: "Back through the city to the island: the archive's overdue books, the soup vendor's bowls, and the debate on the lawn below the plaza.",
+      done: {
+        all: [
+          { flag: 'side.overdue.soup' },
+          { flag: 'side.overdue.ferry' },
+          { flag: 'side.overdue.vol2' },
+          { flag: 'side.soup.done' },
+          { any: [{ flag: 'debate.zetwal_corner.joined' }, { flag: 'debate.zetwal_corner.mediated' }] },
+        ],
+      },
+      noXp: true,
+      // In the order they lie on the way back from the east gate: the lawn below the plaza, the vendor, the old
+      // neighbor, home, the guard, the docks, and the vendor again.
+      goals: [
+        { if: { all: [{ notFlag: 'debate.zetwal_corner.joined' }, { notFlag: 'debate.zetwal_corner.mediated' }] }, map: 'zetwal-town', at: { x: 22, y: 17 } },
+        {
+          if: { any: [{ notFlag: 'side.overdue.soup' }, { all: [{ notFlag: 'side.soup.accepted' }, { notFlag: 'side.soup.done' }] }] },
+          map: 'zetwal-town',
+          at: { x: 11, y: 12 },
+        },
+        { if: { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.elder' }] }, map: 'zetwal-town', at: { x: 4, y: 11 } },
+        { if: { notFlag: 'side.overdue.vol2' }, map: 'zetwal-house', at: { x: 12, y: 4 } },
+        { if: { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.guard' }] }, map: 'zetwal-town', at: { x: 22, y: 10 } },
+        {
+          if: { any: [{ notFlag: 'side.overdue.ferry' }, { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.ferry' }] }] },
+          map: 'zetwal-town',
+          at: { x: 9, y: 23 },
+        },
+        { map: 'zetwal-town', at: { x: 11, y: 12 } },
+      ],
+      hints: [
+        'The overdue books, the soup, and that debate below the plaza, Gigi. All of it is on our way back to the island.',
+        'The debate is on the lawn below the plaza. The soup vendor is on the plaza, Grandmother is at home, the ferryman at the docks.',
+        'The debate on the lawn, then the soup vendor, the old neighbor, Grandmother, the guard, the ferryman, and the vendor again.',
+      ],
+    },
     // Every side quest in Pòdlimyè must be done before Yari sails (owner decision, Oct 18). The gold arrow
-    // follows them (engine/guide.ts `followSide`).
+    // follows what is left of them (engine/guide.ts `followSide`): by now, back on the island.
     {
       id: 'errands',
       title: 'Unfinished business',
@@ -187,7 +250,7 @@ export const ACT1: QuestDef = {
       hints: [
         'We cannot leave yet, Gigi. Your Quests page still has work on it.',
         'Follow the arrow, Gigi. It knows what is left better than I do.',
-        'The archivist, the soup vendor, the cane cutter, and the debate below the plaza. All of it, before we sail.',
+        "The books back to the archivist, Grann's name in Mother Solange's list, and the cane cutter at the name stones.",
       ],
     },
     {

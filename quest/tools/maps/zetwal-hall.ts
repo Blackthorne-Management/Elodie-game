@@ -112,7 +112,10 @@ export function zetwalHall(): MapSource {
     npc('elder_hawk', 10, 8, 'up'),
     // The Envoys' Reception Room.
     npc('foreign_envoy', 6, 15, 'down'),
-    npc('crown_consul', 9, 19, 'up'),
+    // The Crown's consul (decision D, Oct 19): in the Envoys' room by day; the night the lamps light he waits in
+    // the gallery outside the Chancellor's office, walks in on her signing Gianna's papers, and leaves the Hall.
+    npc('crown_consul', 9, 19, 'up', { if: '!story.anissa_woke' }),
+    npc('crown_consul_gallery', 24, 6, 'right', { npc: 'crown_consul', if: 'story.anissa_woke, !story.envoy_papers' }),
     // East.
     npc('chancellor', 32, 5, 'down'),
     npc('seal_keeper', 32, 12, 'down'),

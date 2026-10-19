@@ -95,15 +95,18 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
 
   it('visits every Zetwal map and swaps eras', () => {
     // Chapter 1's maps, the temple archive (the Overdue Shelf, required before sailing), and (at the end of
-    // Chapter 2) home to Pòdlimyè's Old Harbor.
-    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set([...ACT1.maps, 'zetwal-archive', 'zetwal-harbor']));
+    // Chapter 2) home to Pòdlimyè's Old Harbor. Not the Iron Market: since Batch D (Oct 19) the engraver brings
+    // the seal to the Hall, and the Market is the city's shop street, off the story's way.
+    const story = ACT1.maps.filter((m) => m !== 'zetwal-market');
+    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set([...story, 'zetwal-archive', 'zetwal-harbor']));
     for (const m of ['xaragua-village', 'xaragua-plaza', 'xaragua-caney', 'xaragua-customs']) expect(maps).toContain(m);
     expect(eras.filter((e) => e === 'echo').length).toBeGreaterThanOrEqual(2);
     expect(sim.log).toContain('Something old stirs here, but it will not open to you yet.');
   });
 
   it('hears from the family', () => {
-    for (const name of ['Gianna', 'Elodie', 'Anissa', 'Anissa (at the door)', 'Anicette', 'Patricio', 'Aide', 'Yari', 'Cacique Anaco', 'Governor Thorne', 'Marine sergeant']) {
+    // The engraver and the Crown's consul play their scenes in the Hall (Batch D, Oct 19).
+    for (const name of ['Gianna', 'Elodie', 'Anissa', 'Anissa (at the door)', 'Anicette', 'Patricio', 'Aide', 'Yari', 'Engraver', "The Crown's consul", 'Cacique Anaco', 'Governor Thorne', 'Marine sergeant']) {
       expect(speakers).toContain(name);
     }
   });
