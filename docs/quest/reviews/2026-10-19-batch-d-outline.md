@@ -326,3 +326,7 @@ Each step ends with `npm test`, and the route replay numbers are recorded after 
   signs in that chair while she is away") and signs Gianna's papers in front of him. Yari: "That is the paper. They
   nailed it to our customs house." He glances at Anissa and moves on; no "he's looking at me" (only the Quiet
   Crown's watcher clearly notices her in Chapter 1).
+- **Decision C with the whistle (Oct 19): yes.** At dawn both grandparents walk down to Yari's dock (acted out).
+  Anicette hands over food: "Ask them what we promised. Ask them, not the Crown." Old Patricio gives Gianna his
+  Marshal's whistle (a key item, no stats; it matters again in Chapter 10). They wave from the dock; Yari's canoe
+  and the existing voyage stay the way out (no ferry).
