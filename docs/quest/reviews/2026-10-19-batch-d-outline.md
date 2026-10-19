@@ -319,3 +319,10 @@ Each step ends with `npm test`, and the route replay numbers are recorded after 
   Road (the quest can still start early); after the lamp he waits at the name stones on the island, his lines
   rewritten for after the reading, keeping a pointer to the veiled woman by the mill; on the return at the end of
   Chapter 2 he is back on the Cane Road with his warning.
+- **Decision D, revised after the review (Oct 19): yes.** The Crown's envoy walks into the Chancellor's office late
+  at night (the lamps lit across the city an hour ago, and he wants to know why) and lays a paper on her desk:
+  Zetwal should "acknowledge His Majesty's protection of the southern waters". No clause is named and the Throne is
+  not mentioned (Chapter 2's council keeps its reveal; Thorne keeps his lines). The Chancellor refuses ("Nobody
+  signs in that chair while she is away") and signs Gianna's papers in front of him. Yari: "That is the paper. They
+  nailed it to our customs house." He glances at Anissa and moves on; no "he's looking at me" (only the Quiet
+  Crown's watcher clearly notices her in Chapter 1).
