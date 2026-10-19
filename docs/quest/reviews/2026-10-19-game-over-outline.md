@@ -249,3 +249,13 @@ switch that makes the party lose (like the existing test-only extra fighters):
 8. **When the art drop arrives:** put the 1a painting's file in the one entry and check the crop on a phone.
 
 Steps 2 to 4 are rules work (Opus); tests and docs can go to Sonnet; the content check is a good Haiku job.
+
+---
+
+## Owner decisions (Oct 19)
+
+1. **The goddess may speak to her descendants.** The rule in ART-PROMPTS.md ("she never speaks") becomes: Elodie the
+   goddess speaks only to her descendants (Gianna and her line). This screen is one such moment.
+2. **The Grudge stays** (+10% per loss at that fight, up to +30%), counted per fight.
+3. **Random encounters do not count:** losing a random fight in the wild shows no goddess and adds nothing to the
+   count. It keeps today's rule (the fight restarts with the Grudge) unless the owner says otherwise.
