@@ -62,6 +62,8 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
   - Haiku: mechanical work (searches, scanning smoke logs, content checks, renames, data tables).
   For a big decision, have two models review the plan separately and bring the owner where they agree and differ.
   Save every review in full to a file the owner can read; never summarize one away.
+- Chapter gate (owner rule, Oct 19): no Chapter 3 building until Chapter 2 is complete, accepted, and played through
+  by both the owner and the owner's objective reviewer. Until then, work only on Chapters 1 and 2.
 - Netlify credits (owner decision, Oct 16; each deploy costs 15 credits, 3,000 a month): every commit message
   carries `[skip netlify]` so pushes do not build. Deploy (a push without the tag) only after a big chunk of the
   game is done, or when the owner asks.
