@@ -296,6 +296,11 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
   8. **The Escape** (Echo puzzle sequence, signature): through **Benny's smuggler tunnel**, opened by an anchor Benny
      left; the forge-fortress lava channels on the way. Guards fire; the shots land **wide**. Azzy sees his father
      give the order and chooses Gianna. **Azzy joins.** The soldiers who follow him become **Free Brasador**.
+  - **Owner direction (Oct 19), to settle in the Chapter 3 outline (no Chapter 3 building until Chapter 2 is
+    accepted):** Rael **wins** the Trial of Blades (a scripted loss: no Game Over screen for it). He carries **one of
+    the legendary items**. **Azzy makes a distraction** so the party can escape. This changes beats 5 to 8 above
+    (Rael "is defeated and survives"; "the loser answers one question"; Azzy "chooses Gianna" during the escape), so
+    the outline must rework them and ask the owner where they conflict.
   9. Gianna now believes her father is a traitor who sold Xaraguá. She cannot learn otherwise until near the end.
   10. **Echo callback** (after the escape, optional but strongly signposted): young Benny recognizes the Locket on
       Gianna's neck and says something he could not have said before; in the Present, old Benny in the keep (guards
