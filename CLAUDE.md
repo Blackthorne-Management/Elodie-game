@@ -40,8 +40,7 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
 - Ask questions one at a time, each with the reason behind it.
 - Recommend only what is just and genuinely helps the story or the gameplay; never recommend for its own sake
   (owner rule, Oct 19).
-- After every command and run, end the reply with the link to the quest: https://zesty-puffpuff-852680.netlify.app/quest/
-  (it updates only when a push is deployed, see below), then the exact commands to play it locally (owner request,
+- After every command and run, end the reply with the exact commands to play the quest locally (owner request,
   Oct 17). The owner uses Windows PowerShell, where `npm` is blocked by the execution policy, so give them as:
   ```
   cd "D:\Blackthorne Management\Projects\elodie-game\quest"
@@ -67,9 +66,9 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
 - All chapters by Nov 22 (owner decision, Oct 20; replaces the Oct 19 chapter gate): the release is the whole quest,
   Chapters 1 to 12 and the epilogue. Chapters overlap (one outlined while another is built); Chapter 2 is finished
   alongside. The plan is `docs/quest/PLAN-ALL-CHAPTERS.md`.
-- Netlify credits (owner decision, Oct 16; each deploy costs 15 credits, 3,000 a month): every commit message
-  carries `[skip netlify]` so pushes do not build. Deploy (a push without the tag) only after a big chunk of the
-  game is done, or when the owner asks.
+- No deploys (owner decision, Oct 20): work goes to the repos only; the owner is taking the Netlify sites down. Every
+  commit, merges included, carries `[skip netlify]` (a local commit-msg hook adds it), and nothing is deployed until
+  the owner says so. Replies no longer link to the live site.
 
 ## Commands
 - `npm run dev` (add `-- --host` to open on a phone on the same Wi-Fi)
