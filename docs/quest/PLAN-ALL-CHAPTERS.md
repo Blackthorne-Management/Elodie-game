@@ -83,3 +83,27 @@ Quill and Chapter 2's Conch).
 - **Depth:** two side quests per chapter instead of five. The cut ones and the secret items follow after the release.
 - **Balance over 30 levels:** each chapter is tested for its own fights. The whole curve is checked only in the last
   week.
+
+---
+
+## Owner decisions after the two plan reviews (Oct 20)
+
+The reviews are `docs/quest/reviews/2026-10-20-plan-review-opus.md` and `...-sonnet.md` (in full).
+
+1. **The three roads play in a fixed order for the release:** Skarragol (levels 15 to 17), Kuroshi (17 to 19),
+   Jwaladesh (19 to 21). Any order can come in an update. No region-level system is needed for the release.
+2. **Both of the Opus review's main changes are taken:**
+   - **Foundations first,** built while Chapter 2 is finished and Chapter 3 is outlined:
+     - a test set-up for many chapters (one route per chapter from its chapter start, seeded battle dice in the
+       browser test, every chapter replayed headless in `npm test`);
+     - the realm's economy (ally prices, Yield, a record of the Accord's Stability inputs);
+     - a level-curve simulation;
+     - fighters as data.
+   - **A decision date, Sun Nov 8:** if Chapter 9 is not built by then, the owner chooses between Chapters 1 to 9
+     polished on Nov 22 (10 to 12 and the Hearing in December) and all twelve with the late chapters plainer. The
+     last review batch moves to about Nov 14.
+3. **The owner will work on the game more often** from now on, so decisions can come daily.
+
+The rest of the Opus review's changes (its section 6: the minimum per chapter, XP retuned per chapter with the
+simulation, the art that matters most for drop 2, fluent readers per chapter, simplify only where the story does not
+change) are the working plan unless the owner says otherwise.
