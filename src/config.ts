@@ -22,6 +22,9 @@ export const THRESHOLDS: { small: Threshold & { maxPlayers: number }; normal: Th
 
 // Tuning items flagged by the rulebook (Section 12).
 export const SUDDEN_DEATH_ROUND = 16;
+// Squares on the printed round track (rules-decisions 91): numbered 1 to 18 with no Sudden Death mark, so the board
+// stays right for any SUDDEN_DEATH_ROUND from 12 to 18 while playtests settle it. Must be at least SUDDEN_DEATH_ROUND.
+export const ROUND_TRACK = 18;
 export type FirstStriker = 'claimant' | 'challenger';
 export const CHALLENGE_FIRST_STRIKER: FirstStriker = 'claimant';
 

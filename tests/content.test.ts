@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { CARDS, HOUSES } from '../src/data';
 import { manhattan } from '../src/engine/board';
+import { ROUND_TRACK, SUDDEN_DEATH_ROUND } from '../src/config';
 
 describe('the shared deck', () => {
   it('has 126 cards numbered 1-126', () => {
@@ -45,5 +46,8 @@ describe('the houses', () => {
       const want = h.id === 'agnivansh' ? [3, 3, 3, 2] : [3, 3, 3, 3];
       expect(h.hp).toEqual(want);
     }
+  });
+  it('the printed round track reaches the Sudden Death round (rules-decisions 91)', () => {
+    expect(ROUND_TRACK).toBeGreaterThanOrEqual(SUDDEN_DEATH_ROUND);
   });
 });

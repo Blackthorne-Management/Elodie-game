@@ -5,7 +5,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { CARDS } from '../src/data/cards';
 import { GEN_NOTES, HOUSES } from '../src/data/houses';
 import { CATEGORY_ART, HOUSE_ART } from '../src/assets.config';
-import { SUDDEN_DEATH_ROUND } from '../src/config';
+import { ROUND_TRACK, SUDDEN_DEATH_ROUND } from '../src/config';
 import { cardTiming } from '../src/ui/cardKind';
 import { RULES } from '../src/data/rules';
 
@@ -14,6 +14,7 @@ declare const process: { env: Record<string, string | undefined> };
 it.skipIf(!process.env.PRINT)('export card and house text', () => {
   const data = {
     suddenDeathRound: SUDDEN_DEATH_ROUND,
+    roundTrack: ROUND_TRACK,
     // the in-app Reference Card, printed inside the Action card box lid
     reference: RULES.find(r => r.id === 'reference')?.blocks ?? [],
     cards: CARDS.map(c => ({

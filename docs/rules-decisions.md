@@ -593,6 +593,12 @@ These came up in code and weren't covered above; all confirmed as they stand.
   bloodline has ended. `tests/ayatsuri.test.ts` walks every card and house ability with the strings pulled, so the
   printed rule and the engine can't drift. Balance (24,000 bot games, two seed sets): no change beyond noise
   (Suzumori 0.86/0.93 → 0.85/0.91 at 6 players, 0.83/1.01 → 0.81/1.02 at 8; bots rarely reach Gen IV Ayatsuri).
+- **The printed round track is 1 to 18, unmarked [91]** (observer and owner, Oct 20). Order A prints the board before
+  any human game, and the Sudden Death round is the one number playtests can still move (bots claim in rounds 8 to 10;
+  people hold, trade and wait, so games usually run longer). The track shows 18 numbered squares with no skull or
+  label (`ROUND_TRACK` in `src/config.ts`; a test keeps it at least `SUDDEN_DEATH_ROUND`), so the board stays right
+  for any value from 12 to 18. Sudden Death stays at the end of round 16 for now; the rulebook names the round and a
+  marker on that square shows it at setup. A reprint can add the skull once the round is settled.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

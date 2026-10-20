@@ -14,7 +14,8 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
 
 **Order A (Mon Oct 20), BoardGamesMaker, matte laminated (smooth) on everything (owner, Oct 20)**
 - [x] Board approved: `print/board-24in.jpg` (`npm run print:board`), the 4096 map, the 8 seats, bolder grid, each
-  homeland name touching its capital (Aldermoor's last letter reaching into Xaraguá is accepted).
+  homeland name touching its capital (Aldermoor's last letter reaching into Xaraguá is accepted). **Re-rendered Oct 20:
+  the round track is 1 to 18 with no Sudden Death mark** (rules-decisions 91); replace the image already uploaded.
 - [x] Game box approved: `print/box-12.5x12.5x2.pdf` (`npm run print:box`), 12.5" × 12.5" × 2".
 - [x] Action card box approved: `print/card-box-action.pdf` (`npm run print:card-boxes`), Easy Flip 140 × 96 × 24 mm,
   custom (finger open & snap close), all 126 Action cards in two stacks; the Reference Card inside the lid.
@@ -27,8 +28,8 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
 - [ ] With order A, ask BoardGamesMaker two numbers (observer, Oct 20): the Easy Flip box's **inner** height, and
   the thickness of their 63 × 88 card stock in matte lamination (63 cards must fit in 24 mm).
 - [ ] Place order A.
-- **Order A locks the board today:** the round track (Sudden Death at round 16, `SUDDEN_DEATH_ROUND`), the tile
-  positions and the Throne squares are frozen Oct 20, not Oct 31.
+- **Order A locks the board today:** the round track (1 to 18, unmarked), the tile positions and the Throne squares
+  are frozen Oct 20, not Oct 31. The Sudden Death round itself (16 for now) can still move between 12 and 18.
 
 **Rules freeze (Fri Oct 31)**
 - [x] Third design review done (rules-decisions 88 to 90): Rakt Ki Pyaas is a 1-space move; Kay Soley's claim
@@ -44,12 +45,13 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
   - Suzumori at 6: how often Kagemimi was used, and whether a peek changed an attack or a Block;
   - Dorini, Yaguana, Brasador: resource totals at the end, and whether Guaíza was used (reprint data);
   - **every rules question asked at the table, verbatim** (feeds the appendix before the freeze).
-- [ ] Component sizes (proposed, owner to confirm): the 24 mm card boxes leave about 9 mm under the board for the
+- [x] Component sizes (accepted Oct 20; confirm the player boards and rulebook total under 9 mm once BoardGamesMaker
+  gives the stock thickness): the 24 mm card boxes leave about 9 mm under the board for the
   player boards, rulebook and score pad, so **player boards in thin card** (300 to 350 gsm, 1 mm at most, about
   150 × 100 mm; 2 mm chipboard won't fit), and **drop the score pad** (print the score grid on the back of the
-  reference card) or make it 25 sheets. Legacy cards tarot size in the tarot box (48 cards, plenty of room); tokens
+  reference card: kills and Reckonings per player, about 8 columns by 6 rows, pale and pencil-friendly). Legacy cards tarot size in the tarot box (48 cards, plenty of room); tokens
   about 25 mm; **dice: stock**.
-- [ ] Token containers (proposed): **zip bags, ordered with B**. No tray holding 60 tokens flat fits in 24 mm, so
+- [x] Token containers (accepted Oct 20): **zip bags, ordered with B**. No tray holding 60 tokens flat fits in 24 mm, so
   bags are the only fit: three for the resource tokens, one each for Heart/Grudge/reminder tokens, the standees, and
   the dice and round marker.
 - [ ] **Art, cut by what the table sees most** (observer, Oct 20; 20 of 126 cards, none since Oct 13; 0 of 32
