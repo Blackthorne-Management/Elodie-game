@@ -48,7 +48,7 @@ and "Watch the intro" is in the System menu. Music and sound effects are **in th
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):
-- [ ] **By Mon Nov 3** (the battle system is built that week): Samira's *Daftar* skill spends **gold** instead of the
+- [x] **Approved Oct 20:** Samira's *Daftar* skill spends **gold** instead of the
   Wealth score (Wealth is never spent), and grows with the realm's Wealth. Proposal in `COMBAT.md`.
 - [x] The story slice: **settled Oct 15**. Ardencia is Chapter 3 and Al-Doria Chapter 4, so the slice (Zetwal,
   Xaraguá, Ardencia) is the first three chapters.

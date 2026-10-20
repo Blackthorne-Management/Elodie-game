@@ -290,7 +290,7 @@ The hutia (proposal): a 1-in-8 chance after a win to steal one shiny extra drop.
 
 ### 9.6 Samira (Alchemist, Dorini)
 
-The owner decision of Oct 14 says Wealth is a score that is never spent, so **Daftar spends gold** (proposal; see
+The owner decision of Oct 14 says Wealth is a score that is never spent, so **Daftar spends gold** (**approved by the owner, Oct 20**;
 `STORY.md` open question 5).
 
 | Skill | SP | Effect | Board |
