@@ -599,6 +599,11 @@ These came up in code and weren't covered above; all confirmed as they stand.
   label (`ROUND_TRACK` in `src/config.ts`; a test keeps it at least `SUDDEN_DEATH_ROUND`), so the board stays right
   for any value from 12 to 18. Sudden Death stays at the end of round 16 for now; the rulebook names the round and a
   marker on that square shows it at setup. A reprint can add the skull once the round is settled.
+- **Round and Sudden Death tokens; the first player keeps the round [92]** (owner, Oct 20). The round marker is a
+  printed round token, and a Sudden Death token marks the Sudden Death round on the unmarked track ([91]); no spare
+  Grudge Token exists at 8 players, so it is a token of its own. The first player moves the round token at the start
+  of each round and calls Sudden Death when that round ends with no winner. The score pad is dropped: the score grid
+  is printed on the back of the reference cards.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

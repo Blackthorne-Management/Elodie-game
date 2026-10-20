@@ -53,7 +53,7 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
   about 25 mm; **dice: stock**.
 - [x] Token containers (accepted Oct 20): **zip bags, ordered with B**. No tray holding 60 tokens flat fits in 24 mm, so
   bags are the only fit: three for the resource tokens, one each for Heart/Grudge/reminder tokens, the standees, and
-  the dice and round marker.
+  the dice with the round and Sudden Death tokens.
 - [ ] **Art, cut by what the table sees most** (observer, Oct 20; 20 of 126 cards, none since Oct 13; 0 of 32
   portraits): 1. the card back; 2. the 8 Gen I portraits (they are the standees too; Gen II to IV print with crest
   plates); 3. the 10 Elodie Instants and the 8 Block cards; 4. everything else prints in the no-picture design.
@@ -130,10 +130,10 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 | 7 | **Heart Tokens** | 32 round chipboard tokens (3 per player + spares) | `print/tokens/*.png` (to build) | — |
 | 8 | **Grudge Tokens** | 40 round tokens, 5 per house, crest on the front, plain back (also used for the house lottery) | `print/tokens/*.png` (to build) | Crests |
 | 9 | **Resource tokens** | 180 round double-sided chipboard tokens, 60 each of Influence (crown), Fear (crossed swords) and Wealth (coins): **1** on the front, **×5** on the back | `print/tokens/*.png` (to build) | Icons ✔ |
-| 9b | **Round marker** | 1 wooden cube or pawn for the board's round track | stock piece | — |
+| 9b | **Round token and Sudden Death token** | 2 round chipboard tokens for the board's round track (1 to 18): the round token moves each round; the Sudden Death token sits on the Sudden Death round (16 for now). The first player keeps the round and calls Sudden Death (owner, Oct 20) | `print/tokens/*.png` (to build) | — |
 | 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 Grito de Guerra markers, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/*.png` (to build) | — |
 | 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive, except Brasador's, which reads "+1 Fear on kill." (rules-decisions 87; `legacyPassive` in `src/data/houses.ts`). Yaguana's Ancestor's Voice draws one blind from the houses not at the table | `print/legacy/*.png` (to build) | Crests |
-| 10c | **Score pad** | 50-sheet pad, one column per player: kills and Reckonings (read by Sudden Death, Reinado de Cenizas and Elodie's Reckoning; the fallen-houses column was dropped in rules-decisions 87) | `print/scorepad.pdf` (to build) | — |
+| 10c | **Score grid** | Printed on the back of the reference cards (dropped the score pad, Oct 20): one column per player for kills and Reckonings, about 8 × 6, pale and pencil-friendly; one per game is enough | `print/characters/reference-*.png` (to build) | — |
 | 11 | **Dice** | 2 six-sided dice (stock, or custom-printed faces) | stock / `print/dice/*.png` | — |
 | 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`): the **core rules** (about 1,600 words, what a first game needs) first, then the **appendix** (rules-decisions 87) | `print/rulebook.pdf` (to build) | Board, card and portrait art for pictures |
 | 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards), printed from the **Reference Card** section of `src/data/rules.ts`: the turn, the ◎ Target card list and the lasting-card durations (these live on the card, not in the booklet; rules-decisions 87). | `print/characters/reference-*.png` (to build) | — |
@@ -154,7 +154,7 @@ piece goes in its own container underneath. Owner asked Oct 15 to order the cont
 | Bag (or 8 small bags, one per house) | 40 Grudge Tokens | small zip bag |
 | Bag | 27 reminder tokens | small zip bag |
 | Bag | 8 standees and their 8 plastic stands | small zip bag |
-| Bag | round marker and 2 dice | small zip bag |
+| Bag | round token, Sudden Death token and 2 dice | small zip bag |
 | none (flat in the box) | game board, 8 player boards, rulebook, score pad | |
 
 ## Resource tokens: how many
@@ -172,7 +172,7 @@ saved projects in one cart.
 | Order | What | Order by | Shipping |
 |---|---|---|---|
 | **A** | Board (2), game box (1), Action card box, tarot box | **Mon Oct 20** | Standard |
-| **B** | Cards (3, 4, 10b, 13), player boards (5), standees (6), tokens (7, 8, 9, 10) and their zip bags, round marker (9b), score pad (10c), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
+| **B** | Cards (3, 4, 10b, 13), player boards (5), standees (6), tokens (7, 8, 9, 10) and their zip bags, round and Sudden Death tokens (9b), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
 
 ## Schedule
 

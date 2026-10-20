@@ -7,7 +7,7 @@
 // (everything else: Reactions, lasting cards, the two discard piles, Specters and Sudden Death in detail, rulings,
 // two-player modes) and the REFERENCE CARD (printed on the player reference cards: the turn, the ◎ Target cards and
 // the lasting-card durations).
-import { GRITO_MARKERS, HAND_SIZE, OPENING, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
+import { GRITO_MARKERS, HAND_SIZE, OPENING, ROUND_TRACK, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
 import { CARDS } from './cards';
 import { HOUSES } from './houses';
 
@@ -62,7 +62,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         '**The board:** an 18 × 18 grid. The Throne fills the four centre squares. Each of the eight houses owns one tile around it: three **Court** tiles (Influence), three **War** tiles (Fear) and two **Trade** tiles (Wealth).',
         '**Eight houses**, each with four generation cards (Gen I to IV) and a player board.',
         '**The Shared Action Deck:** 126 cards, 71 Hand Cards and 55 Instants.',
-        '**Heart Tokens** (your life, and also your attack strength), **resource tokens** for each pillar and **Grudge Tokens**, plus pawns, dice, markers and a score pad (see Components in Detail).',
+        '**Heart Tokens** (your life, and also your attack strength), **resource tokens** for each pillar and **Grudge Tokens**, plus pawns, dice, markers and a score grid (see Components in Detail).',
         'For **2 to 8 players**, best with 3 to 6. **60 to 150 minutes:** about 20 minutes per player. For a first game, play with 3 to 5.',
       ],
     }],
@@ -77,6 +77,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         'Put your pawn on your house\'s own tile. House Yaguana draws its Legacy card (see House Powers).',
         `Shuffle the deck and deal everyone **${HAND_SIZE} Hand Cards**. Any Instant drawn in this deal is shuffled back and replaced.`,
         '**First player:** if a player named Elodie (or Lolo or Lodie) is playing, she always goes first. Otherwise everyone rolls the die and the highest roll goes first (re-roll ties). Play then goes **clockwise** around the table, in seating order, for the whole game.',
+        `**The round track:** put the round token on square 1 and the **Sudden Death token on square ${SUDDEN_DEATH_ROUND}**. The first player keeps the round for the whole game: they move the round token at the start of each round and, if no one has won when round ${SUDDEN_DEATH_ROUND} ends, they call Sudden Death.`,
       ],
     }],
   },
@@ -94,7 +95,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
       },
       '**Free extras:** your house abilities don\'t use your action (each can be used once per turn unless it says otherwise), and you may **claim the Throne** at any point in your turn while standing on it and eligible.',
       `**Opening truce:** no attacks of any kind during ${truceText}.`,
-      'A **round** is every player taking one turn. The first player moves the round marker at the start of each round.',
+      `A **round** is every player taking one turn. **The first player keeps the round:** they move the round token at the start of each round, and call Sudden Death when round ${SUDDEN_DEATH_ROUND} ends with no winner.`,
     ],
   },
   {
@@ -192,7 +193,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         ],
       },
       'Reaching the threshold never forces a claim; it simply unlocks the option.',
-      `**Sudden Death:** if no one has won by the end of **round ${SUDDEN_DEATH_ROUND}**, the highest combined total of Influence + Fear + Wealth wins (ties: see Sudden Death in Detail).`,
+      `**Sudden Death:** if no one has won by the end of **round ${SUDDEN_DEATH_ROUND}** (the round token has reached the Sudden Death token), the first player calls it: the highest combined total of Influence + Fear + Wealth wins (ties: see Sudden Death in Detail).`,
     ],
   },
 ];
@@ -207,8 +208,8 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
         '**Grudge Tokens:** 40, five per house, with the house crest. They are also the lottery tiles for drawing houses.',
         `**Reminder markers:** 8 new-heir shields, 1 La Marca brand, ${GRITO_MARKERS} Grito de Guerra markers, 8 Specter markers and 8 Used tokens (once-per-game powers).`,
         `**8 Legacy cards,** one per house, each showing that house's Gen I passive (for House Yaguana's Ancestor's Voice and Song of Coaybay). Brasador's Legacy card reads "${brasadorLegacy.replace(/\.$/, '')}" from the start.`,
-        '**Pawns, 2 dice, the round marker** and the round track printed on the board.',
-        '**The score pad:** one column per player for **kills** and **Reckonings**. Sudden Death, Reinado de Cenizas and Elodie\'s Reckoning read it. Tick a kill or a Reckoning the moment it happens.',
+        `**Pawns, 2 dice, the round token and the Sudden Death token,** and the round track (1 to ${ROUND_TRACK}) printed on the board.`,
+        '**The score grid** (on the back of the reference cards; one is enough per game): one column per player for **kills** and **Reckonings**. Sudden Death, Reinado de Cenizas and Elodie\'s Reckoning read it. Tick a kill or a Reckoning the moment it happens.',
         '**Reference cards:** one per player, with the turn, the ◎ Target cards and how long lasting cards stay out (see Reference Card).',
       ],
     }],
@@ -235,7 +236,7 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
     id: 'move', title: 'Moving in Detail',
     blocks: [{
       list: [
-        'Hand Cards can\'t be played before you move. At the start of each round, the first player moves the round marker one space along the round track on the board.',
+        'Hand Cards can\'t be played before you move. At the start of each round, the first player moves the round token one space along the round track on the board.',
         'A roll of 3 can be two up and one right. Distances are always counted in up/down/left/right steps.',
         'Every square can be walked on, sea included, and any number of pawns may share a square.',
         '**Play on the grid only.** The 18 × 18 grid is the whole play area: the ocean and islands outside it are scenery, and no move may leave the grid.',
@@ -316,7 +317,7 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
   {
     id: 'death-detail', title: 'Death in Detail',
     blocks: [
-      '**What the heir keeps:** your hand, your remaining resources, your Grudges, your kills (and Reckonings) and La Marca. Lasting cards on the fallen character are discarded, except truces, Ceasefire and Golden Harvest. Tick the kill on the score pad.',
+      '**What the heir keeps:** your hand, your remaining resources, your Grudges, your kills (and Reckonings) and La Marca. Lasting cards on the fallen character are discarded, except truces, Ceasefire and Golden Harvest. Tick the kill on the score grid.',
       'You can hold several Grudges, even more than one against the same player; a Reckoning settles one.',
       {
         list: [
@@ -375,7 +376,7 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
       {
         steps: [
           'The highest combined total of Influence + Fear + Wealth wins.',
-          'Ties go to the highest single pillar, then the most kills, then the most Reckonings (from the score pad).',
+          'Ties go to the highest single pillar, then the most kills, then the most Reckonings (from the score grid).',
           `Still tied: the tied players duel (damage = Heart Tokens with **no bonuses**, Heart Tokens counting as at most ${heartCap} at ${big}; the earlier player in turn order strikes first; no Block/Deflect cards). With three or more, the earliest seat fights the next; the winner fights on with the Heart Tokens they have left.`,
         ],
       },
