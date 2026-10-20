@@ -36,8 +36,9 @@ The board game (physical and digital) and the quest are one build. At every mile
 owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent deadline first, and keep that list current.
 
 ## Working with the owner
-- Before each build, describe what you are going to do and wait for the owner's approval before continuing.
-- Ask questions one at a time, each with the reason behind it.
+- Keep building (owner rule, Oct 20): ask the owner only about decisions that drastically change the story's flow;
+  for everything else, go with Claude's recommendation, record it in the design docs (marked "Claude's call") and keep
+  building. Questions that are asked come one at a time, each with its reason.
 - Recommend only what is just and genuinely helps the story or the gameplay; never recommend for its own sake
   (owner rule, Oct 19).
 - After every command and run, end the reply with the exact commands to play the quest locally (owner request,
