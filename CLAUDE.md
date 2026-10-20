@@ -40,6 +40,12 @@ Phase 2 (started, at the owner's request): online play. Host a game (players and
 - Test locally with `node scripts/dev-server.mjs` and `?server=http://localhost:8787`.
 - Not yet: QR codes, AFK bot takeover.
 
+## Keep every board game file current (owner, Oct 20)
+Whenever a rule, card, house or tunable number changes, update everything the board game prints or shows in the
+same change: `src/data/rules.ts`, the How to play slides, the app screens, `npm run build:server`, and every print file
+the change reaches (`npm run print`, `print:board`, `print:box`, `print:card-boxes`; commit the ones kept in git).
+If a file the owner has already uploaded to BoardGamesMaker changes, say so and ask them to re-upload it.
+
 ## One build: keep the board game in view
 The board game (physical and digital) and the quest are one build. At every milestone, whatever the task, remind the
 owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent deadline first, and keep that list current.

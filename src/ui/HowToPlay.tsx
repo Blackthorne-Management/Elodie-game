@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import type { HouseId } from '../engine/types';
 import { PILLARS } from '../engine/types';
 import { CONTENT } from '../data';
-import { OPENING, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
+import { OPENING, ROUND_TRACK, SUDDEN_DEATH_EARLIEST, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
 import { BOARD_ART, CATEGORY_ART, HOWTO_ART, PILLAR_ART, UI_ART } from '../assets.config';
 import { CardFrame } from './CardFrame';
 import { Emblem } from './play/Figures';
@@ -182,7 +182,7 @@ const SLIDES: Slide[] = [
     'With enough resources **and** some of every pillar, stand on the Throne and **claim** it. Until then you may pass over it, but not stop there.',
     'Every other eligible rival may **challenge**: you fight each in turn. Survive them all and you win.'] },
   { id: 'sudden', title: 'Sudden Death', pic: SuddenPic, text: [
-    `If no one has won by the end of **round ${SUDDEN_DEATH_ROUND}**, the highest combined total wins.`,
+    `If no one has won by the end of **round ${SUDDEN_DEATH_ROUND}** (or the round your table agreed, ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}), the highest combined total wins.`,
     'Ties go to the highest pillar, then kills, then Reckonings, then a duel.'] },
   { id: 'ready', title: 'You\'re Ready', pic: EndPic, text: [
     'That\'s the heart of it. The full rule guide covers every rule, every house and all 126 cards.'] },

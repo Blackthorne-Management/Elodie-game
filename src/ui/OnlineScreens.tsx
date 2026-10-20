@@ -9,6 +9,8 @@ import { Emblem } from './play/Figures';
 import type { TwoPlayerMode } from '../engine/houseChoice';
 import { TWO_PLAYER_MODES } from '../data/rules';
 import { TwoPlayerModeField } from './TwoPlayerMode';
+import { SuddenDeathField } from './SuddenDeathField';
+import { SUDDEN_DEATH_ROUND } from '../config';
 
 const HOUSE_IDS = Object.keys(CONTENT.houses) as HouseId[];
 const houseName = (h: HouseId) => CONTENT.houses[h].name.replace('House ', '');
@@ -26,6 +28,7 @@ export function HostPanel({ name }: { name: string }) {
   const [total, setTotal] = useState(4);
   const [humans, setHumans] = useState(2);
   const [twoMode, setTwoMode] = useState<TwoPlayerMode>('race');
+  const [suddenDeath, setSuddenDeath] = useState(SUDDEN_DEATH_ROUND);
   const people = Math.min(humans, total);
   return (
     <>
@@ -46,9 +49,10 @@ export function HostPanel({ name }: { name: string }) {
         </div>
       </div>
       {total === 2 && <TwoPlayerModeField value={twoMode} onChange={setTwoMode} />}
+      <SuddenDeathField value={suddenDeath} onChange={setSuddenDeath} />
       <p className="muted small">You get a game code and a message to send your friends. Bots fill the other seats.</p>
       <ErrorLine />
-      <button type="button" className="big" disabled={busy} onClick={() => void host(name, total, people, twoMode)}>{busy ? 'Creating…' : 'Host a game'}</button>
+      <button type="button" className="big" disabled={busy} onClick={() => void host(name, total, people, twoMode, suddenDeath)}>{busy ? 'Creating…' : 'Host a game'}</button>
     </>
   );
 }
@@ -177,6 +181,12 @@ export function Lobby() {
         <section className="panel-card frame">
           <h3 className="lobby-h">Two-player game: {TWO_PLAYER_MODES[lobby.twoMode].name}</h3>
           <p className="small">{TWO_PLAYER_MODES[lobby.twoMode].short}</p>
+        </section>
+      )}
+      {lobby.suddenDeath !== SUDDEN_DEATH_ROUND && (
+        <section className="panel-card frame">
+          <h3 className="lobby-h">Sudden Death after round {lobby.suddenDeath}</h3>
+          <p className="small">The host chose {lobby.suddenDeath < SUDDEN_DEATH_ROUND ? 'a shorter' : 'a longer'} game than the standard {SUDDEN_DEATH_ROUND} rounds.</p>
         </section>
       )}
       <section className="panel-card frame">

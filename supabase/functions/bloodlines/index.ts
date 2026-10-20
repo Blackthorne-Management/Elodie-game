@@ -74,7 +74,8 @@ Deno.serve(async req => {
       case 'create': {
         for (let tries = 0; tries < 8; tries++) {
           const c = core.newCode(env);
-          const { session, token } = core.createSession(env, c, String(r.name ?? ''), Number(r.total), Number(r.humans), r.mode === 'battle' ? 'battle' : 'race');
+          const { session, token } = core.createSession(env, c, String(r.name ?? ''), Number(r.total), Number(r.humans), r.mode === 'battle' ? 'battle' : 'race',
+        r.suddenDeath === undefined ? undefined : Number(r.suddenDeath));
           const done = await sql`insert into bloodlines.sessions (code, status, data) values (${c}, ${session.status}, ${sql.json(session)})
             on conflict (code) do nothing returning code`;
           if (done.length) return json({ ok: true, code: c, token, seat: 0, lobby: core.lobbyView(session, 0) });

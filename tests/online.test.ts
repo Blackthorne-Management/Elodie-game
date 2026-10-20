@@ -123,4 +123,19 @@ describe('online game server', () => {
     expect(() => answer(s, other, 0, (other ? v1 : v0).answers)).toThrow(/not your decision/);
     expect(() => answer(s, mine, 0, 999)).toThrow(/moved on/);
   });
+  it('the host may choose the Sudden Death round, 12 to 18 (rules-decisions 93)', () => {
+    const e = env(3);
+    const { session: s } = createSession(e, 'SUDDEN', 'Host', 3, 1, 'race', 12);
+    expect(lobbyView(s, 0).suddenDeath).toBe(12);
+    startSession(e, s, 0);
+    expect(s.setup!.config?.suddenDeathRound).toBe(12);
+    expect(gameView(s, 0).state.config.suddenDeathRound).toBe(12);
+    const std = createSession(env(4), 'STANDA', 'Host', 3, 1).session;
+    expect(lobbyView(std, 0).suddenDeath).toBe(16);
+    startSession(env(4), std, 0);
+    expect(std.setup!.config).toBeUndefined();          // the standard round leaves the setup unchanged
+    for (const bad of [11, 19, 14.5, Number.NaN]) {
+      expect(() => createSession(env(5), 'BADSDR', 'Host', 3, 1, 'race', bad)).toThrow(/Sudden Death/);
+    }
+  });
 });

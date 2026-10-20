@@ -17,7 +17,7 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
   homeland name touching its capital (Aldermoor's last letter reaching into Xaraguá is accepted). **Re-rendered Oct 20:
   the round track is 1 to 18 with no Sudden Death mark** (rules-decisions 91); replace the image already uploaded.
 - [x] Game box approved: `print/box-12.5x12.5x2.pdf` (`npm run print:box`), 12.5" × 12.5" × 2".
-- [x] Action card box approved: `print/card-box-action.pdf` (`npm run print:card-boxes`), Easy Flip 140 × 96 × 24 mm,
+- [x] Action card box approved: `print/card-box-action.pdf` (**re-rendered Oct 20**: the lid's Reference Card now has Kay Soley's claim numbers; re-upload it) (`npm run print:card-boxes`), Easy Flip 140 × 96 × 24 mm,
   custom (finger open & snap close), all 126 Action cards in two stacks; the Reference Card inside the lid.
 - [x] Tarot box approved: `print/card-box-tarot.pdf`, Double Flip magnetic 130 × 80 × 40 mm, beside the game box;
   the houses inside the flaps.
@@ -86,8 +86,9 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
 - [ ] **Nov 5** (after order B), owner to decide: hide the Hand Card discard pile online (it is face down at the
   table; recommended, for consistency).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
-- [ ] Proposed build (owner to approve): a Sudden Death round setting (12 to 18, default 16) on the new-game and
-  host screens (rules-decisions 93; the engine already takes it).
+- [x] Sudden Death round setting (12 to 18, default 16) on the new-game and host screens, shown in the lobby
+  (rules-decisions 93). Online needs the Edge Function redeployed (`supabase/functions/bloodlines/index.ts` now passes
+  `suddenDeath`); until then online games play to 16.
 - [ ] Owner to decide: show the 8 seat buildings in the app (`SEAT_ART` in `src/assets.config.ts`; a separate build).
 - Balance record (bot games): every house within about 0.81 to 1.22 of its fair share at every count; details in
   `docs/rules-decisions.md` [87] to [90].
