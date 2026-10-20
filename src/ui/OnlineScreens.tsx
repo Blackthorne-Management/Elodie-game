@@ -183,7 +183,7 @@ export function Lobby() {
           <p className="small">{TWO_PLAYER_MODES[lobby.twoMode].short}</p>
         </section>
       )}
-      {lobby.suddenDeath !== SUDDEN_DEATH_ROUND && (
+      {lobby.suddenDeath && lobby.suddenDeath !== SUDDEN_DEATH_ROUND && (
         <section className="panel-card frame">
           <h3 className="lobby-h">Sudden Death after round {lobby.suddenDeath}</h3>
           <p className="small">The host chose {lobby.suddenDeath < SUDDEN_DEATH_ROUND ? 'a shorter' : 'a longer'} game than the standard {SUDDEN_DEATH_ROUND} rounds.</p>
