@@ -51,3 +51,19 @@ describe('the houses', () => {
     expect(ROUND_TRACK).toBeGreaterThanOrEqual(SUDDEN_DEATH_ROUND);
   });
 });
+
+describe('the agreed Sudden Death round (rules-decisions 93)', () => {
+  it('takes any round from SUDDEN_DEATH_EARLIEST to ROUND_TRACK and refuses others', async () => {
+    const { newGame, setup } = await import('./helpers');
+    const { Game } = await import('../src/engine/game');
+    const { CONTENT } = await import('../src/data');
+    const { SUDDEN_DEATH_EARLIEST } = await import('../src/config');
+    expect(newGame(4).s.config.suddenDeathRound).toBe(SUDDEN_DEATH_ROUND);
+    for (const r of [SUDDEN_DEATH_EARLIEST, ROUND_TRACK]) {
+      expect(new Game({ ...setup(4), config: { suddenDeathRound: r } }, CONTENT).s.config.suddenDeathRound).toBe(r);
+    }
+    for (const r of [SUDDEN_DEATH_EARLIEST - 1, ROUND_TRACK + 1, 14.5]) {
+      expect(() => new Game({ ...setup(4), config: { suddenDeathRound: r } }, CONTENT)).toThrow();
+    }
+  });
+});

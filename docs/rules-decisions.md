@@ -604,6 +604,10 @@ These came up in code and weren't covered above; all confirmed as they stand.
   Grudge Token exists at 8 players, so it is a token of its own. The first player moves the round token at the start
   of each round and calls Sudden Death when that round ends with no winner. The score pad is dropped: the score grid
   is printed on the back of the reference cards.
+- **Sudden Death round: a table option, 16 by default [93]** (owner, Oct 20). Before setup the table may agree on any
+  round from 12 to 18 (`SUDDEN_DEATH_EARLIEST` to `ROUND_TRACK` in `src/config.ts`) and put the Sudden Death token
+  there; every rule that says round 16 then means that round. The engine takes it as `config.suddenDeathRound` and
+  refuses a round off the printed track. The playtests still decide the default.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

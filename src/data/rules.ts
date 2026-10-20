@@ -7,7 +7,7 @@
 // (everything else: Reactions, lasting cards, the two discard piles, Specters and Sudden Death in detail, rulings,
 // two-player modes) and the REFERENCE CARD (printed on the player reference cards: the turn, the ◎ Target cards and
 // the lasting-card durations).
-import { GRITO_MARKERS, HAND_SIZE, OPENING, ROUND_TRACK, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
+import { GRITO_MARKERS, HAND_SIZE, OPENING, ROUND_TRACK, SPECTER_CHOICES, SUDDEN_DEATH_EARLIEST, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
 import { CARDS } from './cards';
 import { HOUSES } from './houses';
 
@@ -77,7 +77,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         'Put your pawn on your house\'s own tile. House Yaguana draws its Legacy card (see House Powers).',
         `Shuffle the deck and deal everyone **${HAND_SIZE} Hand Cards**. Any Instant drawn in this deal is shuffled back and replaced.`,
         '**First player:** if a player named Elodie (or Lolo or Lodie) is playing, she always goes first. Otherwise everyone rolls the die and the highest roll goes first (re-roll ties). Play then goes **clockwise** around the table, in seating order, for the whole game.',
-        `**The round track:** put the round token on square 1 and the **Sudden Death token on square ${SUDDEN_DEATH_ROUND}**. The first player keeps the round for the whole game: they move the round token at the start of each round and, if no one has won when round ${SUDDEN_DEATH_ROUND} ends, they call Sudden Death.`,
+        `**The round track:** round token on square 1, **Sudden Death token on square ${SUDDEN_DEATH_ROUND}** (for a shorter or longer game, the table may agree on any square from ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}). The first player keeps the round all game: they move the round token each round and call Sudden Death when the marked round ends with no winner.`,
       ],
     }],
   },
@@ -95,7 +95,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
       },
       '**Free extras:** your house abilities don\'t use your action (each can be used once per turn unless it says otherwise), and you may **claim the Throne** at any point in your turn while standing on it and eligible.',
       `**Opening truce:** no attacks of any kind during ${truceText}.`,
-      `A **round** is every player taking one turn. **The first player keeps the round:** they move the round token at the start of each round, and call Sudden Death when round ${SUDDEN_DEATH_ROUND} ends with no winner.`,
+      'A **round** is every player taking one turn. **The first player keeps the round** (see Setup).',
     ],
   },
   {
@@ -193,7 +193,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         ],
       },
       'Reaching the threshold never forces a claim; it simply unlocks the option.',
-      `**Sudden Death:** if no one has won by the end of **round ${SUDDEN_DEATH_ROUND}** (the round token has reached the Sudden Death token), the first player calls it: the highest combined total of Influence + Fear + Wealth wins (ties: see Sudden Death in Detail).`,
+      `**Sudden Death:** if no one has won by the end of **round ${SUDDEN_DEATH_ROUND}** (or the agreed round: the round token has reached the Sudden Death token), the first player calls it: the highest combined total of Influence + Fear + Wealth wins (ties: see Sudden Death in Detail).`,
     ],
   },
 ];
@@ -372,7 +372,7 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
   {
     id: 'sudden-death', title: 'Sudden Death in Detail',
     blocks: [
-      `If no one has won by the end of **round ${SUDDEN_DEATH_ROUND}**, the game ends:`,
+      `If no one has won by the end of **round ${SUDDEN_DEATH_ROUND}** (or the round the table agreed, ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}), the game ends:`,
       {
         steps: [
           'The highest combined total of Influence + Fear + Wealth wins.',

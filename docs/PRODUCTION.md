@@ -86,6 +86,8 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
 - [ ] **Nov 5** (after order B), owner to decide: hide the Hand Card discard pile online (it is face down at the
   table; recommended, for consistency).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
+- [ ] Proposed build (owner to approve): a Sudden Death round setting (12 to 18, default 16) on the new-game and
+  host screens (rules-decisions 93; the engine already takes it).
 - [ ] Owner to decide: show the 8 seat buildings in the app (`SEAT_ART` in `src/assets.config.ts`; a separate build).
 - Balance record (bot games): every house within about 0.81 to 1.22 of its fair share at every count; details in
   `docs/rules-decisions.md` [87] to [90].

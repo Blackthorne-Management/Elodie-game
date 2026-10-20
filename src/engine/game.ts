@@ -13,7 +13,7 @@ import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, OPENING, TRADE, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, OPENING, TRADE, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, ROUND_TRACK, SUDDEN_DEATH_EARLIEST, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
 } from '../config';
 
 export class GameOver extends Error {}
@@ -53,6 +53,10 @@ export class Game {
       challengeFirstStriker: CHALLENGE_FIRST_STRIKER,
       ...setup.config,
     };
+    // The agreed Sudden Death round must be on the printed track (rules-decisions 93).
+    if (!Number.isInteger(config.suddenDeathRound) || config.suddenDeathRound < SUDDEN_DEATH_EARLIEST || config.suddenDeathRound > ROUND_TRACK) {
+      throw new Error(`Sudden Death must come at a round from ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}`);
+    }
     this.s = {
       setup, config, players: [], order: [], round: 0, turnNo: 0, turn: null,
       drawPile: [], handDiscard: [], instantDiscard: [], removed: [], inPlay: [], dying: [], effects: [], log: [], seq: 0,
