@@ -24,7 +24,11 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
   the notch doesn't cut "ACTION CARDS".
 - [ ] Upscaled logo (owner, Upscayl 4×, to `art/ui/`): the boxes print slightly soft until then; re-run
   `npm run print:box` and `npm run print:card-boxes` when it lands. The game box can wait for it; the rest needn't.
+- [ ] With order A, ask BoardGamesMaker two numbers (observer, Oct 20): the Easy Flip box's **inner** height, and
+  the thickness of their 63 × 88 card stock in matte lamination (63 cards must fit in 24 mm).
 - [ ] Place order A.
+- **Order A locks the board today:** the round track (Sudden Death at round 16, `SUDDEN_DEATH_ROUND`), the tile
+  positions and the Throne squares are frozen Oct 20, not Oct 31.
 
 **Rules freeze (Fri Oct 31)**
 - [x] Third design review done (rules-decisions 88 to 90): Rakt Ki Pyaas is a 1-space move; Kay Soley's claim
@@ -32,25 +36,53 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
   Ayatsuri reaches every card, never a house ability (`tests/ayatsuri.test.ts`); Dorini tested and kept as is.
 - [x] One source of truth (Oct 19): `src/data` + `src/config.ts` + the engine; `src/data/rules.ts` is the rulebook;
   the three draft documents are retired.
-- [ ] **Three human playtests, at 4 and 6 players.** Watch: Agnivansh at 4 (bots 0.89 to 0.95 after Rakt Ki Pyaas),
-  Suzumori at 6 (0.85 to 0.91), Dorini at 2 to 3 (up to 1.18), Yaguana at 4 (1.14 to 1.22), Brasador at 6. And the
-  old rulebook's two tuning questions: time a claim with 2+ challengers at 6 players (does it drag?), and note the
-  round each game ends (Sudden Death is round 16; bots end 6 to 11% of games there, most claims land in round 8 to 10).
-- [ ] Component sizes: Legacy cards (proposed tarot size, in the tarot box), tokens (about 25 mm), player boards
-  (size and thickness; they lie on the card boxes under the board, about 33 mm free in all).
-- [ ] Token containers: choose from BoardGamesMaker's item containers (180 resource tokens; 99 Heart, Grudge and
-  reminder tokens; 8 standees with stands; 2 dice and the round marker), all 24 mm tall or less.
+- [ ] **Three human playtests, at 4 and 6 players; the first by Sat Oct 24** (so a rules question it finds can still
+  be reworded by Oct 31). Three games can't judge a house's win share (don't tune a house on them). Log per game:
+  - the round of the claim, and whether Sudden Death fired (bots: claims in rounds 8 to 10);
+  - minutes from "I claim" to the end with 2+ challengers at 6 players, and whether the room stayed engaged;
+  - Agnivansh at 4: "did the 1-space move after a kill ever change what you did?" (no in both: note for a reprint);
+  - Suzumori at 6: how often Kagemimi was used, and whether a peek changed an attack or a Block;
+  - Dorini, Yaguana, Brasador: resource totals at the end, and whether Guaíza was used (reprint data);
+  - **every rules question asked at the table, verbatim** (feeds the appendix before the freeze).
+- [ ] Component sizes (proposed, owner to confirm): the 24 mm card boxes leave about 9 mm under the board for the
+  player boards, rulebook and score pad, so **player boards in thin card** (300 to 350 gsm, 1 mm at most, about
+  150 × 100 mm; 2 mm chipboard won't fit), and **drop the score pad** (print the score grid on the back of the
+  reference card) or make it 25 sheets. Legacy cards tarot size in the tarot box (48 cards, plenty of room); tokens
+  about 25 mm; **dice: stock**.
+- [ ] Token containers (proposed): **zip bags, ordered with B**. No tray holding 60 tokens flat fits in 24 mm, so
+  bags are the only fit: three for the resource tokens, one each for Heart/Grudge/reminder tokens, the standees, and
+  the dice and round marker.
+- [ ] **Art, cut by what the table sees most** (observer, Oct 20; 20 of 126 cards, none since Oct 13; 0 of 32
+  portraits): 1. the card back; 2. the 8 Gen I portraits (they are the standees too; Gen II to IV print with crest
+  plates); 3. the 10 Elodie Instants and the 8 Block cards; 4. everything else prints in the no-picture design.
+  **Fri Oct 24:** card back and 8 Gen I portraits in `art/`, then `npm run print` the same day.
 - [ ] Card art: 20 of 126 in `art/cards/` (anything missing on Oct 31 prints in the no-picture design).
 - [ ] Card back.
 - [ ] 32 character portraits (none yet in `art/characters/`; prompts in `docs/art/CHARACTER-PROMPTS.md`).
-- [ ] Print files still to build: player boards, standees, tokens (Heart, Grudge, resource, reminder), Legacy cards,
-  score pad, rulebook PDF, reference cards.
+- [ ] **Check this week, before building more:** `scripts/print-cards.cjs` makes MakePlayingCards sizes (game cards
+  1000 × 1360, characters 1050 × 1752). The order goes to BoardGamesMaker: compare with their 63 × 88 and tarot
+  templates (pixel size and bleed) and switch the card output if they differ.
+- [ ] Print files still to build (seven layouts, no script yet): player boards, standees, tokens (Heart, Grudge,
+  resource, reminder), Legacy cards, score pad, rulebook PDF, reference cards. None waits on the freeze except the
+  rulebook and reference card text. **Oct 22:** the BoardGamesMaker templates for tokens, player boards, standees,
+  tarot (Legacy), booklet and reference card, committed to `docs/art/templates/`. **Oct 24:** tokens, Legacy cards,
+  standees. **Oct 27:** player boards, reference card draft. **Oct 31:** rulebook PDF and reference card final.
+  **Nov 1 to 3:** proof only.
+- [ ] **Proofread by someone other than the author:** every card front from the `print/preview-*.jpg` sheets, the 32
+  character cards and the rulebook, between Oct 31 and Nov 2.
+- [ ] **Print-at-home test:** one card front, one reference card and one rulebook spread on paper at true size, to
+  check the text sizes are readable at 63 × 88 mm.
+- [ ] **Language check before Oct 31** for the printed words (Limyè Elodie, Sèman Lapè, Rit Solèy, Kay Soley, and the
+  Taíno names on the board and boxes); the Nov 18 check stays for the quest.
+- [ ] **Slack:** order B on Nov 3 lands about Nov 8 to 20 against Nov 22. Decide now what ships without it if a part
+  slips (standees and Legacy cards are the easiest to replace: crest tokens and a printed sheet).
 - [ ] Optional box extras (owner to say): a "What's in the box" list on the game box underside, the card category key
   inside the Action lid's side panels, the Legacy rule on the tarot box's inner liners.
 - [ ] **Mon Nov 3:** approve proofs, order B (expedited).
 
 **Digital game**
-- [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
+- [ ] **Nov 5** (after order B), owner to decide: hide the Hand Card discard pile online (it is face down at the
+  table; recommended, for consistency).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
 - [ ] Owner to decide: show the 8 seat buildings in the app (`SEAT_ART` in `src/assets.config.ts`; a separate build).
 - Balance record (bot games): every house within about 0.81 to 1.22 of its fair share at every count; details in
@@ -137,8 +169,8 @@ saved projects in one cart.
 
 | Order | What | Order by | Shipping |
 |---|---|---|---|
-| **A** | Board (2) | **Mon Oct 20** | Standard |
-| **B** | Box (1), cards (3, 4, 10b, 13), player boards (5), standees (6), tokens (7, 8, 9, 10), round marker (9b), score pad (10c), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
+| **A** | Board (2), game box (1), Action card box, tarot box | **Mon Oct 20** | Standard |
+| **B** | Cards (3, 4, 10b, 13), player boards (5), standees (6), tokens (7, 8, 9, 10) and their zip bags, round marker (9b), score pad (10c), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
 
 ## Schedule
 
