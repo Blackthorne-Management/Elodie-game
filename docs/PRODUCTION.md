@@ -87,8 +87,8 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
   table; recommended, for consistency).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
 - [x] Sudden Death round setting (12 to 18, default 16) on the new-game and host screens, shown in the lobby
-  (rules-decisions 93). Online needs the Edge Function redeployed (`supabase/functions/bloodlines/index.ts` now passes
-  `suddenDeath`); until then online games play to 16.
+  (rules-decisions 93). Edge Function `bloodlines` redeployed Oct 20 (version 4) to pass `suddenDeath`; owner to
+  confirm with one hosted game at round 12 once Netlify has published the new `server/core.js`.
 - [ ] Owner to decide: show the 8 seat buildings in the app (`SEAT_ART` in `src/assets.config.ts`; a separate build).
 - Balance record (bot games): every house within about 0.81 to 1.22 of its fair share at every count; details in
   `docs/rules-decisions.md` [87] to [90].
