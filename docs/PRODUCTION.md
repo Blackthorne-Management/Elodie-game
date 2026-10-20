@@ -10,36 +10,51 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Wed Oct 15**.
+and ticks items off here as they land. Last updated **Tue Oct 20**.
 
-**Physical game (BoardGamesMaker)**
-- [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
-  (`art/seats/`, each its house's quest capital building, approved Oct 15) are in. Proof `print/board-24in.png`
-  (`npm run print:board`): bolder grid, each homeland name touching its capital; **approved Oct 20** (Aldermoor's
-  name stays centred over its capital though its last letter reaches into Xaraguá). Ready to order.
-- [ ] **Before the board order (Mon Oct 20):** the labelled board guide (`docs/art/board-guide-labelled.png`) still
-  names the north-west country Moa'olani, House Vai'tama; it is Xaraguá, House Yaguana now. Checked Oct 15: no text
-  or data file for print carries the old name (the old mockup is fixed); the labels painted into
-  `print/board-24in.png` must still be checked by eye on the proof.
-- [x] 8 crests.
+**Order A (Mon Oct 20), BoardGamesMaker, matte laminated (smooth) on everything (owner, Oct 20)**
+- [x] Board approved: `print/board-24in.jpg` (`npm run print:board`), the 4096 map, the 8 seats, bolder grid, each
+  homeland name touching its capital (Aldermoor's last letter reaching into Xaraguá is accepted).
+- [x] Game box approved: `print/box-12.5x12.5x2.pdf` (`npm run print:box`), 12.5" × 12.5" × 2".
+- [x] Action card box approved: `print/card-box-action.pdf` (`npm run print:card-boxes`), Easy Flip 140 × 96 × 24 mm,
+  custom (finger open & snap close), all 126 Action cards in two stacks; the Reference Card inside the lid.
+- [x] Tarot box approved: `print/card-box-tarot.pdf`, Double Flip magnetic 130 × 80 × 40 mm, beside the game box;
+  the houses inside the flaps.
+- [ ] Before uploading the Action box: if the finger-open option's template differs from the plain one, send it so
+  the notch doesn't cut "ACTION CARDS".
+- [ ] Upscaled logo (owner, Upscayl 4×, to `art/ui/`): the boxes print slightly soft until then; re-run
+  `npm run print:box` and `npm run print:card-boxes` when it lands. The game box can wait for it; the rest needn't.
+- [ ] Place order A.
+
+**Rules freeze (Fri Oct 31)**
+- [x] Third design review done (rules-decisions 88 to 90): Rakt Ki Pyaas is a 1-space move; Kay Soley's claim
+  numbers, a Forced March example, Grito markers and Guaíza's limits are on the reference card and in the appendix;
+  Ayatsuri reaches every card, never a house ability (`tests/ayatsuri.test.ts`); Dorini tested and kept as is.
+- [x] One source of truth (Oct 19): `src/data` + `src/config.ts` + the engine; `src/data/rules.ts` is the rulebook;
+  the three draft documents are retired.
+- [ ] **Three human playtests, at 4 and 6 players.** Watch: Agnivansh at 4 (bots 0.89 to 0.95 after Rakt Ki Pyaas),
+  Suzumori at 6 (0.85 to 0.91), Dorini at 2 to 3 (up to 1.18), Yaguana at 4 (1.14 to 1.22), Brasador at 6. And the
+  old rulebook's two tuning questions: time a claim with 2+ challengers at 6 players (does it drag?), and note the
+  round each game ends (Sudden Death is round 16; bots end 6 to 11% of games there, most claims land in round 8 to 10).
+- [ ] Component sizes: Legacy cards (proposed tarot size, in the tarot box), tokens (about 25 mm), player boards
+  (size and thickness; they lie on the card boxes under the board, about 33 mm free in all).
+- [ ] Token containers: choose from BoardGamesMaker's item containers (180 resource tokens; 99 Heart, Grudge and
+  reminder tokens; 8 standees with stands; 2 dice and the round marker), all 24 mm tall or less.
 - [ ] Card art: 20 of 126 in `art/cards/` (anything missing on Oct 31 prints in the no-picture design).
 - [ ] Card back.
 - [ ] 32 character portraits (none yet in `art/characters/`; prompts in `docs/art/CHARACTER-PROMPTS.md`).
-- [ ] Print files still to build: box, player boards, standees, tokens (Heart, Grudge, resource, reminder),
-  Legacy cards, score pad, rulebook PDF, reference cards.
-- [ ] **Fri Oct 31:** rules and card text freeze. **Mon Nov 3:** approve proofs, order B (expedited).
+- [ ] Print files still to build: player boards, standees, tokens (Heart, Grudge, resource, reminder), Legacy cards,
+  score pad, rulebook PDF, reference cards.
+- [ ] Optional box extras (owner to say): a "What's in the box" list on the game box underside, the card category key
+  inside the Action lid's side panels, the Legacy rule on the tarot box's inner liners.
+- [ ] **Mon Nov 3:** approve proofs, order B (expedited).
 
 **Digital game**
-- [ ] Balance watch (not retuned): Dorini at 3 players about 1.20x; Ironvow and Agnivansh at 6 about 1.13x;
-  Suzumori at 6 about 0.86x; Kay Soley at 2 to 4 slightly low. Decide before the Oct 31 freeze.
-  - **Dorini: kept as is (owner, Oct 20).** Tested limiting Baraka Dorini's bonus to its own turn (24,000 bot
-    games, two seed sets): 3 players 1.18/1.15 to 1.09/1.08, but 6 players 0.90/0.84 and 8 players 0.82/0.73, and
-    Ironvow at 6 rose to 1.16/1.23. Not applied. Watch Dorini at 2 to 3 players in the human playtests.
-  - Also seen in those runs: Yaguana at 4 players about 1.14 to 1.21 on both seed sets (bots never use Guaíza).
-  - **Agnivansh: Rakt Ki Pyaas is now a 1-space move (rules-decisions 88, Oct 20):** 6 players 1.11/1.16 to
-    0.98/1.06, 8 players 1.11/1.22 to 1.10/0.97; every house still within 0.83 to 1.22.
 - [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
+- [ ] Owner to decide: show the 8 seat buildings in the app (`SEAT_ART` in `src/assets.config.ts`; a separate build).
+- Balance record (bot games): every house within about 0.81 to 1.22 of its fair share at every count; details in
+  `docs/rules-decisions.md` [87] to [90].
 
 **Quest art waiting on the owner (art drop 1, Fri Oct 24):** every prompt is in `docs/quest/ART-PROMPTS.md`: Elodie
 the goddess, Elodie Limyè, Patricio young and old, Anicette young and old, the Sun Locket and Solange's Quill, and
