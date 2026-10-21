@@ -177,6 +177,17 @@ of any crown will part us." Three names, no seventh clause (`story.oath_found`).
 *Proof for the elders* (`story.proof_shown`), is the next build. **Proposals for the owner:** the oath's wording,
 the drum song itself (three bars of long and short marks), Caona's Echo stats and moves, and young Benny's look.
 
+**Built Oct 21 (the side quests and the dusk gate; owner decision Oct 19):** after Thorne's warning the lamp-oil
+seller will not lend a cave lamp under the Governor's spyglass ("Then let him watch us do ordinary things all day");
+she lends it at dusk, when the night canoe brings her oil. Until dusk the Journal (*Until dusk*) follows the five
+quests on the Quests page: **Cut Nets**, **The Hutia's Hoard** (growth puzzle M-XAR-1), **Oil From a Stranger** (the
+ash thumbprint at the hill camp, Rael clue 6), **Medicine for the Cacique** (growth puzzle M-XAR-2 at the scouts'
+camp; Anaco sits up and speaks) and the debate **Owned or Remembered**. The free city then takes on the evening, and
+the cave, the areíto, the lock, the proof and the attack play without a break. Every quest closes at the attack.
+Details and Claude's calls: `SIDE-QUESTS.md`, Yucayeque. Measured on the scripted route (Oct 21, side-quest rewards
+counted): the chapter is 1,640 steps and 49 map changes (was 1,023 and 37); the party is level 8 at the Crown attack
+(was 7), level 9 at Thorne (even; was 8) and level 10 at the end (was 9). An arrow-follower climbs the mountain once.
+
 **Built Oct 17 (the Crown attack, the midpoint; owner decision Oct 17: Anaco is taken prisoner):** Gianna and Yari
 bring the oath stone's words to the elders in the caney (`story.proof_shown`); as the vote turns, the harbor guns
 fire (Thorne's watcher saw where they went). Marines storm the caney: a fight (`caney_breach`: marine, musketeer,
@@ -215,7 +226,7 @@ musketeer (`thorne_blockade`, level 9; sword cane, a pistol shot he takes his ti
 aloud to the whole party). He goes over the side; his marines fish him out ("The Charter stands!"). The canoe slips
 the blockade to a Zetwal trader, and the voyage plays home (`xaragua_zetwal`, by night). On Pòdlimyè's long pier,
 Grandmother and Grandfather wait with the pigeons' news; the city is uneasy (Crown sails off the south reef);
-Patricio meets Caona's granddaughter and asks Gianna to go to Ardencia and ask Lord Rael, Benny's grandson, to stand
+Patricio meets Caona's granddaughter and asks Gianna to go to Ardencia and ask Lord Rael, Benny's son, to stand
 with Xaraguá ("Then ask him why his grandfather said yes"). `act2.complete`; the card: *Chapter 2 complete, The
 Charter. Next: Chapter 3, The Trial of Blades*. The Cane Road's ambushes switch on (`story.zetwal_return`).
 `?chapter=3` starts here.
@@ -567,12 +578,36 @@ real people (guide 7.3).
 
 ## Owner direction (Oct 21): the families are bigger
 
-- **Rael has six siblings** and **Elodie has two**; the owner wants all eight in the game.
-- This touches the Ardencia archive's clue "The Rodriguez Line: Alonso, Benny, Rael, Azriel; *and no others
-  recorded*" (CAPITALS.md): with six siblings, that record either changes or becomes a clue in itself (who struck
-  them from it, and why).
-- Elodie's siblings are Anicette and old Patricio's other children: Gianna's aunts or uncles in Zetwal. Chapter 1 is
-  finished and identical in the demo, so they are best met from the return home (end of Chapter 2) and the Muster
-  (Chapter 10), with at most a mention earlier.
-- Who they are, their names, and where each appears are settled in each chapter's outline (see the owner's answer to
-  the Oct 21 question, recorded below when given).
+Rael is **Benny's son** (QUEST-BUILD-GUIDE.md, settled; an older line here said "grandson" and is corrected).
+
+**Rael's mother is Rahel.** Rael has six siblings, all in the game, each met along the way and helping in a quest or
+side quest. Azzy calls each of them *Titi* (aunt) or *Tío* (uncle).
+
+| Sibling | Parents | Azzy calls them |
+|---|---|---|
+| Amanda | Benny and Rahel (Rael's full sister) | Titi Amanda |
+| Kayla | Rahel and a man from the Asian continent | Titi Kayla |
+| Aiyana | Rahel and the same man (Kayla's full sister) | Titi Aiyana |
+| Jordyn | Rahel and a Black military man | Titi Jordyn |
+| Zelia | Benny and the current mother of Ardencia | Titi Zelia |
+| Joaquin | Benny and the current mother of Ardencia | Tío Joaquin |
+
+- **Benny has four children:** Rael, Amanda, Zelia and Joaquin.
+- **The Ardencia record** ("Alonso, Benny, Rael, Azriel, and no others recorded"): Benny's other children were
+  struck from it for their protection.
+- **Old Benny and his wife Nancy,** and **Rahel,** are met at other points. Claude's call, to confirm: Nancy is the
+  "current mother of Ardencia", Zelia's and Joaquin's mother.
+
+**Elodie's siblings:**
+- **Coralie, "Tati Coco"** to Gigi and Anissa. She lives in a foreign land, an artist and clothing designer for
+  royals. Bumped into along the way, she helps them through a quest.
+- **Sebastian**, a world-renowned organist who plays across the realm for fame. Bumped into along the way, he helps.
+
+**Rael's royal guard (Chapter 3):**
+- **Azriel Rivera** heads it. He fought beside Rael in the Ash Wars; Azzy (Azriel Rodriguez) is named after him.
+- **Jaime** is a strong mage and Rael's advisor.
+
+Both are very strong opponents and fight beside Rael in the Trial.
+
+Each person's role and the place they are met are settled one by one with the owner (the owner's suggestions list:
+`docs/quest/design/FAMILY.md`).
