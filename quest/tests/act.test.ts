@@ -10,7 +10,7 @@ import { RPG } from '../src/data/rpg.ts';
 import { currentObjective } from '../src/engine/quests.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from '../tools/sim-setup.ts';
-import { FlagStore as FlagStoreView } from '../src/engine/flags.ts';
+import { FlagStore as FlagStoreView, type FlagSnapshot } from '../src/engine/flags.ts';
 
 const route = parseRoute(readJson<string[]>('routes/zetwal-act1.json'));
 
@@ -115,7 +115,7 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   it('Chapter 3: the two required side quests and the debate are done before noon, and pay', () => {
     for (const id of ['treasurer', 'thief', 'bread']) {
       const q = SIDE_QUESTS.find((x) => x.id === id)!;
-      expect(sideQuestStatus(new FlagStoreView(atNoon), q), id).toBe('done');
+      expect(sideQuestStatus(new FlagStoreView(atNoon as FlagSnapshot), q), id).toBe('done');
     }
     expect(atNoon['debate.ardencia_bread.mediated']).toBe(true);
     expect(atNoon['clue.treasurer_alive']).toBe(true);
