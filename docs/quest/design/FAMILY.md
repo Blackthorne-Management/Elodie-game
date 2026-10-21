@@ -23,6 +23,7 @@ Every role below is shown on the map (owner rule): they walk in, help and walk o
 | **Aiyana** (Kayla's full sister) | Bright, restless, hands-on | Ch. 8, Agnipur (Jwaladesh) | An engineer of the city's great flame. She opens the way through the Dying Flame puzzle | **settled (owner, Oct 21)** |
 | **Jordyn** (Rahel and a Black military man) | Disciplined, blunt, fair | Ch. 9, Kingsmere (Aldermoor), then Ch. 11 | An officer inside the Regent's guard who defects. She opens the keep's postern, then leads a company in the War of the Harbor | **settled (owner, Oct 21)** |
 | **Rahel** (Rael's mother) | Formidable, warm with grandchildren | Ch. 10, the Muster in Pòdlimyè | She arrives with Jordyn's company and has a scene with Gianna and Anissa. She also has a line for Azzy | **settled (owner, Oct 21)** |
+| **Patricia** (Rahel's mother; Rael's grandmother, great-grandmother to Gianna, Anissa and Azzy) | Owner direction, Oct 21; personality to settle | to settle | to settle | **owner direction** |
 | **Old Benny and Nancy** (the mother of Ardencia) | Benny old and wry, Nancy gracious | Ch. 3 (the keep), Ch. 11 | Benny meets the Locket again, which echoes his young self. In Ch. 11 he and Nancy shelter the wounded | **settled (owner, Oct 21; Nancy is Zelia's and Joaquin's mother)** |
 
 ## Elodie's family (Zetwal)
