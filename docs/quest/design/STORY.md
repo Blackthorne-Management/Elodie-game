@@ -587,7 +587,8 @@ real people (guide 7.3).
 
 Rael is **Benny's son** (QUEST-BUILD-GUIDE.md, settled; an older line here said "grandson" and is corrected).
 
-**Rael's mother is Rahel.** Rael has six siblings, all in the game, each met along the way and helping in a quest or
+**Rael's mother is Rahel**, and Rahel's mother is **Patricia** (owner, Oct 21), great-grandmother to Gianna, Anissa
+and Azzy, also in the game. Rael has six siblings, all in the game, each met along the way and helping in a quest or
 side quest. Azzy calls each of them *Titi* (aunt) or *Tío* (uncle).
 
 | Sibling | Parents | Azzy calls them |
