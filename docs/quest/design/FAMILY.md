@@ -16,7 +16,7 @@ Every role below is shown on the map (owner rule): they walk in, help and walk o
 
 | Who | Suggested personality | Where met | How they help | Status |
 |---|---|---|---|---|
-| **Amanda** (Benny and Rahel) | Warm, sharp-tongued, runs things | Ch. 3, Cenizal's Lower Town | She runs the bread-at-night kitchen that feeds the poor (side quest Ar-1), secretly part of Rael's shadow network. She knows Benny's tunnel, so the escape works because she unbars its far end | suggestion |
+| **Amanda** (Benny and Rahel) | **Bubbly, very excitable, fun-loving, independent, very outspoken, vibrant, and a little crazy** (owner, Oct 21) | Ch. 3, Cenizal's Lower Town | She runs the bread-at-night kitchen that feeds the poor (side quest Ar-1), secretly part of Rael's shadow network. She knows Benny's tunnel, so the escape works because she unbars its far end | **settled (owner, Oct 21)** |
 | **Zelia** (Benny and the mother of Ardencia) | Proper, protective, a keeper of the house | Ch. 3, the Alcázar | Steward of the keep who hides old Benny. She lets Gianna meet him, which sets up young Benny's Echo callback | suggestion |
 | **Joaquin** (Benny and the mother of Ardencia) | Young, loyal, torn | Ch. 3, the wall, then Ch. 10 | The garrison captain whose men's shots land wide during the escape, on his order. He brings Free Brasador to the Muster | suggestion |
 | **Kayla** (Rahel and a man of the Asian continent) | Quiet, exact, a listener | Ch. 7, Kirinoura (Kuroshi) | A cipher clerk in the fog city's archive. She helps decode the screens and the spy map (the Fog Files) | suggestion |
