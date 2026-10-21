@@ -173,6 +173,14 @@ roads 15 to 21, Ch. 9 at 24, Ch. 10 at 25, Ch. 11 at 28, Ch. 12 at 30. Roughly: 
 level plus story, books and quests. The simulation checks that a player who skips all side quests is no more than 2
 levels under the target.
 
+**The level-curve check (built Oct 21):** `npm run level-curve` (`tools/level-curve.ts`, asserted in
+`tests/levelCurve.test.ts`) replays the scripted route, pays what the field pays (fights, side quests, debates) and
+prints each chapter's end level with and without side quests against `src/data/chapterLevels.ts` (STORY.md's table,
+Ardencia 3, Al-Doria 4, the roads in fixed order). Tolerances are `LEVEL_CURVE` in config. First run: Chapter 1 ends
+at level 6 (4 without side quests) against 3, because every Journal step pays a flat 25 (`XP_PER_OBJECTIVE`)
+instead of this section's 10 in Chapter 1; Chapter 2 ends at 9 (8 without side quests) against 8. Random ambushes are
+not counted.
+
 **The three roads (any order):** the first of Skarragol, Kuroshi and Jwaladesh entered is set to levels 15 to 17, the
 second 17 to 19, the third 19 to 21 (`ROAD_TIERS`). Fixed on first entry.
 

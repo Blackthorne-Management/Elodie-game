@@ -67,6 +67,12 @@ export const LEVELS = {
 /** Shared XP: each main-quest step done, and each lore book read. */
 export const XP_PER_OBJECTIVE = 25;
 export const XP_PER_BOOK = 10;
+/**
+ * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
+ * at most this many levels under its target; LEVEL_CURVE_SLACK is how far under (or over) the target the main
+ * route may land and still count as on target.
+ */
+export const LEVEL_CURVE = { skipSideQuestsMaxUnder: 2, slackUnder: 1, slackOver: 1 } as const;
 
 /** The minimap (src/ui/SideMap.ts): how many tiles it shows across and down (CSS sizes it per layout). */
 export const SIDE_MAP = { tilesW: 32, tilesH: 24 } as const;
