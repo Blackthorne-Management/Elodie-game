@@ -67,4 +67,26 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 4 (outline beat 0, with its review 3.12): the trader sails at first light from the Free Brasador camp,
+  // out from Ardencia's north coast, east along the open sea, south past the reefs of Zetwal and down the open sea
+  // to Al-Doria's east coast, abreast of Bab al-Dhahab.
+  ardencia_aldoria: {
+    id: 'ardencia_aldoria',
+    harbor: 'The strand of Ardencia, at first light',
+    paddle: 'A Free Brasador fishing boat rows the party out to the Zetwal trader.',
+    aboard: 'All aboard. The sails fill. Ahead: Al-Doria.',
+    shore: 'ardencia',
+    start: { x: 62, y: 14 },
+    via: [
+      { x: 121, y: 9 },
+      { x: 124, y: 50 },
+    ],
+    end: { x: 117, y: 66 },
+    captions: [
+      { at: 0, text: 'Away from the black cliffs of Ardencia...' },
+      { at: 0.45, text: 'South, past the reefs of Zetwal...' },
+      { at: 0.8, text: '...to the Gate of Gold.' },
+    ],
+    music: 'farewell',
+  },
 };

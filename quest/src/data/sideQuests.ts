@@ -227,4 +227,76 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     done: f('side.bread.done'),
     reward: { gold: 150, xp: 80, pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
   },
+  // ---- Chapter 4, Bab al-Dhahab (outline section 7, with its review): the two required side quests and the debate --
+  // Appraise This (A-1; puzzle M-ALD-1): Samira's bet, three stalls, three fakes. Coralie counts the carpet's knots.
+  {
+    id: 'appraise',
+    title: 'Appraise This',
+    giver: 'Samira',
+    place: "The moneychangers' row",
+    level: 12,
+    summary:
+      'Samira bets you cannot spot a fake. Three stalls on the row each sell one fake among real goods: coins, carpets, weights. Find all three.',
+    accepted: f('side.appraise.accepted'),
+    available: f('story.vault_refused'),
+    start: [{ map: 'aldoria-bazaar', at: { x: 11, y: 23 } }],
+    nudge: 'Samira bet you can\'t spot a fake, Gigi. She was smiling when she said it. I think she wants you to win.',
+    parallel: true,
+    steps: [
+      { text: 'Find the fake coin at the coin stall.', done: f('side.appraise.coin'), goals: [{ map: 'aldoria-bazaar', at: { x: 15, y: 22 } }] },
+      { text: 'Find the fake carpet at the carpet stall.', done: f('side.appraise.carpet'), goals: [{ map: 'aldoria-bazaar', at: { x: 18, y: 22 } }] },
+      { text: 'Find the fake weight at the weights stall.', done: f('side.appraise.weights'), goals: [{ map: 'aldoria-bazaar', at: { x: 21, y: 22 } }] },
+      { text: 'Tell Samira all three.', done: f('side.appraise.done'), goals: [{ map: 'aldoria-bazaar', at: { x: 11, y: 23 } }] },
+    ],
+    done: f('side.appraise.done'),
+    reward: { gold: 100, xp: 110, pillar: { pillar: 'influence', city: 'al_doria', amount: 1 } },
+  },
+  // The souk square's debate, as a required quest (outline 7.3): Is a bad bargain still sacred?
+  {
+    id: 'bargain',
+    title: 'A Bad Bargain',
+    giver: 'Contract-priest',
+    place: 'The souk square',
+    level: 12,
+    summary:
+      'By the dry fountain, a Witness contract-priest and a Gaze merchant argue: is a bad bargain still sacred? Hear them out, then make your case.',
+    accepted: { any: [f('debate.aldoria_bargain.listened'), f('debate.aldoria_bargain.settled')] },
+    available: f('story.vault_refused'),
+    start: [{ map: 'aldoria-bazaar', at: { x: 19, y: 14 } }],
+    nudge: 'A priest and a merchant are arguing by the fountain about bad bargains. The ledger house would know.',
+    steps: [
+      { text: 'Listen to the debate by the dry fountain.', done: f('debate.aldoria_bargain.listened'), goals: [{ map: 'aldoria-bazaar', at: { x: 19, y: 14 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.aldoria_bargain.settled'), goals: [{ map: 'aldoria-bazaar', at: { x: 19, y: 14 } }] },
+    ],
+    done: f('debate.aldoria_bargain.settled'),
+    reward: { xp: 40 },
+  },
+  // Sweet Water (A-3; the rebel safehouse; puzzle M-ALD-2, the cistern pin): the third ash thumbprint.
+  {
+    id: 'sweet_water',
+    title: 'Sweet Water',
+    giver: 'The children at the fountain',
+    place: 'The souk square',
+    level: 12,
+    summary:
+      'The square\'s fountain stopped when the guild put in its pipes. Now water is a copper a cup, and the children on the rim have empty cups.',
+    accepted: f('side.sweet_water.accepted'),
+    available: f('story.vault_refused'),
+    start: [{ map: 'aldoria-bazaar', at: { x: 22, y: 15 } }],
+    nudge: 'The children on the fountain rim have cups and nothing in them, Gigi. Ask them.',
+    steps: [
+      { text: "Find the water-carrier: her door is east of the square, with a grey mark on it.", done: f('side.sweet_water.carrier'), goals: [{ map: 'aldoria-bazaar', at: { x: 36, y: 13 } }] },
+      {
+        text: 'The old cistern gate, out past the caravan gate. The air shimmers over it.',
+        done: f('anchor.cistern_pin'),
+        goals: [
+          { if: f('story.cistern_seen'), map: 'aldoria-desert', at: { x: 29, y: 7 } },
+          { map: 'aldoria-desert', at: { x: 30, y: 6 } },
+        ],
+      },
+      { text: 'Back to the fountain in the square.', done: f('side.sweet_water.done'), goals: [{ map: 'aldoria-bazaar', at: { x: 22, y: 15 } }] },
+    ],
+    done: f('side.sweet_water.done'),
+    reward: { gold: 120, xp: 130, pillar: { pillar: 'influence', city: 'al_doria', amount: 2 } },
+  },
 ];

@@ -420,7 +420,7 @@ describe('every story fight has a way back in', () => {
   it('each fight a conversation starts is meant to be lost, or has a foe on a map or a trigger that starts it again', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
-    expect([...started].sort()).toEqual(['caney_breach', 'intro_boar', 'pier_marines', 'rael_trial', 'thorne_blockade', 'tunnel_bats', 'village_patrol']);
+    expect([...started].sort()).toEqual(['caney_breach', 'intro_boar', 'pier_marines', 'qasim_vault', 'rael_trial', 'thorne_blockade', 'tunnel_bats', 'village_patrol']);
     for (const id of started) {
       const def = battleDef(id);
       expect(def, id).toBeDefined();

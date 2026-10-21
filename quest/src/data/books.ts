@@ -472,6 +472,99 @@ export const BOOKS: readonly Book[] = [
       'The winner may ask the loser one question, and the loser must answer it, truly, between the blades. ' +
       'No record says what Don Alonso asked. Every record says he never lost.',
   },
+  // ---- Al-Doria (Chapter 4): the House of Ledgers' six, and the Majlis's archive of contracts -----------------
+  {
+    id: 'aldoria_letter_numbers',
+    title: 'The Letter-Numbers',
+    category: 'trade',
+    text:
+      'Before the Dorini counted in figures, they counted in letters. Alif was one, ba two, jim three, and so on up the alphabet to a thousand. ' +
+      'A guild ledger written in letter-numbers looks like a poem to a stranger and like a price to a clerk. ' +
+      'The old counting house used them for every entry that mattered, because a thief who could read could still not count. ' +
+      'Kaf is twenty. Ha is five. A careful clerk writes the sum plain in the margin as well, for the day the ink runs. ' +
+      'The careless ones trust the ink. The guild has never lost a ledger to fire. It has lost several to damp.',
+  },
+  {
+    id: 'aldoria_dorini_promise',
+    title: 'The Dorini Promise',
+    category: 'history',
+    text:
+      'House Dorini was a family of moneychangers before it was a house. Its first promise was written on the door of the first counting house: ' +
+      'what is weighed here is weighed true. Every Merchant-Prince since has sworn it on taking the divan. ' +
+      'The Dorini witness, the saying goes, and the Dorini hold. A Dorini witness keeps a copy of what was signed. ' +
+      'It gives that copy to no one, not even the signers, so nobody can change it afterwards. ' +
+      'Fifty years ago the Dorini witnessed the Sun Accord. The ledger of that year is kept with the others, under the guild hall. ' +
+      'Merchants say the Promise is the reason Al-Doria has never needed walls as high as Cenizal\'s.',
+  },
+  {
+    id: 'aldoria_on_contracts',
+    title: 'On Contracts',
+    category: 'law',
+    text:
+      'A contract binds the ones who sign it, and those who consent through them. It binds no one else. ' +
+      'A merchant may sell his own camel; he may not sell his neighbour\'s, however good the price, however fine the seal. ' +
+      'The guild\'s courts have held to this for two hundred years. A bargain over a third party\'s goods binds the third party to nothing, ' +
+      'and the seller owes the buyer back his money. ' +
+      'The Witness priests teach the same: a promise is watched by the one who made it. ' +
+      'Every apprentice copies this book in his first month. Most forget it by his first profit.',
+  },
+  {
+    id: 'aldoria_witness_market',
+    title: 'The Witness in the Market',
+    category: 'religion',
+    text:
+      'The Witness faith came to the bazaar with the first caravans. Its priests sit beside the contract tables and watch. ' +
+      'They do not judge whether a bargain is fair. They judge only whether it was kept. A promise written is a promise watched, they say. ' +
+      'The Gaze keepers, who came later, answer that remembering who was cheated is part of watching. ' +
+      'The two faiths have argued by the dry fountain for as long as there has been a fountain. ' +
+      'Most merchants keep both: the Witness for their contracts, the Gaze for their consciences. On market day, they keep their distance.',
+  },
+  {
+    id: 'aldoria_city_water',
+    title: 'The Water of Bab al-Dhahab',
+    category: 'history',
+    text:
+      'The city drinks from a qanat: a tunnel that carries water underground from the hills past the Desert Edge. ' +
+      'At the cistern head the flow divides. One line feeds the city\'s fountains; the other, built later, feeds the guild\'s tanks. ' +
+      'An iron gate on the old city line can be shut, to clean the channel. The year the guild vault was built, it was found loose. ' +
+      'An engineer of the Zetwal army, in the city for the signing, wanted its iron for the march home. Someone stopped him. ' +
+      'The record does not say who. The city fountain has run dry twice since: in the great drought, and this year.',
+  },
+  {
+    id: 'aldoria_eight_gates',
+    title: 'The Eight Gates',
+    category: 'trade',
+    text:
+      'Eightgate has eight gates, one for each road into the Seat, and every one is watched. ' +
+      'Envoys are searched; merchants are taxed; strangers wait. A Dorini caravan alone passes every gate unquestioned. ' +
+      'The Crown granted it for the guild\'s loans in the Ash Wars, and has never dared take it back. ' +
+      'The caravan master carries the Merchant-Prince\'s pass. Anyone in the caravan is the guild\'s, as far as the gates are concerned. ' +
+      'It is the one thing a Dorini pass is good for in Eightgate. It will get you through a gate. It will not get you through a door.',
+  },
+  {
+    id: 'aldoria_vault_register',
+    title: 'The Vault Register',
+    category: 'history',
+    text:
+      'Register of the guild vault under the guild hall, kept by the chief scribe. ' +
+      'Twelve iron boxes, numbered, in the strongroom behind the balance door. The guild\'s own price opens that door. ' +
+      'The guild knows its price. ' +
+      'Box seven: sealed, "for the bearer of the sun", by order of Yusuf, keeper of the ledger, fifty years ago. Not opened since. ' +
+      'The witness\'s niche, at the far end: the Dorini copy of the Sun Accord. Its lock was cut to a pattern no guildsman holds. ' +
+      'Opened by: no one. Remarks: the guild does not hold the key to its own witness. That was the point.',
+  },
+  {
+    id: 'aldoria_crown_preference',
+    title: "The Crown's Preference",
+    category: 'law',
+    text:
+      'Agreement between His Majesty\'s trade factor and the Dorini guild council, in the Merchant-Prince\'s Majlis. ' +
+      'In return for the guild\'s good offices in the ports, the Crown grants the guild preference in its harbours. ' +
+      'Preference means the first purchase of any cargo landed, at a price the Crown names, before any other buyer may bid. ' +
+      'Schedule of harbours: Pòdlimyè, Cenizal, and, by the seventh clause of the Sun Accord as signed, Yucayeque in Xaraguá. ' +
+      'Signed for the guild by Guildmaster Qasim. Witnessed by the chief scribe. ' +
+      'The space for the Merchant-Prince\'s seal is empty. A note in the margin, in a different hand: "Not by me."',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -490,6 +583,11 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'ard_shelf_law', name: 'Shelf: Oaths and Faith', books: ['ardencia_oaths', 'ardencia_witness'] },
   { id: 'ard_shelf_trade', name: 'Shelf: Iron and Gossip', books: ['ardencia_iron_trade', 'ardencia_kitchen_maids'] },
   { id: 'alcazar_records', name: "Shelf: The Treasurers' Row", books: ['ardencia_last_report', 'ardencia_blade_law'] },
+  // Al-Doria (Chapter 4): the House of Ledgers' three lecterns, and the Majlis's archive of contracts.
+  { id: 'ledgers_trade', name: 'Lectern: Counting and Trade', books: ['aldoria_letter_numbers', 'aldoria_eight_gates'] },
+  { id: 'ledgers_law', name: 'Lectern: Contracts and Faith', books: ['aldoria_on_contracts', 'aldoria_witness_market'] },
+  { id: 'ledgers_city', name: 'Lectern: The City', books: ['aldoria_dorini_promise', 'aldoria_city_water'] },
+  { id: 'majlis_contracts', name: 'Shelf: The Archive of Contracts', books: ['aldoria_vault_register', 'aldoria_crown_preference'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

@@ -210,6 +210,68 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
     ],
   },
+  // Chapter 4's scripted fight (data/battles.ts), for the Foes page. No map rolls on this table.
+  aldoria_story: {
+    id: 'aldoria_story',
+    groups: [
+      {
+        id: 'qasim',
+        weight: 0,
+        level: 14,
+        foes: ['Guildmaster Qasim', 'Caravan Raider', 'Caravan Raider'],
+        intro: 'Qasim comes down the stair with the guild\'s blades.',
+        won: 'Qasim yields, and his blades walk out.',
+        fled: 'There is no way past them but through.',
+      },
+    ],
+  },
+  // The Desert Edge past the caravan gate (Chapter 4; CAPITALS.md 3, re-levelled to 11 to 13 by the outline): raiders on
+  // the caravan road, smugglers, and the Quiet Crown, who have heard about a little girl who glows.
+  desert_edge: {
+    id: 'desert_edge',
+    groups: [
+      {
+        id: 'raiders',
+        enemies: ['caravan_raider', 'caravan_raider'],
+        weight: 3,
+        level: 12,
+        foes: ['Caravan Raider', 'Caravan Raider'],
+        intro: 'Two raiders rise out of the dune, scarves over their faces. "The guild\'s water costs a copper. Your purse costs more."',
+        won: 'The raiders drop back over the dune.',
+        fled: 'You run for the road. Sand slows them more than you.',
+      },
+      {
+        id: 'raider_bandits',
+        enemies: ['caravan_raider', 'road_bandit', 'road_bandit'],
+        weight: 2,
+        level: 11,
+        foes: ['Caravan Raider', 'Road Bandit', 'Road Bandit'],
+        intro: 'A raider and two bandits from the ruined caravanserai. "Toll for the Desert Edge."',
+        won: 'They scatter back toward the ruin.',
+        fled: 'You slip back to the road before they close in.',
+      },
+      {
+        id: 'smugglers',
+        enemies: ['smuggler', 'smuggler'],
+        weight: 2,
+        level: 12,
+        foes: ['Smuggler', 'Smuggler'],
+        intro: 'Smugglers with a string of mules, Crown-stamped crates under the sacking. "You saw sand. Say it."',
+        won: 'The smugglers abandon a crate and drive the mules off.',
+        fled: 'You leave them to their mules.',
+      },
+      {
+        id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot'],
+        weight: 1,
+        level: 13,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
+        intro: 'Two veiled figures stand still in the heat. "The little one glows, they say. Hush, and give her to us."',
+        won: 'The veiled pair walk back into the haze.',
+        fled: 'You run. The heat shimmers where they stood.',
+      },
+    ],
+  },
   // Zetwal: the Cane Road beyond the east gate.
   cane_road: {
     id: 'cane_road',

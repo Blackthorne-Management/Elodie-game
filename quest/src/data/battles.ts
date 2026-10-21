@@ -15,6 +15,8 @@ import { BOOKS } from './books.ts';
 
 /** The library books of Pòdlimyè (reading five teaches Mend). */
 const ZETWAL_BOOKS = BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => b.id);
+/** The House of Ledgers' six in Bab al-Dhahab (reading five teaches Baraka of the Scale; the Majlis's two do not count). */
+const ALDORIA_LEDGERS = ['aldoria_letter_numbers', 'aldoria_eight_gates', 'aldoria_on_contracts', 'aldoria_witness_market', 'aldoria_dorini_promise', 'aldoria_city_water'];
 /** La Biblioteca Vieja's six (reading five teaches Ember Ward; the Alcázar's two shelf books do not count). */
 const ARDENCIA_LIBRARY = ['ardencia_brasador_count', 'ardencia_cendre', 'ardencia_oaths', 'ardencia_witness', 'ardencia_iron_trade', 'ardencia_kitchen_maids'];
 
@@ -50,6 +52,11 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       id: 'ember_ward', name: 'Ember Ward', sp: 7, kind: 'status', power: 0, target: 'ally', statuses: ['warded', 'regen'],
       learn: { lore: { books: ARDENCIA_LIBRARY, count: 5, where: 'La Biblioteca Vieja' } },
       text: 'Learned in Cenizal: a ward of warm ash on one ally. They take a quarter less damage and heal a little, for 3 turns.',
+    },
+    {
+      id: 'baraka_scale', name: 'Baraka of the Scale', sp: 8, kind: 'status', power: 0, target: 'ally', statuses: ['warded', 'inspired'],
+      learn: { lore: { books: ALDORIA_LEDGERS, count: 5, where: 'the House of Ledgers' } },
+      text: 'Learned in Bab al-Dhahab: the scale weighs true for one ally. They take a quarter less and deal a quarter more, for 3 turns.',
     },
     {
       id: 'limye_pou_tout', name: 'Limyè pou Tout', sp: 10, kind: 'heal', power: 80, target: 'allAllies', element: 'light', learn: { level: 4 },

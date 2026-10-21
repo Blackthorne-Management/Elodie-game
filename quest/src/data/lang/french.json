@@ -1,0 +1,8 @@
+{
+  "language": "French (Coralie)",
+  "note": "French words Coralie (Tati Coco, Elodie's sister) uses in Chapter 4. Checked by a fluent speaker before release; verified stays false until then.",
+  "entries": [
+    { "word": "Chérie", "language": "French", "translation": "Darling, sweetheart", "verified": false },
+    { "word": "Mes chéries", "language": "French", "translation": "My darlings", "verified": false }
+  ]
+}

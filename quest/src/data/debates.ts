@@ -247,6 +247,84 @@ export const DEBATES: readonly DebateDef[] = [
       say('baker_widow', 'And not one of them stolen. Ask him. He checks.'),
     ],
   },
+  // Chapter 4, the souk square by the dry fountain (outline 7.3): a Witness contract-priest (the faith of oaths: a promise
+  // written is a promise watched) against a Gaze merchant (the Gaze remembers who was cheated). Required before dusk.
+  // Reason needs one of the House of Ledgers' books on contracts, the Witness or the Dorini Promise. The third round
+  // turns the Majlis's refusal on the square.
+  {
+    id: 'aldoria_bargain',
+    city: 'al_doria',
+    question: 'Is a bad bargain still sacred?',
+    ally: 'gaze_merchant',
+    opponent: 'contract_priest',
+    opensIf: { flag: 'story.vault_refused' },
+    passing: [
+      say('contract_priest', '...signed is signed, merchant. The Witness does not ask whether you liked the price.'),
+      say('gaze_merchant', 'And the Gaze does not forget who paid it.'),
+    ],
+    listen: [
+      say('contract_priest', 'A promise written is a promise watched. A bad bargain kept is still a kept promise. That is what makes this market work.'),
+      say('gaze_merchant', 'The Crown bought Yucayeque\'s harbour from the guild. Nobody in Yucayeque sold it. Is that bargain sacred too?'),
+      say('contract_priest', 'If it was signed, it is watched. "Sacred" and "just" are different words, my friend.'),
+      say('gaze_merchant', 'Then your Witness watches a theft and calls it a contract.'),
+      say(A, 'Gigi, Yari has gone very quiet.'),
+    ],
+    reasonNeeds: [loreFlag('aldoria_on_contracts'), loreFlag('aldoria_witness_market'), loreFlag('aldoria_dorini_promise')],
+    rounds: [
+      {
+        claim: 'A promise written is a promise watched. A bad bargain kept is still a kept promise.',
+        answers: {
+          scripture: { short: 'The Gaze sees both', text: 'The Gaze remembers the bargain and who was cheated by it, and judges both. Not one without the other.', strength: 1 },
+          reason: { short: 'It binds who consented', text: 'Your own teaching: a contract binds the ones who signed it. A bargain over someone else\'s goods binds them to nothing.', strength: 2 },
+          compassion: { short: 'Ask the one who was sold', text: 'Ask the one who was sold whether they feel watched over.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then is the Crown\'s charter on Xaraguá sacred? It was signed. It is watched.',
+        answers: {
+          scripture: { short: 'Elodie lent the harbours', text: 'The temple says the goddess lent the realm to all of us. Nobody was given a harbour to sell.', strength: 1 },
+          reason: { short: 'Then read it aloud', text: 'Then let the Witness watch it read aloud, every clause, in Yucayeque. See who signed for the harbour.', strength: 2 },
+          compassion: { short: 'Yari is standing here', text: 'The girl beside me is from Yucayeque. Tell her the bargain is sacred.', strength: 0 },
+        },
+      },
+      {
+        claim: 'Then tell me, envoy: what do you owe a house that keeps a bad bargain?',
+        answers: {
+          scripture: { short: 'The truth, out loud', text: 'The truth, said out loud. The Gaze asks no more than that of anyone.', strength: 1 },
+          reason: { short: 'Nothing past its word', text: 'Nothing. A witness holds what was signed. It does not have to like it, or profit from it.', strength: 1 },
+          compassion: { short: 'To pay what it owes', text: 'It owes what every debtor owes: to pay it back to the ones it was taken from.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The moneychangers stop counting. Someone at the back says "Hear, hear.")',
+      1: '(The square is split. Half of them watch the priest, half the merchant.)',
+      0: '(A few people shrug and go back to their stalls.)',
+    },
+    won: [
+      say('contract_priest', '...A contract binds the ones who consented. I teach that to every apprentice. I had stopped hearing it.'),
+      say('gaze_merchant', 'Tea, priest? You can watch me pay for it.'),
+    ],
+    lost: [
+      say('contract_priest', 'Signed is signed, envoy. Come back when you can show me otherwise.'),
+      say('gaze_merchant', 'He will be here. He always is. So will I.'),
+    ],
+    mediate: [
+      say(G, 'You both want the same thing: bargains people can trust, and nobody sold who never agreed.'),
+      say(G, 'Priest, watch the contracts. Merchant, read out who signed them. Together, at the fountain, on market day.'),
+      say('contract_priest', 'A Witness and a Gaze merchant at one table. The guild will think it is a conspiracy.'),
+      say('gaze_merchant', 'Let them. It will be the first honest one.'),
+    ],
+    provoke: [
+      say(G, 'Your Witness watched the Crown buy a harbour from people who did not own it, and said nothing!'),
+      nar('The square goes quiet. Two Majlis guards turn to look.'),
+      say('contract_priest', 'Not here, envoy. Not in front of the guards.'),
+    ],
+    after: [
+      say('contract_priest', 'We read the contracts aloud now, at noon. You would be surprised who stops to listen.'),
+      say('gaze_merchant', 'And who stops coming to the market. Both are good signs.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */

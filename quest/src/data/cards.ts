@@ -32,4 +32,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 3 complete',
     lines: ['The Trial of Blades', 'Next: Chapter 4, The Ledger', 'Al-Doria, and a page that should not exist...'],
   },
+  // The end of Chapter 4: the caravan gate at first light; the Dorini caravan sets out for Eightgate.
+  {
+    id: 'act4_end',
+    when: 'act4.complete',
+    title: 'Chapter 4 complete',
+    lines: ['The Ledger', 'Next: Chapter 5, The Parley', 'Eightgate, and a seal only the Throne may break...'],
+  },
 ];

@@ -61,7 +61,7 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
   it('every step flag is set by some dialogue, and every giver stands on a map', () => {
     const setters = new Set(Object.values(validationContext().dialogueSets ?? {}).flat());
     // A debate sets its outcome flags itself (engine/debate.ts), not a static dialogue.
-    for (const d of DEBATES) for (const o of ['listened', 'joined', 'won', 'mediated', 'provoked'] as const) setters.add(debateFlag(d.id, o));
+    for (const d of DEBATES) for (const o of ['listened', 'joined', 'settled', 'won', 'mediated', 'provoked'] as const) setters.add(debateFlag(d.id, o));
     const flagsOf = (c: Condition): string[] => ('flag' in c ? [c.flag] : 'any' in c ? c.any.flatMap(flagsOf) : []);
     for (const q of SIDE_QUESTS) {
       for (const s of q.steps) {

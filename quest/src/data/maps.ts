@@ -2,6 +2,12 @@
 
 import type { TiledMap } from '../engine/tiledMap.ts';
 import testVillage from '../../maps/test-village.tmj?raw';
+import aldoriaQuay from '../../maps/aldoria-quay.tmj?raw';
+import aldoriaBazaar from '../../maps/aldoria-bazaar.tmj?raw';
+import aldoriaMajlis from '../../maps/aldoria-majlis.tmj?raw';
+import aldoriaLedgers from '../../maps/aldoria-ledgers.tmj?raw';
+import aldoriaVault from '../../maps/aldoria-vault.tmj?raw';
+import aldoriaDesert from '../../maps/aldoria-desert.tmj?raw';
 import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
 import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
 import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
@@ -67,6 +73,12 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'ardencia-forge': ardenciaForge,
   'ardencia-tunnel': ardenciaTunnel,
   'ardencia-camp': ardenciaCamp,
+  'aldoria-quay': aldoriaQuay,
+  'aldoria-bazaar': aldoriaBazaar,
+  'aldoria-majlis': aldoriaMajlis,
+  'aldoria-ledgers': aldoriaLedgers,
+  'aldoria-vault': aldoriaVault,
+  'aldoria-desert': aldoriaDesert,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

@@ -39,6 +39,12 @@ export const MUSIC = {
   ardencia: { file: 'audio/music/hall.mp3', loop: true, overlapS: 2.5 },
   cinder_flats: { file: 'audio/music/mountain-path.mp3', loop: true, overlapS: 3 },
   rael_theme: { file: 'audio/music/crown-customs.mp3', loop: true, overlapS: 2.5 },
+  // Al-Doria (Chapter 4): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md). The bazaar plays the
+  // city's market music, the Majlis the hall's, the vault the Echo's, the Desert Edge the cane road's.
+  aldoria: { file: 'audio/music/city.mp3', loop: true, overlapS: 2.5 },
+  majlis: { file: 'audio/music/hall.mp3', loop: true, overlapS: 2.5 },
+  guild_vault: { file: 'audio/music/echo.mp3', loop: true, overlapS: 3.5 },
+  desert_edge: { file: 'audio/music/cane-road.mp3', loop: true, overlapS: 3.5 },
 } as const satisfies Record<string, MusicTrack>;
 
 export type MusicId = keyof typeof MUSIC;
@@ -77,6 +83,12 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'ardencia-forge': 'cinder_flats',
   'ardencia-tunnel': 'cinder_flats',
   'ardencia-camp': 'farewell',
+  'aldoria-quay': 'aldoria',
+  'aldoria-bazaar': 'aldoria',
+  'aldoria-majlis': 'majlis',
+  'aldoria-ledgers': 'majlis',
+  'aldoria-vault': 'guild_vault',
+  'aldoria-desert': 'desert_edge',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */
@@ -113,6 +125,8 @@ export const DIALOGUE_MUSIC: readonly DialogueMusic[] = [
   // Rael's theme under the trial's opening and the winner's question.
   { dialogue: 'trial_start', music: 'rael_theme' },
   { dialogue: 'rael_after', music: 'rael_theme' },
+  // The caravan at first light: the farewell, until Al-Doria has its own track.
+  { dialogue: 'caravan_dawn', music: 'farewell' },
 ];
 
 /** The song under an act's end card, by card id (data/cards.ts). */

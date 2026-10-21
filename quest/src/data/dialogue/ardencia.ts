@@ -1044,10 +1044,58 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
   simple('free_soldier_b_talk', [say('free_brasador', 'My mother is still in the Lower Town. She will understand. She always understands. That is the worst part.')]),
   simple('free_soldier_c_talk', [say('free_brasador', 'Free Brasador. The sergeant made it up on the road. It sounds better than "deserters".')]),
   simple('camp_quartermaster_talk', [say('free_brasador', 'We took what we could carry from the armory. The captain says the envoy pays fair. Have a look.')]),
-  simple('camp_trader_talk', [
-    { if: { notFlag: 'act3.complete' }, speaker: 'camp_trader', text: 'The Marshal told me to wait. I wait.' },
-    { if: { flag: 'act3.complete' }, speaker: 'camp_trader', text: 'Al-Doria at first light. I hope you like the smell of money.' },
-  ]),
+  // ---- Chapter 4, beat 0: the strand at first light (docs/quest/reviews/2026-10-20-chapter4-outline.md and its review
+  // 3.10). The trader's ready check; the sergeant (placed again: he is no map NPC) pledges the strand to Azzy; Yari's
+  // fare coin (granted here unless Chapter 2 already gave it); the party goes down to the boat. Free Brasador's flag
+  // and Journal note were set at Chapter 3's end and are not set again.
+  script('camp_trader_talk', {
+    start: { lines: [], next: [{ if: { flag: 'act3.complete' }, to: 'dawn' }, { to: 'wait' }] },
+    wait: { speaker: 'camp_trader', lines: [{ text: 'The Marshal told me to wait. I wait.' }] },
+    dawn: {
+      speaker: 'camp_trader',
+      lines: [{ text: 'First light, envoy. Al-Doria is four days, down past your own reefs. I hope you like the smell of money.', fx: 'fade' }],
+      choices: [
+        { text: 'Sail for Al-Doria.', next: 'sail' },
+        { text: 'Not yet.', next: 'later' },
+      ],
+    },
+    later: { speaker: 'camp_trader', lines: [{ text: 'The tide turns at noon. After that, you swim.' }] },
+    sail: {
+      lines: [
+        act(
+          [
+            { do: 'place', actor: 'azzy', look: 'azzy', at: at(10, 9), facing: 'up' },
+            { do: 'place', actor: 'sergeant', look: 'free_brasador', at: at(12, 6), facing: 'down' },
+            { do: 'look', actor: 'sergeant' },
+            { do: 'walk', actor: 'sergeant', to: at(10, 8), facing: 'down' },
+          ],
+          'sergeant',
+          'We hold the strand, captain. Come back with an army, or do not come back.',
+        ),
+        say(Z, 'With an army.'),
+        act([{ do: 'walk', actor: 'sergeant', to: at(12, 6), facing: 'down' }, { do: 'look', actor: 'player' }], '', 'The sergeant goes back to the fire. The others stand as Azzy passes.'),
+        act(
+          [{ do: 'place', actor: 'yari', look: 'yari', at: at(9, 9), facing: 'down' }],
+          Y,
+          'The resistance in the caves gave me this for the fare, out of the oil money.',
+          { if: { notFlag: 'item.brasador_coin' } },
+        ),
+        { if: { notFlag: 'item.brasador_coin' }, speaker: Y, text: 'The captain would not take it. "Not Crown, not ours," he said. I kept it.', set: { 'item.brasador_coin': true } },
+        act(
+          [
+            { do: 'walk', actor: 'yari', to: at(8, 11), facing: 'down', async: true },
+            { do: 'walk', actor: 'follower', to: at(9, 11), facing: 'down' },
+            { do: 'walk', actor: 'azzy', to: at(7, 11), facing: 'up' },
+            { do: 'wait', ms: 600 },
+            { do: 'face', actor: 'azzy', facing: 'down' },
+          ],
+          '',
+          'Down to the boat. Azzy goes last, and looks back at the wall once.',
+          { set: { 'travel.next': 'aldoria-quay/landing', 'voyage.next': 'ardencia_aldoria' } },
+        ),
+      ],
+    },
+  }),
   simple('camp_fire', [nar('Driftwood and black stones. Someone is boiling coffee in a helmet.')]),
   simple('trader_boat', [nar('The Zetwal trader, riding at anchor off the black sand. Patricio\'s man kept his word.')]),
 ];

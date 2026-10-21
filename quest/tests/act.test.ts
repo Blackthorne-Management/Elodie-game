@@ -2,7 +2,7 @@
 // game by the scripted route the smoke test also drives in the browser (routes/zetwal-act1.json).
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4 } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { partyMembers } from '../src/engine/rpg.ts';
@@ -19,6 +19,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   const objectives: string[] = [];
   const chapter2: string[] = [];
   const chapter3: string[] = [];
+  const chapter4: string[] = [];
+  /** The story's flags and where the party stood at Chapter 3's end (the route goes on into Chapter 4). */
+  let atChapter3End: { flags: FlagSnapshot; map: string; battles: string[] } = { flags: {}, map: '', battles: [] };
   /** The story's flags and where the party stood at Chapter 2's end (the route goes on into Chapter 3). */
   let atChapter2End: { flags: Record<string, unknown>; map: string; battles: string[] } = { flags: {}, map: '', battles: [] };
   let atNoon: Record<string, unknown> = {};
@@ -37,6 +40,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       atChapter2End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles] };
     }
     if (item.kind === 'mark' && item.name === 'noon') atNoon = sim.logic.state.flags.snapshot();
+    if (item.kind === 'mark' && item.name === 'chapter3-end') {
+      atChapter3End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles] };
+    }
     if (item.kind === 'mark' && item.name === 'end-card') {
       atChapterEnd = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => KEPT.test(k)));
     }
@@ -58,6 +64,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       if (ACT3.maps.includes(sim.logic.state.player.mapId) || sim.logic.state.player.mapId === 'zetwal-harbor') {
         const id3 = currentObjective(ACT3, sim.logic.state.flags)?.id ?? 'complete';
         if (sim.logic.state.flags.isSet('story.ardencia_asked') && chapter3.at(-1) !== id3) chapter3.push(id3);
+      }
+      if (ACT4.maps.includes(sim.logic.state.player.mapId) && sim.logic.state.flags.isSet('act3.complete')) {
+        const id4 = currentObjective(ACT4, sim.logic.state.flags)?.id ?? 'complete';
+        if (chapter4.at(-1) !== id4) chapter4.push(id4);
       }
       if (eras.at(-1) !== sim.logic.era) eras.push(sim.logic.era);
       if (maps.at(-1) !== sim.logic.state.player.mapId) maps.push(sim.logic.state.player.mapId);
@@ -94,14 +104,14 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('Chapter 3: the voyage, the gate and Azzy, the audience, the day in the city, the trial, the forge, the tunnel, the sea road, the camp', () => {
-    const flags = sim.logic.state.flags;
+    const flags = new FlagStoreView(atChapter3End.flags);
     // Every objective in order (Grandfather's request was done at Chapter 2's end; "The Lord's guests" begins and
     // ends inside the one long scene from the trial to Azzy's key, so the route never stops on it).
     expect(chapter3).toEqual([...ACT3.objectives.map((o) => o.id).filter((id) => id !== 'request' && id !== 'guests'), 'complete']);
     expect(flags.isSet('story.forge_open')).toBe(true);
-    expect(sim.battles.slice(5)).toEqual(['rael_trial', 'tunnel_bats']);
+    expect(atChapter3End.battles.slice(5)).toEqual(['rael_trial', 'tunnel_bats']);
     expect(flags.isSet('act3.complete') && flags.isSet('card.act3_end')).toBe(true);
-    expect(sim.logic.state.player.mapId).toBe('ardencia-camp');
+    expect(atChapter3End.map).toBe('ardencia-camp');
     // The trial is lost, never won; the question is asked and the halves glow; Gianna believes the lie.
     expect(flags.isSet('encounter.ardencia_story.rael.won')).toBe(false);
     for (const f of ['story.trial_fought', 'story.signet_glowed', 'clue.father_rael', 'belief.rael_traitor']) expect(flags.isSet(f), f).toBe(true);
@@ -110,6 +120,26 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy']);
     expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
     expect(flags.isSet('story.ardencia_escaped') && flags.isSet('ally.free_brasador')).toBe(true);
+  });
+
+  it('Chapter 4: the strand, the quay, Samira, the Majlis, the day in the city, the vault, Qasim, the Merchant-Prince\'s word, the caravan', () => {
+    const flags = sim.logic.state.flags;
+    // Every objective in order (the lead was done at Chapter 3's end; "The guild's blades" and "The Merchant-Prince's
+    // word" begin and end inside the one scene from the chest to Layla's descent, so the route never stops on them).
+    expect(chapter4).toEqual([...ACT4.objectives.map((o) => o.id).filter((id) => !['lead', 'blades', 'word'].includes(id)), 'complete']);
+    expect(sim.battles.slice(7)).toEqual(['qasim_vault']);
+    expect(flags.isSet('act4.complete') && flags.isSet('card.act4_end')).toBe(true);
+    expect(sim.logic.state.player.mapId).toBe('aldoria-desert');
+    // Samira joins in the vault, before the fight; the copy stays, the seventh page is sealed; the pass and the coin.
+    expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira']);
+    for (const f of ['story.samira_joined', 'clue.sealed_seventh', 'clue.harbor_price', 'clue.brasador_coin', 'item.dorini_pass', 'item.benny_half_sheet', 'item.brasador_coin']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    // The two anchors: the sun lock and the cistern pin; the fountain runs.
+    for (const f of ['anchor.vault_sunlock', 'anchor.cistern_pin', 'side.sweet_water.done', 'side.appraise.done', 'debate.aldoria_bargain.settled']) expect(flags.isSet(f), f).toBe(true);
+    // Coralie was met in the cloth row and sailed on before the vault.
+    expect(flags.isSet('story.coralie_met') && flags.isSet('story.coralie_left')).toBe(true);
+    for (const name of ['Samira', 'Layla', 'Qasim', 'Tati Coco', 'Yusuf', 'Locksmith', 'Water-carrier']) expect(speakers).toContain(name);
   });
 
   it('Chapter 3: the two required side quests and the debate are done before noon, and pay', () => {

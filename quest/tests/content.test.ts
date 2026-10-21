@@ -30,7 +30,7 @@ function flagsSet(): Set<string> {
   // A fight meant to be lost sets its own flags as it ends (engine/gameOver.ts recordLoss: the Trial of Blades).
   for (const b of Object.values(BATTLES)) for (const f of Object.keys(b.meantToLose?.set ?? {})) out.add(f);
   // A debate sets its outcome flags (engine/debate.ts).
-  for (const d of DEBATES) for (const o of ['listened', 'joined', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
+  for (const d of DEBATES) for (const o of ['listened', 'joined', 'settled', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
   // A rhythm lock played right sets its success flags (engine/game.ts finishRhythm).
   for (const r of Object.values(CONTENT.rhythms ?? {})) for (const f of Object.keys(r.success)) out.add(f);
   return out;

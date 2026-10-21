@@ -620,7 +620,7 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
       all: [
         { flag: 'side.appraise.done' },
         { flag: 'side.sweet_water.done' },
-        { any: [{ flag: 'debate.aldoria_bargain.joined' }, { flag: 'debate.aldoria_bargain.mediated' }] },
+        { flag: 'debate.aldoria_bargain.settled' },
         { notFlag: 'story.caravan_dawn' },
       ],
     },

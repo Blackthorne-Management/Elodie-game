@@ -23,7 +23,10 @@ export interface ChapterStart {
 const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string }>> = {
   '2': { mark: 'end-card', map: 'xaragua-village', spawn: 'pier' },
   '3': { mark: 'chapter2-end', map: 'zetwal-harbor', spawn: 'harbor_return' },
+  // Chapter 4 begins on the strand at first light (the trader's ready check: beat 0).
   '4': { mark: 'chapter3-end', map: 'ardencia-camp', spawn: 'strand' },
+  // Chapter 5 begins where the Dorini caravan forms (Eightgate's map comes with Chapter 5: this start moves there).
+  '5': { mark: 'chapter4-end', map: 'aldoria-desert', spawn: 'gate_yard' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

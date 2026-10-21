@@ -656,8 +656,150 @@ export const ACT3: QuestDef = {
   ],
 };
 
+/** Samira's three things before dusk: A-1, the debate (joined or mediated) and A-3 (Chapter 4's "Until dusk"). */
+const ALD_DAY_DONE = { all: [{ flag: 'side.appraise.done' }, { flag: 'side.sweet_water.done' }, { flag: 'debate.aldoria_bargain.settled' }] };
+
+/**
+ * Chapter 4, The Ledger (Al-Doria, Bab al-Dhahab; docs/quest/reviews/2026-10-20-chapter4-outline.md with its review of
+ * Oct 21 and the owner's decisions in design/FAMILY.md). The lead (done at Chapter 3's end, so the Journal opens Chapter 4
+ * on the strand: the camp is both chapters' map, review 3.5), the voyage, the quay, Samira, the Majlis, the day in the
+ * city (two side quests and the debate, followed by the arrow), the guild hall by night, the vault's Echo and its
+ * puzzle, the witness's chest, Qasim, the Merchant-Prince's word and the caravan gate.
+ */
+export const ACT4: QuestDef = {
+  id: 'act4',
+  title: 'Chapter 4: The Ledger',
+  maps: ['ardencia-camp', 'aldoria-quay', 'aldoria-bazaar', 'aldoria-majlis', 'aldoria-ledgers', 'aldoria-vault', 'aldoria-desert'],
+  objectives: [
+    {
+      id: 'lead',
+      title: 'The Dorini vault',
+      detail: "Benny's Refusal: \"The bankers of Al-Doria, who witnessed it, hold the signed copy.\" The Dorini, in Bab al-Dhahab.",
+      done: { flag: 'act3.complete' },
+      // Chapter 3's last scene, shown here so the Journal opens Chapter 4 on the strand: it pays no second XP.
+      noXp: true,
+      goals: [{ map: 'ardencia-camp', at: { x: 21, y: 8 } }],
+      hints: ['The paper said the bankers of Al-Doria, Gigi.', "Azzy read it at the fire: the Dorini vault.", 'Sit by the fire with the others. Then the trader.'],
+    },
+    {
+      id: 'sail',
+      title: 'Sail for Al-Doria',
+      detail: 'The trader who waited for Patricio\'s granddaughter sails at first light. He is down by his boat on the strand.',
+      done: { flag: 'story.aldoria_arrived' },
+      goals: [{ map: 'ardencia-camp', at: { x: 8, y: 9 } }],
+      hints: ['The trader said first light, Gigi. It is first light.', 'He is down by the water, at his boat.', 'Talk to the trader captain by his boat on the strand and tell him to sail.'],
+    },
+    {
+      id: 'quay',
+      title: 'Up from the quay',
+      detail: 'The quay of the Gate of Gold. The gate up into the bazaar is at the top of the quay; its clerk reads papers.',
+      done: { flag: 'story.quay_passed' },
+      goals: [{ map: 'aldoria-quay', at: { x: 15, y: 2 } }],
+      hints: ['Everyone here is carrying something, Gigi.', 'The way up into the city is the gate at the top of the quay.', 'Walk up the quay to the gate and show the clerk your papers.'],
+    },
+    {
+      id: 'samira',
+      title: 'The Grand Bazaar',
+      detail: 'Up from the quay, the Grand Bazaar: covered lanes, moneychangers, a price for everything.',
+      done: { flag: 'story.samira_met' },
+      goals: [{ map: 'aldoria-bazaar', at: { x: 21, y: 29 } }],
+      hints: ['So many people, Gigi. Hold my hand.', 'Up the lane from the quay, into the bazaar.', 'Walk up from the quay into the bazaar. Someone is coming to meet you.'],
+    },
+    {
+      id: 'majlis',
+      title: 'The Merchant-Prince',
+      detail: 'Samira: the signed copy is in the guild vault, and the Merchant-Prince refuses everyone. Ask her anyway, at the Majlis.',
+      done: { flag: 'story.vault_refused' },
+      goals: [
+        { if: { notFlag: 'story.majlis_seen' }, map: 'aldoria-bazaar', at: { x: 22, y: 6 } },
+        { map: 'aldoria-majlis', at: { x: 14, y: 7 } },
+      ],
+      hints: ['Her mother, Gigi. She said "my mother".', 'The Majlis is the big domed hall at the head of the square.', 'Go up the square into the Majlis and walk up the hall to the divan.'],
+    },
+    {
+      id: 'dusk',
+      title: 'Until dusk',
+      detail: 'Samira will take you down at dusk if you do three things for her first. They are on your Quests page.',
+      done: { any: [ALD_DAY_DONE, { flag: 'story.vault_entered' }] },
+      followSide: true,
+      hints: [
+        'Dusk is a long way off, Gigi. Samira gave us a list.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        "Samira's three fakes, the priest and the merchant by the fountain, and the children's water.",
+      ],
+    },
+    {
+      id: 'door',
+      title: 'The guild hall by night',
+      detail: "Dusk. Samira waits at the guild hall's green door, west of the square. The doorman has gone to the tea house.",
+      done: { flag: 'story.vault_entered' },
+      goals: [{ map: 'aldoria-bazaar', at: { x: 12, y: 11 } }],
+      hints: ['The lanterns are lit, Gigi.', "The guild hall's green door is on the west side of the square.", 'Talk to Samira at the green door.'],
+    },
+    {
+      id: 'price',
+      title: 'The price of the harbour',
+      detail: 'The balance door wants a weight, and the ledger page that names it is smudged past reading. The air shimmers.',
+      done: { flag: 'story.vault_echo' },
+      goals: [{ map: 'aldoria-vault', at: { x: 10, y: 7 } }],
+      hints: ['The door wants a weight. The page says how much, if you can read it.', 'Yusuf wrote this page. In the memory, watch him write it.', 'Press Echo on the shimmering floor and talk to young Yusuf at his desk.'],
+    },
+    {
+      id: 'balance',
+      title: 'The balance door',
+      detail: 'Yusuf wrote the price of the harbour: twenty-five. Hang the brass weights that make it on the pan.',
+      done: { flag: 'story.vault_outer' },
+      goals: [{ map: 'aldoria-vault', at: { x: 12, y: 6 } }],
+      hints: ['Twenty-five, Gigi. He said it out loud.', 'The weights are 1, 2, 4, 8 and 16. Which ones make twenty-five?', 'Back in the present, hang 16, 8 and 1 on the pan. Leave 4 and 2 on the rack.'],
+    },
+    {
+      id: 'sun',
+      title: 'Cut to the sun',
+      detail: "The witness's niche at the far end of the strongroom has a lock no key fits. In the memory, the locksmith is still cutting it.",
+      done: { flag: 'story.vault_inner' },
+      goals: [{ map: 'aldoria-vault', at: { x: 21, y: 7 } }],
+      hints: ['A key no guildsman holds, Gigi. Who holds it, then?', 'In the memory, the locksmith asks what pattern to cut.', 'In the memory, show the locksmith the Locket\'s sun. Then open the lock in the present.'],
+    },
+    {
+      id: 'ribbons',
+      title: 'Seven ribbons',
+      detail: "The witness's chest is behind the sun lock. In it, the Dorini copy of the Sun Accord.",
+      done: { flag: 'clue.sealed_seventh' },
+      goals: [{ map: 'aldoria-vault', at: { x: 23, y: 7 } }],
+      hints: ['It\'s open, Gigi.', 'The chest is in the niche, behind the lock.', 'Walk into the niche and open the chest.'],
+    },
+    {
+      id: 'blades',
+      title: "The guild's blades",
+      detail: 'Guildmaster Qasim came down the stair with the guild\'s blades. One waits at the foot of the stair.',
+      done: { flag: 'encounter.aldoria_story.qasim.won' },
+      goals: [{ map: 'aldoria-vault', at: { x: 5, y: 4 } }],
+      hints: ['They are still on the stair, Gigi.', 'The blade at the foot of the stair is waiting for you.', 'Talk to the blade at the foot of the stair to face Qasim again.'],
+    },
+    {
+      id: 'word',
+      title: "The Merchant-Prince's word",
+      detail: 'Someone else is coming down the stair.',
+      done: { flag: 'story.layla_pass' },
+      goals: [{ map: 'aldoria-vault', at: { x: 16, y: 7 } }],
+      hints: ['Someone is coming, Gigi.', 'Stay in the strongroom.', 'Wait in the strongroom by the boxes.'],
+    },
+    {
+      id: 'caravan',
+      title: 'The caravan gate',
+      detail: 'The caravan master leaves at first light from the caravan gate, east through the bazaar. Be on it.',
+      done: { flag: 'act4.complete' },
+      goals: [
+        { if: { notFlag: 'story.vault_left' }, map: 'aldoria-vault', at: { x: 4, y: 1 } },
+        { map: 'aldoria-desert', at: { x: 3, y: 12 } },
+      ],
+      hints: ['First light, Gigi. We cannot miss it.', 'Up the stair, then east through the bazaar to the caravan gate.', 'Walk east out of the bazaar to the caravan gate yard.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -788,5 +930,72 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'ally.free_brasador',
     title: 'Free Brasador',
     text: 'Soldiers who followed Azzy off the wall. Their price, when the realm musters: Fear 6 (owed, paid at the Muster). Lead: Benny\'s Refusal names the Dorini of Al-Doria.',
+  },
+  // Chapter 4.
+  {
+    id: 'aldoria',
+    when: 'story.quay_passed',
+    title: 'The Gate of Gold',
+    text: 'Bab al-Dhahab, Al-Doria\'s capital. On the quay, Crown crates under the Charter\'s seal go into the Dorini warehouse: Yucayeque\'s cassava and salt fish.',
+  },
+  {
+    id: 'samira_eye',
+    when: 'side.appraise.done',
+    title: 'How Samira looks at things',
+    text: 'Edges, knots, stamps. A real coin is milled, a real carpet tight, a real weight stamped. "Everything has a price. Most things also have a tell."',
+  },
+  {
+    id: 'coralie',
+    when: 'story.coralie_met',
+    title: 'Tati Coco',
+    text: 'Mother\'s sister Coralie, buying Zetwal indigo for a foreign court in the cloth row. She is sailing for Eightgate to dress the Regent\'s guests for the Parley.',
+  },
+  {
+    id: 'thumb_three',
+    when: 'side.sweet_water.done',
+    title: 'The ash thumbprint, a third time',
+    text: 'Yucayeque\'s oil, Cenizal\'s bread, Bab al-Dhahab\'s water: the same grey thumbprint on the door that gives it. Someone is feeding the realm.',
+  },
+  {
+    id: 'changed_cistern',
+    when: 'anchor.cistern_pin',
+    title: 'Something changed',
+    text: 'The old cistern gate stands pinned open: young Patricio stopped an engineer taking it for the iron. The city line runs, and the square\'s fountain with it.',
+  },
+  {
+    id: 'harbor_price',
+    when: 'clue.harbor_price',
+    title: 'Twenty-five',
+    text: 'Young Yusuf, keeper of the ledger: "The price of the harbour. Twenty-five." A debt unwritten is a debt unpaid; a debt written is at least a debt.',
+  },
+  {
+    id: 'changed_sunlock',
+    when: 'anchor.vault_sunlock',
+    title: 'Something changed',
+    text: 'The witness\'s niche in the Dorini vault: its lock was cut to the Locket\'s sun fifty years ago, at Patricio\'s word. No guildsman holds that key.',
+  },
+  {
+    id: 'sealed_seventh',
+    when: 'clue.sealed_seventh',
+    title: 'The seventh page',
+    text: 'The Dorini copy of the Sun Accord: six pages open, signed. The seventh is sealed with the Throne\'s wax. Only the Throne Archive at Eightgate may break it.',
+  },
+  {
+    id: 'benny_note',
+    when: 'item.benny_half_sheet',
+    title: "Benny's half-sheet",
+    text: '"I will not put my name to this page. B. Rodriguez." Young Benny\'s hand, kept with the witness\'s copy at Yusuf\'s word.',
+  },
+  {
+    id: 'dorini_pass',
+    when: 'story.layla_pass',
+    title: 'A Dorini caravan',
+    text: 'The Merchant-Prince: a witness holds, and the seal is the Throne\'s. A Dorini caravan is not stopped at the eight gates. It leaves at first light.',
+  },
+  {
+    id: 'brasador_coin',
+    when: 'clue.brasador_coin',
+    title: "Yari's coin",
+    text: 'Samira: Brasador mint, three years old, worn in oil and salt. "Someone in Ardencia pays someone in Xaraguá." Gianna: he pays the resistance to sell it.',
   },
 ];

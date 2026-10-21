@@ -24,8 +24,8 @@ describe('the level curve along the scripted route', () => {
   const report = levelCurve();
   console.log(curveText(report));
 
-  it('measures every chapter the route plays (Chapters 1 to 3 so far), and lists the rest as unplayed', () => {
-    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3]);
+  it('measures every chapter the route plays (Chapters 1 to 4 so far), and lists the rest as unplayed', () => {
+    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4]);
     expect(report.chapters.length + report.unplayed.length).toBe(CHAPTER_LEVELS.length);
     for (const c of report.chapters) expect(c.xp).toBeGreaterThan(c.xpNoSide);
     // XP only grows from one chapter to the next.
@@ -36,6 +36,12 @@ describe('the level curve along the scripted route', () => {
     const c3 = report.chapters.find((c) => c.chapter === 3)!;
     expect(c3.level).toBe(11);
     expect(c3.levelNoSide).toBeGreaterThanOrEqual(9);
+  });
+
+  it('Chapter 4 (Al-Doria) leaves the party at level 14, the outline review\'s target, and at 12 without its side quests', () => {
+    const c4 = report.chapters.find((c) => c.chapter === 4)!;
+    expect(c4.level).toBe(14);
+    expect(c4.levelNoSide).toBeGreaterThanOrEqual(12);
   });
 
   it('each chapter lands on its target level (within LEVEL_CURVE slack), except the ones known and reported', () => {

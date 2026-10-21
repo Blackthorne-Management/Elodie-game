@@ -83,4 +83,25 @@ export const PUZZLES: readonly PuzzleDef[] = [
     // Out through the far wall, with Azzy: the tunnel's wall shuts behind the party.
     goal: { flag: 'story.tunnel_entered' },
   },
+  {
+    id: 'aldoria_vault',
+    title: 'The guild vault: the balance door and the sun lock (signature puzzle: the ledger; PUZZLES.md SIG-ALD)',
+    map: 'aldoria-vault',
+    spawn: 'stair',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.anissa': true,
+      'story.yari_asked': true,
+      'party.azzy': true,
+      'story.benny_joined': true,
+      'story.caona_joined': true,
+      'story.samira_met': true,
+      'story.vault_refused': true,
+      'story.vault_entered': true,
+      'story.vault_lamps': true,
+    },
+    // The witness's chest read: the seventh page, sealed with the Throne's wax.
+    goal: { flag: 'clue.sealed_seventh' },
+  },
 ];
