@@ -112,7 +112,7 @@ describe('fights meant to be lost', () => {
 
   it('a win sets no won flag (the story goes on with the scene either way)', () => {
     const flags = new FlagStore();
-    settleBattle(flags, RPG, { def: SCRIPTED_LOSS, items: battleItems(flags, RPG), outcome: 'won' } as unknown as Battle);
+    settleBattle(flags, RPG, { def: SCRIPTED_LOSS, items: battleItems(flags, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle);
     expect(flags.has('encounter.test.scripted.won')).toBe(false);
   });
 
@@ -361,7 +361,7 @@ describe('losing the boar and coming back', () => {
         sim.logic.riseFromFight();
         return [];
       }
-      settleBattle(flags, RPG, { def, items: battleItems(flags, RPG), outcome: 'won' } as unknown as Battle);
+      settleBattle(flags, RPG, { def, items: battleItems(flags, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle);
       clearLosses(flags, def);
       return sim.logic.battleOver(true);
     };

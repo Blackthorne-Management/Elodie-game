@@ -50,6 +50,42 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       ranks: [{ level: 11, power: 100 }],
     },
   ],
+  // Azzy (COMBAT 9.3): his skills come from the board's Brasador abilities.
+  azzy: [
+    {
+      id: 'la_marca', name: 'La Marca', sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'],
+      text: 'He marks one foe for the house: it takes a quarter more damage for 3 turns.',
+    },
+    {
+      id: 'grito_de_guerra', name: 'Grito de Guerra', sp: 7, kind: 'status', power: 0, target: 'enemy', statuses: ['stunned'], bossChance: 0.5,
+      text: 'A war cry: one foe loses its next action (a boss only half the time).',
+    },
+    {
+      id: 'reinado_de_cenizas', name: 'Reinado de Cenizas', sp: 12, kind: 'damage', stat: 'atk', power: 120, powerPerFell: 40, target: 'enemy', element: 'fire',
+      once: true, heavy: true, text: 'Once per battle: a burning blow, stronger for every foe already felled.',
+    },
+  ],
+  // Samira (COMBAT 9.6; owner approved Oct 20: Daftar spends gold). Each Daftar costs 20 gold plus 10 per level
+  // (Claude's call, so it keeps pace with the fights): 10 HP or 10 damage for every 20 gold, and the realm's
+  // Wealth adds up to 30%; 60 gold buys Inspired.
+  samira: [
+    {
+      id: 'tonic', name: 'Tonic', sp: 6, kind: 'heal', power: 110, target: 'ally', cleanse: true,
+      text: 'A bitter tonic: heals one ally and clears what ails them.',
+    },
+    {
+      id: 'daftar_mend', name: 'Daftar: Remedy', sp: 0, gold: { base: 20, perLevel: 10 }, goldRate: 0.5, kind: 'heal', power: 0, target: 'ally',
+      text: 'She pays for the best: one ally heals 10 HP for every 20 gold spent.',
+    },
+    {
+      id: 'daftar_strike', name: 'Daftar: Hired Blade', sp: 0, gold: { base: 20, perLevel: 10 }, goldRate: 0.5, kind: 'damage', power: 0, target: 'enemy',
+      text: 'Gold buys a blow no armour stops: 10 damage for every 20 gold spent.',
+    },
+    {
+      id: 'daftar_favour', name: 'Daftar: Patronage', sp: 0, gold: { base: 60 }, kind: 'status', power: 0, target: 'ally', statuses: ['inspired'],
+      text: 'A purse for courage: one ally is Inspired for 3 turns (60 gold).',
+    },
+  ],
   yari: [
     { id: 'trackers_mark', name: "Tracker's Mark", sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'Marks one foe: it takes a quarter more damage for 3 turns.' },
     { id: 'arrow_rain', name: 'Arrow Rain', sp: 9, kind: 'damage', stat: 'atk', power: 75, target: 'allEnemies', element: 'wind', learn: { level: 6 }, text: 'Arrows on the wind, at every foe.' },
@@ -66,6 +102,11 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     },
     { id: 'pinning_shot', name: 'Pinning Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'enemy', statuses: ['slowed'], learn: { level: 2 }, text: 'Pins a foe: its turns come slower for 3 turns.' },
     { id: 'volley', name: 'Volley', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 60, target: 'randomEnemies', hits: 3, learn: { level: 4 }, text: 'Three arrows at random foes.' },
+  ],
+  azzy: [
+    { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
+    { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },
+    { id: 'sweep', name: 'Sweep', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 70, target: 'allEnemies', text: 'A wide cut at every foe.' },
   ],
   caona: [
     { id: 'quick_shot', name: 'Quick Shot', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A fast arrow. Ready every turn.' },

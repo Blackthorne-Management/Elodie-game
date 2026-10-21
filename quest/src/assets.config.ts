@@ -282,6 +282,11 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
     skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x3a2a24, trim: C.R!, legs: C.K!, build: 'tall',
     accessories: ['sash', 'epaulettes'],
   },
+  // Samira of the Dorini (Al-Doria, Chapter 4): a placeholder look until her sheet is painted.
+  samira: {
+    skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0x1f6a6a, trim: C.y!, robe: true,
+    headgear: 'wrap', headgearColor: C.y!, accessories: ['satchel', 'sash'],
+  },
   // The Quiet Crown: quiet_crown_<m|f>_<tone>, e.g. quiet_crown_f_deep.
   ...QUIET_CROWN,
 

@@ -40,7 +40,7 @@ function winBattles(sim: Sim): void {
     if (!def) throw new Error(`No battle "${id}"`);
     const flags = sim.logic.state.flags;
     // settleBattle reads only these fields of a finished fight.
-    const won = { def, items: battleItems(flags, RPG), outcome: 'won' } as unknown as Battle;
+    const won = { def, items: battleItems(flags, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle;
     settleBattle(flags, RPG, won);
     return sim.logic.battleOver(true);
   };

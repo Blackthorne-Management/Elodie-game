@@ -55,7 +55,16 @@ export interface Passive {
   text: string;
   /** Known once this holds (always when omitted); unknown passives are not listed. */
   known?: Condition;
+  /** What it does in battle, when it does something the engine runs (whether or not the player knows it yet). */
+  effect?: PassiveEffect;
 }
+
+/**
+ * Passive effects the engine runs (engine/battle.ts), so a new member's passive is data:
+ * battleGold: gold from battles won with them in the party, +share (Samira's Baraka Dorini);
+ * atkPerFell: +share ATK for each foe they fell this battle, up to max (Azzy's Sangre Ardiente).
+ */
+export type PassiveEffect = { kind: 'battleGold'; share: number } | { kind: 'atkPerFell'; share: number; max: number };
 
 export interface ItemDef {
   id: string;
@@ -120,7 +129,10 @@ export interface MemberDef {
   house: string;
   /** Portrait key (assets.config.ts PORTRAITS). */
   portrait: string;
-  /** Walk-sheet look (assets.config.ts NPC_SPRITES), shown large on the Equip screen (default: the portrait key). */
+  /**
+   * Walk-sheet look (assets.config.ts NPC_SPRITES), shown large on the Equip screen (default: the portrait key).
+   * It is also the battle stance's name: art/battle/<look>.png when painted, else the walk sheet stands in.
+   */
   look?: string;
   /** In the party while this holds (always when omitted). */
   joins?: Condition;
@@ -130,6 +142,15 @@ export interface MemberDef {
   support?: boolean;
   /** Fighters: their class (which weapons they may hold). */
   class?: MemberClass;
+  /**
+   * Bonded to Anissa (Gianna): with Anissa in the party their skills cost a quarter less, their actions feed her
+   * Spark, they can Surge, and Anissa's Light reaches them.
+   */
+  anissaBond?: boolean;
+  /** Where they stand in battle (default by class: warriors in front, mages and archers behind). */
+  row?: 'front' | 'back';
+  /** Their SP skills are spells equipped into a few slots (default: mages do; Equip > Spells). */
+  spellbook?: boolean;
   /** Always-on traits, listed on the Equip screen. */
   passives?: readonly Passive[];
   /** Level 1 stats, and what each level adds. */
@@ -251,6 +272,21 @@ function truthy(v: unknown): boolean {
 /** The members with the player now, in the given era. */
 export function partyMembers(flags: FlagReader, rpg: RpgContent, era: 'present' | 'echo'): MemberDef[] {
   return rpg.members.filter((m) => m.era === era && (!m.joins || evaluate(m.joins, flags)));
+}
+
+/** Where a member stands in battle: their own row, else warriors in front and everyone else behind. */
+export function memberRow(m: MemberDef): 'front' | 'back' {
+  return m.row ?? (m.class === 'warrior' ? 'front' : 'back');
+}
+
+/** Whether a member's SP skills are spells equipped into slots: their own setting, else mages do. */
+export function hasSpellbook(m: MemberDef): boolean {
+  return m.spellbook ?? m.class === 'mage';
+}
+
+/** Whether a member's Anissa bond is active now (Anissa is in the party with them). */
+export function bondActive(flags: FlagReader, rpg: RpgContent, m: MemberDef): boolean {
+  return !!m.anissaBond && partyMembers(flags, rpg, m.era).some((x) => x.support);
 }
 
 // ---- Levels and XP ----------------------------------------------------------------------------

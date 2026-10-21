@@ -153,7 +153,7 @@ export const HINT_SHOW_MS = 7000;
 /** Turn order: after acting, a fighter waits round(TURN_DELAY_K / (SPD + TURN_DELAY_OFFSET)) x the action's weight. */
 export const TURN_DELAY_K = 1200;
 export const TURN_DELAY_OFFSET = 30;
-export const ACTION_WEIGHT = { attack: 1, skill: 1, item: 0.8, guard: 0.6 } as const;
+export const ACTION_WEIGHT = { attack: 1, skill: 1, heavy: 1.3, item: 0.8, guard: 0.6 } as const;
 /** Damage variance: x U(1 - v, 1 + v). */
 export const DAMAGE_VARIANCE = 0.08;
 /** Hit chance (physical): HIT_BASE + (SPD difference) / 2, clamped. Crit: CRIT_BASE + (SPD difference) / 4. */
@@ -169,16 +169,18 @@ export const MIN_DAMAGE_SHARE = 0.15;
 export const GUARD_MULT = 0.5;
 /** Status effects (COMBAT 10): how many of the affected fighter's own turns they last, and what they do. */
 export const STATUS = {
-  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false },
-  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true },
-  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true },
+  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false, skip: false },
+  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false },
+  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true, skip: false },
   /** Ward: damage taken x0.75 (a Chapter 1 proposal; Aldermoor's Ward of Patience is the party-wide one). */
-  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false },
-  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false },
+  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false, skip: false },
+  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false, skip: false },
   /** Slowed (COMBAT's Chilled): SPD x0.7, so turns come later. */
-  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true },
+  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true, skip: false },
   /** Taunting: foes' one-target attacks go to this fighter first. */
-  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false },
+  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false, skip: false },
+  /** Stunned (COMBAT 10): the fighter loses their next action (Azzy's Grito de Guerra). */
+  stunned: { turns: 1, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: true },
 } as const;
 /**
  * Spell slots (owner, Oct 15): a mage equips only this many of the spells she knows (the level at which
@@ -191,6 +193,12 @@ export const SPELL_SLOTS: readonly { level: number; slots: number }[] = [
 ];
 /** A mage's Attack with a plain staff: a bash at this power (100 with a bladed or spiked staff). */
 export const MAGE_BASH_POWER = 70;
+/**
+ * Samira's Daftar (COMBAT 9.6; owner approved Oct 20: it spends gold): each realm Wealth point makes what the
+ * gold buys DAFTAR_WEALTH_PER_POINT stronger, up to DAFTAR_WEALTH_MAX.
+ */
+export const DAFTAR_WEALTH_PER_POINT = 0.01;
+export const DAFTAR_WEALTH_MAX = 0.3;
 /** Fighters in a battle at once (owner, Oct 15): up to 8 in the party, 4 fight, the rest wait to swap in. */
 export const BATTLE_ACTIVE = 4;
 /** A fighter who swaps in (or replaces a fallen one) waits this share of a full turn before acting. */

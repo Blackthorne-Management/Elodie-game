@@ -160,7 +160,7 @@ export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(ITEM_
 
 export const MEMBERS: readonly MemberDef[] = [
   {
-    id: 'gianna', name: 'Gianna', role: 'Archivist-Mage', house: 'Kay Soley', portrait: 'gianna', era: 'present', class: 'mage',
+    id: 'gianna', name: 'Gianna', role: 'Archivist-Mage', house: 'Kay Soley', portrait: 'gianna', era: 'present', class: 'mage', anissaBond: true,
     passives: [
       {
         name: "Anissa's Light",
@@ -193,6 +193,29 @@ export const MEMBERS: readonly MemberDef[] = [
     passives: [{ name: 'Hold the line', text: 'When he Guards, the allies behind him take a fifth less damage too.' }],
     base: { hp: 70, sp: 10, atk: 13, def: 12, mag: 3, spd: 7 }, growth: { hp: 8, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'marshal_cutlass', armor: 'officer_coat' },
+  },
+  // The companions to come (fighters as data, Oct 20; COMBAT.md 2 and 9): each is this entry, their skills in
+  // data/battles.ts and a placeholder look (assets.config.ts NPC_SPRITES; a painted battle/<look>.png replaces the
+  // walk sheet in battle). No story sets their join flags yet: Azzy is meant to join in Ardencia (Chapter 3),
+  // Samira in Al-Doria (Chapter 4).
+  {
+    id: 'azzy', name: 'Azzy', role: 'Blade-Knight', house: 'Brasador', portrait: 'azzy', era: 'present', class: 'warrior',
+    passives: [
+      { name: 'Sangre Ardiente', text: 'Each foe he fells this battle: +5% ATK (up to +25%).', effect: { kind: 'atkPerFell', share: 0.05, max: 0.25 } },
+    ],
+    joins: { flag: 'party.azzy' },
+    base: { hp: 60, sp: 14, atk: 14, def: 10, mag: 4, spd: 9 }, growth: { hp: 7, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 },
+    start: { weapon: 'steel_saber', armor: 'officer_coat' },
+  },
+  {
+    id: 'samira', name: 'Samira', role: 'Alchemist', house: 'Dorini', portrait: 'samira', era: 'present', class: 'mage', spellbook: false,
+    passives: [
+      { name: 'Baraka Dorini', text: 'Gold from battles won with her: +10%.', effect: { kind: 'battleGold', share: 0.1 } },
+      { name: 'Daftar al-Dorini', text: 'She pays in gold for what she needs; the realm\'s Wealth makes each coin go further (+1% a point, up to +30%).' },
+    ],
+    joins: { flag: 'party.samira' },
+    base: { hp: 44, sp: 28, atk: 7, def: 6, mag: 12, spd: 11 }, growth: { hp: 5, sp: 3, atk: 1, def: 1, mag: 2, spd: 1 },
+    start: { weapon: 'driftwood_staff_of_focus', armor: 'archivist_robe' },
   },
   // Caona joins the Echo party at the areíto of the first oath (STORY.md Chapter 2, beat 5).
   {

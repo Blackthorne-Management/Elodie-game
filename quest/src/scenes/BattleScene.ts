@@ -40,6 +40,8 @@ import {
   battleEntry,
   battleItems,
   battleParty,
+  battlePurse,
+  goldCost,
   isMove,
   needsTarget,
   settleBattle,
@@ -111,6 +113,7 @@ const STATUS_TAGS: Readonly<Record<StatusId, { tag: string; good: boolean }>> = 
   regen: { tag: 'REGEN', good: true },
   slowed: { tag: 'SLOW', good: false },
   taunting: { tag: 'TAUNT', good: true },
+  stunned: { tag: 'STUN', good: false },
 };
 
 const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
@@ -121,6 +124,7 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
   regen: 'Regen',
   slowed: 'Slowed',
   taunting: 'drawing every blow',
+  stunned: 'Stunned',
 };
 
 const VISIBLE_ROWS = 6;
@@ -234,7 +238,7 @@ export class BattleScene extends Phaser.Scene {
     const flags = rt.logic.state.flags;
     const def = battleDef(this.battleId);
     if (!def) throw new Error(`No battle ${this.battleId}`);
-    const party = battleParty(flags, RPG, SKILL_BOOK);
+    const party = battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present');
     this.extra.forEach((id, i) => {
       const m = RPG.members.find((x) => x.id === id);
       if (m) party.push({ ...battleEntry(flags, RPG, m, SKILL_BOOK, false), id: `${id}${i}` });
@@ -245,7 +249,8 @@ export class BattleScene extends Phaser.Scene {
     this.seed = (this.seed * 1103515245 + 12345) >>> 0;
     // The Grudge: each earlier Game Over at this fight makes the party's blows land harder (engine/gameOver.ts).
     const grudge = grudgeFor(flags, def);
-    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge });
+    const purse = battlePurse(flags, RPG, Object.keys(flags.snapshot()));
+    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse });
     this.placeFighters();
     const opening: BattleEvent[] = [];
     if (grudge > 0) opening.push({ kind: 'text', text: GAME_OVER_TEXT.grudge.replace('{p}', String(Math.round(grudge * 100))) });
@@ -481,7 +486,8 @@ export class BattleScene extends Phaser.Scene {
     this.done = true;
     audio.playMusic(VICTORY_MUSIC);
     const items = this.result.items.map((i) => RPG.items[i.id]?.name ?? i.id).join(', ');
-    this.say(`Victory!  +${this.result.xp} XP  +${this.result.gold} gold${items ? `  ${items}` : ''}`);
+    const spent = this.result.spent ? `  (${this.result.spent} spent)` : '';
+    this.say(`Victory!  +${this.result.xp} XP  +${this.result.gold} gold${spent}${items ? `  ${items}` : ''}`);
     const after = this.battle.def.tutorial?.after;
     if (after) this.openTutorial(after);
   }
@@ -558,12 +564,15 @@ export class BattleScene extends Phaser.Scene {
         ...me.skills
           .filter((s) => !isMove(s))
           .map((s) => {
-            const cost = skillCost(s, me);
+            // Daftar is paid in gold (COMBAT 9.6), the rest in SP.
+            const coins = goldCost(s, me);
+            const cost = coins ? `${coins}g` : String(skillCost(s, me));
+            const price = coins ? `${coins} gold of ${b.purse}` : `${cost} SP`;
             const from = s.source ? ` From the ${s.source}.` : '';
             return {
               label: `${s.source ? '*' : ''}${s.name} ${cost}`,
               enabled: b.canUse(me, s),
-              hint: `${s.text} (${cost} SP)${from}`,
+              hint: `${s.text} (${price})${from}`,
               run: () => this.aimAt(s.name, s.target, 'skills', (target) => ({ kind: 'skill', skill: s.id, target })),
             };
           }),

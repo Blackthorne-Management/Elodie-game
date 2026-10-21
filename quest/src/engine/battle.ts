@@ -17,6 +17,11 @@
 // Skills grow (owner, Oct 15; engine/skills.ts picks what each member brings): weapon moves have
 // cooldowns instead of SP, ranks add power and effects, gear can bring a skill, and a mage's Attack with a
 // plain staff is only a bash.
+// Fighters as data (Oct 20): a member's row, Anissa bond and passive effects come from their MemberDef, so a
+// new companion is a data entry. Skills can cost gold instead of SP (Samira's Daftar: an exact amount bought
+// with gold, stronger with the realm's Wealth), grow with the foes felled (Azzy's Reinado de Cenizas), and stun
+// (a stunned fighter loses their next action; bosses only by a chance). The seed comes from the save
+// (battleSeed), so a fight replays exactly and each new try rolls new dice.
 
 import {
   ACTION_WEIGHT,
@@ -27,6 +32,8 @@ import {
   CRIT_MAX,
   CRIT_MIN,
   CRIT_MULT,
+  DAFTAR_WEALTH_MAX,
+  DAFTAR_WEALTH_PER_POINT,
   DAMAGE_VARIANCE,
   DIFFICULTY,
   ELEMENT_RESIST,
@@ -60,14 +67,17 @@ import {
   SLOTS,
   addSharedXp,
   equipped,
+  globalPillar,
   gold,
   itemCount,
   level,
+  memberRow,
   partyMembers,
   removeItem,
   stats,
   type ItemSpecial,
   type MemberDef,
+  type PassiveEffect,
   type RpgContent,
   type Stats,
 } from './rpg.ts';
@@ -117,6 +127,19 @@ export interface SkillDef {
   cooldown?: number;
   /** Usable once per battle. */
   once?: boolean;
+  /** A heavy action (ACTION_WEIGHT.heavy): the user's next turn comes later. */
+  heavy?: boolean;
+  /**
+   * Paid in gold instead of SP (Samira's Daftar): `base` plus `perLevel` for each of the user's levels. With
+   * `goldRate`, a damage or heal skill does exactly (gold spent x goldRate) points, no stat and no defence,
+   * grown by the realm's Wealth (DAFTAR_WEALTH_PER_POINT each, up to DAFTAR_WEALTH_MAX).
+   */
+  gold?: { base: number; perLevel?: number };
+  goldRate?: number;
+  /** Damage skills: this much more power for every foe felled so far this battle (Azzy's Reinado de Cenizas). */
+  powerPerFell?: number;
+  /** Its statuses land on a boss only this often (0 to 1); on other foes always (Grito de Guerra: 0.5). */
+  bossChance?: number;
   /** How it is learned (omitted: known from the start). */
   learn?: { level?: number; lore?: { books: readonly string[]; count: number; where: string } };
   ranks?: readonly SkillRank[];
@@ -165,6 +188,8 @@ export interface EnemyDef {
   resist?: readonly Element[];
   /** HP times this (a teaching foe that lasts long enough to show its moves: the boar). */
   hpScale?: number;
+  /** A boss: some skills' statuses land only by a chance (SkillDef.bossChance). */
+  boss?: boolean;
 }
 
 export interface BattleDef {
@@ -194,6 +219,10 @@ export interface BattleDef {
    * sets no won flag. Never on a random ambush (tests/gameOver.test.ts).
    */
   meantToLose?: { scene: string };
+  /** Who fights: the present party (the default) or the Echo party (Patricio's). */
+  era?: 'present' | 'echo';
+  /** A fight that belongs to a side quest (its XP counts as side-quest XP in tools/level-curve.ts). */
+  sideQuest?: string;
 }
 
 /**
@@ -227,6 +256,8 @@ export interface PartyEntry {
   bash?: number;
   /** The weapon item in hand (drawn in their hand on the battle screen). */
   weaponItem?: string;
+  /** Passive effects the engine runs (Sangre Ardiente, ...). */
+  passives?: readonly PassiveEffect[];
 }
 
 export interface BattleItem {
@@ -281,6 +312,10 @@ export interface Combatant {
   /** Their plain Attack's power. */
   bash: number;
   weaponItem?: string;
+  passives: readonly PassiveEffect[];
+  /** Foes this fighter has felled this battle. */
+  fells: number;
+  boss: boolean;
 }
 
 export interface ActiveStatus {
@@ -338,6 +373,21 @@ export interface BattleOptions {
   /** The Grudge: +GRUDGE_STEP per earlier Game Over at this fight, up to GRUDGE_MAX (engine/gameOver.ts). */
   grudge?: number;
   difficulty?: keyof typeof DIFFICULTY;
+  /** Gold in the purse, for skills paid in gold (what is spent is taken from the save by settleBattle). */
+  gold?: number;
+  /** The realm's Wealth (it grows what gold buys). */
+  wealth?: number;
+}
+
+/** What a gold skill costs this fighter (0 for SP skills). */
+export function goldCost(skill: SkillDef, c: Pick<Combatant, 'level'>): number {
+  if (!skill.gold) return 0;
+  return skill.gold.base + (skill.gold.perLevel ?? 0) * c.level;
+}
+
+/** How much stronger the realm's Wealth makes what gold buys (a share: 0.12 is +12%). */
+export function wealthBoost(wealth: number): number {
+  return Math.min(DAFTAR_WEALTH_MAX, Math.max(0, wealth) * DAFTAR_WEALTH_PER_POINT);
 }
 
 /** An enemy's stats at its level (COMBAT 13.1), before difficulty. */
@@ -373,6 +423,10 @@ export class Battle {
   surgeArmed = false;
   grudge: number;
   outcome: 'won' | 'lost' | null = null;
+  /** Gold spent on skills this battle (settleBattle takes it from the save). */
+  goldSpent = 0;
+  private readonly gold: number;
+  private readonly boost: number;
   private readonly rng: Rng;
   private readonly enemyDamage: number;
   private readonly tipsShown = new Set<string>();
@@ -385,6 +439,8 @@ export class Battle {
     this.def = def;
     this.rng = new Rng(opts.seed);
     this.grudge = Math.min(GRUDGE_MAX, opts.grudge ?? 0);
+    this.gold = opts.gold ?? 0;
+    this.boost = wealthBoost(opts.wealth ?? 0);
     const diff = DIFFICULTY[opts.difficulty ?? 'story'];
     this.enemyDamage = diff.enemyDamage;
     this.items = items.map((i) => ({ ...i }));
@@ -423,6 +479,9 @@ export class Battle {
       cooldowns: {},
       bash: p.bash ?? 100,
       weaponItem: p.weaponItem,
+      passives: p.passives ?? [],
+      fells: 0,
+      boss: false,
     }));
     const foes: Combatant[] = enemies.map((e, idx) => {
       const n = (seen.get(e.id) ?? 0) + 1;
@@ -461,11 +520,24 @@ export class Battle {
         slot: idx,
         cooldowns: {},
         bash: 100,
+        passives: [],
+        fells: 0,
+        boss: !!e.boss,
       };
     });
     this.combatants = [...members, ...foes];
     // Opening times: a share of a full delay, from the dice (COMBAT 3).
     for (const c of this.combatants) c.next = Math.round(turnDelay(c.spd) * (0.3 + this.rng.next() * 0.7));
+  }
+
+  /** Gold left in the purse for gold skills. */
+  get purse(): number {
+    return this.gold - this.goldSpent;
+  }
+
+  /** Foes felled so far this battle. */
+  get felled(): number {
+    return this.enemies.filter((e) => e.down).length;
   }
 
   /** Everyone in the party, fighting or waiting. */
@@ -540,10 +612,12 @@ export class Battle {
       if (!this.canUse(me, skill)) return [];
       const cost = skillCost(skill, me);
       me.sp -= cost;
+      const paid = goldCost(skill, me);
+      this.goldSpent += paid;
       if (skill.cooldown) me.cooldowns[skill.id] = skill.cooldown + 1; // this turn's end counts one off
       if (skill.once) this.usedOnce.add(`${me.key}:${skill.id}`);
-      weight = isMove(skill) ? ACTION_WEIGHT.attack : ACTION_WEIGHT.skill;
-      events.push(...this.useSkill(me, skill, targets));
+      weight = skill.heavy ? ACTION_WEIGHT.heavy : isMove(skill) ? ACTION_WEIGHT.attack : ACTION_WEIGHT.skill;
+      events.push(...this.useSkill(me, skill, targets, paid));
     } else if (action.kind === 'guard') {
       me.guarding = true;
       weight = ACTION_WEIGHT.guard;
@@ -588,6 +662,7 @@ export class Battle {
   /** Whether a fighter can use a skill now: SP, cooldown, once per battle. */
   canUse(c: Combatant, skill: SkillDef): boolean {
     if (c.sp < skillCost(skill, c)) return false;
+    if (goldCost(skill, c) > this.purse) return false;
     if ((c.cooldowns[skill.id] ?? 0) > 0) return false;
     if (skill.once && this.usedOnce.has(`${c.key}:${skill.id}`)) return false;
     if (skill.kind === 'revive' && !this.party.some((p) => p.down)) return false;
@@ -617,6 +692,15 @@ export class Battle {
       events.push({ kind: 'turn', who: c.key }, ...this.beginTurn(c));
       events.push(...this.check());
       if (this.outcome) break;
+      // Stunned: the turn is lost (the status goes with it).
+      const stun = c.statuses.find((st) => STATUS[st.id].skip);
+      if (stun) {
+        c.statuses = c.statuses.filter((st) => st !== stun);
+        events.push({ kind: 'text', text: `${c.name} is stunned and loses the turn.` }, { kind: 'status', to: c.key, status: stun.id, on: false });
+        c.next += turnDelay(spdOf(c), ACTION_WEIGHT.guard);
+        events.push(...this.endTurn(c));
+        continue;
+      }
       if (c.side === 'party') {
         if (c.skills.some(isMove)) events.push(...this.tip('moves', undefined));
         return events;
@@ -690,7 +774,7 @@ export class Battle {
         return events;
       }
     }
-    const stat = type === 'physical' ? a.atk : a.mag;
+    const stat = type === 'physical' ? a.atk * (1 + this.fellBonus(a)) : a.mag;
     const raw = (stat * power) / 100;
     const cut = type === 'physical' ? b.def * 0.5 : b.def * 0.25;
     let dmg = Math.max(Math.ceil(raw * MIN_DAMAGE_SHARE), raw - cut);
@@ -722,11 +806,30 @@ export class Battle {
       dmg *= ELEMENT_RESIST;
     }
     if (b.guarding) dmg *= GUARD_MULT;
-    const amount = Math.max(1, Math.round(dmg));
+    events.push(...this.wound(a, b, Math.max(1, Math.round(dmg)), { crit, surge, move, style: type, element, affinity }));
+    return events;
+  }
+
+  /** ATK share from felling foes this battle (Sangre Ardiente). */
+  private fellBonus(a: Combatant): number {
+    let bonus = 0;
+    for (const p of a.passives) if (p.kind === 'atkPerFell') bonus += Math.min(p.max, p.share * a.fells);
+    return bonus;
+  }
+
+  /** `amount` of damage lands on `b`: the damage event, and a fall (the next one waiting steps in). */
+  private wound(
+    a: Combatant,
+    b: Combatant,
+    amount: number,
+    info: { crit: boolean; surge: boolean; move: string; style: 'physical' | 'magic'; element?: Element; affinity?: 1 | -1 },
+  ): BattleEvent[] {
+    const events: BattleEvent[] = [];
     b.hp = Math.max(0, b.hp - amount);
-    events.push({ kind: 'damage', from: a.key, to: b.key, amount, crit, surge, move, style: type, element, affinity });
+    events.push({ kind: 'damage', from: a.key, to: b.key, amount, ...info });
     if (b.hp === 0) {
       b.down = true;
+      if (a.side !== b.side) a.fells++;
       events.push({ kind: 'down', who: b.key });
       // The next one waiting takes a fallen fighter's place.
       const next = b.side === 'party' && b.active ? this.bench.find((c) => !c.down) : undefined;
@@ -773,7 +876,7 @@ export class Battle {
   }
 
   /** A skill's effect on its targets: hits, heals and statuses. */
-  private useSkill(me: Combatant, skill: SkillDef, targets: Combatant[]): BattleEvent[] {
+  private useSkill(me: Combatant, skill: SkillDef, targets: Combatant[], paid = 0): BattleEvent[] {
     const events: BattleEvent[] = [];
     const type = skill.stat === 'atk' ? 'physical' : 'magic';
     const random = skill.target === 'randomEnemies';
@@ -799,16 +902,22 @@ export class Battle {
       }
       return events;
     }
+    // Bought with gold (Daftar): an exact amount, grown by the realm's Wealth.
+    const bought = skill.goldRate !== undefined ? Math.max(1, Math.round(paid * skill.goldRate * (1 + this.boost))) : 0;
+    const power = skill.power + (skill.powerPerFell ?? 0) * this.felled;
     const hits = random ? (skill.hits ?? 1) : 1;
     for (let h = 0; h < hits; h++) {
       const pool = random ? [this.rng.pick(targets.filter((t) => !t.down).length ? targets.filter((t) => !t.down) : targets)] : targets;
       for (const t of pool) {
         if (t.down) continue;
-        if (skill.kind === 'damage') {
+        if (skill.kind === 'damage' && bought) {
+          events.push(...this.wound(me, t, bought, { crit: false, surge: false, move: skill.name, style: 'magic', element: skill.element }));
+        } else if (skill.kind === 'damage') {
           if (surge) this.surgeArmed = true;
-          events.push(...this.hit(me, t, skill.name, skill.power, type, skill.element));
+          events.push(...this.hit(me, t, skill.name, power, type, skill.element));
         } else if (skill.kind === 'heal') {
-          const amount = Math.min(t.maxHp - t.hp, Math.round(((me.mag * skill.power) / 100) * (0.95 + this.rng.next() * 0.1)));
+          const rolled = bought || Math.round(((me.mag * skill.power) / 100) * (0.95 + this.rng.next() * 0.1));
+          const amount = Math.min(t.maxHp - t.hp, rolled);
           t.hp += amount;
           events.push({ kind: 'heal', to: t.key, hp: amount, sp: 0, source: skill.name });
         }
@@ -816,7 +925,13 @@ export class Battle {
           for (const st of t.statuses.filter((x) => STATUS[x.id].bad)) events.push({ kind: 'status', to: t.key, status: st.id, on: false });
           t.statuses = t.statuses.filter((x) => !STATUS[x.id].bad);
         }
-        if (!t.down) for (const st of skill.statuses ?? []) events.push(...this.giveStatus(t, st));
+        if (t.down || !skill.statuses?.length) continue;
+        // A boss shrugs some statuses off (Grito de Guerra lands half the time).
+        if (t.boss && skill.bossChance !== undefined && this.rng.next() >= skill.bossChance) {
+          events.push({ kind: 'text', text: `${t.name} shrugs it off.` });
+          continue;
+        }
+        for (const st of skill.statuses) events.push(...this.giveStatus(t, st));
       }
     }
     if (surge) this.surgeArmed = false;
@@ -897,12 +1012,15 @@ function clamp(v: number, lo: number, hi: number): number {
 
 // ---- Between the field and the battle ---------------------------------------------------------------
 
-/** The present party as fighters: their stats with gear, the skills they bring, and their gear's specials. */
-export function battleParty(flags: FlagReader, rpg: RpgContent, book: SkillBook): PartyEntry[] {
-  const withAnissa = partyMembers(flags, rpg, 'present').some((m) => m.support);
-  return partyMembers(flags, rpg, 'present')
-    .filter((m: MemberDef) => !m.support)
-    .map((m) => battleEntry(flags, rpg, m, book, withAnissa));
+/**
+ * The party as fighters (the present one by default, or the Echo's): their stats with gear, the skills they
+ * bring, their gear's specials, and what their MemberDef says (row, Anissa bond, passives). In roster order: the
+ * first BATTLE_ACTIVE fight, the rest wait to swap in.
+ */
+export function battleParty(flags: FlagReader, rpg: RpgContent, book: SkillBook, era: 'present' | 'echo' = 'present'): PartyEntry[] {
+  const members = partyMembers(flags, rpg, era);
+  const withAnissa = members.some((m) => m.support);
+  return members.filter((m: MemberDef) => !m.support).map((m) => battleEntry(flags, rpg, m, book, withAnissa));
 }
 
 /** One member as a fighter. */
@@ -922,13 +1040,19 @@ export function battleEntry(flags: FlagReader, rpg: RpgContent, m: MemberDef, bo
       const sp = id ? rpg.items[id]?.special : undefined;
       return sp ? [sp] : [];
     }),
-    anissaBond: m.class === 'mage' && withAnissa,
-    row: m.class === 'warrior' ? 'front' : 'back',
+    anissaBond: !!m.anissaBond && withAnissa,
+    row: memberRow(m),
     weapon: weapon?.weapon,
     // A plain staff only bashes; one with a blade or spikes strikes properly.
     bash: weapon?.weapon === 'staff' && !weapon.edge ? MAGE_BASH_POWER : 100,
     weaponItem: weapon?.art ?? weaponId ?? undefined,
+    passives: (m.passives ?? []).flatMap((p) => (p.effect ? [p.effect] : [])),
   };
+}
+
+/** What a fight's gold skills can draw on: the gold on hand and the realm's Wealth (`keys`: the save's flag names). */
+export function battlePurse(flags: FlagReader, rpg: RpgContent, keys: readonly string[]): { gold: number; wealth: number } {
+  return { gold: gold(flags, rpg), wealth: globalPillar(flags, rpg, 'wealth', keys) };
 }
 
 /** The bag's consumables, for the Item command. */
@@ -947,8 +1071,18 @@ export function battleItems(flags: FlagReader, rpg: RpgContent): BattleItem[] {
 
 export interface BattleResult {
   xp: number;
+  /** Gold won (with Baraka Dorini's share). */
   gold: number;
+  /** Gold spent on skills (Daftar), taken from the purse. */
+  spent: number;
   items: { id: string; n: number }[];
+}
+
+/** The extra share of battle gold the party's passives bring (Baraka Dorini: +10% while Samira is in the party). */
+export function battleGoldShare(party: readonly Pick<Combatant, 'passives'>[]): number {
+  let share = 0;
+  for (const c of party) for (const p of c.passives) if (p.kind === 'battleGold') share += p.share;
+  return share;
 }
 
 /**
@@ -961,14 +1095,17 @@ export function settleBattle(flags: FlagStore, rpg: RpgContent, battle: Battle):
     const used = itemCount(flags, it.id) - it.count;
     if (used > 0) removeItem(flags, it.id, used);
   }
-  if (battle.outcome !== 'won') return { xp: 0, gold: 0, items: [] };
+  if (battle.outcome !== 'won') return { xp: 0, gold: 0, spent: 0, items: [] };
   addSharedXp(flags, r.xp);
-  flags.set('gold', gold(flags, rpg) + r.gold);
+  // Gold spent on Daftar comes off the purse; the winnings go on, with Baraka Dorini's share.
+  const spent = battle.goldSpent;
+  const won = Math.round(r.gold * (1 + battleGoldShare(battle.party)));
+  flags.set('gold', Math.max(0, gold(flags, rpg) - spent) + won);
   for (const it of r.items ?? []) {
     const def = rpg.items[it.id];
     if (def) flags.set(`item.${it.id}`, itemCount(flags, it.id) + it.n);
   }
   // A fight meant to be lost goes on with its story scene either way; it is never marked won.
   if (!battle.def.meantToLose) flags.set(encounterFlag(battle.def.table, battle.def.group, 'won'), true);
-  return { xp: r.xp, gold: r.gold, items: [...(r.items ?? [])] };
+  return { xp: r.xp, gold: won, spent, items: [...(r.items ?? [])] };
 }

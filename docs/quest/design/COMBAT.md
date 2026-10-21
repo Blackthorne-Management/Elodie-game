@@ -263,6 +263,11 @@ The hutia (proposal): a 1-in-8 chance after a win to steal one shiny extra drop.
 
 ### 9.3 Azzy (Blade-Knight, Brasador)
 
+**Built (Oct 20, fighters as data):** an entry in `data/rpg.ts` (joins on `party.azzy`, which no story sets yet) and
+his skills in `data/battles.ts`. Sangre Ardiente, La Marca, Grito de Guerra (the new Stunned status; on a boss 50%)
+and Reinado de Cenizas (heavy, `ACTION_WEIGHT.heavy = 1.3`) all run. *Claude's call:* as an attacker he also has
+weapon moves (Slash, Heavy Blow, Sweep, as Patricio's), and starts with the Steel Saber and the Officer's coat.
+
 | Skill | SP | Effect | Board |
 |---|---|---|---|
 | Sangre Ardiente | passive | +5% ATK per enemy he fells this battle (max +25%) | Sangre Ardiente |
@@ -290,8 +295,17 @@ The hutia (proposal): a 1-in-8 chance after a win to steal one shiny extra drop.
 
 ### 9.6 Samira (Alchemist, Dorini)
 
-The owner decision of Oct 14 says Wealth is a score that is never spent, so **Daftar spends gold** (proposal; see
-`STORY.md` open question 5).
+The owner decision of Oct 14 says Wealth is a score that is never spent, so **Daftar spends gold** (owner approved,
+Oct 20).
+
+**Built (Oct 20, fighters as data):** an entry in `data/rpg.ts` (joins on `party.samira`, which no story sets yet),
+Baraka Dorini (+10% battle gold), Tonic, and Daftar as three skills paid in gold: *Remedy* (10 HP per 20 gold),
+*Hired Blade* (10 damage per 20 gold, through any armour) and *Patronage* (Inspired, 60 gold); Wealth adds 1% a point
+up to 30% (`DAFTAR_WEALTH_PER_POINT`, `DAFTAR_WEALTH_MAX`). Gold spent comes off the purse when the fight is won; a
+lost fight gives the moment back, gold included. *Claude's call:* Remedy and Hired Blade cost 20 gold plus 10 per
+Samira's level (a fixed amount per use, so there is no amount to pick on a phone; at level 11 that is 130 gold for
+65 points). She is a mage by gear (staff, robe) without a spellbook: all her skills are always in hand. Not built
+yet: Bribe and Bazaar al-Dhahab (they need human foes and extra turns; Chapter 4 work).
 
 | Skill | SP | Effect | Board |
 |---|---|---|---|
@@ -331,6 +345,11 @@ Running joke (no mechanics): he is out of breath after every battle.
 | Caona (Scout-commander, proposal) | Pathfinder (party SPD +20% for 3 turns, SP 6), Scout's Shot (power 110, never misses, SP 3) |
 
 ## 9.9 Rows and swapping (owner, Oct 15; built)
+
+*Fighters as data (Oct 20):* a member's row (`row`, default by class), Anissa bond (`anissaBond`), spellbook
+(`spellbook`, default for mages) and passive effects (`Passive.effect`) are fields of their entry in `data/rpg.ts`.
+Who fights is the roster order: the first four present members fight, the rest wait to swap in. The Status and
+Equip pages scroll their portrait lists, so all eight fit.
 
 - Up to **8** in the party; **4** fight at once (`BATTLE_ACTIVE`); the rest wait.
 - **Swap** (a command, takes the turn): the fighter trades places with someone waiting, who acts after half a turn
