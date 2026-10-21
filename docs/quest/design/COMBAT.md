@@ -229,7 +229,10 @@ in that city (`FEAR_PER_WINS = 6`). Influence and Wealth from fights come only f
 - **Calm:** Hushers' **Frighten** lowers Calm by 1. At 0, Anissa goes quiet and Surge is unavailable until Gianna uses
   **Comfort** (SP 2, so 1 for her: Calm +2). No game over from this.
 - **Anissa can never be hit** (owner, Oct 15). The Shield Anissa command is dropped (Oct 15). Enemy moves once aimed
-  at her (**Seize**, **Hush the Light**) need a new design: open question for the owner.
+  at her go after what she gives the party (Oct 20, Claude's call under the owner's rule): **Seize**: the enemy
+  reaches for her, Gianna steps in the way, 3 Spark is torn away and Gianna is Marked for two turns; **Hush the
+  Light**: a whisper at her, Calm -2 (at 0 she goes quiet and Surge waits for Comfort). Shown: the enemy turns toward
+  her and Gianna moves in front.
 - **She is a person, not a battery:** she hides behind Gianna when a fight opens, says one short line on Surge, and the
   Surge gesture grows more confident with each chapter (`SURGE_ANIM_STAGE` by chapter: 1 = hesitant to 4 = sure).
 
