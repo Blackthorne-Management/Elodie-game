@@ -27,7 +27,7 @@ the home screen instead of starting (owner decision, Oct 16; `src/engine/install
 browser. The dev server (`npm run dev`) skips the screen so a phone on the same Wi-Fi can test in the
 browser; `?install=1` shows it anyway, `?install=0` skips it.
 
-**Jump to a chapter (dev server only).** `?chapter=2` starts a new game at the Yucayeque pier with the party, bag,
+**Jump to a chapter (dev server only).** `?chapter=2` starts a new game at the Yucayeque pier (`?chapter=3` on Pòdlimyè's long pier before the voyage to Ardencia, `?chapter=4` at the Free Brasador camp on Ardencia's strand) with the party, bag,
 gear, gold and story the scripted route leaves at the end of Chapter 1 (`src/data/starts/chapters.json`, written by
 `npx tsx tools/chapter-starts.ts`; a test keeps it in step with the route). Use a private window: the game autosaves
 over your usual save.

@@ -7,7 +7,7 @@
 //   ?touch=1         force the touch overlay
 //   ?intro=0         skip the animated intro and title (the smoke test's main route)
 //   ?install=0|1     never / always show the phone install screen (engine/install.ts)
-//   ?chapter=2 (or 3) dev server only: a new game at the start of that chapter, with the party, bag, gear and
+//   ?chapter=2 (to 4) dev server only: a new game at the start of that chapter, with the party, bag, gear and
 //                    story the scripted route leaves at the end of the one before (src/data/starts/chapters.json)
 
 import Phaser from 'phaser';

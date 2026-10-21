@@ -120,7 +120,7 @@ export function ardenciaTown(): MapSource {
   put(g, 'ψ', [[14, 7], [24, 7]]);
   // The duel court: low walls, the gallery along the top, the sand ring, the Alcázar's side door, the court gate.
   g.rect(29, 4, 9, 11, RED_WALL).rect(30, 5, 7, 1, 'υ').rect(30, 6, 7, 8, DUEL_SAND);
-  g.set(31, 4, '@');
+  g.set(31, 4, '@').set(31, 5, DUEL_SAND);
   g.rect(29, 9, 1, 2, RED_STONE);
   // The plaza: the dry fountain, lanterns.
   g.set(19, 13, 'φ');

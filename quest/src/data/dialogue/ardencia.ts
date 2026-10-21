@@ -168,7 +168,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         say(Z, 'I am Azriel Rodriguez. Azzy, if you prefer. I am to walk you up.'),
         say(G, 'Your father is the Lord?'),
         say(Z, 'He is. The papers say "envoy". They do not say you would be so young.'),
-        say(A, 'She is the oldest person I know.'),
+        say(A, 'She is my sister. She does not give up.'),
         say(Z, 'Then I will trust her. Come. The gate is open to you.', { set: { 'story.azzy_met': true } }),
         act([{ do: 'exit', actor: 'azzy', to: at(25, 0) }], '', 'Azzy walks back up through the gate, and the halberdiers stand aside.'),
       ],
@@ -523,7 +523,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         say(G, 'The elders?'),
         say('amanda', 'The elders! Ha! The elders pay for nothing. Not even their own hats. Have you seen their hats?'),
         say('amanda', 'Coma, envoy. And stop asking a cook where the bread comes from. It comes from the oven.', { set: { 'side.bread.cook': true } }),
-        say(A, 'She talks like a firework, Gigi.'),
+        say(A, 'She is so loud, Gigi. But none of the children are afraid of her.'),
       ],
     },
     after: {
