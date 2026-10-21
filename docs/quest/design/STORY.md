@@ -227,7 +227,7 @@ aloud to the whole party). He goes over the side; his marines fish him out ("The
 the blockade to a Zetwal trader, and the voyage plays home (`xaragua_zetwal`, by night). On Pòdlimyè's long pier,
 Grandmother and Grandfather wait with the pigeons' news; the city is uneasy (Crown sails off the south reef);
 Patricio meets Caona's granddaughter and asks Gianna to go to Ardencia and ask Lord Rael, Benny's son, to stand
-with Xaraguá ("Then ask him why his grandfather said yes"). `act2.complete`; the card: *Chapter 2 complete, The
+with Xaraguá ("Then ask him why his father said yes"). `act2.complete`; the card: *Chapter 2 complete, The
 Charter. Next: Chapter 3, The Trial of Blades*. The Cane Road's ambushes switch on (`story.zetwal_return`).
 `?chapter=3` starts here.
 
