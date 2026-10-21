@@ -244,6 +244,8 @@ const TEAL = 0x17a5a5;
 const HAIR_BLACK = 0x2b2433;
 const HAIR_DARK = 0x2a1a14;
 const WHITE_HAIR = C.h!;
+/** House Brasador's near-black (Ardencia, Chapter 3). */
+const BRASADOR_BLACK = 0x2a2632;
 
 /**
  * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
@@ -427,6 +429,30 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   marine_lieutenant: { skin: C.s!, hair: C.B!, hairStyle: 'cropped', outfit: C.r!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.u!, accessories: ['sash', 'epaulettes'] },
   crown_captain: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: C.u!, trim: C.y!, legs: C.w!, build: 'tall', beard: C.G!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['epaulettes', 'sash'] },
   crown_clerk: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
+  // Ardencia (Chapter 3; drawn placeholders until art drop 2, prompts in docs/quest/ART-PROMPTS.md). Brasador wears
+  // near-black and crimson. Rael: tall, grey at the temples, epaulettes and sash, the signet on his hand.
+  rael: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: BRASADOR_BLACK, trim: C.R!, legs: C.k!, build: 'tall', accessories: ['epaulettes', 'sash', 'emblem'] },
+  rivera: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.r!, trim: BRASADOR_BLACK, legs: C.K!, build: 'tall', beard: HAIR_BLACK, headgear: 'helmet', headgearColor: C.i!, accessories: ['sash'] },
+  jaime: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.r!, trim: C.y!, robe: true, beard: HAIR_BLACK, accessories: ['staff', 'emblem'] },
+  brasador_halberdier: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: BRASADOR_BLACK, trim: C.R!, legs: C.K!, headgear: 'helmet', headgearColor: C.i!, accessories: ['staff'] },
+  free_brasador: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: BRASADOR_BLACK, trim: C.w!, legs: C.K!, headgear: 'helmet', headgearColor: C.g!, accessories: ['staff'] },
+  cresswell: { skin: C.T!, hair: C.N!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.w!, build: 'tall', headgear: 'bicorne', headgearColor: C.u!, accessories: ['sash', 'emblem'] },
+  zelia: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'bun', outfit: BRASADOR_BLACK, trim: C.y!, robe: true, accessories: ['sash'] },
+  joaquin: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.K!, headgear: 'helmet', headgearColor: C.r!, accessories: ['epaulettes'] },
+  amanda: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'curly', outfit: C.o!, trim: C.R!, robe: true, headgear: 'wrap', headgearColor: C.R!, accessories: ['apron'] },
+  benny_old: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.r!, trim: C.o!, legs: C.K!, beard: WHITE_HAIR, accessories: ['cane', 'emblem'] },
+  nancy: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.m!, trim: C.y!, robe: true, accessories: ['sash'] },
+  ard_elder: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.r!, trim: C.y!, robe: true, beard: WHITE_HAIR, accessories: ['cane'] },
+  ard_elder_f: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.r!, trim: C.w!, robe: true },
+  treasurer_daughter: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.g!, trim: C.w!, robe: true },
+  oath_knight: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.G!, trim: C.R!, legs: C.K!, beard: C.B!, accessories: ['sash'] },
+  baker_widow: { skin: C.S!, hair: C.G!, hairStyle: 'bun', outfit: BRASADOR_BLACK, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: C.k!, accessories: ['apron'] },
+  echo_clerk: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x8a7a50, trim: C.N!, legs: C.B!, accessories: ['satchel'] },
+  echo_forgemaster: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x6a5a40, trim: C.e!, legs: C.B!, beard: HAIR_BLACK, accessories: ['apron'] },
+  ard_smith: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: BRASADOR_BLACK, trim: C.e!, legs: C.K!, beard: C.B!, accessories: ['apron'] },
+  ard_librarian: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: C.r!, trim: C.N!, robe: true, accessories: ['satchel'] },
+  ard_villager: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x7a5a48, trim: C.R!, legs: C.K! },
+  ard_villager_f: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x8a6a50, trim: C.R!, robe: true },
 };
 
 /** The player's look in each era. */
@@ -842,6 +868,56 @@ export const BATTLE_ART = {
   shakePx: 2,
 } as const;
 
+// Ardencia (Chapter 3): the Cinder Flats under a hazy sky, black lava and steam; the duel court's sand ring under
+// the Alcázar's red walls; Benny's tunnel, a black lava tube with a glow of lava far down it.
+const ARDENCIA_BACKDROPS = {
+  cinder_flats: {
+    sky: [0x8a6a5a, 0x9a7a66, 0xaa8a72, 0xbc9c80, 0xceae90, 0xdcc0a4],
+    cloud: 0xe8dccc,
+    cloudShade: 0xb8a898,
+    mountainFar: 0x5a4a50,
+    mountainNear: 0x3a3038,
+    trees: 0x2a2430,
+    treesDark: 0x1a1420,
+    field: 0x3a3440,
+    cane: 0x6e6a78,
+    caneDark: 0x4a4452,
+    ground: 0x3a3238,
+    groundDark: 0x241e26,
+    groundLight: 0x5a4a50,
+  },
+  duel_court: {
+    sky: [0x6a9ad0, 0x7aa8d8, 0x8cb6de, 0x9ec4e4, 0xb2d2ea, 0xc8e0ee],
+    cloud: 0xf4f6fa,
+    cloudShade: 0xc8d4e6,
+    mountainFar: 0x9a4a3a,
+    mountainNear: 0x7a2a26,
+    trees: 0x6a2a24,
+    treesDark: 0x4a1a18,
+    field: 0xb0603a,
+    cane: 0xc8784a,
+    caneDark: 0x8e4a2a,
+    ground: 0xd8c08a,
+    groundDark: 0xb8a070,
+    groundLight: 0xe8d4a4,
+  },
+  lava_tube: {
+    sky: [0x0c0a10, 0x141018, 0x1a1420, 0x241a24, 0x3a2224, 0x5a2a20],
+    cloud: 0x3a3440,
+    cloudShade: 0x2a2430,
+    mountainFar: 0x1a1420,
+    mountainNear: 0x14101a,
+    trees: 0x2a2430,
+    treesDark: 0x1a1420,
+    field: 0x241e26,
+    cane: 0xe0782a,
+    caneDark: 0x7a2a26,
+    ground: 0x2a2430,
+    groundDark: 0x1a1420,
+    groundLight: 0x4a4452,
+  },
+} as const;
+
 /** The painted scene behind each battle (BattleDef.backdrop), drawn in code until painted art arrives. */
 export const BATTLE_BACKDROPS: Readonly<Record<string, {
   sky: readonly number[];
@@ -922,6 +998,7 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     groundDark: 0x6b4426,
     groundLight: 0xc8a46b,
   },
+  ...ARDENCIA_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

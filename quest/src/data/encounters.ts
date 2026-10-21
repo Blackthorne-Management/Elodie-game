@@ -123,6 +123,93 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
     ],
   },
+  // Chapter 3's scripted fights (data/battles.ts), for the Foes page. No map rolls on this table.
+  ardencia_story: {
+    id: 'ardencia_story',
+    groups: [
+      {
+        id: 'rael',
+        weight: 0,
+        level: 13,
+        foes: ['Rael', 'Captain Rivera', 'Jaime'],
+        intro: 'Rael walks onto the sand.',
+        won: 'Rael ends it himself.',
+        fled: 'There is no leaving the ring.',
+      },
+      {
+        id: 'bats',
+        weight: 0,
+        level: 10,
+        foes: ['Cave Bat', 'Cave Bat', 'Cave Bat'],
+        intro: 'Bats pour out of the narrow.',
+        won: 'The bats whirl away down the tube.',
+        fled: 'You back into the dark.',
+      },
+    ],
+  },
+  // Ardencia (Chapter 3; outline section 5): the sea road up the Cinder Flats, levels 8 to 10 on the way up.
+  cinder_flats: {
+    id: 'cinder_flats',
+    groups: [
+      {
+        id: 'salamanders',
+        enemies: ['cinder_salamander', 'cinder_salamander'],
+        weight: 3,
+        level: 8,
+        foes: ['Cinder Salamander', 'Cinder Salamander'],
+        intro: 'Two salamanders slide out of a steaming crack, their backs glowing like coals.',
+        won: 'The salamanders hiss and slip back into the rock.',
+        fled: 'You back off the hot ground. They do not follow into the cool.',
+      },
+      {
+        id: 'bats',
+        enemies: ['cave_bat', 'cave_bat', 'cave_bat'],
+        weight: 2,
+        level: 8,
+        foes: ['Cave Bat', 'Cave Bat', 'Cave Bat'],
+        intro: 'A shriek from a lava tube, and the air is full of wings.',
+        won: 'The bats scatter back into the dark.',
+        fled: 'You cover your heads and run until the shrieking stops.',
+      },
+      {
+        id: 'bandit_deserter',
+        enemies: ['road_bandit', 'brasador_halberdier'],
+        weight: 2,
+        level: 9,
+        foes: ['Road Bandit', 'Brasador Halberdier'],
+        intro: 'A bandit and a deserter in a torn black coat block the road. "Toll for the sea road."',
+        won: 'The deserter throws down his halberd and runs for the strand.',
+        fled: 'You slip back down the road into the steam.',
+      },
+      {
+        id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot'],
+        weight: 1,
+        level: 9,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
+        intro: 'Two veiled figures stand in the steam of a spring. "Hush. Where is the little one?"',
+        won: 'The veiled pair step back into the steam and are gone.',
+        fled: 'You run. The steam closes behind you.',
+      },
+    ],
+  },
+  // After the escape (story.ardencia_escaped): Brasador patrols hunt the party on the strand road. Their hooks
+  // stun; they mean to take the party back, not to kill (no Bound: that is Rael's rule only).
+  cinder_patrols: {
+    id: 'cinder_patrols',
+    groups: [
+      {
+        id: 'halberdiers',
+        enemies: ['brasador_halberdier', 'brasador_halberdier'],
+        weight: 1,
+        level: 11,
+        foes: ['Brasador Halberdier', 'Brasador Halberdier'],
+        intro: 'A Brasador patrol, halberds low. "The Lord wants his guests back. Come quietly."',
+        won: 'The halberdiers fall back up the road toward the walls.',
+        fled: 'You run for the strand. The patrol is slower in its coats.',
+      },
+    ],
+  },
   // Zetwal: the Cane Road beyond the east gate.
   cane_road: {
     id: 'cane_road',

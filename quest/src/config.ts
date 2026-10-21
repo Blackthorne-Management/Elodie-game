@@ -205,6 +205,23 @@ export const MAGE_BASH_POWER = 70;
  */
 export const DAFTAR_WEALTH_PER_POINT = 0.01;
 export const DAFTAR_WEALTH_MAX = 0.3;
+/**
+ * Bound (COMBAT 10; Rael's fights only, BattleDef.binds): at 0 HP a fighter is Bound, not Down. On their turn they
+ * can only Break Free: BOUND_BREAK_CHANCE the first time, sure the second. Any heal frees them too (Claude's call,
+ * Oct 21: Comfort is not built). Freed by Break Free, they stand with BOUND_FREE_HP_SHARE of their HP; freed by a
+ * heal, with what it healed.
+ */
+export const BOUND_BREAK_CHANCE = 0.5;
+export const BOUND_FREE_HP_SHARE = 0.25;
+/** A guard who shields his lord (EnemyDef.protects: Captain Rivera) takes this share of one-target blows meant for him. */
+export const INTERCEPT_CHANCE = 0.75;
+/**
+ * The Trial of Blades (Chapter 3; the outline review 3.3): Rael ends the fight himself at the first of every fighter
+ * Bound, his HP floor holding, or TRIAL_TURNS_AFTER_FINISHER of his own turns after Reinado de Cenizas; the round cap
+ * (his own turns) is only the backstop for a party that stalls in the first two phases.
+ */
+export const RAEL_TRIAL_MAX_ROUNDS = 14;
+export const TRIAL_TURNS_AFTER_FINISHER = 3;
 /** Fighters in a battle at once (owner, Oct 15): up to 8 in the party, 4 fight, the rest wait to swap in. */
 export const BATTLE_ACTIVE = 4;
 /** A fighter who swaps in (or replaces a fallen one) waits this share of a full turn before acting. */

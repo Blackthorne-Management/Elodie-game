@@ -10,6 +10,7 @@ import { battleDef } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { battleItems, settleBattle, type Battle } from '../src/engine/battle.ts';
 import { GameLogic } from '../src/engine/game.ts';
+import { recordLoss } from '../src/engine/gameOver.ts';
 import { decodeSave, encodeSave } from '../src/engine/save.ts';
 import { Sim } from '../src/engine/sim.ts';
 import { applySave, newGame, toSaveData } from '../src/engine/state.ts';
@@ -39,6 +40,11 @@ function winBattles(sim: Sim): void {
     const def = battleDef(id);
     if (!def) throw new Error(`No battle "${id}"`);
     const flags = sim.logic.state.flags;
+    // A fight meant to be lost (the Trial of Blades) ends as the battle scene ends it: its flags, then its scene.
+    if (def.meantToLose) {
+      recordLoss(flags, def);
+      return sim.logic.battleOver(false, def.meantToLose.scene);
+    }
     // settleBattle reads only these fields of a finished fight.
     const won = { def, items: battleItems(flags, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle;
     settleBattle(flags, RPG, won);

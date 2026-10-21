@@ -217,6 +217,15 @@ export const MEMBERS: readonly MemberDef[] = [
     base: { hp: 44, sp: 28, atk: 7, def: 6, mag: 12, spd: 11 }, growth: { hp: 5, sp: 3, atk: 1, def: 1, mag: 2, spd: 1 },
     start: { weapon: 'driftwood_staff_of_focus', armor: 'archivist_robe' },
   },
+  // Young Lord Benny joins the Echo party once Azzy has joined (STORY.md: the design's rule), at the end of Chapter 3
+  // (story.benny_joined); his first fight in the Echo is Chapter 4's.
+  {
+    id: 'benny', name: 'Benny', role: 'Lord of Ardencia', house: 'Brasador', portrait: 'benny', look: 'benny_young', era: 'echo', class: 'warrior',
+    passives: [{ name: 'The iron promise', text: 'He kept the goal, not the oath: his La Marca is a weapon move, ready every third turn.' }],
+    joins: { flag: 'story.benny_joined' },
+    base: { hp: 66, sp: 12, atk: 14, def: 11, mag: 4, spd: 8 }, growth: { hp: 7, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 },
+    start: { weapon: 'steel_saber', armor: 'officer_coat' },
+  },
   // Caona joins the Echo party at the areíto of the first oath (STORY.md Chapter 2, beat 5).
   {
     id: 'caona', name: 'Caona', role: 'Scout', house: 'Yaguana', portrait: 'caona', era: 'echo', class: 'archer',

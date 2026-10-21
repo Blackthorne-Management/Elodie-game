@@ -3,9 +3,9 @@
 // Anissa run into a boar, which teaches the commands, Anissa's Spark and Surge, and her light.
 // Numbers follow docs/quest/design/COMBAT.md.
 
-import { ANISSA_SP_EVERY, BATTLE_ACTIVE, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST } from '../config.ts';
+import { ANISSA_SP_EVERY, BATTLE_ACTIVE, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
 import { ENCOUNTERS } from './encounters.ts';
-import type { BattleDef, EnemyDef, SkillDef } from '../engine/battle.ts';
+import type { BattleDef, EnemyDef, EnemyMove, SkillDef } from '../engine/battle.ts';
 import type { SkillBook } from '../engine/skills.ts';
 import { BOOKS } from './books.ts';
 
@@ -112,6 +112,12 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'quick_shot', name: 'Quick Shot', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A fast arrow. Ready every turn.' },
     { id: 'pinning_shot', name: 'Pinning Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'enemy', statuses: ['slowed'], text: 'Pins a foe: its turns come slower for 3 turns.' },
     { id: 'scouts_mark', name: "Scout's Mark", sp: 0, cooldown: 3, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'She has watched this foe for a week: it takes a quarter more damage for 3 turns.' },
+  ],
+  // Young Lord Benny of Ardencia in the Echo party (from the end of Chapter 3, once Azzy has joined).
+  benny: [
+    { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
+    { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },
+    { id: 'brasador_mark', name: 'La Marca', sp: 0, cooldown: 3, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'He marks one foe for the house: it takes a quarter more damage for 3 turns.' },
   ],
   patricio: [
     { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
@@ -264,6 +270,96 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     ],
     weak: ['light'],
   },
+  // ---- Chapter 3, Ardencia (outline section 5; review section 7) ----------------------------------------
+  // The Cinder Flats: salamanders in the hot cracks, bats in the lava tubes (drawn: ENEMY_ART), and Brasador
+  // halberdiers (drawn from their walking sprites until art drop 2).
+  cinder_salamander: {
+    id: 'cinder_salamander',
+    name: 'Cinder Salamander',
+    look: 'cinder_salamander',
+    level: 8,
+    role: 'caster',
+    moves: [
+      { name: 'Ember Spit', power: 95, magic: true },
+      { name: 'Flare', power: 150, magic: true, every: 3, tell: 'The salamander swells, its back glowing white...' },
+    ],
+    weak: ['water'],
+    resist: ['fire'],
+  },
+  cave_bat: {
+    id: 'cave_bat',
+    name: 'Cave Bat',
+    look: 'cave_bat',
+    level: 8,
+    role: 'skirmisher',
+    // Screech (COMBAT's Fogged is not built: Claude's call, Oct 21): it leaves the party Weakened instead.
+    moves: [
+      { name: 'Bite', power: 95 },
+      { name: 'Screech', power: 60, area: true, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The bats wheel up into the roof, all at once...' },
+    ],
+    weak: ['light'],
+  },
+  brasador_halberdier: {
+    id: 'brasador_halberdier',
+    name: 'Brasador Halberdier',
+    look: 'brasador_halberdier',
+    level: 9,
+    role: 'tank',
+    moves: [
+      { name: 'Halberd', power: 105 },
+      { name: 'Hook', power: 90, statuses: ['stunned'], chance: 0.5, every: 3, tell: 'The halberdier turns his blade, hook first...' },
+    ],
+  },
+  // The Trial of Blades (the outline 4.2, retuned by its review 3.3 and 7): Rael, Lord of Ardencia, level 13, a
+  // tank at 3 times HP and 1.2 ATK, wearing La Promesa de Benny (owner decision 2: its Last Stand is his
+  // HP floor). He never targets Anissa (she cannot be hit): his Seize goes for her Spark and Gianna steps in.
+  // Phase 1 is his alone; Captain Azriel Rivera and Jaime walk in at phase 2.
+  rael: {
+    id: 'rael',
+    name: 'Rael',
+    look: 'rael',
+    level: 13,
+    role: 'tank',
+    boss: true,
+    hpScale: 3,
+    atkScale: 1.2,
+    atkPerBound: 0.1,
+    floor: { hp: 1, text: 'La Promesa de Benny glows on his wrist. Rael stands.' },
+    moves: [
+      { name: 'Sword', power: 110 },
+      { name: 'La Marca', power: 90, statuses: ['marked'], every: 2 },
+      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], turns: 2, every: 3, tell: 'He is looking at Anissa, not at you.' },
+    ],
+  },
+  // Captain Azriel Rivera of the royal guard (owner direction, Oct 21): the wall. Most blows meant for Rael go to
+  // him; at 0 HP he steps back from the sand.
+  rivera: {
+    id: 'rivera',
+    name: 'Captain Rivera',
+    look: 'rivera',
+    level: 13,
+    role: 'tank',
+    protects: 'rael',
+    withdraws: { line: 'Stand back, Captain.', speaker: 'Rael' },
+    moves: [
+      { name: 'Halberd', power: 100 },
+      { name: 'Hook', power: 85, statuses: ['stunned'], chance: 0.5, every: 3, tell: 'Rivera turns his halberd, hook first, and watches Yari...' },
+    ],
+  },
+  // Jaime, Rael's advisor and a strong mage: a ward on his lord, and one area spell he takes his time over.
+  jaime: {
+    id: 'jaime',
+    name: 'Jaime',
+    look: 'jaime',
+    level: 13,
+    role: 'caster',
+    withdraws: { line: 'Enough, Jaime. Step back.', speaker: 'Rael' },
+    moves: [
+      { name: 'Ash Bolt', power: 85, magic: true },
+      { name: 'Ward of Ash', power: 0, ally: 'rael', statuses: ['warded'], every: 3 },
+      { name: 'Ash Storm', power: 100, magic: true, area: true, every: 4, tell: 'Jaime lifts both hands. The air over the sand begins to burn...' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     name: 'Marine sergeant',
@@ -277,7 +373,79 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
 };
 
+/** Rael's moves once the guards are in (phase 2, Unleashed) and once he is cornered (phase 3). */
+const RAEL_UNLEASHED: readonly EnemyMove[] = [
+  { name: 'Sword', power: 110 },
+  { name: 'Grito de Guerra', power: 60, statuses: ['stunned'], every: 2, tell: 'Rael draws a long breath. The gallery goes quiet...' },
+  { name: 'La Marca', power: 90, statuses: ['marked'], every: 3 },
+];
+const RAEL_CORNERED: readonly EnemyMove[] = [
+  { name: 'Sword', power: 115 },
+  {
+    name: 'Reinado de Cenizas', power: 130, powerPerBound: 40, area: true, every: 2, once: true,
+    tell: 'Rael lifts his blade over his head. The sand around him starts to smoke. Guard, everyone!',
+  },
+];
+
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 3: the Trial of Blades (meant to be lost: no goddess, no count, no Grudge, no Yield; outline 4.2 and
+  // its review). Members are Bound at 0 HP. Rael wins whatever the party does: he ends it at the first of every
+  // fighter Bound, La Promesa holding him at 1 HP, three of his turns after Reinado de Cenizas, or the round cap.
+  rael_trial: {
+    id: 'rael_trial',
+    title: 'The Trial of Blades',
+    backdrop: 'duel_court',
+    enemies: ['rael'],
+    table: 'ardencia_story',
+    group: 'rael',
+    rewards: { xp: 0, gold: 0 },
+    meantToLose: { scene: 'rael_after', set: { 'story.trial_fought': true } },
+    binds: true,
+    phases: [
+      {
+        below: 0.66,
+        onSurge: true,
+        speaker: 'Rael',
+        text: 'Good.',
+        moves: RAEL_UNLEASHED,
+        enter: ['rivera', 'jaime'],
+        enterText: 'Captain Rivera and Jaime step onto the sand beside their lord.',
+      },
+      { below: 0.33, speaker: 'Rael', text: 'Again.', moves: RAEL_CORNERED },
+    ],
+    finale: {
+      boss: 'rael',
+      line: 'Enough.',
+      move: 'Cenizas',
+      text: 'Ash rises off the sand in a ring. When it settles, every one of them is on their knees, cords at their wrists.',
+      finisher: 'Reinado de Cenizas',
+      turnsAfter: TRIAL_TURNS_AFTER_FINISHER,
+    },
+    tips: {
+      start: 'Gigi... he isn\'t angry. That\'s worse.',
+      spark: 'Take my light, Gigi. Now.',
+      tell: 'Guard, Gigi! Yari!',
+      lowHp: 'Heal, Gigi. Please.',
+    },
+  },
+  // Chapter 3: Benny's tunnel (outline beat 8): Azzy's first fight, in the front row. Paid below the ambush rule on
+  // purpose (the outline's levels table counts 120 XP).
+  tunnel_bats: {
+    id: 'tunnel_bats',
+    title: "Benny's Tunnel",
+    backdrop: 'lava_tube',
+    enemies: ['cave_bat', 'cave_bat', 'cave_bat'],
+    level: 10,
+    table: 'ardencia_story',
+    group: 'bats',
+    rewards: { xp: 120, gold: 40 },
+    tips: {
+      start: 'Azzy is in front now, Gigi. They can\'t reach you past him. Let him mark one with La Marca.',
+      spark: 'Surge, Gigi!',
+      tell: 'They\'re going to scream! Guard!',
+      lowHp: 'Heal, Gigi!',
+    },
+  },
   // Chapter 2: the first fight in Yucayeque, on the pier the ferry lands at.
   pier_marines: {
     id: 'pier_marines',
@@ -418,6 +586,8 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
 const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   mountain_path: { title: 'The Mountain Path', backdrop: 'mountain_path' },
   cane_road: { title: 'The Cane Road', backdrop: 'cane_road' },
+  cinder_flats: { title: 'The Cinder Flats', backdrop: 'cinder_flats' },
+  cinder_patrols: { title: 'The Sea Road', backdrop: 'cinder_flats' },
 };
 
 /**

@@ -2805,6 +2805,48 @@ export const ENEMY_ART: Readonly<Record<string, PixelArt>> = {
       '............................................',
     ],
   },
+  // Chapter 3: a cave bat of the Cinder Flats' lava tubes, wings spread, red eyes. 28 x 16, facing left.
+  cave_bat: {
+    rows: [
+      '............................',
+      '..k.....................k...',
+      '..kk...................kk...',
+      '..kKk.......kk.kk.....kKk...',
+      '..kKKk.....kKkkKk....kKKk...',
+      '..kKgKk...kKKKKKKk..kKgKk...',
+      '..kKggKk.kKRKKKRKk.kKggKk...',
+      '...kKggKkKKKKKKKKKkKggKk....',
+      '...kKgggKKKKWKWKKKKgggKk....',
+      '....kKgggKKKKKKKKKgggKk.....',
+      '....kKggggKKKKKKKggggKk.....',
+      '.....kKgggkKKKKKkgggKk......',
+      '......kKgk.kKKKk..kgKk......',
+      '.......kk...kKk....kk.......',
+      '.............k..............',
+      '............................',
+    ],
+  },
+  // Chapter 3: a cinder salamander, its back glowing like coals. 36 x 16, facing left.
+  cinder_salamander: {
+    rows: [
+      '....................................',
+      '....................................',
+      '........kkkk........................',
+      '......kkRoRRkk......................',
+      '.....kRoYooRRRkk....................',
+      '....kRRkoooRRRRRkkk.................',
+      '...kRRRRooRRoRRRRRRkkk..............',
+      '..kRRWkRRRRoRoRRoRRRRRkkk...........',
+      '..kRRRRRRRRRRRRRRRRRRRRRRkkk........',
+      '..krrRRRRRRrRRRRRRrRRRRRRRRRkk......',
+      '...kkrrrrrrrrrrrrrrrrrrrrrRRRRkk....',
+      '.....kkk.krk..krk...krk..kkrrRRRkk..',
+      '.......k.krk..krk...krk.....kkrrRRk.',
+      '.........kk...kk....kk........kkrrk.',
+      '................................kk..',
+      '....................................',
+    ],
+  },
   // The cane-field boar (kochon mawon): the first battle, on the Cane Road.
   // 52 x 36, facing left (enemies stand on the right of the battle screen). A stand-in until the painted art.
   boar: {

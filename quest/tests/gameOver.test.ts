@@ -123,8 +123,8 @@ describe('fights meant to be lost', () => {
       expect(CONTENT.dialogue[b.meantToLose!.scene], b.id).toBeDefined();
       expect(isRandomFight(b), b.id).toBe(false);
     }
-    // Chapter 1 and 2 have none yet (the Rael fight waits for the Chapter gate).
-    expect(Object.values(BATTLES).filter((b) => b.meantToLose)).toEqual([]);
+    // Chapters 1 and 2 have none; Chapter 3 has the Trial of Blades, and it is the only one so far.
+    expect(Object.values(BATTLES).filter((b) => b.meantToLose).map((b) => b.id)).toEqual(['rael_trial']);
   });
 
   it('after one, the game logic plays its scene whether the party fell or won', () => {
