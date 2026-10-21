@@ -202,7 +202,7 @@ describe('the Trial of Blades: lost, never won, and never lost to a reload', () 
     expect(back.battles).toEqual([]);
   });
 
-  it('the question: the court cleared, the halves glow, four sentences, the lie with the signet glowing, Rivera at the door', () => {
+  it('the question: the court cleared, the halves glow, four sentences, the lie with the signet glowing, Rivera and Jaime stay', () => {
     const lines = CONTENT.dialogue.rael_after!.nodes.start!.lines;
     const text = lines.map((l) => l.text);
     expect(text).toContain('Mine: who gave you that locket?');
@@ -211,9 +211,9 @@ describe('the Trial of Blades: lost, never won, and never lost to a reload', () 
     expect(text.join(' ')).not.toMatch(/\bAzriel\b/);
     expect(lines.some((l) => l.fx === 'token' && l.set?.['story.signet_glowed'])).toBe(true);
     expect(lines.some((l) => l.fx === 'signet' && l.text.startsWith('The envoy of Zetwal broke no law'))).toBe(true);
-    // Jaime leaves with the elders; Rivera shuts the door and stays.
+    // Both stay and both know (owner decision, Oct 21): Jaime at the Lord's shoulder, Rivera at the door.
     const cues = lines.flatMap((l) => l.stage ?? []);
-    expect(cues.some((c) => c.do === 'exit' && c.actor === 'jaime')).toBe(true);
+    expect(cues.some((c) => c.do === 'exit' && c.actor === 'jaime')).toBe(false);
     expect(cues.some((c) => c.do === 'exit' && c.actor === 'rivera')).toBe(false);
     // Never a joke from Anissa here: she speaks only of the light.
     expect(lines.filter((l) => l.speaker === 'anissa').map((l) => l.text)).toEqual(["It's the same light, Gigi. His ring and your locket. They're one thing.", 'Gigi. His ring lit again.']);

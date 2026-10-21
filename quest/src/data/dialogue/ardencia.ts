@@ -644,7 +644,8 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
   }),
 
   // ---- Beat 5: the winner's question (owner decision 1; review 3.2, 7.2) -----------------------------
-  // The party kneels, Bound. The court is cleared; Jaime leaves with the elders; Rivera stays at the door, silent.
+  // The party kneels, Bound. The court is cleared; Jaime stays at the Lord's shoulder and Rivera at the door, both
+  // silent: both know the secret from here on (owner decision, Oct 21).
   // His question, her answer; the two halves glow (story.signet_glowed); four cold sentences. Cresswell comes back
   // for the lie, and the signet glows again. Anissa says so; Gianna, looking at the floor, does not hear it.
   simple('rael_after', [
@@ -664,7 +665,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         { do: 'exit', actor: 'elder_a', to: at(31, 4), async: true },
         { do: 'exit', actor: 'elder_b', to: at(31, 4), async: true },
         { do: 'exit', actor: 'elder_c', to: at(31, 4), async: true },
-        { do: 'exit', actor: 'jaime', to: at(31, 4) },
+        { do: 'walk', actor: 'jaime', to: at(36, 8), facing: 'left' },
         { do: 'look', actor: 'cresswell' },
         { do: 'wait', ms: 600 },
         { do: 'exit', actor: 'cresswell', to: at(31, 4) },
@@ -672,7 +673,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         { do: 'look', actor: 'player' },
       ],
       '',
-      'The elders go. Jaime goes with them. The Crown\'s envoy goes last and slowest. Captain Rivera shuts the door and stays at it.',
+      'The elders go, the Crown\'s envoy last and slowest. Jaime stays at the Lord\'s shoulder. Rivera shuts the door.',
     ),
     say(R, 'The law gives the winner one question, and the loser answers it.'),
     say(R, 'Mine: who gave you that locket?'),
