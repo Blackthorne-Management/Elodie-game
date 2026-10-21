@@ -15,6 +15,8 @@ import { BOOKS } from './books.ts';
 
 /** The library books of Pòdlimyè (reading five teaches Mend). */
 const ZETWAL_BOOKS = BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => b.id);
+/** La Biblioteca Vieja's six (reading five teaches Ember Ward; the Alcázar's two shelf books do not count). */
+const ARDENCIA_LIBRARY = ['ardencia_brasador_count', 'ardencia_cendre', 'ardencia_oaths', 'ardencia_witness', 'ardencia_iron_trade', 'ardencia_kitchen_maids'];
 
 /** SP skills by member: a mage's spells (equipped into slots), an attacker's few skills. */
 export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
@@ -43,6 +45,11 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       learn: { lore: { books: ZETWAL_BOOKS, count: 5, where: 'Pòdlimyè library' } },
       text: 'Learned from the archive: one ally heals a little each turn for 3 turns.',
       ranks: [{ level: 10, statuses: ['warded'] }],
+    },
+    {
+      id: 'ember_ward', name: 'Ember Ward', sp: 7, kind: 'status', power: 0, target: 'ally', statuses: ['warded', 'regen'],
+      learn: { lore: { books: ARDENCIA_LIBRARY, count: 5, where: 'La Biblioteca Vieja' } },
+      text: 'Learned in Cenizal: a ward of warm ash on one ally. They take a quarter less damage and heal a little, for 3 turns.',
     },
     {
       id: 'limye_pou_tout', name: 'Limyè pou Tout', sp: 10, kind: 'heal', power: 80, target: 'allAllies', element: 'light', learn: { level: 4 },

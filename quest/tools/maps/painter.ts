@@ -159,6 +159,35 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ǖ: { ground: 'cave_wall', deco: 'carving', solid: true },
   ǘ: { ground: 'cave_floor', deco: 'stone_pile', solid: true },
   ĝ: { ground: 'cave', solid: false },
+  // Ardencia (Chapter 3, Oct 21).
+  α: { ground: 'black_sand', solid: false },
+  β: { ground: 'basalt', solid: true },
+  γ: { ground: 'cinder', solid: false },
+  δ: { ground: 'red_stone', solid: false },
+  ε: { ground: 'red_wall', solid: true },
+  ζ: { ground: 'duel_sand', solid: false },
+  η: { ground: 'hot_spring', solid: true },
+  θ: { ground: 'iron_floor', solid: false },
+  ι: { ground: 'lava', solid: true },
+  κ: { ground: 'ditch', solid: false },
+  μ: { ground: 'iron_floor', deco: 'bellows', solid: true },
+  ν: { ground: 'red_wall', deco: 'tapestry', solid: true },
+  π: { ground: 'red_stone', deco: 'barrel', solid: true },
+  σ: { ground: 'iron_floor', deco: 'shelf', solid: true },
+  τ: { ground: 'red_stone', deco: 'stall', solid: true },
+  υ: { ground: 'red_stone', deco: 'gallery', solid: true },
+  φ: { ground: 'red_stone', deco: 'monument', solid: true },
+  χ: { ground: 'red_stone', deco: 'lantern', solid: true },
+  ψ: { ground: 'red_stone', deco: 'banner', solid: true },
+  ω: { ground: 'iron_floor', deco: 'barrel', solid: true },
+  ϊ: { ground: 'cinder', deco: 'stone_pile', solid: true },
+  ϋ: { ground: 'red_stone', deco: 'table', solid: true },
+  ό: { ground: 'red_stone', deco: 'bench', solid: true },
+  ύ: { ground: 'carpet', solid: false },
+  ώ: { ground: 'dais', deco: 'throne', solid: true },
+  Ϗ: { ground: 'red_stone', deco: 'shelf', solid: true },
+  ϐ: { ground: 'black_sand', deco: 'tent', solid: true },
+  ϑ: { ground: 'black_sand', deco: 'firepit', solid: true },
 };
 
 export class Grid {
@@ -343,7 +372,7 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
 }
 
 /** Building walls and the roofs above them: stone and tile, and Xaraguá's cane walls under thatch. */
-const WALLS = new Set(['#', 'é']);
+const WALLS = new Set(['#', 'é', 'ε']);
 const ROOFS = new Set(['^', 'á']);
 
 /**
@@ -398,7 +427,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

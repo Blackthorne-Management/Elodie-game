@@ -34,6 +34,11 @@ export const MUSIC = {
   caney: { file: 'audio/music/caney.mp3', loop: true, overlapS: 3 },
   mountain_path: { file: 'audio/music/mountain-path.mp3', loop: true, overlapS: 3 },
   crown_customs: { file: 'audio/music/crown-customs.mp3', loop: true, overlapS: 2.5 },
+  // Ardencia (Chapter 3): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md). Cenizal plays the
+  // hall's music, the flats the mountain path's; Rael's low-brass theme slot plays under the trial and the reveal.
+  ardencia: { file: 'audio/music/hall.mp3', loop: true, overlapS: 2.5 },
+  cinder_flats: { file: 'audio/music/mountain-path.mp3', loop: true, overlapS: 3 },
+  rael_theme: { file: 'audio/music/crown-customs.mp3', loop: true, overlapS: 2.5 },
 } as const satisfies Record<string, MusicTrack>;
 
 export type MusicId = keyof typeof MUSIC;
@@ -64,6 +69,14 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'xaragua-record': 'caney',
   'xaragua-cellar': 'crown_customs',
   'xaragua-seacave': 'mountain_path',
+  'ardencia-flats': 'cinder_flats',
+  'ardencia-town': 'ardencia',
+  'ardencia-alcazar': 'ardencia',
+  'ardencia-lower': 'ardencia',
+  'ardencia-library': 'ardencia',
+  'ardencia-forge': 'cinder_flats',
+  'ardencia-tunnel': 'cinder_flats',
+  'ardencia-camp': 'farewell',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */
@@ -97,6 +110,9 @@ export interface DialogueMusic {
 export const DIALOGUE_MUSIC: readonly DialogueMusic[] = [
   // Seeing Mother off at the gate (her speech on the stage keeps the festival playing).
   { dialogue: 'elodie_talk', if: { flag: 'story.heard_speech' }, music: 'farewell' },
+  // Rael's theme under the trial's opening and the winner's question.
+  { dialogue: 'trial_start', music: 'rael_theme' },
+  { dialogue: 'rael_after', music: 'rael_theme' },
 ];
 
 /** The song under an act's end card, by card id (data/cards.ts). */

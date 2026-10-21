@@ -173,6 +173,25 @@ export const TILESET = {
     // The occupation (Oct 17): the Crown's banner, and a burned-out market stall.
     { gid: 128, name: 'crown_banner', base: 0xb8403a, accent: 0xf4ecd8, pattern: 'stripes' },
     { gid: 129, name: 'stall_burned', base: 0x3a3440, accent: 0xe0782a, pattern: 'stripes' },
+    // Ardencia (Chapter 3, Oct 21): black sand and cinder ground, black basalt, lava, steaming springs, the red
+    // stone of Cenizal's streets and walls, the duel court's sand, the forge fortress's iron floor and its dry
+    // ditches (fifty years ago), bellows, tapestries and iron bars.
+    { gid: 130, name: 'black_sand', base: 0x3a3440, accent: 0x5a5260, pattern: 'dots' },
+    { gid: 131, name: 'cinder', base: 0x5a4a50, accent: 0x6e5a5a, pattern: 'dots' },
+    { gid: 132, name: 'basalt', base: 0x241e26, accent: 0x3a3238, pattern: 'grid' },
+    { gid: 133, name: 'lava', base: 0xd8582a, accent: 0xf2d04b, pattern: 'wave' },
+    { gid: 134, name: 'hot_spring', base: 0x5aa8b8, accent: 0xe8f0f0, pattern: 'wave' },
+    { gid: 135, name: 'red_stone', base: 0xb0603a, accent: 0x9a4e2e, pattern: 'grid' },
+    { gid: 136, name: 'red_wall', base: 0x8a3a2a, accent: 0x6a2a20, pattern: 'grid' },
+    { gid: 137, name: 'duel_sand', base: 0xe0c890, accent: 0xc8ac70, pattern: 'dots' },
+    { gid: 138, name: 'iron_floor', base: 0x4a4452, accent: 0x5e5866, pattern: 'grid' },
+    { gid: 139, name: 'ditch', base: 0x3a3238, accent: 0x6a4a3a, pattern: 'stripes' },
+    { gid: 140, name: 'bellows', base: 0x6b4426, accent: 0x3a3440, pattern: 'border' },
+    { gid: 141, name: 'tapestry', base: 0x8a3a2a, accent: 0xf2d04b, pattern: 'border' },
+    { gid: 142, name: 'iron_bars', base: 0x1a1420, accent: 0xa8a6b4, pattern: 'stripes' },
+    { gid: 143, name: 'forge_gate', base: 0x4a4a52, accent: 0xe0782a, pattern: 'cross' },
+    { gid: 144, name: 'forge_lever', base: 0x6b4426, accent: 0xc8c8d0, pattern: 'cross' },
+    { gid: 145, name: 'gallery', base: 0x5e3e22, accent: 0x8a3a2a, pattern: 'stripes' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -542,6 +561,8 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     color: 0x14183a,
     alpha: 0.34,
   },
+  // The Lower Town by night (Bread at Night, Chapter 3).
+  { maps: ['ardencia-lower'], if: { flag: 'story.cart_night' }, color: 0x101428, alpha: 0.42 },
 ];
 
 /**

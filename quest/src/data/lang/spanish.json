@@ -1,0 +1,96 @@
+{
+  "language": "Spanish (Ardencia)",
+  "note": "Spanish words the quest uses in Ardencia (House Brasador). Every entry must be checked by a fluent speaker before release (guide 8); verified stays false until then.",
+  "entries": [
+    {
+      "word": "¡Coma, coma",
+      "language": "Spanish",
+      "translation": "Eat, eat!",
+      "verified": false
+    },
+    {
+      "word": "Mi amor",
+      "language": "Spanish",
+      "translation": "My love (said to family and children)",
+      "verified": false
+    },
+    {
+      "word": "Titi",
+      "language": "Spanish (Caribbean)",
+      "translation": "Auntie",
+      "verified": false
+    },
+    {
+      "word": "Tío",
+      "language": "Spanish",
+      "translation": "Uncle",
+      "verified": false
+    },
+    {
+      "word": "Alcázar",
+      "language": "Spanish",
+      "translation": "A fortified palace; the seat of the Lord of Ardencia",
+      "verified": false
+    },
+    {
+      "word": "Biblioteca Vieja",
+      "language": "Spanish",
+      "translation": "The Old Library",
+      "verified": false
+    },
+    {
+      "word": "La Promesa de Benny",
+      "language": "Spanish",
+      "translation": "Benny's Promise (a legendary charm)",
+      "verified": false
+    },
+    {
+      "word": "Reinado de Cenizas",
+      "language": "Spanish",
+      "translation": "Reign of Ashes",
+      "verified": false
+    },
+    {
+      "word": "Grito de Guerra",
+      "language": "Spanish",
+      "translation": "War cry",
+      "verified": false
+    },
+    {
+      "word": "La Marca",
+      "language": "Spanish",
+      "translation": "The Mark",
+      "verified": false
+    },
+    {
+      "word": "Sangre Ardiente",
+      "language": "Spanish",
+      "translation": "Burning blood",
+      "verified": false
+    },
+    {
+      "word": "Pan de ceniza",
+      "language": "Spanish",
+      "translation": "Ash bread",
+      "verified": false
+    },
+    {
+      "word": "Olla",
+      "language": "Spanish",
+      "translation": "A clay cooking pot, and the stew made in it",
+      "verified": false
+    },
+    {
+      "word": "Café de olla",
+      "language": "Spanish",
+      "translation": "Coffee brewed in a clay pot with cinnamon and cane sugar",
+      "verified": false
+    },
+    {
+      "word": "Cenizal",
+      "language": "Spanish",
+      "translation": "Place of ashes (the capital of Ardencia)",
+      "verified": false
+    }
+  ]
+}

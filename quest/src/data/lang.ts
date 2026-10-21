@@ -3,6 +3,7 @@
 // unverified ones.
 
 import kreyol from './lang/kreyol.json' with { type: 'json' };
+import spanish from './lang/spanish.json' with { type: 'json' };
 import taino from './lang/taino.json' with { type: 'json' };
 
 export interface GlossaryEntry {
@@ -18,4 +19,4 @@ export interface Glossary {
   entries: GlossaryEntry[];
 }
 
-export const GLOSSARIES: readonly Glossary[] = [kreyol as Glossary, taino as Glossary];
+export const GLOSSARIES: readonly Glossary[] = [kreyol as Glossary, taino as Glossary, spanish as Glossary];

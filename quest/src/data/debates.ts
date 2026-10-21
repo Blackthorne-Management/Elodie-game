@@ -171,6 +171,82 @@ export const DEBATES: readonly DebateDef[] = [
       say(R, 'And better ones.'),
     ],
   },
+  // Cenizal's Lower Town (Chapter 3; outline 7.3), by the soup line: a baker's widow of the Gaze against a Witness
+  // oath-knight (the soldiers' faith: an oath, and what breaking one costs). Required before noon. Reason needs one
+  // of La Biblioteca Vieja's books on oaths, the iron trade or the kitchen gossip.
+  {
+    id: 'ardencia_bread',
+    city: 'ardencia',
+    question: 'Is a thief who feeds the hungry a thief?',
+    ally: 'baker_widow',
+    opponent: 'oath_knight',
+    passing: [
+      say('oath_knight', '...and a stolen loaf is a stolen loaf, widow. The oath has no clause for soup.'),
+      say('baker_widow', 'Then the oath was written by men who never went hungry.'),
+    ],
+    listen: [
+      say('oath_knight', 'Someone is stealing the Lord\'s iron, a cart a month, and feeding this street with it. Everyone knows.'),
+      say('baker_widow', 'Everyone eats. That is what everyone knows.'),
+      say('oath_knight', 'Every soldier here swore on the iron not to steal from the house. A thief who feeds you is still a thief.'),
+      say('baker_widow', 'My husband swore that oath. He died at Cendre. Nobody fed me until the bread came.'),
+      say(A, 'Gigi, they are both a little bit right. Is that allowed?'),
+    ],
+    reasonNeeds: [loreFlag('ardencia_oaths'), loreFlag('ardencia_iron_trade'), loreFlag('ardencia_kitchen_maids')],
+    rounds: [
+      {
+        claim: 'A thief is a thief. The oath against stealing has no clause for soup.',
+        answers: {
+          scripture: { short: 'The Gaze remembers both', text: 'The Gaze remembers who was fed and who took, and judges both. Not one without the other.', strength: 1 },
+          reason: { short: 'The oath binds the swearer', text: 'Your own Witnesses teach it: an oath binds the one who swore it. The hungry swore nothing.', strength: 2 },
+          compassion: { short: 'Ask the child in line', text: 'Ask the child at the front of the line whether she is eating stolen soup.', strength: 0 },
+        },
+      },
+      {
+        claim: 'If the Lord\'s iron feeds them, then the Lord is the thief, or the fool who is robbed.',
+        answers: {
+          scripture: { short: 'Elodie lent the realm', text: 'The temple says the goddess lent the realm to all of us to keep. Iron included.', strength: 1 },
+          reason: { short: 'The shortfall is steady', text: 'One cart a month, never more, for three years. A thief who is never caught is a thief who is allowed.', strength: 2 },
+          compassion: { short: 'Nobody here is fooled', text: 'Nobody on this street thinks the Lord is a fool. They think someone cares.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then tell me, envoy: what do you owe a lord who feeds you with stolen bread?',
+        answers: {
+          scripture: { short: 'Thanks, and the truth', text: 'Thanks, and the truth. The Gaze asks no more than that of anyone.', strength: 1 },
+          reason: { short: 'Nothing he did not pay', text: 'Nothing. If the bread is his, it is a gift. If it is stolen, it was never his to sell.', strength: 1 },
+          compassion: { short: 'To feed the next one', text: 'You owe the next hungry child a bowl, when you can. That is how a street pays its debts.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The soup line murmurs. Someone claps. The widow wipes her eyes.)',
+      1: '(The street is split. Half look at the knight, half at the pot.)',
+      0: '(A few people shrug and go back to their bowls.)',
+    },
+    won: [
+      say('oath_knight', '...The oath binds the swearer. I taught that to recruits for twenty years. I had forgotten.'),
+      say('baker_widow', 'Eat with us, knight. The pot does not ask who you are.'),
+    ],
+    lost: [
+      say('oath_knight', 'A thief is a thief, envoy. Come back when you can tell me otherwise.'),
+      say('baker_widow', 'Do not mind him, child. He argues with the soup, too.'),
+    ],
+    mediate: [
+      say(G, 'You both want the same thing: nobody in this street hungry, and nobody shamed for it.'),
+      say(G, 'Knight, stand the soup line with the cook, and count the bowls. Widow, tell him every name.'),
+      say('oath_knight', 'A Witness counting bowls. My sergeant would laugh.'),
+      say('baker_widow', 'Then let him laugh with a full mouth.'),
+    ],
+    provoke: [
+      say(G, 'You swore oaths to a Lord who lets his people starve!'),
+      nar('The street goes quiet. The knight\'s hand goes to his belt, and stays there.'),
+      say('baker_widow', 'Not in front of the children, envoy. Not here.'),
+    ],
+    after: [
+      say('oath_knight', 'I keep the count now. Three hundred and twelve bowls yesterday.'),
+      say('baker_widow', 'And not one of them stolen. Ask him. He checks.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */

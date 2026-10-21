@@ -148,4 +148,83 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     done: { any: [f('debate.xaragua_springs.joined'), f('debate.xaragua_springs.mediated')] },
     reward: { xp: 60 },
   },
+  // ---- Chapter 3, Cenizal (outline section 7): the two required side quests and the debate --------------
+  // The Treasurer's Daughter (Ar-2; puzzle M-ARD-1): the records room, Benny's office in the Echo, the niche behind
+  // the tapestry; the steward Zelia opens the room, and at the end takes Gianna to the old lord (FAMILY.md).
+  {
+    id: 'treasurer',
+    title: "The Treasurer's Daughter",
+    giver: "The treasurer's daughter",
+    place: 'The Alcázar',
+    level: 9,
+    summary:
+      'Her father, the city treasurer, "retired" eleven years ago and never came home. His last ledger should be in the Alcázar\'s records room.',
+    accepted: f('side.treasurer.accepted'),
+    available: f('story.trial_set'),
+    start: [{ map: 'ardencia-alcazar', at: { x: 12, y: 8 } }],
+    nudge: 'The young woman at the hall gate has been standing there a long time, Gigi. Ask her.',
+    steps: [
+      { text: 'Ask the steward to open the records room (the Alcázar).', done: f('side.treasurer.zelia'), goals: [{ map: 'ardencia-alcazar', at: { x: 15, y: 6 } }] },
+      { text: 'Look for the last ledger on the treasurers\' shelf.', done: f('side.treasurer.shelf'), goals: [{ map: 'ardencia-alcazar', at: { x: 27, y: 3 } }] },
+      { text: 'The air shimmers in the records room. Ask the memory where treasurers hid their copies.', done: f('clue.niche'), goals: [{ map: 'ardencia-alcazar', at: { x: 26, y: 6 } }] },
+      { text: 'Back in the present, look behind the tapestry on the east wall.', done: f('clue.treasurer_alive'), goals: [{ map: 'ardencia-alcazar', at: { x: 31, y: 6 } }] },
+      { text: "Tell the treasurer's daughter.", done: f('side.treasurer.told'), goals: [{ map: 'ardencia-alcazar', at: { x: 12, y: 8 } }] },
+      {
+        text: 'The steward has a message for you.',
+        done: f('side.treasurer.done'),
+        goals: [
+          { if: f('side.treasurer.benny_open'), map: 'ardencia-alcazar', at: { x: 4, y: 15 } },
+          { map: 'ardencia-alcazar', at: { x: 20, y: 8 } },
+        ],
+      },
+    ],
+    done: f('side.treasurer.done'),
+    reward: { gold: 100, xp: 90, items: [{ id: 'bennys_refusal', n: 1 }], pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
+  },
+  // The Lower Town's debate, as a required quest (outline 7.3): Is a thief who feeds the hungry a thief?
+  {
+    id: 'thief',
+    title: 'Bread and the Oath',
+    giver: "Baker's widow",
+    place: 'The Lower Town',
+    level: 9,
+    summary:
+      'By the soup line, a baker\'s widow and a Witness oath-knight argue: is a thief who feeds the hungry a thief? Hear them out, then make your case.',
+    accepted: { any: [f('debate.ardencia_bread.listened'), f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] },
+    available: f('story.trial_set'),
+    start: [{ map: 'ardencia-lower', at: { x: 19, y: 13 } }],
+    nudge: "They're arguing by the soup line about whether stealing bread is stealing. The old library would give you an answer.",
+    steps: [
+      { text: 'Listen to the debate in the Lower Town.', done: f('debate.ardencia_bread.listened'), goals: [{ map: 'ardencia-lower', at: { x: 19, y: 13 } }] },
+      {
+        text: 'Join the debate and argue all three rounds, or mediate.',
+        done: { any: [f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] },
+        goals: [{ map: 'ardencia-lower', at: { x: 19, y: 13 } }],
+      },
+    ],
+    done: { any: [f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] },
+    reward: { xp: 40 },
+  },
+  // Bread at Night (Ar-1; the rebel safehouse): Azzy's own question. The cook is Amanda, Benny's daughter (FAMILY.md).
+  {
+    id: 'bread',
+    title: 'Bread at Night',
+    giver: 'Azzy',
+    place: 'The court gate',
+    level: 10,
+    summary:
+      "Azzy: his father's poor are not starving, and he does not know why. There is soup in the Lower Town every day, and no one says who pays.",
+    accepted: f('side.bread.accepted'),
+    available: { all: [f('side.treasurer.done'), { any: [f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] }] },
+    start: [{ map: 'ardencia-town', at: { x: 28, y: 9 } }],
+    nudge: "Azzy said his father's poor are not starving and he doesn't know why. He wants to show you tonight.",
+    steps: [
+      { text: 'Ask the Lower Town\'s cook who pays for the soup.', done: f('side.bread.cook'), goals: [{ map: 'ardencia-lower', at: { x: 12, y: 7 } }] },
+      { text: 'Look at the barrels by her kitchen door.', done: f('side.bread.thumb'), goals: [{ map: 'ardencia-lower', at: { x: 14, y: 6 } }] },
+      { text: 'Find Azzy at the Lower Town gate, and wait for dark.', done: { any: [f('story.cart_night'), f('side.bread.done')] }, goals: [{ map: 'ardencia-lower', at: { x: 28, y: 11 } }] },
+      { text: 'Watch the lane from the corner by the old well.', done: f('side.bread.done'), goals: [{ map: 'ardencia-lower', at: { x: 18, y: 5 } }] },
+    ],
+    done: f('side.bread.done'),
+    reward: { gold: 150, xp: 100, pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
+  },
 ];

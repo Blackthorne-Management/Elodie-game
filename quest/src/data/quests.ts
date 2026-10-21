@@ -475,8 +475,177 @@ export const ACT2: QuestDef = {
   ],
 };
 
+
+/** The Lower Town debate, joined or mediated (Chapter 3's "Until noon"). */
+const ARD_DEBATE_DONE = { any: [{ flag: 'debate.ardencia_bread.joined' }, { flag: 'debate.ardencia_bread.mediated' }] };
+
+/**
+ * Chapter 3, The Trial of Blades (Ardencia, Cenizal; docs/quest/reviews/2026-10-20-chapter3-outline.md with its
+ * review and the owner's decisions). Grandfather's request (done at Chapter 2's end, so the Journal shows this
+ * chapter on the pier), the voyage, the gate and Azzy, the audience, the day in the city (two side quests and the
+ * debate, followed by the arrow), the trial (meant to be lost), the forge fortress and its Echo puzzle, Benny's
+ * tunnel, the sea road and the camp.
+ */
+export const ACT3: QuestDef = {
+  id: 'act3',
+  title: 'Chapter 3: The Trial of Blades',
+  maps: ['ardencia-flats', 'ardencia-town', 'ardencia-alcazar', 'ardencia-lower', 'ardencia-library', 'ardencia-forge', 'ardencia-tunnel', 'ardencia-camp'],
+  objectives: [
+    {
+      id: 'request',
+      title: "Grandfather's request",
+      detail: 'Grandfather asks Gianna to go to Ardencia and ask Lord Rael, Benny\'s son, to stand with Xaraguá.',
+      done: { flag: 'story.ardencia_asked' },
+      goals: [{ map: 'zetwal-harbor', at: { x: 30, y: 12 } }],
+      hints: [
+        'Grandfather is waiting on the pier, Gigi.',
+        'The long pier at the Old Harbor.',
+        'Walk up the long pier to Grandfather and Grandmother.',
+      ],
+    },
+    {
+      id: 'sail',
+      title: 'Sail for Ardencia',
+      detail: 'The trader who brought you home sails for Ardencia from the long pier. Ardencia is across the strait.',
+      done: { flag: 'story.ardencia_arrived' },
+      goals: [{ map: 'zetwal-harbor', at: { x: 30, y: 14 } }],
+      hints: [
+        'Ardencia is across the water, Gigi. We need a boat.',
+        'The trader captain is still on the long pier.',
+        'Talk to the trader captain at the end of the long pier and tell him to sail.',
+      ],
+    },
+    {
+      id: 'gate',
+      title: 'The gate of Cenizal',
+      detail: 'The sea road climbs the Cinder Flats to the red-stone gate of Cenizal. Show your papers at the gate.',
+      done: { flag: 'story.azzy_met' },
+      goals: [{ map: 'ardencia-flats', at: { x: 24, y: 4 } }],
+      hints: [
+        'The road goes up to the city, Gigi. All of it uphill.',
+        'Follow the road north from the black sand, then west to the gate.',
+        'Walk up the road to the halberdiers at the gate and show them your papers.',
+      ],
+    },
+    {
+      id: 'audience',
+      title: 'An audience with the Lord',
+      detail: 'Azzy has gone ahead into the Alcázar, at the head of the plaza. Follow him in.',
+      done: { flag: 'story.trial_set' },
+      goals: [
+        { if: { notFlag: 'story.town_seen' }, map: 'ardencia-town', at: { x: 19, y: 7 } },
+        { map: 'ardencia-alcazar', at: { x: 16, y: 18 } },
+      ],
+      hints: [
+        'Azzy went into the big red house, Gigi.',
+        'The Alcázar is at the top of the plaza.',
+        'Go up the plaza and in through the Alcázar\'s doors.',
+      ],
+    },
+    {
+      id: 'noon',
+      title: 'Until noon',
+      detail: 'The trial is at noon tomorrow. Azzy says: see the city. Finish the quests on your Quests page; Azzy waits at the court gate.',
+      done: { any: [{ all: [{ flag: 'side.treasurer.done' }, { flag: 'side.bread.done' }, ARD_DEBATE_DONE] }, { flag: 'story.trial_fought' }] },
+      followSide: true,
+      hints: [
+        'Noon is a long way off, Gigi. The city has people who need you first.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        "The treasurer's daughter in the Alcázar, the bread debate in the Lower Town, and Azzy's bread at night.",
+      ],
+    },
+    {
+      id: 'trial',
+      title: 'The Trial of Blades',
+      detail: 'Noon. Azzy waits at the gate of the duel court, beside the Alcázar. Stand in the ring.',
+      done: { flag: 'story.trial_fought' },
+      goals: [
+        { if: { notFlag: 'story.noon' }, map: 'ardencia-town', at: { x: 28, y: 9 } },
+        { map: 'ardencia-town', at: { x: 32, y: 9 } },
+      ],
+      hints: [
+        "It's noon, Gigi. I don't want it to be noon.",
+        'Azzy is at the court gate, beside the Alcázar.',
+        'Talk to Azzy at the court gate, then walk into the middle of the ring.',
+      ],
+    },
+    {
+      id: 'guests',
+      title: "The Lord's guests",
+      detail: 'Held in the forge fortress, "as guests". There must be a way out of this hall.',
+      done: { flag: 'story.forge_open' },
+      goals: [{ map: 'ardencia-forge', at: { x: 26, y: 9 } }],
+      hints: [
+        'Gigi... say something.',
+        'Someone is coming. Wait.',
+        'Wait in the cell. Someone is coming.',
+      ],
+    },
+    {
+      id: 'channels',
+      title: 'The fire has to go somewhere',
+      detail: 'Three channels of lava cross the hall between the cell and the far wall. In the memory, the ditches are dry and the gates turn.',
+      done: { all: [{ flag: 'anchor.forge_gate_a' }, { flag: 'anchor.forge_gate_b' }, { flag: 'anchor.forge_gate_c' }] },
+      goals: [{ map: 'ardencia-forge', at: { x: 21, y: 9 } }],
+      hints: [
+        'The fire has to go somewhere. Can you choose where?',
+        'In the memory the ditches are dry and the gates turn. Look at where the lava runs now, then change it there.',
+        'Set the gates right, left, right in the memory; then pull Benny\'s lever behind the bellows.',
+      ],
+    },
+    {
+      id: 'lever',
+      title: "Benny's way out",
+      detail: 'The far wall is blank. In the memory, young Lord Benny is by the bellows, with something to show Patricio.',
+      done: { flag: 'party.azzy' },
+      goals: [{ map: 'ardencia-forge', at: { x: 21, y: 9 } }],
+      hints: [
+        'A wall nobody can open is still a door, Gigi. Grandfather says so.',
+        'Lord Benny is by the bellows in the memory, on the far side of the hall.',
+        'In the memory, talk to Benny by the bellows, pull the lever behind them, then come back to the present.',
+      ],
+    },
+    {
+      id: 'tunnel',
+      title: "Benny's tunnel",
+      detail: 'The tunnel runs under the wall to the sea road. Something is moving in the dark ahead.',
+      done: { flag: 'encounter.ardencia_story.bats.won' },
+      goals: [{ map: 'ardencia-tunnel', at: { x: 17, y: 5 } }],
+      hints: [
+        'It is very dark, Gigi. Hold my hand.',
+        'The tunnel goes west, to the sea.',
+        'Walk west along the tunnel. Azzy will go first.',
+      ],
+    },
+    {
+      id: 'sea_road',
+      title: 'The sea road',
+      detail: 'Out under the walls, down the sea road to the strand, west.',
+      done: { flag: 'story.ardencia_escaped' },
+      goals: [{ map: 'ardencia-flats', at: { x: 5, y: 15 } }],
+      hints: [
+        'Run, Gigi!',
+        'Down the road, away from the wall.',
+        'Follow the sea road south from the tunnel mouth.',
+      ],
+    },
+    {
+      id: 'camp',
+      title: 'Free Brasador',
+      detail: 'A fishers\' camp on the strand, west along the shore. Patricio\'s trader is waiting there.',
+      done: { flag: 'act3.complete' },
+      goals: [{ map: 'ardencia-camp', at: { x: 21, y: 8 } }],
+      hints: [
+        'Azzy said the camp is west.',
+        'The strand road goes west to the camp.',
+        'Follow the road west off the sea road to the camp on the strand.',
+      ],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -558,5 +727,54 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'clue.first_oath',
     title: 'The first oath',
     text: '"The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us." Sworn by Caona, Patricio and Benny. No seventh clause.',
+  },
+  // Chapter 3.
+  {
+    id: 'trial_set',
+    when: 'story.trial_set',
+    title: 'The Law of the Blade',
+    text: 'No outsider is heard by the Lord of Ardencia until she has stood in the ring. The trial is at noon tomorrow, in the duel court beside the Alcázar.',
+  },
+  {
+    id: 'ardencia_record',
+    when: 'clue.ardencia_record',
+    title: 'The line of Ardencia',
+    text: 'The records room keeps the line in a clerk\'s best hand: Alonso, Benny, Rael, Azriel. Under it, in other ink: "No others recorded."',
+  },
+  {
+    id: 'niche',
+    when: 'clue.niche',
+    title: "Benny's clerk",
+    text: 'Every treasurer since Don Alonso kept his working copies in a niche behind the tapestry on the records room\'s east wall.',
+  },
+  {
+    id: 'treasurer_alive',
+    when: 'clue.treasurer_alive',
+    title: 'The treasurer is alive',
+    text: '"I am alive. I am held where the ash falls. Tell her I am alive." In the treasurer\'s own hand, dated this year. Where the ash falls: unknown.',
+  },
+  {
+    id: 'bread_night',
+    when: 'clue.bread_night',
+    title: 'The ash thumbprint, again',
+    text: 'Bread comes to the Lower Town by night in covered carts, and the driver signs the barrels with an ash thumbprint. Yucayeque\'s oil came the same way.',
+  },
+  {
+    id: 'father_rael',
+    when: 'clue.father_rael',
+    title: "The winner's question",
+    text: 'Rael asked who gave her the Locket. His signet and her Locket glowed together. Elodie is his wife; Gianna and Anissa are his daughters; Azzy is their brother.',
+  },
+  {
+    id: 'rael_traitor',
+    when: 'belief.rael_traitor',
+    title: 'Ardencia stands with the Crown',
+    text: 'Rael told the Crown\'s envoy Ardencia stands with the Crown, and gave his daughters to its ship. Gianna: he sold Xaraguá, then he sold us.',
+  },
+  {
+    id: 'free_brasador',
+    when: 'ally.free_brasador',
+    title: 'Free Brasador',
+    text: 'Soldiers who followed Azzy off the wall. Their price, when the realm musters: Fear 6 (owed, paid at the Muster). Lead: Benny\'s Refusal names the Dorini of Al-Doria.',
   },
 ];

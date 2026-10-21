@@ -25,4 +25,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 2 complete',
     lines: ['The Charter', 'Next: Chapter 3, The Trial of Blades', 'Ardencia, and an oath fifty years old...'],
   },
+  // The end of Chapter 3: the strand camp; the trader sails for Al-Doria at first light.
+  {
+    id: 'act3_end',
+    when: 'act3.complete',
+    title: 'Chapter 3 complete',
+    lines: ['The Trial of Blades', 'Next: Chapter 4, The Ledger', 'Al-Doria, and a page that should not exist...'],
+  },
 ];

@@ -49,4 +49,22 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 3 (outline beat 0): the trader that brought them home sails again, by day, north round Zetwal and west
+  // along the coast to Ardencia's sea road, under the black cliffs.
+  zetwal_ardencia: {
+    id: 'zetwal_ardencia',
+    harbor: 'Pòdlimyè, at noon',
+    paddle: 'The trader casts off from the long pier and swings out past the reef.',
+    aboard: 'The sails fill. Ardencia is across the strait.',
+    shore: 'zetwal',
+    start: { x: 119, y: 37 },
+    via: [{ x: 121, y: 9 }],
+    end: { x: 62, y: 14 },
+    captions: [
+      { at: 0, text: 'Out past the reefs of Zetwal...' },
+      { at: 0.35, text: 'North, then west along the coast...' },
+      { at: 0.75, text: '...to the black cliffs of Ardencia.' },
+    ],
+    music: 'farewell',
+  },
 };

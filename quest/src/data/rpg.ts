@@ -6,7 +6,7 @@ import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SUR
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2 } from './quests.ts';
+import { ACT1, ACT2, ACT3 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
@@ -119,6 +119,17 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'fish_stew', name: 'Fish stew', kind: 'consumable', price: 25, heals: 20, healTurns: 3, text: 'Snapper and peppers in a gourd bowl. Restores 20 HP, a little at a time.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
 
+  // Ardencia (Chapter 3): Cenizal's tavern, and the key item from the treasurer's daughter.
+  { id: 'pan_de_ceniza', name: 'Pan de ceniza', kind: 'consumable', price: 25, heals: 35, text: 'Dark bread baked in the ash of the forges. Restores 35 HP.' },
+  { id: 'olla', name: 'Olla de Cenizal', kind: 'consumable', price: 40, heals: 60, healTurns: 3, text: 'Beans, pork and peppers from a clay pot. Restores 60 HP, a little at a time.' },
+  { id: 'cafe_de_olla', name: 'Café de olla', kind: 'consumable', price: 30, restores: 15, text: 'Coffee with cinnamon and cane sugar, stirred in clay. Restores 15 SP.' },
+  {
+    id: 'bennys_refusal',
+    name: "Benny's Refusal (copy)",
+    kind: 'key',
+    price: 0,
+    text: 'Lord Benny\'s refusal to sign a seventh page, fifty years old. The bankers of Al-Doria, it says, hold the signed copy.',
+  },
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
   // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
   // warriors (defence, HP, slower). Rarity sets the colour behind the picture and how good it is:
@@ -136,6 +147,9 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'padded_vest', level: 3, rarity: 'uncommon', name: 'Padded vest', kind: 'gear', slot: 'armor', armor: 'leather', price: 140, stats: { def: 4, hp: 6, spd: 1, atk: 1 }, text: 'Quilted cotton over leather. Light enough to run in.' },
   // Heavy armour (suits warriors).
   { id: 'officer_coat', name: "Officer's coat", kind: 'gear', slot: 'armor', armor: 'heavy', level: 1, price: 150, stats: { def: 5, hp: 10 }, text: 'Red wool and gold buttons over a mail lining, heavy as a promise.' },
+  { id: 'blackened_plate', level: 10, rarity: 'uncommon', name: 'Blackened plate', kind: 'gear', slot: 'armor', armor: 'heavy', price: 620, stats: { def: 12, hp: 20, spd: -1 }, text: 'Brasador plate, blackened in the forge so it never shines on a night march.' },
+  { id: 'cinder_coat', level: 9, rarity: 'uncommon', name: 'Cinder coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 380, stats: { def: 6, hp: 10, spd: 2 }, text: 'Oiled black leather over quilting. The sparks of the forge roll off it.' },
+  { id: 'ember_robe', level: 9, rarity: 'uncommon', name: 'Ember robe', kind: 'gear', slot: 'armor', armor: 'robe', price: 360, stats: { def: 4, sp: 12, mag: 3 }, text: 'Red wool with a black hem, the robe of the Biblioteca Vieja\'s readers.' },
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
   // Charms (anyone).
@@ -146,6 +160,8 @@ const ITEM_LIST: ItemDef[] = [
     text: 'A small face carved in dark wood, worn on a cotton cord. The carver says it watches your back.',
   },
   { id: 'cotton_tunic', level: 4, rarity: 'uncommon', name: 'Cotton tunic', kind: 'gear', slot: 'armor', armor: 'leather', price: 230, stats: { def: 4, hp: 8, spd: 2 }, text: 'Thick Yaguana cotton, quilted twice, with a teal border. Light, cool and hard to cut.' },
+  { id: 'iron_ring', name: 'Iron ring', kind: 'gear', slot: 'charm', level: 8, rarity: 'uncommon', price: 260, stats: { atk: 3, def: 2 }, text: 'A plain Brasador ring, hammered thick. For luck, they say, and for punching.' },
+  { id: 'ember_ring', name: 'Ember ring', kind: 'gear', slot: 'charm', level: 10, rarity: 'rare', price: 480, stats: { mag: 3, sp: 6 }, special: { kind: 'spRegen', value: 4, text: '+4% SP each turn.' }, text: 'A ring with a chip of forge-glass that never quite cools. +4% SP each turn in battle.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {
@@ -249,6 +265,12 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   xaragua_carver: { greeting: 'Guatiao! What will it be?', id: 'xaragua_carver', name: "Carver's mat", city: 'xaragua', stock: ['shell_beads', 'carved_charm'] },
   xaragua_bows: { greeting: 'Guatiao! What will it be?', id: 'xaragua_bows', name: "Bow-maker's stall", city: 'xaragua', stock: ['ironwood_bow', 'cotton_tunic'] },
   zetwal_cloth: { id: 'zetwal_cloth', name: 'Cloth row', city: 'zetwal', stock: ['woven_tunic', 'temple_robe'] },
+  // Cenizal (Chapter 3): the smith, the ring-maker and the tavern in the Upper Town; the Free Brasador
+  // quartermaster at the camp sells the smith's armour, for a party that could not buy it before noon (review 3.7).
+  ardencia_forge: { id: 'ardencia_forge', name: 'Brasador smithy', city: 'ardencia', stock: ['blackened_plate', 'cinder_coat', 'ember_robe', 'steel_saber', 'iron_cuirass'] },
+  ardencia_rings: { id: 'ardencia_rings', name: "Ring-maker's stall", city: 'ardencia', stock: ['iron_ring', 'ember_ring'] },
+  ardencia_tavern: { id: 'ardencia_tavern', name: 'Tavern', city: 'ardencia', stock: ['pan_de_ceniza', 'olla', 'cafe_de_olla'] },
+  ardencia_camp: { id: 'ardencia_camp', name: 'Free Brasador stores', city: 'ardencia', stock: ['blackened_plate', 'cinder_coat', 'iron_ring', 'pan_de_ceniza'] },
 };
 
 /**
@@ -301,6 +323,21 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'xaragua-record', name: 'Record house' },
     ],
   },
+  // Chapter 3 (built Oct 21; CAPITALS.md 4): the Upper Town and its duel court in the middle, the Lower Town west,
+  // the Cinder Flats and the sea road below the walls (south), the strand camp west along the shore.
+  ardencia: {
+    id: 'ardencia',
+    name: 'Cenizal',
+    house: 'Brasador',
+    sections: [
+      { map: 'ardencia-town', name: 'Upper Town', at: { x: 0, y: 0 } },
+      { map: 'ardencia-lower', name: 'Lower Town', at: { x: -33, y: 10 } },
+      { map: 'ardencia-flats', name: 'The Cinder Flats', at: { x: 0, y: 29 } },
+      { map: 'ardencia-camp', name: 'Strand camp', at: { x: -25, y: 41 } },
+      { map: 'ardencia-alcazar', name: 'The Alcázar' },
+      { map: 'ardencia-library', name: 'La Biblioteca Vieja' },
+    ],
+  },
 };
 
 /** The realm around Eightgate, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
@@ -308,7 +345,7 @@ export const REALM: readonly RealmPlace[] = [
   // The realm's neutral city, where every house may come and none may draw steel (so they say). The
   // old seat of the realm stands at its heart; whether Elodie blessed it is argued (data/books.ts).
   { id: 'seat', name: 'Eightgate', house: 'Open to all houses' },
-  { id: 'ardencia', name: 'Ardencia', house: 'Brasador' },
+  { id: 'ardencia', name: 'Ardencia', house: 'Brasador', city: 'ardencia' },
   { id: 'zetwal', name: 'Zetwal', house: 'Kay Soley', city: 'zetwal' },
   { id: 'al_doria', name: 'Al-Doria', house: 'Dorini' },
   { id: 'skarragol', name: 'Skarragol', house: 'Ironvow' },
@@ -329,12 +366,13 @@ export const RPG: RpgContent = {
   pillarRules: [
     { pillar: 'influence', city: 'zetwal', flags: BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => loreFlag(b.id)), each: 1 },
     { pillar: 'influence', city: 'xaragua', flags: BOOKS.filter((b) => b.id.startsWith('xaragua_')).map((b) => loreFlag(b.id)), each: 1 },
+    { pillar: 'influence', city: 'ardencia', flags: BOOKS.filter((b) => b.id.startsWith('ardencia_')).map((b) => loreFlag(b.id)), each: 1 },
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
-    { flags: [...ACT1.objectives, ...ACT2.objectives].filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
+    { flags: [...ACT1.objectives, ...ACT2.objectives, ...ACT3.objectives].filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
     { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
   ],
   levels: LEVELS,

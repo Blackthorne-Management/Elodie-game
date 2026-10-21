@@ -371,6 +371,107 @@ export const BOOKS: readonly Book[] = [
       'Nothing else in the bundle is ever waived. The runner has circled it twice. ' +
       'Beside the circle, a question in the runner\'s own hand: who can make the Governor waive anything?',
   },
+  // ---- Ardencia: La Biblioteca Vieja and the Alcázar (Chapter 3) ----------------------------------
+  {
+    id: 'ardencia_brasador_count',
+    title: 'Ash Wars: The Brasador Count',
+    category: 'war',
+    text:
+      'Ardencia keeps its own count of the Ash Wars, and it does not sing. ' +
+      'Raiders burned the highland roads for three summers. The Crown sent letters. Lord Rael sent the grand army. ' +
+      'The count lists every column, every ford and every grave, and the name of the man who dug it. ' +
+      'It lists the prisoners too, by the hundred, and beside each hundred one word: released. ' +
+      'The songs in the taverns say otherwise. They say the ford ran red and the Lord laughed. ' +
+      'The clerk who copied this count has added a line at the bottom: "The Lord has read the songs. He has never ordered one stopped." ' +
+      'Nobody in Cenizal has ever explained why.',
+  },
+  {
+    id: 'ardencia_cendre',
+    title: 'The Ford of Cendre',
+    category: 'history',
+    text:
+      'Cendre is a ford on the highland road, a day north of Cenizal. Twenty-five years ago the Ash Wars ended there. ' +
+      'Lord Rael held the far bank with four hundred men. Beside him stood a young captain of the guard named Rivera. ' +
+      'The raiders came at dawn with Crown powder in their wagons, which the Crown has never explained either. ' +
+      'The fight lasted an hour. Rivera took a blade meant for the Lord and kept standing. ' +
+      'When it was over the Lord walked into the river to his knees and stood there until noon. ' +
+      'The soldiers say he was counting. The Crown chronicle says he was gloating. ' +
+      'Captain Rivera has never said, and he is the only one who would know.',
+  },
+  {
+    id: 'ardencia_oaths',
+    title: 'Oaths of the Ash Road',
+    category: 'law',
+    text:
+      'Every soldier of Ardencia swears the same oath on the same iron, in the duel court, before the elders. ' +
+      'Stand for the house. Do not steal from the house. Do not break the law of the blade. ' +
+      'The Witnesses, who keep the soldiers\' faith, teach that an oath binds the one who swears it, and no one else. ' +
+      'A soldier who steals has broken his oath. A hungry child who steals has sworn nothing, and has broken nothing. ' +
+      'The elders call this teaching dangerous. The Witnesses call it arithmetic. ' +
+      'The law says the oath-breaker answers to the house. It does not say who answers for a house that lets its people starve.',
+  },
+  {
+    id: 'ardencia_witness',
+    title: 'The Witness Among Soldiers',
+    category: 'religion',
+    text:
+      'The Witness is the soldiers\' faith in Ardencia, older than the Accord and younger than the forges. ' +
+      'It has no temple. It has the duel court, the barracks and the road. ' +
+      'A Witness believes the world keeps a ledger of every promise made in it. ' +
+      'Keep the promise, and the ledger balances. Break it, and someone pays, though not always the one who broke it. ' +
+      'So a Witness oath-knight carries the cost of other men\'s broken oaths, on purpose, as a kind of prayer. ' +
+      'The Gaze of Elodie remembers. The Witness keeps accounts. ' +
+      'In Cenizal, people say the difference between them is the difference between a mother and a banker.',
+  },
+  {
+    id: 'ardencia_iron_trade',
+    title: 'The Iron Trade',
+    category: 'trade',
+    text:
+      'Ardencia has iron and fire and almost nothing else. Every loaf in Cenizal was paid for in iron somewhere. ' +
+      'The Crown buys Brasador steel for its marines, and pays late. Zetwal buys it for its harbor chains, and pays on time. ' +
+      'Al-Doria lends against it, and charges for the pleasure. ' +
+      'Three years ago the iron ledgers of the Upper Town began to show a small shortfall every month. Never more than a cart. ' +
+      'The treasurer of that year reported it. Then the treasurer retired. ' +
+      'The shortfall did not. Whoever is taking a cart of the Lord\'s iron every month, the Lower Town has eaten well since.',
+  },
+  {
+    id: 'ardencia_kitchen_maids',
+    title: 'What the Kitchen Maids Say',
+    category: 'gossip',
+    text:
+      'Collected, says the cover, by a kitchen maid of the Alcázar who would rather not be named. ' +
+      'The Lord eats standing up. The Lord has not laughed since the Ash Wars, except once, at a letter from abroad, which he burned. ' +
+      'The old lord Benny takes sugar in his coffee and denies it. The steward counts the spoons. ' +
+      'Somebody in the house sends bread to the Lower Town by night, and every maid knows it, and every maid has decided not to know. ' +
+      'The young lord Azriel reads in the kitchen because it is warm. ' +
+      'He asked the cook once why there are no portraits of his mother. The cook gave him an extra pastry and changed the subject.',
+  },
+  {
+    id: 'ardencia_last_report',
+    title: "The Treasurer's Last Report",
+    category: 'trade',
+    text:
+      'An unsigned report, filed eleven years ago, the last in the treasurers\' row. ' +
+      'Iron sold to the Crown: four hundred carts. Iron paid for by the Crown: three hundred and ten. ' +
+      'The report asks the Lord to press the Crown for the rest. Beside the request, in another hand: Not yet. ' +
+      'Below that, the treasurer again: Then when? There is no answer. ' +
+      'The last page says the treasurer will retire at the end of the month, by his own wish. ' +
+      'The ink of "by his own wish" is darker than the rest, as if someone went over it twice. ' +
+      'The report is not signed. Every other report on the shelf is.',
+  },
+  {
+    id: 'ardencia_blade_law',
+    title: 'The Law of the Blade',
+    category: 'law',
+    text:
+      'Don Alonso, first Lord of Ardencia, made one law before any other: no outsider is heard who has not stood in the ring. ' +
+      'He meant it kindly. A stranger who had faced a Brasador blade and kept her feet had earned the right to speak. ' +
+      'The trial is fought on the sand beside the Alcázar, before the elders. The Lord may fight it himself, or send a champion. ' +
+      'Lord Benny never sent a champion. Lord Rael never has either. ' +
+      'The winner may ask the loser one question, and the loser must answer it, truly, between the blades. ' +
+      'No record says what Don Alonso asked. Every record says he never lost.',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -384,6 +485,11 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'song_spirit', name: 'Shelf: Springs and Spirits', books: ['xaragua_roots_tides', 'xaragua_opia', 'xaragua_hutia'] },
   { id: 'song_accounts', name: 'Shelf: Accounts', books: ['xaragua_cassava_salt', 'xaragua_charter'] },
   { id: 'caney_records', name: "Shelf: The Cacique's Records", books: ['xaragua_council_minutes', 'xaragua_anaco_letter', 'xaragua_healer_notes', 'xaragua_customs_receipts'] },
+  // Ardencia (Chapter 3): La Biblioteca Vieja's three shelves, and the Alcázar's records room.
+  { id: 'ard_shelf_war', name: 'Shelf: The Ash Wars', books: ['ardencia_brasador_count', 'ardencia_cendre'] },
+  { id: 'ard_shelf_law', name: 'Shelf: Oaths and Faith', books: ['ardencia_oaths', 'ardencia_witness'] },
+  { id: 'ard_shelf_trade', name: 'Shelf: Iron and Gossip', books: ['ardencia_iron_trade', 'ardencia_kitchen_maids'] },
+  { id: 'alcazar_records', name: "Shelf: The Treasurers' Row", books: ['ardencia_last_report', 'ardencia_blade_law'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

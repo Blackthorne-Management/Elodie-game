@@ -580,10 +580,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 272,
+      "imageheight": 304,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 129,
+      "tilecount": 145,
       "columns": 8,
       "margin": 0,
       "spacing": 0
