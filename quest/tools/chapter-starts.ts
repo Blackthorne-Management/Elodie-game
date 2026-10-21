@@ -23,6 +23,7 @@ export interface ChapterStart {
 const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string }>> = {
   '2': { mark: 'end-card', map: 'xaragua-village', spawn: 'pier' },
   '3': { mark: 'chapter2-end', map: 'zetwal-harbor', spawn: 'harbor_return' },
+  '4': { mark: 'chapter3-end', map: 'ardencia-camp', spawn: 'strand' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

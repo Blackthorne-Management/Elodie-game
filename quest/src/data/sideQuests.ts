@@ -179,7 +179,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       },
     ],
     done: f('side.treasurer.done'),
-    reward: { gold: 100, xp: 90, items: [{ id: 'bennys_refusal', n: 1 }], pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
+    reward: { gold: 100, xp: 70, items: [{ id: 'bennys_refusal', n: 1 }], pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
   },
   // The Lower Town's debate, as a required quest (outline 7.3): Is a thief who feeds the hungry a thief?
   {
@@ -225,6 +225,6 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       { text: 'Watch the lane from the corner by the old well.', done: f('side.bread.done'), goals: [{ map: 'ardencia-lower', at: { x: 18, y: 5 } }] },
     ],
     done: f('side.bread.done'),
-    reward: { gold: 150, xp: 100, pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
+    reward: { gold: 150, xp: 80, pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
   },
 ];

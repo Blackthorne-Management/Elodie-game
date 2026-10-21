@@ -496,6 +496,8 @@ export const ACT3: QuestDef = {
       title: "Grandfather's request",
       detail: 'Grandfather asks Gianna to go to Ardencia and ask Lord Rael, Benny\'s son, to stand with Xaraguá.',
       done: { flag: 'story.ardencia_asked' },
+      // Chapter 2's last scene, shown here so the Journal opens Chapter 3 on the pier: it pays no second XP.
+      noXp: true,
       goals: [{ map: 'zetwal-harbor', at: { x: 30, y: 12 } }],
       hints: [
         'Grandfather is waiting on the pier, Gigi.',
@@ -574,6 +576,8 @@ export const ACT3: QuestDef = {
       title: "The Lord's guests",
       detail: 'Held in the forge fortress, "as guests". There must be a way out of this hall.',
       done: { flag: 'story.forge_open' },
+      // A scene the party only watches (Azzy's key): no XP of its own (the level curve, Claude's call Oct 21).
+      noXp: true,
       goals: [{ map: 'ardencia-forge', at: { x: 26, y: 9 } }],
       hints: [
         'Gigi... say something.',
@@ -586,7 +590,12 @@ export const ACT3: QuestDef = {
       title: 'The fire has to go somewhere',
       detail: 'Three channels of lava cross the hall between the cell and the far wall. In the memory, the ditches are dry and the gates turn.',
       done: { all: [{ flag: 'anchor.forge_gate_a' }, { flag: 'anchor.forge_gate_b' }, { flag: 'anchor.forge_gate_c' }] },
-      goals: [{ map: 'ardencia-forge', at: { x: 21, y: 9 } }],
+      // The gates one by one, nearest first (each is turned in the memory, where its ditch is dry).
+      goals: [
+        { if: { notFlag: 'anchor.forge_gate_a' }, map: 'ardencia-forge', at: { x: 20, y: 7 } },
+        { if: { notFlag: 'anchor.forge_gate_b' }, map: 'ardencia-forge', at: { x: 15, y: 7 } },
+        { map: 'ardencia-forge', at: { x: 10, y: 7 } },
+      ],
       hints: [
         'The fire has to go somewhere. Can you choose where?',
         'In the memory the ditches are dry and the gates turn. Look at where the lava runs now, then change it there.',
@@ -598,7 +607,10 @@ export const ACT3: QuestDef = {
       title: "Benny's way out",
       detail: 'The far wall is blank. In the memory, young Lord Benny is by the bellows, with something to show Patricio.',
       done: { flag: 'party.azzy' },
-      goals: [{ map: 'ardencia-forge', at: { x: 21, y: 9 } }],
+      goals: [
+        { if: { notFlag: 'anchor.benny_lever' }, map: 'ardencia-forge', at: { x: 3, y: 5 } },
+        { map: 'ardencia-forge', at: { x: 21, y: 9 } },
+      ],
       hints: [
         'A wall nobody can open is still a door, Gigi. Grandfather says so.',
         'Lord Benny is by the bellows in the memory, on the far side of the hall.',

@@ -24,12 +24,18 @@ describe('the level curve along the scripted route', () => {
   const report = levelCurve();
   console.log(curveText(report));
 
-  it('measures every chapter the route plays (Chapters 1 and 2 so far), and lists the rest as unplayed', () => {
-    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2]);
+  it('measures every chapter the route plays (Chapters 1 to 3 so far), and lists the rest as unplayed', () => {
+    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3]);
     expect(report.chapters.length + report.unplayed.length).toBe(CHAPTER_LEVELS.length);
     for (const c of report.chapters) expect(c.xp).toBeGreaterThan(c.xpNoSide);
     // XP only grows from one chapter to the next.
-    expect(report.chapters[1]!.xp).toBeGreaterThan(report.chapters[0]!.xp);
+    for (let i = 1; i < report.chapters.length; i++) expect(report.chapters[i]!.xp).toBeGreaterThan(report.chapters[i - 1]!.xp);
+  });
+
+  it('Chapter 3 (Ardencia) leaves the party at level 11, the outline\'s target, with every side quest on the route', () => {
+    const c3 = report.chapters.find((c) => c.chapter === 3)!;
+    expect(c3.level).toBe(11);
+    expect(c3.levelNoSide).toBeGreaterThanOrEqual(9);
   });
 
   it('each chapter lands on its target level (within LEVEL_CURVE slack), except the ones known and reported', () => {
