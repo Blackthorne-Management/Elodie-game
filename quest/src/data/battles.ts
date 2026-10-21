@@ -3,7 +3,7 @@
 // Anissa run into a boar, which teaches the commands, Anissa's Spark and Surge, and her light.
 // Numbers follow docs/quest/design/COMBAT.md.
 
-import { ANISSA_SP_EVERY, BATTLE_ACTIVE, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
+import { ANISSA_SP_EVERY, BATTLE_ACTIVE, BRIBE_GOLD_PER_LEVEL, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
 import { ENCOUNTERS } from './encounters.ts';
 import type { BattleDef, EnemyDef, EnemyMove, SkillDef } from '../engine/battle.ts';
 import type { SkillBook } from '../engine/skills.ts';
@@ -84,9 +84,16 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       id: 'daftar_mend', name: 'Daftar: Remedy', sp: 0, gold: { base: 20, perLevel: 10 }, goldRate: 0.5, kind: 'heal', power: 0, target: 'ally',
       text: 'She pays for the best: one ally heals 10 HP for every 20 gold spent.',
     },
+    // Renamed from "Hired Blade" (Chapter 4 review 3.7: it collided with Qasim's Hire Blades); the id stays for saves.
     {
-      id: 'daftar_strike', name: 'Daftar: Hired Blade', sp: 0, gold: { base: 20, perLevel: 10 }, goldRate: 0.5, kind: 'damage', power: 0, target: 'enemy',
+      id: 'daftar_strike', name: 'Daftar: Debt Collected', sp: 0, gold: { base: 20, perLevel: 10 }, goldRate: 0.5, kind: 'damage', power: 0, target: 'enemy',
       text: 'Gold buys a blow no armour stops: 10 damage for every 20 gold spent.',
+    },
+    // Bribe (COMBAT 9.6; Chapter 4): a person takes the purse and walks out. A blade Qasim hired mid-fight was paid
+    // by the guild first, so the purse comes back.
+    {
+      id: 'bribe', name: 'Bribe', sp: 0, gold: { base: 0, perLevel: BRIBE_GOLD_PER_LEVEL }, kind: 'status', power: 0, target: 'enemy', bribe: true,
+      text: 'A purse for one foe who can be bought: they walk out of the fight. A hired blade was paid already: the gold comes back.',
     },
     {
       id: 'daftar_favour', name: 'Daftar: Patronage', sp: 0, gold: { base: 60 }, kind: 'status', power: 0, target: 'ally', statuses: ['inspired'],
@@ -178,6 +185,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // (facing left) until art drop 2 brings painted enemies.
   crown_marine: {
     id: 'crown_marine',
+    bribable: true,
     name: 'Crown Marine',
     look: 'crown_marine',
     level: 3,
@@ -188,6 +196,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // the encounter group. People are drawn from their walking sprites until art drop 2.
   crown_musketeer: {
     id: 'crown_musketeer',
+    bribable: true,
     name: 'Crown Musketeer',
     look: 'crown_musketeer',
     level: 5,
@@ -199,6 +208,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
   road_bandit: {
     id: 'road_bandit',
+    bribable: true,
     name: 'Road Bandit',
     look: 'road_bandit',
     level: 4,
@@ -234,6 +244,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
   smuggler: {
     id: 'smuggler',
+    bribable: true,
     name: 'Smuggler',
     look: 'smuggler',
     level: 7,
@@ -245,6 +256,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
   lookout: {
     id: 'lookout',
+    bribable: true,
     name: 'Lookout',
     look: 'lookout',
     level: 6,
@@ -254,6 +266,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // The night of the attack (Oct 17): the officer leading the marines into the caney.
   marine_lieutenant: {
     id: 'marine_lieutenant',
+    bribable: true,
     name: 'Marine lieutenant',
     look: 'marine_lieutenant',
     level: 6,
@@ -367,8 +380,43 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Ash Storm', power: 100, magic: true, area: true, every: 4, tell: 'Jaime lifts both hands. The air over the sand begins to burn...' },
     ],
   },
+  // ---- Chapter 4, Al-Doria (the outline section 4 and 5, with its review 3.1 and 3.7) ----------------------------
+  // The guild's blades in green, and the caravan road's raiders: a curved blade, and a fistful of sand in the eyes
+  // (COMBAT's Fogged is not built: it leaves the fighter Weakened, as the bats' Screech does). They take a purse.
+  caravan_raider: {
+    id: 'caravan_raider',
+    name: 'Caravan Raider',
+    look: 'caravan_raider',
+    level: 13,
+    role: 'skirmisher',
+    bribable: true,
+    moves: [
+      { name: 'Scimitar', power: 115 },
+      { name: 'Sand Toss', power: 70, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The raider scoops up a fistful of sand...' },
+    ],
+  },
+  // Guildmaster Qasim (review 3.1): level 14, a brute at 3.5 times HP and 1.1 ATK, the threat in what he buys. Phase 1
+  // he hires a blade every third turn (HIRE_CAP on the field at once); at 40% he forecloses: Seize Assets once (every
+  // fighter Weakened, telegraphed), then the Golden Wall (damage taken halved, its turns, a Surge shatters it). At 0
+  // HP he yields and his blades walk out with him (the Yield step's fallback, as Thorne's fight ends on the win).
+  qasim: {
+    id: 'qasim',
+    name: 'Guildmaster Qasim',
+    look: 'qasim',
+    level: 14,
+    role: 'brute',
+    boss: true,
+    hpScale: 4,
+    atkScale: 1.4,
+    withdraws: { line: 'Enough. Enough! Name your fee.', speaker: 'Qasim' },
+    moves: [
+      { name: 'Cane', power: 120 },
+      { name: 'Hire Blades', power: 0, hire: 'caravan_raider', every: 2, tell: 'Qasim rattles a purse at the stair. "Blades! The guild pays double!"' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
+    bribable: true,
     name: 'Marine sergeant',
     look: 'marine_sergeant',
     level: 4,
@@ -394,7 +442,36 @@ const RAEL_CORNERED: readonly EnemyMove[] = [
   },
 ];
 
+/** Qasim once the guild's money is gone (phase 2, Foreclosure): no more hiring; he seizes, then walls himself in gold. */
+const QASIM_FORECLOSURE: readonly EnemyMove[] = [
+  { name: 'Cane', power: 160 },
+  {
+    name: 'Seize Assets', power: 230, area: true, statuses: ['weakened'], every: 2, once: true,
+    tell: 'Qasim opens the guild ledger at your names. "Seize their assets." Guard, everyone!',
+  },
+  { name: 'Golden Wall', power: 0, ally: 'qasim', statuses: ['gilded'], every: 3, tell: 'Qasim kicks open a strongbox and stacks the gold in front of him!' },
+];
+
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 4: Guildmaster Qasim in the guild vault (the outline beat 8, its review 3.1). Game Over applies; the way
+  // back in is the blade at the stair foot. Samira has joined before it, so it teaches Bribe and her Daftar.
+  qasim_vault: {
+    id: 'qasim_vault',
+    title: "The Guild's Blades",
+    backdrop: 'guild_vault',
+    enemies: ['qasim', 'caravan_raider', 'caravan_raider'],
+    table: 'aldoria_story',
+    group: 'qasim',
+    rewards: { xp: 200, gold: 200 },
+    endsWithBoss: true,
+    phases: [{ below: 0.6, speaker: 'Qasim', text: 'Then I foreclose.', moves: QASIM_FORECLOSURE }],
+    tips: {
+      start: 'Gigi, Samira can Bribe a blade. The ones he hires were paid already: their purse comes back to her.',
+      spark: 'Gigi, Surge! The wall!',
+      tell: 'Guard, everyone!',
+      lowHp: "Samira's Remedy costs gold, Gigi. It heals a lot.",
+    },
+  },
   // Chapter 3: the Trial of Blades (meant to be lost: no goddess, no count, no Grudge, no Yield; outline 4.2 and
   // its review). Members are Bound at 0 HP. Rael wins whatever the party does: he ends it at the first of every
   // fighter Bound, La Promesa holding him at 1 HP, three of his turns after Reinado de Cenizas, or the round cap.
@@ -595,6 +672,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   cane_road: { title: 'The Cane Road', backdrop: 'cane_road' },
   cinder_flats: { title: 'The Cinder Flats', backdrop: 'cinder_flats' },
   cinder_patrols: { title: 'The Sea Road', backdrop: 'cinder_flats' },
+  desert_edge: { title: 'The Desert Edge', backdrop: 'desert_edge' },
 };
 
 /**
@@ -622,4 +700,14 @@ export function battleDef(id: string): BattleDef | undefined {
     group: groupId!,
     rewards: { xp: ENCOUNTER_XP_PER_LEVEL * group.level * foes, gold: ENCOUNTER_GOLD_PER_LEVEL * group.level * foes },
   };
+}
+
+/**
+ * The foes who can walk into a fight once it has begun, by enemy id: a boss phase's guards (Rivera and Jaime in the
+ * Trial of Blades) and the blades a boss hires (Qasim). The battle scene and the simulators build the reserve here.
+ */
+export function battleReserve(def: Pick<BattleDef, 'enemies' | 'phases'>): Record<string, EnemyDef> {
+  const moves = [...def.enemies.flatMap((id) => ENEMIES[id]?.moves ?? []), ...(def.phases ?? []).flatMap((p) => p.moves ?? [])];
+  const ids = [...(def.phases ?? []).flatMap((p) => p.enter ?? []), ...moves.flatMap((m) => (m.hire ? [m.hire] : []))];
+  return Object.fromEntries(ids.filter((id) => ENEMIES[id]).map((id) => [id, ENEMIES[id]!]));
 }

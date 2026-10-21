@@ -58,7 +58,7 @@ describe('companions are data', () => {
     expect(by.azzy!.passives).toEqual([{ kind: 'atkPerFell', share: 0.05, max: 0.25 }]);
     expect(by.samira!.passives).toEqual([{ kind: 'battleGold', share: 0.1 }]);
     expect(by.azzy!.skills.map((s) => s.id)).toEqual(['slash', 'heavy_blow', 'sweep', 'la_marca', 'grito_de_guerra', 'reinado_de_cenizas']);
-    expect(by.samira!.skills.map((s) => s.id)).toEqual(['tonic', 'daftar_mend', 'daftar_strike', 'daftar_favour']);
+    expect(by.samira!.skills.map((s) => s.id)).toEqual(['tonic', 'daftar_mend', 'daftar_strike', 'bribe', 'daftar_favour']);
     expect(by.samira!.look).toBe('samira');
     // Samira is a mage by her gear, but her skills are not a spellbook (no slots to fill).
     expect(usesSlots(member('samira'))).toBe(false);

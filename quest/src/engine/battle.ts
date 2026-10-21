@@ -34,6 +34,7 @@ import {
   BATTLE_ACTIVE,
   BOUND_BREAK_CHANCE,
   BOUND_FREE_HP_SHARE,
+  HIRE_CAP,
   INTERCEPT_CHANCE,
   RAEL_TRIAL_MAX_ROUNDS,
   ANISSA_SP_EVERY,
@@ -148,6 +149,12 @@ export interface SkillDef {
   goldRate?: number;
   /** Damage skills: this much more power for every foe felled so far this battle (Azzy's Reinado de Cenizas). */
   powerPerFell?: number;
+  /**
+   * Bribe (Samira): the target takes the purse and walks out of the fight (no fall, no fell). Only a foe that can be
+   * bought (EnemyDef.bribable) takes it; any other refuses and the gold stays in the purse. A foe hired mid-fight
+   * (EnemyMove.hire) was paid first, so the gold comes back.
+   */
+  bribe?: boolean;
   /** Its statuses land on a boss only this often (0 to 1); on other foes always (Grito de Guerra: 0.5). */
   bossChance?: number;
   /** How it is learned (omitted: known from the start). */
@@ -201,6 +208,11 @@ export interface EnemyMove {
   powerPerBound?: number;
   /** Used once per battle. */
   once?: boolean;
+  /**
+   * Hire Blades (Qasim): instead of striking, this foe (an enemy id, from the battle's reserve) walks in, hired; at
+   * most HIRE_CAP hired ones on the field at once (otherwise the normal attack).
+   */
+  hire?: string;
 }
 
 export interface EnemyDef {
@@ -231,6 +243,8 @@ export interface EnemyDef {
   withdraws?: { line: string; speaker?: string };
   /** One-target blows meant for this foe (by enemy id) go to this one instead, INTERCEPT_CHANCE of the time. */
   protects?: string;
+  /** A person who takes a purse (Samira's Bribe); beasts, zealots and bosses refuse. */
+  bribable?: boolean;
 }
 
 /**
@@ -301,6 +315,11 @@ export interface BattleDef {
   finale?: BattleFinale;
   /** Who fights: the present party (the default) or the Echo party (Patricio's). */
   era?: 'present' | 'echo';
+  /**
+   * The fight ends when the boss is down (he yields: EnemyDef.withdraws); whoever is still standing with him walks
+   * out (Qasim's blades). The Yield step's fallback, as Thorne's fight ends on the win.
+   */
+  endsWithBoss?: boolean;
   /** A fight that belongs to a side quest (its XP counts as side-quest XP in tools/level-curve.ts). */
   sideQuest?: string;
 }
@@ -408,6 +427,9 @@ export interface Combatant {
   floor?: { hp: number; text: string };
   withdraws?: { line: string; speaker?: string };
   protects?: string;
+  bribable: boolean;
+  /** Walked in mid-fight, paid by the boss (Hire Blades): a Bribe on them is refunded. */
+  hired: boolean;
 }
 
 export interface ActiveStatus {
@@ -605,6 +627,8 @@ export class Battle {
       breakTries: 0,
       phaseTurns: 0,
       atkPerBound: 0,
+      bribable: false,
+      hired: false,
     }));
     const foes: Combatant[] = enemies.map((e, idx) => {
       const n = (seen.get(e.id) ?? 0) + 1;
@@ -663,6 +687,8 @@ export class Battle {
       floor: e.floor,
       withdraws: e.withdraws,
       protects: e.protects,
+      bribable: !!e.bribable && !e.boss,
+      hired: false,
     };
   }
 
@@ -937,6 +963,22 @@ export class Battle {
     // Seize: Anissa cannot be hit, so Gianna steps in (when she is standing).
     const gianna = move.seize !== undefined ? targets.find((t) => t.anissaBond) : undefined;
     if ((move.ally && !ally) || (move.seize !== undefined && !gianna)) move = c.moves[0] ?? { name: 'Attack', power: 100 };
+    // Hire Blades: a blade walks in, paid by the boss (while fewer than HIRE_CAP hired ones stand).
+    if (move.hire) {
+      const blade = this.reserve[move.hire];
+      const standing = this.enemies.filter((e) => e.hired && !e.down).length;
+      if (blade && standing < HIRE_CAP) {
+        events.push({ kind: 'use', who: c.key, name: move.name, targets: [] });
+        const hired = this.walkIn(move.hire, blade);
+        hired.hired = true;
+        events.push({ kind: 'enter', who: hired.key });
+        const nextHeavy = c.moves.find((m) => ready(m, c.phaseTurns + 1));
+        if (nextHeavy?.tell) events.push({ kind: 'text', text: nextHeavy.tell }, ...this.tip('tell', this.def.tips?.tell));
+        c.next += turnDelay(spdOf(c), ACTION_WEIGHT.attack);
+        return events;
+      }
+      move = c.moves[0] ?? { name: 'Attack', power: 100 };
+    }
     if (ally) {
       events.push({ kind: 'use', who: c.key, name: move.name, targets: [ally.key] });
       for (const st of move.statuses ?? []) events.push(...this.giveStatus(ally, st, move.turns));
@@ -1004,6 +1046,13 @@ export class Battle {
       dmg *= SURGE_MULT;
       this.surgeArmed = false;
     }
+    // A Surge shatters a wall of gold (the Golden Wall) before the blow lands.
+    const walls = surge ? b.statuses.filter((st) => STATUS[st.id].shatter) : [];
+    if (walls.length > 0) {
+      b.statuses = b.statuses.filter((st) => !STATUS[st.id].shatter);
+      for (const st of walls) events.push({ kind: 'status', to: b.key, status: st.id, on: false });
+      events.push({ kind: 'text', text: `Anissa's light breaks through. The wall in front of ${b.name} shatters!` });
+    }
     if (a.side === 'party') dmg *= 1 + this.grudge;
     if (a.side === 'enemy') dmg *= this.enemyDamage;
     for (const st of a.statuses) dmg *= STATUS[st.id].dealt;
@@ -1064,6 +1113,13 @@ export class Battle {
       b.down = true;
       if (a.side !== b.side) a.fells++;
       events.push({ kind: 'withdraw', who: b.key }, { kind: 'text', text: b.withdraws.line, speaker: b.withdraws.speaker });
+      // He yields, and the ones he paid walk out with him.
+      if (this.def.endsWithBoss && b.boss) {
+        for (const e of this.enemies.filter((x) => !x.down)) {
+          e.down = true;
+          events.push({ kind: 'withdraw', who: e.key });
+        }
+      }
       return events;
     }
     if (b.hp === 0) {
@@ -1140,6 +1196,24 @@ export class Battle {
       if (me.anissaBond) {
         this.spark = Math.min(SPARK_MAX, this.spark + 3);
         events.push({ kind: 'spark', value: this.spark });
+      }
+      return events;
+    }
+    // Bribe: the purse changes hands and the foe walks out (a hired one was paid first: the gold comes back).
+    if (skill.bribe) {
+      for (const t of targets) {
+        if (t.down) continue;
+        if (!t.bribable) {
+          this.goldSpent -= paid;
+          events.push({ kind: 'text', text: `${t.name} is not for sale.` });
+          continue;
+        }
+        t.down = true;
+        events.push({ kind: 'withdraw', who: t.key }, { kind: 'text', text: `${t.name} takes the purse and walks out of the fight.` });
+        if (t.hired) {
+          this.goldSpent -= paid;
+          events.push({ kind: 'text', text: 'The guild paid him first. Samira collects twice: the purse comes back.' });
+        }
       }
       return events;
     }
@@ -1243,17 +1317,19 @@ export class Battle {
       if (p.text) events.push({ kind: 'text', text: p.text, speaker: p.speaker });
       const ids = (p.enter ?? []).filter((id) => this.reserve[id]);
       if (ids.length && p.enterText) events.push({ kind: 'text', text: p.enterText });
-      for (const id of ids) {
-        const e = this.reserve[id]!;
-        const n = this.enemies.filter((x) => x.enemyId === id).length + 1;
-        const slot = [0, 1, 2, 3].find((k) => !this.enemies.some((x) => x.slot === k && !x.down)) ?? this.enemies.length;
-        const c = this.foe(e, n, n > 1, slot);
-        c.next = (this.actor?.next ?? 0) + Math.round(turnDelay(c.spd) * 0.5);
-        this.combatants.push(c);
-        events.push({ kind: 'enter', who: c.key });
-      }
+      for (const id of ids) events.push({ kind: 'enter', who: this.walkIn(id, this.reserve[id]!).key });
     }
     return events;
+  }
+
+  /** A foe from the reserve walks into the fight (a phase's guards, a hired blade): a free place, half a turn's wait. */
+  private walkIn(id: string, e: EnemyDef): Combatant {
+    const n = this.enemies.filter((x) => x.enemyId === id).length + 1;
+    const slot = [0, 1, 2, 3].find((k) => !this.enemies.some((x) => x.slot === k && !x.down)) ?? this.enemies.length;
+    const c = this.foe(e, n, n > 1, slot);
+    c.next = (this.actor?.next ?? 0) + Math.round(turnDelay(c.spd) * 0.5);
+    this.combatants.push(c);
+    return c;
   }
 
   /** Whether the boss ends the fight on this turn of his: after his finisher, or at the round cap. */

@@ -192,6 +192,39 @@ export const TILESET = {
     { gid: 143, name: 'forge_gate', base: 0x4a4a52, accent: 0xe0782a, pattern: 'cross' },
     { gid: 144, name: 'forge_lever', base: 0x6b4426, accent: 0xc8c8d0, pattern: 'cross' },
     { gid: 145, name: 'gallery', base: 0x5e3e22, accent: 0x8a3a2a, pattern: 'stripes' },
+    // Al-Doria (Chapter 4, Oct 21): sandstone streets and walls under green domes, zellige tiles, the desert's dunes,
+    // the bazaar's awnings and stalls, the guild vault's stone and iron (the balance, its weights, the sun lock, the
+    // chest), the cistern line dry and running, the caravans' camels (placeholders until art drop 2).
+    { gid: 146, name: 'sandstone', base: 0xe0c89a, accent: 0xc8ac78, pattern: 'grid' },
+    { gid: 147, name: 'sandstone_wall', base: 0xc8a070, accent: 0xa88050, pattern: 'grid' },
+    { gid: 148, name: 'dome', base: 0x1e8449, accent: 0x2ea85e, pattern: 'stripes' },
+    { gid: 149, name: 'zellige', base: 0x2a8a6a, accent: 0xd8b04a, pattern: 'cross' },
+    { gid: 150, name: 'dune', base: 0xe0b878, accent: 0xc89c58, pattern: 'dots' },
+    { gid: 151, name: 'arcade', base: 0xd8c08a, accent: 0x8a6a3a, pattern: 'border' },
+    { gid: 152, name: 'awning', base: 0x1e8449, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 153, name: 'carpet_stall', base: 0x8a3050, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 154, name: 'coin_table', base: 0x6b4426, accent: 0xf2d04b, pattern: 'dots' },
+    { gid: 155, name: 'weights_table', base: 0x6b4426, accent: 0x8e8e9c, pattern: 'grid' },
+    { gid: 156, name: 'vault_floor', base: 0x6e6152, accent: 0x8a7a68, pattern: 'grid' },
+    { gid: 157, name: 'vault_wall', base: 0x3a3238, accent: 0x5a4a50, pattern: 'grid' },
+    { gid: 158, name: 'strongbox', base: 0x4a4452, accent: 0xa8a6b4, pattern: 'grid' },
+    { gid: 159, name: 'channel_dry', base: 0xb89a6a, accent: 0x9c8050, pattern: 'stripes' },
+    { gid: 160, name: 'channel_water', base: 0x3a6fb8, accent: 0x9ad8ff, pattern: 'wave' },
+    { gid: 161, name: 'camel', base: 0xc8a46b, accent: 0x8a6a3a, pattern: 'blob' },
+    { gid: 162, name: 'crate_sealed', base: 0x9c7446, accent: 0xc0392b, pattern: 'cross' },
+    { gid: 163, name: 'ship_hull', base: 0x5e3e22, accent: 0x3a2614, pattern: 'stripes' },
+    { gid: 164, name: 'lectern', base: 0x6b4426, accent: 0xe8d8b0, pattern: 'border' },
+    { gid: 165, name: 'sluice', base: 0x5e5866, accent: 0xa8a6b4, pattern: 'stripes' },
+    { gid: 166, name: 'balance', base: 0x9c7446, accent: 0xf2d04b, pattern: 'cross' },
+    { gid: 167, name: 'weight_hook', base: 0x6e5a3a, accent: 0xb8902a, pattern: 'blob' },
+    { gid: 168, name: 'weight_hung', base: 0xb8902a, accent: 0xfff2a0, pattern: 'blob' },
+    { gid: 169, name: 'balance_door', base: 0x8a6a3a, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 170, name: 'sun_lock', base: 0x5e3e22, accent: 0x8a7a68, pattern: 'blob' },
+    { gid: 171, name: 'sun_lock_cut', base: 0x5e3e22, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 172, name: 'sealed_chest', base: 0x6b4426, accent: 0xc0392b, pattern: 'border' },
+    { gid: 173, name: 'fountain_dry', base: 0xc8b07a, accent: 0x8e8e9c, pattern: 'border' },
+    { gid: 174, name: 'old_gate', base: 0x6e4a2a, accent: 0xa8a6b4, pattern: 'cross' },
+    { gid: 175, name: 'old_gate_open', base: 0x6e4a2a, accent: 0x3a6fb8, pattern: 'stripes' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -263,6 +296,8 @@ const TEAL = 0x17a5a5;
 const HAIR_BLACK = 0x2b2433;
 const HAIR_DARK = 0x2a1a14;
 const WHITE_HAIR = C.h!;
+/** House Dorini's green (Al-Doria, Chapter 4). */
+const DORINI_GREEN = 0x1e8449;
 /** House Brasador's near-black (Ardencia, Chapter 3). */
 const BRASADOR_BLACK = 0x2a2632;
 
@@ -472,6 +507,20 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   ard_librarian: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: C.r!, trim: C.N!, robe: true, accessories: ['satchel'] },
   ard_villager: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x7a5a48, trim: C.R!, legs: C.K! },
   ard_villager_f: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x8a6a50, trim: C.R!, robe: true },
+  // Al-Doria (Chapter 4; drawn placeholders until art drop 2, prompts in docs/quest/ART-PROMPTS.md). The Dorini wear
+  // the guild's green and gold. Layla: tall, green and gold, a ledger chain. Qasim: broad, gold rings, a cane.
+  layla: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: DORINI_GREEN, trim: C.y!, robe: true, build: 'tall', headgear: 'wrap', headgearColor: C.y!, accessories: ['sash', 'emblem'] },
+  qasim: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: DORINI_GREEN, trim: C.y!, legs: C.b!, build: 'tall', beard: HAIR_BLACK, headgear: 'wrap', headgearColor: C.w!, accessories: ['cane', 'sash'] },
+  caravan_raider: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xc8a46b, trim: DORINI_GREEN, legs: C.B!, headgear: 'wrap', headgearColor: 0xd8c08a, accessories: ['sash'] },
+  dorini_scribe: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: DORINI_GREEN, trim: C.w!, robe: true, beard: HAIR_BLACK, accessories: ['satchel'] },
+  majlis_guard: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: DORINI_GREEN, trim: C.y!, legs: C.K!, headgear: 'helmet', headgearColor: C.y!, accessories: ['staff'] },
+  aldoria_trader: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0xd8c08a, trim: DORINI_GREEN, legs: C.B!, headgear: 'wrap', headgearColor: C.w!, accessories: ['satchel'] },
+  aldoria_trader_f: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0xb86a3a, trim: C.y!, robe: true, headgear: 'wrap', headgearColor: 0x1e8449 },
+  water_carrier: { skin: C.S!, hair: C.G!, hairStyle: 'bun', outfit: 0x5a7a9a, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: C.w!, accessories: ['apron'] },
+  // Coralie, "Tati Coco" (FAMILY.md, owner, Oct 21): Elodie's sister, the designer who dresses royals; flamboyant.
+  coralie: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'puffs', outfit: C.P!, trim: C.y!, robe: true, build: 'tall', headgear: 'wrap', headgearColor: C.p!, accessories: ['sash', 'satchel'] },
+  echo_yusuf: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x5a6a40, trim: C.N!, robe: true, accessories: ['satchel'] },
+  echo_locksmith: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x6a5a40, trim: C.e!, legs: C.B!, beard: C.G!, accessories: ['apron'] },
 };
 
 /** The player's look in each era. */
@@ -563,6 +612,21 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
   },
   // The Lower Town by night (Bread at Night, Chapter 3).
   { maps: ['ardencia-lower'], if: { flag: 'story.cart_night' }, color: 0x101428, alpha: 0.42 },
+  // Al-Doria from dusk to the caravan's first light (Chapter 4, review 3.9): the same condition as the guild hall's
+  // door (Samira's three things done), not a flag of its own, so a debate settled last still brings the night.
+  {
+    maps: ['aldoria-bazaar', 'aldoria-desert'],
+    if: {
+      all: [
+        { flag: 'side.appraise.done' },
+        { flag: 'side.sweet_water.done' },
+        { any: [{ flag: 'debate.aldoria_bargain.joined' }, { flag: 'debate.aldoria_bargain.mediated' }] },
+        { notFlag: 'story.caravan_dawn' },
+      ],
+    },
+    color: 0x1a1430,
+    alpha: 0.38,
+  },
 ];
 
 /**
@@ -939,6 +1003,40 @@ const ARDENCIA_BACKDROPS = {
   },
 } as const;
 
+// Al-Doria (Chapter 4): the Desert Edge's dunes under a white sky; the guild vault, lamplit stone and iron boxes.
+const ALDORIA_BACKDROPS = {
+  desert_edge: {
+    sky: [0xc8d8e8, 0xd4e0ea, 0xe0e6e8, 0xeae8e0, 0xf2e8d4, 0xf6e4c4],
+    cloud: 0xfaf6ee,
+    cloudShade: 0xe0d8c8,
+    mountainFar: 0xc8a070,
+    mountainNear: 0xb08a58,
+    trees: 0x6a7a40,
+    treesDark: 0x4a5a2a,
+    field: 0xe0b878,
+    cane: 0xd8a868,
+    caneDark: 0xb08850,
+    ground: 0xe0c89a,
+    groundDark: 0xc8ac78,
+    groundLight: 0xf0dcb0,
+  },
+  guild_vault: {
+    sky: [0x14101a, 0x1a1420, 0x241e26, 0x3a3238, 0x4a3a2a, 0x6a5a3a],
+    cloud: 0x3a3440,
+    cloudShade: 0x2a2430,
+    mountainFar: 0x3a3238,
+    mountainNear: 0x2a2430,
+    trees: 0x4a4452,
+    treesDark: 0x2a2632,
+    field: 0x6e6152,
+    cane: 0xb8902a,
+    caneDark: 0x6b4426,
+    ground: 0x6e6152,
+    groundDark: 0x4a4038,
+    groundLight: 0x8a7a68,
+  },
+} as const;
+
 /** The painted scene behind each battle (BattleDef.backdrop), drawn in code until painted art arrives. */
 export const BATTLE_BACKDROPS: Readonly<Record<string, {
   sky: readonly number[];
@@ -1020,6 +1118,7 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     groundLight: 0xc8a46b,
   },
   ...ARDENCIA_BACKDROPS,
+  ...ALDORIA_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

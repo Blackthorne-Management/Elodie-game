@@ -188,6 +188,35 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   Ϗ: { ground: 'red_stone', deco: 'shelf', solid: true },
   ϐ: { ground: 'black_sand', deco: 'tent', solid: true },
   ϑ: { ground: 'black_sand', deco: 'firepit', solid: true },
+  // Al-Doria (Chapter 4, Oct 21).
+  б: { ground: 'sandstone', solid: false },
+  Б: { ground: 'sandstone_wall', solid: true },
+  г: { ground: 'dome', solid: true },
+  д: { ground: 'zellige', solid: false },
+  ж: { ground: 'dune', solid: false },
+  Ж: { ground: 'dune', deco: 'palm', solid: true },
+  з: { ground: 'sandstone', deco: 'arcade', solid: true },
+  и: { ground: 'sandstone', deco: 'awning', solid: true },
+  й: { ground: 'sandstone', deco: 'carpet_stall', solid: true },
+  л: { ground: 'sandstone', deco: 'coin_table', solid: true },
+  Л: { ground: 'sandstone', deco: 'weights_table', solid: true },
+  п: { ground: 'vault_floor', solid: false },
+  П: { ground: 'vault_wall', solid: true },
+  ф: { ground: 'vault_floor', deco: 'strongbox', solid: true },
+  ц: { ground: 'channel_dry', solid: false },
+  Ц: { ground: 'channel_water', solid: true },
+  ч: { ground: 'dune', deco: 'camel', solid: true },
+  ш: { ground: 'sandstone', deco: 'crate_sealed', solid: true },
+  Ш: { ground: 'water', deco: 'ship_hull', solid: true },
+  щ: { ground: 'floor', deco: 'lectern', solid: true },
+  ы: { ground: 'sandstone', solid: true },
+  э: { ground: 'dune', deco: 'sluice', solid: true },
+  ю: { ground: 'dune', deco: 'tent', solid: true },
+  я: { ground: 'sandstone', deco: 'lantern', solid: true },
+  Э: { ground: 'sandstone_wall', deco: 'banner', solid: true },
+  Я: { ground: 'sandstone', deco: 'spice', solid: true },
+  Ю: { ground: 'sandstone', deco: 'cloth', solid: true },
+  Ф: { ground: 'vault_floor', deco: 'lectern', solid: true },
 };
 
 export class Grid {
@@ -372,8 +401,8 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
 }
 
 /** Building walls and the roofs above them: stone and tile, and Xaraguá's cane walls under thatch. */
-const WALLS = new Set(['#', 'é', 'ε']);
-const ROOFS = new Set(['^', 'á']);
+const WALLS = new Set(['#', 'é', 'ε', 'Б']);
+const ROOFS = new Set(['^', 'á', 'г']);
 
 /**
  * Every building with no way in gets a grey door you cannot open (owner request, Oct 16), in the middle
@@ -427,7 +456,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

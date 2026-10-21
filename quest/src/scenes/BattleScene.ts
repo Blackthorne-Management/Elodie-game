@@ -33,7 +33,7 @@ import {
 import { GAME_OVER, SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { GAME_OVER_TEXT } from '../data/gameOver.ts';
 import { clearLosses, grudgeFor, recordLoss } from '../engine/gameOver.ts';
-import { ENEMIES, SKILL_BOOK, battleDef } from '../data/battles.ts';
+import { ENEMIES, SKILL_BOOK, battleDef, battleReserve } from '../data/battles.ts';
 import { RPG } from '../data/rpg.ts';
 import {
   Battle,
@@ -115,6 +115,7 @@ const STATUS_TAGS: Readonly<Record<StatusId, { tag: string; good: boolean }>> = 
   slowed: { tag: 'SLOW', good: false },
   taunting: { tag: 'TAUNT', good: true },
   stunned: { tag: 'STUN', good: false },
+  gilded: { tag: 'GOLD', good: true },
 };
 
 const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
@@ -126,6 +127,7 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
   slowed: 'Slowed',
   taunting: 'drawing every blow',
   stunned: 'Stunned',
+  gilded: 'behind a wall of gold',
 };
 
 const VISIBLE_ROWS = 6;
@@ -251,8 +253,8 @@ export class BattleScene extends Phaser.Scene {
     // The Grudge: each earlier Game Over at this fight makes the party's blows land harder (engine/gameOver.ts).
     const grudge = grudgeFor(flags, def);
     const purse = battlePurse(flags, RPG, Object.keys(flags.snapshot()));
-    // Guards a boss phase brings in (the Trial of Blades: Rivera and Jaime walk in at phase 2).
-    const reserve = Object.fromEntries((def.phases ?? []).flatMap((p) => p.enter ?? []).map((id) => [id, ENEMIES[id]!]).filter(([, e]) => e));
+    // Foes who can walk in mid-fight: a boss phase's guards (Rivera and Jaime), the blades Qasim hires.
+    const reserve = battleReserve(def);
     this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve });
     this.placeFighters();
     const opening: BattleEvent[] = [];

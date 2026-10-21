@@ -98,9 +98,11 @@ export class VoyageScene extends Phaser.Scene {
     g.fillStyle(night ? 0x14304a : 0x2b5f7c, 1).fillRect(0, 34, VIEW_WIDTH, VIEW_HEIGHT - 34);
     g.fillStyle(night ? 0x1c4058 : 0x3a7fa0, 1).fillRect(0, 34, 120, VIEW_HEIGHT - 34);
     // The shore on the west: sand, green, roofs (Pòdlimyè's red tile, or Yucayeque's thatch), the pier.
-    g.fillStyle(night ? 0x6a5e48 : 0xd8c08a, 1).fillRect(0, 34, 46, VIEW_HEIGHT - 34);
-    g.fillStyle(night ? 0x24402a : 0x4f9a4a, 1).fillRect(0, 34, 30, VIEW_HEIGHT - 34);
-    const roof = voyage.shore === 'xaragua' ? 0xc8a46b : 0xa04040;
+    // Ardencia's strand is black sand under basalt (Chapter 4's voyage leaves from the Free Brasador camp).
+    const black = voyage.shore === 'ardencia';
+    g.fillStyle(night ? 0x6a5e48 : black ? 0x3a3440 : 0xd8c08a, 1).fillRect(0, 34, 46, VIEW_HEIGHT - 34);
+    g.fillStyle(night ? 0x24402a : black ? 0x241e26 : 0x4f9a4a, 1).fillRect(0, 34, 30, VIEW_HEIGHT - 34);
+    const roof = voyage.shore === 'xaragua' ? 0xc8a46b : black ? 0x2a2632 : 0xa04040;
     for (const [x, y] of [[4, 44], [14, 70], [6, 104], [16, 134]] as const) {
       g.fillStyle(night ? 0x5a4a30 : roof, 1).fillRect(x, y, 10, 6);
       g.fillStyle(night ? 0x4a4038 : 0x9a8a78, 1).fillRect(x + 1, y + 6, 8, 5);

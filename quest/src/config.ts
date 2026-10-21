@@ -175,18 +175,23 @@ export const MIN_DAMAGE_SHARE = 0.15;
 export const GUARD_MULT = 0.5;
 /** Status effects (COMBAT 10): how many of the affected fighter's own turns they last, and what they do. */
 export const STATUS = {
-  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false, skip: false },
-  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false },
-  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true, skip: false },
+  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
+  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false },
+  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false },
   /** Ward: damage taken x0.75 (a Chapter 1 proposal; Aldermoor's Ward of Patience is the party-wide one). */
-  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false, skip: false },
-  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false, skip: false },
+  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
+  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
   /** Slowed (COMBAT's Chilled): SPD x0.7, so turns come later. */
-  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true, skip: false },
+  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true, skip: false, shatter: false },
   /** Taunting: foes' one-target attacks go to this fighter first. */
-  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false, skip: false },
+  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false, skip: false, shatter: false },
   /** Stunned (COMBAT 10): the fighter loses their next action (Azzy's Grito de Guerra). */
-  stunned: { turns: 1, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: true },
+  stunned: { turns: 1, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: true, shatter: false },
+  /**
+   * The Golden Wall (Qasim, Chapter 4; the outline review 3.7): gold stacked in front of him, damage taken x0.5 for
+   * its turns. A Surge-powered blow shatters it at once (and lands in full).
+   */
+  gilded: { turns: 3, dealt: 1, taken: 0.5, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: true },
 } as const;
 /**
  * Spell slots (owner, Oct 15): a mage equips only this many of the spells she knows (the level at which
@@ -222,6 +227,14 @@ export const INTERCEPT_CHANCE = 0.75;
  */
 export const RAEL_TRIAL_MAX_ROUNDS = 14;
 export const TRIAL_TURNS_AFTER_FINISHER = 3;
+/**
+ * Bribe (Samira, COMBAT 9.6; Chapter 4): a human foe takes the purse and walks out of the fight. It costs
+ * BRIBE_GOLD_PER_LEVEL gold for each of Samira's levels (325 at level 13); a foe someone hired mid-fight (Qasim's
+ * Hire Blades) was paid by the guild first, so the purse comes back (the refund).
+ */
+export const BRIBE_GOLD_PER_LEVEL = 25;
+/** Qasim's Hire Blades: at most this many hired blades on the field at once (the starting pair aside). */
+export const HIRE_CAP = 2;
 /** Fighters in a battle at once (owner, Oct 15): up to 8 in the party, 4 fight, the rest wait to swap in. */
 export const BATTLE_ACTIVE = 4;
 /** A fighter who swaps in (or replaces a fallen one) waits this share of a full turn before acting. */

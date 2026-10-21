@@ -41,9 +41,18 @@ export interface JournalNote {
   text: string;
 }
 
-/** The chapter a map belongs to (the Journal and Anissa's hints follow it); null outside every chapter. */
-export function questForMap(quests: readonly QuestDef[], mapId: string): QuestDef | null {
-  return quests.find((q) => q.maps.includes(mapId)) ?? null;
+/**
+ * The chapter a map belongs to (the Journal and Anissa's hints follow it); null outside every chapter. A map two
+ * chapters share (the strand camp ends Chapter 3 and begins Chapter 4) belongs to the latest of them that has begun
+ * (an objective done), else to the first that lists it.
+ */
+export function questForMap(quests: readonly QuestDef[], mapId: string, flags?: FlagReader): QuestDef | null {
+  const listing = quests.filter((q) => q.maps.includes(mapId));
+  if (flags && listing.length > 1) {
+    const begun = [...listing].reverse().find((q) => q.objectives.some((o) => evaluate(o.done, flags)));
+    if (begun) return begun;
+  }
+  return listing[0] ?? null;
 }
 
 /**
@@ -51,7 +60,7 @@ export function questForMap(quests: readonly QuestDef[], mapId: string): QuestDe
  * after a voyage) the latest chapter with an objective done. Null before any.
  */
 export function questForJournal(quests: readonly QuestDef[], mapId: string, flags: FlagReader): QuestDef | null {
-  return questForMap(quests, mapId) ?? [...quests].reverse().find((q) => q.objectives.some((o) => evaluate(o.done, flags))) ?? null;
+  return questForMap(quests, mapId, flags) ?? [...quests].reverse().find((q) => q.objectives.some((o) => evaluate(o.done, flags))) ?? null;
 }
 
 export function currentObjective(quest: QuestDef, flags: FlagReader): Objective | null {
