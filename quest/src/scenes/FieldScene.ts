@@ -117,8 +117,8 @@ interface StageActor {
   endFacing?: Dir8;
   /** Leave the stage on arrival. */
   leaving: boolean;
-  /** Borrowed from the map: an NPC's placement (by object id), Anissa following, or Yari. Never destroyed here. */
-  borrowed?: number | 'follower' | 'yari';
+  /** Borrowed from the map: an NPC's placement (by object id), Anissa following, Yari or Azzy. Never destroyed here. */
+  borrowed?: number | 'follower' | 'yari' | 'azzy';
 }
 
 /** The quest pointers: the story's (gold) and a side quest's (silver). */
@@ -171,6 +171,8 @@ export interface FieldSnapshot {
   follower: { x: number; y: number; glowing: boolean } | null;
   /** Yari walking behind Anissa, once she is in the party (demo review, Oct 17). */
   yari: { x: number; y: number; visible: boolean } | null;
+  /** Azzy walking last, once he has joined (Chapter 3). */
+  azzy: { x: number; y: number; visible: boolean } | null;
   /** How many of the festival's passers-by are on the map. */
   crowd: number;
   /** The quest arrow: where the story points on this map, and whether the arrow or the goal's marker shows. */
@@ -234,6 +236,10 @@ export class FieldScene extends Phaser.Scene {
   private follower: Follower | null = null;
   /** Yari, behind Anissa (or Gianna), while she is in the party. */
   private yari: Follower | null = null;
+  /** Azzy, last in the line, once he has joined (Chapter 3, the forge: the followers are a line of three). */
+  private azzy: Follower | null = null;
+  /** Where a scene last left Azzy before he joined. */
+  private azzyStaged: Pos | null = null;
   /**
    * The quest pointers (engine/guide.ts): the story's next stop in gold, a side quest's in silver (owner, Oct 18).
    * Each has an arrow for the screen's edge and a marker for over the stop.
@@ -321,6 +327,7 @@ export class FieldScene extends Phaser.Scene {
     this.lastGlowed = [];
     this.follower = null;
     this.yari = null;
+    this.azzy = null;
     this.crowd = [];
     this.cardArt = null;
     this.pointers = { story: { way: null, arrow: null, mark: null }, side: { way: null, arrow: null, mark: null } };
@@ -1341,6 +1348,9 @@ export class FieldScene extends Phaser.Scene {
     const onStage = this.stageActors.get('yari');
     this.placeYari(yariStood ?? (onStage && onStage.borrowed === undefined ? onStage.at : undefined) ?? this.yariStaged ?? undefined);
     this.yariStaged = null;
+    const azzyOnStage = this.stageActors.get('azzy');
+    this.placeAzzy((azzyOnStage && azzyOnStage.borrowed === undefined ? azzyOnStage.at : undefined) ?? this.azzyStaged ?? undefined);
+    this.azzyStaged = null;
     this.syncCrowd();
     this.refreshGuide();
   }
@@ -1441,6 +1451,7 @@ export class FieldScene extends Phaser.Scene {
     if (samePos(p, this.logic.state.player.pos)) return true;
     if (this.follower && samePos(p, this.follower.pos)) return true;
     if (this.yari && samePos(p, this.yari.pos)) return true;
+    if (this.azzy && samePos(p, this.azzy.pos)) return true;
     if (this.logic.npcs().some((n) => samePos(n.pos, p))) return true;
     return this.crowd.some((c) => samePos(c.at, p) || (c.mover.glide !== null && samePos(c.mover.glide.to, p)));
   }
@@ -1559,10 +1570,38 @@ export class FieldScene extends Phaser.Scene {
     this.updateFollowerLook();
   }
 
+  private azzyWithUs(): boolean {
+    return partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'azzy');
+  }
+
+  /** Azzy walks last in the line (behind Yari, Anissa or Gianna) once he has joined, from where a scene left him. */
+  private placeAzzy(stood?: Pos): void {
+    if (!this.azzyWithUs()) {
+      this.azzy?.sprite.destroy();
+      this.azzy = null;
+      return;
+    }
+    if (this.azzy) return;
+    const p = this.logic.state.player;
+    const lead = this.yari?.pos ?? this.follower?.pos ?? p.pos;
+    const taken = (t: Pos) => samePos(t, p.pos) || (this.follower !== null && samePos(t, this.follower.pos)) || (this.yari !== null && samePos(t, this.yari.pos));
+    const tryDirs: Dir8[] = [opposite(spriteFacing(p.facing)), ...DIRS];
+    const spot =
+      stood ??
+      tryDirs.map((d) => stepFrom(lead, d)).find((t) => !taken(t) && this.logic.isOpen(t, 'present') && !this.logic.npcs('present').some((n) => samePos(n.pos, t))) ??
+      lead;
+    const w = tileToWorld(spot);
+    const sprite = this.add.image(w.x, w.y, textureKeyForCharacter('azzy')).setOrigin(0.5, 1).setDepth(10 + w.y - 1);
+    setLook(sprite, 'azzy', p.facing);
+    this.azzy = { sprite, pos: spot, from: spot, facing: p.facing, glow: null, distance: WALK_CYCLE_PX / 2, lastT: 1 };
+    this.updateFollowerLook();
+  }
+
   /** In the present she walks behind Gianna; in the Echo she stays put, glowing, holding the door. */
   private updateFollowerLook(): void {
     // Yari is not part of the memory: she waits out of sight until it ends.
     this.yari?.sprite.setVisible(this.logic.era !== 'echo');
+    this.azzy?.sprite.setVisible(this.logic.era !== 'echo');
     const f = this.follower;
     if (!f) return;
     const echo = this.logic.era === 'echo';
@@ -1582,10 +1621,17 @@ export class FieldScene extends Phaser.Scene {
     // Anissa steps where Gianna was; Yari steps where Anissa was (or where Gianna was, without her).
     const anissaWas = this.follower ? { ...this.follower.pos } : null;
     const anissaMoved = this.follower ? this.stepFollower(this.follower, playerFrom, ANISSA_GLOW.look) : false;
+    const yariWas = this.yari ? { ...this.yari.pos } : null;
+    let yariMoved = false;
     if (this.yari) {
-      if (!this.follower) this.stepFollower(this.yari, playerFrom, 'yari');
-      else if (anissaMoved && anissaWas) this.stepFollower(this.yari, anissaWas, 'yari');
+      if (!this.follower) yariMoved = this.stepFollower(this.yari, playerFrom, 'yari');
+      else if (anissaMoved && anissaWas) yariMoved = this.stepFollower(this.yari, anissaWas, 'yari');
       else this.stepFollower(this.yari, this.yari.pos, 'yari');
+    }
+    // Azzy steps where the one ahead of him was (Yari, else Anissa, else Gianna).
+    if (this.azzy) {
+      const lead = this.yari ? (yariMoved ? yariWas : null) : this.follower ? (anissaMoved ? anissaWas : null) : playerFrom;
+      this.stepFollower(this.azzy, lead ?? this.azzy.pos, 'azzy');
     }
   }
 
@@ -1609,6 +1655,7 @@ export class FieldScene extends Phaser.Scene {
     if (this.logic.era === 'echo') return;
     if (this.follower) this.moveOneFollower(this.follower, t, ANISSA_GLOW.look);
     if (this.yari) this.moveOneFollower(this.yari, t, 'yari');
+    if (this.azzy) this.moveOneFollower(this.azzy, t, 'azzy');
   }
 
   private moveOneFollower(f: Follower, t: number, look: string): void {
@@ -1872,6 +1919,13 @@ export class FieldScene extends Phaser.Scene {
       this.stageActors.set(id, a);
       return a;
     }
+    if (id === 'azzy' && this.azzy) {
+      // Azzy walking with the party: a scene that names him moves his own sprite.
+      const f = this.azzy;
+      const a: StageActor = { sprite: f.sprite, look: 'azzy', at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'azzy' };
+      this.stageActors.set(id, a);
+      return a;
+    }
     if (id === STAGE_FOLLOWER && this.follower) {
       const f = this.follower;
       const a: StageActor = { sprite: f.sprite, look: ANISSA_GLOW.look, at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'follower' };
@@ -1892,7 +1946,7 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private stageActor(id: string, look: string, at: Pos, facing: Dir8): StageActor {
-    let a = this.stageActors.get(id) ?? (id === 'yari' && this.yari ? this.borrowActor(id) : undefined);
+    let a = this.stageActors.get(id) ?? ((id === 'yari' && this.yari) || (id === 'azzy' && this.azzy) ? this.borrowActor(id) : undefined);
     if (a?.borrowed !== undefined) a.sprite.setVisible(true);
     const w = tileToWorld(at);
     if (!a) {
@@ -1985,10 +2039,11 @@ export class FieldScene extends Phaser.Scene {
   private clearStage(): void {
     for (const [id, a] of this.stageActors) {
       if (id === 'yari' && a.borrowed === undefined && a.sprite.visible) this.yariStaged = { ...a.at };
+      if (id === 'azzy' && a.borrowed === undefined && a.sprite.visible) this.azzyStaged = { ...a.at };
       if (a.borrowed === undefined) a.sprite.destroy();
-      else if (a.borrowed === 'follower' || a.borrowed === 'yari') {
-        // Anissa (or Yari) follows on from wherever the scene left her.
-        const f = a.borrowed === 'follower' ? this.follower : this.yari;
+      else if (a.borrowed === 'follower' || a.borrowed === 'yari' || a.borrowed === 'azzy') {
+        // Anissa (or Yari, or Azzy) follows on from wherever the scene left them.
+        const f = a.borrowed === 'follower' ? this.follower : a.borrowed === 'yari' ? this.yari : this.azzy;
         if (f) {
           f.pos = { ...a.at };
           f.from = { ...a.at };
@@ -2027,6 +2082,10 @@ export class FieldScene extends Phaser.Scene {
     const cam = this.cameras.main;
     if (fx === 'flash') cam.flash(600, 255, 244, 214);
     else if (fx === 'shake') cam.shake(260, 0.008);
+    // Chapter 3: the Sun Locket and Rael's signet glowing together (a long warm gold), and the signet alone at his
+    // lie (a short, fainter gold the player sees and Gianna, looking at the sand, does not).
+    else if (fx === 'token') cam.flash(1400, 255, 214, 110);
+    else if (fx === 'signet') cam.flash(500, 214, 170, 70);
     else if (fx === 'fade') {
       cam.fadeOut(250, 0, 0, 0);
       cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => cam.fadeIn(450, 0, 0, 0));
@@ -2285,6 +2344,7 @@ export class FieldScene extends Phaser.Scene {
       },
       follower: f ? { x: f.pos.x, y: f.pos.y, glowing: f.glow !== null } : null,
       yari: this.yari ? { x: this.yari.pos.x, y: this.yari.pos.y, visible: this.yari.sprite.visible } : null,
+      azzy: this.azzy ? { x: this.azzy.pos.x, y: this.azzy.pos.y, visible: this.azzy.sprite.visible } : null,
       guide: this.pointerSnapshot('story'),
       sideGuide: this.pointerSnapshot('side'),
       crowd: this.crowd.length,
