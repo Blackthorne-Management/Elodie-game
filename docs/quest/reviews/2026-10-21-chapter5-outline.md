@@ -900,3 +900,10 @@ Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, mo
 24); card art, portraits and the card back before the rules and card text freeze (Fri Oct 31); order B with proofs
 (Mon Nov 3); the Dec 1 story questions, now needed by early November; the fluent-speaker check (Wed Nov 18; nothing
 in this chapter needs it).
+
+---
+
+## Owner decisions (Oct 21, by pop-up)
+
+1. **The Seventh Clause is first read aloud in the Parley,** at Elodie's demand, before every house; the Regent cannot
+   refuse in public.
