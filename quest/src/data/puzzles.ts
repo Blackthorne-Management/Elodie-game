@@ -65,4 +65,22 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { flag: 'clue.drum_pattern' },
   },
+  {
+    id: 'ardencia_forge',
+    title: "The forge fortress's channels and Benny's lever (signature puzzle: fire; PUZZLES.md SIG-ARD parts 1 and 2)",
+    map: 'ardencia-forge',
+    spawn: 'cell',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.anissa': true,
+      'story.yari_asked': true,
+      'story.trial_fought': true,
+      'story.forge_held': true,
+      'story.forge_arrived': true,
+      'story.forge_open': true,
+    },
+    // Out through the far wall, with Azzy: the tunnel's wall shuts behind the party.
+    goal: { flag: 'story.tunnel_entered' },
+  },
 ];
