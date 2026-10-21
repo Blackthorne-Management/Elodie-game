@@ -41,6 +41,8 @@ owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent dead
   building. Questions that are asked come one at a time, each with its reason, as a pop-up with multiple-choice
   answers (the recommendation first). The build never pauses for an answer: go ahead with the recommendation and
   change course if the owner answers otherwise (owner rule, Oct 20).
+- Between major builds (owner request, Oct 21), give the owner a ready-to-paste prompt for the objective reviewer,
+  saved in `docs/quest/reviews/reviewer-prompts/`, covering what landed since the last review.
 - Recommend only what is just and genuinely helps the story or the gameplay; never recommend for its own sake
   (owner rule, Oct 19).
 - After every command and run, end the reply with the exact commands to play the quest locally (owner request,
