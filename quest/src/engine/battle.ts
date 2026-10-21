@@ -61,7 +61,7 @@ import {
 } from '../config.ts';
 import type { FlagStore, FlagReader } from './flags.ts';
 import { encounterFlag } from './encounterFlags.ts';
-import { Rng } from './rng.ts';
+import { Rng, seedFrom } from './rng.ts';
 import { battleSkills, type SkillBook } from './skills.ts';
 import {
   SLOTS,
@@ -1053,6 +1053,30 @@ export function battleEntry(flags: FlagReader, rpg: RpgContent, m: MemberDef, bo
 /** What a fight's gold skills can draw on: the gold on hand and the realm's Wealth (`keys`: the save's flag names). */
 export function battlePurse(flags: FlagReader, rpg: RpgContent, keys: readonly string[]): { gold: number; wealth: number } {
   return { gold: gold(flags, rpg), wealth: globalPillar(flags, rpg, 'wealth', keys) };
+}
+
+// ---- The dice ------------------------------------------------------------------------------------------
+
+/** How many times this fight has been started on this save (a random ambush counts by its group). */
+export function battleTriesFlag(def: Pick<BattleDef, 'table' | 'group'>): string {
+  return `battle.tries.${def.table}.${def.group}`;
+}
+
+/**
+ * A fight's dice come from the save, not the clock (plan review 3.5): the fight's id and how many times it has been
+ * started before. The same save replays the same fight exactly (the browser test, the simulator); each new try, a
+ * retry after Game Over included, rolls new dice.
+ */
+export function battleSeed(flags: FlagReader, def: Pick<BattleDef, 'id' | 'table' | 'group'>): number {
+  const v = flags.get(battleTriesFlag(def));
+  return seedFrom(`${def.id}#${typeof v === 'number' ? v : 0}`);
+}
+
+/** The seed for a fight about to begin, counting the try (the battle scene calls this once per fight). */
+export function startBattleSeed(flags: FlagStore, def: Pick<BattleDef, 'id' | 'table' | 'group'>): number {
+  const seed = battleSeed(flags, def);
+  flags.add(battleTriesFlag(def), 1);
+  return seed;
 }
 
 /** The bag's consumables, for the Item command. */

@@ -70,6 +70,11 @@ A charge-time system shown on the initiative bar (the next 8 turns).
 
 - **Opening times:** each fighter starts at `Delay x U(0.3, 1.0)` from the seeded Rng. An ambush (enemy first strike)
   gives the enemies 0.3 and the party 1.0; a party first strike (approaching from behind on the field) is the reverse.
+- **The dice (built Oct 21):** every fight's seed comes from the save, not the clock: the fight's id and how many
+  times it has been started on this save (`battle.tries.<table>.<group>`; `battleSeed` in `engine/battle.ts`). The
+  same save replays the same fight (the browser test, the simulator); every new try, a retry after Game Over
+  included, rolls new dice. *Claude's call:* the try is counted when the fight starts and saved with the next save, so
+  closing the app mid-fight and loading again replays that fight exactly.
 - Example: Gianna at level 1 (SPD 9) waits 31; Yari (SPD 13) waits 28, so Yari gets about 11% more turns.
 
 ## 4. Commands

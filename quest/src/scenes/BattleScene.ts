@@ -46,6 +46,7 @@ import {
   needsTarget,
   settleBattle,
   skillCost,
+  startBattleSeed,
   targetsAllies,
   type Action,
   type BattleEvent,
@@ -210,7 +211,6 @@ export class BattleScene extends Phaser.Scene {
     setCurrent(this);
     const cam = this.cameras.main;
     cam.setOrigin(0, 0).setZoom(renderScale());
-    this.seed = Date.now() >>> 0 || 1;
     const def = battleDef(this.battleId);
     this.drawBackdrop(def?.backdrop ?? 'cane_road');
     audio.playMusic(BATTLE_MUSIC);
@@ -246,7 +246,8 @@ export class BattleScene extends Phaser.Scene {
     // A random ambush fights at its group's level.
     const enemies = def.enemies.map((id) => ENEMIES[id]!).filter(Boolean).map((e) => (def.level ? { ...e, level: def.level } : e));
     const items = battleItems(flags, RPG);
-    this.seed = (this.seed * 1103515245 + 12345) >>> 0;
+    // The dice come from the save: this fight and how many times it has been tried (engine/battle.ts battleSeed).
+    this.seed = startBattleSeed(flags, def);
     // The Grudge: each earlier Game Over at this fight makes the party's blows land harder (engine/gameOver.ts).
     const grudge = grudgeFor(flags, def);
     const purse = battlePurse(flags, RPG, Object.keys(flags.snapshot()));

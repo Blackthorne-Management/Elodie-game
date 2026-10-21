@@ -742,7 +742,8 @@ async function fightBattle(page, id, shots) {
 let accidentalFalls = 0;
 
 /**
- * The bot lost a fight on the scripted route (the dice come from the clock): the goddess's screen opens. Skip
+ * The bot lost a fight on the scripted route (the dice come from the save, so a fall replays the same way until the
+ * next try rolls new ones): the goddess's screen opens. Skip
  * (B) to the last screen, Rise (A), and fight again from the moment before: a fight started by stepping on a
  * trigger (the boar's line) is one step back, so step on again; any other waits where it began, so meet the
  * foe again from the same tile (the rematch hook: what talking to the waiting foe does, without walking away
