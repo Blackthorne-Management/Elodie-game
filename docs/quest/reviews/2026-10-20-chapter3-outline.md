@@ -624,3 +624,13 @@ About 45 minutes, the plan's figure, with the library and a second ambush on top
    5 review batch (about Nov 1).
 
 Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, board order A first.
+
+---
+
+## Owner decisions (Oct 20, by pop-up)
+
+1. **The reveal: the winner's question.** The law gives the winner one question. Rael clears the court and asks
+   Gianna "Who gave you that locket?"; his signet and her Locket glow together in his hand, and he tells her in four
+   cold sentences. Envoy Cresswell re-enters for the lie and the order to seize her.
+2. **Rael carries La Promesa de Benny.** Its *Last Stand* is the HP floor that keeps him standing on screen. The
+   party gets it from him in Chapter 11; Ar-4's secret quest gets a different reward (after the release).
