@@ -564,3 +564,15 @@ real people (guide 7.3).
     secret husband). Does Patricio know about the marriage when he sends her to Ardencia?
 14. **Who is caught in the occupation?** Proposal: Cacique Anaco is held under guard in his own house; the elders are
     split; the resistance hides in the petroglyph caves.
+
+## Owner direction (Oct 21): the families are bigger
+
+- **Rael has six siblings** and **Elodie has two**; the owner wants all eight in the game.
+- This touches the Ardencia archive's clue "The Rodriguez Line: Alonso, Benny, Rael, Azriel; *and no others
+  recorded*" (CAPITALS.md): with six siblings, that record either changes or becomes a clue in itself (who struck
+  them from it, and why).
+- Elodie's siblings are Anicette and old Patricio's other children: Gianna's aunts or uncles in Zetwal. Chapter 1 is
+  finished and identical in the demo, so they are best met from the return home (end of Chapter 2) and the Muster
+  (Chapter 10), with at most a mention earlier.
+- Who they are, their names, and where each appears are settled in each chapter's outline (see the owner's answer to
+  the Oct 21 question, recorded below when given).
