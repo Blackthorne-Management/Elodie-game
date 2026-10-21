@@ -718,3 +718,12 @@ chapter's only time outside the walls. The library and a second ambush are on to
 Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, most urgent first: art drop 1 (Fri Oct
 24), card art, portraits and the card back before the Oct 31 freeze, order B with proofs Mon Nov 3, the Dec 1 story
 questions now needed by early November (question 1 above is one of them), the fluent-speaker check Nov 18.
+
+---
+
+## Owner decisions (Oct 21, by pop-up)
+
+1. **Layla Dorini rules Al-Doria as Merchant-Prince, and she is Samira's mother.** Samira defies her own mother on the
+   divan; Layla's refusal, her descent into the vault and the purse sent without a word are a mother's scenes.
+2. **Coralie, "Tati Coco"** (FAMILY.md): bumped into in the cloth merchants' row, she helps with the carpet knot
+   count and sails on before the vault.
