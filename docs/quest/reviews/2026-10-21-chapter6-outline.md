@@ -655,3 +655,295 @@ Echo's turning sky and the horns not built); Bayarmaa's Journal sketch and the c
 item. Nothing in this build should make it harder: the cairns are on the plateau's high ground away from the folds.
 
 ---
+
+## 9. Bayarmaa and Salkhi: how the companion joins and plays
+
+- **Who she is on the map:** Bayarmaa Ironvow, Torvald's daughter, Sarnai's granddaughter, the standard's guard the
+  night it went; a raider "more devoted to her horse, who has more dialogue than she does" (guide 5.4, approved). She
+  says little and all of it flat; her one long speech is beat 8. Her warmth goes to the horse and, once, to Anissa:
+  on the ice, when Anissa says she is coming, Bayarmaa takes off her outer fur and puts it on her without a word
+  (shown: a `walk` to Anissa, a beat, and Anissa's sprite gets a fur recolour for the fjord map, `story.anissa_fur`).
+  No joke anywhere near that; the joke is that Salkhi says "She never gives me her fur."
+- **When she joins:** at the Moot (beat 2), under the envoy's bond, **before** the fjord, as a fighter
+  (`party.bayarmaa`); she clears her name when the standard stands (beat 8, `story.bayarmaa_cleared`). `STORY.md`
+  says "clears her name and joins" in that order; this outline swaps it (Claude's call, section 12) so the player
+  plays the Raider through the Raider's chapter and the crossing is hers (she knows the thin water), which the story
+  needs more than the order.
+- **Her data entry** (`rpg.ts` `MEMBERS`, the Oct 20 "fighters as data"), sim-checked at 16 (hp 154, atk 53, def 27,
+  spd 46, the fastest fighter in the party, as a Raider should be; Azzy hits harder, Yari shoots from the back):
+  `{ id: 'bayarmaa', name: 'Bayarmaa', role: 'Raider', house: 'Ironvow', portrait: 'bayarmaa', era: 'present', class:
+  'warrior', joins: { flag: 'party.bayarmaa' }, base: { hp: 56, sp: 16, atk: 13, def: 8, mag: 4, spd: 14 }, growth: {
+  hp: 6, sp: 2, atk: 2, def: 1, mag: 0, spd: 2 }, start: { weapon: 'steppe_sabre', armor: 'braided_cloak' } }` (two
+  new items at tier 16, or `steel_saber` and `cotton_tunic` as the sim used; the start gear should be hers, not
+  shop stock: a curved sabre and a riding coat, art through the config).
+- **Her skills** (COMBAT 9.4, in the engine's shapes): **Ironvow's Oath** (passive: "Her opening time is always the
+  lowest in the party": Caona has the same passive as text only; make it real with the same small engine piece as
+  Caona's, if Chapter 4 built one, else text); **Raider's Charge** (SP 5, power 130, `light: true`: the one new
+  `SkillDef` field, section 10, so "her delay this turn is halved" is true); **Hoofbeat** (SP 6, power 90, `stunned`,
+  `bossChance: 0.25`: Salkhi kicks; on a normal foe it stuns, on a boss a quarter of the time, which is what the
+  engine's `bossChance` already does for Azzy's Grito); **The Great Raid** (SP 16, `once`, `light` with weight 0, so her
+  next turn comes at once: "two full turns in a row" without a new turn system). Moves: Slash, Heavy Blow, and
+  **Horse-Tail Sweep** (cooldown 3, power 70, all enemies). Her battle look: a placeholder recolour of the walk sheet
+  until art.
+- **Salkhi** is not a fighter and not a follower: a horse NPC placed by flag on each outdoor map (the fair, the quay,
+  the plateau, the fjord's shores) wherever the party has just come from or is going, standing outside every tent
+  (walkers move her between placements, so she walks). She has more lines than Bayarmaa: at the fair ("I am the only
+  one here who was not accused of anything"), outside the Moot, at the folds (the foal, S-1's seed: "That foal is on
+  the wrong side of the rail from its mother and nobody in this country can count"), on the ice ("I do not do ice.
+  I did it once. Ask her grandmother."), at the camp ("That black horse has my saddle's cousin on it"), at the quay.
+  She sighs at Azzy once per map until `choice.azzy_ordu` is set, then stops: "He said no to two hundred horses. I
+  respect that less than you'd think." Salkhi never speaks in a scene with Anissa's lines in it, and never about her.
+- **Art:** `ART-PROMPTS.md` gets Bayarmaa (walk, battle, portrait) and Salkhi when the outline is approved; neither
+  is on the Opus review's drop-2 list, so the placeholders may ship.
+
+---
+
+## 10. New systems the chapter needs (honest effort, in Opus builder-days)
+
+| Need | What exists | What to build | Fallback | Effort |
+|---|---|---|---|---|
+| **Bayarmaa as data** | fighters as data (Azzy, Samira, Benny, Caona) | her `MemberDef`, skills, moves, looks, join flag; the active-four order so she fights (section 4) | none needed | 0.2 |
+| **A light action** (`light?: boolean` on `SkillDef`: weight 0.5; `light` with `weight: 0` for the Great Raid) | `heavy` (weight > 1), `turnDelay(spd, weight)` | the symmetric flag, read where `heavy` is | the two skills' text only; Raider's Charge is a plain 130 | 0.1 |
+| **The two-era fjord** | `collidePresent` / `collideEcho`, per-era visible layers, zones, the map validator | map data only (section 3) | none needed | 0 |
+| **The herd as a moving screen** | NPC and object placements by flag; `walkers` walk an NPC between placements | map data and two flags | the camp fight only (no stealth) | 0 |
+| **The Echo scene with the herd moving** | Echo-era objects with `if`; `echo.*` flags wiped on return | data | a line says the herd moved | 0 |
+| **Land journey to Ordvik; the sea voyage to Kuroshi** | Chapter 5's land mode (if built) or the card; `VoyageDef` for the sea | one `VoyageDef` (sea); the land one as Chapter 5 built it | cards | 0.1 |
+| **The Grimvald fight** | phases, `enter`, `ally` moves, `onSurge`, `withdraws`, `endsWithBoss`, Game Over | data; a test like Qasim's (a bot and seeds) | none | 0.2 |
+| **The dusk and dawn variants, the fur recolour, the planted pole** | flag variants (Chapters 4 and 5), sprite recolours through `assets.config.ts` | data and looks | lines instead | 0.1 |
+| **The ambush XP taper** (section 5; realm-wide) | `ENCOUNTER_XP_PER_LEVEL` | one config table and one line where the rule pays; `levelCurve.test.ts` re-asserted | lower weights and a longer grace on the plateau | 0.1 |
+| **Two new glossaries** (Mongolian, Old Norse) | `lang.ts`, `audit:lang` | two JSON files, every entry `verified: false` | none | 0.05 |
+| **Chapter wiring** | `CHAPTERS`, `chapters.json`, the route, `CHAPTER_LEVELS` (has 6), `MARKS` | `ACT6` in `quests.ts`; `'7'` in `MARKS` (Kirinoura's pier, or the card's landing); the route to `@chapter6-end`; `?chapter=6` | none | 0.25 |
+
+About **one builder-day** of engine and wiring, most of it data; no region-level system (the fixed order), no Yield
+step (the map Parley), no stealth system, no Echo battle, no key items in battle. Everything else is maps, dialogue,
+quests and tests at Chapter 3's rates.
+
+---
+
+## 11. People, with placeholder looks (drawn in code, `assets.config.ts` NPC looks; art drops in through the config)
+
+| Person | Role | Look (placeholder) | Later |
+|---|---|---|---|
+| **Bayarmaa** | the companion (section 9) | a new member look: dark braid, a grey riding coat, a curved sabre; a battle recolour | the betrayer-defies-her-house scene in Ch. 11 if Ironvow is bought (STORY 6.9) |
+| **Salkhi** | her horse; the fair's comic voice | a grey horse sprite, 1 x 1, three colours shared with the herd | S-1, S-4 after the release |
+| **Torvald** | the chieftain; Bayarmaa's father; the ruler she defies | big, grey-blond, a bear fur, no crown; `torvald` | the Muster (an envoy or his daughter) |
+| **The lawspeaker** ("Old Ketil", proposal) | the law said plainly; the one who sits | old, a staff, painted hides behind him | |
+| **Hrafn**, the raiding jarl | for the sale; the accuser; the betrayer's seed (COMBAT 13.3 #8) | a raven on his cloak, an axe; `hrafn` | Chief Hrafn, the Ironvow betrayer variant (Ch. 10 to 11) if Skarragol's price is least paid |
+| **The trading jarl** ("Sigrún", proposal) | against the sale; the price's proof; the quay | a tally stick, furs | the fleet at the Harbor |
+| **The Crown's hostage-envoy** ("Mr. Pelham", proposal) | the steppe's hostage-guest; the Crown's offer; the receipt in his hand | Aldermoor violet, a ledger; the Chapter 5 clerk's shape | sent home after the horn |
+| **The horn-master**, two **horn-riders** | messages; Bayarmaa's escort; the horn | felt caps, horns | |
+| **Noyan Grimvald** | the boss | a wolf fur, a red sash, coin at the hem; `grimvald`; a battle look | bound at the Moot if spared |
+| **Steppe Reavers**, **Lookouts**, **Steppe Wolves**, **Zealots** | the plateau and the camp | reaver: a horse-tail helm; wolf: a grey four-legged sprite; the built lookout and zealot | Kuroshi's tier reuses the reaver with a palette swap if it needs a human skirmisher |
+| **The envoy of Azzy's mother's people** ("Chuluun", proposal) and his **champion** | S-5 | a white felt coat with a silver mare; the champion a reaver in white | |
+| **The folds herder** ("Oyuun", proposal), the **old herder** (S-4's giver, placed, one line) | S-3; S-4 later | plain felt, a crook | S-4 |
+| **The Sky-Rider**, the **Witness elder** | the debate | blue felt with a wind glyph; the Chapter 4 Witness look in a fur | the post-Harbor corner |
+| **The skald** (the Saga Tent), three **vendors**, the **Crown surveyor**, the **crier** | | | |
+| **Echo:** **Sarnai Ironvow** (Gen II, a grey horse, a whistle on a cord), her riders (reaver looks), the Crown's sentries (the built old-uniform `crown_marine`), young **Patricio** (the player; Benny and Caona as data, not drawn) | beat 5, S-3 | the Echo palette | |
+
+Voices: Bayarmaa short and flat, warm only to the horse; Salkhi long, dry and vain; Torvald tired and exact;
+the lawspeaker legal and amused; Hrafn blunt; the hostage-envoy courteous in the Regent's register ("I would not
+want the envoy to say she was not shown it"); Grimvald a man who was paid and says so; the ordu's envoy ceremonious
+to the point of comedy. No one in Ordvik sounds like Pòdlimyè, Yucayeque or Cenizal.
+
+---
+
+## 12. Owner questions (owner rule, Oct 20: only decisions that drastically change the story's flow; one at a time)
+
+**None.** I looked for one and did not find a decision here that changes the story's flow: the thief is the design's
+Crown-paid raider chief, the council does not sell, Bayarmaa joins and defies her council, Azzy's mother does not
+appear (settled), the price is Wealth 10, the road order is the owner's. The two places a reviewer might expect a
+question are below as Claude's calls, with the reason each is not a flow change; if the second review disagrees,
+either becomes a pop-up with the recommendation first and the build goes ahead on it.
+
+The Claude's calls, each with its reason:
+
+- **Bayarmaa joins at the Moot, before the fjord, and clears her name at the horn** (section 9), reversing
+  `STORY.md`'s "clears her name and joins". *Reason:* the player must play the Raider in her chapter, and the crossing
+  is hers; her name is cleared by the standard in both orders. The chapter's end is the same.
+- **The Crown's hand is a receipt, not a confession:** Grimvald says "Ask the Crown" and the hostage-envoy's receipt
+  is in his chest; the envoy is sent home, not unmasked. *Reason:* the design's "the Crown buys whole councils" is
+  shown by a paper the player reads; the Regent stays three moves ahead and loses nothing he will miss; nothing is
+  revealed that Chapter 9 needs.
+- **Torvald is clean; Hrafn is the sale's voice and the betrayer's seed.** *Reason:* "Bayarmaa defies a council" is
+  the guide's; a corrupt father would make it a family tragedy the chapter has no room for, and COMBAT already names
+  Chief Hrafn as Ironvow's betrayer variant.
+- **The standard is broken from Grimvald's hand by a Surge, not by an item use in battle** (section 5). *Reason:* the
+  engine has no key items in battle; `onSurge` exists and makes Anissa's light the beat.
+- **The herd stealth is a moving screen with two whistles and the camp fight as its fail-safe,** not sight cones and
+  timing (section 8). *Reason:* no stealth system exists, the plan has two days, and a stealth that soft-locks is
+  worse than a fight.
+- **No Echo battle; Sarnai's raid is a raid, not a battle** (section 4).
+- **The price scene folds S-2's three proofs into the main story; S-2 and S-1 follow after the release; S-5 and S-3
+  are the required two** (section 7).
+- **Side-quest and fight XP are set at the built curve's scale, not `SIDE-QUESTS.md`'s road-tier table** (80 to 100
+  XP, not 200 to 320), and **the ambush rule gets a taper from level 12** (section 5), realm-wide. *Reason:* the
+  numbers; the simulator decides on day 1.
+- **The journey back from the camp is a card** (round the fjord's head on Grimvald's horses). *Reason:* a second
+  crossing would be the puzzle twice; the chapter's only card.
+- **Salkhi is a flag-placed NPC, not a follower.** *Reason:* a horse stays outside tents, and the follower line would
+  put her in the Moot.
+- **Six maps, the quay split out** (section 3). *Reason:* the fleet for sale must be walked past, measured by the
+  Crown's own surveyor.
+- **The Moot Tent is 36 x 26** (the seat paragraph's size), as Chapter 5 chose the Hall's larger size.
+- **No family member is placed in Skarragol** (FAMILY.md has every one placed elsewhere; the owner allowed a bump-in
+  "if it truly helps"). *Reason:* this chapter's family thread is Azzy's maternal line, which is not Rael's or
+  Elodie's family; a Titi or Tío here would crowd S-5's scene and take a slot the later chapters have already used.
+  Nothing here needs one.
+- **Names are proposals** (Grimvald, Hrafn and Torvald from the design; Ketil, Sigrún, Pelham, Chuluun, Oyuun new),
+  people named by role in the build until the owner approves (CAPITALS' rule).
+- **Skarragol lies south-east of Eightgate and Kuroshi south-west of Skarragol**, by the realm map; "the winter road"
+  is a plateau road, and the cold is altitude.
+
+---
+
+## 13. Length
+
+Estimated from Chapter 2's measured route (1,020 steps, about 40 minutes) and Chapter 5's estimate (740 steps, 25 to
+30 minutes by its review):
+
+| Part | Steps | Transitions | Lines | Fights |
+|---|---|---|---|---|
+| The winter road, the plateau road in, the fair in uproar | ~120 | 2 | ~25 | 0 to 1 ambush |
+| The Moot: the law, the accusation, the bond, the offer | ~60 | 2 | ~40 | |
+| S-5 at the fair, the debate at the mats | ~90 | 1 | ~45 | 0 to 1 (the champion) |
+| S-3: the plateau, the folds, the store, the Echo, back | ~200 | 4 | ~25 | the wolves, 0 to 1 ambush |
+| The fjord: the crossing (both eras), Sarnai's raid, the herd | ~170 | 2 | ~35 | 0 to 1 (the lookouts) |
+| Grimvald, the Parley, the card | ~40 | 1 | ~25 | the boss |
+| The horn, the price, the token, the quay, the card | ~80 | 3 | ~35 | |
+| **Chapter 6** | **~760** | **15** | **~230** | 2 to 5 |
+
+About **30 minutes**, the plan's number, with the Saga Tent's books and the furrier on top. Without the two side
+quests and the debate (the gate holds, so a player cannot) the main line alone is about 15 minutes.
+
+---
+
+## 14. Continuity into Chapter 7 (Kuroshi, The Fog Files; the second road, 17 to 19)
+
+- **The lead:** Torvald's sealed letter to Kaede Suzumori (`item.torvald_letter`: "Kuroshi will not speak to anyone
+  until Skarragol has", Chapter 5's line, now an object the party carries) and the longship south-west along the
+  coast (`skarragol_kuroshi`, from (91, 91) to Kirinoura at (66, 106)). `?chapter=7` starts where Chapter 7's outline
+  puts the landing (the pier in the mist is the natural one).
+- **The party leaves with:** Gianna, Yari, Azzy, Samira, **Bayarmaa**, Anissa (six, five fighters, four active; who is
+  active is whatever the player set); Salkhi (a horse placement on Kirinoura's outdoor maps, with lines about fog);
+  **level 17** (section 5); the Echo party unchanged; gold about 1,200 to 1,800 less the furrier; key items plus the
+  Ironvow token (`item.token_ironvow`), Torvald's letter, the Crown's purse if kept; flags `story.skarragol_arrived`,
+  `party.bayarmaa`, `story.bayarmaa_cleared`, `ally.skarragol` with Skarragol's Wealth at 2 to 8, `clue.herd_whistle`,
+  `clue.crown_pays_raiders`, `choice.patricio_raid`, `choice.grimvald_spared|broken`, `choice.azzy_ordu`
+  (`influence|fear|share`, read at the Claim), `choice.crown_purse_given`, `side.winter_stores.done` (the thumbprint
+  count up one), `side.grandson.done`, the debate's outcome, Skarragol's Influence (about 3 to 14 by books),
+  `act6.complete`.
+- **What Gianna believes:** unchanged. The Rael thread did not move here; Chapter 7's files give clue 3 (Ardencia's
+  gold flowing out) and name the buyer's mark. The "nobody dies" pattern grew by one: Grimvald and his reavers
+  withdraw, and Sarnai's raid touched "nobody who dropped his musket".
+- **What the realm knows:** the Crown pays raiders to steal the things councils swear on, so that councils can sell
+  lawfully (the receipt); Chapter 7's Paper Fox sells files to the same buyer, and Chapter 8's hoarder is paid for a
+  shortage: the same hand three ways, which is the three roads' point. Hrafn is alive and unconvinced (the betrayal
+  rule's seed for Chapter 10).
+- **Kayla** (FAMILY.md, settled) is the cipher clerk in Kirinoura's archive; Chapter 7's outline places her. Bayarmaa
+  has one line about Kuroshi before landing ("Fog people. They know what you said before you say it. Say less.")
+  that is also her advice to herself.
+- **The debate corner** rewrites after the Harbor Turn (Chapter 11); the fair's dusk variant is not seen again
+  unless Chapter 10's muster brings the party back (it does not; the Ironvow come to Pòdlimyè).
+- **Nothing built in Chapters 3 to 5 is touched** except `CHAPTERS`, `chapters.json`, the route, `encounters.ts`
+  (`winter_plateau`), `MEMBERS` (Bayarmaa's entry and, if the active order is by list, her place before Samira's),
+  the voyages, and the ambush taper in config, which `levelCurve.test.ts` must re-assert for Chapters 1 to 5 before
+  it lands.
+
+---
+
+## 15. Risks
+
+- **The level curve is the chapter's real risk, and it is realm-wide.** At this tier the ambush rule pays a level per
+  trio (section 5). Chapter 6 is the first chapter where a normal player over-levels by two or three, and Chapters 7
+  to 9 inherit it. The taper is a config change with a test; it must be decided by the central session on day 1 and
+  checked against Chapters 1 to 5's routes before Chapter 6's dialogue is written, or the chapter's XP data is tuned
+  twice.
+- **Who fights.** If Bayarmaa is benched by default, the chapter's new companion is never seen in battle by a player
+  who does not open the Equip or Party screen. Day 1, section 4.
+- **The two-era fjord is data, but it is the first map with both collision layers doing real work.** The validator
+  checks zones, not routes: a route test (the puzzle's `solution.json`) is the only thing that proves the five swaps
+  cross; build the fjord first and replay it headless before anything else is drawn on it.
+- **Sarnai's raid is the chapter's heart and is easy to make a cutscene.** Every movement in it is a stage cue or a
+  flag-placed object: the herd shifting, the sentries turning, the riders going in, the wagons burning (a tile
+  variant and a shake). If the build runs short, the raid keeps its staging and the camp's present-era dressing is
+  cut instead.
+- **Anissa on the ice.** She holds the door at the shore; in the present she follows across the floes with the
+  party; nothing targets her at the camp (the lookouts' horn calls reavers at the party, Grimvald's Trample is an
+  `area` move that the engine already keeps off her, as every area move is). The fur is the chapter's one touch of
+  her, and it is Bayarmaa's.
+- **Tone.** Salkhi is the fair's joke and never Anissa's; the ordu's bowing is at Azzy; Samira's pricing stops at
+  the Moot's door and the council table, where it becomes her letter; no jokes in Sarnai's raid or at the price
+  scene's "waters" line. The Sky-Rider and the Witness elder are both reasonable. The hostage-envoy is courteous to the
+  end and never sneers.
+- **The Crown's hand must stay the Regent's, not the Hushed's.** The receipt is the Throne's compensation office's;
+  the Zealots on the plateau are the Quiet Crown's ("the little one glows"); no line joins the two. That join is
+  Chapter 9's.
+- **Languages.** Three vendor greetings and a few words (*noyan*, *ordu*, *Salkhi*, *Ordvik*) in Mongolian and Old
+  Norse, every one `verified: false` for the Nov 18 check; nothing longer, so a wrong word costs a line, not a scene.
+- **Names.** Every new name is a proposal and the build names people by role; the owner's yes on Torvald, Grimvald
+  and Hrafn (all from the design) is the only one that matters for the dialogue's shape.
+- **Chapter 5 may land late** (its slot is Oct 26 to 28, this chapter's Oct 27 to 30). Everything here except the
+  land journey and Torvald's "we heard the page read" line can be built from the Chapter 5 outline's section 14
+  state (with its review's corrections) before Chapter 5 is done; `?chapter=6` needs Chapter 5's route; until then
+  the chapter is tested from a hand-written start save with section 1's state, as Chapters 4 and 5 planned for
+  themselves.
+
+---
+
+## 16. Build plan (small steps, each checked before the next; sized to two and a half builder-days, Oct 27 to 30)
+
+**Day 1 (Opus with Sonnet on maps and content):**
+1. **Docs and the numbers (morning, 1 hour):** the second review; `STORY.md` Chapter 6 rewritten to this outline (the
+   join order, the receipt, the card), `CAPITALS.md` 6 re-sized (six maps, the quay, the Moot at 36 x 26),
+   `SIDE-QUESTS.md` S-3 and S-5 marked for the release with the new numbers and S-1, S-2, S-4 after, `PUZZLES.md`
+   SIG-SKA's staging and the herd's screen, `COMBAT.md` 9.4 with Bayarmaa's stat line and 13.3 with Grimvald's
+   scaling, Bayarmaa's and Salkhi's prompts into `ART-PROMPTS.md`. **The ambush taper decided** by the simulator on
+   Chapters 1 to 5's routes (section 5).
+2. **Engine and data (Opus, half a day):** Bayarmaa as data (entry, skills, moves, looks, the active order), `light`
+   on `SkillDef`, the taper, the two glossaries, the voyage(s); unit tests for each (`fighters.test.ts` grows by one;
+   a Bayarmaa skills test; the taper in `levelCurve.test.ts` and `battle.test.ts`).
+3. **Maps (Sonnet, the rest of the day), the fjord first:** `tools/maps/skarragol.ts` with the six maps of section 3,
+   the fjord's two collision layers and six zones replayed headless by a draft `puzzles/skarragol_fjord/solution.json`
+   before the other five are drawn; the plateau's zone and anchor, the ambush layer, the cairns inert; the fair's
+   dusk and dawn variants; Salkhi's placements; the Moot's pole object; validated; the city entry in `CITIES`.
+4. **Content (Haiku and Sonnet, in parallel):** eleven books, the `winter_plateau` table and `skarragol_story` groups,
+   the five enemies and Grimvald with his phases, the vendors and the five items, the looks (section 11), the
+   speakers, the audio slots (a horn, the three-note whistle, hoofbeats, the wagons' shake; the fair plays the
+   farewell track until Ordvik has its own; the fjord silence and wind).
+
+**Day 2 (Opus with Sonnet on dialogue):**
+5. **Dialogue and the story wiring (the morning):** `data/dialogue/skarragol.ts` staged from the beats, in this order
+   so an interruption leaves a playable chapter: the road and the fair in uproar; the Moot and the bond (Bayarmaa
+   joins); the gate; the fjord's zones and Sarnai's raid; the herd and the camp; Grimvald and the Parley; the horn,
+   the price and the token; the quay and the card. `ACT6` in `quests.ts` with hints and goals; the Journal notes
+   (*Sarnai's whistle*, *The Crown pays raiders*, *The Ironvow fleet*, *The winter stores*, *Grandson of the steppe*).
+6. **The quests (early afternoon):** S-3 (the herder, the wolves, the Echo boulder, the wall, the thumbprint), S-5
+   (the envoy, the three answers, the champion's bout, the rail conversation), the debate *Oath of blood or oath of
+   sky?* (two speakers, three rounds, the Reason books).
+7. **The puzzle files and tests (late afternoon):** `puzzles/skarragol_fjord/` and `puzzles/skarragol_gully/`; a
+   `fjord_grimvald` bot test on seeds at 15, 16 and 17 (the scratch sim's bot, moved into `tests/`); quests, guide,
+   debate, side-quest, maps, stage and content tests green; a content test that no Salkhi line sits in a node with an
+   Anissa line and that no line in the chapter joins "Crown" or "Regent" to "glows" or "little one".
+8. **The route (evening):** Chapter 6's route from its chapter start to `@chapter6-end`; `chapter-starts.ts` with
+   chapter 7; `act.test.ts`; `tools/level-curve.ts` run and the XP dials set (section 5); the smoke test's Chapter 6
+   section with screenshots of the empty pole, Bayarmaa walking to the party at the Moot, the five-swap crossing
+   (one in each era), the herd moving, Grimvald mounted, the standard planted at the horn, and the quay, at 844 x
+   390 and 390 x 844.
+
+**Day 3 (morning):**
+9. **Full browser test:** the chapter end to end on a phone; Game Over on a plateau ambush (back to the east gate)
+   and on Grimvald (back to the tent's trigger); a save on the ice and at the camp; `npm test`, typecheck, lint, build;
+   the reviewer prompt in `reviews/reviewer-prompts/` (the Chapters 6 to 9 batch, about Nov 9); then Chapter 7's
+   outline, which overlaps with this build from day 2.
+
+**If day 2 runs over, cut in this order:** the quay map (the hulls drawn on the fair's north edge instead; the voyage
+from there), the dusk and dawn variants (lines), the Saga Tent's books from eight to five (*Ulfgar's Oath*, *Sarnai's
+Ride*, *The Law of the Moot*, *The Sky-Riders*, *Who Married Whom*), the champion's bout (the "fear" answer pays
+without a fight), the ride round as a line. Never cut: Bayarmaa active in battle, the five-swap crossing, Sarnai's
+raid staged, the herd moving, Grimvald's three phases, the standard planted at the horn, the price scene with the
+token, the two required quests and the debate.
+
+Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, most urgent first: art drop 1 (Fri Oct
+24); card art, portraits and the card back before the rules and card text freeze (Fri Oct 31); order B with proofs
+(Mon Nov 3); the Dec 1 story questions, now needed by early November; the fluent-speaker check (Wed Nov 18: this
+chapter adds Mongolian and Old Norse, a few words each).
