@@ -198,6 +198,58 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
 
 ## Yucayeque (Xaraguá)
 
+**Built (Oct 21; outline `reviews/2026-10-19-chapter2-side-quests-outline.md`, its review and the owner decisions at
+its end):** four Chapter 2 side quests in `quest/src/data/sideQuests.ts`, with their lines in
+`quest/src/data/dialogue/xaraguaQuests.ts`, plus the debate *Owned or Remembered*. All five are required before the
+cave, and all live in the free city.
+- **The gate (owner decision, Oct 19).** After Thorne's warning, the lamp-oil seller will not hand a cave lamp to the
+  envoy's daughter under the Governor's spyglass (a flash in the customs house window). Yari: "Then let him watch us
+  do ordinary things all day." She lends the lamp at dusk, when the night canoe brings her oil and the glass goes in.
+  The Journal: *A light for the cave* (asking her; no story XP), *Until dusk* (done through the side quests,
+  `followSide`, no story XP; done for a save that already has the lamp), *The lamp at dusk*. Until then she lists what
+  is still left. Dusk is shown: once the five are done the free city's outdoor maps take an evening wash
+  (`MAP_MOODS`), the night canoe comes in to the jetty and the paddler walks off again, and the cave, the areíto, the
+  lock and the proof play in the evening, straight through to the attack.
+- **Cut Nets** (the pier fisher; after the pier fight): three nets cut "for the harbor's safety", by the canoe jetty on
+  the village shore (on the story's own path to the gardens), by the canoes on the Canoe Beach and at the salt pans
+  (the shell diver walks over: the longboat crew did it). Yari and the fisher mend them on the sand (her father's
+  knot). No fight (owner decision). 70 gold, 25 XP, *Net-float charm*, +1 Influence.
+- **The Hutia's Hoard** (the small girl in the cassava gardens; after the pier fight; puzzle M-XAR-1): a trail of
+  dropped shiny things across the gardens to the old ceiba, whose hollow is out of reach. In the memory it is a
+  sapling, with two of Caona's scouts and a hutia; staked low (`anchor.hutia_stake`), it grows a fork you can climb.
+  The bead goes home; the girl gives you the Crown button. The carver on the beach misses his fish hook. 80 gold,
+  25 XP, *Brass button charm* (crit +3%), +1 Influence; Journal "Something changed".
+- **Oil From a Stranger** (the lamp-oil seller, offered in the refusal at the lamp): two jars up the Mountain Path to
+  the hill camp; the scout runs to check the path behind Gianna; the leader takes the jars and shows the grey ash
+  thumbprint on the post, the same as on the jars' wax (Rael clue 6; Journal *The ash thumbprint*). It ends at the
+  camp (review D2); the seller has the news by runner at dusk. 80 gold, 25 XP, +1 Influence.
+- **Medicine for the Cacique** (the healer, offered at Anaco's bedside as the story meets him, or later in the caney;
+  puzzle M-XAR-2): stumps by the road the Crown's crews cut across the camp's flat ground; in the memory at the camp
+  fire, Caona's scouts' healer gives Patricio seed: "Plant a row where no road will ever go." Planted on the flat, the
+  trees grew and were cut for the road too (a second row of stumps); planted behind the new limestone at the camp's
+  north end (`anchor.healer_grove`), a grove stands there now. The bark cures Anaco on screen: he sits up and says
+  "Tell the elders I will stand when they sit." 100 gold, 30 XP, +2 Influence. In the occupied city the cave healer
+  adds: "The grove bark went with the caney."
+- **Owned or Remembered** (the debate by the village fire): now required with the other four; 30 XP (was 60); listed
+  as *Harbor Village*; the arrow points at the elder (the fire itself cannot be talked to).
+- **Every quest closes at the Crown attack** (review D4): neither offered nor shown half done once
+  `story.crown_attack` is set; a quest finished before stays done.
+- **The arrow** does what is on the map the player is on first (`engine/guide.ts` `storyGoal`), so it climbs the
+  mountain once for both mountain quests. Its order from the seller: the nets, the debate, the hutia, the camp (oil,
+  then the grove), the healer in the caney, the seller at dusk.
+
+**Claude's calls (Oct 21, not drastic, recorded here):** the request at the lamp is its own Journal objective
+(`lamp_ask`, no XP) so the arrow sends the player to the seller's refusal before the quests, and the lamp's 25 XP is
+paid once, at dusk; the dusk wash covers the free city's outdoor maps and the camp from the moment the five are done
+until the attack; the springs quest's marker moved from the fire to the elder; rewards XP 25/25/25/30/30 (the
+review's 20 to 30 band), gold and items as the outline; the cut nets' places (village 12,20; beach 6,13 and 28,12);
+the camp's limestone ledge and the road crews' road were added to the map so the grove puzzle reads off the screen;
+a wrong planting is answered on screen (the second row of stumps), not refused; Anissa's hints for the two puzzles
+are spoken on a second look at the tree and at the stumps; placeholder drawings for the net, glint, sapling, forked
+ceiba, stumps, seed row and grove; both memories are dated after the first oath ("the summer after", "a season
+after"), so the scouts may call Patricio Marshal before the player has seen the areíto. Caona's Conch (X-4) is not
+built (owner decision).
+
 ### X-1 Cut Nets
 - **Giver:** a net-mender on the pier. **Accept:** after the first battle (the tutorial on the pier).
 - **Steps:** 1) Find the three cut nets on the shore. 2) Crown marines cut them "for the harbor's safety": fight them

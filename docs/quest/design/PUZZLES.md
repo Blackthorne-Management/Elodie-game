@@ -30,8 +30,8 @@ validator checks this), and only objects flagged `anchor` carry a change back to
 | SIG-JWA | The relay of lamps and mirrors | Agnipur | 8 | signature | Fire / light | 4 |
 | SIG-ALM | The archive and the courtroom | Kingsmere | 9 | signature | Cipher, Social | 6 |
 | M-ZET-2 | The powder cellar | Pòdlimyè, Cane Road | 10 | minor (Z-6) | Door | 2 |
-| M-XAR-1 | The hutia's tree | Yucayeque | 2 | minor (X-3) | Growth | 2 |
-| M-XAR-2 | The healer's grove | Yucayeque | 2 | minor (X-5) | Growth | 2 |
+| M-XAR-1 | The hutia's tree | Yucayeque | 2 | minor (X-3, built) | Growth | 2 |
+| M-XAR-2 | The healer's grove | Yucayeque | 2 | minor (X-5, built) | Growth | 2 |
 | M-ALD-1 | Spot the fakes | Bab al-Dhahab | 3 | minor (A-1) | observation (present only) | 1 |
 | M-ALD-2 | The cistern pin | Bab al-Dhahab | 3 | minor (A-3) | Water | 2 |
 | M-ARD-1 | The clerk's niche | Cenizal | 4 | minor (Ar-2) | Social | 2 |
@@ -121,14 +121,14 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   of the drum song at the dance, and tap the whole song on the stones."
 - **Difficulty:** 3.
 
-### M-XAR-1 The hutia's tree (X-3)
+### M-XAR-1 The hutia's tree (X-3; built Oct 21, `quest/puzzles/xaragua_hutia/`)
 - **Present:** the hollow is too high to reach. **Echo:** the tree is a sapling. **Logic:** stake the sapling so it
   grows a low fork. **Anchor:** the stake.
 - **Hints:** "Trees grow, Gigi. That's the whole trick of trees." / "In the memory it's tiny. You could bend it." /
   "Drive the stake beside the sapling in the memory, then climb the fork it grew."
 - **Difficulty:** 2.
 
-### M-XAR-2 The healer's grove (X-5)
+### M-XAR-2 The healer's grove (X-5; built Oct 21, `quest/puzzles/xaragua_grove/`)
 - **Present:** the grove is stumps; the road crews cut it. **Echo:** Caona's healer gathers seed and points to the rocks
   "where no road will ever go". **Logic:** plant behind the rocks. **Anchor:** the planted row.
 - **Hints:** "Roads go where it's flat. Where isn't flat?" / "The healer in the memory said something about the rocks."

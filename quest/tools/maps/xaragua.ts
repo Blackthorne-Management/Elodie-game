@@ -30,6 +30,8 @@ const PEACE = '!story.crown_attack';
 const WAR = 'story.crown_attack';
 /** The marines' checkpoints stand from the morning after the attack until the envoy shows her papers. */
 const CHECKPOINTS = 'story.refuge, !story.papers_checked';
+/** Chapter 2's side quests (Oct 20): their things lie about the free city from the pier fight until the attack. */
+const FREE_CITY = 'encounter.xaragua_story.pier.won, !story.crown_attack';
 
 /** A Crown banner raised over the occupied city. */
 function crownBanner(name: string, x: number, y: number): ObjSpec {
@@ -147,6 +149,8 @@ export function xaraguaVillage(): MapSource {
     // The debate corner: an elder of the springs and a Gaze pilgrim, arguing across the yard's fire.
     npc('debate_roots_elder', 9, 7, 'right', { if: PEACE }),
     npc('debate_pilgrim', 13, 7, 'left', { if: PEACE }),
+    // Cut Nets (Chapter 2 side quest): the net cut on the village shore, by the canoe jetty, until it is taken back.
+    obj('net_village', 12, 20, { dialogue: 'cut_net_village', kind: 'net_cut', solid: true, era: 'present', if: `${FREE_CITY}, !side.nets.village` }),
     // Occupied: checkpoints on the trails, the Crown's banners, and (on the night of the attack) the patrol
     // on the trail west (the fight starts on arrival; the sergeant restarts it after a lost fight).
     npc('occ_marine_curfew', 27, 13, 'down', { if: WAR }),
@@ -303,6 +307,9 @@ export function xaraguaBeach(): MapSource {
     npc('bow_maker', 19, 3, 'up', { if: PEACE }),
     npc('canoe_maker', 9, 13, 'left', { if: PEACE }),
     npc('shell_diver', 30, 10, 'up', { if: PEACE }),
+    // Cut Nets (Chapter 2 side quest): two more cut nets, by the drawn-up canoes and at the salt pans.
+    obj('net_beach', 6, 13, { dialogue: 'cut_net_beach', kind: 'net_cut', solid: true, era: 'present', if: `${FREE_CITY}, !side.nets.beach` }),
+    obj('net_salt', 28, 12, { dialogue: 'cut_net_salt', kind: 'net_cut', solid: true, era: 'present', if: `${FREE_CITY}, !side.nets.salt` }),
     // Occupied: the market burned on the night of the attack, a musketeer on the trail.
     ...stalls.map(([x, y], i) => obj(`burned_stall_${i + 1}`, x, y, { kind: 'stall_burned', solid: true, era: 'present', if: WAR })),
     npc('occ_marine_beach', 13, 8, 'down', { if: WAR }),
@@ -353,6 +360,26 @@ export function xaraguaConuco(): MapSource {
     npc('cassava_farmer', 20, 4, 'up', { if: PEACE }),
     npc('cassava_farmer_2', 11, 5, 'right', { if: PEACE }),
     npc('conuco_kid', 16, 14, 'down', { if: PEACE }),
+    // The Hutia's Hoard (Chapter 2 side quest, PUZZLES.md M-XAR-1): the hutia's dropped things lead west to the old
+    // ceiba, whose hollow is out of reach; fifty years ago it was a sapling with a stake leaning by it (two of
+    // Caona's scouts teasing a hutia). Staked in the memory (the anchor), it grew a low fork you can climb.
+    obj('glint_pond', 21, 15, { kind: 'glint', era: 'present', if: 'side.hutia.accepted, !side.hutia.tree' }),
+    obj('glint_trail', 9, 11, { kind: 'glint', era: 'present', if: 'side.hutia.accepted, !side.hutia.tree' }),
+    obj('old_ceiba', 2, 9, { dialogue: 'old_ceiba', kind: 'ceiba', solid: true, era: 'present', if: '!anchor.hutia_stake' }),
+    obj('old_ceiba_fork', 2, 9, { dialogue: 'old_ceiba', kind: 'ceiba_fork', solid: true, era: 'present', if: 'anchor.hutia_stake' }),
+    {
+      layer: 'echo_zones',
+      name: 'ceiba_roots',
+      x: 2,
+      y: 10,
+      w: 2,
+      h: 2,
+      props: { if: 'item.sun_locket, side.hutia.tree', onEcho: 'hutia_echo_enter', onReturn: 'hutia_echo_return' },
+    },
+    obj('ceiba_sapling', 2, 9, { dialogue: 'ceiba_sapling', kind: 'sapling', solid: true, era: 'echo' }),
+    { layer: 'anchors', name: 'hutia_stake', x: 2, y: 9, props: { object: 'ceiba_sapling', flag: 'anchor.hutia_stake' } },
+    npc('echo_hutia_scout', 5, 9, 'left', { era: 'echo' }),
+    npc('echo_hutia_scout_2', 4, 12, 'up', { era: 'echo' }),
     // The occupied city: the fever-bark tree by the spring pond (the healer asks for its bark for Anaco).
     obj('fever_bark_tree', 29, 18, { dialogue: 'fever_bark_tree', kind: 'ceiba', solid: true, era: 'present' }),
 
@@ -430,10 +457,34 @@ export function xaraguaCamp(): MapSource {
   g.set(17, 10, 'ś');
   put(g, 'č', [[2, 2], [25, 3], [3, 15], [24, 16]]);
   put(g, 'ď', [[1, 9], [26, 10]]);
+  // Limestone at the camp's north end, with a strip of ground behind it (Medicine for the Cacique, M-XAR-2): no road
+  // will ever go there.
+  g.rect(11, 5, 6, 1, ROCK);
 
   const e = g.map(OLD);
+  // Now: the Crown's road crews cut a road straight across the flat ground west of the fire, through the old grove.
+  g.rect(5, 9, 6, 2, TRAIL);
 
   const objects: ObjSpec[] = [
+    // Medicine for the Cacique (Chapter 2 side quest): the cut grove's stumps by the road; in the memory, the scouts'
+    // healer by the fire and two places to plant (the anchors): the flat, where the road will go, or behind the rocks.
+    obj('old_stumps', 6, 7, { dialogue: 'old_stumps', kind: 'stump', solid: true, era: 'present', if: '!anchor.grove_flat' }, 3, 1),
+    obj('cut_young_grove', 6, 7, { dialogue: 'old_stumps', kind: 'stump', solid: true, era: 'present', if: 'anchor.grove_flat' }, 3, 1),
+    obj('young_grove', 12, 4, { dialogue: 'young_grove', kind: 'grove', solid: true, era: 'present', if: 'anchor.healer_grove' }, 4, 1),
+    {
+      layer: 'echo_zones',
+      name: 'camp_fire',
+      x: 12,
+      y: 9,
+      w: 3,
+      h: 2,
+      props: { if: 'item.sun_locket, side.medicine.stumps', onEcho: 'grove_echo_enter', onReturn: 'grove_echo_return' },
+    },
+    npc('echo_scout_healer', 16, 7, 'left', { era: 'echo' }),
+    obj('grove_spot_flat', 6, 7, { dialogue: 'grove_spot_flat', kind: 'seed_row', solid: true, era: 'echo' }, 3, 1),
+    obj('grove_spot_rocks', 12, 4, { dialogue: 'grove_spot_rocks', kind: 'seed_row', solid: true, era: 'echo' }, 4, 1),
+    { layer: 'anchors', name: 'grove_flat', x: 6, y: 7, props: { object: 'grove_spot_flat', flag: 'anchor.grove_flat' } },
+    { layer: 'anchors', name: 'healer_grove', x: 12, y: 4, props: { object: 'grove_spot_rocks', flag: 'anchor.healer_grove' } },
     // Since the attack the camp's people shelter in the petroglyph cave.
     npc('camp_leader', 15, 11, 'left', { if: '!story.refuge' }),
     npc('camp_scout', 19, 8, 'left', { if: '!story.refuge' }),

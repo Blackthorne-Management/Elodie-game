@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 35,
+  "nextobjectid": 36,
   "layers": [
     {
       "id": 1,
@@ -1050,6 +1050,44 @@
       "objects": [
         {
           "id": 24,
+          "name": "net_village",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 320,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cut_net_village"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "encounter.xaragua_story.pier.won, !story.crown_attack, !side.nets.village"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "net_cut"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
           "name": "crown_banner_village",
           "type": "puzzle_object",
           "x": 448,
@@ -1082,7 +1120,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 26,
           "name": "checkpoint_north",
           "type": "puzzle_object",
           "x": 336,
@@ -1120,7 +1158,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 27,
           "name": "checkpoint_east",
           "type": "puzzle_object",
           "x": 656,
@@ -1158,7 +1196,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 28,
           "name": "shutters_weaver",
           "type": "puzzle_object",
           "x": 288,
@@ -1186,7 +1224,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 29,
           "name": "shutters_family",
           "type": "puzzle_object",
           "x": 144,
@@ -1214,7 +1252,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 30,
           "name": "crown_banner_pier",
           "type": "puzzle_object",
           "x": 320,
@@ -1247,7 +1285,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 31,
           "name": "xaragua_customs_sign",
           "type": "puzzle_object",
           "x": 512,
@@ -1270,7 +1308,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 32,
           "name": "pier_sign",
           "type": "puzzle_object",
           "x": 384,
@@ -1293,7 +1331,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 33,
           "name": "crown_ship_west",
           "type": "puzzle_object",
           "x": 32,
@@ -1321,7 +1359,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 34,
           "name": "crown_ship_east",
           "type": "puzzle_object",
           "x": 464,
@@ -1349,7 +1387,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 35,
           "name": "crown_ship_far",
           "type": "puzzle_object",
           "x": 576,
@@ -1388,7 +1426,7 @@
       "imageheight": 272,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 129,
+      "tilecount": 136,
       "columns": 8,
       "margin": 0,
       "spacing": 0

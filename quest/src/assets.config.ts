@@ -5,6 +5,7 @@
 // keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
 
 import type { Condition } from './engine/conditions.ts';
+import { CHAPTER2_QUESTS_DONE } from './data/sideQuests.ts';
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -173,6 +174,16 @@ export const TILESET = {
     // The occupation (Oct 17): the Crown's banner, and a burned-out market stall.
     { gid: 128, name: 'crown_banner', base: 0xb8403a, accent: 0xf4ecd8, pattern: 'stripes' },
     { gid: 129, name: 'stall_burned', base: 0x3a3440, accent: 0xe0782a, pattern: 'stripes' },
+    // Chapter 2's side quests (Oct 20): a cut net left on the sand, a glint of something shiny the hutia dropped,
+    // the ceiba as a sapling (the memory) and with its low fork (the present, once staked), the stumps of the cut
+    // grove, turned earth for planting (the memory), and the young grove behind the rocks.
+    { gid: 130, name: 'net_cut', base: 0xd8bf8a, accent: 0x6b4426, pattern: 'grid' },
+    { gid: 131, name: 'glint', base: 0x2e8a4e, accent: 0x9ad8ff, pattern: 'dots' },
+    { gid: 132, name: 'sapling', base: 0x2e8a4e, accent: 0x8cc860, pattern: 'cross' },
+    { gid: 133, name: 'ceiba_fork', base: 0x2e8a4e, accent: 0x9c7446, pattern: 'cross' },
+    { gid: 134, name: 'stump', base: 0x2e8a4e, accent: 0x9c7446, pattern: 'border' },
+    { gid: 135, name: 'seed_row', base: 0x7a5a38, accent: 0x8cc860, pattern: 'stripes' },
+    { gid: 136, name: 'grove', base: 0x2a5e2f, accent: 0xa8a6b4, pattern: 'blob' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -467,6 +478,9 @@ export const PORTRAITS: Record<string, PlaceholderPortrait> = {
   echo_spring_keeper: portrait('echo_yaguana', SEPIA),
   echo_areito_drummer: portrait('echo_yaguana_drummer', SEPIA),
   echo_areito_singer: portrait('echo_yaguana', SEPIA),
+  // Chapter 2's side quests (Oct 20): Caona's scouts in the gardens, and their healer at the hill camp.
+  echo_hutia_scout: portrait('echo_yaguana', SEPIA),
+  echo_scout_healer: portrait('echo_yaguana', SEPIA),
 };
 
 /** Portraits are this many pixels square in the dialogue box (real portraits: 48 x 48 files). */
@@ -505,6 +519,14 @@ export const ART_FILES = {
  * curfew and smoke after the Crown attack (Chapter 2, Oct 17). Drawn over the world, under the interface.
  */
 export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color: number; alpha: number }[] = [
+  // Dusk over the free city (Chapter 2 side quests, Oct 20): once every quest is done the sun goes down, the night
+  // canoe brings the lamp oil, and the cave, the areíto and the proof all happen in the evening (data/quests.ts dusk).
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain', 'xaragua-camp'],
+    if: { all: [{ any: [CHAPTER2_QUESTS_DONE, { flag: 'item.oil_lamp' }] }, { notFlag: 'story.crown_attack' }] },
+    color: 0x4a2a5a,
+    alpha: 0.24,
+  },
   {
     maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain'],
     if: { flag: 'story.crown_attack' },

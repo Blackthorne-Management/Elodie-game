@@ -80,6 +80,28 @@ const ITEM_LIST: ItemDef[] = [
     price: 0,
     text: 'Strips of bitter bark from the tree by the spring in the cassava gardens. The healer boils it for the cacique\'s fever.',
   },
+  // Chapter 2's side quests (Oct 20): the jars for the hill camp, the healer's grove bark, and the bead the hutia took.
+  {
+    id: 'oil_jars',
+    name: 'Oil jars',
+    kind: 'key',
+    price: 0,
+    text: 'Two clay jars of the oil that comes by canoe after dark, stoppered with wax. For the leader of the hill camp.',
+  },
+  {
+    id: 'grove_bark',
+    name: 'Grove bark',
+    kind: 'key',
+    price: 0,
+    text: 'Bark from the grove behind the rocks at the hill camp: the old cure for the cacique\'s fever, that the pond tree only holds back.',
+  },
+  {
+    id: 'hutia_bead',
+    name: 'Sea-glass bead',
+    kind: 'key',
+    price: 0,
+    text: 'A green sea-glass bead on a cotton thread, from the hutia\'s hollow. It belongs to the small girl in the cassava gardens.',
+  },
   // The secret items (docs/quest/design/SECRET-ITEMS.md, owner approved Oct 14), one per capital: the
   // legendary relics, worn in their own slot (owner decision, Oct 15).
   {
@@ -146,6 +168,13 @@ const ITEM_LIST: ItemDef[] = [
     text: 'A small face carved in dark wood, worn on a cotton cord. The carver says it watches your back.',
   },
   { id: 'cotton_tunic', level: 4, rarity: 'uncommon', name: 'Cotton tunic', kind: 'gear', slot: 'armor', armor: 'leather', price: 230, stats: { def: 4, hp: 8, spd: 2 }, text: 'Thick Yaguana cotton, quilted twice, with a teal border. Light, cool and hard to cut.' },
+  // Chapter 2's side quest rewards (Oct 20): the fisher's net float, and the button from the hutia's hoard.
+  { id: 'net_float_charm', name: 'Net-float charm', kind: 'gear', slot: 'charm', level: 4, rarity: 'uncommon', price: 120, stats: { spd: 2, hp: 3 }, text: 'A carved gourd float from a Yucayeque net, on a knotted cord. The fisher tied the knot himself.' },
+  {
+    id: 'brass_button_charm', level: 3, rarity: 'rare', name: 'Brass button charm', kind: 'gear', slot: 'charm', price: 110, stats: { hp: 4 },
+    special: { kind: 'crit', value: 3, text: '+3% critical chance.' },
+    text: 'A Crown marine\'s brass button from the hutia\'s hoard, polished by a hutia\'s paws. Lucky, Yari says, for everyone but the marine.',
+  },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {

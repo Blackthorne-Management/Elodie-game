@@ -107,6 +107,11 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   echo_spring_keeper: n('echo_spring_keeper', 'echo_yaguana', 'Spring keeper'),
   echo_areito_drummer: n('echo_areito_drummer', 'echo_yaguana_drummer', 'Drummer'),
   echo_areito_singer: n('echo_areito_singer', 'echo_yaguana', 'Singer'),
+  // The cassava gardens and the hill camp fifty years ago (Chapter 2's side quests, Oct 20): two of Caona's scouts
+  // and the hutia that hides things at the ceiba's roots; the scouts' healer gathering seed by the camp fire.
+  echo_hutia_scout: n('echo_hutia_scout', 'echo_yaguana', 'Scout'),
+  echo_hutia_scout_2: n('echo_hutia_scout_2', 'echo_yaguana', 'Scout'),
+  echo_scout_healer: n('echo_scout_healer', 'echo_yaguana', "Scouts' healer"),
   caona: n('caona', 'caona', 'Caona'),
   benny: n('benny', 'benny_young', 'Lord Benny'),
   // Xaraguá, Yucayeque (Chapter 2, Oct 16): townsfolk by role until the story build names them.

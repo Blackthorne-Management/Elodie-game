@@ -23,6 +23,15 @@ const BEFORE_LOCKET: FlagSnapshot = {
   'story.house_entered': true,
 };
 
+/** Yucayeque on the day after Thorne's warning: the pier won, the party in the free city, the Locket in hand. */
+const XARAGUA_FREE: FlagSnapshot = {
+  ...BEFORE_LOCKET,
+  'item.sun_locket': true,
+  'encounter.xaragua_story.pier.won': true,
+  'story.thorne_met': true,
+  'story.lamp_asked': true,
+};
+
 export const PUZZLES: readonly PuzzleDef[] = [
   {
     id: 'warroom_orders',
@@ -64,5 +73,22 @@ export const PUZZLES: readonly PuzzleDef[] = [
       'story.cave_entered': true,
     },
     goal: { flag: 'clue.drum_pattern' },
+  },
+  // Chapter 2's side quests (Oct 20): the two growth puzzles, in the free city before dusk.
+  {
+    id: 'xaragua_hutia',
+    title: "The Hutia's Hoard: stake the ceiba sapling so it grows a step (PUZZLES.md M-XAR-1)",
+    map: 'xaragua-conuco',
+    spawn: 'conuco',
+    flags: { ...XARAGUA_FREE, 'side.hutia.accepted': true },
+    goal: { flag: 'side.hutia.hoard' },
+  },
+  {
+    id: 'xaragua_grove',
+    title: 'Medicine for the Cacique: plant the grove where no road will go (PUZZLES.md M-XAR-2)',
+    map: 'xaragua-camp',
+    spawn: 'camp',
+    flags: { ...XARAGUA_FREE, 'story.anaco_met': true, 'side.medicine.accepted': true },
+    goal: { flag: 'side.medicine.bark' },
   },
 ];

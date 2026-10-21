@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 9,
+  "nextobjectid": 18,
   "layers": [
     {
       "id": 1,
@@ -351,6 +351,62 @@
               "value": "conuco_kid"
             }
           ]
+        },
+        {
+          "id": 4,
+          "name": "echo_hutia_scout",
+          "type": "npc",
+          "x": 80,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_hutia_scout"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "echo_hutia_scout_2",
+          "type": "npc",
+          "x": 64,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_hutia_scout_2"
+            }
+          ]
         }
       ]
     },
@@ -365,7 +421,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 4,
+          "id": 6,
           "name": "conuco_village",
           "type": "door",
           "x": 496,
@@ -393,7 +449,7 @@
           ]
         },
         {
-          "id": 5,
+          "id": 7,
           "name": "conuco_mountain",
           "type": "door",
           "x": 96,
@@ -421,7 +477,7 @@
           ]
         },
         {
-          "id": 6,
+          "id": 8,
           "name": "conuco_cave",
           "type": "door",
           "x": 96,
@@ -482,7 +538,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 7,
+          "id": 9,
           "name": "conuco",
           "type": "spawn",
           "x": 464,
@@ -515,7 +571,36 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 10,
+          "name": "ceiba_roots",
+          "type": "echo_zone",
+          "x": 32,
+          "y": 160,
+          "width": 32,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.hutia.tree"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "hutia_echo_enter"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "hutia_echo_return"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 13,
@@ -526,7 +611,31 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 11,
+          "name": "hutia_stake",
+          "type": "anchor",
+          "x": 32,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.hutia_stake"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "ceiba_sapling"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 14,
@@ -539,7 +648,172 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 8,
+          "id": 12,
+          "name": "glint_pond",
+          "type": "puzzle_object",
+          "x": 336,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.hutia.accepted, !side.hutia.tree"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "glint"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "glint_trail",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.hutia.accepted, !side.hutia.tree"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "glint"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "old_ceiba",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "old_ceiba"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.hutia_stake"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "ceiba"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "old_ceiba_fork",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "old_ceiba"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.hutia_stake"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "ceiba_fork"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "ceiba_sapling",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "ceiba_sapling"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sapling"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 17,
           "name": "fever_bark_tree",
           "type": "puzzle_object",
           "x": 464,
@@ -583,7 +857,7 @@
       "imageheight": 272,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 129,
+      "tilecount": 136,
       "columns": 8,
       "margin": 0,
       "spacing": 0

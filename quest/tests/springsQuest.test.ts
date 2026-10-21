@@ -25,11 +25,14 @@ describe('Owned or Remembered (the debate by the village fire)', () => {
     expect(waypoint(maps, 'xaragua-village', goal, f)).not.toBeNull();
   });
 
-  it('the debaters stand by the fire, either side of the quest marker, while the city is free', () => {
+  // The marker is on the elder, the giver (Oct 20: the fire between them cannot be talked to, so an arrow-follower
+  // walks up to him), with the pilgrim across the fire.
+  it('the elder stands on the quest marker and the pilgrim across the fire, while the city is free', () => {
     const at = springs.start![0]!.at;
     const here = maps['xaragua-village']!.npcs.filter((n) => n.npc === 'debate_roots_elder' || n.npc === 'debate_pilgrim');
     expect(here).toHaveLength(2);
-    for (const n of here) expect(Math.abs(n.pos.x - at.x) + Math.abs(n.pos.y - at.y)).toBeLessThanOrEqual(2);
+    expect(here.find((n) => n.npc === 'debate_roots_elder')!.pos).toEqual(at);
+    for (const n of here) expect(Math.abs(n.pos.x - at.x) + Math.abs(n.pos.y - at.y)).toBeLessThanOrEqual(4);
   });
 
   it('listening starts it; joining all three rounds (won or lost) or mediating finishes it', () => {
