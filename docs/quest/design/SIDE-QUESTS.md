@@ -274,6 +274,10 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
 ## Cenizal (Ardencia)
 
 ### Ar-1 Bread at Night (rebel safehouse)
+- **As built (Oct 21; required before noon):** the cook is **Amanda** (Benny's daughter, owner, Oct 21). Ask her by day
+  (she tells nothing, loudly), see the ash thumbprint on the barrels, meet Azzy at the Lower Town gate at dusk, and
+  watch the cart from the corner by the old well (no stealth fail: Claude's call). Reward 150 gold, 80 XP, +1
+  Influence (Ardencia).
 - **Giver:** Azzy: "My father's poor are not starving. I do not know why." **Accept:** after meeting Azzy.
 - **Steps:** 1) At night, follow a covered cart through the lower town without being seen (a short stealth path;
   seen: a fight with hired guards, level 12). 2) The cart feeds a soup line; the cook will not say who pays. Grey
@@ -281,6 +285,10 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
 - **Reward:** 150 gold, 150 XP, +1 Influence (Ardencia), *The Ash Thumbprint (4 of 9)*.
 
 ### Ar-2 The Treasurer's Daughter
+- **As built (Oct 21; required):** the steward **Zelia** opens the records room; the Echo of Benny's office; the
+  niche; the note; the daughter gives *Benny's Refusal* (the lead to Al-Doria); then Zelia takes Gianna to **old
+  Benny** and **Nancy** in the quiet rooms (owner, Oct 21: Benny meets the Locket again). Reward 100 gold, 70 XP, +1
+  Influence (Ardencia), *Benny's Refusal (copy)*.
 - **Giver:** a young woman at the elders' hall gate. **Accept:** talk to her.
 - **Steps:** 1) Her father, the city treasurer, "disappeared" years ago. 2) Find his last ledger in the hall archive.
   3) In the Echo the archive was Benny's office; Benny's clerk shows where the treasurer's predecessors hid working
@@ -297,11 +305,15 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
 - **Reward:** 300 gold, 160 XP, +2 Fear or +2 Influence (Ardencia). The elder appears at the Hearing.
 
 ### Ar-4 The Old Lord's Errand (secret item)
+- **Changed by owner decision 2 (Oct 20):** Rael wears La Promesa de Benny in the Trial and gives it up in Chapter
+  11, so Ar-4 rewards old Benny's written promise (a letter), not the charm. After the release.
 - **Giver:** old Benny in the keep (the guide's callback scene). **Accept:** after the Echo callback.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 5, `PUZZLES.md` (S-ARD). La Promesa de Benny; 250 gold, 180 XP, +2
   Influence (Ardencia).
 
 ### Ar-5 The Arrows Missed
+- **As built (Oct 21):** its clue is one exchange at the camp ("Every shot wide, envoy." / "Then they missed."); the
+  quest form follows the release.
 - **Giver:** Azzy, at the Free Brasador camp after the escape. **Accept:** automatic.
 - **Steps:** 1) Talk to five soldiers. 2) Three of them say the arrows landed wide, "every one, and those were the
   best archers in Ardencia" (guide clue 5). 3) Azzy refuses to hear it ("Then they missed").

@@ -145,6 +145,10 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 
 ## 5. La Promesa de Benny (Cenizal, Ardencia)
 
+- **Owner decision 2 (Oct 20), built Oct 21:** **Rael carries it.** Its *Last Stand* is his HP floor in the Trial of
+  Blades (named on screen once: "La Promesa de Benny glows on his wrist. Rael stands."). The party gets it from Rael in
+  Chapter 11; Ar-4 below rewards old Benny's letter instead.
+
 - **Side quest:** Ar-4 *The Old Lord's Errand*. After the escape, old Benny (in the keep, guards looking away) asks
   Gianna to bring him the promise he left in the chapel crypt "before your father was born". The party is wanted in
   Ardencia, so this is a sneak. Opens after Chapter 3; best done in Chapter 5 or later (crypt guards, if seen, start a

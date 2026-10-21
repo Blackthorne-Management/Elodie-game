@@ -322,6 +322,13 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
 - **Boss:** Rael the Ruthless, Fight 1 (level 11).
 - **What the player learns:** Rael is her father; the token is one token in two halves; the signet glows (the player
   sees it, Gianna does not understand); the shots missed; nobody died.
+- **As built (Oct 21, branch `chapter3`):** beats 5 to 8 follow the owner's decisions of Oct 20 and the families of
+  Oct 21, not the list above: Rael wins (a scripted loss, the party Bound; La Promesa de Benny holds him at 1 HP);
+  the winner's question with the court cleared (Rivera silent at the door, Jaime gone with the elders); the signet
+  glows at the lie and Anissa says so, unheard; the forge cell, Azzy's key, the Echo of Benny's armory (the channels
+  and the lever), the bell, Azzy joining in the dark; Benny's tunnel (Amanda unbars it), the shots wide on Joaquin's
+  order, the camp. Levels 8 to 11 (the party leaves at 11). The whole list of Claude's calls is in
+  `docs/quest/reviews/2026-10-20-chapter3-outline.md`, "Built (Oct 21)".
 
 ### Chapter 4: The Ledger (Al-Doria)
 

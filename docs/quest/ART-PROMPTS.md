@@ -433,6 +433,32 @@ Then two more expressions, one at a time:
 Pixel art sprite sheet of the same character, Anaco, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character: match its art style, pixel size and chibi proportions (big head about 40% of the figure), but draw him a little taller and thinner. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Warm brown skin, long white hair tied back, white cotton tunic and mantle with teal and red edges, a gold disc pendant on the chest, the dark carved staff held in one hand and visible in every frame; he walks slowly, slightly stooped. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
 ```
 
+## 13. Rael, Captain Rivera and Jaime (Chapter 3; art drop 2)
+
+Added Oct 21 with the Chapter 3 build (the review asked for all three with Rael's). The game draws placeholders from
+the looks `rael`, `rivera`, `jaime` until these arrive (`quest/src/assets.config.ts`). Make each like section 12: a
+reference sheet in a new chat (attach Gianna's sheet), then the portrait and the walking sprite sheet in the same chat
+(attach Gianna's sprite sheet). Their battle sprites use the walking sheet until painted enemy files exist.
+
+**Rael, Lord of Ardencia** (about 50; the guide's design): tall, broad-shouldered, very still; short black hair grey at
+the temples, a trimmed dark beard, a thin pale scar through the left eyebrow, warm light-brown skin, dark watchful
+eyes. Near-black long coat with crimson trim and lining, black breeches and boots, crimson sash, dark epaulettes. On
+his right hand a **gold signet ring with a half-sun** (the other half of the Sun Locket's design); on his left wrist a
+plain dark iron band with a small ember-red stone (La Promesa de Benny). He stands with his hands behind his back.
+Expressions for the portrait: **cold** (default), **stern**, and **unreadable** (the one he wears at the lie).
+
+**Captain Azriel Rivera** (about 50; captain of the royal guard, Azzy's namesake): a soldier's build, weathered brown
+skin, close-cropped black hair going grey, a short black beard, an old scar along the jaw. Crimson coat under a dark
+iron breastplate, a dark iron helmet with a crimson crest and a dented, scarred brow, a halberd. Quiet, loyal, says
+almost nothing. Portrait expressions: **watchful** (default), **grim**.
+
+**Jaime** (about 45; a strong mage, Rael's advisor): lean, deep brown skin, long black hair tied back, a neat black
+beard, sharp clever eyes. Long robe of Brasador red with a gold hem and a black over-mantle, a staff of black iron
+crowned with a glowing ember. Portrait expressions: **measured** (default), **casting** (eyes lit with ember light).
+
+Rules for all three (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
 ---
 
 ## File names (for the conversion)
