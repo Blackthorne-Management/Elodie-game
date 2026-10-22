@@ -601,7 +601,7 @@ come up (tests/battle.test.ts). Attacking alone still wins with Yari but costs o
 | **Down** | 0 HP, out of the fight | until revived | revive items, Say Their Names, Rit Solèy, end of battle (revives at 1 HP) |
 | **Marked** | Takes x1.25 damage | 3 turns | |
 | **Stunned** | Skips the next action | 1 action | |
-| **Hushed** | Cannot use skills (Attack, Guard, Item still work). **Built Oct 22 (Chapter 7):** SP skills are blocked; weapon moves (no SP) still work (`STATUS.noSkills`). **Built Oct 22 (Chapter 9, the outline review's 3.1):** the weapon moves are blocked too: Attack, Guard and Item only | 2 turns | Tidewash, Tonic |
+| **Hushed** | Cannot use skills (Attack, Guard, Item still work). **Built Oct 22 (Chapter 7):** SP skills are blocked; weapon moves (no SP) still work (`STATUS.noSkills`). **Built Oct 22 (Chapter 9, the outline review's 3.1):** the weapon moves are blocked too: Attack, Guard and Item only. **Fixed Oct 22 (Chapter 11's smoke):** a fighter whose Attack opens their weapon moves (Rael, Azzy, Yari) had no working Attack while Hushed (every move greyed out); Attack now strikes plainly while the moves are blocked | 2 turns | Tidewash, Tonic |
 | **Frightened** | Anissa only: see Calm (Section 8) | until Comfort | Comfort |
 | **Burning** | Loses 6% max HP each turn. **Built Oct 22 (Chapter 8):** a boss loses only `BURNING_BOSS_SHARE` (2%); it never takes the last HP | 3 turns | Tidewash, water items |
 | **Oiled** (the Oil Wall; built Oct 22, Chapter 8) | Damage taken x0.5; fire does nothing (`STATUS_IMMUNE`); a Surge shatters it | 3 turns | a Surge |

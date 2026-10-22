@@ -32,7 +32,7 @@ import {
   textureKeyForEnemy,
   textureKeyForWeapon,
 } from '../assets.config.ts';
-import { GAME_OVER, SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { GAME_OVER, SPARK_MAX, STATUS, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { GAME_OVER_TEXT } from '../data/gameOver.ts';
 import { clearLosses, grudgeFor, recordLoss } from '../engine/gameOver.ts';
 import { ENEMIES, SKILL_BOOK, battleDef, battleReserve } from '../data/battles.ts';
@@ -679,7 +679,9 @@ export class BattleScene extends Phaser.Scene {
       ];
     }
     const waiting = b.bench.filter((c) => !c.down);
-    const hasMoves = me.skills.some(isMove);
+    // Hushed blocks the weapon moves too, but Attack still works (COMBAT.md's Hushed row: Attack, Guard and Item only):
+    // a fighter whose Attack is their moves strikes plainly while the moves are blocked.
+    const hasMoves = me.skills.some(isMove) && !me.statuses.some((st) => STATUS[st.id].noSkills);
     const spSkills = me.skills.filter((s) => !isMove(s)).length;
     const rows: Row[] = [
       {
