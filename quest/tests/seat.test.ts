@@ -98,10 +98,10 @@ describe('the chapter starts, and Chapter 4\'s caravan arrives at the Gold Gate'
     expect(storyGoal(quest, flags, SIDE_QUESTS)).toEqual({ map: 'seat-gateyard', at: { x: 3, y: 10 } });
   });
 
-  it('?chapter=6: at the Iron Gate after the card, the party whole, Chapter 5\'s clues kept', () => {
+  it('?chapter=6: on the Winter Plateau road after the card, the party whole, Chapter 5\'s clues kept', () => {
     const logic = startAt('6');
     const flags = logic.state.flags;
-    expect(logic.state.player.mapId).toBe('seat-concourse');
+    expect(logic.state.player.mapId).toBe('skarragol-plateau');
     expect(flags.isSet('act5.complete') && flags.isSet('card.act5_end')).toBe(true);
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira']);
     for (const f of ['clue.seventh_clause_read', 'clue.elodie_locket_line', 'clue.elodie_tested_line', 'side.seats.stage1', 'belief.rael_traitor']) expect(flags.isSet(f), f).toBe(true);

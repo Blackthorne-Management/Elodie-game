@@ -11,6 +11,7 @@ import { cardFlag, type CardDef, type EncounterGroup, type EncounterTable, type 
 import { DialogueRunner, type DialogueScript, type DialogueView } from './dialogue.ts';
 import { FlagStore, type FlagSnapshot } from './flags.ts';
 import { Rng } from './rng.ts';
+import { ROTOR_PUSH_FLAG, pushRotor } from './rotor.ts';
 import { components, doorArrival, doorAt, facingTiles, inBounds, isDiagonal, samePos, stepFrom } from './grid.ts';
 import type { GameState } from './state.ts';
 import { rectContains, type CrowdZone, type Door, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
@@ -33,6 +34,8 @@ export const FIGHT_RETURN_FLAG = 'fight.return';
 export const BATTLE_AFTER_FLAG = 'battle.after';
 /** Gold a conversation charges (a number), paid when it ends. */
 export const GOLD_PAY_FLAG = 'gold.pay';
+/** Gold a conversation hands over (a number), added when it ends (Chapter 6: the Crown's purse, kept). */
+export const GOLD_GAIN_FLAG = 'gold.gain';
 
 /** What the player is facing, with the name its label shows. */
 export type Target =
@@ -625,6 +628,25 @@ export class GameLogic {
     if (typeof pay === 'number' && pay > 0) {
       const purse = flags.get('gold');
       flags.set('gold', Math.max(0, (typeof purse === 'number' ? purse : STARTING_GOLD) - pay));
+    }
+    const gain = flags.get(GOLD_GAIN_FLAG);
+    flags.clear(GOLD_GAIN_FLAG);
+    if (typeof gain === 'number' && gain > 0) {
+      const purse = flags.get('gold');
+      flags.set('gold', (typeof purse === 'number' ? purse : STARTING_GOLD) + gain);
+    }
+    // A screen pushed in the file house (engine/rotor.ts): turn it and its neighbours, and say what happened.
+    const push = flags.get(ROTOR_PUSH_FLAG);
+    flags.clear(ROTOR_PUSH_FLAG);
+    if (typeof push === 'string' && push) {
+      const [rotorId, index] = push.split(':');
+      const rotor = this.content.rotors?.[rotorId ?? ''];
+      if (rotor) {
+        const r = pushRotor(rotor, flags, Number(index));
+        const m = this.content.messages;
+        if (r.ok) effects.push({ kind: 'toast', text: r.solved ? (m.rotorSolved ?? 'Every screen faces north.') : (m.rotorTurned ?? 'The screens turn.') });
+        else if (r.reason === 'pegged') effects.push({ kind: 'refused', text: m.rotorPegged ?? 'That screen is pegged fast.' });
+      }
     }
     const battle = flags.get('battle.next');
     if (typeof battle === 'string' && battle) {

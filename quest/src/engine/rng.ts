@@ -28,6 +28,16 @@ export class Rng {
     return items[this.int(0, items.length - 1)]!;
   }
 
+  /** A shuffled copy (Fisher-Yates). */
+  shuffle<T>(items: readonly T[]): T[] {
+    const out = [...items];
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = this.int(0, i);
+      [out[i], out[j]] = [out[j]!, out[i]!];
+    }
+    return out;
+  }
+
   /** The current state, so a game can save and resume its random sequence. */
   get seed(): number {
     return this.state;

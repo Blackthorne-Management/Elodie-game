@@ -1,0 +1,15 @@
+{
+  "language": "Mongolian (Skarragol's steppe clans)",
+  "note": "Mongolian words and names the quest uses in Skarragol (House Ironvow's eastern clans, Chapter 6). Every entry must be checked by a fluent speaker before release (guide 8; the Nov 18 check); verified stays false until then.",
+  "entries": [
+    { "word": "Sain baina uu", "language": "Mongolian", "translation": "Hello (literally: are you well?)", "verified": false },
+    { "word": "Bayarlalaa", "language": "Mongolian", "translation": "Thank you", "verified": false },
+    { "word": "Noyan", "language": "Mongolian", "translation": "Lord, chief (a title: Noyan Grimvald)", "verified": false },
+    { "word": "Ordu", "language": "Mongolian", "translation": "A royal camp, a household of the steppe (the root of the word horde)", "verified": false },
+    { "word": "Khatun", "language": "Mongolian", "translation": "Queen, lady of a royal household", "verified": false },
+    { "word": "Salkhi", "language": "Mongolian", "translation": "Wind (Bayarmaa's grey mare)", "verified": false },
+    { "word": "Bayarmaa", "language": "Mongolian", "translation": "A woman's name: joy, and mother (Bayar + maa)", "verified": false },
+    { "word": "Sarnai", "language": "Mongolian", "translation": "Rose (a woman's name)", "verified": false },
+    { "word": "Airag", "language": "Mongolian", "translation": "Fermented mare's milk", "verified": false }
+  ]
+}

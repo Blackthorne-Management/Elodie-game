@@ -1048,3 +1048,102 @@ Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, mo
 24); card art, portraits and the card back before the rules and card text freeze (Fri Oct 31); order B with proofs
 (Mon Nov 3); the Dec 1 story questions, now needed by early November (the Gen III rulers each companion defies:
 Kaede is this chapter's); the fluent-speaker check (Wed Nov 18: this chapter adds Japanese, a few words).
+
+---
+
+## Built (Oct 22): what changed from this outline, and Claude's calls
+
+Built on branch `chapter7` (from `chapter6` at `b3e344e`), with the second review's fixes
+(`2026-10-22-chapter7-outline-review.md` section 6) applied. Code: `quest/tools/maps/kuroshi.ts`,
+`quest/src/data/kuroshi.ts` (places and conditions both the maps and the scenes read), `quest/src/data/dialogue/kuroshi.ts`,
+`ACT7` in `quest/src/data/quests.ts`, the Kirinoura entries in `battles.ts`, `encounters.ts`, `sideQuests.ts`,
+`debates.ts`, `books.ts`, `rpg.ts`, `npcs.ts`, `speakers.ts`, `objects.ts`, `cards.ts`, `voyages.ts`; the engine's
+`engine/rotor.ts` and the disguise, reveal, mirror and Hushed pieces of `engine/battle.ts`; tests in
+`quest/tests/kuroshi.test.ts`, `rotor.test.ts` and `shadowFight.test.ts`; puzzles `kuroshi_fogmaze`,
+`kuroshi_screens`, `kuroshi_stacks` and `kuroshi_posts`.
+
+**The review's fixes, as built:**
+- **Levels (3.5).** Measured, not assumed: Chapter 6 as built ends at 17 (route 4,579, played 4,611), not at 19, so the
+  band holds without re-basing the road tiers. Chapter 7's steps pay **44** (Claude's call: at 42 the line without
+  side quests ended at 4,221, one XP short of 17). The Fox 140, K-2 50 and its cutpurses 30, K-3 50 and its moths 30,
+  the debate 15, fourteen books. The one ambush rule is the levels pass's (by the party's level). Measured
+  (`tools/level-curve.ts`, seeds 1 to 200):
+
+  | Ch | Target | Route end (XP) | No side quests | Side XP | Played median | Played p90 | Wanderer p90 |
+  |---|---|---|---|---|---|---|---|
+  | 6 | 15-17 | 17 (4,579) | 15 (3,474) | 38 | 17 (4,611) | 17 | 18 |
+  | 7 | 17-19 | **19 (5,493)** | **17 (4,243)** | 145 | **19 (5,525)** | 19 | 20 |
+
+  Jwaladesh (19 to 21) is met at 19.
+- **The grid (3.1, fix a).** Unpegged, the loose centre slips back east after every push, so the grid never opens and
+  the cheat test passes; pegged (Sayo's war room, `anchor.screen_peg`), it holds north and cannot be pushed; four
+  pushes open the lanes (`engine/rotor.ts`, `SCREENS` in `data/kuroshi.ts`).
+- **The buyer's list (3.2).** Prices only, the names cut away: "Four lines, four prices. The names were cut before it
+  reached the Fox. Somebody knew the list would be sold." No "which line is shortest". The betrayer is still chosen at
+  the Muster.
+- **The K-2 Echo (3.3).** Sayo's clerk files a Revolution file and says the rule aloud; the Ash Wars row is worked out
+  in the present (M-KUR-1).
+- **Kayla (3.4).** The glyph card (`item.kayla_glyphs`) at K-2's end; the spy map needs it. No Alcázar backstory, no
+  "say his name", no Rodriguez ("I am family who is a clerk. Both are written."); "A closed hand. It is not a Crown
+  seal, and it is not a house's." A test bans the Quiet Crown, Rodriguez and Alcázar in her lines, and the review's
+  four words. Recorded in `FAMILY.md`.
+- **The Fox (3.6).** Sold Secrets uses the power of the target's best damage skill (the move's 120 as a floor) with the
+  Fox's ATK; the decoys rustle (a real move) and step in front of him; all four show as *Paper Fox? A* to *D* with
+  hidden HP bars until Kagemimi finds him out, and found out means Marked; **phase 2 at 40%**;
+  bot tests with the attack and the skills bots (`kuroshi.test.ts`). **Scaling (Claude's call): hp x12, atk x1.8**
+  (x10 / x1.6 left the full kit only 14% hurt). The start tip names the answer: "Haru can hear which one breathes,
+  Gigi. Kagemimi! Then hit the real one. Blows that hit them all tear paper."
+- **The maze and the posts (3.7, 3.8).** A wrong way returns the party to the plaza it left; the Echo shows nine posts
+  (all three codes); six marsh posts; the quarter's marsh road is shut until `story.causeway_lit` (from both sides);
+  the far gap turns a blind walk back to the gate (`story.maze_walked` only with the code).
+- **Costs and staging (3.9).** Haru is the sixth follower; the lantern recolour on Anissa is cut (the lantern is a key
+  item); fog and dusk are map moods; the voyage `skarragol_kuroshi` (two new shores, `skarragol` and `kuroshi`); the
+  walkers have distinct NPC ids; the boats are objects that appear when the posts are right; dusk is a condition
+  (`QUARTER_DUSK`).
+- **Party and price (3.9, 3.10).** `MemberDef.leads` for Haru in his chapter (realm-wide rule: the chapter's companion
+  fights second, after Gianna); the token is given when the alliance is made (Chapter 6's decision); the price is
+  Influence 10, paid in flags (`pillarRules`): the receipts +2, the petition signed, Samira's names (her fee waived)
+  and the Fox spared +1 each, with the books and K-2, K-3 and the debate as Influence at Kuroshi.
+- **Small fixes (3.10).** "Your mother gave my grandfather every Crown movement of the war"; the Crown's supply ships
+  at Kingsmere; no fox-broken marsh effect (the Fear is the reward); plain wording for Anissa's debate line.
+
+**Other Claude's calls in the build:**
+- **The file house is its own map** (`kuroshi-filehouse`, 22 x 16) behind the Hall's signal room, with a back door to
+  the marsh's tower: seven maps, not six. Its front door opens once the Fox is beaten.
+- **Haru joins at the lantern hour** (the Hall that night, after K-2 and the debate), so he walks the maze and the
+  marsh and leads in the Fox fight; he refuses the neutrality order there.
+- Kayla's meeting plays as the party crosses the library (a full-width row), and talking to her plays it if it has not
+  happened (the gold walk had skirted a short strip).
+- The stacks' stealth: the cutpurses' sightline is a column in front of them; stepping in is the fight, and after it
+  the stacks are clear (the fail-safe).
+- **Marsh posts** cycle white, red, dark on each tap; the check plays when all six are lit; a wrong code says so and
+  resets nothing.
+- The maze is a placed building on the city map with no position of its own; the marsh sits at (42, -12).
+- Kagemimi tells the next move as text (no display above the target); Sasayaki Ha is a Weakening cut and Ayatsuri a
+  Stun (once), the fallbacks for the strip, the cancel and the redirect (`COMBAT.md` 9.5).
+- Hushed blocks SP skills; weapon moves still work (`STATUS.noSkills`).
+- The tier-20 stock is the Kirinoura Tanto of Force and the silk mask charm; Haru's Paper Knife is level 16.
+- Names by role: the signal master, the keeper of files, the Crown's observer, the broker (the Paper Fox); Kaede by
+  the outline's name; Councillor Mibu stays a proposal (the retainer for neutrality).
+- `?chapter=7` starts on Kirinoura's pier after the voyage; `?chapter=8` on the same pier after the card.
+
+**Fights (`tools/battle-sim.ts`, 40 runs each, at the route's markers; falls counted across the whole party):**
+
+| Fight | Plan | +0% | +30% | +50% |
+|---|---|---|---|---|
+| The Paper Fox (`kirinoura-fox`) | Attack | 5/40, 62.8 actions, 96% lost, 5.7 falls | 33/40, 71% | 38/40, 58% |
+| The Paper Fox | Spells | 40/40, 30.5, 38%, 1.6 falls | 40/40, 30% | 40/40, 29% |
+| The Paper Fox | Skills | 40/40, 23.6, 20%, 0.3 falls (11 runs with a fall) | 40/40, 17% | 40/40, 14% |
+| Stacks cutpurses (`kirinoura-stacks`) | Attack | 40/40, 20.7, 43%, 0.9 falls | 40/40, 35% | 40/40, 35% |
+| Stacks cutpurses | Skills | 40/40, 8.3, 12% | | |
+| Marsh moths (`kirinoura-moths`) | Attack | 40/40, 10.1, 8% | | |
+| Marsh moths | Skills | 40/40, 5.3, 4% | | |
+
+The fog marsh's ambushes (Attack, no falls): moths 8% lost, cutpurses 6%, a cutpurse and a Husher 7%, Hushers 13%.
+The ordinary fights' Grudge is capped at +30%, so +50% equals +30% there.
+
+**Gold-arrow walk:** Chapter 7 end to end with no stall, 720 steps and 16 map changes (`tests/goldWalk.test.ts`).
+
+**Not built (after the release, as planned):** K-1 (the three sightings play as story; the quest is not offered),
+K-4 and S-KUR (the Nightingale Key; Lady Sayo's House), K-5 (the elder is placed with one line), the paper charm,
+the next-move display, Haru's lantern on Anissa, the voyage `kuroshi_jwaladesh`, painted art (placeholders).

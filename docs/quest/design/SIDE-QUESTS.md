@@ -72,11 +72,11 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | Se-3 | Deserters' Road (built Oct 22, required) | Eightgate | Ch. 5 | 14 to 16 | yes | no |
 | Se-4 | The Unknotted Ribbon (secret) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | yes |
 | Se-5 | A Seat for Every House (stage 1 built Oct 22, required) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | no |
-| S-1 | Salkhi Has Opinions | Ordvik | Ch. 6 | road tier | no | no |
-| S-2 | The Fleet for Sale | Ordvik | Ch. 6 | road tier | no | no |
-| S-3 | The Winter Stores (safehouse) | Ordvik | Ch. 6 | road tier | yes | yes |
-| S-4 | The Cairn of Nine Riders (secret) | Ordvik | Ch. 6 | road tier | yes (plateau) | yes |
-| S-5 | Grandson of the Steppe | Ordvik | Ch. 6 | road tier | optional | no |
+| S-1 | Salkhi Has Opinions (after the release; its lines are Salkhi's in the story) | Ordvik | Ch. 6 | road tier | no | no |
+| S-2 | The Fleet for Sale (folded into the price scene, Oct 22; the race after the release) | Ordvik | Ch. 6 | road tier | no | no |
+| S-3 | The Winter Stores (safehouse; built Oct 22, required) | Ordvik | Ch. 6 | 16 | yes | yes |
+| S-4 | The Cairn of Nine Riders (secret; after the release, the cairns placed) | Ordvik | Ch. 6 | road tier | yes (plateau) | yes |
+| S-5 | Grandson of the Steppe (built Oct 22, required) | Ordvik | Ch. 6 | 16 | optional | no |
 | K-1 | Definitely Not a Spy | Kirinoura | Ch. 7 | road tier | no | no |
 | K-2 | The Spy Ledger | Kirinoura | Ch. 7 | road tier | if seen | yes |
 | K-3 | Lanterns for the Lost (safehouse) | Kirinoura | Ch. 7 | road tier | yes | no |
@@ -417,6 +417,10 @@ built (owner decision).
   Jwaladesh's lamp, the Aldermoor dissidents' law-seal, and Zetwal's sun cloth. Place them in the Throne Hall before the
   Claim.
 - **Reward:** 400 XP, +5 Accord Stability, and the standing council scene in the Just Throne ending (guide 5.7).
+- **Claude's call (Oct 22, the Chapter 6 outline review 3.6):** a token is given **when the alliance is made**, not when
+  its price is paid in full (prices are owed, paid at the Muster; a token given only at 10 of 10 would leave the chairs
+  empty). Skarragol's braid is the first, given in Ordvik's price scene. Toward a price, Influence and Fear count at
+  half value when the Muster computes it (the guide's rule); Ordvik's Journal note says what each payment was worth.
 
 ## Ordvik (Skarragol)
 
@@ -455,6 +459,14 @@ built (owner decision).
 
 ## Kirinoura (Kuroshi)
 
+- **Built (Oct 22; the Chapter 6 outline section 7 with its review's 3.5):** the envoy is of the khatun's household,
+  Ironvow's eastern clans (no separate polity); his offer is two hundred riders "the day you take your mother's name".
+  Three answers, all kept in `choice.azzy_ordu` for Chapter 12: refuse politely (+2 Influence at Ordvik), refuse with a
+  show of strength (a sparring bout with the champion in white, who steps back at 0 HP: +2 Fear), or ask Gianna (the
+  corral rail: +1 Influence, tips the Claim toward sharing). 50 XP, 150 gold. S-3 (built): the wolves at the store (a
+  fight), the boulder rolled in the memory (`anchor.wolf_run`), the wall now, the fourth ash thumbprint; 60 XP, 200
+  gold, +1 Wealth. Both close (`closed`) if the story is past them.
+
 ### K-1 Definitely Not a Spy
 - **Giver:** Haru (unseen). **Accept:** the hutia notices someone following.
 - **Steps:** spot Haru three times as he tails the party (a reflection in a puddle, a moving screen, a pair of shoes
@@ -467,6 +479,14 @@ built (owner decision).
   (stealth; seen: a fight with Fog Cutpurses). 3) In the Echo, Sayo's clerk files the ledger under a cipher shelf
   mark; learn it. 4) Find it in the present by the mark.
 - **Reward:** 280 XP, +2 Influence (Kuroshi), the ledger book (Ash Wars account 2 of 4).
+- **Built (Oct 22; the Chapter 7 outline 7.1 with its second review's 3.3 and 3.4; Claude's calls):** the giver is
+  Kayla, the cipher clerk at the Lantern Library (not a file house archivist), who is met by walking up to her desk.
+  The sealed stacks are behind the library's paper partition: three Fog Cutpurses work the shelves, and stepping into
+  their sightline is the fight (`stacks_cutpurses`, 30 XP), after which the stacks are clear. The Echo teaches the
+  shelving rule on a Revolution file (M-KUR-1); the ledger is found by the rule and taken back to Kayla's desk. She
+  hands Gianna Sayo's house glyphs (`item.kayla_glyphs`): "You will need these where you are going. I did not say
+  where." 50 XP, 200 gold, +2 Influence (Kuroshi), the book. Required before the lantern hour; closes if the story is
+  past it (`story.haru_met`).
 
 ### K-3 Lanterns for the Lost (rebel safehouse)
 - **Giver:** a fisher's family at the marsh edge. **Accept:** talk to them.
@@ -474,6 +494,12 @@ built (owner decision).
   the right signal order (the signature puzzle's lantern code, simpler). 3) The fishers were hiding a rebel press (grey
   thumbprint on the ink).
 - **Reward:** 300 gold, 260 XP, +1 Influence (Kuroshi), *The Ash Thumbprint (6 of 9)*.
+- **Built (Oct 22; the outline 7.2 with its second review's 3.7 and 3.8; Claude's calls):** the fisher's wife and boy
+  ask on the quarter by day; the marsh is reached only through the fog maze (the quarter's marsh road is shut by the
+  fog order until the causeway is lit), so the quest's step past the asking waits for Haru. Six posts, the code left
+  then right (M-KUR-2); the Lantern Moths rise first (`marsh_moths`, 30 XP), then the boats come home as objects, and
+  the press in the huts carries the fifth grey thumbprint on the built route. 50 XP, 250 gold, +1 Influence (Kuroshi).
+  Required (the way on to the file house's back door); closes on `ally.kuroshi`.
 
 ### K-4 The Letter in the Floor (secret item)
 - **Giver:** the old floor-maker. **Accept:** with Haru in the party.

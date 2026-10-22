@@ -6,6 +6,8 @@
 
 import type { Condition } from './engine/conditions.ts';
 import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './data/sideQuests.ts';
+import { FAIR_DUSK } from './data/skarragol.ts';
+import { NIGHT, QUARTER_DUSK } from './data/kuroshi.ts';
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -259,6 +261,89 @@ export const TILESET = {
     { gid: 198, name: 'violet_banner', base: 0x6a5a8a, accent: 0xf2d04b, pattern: 'stripes' },
     { gid: 199, name: 'curtain', base: 0x8a3050, accent: 0xf2d04b, pattern: 'stripes' },
     { gid: 200, name: 'chain', base: 0x8f8578, accent: 0xa8a6b4, pattern: 'cross' },
+    // Ordvik and the Winter Plateau (Chapter 6, Oct 22): grey-green steppe grass, slate, snow on the high ground, felt
+    // tents and hide walls, corral rails, the fjord's black water, the present's drifting floes and the memory's ice
+    // (white and walkable, or thin and black), shingle, sledges, longships, the standard poles (empty and planted), the
+    // gully boulder, the Crown's chest and supply wagons, the cairns. Accent #5d6d7e (CAPITALS 6). Placeholders until art.
+    { gid: 201, name: 'steppe_grass', base: 0x8a9a70, accent: 0x6e7e58, pattern: 'dots' },
+    { gid: 202, name: 'steppe_road', base: 0xa8987a, accent: 0x8a7a5e, pattern: 'stripes' },
+    { gid: 203, name: 'slate', base: 0x5d6d7e, accent: 0x46525e, pattern: 'grid' },
+    { gid: 204, name: 'snow', base: 0xe8eef2, accent: 0xc8d4dc, pattern: 'dots' },
+    { gid: 205, name: 'felt_wall', base: 0xc8b89a, accent: 0x8a7a5e, pattern: 'stripes' },
+    { gid: 206, name: 'tent_roof', base: 0xa89878, accent: 0x6e5e44, pattern: 'stripes' },
+    { gid: 207, name: 'corral', base: 0x8a6a44, accent: 0x5e4630, pattern: 'border' },
+    { gid: 208, name: 'fjord_water', base: 0x1e2a36, accent: 0x2e4050, pattern: 'wave' },
+    { gid: 209, name: 'floe', base: 0xd8e4ec, accent: 0x9ab0c0, pattern: 'blob' },
+    { gid: 210, name: 'ice', base: 0xeaf4fa, accent: 0xb8d0e0, pattern: 'cross' },
+    { gid: 211, name: 'thin_ice', base: 0x3a4a5a, accent: 0x8aa0b4, pattern: 'blob' },
+    { gid: 212, name: 'shingle', base: 0x8e8e86, accent: 0x6e6e66, pattern: 'dots' },
+    { gid: 213, name: 'felt_floor', base: 0xb8a07a, accent: 0x9a845e, pattern: 'grid' },
+    { gid: 214, name: 'hide_wall', base: 0x7a5a3a, accent: 0xc8a46b, pattern: 'stripes' },
+    { gid: 215, name: 'cairn', base: 0x9a9a92, accent: 0x6a6a62, pattern: 'blob' },
+    { gid: 216, name: 'sledge', base: 0x6e5236, accent: 0xa8885a, pattern: 'stripes' },
+    { gid: 217, name: 'longship', base: 0x5e3e22, accent: 0xc8a46b, pattern: 'border' },
+    { gid: 218, name: 'grain_sacks', base: 0xd8c08a, accent: 0x9a845e, pattern: 'blob' },
+    { gid: 219, name: 'clan_pole', base: 0x6b4426, accent: 0xe8e0c8, pattern: 'cross' },
+    { gid: 220, name: 'painted_hide', base: 0xc8a46b, accent: 0xb8403a, pattern: 'border' },
+    { gid: 221, name: 'chieftain_seat', base: 0x6b4426, accent: 0x5d6d7e, pattern: 'border' },
+    { gid: 222, name: 'standard_pole', base: 0x6b4426, accent: 0x5d6d7e, pattern: 'stripes' },
+    { gid: 223, name: 'standard_planted', base: 0x6b4426, accent: 0xe8e0c8, pattern: 'cross' },
+    { gid: 224, name: 'boulder', base: 0x7a7a72, accent: 0x5a5a52, pattern: 'blob' },
+    { gid: 225, name: 'boulder_wall', base: 0x6a7a5a, accent: 0x7a7a72, pattern: 'grid' },
+    { gid: 226, name: 'crown_chest', base: 0x6a5a8a, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 227, name: 'picket', base: 0x8a6a44, accent: 0x5e4630, pattern: 'stripes' },
+    { gid: 228, name: 'store_door', base: 0x2a2632, accent: 0x5d6d7e, pattern: 'border' },
+    { gid: 229, name: 'supply_wagon', base: 0x7a5530, accent: 0xb8403a, pattern: 'stripes' },
+    { gid: 230, name: 'wagon_burning', base: 0xd86a2a, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 231, name: 'sighting_stone', base: 0xa8a6b4, accent: 0x6a6a62, pattern: 'cross' },
+    { gid: 232, name: 'felt_tent', base: 0xc8b89a, accent: 0x8a7a5e, pattern: 'border' },
+    // Kirinoura, Kuroshi (Chapter 7, Oct 22): black water, grey planks and bridges, white paper screens in dark lacquer
+    // frames, violet-grey roofs, tatami, the marsh's reeds and causeways, the fog maze's paper walls and lanes, lantern
+    // posts (dark, white, red), the file house's pivoting screens (four facings, the loose one, torn), Sayo's wall map,
+    // the floor stone, the paper seal and the order. Accent #7d3c98 (CAPITALS 7). Placeholders until art.
+    { gid: 233, name: 'kq_paving', base: 0x8a8690, accent: 0x6e6a78, pattern: 'grid' },
+    { gid: 234, name: 'kq_wall', base: 0x3a3644, accent: 0x5a5468, pattern: 'stripes' },
+    { gid: 235, name: 'kq_plank', base: 0x8e8a84, accent: 0x6a665e, pattern: 'stripes' },
+    { gid: 236, name: 'kq_canal', base: 0x14141c, accent: 0x2a2a38, pattern: 'wave' },
+    { gid: 237, name: 'kq_bridge', base: 0x9a9690, accent: 0x5a5468, pattern: 'border' },
+    { gid: 238, name: 'lacquer_wall', base: 0x2a1a1e, accent: 0xe8e2d4, pattern: 'border' },
+    { gid: 239, name: 'kq_roof', base: 0x5a5468, accent: 0x7d3c98, pattern: 'stripes' },
+    { gid: 240, name: 'lacquer_floor', base: 0x5a3a32, accent: 0x3a2422, pattern: 'grid' },
+    { gid: 241, name: 'tatami', base: 0xb8b07a, accent: 0x8a8458, pattern: 'grid' },
+    { gid: 242, name: 'screen_wall', base: 0xece6d6, accent: 0x2a1a1e, pattern: 'cross' },
+    { gid: 243, name: 'reed', base: 0x6e7a5a, accent: 0x4a5640, pattern: 'stripes' },
+    { gid: 244, name: 'marsh_water', base: 0x2a3238, accent: 0x3e4a50, pattern: 'wave' },
+    { gid: 245, name: 'causeway', base: 0x7a7268, accent: 0x5a544c, pattern: 'dots' },
+    { gid: 246, name: 'fog_lane', base: 0xa8aab0, accent: 0x8a8c94, pattern: 'dots' },
+    { gid: 247, name: 'paper_wall', base: 0xdcd8cc, accent: 0xb0aca0, pattern: 'grid' },
+    { gid: 248, name: 'stone_lantern', base: 0x8a8690, accent: 0xf2d04b, pattern: 'cross' },
+    { gid: 249, name: 'tea_stall', base: 0x7d3c98, accent: 0xe8e2d4, pattern: 'stripes' },
+    { gid: 250, name: 'torii', base: 0x2a1a1e, accent: 0xb8403a, pattern: 'border' },
+    { gid: 251, name: 'writing_table', base: 0x2a1a1e, accent: 0xd8c08a, pattern: 'border' },
+    { gid: 252, name: 'lantern_pile', base: 0xe8d8a0, accent: 0xd86a2a, pattern: 'blob' },
+    { gid: 253, name: 'post_dark', base: 0x3a3644, accent: 0x5a5468, pattern: 'border' },
+    { gid: 254, name: 'post_white', base: 0xfafaf0, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 255, name: 'post_red', base: 0xd8584a, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 256, name: 'screen_n', base: 0xece6d6, accent: 0x7d3c98, pattern: 'stripes' },
+    { gid: 257, name: 'screen_e', base: 0xece6d6, accent: 0x5a5468, pattern: 'border' },
+    { gid: 258, name: 'screen_s', base: 0xd8d2c2, accent: 0x7d3c98, pattern: 'cross' },
+    { gid: 259, name: 'screen_w', base: 0xd8d2c2, accent: 0x5a5468, pattern: 'grid' },
+    { gid: 260, name: 'screen_loose', base: 0xece6d6, accent: 0xd86a2a, pattern: 'dots' },
+    { gid: 261, name: 'screen_torn', base: 0xb0aca0, accent: 0x6a665e, pattern: 'blob' },
+    { gid: 262, name: 'map_wall', base: 0x9a8a6a, accent: 0x6e6050, pattern: 'grid' },
+    { gid: 263, name: 'map_wall_pins', base: 0xd8c08a, accent: 0xb8403a, pattern: 'dots' },
+    { gid: 264, name: 'floor_stone', base: 0x6e6a78, accent: 0x2a2632, pattern: 'border' },
+    { gid: 265, name: 'paper_seal', base: 0xece6d6, accent: 0xb8403a, pattern: 'cross' },
+    { gid: 266, name: 'notice', base: 0xe8e2d4, accent: 0x2a1a1e, pattern: 'stripes' },
+    { gid: 267, name: 'file_box', base: 0x2a1a1e, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 268, name: 'crown_launch', base: 0x6a5a8a, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 269, name: 'fishing_boat', base: 0x6b4426, accent: 0xc8a46b, pattern: 'border' },
+    { gid: 270, name: 'puddle', base: 0x4a5a6a, accent: 0x8a9aaa, pattern: 'wave' },
+    { gid: 271, name: 'type_press', base: 0x5a3a32, accent: 0x14141c, pattern: 'dots' },
+    { gid: 272, name: 'fog_bank', base: 0xc8c8cc, accent: 0xa8aab0, pattern: 'blob' },
+    { gid: 273, name: 'lanes_shut', base: 0xdcd8cc, accent: 0x7d3c98, pattern: 'stripes' },
+    { gid: 274, name: 'tea_bowl', base: 0x5a3a32, accent: 0x7fbf7a, pattern: 'blob' },
+    { gid: 275, name: 'crane_paper', base: 0xfafaf0, accent: 0x7d3c98, pattern: 'cross' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -284,8 +369,11 @@ export interface PlaceholderCharacter {
   legs?: number;
   /** A long dress or robe down to the ankles. */
   robe?: boolean;
-  /** small: a child or Anissa; tall: Elodie. */
-  build?: 'normal' | 'small' | 'tall';
+  /**
+   * small: a child or Anissa; tall: Elodie. horse and wolf (Chapter 6): four legs, drawn by scenes/pixels.ts
+   * drawBeast: `outfit` the coat, `hair` the mane, `trim` the tack (none on a wolf), `skin` the muzzle.
+   */
+  build?: 'normal' | 'small' | 'tall' | 'horse' | 'wolf';
   headgear?: Headgear;
   headgearColor?: number;
   beard?: number;
@@ -337,6 +425,12 @@ const BRASADOR_BLACK = 0x2a2632;
 /** Aldermoor's violet and the Regent's grey-violet (Eightgate, Chapter 5). */
 const SEAT_VIOLET = 0x6a5a8a;
 const SEAT_GREY_VIOLET = 0x5a5468;
+/** Ironvow's slate (Ordvik, Chapter 6; CAPITALS.md 6 accent #5d6d7e). */
+const IRONVOW_SLATE = 0x5d6d7e;
+/** The Suzumori violet (Kirinoura, Chapter 7; CAPITALS.md 7 accent #7d3c98) and two skin tones of the fog city. */
+const SUZUMORI_VIOLET = 0x7d3c98;
+const KUROSHI_SKIN = 0xd8a880;
+const KUROSHI_SKIN_WARM = 0xc8946a;
 
 /**
  * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
@@ -585,6 +679,70 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   // Coco's seamstresses (beat 6): a white hood and an apron over grey, for Gianna and Anissa (DISGUISE below).
   gianna_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x8e8e9c, trim: C.w!, robe: true, headgear: 'hood', headgearColor: C.w!, accessories: ['apron', 'locket'] },
   anissa_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'puffs', outfit: 0x8e8e9c, trim: C.w!, robe: true, build: 'small', headgear: 'hood', headgearColor: C.w!, accessories: ['apron'] },
+  // Ordvik and the Winter Plateau (Chapter 6, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md
+  // 15). The Ironvow in grey felt and fur, slate-blue at the collar (#5d6d7e); the Crown's hostage-envoy and surveyor in
+  // Aldermoor violet; the eastern clans' envoy in white felt with a silver mare. Horses and wolves on four legs.
+  bayarmaa: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x7a7a82, trim: IRONVOW_SLATE, legs: C.b!, accessories: ['sash'] },
+  torvald: { skin: C.T!, hair: 0xb8a878, hairStyle: 'long', outfit: 0x6b5a44, trim: IRONVOW_SLATE, legs: C.b!, build: 'tall', beard: 0xb8a878, accessories: ['emblem'] },
+  lawspeaker: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: 0x8a7a68, trim: IRONVOW_SLATE, robe: true, beard: WHITE_HAIR, accessories: ['staff'] },
+  hrafn: { skin: C.T!, hair: 0x2a2a30, hairStyle: 'short', outfit: 0x2a2a30, trim: C.G!, legs: C.b!, beard: 0x2a2a30, accessories: ['sash'] },
+  trading_jarl: { skin: C.T!, hair: 0xd8b878, hairStyle: 'braid', outfit: 0x8a6a44, trim: IRONVOW_SLATE, legs: C.b!, accessories: ['satchel'] },
+  hostage_envoy: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.w!, accessories: ['satchel', 'sash'] },
+  crown_surveyor: { skin: C.s!, hair: C.B!, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: C.w!, legs: C.K!, headgear: 'brimmed', headgearColor: SEAT_GREY_VIOLET, accessories: ['satchel'] },
+  horn_master: { skin: C.S!, hair: 0x8a6a3a, hairStyle: 'short', outfit: 0x6e6a78, trim: C.N!, legs: C.b!, headgear: 'cap', headgearColor: 0x8a7a68, beard: 0x8a6a3a, accessories: ['drum'] },
+  horn_rider: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'cropped', outfit: 0x6e6a78, trim: IRONVOW_SLATE, legs: C.b!, headgear: 'cap', headgearColor: 0x8a7a68 },
+  grimvald: { skin: C.T!, hair: 0x4a3a2a, hairStyle: 'long', outfit: 0x8a8a8a, trim: C.R!, legs: C.b!, build: 'tall', beard: 0x4a3a2a, headgear: 'hood', headgearColor: 0x6e6a6a, accessories: ['sash'] },
+  steppe_reaver: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x6e5a44, trim: C.R!, legs: C.b!, headgear: 'helmet', headgearColor: 0x8a7a68, accessories: ['sash'] },
+  ordu_envoy: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.w!, trim: C.I!, robe: true, headgear: 'cap', headgearColor: C.w!, accessories: ['emblem', 'sash'] },
+  ordu_champion: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.h!, trim: C.I!, legs: C.w!, headgear: 'helmet', headgearColor: C.I!, accessories: ['sash'] },
+  oyuun: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x8a7a68, trim: C.R!, legs: C.b!, headgear: 'headband', headgearColor: C.R!, accessories: ['staff'] },
+  old_herder: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x6e6a5a, trim: C.N!, robe: true, beard: WHITE_HAIR, accessories: ['staff'] },
+  witness_elder: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.w!, trim: C.y!, robe: true, accessories: ['satchel'] },
+  skald: { skin: C.T!, hair: 0xb8a878, hairStyle: 'long', outfit: 0x5a6a7a, trim: C.N!, robe: true, beard: 0xb8a878, accessories: ['drum'] },
+  steppe_vendor: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x8a6a44, trim: C.R!, legs: C.b!, accessories: ['apron'] },
+  furrier: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'short', outfit: 0x6b5a44, trim: C.G!, legs: C.b!, beard: 0x8a6a3a, accessories: ['apron'] },
+  fair_crier: { skin: C.T!, hair: 0xd8b878, hairStyle: 'cropped', outfit: 0x6e6a78, trim: C.y!, legs: C.b!, headgear: 'cap', headgearColor: C.R! },
+  echo_sarnai: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x7a7a82, trim: IRONVOW_SLATE, legs: C.b!, headgear: 'hood', headgearColor: 0x8a7a68, accessories: ['emblem'] },
+  echo_rider: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x6e5a44, trim: IRONVOW_SLATE, legs: C.b!, headgear: 'helmet', headgearColor: 0x8a7a68 },
+  echo_crown_sentry: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: C.R!, trim: C.w!, legs: C.w!, headgear: 'cap', headgearColor: C.u!, accessories: ['sash'] },
+  horse_grey: { skin: 0xb8b8c0, hair: 0x4a4a52, hairStyle: 'short', outfit: 0xa8a6b4, trim: IRONVOW_SLATE, build: 'horse' },
+  horse_bay: { skin: 0x5a3a28, hair: C.b!, hairStyle: 'short', outfit: 0x8a5a34, trim: C.N!, build: 'horse' },
+  horse_dun: { skin: 0x8a7a5a, hair: 0x3a3028, hairStyle: 'short', outfit: 0xc8b07a, trim: C.N!, build: 'horse' },
+  horse_black: { skin: 0x3a3440, hair: 0x1e1a22, hairStyle: 'short', outfit: 0x2a2632, trim: C.R!, build: 'horse' },
+  horse_chestnut: { skin: 0x6a3a22, hair: 0x6a3a22, hairStyle: 'short', outfit: 0xa85a2a, trim: C.N!, build: 'horse' },
+  echo_horse: { skin: 0x6a5a48, hair: 0x3a3028, hairStyle: 'short', outfit: 0x9a8a6a, trim: C.N!, build: 'horse' },
+  steppe_wolf: { skin: 0x3a3440, hair: 0x6e6a78, hairStyle: 'short', outfit: 0x9a9aa2, trim: 0x9a9aa2, build: 'wolf' },
+  // Kirinoura (Chapter 7, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 16). The Suzumori
+  // in grey and violet (#7d3c98), clerks in grey with ink on the cuff, the Crown's observer in Aldermoor violet, the
+  // fishers in plain indigo; the Echo's Lady Sayo and her agents in the memory's grey.
+  haru: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x6e6a78, trim: SUZUMORI_VIOLET, legs: 0x3a3644, accessories: ['sash', 'satchel'] },
+  kayla: { skin: KUROSHI_SKIN_WARM, hair: HAIR_BLACK, hairStyle: 'bun', outfit: 0x8a8690, trim: 0x2a2a38, robe: true, accessories: ['satchel'] },
+  kaede: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'bun', outfit: 0x5a5468, trim: SUZUMORI_VIOLET, robe: true, accessories: ['sash', 'emblem'] },
+  retainer_neutral: { skin: KUROSHI_SKIN, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x6e6a78, trim: C.w!, robe: true, beard: 0x4a4a52, accessories: ['emblem'] },
+  retainer_war: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0x3a3644, trim: SUZUMORI_VIOLET, legs: 0x2a2632, accessories: ['sash'] },
+  signal_master: { skin: KUROSHI_SKIN, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x5a5468, trim: C.y!, robe: true, accessories: ['staff'] },
+  keeper_files: { skin: KUROSHI_SKIN, hair: 0x4a4a52, hairStyle: 'bald', outfit: 0x6e6a78, trim: C.N!, robe: true, accessories: ['satchel'] },
+  crown_observer: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.w!, accessories: ['satchel', 'sash'] },
+  observer_clerk: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x8a8690, trim: SEAT_VIOLET, legs: 0x3a3644, accessories: ['satchel'] },
+  paper_fox: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x8a8690, trim: C.w!, robe: true, accessories: ['sash', 'veil'] },
+  gate_guard_kq: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x3a3644, trim: SUZUMORI_VIOLET, legs: 0x2a2632, headgear: 'helmet', headgearColor: 0x3a3644 },
+  harbour_master: { skin: KUROSHI_SKIN, hair: 0x6e6a78, hairStyle: 'short', outfit: 0x2a3a58, trim: C.w!, legs: 0x2a2632, headgear: 'brimmed', headgearColor: 0x5a5468, beard: 0x6e6a78 },
+  kq_vendor: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'bun', outfit: SUZUMORI_VIOLET, trim: C.w!, robe: true, accessories: ['apron'] },
+  kq_armourer: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x4a4a52, trim: C.R!, legs: 0x2a2632, accessories: ['apron'] },
+  kq_librarian: { skin: KUROSHI_SKIN, hair: WHITE_HAIR, hairStyle: 'bun', outfit: 0x6e6a78, trim: C.N!, robe: true, accessories: ['satchel'] },
+  suzumori_elder: { skin: KUROSHI_SKIN, hair: WHITE_HAIR, hairStyle: 'bald', outfit: 0x5a5468, trim: C.G!, robe: true, beard: WHITE_HAIR, accessories: ['staff'] },
+  kq_fisher_woman: { skin: KUROSHI_SKIN_WARM, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x2a3a78, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: 0x2a3a78 },
+  kq_fisher_boy: { skin: KUROSHI_SKIN_WARM, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x2a3a78, trim: C.N!, legs: 0x3a3644, build: 'small' },
+  kq_old_fisher: { skin: KUROSHI_SKIN_WARM, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x2a3a58, trim: C.N!, legs: 0x3a3644, headgear: 'brimmed', headgearColor: C.N!, beard: WHITE_HAIR },
+  balance_keeper: { skin: KUROSHI_SKIN, hair: 0x4a4a52, hairStyle: 'long', outfit: C.G!, trim: C.y!, robe: true, accessories: ['satchel'] },
+  whisperer: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x4a4650, trim: 0x2a2632, robe: true, headgear: 'hood', headgearColor: 0x4a4650, accessories: ['veil'] },
+  lantern_lighter: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x5a5468, trim: C.y!, legs: 0x2a2632, accessories: ['staff'] },
+  fog_cutpurse: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x6e6a78, trim: 0x3a3644, legs: 0x2a2632, headgear: 'hood', headgearColor: 0x5a5468 },
+  husher: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x3a3644, trim: 0x8a8690, robe: true, headgear: 'cowl', headgearColor: 0x2a2632, accessories: ['veil'] },
+  lantern_moth: { skin: 0xe8e2d4, hair: 0xf2d04b, hairStyle: 'puffs', outfit: 0xe8e2d4, trim: 0xf2d04b, build: 'small' },
+  echo_sayo: { skin: KUROSHI_SKIN, hair: 0x4a4a52, hairStyle: 'bun', outfit: 0x6e6a78, trim: SUZUMORI_VIOLET, robe: true, accessories: ['satchel', 'emblem'] },
+  echo_sayo_clerk: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x8a8690, trim: 0x2a2a38, robe: true, accessories: ['satchel'] },
+  echo_agent: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x6e6a78, trim: 0x3a3644, legs: 0x2a2632, headgear: 'hood', headgearColor: 0x6e6a78 },
 };
 
 /** The player's look in each era. */
@@ -714,6 +872,35 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     if: { all: [CHAPTER5_QUESTS_DONE, { notFlag: 'story.disguised' }, { notFlag: 'story.archive_entered' }] },
     color: 0x2a2048,
     alpha: 0.3,
+  },
+  // Dusk on the Winter Plateau (Chapter 6): the day's three things done, until the party comes round the fjord's head
+  // at dawn with the standard (data/skarragol.ts FAIR_DUSK). The fjord's near shore is at dusk too: they set out then.
+  {
+    maps: ['skarragol-fair', 'skarragol-plateau', 'skarragol-quay', 'skarragol-fjord'],
+    if: FAIR_DUSK,
+    color: 0x2a2848,
+    alpha: 0.32,
+  },
+  // Kirinoura (Chapter 7): the lantern hour on the quarter, the pier, the library and the Hall (K-2 and the debate
+  // done, until dawn: data/kuroshi.ts QUARTER_DUSK); the night fog in the maze, the marsh and the file house from the
+  // lantern hour until dawn (NIGHT); and the fog in the maze and on the marsh by day, after it.
+  {
+    maps: ['kuroshi-quarter', 'kuroshi-pier', 'kuroshi-library', 'kuroshi-hall'],
+    if: QUARTER_DUSK,
+    color: 0x2a2848,
+    alpha: 0.32,
+  },
+  {
+    maps: ['kuroshi-fogmaze', 'kuroshi-marsh', 'kuroshi-filehouse'],
+    if: NIGHT,
+    color: 0x3a3c4a,
+    alpha: 0.4,
+  },
+  {
+    maps: ['kuroshi-fogmaze', 'kuroshi-marsh'],
+    if: { flag: 'story.quarter_dawn' },
+    color: 0xa8aab0,
+    alpha: 0.28,
   },
 ];
 
@@ -1002,6 +1189,8 @@ export const BATTLE_ART = {
   bandAlpha: 0.78,
   hpBar: 0x7fbf7a,
   hpLow: 0xd8584a,
+  /** A foe in disguise (Chapter 7's paper decoys): a grey bar, full, until it is found out. */
+  hpMasked: 0x8a8494,
   spBar: 0x5a8ad8,
   sparkBar: 0xfff2a0,
   cursor: 0xf2d04b,
@@ -1144,6 +1333,91 @@ const SEAT_BACKDROPS = {
   },
 } as const;
 
+// Ordvik (Chapter 6): the Winter Plateau under a grey sky with snow on the rises; the far shore of the fjord at dusk,
+// ice-white beyond the meadow; the horse-fair by day.
+// Kirinoura (Chapter 7): the Fog Marsh at night, reeds and black water under a grey-violet sky; the file house, lacquer
+// and paper by lantern light.
+const KUROSHI_BACKDROPS = {
+  fog_marsh: {
+    sky: [0x2a2a38, 0x3a3a4a, 0x4a4a5a, 0x5a5a6a, 0x6e6e7a, 0x8a8a94],
+    cloud: 0xa8aab0,
+    cloudShade: 0x8a8c94,
+    mountainFar: 0x5a5468,
+    mountainNear: 0x3a3644,
+    trees: 0x4a5640,
+    treesDark: 0x3a4430,
+    field: 0x6e7a5a,
+    cane: 0x7a8664,
+    caneDark: 0x4a5640,
+    ground: 0x7a7268,
+    groundDark: 0x5a544c,
+    groundLight: 0x8e867c,
+  },
+  file_house: {
+    sky: [0x1a1218, 0x2a1a1e, 0x3a2422, 0x4a2e2a, 0x5a3a32, 0x6a4a3e],
+    cloud: 0xece6d6,
+    cloudShade: 0xb0aca0,
+    mountainFar: 0xece6d6,
+    mountainNear: 0x2a1a1e,
+    trees: 0xd8d2c2,
+    treesDark: 0x7d3c98,
+    field: 0x5a3a32,
+    cane: 0xb8b07a,
+    caneDark: 0x8a8458,
+    ground: 0x5a3a32,
+    groundDark: 0x3a2422,
+    groundLight: 0x7a5a4a,
+  },
+} as const;
+
+const SKARRAGOL_BACKDROPS = {
+  winter_plateau: {
+    sky: [0x7a8a9a, 0x8a98a6, 0x9aa6b2, 0xaab4be, 0xbcc4cc, 0xccd2d8],
+    cloud: 0xf0f2f4,
+    cloudShade: 0xc8ccd4,
+    mountainFar: 0xc8d4dc,
+    mountainNear: 0x5d6d7e,
+    trees: 0x5a6a4a,
+    treesDark: 0x46523a,
+    field: 0x8a9a70,
+    cane: 0x9aaa7a,
+    caneDark: 0x6e7e58,
+    ground: 0xa8987a,
+    groundDark: 0x8a7a5e,
+    groundLight: 0xc0b090,
+  },
+  frozen_fjord: {
+    sky: [0x2a3448, 0x3a4458, 0x4a5468, 0x5d6d7e, 0x7a8a9a, 0x9aa6b2],
+    cloud: 0xc8d4dc,
+    cloudShade: 0x8a98a6,
+    mountainFar: 0xd8e4ec,
+    mountainNear: 0x46525e,
+    trees: 0x3a4a3a,
+    treesDark: 0x2a362a,
+    field: 0x6e7e58,
+    cane: 0x8a9a70,
+    caneDark: 0x5a6a4a,
+    ground: 0x8e8e86,
+    groundDark: 0x6e6e66,
+    groundLight: 0xa8a8a0,
+  },
+  horse_fair: {
+    sky: [0x6a86a8, 0x7a94b2, 0x8aa2bc, 0x9cb0c6, 0xaebed0, 0xc2ccd8],
+    cloud: 0xf0f2f4,
+    cloudShade: 0xc8ccd4,
+    mountainFar: 0xc8d4dc,
+    mountainNear: 0x5d6d7e,
+    trees: 0xc8b89a,
+    treesDark: 0xa89878,
+    field: 0x8a9a70,
+    cane: 0x9aaa7a,
+    caneDark: 0x6e7e58,
+    ground: 0xa8987a,
+    groundDark: 0x8a7a5e,
+    groundLight: 0xc0b090,
+  },
+} as const;
+
 /** The painted scene behind each battle (BattleDef.backdrop), drawn in code until painted art arrives. */
 export const BATTLE_BACKDROPS: Readonly<Record<string, {
   sky: readonly number[];
@@ -1227,6 +1501,8 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
   ...ARDENCIA_BACKDROPS,
   ...ALDORIA_BACKDROPS,
   ...SEAT_BACKDROPS,
+  ...SKARRAGOL_BACKDROPS,
+  ...KUROSHI_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

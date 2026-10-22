@@ -519,6 +519,180 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     done: f('side.deserters.done'),
     reward: { gold: 60, xp: 30, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
   },
+  // ---- Chapter 6, Ordvik (the outline section 7, with its second review): two required side quests and the debate ----
+  // Grandson of the Steppe (S-5; Azzy's thread): his mother's people are the khatun's household of Ironvow's eastern
+  // clans (the review's 3.5: no separate polity, his mother's name, no grandfather's). Opens as the envoy bows at the
+  // fair. Three answers, all remembered for Chapter 12's Claim (choice.azzy_ordu); the pillar follows the answer
+  // (data/rpg.ts pillarRules). Closed if the party is somehow across the fjord without it.
+  {
+    id: 'grandson',
+    title: 'Grandson of the Steppe',
+    giver: 'The envoy in white',
+    place: 'The Horse-Fair',
+    level: 16,
+    summary:
+      'An envoy of the khatun\'s household, Azzy\'s mother\'s people, bows to Azzy at the fair and will not stand up. He has an offer, and Azzy has to answer it.',
+    accepted: f('side.grandson.accepted'),
+    available: f('story.fair_seen'),
+    start: [{ map: 'skarragol-fair', at: { x: 34, y: 8 } }],
+    nudge: 'The man in the white coat is still bowing, Gigi. At Azzy.',
+    steps: [
+      { text: "Hear the envoy at the white tent.", done: f('side.grandson.answered'), goals: [{ map: 'skarragol-fair', at: { x: 34, y: 8 } }] },
+      {
+        text: "Azzy's answer.",
+        done: f('side.grandson.done'),
+        goals: [
+          { if: f('side.grandson.bout'), map: 'skarragol-fair', at: { x: 36, y: 8 } },
+          { map: 'skarragol-fair', at: { x: 34, y: 8 } },
+        ],
+      },
+    ],
+    done: f('side.grandson.done'),
+    closed: f('story.fjord_crossed'),
+    closedText: 'Closed: the envoy in white rode east before Azzy answered him. His mother will hear nothing yet.',
+    reward: { gold: 150, xp: 50 },
+  },
+  // The Winter Stores (S-3; the rebel safehouse; puzzle M-SKA-1, the wolf run): the fourth ash thumbprint.
+  {
+    id: 'winter_stores',
+    title: 'The Winter Stores',
+    giver: 'Herder at the folds',
+    place: 'The Winter Plateau',
+    level: 16,
+    summary:
+      'Someone leaves grain for the herders under the plateau\'s edge every winter, a grey thumbprint on every sack. This year the wolves have found the store.',
+    accepted: f('side.winter_stores.accepted'),
+    available: f('party.bayarmaa'),
+    start: [{ map: 'skarragol-plateau', at: { x: 34, y: 16 } }],
+    nudge: 'The herders on the plateau are counting their sacks twice.',
+    steps: [
+      { text: 'The winter store under the plateau\'s edge, south of the folds.', done: f('side.winter_stores.wolves'), goals: [{ map: 'skarragol-plateau', at: { x: 36, y: 26 } }] },
+      {
+        text: 'The air shimmers in front of the store. The wolves\' gully, fifty years ago.',
+        done: f('anchor.wolf_run'),
+        goals: [{ map: 'skarragol-plateau', at: { x: 36, y: 23 } }],
+        // In the memory: the loose boulder on the slope above the gully.
+        echoGoals: [{ map: 'skarragol-plateau', at: { x: 41, y: 21 } }],
+      },
+      {
+        text: 'Back to the herder at the folds.',
+        done: f('side.winter_stores.done'),
+        goals: [{ map: 'skarragol-plateau', at: { x: 34, y: 16 } }],
+        echoGoals: [{ map: 'skarragol-plateau', at: { x: 36, y: 23 } }],
+      },
+    ],
+    done: f('side.winter_stores.done'),
+    closed: f('story.fjord_crossed'),
+    closedText: 'Closed: the party went down to the fjord. The herders guard the store themselves.',
+    reward: { gold: 200, xp: 60, pillar: { pillar: 'wealth', city: 'skarragol', amount: 1 } },
+  },
+  // The trading mats' debate, as a required quest (outline 7.3): Oath of blood or oath of sky?
+  {
+    id: 'oath',
+    title: 'Oath of Blood or Sky',
+    giver: 'Witness elder',
+    place: 'The trading mats',
+    level: 16,
+    summary:
+      'On the trading mats a Sky-Rider and a Witness elder argue whether an oath lives in a stolen standard or under the open sky. Hear them out, then make your case.',
+    accepted: { any: [f('debate.skarragol_oath.listened'), f('debate.skarragol_oath.settled')] },
+    available: f('party.bayarmaa'),
+    start: [{ map: 'skarragol-fair', at: { x: 35, y: 21 } }],
+    nudge: 'The traders by the mats are arguing about a stick, Gigi. The Saga Tent has their laws.',
+    steps: [
+      { text: 'Listen to the debate on the trading mats.', done: f('debate.skarragol_oath.listened'), goals: [{ map: 'skarragol-fair', at: { x: 35, y: 21 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.skarragol_oath.settled'), goals: [{ map: 'skarragol-fair', at: { x: 35, y: 21 } }] },
+    ],
+    done: f('debate.skarragol_oath.settled'),
+    closed: f('story.fjord_crossed'),
+    closedText: 'Closed: the traders are still shouting. They always are.',
+    reward: { xp: 20, pillar: { pillar: 'influence', city: 'skarragol', amount: 1 } },
+  },
+  // ---- Chapter 7, Kirinoura (the outline section 7, with its second review): two required side quests and the debate ----
+  // The Spy Ledger (K-2; Kayla; the Ash Wars account 2 of 4; M-KUR-1): the sealed stacks behind the Lantern Library. The
+  // Echo at Kayla's desk teaches the shelving rule on a Revolution file (the review's 3.3); the Ash Wars row is worked out
+  // in the present. Kayla's glyph card at the end is her help with the screens and the spy map (the review's 3.4).
+  {
+    id: 'spy_ledger',
+    title: 'The Spy Ledger',
+    giver: 'Kayla, cipher clerk',
+    place: 'The Lantern Library',
+    level: 18,
+    summary:
+      'Four accounts of the Ash Wars, and three of them lie. Kirinoura\'s is in the sealed stacks behind the library, shelved by a cipher Kayla keeps.',
+    accepted: f('side.spy_ledger.accepted'),
+    available: f('story.letter_given'),
+    start: [{ map: 'kuroshi-library', at: { x: 9, y: 5 } }],
+    nudge: 'The clerk at the library keeps looking at Azzy, Gigi.',
+    steps: [
+      { text: 'Meet the clerk at the back desk of the Lantern Library.', done: f('side.spy_ledger.accepted'), goals: [{ map: 'kuroshi-library', at: { x: 9, y: 5 } }] },
+      {
+        text: 'The Echo at Kayla\'s desk is older than the stacks\' door.',
+        done: f('clue.shelf_mark'),
+        goals: [{ map: 'kuroshi-library', at: { x: 9, y: 8 } }],
+        echoGoals: [{ map: 'kuroshi-library', at: { x: 9, y: 8 } }],
+      },
+      {
+        text: 'Into the stacks by the high window; find the Ash Wars ledger by the shelving rule.',
+        done: { any: [f('item.spy_ledger'), f('side.spy_ledger.done')] },
+        goals: [{ map: 'kuroshi-library', at: { x: 20, y: 10 } }],
+        echoGoals: [{ map: 'kuroshi-library', at: { x: 9, y: 8 } }],
+      },
+      { text: 'Back to Kayla with the ledger.', done: f('side.spy_ledger.done'), goals: [{ map: 'kuroshi-library', at: { x: 9, y: 5 } }] },
+    ],
+    done: f('side.spy_ledger.done'),
+    closed: f('story.haru_met'),
+    closedText: 'Closed: the lantern hour came first. The ledger stays in the stacks.',
+    reward: { gold: 200, xp: 50, pillar: { pillar: 'influence', city: 'kuroshi', amount: 2 } },
+  },
+  // Lanterns for the Lost (K-3; the rebel safehouse; M-KUR-2): the fishers' boats steer home by the marsh posts. On the
+  // route: the lit posts show the causeway to the file house's back door, so the quest is never an errand.
+  {
+    id: 'lanterns',
+    title: 'Lanterns for the Lost',
+    giver: 'Fisher woman',
+    place: 'The marsh road',
+    level: 18,
+    summary:
+      'The fishers\' boats went out before the fog and steer home by the marsh posts. The posts are dark, and nobody will light them: the code is a Suzumori secret.',
+    accepted: f('side.lanterns.accepted'),
+    available: f('story.letter_given'),
+    start: [{ map: 'kuroshi-quarter', at: { x: 37, y: 2 } }],
+    nudge: 'The fishers\' boy has a lantern and nothing to light it for.',
+    steps: [
+      // No goal until Haru has joined: the arrow does not lead toward the fog before the maze can be walked (the
+      // review's 4: followSide); after, it points at the maze gate, where the code is learned.
+      { text: 'Someone must know the posts\' code.', done: f('clue.lantern_code'), goals: [{ if: f('party.haru'), map: 'kuroshi-fogmaze', at: { x: 14, y: 27 } }] },
+      { text: 'Light the marsh posts by the huts: left, then right.', done: f('story.boats_home'), goals: [{ map: 'kuroshi-marsh', at: { x: 21, y: 12 } }] },
+      { text: 'The old fisher at the huts.', done: f('side.lanterns.done'), goals: [{ map: 'kuroshi-marsh', at: { x: 16, y: 14 } }] },
+    ],
+    done: f('side.lanterns.done'),
+    closed: f('ally.kuroshi'),
+    closedText: 'Closed: the fishers lit their own posts in the end.',
+    reward: { gold: 250, xp: 50, pillar: { pillar: 'influence', city: 'kuroshi', amount: 1 } },
+  },
+  // The middle bridge's debate, as a required quest (outline 7.3): Is silence virtue or concealment?
+  {
+    id: 'silence',
+    title: 'Silence or Concealment',
+    giver: 'Balance-keeper',
+    place: 'The middle bridge',
+    level: 18,
+    summary:
+      'On the middle bridge a Witness balance-keeper and a veiled speaker argue whether silence is a virtue or a hiding place. Hear them out, then make your case.',
+    accepted: { any: [f('debate.kuroshi_silence.listened'), f('debate.kuroshi_silence.settled')] },
+    available: f('story.letter_given'),
+    start: [{ map: 'kuroshi-quarter', at: { x: 26, y: 11 } }],
+    nudge: 'The two on the middle bridge are arguing about not talking.',
+    steps: [
+      { text: 'Listen to the debate on the middle bridge.', done: f('debate.kuroshi_silence.listened'), goals: [{ map: 'kuroshi-quarter', at: { x: 26, y: 11 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.kuroshi_silence.settled'), goals: [{ map: 'kuroshi-quarter', at: { x: 26, y: 11 } }] },
+    ],
+    done: f('debate.kuroshi_silence.settled'),
+    closed: f('story.haru_met'),
+    closedText: 'Closed: the keepers are still at it. They always are.',
+    reward: { xp: 15, pillar: { pillar: 'influence', city: 'kuroshi', amount: 1 } },
+  },
 ];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */

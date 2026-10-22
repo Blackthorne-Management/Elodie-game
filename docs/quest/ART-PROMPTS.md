@@ -490,6 +490,92 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 
 ---
 
+## 15. Bayarmaa, Salkhi, Torvald, Hrafn, Grimvald and Sarnai (Chapter 6, Ordvik; art drop 2 or after)
+
+Added Oct 22 with the Chapter 6 build. The game draws placeholders from the looks `bayarmaa`, `horse_grey` (Salkhi),
+`torvald`, `hrafn`, `grimvald`, `echo_sarnai`, `steppe_reaver`, `steppe_wolf`, `ordu_envoy`, `hostage_envoy` until these
+arrive (`quest/src/assets.config.ts`; horses and wolves are drawn on four legs). Make each like section 12: a reference
+sheet in a new chat (attach Gianna's sheet), then the portrait and the walking sprite sheet in the same chat.
+
+**Bayarmaa Ironvow** (about 19; the Raider, the chapter's companion): lean and sharp-shouldered, warm tan skin, a long
+black braid down her back, dark eyes that look past you at the horizon. A grey felt riding coat to the knee with a
+slate-blue collar and a braided hem, a wide sash, riding boots, a curved steppe sabre at her hip with a horsehair grip.
+Portrait expressions: **flat** (default: says little), **fierce** (the Moot, defying her council), and **soft** (only
+for her horse, or the moment she gives Anissa her fur). Battle stance: empty-handed, weight forward, as if about to
+ride.
+
+**Salkhi** (Bayarmaa's grey mare; she talks): a dappled grey steppe mare, short and sturdy, a dark mane, a slate-blue
+saddle-cloth, an expression of enormous dignity and mild contempt. Walking sheet on four legs (same 3 x 4 layout).
+Portrait: **unimpressed** (default) and **vindicated**.
+
+**Torvald** (about 55; chieftain of the Ironvow, Bayarmaa's father): big, tired, grey-blond hair and beard, a bear-fur
+mantle over brown wool, no crown, the standard's slate disc as a brooch. Portrait: **tired** (default), **exact**.
+
+**Hrafn** (about 45; the raiding jarl): black hair and beard cut short, a black cloak with a raven stitched on it, an
+axe at his belt. Portrait: **blunt** (default).
+
+**Noyan Grimvald** (about 50; the boss, a raider chief the Crown paid): huge, a wolf-fur coat with Throne gold coins
+sewn in the hem, a red sash, the Ironvow standard (nine horse-tails under a slate disc) strapped across his back. Battle
+sprite: mounted on a black horse (phase 1) and on foot (phase 2). Portrait: **paid** (default: a man who says so).
+
+**Sarnai Ironvow** (the Echo, fifty years ago; Bayarmaa's grandmother): Bayarmaa's face, older, a grey hood, a bone
+whistle on a cord, beside a grey horse; sepia like every Echo portrait. Portrait: **certain**.
+
+**Also (placeholders may ship):** the lawspeaker (old, a staff, painted hides), the trading jarl (a fair braid, a tally
+stick), the Crown's envoy (Aldermoor violet, a ledger), the envoy in white (a white felt coat with a silver mare), the
+champion in white, the herder (a crook, a red headband), the steppe reavers (horse-tail helms), the steppe wolves.
+
+Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
+## 16. Haru, Kayla, Kaede, the Paper Fox and Sayo (Chapter 7, Kirinoura; art drop 2 or after)
+
+Added Oct 22 with the Chapter 7 build. The game draws placeholders from the looks `haru`, `kayla`, `kaede`,
+`paper_fox`, `echo_sayo`, `echo_sayo_clerk`, `echo_agent`, `retainer_neutral`, `retainer_war`, `signal_master`,
+`keeper_files`, `crown_observer`, `fog_cutpurse`, `husher`, `lantern_moth` until these arrive
+(`quest/src/assets.config.ts`; Suzumori violet `#7d3c98`). Make each like section 12: a reference sheet in a new chat
+(attach Gianna's sheet), then the portrait and the walking sprite sheet in the same chat.
+
+**Haru Suzumori** (about 18; the Shadow agent, the chapter's companion): slight and quick, East Asian, black hair tied
+back with a few strands loose, a watchful face that is always one beat too honest. A grey kimono jacket over dark
+trousers, a violet cord at the wrist, soft-soled shoes, a short paper knife in a lacquer sheath at the small of his
+back and a folded paper lantern at his belt. Portrait expressions: **deadpan** (default: "definitely not a spy"),
+**caught** (spotted behind the lantern pile), and **set** (refusing his mother's order). Battle stance: empty-handed,
+low, weight on the back foot.
+
+**Kayla** (about 25; the cipher clerk, Rael's half-sister, Azzy's Titi): Rahel's daughter by a man of the Asian
+continent; calm dark eyes, black hair pinned up with a writing brush through it. A clerk's grey robe, one cuff stained
+with ink, a lacquer case of seals at her belt. Portrait: **exact** (default: correcting you), **listening**.
+
+**Lady Kaede Suzumori** (about 50; the spymaster, Haru's mother): straight-backed, silver at the temples, a grey
+kimono with a violet underlayer, a writing brush in her hand at a low table. Portrait: **dry** (default), **final**,
+and **warm** (once, at the petition).
+
+**The Paper Fox** (about 40; the broker, the boss): a man in a plain grey kimono who could be anyone; a white paper
+fox mask, first at his belt, then worn; a paper knife; folded paper sheets that become decoys. Battle sprite: masked,
+standing among three identical paper copies of himself (the decoys are the same sprite, paler). Portrait:
+**courteous** (default: a little proud of his trade), **yielding**.
+
+**Lady Sayo Suzumori** (the Echo, fifty years ago; Haru's grandmother): a tired, practical woman of about 40 in
+grey, a brush behind her ear, a lantern code card in her hand; sepia like every Echo portrait. Her clerk (a young man
+at a library desk) and her three agents (grey hoods, lanterns on poles) in the same palette. Portrait: **practical**.
+
+**Places (backgrounds, no people):** the Lantern Quarter at dusk (canals, arched bridges, paper lanterns, mist); the
+Hall of Screens (a long corridor of paper screens to a lacquer dais); the file house (a 3 x 3 grid of pivoting paper
+screens, file stacks, a wall map); the fog maze (identical lanes, unlit lantern posts in threes, white fog); the Fog
+Marsh (reeds, a plank causeway, fishers' huts, six lantern posts). The battle backdrops `fog_marsh` and `file_house`
+use these.
+
+**Also (placeholders may ship):** the two retainers (grey, a fan; grey, a sword), the signal master (a lantern on a
+pole, a kite glyph on his sleeve), the keeper of files (a key ring), the Crown's observer (Aldermoor violet, a lacquer
+file-box), the fishers' family (plain indigo, a lantern), the Suzumori elder, the balance-keeper and the whisperer
+(a veil, no sigil), the Fog Cutpurses (grey hoods), the Hushers (a long veil), the Lantern Moths (pale, small).
+
+Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |

@@ -244,12 +244,30 @@ both.
 | 3 | 8-11 | 11 (2,249) | 10 (1,714) | 0 | 11 (2,249) | 11 | 11 |
 | 4 | 11-14 | 14 (3,284) | 12 (2,489) | 14 | 14 (3,284) | 14 | 14 |
 | 5 | 14-15 | 15 (3,699) | 13 (2,764) | 16 | 15 (3,699) | 15 | 16 |
+| 6 | 15-17 | 17 (4,579) | 15 (3,474) | 38 | 17 (4,611) | 17 | 18 |
+| 7 | 17-19 | 19 (5,493) | 17 (4,243) | 145 | 19 (5,525) | 19 | 20 |
 
 Before it: 6, 10, 12, 15, 15 (the route line; ambushes then paid 10 x level x foes). The route walks few wild tiles
 (none in Ardencia: the sea road skirts the Cinder Flats' fields), so the played median sits on the route line; the
 wanderer is what a player who explores the wilds gets. **For the Chapter 6 to 8 outlines:** their level plans assumed
 25 XP a step and an ambush taper; Chapter 6 now starts at 3,699 (level 15), its steps pay 40 until it gets its own
 row, and ambushes follow the rule above, so re-run their sums with `level-curve.ts` when each is built.
+
+**Chapter 6 (built Oct 22; Claude's calls):** its steps pay **65** (`XP_PER_OBJECTIVE_BY_CHAPTER[5]`), not the
+formula's 45: the line without side quests reaches Chapter 6 two under (13 against 15) and the formula would leave it
+three under; Ordvik's side quests and fights pay less than its outline planned (S-5 50, S-3 60 and its wolves 40, the
+debate 20, Grimvald 120, the lookouts 40, the bout 0) so the route and the played line end on 17, not 18. Eleven books
+at 10. Measured: route 17 (4,579), without side quests 15 (3,474), played median 17 (4,611), p90 17, wanderer 18.
+Kuroshi (17 to 19) is met at 17. Chapter 8 gets its own row when built.
+
+**Chapter 7 (built Oct 22; Claude's calls):** its steps pay **44** (`XP_PER_OBJECTIVE_BY_CHAPTER[6]`). At 42 the line
+without side quests ended at 4,221, one XP short of 17; at 44 it ends on 17 (4,243). Four objectives pay nothing
+(`noXp`: the mist, the lantern hour's follow-the-quest step, the lanterns, the west): they are travel or a side
+quest's own payment. Kirinoura pays the Fox 140, K-2 50 (and the stacks' cutpurses 30), K-3 50 (and the moths 30),
+the debate 15 (side XP 145 with the books' share); fourteen books. Measured (`tools/level-curve.ts`, seeds 1 to 200): route 19 (5,493), without side quests
+17 (4,243), played median 19 (5,525), p90 19, wanderer p90 20. The second review's fear (3.5) that the played start
+would already be 19 did not come true on the built curve: Chapter 6 ends at 17 (4,579 route, 4,611 played), so the
+band holds without re-basing the road tiers. Jwaladesh (19 to 21) is met at 19.
 
 **The three roads (any order):** the first of Skarragol, Kuroshi and Jwaladesh entered is set to levels 15 to 17, the
 second 17 to 19, the third 19 to 21 (`ROAD_TIERS`). Fixed on first entry.
@@ -365,6 +383,15 @@ weapon moves (Slash, Heavy Blow, Sweep, as Patricio's), and starts with the Stee
 | Hoofbeat | 6 | Salkhi kicks: power 90 to one enemy, Stunned 1 turn 25% | |
 | The Great Raid | 16 | Once per battle: take two full turns in a row | The Great Raid |
 
+**Built (Oct 22; Chapter 6):** base HP 56, SP 16, ATK 13, DEF 8, MAG 4, SPD 15; growth HP 6, SP 2, ATK 2, DEF 1, SPD 2
+(the fastest in the party). Starts with a Steppe Sabre of Swiftness and a braided riding coat. Ironvow's Oath is real
+(`opensFirst`: her opening time is the party's lowest); Raider's Charge 130 with weight 0.5; Hoofbeat 90, Stunned on a
+boss a quarter of the time; The Great Raid 150, once, weight 0 (her next turn at once). Moves: Slash, Heavy Blow,
+Horse-Tail Sweep (every foe). She fights second, after Gianna, from the Moot until the chapter ends (`MemberDef.leads`).
+**Noyan Grimvald** (13.3), built: level 17 brute, hp x5, atk x1.3 (sim numbers in the Chapter 6 outline's Built
+section); phases at half (unhorsed, two reavers ride in, the Stolen Standard inspires them) and at a quarter or a Surge
+in that phase (the standard falls); he withdraws at 0 HP.
+
 ### 9.5 Haru (Shadow agent, Suzumori)
 
 | Skill | SP | Effect | Board |
@@ -373,6 +400,17 @@ weapon moves (Slash, Heavy Blow, Sweep, as Patricio's), and starts with the Stee
 | Sasayaki Ha | 6 | Strip one buff from an enemy, or cancel a charging skill | Sasayaki Ha |
 | Paper Smoke | 5 | Party evasion +15% for 2 turns | |
 | Ayatsuri | 14 | Once per battle: one enemy's next action targets another enemy instead | Ayatsuri |
+
+**Built (Oct 22; Chapter 7):** base HP 44, SP 22, ATK 11, DEF 7, MAG 9, SPD 16; growth HP 5, SP 3, ATK 2, DEF 1, MAG 1,
+SPD 2. Starts with a Paper Knife of Swiftness and a grey kimono. He joins at the lantern hour (`party.haru`), walks as
+the sixth follower and fights second, after Gianna, until the chapter ends (`MemberDef.leads`; Samira and Bayarmaa
+step back). Kagemimi is real (`SkillDef.reveal`): the target's next move is told as text, a foe in disguise is found
+out, and the real one is Marked (Claude's call: the next-move display above the target is not built; the line says
+it). **Fallbacks (Claude's calls):** Sasayaki Ha is a 110 cut that Weakens (a boss half the time) in place of the
+buff strip and the charge cancel, which need engine work no fight yet asks for; Paper Smoke is Warded on the party
+(Fogged is the enemy-side evasion, and the engine has no evasion on allies); Ayatsuri Stuns one foe once a battle (a
+boss half the time) in place of the redirect. Moves: Quick Cut 100, Twin Cut (two cuts at random foes, 75 each),
+Throat Cut 150. The board names stay.
 
 ### 9.6 Samira (Alchemist, Dorini)
 
@@ -479,7 +517,7 @@ come up (tests/battle.test.ts). Attacking alone still wins with Yari but costs o
 | **Down** | 0 HP, out of the fight | until revived | revive items, Say Their Names, Rit Solèy, end of battle (revives at 1 HP) |
 | **Marked** | Takes x1.25 damage | 3 turns | |
 | **Stunned** | Skips the next action | 1 action | |
-| **Hushed** | Cannot use skills (Attack, Guard, Item still work) | 2 turns | Tidewash, Tonic |
+| **Hushed** | Cannot use skills (Attack, Guard, Item still work). **Built Oct 22 (Chapter 7):** SP skills are blocked; weapon moves (no SP) still work (`STATUS.noSkills`) | 2 turns | Tidewash, Tonic |
 | **Frightened** | Anissa only: see Calm (Section 8) | until Comfort | Comfort |
 | **Burning** | Loses 6% max HP each turn | 3 turns | Tidewash, water items |
 | **Poisoned** | Loses 4% max HP each turn | 5 turns | Tidewash, Tonic |
@@ -627,7 +665,7 @@ Boss stats: the standard line x the multipliers in each row (`BOSS_SCALE`). Phas
 | 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 3) | 11 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; (*Seize* on Anissa: to redesign, Shield Anissa dropped Oct 15). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. **Built Oct 21** (owner decisions: he wins, wearing La Promesa de Benny): level 13, HP x3, ATK x1.2; Seize in phase 1; Captain Rivera and Jaime walk in at phase 2 and step back at 0 HP; the floor and his finale (`docs/quest/reviews/2026-10-20-chapter3-outline.md`, "Built"). |
 | 3b | **Rael, the Harbor Strike** (same boss, Strike route only) | Harbor flank (Ch. 11) | 28 | 9 / 1.2 | Four phases: Measured, Unleashed, Cornered, then **Broken Army** (his guards leave; he only Binds and will not strike Gianna; the fight ends when his army breaks, at 10% HP). |
 | 4 | **Noyan Grimvald** (proposal) | Skarragol frozen fjord (Ch. 6) | tier top (17, 19 or 21) | 8 / 1.2 | **1 Mounted:** *Trample* (all), fast. **2 (50%) Unhorsed:** slower, *Stolen Standard* (Inspired on all his raiders); returning the standard to Bayarmaa (an Item use) breaks it. |
-| 5 | **The Paper Fox** (proposal) | Kuroshi file house (Ch. 7) | tier top | 7 / 1.0 | **1 Screens:** hides among three paper decoys (Haru's Kagemimi or *Lantern* shows the real one). **2 (40%) Sold Secrets:** reads a member's "file": copies their best skill and uses it on them. |
+| 5 | **The Paper Fox** (proposal) | Kuroshi file house (Ch. 7) | tier top | 7 / 1.0 | **1 Screens:** hides among three paper decoys (Haru's Kagemimi or *Lantern* shows the real one). **2 (40%) Sold Secrets:** reads a member's "file": copies their best skill and uses it on them. **Built Oct 22 (Claude's calls, the second review's 3.6):** level 19, HP x12, ATK x1.8 (x10 / x1.6 left the kit 14% hurt). He and three paper decoys all show as *Paper Fox? A* to *D*, letters and places dealt at random, HP bars hidden; the decoys step in front of him and rustle (a real move). Kagemimi (or the reveal) names and Marks him, and the decoys turn plain paper and stop stepping in front; area blows tear paper. Fold brings another decoy every 3 turns (every 5 in phase 2). Phase 2 at **40%**: *Sold Secrets* every other turn uses the power of a member's best damage skill (the move's own 120 as a floor) with the Fox's ATK, aimed at them ("reads from a file with X's name on it"). He yields at 0 HP and is bound. 140 XP, 300 gold. |
 | 6 | **Seth Dhanraj** (proposal) | Jwaladesh oil store (Ch. 8) | tier top | 8 / 1.1 | **1 Hoard:** *Oil Wall* (fire immunity), Oil Enforcers. **2 (50%) Price Spike:** each turn the party's next item costs 1 extra turn of delay; lighting his oil (any fire skill after the wall falls) Burns him. |
 | 7 | **The Hushed** | Aldermoor Regent's keep (Ch. 9) | 24 | 9 / 1.1 | **1 Silence:** Hush on two members a turn, Hushers. **2 (60%) Hush the Light:** aims at Anissa every other turn (to redesign, Shield Anissa dropped Oct 15; Comfort). **3 (25%) Unmasked:** the voice behind the veil; *Quiet Crown* (Weakened all, Calm -1). |
 | 8 | **The Betrayer** (four variants by house) | Harbor flank (Ch. 11) | 26 | 8 / 1.2 | Shared frame, house moves: Dorini *Paid Off* (Bribes your benched members' turns away), Ironvow *Warpath* (two turns in a row), Suzumori *Marionette* (redirects your action), Agnivansh *Endless War* (no SP costs for a round). Proposal names: Admiral Rashid, Chief Hrafn, Councillor Mibu, Steward Prakash. Skipped if turned at the Muster. |

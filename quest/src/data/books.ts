@@ -686,6 +686,367 @@ export const BOOKS: readonly Book[] = [
       'No claimant has stood on the tile in fifty years, and the Regent has not asked for one. ' +
       'Someone has written in the margin, in a clerk\'s small hand: "Limyè? A temple name, not a house."',
   },
+  // ---- Ordvik (Chapter 6): the Saga Tent's eight, on hides and tally sticks, and the Moot's three ----------
+  {
+    id: 'skarragol_ulfgar_oath',
+    title: 'Ulfgar\'s Oath',
+    category: 'law',
+    text:
+      'Ulfgar Ironvow was the first chieftain of the horse clans and the fjord clans together. ' +
+      'Before him the clans swore on whatever was to hand, and broke whatever they swore on. ' +
+      'Ulfgar cut a pole of black ash, bound nine horse-tails to it, and cut his palm over it. ' +
+      'He said: an oath sworn on a thing can be seen, and what can be seen can be counted. ' +
+      'From that day the Ironvow swear on the standard or not at all. ' +
+      'A chieftain who loses it may not bind the clans to anything until it stands again. ' +
+      'The skalds say Ulfgar wanted it that way. A people that can lose its oath will guard it. ' +
+      'The Sky-Riders say he only wanted a stick to wave. Both stories are told at every fire.',
+  },
+  {
+    id: 'skarragol_sarnai_ride',
+    title: 'Sarnai\'s Ride',
+    category: 'war',
+    text:
+      'In the last winter of the war, the Crown camped its supply train on the far shore of the fjord. ' +
+      'Grain for three armies sat in its wagons, and the ice between was guarded by sentries with muskets. ' +
+      'Sarnai Ironvow crossed the ice at night with forty riders hidden in a herd of steppe horses. ' +
+      'She whistled, and the herd walked where the whistle walked. The sentries watched horses. ' +
+      'Nobody writes the whistle down. The skalds say it was three notes, and leave it there. ' +
+      'The wagons burned. Nobody who dropped his musket was touched, and half the grain went south to Zetwal. ' +
+      'The spring ice took half her riders on the way home. Nine of them are under the cairns on the plateau. ' +
+      'The Crown never camped on that shore again.',
+  },
+  {
+    id: 'skarragol_law_moot',
+    title: 'The Law of the Moot',
+    category: 'law',
+    text:
+      'The Moot sits when the horn blows at first light, and not before. ' +
+      'The chieftain speaks first and votes last. The lawspeaker speaks only the law, and is never asked twice. ' +
+      'What the standard binds, no vote may undo. What no oath forbids, the council may sell. ' +
+      'A vote taken while the standard is gone is lawful. The law also names it shameful, and both are written. ' +
+      'If the standard stands on its pole when the horn blows, every vote called without it falls. ' +
+      'A guest of the Moot may ask for a prisoner under an envoy\'s bond. If the prisoner runs, the guest pays. ' +
+      'The lawspeaker keeps these words on painted hides. Everyone quotes them. Nobody reads them.',
+  },
+  {
+    id: 'skarragol_sky_riders',
+    title: 'The Sky-Riders',
+    category: 'religion',
+    text:
+      'The Sky-Riders are the wind sect of the Four Hands, and the plateau is full of them. ' +
+      'They swear to the open sky, because the sky cannot be stolen, sold or burned. ' +
+      'They keep no temple. A Sky-Rider prays on horseback, facing the wind, with the reins slack. ' +
+      'They have argued with the Witness elders of Ordvik for three hundred years, mostly about the standard. ' +
+      'The elders say an oath you cannot lose is an oath you cannot keep. ' +
+      'The Sky-Riders say an oath on a stick is a stick. The two sit at the same fires and share the same salt. ' +
+      'Sarnai Ironvow, the skalds say, swore on the sky and on the pole, and told both sides they were right.',
+  },
+  {
+    id: 'skarragol_furs_salt',
+    title: 'Furs, Salt and Horses',
+    category: 'trade',
+    text:
+      'Ordvik sells three things: furs from the plateau, fish from the fjord, and horses from everywhere. ' +
+      'It buys one thing it cannot make, which is salt. Without salt the fish rot and the winter kills. ' +
+      'Before the Crown\'s blockade, Dorini salt came up the coast in the trading jarl\'s longships. ' +
+      'Since the blockade, salt costs three times what it did, and the fleet sits on the shingle. ' +
+      'The Crown offers compensation for the blockade it imposes. The price is the fleet. ' +
+      'The trading jarl says a people who sell their ships to buy salt will buy salt forever. ' +
+      'The raiding jarl says a fleet that cannot raid is firewood. Both are counting the same hulls.',
+  },
+  {
+    id: 'skarragol_mare_sky',
+    title: 'The Mare in the Sky',
+    category: 'folklore',
+    text:
+      'The herders say there is a mare in the night sky, nine stars round a tenth, and she walks the year. ' +
+      'In spring she grazes low over the fjord. At first snow she stands over the plateau\'s high stones. ' +
+      'Nine riders who went out on the ice with Sarnai never came home. ' +
+      'Their cairns stand in a ring on the plateau, round a flat stone scored with lines. ' +
+      'The old herders say that on the right night the mare stands over the stone, and the lines point somewhere. ' +
+      'Nobody young has seen it. The old herders will not say where the lines point. ' +
+      'They say only that the riders left something for the one who can read the sky as Sarnai did.',
+  },
+  {
+    id: 'skarragol_who_married',
+    title: 'Who Married Whom',
+    category: 'gossip',
+    text:
+      'A skald\'s notes on the great families, not to be sung at a feast. ' +
+      'Torvald married late and lost his wife early. His daughter rides better than he ever did, and he knows it. ' +
+      'Hrafn has married twice, both times for ships. ' +
+      'The trading jarl has never married, and keeps a tally stick for every offer. ' +
+      'A daughter of the khatun\'s household married a Brasador lord in the Ash Wars, and came home alone. ' +
+      'The boy stayed in Ardencia. The eastern clans still send a rider to Cenizal every year to ask after him. ' +
+      'The rider is always told the boy is well, and goes home, and comes back the next year.',
+  },
+  {
+    id: 'skarragol_ironvow_line',
+    title: 'The Ironvow Line',
+    category: 'genealogy',
+    text:
+      'The chieftains of the Ironvow, as the skalds count them. ' +
+      'Ulfgar, who cut the standard and joined the clans. Many after him, whose names are on the poles. ' +
+      'Sarnai, who broke the Crown\'s supply train on the fjord ice in the last winter of the war. ' +
+      'She swore for the Ironvow at the Accord, and came home to bury nine riders. ' +
+      'Torvald her son, chieftain now, who has kept the fleet on the water through three hard winters. ' +
+      'Bayarmaa his daughter, the standard\'s guard, who rides with the horn-riders and speaks to her horse more than to the Moot. ' +
+      'The skald who wrote this added, small: she will be chieftain, or she will be gone.',
+  },
+  {
+    id: 'skarragol_standard_keeping',
+    title: 'The Standard\'s Keeping',
+    category: 'law',
+    text:
+      'The guard roster for the Ironvow standard, kept by the lawspeaker, for the nights of this autumn. ' +
+      'Each night two names: one from the horse clans, one from the fjord clans. ' +
+      'On the night it went, the horse clans\' name is Bayarmaa, Torvald\'s daughter, written plainly. ' +
+      'The fjord clans\' name has been struck out with a heavy line, and no other written in its place. ' +
+      'Under it, in the lawspeaker\'s hand: the struck name was a rider of the raiding jarl\'s household. ' +
+      'He asked to be moved to the quay that night, and was. Nobody has asked him why. ' +
+      'The lawspeaker\'s note ends: the law does not ask questions. Envoys may.',
+  },
+  {
+    id: 'skarragol_crown_offer',
+    title: 'The Crown\'s Offer',
+    category: 'trade',
+    text:
+      'A copy of the offer the Crown\'s guest laid before the council, in a clerk\'s careful hand. ' +
+      'The Throne will pay compensation for the blockade of the northern coast, in gold, this winter. ' +
+      'In return, the Ironvow fleet passes into the Throne\'s keeping for the duration of the war. ' +
+      'The offer stands until the morning horn of the council\'s vote, and not a moment after. ' +
+      'It is signed by the Throne\'s compensation office. No person\'s name is on it. ' +
+      'In the margin, in a heavier hand, someone has written: whose war? ' +
+      'Someone else has written under that: the Throne\'s. And under that, nothing more.',
+  },
+  {
+    id: 'skarragol_compensation',
+    title: 'Compensation Claims',
+    category: 'history',
+    text:
+      'A ledger of claims the Throne\'s compensation office has paid in the last ten years. ' +
+      'Ships lost to the blockade, at half their value. Herds lost to Crown requisitions, at a third. ' +
+      'A temple in Jwaladesh, for a sacred lamp broken by soldiers, paid in full and quickly. ' +
+      'A guild in Al-Doria, for papers lost in a fire, paid before the fire was reported. ' +
+      'A great many claims for the recovery of objects, paid to persons not named. ' +
+      'Whoever kept the ledger stopped adding to it last spring. ' +
+      'The last line reads: the office pays what it is told to pay, and is told by whom it pays.',
+  },
+  // ---- Kirinoura (Chapter 7): the Lantern Library's nine (and the spy ledger, back on its shelf after K-2), the Hall's four --
+  {
+    id: 'kuroshi_genzo_ear',
+    title: 'Genzō\'s Ear',
+    category: 'history',
+    text:
+      'Suzumori Genzō was a harbour clerk who could not stop listening. ' +
+      'He kept a book of what sailors said in the tea houses. ' +
+      'Which ship carried what, which captain owed whom, which Crown officer drank. ' +
+      'He never repeated a word of it. ' +
+      'He only wrote it down. ' +
+      'When the Crown\'s governor of the fog coast was recalled in disgrace, everyone knew who had kept the book. ' +
+      'Nobody could prove it. ' +
+      'The Suzumori say that is how a house is founded: by being trusted with things and keeping them. ' +
+      'Genzō\'s rule is still painted over the Hall\'s records room: write everything, say nothing, sell nothing. ' +
+      'Somebody has added, in a smaller hand, a fourth line: until it matters.',
+  },
+  {
+    id: 'kuroshi_sayo_network',
+    title: 'Sayo\'s Network',
+    category: 'war',
+    text:
+      'In the Alliance War, Lady Sayo Suzumori ran the realm\'s listening. ' +
+      'Fishers, clerks, tea girls and lantern-lighters carried slips to her war room in the file house, and she pinned them to a map. ' +
+      'The Marshal of Zetwal knew where the Crown would be before the Crown did. ' +
+      'Sayo talked to her people through the fog with lanterns: white and red, in threes, lit and never written. ' +
+      'The code was the point. ' +
+      'A thing that is written can be sold. ' +
+      'Her agents who were caught died without a name. ' +
+      'Sayo kept those names herself, and asked the winners for one thing: write them down. ' +
+      'Nobody has, yet.',
+  },
+  {
+    id: 'kuroshi_suzumori_line',
+    title: 'The Suzumori Line',
+    category: 'genealogy',
+    text:
+      'Genzō, the clerk who listened. ' +
+      'His daughter Sayo, who ran the war\'s listening and lit the fog with lanterns. ' +
+      'Her daughter Kaede, who rules Kirinoura from a writing table and has never raised her voice in council. ' +
+      'Kaede\'s son Haru, who follows people for his mother and is, by every account, very bad at not being seen. ' +
+      'The Suzumori marry quietly and outlive their enemies. ' +
+      'Their crest is a bell in a grove: a bell is heard, the saying goes, and a grove hears. ' +
+      'No portrait of any Suzumori hangs in the Hall of Screens. ' +
+      'They say it is modesty. ' +
+      'Their enemies say it is a precaution.',
+  },
+  {
+    id: 'kuroshi_informants_petition',
+    title: 'The Informants\' Petition',
+    category: 'law',
+    text:
+      'To the Throne of the realm, from the people of Kirinoura who carry what they hear to the Hall. ' +
+      'We ask to be named in the law. ' +
+      'Not to be thanked: to be named, as soldiers are named, so that our widows are paid. ' +
+      'We ask that no file with our names in it be sold, copied or shown to any foreign officer. ' +
+      'We ask that a broker who sells our names be tried as a man who sells soldiers. ' +
+      'Fifty signatures, and fifty thumbprints for those who cannot write. ' +
+      'Filed with the Throne\'s clerks after the Alliance War. ' +
+      'Returned unread, three times. ' +
+      'The Hall keeps a copy here. ' +
+      'The council still reads it aloud every new year.',
+  },
+  {
+    id: 'kuroshi_balance_silence',
+    title: 'Balance and Silence',
+    category: 'religion',
+    text:
+      'The Witness keepers of Kirinoura teach that the Gaze is a scale, and silence is one of its weights. ' +
+      'A silence kept for the weak is a shield: the fisher\'s name, the widow\'s debt, the child\'s mistake. ' +
+      'A silence kept for the strong is a wall: the council\'s price, the governor\'s page, the broker\'s list. ' +
+      'The keepers do not ask which silence a person keeps. ' +
+      'They ask who it is kept for. ' +
+      'Every keeper takes one vow at her ordination, said in a whisper so that only the Witness hears. ' +
+      'Nobody else has ever been told what it is. ' +
+      'The keepers say that is the lesson.',
+  },
+  {
+    id: 'kuroshi_burned_temple',
+    title: 'The Burned Temple',
+    category: 'history',
+    text:
+      'In the Ash Wars, a Crown paper came to Kirinoura\'s council. ' +
+      'It said the fire priests of Agnipur were hiding Crown deserters in their temple. ' +
+      'The council sent ships. ' +
+      'The temple burned. ' +
+      'There were no deserters in it at all. ' +
+      'The paper was false, and the Crown has never said who wrote it. ' +
+      'The elder who signed the order for Kuroshi is still alive, and goes to the library most mornings, and stands by this book. ' +
+      'Agnipur has never accepted an apology from Kirinoura, because none has been sent. ' +
+      'The elder says one has been written, every year, and never posted.',
+  },
+  {
+    id: 'kuroshi_silk_tea',
+    title: 'Silk, Tea and Secrets',
+    category: 'trade',
+    text:
+      'Kirinoura sells three things: silk, tea, and what it knows. ' +
+      'The first two are taxed. ' +
+      'Silk comes down from the hill farms in bales wrapped in oiled paper. ' +
+      'Tea comes in by the marsh boats, before the fog lifts. ' +
+      'Secrets come in every other way: in a tea house, on a bridge, under a lantern. ' +
+      'A merchant who wants to buy the third thing asks for the second, very politely, and waits. ' +
+      'The tea houses keep a screen half open on the street for this reason. ' +
+      'A sensible visitor drinks the tea, admires the silk, and says nothing he would mind hearing again.',
+  },
+  {
+    id: 'kuroshi_tea_whispers',
+    title: 'Tea House Whispers',
+    category: 'gossip',
+    text:
+      'Overheard at the tea house by the middle bridge this season, and written down by somebody who should know better. ' +
+      'The Crown\'s observer takes his tea with the same courteous man every day, and never pays. ' +
+      'The keeper of files has a new coat. ' +
+      'Lady Kaede\'s son was seen on four roofs in one night and fell off one of them. ' +
+      'Gold has been flowing out of Ardencia for years, to places no one should be funding, and the Alcázar says nothing. ' +
+      'The marsh fishers print something at night. ' +
+      'Nobody has asked what. ' +
+      'The fog is thicker than it was last year, and the lanterns are lit at noon.',
+  },
+  {
+    id: 'kuroshi_nightingale_floor',
+    title: 'The Nightingale Floor',
+    category: 'folklore',
+    text:
+      'Lady Sayo\'s House on the west canal has a floor that sings. ' +
+      'Every board is laid on iron cramps that chirp like a nightingale when a foot comes down on them. ' +
+      'Sayo had it laid in the war, so that no one could walk to her door unheard. ' +
+      'The house has been shut since she died. ' +
+      'Children say the floor still sings at night, though nobody walks it. ' +
+      'The floor-maker who laid it had an apprentice, who is old now and makes keys. ' +
+      'They say the floor can be walked in silence, if you know which boards Sayo stepped on. ' +
+      'They say she only ever told one person.',
+  },
+  {
+    id: 'kuroshi_spy_ledger',
+    title: 'The Suzumori Spy Ledger',
+    category: 'war',
+    available: { flag: 'side.spy_ledger.done' },
+    text:
+      'The Ash Wars, as Kirinoura\'s informants counted them, in a clerk\'s hand. ' +
+      'The Crown\'s own war rolls say Lord Rael of Ardencia butchered a Crown column on the Ash Road. ' +
+      'The Suzumori ledger says something else. ' +
+      'Forty-one Crown marines were taken on the Ash Road by Brasador riders, and held, and fed. ' +
+      'Nine died. ' +
+      'All nine were killed by the Crown\'s own volleys, fired into the column from the ridge after it had surrendered. ' +
+      'The ledger names the ridge\'s captain and the hour. ' +
+      'It does not say who gave him the order. ' +
+      'Beside the entry, in red ink: Not to be read aloud while the Crown keeps an observer in the Hall.',
+  },
+  {
+    id: 'kuroshi_neutrality_order',
+    title: 'The Neutrality Order',
+    category: 'law',
+    text:
+      'By order of the council of Kirinoura, while the Throne\'s Parley sits and after it: Kirinoura takes no side. ' +
+      'The file house is sealed. ' +
+      'No file leaves it. ' +
+      'No envoy enters it. ' +
+      'No informant of the Suzumori is named to anyone, for any price. ' +
+      'The keeper of files holds the seal, and answers for it with his post. ' +
+      'This order protects the people who tell the Hall what they know. ' +
+      'It is the only protection they have. ' +
+      'Pasted beside the file house door, and copied to every bridge. ' +
+      'Somebody has scratched a line under the word sealed, very lightly, with a fingernail.',
+  },
+  {
+    id: 'kuroshi_buyers_mark',
+    title: 'The Buyer\'s Mark',
+    category: 'law',
+    available: { flag: 'clue.buyers_mark' },
+    text:
+      'A buying-list on Crown paper, in Throne sols. ' +
+      'Four lines, four prices: three large, one larger. ' +
+      'Every name has been cut out of the paper with a knife, cleanly, after the ink was dry. ' +
+      'Beside one of the prices, a stamped mark in black: a closed hand. ' +
+      'It is not a Crown seal. ' +
+      'It is not the mark of any house. ' +
+      'Kayla\'s note, pinned to it in her small hand: The names were cut before the list reached the broker. ' +
+      'Somebody knew it would be sold. ' +
+      'The list does not say which house was bought, or whether the price has been paid yet. ' +
+      'It only says that one of them can be.',
+  },
+  {
+    id: 'kuroshi_outflows',
+    title: 'The Ledger of Outflows',
+    category: 'trade',
+    available: { flag: 'clue.ardencia_outflows' },
+    text:
+      'A copy of an Ardencian counting-house ledger, in the treasury\'s own hand. ' +
+      'Gold leaves the Alcázar\'s treasury every season, for twenty years. ' +
+      'Large sums, larger in the war years. ' +
+      'The destinations are written in a cipher. ' +
+      'The amounts and the dates are not. ' +
+      'Kayla\'s note: Ardencia\'s counting-house hand; Kirinoura has copied enough of it to know it. ' +
+      'The key is not the Crown\'s and not one this city has ever held. ' +
+      'Samira, reading it over Gianna\'s shoulder, said only that a coin she once had was minted somewhere else. ' +
+      'Nobody here can say where the gold went. ' +
+      'Kayla would say no more than that.',
+  },
+  {
+    id: 'kuroshi_fox_receipts',
+    title: 'The Paper Fox\'s Receipts',
+    category: 'law',
+    available: { flag: 'clue.fox_receipts' },
+    text:
+      'Eleven years of receipts from a broker of Kirinoura, kept in a lacquer box under the file house floor. ' +
+      'Each is for copies of files from the sealed house: troop counts, harbour charts, informants\' names. ' +
+      'Each is paid in Throne sols. ' +
+      'Each is countersigned in Aldermoor violet by the Throne\'s observer. ' +
+      'The keeper of files is paid on every one, in a smaller hand at the foot. ' +
+      'The broker\'s own note on the last: Copies only. ' +
+      'The originals are perfectly safe. ' +
+      'Read aloud to the council at dawn by the signal master, who did not raise his voice once, all the way through.',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -712,6 +1073,16 @@ export const SHELVES: readonly Shelf[] = [
   // Eightgate (Chapter 5): the Throne Hall's records room, and the Throne Archive (readable from the bell on).
   { id: 'hall_records', name: "Shelf: The Hall's Records", books: ['seat_regent_commission', 'seat_petitions_breach', 'seat_council_eight', 'seat_seventh_clause'] },
   { id: 'archive_shelves', name: 'Shelves: The Throne Archive', books: ['seat_weaving', 'seat_founding_compact', 'seat_accord_sealed', 'seat_throne_clerks', 'seat_claimant_families'] },
+  // Ordvik (Chapter 6): the Saga Tent's hides and tally sticks, and the lawspeaker's painted hides in the Moot.
+  { id: 'saga_hides_a', name: 'Hides: Oaths and the Law', books: ['skarragol_ulfgar_oath', 'skarragol_sarnai_ride', 'skarragol_law_moot', 'skarragol_sky_riders'] },
+  { id: 'saga_hides_b', name: 'Tally sticks: Trade and Lines', books: ['skarragol_furs_salt', 'skarragol_mare_sky', 'skarragol_who_married', 'skarragol_ironvow_line'] },
+  { id: 'moot_hides', name: "The lawspeaker's hides", books: ['skarragol_standard_keeping', 'skarragol_crown_offer', 'skarragol_compensation'] },
+  // Kirinoura (Chapter 7): the Lantern Library's three shelves, the Neutrality Order at the file house door, the Hall's records.
+  { id: 'kur_lib_a', name: 'Shelf: The House of Suzumori', books: ['kuroshi_genzo_ear', 'kuroshi_sayo_network', 'kuroshi_suzumori_line'] },
+  { id: 'kur_lib_b', name: 'Shelf: Law and the Witness', books: ['kuroshi_informants_petition', 'kuroshi_balance_silence', 'kuroshi_burned_temple'] },
+  { id: 'kur_lib_c', name: 'Shelf: Silk, Tea and Rumour', books: ['kuroshi_silk_tea', 'kuroshi_tea_whispers', 'kuroshi_nightingale_floor', 'kuroshi_spy_ledger'] },
+  { id: 'kur_hall_order', name: 'The Neutrality Order', books: ['kuroshi_neutrality_order'] },
+  { id: 'kur_hall_records', name: "Shelf: The Hall's Records", books: ['kuroshi_buyers_mark', 'kuroshi_outflows', 'kuroshi_fox_receipts'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

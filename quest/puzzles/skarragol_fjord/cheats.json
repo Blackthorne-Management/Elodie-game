@@ -1,0 +1,38 @@
+{
+  "an Echo on the shingle, off the floes: the Locket will not open there": [
+    "up*2",
+    "echo",
+    "up*10",
+    "right*10",
+    "up*10"
+  ],
+  "the present's floes from the first zone: they run out in black water": [
+    "up*4",
+    "right*5",
+    "up*5",
+    "left*5",
+    "up*5"
+  ],
+  "the memory's ice straight up from the first floe, never coming back to now: thin ice ahead of the second": [
+    "up*4",
+    "echo",
+    "skip",
+    "up*5",
+    "up*10",
+    "right*10",
+    "up*10"
+  ],
+  "four swaps, then on in the present: open water between the fifth floe and the far shore": [
+    "up*4",
+    "echo",
+    "skip",
+    "up*5",
+    "echo",
+    "right*10",
+    "echo",
+    "up*5",
+    "echo",
+    "right*11",
+    "up*5"
+  ]
+}

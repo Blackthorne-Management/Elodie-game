@@ -1,0 +1,12 @@
+{
+  "language": "Old Norse (Ordvik and the fjord)",
+  "note": "Old Norse words the quest uses in Skarragol (House Ironvow's fjord clans, Chapter 6). Every entry must be checked by a fluent reader before release (guide 8; the Nov 18 check); verified stays false until then.",
+  "entries": [
+    { "word": "Heill", "language": "Old Norse", "translation": "Hail, be well (a greeting)", "verified": false },
+    { "word": "Þökk", "language": "Old Norse", "translation": "Thanks", "verified": false },
+    { "word": "Jarl", "language": "Old Norse", "translation": "A chieftain under the king; here one of the Moot's great men", "verified": false },
+    { "word": "Lögsögumaðr", "language": "Old Norse", "translation": "Lawspeaker: the one who recites the law at the assembly", "verified": false },
+    { "word": "Skald", "language": "Old Norse", "translation": "A poet who keeps the sagas", "verified": false },
+    { "word": "Ordvik", "language": "Old Norse (made up)", "translation": "Bay of the oath (a proposal name for Skarragol's capital: orð, word, and vík, bay)", "verified": false }
+  ]
+}

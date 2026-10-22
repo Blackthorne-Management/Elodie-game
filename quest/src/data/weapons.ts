@@ -69,6 +69,11 @@ export const DESIGNS: readonly Design[] = [
   { id: 'cane_machete', name: 'Cane Machete', weapon: 'blade', rarity: 'common', level: 1, price: 70, stats: { atk: 3 }, text: "A cane cutter's blade, iron and wood." },
   { id: 'marshal_cutlass', name: 'Cutlass', weapon: 'blade', rarity: 'common', level: 1, price: 120, stats: { atk: 5 }, text: "The Marshal's cutlass, notched from the war." },
   { id: 'steel_saber', name: 'Steel Saber', weapon: 'blade', rarity: 'uncommon', level: 4, price: 280, stats: { atk: 8 }, text: 'Bright steel with a brass guard, from the harbor forge.' },
+  // Ordvik (Chapter 6): Bayarmaa's own, and the furrier's (tier 16).
+  { id: 'steppe_sabre', name: 'Steppe Sabre', weapon: 'blade', rarity: 'uncommon', level: 15, price: 760, stats: { atk: 14, spd: 1 }, text: 'A curved Ironvow sabre, light enough to swing from the saddle, its grip wound in horsehair.' },
+  // Kirinoura (Chapter 7): Haru's own short blade (tier 16), and the armourer's tanto (tier 20).
+  { id: 'paper_knife', name: 'Paper Knife', weapon: 'blade', rarity: 'uncommon', level: 16, price: 700, stats: { atk: 14, spd: 2 }, text: 'A short straight blade in a plain grey scabbard. It is named for the paper it is mostly used to cut.' },
+  { id: 'kirinoura_tanto', name: 'Kirinoura Tanto', weapon: 'blade', rarity: 'uncommon', level: 20, price: 650, stats: { atk: 20 }, text: 'A lacquer-handled tanto from the armourer on the east bank. It weighs nothing, and cuts as if it meant it.' },
 ];
 
 export const SUFFIXES: readonly Suffix[] = [

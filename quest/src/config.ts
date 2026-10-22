@@ -68,9 +68,13 @@ export const LEVELS = {
  * Shared XP: each main-quest step done, by chapter (index 0 is Chapter 1), and each lore book read. The levels pass
  * (Claude's call, Oct 22; COMBAT.md 6): a step pays 15 in Chapter 1 (the boar still meets a level-3 Gianna), then
  * 15 + 5 x chapter; a chapter past the table pays its last entry. The route then ends each chapter on its target
- * (tools/level-curve.ts): 4, 8, 11, 14, 15.
+ * (tools/level-curve.ts): 4, 8, 11, 14, 15. Chapter 6 pays 65, not the formula's 45 (Claude's call, Oct 22): the
+ * line without side quests reaches Chapter 6 already two under (13 against 15) and must not fall to three; Ordvik's
+ * side quests pay less to keep the played line on 17 (COMBAT.md 6, "Chapter 6"). Chapter 7 pays 44 (Claude's call,
+ * Oct 22): at 42 the line without side quests ended one XP short of 17; at 44 it ends on 17 and the route on 19
+ * (COMBAT.md 6, "Chapter 7").
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
@@ -180,23 +184,28 @@ export const MIN_DAMAGE_SHARE = 0.15;
 export const GUARD_MULT = 0.5;
 /** Status effects (COMBAT 10): how many of the affected fighter's own turns they last, and what they do. */
 export const STATUS = {
-  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
-  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false },
-  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false },
+  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false, noSkills: false },
+  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false, noSkills: false },
+  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false, noSkills: false },
   /** Ward: damage taken x0.75 (a Chapter 1 proposal; Aldermoor's Ward of Patience is the party-wide one). */
-  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
-  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
+  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false, noSkills: false },
+  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false, skip: false, shatter: false, noSkills: false },
   /** Slowed (COMBAT's Chilled): SPD x0.7, so turns come later. */
-  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true, skip: false, shatter: false },
+  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true, skip: false, shatter: false, noSkills: false },
   /** Taunting: foes' one-target attacks go to this fighter first. */
-  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false, skip: false, shatter: false },
+  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false, skip: false, shatter: false, noSkills: false },
   /** Stunned (COMBAT 10): the fighter loses their next action (Azzy's Grito de Guerra). */
-  stunned: { turns: 1, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: true, shatter: false },
+  stunned: { turns: 1, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: true, shatter: false, noSkills: false },
   /**
    * The Golden Wall (Qasim, Chapter 4; the outline review 3.7): gold stacked in front of him, damage taken x0.5 for
    * its turns. A Surge-powered blow shatters it at once (and lands in full).
    */
-  gilded: { turns: 3, dealt: 1, taken: 0.5, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: true },
+  gilded: { turns: 3, dealt: 1, taken: 0.5, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: true, noSkills: false },
+  /**
+   * Hushed (COMBAT 10; Chapter 7, the Husher's Hush): no SP skills for its turns. Attack, the weapon moves under it,
+   * Guard and Item still work.
+   */
+  hushed: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false, noSkills: true },
 } as const;
 /**
  * Spell slots (owner, Oct 15): a mage equips only this many of the spells she knows (the level at which

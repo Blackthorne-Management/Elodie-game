@@ -27,8 +27,12 @@ const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string 
   '4': { mark: 'chapter3-end', map: 'ardencia-camp', spawn: 'strand' },
   // Chapter 5 begins as the Dorini caravan comes in at Eightgate's Gold Gate (the caravan's arrival plays).
   '5': { mark: 'chapter4-end', map: 'seat-gateyard', spawn: 'gold_gate' },
-  // Chapter 6 begins at the Iron Gate after the card (Skarragol's maps come with Chapter 6: this start moves there).
-  '6': { mark: 'chapter5-end', map: 'seat-concourse', spawn: 'iron_gate' },
+  // Chapter 6 begins on the Winter Plateau road, the Iron Gate behind them (the arrival plays).
+  '6': { mark: 'chapter5-end', map: 'skarragol-plateau', spawn: 'seat_road' },
+  // Chapter 7 begins on Kirinoura's pier, off the Ironvow longship (the landing plays).
+  '7': { mark: 'chapter6-end', map: 'kuroshi-pier', spawn: 'pier' },
+  // Chapter 8 begins on Kirinoura's pier after the card (Jwaladesh's maps come with Chapter 8: this start moves there).
+  '8': { mark: 'chapter7-end', map: 'kuroshi-pier', spawn: 'pier' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

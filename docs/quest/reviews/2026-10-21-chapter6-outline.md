@@ -947,3 +947,94 @@ Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, mo
 24); card art, portraits and the card back before the rules and card text freeze (Fri Oct 31); order B with proofs
 (Mon Nov 3); the Dec 1 story questions, now needed by early November; the fluent-speaker check (Wed Nov 18: this
 chapter adds Mongolian and Old Norse, a few words each).
+
+---
+
+## Built (Oct 22): what changed from this outline, and Claude's calls
+
+Built on branch `chapter6` (from `aed16d7`), with the second review's fixes (`2026-10-21-chapter6-outline-review.md`
+section 6) applied. Code: `quest/tools/maps/skarragol.ts`, `quest/src/data/skarragol.ts` (places and conditions both
+the maps and the scenes read), `quest/src/data/dialogue/skarragol.ts`, `ACT6` in `quest/src/data/quests.ts`, the
+Ordvik entries in `battles.ts`, `encounters.ts`, `sideQuests.ts`, `debates.ts`, `books.ts`, `rpg.ts`, `npcs.ts`,
+`speakers.ts`, `objects.ts`, `cards.ts`; tests in `quest/tests/skarragol.test.ts`; puzzles `skarragol_fjord` and
+`skarragol_gully`.
+
+**The review's fixes, as built:**
+- **Levels (3.1).** The levels pass (Oct 22) replaced the outline's numbers and the taper: one ambush rule by the
+  party's level for every chapter. Re-planned on the built curve: Chapter 6's steps pay **65** (Claude's call: the
+  line without side quests arrives already two under, 13 against 15, and the formula's 45 would leave it three under);
+  S-5 50 XP, S-3 60 and its wolves 40, the debate 20, Grimvald 120, the lookouts 40, the bout 0; eleven books at 10.
+  Measured (`tools/level-curve.ts`, seeds 1 to 200):
+
+  | Ch | Target | Route end (XP) | No side quests | Played median | Played p90 | Wanderer p90 |
+  |---|---|---|---|---|---|---|
+  | 5 | 14-15 | 15 (3,699) | 13 (2,764) | 15 | 15 | 16 |
+  | 6 | 15-17 | **17 (4,579)** | **15 (3,474)** | **17 (4,611)** | 17 | 18 |
+
+  The route walks 38 wild steps in Chapter 6 (the herders' track); 0.5 ambushes on average. Kuroshi's band begins at
+  17: the party arrives at it, not past it (18 needs 4,653).
+- **The raid (3.2).** Sarnai's raid plays from an Echo-era step trigger on the far shore's floe (`raid_step`), and from
+  the zone's `onEcho` for a player who reaches the floe in the present; five swaps cross (`skarragol_fjord`
+  solution, asserted), no sixth.
+- **Grimvald (3.3).** Phase 3 is `{ below: 0.25, onSurge: true }`, and an `onSurge` phase now answers only a Surge made
+  in the phase before it (engine: `surgedInPhase`), so a Surge spent early never skips the unhorsing; every won fight
+  shows the three phases in order (tested on 30 seeds). The standard is strapped across his back; his horse bolts for
+  the picket line; after the fight Bayarmaa picks it up off the grass. **Scaling (Claude's call): hp x5, atk x1.3**,
+  not x7 / x1.6 (that was simmed on a bot that Guards and casts; Attack alone lost 40 of 40 even at the boss Grudge).
+  `tools/battle-sim.ts fjord_grimvald ordvik-herd`, 40 runs: Attack alone 1/40 (35.8 actions, 100% of the party's HP
+  lost), 27/40 at +30%, 37/40 at +50% (as Thorne); the skills 40/40 (18.9 actions, 39% lost). The start tip names the
+  answer: "Your light, Gigi, and Bayarmaa's Charge. Not your staff. When he turns his horse, everyone Guard."
+- **The season (3.4).** The present is the edge of the freeze (open water, the first floes); "the floes drift out with
+  the morning tide"; Torvald: "the fjord took half your grandmother's riders, coming home in the spring". The Echo
+  shows the raid win.
+- **Azzy's envoy (3.5).** The envoy is of **the khatun's household, Ironvow's eastern clans**: no separate polity, "the
+  day you take your mother's name", and Bayarmaa: "Your mother's people ride under our standard too." Azzy and
+  Bayarmaa are not made kin (no owner question needed).
+- **The price (3.6).** Paid in flags (`pillarRules`): the purse +3 Wealth, the jarl's 300 gold +3, Samira's salt
+  letter +1, S-3 +1; the route pays 8 of 10. Keeping the purse pays 300 gold (`gold.gain`). The token is given when the
+  alliance is made (Claude's call, recorded in `SIDE-QUESTS.md` Se-5); Influence counts toward a price at half value
+  when the Muster computes it (nothing computes prices yet); the Journal note *The Ironvow fleet* says what each paid
+  and "least paid, first bought".
+- **The herd (3.7).** Six horses as distinct NPCs (`herd_1` to `herd_6`), three placements each, walked by the walkers;
+  the Echo herd four more. Horses and wolves are drawn on four legs (`build: 'horse' | 'wolf'`).
+- **Followers (3.8).** Bayarmaa is the fifth follower (`FieldScene`); Salkhi is a flag-placed NPC on the outdoor maps
+  (one per map), never a follower. The fur moment is a walk and a line, no recolour (Claude's call).
+- **Who fights (3.9).** `MemberDef.leads`: Bayarmaa fights second (after Gianna) from the Moot until `act6.complete`,
+  Samira on the bench; after the chapter the roster's order holds and Swap brings Bayarmaa in.
+- **Anissa (3.10).** Salkhi's fur line is cut (it was about Anissa). A test: no scene with Salkhi's lines has Anissa's.
+- **Smaller (3.11).** Dusk is a condition (`FAIR_DUSK`); the receipt is an unsigned compensation-office voucher; the
+  quay's voyage waits for Chapter 7's landing (below).
+
+**Other Claude's calls in the build:**
+- The fair's arrival scene plays as the party crosses the field (a column trigger), so it cannot be walked round.
+- The dusk scene plays at the fjord path's door once the three are done (the door's `closed` dialogue), not on a step
+  beside it (the gold walk walked round a one-row trigger).
+- The Moot's scenes play near the chieftain (row 6), and Bayarmaa and her riders stand beside the aisle.
+- Ironvow's Oath is real (`opensFirst`); Caona's same passive stays text (not hers to change in this chapter).
+- The Great Raid is a 150-power blow with weight 0 (her next turn at once), once a battle; Hoofbeat lands on a boss a
+  quarter of the time.
+- The reavers' weight on the plateau does not change after `choice.grimvald_broken` (no engine for it); the Fear is the
+  reward.
+- The plunder store sells the furrier's kind of stock at the same prices (shops have one price list).
+- Chapter 5's Iron Gate now sets `travel.next` to the plateau road (the land journey is the card, as Chapter 4's was).
+- The longship's voyage (`skarragol_kuroshi`) is not built: Chapter 7's landing does not exist yet. `?chapter=7`
+  starts on Ordvik's quay; Chapter 7 adds the voyage and moves the start.
+- Names by role: the lawspeaker, the trading jarl, the Crown's envoy, the envoy in white, the herder (the proposals
+  Ketil, Sigrún, Pelham, Chuluun and Oyuun stay proposals; the herder's NPC id is `oyuun`).
+
+**Fights (battle-sim, 40 runs each, at the route's markers):**
+
+| Fight | Plan | +0% | +30% | +50% |
+|---|---|---|---|---|
+| Grimvald (`ordvik-herd`) | Attack | 1/40, 35.8 actions, 100% lost | 27/40, 82% | 37/40, 66% |
+| Grimvald | Skills | 40/40, 18.9, 39% | 40/40, 21% | 40/40, 15% |
+| Camp lookouts (`ordvik-herd`) | Attack | 40/40, 13.7, 18% | 40/40, 16% | 40/40, 16% |
+| Winter wolves (`ordvik-stores`) | Attack | 40/40, 11.6, 15% | 40/40, 13% | 40/40, 13% |
+| The champion's bout (`ordvik-saga`) | Attack | 40/40, 19.7, 20% | 40/40, 16% | 40/40, 16% |
+
+The smoke test's own plan (Surge, Sunthread, Attack) wins Grimvald and the wolves 40 of 40.
+
+**Gold-arrow walk:** Chapter 6 end to end with no stall, 446 steps and 11 map changes (`tests/goldWalk.test.ts`).
+
+**Not built (after the release, as planned):** S-1, S-2 (folded into the price scene), S-4 and the secret (the cairns
+and the flat stone are placed and inert), the horse-fair race, the voyage to Kuroshi, painted art (placeholders).

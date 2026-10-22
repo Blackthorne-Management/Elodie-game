@@ -10,6 +10,7 @@ import { loreFlag } from './books.ts';
 const K = 'gaze_keeper';
 const Q = 'recruiter_a';
 const G = 'gianna';
+const BY = 'bayarmaa';
 const A = 'anissa';
 const R = 'roots_elder';
 const P = 'gaze_pilgrim';
@@ -407,6 +408,162 @@ export const DEBATES: readonly DebateDef[] = [
     after: [
       say('witness_priest', 'We read a clause of the Compact aloud here now. The Sealbearers listen. They pretend not to.'),
       say('quiet_speaker', 'I still think it is noise. I come to hear it anyway.'),
+    ],
+  },
+  // Ordvik's trading mats (Chapter 6; the outline 7.3): Oath of blood or oath of sky? Required. The Witness elder is
+  // Gianna's side (the party is here to put the standard back); the Sky-Rider is the opponent. Both reasonable, both
+  // dry or cheerful; no faith is a cult. Reason needs one of the Saga Tent's three oath books.
+  {
+    id: 'skarragol_oath',
+    city: 'skarragol',
+    question: 'Oath of blood or oath of sky?',
+    ally: 'witness_elder',
+    opponent: 'sky_rider',
+    opensIf: { flag: 'party.bayarmaa' },
+    passing: [
+      say('sky_rider', '...a stick! You swore on a stick, and now you are surprised it can be stolen!'),
+      say('witness_elder', 'And you swore on the weather, and are surprised nobody can hold you to it.'),
+    ],
+    listen: [
+      say('sky_rider', 'An oath sworn on a stick is a stick. We swear to the open sky, and the sky is still there when the stick is stolen.'),
+      say('sky_rider', 'Sell the fleet or don\'t. The oath was never in the pole.'),
+      say('witness_elder', 'A contract is a thing you can lose. That is what makes it a contract.'),
+      say('witness_elder', 'Ulfgar swore blood on the standard so that losing it would cost something. It is costing something. Good.'),
+      say(A, 'They both want the standard back, Gigi. They just don\'t want to say it the same way.'),
+    ],
+    reasonNeeds: [loreFlag('skarragol_ulfgar_oath'), loreFlag('skarragol_law_moot'), loreFlag('skarragol_sky_riders')],
+    rounds: [
+      {
+        claim: 'The sky cannot be stolen. A standard can. Why tie an oath to the thing a thief can carry off?',
+        answers: {
+          scripture: { short: 'Elodie wove both', text: 'The goddess wove the sky and the hands that cut the pole. An oath can live in either.', strength: 1 },
+          reason: { short: 'So it can be counted', text: 'Ulfgar\'s Oath: sworn on a thing so the Moot can see who keeps it. You cannot count the sky.', strength: 2 },
+          compassion: { short: 'Ask the guard', text: 'Ask the girl who guarded it whether the oath felt like weather the night it went.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then the Crown has bought your oath with one thief. Sky-sworn, the council could never sell.',
+        answers: {
+          scripture: { short: 'Nothing sells a vow', text: 'No god weighs a vow by where it hangs. A sold oath is a broken one, sky or pole.', strength: 1 },
+          reason: { short: 'The law calls it shame', text: 'The Law of the Moot: the vote is lawful and shameful. Both are written. The pole makes the shame visible.', strength: 2 },
+          compassion: { short: 'Three winters of fish', text: 'They are not selling an oath. They are selling three winters of fish and no salt.', strength: 1 },
+        },
+      },
+      {
+        claim: 'So you would swear on a stick, envoy? Your Zetwal swore on a page, and the Crown wrote a seventh one.',
+        answers: {
+          scripture: { short: 'The Gaze remembers', text: 'The Gaze remembers what was sworn, whatever it was sworn on. That page was read aloud.', strength: 1 },
+          reason: { short: 'A page read is kept', text: 'A page nobody read was never agreed. A standard everyone sees can\'t hide a seventh clause.', strength: 1 },
+          compassion: { short: 'Swear on both', text: 'Swear on both. On the pole for the Moot, and on the sky for yourselves. Nobody here wants it lost.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The traders on the mats stop haggling. A horse-dealer says "Hah!" and pays someone.)',
+      1: '(Half the mats nod at the elder, half at the rider. The salt trader nods at both.)',
+      0: '(The traders go back to their salt.)',
+    },
+    won: [
+      say('sky_rider', 'Counted, not kept. ...Fine. The sky can stand being looked at.'),
+      say('witness_elder', 'You argue like a lawspeaker\'s granddaughter. That is a compliment, and you should take it before I think better of it.'),
+    ],
+    lost: [
+      say('sky_rider', 'The sky is still there, envoy. Come back when the stick is.'),
+      say('witness_elder', 'She will. Then we will see.'),
+    ],
+    mediate: [
+      say(G, 'You both want the oath kept, and the fleet not sold.'),
+      say(BY, 'Swear on both. My grandmother did.'),
+      say('sky_rider', 'Sarnai swore on the sky. ...And on the pole. She did, didn\'t she.'),
+      say('witness_elder', 'She did. It is on the hides. Read it.'),
+    ],
+    provoke: [
+      say(G, 'Your oaths are what a council sells when the blockade bites. Sky or stick!'),
+      nar('The mats go quiet. Two horn-riders look over.'),
+      say('witness_elder', 'Not here, envoy. Not with Hrafn\'s riders listening.'),
+    ],
+    after: [
+      say('witness_elder', 'The standard stands. The rider swore on the sky this morning, facing the pole. I saw her.'),
+      say('sky_rider', 'The sky was behind the pole. It counts.'),
+    ],
+  },
+  // Kirinoura's middle bridge (Chapter 7; the outline 7.3 with its review's 3.10): Is silence virtue or concealment?
+  // Required. The Witness balance-keeper is Gianna's side; the veiled speaker is a public street speaker of the Quiet
+  // Crown, reasonable and unhurried, not a Husher (the Chapter 1 recruiter's precedent): he never looks at Anissa, never
+  // names her. The player may argue his side: Kirinoura's neutrality is the silence he means, and the chapter answers
+  // him with the receipts. Reason needs one of the library's three silence books.
+  {
+    id: 'kuroshi_silence',
+    city: 'kuroshi',
+    question: 'Is silence virtue or concealment?',
+    ally: 'balance_keeper',
+    opponent: 'whisperer',
+    opensIf: { flag: 'story.letter_given' },
+    passing: [
+      say('whisperer', '...silence is what you call it when you are the one not telling.'),
+      say('balance_keeper', 'And a lie is what you call it when you are the one not listening.'),
+    ],
+    listen: [
+      say('balance_keeper', 'An oath kept in silence is still kept. The Witness hears what is not said.'),
+      say('balance_keeper', 'Silence is the room an honest word waits in.'),
+      say('whisperer', 'Your council is silent. The Throne is silent. Every house keeps its files and calls it prudence.'),
+      say('whisperer', 'One hand would need no silence. It would simply say.'),
+      say(A, 'The quiet one wants everybody to talk, Gigi. The loud one wants everybody quiet.'),
+    ],
+    reasonNeeds: [loreFlag('kuroshi_balance_silence'), loreFlag('kuroshi_informants_petition'), loreFlag('kuroshi_genzo_ear')],
+    rounds: [
+      {
+        claim: 'A city that writes everything down and reads none of it out is not keeping faith. It is keeping files.',
+        answers: {
+          scripture: { short: 'The Witness hears', text: 'The Witness hears what is kept, and what is told. Keeping is not lying.', strength: 1 },
+          reason: { short: 'Files protect people', text: 'The Informants\' Petition: a name in a file is a name a broker cannot sell. Silence is the only law they have.', strength: 2 },
+          compassion: { short: 'Ask the informant', text: 'Ask the fisher who told Sayo where the marines slept whether she wanted it read aloud.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then the Throne\'s silence protects people too. You cannot have one silence and not the other.',
+        answers: {
+          scripture: { short: 'Elodie remembers', text: 'Elodie remembers what kings forget. A silence that forgets is not the same as one that keeps.', strength: 1 },
+          reason: { short: 'Who is silent, for whom', text: 'Balance and Silence: a silence kept for the weak is a shield; one kept for the strong is a wall.', strength: 2 },
+          compassion: { short: 'Look who it hides', text: 'Look at who each silence hides. One hides fishers. The other hides a page.', strength: 1 },
+        },
+      },
+      {
+        claim: 'So you would have the people speak, envoy, and their councils keep quiet? Who decides which is which?',
+        answers: {
+          scripture: { short: 'The Gaze decides', text: 'The Gaze sees both. Neither is ours to choose alone.', strength: 1 },
+          reason: { short: 'The law decides', text: 'A law that names the informants, and keeps them safe. Then their silence is no one\'s price.', strength: 1 },
+          compassion: { short: 'Those it costs', text: 'The ones it costs most decide. Ask them. They are on the marsh, lighting posts.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(On the bridge, a clerk stops writing. A tea seller says "So!" and pours for everyone.)',
+      1: '(Half the bridge nods at the keeper, half at the veil. A lantern-lighter nods at both.)',
+      0: '(The bridge goes back to its own business, quietly.)',
+    },
+    won: [
+      say('whisperer', 'A shield and a wall. ...Then build the shield where I can see it, envoy.'),
+      say('balance_keeper', 'He will hold you to it. So will I.'),
+    ],
+    lost: [
+      say('whisperer', 'Silence, envoy, all the way down. Come back when somebody says something.'),
+      say('balance_keeper', 'She will. Then we will listen.'),
+    ],
+    mediate: [
+      say(G, 'You both want the people safe, and the powerful seen.'),
+      say('whisperer', 'Then name the people in the law, and the powerful in the street.'),
+      say('balance_keeper', 'That is the Informants\' Petition. It has been on the shelf fifty years.'),
+      say('whisperer', 'Then take it down.'),
+    ],
+    provoke: [
+      say(G, 'Your city sells silence by the page. Ask the Crown\'s man what it costs!'),
+      nar('The bridge goes very quiet. A clerk writes something down.'),
+      say('balance_keeper', 'Not here, envoy. Everything on this bridge is written down.'),
+    ],
+    after: [
+      say('balance_keeper', 'The order is lifted for the Throne and kept for the people. A shield, not a wall.'),
+      say('whisperer', 'For now. Write it down.'),
     ],
   },
 ];

@@ -235,6 +235,59 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ղ: { ground: 'seat_wall', deco: 'seat_gate', solid: true },
   // The city's own walls (not a building: no grey door is added to them).
   ճ: { ground: 'seat_wall', solid: true },
+  // Ordvik and the Winter Plateau (Chapter 6, Oct 22).
+  ა: { ground: 'steppe_grass', solid: false },
+  ბ: { ground: 'steppe_road', solid: false },
+  გ: { ground: 'slate', solid: true },
+  დ: { ground: 'snow', solid: false },
+  ე: { ground: 'felt_wall', solid: true },
+  ვ: { ground: 'tent_roof', solid: true },
+  ზ: { ground: 'steppe_grass', deco: 'corral', solid: true },
+  თ: { ground: 'fjord_water', solid: true },
+  ი: { ground: 'floe', solid: false },
+  კ: { ground: 'ice', solid: false },
+  ლ: { ground: 'thin_ice', solid: true },
+  მ: { ground: 'shingle', solid: false },
+  ნ: { ground: 'felt_floor', solid: false },
+  ო: { ground: 'hide_wall', solid: true },
+  პ: { ground: 'snow', deco: 'cairn', solid: true },
+  ჟ: { ground: 'felt_floor', deco: 'clan_pole', solid: true },
+  რ: { ground: 'steppe_grass', deco: 'sledge', solid: true },
+  ს: { ground: 'fjord_water', deco: 'longship', solid: true },
+  ტ: { ground: 'felt_floor', deco: 'firepit', solid: true },
+  უ: { ground: 'steppe_grass', deco: 'grain_sacks', solid: true },
+  ფ: { ground: 'felt_floor', deco: 'painted_hide', solid: true },
+  ქ: { ground: 'steppe_grass', deco: 'supply_wagon', solid: true },
+  ღ: { ground: 'steppe_grass', deco: 'felt_tent', solid: true },
+  ყ: { ground: 'felt_floor', deco: 'chieftain_seat', solid: true },
+  შ: { ground: 'felt_floor', deco: 'shelf', solid: true },
+  ჩ: { ground: 'steppe_grass', deco: 'firepit', solid: true },
+  // Kirinoura (Chapter 7, Oct 22).
+  あ: { ground: 'kq_paving', solid: false },
+  い: { ground: 'kq_wall', solid: true },
+  う: { ground: 'kq_plank', solid: false },
+  え: { ground: 'kq_canal', solid: true },
+  お: { ground: 'kq_bridge', solid: false },
+  か: { ground: 'lacquer_wall', solid: true },
+  き: { ground: 'kq_roof', solid: true },
+  く: { ground: 'lacquer_floor', solid: false },
+  け: { ground: 'tatami', solid: false },
+  こ: { ground: 'screen_wall', solid: true },
+  さ: { ground: 'reed', solid: false },
+  し: { ground: 'marsh_water', solid: true },
+  す: { ground: 'causeway', solid: false },
+  せ: { ground: 'fog_lane', solid: false },
+  そ: { ground: 'paper_wall', solid: true },
+  た: { ground: 'kq_paving', deco: 'stone_lantern', solid: true },
+  ち: { ground: 'kq_paving', deco: 'tea_stall', solid: true },
+  つ: { ground: 'kq_paving', deco: 'torii', solid: true },
+  て: { ground: 'lacquer_floor', deco: 'shelf', solid: true },
+  と: { ground: 'lacquer_floor', deco: 'desk', solid: true },
+  な: { ground: 'tatami', deco: 'writing_table', solid: true },
+  に: { ground: 'kq_plank', deco: 'lantern_pile', solid: true },
+  ぬ: { ground: 'kq_canal', deco: 'longship', solid: true },
+  ね: { ground: 'lacquer_floor', deco: 'table', solid: true },
+  の: { ground: 'kq_canal', deco: 'canoe', solid: true },
 };
 
 export class Grid {
@@ -419,8 +472,8 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
 }
 
 /** Building walls and the roofs above them: stone and tile, and Xaraguá's cane walls under thatch. */
-const WALLS = new Set(['#', 'é', 'ε', 'Б', 'բ']);
-const ROOFS = new Set(['^', 'á', 'г', 'գ']);
+const WALLS = new Set(['#', 'é', 'ε', 'Б', 'բ', 'ე', 'か']);
+const ROOFS = new Set(['^', 'á', 'г', 'գ', 'ვ', 'き']);
 
 /**
  * Every building with no way in gets a grey door you cannot open (owner request, Oct 16), in the middle
@@ -474,7 +527,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ', 'გ', 'ე', 'ო', 'ზ', 'い', 'か', 'こ', 'そ']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

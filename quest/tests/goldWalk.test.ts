@@ -5,7 +5,7 @@
 // coming back from the bridgehead's memory before the pawl is pinned.
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7 } from '../src/data/quests.ts';
 import { findPath } from '../src/engine/sim.ts';
 import type { Sim } from '../src/engine/sim.ts';
 import { goldWalk } from '../tools/gold-walk.ts';
@@ -66,6 +66,57 @@ describe('following only the gold arrow on, through Chapters 3, 4 and 5', () => 
   it('takes a reasonable way (measured Oct 22: 1,810 steps and 48 map changes)', () => {
     expect(walk.steps).toBeLessThan(2100);
     expect(walk.mapChanges).toBeLessThan(60);
+  });
+});
+
+describe('following only the gold arrow on, through Chapter 6', () => {
+  // On from the end of Chapter 5 (Chapter 6, Oct 22): the fair, the Moot, the day's three things, the fjord's five swaps
+  // zone by zone (the reach_zN triggers move the arrow on), Sarnai's raid, the herd's two whistles, Grimvald, the horn.
+  const start = goldWalk({ maps });
+  const mid = goldWalk({ maps, sim: start.sim, through: 'act5' });
+  const walk = goldWalk({ maps, sim: mid.sim, through: 'act6' });
+
+  it('finishes Chapter 6 with no stall', () => {
+    expect(walk.stalls).toEqual([]);
+    expect(walk.finished).toBe(true);
+    for (const f of ['party.bayarmaa', 'clue.herd_whistle', 'story.herd_unseen', 'story.grimvald_beaten', 'ally.skarragol', 'act6.complete']) expect(walk.sim.logic.state.flags.isSet(f), f).toBe(true);
+  });
+
+  it('meets every objective in order (the arrival, the ride round and the price are inside the scenes that begin them)', () => {
+    expect(walk.objectives).toEqual(ACT6.objectives.filter((o) => !['road', 'round', 'price'].includes(o.id)).map((o) => `act6/${o.id}`));
+  });
+
+  it('takes a reasonable way (measured Oct 22: 446 steps and 11 map changes)', () => {
+    expect(walk.steps).toBeLessThan(600);
+    expect(walk.mapChanges).toBeLessThan(20);
+  });
+});
+
+describe('following only the gold arrow on, through Chapter 7', () => {
+  // On from the end of Chapter 6 (Chapter 7, Oct 22): the pier, the letter, the day (Kayla and K-2's stacks, the debate,
+  // the fishers), the lantern hour, the maze's code in the memory and its six plazas one by one, the marsh posts lit
+  // post by post (the arrow points at a post still showing the wrong light; the player turns it), the back door, Sayo's
+  // war room and the peg, the screens push by push, the map, the Fox, the files with Kayla, the petition, the pier.
+  const start = goldWalk({ maps });
+  const mid = goldWalk({ maps, sim: start.sim, through: 'act5' });
+  const six = goldWalk({ maps, sim: mid.sim, through: 'act6' });
+  const walk = goldWalk({ maps, sim: six.sim, through: 'act7' });
+
+  it('finishes Chapter 7 with no stall', () => {
+    expect(walk.stalls).toEqual([]);
+    expect(walk.finished).toBe(true);
+    for (const f of ['party.haru', 'clue.lantern_code', 'story.maze_walked', 'side.lanterns.done', 'anchor.screen_peg', 'rotor.screens.solved', 'story.fox_beaten', 'clue.buyers_mark', 'ally.kuroshi', 'act7.complete']) {
+      expect(walk.sim.logic.state.flags.isSet(f), f).toBe(true);
+    }
+  });
+
+  it('meets every objective in order (the landing is inside the scene that begins it)', () => {
+    expect(walk.objectives).toEqual(ACT7.objectives.filter((o) => o.id !== 'mist').map((o) => `act7/${o.id}`));
+  });
+
+  it('takes a reasonable way (measured Oct 22: 720 steps and 16 map changes)', () => {
+    expect(walk.steps).toBeLessThan(900);
+    expect(walk.mapChanges).toBeLessThan(25);
   });
 });
 

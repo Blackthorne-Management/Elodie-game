@@ -427,6 +427,13 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
 - **Who joins:** Bayarmaa (Raider) and her horse (proposal name: **Salkhi**, "wind").
 - **Price:** Wealth 10.
 - **Learns:** Sarnai broke the Crown once by speed; the Crown buys whole councils; Azzy's mother's people are watching.
+- **Built (Oct 22; the outline `reviews/2026-10-21-chapter6-outline.md`, its "Built" section, and its second review):**
+  Claude's calls on the staging: Bayarmaa joins at the Moot under the envoy's bond (before the fjord) and clears her
+  name at the horn; the thief's pay is an unsigned compensation-office voucher, not a confession; Torvald is clean and
+  Hrafn is the sale's voice; the present is the edge of the freeze (Sarnai's raid won; the spring ice took half her
+  riders home); Azzy's mother's people are the khatun's household of Ironvow's eastern clans; the standard falls from
+  Grimvald's hand in the fight's third phase; the way back round the fjord's head is the chapter's one card. The roads
+  play Skarragol first (15 to 17), then Kuroshi and Jwaladesh (owner decision, Oct 20).
 
 #### Chapter 7: The Fog Files (Kuroshi)
 
@@ -439,6 +446,15 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
   the Paper Fox** (proposal), a broker selling Kuroshi's files to the Crown; Haru refuses the neutrality order and joins.
 - **Who joins:** Haru Suzumori (Shadow agent). **Price:** Influence 10.
 - **Learns:** the Crown has bought (or will buy) one ally; Ardencia's gold goes somewhere secret.
+- **Built (Oct 22; the outline `reviews/2026-10-21-chapter7-outline.md`, its "Built" section, and its second review):**
+  Claude's calls on the staging: Haru joins at the lantern hour (after K-2 and the debate), not at the Fox, and refuses
+  the neutrality order in the Hall that night; the file house is its own room behind the Hall's signal room; Kayla
+  hands Gianna Sayo's house glyphs at K-2's end (the card reads the spy map's pins, restoring `FAMILY.md`'s "helps
+  decode the screens and the spy map"); the buying-list's names were cut before it reached the Fox, prices only, a
+  closed hand beside one line that is "not a Crown seal, and not a house's" (the betrayer is still chosen at the
+  Muster); the Echo in the library teaches the shelving rule on a Revolution file and the Ash Wars row is worked out
+  in the present; the Fox yields and is bound (nobody dies); the price is Influence, paid in flags. Names by role
+  where the outline proposed names (the signal master, the keeper of files, the Crown's observer).
 
 #### Chapter 8: The Dying Flame (Jwaladesh)
 

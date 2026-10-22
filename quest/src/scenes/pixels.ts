@@ -156,6 +156,7 @@ export function characterPix(look: PlaceholderCharacter, facing: Dir, step: 0 | 
 }
 
 function drawCharacter(look: PlaceholderCharacter, view: View, step: 0 | 1 | 2): Pix {
+  if (look.build === 'horse' || look.build === 'wolf') return drawBeast(look, view, step);
   const p = new Pix(CHARACTER_WIDTH, CHARACTER_HEIGHT);
   const b = BUILDS[look.build ?? 'normal'];
   const bob = step === 0 ? 0 : 1;
@@ -239,6 +240,76 @@ function drawCharacter(look: PlaceholderCharacter, view: View, step: 0 | 1 | 2):
   else p.rect(13, B, 3, 1, trim);
   if (look.headgear !== 'hood') drawFace(p, look, view, H);
   for (const a of look.accessories ?? []) drawAccessory(p, a, view, { H, B, L, F, robe: !!look.robe, trim });
+  return p.outline(OUTLINE);
+}
+
+/**
+ * A horse or a wolf in the 24 x 32 cell (Chapter 6: Salkhi, the herd, Grimvald's black horse, the steppe wolves),
+ * by the same rules as the people: the feet on the bottom row, a step lifts one foot and bobs the body a pixel, a
+ * 1 px dark outline and the same light from the top left. A wolf is lower and has no tack.
+ */
+function drawBeast(look: PlaceholderCharacter, view: View, step: 0 | 1 | 2): Pix {
+  const p = new Pix(CHARACTER_WIDTH, CHARACTER_HEIGHT);
+  const wolf = look.build === 'wolf';
+  const bob = step === 0 ? 0 : 1;
+  const coat = look.outfit;
+  const mane = look.hair;
+  const hoof = look.legs ?? mix(coat, SHADOW, 0.45);
+  const far = (c: number) => mix(c, SHADOW, 0.3);
+  const F = 30; // hooves
+  const top = (wolf ? 15 : 6) + bob;
+  if (view === 'right') {
+    const by = (wolf ? 19 : 14) + bob; // body top
+    const bh = wolf ? 6 : 8;
+    // Legs: far pair darker; a step swings them.
+    const legTop = by + bh;
+    const legs: [number, boolean][] = wolf ? [[5, false], [8, true], [14, false], [17, true]] : [[4, false], [7, true], [13, false], [16, true]];
+    legs.forEach(([x, near], i) => {
+      const lift = step !== 0 && (i % 2 === (step === 1 ? 0 : 1)) ? 1 : 0;
+      const c = near ? coat : far(coat);
+      p.rect(x, legTop, 2, F - legTop - lift, c).rect(x, F - lift, 2, 1, hoof);
+    });
+    p.rect(3, by, wolf ? 15 : 14, bh, coat);
+    // Neck and head, to the right; the ear; the tail.
+    if (wolf) {
+      p.rect(16, top + 1, 5, 5, coat).rect(20, top + 3, 2, 2, look.skin).set(17, top, coat);
+      p.rect(1, by + 1, 2, 3, mane);
+    } else {
+      p.rect(14, top + 4, 4, 8, coat).rect(16, top + 2, 6, 5, coat).rect(20, top + 4, 2, 3, look.skin).set(17, top, coat).set(17, top + 1, coat);
+      p.rect(13, top + 3, 2, 8, mane);
+      p.rect(1, by + 1, 2, 7, mane);
+      p.rect(8, by - 1, 5, 2, look.trim);
+    }
+    p.bevel(new Set([coat, mane]));
+    p.set(wolf ? 19 : 19, top + (wolf ? 2 : 3), PALETTE.k!);
+    return p.outline(OUTLINE);
+  }
+  // Facing the player, or away: the body seen end on, two legs showing, the head over it (front) or the tail (back).
+  const by = (wolf ? 20 : 15) + bob;
+  const bw = wolf ? 8 : 10;
+  const bx = (CHARACTER_WIDTH - bw) / 2;
+  const legTop = by + (wolf ? 5 : 8);
+  [[bx + 1, step === 1], [bx + bw - 3, step === 2]].forEach(([x, up]) => {
+    const lift = up ? 1 : 0;
+    p.rect(x as number, legTop, 2, F - legTop - lift, coat).rect(x as number, F - lift, 2, 1, hoof);
+  });
+  p.rect(bx, by, bw, wolf ? 6 : 9, coat);
+  if (view === 'down') {
+    const hw = wolf ? 6 : 6;
+    const hx = (CHARACTER_WIDTH - hw) / 2;
+    p.rect(hx, top + 1, hw, wolf ? 6 : 10, coat).rect(hx + 1, top + (wolf ? 5 : 8), hw - 2, wolf ? 2 : 3, look.skin);
+    p.set(hx, top, coat).set(hx + hw - 1, top, coat);
+    if (!wolf) p.rect(hx + 2, top + 1, 2, 3, mane);
+    p.bevel(new Set([coat, mane]));
+    p.set(hx + 1, top + 3, PALETTE.k!).set(hx + hw - 2, top + 3, PALETTE.k!);
+  } else {
+    const hw = 6;
+    const hx = (CHARACTER_WIDTH - hw) / 2;
+    p.rect(hx, top + 1, hw, wolf ? 5 : 8, coat).set(hx, top, coat).set(hx + hw - 1, top, coat);
+    if (!wolf) p.rect(hx + 2, top + 1, 2, 9, mane).rect(bx + 2, by - 1, bw - 4, 2, look.trim);
+    p.rect(11, by + 2, 2, wolf ? 4 : 8, mane);
+    p.bevel(new Set([coat, mane]));
+  }
   return p.outline(OUTLINE);
 }
 

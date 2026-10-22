@@ -15,6 +15,12 @@ export const STAGE_FOLLOWER = 'follower';
 /** Someone already standing on the map, by NPC id (`npc:canoe_fisher`); they walk home after the scene. */
 export const STAGE_NPC = 'npc:';
 
+/**
+ * Companions walking with the party (scenes/FieldScene.ts borrows their sprites): a scene may walk, turn or follow
+ * them without bringing them on first, as it does Anissa (Chapter 6; before, scenes placed them first).
+ */
+export const STAGE_PARTY: ReadonlySet<string> = new Set(['yari', 'azzy', 'samira', 'bayarmaa', 'haru']);
+
 /** Actors the scene borrows from the map (they are on stage from the start and need no look). */
 export function isBorrowed(actor: string): boolean {
   return actor === STAGE_FOLLOWER || actor.startsWith(STAGE_NPC);
@@ -65,10 +71,10 @@ export function stageProblems(script: DialogueScript, looks: ReadonlySet<string>
     }
     if (c.actor === STAGE_PLAYER && (c.do === 'face' || c.do === 'look')) continue;
     if (c.do === 'look') {
-      if (!isBorrowed(c.actor) && !cues.some((x) => (x.do === 'place' || x.do === 'enter') && x.actor === c.actor)) out.push(`${script.id}: the camera follows ${c.actor}, who never comes on stage`);
+      if (!isBorrowed(c.actor) && !STAGE_PARTY.has(c.actor) && !cues.some((x) => (x.do === 'place' || x.do === 'enter') && x.actor === c.actor)) out.push(`${script.id}: the camera follows ${c.actor}, who never comes on stage`);
       continue;
     }
-    if (!on.has(c.actor)) out.push(`${script.id}: ${c.do} for ${c.actor}, who is not on stage`);
+    if (!on.has(c.actor) && !STAGE_PARTY.has(c.actor)) out.push(`${script.id}: ${c.do} for ${c.actor}, who is not on stage`);
     if (c.do === 'exit') on.delete(c.actor);
   }
   return out;

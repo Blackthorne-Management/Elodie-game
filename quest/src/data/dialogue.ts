@@ -7,6 +7,8 @@ import { ALDORIA_DIALOGUE } from './dialogue/aldoria.ts';
 import { ARDENCIA_DIALOGUE } from './dialogue/ardencia.ts';
 import { XARAGUA_DIALOGUE } from './dialogue/xaragua.ts';
 import { SEAT_DIALOGUE } from './dialogue/seat.ts';
+import { KUROSHI_DIALOGUE } from './dialogue/kuroshi.ts';
+import { SKARRAGOL_DIALOGUE } from './dialogue/skarragol.ts';
 import { XARAGUA_QUEST_DIALOGUE } from './dialogue/xaraguaQuests.ts';
 import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
 
@@ -152,6 +154,8 @@ export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
   ...Object.fromEntries(ALDORIA_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(XARAGUA_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(SEAT_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(SKARRAGOL_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(KUROSHI_DIALOGUE.map((d) => [d.id, d])),
   ...SHELF_DIALOGUE,
 };
 

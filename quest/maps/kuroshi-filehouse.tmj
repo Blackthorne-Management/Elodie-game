@@ -1,0 +1,2127 @@
+{
+  "compressionlevel": -1,
+  "width": 22,
+  "height": 16,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 52,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+96,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+97,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,238,238,238,238,238,238,238,238,94,95,238,238,238,238,238,238,238,238,238,238
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+96,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+97,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,
+238,238,238,238,238,238,238,238,238,238,94,95,238,238,238,238,238,238,238,238,238,238
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,32,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+0,0,0,0,0,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "sayo",
+          "type": "npc",
+          "x": 48,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "sayo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 2,
+          "name": "fh_front",
+          "type": "door",
+          "x": 160,
+          "y": 240,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "closed",
+              "type": "string",
+              "value": "fh_front_shut"
+            },
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.fox_beaten"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "kuroshi-hall"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "hall_filehouse"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "fh_back",
+          "type": "door",
+          "x": 0,
+          "y": 208,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "kuroshi-marsh"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "marsh_tower"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 4,
+          "name": "filehouse_enter",
+          "type": "trigger",
+          "x": 32,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "filehouse_enter"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.filehouse_entered"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.causeway_lit"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "fox_scene",
+          "type": "trigger",
+          "x": 16,
+          "y": 32,
+          "width": 320,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "fox_scene"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.spy_map_read, !story.fox_beaten"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 6,
+          "name": "filehouse",
+          "type": "spawn",
+          "x": 32,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 7,
+          "name": "map_echo",
+          "type": "echo_zone",
+          "x": 32,
+          "y": 112,
+          "width": 16,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, story.filehouse_entered"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "sayo_echo"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "sayo_echo_return"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 8,
+          "name": "screen_peg",
+          "type": "anchor",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.screen_peg"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "loose_screen"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 9,
+          "name": "lanes_shut",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 48,
+          "width": 320,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "lanes_shut"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!rotor.screens.solved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lanes_shut"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "floor_stone",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "floor_stone"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.spy_map_read"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "floor_stone"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "north_stack",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 16,
+          "width": 320,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "north_stack"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "screen_0_n",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_0"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.0.n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "screen_0_e",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_0"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.0.e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "screen_0_s",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_0"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.0.s"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "screen_0_w",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_0"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.0.w|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "screen_1_n",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.1.n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "screen_1_e",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.1.e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "screen_1_s",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.1.s"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "screen_1_w",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.1.w|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "screen_2_n",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.2.n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "screen_2_e",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.2.e|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "screen_2_s",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.2.s"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "screen_2_w",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.2.w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "screen_3_n",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.3.n|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "screen_3_e",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.3.e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "screen_3_s",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.3.s"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "screen_3_w",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.3.w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "screen_4_held",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.screen_peg"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "screen_4_loose",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.screen_peg"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_loose"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "screen_5_n",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.5.n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "screen_5_e",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.5.e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "screen_5_s",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.5.s|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "name": "screen_5_w",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.5.w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 34,
+          "name": "screen_6_n",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.6.n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "name": "screen_6_e",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.6.e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 36,
+          "name": "screen_6_s",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.6.s"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 37,
+          "name": "screen_6_w",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.6.w|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 38,
+          "name": "screen_7_n",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.7.n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 39,
+          "name": "screen_7_e",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.7.e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 40,
+          "name": "screen_7_s",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.7.s"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 41,
+          "name": "screen_7_w",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.7.w|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "name": "screen_8_n",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.8.n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 43,
+          "name": "screen_8_e",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.8.e|!rotor.screens.moved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 44,
+          "name": "screen_8_s",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.8.s"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 45,
+          "name": "screen_8_w",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "screen_push_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "rotor.screens.8.w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 46,
+          "name": "torn_paper_a",
+          "type": "puzzle_object",
+          "x": 128,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.fox_beaten, rotor.screens.solved"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_torn"
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "name": "torn_paper_b",
+          "type": "puzzle_object",
+          "x": 208,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.fox_beaten"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_torn"
+            }
+          ]
+        },
+        {
+          "id": 48,
+          "name": "sayo_map",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 112,
+          "width": 16,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "sayo_map"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "map_wall"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "name": "sayo_map_echo",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 112,
+          "width": 16,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "sayo_map_echo"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "map_wall_pins"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 50,
+          "name": "loose_screen",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "loose_screen"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.screen_peg"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_loose"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "name": "pegged_screen_echo",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.screen_peg"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "screen_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 560,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 275,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

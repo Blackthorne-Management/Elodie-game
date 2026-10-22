@@ -1,0 +1,42 @@
+{
+  "right at the first plaza (two white and a red means left): the fog turns you back": [
+    "up",
+    "left*2",
+    "echo",
+    "skip",
+    "echo",
+    "up",
+    "right",
+    "up",
+    "skip",
+    "up*2",
+    "right*3",
+    "skip"
+  ],
+  "walked blind, without the memory at the gate: Haru turns you back at the gap": [
+    "up*2",
+    "left",
+    "up",
+    "skip",
+    "up*2",
+    "left*5",
+    "up*2",
+    "skip",
+    "up*6",
+    "skip",
+    "up*2",
+    "right*6",
+    "up*2",
+    "skip",
+    "up*2",
+    "right*6",
+    "up*2",
+    "skip",
+    "up*2",
+    "left*5",
+    "up",
+    "skip",
+    "up*3",
+    "skip"
+  ]
+}
