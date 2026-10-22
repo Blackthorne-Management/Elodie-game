@@ -5,9 +5,11 @@
 // coming back from the bridgehead's memory before the pawl is pinned.
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9 } from '../src/data/quests.ts';
-import { findPath } from '../src/engine/sim.ts';
-import type { Sim } from '../src/engine/sim.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10 } from '../src/data/quests.ts';
+import { CONTENT } from '../src/data/content.ts';
+import { GameLogic } from '../src/engine/game.ts';
+import { Sim, findPath } from '../src/engine/sim.ts';
+import { newGame } from '../src/engine/state.ts';
 import { goldWalk } from '../tools/gold-walk.ts';
 import { loadMaps, newGameSim } from '../tools/sim-setup.ts';
 
@@ -178,6 +180,51 @@ describe('following only the gold arrow on, through Chapter 9', () => {
   it('takes a reasonable way (measured Oct 22: 574 steps and 15 map changes)', () => {
     expect(walk.steps).toBeLessThan(750);
     expect(walk.mapChanges).toBeLessThan(25);
+  });
+
+  describe('and on through Chapter 10, both ways the night can go', () => {
+    // On from the end of Chapter 9 (Chapter 10, Oct 22): the long pier, the camps on the plaza, the Speaker's gate, the
+    // three feuds, Jordyn's watch, the kitchen, the blessing at the lamp, Patricio's stone, Z-6 (the crew and the mill)
+    // and Z-3 (the lonely cutter) as the arrow finds them, the vote, the whistle, the night under the point and the tide.
+    // The night goes the way the shares say; a second walk forces the other way (each from where the first stood at dusk).
+    const ten = goldWalk({ maps, sim: walk.sim, through: 'act10', until: (s) => s.logic.state.flags.isSet('story.inspection_done') && s.logic.mode === 'field' });
+    const dusk = ten.sim.logic.state.flags.snapshot();
+    const player = structuredClone(ten.sim.logic.state.player);
+    const exposedFirst = ten.sim.logic.state.flags.isSet('muster.exposed_possible');
+    const night = goldWalk({ maps, sim: ten.sim, through: 'act10' });
+    // The other way: the same dusk, with the exposed route open if it was shut (or shut if it was open).
+    const state = newGame(maps[player.mapId]!, maps[player.mapId]!.spawns[0]!.id);
+    state.player = player;
+    state.flags.load(dusk);
+    if (exposedFirst) state.flags.clear('muster.exposed_possible');
+    else state.flags.set('muster.exposed_possible', true);
+    const otherNight = goldWalk({ maps, sim: new Sim(new GameLogic(maps, CONTENT, state)), through: 'act10' });
+
+    it('finishes Chapter 10 with no stall', () => {
+      expect(ten.stalls).toEqual([]);
+      expect(night.stalls).toEqual([]);
+      expect(night.finished).toBe(true);
+      for (const f of ['story.muster_begun', 'story.council_voted', 'side.muskets.done', 'side.lonely_cutter.done', 'story.blessing', 'story.inspection_done', 'story.betrayal_seen', 'act10.complete']) {
+        expect(night.sim.logic.state.flags.isSet(f), f).toBe(true);
+      }
+      expect(night.sim.logic.state.flags.isSet(exposedFirst ? 'muster.turned' : 'muster.betrayed')).toBe(true);
+      expect(otherNight.stalls).toEqual([]);
+      expect(otherNight.finished).toBe(true);
+      expect(otherNight.sim.logic.state.flags.isSet(exposedFirst ? 'muster.betrayed' : 'muster.turned')).toBe(true);
+      expect(otherNight.sim.logic.state.flags.isSet('act10.complete')).toBe(true);
+    });
+
+    it('meets every objective in order (the seated city, the night and the tide are inside the scenes that begin them)', () => {
+      const met = [...ten.objectives, ...night.objectives];
+      expect(met).toEqual(ACT10.objectives.filter((o) => met.includes(`act10/${o.id}`)).map((o) => `act10/${o.id}`));
+      expect(met.length).toBeGreaterThanOrEqual(ACT10.objectives.length - 3);
+    });
+
+    it('takes a reasonable way (measured Oct 22: 921 steps and 25 map changes; the night 95 steps either way)', () => {
+      console.log(`chapter 10 gold walk: ${ten.steps + night.steps} steps, ${ten.mapChanges + night.mapChanges} map changes; night ${exposedFirst ? 'exposed' : 'sailed'} (${night.steps} steps; the other way ${otherNight.steps})`);
+      expect(ten.steps + night.steps).toBeLessThan(1400);
+      expect(ten.mapChanges + night.mapChanges).toBeLessThan(40);
+    });
   });
 });
 

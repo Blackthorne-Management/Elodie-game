@@ -2,7 +2,7 @@
 // game by the scripted route the smoke test also drives in the browser (routes/zetwal-act1.json).
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10 } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { partyMembers } from '../src/engine/rpg.ts';
@@ -25,6 +25,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   const chapter7: string[] = [];
   const chapter8: string[] = [];
   const chapter9: string[] = [];
+  const chapter10: string[] = [];
+  /** Where the party stood, and what it had fought, as Chapter 9's card shows (the route goes on into Chapter 10). */
+  let atChapter9End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, on Agnipur's quay at Chapter 8's end (the route goes on into Chapter 9). */
   let atChapter8End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, as Chapter 7's card shows (the route goes on into Chapter 8). */
@@ -70,6 +73,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     if (item.kind === 'mark' && item.name === 'chapter7-end') {
       atChapter7End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
     }
+    if (item.kind === 'mark' && item.name === 'chapter9-end') {
+      atChapter9End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
+    }
     if (item.kind === 'mark' && item.name === 'chapter8-end') {
       atChapter8End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
     }
@@ -87,7 +93,8 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       listen();
       const id = currentObjective(ACT1, sim.logic.state.flags)?.id ?? 'complete';
       if (objectives.at(-1) !== id) objectives.push(id);
-      if (ACT2.maps.includes(sim.logic.state.player.mapId)) {
+      // (Chapter 11 lands on the Canoe Beach, a Chapter 2 map: its tracking stops at Chapter 10's end.)
+      if (ACT2.maps.includes(sim.logic.state.player.mapId) && !sim.logic.state.flags.isSet('act10.complete')) {
         const id2 = currentObjective(ACT2, sim.logic.state.flags)?.id ?? 'complete';
         if (chapter2.at(-1) !== id2) chapter2.push(id2);
       }
@@ -114,6 +121,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       if (ACT8.maps.includes(sim.logic.state.player.mapId)) {
         const id8 = currentObjective(ACT8, sim.logic.state.flags)?.id ?? 'complete';
         if (chapter8.at(-1) !== id8) chapter8.push(id8);
+      }
+      if (sim.logic.state.flags.isSet('act9.complete') && sim.logic.state.player.mapId.startsWith('zetwal-')) {
+        const id10 = currentObjective(ACT10, sim.logic.state.flags)?.id ?? 'complete';
+        if (chapter10.at(-1) !== id10) chapter10.push(id10);
       }
       if (ACT9.maps.includes(sim.logic.state.player.mapId)) {
         const id9 = currentObjective(ACT9, sim.logic.state.flags)?.id ?? 'complete';
@@ -273,11 +284,11 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     // Every objective in order (the landing is done by the arrival itself; the toccata objective follows the side quests).
     expect(chapter9).toEqual([...ACT9.objectives.map((o) => o.id).filter((id) => id !== 'mere'), 'complete']);
     // The press-gang on the Cross, the bog chapel's cell (Al-3) and the Hushed in the Assize.
-    expect(sim.battles.slice(atChapter8End.battles.length)).toEqual(['press_gang_cross', 'bog_chapel_cell', 'assize_hushed']);
+    expect(atChapter9End.battles.slice(atChapter8End.battles.length)).toEqual(['press_gang_cross', 'bog_chapel_cell', 'assize_hushed']);
     expect(flags.isSet('act9.complete') && flags.isSet('card.act9_end')).toBe(true);
-    // Home across the bay: the trader lands them on Zetwal's harbour (Chapter 10 starts there).
-    expect(sim.logic.state.player.mapId).toBe('zetwal-harbor');
-    expect(sim.logic.mode).toBe('field');
+    // The card shows on the Mere Stair; closing it, the trader lands them on Zetwal's harbour (Chapter 10 starts there).
+    expect(atChapter9End.map).toBe('aldermoor-heath');
+    expect(atChapter9End.mode).toBe('card');
     // Edmund joins at the press-gang on the Cross and leads the order for the chapter; after it he stays, behind the others.
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toContain('edmund');
     expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
@@ -285,6 +296,27 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       expect(flags.isSet(f), f).toBe(true);
     }
     for (const name of ['Edmund', 'Jordyn', 'Sebastian', 'The Almoner', 'The Lord Regent']) expect(speakers).toContain(name);
+  });
+
+  it('Chapter 10: the pier, the camp, the council, the watch, the kitchen, the lamp, the stone, the allies seated, the vote, the whistle, under the point, the tide', () => {
+    const flags = sim.logic.state.flags;
+    // Every objective in order, the pier's scene first as the party lands.
+    expect(chapter10).toEqual([...ACT10.objectives.map((o) => o.id), 'complete']);
+    // The crew at the smugglers' landing (Z-6); the route meets no ambush on the Cane Road.
+    expect(sim.battles.slice(atChapter9End.battles.length)).toEqual(['mangrove_crew']);
+    expect(flags.isSet('act10.complete') && flags.isSet('card.act10_end')).toBe(true);
+    // The fleet sails: Chapter 11 lands on the Canoe Beach below Yucayeque.
+    expect(sim.logic.state.player.mapId).toBe('xaragua-beach');
+    expect(sim.logic.mode).toBe('field');
+    for (const f of ['story.pier_met', 'story.plaza_camp_seen', 'story.council_condition', 'story.watch_landed', 'story.rahel_met', 'story.blessing', 'story.patricio_told', 'clue.four_accounts', 'clue.signing_morning', 'side.muskets.done', 'anchor.mill_bar', 'side.lonely_cutter.done', 'debate.zetwal_feud_merchants.settled', 'debate.zetwal_feud_temple.settled', 'debate.zetwal_feud_crown.settled', 'story.council_voted', 'story.chain_raised', 'story.inspection_done', 'muster.resolved', 'story.betrayal_seen', 'item.marshal_whistle', 'belief.rael_traitor']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    // The headless route pays no side quest (the field does), so the Dorini are least paid and not exposable: they sail.
+    expect(flags.get('muster.betrayer')).toBe('al_doria');
+    expect(flags.isSet('muster.betrayed') && flags.isSet('muster.gone.al_doria')).toBe(true);
+    expect(flags.get('army.al_doria')).toBe(0);
+    expect(flags.get('army.zetwal')).toBe(60);
+    for (const name of ['Rahel', 'Patricia', 'Tío Joaquin', 'Jordyn', 'Ti Jak', 'The Dorini admiral', 'Hrafn', 'Powder-master', 'Crew chief']) expect(speakers).toContain(name);
   });
 
   it('Chapter 3: the two required side quests and the debate are done before noon, and pay', () => {
@@ -324,7 +356,8 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     // Chapter 2) home to Pòdlimyè's Old Harbor. Not the Iron Market: since Batch D (Oct 19) the engraver brings
     // the seal to the Hall, and the Market is the city's shop street, off the story's way.
     const story = ACT1.maps.filter((m) => m !== 'zetwal-market');
-    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set([...story, 'zetwal-archive', 'zetwal-harbor']));
+    // Chapter 10 (the Muster) adds the Iron Market (the first feud) and the mill's cellar (Z-6).
+    expect(new Set(maps.filter((m) => m.startsWith('zetwal-')))).toEqual(new Set([...story, 'zetwal-archive', 'zetwal-harbor', 'zetwal-market', 'zetwal-mill']));
     for (const m of ['xaragua-village', 'xaragua-plaza', 'xaragua-caney', 'xaragua-customs']) expect(maps).toContain(m);
     expect(eras.filter((e) => e === 'echo').length).toBeGreaterThanOrEqual(2);
     expect(sim.log).toContain('Something old stirs here, but it will not open to you yet.');
