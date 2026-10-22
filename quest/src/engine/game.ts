@@ -33,6 +33,8 @@ export const FIGHT_RETURN_FLAG = 'fight.return';
 export const BATTLE_AFTER_FLAG = 'battle.after';
 /** Gold a conversation charges (a number), paid when it ends. */
 export const GOLD_PAY_FLAG = 'gold.pay';
+/** Gold a conversation hands over (a number), added when it ends (Chapter 6: the Crown's purse, kept). */
+export const GOLD_GAIN_FLAG = 'gold.gain';
 
 /** What the player is facing, with the name its label shows. */
 export type Target =
@@ -625,6 +627,12 @@ export class GameLogic {
     if (typeof pay === 'number' && pay > 0) {
       const purse = flags.get('gold');
       flags.set('gold', Math.max(0, (typeof purse === 'number' ? purse : STARTING_GOLD) - pay));
+    }
+    const gain = flags.get(GOLD_GAIN_FLAG);
+    flags.clear(GOLD_GAIN_FLAG);
+    if (typeof gain === 'number' && gain > 0) {
+      const purse = flags.get('gold');
+      flags.set('gold', (typeof purse === 'number' ? purse : STARTING_GOLD) + gain);
     }
     const battle = flags.get('battle.next');
     if (typeof battle === 'string' && battle) {

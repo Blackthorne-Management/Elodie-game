@@ -64,7 +64,11 @@ export interface Passive {
  * battleGold: gold from battles won with them in the party, +share (Samira's Baraka Dorini);
  * atkPerFell: +share ATK for each foe they fell this battle, up to max (Azzy's Sangre Ardiente).
  */
-export type PassiveEffect = { kind: 'battleGold'; share: number } | { kind: 'atkPerFell'; share: number; max: number };
+export type PassiveEffect =
+  | { kind: 'battleGold'; share: number }
+  | { kind: 'atkPerFell'; share: number; max: number }
+  /** Ironvow's Oath (Bayarmaa, Chapter 6): her opening time is the lowest in the party, so she acts first of them. */
+  | { kind: 'opensFirst' };
 
 export interface ItemDef {
   id: string;
@@ -158,6 +162,11 @@ export interface MemberDef {
   growth: Stats;
   /** What they wear when the game starts. */
   start?: Partial<Record<Slot, string>>;
+  /**
+   * While this holds, they fight among the first four, right after the first fighter (Gianna), ahead of the roster's
+   * order (Chapter 6: Bayarmaa fights in her own chapter; the review's 3.9). Swap still trades anyone in battle.
+   */
+  leads?: Condition;
 }
 
 export interface ShopDef {

@@ -73,6 +73,7 @@ import {
   TURN_DELAY_K,
   TURN_DELAY_OFFSET,
 } from '../config.ts';
+import { evaluate } from './conditions.ts';
 import type { FlagStore, FlagReader } from './flags.ts';
 import { encounterFlag } from './encounterFlags.ts';
 import { Rng, seedFrom } from './rng.ts';
@@ -145,6 +146,11 @@ export interface SkillDef {
   once?: boolean;
   /** A heavy action (ACTION_WEIGHT.heavy): the user's next turn comes later. */
   heavy?: boolean;
+  /**
+   * The action's own weight on the user's next turn, in place of its kind's (ACTION_WEIGHT): Raider's Charge is 0.5
+   * (her delay this turn is halved), The Great Raid 0 (two full turns in a row; Bayarmaa, COMBAT 9.4).
+   */
+  weight?: number;
   /**
    * Paid in gold instead of SP (Samira's Daftar): `base` plus `perLevel` for each of the user's levels. With
    * `goldRate`, a damage or heal skill does exactly (gold spent x goldRate) points, no stat and no defence,
@@ -583,6 +589,12 @@ export class Battle {
   phase = 0;
   /** The party has Surged at least once (a phase can start on it). */
   surgedOnce = false;
+  /**
+   * A Surge since the boss's current phase began: an `onSurge` phase answers a Surge made in the phase before it,
+   * so a Surge spent early in the fight cannot carry a later phase in at once (Grimvald, Chapter 6; for Rael's first
+   * phase it is the same as surgedOnce).
+   */
+  surgedInPhase = false;
   /** The boss's floor has held (its text shown), and the finale is owed before anyone else moves. */
   floorHeld = false;
   private finalePending = false;
@@ -658,6 +670,12 @@ export class Battle {
     this.combatants = [...members, ...foes];
     // Opening times: a share of a full delay, from the dice (COMBAT 3).
     for (const c of this.combatants) c.next = Math.round(turnDelay(c.spd) * (0.3 + this.rng.next() * 0.7));
+    // Ironvow's Oath: her opening time is the lowest in the party.
+    for (const c of members) {
+      if (!c.active || !c.passives.some((x) => x.kind === 'opensFirst')) continue;
+      const first = Math.min(...members.filter((m) => m.active && m !== c).map((m) => m.next));
+      if (Number.isFinite(first) && c.next >= first) c.next = Math.max(0, first - 1);
+    }
   }
 
   /** A foe as a fighter, at difficulty. */
@@ -804,6 +822,7 @@ export class Battle {
       this.spark -= SURGE_COST;
       this.surgeArmed = true;
       this.surgedOnce = true;
+      this.surgedInPhase = true;
       return [{ kind: 'surge' }, { kind: 'spark', value: this.spark }, { kind: 'text', text: `Anissa's light gathers around ${me.name}.` }, ...this.phaseCheck()];
     }
     const events: BattleEvent[] = [];
@@ -826,7 +845,7 @@ export class Battle {
       this.goldSpent += paid;
       if (skill.cooldown) me.cooldowns[skill.id] = skill.cooldown + 1; // this turn's end counts one off
       if (skill.once) this.usedOnce.add(`${me.key}:${skill.id}`);
-      weight = skill.heavy ? ACTION_WEIGHT.heavy : isMove(skill) ? ACTION_WEIGHT.attack : ACTION_WEIGHT.skill;
+      weight = skill.weight ?? (skill.heavy ? ACTION_WEIGHT.heavy : isMove(skill) ? ACTION_WEIGHT.attack : ACTION_WEIGHT.skill);
       events.push(...this.useSkill(me, skill, targets, paid));
     } else if (action.kind === 'guard') {
       me.guarding = true;
@@ -1333,9 +1352,10 @@ export class Battle {
     const boss = this.bossFighter;
     while (boss && !boss.down && this.phase < phases.length) {
       const p = phases[this.phase]!;
-      const due = (p.below !== undefined && boss.hp <= boss.maxHp * p.below) || (!!p.onSurge && this.surgedOnce);
+      const due = (p.below !== undefined && boss.hp <= boss.maxHp * p.below) || (!!p.onSurge && this.surgedInPhase);
       if (!due) break;
       this.phase++;
+      this.surgedInPhase = false;
       if (p.moves) {
         boss.moves = p.moves;
         boss.phaseTurns = 0;
@@ -1444,7 +1464,11 @@ function clamp(v: number, lo: number, hi: number): number {
 export function battleParty(flags: FlagReader, rpg: RpgContent, book: SkillBook, era: 'present' | 'echo' = 'present'): PartyEntry[] {
   const members = partyMembers(flags, rpg, era);
   const withAnissa = members.some((m) => m.support);
-  return members.filter((m: MemberDef) => !m.support).map((m) => battleEntry(flags, rpg, m, book, withAnissa));
+  const fighters = members.filter((m: MemberDef) => !m.support);
+  // A member who leads now (MemberDef.leads) fights right after the first fighter, ahead of the roster's order.
+  const leading = fighters.filter((m, i) => i > 0 && !!m.leads && evaluate(m.leads, flags));
+  const ordered = leading.length > 0 ? [fighters[0]!, ...leading, ...fighters.slice(1).filter((m) => !leading.includes(m))] : fighters;
+  return ordered.map((m) => battleEntry(flags, rpg, m, book, withAnissa));
 }
 
 /** One member as a fighter. */

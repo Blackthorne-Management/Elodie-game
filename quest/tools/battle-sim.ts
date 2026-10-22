@@ -6,7 +6,7 @@
 // and at each step of the Grudge. `node --experimental-strip-types tools/battle-sim.ts <battle> <marker> [runs]`
 // prints wins, average turns and the share of the party's HP lost. tests/crownAttack.test.ts uses the same plans.
 
-import { ENEMIES, SKILL_BOOK, battleDef } from '../src/data/battles.ts';
+import { ENEMIES, SKILL_BOOK, battleDef, battleReserve } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { Battle, battleParty } from '../src/engine/battle.ts';
 import type { FlagReader } from '../src/engine/flags.ts';
@@ -38,7 +38,7 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
   const def = battleDef(id);
   if (!def) throw new Error(`No battle ${id}`);
   const enemies = def.enemies.map((e) => ENEMIES[e]!).map((e) => (def.level ? { ...e, level: def.level } : e));
-  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK), enemies, [], { seed, grudge });
+  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK), enemies, [], { seed, grudge, reserve: battleReserve(def) });
   b.start();
   const maxHp = b.party.reduce((n, c) => n + c.maxHp, 0);
   let turns = 0;
