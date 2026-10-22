@@ -1325,5 +1325,5 @@ next one to settle); the fluent-speaker check (Wed Nov 18: no new language here;
   - **The chain:** it fits the built harbor map and Anaco's line.
   - **The thumbprint ledger:** it lists the right nine doors.
   - **The other fixes:** taken as written.
-- **Put to the owner (the build goes ahead with "stays"):** on Strike, Azzy stays in the party, furious, and his anger
+- **Owner decision (Oct 22): stays.** On Strike, Azzy stays in the party, furious, and his anger
   colours the Claim.
