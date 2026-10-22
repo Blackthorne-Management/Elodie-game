@@ -1,0 +1,1341 @@
+{
+  "compressionlevel": -1,
+  "width": 30,
+  "height": 18,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 31,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 18,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,287,287,287,287,287,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,286,286,286,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,94,95,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 18,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 18,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,282,282,282,282,282,287,287,287,287,287,287,287,287,286,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,287,287,287,287,287,287,287,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,286,286,286,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,
+287,287,285,285,285,285,285,285,285,285,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,
+287,287,287,94,95,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287,287
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 18,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 18,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 18,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 18,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "aiyana_roof",
+          "type": "npc",
+          "x": 272,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.beam_at_temple"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "aiyana"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 2,
+          "name": "roofs_ladder",
+          "type": "door",
+          "x": 48,
+          "y": 272,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "jwaladesh-bazaar"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "bazaar_roofs"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 3,
+          "name": "roofs_arrive",
+          "type": "trigger",
+          "x": 48,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roofs_arrive"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.rooftops_entered"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.tower_mirror"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "disc_again",
+          "type": "trigger",
+          "x": 160,
+          "y": 32,
+          "width": 80,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "disc_again"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "mirror.1_e, mirror.2_n, mirror.3_n, anchor.chain_lamp, anchor.tower_mirror, !story.beam_at_temple"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 5,
+          "name": "roofs",
+          "type": "spawn",
+          "x": 48,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 6,
+          "name": "bracket_4",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "bracket_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "bracket_empty"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "wick_window",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 16,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_window"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.beam_at_temple"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "wick_window"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "wick_window_lit",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 16,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_window"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.beam_at_temple"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "wick_window_lit"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "roof_tower",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 64,
+          "width": 80,
+          "height": 112,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_tower"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "beam_in",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 224,
+          "width": 16,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.chain_lamp, anchor.tower_mirror"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "beam_v"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "beam_brick",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 176,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.chain_lamp, anchor.tower_mirror, mirror.1_n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "beam_v"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "beam_1",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 208,
+          "width": 144,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.beam_at_temple"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "beam_h"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "beam_2",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 128,
+          "width": 16,
+          "height": 80,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.beam_at_temple"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "beam_v"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "beam_3",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 48,
+          "width": 16,
+          "height": 64,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.beam_at_temple"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "beam_v"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "beam_4",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 32,
+          "width": 224,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.beam_at_temple"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "beam_h"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "mirror_1_down",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.rooftops_entered"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_down"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "mirror_1_n",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.1_n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "mirror_1_e",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.1_e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "mirror_1_s",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, !mirror.1_e, !mirror.1_n, !mirror.1_w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "mirror_1_w",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.1_w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "mirror_2_down",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.rooftops_entered"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_down"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "mirror_2_n",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.2_n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "mirror_2_e",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.2_e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "mirror_2_s",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, !mirror.2_e, !mirror.2_n, !mirror.2_w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "mirror_2_w",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.2_w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "mirror_3_down",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.rooftops_entered"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_down"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "mirror_3_n",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.3_n"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_n"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "mirror_3_e",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.3_e"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_e"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "mirror_3_s",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, !mirror.3_e, !mirror.3_n, !mirror.3_w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_s"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "mirror_3_w",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "roof_mirror_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rooftops_entered, mirror.3_w"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "mirror_w"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 672,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 332,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

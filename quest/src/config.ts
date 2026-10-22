@@ -72,9 +72,11 @@ export const LEVELS = {
  * line without side quests reaches Chapter 6 already two under (13 against 15) and must not fall to three; Ordvik's
  * side quests pay less to keep the played line on 17 (COMBAT.md 6, "Chapter 6"). Chapter 7 pays 44 (Claude's call,
  * Oct 22): at 42 the line without side quests ended one XP short of 17; at 44 it ends on 17 and the route on 19
- * (COMBAT.md 6, "Chapter 7").
+ * (COMBAT.md 6, "Chapter 7"). Chapter 8 pays 60 (Claude's call, Oct 22): at 44 the line without side quests ended at
+ * 18, three under 21; Agnipur's side quests pay less instead (J-2 and J-3 25, the salt road 20), so the route still
+ * ends on 21 (COMBAT.md 6, "Chapter 8").
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 44];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter

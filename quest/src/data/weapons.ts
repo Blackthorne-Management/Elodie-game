@@ -73,6 +73,10 @@ export const DESIGNS: readonly Design[] = [
   { id: 'steppe_sabre', name: 'Steppe Sabre', weapon: 'blade', rarity: 'uncommon', level: 15, price: 760, stats: { atk: 14, spd: 1 }, text: 'A curved Ironvow sabre, light enough to swing from the saddle, its grip wound in horsehair.' },
   // Kirinoura (Chapter 7): Haru's own short blade (tier 16), and the armourer's tanto (tier 20).
   { id: 'paper_knife', name: 'Paper Knife', weapon: 'blade', rarity: 'uncommon', level: 16, price: 700, stats: { atk: 14, spd: 2 }, text: 'A short straight blade in a plain grey scabbard. It is named for the paper it is mostly used to cut.' },
+  // Agnipur (Chapter 8): Vikram's own talwar (tier 20), and the swordsmith's flame talwar (tier 24, sold at half its
+  // bonus until the party reaches it).
+  { id: 'agnipur_talwar', name: 'Agnipur Talwar', weapon: 'blade', rarity: 'uncommon', level: 20, price: 760, stats: { atk: 20, spd: 1 }, text: 'A curved sword with a brass hilt, the blade blued with heat. Vikram has argued with it for years.' },
+  { id: 'flame_talwar', name: 'Flame Talwar', weapon: 'blade', rarity: 'uncommon', level: 24, price: 900, stats: { atk: 24 }, text: 'A broad talwar from the bazaar\'s swordsmith, a flame chased in brass down the spine.' },
   { id: 'kirinoura_tanto', name: 'Kirinoura Tanto', weapon: 'blade', rarity: 'uncommon', level: 20, price: 650, stats: { atk: 20 }, text: 'A lacquer-handled tanto from the armourer on the east bank. It weighs nothing, and cuts as if it meant it.' },
 ];
 

@@ -7,6 +7,7 @@ import { AREITO_BARS, barText } from './rhythms.ts';
 import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './sideQuests.ts';
 import { FAIR, FJORD, HERD, HORN_DAY_DONE, MOOT, PLATEAU, QUAY } from './skarragol.ts';
 import { FILEHOUSE, HALL, LANTERN_DAY_DONE, LIBRARY, MARSH, MARSH_CODE, MAZE, PIER, QUARTER, SCREENS_SOLUTION } from './kuroshi.ts';
+import { BAZAAR, COURT, DAY_DONE, HARBOR, MIRROR_SOLUTION, ROOFTOPS, mirrorFlag } from './jwaladesh.ts';
 import type { Goal } from '../engine/guide.ts';
 
 export const ACT1: QuestDef = {
@@ -1375,8 +1376,147 @@ export const ACT7: QuestDef = {
   ],
 };
 
+const JWA_MAPS = ['jwaladesh-harbor', 'jwaladesh-bazaar', 'jwaladesh-rooftops', 'jwaladesh-library', 'jwaladesh-court', 'jwaladesh-saltflats'];
+/** The lamp's platform (the chain tower's Echo zone): stand there and press Echo. */
+const lampZone: Goal = { map: 'jwaladesh-harbor', at: { x: HARBOR.zone.x + 1, y: HARBOR.zone.y } };
+const courtRow: Goal = { map: 'jwaladesh-court', at: { x: COURT.altar.x, y: COURT.sceneRow } };
+/** A roof mirror still facing the wrong way (the arrow points at it; the player turns it). */
+const mirrorGoals: Goal[] = MIRROR_SOLUTION.map((f, i) => ({
+  if: { notFlag: mirrorFlag(i + 1, f as 'e' | 'n' | 'w') },
+  map: 'jwaladesh-rooftops',
+  at: { ...ROOFTOPS.mirrors[i]! },
+}));
+
+/**
+ * Chapter 8, The Dying Flame (Agnipur, Jwaladesh; the third road: docs/quest/reviews/2026-10-22-chapter8-outline.md
+ * with its second review). Under the chain, the stair and Vikram, Aiyana's roof, the Court at noon and the duel, the
+ * day until the night lamp (J-2, J-3 and the debate, followed by the arrow), the chain tower and Arjun's night (the lamp
+ * and the mirror carried back), the roofs and Anissa's disc, the flame, Seth Dhanraj, the price at dawn, the quay.
+ */
+export const ACT8: QuestDef = {
+  id: 'act8',
+  title: 'Chapter 8: The Dying Flame',
+  maps: JWA_MAPS,
+  objectives: [
+    {
+      id: 'chain',
+      title: 'Under the chain',
+      detail: 'Across the bay from Kirinoura to Agnipur\'s harbor, where a great chain closes the harbor mouth and its lamp is dark.',
+      done: { flag: 'story.jwaladesh_arrived' },
+      noXp: true,
+      goals: [{ map: 'jwaladesh-harbor', at: { ...HARBOR.landing } }],
+      hints: ['The lamp on the tower is dark, Gigi.', 'The quay goes up to a stair.', 'Walk up the quay toward the stair.'],
+    },
+    {
+      id: 'stair',
+      title: 'Up the harbor stair',
+      detail: 'A crowd at the top of the quay, and the sound of two blades. The stair goes up into the Lamp Bazaar.',
+      done: { flag: 'story.vikram_seen' },
+      goals: [{ map: 'jwaladesh-harbor', at: { x: HARBOR.stair.x, y: HARBOR.sightRow } }],
+      hints: ['Somebody is fighting up there, Gigi.', 'The crowd at the top of the quay.', 'Walk up the quay to the crowd by the stair.'],
+    },
+    {
+      id: 'mirrors',
+      title: 'The mirrors are down',
+      detail: 'The bazaar\'s rooftop mirrors are turned face-down. Somebody on the dyers\' roof is arguing with a bolt.',
+      done: { flag: 'story.aiyana_met' },
+      goals: [{ map: 'jwaladesh-bazaar', at: { ...BAZAAR.aiyana } }],
+      hints: ['Somebody on that roof keeps looking at Azzy, Gigi.', 'The low roof by the dyers has a stair.', 'Go up the dyers\' stair to the woman under the mirror.'],
+    },
+    {
+      id: 'court',
+      title: "The Court's one word",
+      detail: 'The Court of the Flame sits at noon, at the head of the bazaar. Up the colonnade to Meera\'s seat.',
+      done: { flag: 'story.court_heard' },
+      goals: [courtRow],
+      hints: ['The Court sits at noon, Gigi.', 'The saffron doors at the top of the bazaar.', 'Go into the Court and walk up the colonnade.'],
+    },
+    {
+      id: 'night_lamp',
+      title: 'Until the night lamp',
+      detail: 'Aiyana opens the chain tower when the watch changes, after dark. Until then: the runners, the sweeping priest, the spice row.',
+      done: { any: [DAY_DONE, { flag: 'story.tower_open' }] },
+      followSide: true,
+      noXp: true,
+      hints: [
+        'The night lamp is after dark, Gigi. There is a day first.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        'The runners on the temple steps, the priest with the broom, and the two on the spice row.',
+      ],
+    },
+    {
+      id: 'tower',
+      title: 'The chain tower',
+      detail: 'Night. Aiyana is waiting at the chain tower\'s gate on the quay, with a key nobody has asked her for in two years.',
+      done: { flag: 'story.tower_open' },
+      goals: [{ map: 'jwaladesh-harbor', at: { x: HARBOR.gate.x, y: HARBOR.gateRow } }],
+      hints: ['It\'s dark now, Gigi.', 'Aiyana is at the chain tower, down on the quay.', 'Go down to the quay and walk to the chain tower\'s gate.'],
+    },
+    {
+      id: 'lamp',
+      title: "Arjun's lamp",
+      detail: 'The lamp\'s platform shimmers. Fifty years ago, Arjun of the Agnivansh stood here the night his riders took the chain.',
+      done: { flag: 'anchor.chain_lamp' },
+      goals: [lampZone],
+      echoGoals: [{ map: 'jwaladesh-harbor', at: { ...HARBOR.lamp } }],
+      hints: ['It\'s shimmering by the lamp, Gigi.', 'A lamp lit in the memory stays lit.', 'On the platform, use the Locket; light the lamp with the taper.'],
+    },
+    {
+      id: 'tower_mirror',
+      title: "Arjun's mirror",
+      detail: 'The temple must see the lamp from the hill. The old watchtower\'s bracket is empty; a spare mirror lies at its foot.',
+      done: { flag: 'anchor.tower_mirror' },
+      goals: [lampZone],
+      echoGoals: [{ if: { notFlag: 'echo.spare_mirror' }, map: 'jwaladesh-harbor', at: { ...HARBOR.spareMirror } }, { map: 'jwaladesh-harbor', at: { ...HARBOR.bracket } }],
+      hints: ['The old tower is missing its mirror, Gigi.', 'There is a spare mirror at the tower\'s foot.', 'In the memory, take the spare mirror and bolt it in the bracket.'],
+    },
+    {
+      id: 'roofs',
+      title: 'The roofs',
+      detail: 'The lamp burns and the tower mirror faces the hill. Up the dyers\' stair and Aiyana\'s ladder to the roofs\' mirrors.',
+      done: { flag: 'story.beam_at_temple' },
+      goals: [...mirrorGoals, { map: 'jwaladesh-rooftops', at: { x: ROOFTOPS.anissaSpot.x - 2, y: ROOFTOPS.anissaSpot.y } }],
+      echoGoals: [lampZone],
+      hints: ['Light needs a road too, Gigi.', 'The new tower is in the old line. The runners went round: left, up, up, then in.', 'Turn the roof mirrors: east, north, north. The last one is mine.'],
+    },
+    {
+      id: 'flame',
+      title: 'The flame',
+      detail: 'The beam goes through the wick-window onto the curtained altar. The Court of the Flame, at night.',
+      done: { flag: 'story.flame_seen' },
+      goals: [courtRow],
+      hints: ['The curtain is glowing, Gigi.', 'The Court, at the head of the bazaar.', 'Go into the Court and walk up the colonnade to the altar.'],
+    },
+    {
+      id: 'oil',
+      title: 'The oil',
+      detail: 'The flame will not last the night without oil, and the oil is in Seth Dhanraj\'s store on the quay.',
+      done: { flag: 'story.dhanraj_beaten' },
+      goals: [{ map: 'jwaladesh-harbor', at: { ...HARBOR.storeDoors } }],
+      hints: ['Vikram is going to the quay, Gigi.', 'The oil store, on the east of the quay.', 'Go down to the quay and into the oil store\'s doorway.'],
+    },
+    {
+      id: 'keepers',
+      title: 'The Flame Keepers',
+      detail: 'Dawn. The flame burns on oil, and the Court has a ledger to read. Up the colonnade.',
+      done: { flag: 'ally.jwaladesh' },
+      goals: [courtRow],
+      hints: ['The Court is sitting, Gigi.', 'Up the hill to the Court of the Flame.', 'Go into the Court and walk up the colonnade with the ledger.'],
+    },
+    {
+      id: 'north',
+      title: 'North',
+      detail: 'A Zetwal trader at the quay, north along the white coast to Aldermoor. Vikram is coming too.',
+      done: { flag: 'act8.complete' },
+      noXp: true,
+      goals: [{ map: 'jwaladesh-harbor', at: { x: HARBOR.landing.x, y: HARBOR.endRow } }],
+      hints: ['A boat, Gigi.', 'Down the stair to the quay.', 'Walk down the quay to the trader.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -1758,6 +1898,61 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'item.token_suzumori',
     title: 'Suzumori sits',
     text: 'Kaede folded a crane from the turned order for the chamberlain\'s chair. Agnipur will not take it. Take it anyway, she said.',
+  },
+  // Chapter 8, Agnipur.
+  {
+    id: 'relay',
+    when: 'side.lamp_relay.done',
+    title: 'The relay',
+    text: 'Harbor to temple before it gutters: left at the dyers, through the arch, along the wall. The sea-wall lane is the same idea.',
+  },
+  {
+    id: 'thumb_seven',
+    when: 'story.salt_road_cleared',
+    title: 'The salt-road carter',
+    text: 'Oil for the wick from nobody, with the ash thumbprint on the seal. Seven of nine. The temple will not say it needs it.',
+  },
+  {
+    id: 'arjun_charge',
+    when: 'clue.arjun_charge',
+    title: "Arjun's charge",
+    text: 'The night the Crown held Agnipur behind its own chain: two hands on the taper, a mirror bolted, seven rode out, five came home.',
+  },
+  {
+    id: 'changed_chain_lamp',
+    when: 'anchor.chain_lamp',
+    title: 'Something changed',
+    text: 'The chain lamp burns over Agnipur\'s harbor: young Patricio lit it with Arjun\'s hand closed over his, fifty years ago.',
+  },
+  {
+    id: 'changed_tower_mirror',
+    when: 'anchor.tower_mirror',
+    title: 'Something changed',
+    text: 'A bronze mirror sits in the old watchtower\'s bracket, faced at the temple quarter: young Patricio bolted it there.',
+  },
+  {
+    id: 'crown_holds_oil',
+    when: 'clue.crown_holds_oil',
+    title: 'The ledger of advances',
+    text: 'Every jar in the harbor bought with advances from the Throne\'s purchasing office, Kingsmere. "Hold until the Court signs for the chain."',
+  },
+  {
+    id: 'flame_keepers',
+    when: 'ally.jwaladesh',
+    title: 'The Flame Keepers',
+    text: 'Price: Wealth 8, owed at the Muster. Laid at the altar\'s foot: the oil, and what was chosen. Least paid, first bought.',
+  },
+  {
+    id: 'agnivansh_token',
+    when: 'item.token_agnivansh',
+    title: 'Agnivansh sits',
+    text: 'Meera lit a small brass lamp from the flame for the chamberlain\'s chair. The Suzumori crane sat on her altar for one night.',
+  },
+  {
+    id: 'aiyana',
+    when: 'story.aiyana_met',
+    title: 'Titi Aiyana',
+    text: 'Kayla\'s sister, Azzy\'s aunt: the Court\'s engineer of the great flame. She measures the flame every morning, and is the only one allowed to.',
   },
   {
     id: 'in_private',

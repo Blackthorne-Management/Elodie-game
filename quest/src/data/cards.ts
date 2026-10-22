@@ -67,4 +67,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 7 complete',
     lines: ['The Fog Files', 'Next: Chapter 8, The Dying Flame', 'Jwaladesh, where the sky is on fire and the flame is going out...'],
   },
+  // The end of Chapter 8: a Zetwal trader north along the white coast to Aldermoor (Chapter 9's landing).
+  {
+    id: 'act8_end',
+    when: 'act8.complete',
+    title: 'Chapter 8 complete',
+    lines: ['The Dying Flame', "Next: Chapter 9, The Regent's Keep", 'Aldermoor, where the Crown keeps its books...'],
+  },
 ];

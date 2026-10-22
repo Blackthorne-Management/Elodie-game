@@ -93,8 +93,8 @@ describe('the count and the Grudge', () => {
     expect(GRUDGE_MAX_BOSS).toBeGreaterThan(GRUDGE_MAX);
     expect(grudgeCap(boss)).toBe(GRUDGE_MAX_BOSS);
     expect(grudgeCap(story)).toBe(GRUDGE_MAX);
-    // Only the chapter bosses (Chapter 2: Thorne; Chapter 6: Grimvald; Chapter 7: the Paper Fox).
-    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['fjord_grimvald', 'file_house_fox', 'thorne_blockade']);
+    // Only the chapter bosses (Chapter 2: Thorne; Chapter 6: Grimvald; Chapter 7: the Paper Fox; Chapter 8: Seth Dhanraj).
+    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['oil_store_dhanraj', 'fjord_grimvald', 'file_house_fox', 'thorne_blockade']);
   });
 
   it('a win clears that fight\'s losses (and so its Grudge); the count stays', () => {
@@ -139,8 +139,9 @@ describe('fights meant to be lost', () => {
       expect(CONTENT.dialogue[b.meantToLose!.scene], b.id).toBeDefined();
       expect(isRandomFight(b), b.id).toBe(false);
     }
-    // Chapters 1 and 2 have none; Chapter 3 has the Trial of Blades, and it is the only one so far.
-    expect(Object.values(BATTLES).filter((b) => b.meantToLose).map((b) => b.id)).toEqual(['rael_trial']);
+    // Chapters 1 and 2 have none; Chapter 3 has the Trial of Blades; Chapter 8 the duel in the yard (a sparring match
+    // that ends either way, the second review's 3.9).
+    expect(Object.values(BATTLES).filter((b) => b.meantToLose).map((b) => b.id)).toEqual(['duel_yard_vikram', 'rael_trial']);
   });
 
   it('after one, the game logic plays its scene whether the party fell or won', () => {
@@ -436,7 +437,7 @@ describe('every story fight has a way back in', () => {
   it('each fight a conversation starts is meant to be lost, or has a foe on a map or a trigger that starts it again', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
-    expect([...started].sort()).toEqual(['camp_lookouts', 'caney_breach', 'deserters_road', 'file_house_fox', 'fjord_grimvald', 'intro_boar', 'marsh_moths', 'ordu_bout', 'pier_marines', 'qasim_vault', 'rael_trial', 'stacks_cutpurses', 'thorne_blockade', 'tunnel_bats', 'village_patrol', 'winter_wolves']);
+    expect([...started].sort()).toEqual(['camp_lookouts', 'caney_breach', 'deserters_road', 'duel_yard_vikram', 'file_house_fox', 'fjord_grimvald', 'intro_boar', 'marsh_moths', 'oil_store_dhanraj', 'ordu_bout', 'pier_marines', 'qasim_vault', 'quay_watch', 'rael_trial', 'salt_road_enforcers', 'stacks_cutpurses', 'thorne_blockade', 'tunnel_bats', 'village_patrol', 'winter_wolves']);
     for (const id of started) {
       const def = battleDef(id);
       expect(def, id).toBeDefined();

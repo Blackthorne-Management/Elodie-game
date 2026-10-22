@@ -1047,6 +1047,204 @@ export const BOOKS: readonly Book[] = [
       'The originals are perfectly safe. ' +
       'Read aloud to the council at dawn by the signal master, who did not raise his voice once, all the way through.',
   },
+  // ---- Agnipur (Chapter 8): the Palm-Leaf Library's nine, the Court's treasury book and records (the ledger after beat 7) --
+  {
+    id: 'jwaladesh_tejaswini',
+    title: "Rani Tejaswini's Flame",
+    category: 'religion',
+    text:
+      'Rani Tejaswini founded the Agnivansh with a lamp and a vow. ' +
+      'The lamp was a clay bowl of ghee she carried down from the hills when her village burned. ' +
+      'She set it on a rock above the harbor and swore it would not go out while one of her line was alive to tend it. ' +
+      'The rock is the altar now, and the Court of the Flame is built round it. ' +
+      'Her teaching is short, and the Keepers repeat it every morning: hesitation is the only true death. ' +
+      'The Keepers say it means a hand must never wait when the flame needs it. ' +
+      'Older readers note that Tejaswini waited three days in the rain for her bowl to dry before she lit it. ' +
+      'The Keepers do not mention this. ' +
+      'The bowl is still under the wick, cracked and mended with brass.',
+  },
+  {
+    id: 'jwaladesh_harbor_chain',
+    title: 'The Harbor Chain',
+    category: 'war',
+    text:
+      'In the Alliance War the Crown\'s fleet held Agnipur behind its own harbor chain. ' +
+      'The Crown had taken the chain tower on the mole and drawn the links taut across the harbor mouth. ' +
+      'No ship could come in, and none could leave. ' +
+      'Arjun of the Agnivansh took seven riders along the mole at night, at the Crown\'s tower. ' +
+      'A Zetwal officer stood with him at the old chain lamp and lit the signal for the allied ships. ' +
+      'Cannon fire came from the hulls beyond the chain. ' +
+      'Two riders fell on the mole. ' +
+      'The tower\'s gate went down, the chain dropped, and five rode home. ' +
+      'Every new moon after, the runners carried the lamp\'s fire up to the temple\'s wick. ' +
+      'The chain has been the city\'s ever since. Seven rode out, the song says. Five came home.',
+  },
+  {
+    id: 'jwaladesh_law_flame',
+    title: 'The Law of the Flame',
+    category: 'law',
+    text:
+      'Who may tend the flame: the Keepers of the Four Hands, under the Court, and the Court\'s engineer, who alone may measure it. ' +
+      'Who pays for its oil: the treasury of the Agnivansh, from the harbor\'s dues, by ancient right. ' +
+      'Who may see it: anyone who climbs the temple steps, at any hour, without asking leave. ' +
+      'That last clause is the oldest in the book. ' +
+      'It is underlined in three different inks. ' +
+      'The law says nothing about curtains. ' +
+      'A commentary in the margin, unsigned, observes that a flame that must be hidden is a flame the city has stopped paying for. ' +
+      'Another hand has written under it: or one that somebody else has started paying for. ' +
+      'Nobody has crossed either out.',
+  },
+  {
+    id: 'jwaladesh_flame_keepers',
+    title: 'The Flame Keepers',
+    category: 'religion',
+    text:
+      'The Flame Keepers are the fire\'s hand of the Four Hands, the faith of Jwaladesh. ' +
+      'They believe the world is held in four hands: fire, water, earth and breath. ' +
+      'A hand that lets go is a hand that has failed, and so a Keeper never lets the flame go untended for a single hour. ' +
+      'They take vows of service, not silence. ' +
+      'A Keeper may argue with anyone, about anything, so long as the flame is tended while they do. ' +
+      'Their rite is plain: the wick is trimmed in the open, the oil poured in the open, and the city may watch. ' +
+      'This book was copied before the curtain went up. ' +
+      'A newer note says the Keepers voted on the curtain, four to three, and that the three are still arguing.',
+  },
+  {
+    id: 'jwaladesh_oil_ghee',
+    title: 'Oil, Ghee and Grain',
+    category: 'trade',
+    text:
+      'Prices in the Lamp Bazaar, kept by the spice row\'s guild for a hundred years. ' +
+      'Grain has gone up and down with the rains. ' +
+      'Ghee has gone up with the cows. ' +
+      'Oil stayed at four the measure for most of a century, because the harbor brought it in faster than the city could burn it. ' +
+      'Two years ago the entries change. ' +
+      'A new buyer at the quay, named only as the Seth, bought every jar that landed, then every jar in the warehouses. ' +
+      'The price went to nine, then twenty, then forty. ' +
+      'The lamp-sellers kept selling lamps. ' +
+      'The last entry, in a tired hand: forty the measure. Was four. ' +
+      'Under it, scratched: and the Crown\'s launch at the Seth\'s steps every week.',
+  },
+  {
+    id: 'jwaladesh_relay',
+    title: 'The Relay',
+    category: 'folklore',
+    text:
+      'Every new moon the runners carry the sea\'s fire from the chain lamp to the temple\'s wick. ' +
+      'Harbor to temple before it gutters. ' +
+      'The wind comes off the sea up the main street, so the runners never take it. ' +
+      'Their way is older than the bazaar\'s tower and most of its lanes. ' +
+      'Left at the dyers, through the arch, along the wall, and in at the temple steps. ' +
+      'Children learn it as a skipping rhyme before they can run it. ' +
+      'When a runner is too old to run, the hall gives her a lamp on a pole and makes her chief. ' +
+      'The rhyme has a last line nobody sings any more. ' +
+      'When the lamp is dark, the runners wait. When the lamp is lit, the runners go. ' +
+      'The chain lamp has been dark two years.',
+  },
+  {
+    id: 'jwaladesh_duels',
+    title: 'Duels Over Breakfast',
+    category: 'gossip',
+    text:
+      'A broadsheet from the spice row, pinned up and torn down weekly. ' +
+      'This week: the Court\'s son has fought eleven duels this month, all over arguments, all won, all on one breath. ' +
+      'His mother has asked him to stop. ' +
+      'He has asked her for an argument. ' +
+      'The dyer who said the Crown would never hold the chain lost his sword in the dust on the harbor stair. ' +
+      'The dyer says he still thinks he was right. ' +
+      'The Court\'s son says that is the dyer\'s right, and that he will be happy to settle it again on Thursday. ' +
+      'Odds at the milk stall: the son, every time. ' +
+      'Odds on him getting his breath back before noon: none offered.',
+  },
+  {
+    id: 'jwaladesh_burned_temple',
+    title: 'Our Burned Temple',
+    category: 'history',
+    text:
+      'In the Ash Wars a Crown paper came to Kirinoura saying our temple at the salt gate hid Brasador arms. ' +
+      'The Suzumori believed it. ' +
+      'Their men burned the temple in a night, and found nothing in the ashes but the bowls. ' +
+      'The paper was false. ' +
+      'The Crown never said who wrote it, and the Suzumori never asked loudly enough. ' +
+      'We rebuilt the temple in white stone, and we have never taken a Suzumori crane since. ' +
+      'Kirinoura keeps its own account of the fire, they say, and it is shorter than ours. ' +
+      'A reader who has both will notice that neither names the man who signed the order. ' +
+      'Somebody has written in the margin: he is still alive, and sorry. That is not enough. It is a start.',
+  },
+  {
+    id: 'jwaladesh_agnivansh_line',
+    title: 'The Agnivansh Line',
+    category: 'genealogy',
+    text:
+      'Rani Tejaswini, who carried the bowl down from the hills and lit it on the rock. ' +
+      'Her grandson Arjun, who took the Harbor Chain back with seven riders and a Zetwal hand on the lamp. ' +
+      'His daughter Meera, who rules from the seat below the altar, says little, and says it once. ' +
+      'Her son Vikram, who says a great deal, usually out of breath, usually with a sword in his hand. ' +
+      'The Agnivansh do not paint portraits. ' +
+      'Each of them is shown in the Court\'s records by the height of the flame on the day they took the seat. ' +
+      'Tejaswini\'s was a hand. ' +
+      'Arjun\'s was an arm. ' +
+      'Meera\'s was the height of a lamp. ' +
+      'There is a blank line under hers, measured but not yet written.',
+  },
+  {
+    id: 'jwaladesh_treasury_book',
+    title: 'The Treasury Book',
+    category: 'law',
+    text:
+      'The Court of the Flame\'s treasury book, in the treasurer\'s fair hand. ' +
+      'Harbor dues in, oil out, every month for thirty years, the columns ruled in red. ' +
+      'Two springs ago the oil column grows longer than the dues column. ' +
+      'Then the dues column stops. ' +
+      'A note: the Seth holds the harbor\'s oil by contract; the harbor\'s dues are owed to the Seth until further notice. ' +
+      'After that the pages are ruled, and dated, and blank. ' +
+      'On the last written page, small, in the same fair hand: the treasury is empty and the Court has one word. ' +
+      'Under it, in a different hand, a measuring rod\'s notches: a thumb, a thumb, a thumb.',
+  },
+  {
+    id: 'jwaladesh_priests_decision',
+    title: "The Priests' Decision",
+    category: 'religion',
+    text:
+      'The council of the Keepers, in session this month, on the state of the flame. ' +
+      'Moved: that the flame is low, and the oil is held by the Seth, and the Crown\'s factor waits for the Court\'s word. ' +
+      'Moved: that if the city saw the flame so low, the city would lose heart, and the Court would have to sell the chain. ' +
+      'Resolved, four to three: that the altar be curtained, and the rooftop mirrors turned down for cleaning, until oil is found. ' +
+      'The three who voted no have signed their names under the four. ' +
+      'One of the three is the junior priest. ' +
+      'The senior Keeper\'s signature is the largest on the page. ' +
+      'Nobody has signed for the city.',
+  },
+  {
+    id: 'jwaladesh_oil_contracts',
+    title: 'Oil Contracts',
+    category: 'trade',
+    text:
+      'Contracts for the temple\'s oil, bound together with brass rings. ' +
+      'Every one is signed by the Court\'s treasurer and by Seth Dhanraj, merchant, of the harbor. ' +
+      'Each sells the Seth the right to hold the harbor\'s oil until the temple can pay the price of the day. ' +
+      'Each is witnessed at the altar, as the law requires. ' +
+      'The price of the day is set at the Oil Exchange. ' +
+      'The Oil Exchange is owned by Seth Dhanraj. ' +
+      'A clerk has added a note in pencil, then rubbed it out, then written it again more faintly. ' +
+      'It says: who pays the Seth? Nobody has answered it. ' +
+      'The last contract is dated last month.',
+  },
+  {
+    id: 'jwaladesh_ledger_advances',
+    title: "Dhanraj's Ledger of Advances",
+    category: 'trade',
+    available: { flag: 'story.dhanraj_beaten' },
+    text:
+      'The Seth\'s own ledger, taken from his lap in the oil store. ' +
+      'Every jar in the harbor, bought with advances from the Throne\'s purchasing office in Kingsmere. ' +
+      'Each advance is countersigned by the Crown\'s oil-factor in violet ink. ' +
+      'The sums are large, regular and patient, two years of them. ' +
+      'The Seth never paid for a jar with his own money. ' +
+      'At the foot of the last page, in the factor\'s hand: hold until the Court signs for the chain. ' +
+      'Under it, in the Seth\'s hand, smaller: I was never told why. ' +
+      'The ledger now sits on the Court\'s records shelf beside the contracts it paid for. ' +
+      'The junior priest reads it aloud to anyone who asks.',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -1083,6 +1281,11 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'kur_lib_c', name: 'Shelf: Silk, Tea and Rumour', books: ['kuroshi_silk_tea', 'kuroshi_tea_whispers', 'kuroshi_nightingale_floor', 'kuroshi_spy_ledger'] },
   { id: 'kur_hall_order', name: 'The Neutrality Order', books: ['kuroshi_neutrality_order'] },
   { id: 'kur_hall_records', name: "Shelf: The Hall's Records", books: ['kuroshi_buyers_mark', 'kuroshi_outflows', 'kuroshi_fox_receipts'] },
+  { id: 'jwa_lib_a', name: 'Shelf: The Flame and the Line', books: ['jwaladesh_tejaswini', 'jwaladesh_flame_keepers', 'jwaladesh_agnivansh_line'] },
+  { id: 'jwa_lib_b', name: 'Shelf: The Harbor and the Law', books: ['jwaladesh_harbor_chain', 'jwaladesh_law_flame', 'jwaladesh_relay'] },
+  { id: 'jwa_lib_c', name: 'Shelf: The Bazaar Talks', books: ['jwaladesh_oil_ghee', 'jwaladesh_duels', 'jwaladesh_burned_temple'] },
+  { id: 'jwa_treasury', name: 'The Treasury Book', books: ['jwaladesh_treasury_book'] },
+  { id: 'jwa_court_records', name: "Shelf: The Court's Records", books: ['jwaladesh_priests_decision', 'jwaladesh_oil_contracts', 'jwaladesh_ledger_advances'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

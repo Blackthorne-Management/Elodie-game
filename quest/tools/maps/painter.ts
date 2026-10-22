@@ -288,6 +288,35 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ぬ: { ground: 'kq_canal', deco: 'longship', solid: true },
   ね: { ground: 'lacquer_floor', deco: 'table', solid: true },
   の: { ground: 'kq_canal', deco: 'canoe', solid: true },
+  // Agnipur (Chapter 8, Oct 22).
+  क: { ground: 'jw_stone', solid: false },
+  ख: { ground: 'jw_wall', solid: true },
+  ग: { ground: 'jw_dome', solid: true },
+  घ: { ground: 'jw_quay', solid: false },
+  च: { ground: 'jw_sea', solid: true },
+  छ: { ground: 'jw_mole', solid: false },
+  ज: { ground: 'jw_tower', solid: true },
+  झ: { ground: 'saffron_floor', solid: false },
+  ट: { ground: 'jw_column', solid: true },
+  ठ: { ground: 'jw_roof', solid: false },
+  ड: { ground: 'jw_plank', solid: false },
+  ढ: { ground: 'jw_void', solid: true },
+  त: { ground: 'jw_road', solid: false },
+  थ: { ground: 'salt', deco: 'scrub', solid: true },
+  द: { ground: 'jw_stair', solid: false },
+  ध: { ground: 'jw_stone', deco: 'arch', solid: false },
+  न: { ground: 'store_floor', deco: 'oil_jar', solid: true },
+  प: { ground: 'store_floor', solid: false },
+  फ: { ground: 'store_wall', solid: true },
+  ब: { ground: 'jw_stone', deco: 'dye_vat', solid: true },
+  भ: { ground: 'jw_stone', deco: 'brass_stall', solid: true },
+  म: { ground: 'jw_steps', solid: false },
+  य: { ground: 'palm_floor', solid: false },
+  र: { ground: 'palm_floor', deco: 'shelf', solid: true },
+  ल: { ground: 'jw_quay', deco: 'jar_cart', solid: true },
+  व: { ground: 'duel_sand', deco: 'fence', solid: true },
+  स: { ground: 'tower_floor', solid: false },
+  ह: { ground: 'jw_quay', deco: 'awning', solid: true },
 };
 
 export class Grid {
@@ -527,7 +556,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ', 'გ', 'ე', 'ო', 'ზ', 'い', 'か', 'こ', 'そ']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ', 'გ', 'ე', 'ო', 'ზ', 'い', 'か', 'こ', 'そ', 'ख', 'फ', 'ढ']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

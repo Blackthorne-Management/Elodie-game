@@ -31,8 +31,10 @@ const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string 
   '6': { mark: 'chapter5-end', map: 'skarragol-plateau', spawn: 'seat_road' },
   // Chapter 7 begins on Kirinoura's pier, off the Ironvow longship (the landing plays).
   '7': { mark: 'chapter6-end', map: 'kuroshi-pier', spawn: 'pier' },
-  // Chapter 8 begins on Kirinoura's pier after the card (Jwaladesh's maps come with Chapter 8: this start moves there).
-  '8': { mark: 'chapter7-end', map: 'kuroshi-pier', spawn: 'pier' },
+  // Chapter 8 begins on Agnipur's harbor quay, under the great chain, off the Zetwal trader (the landing plays).
+  '8': { mark: 'chapter7-end', map: 'jwaladesh-harbor', spawn: 'landing' },
+  // Chapter 9 begins on Agnipur's quay after the card (Aldermoor's maps come with Chapter 9: this start moves there).
+  '9': { mark: 'chapter8-end', map: 'jwaladesh-harbor', spawn: 'landing' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

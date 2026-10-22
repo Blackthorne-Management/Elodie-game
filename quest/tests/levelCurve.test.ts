@@ -20,8 +20,8 @@ describe('the level curve along the scripted route', () => {
   console.log(curveText(report));
   const ch = (n: number) => report.chapters.find((c) => c.chapter === n)!;
 
-  it('measures every chapter the route plays (Chapters 1 to 7 so far), and lists the rest as unplayed', () => {
-    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+  it('measures every chapter the route plays (Chapters 1 to 8 so far), and lists the rest as unplayed', () => {
+    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     expect(report.chapters.length + report.unplayed.length).toBe(CHAPTER_LEVELS.length);
     for (const c of report.chapters) expect(c.xp).toBeGreaterThan(c.xpNoSide);
     // XP only grows from one chapter to the next.
@@ -41,8 +41,8 @@ describe('the level curve along the scripted route', () => {
     }
   });
 
-  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15, Chapter 6 at 17, Chapter 7 at 19', () => {
-    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17, 19]);
+  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15, Chapter 6 at 17, Chapter 7 at 19, Chapter 8 at 21', () => {
+    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17, 19, 21]);
     // Chapter 1 was 6 (25 XP a step); Chapter 2 was 10 (its five required side quests, and 80 XP an ambush).
     expect(ch(1).xp).toBeLessThan(xpForLevel(RPG, 5));
     expect(ch(2).xp).toBeLessThan(xpForLevel(RPG, 9));
@@ -77,6 +77,23 @@ describe('the level curve along the scripted route', () => {
     expect(seven.played.medianXp).toBeLessThan(xpForLevel(RPG, 20));
     // Chapter 7 starts where Chapter 6 ended: 17, the bottom of its band.
     expect(ch(6).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 17));
+  });
+
+  it('Chapter 8 (Jwaladesh, 19 to 21) ends on 21 on the route and on the played line, and at 19 without side quests', () => {
+    const eight = ch(8);
+    expect(eight.level).toBe(21);
+    expect(eight.played.median).toBe(21);
+    expect(eight.played.p90).toBeLessThanOrEqual(22);
+    expect(eight.played.wanderP90).toBeLessThanOrEqual(22);
+    // A player who skips the side quests (J-2, J-3, the debate's quest and the salt road's fight) stays within two levels.
+    expect(eight.levelNoSide).toBe(19);
+    expect(eight.target.to - eight.levelNoSide).toBeLessThanOrEqual(LEVEL_CURVE.skipSideQuestsMaxUnder);
+    // Aldermoor's band starts at 21: the party arrives at it, not past it (22 needs 6,524).
+    expect(eight.xp).toBeLessThan(xpForLevel(RPG, 22));
+    expect(eight.played.medianXp).toBeLessThan(xpForLevel(RPG, 22));
+    // Chapter 8 starts where Chapter 7 ended: 19, the bottom of its band.
+    expect(ch(7).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 19));
+    expect(ch(7).xp).toBeLessThan(xpForLevel(RPG, 20));
   });
 
   it(`skipping every side quest leaves the party at most ${LEVEL_CURVE.skipSideQuestsMaxUnder} levels under the target`, () => {
