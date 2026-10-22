@@ -1472,6 +1472,6 @@ new language).
   - The Hushed has `magScale` 1.25 at HP x7 and Hushers with `protects`.
   - The XP plan is re-run against the levels pass.
   - The build is planned at 3 to 3.5 days.
-- **Put to the owner (the build goes ahead with yes):** the Almoner is the veiled woman from Chapter 1's Cane Road. The
+- **Owner decision (Oct 22): yes.** The Almoner is the veiled woman from Chapter 1's Cane Road. The
   facts are corrected per review finding 2: the Cane Road by the mill, `choice.warned_watcher`, Gianna's own words,
   and her line "No one. That is the point of us." quoted back at the unmasking.
