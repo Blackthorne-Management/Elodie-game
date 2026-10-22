@@ -5,7 +5,7 @@
 // coming back from the bridgehead's memory before the pawl is pinned.
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11, ACT12, EPILOGUE } from '../src/data/quests.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { GameLogic } from '../src/engine/game.ts';
 import { Sim, findPath } from '../src/engine/sim.ts';
@@ -263,6 +263,43 @@ describe('following only the gold arrow on, through Chapter 9', () => {
         expect(eleven.steps).toBeLessThan(800);
         expect(otherEleven.steps).toBeLessThan(800);
         expect(eleven.mapChanges).toBeLessThan(30);
+      });
+
+      describe('and on through Chapter 12 and the Epilogue, to the end', () => {
+        // On from the end of Chapter 11 (Chapter 12, Oct 22): the ash road, the gates, the rooms, Volume One, the corner's
+        // debate, the tokens handed over on the steps, the night, the bell, the chairs set, the Echo of the eighth chair,
+        // the count, the Claim and the Regent, the chairs filling, the Clause Six petition, the arrest and Rael's signet;
+        // then the Hearing nine days later, its witnesses, the verdict (the first choice: a pardon) and the ending.
+        const twelve = [eleven, otherEleven].map((w) => goldWalk({ maps, sim: w.sim, through: 'act12' }));
+        const epilogue = twelve.map((w) => goldWalk({ maps, sim: w.sim, through: 'epilogue' }));
+
+        it('finishes Chapter 12 and the Epilogue with no stall, from either night', () => {
+          for (const w of [...twelve, ...epilogue]) {
+            expect(w.stalls).toEqual([]);
+            expect(w.finished).toBe(true);
+          }
+          for (const w of epilogue) {
+            const f = w.sim.logic.state.flags;
+            for (const flag of ['side.seats.done', 'side.volume_one.done', 'debate.seat_claim.settled', 'story.chair_read', 'story.claim_won', 'story.regent_arrested', 'story.rael_surrendered', 'act12.complete', 'hearing.pardon', 'end.done']) {
+              expect(f.isSet(flag), flag).toBe(true);
+            }
+            expect(['ending.just', 'ending.hollow'].some((e) => f.isSet(e))).toBe(true);
+            expect(w.sim.battles.filter((b) => b.startsWith('claim_'))).toEqual(['claim_regent']);
+          }
+        });
+
+        it('meets every objective in order', () => {
+          for (const w of twelve) expect(w.objectives).toEqual(ACT12.objectives.filter((o) => w.objectives.includes(`act12/${o.id}`)).map((o) => `act12/${o.id}`));
+          for (const w of twelve) expect(w.objectives.length).toBeGreaterThanOrEqual(ACT12.objectives.length - 3);
+          for (const w of epilogue) expect(w.objectives).toEqual(EPILOGUE.objectives.filter((o) => w.objectives.includes(`epilogue/${o.id}`)).map((o) => `epilogue/${o.id}`));
+        });
+
+        it('takes a reasonable way (measured Oct 22: 229 steps and 6 map changes; the Epilogue 5, it is played in the Hall)', () => {
+          console.log(`chapter 12 gold walk: ${twelve[0]!.steps} steps, ${twelve[0]!.mapChanges} map changes; the epilogue ${epilogue[0]!.steps} steps`);
+          for (const w of twelve) expect(w.steps).toBeLessThan(400);
+          for (const w of epilogue) expect(w.steps).toBeLessThan(60);
+          expect(twelve[0]!.mapChanges).toBeLessThan(15);
+        });
       });
     });
   });

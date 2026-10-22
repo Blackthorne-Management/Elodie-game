@@ -109,12 +109,15 @@ describe('the arrows follow the scripted route (every chapter it plays)', () => 
       if (!goal) problems.push(`${before.id}: no goal holds (on ${mapId})`);
       else if (!waypoint(maps, mapId, goal, flags)) problems.push(`${before.id}: no way from ${mapId} to ${goal.map}`);
     }
+    const from = { ...sim.logic.state.player.pos };
     sim.run([item]);
     const after = quest ? currentObjective(quest, flags) : null;
     if (before && goal && after?.id !== before.id) {
       const p = sim.logic.state.player;
-      // Done where the goal said (a map change at the end of a scene counts from the map it began on).
-      const here = p.mapId === goal.map ? near(p.pos, goal.at) : Infinity;
+      // Done where the goal said (a map change at the end of a scene counts from the map it began on, and so does a
+      // journey across the same map: Chapter 12's verdict, and then that afternoon on the Throne tile).
+      const journey = item.kind === 'press' && p.mapId === mapId && near(p.pos, from) > 2;
+      const here = journey ? near(from, goal.at) : p.mapId === goal.map ? near(p.pos, goal.at) : Infinity;
       if (here > 4 && mapId !== goal.map) problems.push(`${before.id}: done on ${p.mapId} ${p.pos.x},${p.pos.y}, goal ${goal.map} ${goal.at.x},${goal.at.y}`);
       else if (here > 4 && mapId === goal.map && p.mapId === goal.map) problems.push(`${before.id}: done at ${p.pos.x},${p.pos.y}, goal ${goal.at.x},${goal.at.y}`);
     }

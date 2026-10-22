@@ -532,6 +532,74 @@ async function chapter11Checks(page, sim, name) {
 }
 
 /**
+ * Chapter 12, the Claim, and the Epilogue, the Hearing, at their markers: the arrival's scene on the Concourse, the rooms,
+ * the tokens handed over before the night, the bell, the chairs set and the Echo of the eighth chair, the petition read, the
+ * Claim's card in the Hall with the Regent arrested and Rael's signet laid down, the Hearing's arrivals nine days later, and
+ * the ending's card with the score written (the browser agreeing with the simulator on each).
+ */
+async function chapter12Checks(page, sim, name) {
+  const marks = ['claim-arrival', 'claim-rooms', 'claim-night', 'claim-bell', 'claim-echo', 'claim-count', 'claim-tile', 'chapter12-end', 'hearing-arrivals', 'hearing-verdict', 'the-end'];
+  if (!marks.includes(name)) return;
+  const s = await snap(page);
+  const f = s.flags;
+  const at = (map, mode) => check(s.mapId === map && (!mode || s.mode === mode), `@${name}: ${mode ?? 'on'} ${map} (${s.mode}, ${s.mapId})`);
+  const has = (...flags) => {
+    for (const flag of flags) check(f[flag] === true, `@${name}: ${flag}`);
+  };
+  if (name === 'claim-arrival') {
+    at('seat-concourse', 'dialogue');
+    has('act11.complete', 'story.claim_arrive_seen');
+  }
+  if (name === 'claim-rooms') {
+    at('seat-rooms', 'dialogue');
+    has('story.rooms_seen');
+  }
+  if (name === 'claim-night') {
+    at('seat-concourse', 'field');
+    has('side.volume_one.accepted', 'debate.seat_claim.settled');
+    check(f['side.seats.handed'] !== true, '@claim-night: the tokens are not handed over yet');
+  }
+  if (name === 'claim-bell') {
+    at('seat-concourse', 'field');
+    has('side.seats.handed', 'story.bell_claim');
+  }
+  if (name === 'claim-echo') {
+    at('seat-hall', 'field');
+    has('story.chairs_set', 'side.seats.done');
+  }
+  if (name === 'claim-count') {
+    at('seat-hall', 'field');
+    has('story.chair_read', 'clue.petition_original');
+  }
+  if (name === 'claim-tile') {
+    at('seat-hall', 'field');
+    has('story.claim_begun');
+    check(f['story.claim_won'] !== true, '@claim-tile: the Claim is not won yet');
+  }
+  if (name === 'chapter12-end') {
+    at('seat-hall', 'card');
+    has('story.claim_won', 'story.regent_arrested', 'story.rael_surrendered', 'story.hearing_called', 'card.claim_stands');
+    check(f['item.chain_of_office'] >= 1, '@chapter12-end: the Regent\'s chain of office is the party\'s');
+    check(f['party.rael'] !== true, '@chapter12-end: Rael is not in the roster');
+    check(f['stability.score'] === undefined, '@chapter12-end: no score before the verdict');
+  }
+  if (name === 'hearing-arrivals') {
+    at('seat-concourse', 'dialogue');
+    check(f['story.hearing_arrived'] !== true, '@hearing-arrivals: the arrivals are playing');
+  }
+  if (name === 'hearing-verdict') {
+    at('seat-hall', 'field');
+    has('story.hearing_arrived', 'side.volume_one.done', 'story.hearing_heard');
+  }
+  if (name === 'the-end') {
+    at('seat-hall', 'card');
+    has('hearing.pardon', 'act12.complete', 'end.done');
+    const score = sim.logic.state.flags.get('stability.score');
+    check(f['stability.score'] === score && f[`ending.${score >= 80 ? 'just' : 'hollow'}`] === true, `@the-end: the score is written (${f['stability.score']}) and the ending follows it`);
+  }
+}
+
+/**
  * The item showcase is browser-only (the simulator has no screen): when one is up, check it (the first
  * time each item shows), photograph the Locket's, skip its rise with A and close it with a tap.
  */
@@ -1030,6 +1098,7 @@ async function playAct(browser, errors) {
     if (item.kind === 'mark') {
       await markChecks(page, sim, item.name);
       await chapter11Checks(page, sim, item.name);
+      await chapter12Checks(page, sim, item.name);
       await shoot(page, item.name, shots);
       continue;
     }

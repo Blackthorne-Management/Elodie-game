@@ -6,7 +6,7 @@
 // the party's level (AMBUSH_XP), and every chapter built so far is on target on both lines.
 
 import { describe, expect, it } from 'vitest';
-import { AMBUSH_XP, LEVEL_CURVE } from '../src/config.ts';
+import { AMBUSH_XP, LEVEL_CURVE, XP_PER_OBJECTIVE_BY_CHAPTER } from '../src/config.ts';
 import { battleDef } from '../src/data/battles.ts';
 import { CHAPTER_LEVELS } from '../src/data/chapterLevels.ts';
 import { RPG } from '../src/data/rpg.ts';
@@ -20,8 +20,9 @@ describe('the level curve along the scripted route', () => {
   console.log(curveText(report));
   const ch = (n: number) => report.chapters.find((c) => c.chapter === n)!;
 
-  it('measures every chapter the route plays (Chapters 1 to 11 so far), and lists the rest as unplayed', () => {
-    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+  it('measures every chapter the route plays (Chapters 1 to 12: all of them), and lists the rest as unplayed', () => {
+    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    expect(report.unplayed).toEqual([]);
     expect(report.chapters.length + report.unplayed.length).toBe(CHAPTER_LEVELS.length);
     for (const c of report.chapters) expect(c.xp).toBeGreaterThan(c.xpNoSide);
     // XP only grows from one chapter to the next.
@@ -41,8 +42,8 @@ describe('the level curve along the scripted route', () => {
     }
   });
 
-  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15, Chapter 6 at 17, Chapter 7 at 19, Chapter 8 at 21, Chapter 9 at 24, Chapter 10 at 25, Chapter 11 at 28', () => {
-    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17, 19, 21, 24, 25, 28]);
+  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15, Chapter 6 at 17, Chapter 7 at 19, Chapter 8 at 21, Chapter 9 at 24, Chapter 10 at 25, Chapter 11 at 28, Chapter 12 at 30', () => {
+    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17, 19, 21, 24, 25, 28, 30]);
     // Chapter 1 was 6 (25 XP a step); Chapter 2 was 10 (its five required side quests, and 80 XP an ambush).
     expect(ch(1).xp).toBeLessThan(xpForLevel(RPG, 5));
     expect(ch(2).xp).toBeLessThan(xpForLevel(RPG, 9));
@@ -147,6 +148,21 @@ describe('the level curve along the scripted route', () => {
     // Chapter 11 starts where Chapter 10 ended: 25. The Mountain Path and the gardens are walked four times at war.
     expect(ch(10).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 25));
     expect(eleven.wildSteps).toBeGreaterThan(200);
+  });
+
+  it('Chapter 12 (the Claim, 28 to 30) ends on 30, the cap, on the route and on the played line, and at 28 without side quests', () => {
+    const twelve = ch(12);
+    expect(twelve.level).toBe(30);
+    expect(twelve.played.median).toBe(30);
+    // The story carries the chapter (XP_PER_OBJECTIVE_BY_CHAPTER row 12, the Regent): its two required side quests pay
+    // little (the Chapter 10 rule: what a player cannot skip rides on the Journal's steps), so the line without side quests
+    // reaches the band's floor, 28, two under the cap.
+    expect(twelve.levelNoSide).toBe(28);
+    expect(twelve.target.to - twelve.levelNoSide).toBeLessThanOrEqual(LEVEL_CURVE.skipSideQuestsMaxUnder);
+    // The Regent is met at 29 on the route (30 needs 10,936): the fight is sized for 30 and orange at 28.
+    expect(ch(11).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 28));
+    expect(twelve.xp - battleXp(new FlagStore({ 'party.anissa': true }), RPG, battleDef('claim_regent')!) - XP_PER_OBJECTIVE_BY_CHAPTER[11]!).toBeLessThan(xpForLevel(RPG, 30));
+    expect(twelve.wildSteps).toBe(0);
   });
 
   it(`skipping every side quest leaves the party at most ${LEVEL_CURVE.skipSideQuestsMaxUnder} levels under the target`, () => {

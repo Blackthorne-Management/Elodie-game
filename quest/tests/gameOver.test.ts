@@ -94,10 +94,11 @@ describe('the count and the Grudge', () => {
     expect(grudgeCap(boss)).toBe(GRUDGE_MAX_BOSS);
     expect(grudgeCap(story)).toBe(GRUDGE_MAX);
     // Only the chapter bosses (Chapter 2: Thorne; Chapter 6: Grimvald; Chapter 7: the Paper Fox; Chapter 8: Seth Dhanraj;
-    // Chapter 9: the Hushed; Chapter 11: the house that sailed to the Crown, Thorne at the customs house, Hale, Rael).
+    // Chapter 9: the Hushed; Chapter 11: the house that sailed to the Crown, Thorne at the customs house, Hale, Rael; Chapter
+    // 12: the Lord Regent at the Claim. Azzy's Challenge is not a boss: nobody climbs a Grudge against a brother).
     expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual([
       'harbor_flank_skarragol', 'harbor_flank_kuroshi', 'harbor_flank_jwaladesh', 'harbor_flank_al_doria', 'customs_thorne', 'flagship_hale',
-      'pier_rael', 'mangrove_crew', 'assize_hushed', 'oil_store_dhanraj', 'fjord_grimvald', 'file_house_fox', 'thorne_blockade',
+      'pier_rael', 'claim_regent', 'mangrove_crew', 'assize_hushed', 'oil_store_dhanraj', 'fjord_grimvald', 'file_house_fox', 'thorne_blockade',
     ]);
   });
 
@@ -442,7 +443,7 @@ describe('every story fight has a way back in', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
     expect([...started].sort()).toEqual([
-      'assize_hushed', 'bog_chapel_cell', 'camp_lookouts', 'caney_breach', 'caona_stand', 'customs_thorne', 'deserters_road', 'duel_yard_vikram',
+      'assize_hushed', 'bog_chapel_cell', 'camp_lookouts', 'caney_breach', 'caona_stand', 'claim_azzy', 'claim_regent', 'customs_thorne', 'deserters_road', 'duel_yard_vikram',
       'file_house_fox', 'fjord_grimvald', 'flagship_hale', 'harbor_flank_al_doria', 'harbor_flank_jwaladesh', 'harbor_flank_kuroshi',
       'harbor_flank_skarragol', 'headland_battery', 'intro_boar', 'mangrove_crew', 'marsh_moths', 'oil_store_dhanraj', 'ordu_bout', 'pier_marines',
       'pier_rael', 'press_gang_cross', 'qasim_vault', 'quay_watch', 'rael_trial', 'salt_road_enforcers', 'stacks_cutpurses', 'thorne_blockade',
