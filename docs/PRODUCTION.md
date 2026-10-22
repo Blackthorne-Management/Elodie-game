@@ -130,9 +130,8 @@ pier's memory, the Turn with the signet's public lie, Trust (Hale, Rael in the f
 furious and staying), the truth by lamplight, old Benny and Nancy and the Song House, the caney and the card;
 `?chapter=12` at Eightgate's Ardencia Gate). Ahead of its **Nov 10 to 13** slot (on its branch, not merged). Waiting on
 the owner: a human read of every Rael, Benny, Nancy, Anaco, Yari, Azzy and Anissa line in the war (reviewer prompt
-`docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter11-build.md`); **one contradiction to settle:** STORY's
-private line "My father kept his oath and it cost him everything" (built verbatim) against young Benny's built passive
-"He kept the goal, not the oath" (Chapter 3), so one line or one passive changes; Hale's look (`docs/quest/ART-PROMPTS.md`
+`docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter11-build.md`); the Benny contradiction is settled (Claude's call: the
+passive now reads "He kept the oath, whatever it cost", matching Rael's private line); Hale's look (`docs/quest/ART-PROMPTS.md`
 20); the war's music track (`docs/quest/AUDIO-PROMPTS.md`, a slot plays the Mountain Path's until then). Noted: Chapter
 11's steps pay 58 XP; the route ends at 28, the line without side quests at 26; the gardens' road is a long walk (a
 step and a question on each side), not a door. Not built yet: the market's second stock once the harbor is taken,

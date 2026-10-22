@@ -566,7 +566,7 @@ export const MEMBERS: readonly MemberDef[] = [
   // Yusuf's desk; his first fight in the Echo comes in a later chapter.
   {
     id: 'benny', name: 'Benny', role: 'Lord of Ardencia', house: 'Brasador', portrait: 'benny', look: 'benny_young', era: 'echo', class: 'warrior',
-    passives: [{ name: 'The iron promise', text: 'He kept the goal, not the oath: his La Marca is a weapon move, ready every third turn.' }],
+    passives: [{ name: 'The iron promise', text: 'He kept the oath, whatever it cost: his La Marca is a weapon move, ready every third turn.' }],
     joins: { flag: 'story.benny_joined' },
     base: { hp: 66, sp: 12, atk: 14, def: 11, mag: 4, spd: 8 }, growth: { hp: 7, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'steel_saber', armor: 'officer_coat' },

@@ -37,9 +37,9 @@ Paste this to the objective reviewer.
 > against the family's settled facts (`FAMILY.md`: Rael and Elodie married, Benny Rael's father, Nancy not Rael's
 > mother, Patricia a great-grandmother), and for voice: is Rael the guide's (no plea, no excuse, "I will answer for it
 > where it can be written down"), is Benny wry, Nancy gracious, Anaco a cacique, Yari Caona's great-granddaughter, Azzy
-> furious and loyal on Strike, every Anissa line a child's and never a joke?; and **say which is right** where the build
-> found a contradiction it did not settle: STORY's private line "My father kept his oath and it cost him everything"
-> (built verbatim) against young Benny's built passive "He kept the goal, not the oath" (Chapter 3);
+> furious and loyal on Strike, every Anissa line a child's and never a joke?; and **check the settled contradiction:** STORY's
+> private line "My father kept his oath and it cost him everything" stands, and young Benny's passive (Chapter 3) was
+> changed from "He kept the goal, not the oath" to "He kept the oath, whatever it cost" (Claude's call): is that right?;
 > (3) the owner rules: every story moment acted out on the map (the companies up the sand in columns, the crew down
 > the rock, the hull grounding and the betrayer walking up the beach, the watch walking him to the boats, the
 > resistance coming down the gardens' road, the carrier walking off, the picket, the conch and the companies filing

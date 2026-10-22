@@ -118,9 +118,9 @@ son. He was always his own. He never explained himself to me either." (not "his 
 Nancy is beside him). **Nancy** takes Anissa's hand ("Child. There are hurt people on this island and a lamp to hold.
 Show me where.") and walks the wounded up to the Song House; to Gianna: "Zelia will want to hear that you ate
 something." **Joaquin** counts Free Brasador's wounded ("Nobody from the wall."). Patricia's "Count them at dusk.
-Harbors lie." becomes the Journal's flank step and the boy's count from the lookout. **Not settled (flagged):** STORY's
-private line, "My father kept his oath and it cost him everything", against young Benny's built passive, "He kept the
-goal, not the oath" (Chapter 3); the line is built as STORY has it.
+Harbors lie." becomes the Journal's flank step and the boy's count from the lookout. **Settled (Claude's call, Oct 22):**
+STORY's private line, "My father kept his oath and it cost him everything", stands; young Benny's passive (Chapter 3)
+now reads "He kept the oath, whatever it cost" instead of "He kept the goal, not the oath".
 
 ## Rael's royal guard (Ch. 3)
 

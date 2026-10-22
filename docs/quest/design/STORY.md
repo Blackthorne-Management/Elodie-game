@@ -587,8 +587,9 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
   the choice *You tested us.* / *You lied to us for twenty years.*; the Locket and the signet glow together on the Ash
   Road Accounts (the token's rule); old Benny and Nancy come up the pier and take the wounded to the Song House, where
   Anissa holds the lamp. The caney: Anaco in his duho, the carved paddle to Yari, Rael "not beside you" at Eightgate,
-  the Regent gone home to his Throne. **Flagged for the owner:** the private line says Benny "kept his oath"; young
-  Benny's built passive (Chapter 3) says "He kept the goal, not the oath". One of the two should change.
+  the Regent gone home to his Throne. **Settled (Claude's call, Oct 22):** the private line says Benny "kept his oath"; young
+  Benny's passive (Chapter 3) said the opposite, so it now reads "He kept the oath, whatever it cost" (Rael is the one
+  who kept the goal instead).
 
 ### Chapter 12: The Claim (Eightgate)
 
