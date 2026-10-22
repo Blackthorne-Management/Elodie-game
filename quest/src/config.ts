@@ -68,9 +68,11 @@ export const LEVELS = {
  * Shared XP: each main-quest step done, by chapter (index 0 is Chapter 1), and each lore book read. The levels pass
  * (Claude's call, Oct 22; COMBAT.md 6): a step pays 15 in Chapter 1 (the boar still meets a level-3 Gianna), then
  * 15 + 5 x chapter; a chapter past the table pays its last entry. The route then ends each chapter on its target
- * (tools/level-curve.ts): 4, 8, 11, 14, 15.
+ * (tools/level-curve.ts): 4, 8, 11, 14, 15. Chapter 6 pays 65, not the formula's 45 (Claude's call, Oct 22): the
+ * line without side quests reaches Chapter 6 already two under (13 against 15) and must not fall to three; Ordvik's
+ * side quests pay less to keep the played line on 17 (COMBAT.md 6, "Chapter 6").
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter

@@ -686,6 +686,152 @@ export const BOOKS: readonly Book[] = [
       'No claimant has stood on the tile in fifty years, and the Regent has not asked for one. ' +
       'Someone has written in the margin, in a clerk\'s small hand: "Limyè? A temple name, not a house."',
   },
+  // ---- Ordvik (Chapter 6): the Saga Tent's eight, on hides and tally sticks, and the Moot's three ----------
+  {
+    id: 'skarragol_ulfgar_oath',
+    title: 'Ulfgar\'s Oath',
+    category: 'law',
+    text:
+      'Ulfgar Ironvow was the first chieftain of the horse clans and the fjord clans together. ' +
+      'Before him the clans swore on whatever was to hand, and broke whatever they swore on. ' +
+      'Ulfgar cut a pole of black ash, bound nine horse-tails to it, and cut his palm over it. ' +
+      'He said: an oath sworn on a thing can be seen, and what can be seen can be counted. ' +
+      'From that day the Ironvow swear on the standard or not at all. ' +
+      'A chieftain who loses it may not bind the clans to anything until it stands again. ' +
+      'The skalds say Ulfgar wanted it that way. A people that can lose its oath will guard it. ' +
+      'The Sky-Riders say he only wanted a stick to wave. Both stories are told at every fire.',
+  },
+  {
+    id: 'skarragol_sarnai_ride',
+    title: 'Sarnai\'s Ride',
+    category: 'war',
+    text:
+      'In the last winter of the war, the Crown camped its supply train on the far shore of the fjord. ' +
+      'Grain for three armies sat in its wagons, and the ice between was guarded by sentries with muskets. ' +
+      'Sarnai Ironvow crossed the ice at night with forty riders hidden in a herd of steppe horses. ' +
+      'She whistled, and the herd walked where the whistle walked. The sentries watched horses. ' +
+      'Nobody writes the whistle down. The skalds say it was three notes, and leave it there. ' +
+      'The wagons burned. Nobody who dropped his musket was touched, and half the grain went south to Zetwal. ' +
+      'The spring ice took half her riders on the way home. Nine of them are under the cairns on the plateau. ' +
+      'The Crown never camped on that shore again.',
+  },
+  {
+    id: 'skarragol_law_moot',
+    title: 'The Law of the Moot',
+    category: 'law',
+    text:
+      'The Moot sits when the horn blows at first light, and not before. ' +
+      'The chieftain speaks first and votes last. The lawspeaker speaks only the law, and is never asked twice. ' +
+      'What the standard binds, no vote may undo. What no oath forbids, the council may sell. ' +
+      'A vote taken while the standard is gone is lawful. The law also names it shameful, and both are written. ' +
+      'If the standard stands on its pole when the horn blows, every vote called without it falls. ' +
+      'A guest of the Moot may ask for a prisoner under an envoy\'s bond. If the prisoner runs, the guest pays. ' +
+      'The lawspeaker keeps these words on painted hides. Everyone quotes them. Nobody reads them.',
+  },
+  {
+    id: 'skarragol_sky_riders',
+    title: 'The Sky-Riders',
+    category: 'religion',
+    text:
+      'The Sky-Riders are the wind sect of the Four Hands, and the plateau is full of them. ' +
+      'They swear to the open sky, because the sky cannot be stolen, sold or burned. ' +
+      'They keep no temple. A Sky-Rider prays on horseback, facing the wind, with the reins slack. ' +
+      'They have argued with the Witness elders of Ordvik for three hundred years, mostly about the standard. ' +
+      'The elders say an oath you cannot lose is an oath you cannot keep. ' +
+      'The Sky-Riders say an oath on a stick is a stick. The two sit at the same fires and share the same salt. ' +
+      'Sarnai Ironvow, the skalds say, swore on the sky and on the pole, and told both sides they were right.',
+  },
+  {
+    id: 'skarragol_furs_salt',
+    title: 'Furs, Salt and Horses',
+    category: 'trade',
+    text:
+      'Ordvik sells three things: furs from the plateau, fish from the fjord, and horses from everywhere. ' +
+      'It buys one thing it cannot make, which is salt. Without salt the fish rot and the winter kills. ' +
+      'Before the Crown\'s blockade, Dorini salt came up the coast in the trading jarl\'s longships. ' +
+      'Since the blockade, salt costs three times what it did, and the fleet sits on the shingle. ' +
+      'The Crown offers compensation for the blockade it imposes. The price is the fleet. ' +
+      'The trading jarl says a people who sell their ships to buy salt will buy salt forever. ' +
+      'The raiding jarl says a fleet that cannot raid is firewood. Both are counting the same hulls.',
+  },
+  {
+    id: 'skarragol_mare_sky',
+    title: 'The Mare in the Sky',
+    category: 'folklore',
+    text:
+      'The herders say there is a mare in the night sky, nine stars round a tenth, and she walks the year. ' +
+      'In spring she grazes low over the fjord. At first snow she stands over the plateau\'s high stones. ' +
+      'Nine riders who went out on the ice with Sarnai never came home. ' +
+      'Their cairns stand in a ring on the plateau, round a flat stone scored with lines. ' +
+      'The old herders say that on the right night the mare stands over the stone, and the lines point somewhere. ' +
+      'Nobody young has seen it. The old herders will not say where the lines point. ' +
+      'They say only that the riders left something for the one who can read the sky as Sarnai did.',
+  },
+  {
+    id: 'skarragol_who_married',
+    title: 'Who Married Whom',
+    category: 'gossip',
+    text:
+      'A skald\'s notes on the great families, not to be sung at a feast. ' +
+      'Torvald married late and lost his wife early. His daughter rides better than he ever did, and he knows it. ' +
+      'Hrafn has married twice, both times for ships. ' +
+      'The trading jarl has never married, and keeps a tally stick for every offer. ' +
+      'A daughter of the khatun\'s household married a Brasador lord in the Ash Wars, and came home alone. ' +
+      'The boy stayed in Ardencia. The eastern clans still send a rider to Cenizal every year to ask after him. ' +
+      'The rider is always told the boy is well, and goes home, and comes back the next year.',
+  },
+  {
+    id: 'skarragol_ironvow_line',
+    title: 'The Ironvow Line',
+    category: 'genealogy',
+    text:
+      'The chieftains of the Ironvow, as the skalds count them. ' +
+      'Ulfgar, who cut the standard and joined the clans. Many after him, whose names are on the poles. ' +
+      'Sarnai, who broke the Crown\'s supply train on the fjord ice in the last winter of the war. ' +
+      'She swore for the Ironvow at the Accord, and came home to bury nine riders. ' +
+      'Torvald her son, chieftain now, who has kept the fleet on the water through three hard winters. ' +
+      'Bayarmaa his daughter, the standard\'s guard, who rides with the horn-riders and speaks to her horse more than to the Moot. ' +
+      'The skald who wrote this added, small: she will be chieftain, or she will be gone.',
+  },
+  {
+    id: 'skarragol_standard_keeping',
+    title: 'The Standard\'s Keeping',
+    category: 'law',
+    text:
+      'The guard roster for the Ironvow standard, kept by the lawspeaker, for the nights of this autumn. ' +
+      'Each night two names: one from the horse clans, one from the fjord clans. ' +
+      'On the night it went, the horse clans\' name is Bayarmaa, Torvald\'s daughter, written plainly. ' +
+      'The fjord clans\' name has been struck out with a heavy line, and no other written in its place. ' +
+      'Under it, in the lawspeaker\'s hand: the struck name was a rider of the raiding jarl\'s household. ' +
+      'He asked to be moved to the quay that night, and was. Nobody has asked him why. ' +
+      'The lawspeaker\'s note ends: the law does not ask questions. Envoys may.',
+  },
+  {
+    id: 'skarragol_crown_offer',
+    title: 'The Crown\'s Offer',
+    category: 'trade',
+    text:
+      'A copy of the offer the Crown\'s guest laid before the council, in a clerk\'s careful hand. ' +
+      'The Throne will pay compensation for the blockade of the northern coast, in gold, this winter. ' +
+      'In return, the Ironvow fleet passes into the Throne\'s keeping for the duration of the war. ' +
+      'The offer stands until the morning horn of the council\'s vote, and not a moment after. ' +
+      'It is signed by the Throne\'s compensation office. No person\'s name is on it. ' +
+      'In the margin, in a heavier hand, someone has written: whose war? ' +
+      'Someone else has written under that: the Throne\'s. And under that, nothing more.',
+  },
+  {
+    id: 'skarragol_compensation',
+    title: 'Compensation Claims',
+    category: 'history',
+    text:
+      'A ledger of claims the Throne\'s compensation office has paid in the last ten years. ' +
+      'Ships lost to the blockade, at half their value. Herds lost to Crown requisitions, at a third. ' +
+      'A temple in Jwaladesh, for a sacred lamp broken by soldiers, paid in full and quickly. ' +
+      'A guild in Al-Doria, for papers lost in a fire, paid before the fire was reported. ' +
+      'A great many claims for the recovery of objects, paid to persons not named. ' +
+      'Whoever kept the ledger stopped adding to it last spring. ' +
+      'The last line reads: the office pays what it is told to pay, and is told by whom it pays.',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -712,6 +858,10 @@ export const SHELVES: readonly Shelf[] = [
   // Eightgate (Chapter 5): the Throne Hall's records room, and the Throne Archive (readable from the bell on).
   { id: 'hall_records', name: "Shelf: The Hall's Records", books: ['seat_regent_commission', 'seat_petitions_breach', 'seat_council_eight', 'seat_seventh_clause'] },
   { id: 'archive_shelves', name: 'Shelves: The Throne Archive', books: ['seat_weaving', 'seat_founding_compact', 'seat_accord_sealed', 'seat_throne_clerks', 'seat_claimant_families'] },
+  // Ordvik (Chapter 6): the Saga Tent's hides and tally sticks, and the lawspeaker's painted hides in the Moot.
+  { id: 'saga_hides_a', name: 'Hides: Oaths and the Law', books: ['skarragol_ulfgar_oath', 'skarragol_sarnai_ride', 'skarragol_law_moot', 'skarragol_sky_riders'] },
+  { id: 'saga_hides_b', name: 'Tally sticks: Trade and Lines', books: ['skarragol_furs_salt', 'skarragol_mare_sky', 'skarragol_who_married', 'skarragol_ironvow_line'] },
+  { id: 'moot_hides', name: "The lawspeaker's hides", books: ['skarragol_standard_keeping', 'skarragol_crown_offer', 'skarragol_compensation'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

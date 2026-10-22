@@ -5,6 +5,7 @@
 import type { JournalNote, QuestDef } from '../engine/quests.ts';
 import { AREITO_BARS, barText } from './rhythms.ts';
 import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './sideQuests.ts';
+import { FAIR, FJORD, HERD, HORN_DAY_DONE, MOOT, PLATEAU, QUAY } from './skarragol.ts';
 
 export const ACT1: QuestDef = {
   id: 'act1',
@@ -1033,8 +1034,174 @@ export const ACT5: QuestDef = {
   ],
 };
 
+const SKA_MAPS = ['skarragol-plateau', 'skarragol-fair', 'skarragol-moot', 'skarragol-saga', 'skarragol-quay', 'skarragol-fjord'];
+const zoneAt = (i: number, era: 'present' | 'echo' = 'present') => {
+  const z = FJORD.zones[i]!;
+  // The shimmer's middle tile on its far side: where a player swapping on the way across stands.
+  return { map: 'skarragol-fjord', at: { x: z.x + 1, y: era === 'present' ? z.y : z.y + z.h - 1 } };
+};
+
+/**
+ * Chapter 6, The Stolen Standard (Ordvik, Skarragol; the first road: docs/quest/reviews/2026-10-21-chapter6-outline.md
+ * with its second review). The winter road, the fair in uproar, the Moot (Bayarmaa joins under the envoy's bond), the
+ * day until the horn (two side quests and the debate, followed by the arrow), the fjord's five swaps, Sarnai's raid,
+ * the herd, Grimvald, the ride round at dawn, the horn and the price, the longship.
+ */
+export const ACT6: QuestDef = {
+  id: 'act6',
+  title: 'Chapter 6: The Stolen Standard',
+  maps: SKA_MAPS,
+  objectives: [
+    {
+      id: 'road',
+      title: 'The winter road',
+      detail: 'East out of the Iron Gate and up onto the Winter Plateau: Skarragol, the Ironvow, and a standard nobody has.',
+      done: { flag: 'story.skarragol_arrived' },
+      // The arrival is a scene on landing (no XP).
+      noXp: true,
+      goals: [{ map: 'skarragol-plateau', at: { x: PLATEAU.spawn.x, y: PLATEAU.spawn.y } }],
+      hints: ['It is cold, Gigi.', 'The road goes on west, to the fair.', 'Follow the road down to the fair.'],
+    },
+    {
+      id: 'fair',
+      title: 'The Horse-Fair',
+      detail: 'Down the road west to Ordvik\'s horse-fair. The Ironvow envoy at Eightgate said: ask Ordvik.',
+      done: { flag: 'story.fair_seen' },
+      noXp: true,
+      goals: [{ map: 'skarragol-fair', at: { x: FAIR.crier.x, y: FAIR.crier.y } }],
+      hints: ['There\'s a whole fair down there, Gigi.', 'The road west goes in at the fair\'s east gate.', 'Walk west on the road into the fair, toward the crier.'],
+    },
+    {
+      id: 'moot',
+      title: 'The Moot',
+      detail: 'The Great Moot Tent in the middle of the field. The council sits at the horn; the chieftain hears envoys before it.',
+      done: { flag: 'party.bayarmaa' },
+      // In the Moot Tent, the chieftain (from the fair the arrow names the tent's door: engine/guide.ts waypoint).
+      goals: [{ map: 'skarragol-moot', at: { x: MOOT.torvald.x, y: MOOT.torvald.y } }],
+      hints: ['They took that girl into the big tent, Gigi.', 'The Moot Tent is in the middle of the field, by the empty pole.', 'Go into the Moot Tent and walk up the aisle to the chieftain.'],
+    },
+    {
+      id: 'until_horn',
+      title: 'Until the horn',
+      detail: 'Torvald: the white coat, the herders at the folds, the traders on the mats. The horn is at first light. Your Quests page.',
+      done: { any: [HORN_DAY_DONE, { flag: 'story.fjord_crossed' }] },
+      followSide: true,
+      noXp: true,
+      hints: [
+        'The horn is at first light, Gigi. There\'s a day first.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        'Azzy\'s envoy in white, the herders on the plateau, and the two arguing on the mats.',
+      ],
+    },
+    {
+      id: 'set_out',
+      title: 'The fjord path',
+      detail: 'Dusk. Bayarmaa: the floes go out with the morning tide. The fjord path leaves the fair at its north-east corner.',
+      done: { flag: 'story.fjord_set_out' },
+      noXp: true,
+      goals: [{ map: 'skarragol-fair', at: { x: FAIR.fjordPath.x, y: FAIR.fjordPath.y } }],
+      hints: ['It\'s getting dark, Gigi.', 'Bayarmaa keeps looking at the fjord path.', 'Walk to the fjord path at the fair\'s north-east corner.'],
+    },
+    {
+      id: 'crossing',
+      title: 'The thin water',
+      detail: 'Open water and drifting floes. Some floes shimmer: fifty years ago the fjord was ice there too. Cross on both.',
+      done: { flag: 'story.fjord_crossed' },
+      // The arrow walks the crossing zone by zone (the reach_zN triggers on the map): in the present, the next floe to
+      // swap on or walk to; in the memory, the next ice to walk to or the floe to come back on.
+      goals: [
+        { if: { flag: 'story.fjord_z5' }, ...zoneAt(4, 'echo') },
+        { if: { flag: 'story.fjord_z4' }, ...zoneAt(4) },
+        { if: { flag: 'story.fjord_z3' }, ...zoneAt(2, 'echo') },
+        { if: { flag: 'story.fjord_z2' }, ...zoneAt(2) },
+        zoneAt(0, 'echo'),
+      ],
+      echoGoals: [
+        { if: { flag: 'story.fjord_z5' }, map: 'skarragol-fjord', at: { x: FJORD.zones[5]!.x + 1, y: FJORD.crossedRow } },
+        { if: { flag: 'story.fjord_z4' }, ...zoneAt(3) },
+        { if: { flag: 'story.fjord_z3' }, ...zoneAt(3, 'echo') },
+        { if: { flag: 'story.fjord_z2' }, ...zoneAt(1) },
+        zoneAt(1, 'echo'),
+      ],
+      hints: [
+        'The ice was solid once. And the floes are solid now. Use both.',
+        'Swap only on the shimmer. When the dark ice is ahead, come back to now.',
+        'Cross on five swaps: Echo on the first floe, back on the next, and so on, to the far shore.',
+      ],
+    },
+    {
+      id: 'raid',
+      title: "Sarnai's raid",
+      detail: 'The far shore, fifty years ago: the Crown\'s supply camp, and a herd on the ice where no horse should be.',
+      done: { flag: 'clue.herd_whistle' },
+      goals: [{ map: 'skarragol-fjord', at: { x: FJORD.zones[5]!.x + 1, y: FJORD.zones[5]!.y } }],
+      echoGoals: [{ map: 'skarragol-fjord', at: { x: FJORD.zones[5]!.x + 1, y: FJORD.raidRow } }],
+      hints: ['Someone is on the ice in the memory, Gigi.', 'Step onto the far shore\'s floe in the memory.', 'In the memory, walk onto the far shore\'s floe and meet the woman with the whistle.'],
+    },
+    {
+      id: 'herd',
+      title: 'Inside the herd',
+      detail: 'Grimvald\'s camp: a ring of sledges, two gaps, a lookout at each. A loose herd grazes between the ice and the ring.',
+      done: { any: [{ flag: 'story.herd_unseen' }, { flag: 'story.lookouts_beaten' }] },
+      goals: [
+        { if: { flag: 'story.herd_called' }, map: 'skarragol-fjord', at: { x: FJORD.picket.x, y: FJORD.picket.y } },
+        { map: 'skarragol-fjord', at: { x: HERD[3]!.a.x, y: HERD[3]!.a.y } },
+      ],
+      // Still in the memory: the shimmer back out.
+      echoGoals: [{ map: 'skarragol-fjord', at: { x: FJORD.zones[5]!.x + 1, y: FJORD.zones[5]!.y } }],
+      hints: [
+        'The lookouts are watching the gaps, Gigi. Not the horses.',
+        'Sarnai\'s whistle. Low, high, low. The herd walks where the whistle walks.',
+        'Whistle at the herd, then again at the picket line inside the ring. Walk in behind the horses.',
+      ],
+    },
+    {
+      id: 'standard',
+      title: 'The stolen standard',
+      detail: 'Grimvald\'s tent at the back of the camp, and his black horse tethered beside it.',
+      done: { flag: 'story.grimvald_beaten' },
+      goals: [{ map: 'skarragol-fjord', at: { x: FJORD.blackHorse.x, y: FJORD.blackHorse.y } }],
+      hints: ['Bayarmaa has her hand on her sabre, Gigi.', 'His tent is behind the inner ring, by the black horse.', 'Go through the inner ring\'s gap to Grimvald\'s tent.'],
+    },
+    {
+      id: 'round',
+      title: "Round the fjord's head",
+      detail: 'Grimvald\'s horses know the way round the fjord\'s head. The fair\'s fires at dawn.',
+      done: { flag: 'story.standard_home' },
+      noXp: true,
+      goals: [{ map: 'skarragol-fjord', at: { x: FJORD.blackHorse.x, y: FJORD.blackHorse.y } }],
+      hints: ['We have it, Gigi.', 'Bayarmaa knows the way round.', 'Talk to Bayarmaa by the tent.'],
+    },
+    {
+      id: 'horn',
+      title: 'The horn',
+      detail: 'First light. The council stands to vote at the horn. The standard\'s place is the empty pole beside the chieftain\'s seat.',
+      done: { flag: 'story.standard_planted' },
+      goals: [{ map: 'skarragol-moot', at: { x: MOOT.innerPole.x, y: MOOT.innerPole.y } }],
+      hints: ['The horn, Gigi! Hurry!', 'The Moot Tent. The pole by the chieftain\'s seat.', 'Go into the Moot Tent and up the aisle before the vote.'],
+    },
+    {
+      id: 'price',
+      title: 'The price of a fleet',
+      detail: 'Torvald: the Ironvow ride for whoever pays the blockade\'s cost. Their price is Wealth 10.',
+      done: { flag: 'ally.skarragol' },
+      goals: [{ map: 'skarragol-moot', at: { x: MOOT.torvald.x, y: MOOT.torvald.y } }],
+      hints: ['They want the blockade paid for, Gigi.', 'What we have, we lay on the table.', 'Hear Torvald out and lay down what you can.'],
+    },
+    {
+      id: 'longship',
+      title: 'The longship',
+      detail: 'Torvald\'s letter for Kuroshi, and a longship at the quay. South along the coast, to Kirinoura.',
+      done: { flag: 'act6.complete' },
+      noXp: true,
+      goals: [{ map: 'skarragol-quay', at: { x: QUAY.ship.x, y: QUAY.ship.y } }],
+      hints: ['A boat, Gigi.', 'The quay is up the lane north of the fair.', 'Walk to the longship at the end of the quay\'s pier.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -1282,6 +1449,55 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'clue.seventh_clause_read',
     title: 'The seventh clause',
     text: '"The harbor of Xaraguá and its waters are given into the keeping of the Crown of Aldermoor, at the Crown\'s pleasure, to be revisited." No signature.',
+  },
+  // Chapter 6 (Ordvik).
+  {
+    id: 'ironvow_law',
+    when: 'story.moot_seen',
+    title: 'The Law of the Moot',
+    text: 'The Ironvow swear on the standard or not at all. If it stands on its pole when the horn blows, the vote to sell the fleet falls.',
+  },
+  {
+    id: 'sarnai_whistle',
+    when: 'clue.herd_whistle',
+    title: "Sarnai's whistle",
+    text: 'Three notes: low, high, low. The herd walks where the whistle walks, and riders walk inside the herd. "Speed is the only thing the Crown cannot buy."',
+  },
+  {
+    id: 'changed_wolf_run',
+    when: 'anchor.wolf_run',
+    title: 'Something changed',
+    text: 'A boulder wall shuts the wolves\' gully under the plateau: young Patricio rolled it down fifty years ago. It has grass on it now.',
+  },
+  {
+    id: 'thumb_four',
+    when: 'side.winter_stores.done',
+    title: 'The winter stores',
+    text: 'Grain comes to the plateau before the snow, thumbprinted. Yucayeque\'s oil, Cenizal\'s bread, Bab al-Dhahab\'s water, Ordvik\'s grain: the same hand.',
+  },
+  {
+    id: 'crown_pays_raiders',
+    when: 'clue.crown_pays_raiders',
+    title: 'The Crown pays raiders',
+    text: 'In Grimvald\'s tent: Throne gold, and a voucher with no name. "For the recovery of a sacred object, payable on the council\'s vote."',
+  },
+  {
+    id: 'grandson',
+    when: 'side.grandson.done',
+    title: 'Grandson of the steppe',
+    text: 'Azzy\'s mother\'s people are the khatun\'s household of Ironvow\'s eastern clans. They offered riders for his mother\'s name. He answered.',
+  },
+  {
+    id: 'ironvow_fleet',
+    when: 'ally.skarragol',
+    title: 'The Ironvow fleet',
+    text: 'Price: Wealth 10, owed at the Muster. Paid at Ordvik: the purse +3, Samira\'s salt +1, the jarl\'s gold +3, the stores +1. Least paid, first bought.',
+  },
+  {
+    id: 'ironvow_token',
+    when: 'item.token_ironvow',
+    title: 'Ironvow sits',
+    text: 'Torvald cut a braid from the standard for the chamberlain\'s chair: Ironvow will sit with Zetwal at a Claim. A letter for Kuroshi, too.',
   },
   {
     id: 'in_private',

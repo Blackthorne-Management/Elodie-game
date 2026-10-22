@@ -15,6 +15,12 @@ import seatQuarter from '../../maps/seat-quarter.tmj?raw';
 import seatWorkshop from '../../maps/seat-workshop.tmj?raw';
 import seatArchive from '../../maps/seat-archive.tmj?raw';
 import seatFields from '../../maps/seat-fields.tmj?raw';
+import skarragolPlateau from '../../maps/skarragol-plateau.tmj?raw';
+import skarragolFair from '../../maps/skarragol-fair.tmj?raw';
+import skarragolMoot from '../../maps/skarragol-moot.tmj?raw';
+import skarragolSaga from '../../maps/skarragol-saga.tmj?raw';
+import skarragolQuay from '../../maps/skarragol-quay.tmj?raw';
+import skarragolFjord from '../../maps/skarragol-fjord.tmj?raw';
 import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
 import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
 import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
@@ -93,6 +99,12 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'seat-workshop': seatWorkshop,
   'seat-archive': seatArchive,
   'seat-fields': seatFields,
+  'skarragol-plateau': skarragolPlateau,
+  'skarragol-fair': skarragolFair,
+  'skarragol-moot': skarragolMoot,
+  'skarragol-saga': skarragolSaga,
+  'skarragol-quay': skarragolQuay,
+  'skarragol-fjord': skarragolFjord,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

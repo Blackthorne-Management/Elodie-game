@@ -108,6 +108,22 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       text: 'A purse for courage: one ally is Inspired for 3 turns (60 gold).',
     },
   ],
+  // Bayarmaa (COMBAT 9.4; the outline section 9): Raider's Charge leaves her next turn half as far off (its weight), Hoofbeat
+  // is Salkhi's kick (a boss only a quarter of the time), The Great Raid gives her a second turn at once, once a battle.
+  bayarmaa: [
+    {
+      id: 'raiders_charge', name: "Raider's Charge", sp: 5, kind: 'damage', stat: 'atk', power: 130, target: 'enemy', weight: 0.5,
+      text: 'She rides straight through one foe, and is ready again in half the time.',
+    },
+    {
+      id: 'hoofbeat', name: 'Hoofbeat', sp: 6, kind: 'damage', stat: 'atk', power: 90, target: 'enemy', statuses: ['stunned'], bossChance: 0.25,
+      text: 'Salkhi kicks: one foe loses its next action (a boss only a quarter of the time).',
+    },
+    {
+      id: 'great_raid', name: 'The Great Raid', sp: 16, kind: 'damage', stat: 'atk', power: 150, target: 'enemy', once: true, weight: 0,
+      text: 'Once per battle: a raid her grandmother would know. A heavy blow, and her next turn comes at once.',
+    },
+  ],
   yari: [
     { id: 'trackers_mark', name: "Tracker's Mark", sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'Marks one foe: it takes a quarter more damage for 3 turns.' },
     { id: 'arrow_rain', name: 'Arrow Rain', sp: 9, kind: 'damage', stat: 'atk', power: 75, target: 'allEnemies', element: 'wind', learn: { level: 6 }, text: 'Arrows on the wind, at every foe.' },
@@ -134,6 +150,11 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'quick_shot', name: 'Quick Shot', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A fast arrow. Ready every turn.' },
     { id: 'pinning_shot', name: 'Pinning Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'enemy', statuses: ['slowed'], text: 'Pins a foe: its turns come slower for 3 turns.' },
     { id: 'scouts_mark', name: "Scout's Mark", sp: 0, cooldown: 3, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'She has watched this foe for a week: it takes a quarter more damage for 3 turns.' },
+  ],
+  bayarmaa: [
+    { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A sabre cut from the saddle. Ready every turn.' },
+    { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },
+    { id: 'horse_tail_sweep', name: 'Horse-Tail Sweep', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 70, target: 'allEnemies', text: 'She wheels Salkhi through the line: every foe.' },
   ],
   // Young Lord Benny of Ardencia in the Echo party (from the end of Chapter 3, once Azzy has joined).
   benny: [
@@ -474,6 +495,81 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Hungry lunge', power: 150, every: 3, tell: 'A deserter crouches low, eyes on your bags...' },
     ],
   },
+  // ---- Chapter 6, Skarragol (the outline section 5 with its review 3.3; COMBAT 13.2 and 13.3) ---------------------
+  // The plateau's wolves (COMBAT's Chilled is the built Slowed; Pack Bite has no engine support and is cut: a pack of
+  // four at 17 is the pressure instead), the reavers who ride for whoever pays, and the camp's lookout with his horn.
+  steppe_wolf: {
+    id: 'steppe_wolf',
+    name: 'Steppe Wolf',
+    look: 'steppe_wolf',
+    level: 16,
+    role: 'skirmisher',
+    moves: [
+      { name: 'Bite', power: 100 },
+      { name: 'Frost Breath', power: 80, statuses: ['slowed'], chance: 0.5, every: 3, tell: 'The wolf draws a long, cold breath...' },
+    ],
+  },
+  steppe_reaver: {
+    id: 'steppe_reaver',
+    bribable: true,
+    name: 'Steppe Reaver',
+    look: 'steppe_reaver',
+    level: 16,
+    role: 'skirmisher',
+    withdraws: { line: 'The reaver wheels her horse and rides for the sledges.' },
+    moves: [
+      { name: 'Sabre', power: 110 },
+      { name: "Raider's Charge", power: 150, every: 3, tell: 'The reaver wheels her horse and lowers the sabre...' },
+    ],
+  },
+  camp_lookout: {
+    id: 'camp_lookout',
+    bribable: true,
+    name: 'Camp lookout',
+    look: 'lookout',
+    level: 17,
+    role: 'skirmisher',
+    withdraws: { line: 'The lookout drops his horn and runs for the tents.' },
+    moves: [
+      { name: 'Sling', power: 100 },
+      { name: 'Horn', power: 0, ally: 'steppe_reaver', statuses: ['inspired'], every: 2, tell: 'The lookout puts his horn to his lips...' },
+    ],
+  },
+  // S-5's sparring bout: the eastern clans' champion, in white. A bout, not a fight to the death: she steps back at 0 HP.
+  ordu_champion: {
+    id: 'ordu_champion',
+    name: 'Champion of the eastern clans',
+    look: 'ordu_champion',
+    level: 17,
+    role: 'brute',
+    boss: true,
+    hpScale: 2.5,
+    withdraws: { line: 'Enough. He can sit a horse. I will say so.', speaker: 'Champion' },
+    moves: [
+      { name: 'Practice sabre', power: 110 },
+      { name: 'Ride-by', power: 150, every: 3, tell: 'The champion turns her horse wide for a run at you...' },
+    ],
+  },
+  // Noyan Grimvald, the Crown-paid raider chief (the outline 5 with its review 3.3): level 17, a brute at 5 times HP and
+  // 1.3 ATK (the outline's 7 and 1.6 were simmed on a bot that Guards and casts; tools/battle-sim.ts at @herd, 40 runs:
+  // Attack alone wins 1 in 40, and 37 in 40 at the boss Grudge, as Thorne; the skills win 40 in 40 with 39% of the
+  // party's HP lost; the start tip names the answer). Mounted, then unhorsed (two reavers ride in), then the standard
+  // falls from his hand (at a quarter of his HP, or sooner at a Surge in that phase), and at 0 HP he yields: nobody dies.
+  grimvald: {
+    id: 'grimvald',
+    name: 'Noyan Grimvald',
+    look: 'grimvald',
+    level: 17,
+    role: 'brute',
+    boss: true,
+    hpScale: 5,
+    atkScale: 1.3,
+    withdraws: { line: 'Enough! The standard is yours. Keep the horse.', speaker: 'Grimvald' },
+    moves: [
+      { name: 'Lance', power: 120 },
+      { name: 'Trample', power: 100, area: true, every: 2, tell: 'Grimvald turns his horse and spurs it straight at the line...' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     bribable: true,
@@ -502,6 +598,17 @@ const RAEL_CORNERED: readonly EnemyMove[] = [
   },
 ];
 
+/** Grimvald unhorsed (phase 2): the axe, and the stolen standard planted to rally his riders. */
+const GRIMVALD_UNHORSED: readonly EnemyMove[] = [
+  { name: 'Axe', power: 120 },
+  {
+    name: 'Stolen Standard', power: 0, ally: 'steppe_reaver', statuses: ['inspired'], every: 2,
+    tell: 'Grimvald drives the Ironvow standard into the turf. His riders roar.',
+  },
+];
+/** Grimvald with the standard gone from his hand (phase 3): the axe only. */
+const GRIMVALD_BROKEN: readonly EnemyMove[] = [{ name: 'Axe', power: 110 }];
+
 /** Qasim once the guild's money is gone (phase 2, Foreclosure): no more hiring; he seizes, then walls himself in gold. */
 const QASIM_FORECLOSURE: readonly EnemyMove[] = [
   { name: 'Cane', power: 160 },
@@ -513,6 +620,96 @@ const QASIM_FORECLOSURE: readonly EnemyMove[] = [
 ];
 
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 6: Noyan Grimvald at his tent (the outline beat 7, its review 3.3). Game Over applies; the way back in is
+  // the tent's trigger. The phases always come: unhorsed at half, the standard falls at a quarter (a Surge in that
+  // phase brings it sooner). Paid 120, below the outline's 150 (its review 3.1), the level curve's number.
+  fjord_grimvald: {
+    id: 'fjord_grimvald',
+    title: 'Noyan Grimvald',
+    backdrop: 'frozen_fjord',
+    enemies: ['grimvald'],
+    table: 'skarragol_story',
+    group: 'grimvald',
+    rewards: { xp: 120, gold: 300 },
+    endsWithBoss: true,
+    boss: true,
+    phases: [
+      {
+        below: 0.5,
+        speaker: 'Grimvald',
+        text: 'Horse! To me!',
+        moves: GRIMVALD_UNHORSED,
+        enter: ['steppe_reaver', 'steppe_reaver'],
+        enterText: 'His horse bolts for the picket line. Two reavers ride in from the sledges.',
+      },
+      {
+        below: 0.25,
+        onSurge: true,
+        text: 'The Ironvow standard falls from his hand into the grass. Bayarmaa, over it: "That is not yours."',
+        moves: GRIMVALD_BROKEN,
+      },
+    ],
+    tips: {
+      // The one thing that matters, said at the start (review 1, finding 1): skills, not staffs; Guard on the Trample.
+      start: 'Your light, Gigi, and Bayarmaa\'s Charge. Not your staff. When he turns his horse, everyone Guard.',
+      spark: 'Surge, Gigi! The standard!',
+      tell: 'He is turning the horse! Guard!',
+      lowHp: 'Heal, Gigi. Please.',
+    },
+  },
+  // Chapter 6: the camp's lookouts, the herd stealth's fail-safe (the outline beat 6). Paid flat (data).
+  camp_lookouts: {
+    id: 'camp_lookouts',
+    title: "The Thief's Camp",
+    backdrop: 'frozen_fjord',
+    enemies: ['steppe_reaver', 'steppe_reaver', 'camp_lookout'],
+    level: 17,
+    table: 'skarragol_story',
+    group: 'lookouts',
+    rewards: { xp: 40, gold: 150 },
+    tips: {
+      start: 'The lookout will call them on, Gigi. Him first.',
+      spark: 'Surge, Gigi!',
+      tell: 'Guard, Gigi!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 6, S-3: the wolves at the winter store. Paid below the ambush rule on purpose (its review 3.1).
+  winter_wolves: {
+    id: 'winter_wolves',
+    title: 'The Winter Store',
+    backdrop: 'winter_plateau',
+    enemies: ['steppe_wolf', 'steppe_wolf', 'steppe_wolf'],
+    level: 16,
+    table: 'skarragol_story',
+    group: 'wolves',
+    rewards: { xp: 40, gold: 120 },
+    sideQuest: 'winter_stores',
+    tips: {
+      start: 'Three of them, Gigi. They come up the gully one at a time. Bayarmaa first.',
+      spark: 'Surge, Gigi!',
+      tell: 'Cold breath! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 6, S-5: the champion's bout (Azzy's show of strength). A sparring bout: she steps back at 0 HP; the quest pays.
+  ordu_bout: {
+    id: 'ordu_bout',
+    title: 'A Sparring Bout',
+    backdrop: 'horse_fair',
+    enemies: ['ordu_champion'],
+    table: 'skarragol_story',
+    group: 'champion',
+    rewards: { xp: 0, gold: 0 },
+    endsWithBoss: true,
+    sideQuest: 'grandson',
+    tips: {
+      start: "It's a bout, Gigi. Nobody gets hurt past the bout. Azzy wants to win it.",
+      spark: 'Surge!',
+      tell: 'She is turning wide! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
   // Chapter 4: Guildmaster Qasim in the guild vault (the outline beat 8, its review 3.1). Game Over applies; the way
   // back in is the blade at the stair foot. Samira has joined before it, so it teaches Bribe and her Daftar.
   qasim_vault: {
@@ -757,6 +954,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   cinder_patrols: { title: 'The Sea Road', backdrop: 'cinder_flats' },
   desert_edge: { title: 'The Desert Edge', backdrop: 'desert_edge' },
   crossroads: { title: 'The Crossroads Fields', backdrop: 'crossroads' },
+  winter_plateau: { title: 'The Winter Plateau', backdrop: 'winter_plateau' },
 };
 
 /**

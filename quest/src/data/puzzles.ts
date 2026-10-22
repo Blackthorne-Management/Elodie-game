@@ -32,6 +32,25 @@ const XARAGUA_FREE: FlagSnapshot = {
   'story.lamp_asked': true,
 };
 
+/** Ordvik at dusk (Chapter 6): Bayarmaa with the party, the day's three things done, set out for the fjord. */
+const SKARRAGOL_DUSK: FlagSnapshot = {
+  ...BEFORE_LOCKET,
+  'item.sun_locket': true,
+  'story.yari_asked': true,
+  'party.azzy': true,
+  'party.samira': true,
+  'party.bayarmaa': true,
+  'story.benny_joined': true,
+  'story.caona_joined': true,
+  'act5.complete': true,
+  'card.act5_end': true,
+  'story.skarragol_arrived': true,
+  'story.fair_seen': true,
+  'story.moot_seen': true,
+  'story.fjord_set_out': true,
+  'story.fjord_seen': true,
+};
+
 export const PUZZLES: readonly PuzzleDef[] = [
   {
     id: 'warroom_orders',
@@ -153,5 +172,25 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     // Hollis opens the drawer and agrees to take the page to the Parley.
     goal: { flag: 'story.hollis_agreed' },
+  },
+  // Chapter 6 (Oct 22): Ordvik's signature puzzle, the frozen fjord (PUZZLES.md SIG-SKA, as the outline's second review
+  // 3.2 and 3.4 fixed it): five swaps across, the floes now and the ice then, and Sarnai's raid on the far shore's floe
+  // in the memory (a step trigger: the crossing ends in the Echo). The herd is the scripted route's and its tests'.
+  {
+    id: 'skarragol_fjord',
+    title: 'The frozen fjord: five swaps across, and Sarnai\'s whistle (signature puzzle; PUZZLES.md SIG-SKA)',
+    map: 'skarragol-fjord',
+    spawn: 'fjord_path',
+    flags: { ...SKARRAGOL_DUSK },
+    goal: { flag: 'clue.herd_whistle' },
+  },
+  // S-3's minor puzzle (M-SKA-1, the wolf run): the boulder on the slope in the memory, the wall across the gully now.
+  {
+    id: 'skarragol_gully',
+    title: 'The wolf run: the boulder above the gully (minor puzzle; PUZZLES.md M-SKA-1)',
+    map: 'skarragol-plateau',
+    spawn: 'store',
+    flags: { ...SKARRAGOL_DUSK, 'story.fjord_set_out': false, 'side.winter_stores.accepted': true, 'side.winter_stores.wolves': true, 'encounter.skarragol_story.wolves.won': true },
+    goal: { flag: 'anchor.wolf_run' },
   },
 ];

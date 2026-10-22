@@ -10,6 +10,7 @@ import { loreFlag } from './books.ts';
 const K = 'gaze_keeper';
 const Q = 'recruiter_a';
 const G = 'gianna';
+const BY = 'bayarmaa';
 const A = 'anissa';
 const R = 'roots_elder';
 const P = 'gaze_pilgrim';
@@ -407,6 +408,83 @@ export const DEBATES: readonly DebateDef[] = [
     after: [
       say('witness_priest', 'We read a clause of the Compact aloud here now. The Sealbearers listen. They pretend not to.'),
       say('quiet_speaker', 'I still think it is noise. I come to hear it anyway.'),
+    ],
+  },
+  // Ordvik's trading mats (Chapter 6; the outline 7.3): Oath of blood or oath of sky? Required. The Witness elder is
+  // Gianna's side (the party is here to put the standard back); the Sky-Rider is the opponent. Both reasonable, both
+  // dry or cheerful; no faith is a cult. Reason needs one of the Saga Tent's three oath books.
+  {
+    id: 'skarragol_oath',
+    city: 'skarragol',
+    question: 'Oath of blood or oath of sky?',
+    ally: 'witness_elder',
+    opponent: 'sky_rider',
+    opensIf: { flag: 'party.bayarmaa' },
+    passing: [
+      say('sky_rider', '...a stick! You swore on a stick, and now you are surprised it can be stolen!'),
+      say('witness_elder', 'And you swore on the weather, and are surprised nobody can hold you to it.'),
+    ],
+    listen: [
+      say('sky_rider', 'An oath sworn on a stick is a stick. We swear to the open sky, and the sky is still there when the stick is stolen.'),
+      say('sky_rider', 'Sell the fleet or don\'t. The oath was never in the pole.'),
+      say('witness_elder', 'A contract is a thing you can lose. That is what makes it a contract.'),
+      say('witness_elder', 'Ulfgar swore blood on the standard so that losing it would cost something. It is costing something. Good.'),
+      say(A, 'They both want the standard back, Gigi. They just don\'t want to say it the same way.'),
+    ],
+    reasonNeeds: [loreFlag('skarragol_ulfgar_oath'), loreFlag('skarragol_law_moot'), loreFlag('skarragol_sky_riders')],
+    rounds: [
+      {
+        claim: 'The sky cannot be stolen. A standard can. Why tie an oath to the thing a thief can carry off?',
+        answers: {
+          scripture: { short: 'Elodie wove both', text: 'The goddess wove the sky and the hands that cut the pole. An oath can live in either.', strength: 1 },
+          reason: { short: 'So it can be counted', text: 'Ulfgar\'s Oath: sworn on a thing so the Moot can see who keeps it. You cannot count the sky.', strength: 2 },
+          compassion: { short: 'Ask the guard', text: 'Ask the girl who guarded it whether the oath felt like weather the night it went.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then the Crown has bought your oath with one thief. Sky-sworn, the council could never sell.',
+        answers: {
+          scripture: { short: 'Nothing sells a vow', text: 'No god weighs a vow by where it hangs. A sold oath is a broken one, sky or pole.', strength: 1 },
+          reason: { short: 'The law calls it shame', text: 'The Law of the Moot: the vote is lawful and shameful. Both are written. The pole makes the shame visible.', strength: 2 },
+          compassion: { short: 'Three winters of fish', text: 'They are not selling an oath. They are selling three winters of fish and no salt.', strength: 1 },
+        },
+      },
+      {
+        claim: 'So you would swear on a stick, envoy? Your Zetwal swore on a page, and the Crown wrote a seventh one.',
+        answers: {
+          scripture: { short: 'The Gaze remembers', text: 'The Gaze remembers what was sworn, whatever it was sworn on. That page was read aloud.', strength: 1 },
+          reason: { short: 'A page read is kept', text: 'A page nobody read was never agreed. A standard everyone sees can\'t hide a seventh clause.', strength: 1 },
+          compassion: { short: 'Swear on both', text: 'Swear on both. On the pole for the Moot, and on the sky for yourselves. Nobody here wants it lost.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The traders on the mats stop haggling. A horse-dealer says "Hah!" and pays someone.)',
+      1: '(Half the mats nod at the elder, half at the rider. The salt trader nods at both.)',
+      0: '(The traders go back to their salt.)',
+    },
+    won: [
+      say('sky_rider', 'Counted, not kept. ...Fine. The sky can stand being looked at.'),
+      say('witness_elder', 'You argue like a lawspeaker\'s granddaughter. That is a compliment, and you should take it before I think better of it.'),
+    ],
+    lost: [
+      say('sky_rider', 'The sky is still there, envoy. Come back when the stick is.'),
+      say('witness_elder', 'She will. Then we will see.'),
+    ],
+    mediate: [
+      say(G, 'You both want the oath kept, and the fleet not sold.'),
+      say(BY, 'Swear on both. My grandmother did.'),
+      say('sky_rider', 'Sarnai swore on the sky. ...And on the pole. She did, didn\'t she.'),
+      say('witness_elder', 'She did. It is on the hides. Read it.'),
+    ],
+    provoke: [
+      say(G, 'Your oaths are what a council sells when the blockade bites. Sky or stick!'),
+      nar('The mats go quiet. Two horn-riders look over.'),
+      say('witness_elder', 'Not here, envoy. Not with Hrafn\'s riders listening.'),
+    ],
+    after: [
+      say('witness_elder', 'The standard stands. The rider swore on the sky this morning, facing the pole. I saw her.'),
+      say('sky_rider', 'The sky was behind the pole. It counts.'),
     ],
   },
 ];

@@ -6,6 +6,7 @@
 
 import type { Condition } from './engine/conditions.ts';
 import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './data/sideQuests.ts';
+import { FAIR_DUSK } from './data/skarragol.ts';
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -259,6 +260,42 @@ export const TILESET = {
     { gid: 198, name: 'violet_banner', base: 0x6a5a8a, accent: 0xf2d04b, pattern: 'stripes' },
     { gid: 199, name: 'curtain', base: 0x8a3050, accent: 0xf2d04b, pattern: 'stripes' },
     { gid: 200, name: 'chain', base: 0x8f8578, accent: 0xa8a6b4, pattern: 'cross' },
+    // Ordvik and the Winter Plateau (Chapter 6, Oct 22): grey-green steppe grass, slate, snow on the high ground, felt
+    // tents and hide walls, corral rails, the fjord's black water, the present's drifting floes and the memory's ice
+    // (white and walkable, or thin and black), shingle, sledges, longships, the standard poles (empty and planted), the
+    // gully boulder, the Crown's chest and supply wagons, the cairns. Accent #5d6d7e (CAPITALS 6). Placeholders until art.
+    { gid: 201, name: 'steppe_grass', base: 0x8a9a70, accent: 0x6e7e58, pattern: 'dots' },
+    { gid: 202, name: 'steppe_road', base: 0xa8987a, accent: 0x8a7a5e, pattern: 'stripes' },
+    { gid: 203, name: 'slate', base: 0x5d6d7e, accent: 0x46525e, pattern: 'grid' },
+    { gid: 204, name: 'snow', base: 0xe8eef2, accent: 0xc8d4dc, pattern: 'dots' },
+    { gid: 205, name: 'felt_wall', base: 0xc8b89a, accent: 0x8a7a5e, pattern: 'stripes' },
+    { gid: 206, name: 'tent_roof', base: 0xa89878, accent: 0x6e5e44, pattern: 'stripes' },
+    { gid: 207, name: 'corral', base: 0x8a6a44, accent: 0x5e4630, pattern: 'border' },
+    { gid: 208, name: 'fjord_water', base: 0x1e2a36, accent: 0x2e4050, pattern: 'wave' },
+    { gid: 209, name: 'floe', base: 0xd8e4ec, accent: 0x9ab0c0, pattern: 'blob' },
+    { gid: 210, name: 'ice', base: 0xeaf4fa, accent: 0xb8d0e0, pattern: 'cross' },
+    { gid: 211, name: 'thin_ice', base: 0x3a4a5a, accent: 0x8aa0b4, pattern: 'blob' },
+    { gid: 212, name: 'shingle', base: 0x8e8e86, accent: 0x6e6e66, pattern: 'dots' },
+    { gid: 213, name: 'felt_floor', base: 0xb8a07a, accent: 0x9a845e, pattern: 'grid' },
+    { gid: 214, name: 'hide_wall', base: 0x7a5a3a, accent: 0xc8a46b, pattern: 'stripes' },
+    { gid: 215, name: 'cairn', base: 0x9a9a92, accent: 0x6a6a62, pattern: 'blob' },
+    { gid: 216, name: 'sledge', base: 0x6e5236, accent: 0xa8885a, pattern: 'stripes' },
+    { gid: 217, name: 'longship', base: 0x5e3e22, accent: 0xc8a46b, pattern: 'border' },
+    { gid: 218, name: 'grain_sacks', base: 0xd8c08a, accent: 0x9a845e, pattern: 'blob' },
+    { gid: 219, name: 'clan_pole', base: 0x6b4426, accent: 0xe8e0c8, pattern: 'cross' },
+    { gid: 220, name: 'painted_hide', base: 0xc8a46b, accent: 0xb8403a, pattern: 'border' },
+    { gid: 221, name: 'chieftain_seat', base: 0x6b4426, accent: 0x5d6d7e, pattern: 'border' },
+    { gid: 222, name: 'standard_pole', base: 0x6b4426, accent: 0x5d6d7e, pattern: 'stripes' },
+    { gid: 223, name: 'standard_planted', base: 0x6b4426, accent: 0xe8e0c8, pattern: 'cross' },
+    { gid: 224, name: 'boulder', base: 0x7a7a72, accent: 0x5a5a52, pattern: 'blob' },
+    { gid: 225, name: 'boulder_wall', base: 0x6a7a5a, accent: 0x7a7a72, pattern: 'grid' },
+    { gid: 226, name: 'crown_chest', base: 0x6a5a8a, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 227, name: 'picket', base: 0x8a6a44, accent: 0x5e4630, pattern: 'stripes' },
+    { gid: 228, name: 'store_door', base: 0x2a2632, accent: 0x5d6d7e, pattern: 'border' },
+    { gid: 229, name: 'supply_wagon', base: 0x7a5530, accent: 0xb8403a, pattern: 'stripes' },
+    { gid: 230, name: 'wagon_burning', base: 0xd86a2a, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 231, name: 'sighting_stone', base: 0xa8a6b4, accent: 0x6a6a62, pattern: 'cross' },
+    { gid: 232, name: 'felt_tent', base: 0xc8b89a, accent: 0x8a7a5e, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -284,8 +321,11 @@ export interface PlaceholderCharacter {
   legs?: number;
   /** A long dress or robe down to the ankles. */
   robe?: boolean;
-  /** small: a child or Anissa; tall: Elodie. */
-  build?: 'normal' | 'small' | 'tall';
+  /**
+   * small: a child or Anissa; tall: Elodie. horse and wolf (Chapter 6): four legs, drawn by scenes/pixels.ts
+   * drawBeast: `outfit` the coat, `hair` the mane, `trim` the tack (none on a wolf), `skin` the muzzle.
+   */
+  build?: 'normal' | 'small' | 'tall' | 'horse' | 'wolf';
   headgear?: Headgear;
   headgearColor?: number;
   beard?: number;
@@ -337,6 +377,8 @@ const BRASADOR_BLACK = 0x2a2632;
 /** Aldermoor's violet and the Regent's grey-violet (Eightgate, Chapter 5). */
 const SEAT_VIOLET = 0x6a5a8a;
 const SEAT_GREY_VIOLET = 0x5a5468;
+/** Ironvow's slate (Ordvik, Chapter 6; CAPITALS.md 6 accent #5d6d7e). */
+const IRONVOW_SLATE = 0x5d6d7e;
 
 /**
  * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
@@ -585,6 +627,39 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   // Coco's seamstresses (beat 6): a white hood and an apron over grey, for Gianna and Anissa (DISGUISE below).
   gianna_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x8e8e9c, trim: C.w!, robe: true, headgear: 'hood', headgearColor: C.w!, accessories: ['apron', 'locket'] },
   anissa_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'puffs', outfit: 0x8e8e9c, trim: C.w!, robe: true, build: 'small', headgear: 'hood', headgearColor: C.w!, accessories: ['apron'] },
+  // Ordvik and the Winter Plateau (Chapter 6, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md
+  // 15). The Ironvow in grey felt and fur, slate-blue at the collar (#5d6d7e); the Crown's hostage-envoy and surveyor in
+  // Aldermoor violet; the eastern clans' envoy in white felt with a silver mare. Horses and wolves on four legs.
+  bayarmaa: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x7a7a82, trim: IRONVOW_SLATE, legs: C.b!, accessories: ['sash'] },
+  torvald: { skin: C.T!, hair: 0xb8a878, hairStyle: 'long', outfit: 0x6b5a44, trim: IRONVOW_SLATE, legs: C.b!, build: 'tall', beard: 0xb8a878, accessories: ['emblem'] },
+  lawspeaker: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: 0x8a7a68, trim: IRONVOW_SLATE, robe: true, beard: WHITE_HAIR, accessories: ['staff'] },
+  hrafn: { skin: C.T!, hair: 0x2a2a30, hairStyle: 'short', outfit: 0x2a2a30, trim: C.G!, legs: C.b!, beard: 0x2a2a30, accessories: ['sash'] },
+  trading_jarl: { skin: C.T!, hair: 0xd8b878, hairStyle: 'braid', outfit: 0x8a6a44, trim: IRONVOW_SLATE, legs: C.b!, accessories: ['satchel'] },
+  hostage_envoy: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.w!, accessories: ['satchel', 'sash'] },
+  crown_surveyor: { skin: C.s!, hair: C.B!, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: C.w!, legs: C.K!, headgear: 'brimmed', headgearColor: SEAT_GREY_VIOLET, accessories: ['satchel'] },
+  horn_master: { skin: C.S!, hair: 0x8a6a3a, hairStyle: 'short', outfit: 0x6e6a78, trim: C.N!, legs: C.b!, headgear: 'cap', headgearColor: 0x8a7a68, beard: 0x8a6a3a, accessories: ['drum'] },
+  horn_rider: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'cropped', outfit: 0x6e6a78, trim: IRONVOW_SLATE, legs: C.b!, headgear: 'cap', headgearColor: 0x8a7a68 },
+  grimvald: { skin: C.T!, hair: 0x4a3a2a, hairStyle: 'long', outfit: 0x8a8a8a, trim: C.R!, legs: C.b!, build: 'tall', beard: 0x4a3a2a, headgear: 'hood', headgearColor: 0x6e6a6a, accessories: ['sash'] },
+  steppe_reaver: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x6e5a44, trim: C.R!, legs: C.b!, headgear: 'helmet', headgearColor: 0x8a7a68, accessories: ['sash'] },
+  ordu_envoy: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.w!, trim: C.I!, robe: true, headgear: 'cap', headgearColor: C.w!, accessories: ['emblem', 'sash'] },
+  ordu_champion: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: C.h!, trim: C.I!, legs: C.w!, headgear: 'helmet', headgearColor: C.I!, accessories: ['sash'] },
+  oyuun: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x8a7a68, trim: C.R!, legs: C.b!, headgear: 'headband', headgearColor: C.R!, accessories: ['staff'] },
+  old_herder: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x6e6a5a, trim: C.N!, robe: true, beard: WHITE_HAIR, accessories: ['staff'] },
+  witness_elder: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.w!, trim: C.y!, robe: true, accessories: ['satchel'] },
+  skald: { skin: C.T!, hair: 0xb8a878, hairStyle: 'long', outfit: 0x5a6a7a, trim: C.N!, robe: true, beard: 0xb8a878, accessories: ['drum'] },
+  steppe_vendor: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x8a6a44, trim: C.R!, legs: C.b!, accessories: ['apron'] },
+  furrier: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'short', outfit: 0x6b5a44, trim: C.G!, legs: C.b!, beard: 0x8a6a3a, accessories: ['apron'] },
+  fair_crier: { skin: C.T!, hair: 0xd8b878, hairStyle: 'cropped', outfit: 0x6e6a78, trim: C.y!, legs: C.b!, headgear: 'cap', headgearColor: C.R! },
+  echo_sarnai: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x7a7a82, trim: IRONVOW_SLATE, legs: C.b!, headgear: 'hood', headgearColor: 0x8a7a68, accessories: ['emblem'] },
+  echo_rider: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x6e5a44, trim: IRONVOW_SLATE, legs: C.b!, headgear: 'helmet', headgearColor: 0x8a7a68 },
+  echo_crown_sentry: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: C.R!, trim: C.w!, legs: C.w!, headgear: 'cap', headgearColor: C.u!, accessories: ['sash'] },
+  horse_grey: { skin: 0xb8b8c0, hair: 0x4a4a52, hairStyle: 'short', outfit: 0xa8a6b4, trim: IRONVOW_SLATE, build: 'horse' },
+  horse_bay: { skin: 0x5a3a28, hair: C.b!, hairStyle: 'short', outfit: 0x8a5a34, trim: C.N!, build: 'horse' },
+  horse_dun: { skin: 0x8a7a5a, hair: 0x3a3028, hairStyle: 'short', outfit: 0xc8b07a, trim: C.N!, build: 'horse' },
+  horse_black: { skin: 0x3a3440, hair: 0x1e1a22, hairStyle: 'short', outfit: 0x2a2632, trim: C.R!, build: 'horse' },
+  horse_chestnut: { skin: 0x6a3a22, hair: 0x6a3a22, hairStyle: 'short', outfit: 0xa85a2a, trim: C.N!, build: 'horse' },
+  echo_horse: { skin: 0x6a5a48, hair: 0x3a3028, hairStyle: 'short', outfit: 0x9a8a6a, trim: C.N!, build: 'horse' },
+  steppe_wolf: { skin: 0x3a3440, hair: 0x6e6a78, hairStyle: 'short', outfit: 0x9a9aa2, trim: 0x9a9aa2, build: 'wolf' },
 };
 
 /** The player's look in each era. */
@@ -714,6 +789,14 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     if: { all: [CHAPTER5_QUESTS_DONE, { notFlag: 'story.disguised' }, { notFlag: 'story.archive_entered' }] },
     color: 0x2a2048,
     alpha: 0.3,
+  },
+  // Dusk on the Winter Plateau (Chapter 6): the day's three things done, until the party comes round the fjord's head
+  // at dawn with the standard (data/skarragol.ts FAIR_DUSK). The fjord's near shore is at dusk too: they set out then.
+  {
+    maps: ['skarragol-fair', 'skarragol-plateau', 'skarragol-quay', 'skarragol-fjord'],
+    if: FAIR_DUSK,
+    color: 0x2a2848,
+    alpha: 0.32,
   },
 ];
 
@@ -1144,6 +1227,56 @@ const SEAT_BACKDROPS = {
   },
 } as const;
 
+// Ordvik (Chapter 6): the Winter Plateau under a grey sky with snow on the rises; the far shore of the fjord at dusk,
+// ice-white beyond the meadow; the horse-fair by day.
+const SKARRAGOL_BACKDROPS = {
+  winter_plateau: {
+    sky: [0x7a8a9a, 0x8a98a6, 0x9aa6b2, 0xaab4be, 0xbcc4cc, 0xccd2d8],
+    cloud: 0xf0f2f4,
+    cloudShade: 0xc8ccd4,
+    mountainFar: 0xc8d4dc,
+    mountainNear: 0x5d6d7e,
+    trees: 0x5a6a4a,
+    treesDark: 0x46523a,
+    field: 0x8a9a70,
+    cane: 0x9aaa7a,
+    caneDark: 0x6e7e58,
+    ground: 0xa8987a,
+    groundDark: 0x8a7a5e,
+    groundLight: 0xc0b090,
+  },
+  frozen_fjord: {
+    sky: [0x2a3448, 0x3a4458, 0x4a5468, 0x5d6d7e, 0x7a8a9a, 0x9aa6b2],
+    cloud: 0xc8d4dc,
+    cloudShade: 0x8a98a6,
+    mountainFar: 0xd8e4ec,
+    mountainNear: 0x46525e,
+    trees: 0x3a4a3a,
+    treesDark: 0x2a362a,
+    field: 0x6e7e58,
+    cane: 0x8a9a70,
+    caneDark: 0x5a6a4a,
+    ground: 0x8e8e86,
+    groundDark: 0x6e6e66,
+    groundLight: 0xa8a8a0,
+  },
+  horse_fair: {
+    sky: [0x6a86a8, 0x7a94b2, 0x8aa2bc, 0x9cb0c6, 0xaebed0, 0xc2ccd8],
+    cloud: 0xf0f2f4,
+    cloudShade: 0xc8ccd4,
+    mountainFar: 0xc8d4dc,
+    mountainNear: 0x5d6d7e,
+    trees: 0xc8b89a,
+    treesDark: 0xa89878,
+    field: 0x8a9a70,
+    cane: 0x9aaa7a,
+    caneDark: 0x6e7e58,
+    ground: 0xa8987a,
+    groundDark: 0x8a7a5e,
+    groundLight: 0xc0b090,
+  },
+} as const;
+
 /** The painted scene behind each battle (BattleDef.backdrop), drawn in code until painted art arrives. */
 export const BATTLE_BACKDROPS: Readonly<Record<string, {
   sky: readonly number[];
@@ -1227,6 +1360,7 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
   ...ARDENCIA_BACKDROPS,
   ...ALDORIA_BACKDROPS,
   ...SEAT_BACKDROPS,
+  ...SKARRAGOL_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

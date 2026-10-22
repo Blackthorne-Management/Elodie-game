@@ -46,4 +46,18 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 5 complete',
     lines: ['The Parley', 'Next: Chapter 6, The Stolen Standard', 'Skarragol, and a herd that will not stay stolen...'],
   },
+  // Chapter 6: round the fjord's head on Grimvald's horses, to the fair at dawn (the chapter's only card mid-way).
+  {
+    id: 'round_fjord',
+    when: 'story.standard_home',
+    title: "Round the fjord's head",
+    lines: ["On the thief's own horses, by the shore path round the fjord's head.", 'The standard across Bayarmaa\'s saddle.', 'At first light, the fair\'s fires, and the horn.'],
+  },
+  // The end of Chapter 6: the longship south along the coast, to Kuroshi (the roads in their fixed order).
+  {
+    id: 'act6_end',
+    when: 'act6.complete',
+    title: 'Chapter 6 complete',
+    lines: ['The Stolen Standard', 'Next: Chapter 7, The Fog Files', 'Kuroshi, and a city that knows what you said before you say it...'],
+  },
 ];

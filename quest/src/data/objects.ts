@@ -7,6 +7,26 @@ import type { ObjectInfo } from '../engine/content.ts';
 import { SHELF_OBJECTS } from './books.ts';
 
 export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
+  // Ordvik (Chapter 6).
+  seat_road_back: { name: 'The road to Eightgate' },
+  winter_store: { name: 'The winter store' },
+  winter_store_echo: { name: "Sarnai's cache" },
+  slope_boulder: { name: 'A loose boulder' },
+  gully_boulder_echo: { name: 'The boulder, rolled' },
+  boulder_wall: { name: 'A boulder wall' },
+  gully_open: { name: "The wolves' gully" },
+  sighting_stone: { name: 'The flat stone' },
+  pole_fair: { name: 'The empty standard pole' },
+  fair_board: { name: 'Contract board' },
+  white_tent: { name: 'The white tent' },
+  inner_pole: { name: 'The inner pole' },
+  inner_pole_planted: { name: 'The Ironvow standard' },
+  chieftain_seat: { name: "The chieftain's seat" },
+  crown_chest: { name: "The Crown's offer" },
+  longship_ready: { name: 'The Ironvow longship' },
+  quay_hulls: { name: 'Eleven hulls' },
+  picket_line: { name: "Grimvald's picket line" },
+  wagons_burning: { name: "The Crown's wagons, burning" },
   // Eightgate (Chapter 5).
   seat_contract_board: { name: 'Contract board' },
   gold_gate_shut: { name: 'The Gold Gate' },
@@ -272,6 +292,17 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
 
 /** Door labels, by `<map id>/<door id>` (or a bare door id when it is unique). */
 export const DOORS: Readonly<Record<string, string>> = {
+  // Ordvik (Chapter 6).
+  'skarragol-plateau/plateau_fair': 'West: the Horse-Fair',
+  'skarragol-fair/fair_plateau': 'East: the Winter Plateau',
+  'skarragol-fair/fair_quay': 'North: the Longship Quay',
+  'skarragol-fair/fair_fjord': 'North-east: the fjord path',
+  'skarragol-fair/fair_moot': 'The Great Moot Tent',
+  'skarragol-fair/fair_saga': 'The Saga Tent',
+  'skarragol-moot/moot_out': 'Out to the fair',
+  'skarragol-saga/saga_out': 'Out to the fair',
+  'skarragol-quay/quay_fair': 'South: the Horse-Fair',
+  'skarragol-fjord/fjord_fair': 'South: back up to the fair',
   // Eightgate (Chapter 5).
   'seat-gateyard/yard_concourse': 'West: the inner arch',
   'seat-gateyard/yard_fields': 'South: the road to the Crossroads Fields',

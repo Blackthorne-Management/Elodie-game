@@ -103,6 +103,14 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'seat-hall': 'throne_hall',
   'seat-archive': 'throne_archive',
   'seat-fields': 'crossroads',
+  // Ordvik (Chapter 6): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md): the fair plays the farewell
+  // track, the Moot the hall's, the Saga Tent home, the plateau and the quay the cane road's, the fjord the Echo's.
+  'skarragol-fair': 'seat',
+  'skarragol-moot': 'majlis',
+  'skarragol-saga': 'home',
+  'skarragol-plateau': 'crossroads',
+  'skarragol-quay': 'crossroads',
+  'skarragol-fjord': 'throne_archive',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */

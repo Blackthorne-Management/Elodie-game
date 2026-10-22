@@ -1,0 +1,19 @@
+{
+  "the slope in the present: slate, and no boulder to move": [
+    "down*2",
+    "right*4",
+    "up*2",
+    "right",
+    "confirm",
+    "skip"
+  ],
+  "the gully in the memory without the boulder: walking it shuts nothing": [
+    "down*2",
+    "echo",
+    "skip",
+    "right*4",
+    "right*4",
+    "confirm",
+    "skip"
+  ]
+}

@@ -1003,7 +1003,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     say(Z, 'My mother\'s people.'),
     act([{ do: 'face', actor: 'coralie', facing: 'left' }], CO, 'East! Up onto the plateau! Bring me a colour I haven\'t got!'),
     nar('She waves with both arms: the one flamboyant thing she does in the open.'),
-    nar('The Iron Gate opens on the winter road east.', { fx: 'fade', set: { 'act5.complete': true } }),
+    nar('The Iron Gate opens on the winter road east.', { fx: 'fade', set: { 'act5.complete': true, 'travel.next': 'skarragol-plateau/seat_road' } }),
   ]),
 
   // ---- Deserters' Road (Se-3) ----------------------------------------------------------------------------

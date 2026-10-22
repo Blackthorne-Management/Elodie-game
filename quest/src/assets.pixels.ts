@@ -3391,6 +3391,29 @@ export const WEAPON_ART: Readonly<Record<string, BattleWeaponArt>> = {
       '.kbbk.............',
       'kCkk..............',
     ],
+  },  // Bayarmaa's curved steppe sabre (Chapter 6): the saber's drawing in darker steel until art.
+  steppe_sabre: {
+    grip: { x: 3, y: 14 },
+    rows: [
+      '..............kkk.',
+      '.............kGGWk',
+      '............kGGWk.',
+      '...........kGGWk..',
+      '..........kGGWk...',
+      '..........kkkk....',
+      '.........kGGWk....',
+      '........kGGWk.....',
+      '.......kGGWk......',
+      '......kGGWk.......',
+      '.....kGGWk........',
+      '...kkGyWk.........',
+      '..kyyyWk..........',
+      '.kykkkk...........',
+      '..kkbk............',
+      '..kbk.............',
+      '.kbbk.............',
+      'kCkk..............',
+    ],
   },
 };
 
