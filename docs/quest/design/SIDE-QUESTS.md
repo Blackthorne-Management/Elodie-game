@@ -172,8 +172,8 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
   required):** the veiled woman is gone (she was the Hushed, beaten in Chapter 9). The cane cutter says Ti Jak has not
   come to work; he sits alone at the mill's cold hearth ("She said she'd come back."). **Compassion** works if the
   party knows his mother's name (Odile, from Mother Solange's list, or the Chapter 1 cane name recorded); **Reason** if
-  they hold Chapter 9's purge list (her debt went with her; the *Quiet Crown Tract* can never be read: the
-  `hall_records` shelf id bug); **Scripture** is "Not yet." Anissa sits down beside him. Reward 60 gold, +1 Influence
+  they hold Chapter 9's purge list (her debt went with her; the *Quiet Crown Tract* could not be read when this was built: the
+  `hall_records` shelf id bug, fixed on Oct 22 with the Chapter 11 build, Zetwal's shelf now `hall_harbor_records`); **Scripture** is "Not yet." Anissa sits down beside him. Reward 60 gold, +1 Influence
   (Zetwal), +3 Concord; no XP (moved to the story's steps). Closes when the fleet sails.
 
 ### Z-4 The Seventh Stone (secret item)

@@ -132,7 +132,7 @@ export function zetwalHall(): MapSource {
 
     obj('head_seat', 19, 2, { dialogue: 'hall_seat', era: 'present' }),
     obj('hall_law', 28, 10, { dialogue: 'shelf.hall_law', era: 'present' }, 3, 1),
-    obj('hall_records', 34, 10, { dialogue: 'shelf.hall_records', era: 'present' }, 3, 1),
+    obj('hall_harbor_records', 34, 10, { dialogue: 'shelf.hall_harbor_records', era: 'present' }, 3, 1),
     obj('council_desk', 5, 4, { dialogue: 'council_desk', era: 'present' }, 4, 1),
     obj('pigeon_loft', 35, 17, { dialogue: 'pigeon_loft', era: 'present' }, 3, 2),
     obj('courier_map', 33, 21, { dialogue: 'courier_map', era: 'present' }),
