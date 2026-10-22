@@ -76,7 +76,7 @@ export const LEVELS = {
  * 18, three under 21; Agnipur's side quests pay less instead (J-2 and J-3 25, the salt road 20), so the route still
  * ends on 21 (COMBAT.md 6, "Chapter 8").
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter

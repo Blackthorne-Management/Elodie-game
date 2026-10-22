@@ -9,6 +9,7 @@ import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './data/sideQuests.ts
 import { FAIR_DUSK } from './data/skarragol.ts';
 import { NIGHT, QUARTER_DUSK } from './data/kuroshi.ts';
 import { DAWN as AGNIPUR_DAWN, NIGHT as AGNIPUR_NIGHT } from './data/jwaladesh.ts';
+import { EVE as KINGSMERE_EVE, KEEP_NIGHT, LAST_DAWN as KINGSMERE_DAWN, RAIN as KINGSMERE_RAIN } from './data/aldermoor.ts';
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -405,6 +406,51 @@ export const TILESET = {
     { gid: 330, name: 'salt_shrine', base: 0xf4eee0, accent: 0xe67e22, pattern: 'cross' },
     { gid: 331, name: 'carter_cart', base: 0x8a6a42, accent: 0xd8c8a0, pattern: 'border' },
     { gid: 332, name: 'trader_ship', base: 0xa04040, accent: 0xd8c08a, pattern: 'border' },
+    // Kingsmere, Aldermoor (Chapter 9, Oct 22): grey-blue stone and slate under rain, heather and black bog beyond the
+    // wall, the mere a flat grey sheet; violet only on the Crown's people and the keep's door. The archive's cabinets,
+    // the panel, the postern, the organ, the oath-stone, the dock's rail and the cell's bars. Accent #2e86c1 (CAPITALS 9).
+    { gid: 333, name: 'al_wetflag', base: 0x6e7884, accent: 0x5a6470, pattern: 'grid' },
+    { gid: 334, name: 'al_wall', base: 0x5a6270, accent: 0x3e4450, pattern: 'border' },
+    { gid: 335, name: 'al_slate', base: 0x3a4250, accent: 0x2a3038, pattern: 'stripes' },
+    { gid: 336, name: 'heather', base: 0x6a5a7a, accent: 0x8a6a9a, pattern: 'dots' },
+    { gid: 337, name: 'bog', base: 0x2a2a24, accent: 0x3a4030, pattern: 'blob' },
+    { gid: 338, name: 'mere', base: 0x5a6a78, accent: 0x7a8a96, pattern: 'wave' },
+    { gid: 339, name: 'al_road', base: 0x7a7468, accent: 0x5e5a50, pattern: 'dots' },
+    { gid: 340, name: 'keep_floor', base: 0x8a8c90, accent: 0x6e7074, pattern: 'grid' },
+    { gid: 341, name: 'violet_carpet', base: 0x5a4a7a, accent: 0x7a6a9a, pattern: 'stripes' },
+    { gid: 342, name: 'keep_pillar', base: 0x9a9ca2, accent: 0x6a6c72, pattern: 'stripes' },
+    { gid: 343, name: 'archive_floor', base: 0x6a5440, accent: 0x4e3c2c, pattern: 'grid' },
+    { gid: 344, name: 'pew', base: 0x5a4030, accent: 0x3a2a1e, pattern: 'stripes' },
+    { gid: 345, name: 'keep_dais', base: 0x7a6a8a, accent: 0x5a4a6a, pattern: 'grid' },
+    { gid: 346, name: 'dock_rail', base: 0x4e3a2a, accent: 0x8a7050, pattern: 'border' },
+    { gid: 347, name: 'cell_bars', base: 0x3a3c42, accent: 0x8a8c92, pattern: 'stripes' },
+    { gid: 348, name: 'cell_floor', base: 0x5a5a52, accent: 0x44443c, pattern: 'dots' },
+    { gid: 349, name: 'nave_floor', base: 0x9a948a, accent: 0x7a746a, pattern: 'grid' },
+    { gid: 350, name: 'chapel_floor', base: 0x5a6a4a, accent: 0x44543a, pattern: 'dots' },
+    { gid: 351, name: 'al_stall', base: 0x6a4a7a, accent: 0xd8d0c0, pattern: 'stripes' },
+    { gid: 352, name: 'al_shelf', base: 0x4e3a2a, accent: 0xc8b090, pattern: 'grid' },
+    { gid: 353, name: 'notice_post', base: 0x5a4a3a, accent: 0xf4eee0, pattern: 'border' },
+    { gid: 354, name: 'thumbprint_door', base: 0x5a4a3a, accent: 0x9a9a9a, pattern: 'blob' },
+    { gid: 355, name: 'hand_press', base: 0x3a3a40, accent: 0x8a7050, pattern: 'cross' },
+    { gid: 356, name: 'drying_sheets', base: 0xf4f0e4, accent: 0x3a3a40, pattern: 'stripes' },
+    { gid: 357, name: 'milestone_al', base: 0x8a8c90, accent: 0x5a5c60, pattern: 'border' },
+    { gid: 358, name: 'cabinet', base: 0x5a3e2a, accent: 0xd8b04a, pattern: 'grid' },
+    { gid: 359, name: 'panel_loose', base: 0x6a5440, accent: 0x4e3c2c, pattern: 'stripes' },
+    { gid: 360, name: 'panel_open', base: 0x2a2018, accent: 0xf4eee0, pattern: 'border' },
+    { gid: 361, name: 'ash_shelf', base: 0x4e3a2a, accent: 0x8a3b2a, pattern: 'grid' },
+    { gid: 362, name: 'postern_barred', base: 0x4a3a2a, accent: 0x3a3c42, pattern: 'cross' },
+    { gid: 363, name: 'postern_open', base: 0x2a2830, accent: 0x4a3a2a, pattern: 'border' },
+    { gid: 364, name: 'archive_door', base: 0x3a3c42, accent: 0x6a5a8a, pattern: 'cross' },
+    { gid: 365, name: 'great_organ', base: 0xb8a070, accent: 0x8a7a50, pattern: 'stripes' },
+    { gid: 366, name: 'organ_console', base: 0x5a3e2a, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 367, name: 'oath_stone', base: 0xc8c4bc, accent: 0x9a968e, pattern: 'blob' },
+    { gid: 368, name: 'bell_post', base: 0x5a4a3a, accent: 0xd8b04a, pattern: 'cross' },
+    { gid: 369, name: 'court_doors', base: 0x4e3a2a, accent: 0x6a5a8a, pattern: 'stripes' },
+    { gid: 370, name: 'evidence_table', base: 0x5a3e2a, accent: 0xf4eee0, pattern: 'border' },
+    { gid: 371, name: 'market_cross', base: 0x9a9ca2, accent: 0x6a6c72, pattern: 'cross' },
+    { gid: 372, name: 'cell_bench', base: 0x5a4a3a, accent: 0x3a2e24, pattern: 'stripes' },
+    { gid: 373, name: 'gallery_desk', base: 0x5a3e2a, accent: 0xf4eee0, pattern: 'grid' },
+    { gid: 374, name: 'chapel_lantern', base: 0x3a3a40, accent: 0xf2d04b, pattern: 'blob' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -497,6 +543,10 @@ const AGNI_SAFFRON = 0xe67e22;
 const AGNI_BRASS = 0xd8b04a;
 const AGNI_SKIN = 0xb07850;
 const AGNI_SKIN_DEEP = 0x8a5a3a;
+/** Kingsmere (Chapter 9; CAPITALS.md 9 accent #2e86c1): oilskin, slate grey, the Regent's violet on his own people. */
+const MOOR_OILSKIN = 0x3e4a3a;
+const MOOR_GREY = 0x5a6270;
+const STILLWATER_GREY = 0x6e7480;
 
 /**
  * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
@@ -836,6 +886,39 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   jw_swordsmith: { skin: AGNI_SKIN_DEEP, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x4a4a52, trim: AGNI_BRASS, legs: 0x2a2632, beard: HAIR_BLACK, accessories: ['apron'] },
   jw_librarian: { skin: AGNI_SKIN, hair: WHITE_HAIR, hairStyle: 'long', outfit: 0xf4eee0, trim: AGNI_SAFFRON, robe: true, accessories: ['satchel'] },
   jw_harbour_master: { skin: AGNI_SKIN_DEEP, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x2a3a58, trim: AGNI_BRASS, legs: 0x2a2632, headgear: 'wrap', headgearColor: AGNI_SAFFRON, beard: 0x4a4a52 },
+  // Kingsmere (Chapter 9, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 18). Grey wool and
+  // oilskin under the rain; the Regent's violet on his own people; the Almoner in the road watcher's own look (the second
+  // review's 3.2: the recognition is also a picture), and unveiled in the same palette.
+  edmund: { skin: C.s!, hair: C.N!, hairStyle: 'curly', outfit: STILLWATER_GREY, trim: C.w!, legs: C.K!, headgear: 'brimmed', headgearColor: 0x3a3440, accessories: ['satchel'] },
+  jordyn: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: SEAT_VIOLET, trim: C.y!, legs: C.K!, build: 'tall', accessories: ['epaulettes', 'sash'] },
+  sebastian: { skin: C.S!, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x5a2a3a, trim: C.y!, legs: C.K!, build: 'tall', beard: 0x6a6a72, accessories: ['sash'] },
+  almoner: { ...QUIET_CROWN.quiet_crown_f_brown!, outfit: 0x5a5a62 },
+  almoner_unveiled: { skin: SKIN_TONES.brown, hair: C.G!, hairStyle: 'bun', outfit: 0x5a5a62, trim: 0xc8c8d0, robe: true, accessories: ['emblem'] },
+  almswoman: { skin: SKIN_TONES.tan, hair: HAIR_DARK, hairStyle: 'braid', outfit: 0x6a6a72, trim: 0xc8c8d0, robe: true, headgear: 'cowl', headgearColor: 0x5a5a62, accessories: ['veil'] },
+  rosalind: { skin: C.T!, hair: C.G!, hairStyle: 'bun', outfit: SEAT_GREY_VIOLET, trim: C.I!, robe: true, accessories: ['emblem'] },
+  magistrate_al: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x2a2632, trim: SEAT_VIOLET, robe: true, accessories: ['emblem'] },
+  keep_steward: { skin: C.S!, hair: C.B!, hairStyle: 'bald', outfit: SEAT_VIOLET, trim: C.N!, legs: C.K!, beard: C.B!, accessories: ['satchel'] },
+  witness_bishop: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0xd8d0c0, trim: 0x2e86c1, robe: true, accessories: ['staff'] },
+  assize_clerk: { skin: C.s!, hair: C.B!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.w!, legs: C.K!, accessories: ['satchel', 'emblem'] },
+  regent_watch: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: SEAT_VIOLET, trim: C.I!, legs: C.K!, headgear: 'cap', headgearColor: SEAT_GREY_VIOLET, accessories: ['staff'] },
+  watch_inside_out: { skin: C.S!, hair: C.B!, hairStyle: 'cropped', outfit: 0x8a8690, trim: SEAT_VIOLET, legs: C.K!, headgear: 'cap', headgearColor: 0x8a8690, accessories: ['staff'] },
+  echo_old_sealbearer: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: 0x7a6a5a, trim: C.N!, legs: C.b!, headgear: 'helmet', headgearColor: 0x8a7a68, accessories: ['emblem'] },
+  moor_constable: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: MOOR_OILSKIN, trim: C.N!, legs: C.K!, headgear: 'brimmed', headgearColor: MOOR_OILSKIN, accessories: ['staff'] },
+  bog_hound: { skin: 0x1a1420, hair: 0x2a2632, hairStyle: 'short', outfit: 0x2a2a30, trim: 0x2a2a30, build: 'wolf' },
+  crown_officer: { skin: C.s!, hair: C.B!, hairStyle: 'cropped', outfit: SEAT_VIOLET, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.u!, accessories: ['sash', 'epaulettes'] },
+  printer: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x4a4a52, trim: 0x1a1420, legs: C.K!, beard: WHITE_HAIR, accessories: ['apron'] },
+  apprentice: { skin: C.S!, hair: C.B!, hairStyle: 'cropped', outfit: 0x6a6a72, trim: 0x1a1420, legs: C.K!, accessories: ['apron'] },
+  clockmaker: { skin: C.T!, hair: C.G!, hairStyle: 'bald', outfit: 0x5a4030, trim: C.y!, legs: C.K!, beard: C.G!, accessories: ['satchel'] },
+  pie_seller: { skin: C.T!, hair: C.B!, hairStyle: 'bun', outfit: 0xd8d0c0, trim: 0x2e86c1, robe: true, accessories: ['apron'] },
+  pie_boy: { skin: C.T!, hair: C.N!, hairStyle: 'short', outfit: MOOR_GREY, trim: C.w!, build: 'small' },
+  pie_mother: { skin: C.T!, hair: C.B!, hairStyle: 'bun', outfit: 0x8a7a68, trim: C.w!, robe: true, accessories: ['apron'] },
+  tea_woman: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'long', outfit: 0x4e5a6a, trim: C.w!, robe: true },
+  al_jeweller: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: 0x2a2632, trim: C.y!, legs: C.K!, accessories: ['emblem'] },
+  al_outfitter: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'curly', outfit: MOOR_OILSKIN, trim: C.N!, legs: C.K!, accessories: ['apron'] },
+  qc_hierarch: { skin: SKIN_TONES.light, hair: C.G!, hairStyle: 'short', outfit: 0x6a6a72, trim: 0xc8c8d0, robe: true, accessories: ['sash', 'emblem'] },
+  gaze_exile: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'long', outfit: 0xc8a050, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: 0xd8b860, accessories: ['staff'] },
+  rolls_keeper: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: 0x2a2632, trim: 0x2e86c1, robe: true, accessories: ['satchel'] },
+  verger: { skin: C.S!, hair: C.G!, hairStyle: 'bald', outfit: 0x2a2632, trim: 0xd8d0c0, robe: true, accessories: ['staff'] },
 };
 
 /** The player's look in each era. */
@@ -1009,6 +1092,13 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     color: 0xf2a050,
     alpha: 0.14,
   },
+  // Kingsmere (Chapter 9): the keep and the church by night from the Toccata's first chord until the party is caught
+  // (data/aldermoor.ts KEEP_NIGHT); the eve's lamplit dusk on the square, the close and the church (EVE, a condition);
+  // the last dawn on the Heath (LAST_DAWN); and the rain on the outdoor maps until then (RAIN: a wash, not a layer).
+  { maps: ['aldermoor-keep', 'aldermoor-cathedral'], if: KEEP_NIGHT, color: 0x141830, alpha: 0.42 },
+  { maps: ['aldermoor-cross', 'aldermoor-keep', 'aldermoor-cathedral', 'aldermoor-heath'], if: KINGSMERE_EVE, color: 0x2a2440, alpha: 0.34 },
+  { maps: ['aldermoor-heath', 'aldermoor-cross'], if: KINGSMERE_DAWN, color: 0xd8a070, alpha: 0.12 },
+  { maps: ['aldermoor-heath', 'aldermoor-cross'], if: KINGSMERE_RAIN, color: 0x5a6a80, alpha: 0.22 },
 ];
 
 /**
@@ -1511,6 +1601,70 @@ const JWALADESH_BACKDROPS = {
   },
 } as const;
 
+// Kingsmere (Chapter 9): the heath under rain, the wet square, the courtroom's dark wood and violet, the bog chapel.
+const KINGSMERE_BACKDROPS = {
+  moor_heath: {
+    sky: [0x4a5260, 0x56606e, 0x626c7a, 0x6e7886, 0x7a8492, 0x86909e],
+    cloud: 0x9aa2ae,
+    cloudShade: 0x6e7684,
+    mountainFar: 0x5a5a6a,
+    mountainNear: 0x4a4458,
+    trees: 0x6a5a7a,
+    treesDark: 0x4a3e5a,
+    field: 0x5a4e6a,
+    cane: 0x6a5a7a,
+    caneDark: 0x2a2a24,
+    ground: 0x5a5a4a,
+    groundDark: 0x3a3a30,
+    groundLight: 0x7a7a68,
+  },
+  market_cross: {
+    sky: [0x3a4250, 0x464e5c, 0x525a68, 0x5e6674, 0x6a7280, 0x767e8c],
+    cloud: 0x9aa2ae,
+    cloudShade: 0x6e7684,
+    mountainFar: 0x5a6270,
+    mountainNear: 0x3e4450,
+    trees: 0x6a5a8a,
+    treesDark: 0x3a3048,
+    field: 0x6e7884,
+    cane: 0x5a6270,
+    caneDark: 0x3e4450,
+    ground: 0x6e7884,
+    groundDark: 0x5a6470,
+    groundLight: 0x8a94a0,
+  },
+  assize_court: {
+    sky: [0x1a1420, 0x24202c, 0x2e2a38, 0x383444, 0x423e50, 0x4c485c],
+    cloud: 0x6a5a8a,
+    cloudShade: 0x4a3e5a,
+    mountainFar: 0x4e3a2a,
+    mountainNear: 0x3a2a1e,
+    trees: 0x6a5a8a,
+    treesDark: 0x3a3048,
+    field: 0x8a8c90,
+    cane: 0x4e3a2a,
+    caneDark: 0x2a2018,
+    ground: 0x8a8c90,
+    groundDark: 0x6e7074,
+    groundLight: 0xa8aab0,
+  },
+  bog_chapel: {
+    sky: [0x2a2a34, 0x34343e, 0x3e3e48, 0x484852, 0x52525c, 0x5c5c66],
+    cloud: 0xf2d04b,
+    cloudShade: 0x8a7a5a,
+    mountainFar: 0x5a6270,
+    mountainNear: 0x3e4450,
+    trees: 0x3a4030,
+    treesDark: 0x2a2a24,
+    field: 0x5a6a4a,
+    cane: 0x44543a,
+    caneDark: 0x2a2a24,
+    ground: 0x5a6a4a,
+    groundDark: 0x44543a,
+    groundLight: 0x6e7e5c,
+  },
+} as const;
+
 const SKARRAGOL_BACKDROPS = {
   winter_plateau: {
     sky: [0x7a8a9a, 0x8a98a6, 0x9aa6b2, 0xaab4be, 0xbcc4cc, 0xccd2d8],
@@ -1645,6 +1799,7 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
   ...SKARRAGOL_BACKDROPS,
   ...KUROSHI_BACKDROPS,
   ...JWALADESH_BACKDROPS,
+  ...KINGSMERE_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

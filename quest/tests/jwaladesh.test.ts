@@ -89,10 +89,11 @@ describe('the chapter starts', () => {
     }
   });
 
-  it('?chapter=9: Agnipur\'s quay after the card, Vikram with them, the ledger and three tokens in hand', () => {
+  it('?chapter=9: the foot of the Mere Stair after the voyage north, Vikram with them, the ledger and three tokens in hand', () => {
     const at9 = starts['9']!;
     const flags = new FlagStore(at9.flags);
-    expect(at9.map).toBe('jwaladesh-harbor');
+    expect(at9.map).toBe('aldermoor-heath');
+    expect(at9.spawn).toBe('mere_stair');
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram']);
     for (const f of ['act8.complete', 'card.act8_end', 'ally.jwaladesh', 'item.token_agnivansh', 'item.token_suzumori', 'item.token_ironvow', 'item.dhanraj_ledger', 'clue.crown_holds_oil', 'story.vikram_left_agnipur', 'belief.rael_traitor']) {
       expect(flags.isSet(f), f).toBe(true);

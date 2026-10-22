@@ -1061,7 +1061,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
       next: 'go',
     },
     go: {
-      lines: [say(A, 'Vikram\'s coming too, Gigi.'), say(G, 'He is. Kingsmere.', { fx: 'fade', set: { 'act8.complete': true } })],
+      lines: [say(A, 'Vikram\'s coming too, Gigi.'), say(G, 'He is. Kingsmere.', { fx: 'fade', set: { 'act8.complete': true, 'travel.next': 'aldermoor-heath/mere_stair', 'voyage.next': 'jwaladesh_aldermoor' } })],
     },
   }),
 ];

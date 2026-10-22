@@ -6,7 +6,7 @@ import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SUR
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8 } from './quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
@@ -166,6 +166,10 @@ const ITEM_LIST: ItemDef[] = [
   // Agnipur's milk-and-bread stall (Chapter 8).
   { id: 'spiced_milk', name: 'Spiced milk', kind: 'consumable', price: 40, restores: 18, text: 'Hot milk with cardamom and a thread of saffron. Restores 18 SP.' },
   { id: 'flatbread', name: 'Flatbread', kind: 'consumable', price: 40, heals: 50, text: 'Flatbread from the stall\'s clay oven, still blistered. Restores 50 HP.' },
+  // Kingsmere's pie shop (Chapter 9).
+  { id: 'meat_pie', name: 'Meat pie', kind: 'consumable', price: 55, heals: 80, text: 'A raised pie, steak and onion, the crust dark with egg. Restores 80 HP.' },
+  { id: 'kingsmere_tea', name: 'Kingsmere tea', kind: 'consumable', price: 45, restores: 20, text: 'Black tea, strong enough to stand a spoon in, with milk. Restores 20 SP.' },
+  { id: 'scones', name: 'Scones', kind: 'consumable', price: 35, heals: 40, text: 'Two scones, a little burnt, with butter. Restores 40 HP.' },
   { id: 'lentil_stew', name: 'Lentil stew', kind: 'consumable', price: 35, heals: 40, healTurns: 3, text: 'Yellow lentils and cumin, too hot to eat fast. Restores 40 HP, a little at a time.' },
   { id: 'dates', name: 'Dates', kind: 'consumable', price: 30, heals: 45, text: 'Medjool dates from the oases past the Desert Edge. Restores 45 HP.' },
   { id: 'tagine', name: 'Lamb tagine', kind: 'consumable', price: 55, heals: 80, healTurns: 3, text: 'Lamb, apricots and almonds under a clay cone. Restores 80 HP, a little at a time.' },
@@ -301,6 +305,15 @@ const ITEM_LIST: ItemDef[] = [
     price: 0,
     text: 'A polished bronze disc the size of a plate, from Aiyana\'s apron. Anissa held the last of the light in it. She is keeping it.',
   },
+  // Chapter 9, Kingsmere: Edmund's hat (Anissa's), the recital bill (Anissa's), the papers from the archive, the purge
+  // list (Al-3), the Crown Chronicle (Al-2).
+  { id: 'edmund_hat', name: "Edmund's hat", kind: 'key', price: 0, text: 'A good grey hat, a little wet. "Hats get hit here. People don\'t, as a rule." Anissa is keeping it.' },
+  { id: 'recital_bill', name: "Uncle Sebastian's recital", kind: 'key', price: 0, text: 'The bill from the notice post: the Agatha Toccata, by the Regent\'s command. Anissa turned every page on the beat. She counted.' },
+  { id: 'crown_pact', name: "The Crown's Pact With Ardencia", kind: 'key', price: 0, text: 'To the Lord of Ardencia, the Throne at the Regent\'s pleasure, and the harbor dues of Xaraguá for ten years. Paid, in full.' },
+  { id: 'ash_road_accounts', name: 'The Ash Road Accounts', kind: 'key', price: 0, text: 'Columns of figures leaving Ardencia\'s treasury into accounts marked with a cipher and a road. Haru has no key for it yet.' },
+  { id: 'thomas_record', name: "Thomas Stillwater's Record", kind: 'key', price: 0, text: 'The Seventh Clause in the Crown\'s words. In the margin: Xaraguá was never asked. T.S. At the foot: Written at a quarter to three, by the tower bell.' },
+  { id: 'crown_chronicle', name: 'The Crown Chronicle', kind: 'key', price: 0, text: 'The Crown\'s account of the Ash Wars, the third of four. On the fly-leaf: Written to order. The true count is in Kirinoura. T.S.' },
+  { id: 'purge_list', name: 'The Purge List', kind: 'key', price: 0, text: 'Names and streets, "quiet" beside each, by the Hushed\'s word. On its cover, a grey thumbprint and three words: Warn them first.' },
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
   // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
   // warriors (defence, HP, slower). Rarity sets the colour behind the picture and how good it is:
@@ -340,6 +353,9 @@ const ITEM_LIST: ItemDef[] = [
   // Agnipur's tier (Chapter 8): Vikram's own saffron duelling coat (tier 20), and the swordsmith's scale (tier 24).
   { id: 'saffron_coat', level: 20, rarity: 'uncommon', name: 'Saffron duelling coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 780, stats: { def: 11, hp: 16, spd: 2 }, text: 'Saffron silk over a quilted vest, cut for a man who fights before breakfast.' },
   { id: 'scale_armour', level: 24, rarity: 'uncommon', name: 'Scale armour', kind: 'gear', slot: 'armor', armor: 'heavy', price: 1000, stats: { def: 18, hp: 30, spd: -1 }, text: 'Brass scales on oiled leather. It rings like a temple when you walk.' },
+  // Kingsmere's tier (Chapter 9): Edmund's own greatcoat (tier 20), and the outfitter's oilcloth coat (tier 24).
+  { id: 'stillwater_greatcoat', level: 20, rarity: 'uncommon', name: 'Stillwater greatcoat', kind: 'gear', slot: 'armor', armor: 'heavy', price: 820, stats: { def: 14, hp: 24, spd: -1 }, text: 'A long grey greatcoat with a mail lining. It has been apologised in, many times.' },
+  { id: 'oilcloth_coat', level: 24, rarity: 'uncommon', name: 'Oilcloth coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 1000, stats: { def: 17, hp: 28, spd: 1 }, text: 'Kingsmere\'s answer to the weather: waxed cloth over quilting. Nothing gets in, eventually.' },
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
   // Charms (anyone).
@@ -369,6 +385,11 @@ const ITEM_LIST: ItemDef[] = [
   // seller's brass lamp charm.
   { id: 'flame_bead_bracelet', name: 'Flame-bead bracelet', kind: 'gear', slot: 'charm', level: 20, rarity: 'uncommon', price: 400, stats: { mag: 4, atk: 2 }, text: 'Red glass beads on a runner\'s cord, each with a fleck of gold in it. Fire likes them.' },
   { id: 'brass_lamp_charm', name: 'Brass lamp charm', kind: 'gear', slot: 'charm', level: 20, rarity: 'uncommon', price: 300, stats: { def: 3, hp: 10 }, text: 'A thumb-sized brass lamp on a cord, empty. The bead seller swears it keeps the heat off.' },
+  // Kingsmere (Chapter 9): the jeweller's law-seal brooch and steel ring (the brooch's quirk is cut: stats and text), and
+  // the Almoner's brooch from the Assize (Calm is not built: stats).
+  { id: 'law_seal_brooch', name: 'Law-seal brooch', kind: 'gear', slot: 'charm', level: 22, rarity: 'uncommon', price: 350, stats: { def: 3, hp: 8 }, text: 'A silver brooch with the Witness\'s seal. Kingsmere lawyers wear it to court. Thieves dislike it.' },
+  { id: 'steel_ring', name: 'Plain steel ring', kind: 'gear', slot: 'charm', level: 22, rarity: 'uncommon', price: 320, stats: { atk: 3, def: 3 }, text: 'A plain steel ring, very well made. The jeweller says plain is the hardest thing to make.' },
+  { id: 'charity_brooch', name: "The Crown's charity", kind: 'gear', slot: 'charm', level: 24, rarity: 'uncommon', price: 500, stats: { def: 4, mag: 4 }, text: 'The Almoner\'s brooch: the Crown\'s charities, a small closed hand in silver. Taken in the Assize.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {
@@ -484,6 +505,23 @@ export const MEMBERS: readonly MemberDef[] = [
     base: { hp: 40, sp: 20, atk: 15, def: 5, mag: 8, spd: 15 }, growth: { hp: 4, sp: 3, atk: 3, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'agnipur_talwar_of_force', armor: 'saffron_coat' },
   },
+  // Edmund Stillwater (Chapter 9; COMBAT 9.8, the outline section 9.1 with its second review): he joins at the pie shop,
+  // as a fighter, before the keep (party.edmund), defies the Regent in the court, and leads in his own chapter like
+  // Bayarmaa, Haru and Vikram in theirs. The Guardian: the most HP and DEF of anyone, the slowest. Aldermoor's Vigil
+  // (+10% HP) is folded into his base; The Long Watch and Stillwater's Patience are after the release (their text).
+  {
+    id: 'edmund', name: 'Edmund', role: 'Guardian', house: 'Stillwater', portrait: 'edmund', era: 'present', class: 'warrior',
+    passives: [
+      { name: "Aldermoor's Vigil", text: 'His HP is a tenth higher than it would be (in his base).' },
+      { name: 'The Long Watch', text: 'After the release: each turn he holds back, his DEF grows a little.' },
+      { name: "Stillwater's Patience", text: 'After the release: once a battle, he cancels a foe\'s boast.' },
+      { name: 'Terribly sorry', text: 'He apologises to every foe before he hits them. He means it.' },
+    ],
+    joins: { flag: 'party.edmund' },
+    leads: { all: [{ flag: 'party.edmund' }, { notFlag: 'act9.complete' }] },
+    base: { hp: 58, sp: 18, atk: 11, def: 12, mag: 5, spd: 8 }, growth: { hp: 7, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 },
+    start: { weapon: 'pattern_sword_of_guarding', armor: 'stillwater_greatcoat' },
+  },
   // Young Lord Benny joins the Echo party once Azzy has joined (STORY.md: the design's rule), at the end of Chapter 3
   // (story.benny_joined). Chapter 4 has no Echo battle (the plan review's rule): his first Echo there is a walk, at
   // Yusuf's desk; his first fight in the Echo comes in a later chapter.
@@ -552,6 +590,11 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   agnipur_milk: { greeting: 'Namaste! Spiced milk, flatbread, lentil stew.', id: 'agnipur_milk', name: 'Milk-and-bread stall', city: 'jwaladesh', stock: ['spiced_milk', 'flatbread', 'lentil_stew'] },
   agnipur_beads: { greeting: 'Namaste. Charms for the heat.', id: 'agnipur_beads', name: 'Bead seller', city: 'jwaladesh', stock: ['brass_lamp_charm'] },
   agnipur_swords: { greeting: 'Namaste. Talwars and scale.', id: 'agnipur_swords', name: 'Swordsmith', city: 'jwaladesh', stock: ['flame_talwar_of_force', 'scale_armour', 'lacquered_armour', 'kirinoura_tanto_of_force'] },
+  // Kingsmere (Chapter 9): the pie shop, the jeweller and the outfitter on the Market Cross (tier 24 shown honestly at
+  // half bonus, and Agnipur's tier-20 pieces for a party that skipped the swordsmith).
+  kingsmere_pies: { greeting: 'Afternoon. Mind the rain.', id: 'kingsmere_pies', name: 'Pie shop', city: 'aldermoor', stock: ['meat_pie', 'kingsmere_tea', 'scones'] },
+  kingsmere_jeweller: { greeting: 'Good day, madam.', id: 'kingsmere_jeweller', name: 'Jeweller', city: 'aldermoor', stock: ['law_seal_brooch', 'steel_ring'] },
+  kingsmere_outfitter: { greeting: 'How may I help?', id: 'kingsmere_outfitter', name: 'Outfitter', city: 'aldermoor', stock: ['kingsmere_blade_of_force', 'oilcloth_coat', 'scale_armour', 'agnipur_talwar_of_force', 'saffron_coat'] },
 };
 
 /**
@@ -697,6 +740,22 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'jwaladesh-court', name: 'The Court of the Flame' },
     ],
   },
+  // Chapter 9 (built Oct 22; CAPITALS.md 9 with the outline's five maps): the Market Cross in the middle with the keep and
+  // St. Agatha's at its head, the Heath beyond the Moor Gate to the south-west; the Rolls House, the keep and the church
+  // as buildings at their doors.
+  aldermoor: {
+    id: 'aldermoor',
+    name: 'Kingsmere',
+    house: 'Stillwater',
+    sections: [
+      { map: 'aldermoor-cross', name: 'The Market Cross', at: { x: 26, y: 0 } },
+      { map: 'aldermoor-heath', name: 'The Heath', at: { x: 0, y: 30 } },
+      { map: 'aldermoor-rolls', name: 'The Rolls House' },
+      { map: 'aldermoor-keep', name: "The Regent's Keep" },
+      { map: 'aldermoor-close', name: 'The close', at: { x: 30, y: -8 } },
+      { map: 'aldermoor-cathedral', name: "St. Agatha's" },
+    ],
+  },
 };
 
 /** The realm around Eightgate, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
@@ -710,7 +769,7 @@ export const REALM: readonly RealmPlace[] = [
   { id: 'skarragol', name: 'Skarragol', house: 'Ironvow', city: 'skarragol' },
   { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori', city: 'kuroshi' },
   { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh', city: 'jwaladesh' },
-  { id: 'aldermoor', name: 'Aldermoor', house: 'Stillwater' },
+  { id: 'aldermoor', name: 'Aldermoor', house: 'Stillwater', city: 'aldermoor' },
   { id: 'xaragua', name: 'Xaraguá', house: 'Yaguana', city: 'xaragua' },
 ];
 
@@ -752,13 +811,19 @@ export const RPG: RpgContent = {
     { pillar: 'wealth', city: 'jwaladesh', flags: ['choice.advances_given'], each: 4 },
     { pillar: 'influence', city: 'jwaladesh', flags: ['choice.petition_jwa_signed', 'choice.dhanraj_spared', 'story.crane_accepted'], each: 1 },
     { pillar: 'fear', city: 'jwaladesh', flags: ['choice.dhanraj_broken'], each: 1 },
+    { pillar: 'influence', city: 'aldermoor', flags: BOOKS.filter((b) => b.id.startsWith('aldermoor_')).map((b) => loreFlag(b.id)), each: 1 },
+    // Kingsmere's price (Fear 8; outline beat 8 with its second review's 3.7, option (a)): Al-3's +3 (its reward), the
+    // Hushed beaten +1 (the boss), Jordyn's company +1, the Hushed shown to the city +1. Floor 5, so the Muster has a
+    // number to work with; the court's own fall and the published list are not counted twice.
+    { pillar: 'fear', city: 'aldermoor', flags: ['story.hushed_beaten', 'story.jordyn_defected', 'choice.hushed_broken'], each: 1 },
+    { pillar: 'influence', city: 'aldermoor', flags: ['choice.hushed_tried', 'story.edmund_defied'], each: 1 },
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
     // A Journal step pays by its chapter (XP_PER_OBJECTIVE_BY_CHAPTER).
-    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8].map((act, i) => ({
+    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9].map((act, i) => ({
       flags: act.objectives.filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)),
       each: XP_PER_OBJECTIVE_BY_CHAPTER[Math.min(i, XP_PER_OBJECTIVE_BY_CHAPTER.length - 1)]!,
     })),

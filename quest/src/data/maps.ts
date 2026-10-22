@@ -34,6 +34,12 @@ import jwaladeshRooftops from '../../maps/jwaladesh-rooftops.tmj?raw';
 import jwaladeshLibrary from '../../maps/jwaladesh-library.tmj?raw';
 import jwaladeshCourt from '../../maps/jwaladesh-court.tmj?raw';
 import jwaladeshSaltflats from '../../maps/jwaladesh-saltflats.tmj?raw';
+import aldermoorHeath from '../../maps/aldermoor-heath.tmj?raw';
+import aldermoorCross from '../../maps/aldermoor-cross.tmj?raw';
+import aldermoorRolls from '../../maps/aldermoor-rolls.tmj?raw';
+import aldermoorKeep from '../../maps/aldermoor-keep.tmj?raw';
+import aldermoorClose from '../../maps/aldermoor-close.tmj?raw';
+import aldermoorCathedral from '../../maps/aldermoor-cathedral.tmj?raw';
 import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
 import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
 import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
@@ -131,6 +137,12 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'jwaladesh-library': jwaladeshLibrary,
   'jwaladesh-court': jwaladeshCourt,
   'jwaladesh-saltflats': jwaladeshSaltflats,
+  'aldermoor-heath': aldermoorHeath,
+  'aldermoor-cross': aldermoorCross,
+  'aldermoor-rolls': aldermoorRolls,
+  'aldermoor-keep': aldermoorKeep,
+  'aldermoor-close': aldermoorClose,
+  'aldermoor-cathedral': aldermoorCathedral,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

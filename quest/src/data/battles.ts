@@ -148,6 +148,15 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
   ],
   // Vikram (COMBAT 9.7; the outline section 9.1 with its review's 3.8): Ember Cut is fire and sets Burning (a boss only a
   // third of the time); Ananta Yuddha's free round is the fallback the review named, Inspired on the whole party, once.
+  // Edmund (COMBAT 9.8; the outline section 9.1 with its second review's 3.11): Shield Wall is the fallback the outline
+  // named (Warded on the whole party, 3 turns; the one-hit Shielded is after the release); Tea Break heals by share.
+  edmund: [
+    { id: 'shield_wall', name: 'Shield Wall', sp: 8, kind: 'status', power: 0, target: 'allAllies', statuses: ['warded'], text: 'He sets himself in front of everyone: the whole party takes a quarter less for 3 turns.' },
+    {
+      id: 'tea_break', name: 'Tea Break', sp: 10, kind: 'heal', power: 0, healShare: 0.15, target: 'allAllies',
+      text: '"Terribly sorry, one moment." Every ally gets back 15% of their HP.',
+    },
+  ],
   vikram: [
     {
       id: 'ember_cut', name: 'Ember Cut', sp: 4, kind: 'damage', stat: 'atk', power: 130, target: 'enemy', element: 'fire', statuses: ['burning'], bossChance: 0.3,
@@ -194,6 +203,11 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'quick_cut', name: 'Quick Cut', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A short, fast cut. Ready every turn.' },
     { id: 'twin_cut', name: 'Twin Cut', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 75, target: 'randomEnemies', hits: 2, text: 'Two cuts at foes at random. Needs 2 turns to ready again.' },
     { id: 'throat_cut', name: 'Throat Cut', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 150, target: 'enemy', text: 'One cut, exactly placed. Needs 3 turns to ready again.' },
+  ],
+  edmund: [
+    { id: 'shield_bash', name: 'Shield Bash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'An apology, then the flat of the shield. Ready every turn.' },
+    { id: 'measured_blow', name: 'Measured Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 150, target: 'enemy', text: 'One blow, exactly where he meant it. Needs 2 turns to ready again.' },
+    { id: 'hold_the_line_edmund', name: 'Hold the Line', sp: 0, cooldown: 3, kind: 'status', power: 0, target: 'self', statuses: ['taunting', 'warded'], text: 'Draws every blow to him, and takes them better, for 2 turns.' },
   ],
   vikram: [
     { id: 'quick_thrust', name: 'Quick Thrust', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A duellist\'s thrust. Ready every turn.' },
@@ -774,6 +788,111 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Oil Wall', power: 0, ally: 'seth_dhanraj', statuses: ['oiled'], every: 3, tell: 'Dhanraj kicks a jar over. Oil spreads in a ring at his feet; nothing burns there.' },
     ],
   },
+  // ---- Chapter 9, Aldermoor (the outline section 5 with its second review's 3.1; COMBAT 13.2 and 13.3) ---------------
+  // The Moor Constables (polite: their tells say sorry; one whistles up another), the bog hounds, the Crown's press
+  // officer (COMBAT's Order is cut; Rally gives the constables Inspired), the Regent's Sealbearers (the Heath only: in the
+  // keep and the court they are staged, never fought), the heath's Hushers, and the Hushed with the veils who kneel to her.
+  moor_constable: {
+    id: 'moor_constable',
+    name: 'Moor Constable',
+    look: 'moor_constable',
+    level: 22,
+    role: 'tank',
+    bribable: true,
+    withdraws: { line: 'The constable apologises, and steps out of it.' },
+    moves: [
+      { name: 'Truncheon', power: 100 },
+      { name: 'Arrest', power: 80, statuses: ['stunned'], chance: 0.5, every: 3, tell: 'The constable unhooks the irons from his belt. "Sorry about this."' },
+      { name: 'Whistle', power: 0, hire: 'moor_constable', every: 4, once: true, tell: 'The constable fumbles for his whistle. "Sorry. Regulations."' },
+    ],
+  },
+  bog_hound: {
+    id: 'bog_hound',
+    name: 'Bog Hound',
+    look: 'bog_hound',
+    level: 23,
+    role: 'brute',
+    weak: ['fire'],
+    moves: [
+      { name: 'Bite', power: 110 },
+      { name: 'Drag', power: 140, every: 3, tell: 'The hound lowers its head and digs its paws into the peat...' },
+    ],
+  },
+  crown_officer: {
+    id: 'crown_officer',
+    name: 'Crown Officer',
+    look: 'crown_officer',
+    level: 22,
+    role: 'brute',
+    bribable: true,
+    withdraws: { line: 'The officer sits down in the wet, and stays there.' },
+    moves: [
+      { name: 'Sabre', power: 100 },
+      { name: 'Rally', power: 0, ally: 'moor_constable', statuses: ['inspired'], every: 3, tell: 'The officer raises his sabre: "Steady!"' },
+    ],
+  },
+  al_sealbearer: {
+    id: 'al_sealbearer',
+    name: "Regent's Sealbearer",
+    look: 'sealbearer',
+    level: 24,
+    role: 'caster',
+    armored: true,
+    moves: [
+      { name: 'Writ', power: 100, magic: true, statuses: ['weakened'], chance: 0.6 },
+      { name: 'Seal', power: 130, magic: true, statuses: ['hushed'], every: 3, tell: 'The Sealbearer lifts the Throne\'s seal...' },
+    ],
+  },
+  heath_husher: {
+    id: 'heath_husher',
+    name: 'Husher',
+    look: 'almswoman',
+    level: 23,
+    role: 'caster',
+    resist: ['light'],
+    withdraws: { line: 'The Husher steps back into the heather without a sound.' },
+    moves: [
+      { name: 'Whisper', power: 90, magic: true },
+      { name: 'Hush', power: 60, magic: true, statuses: ['hushed'], every: 3, tell: 'The Husher lifts a finger to the veil. The heath goes quiet...' },
+      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you. At her.' },
+    ],
+  },
+  // The veils in the court: they kneel to her, and they stand in front of her (the second review's 3.1: protects).
+  court_husher: {
+    id: 'court_husher',
+    name: 'Veil',
+    look: 'almswoman',
+    level: 23,
+    role: 'caster',
+    resist: ['light'],
+    protects: 'the_hushed',
+    withdraws: { line: 'The veil steps back up the gallery stair.' },
+    moves: [
+      { name: 'Whisper', power: 90, magic: true },
+      { name: 'Hush', power: 60, magic: true, statuses: ['hushed'], every: 3, tell: 'The veil lifts a finger. The court goes quieter...' },
+    ],
+  },
+  // The Hushed (COMBAT 13.3; the outline section 5 with its second review's 3.1): the Regent's almoner, the head the
+  // cells kneel to, level 24, a caster boss: HP x7 and MAG x1.25 (magScale; a caster boss's spells never scaled before).
+  // Hush takes the party's skills and moves two turns at a time (Attack, Guard and Item only); Hush the Light is a
+  // whisper at Anissa, and Gianna steps in (seize: Calm and Comfort are after the release, the review's cut). At 0 HP she
+  // goes down on one knee and the watch takes her: nobody dies.
+  the_hushed: {
+    id: 'the_hushed',
+    name: 'The Hushed',
+    look: 'almoner',
+    level: 24,
+    role: 'caster',
+    boss: true,
+    hpScale: 7,
+    magScale: 1.25,
+    resist: ['light'],
+    withdraws: { line: 'She goes down on one knee in front of the dock. The watch takes her arms.', speaker: 'The Hushed' },
+    moves: [
+      { name: 'Whisper', power: 100, magic: true },
+      { name: 'Hush', power: 120, magic: true, area: true, statuses: ['hushed'], chance: 0.5, every: 3, tell: 'The grey veil tilts. The court goes quiet, all at once... Guard!' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     bribable: true,
@@ -819,6 +938,18 @@ const FOX_SECRETS: readonly EnemyMove[] = [
   { name: 'Fold', power: 0, hire: 'paper_decoy', every: 5, tell: 'The Fox folds a sheet in half, and in half again: another of him is coming.' },
 ];
 
+/** The Hushed when she turns from the dock to the bench behind it (phase 2, 60%): a whisper at Anissa; Gianna steps in. */
+const HUSH_THE_LIGHT: readonly EnemyMove[] = [
+  { name: 'Veil', power: 130, magic: true },
+  { name: 'Hush the Light', power: 0, seize: 3, statuses: ['marked'], every: 2, tell: 'She is not looking at the dock. She is looking at the little one.' },
+];
+
+/** The Hushed unmasked (phase 3, 25%): her bare voice, and the Quiet Crown at everyone. */
+const UNMASKED: readonly EnemyMove[] = [
+  { name: 'Bare Voice', power: 140, magic: true },
+  { name: 'Quiet Crown', power: 150, magic: true, area: true, statuses: ['weakened'], every: 2, tell: 'Her bare voice fills the court: "One hand. One voice. Quiet." Guard, everyone!' },
+];
+
 /** Dhanraj when the price goes up (phase 2, 50%): the staff, Price Spike at everyone, the wall now and then. */
 const DHANRAJ_PRICE_SPIKE: readonly EnemyMove[] = [
   { name: 'Ledger Staff', power: 130 },
@@ -837,6 +968,73 @@ const QASIM_FORECLOSURE: readonly EnemyMove[] = [
 ];
 
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 9: the Hushed in the Assize (the outline beat 7, its second review's 3.1 and 3.12). Game Over applies; the way
+  // back in is the dock's gate (the court's doors are held by the watch while it sits). Two veils at her side step in
+  // front of her (protects); she turns to the bench at 60%; at 25% her veil comes off and two more come down the stair.
+  assize_hushed: {
+    id: 'assize_hushed',
+    title: 'The Hushed',
+    backdrop: 'assize_court',
+    enemies: ['court_husher', 'the_hushed', 'court_husher'],
+    table: 'aldermoor_story',
+    group: 'hushed',
+    rewards: { xp: 260, gold: 400, items: [{ id: 'charity_brooch', n: 1 }] },
+    endsWithBoss: true,
+    boss: true,
+    phases: [
+      { below: 0.6, speaker: 'The Hushed', text: 'Enough noise. Now the little one.', moves: HUSH_THE_LIGHT },
+      {
+        below: 0.25,
+        speaker: 'The Hushed',
+        text: 'You wanted a face. Here.',
+        moves: UNMASKED,
+        enter: ['court_husher', 'court_husher'],
+        enterText: 'The veil comes off. Two more veils come down the gallery stair.',
+      },
+    ],
+    tips: {
+      // The answer, said at the start (the second review's 3.9: her light is resisted, so the tip does not promise it).
+      start: 'She takes your words, Gigi. Plain blows still land. My light still comes. Edmund, hold them.',
+      spark: 'Surge, Gigi! On her!',
+      tell: 'The court\'s going quiet! Guard!',
+      lowHp: 'Gigi. Plain blows. Then heal, when you can.',
+    },
+  },
+  // Chapter 9: the press-gang at the pie shop (beat 1), with Edmund in it. Paid flat (data).
+  press_gang_cross: {
+    id: 'press_gang_cross',
+    title: 'The Market Cross',
+    backdrop: 'market_cross',
+    enemies: ['moor_constable', 'crown_officer', 'moor_constable'],
+    level: 22,
+    table: 'aldermoor_story',
+    group: 'press_gang',
+    rewards: { xp: 50, gold: 100 },
+    tips: {
+      start: 'The sergeant shouts and they get braver, Gigi. Edmund says he\'s sorry. He hits them anyway.',
+      spark: 'Surge, Gigi!',
+      tell: 'Irons! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 9, Al-3: the cell in the bog chapel. Paid flat (data).
+  bog_chapel_cell: {
+    id: 'bog_chapel_cell',
+    title: 'The Bog Chapel',
+    backdrop: 'bog_chapel',
+    enemies: ['heath_husher', 'qc_zealot', 'heath_husher', 'bog_hound'],
+    level: 23,
+    table: 'aldermoor_story',
+    group: 'chapel',
+    rewards: { xp: 40, gold: 150 },
+    sideQuest: 'purge_list',
+    tips: {
+      start: 'They take your words, Gigi. Plain blows still land. The hound first, before it drags someone.',
+      spark: 'Surge, Gigi!',
+      tell: 'Guard, Gigi!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
   // Chapter 8: Seth Dhanraj in the oil store (the outline beat 7, its review 3.1). Game Over applies; the way back in is
   // the store's doorway. Two enforcers at his side step in front of him (protects); two more at half his HP.
   oil_store_dhanraj: {
@@ -1324,6 +1522,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   winter_plateau: { title: 'The Winter Plateau', backdrop: 'winter_plateau' },
   fog_marsh: { title: 'The Fog Marsh', backdrop: 'fog_marsh' },
   salt_flats: { title: 'The Salt Flats', backdrop: 'salt_flats' },
+  heath: { title: 'The Heath', backdrop: 'moor_heath' },
 };
 
 /**

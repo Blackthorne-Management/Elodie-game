@@ -74,4 +74,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 8 complete',
     lines: ['The Dying Flame', "Next: Chapter 9, The Regent's Keep", 'Aldermoor, where the Crown keeps its books...'],
   },
+  // The end of Chapter 9: home to Pòdlimyè before the Crown's fleet (Chapter 10's Muster).
+  {
+    id: 'act9_end',
+    when: 'act9.complete',
+    title: 'Chapter 9 complete',
+    lines: ["The Regent's Keep", 'Next: Chapter 10, The Muster', 'Zetwal, where the realm must gather before the fleet...'],
+  },
 ];

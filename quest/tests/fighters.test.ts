@@ -81,9 +81,10 @@ describe('companions are data', () => {
       joins: { flag: 'party.edmund' },
       base: { hp: 66, sp: 14, atk: 10, def: 14, mag: 5, spd: 6 }, growth: { hp: 8, sp: 2, atk: 2, def: 3, mag: 1, spd: 1 },
     };
-    const rpg: RpgContent = { ...RPG, members: [...RPG.members, edmund] };
+    const rpg: RpgContent = { ...RPG, members: [...RPG.members.filter((m) => m.id !== 'edmund'), edmund] };
     const book: SkillBook = {
       ...SKILL_BOOK,
+      moves: { ...SKILL_BOOK.moves, edmund: [] },
       skills: { ...SKILL_BOOK.skills, edmund: [{ id: 'shield_wall', name: 'Shield Wall', sp: 8, kind: 'status', power: 0, target: 'allAllies', statuses: ['warded'], text: 'x' }] },
     };
     const f = fullParty(10);

@@ -376,8 +376,9 @@ describe('targets, statuses and elements', () => {
     const spell = dmg(b2.act({ kind: 'skill', skill: 'sunthread', target: boarKey }));
     expect(spell.amount).toBe(dmg(c2.act({ kind: 'skill', skill: 'sunthread', target: boarKey })).amount);
     expect(spell.affinity).toBeUndefined();
-    // Only the patrol's musketeer wears one in Chapter 2 (the patrol is where the lesson is taught).
-    expect(Object.values(ENEMIES).filter((e) => e.armored).map((e) => e.id)).toEqual(['breastplate_musketeer']);
+    // Only the patrol's musketeer wears one in Chapter 2 (the patrol is where the lesson is taught); the Regent's
+    // Sealbearers wear the Throne's (Chapter 9, the Heath).
+    expect(Object.values(ENEMIES).filter((e) => e.armored).map((e) => e.id)).toEqual(['breastplate_musketeer', 'al_sealbearer']);
     expect(BATTLES.village_patrol!.enemies).toContain('breastplate_musketeer');
   });
 

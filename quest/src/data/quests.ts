@@ -8,6 +8,7 @@ import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './sideQuests.ts';
 import { FAIR, FJORD, HERD, HORN_DAY_DONE, MOOT, PLATEAU, QUAY } from './skarragol.ts';
 import { FILEHOUSE, HALL, LANTERN_DAY_DONE, LIBRARY, MARSH, MARSH_CODE, MAZE, PIER, QUARTER, SCREENS_SOLUTION } from './kuroshi.ts';
 import { BAZAAR, COURT, DAY_DONE, HARBOR, MIRROR_SOLUTION, ROOFTOPS, mirrorFlag } from './jwaladesh.ts';
+import { CATHEDRAL, CLOSE, CROSS, DAY_DONE as KINGSMERE_DAY_DONE, HEATH, KEEP, cabinetOf, PACT_DRAWER } from './aldermoor.ts';
 import type { Goal } from '../engine/guide.ts';
 
 export const ACT1: QuestDef = {
@@ -1515,8 +1516,184 @@ export const ACT8: QuestDef = {
   ],
 };
 
+const ALD_MAPS = ['aldermoor-heath', 'aldermoor-cross', 'aldermoor-rolls', 'aldermoor-keep', 'aldermoor-close', 'aldermoor-cathedral'];
+const keepAt = (x: number, y: number): Goal => ({ map: 'aldermoor-keep', at: { x, y } });
+/** The archive's filing floor (the Echo zone of the first revisiting): stand there and press Echo. */
+const filingFloor = keepAt(KEEP.zone.x + 5, KEEP.zone.y);
+const dockFloor = keepAt(KEEP.dockSpawn.x, KEEP.dockSpawn.y);
+const pactCabinet = KEEP.cabinets[cabinetOf(PACT_DRAWER.year) - 1]!;
+const cathedralRow: Goal = { map: 'aldermoor-cathedral', at: { x: CATHEDRAL.west.x, y: CATHEDRAL.sceneRow } };
+
+/**
+ * Chapter 9, The Regent's Keep (Kingsmere, Aldermoor: docs/quest/reviews/2026-10-22-chapter9-outline.md with its second
+ * review). The Mere Stair and the road, the Market Cross and Edmund, the Regent's answer and Jordyn at the door, the
+ * close after the bell, the organ and Sebastian, the day until the Toccata (Al-3 and the debate, followed by the arrow),
+ * the Toccata, the postern and the archive (the first revisiting, Thomas's panel, the mirror file), caught, the Assize
+ * (the dock's roll, the record read, the Hushed unmasked), the price at dawn, home.
+ */
+export const ACT9: QuestDef = {
+  id: 'act9',
+  title: "Chapter 9: The Regent's Keep",
+  maps: ALD_MAPS,
+  objectives: [
+    {
+      id: 'mere',
+      title: 'The Mere Stair',
+      detail: 'North along the white coast to Kingsmere, where the Crown keeps its books. The trader will not tie up under a Crown gun.',
+      done: { flag: 'story.aldermoor_arrived' },
+      noXp: true,
+      goals: [{ map: 'aldermoor-heath', at: { ...HEATH.stair } }],
+      hints: ['It\'s raining, Gigi.', 'The stair goes up from the water.', 'Walk up the Mere Stair.'],
+    },
+    {
+      id: 'notice',
+      title: 'The notice post',
+      detail: 'A Crown notice post at the stair\'s head, two bills under a tin hood.',
+      done: { flag: 'story.recital_seen' },
+      goals: [{ map: 'aldermoor-heath', at: { ...HEATH.notice } }],
+      hints: ['There are papers on that post, Gigi.', 'The post at the top of the stair.', 'Read the notice post by the road.'],
+    },
+    {
+      id: 'road',
+      title: 'The road, not the heath',
+      detail: 'The constables walked ahead to the Moor Gate. The road is safe; the heath is not.',
+      done: { flag: 'story.moor_gate' },
+      goals: [{ map: 'aldermoor-heath', at: { x: HEATH.gateStrip, y: HEATH.roadRows[0] } }],
+      hints: ['The constables are waiting, Gigi.', 'East along the road to the gate.', 'Walk the heath road east to the Moor Gate.'],
+    },
+    {
+      id: 'cross',
+      title: 'The Market Cross',
+      detail: 'A wet grey square, and a press-gang at the pie shop\'s door.',
+      done: { flag: 'story.edmund_met' },
+      goals: [{ map: 'aldermoor-cross', at: { x: CROSS.cross.x, y: CROSS.pressRow } }],
+      hints: ['Somebody is shouting at a boy, Gigi.', 'The pie shop, on the square.', 'Walk up into the square.'],
+    },
+    {
+      id: 'keep',
+      title: "The Regent's answer",
+      detail: 'The Regent receives everybody. His keep is at the head of the square.',
+      done: { flag: 'story.regent_refused' },
+      goals: [keepAt(KEEP.passage.x, KEEP.audienceRow)],
+      hints: ['He receives everybody, Edmund says.', 'The keep at the head of the square.', 'Go into the keep and up the great hall.'],
+    },
+    {
+      id: 'close',
+      title: 'The close, after the bell',
+      detail: 'The captain of the watch said: the close, after the evening bell. Its gate is between the church and the keep.',
+      done: { flag: 'story.jordyn_offer' },
+      goals: [{ map: 'aldermoor-close', at: { x: CLOSE.offerStrip, y: CLOSE.gate.y } }],
+      hints: ['Azzy\'s aunt said the close, Gigi.', 'The gate between the church and the keep.', 'Go through the close gate after the bell.'],
+    },
+    {
+      id: 'organ',
+      title: 'The organ',
+      detail: 'Someone in St. Agatha\'s is playing very loud, and stopping, and starting again.',
+      done: { flag: 'story.sebastian_met' },
+      goals: [cathedralRow],
+      hints: ['Somebody is playing very loud, Gigi.', 'The church beside the keep.', 'Go into St. Agatha\'s.'],
+    },
+    {
+      id: 'toccata',
+      title: 'Until the Toccata',
+      detail: 'The loud piece is tomorrow night. Until then: the printer on the heath, the two by the cross.',
+      done: { any: [KINGSMERE_DAY_DONE, { flag: 'story.recital_begun' }] },
+      followSide: true,
+      noXp: true,
+      hints: ['The Toccata is tomorrow night, Gigi. There is a day first.', 'Follow the arrow. Your Quests page knows what is left.', 'Edmund\'s tutor on the heath, and the two by the cross.'],
+    },
+    {
+      id: 'recital',
+      title: 'The Toccata',
+      detail: 'The eve of the Assize. The court walks to St. Agatha\'s, and Uncle Sebastian plays.',
+      done: { flag: 'story.recital_begun' },
+      goals: [cathedralRow],
+      hints: ['The lamps are lit, Gigi.', 'Uncle Sebastian is playing tonight.', 'Go into St. Agatha\'s.'],
+    },
+    {
+      id: 'postern',
+      title: 'The postern',
+      detail: 'Through the vestry, across the close, through the postern. The Sealbearers\' lamps; the dark side of the hall.',
+      done: { flag: 'story.keep_archive_entered' },
+      goals: [keepAt(KEEP.archiveDoor.x, KEEP.archiveDoor.y)],
+      hints: ['Stay behind the pillars, Gigi.', 'The dark side of the hall, under the north wall.', 'Through the postern, along the north wall to the archive door.'],
+    },
+    {
+      id: 'revisiting',
+      title: 'The first revisiting',
+      detail: 'The archive\'s floor shimmers. Fifty years ago a young clerk filed the Crown\'s records here.',
+      done: { flag: 'anchor.thomas_record' },
+      goals: [filingFloor],
+      echoGoals: [{ if: { notFlag: 'echo.record_in_hand' }, ...keepAt(KEEP.thomas.x, KEEP.thomas.y) }, keepAt(KEEP.panel.x, KEEP.panel.y)],
+      hints: ['The floor is shimmering, Gigi.', 'Somebody hid something here, once.', 'Use the Locket on the floor; give Thomas\'s record a place to hide.'],
+    },
+    {
+      id: 'record',
+      title: "Thomas's panel",
+      detail: 'The loose panel, behind the Ash Wars shelf. Something was hidden there fifty years ago.',
+      done: { flag: 'story.record_found' },
+      goals: [{ if: { notFlag: 'side.crown_chronicle.accepted' }, ...keepAt(KEEP.ashShelf.x, KEEP.ashShelf.y) }, keepAt(KEEP.panel.x, KEEP.panel.y)],
+      echoGoals: [filingFloor],
+      hints: ['A panel nobody can reach, Gigi.', 'The shelf is in the way of it.', 'Lift the chronicle down from the shelf, then open the panel.'],
+    },
+    {
+      id: 'mirror',
+      title: 'The mirror file',
+      detail: 'The pact is not under its year. Thomas said: they file lies in the mirror.',
+      done: { flag: 'clue.crown_pact' },
+      goals: [keepAt(pactCabinet.x, pactCabinet.y)],
+      hints: ['Even archives lie, Gigi. But they lie neatly.', 'Thomas said lies are filed in the mirror. The minutes give the year.', 'The Accord\'s year reversed: 32, under the red seal.'],
+    },
+    {
+      id: 'out',
+      title: 'Out, quietly',
+      detail: 'The pact, the record, the chronicle. Out through the hall before the organ stops.',
+      done: { flag: 'story.caught' },
+      goals: [
+        { if: { notFlag: 'side.crown_chronicle.done' }, ...keepAt(KEEP.ashShelf.x + 1, KEEP.ashShelf.y) },
+        keepAt(KEEP.archiveDoor.x, KEEP.archiveDoor.y + 1),
+      ],
+      hints: ['The organ is still playing, Gigi.', 'The chronicle\'s fly-leaf, once more.', 'Read the chronicle again, then out of the archive door.'],
+    },
+    {
+      id: 'assize',
+      title: 'The Assize',
+      detail: 'A witness who swears falsely falls with her evidence. The clerk keeps the evidence; the dock shimmers.',
+      done: { flag: 'story.record_read' },
+      goals: [{ if: { notFlag: 'clue.ratification' }, ...dockFloor }, keepAt(KEEP.clerk.x, KEEP.clerk.y)],
+      echoGoals: [dockFloor],
+      hints: ['The second witness lies, Gigi.', 'The court remembers who was here. Look under the dock.', 'Press the Almoner. Lay the roll, then Thomas\'s record.'],
+    },
+    {
+      id: 'hushed',
+      title: 'The Hushed',
+      detail: 'The Almoner, forsworn, will not go. "Enough noise."',
+      done: { flag: 'story.hushed_beaten' },
+      goals: [keepAt(KEEP.dock.x + 1, KEEP.dock.y - 1)],
+      hints: ['Plain blows still land, Gigi.', 'Edmund holds them. Guard when the court goes quiet.', 'Step to the dock\'s gate and face her again.'],
+    },
+    {
+      id: 'price',
+      title: 'The price',
+      detail: 'Dawn on the Mere Stair. The dissidents are coming down the road.',
+      done: { flag: 'ally.aldermoor_dissidents' },
+      goals: [{ map: 'aldermoor-heath', at: { x: HEATH.stair.x + 1, y: HEATH.stair.y } }],
+      hints: ['People are coming down the road, Gigi.', 'At the stair.', 'Wait on the Mere Stair.'],
+    },
+    {
+      id: 'home',
+      title: 'Home',
+      detail: 'The Zetwal trader at the stair, south and then east, home. The fleet sails after the Assize.',
+      done: { flag: 'act9.complete' },
+      noXp: true,
+      goals: [{ map: 'aldermoor-heath', at: { x: HEATH.boardX, y: HEATH.stair.y } }],
+      hints: ['The boat, Gigi.', 'Down the stair.', 'Step down to the trader\'s boat.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -1898,6 +2075,67 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'item.token_suzumori',
     title: 'Suzumori sits',
     text: 'Kaede folded a crane from the turned order for the chamberlain\'s chair. Agnipur will not take it. Take it anyway, she said.',
+  },
+  // Chapter 9, Kingsmere.
+  {
+    id: 'first_revisiting',
+    when: 'clue.first_revisiting',
+    title: 'The first revisiting',
+    text: 'The Crown meant to keep the harbor from the day it sealed. "To be revisited" means when they choose. Thomas wrote the true record anyway.',
+  },
+  {
+    id: 'changed_thomas_record',
+    when: 'anchor.thomas_record',
+    title: 'Something changed',
+    text: 'Thomas Stillwater\'s true record lies behind the archive\'s loose panel: young Patricio leaned on it, fifty years ago.',
+  },
+  {
+    id: 'mirror_file',
+    when: 'clue.crown_pact',
+    title: 'The mirror file',
+    text: 'The Accord\'s year reversed, under the house the lie is about: 32, red. The pact, and the Ash Road Accounts in a cipher Haru cannot read yet.',
+  },
+  {
+    id: 'the_roll',
+    when: 'clue.ratification',
+    title: 'The roll',
+    text: 'The roll of the court the day the seventh clause was ratified: Xaraguá not present. Not sent for. Xaraguá was not in that court.',
+  },
+  {
+    id: 'thumb_eight',
+    when: 'clue.list_leaked',
+    title: 'The ash thumbprint (8 of 9)',
+    text: 'The purge list, leaked from inside the Quiet Crown with the grey thumb on its cover: "Warn them first." Eight of nine.',
+  },
+  {
+    id: 'four_accounts_three',
+    when: 'side.crown_chronicle.done',
+    title: 'The four accounts: three read',
+    text: 'The temple record, the spy ledger and now the Crown Chronicle, written to order. The fourth is Grandmother\'s.',
+  },
+  {
+    id: 'hushed_commission',
+    when: 'clue.hushed_regent',
+    title: "The Almoner's commission",
+    text: '"To the Crown\'s almoner, the keeping of the quiet." Under the Throne\'s seal, with no hand. The Crown disowns any almoner.',
+  },
+  {
+    id: 'stillwater_dissidents',
+    when: 'ally.aldermoor_dissidents',
+    title: 'The Stillwater dissidents',
+    text: 'Price: Fear 8, owed at the Muster. They are the Crown\'s own people: no chair at Eightgate, no token for the chamberlain.',
+  },
+  {
+    id: 'jordyn',
+    when: 'story.jordyn_offer',
+    title: 'Titi Jordyn',
+    text: 'Rahel\'s daughter, Azzy\'s aunt: captain of the Regent\'s watch. She does not defect for family. She keeps the law.',
+  },
+  {
+    id: 'sebastian',
+    when: 'story.sebastian_met',
+    title: 'Uncle Sebastian',
+    text: 'Mummy\'s brother, organist to three courts. He plays the Agatha Toccata on the eve of the Assize, very loud, at the hour we need.',
   },
   // Chapter 8, Agnipur.
   {

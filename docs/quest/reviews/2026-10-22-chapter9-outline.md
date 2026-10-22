@@ -1461,3 +1461,17 @@ Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, mo
 early November (the Aldermoor ledger and Patricio in Aldermoor are both paid in this chapter as Claude's calls, the
 second refined; Rosalind is this chapter's Gen III ruler); the fluent-speaker check (Wed Nov 18: this chapter adds no
 new language).
+
+## Decisions after the second review (Oct 22)
+
+- **Claude's call:** the build takes every fix in section 6 of `2026-10-22-chapter9-outline-review.md`. Specifically:
+  - Anissa comes through the postern with the party and holds the Echo's door, not the organ loft.
+  - Sebastian's bill reads "that's Grandpapa's name".
+  - Al-2's panel is behind the shelf.
+  - The dissidents' price can be short.
+  - The Hushed has `magScale` 1.25 at HP x7 and Hushers with `protects`.
+  - The XP plan is re-run against the levels pass.
+  - The build is planned at 3 to 3.5 days.
+- **Owner decision (Oct 22): yes.** The Almoner is the veiled woman from Chapter 1's Cane Road. The
+  facts are corrected per review finding 2: the Cane Road by the mill, `choice.warned_watcher`, Gianna's own words,
+  and her line "No one. That is the point of us." quoted back at the unmasking.

@@ -341,6 +341,11 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.hushed_beaten"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "road_watcher"
@@ -656,10 +661,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 672,
+      "imageheight": 752,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 332,
+      "tilecount": 374,
       "columns": 8,
       "margin": 0,
       "spacing": 0

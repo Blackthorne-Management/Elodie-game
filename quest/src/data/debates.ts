@@ -644,6 +644,84 @@ export const DEBATES: readonly DebateDef[] = [
       say('gaze_pilgrim', 'Write that down, Keeper. I will.'),
     ],
   },
+  // Kingsmere's Market Cross (Chapter 9; the outline 7.3): Should the Throne have one hand? Required. The Gaze exile is
+  // Gianna's side; the Quiet Crown hierarch is a sincere believer in a plain grey stole, not a Husher and not veiled (no
+  // line joins him to the cells). The player may argue his side: the chapter's court has one hand, patient and polite;
+  // the chapter's answer is a clerk who wrote the truth in a margin and waited fifty years for a court to read it.
+  {
+    id: 'aldermoor_one_hand',
+    city: 'aldermoor',
+    question: 'Should the Throne have one hand?',
+    ally: 'gaze_exile',
+    opponent: 'qc_hierarch',
+    opensIf: { flag: 'story.edmund_met' },
+    passing: [
+      say('qc_hierarch', '...eight voices shouting across a table while the harbor burns.'),
+      say('gaze_exile', 'And one hand in the dark, which nobody can hold to anything.'),
+    ],
+    listen: [
+      say('qc_hierarch', 'The realm is eight voices shouting across a table while the harbor burns.'),
+      say('qc_hierarch', 'One hand on the Throne and the shouting stops. That is not tyranny. That is quiet.'),
+      say('gaze_exile', 'A hand that cannot be seen cannot be held to anything. The goddess does not rule. She watches.'),
+      say('gaze_exile', 'One hand in the dark is how my island was counted as property.'),
+      say(A, 'The grey one wants everybody quiet, Gigi. The sun one wants everybody watched.'),
+    ],
+    reasonNeeds: [loreFlag('aldermoor_witness_law'), loreFlag('aldermoor_agatha')],
+    rounds: [
+      {
+        claim: 'Eight houses could not agree on the time of day. One hand would at least keep time.',
+        answers: {
+          scripture: { short: 'Elodie watches', text: 'Elodie does not rule. She watches, and every ruler knows it. A watched hand keeps better time.', strength: 1 },
+          reason: { short: 'The roll keeps time', text: 'The Witness and the Law: a court keeps time with its roll, not its hand. Who was there, who was sent for.', strength: 2 },
+          compassion: { short: 'Ask who is quiet', text: 'Ask the families on the Cross who went quiet whether the quiet kept time for them.', strength: 1 },
+        },
+      },
+      {
+        claim: 'The Crown is patient. Patience is a virtue. Dame Agatha said the loud burn out first.',
+        answers: {
+          scripture: { short: 'The goddess waits', text: 'The goddess is patient too. She waits for what is hidden to be shown, not for it to be forgotten.', strength: 1 },
+          reason: { short: 'Agatha wrote it down', text: 'Dame Agatha\'s Patience: she was patient and she wrote everything down, and read it back. Patience is a record.', strength: 2 },
+          compassion: { short: 'Patience for whom', text: 'Patient with whom? Agatha was patient with the lords who lied. This patience is spent on the people it hushes.', strength: 1 },
+        },
+      },
+      {
+        claim: 'So you would have eight hands, envoy, and every one of them grabbing?',
+        answers: {
+          scripture: { short: 'Hands, watched', text: 'Eight hands, every one of them watched. That is what the Gaze is for.', strength: 1 },
+          reason: { short: 'A hand in the light', text: 'One hand, if you like. But in the light, with its own name on what it signs. Not under a seal with no hand.', strength: 1 },
+          compassion: { short: 'Hands that hold', text: 'Hands that hold each other up. A clerk wrote the truth in a margin and waited fifty years. Somebody read it.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(Round the cross, a tea-shop keeper opens her door a crack to listen. A constable takes his hat off.)',
+      1: '(Half the square nods at the hierarch, half at the exile. The cross gets touched for luck, twice.)',
+      0: '(The square goes back to being wet.)',
+    },
+    won: [
+      say('qc_hierarch', 'In the light, with its own name on what it signs. ...I would like to know whose name.'),
+      say('gaze_exile', 'So would I. So would the whole Cross.'),
+    ],
+    lost: [
+      say('qc_hierarch', 'Quiet, envoy. Come back when you have something quieter to say.'),
+      say('gaze_exile', 'She will. I have been coming back for thirty years.'),
+    ],
+    mediate: [
+      say(G, 'You both want the shouting to stop. One of you by one hand, one of you by every eye.'),
+      say('qc_hierarch', 'Then let the hand sign its own name.'),
+      say('gaze_exile', 'And let it be read aloud in the square, where we can all see it.'),
+      say('qc_hierarch', 'That is the Witness\'s way. We have been arguing about the Witness.'),
+    ],
+    provoke: [
+      say(G, 'Your one hand keeps an almoner who takes families\' voices. Is that the quiet you mean?'),
+      nar('The square goes very still. A tea-shop door shuts.'),
+      say('qc_hierarch', 'Not here, envoy. Not in the rain, where she can hear.'),
+    ],
+    after: [
+      say('qc_hierarch', 'A hand in the light. I will think about it, in the light.'),
+      say('gaze_exile', 'Think out loud. That is all the goddess asks.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */
