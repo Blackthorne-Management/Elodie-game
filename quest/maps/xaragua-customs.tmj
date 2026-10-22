@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 7,
+  "nextobjectid": 10,
   "layers": [
     {
       "id": 1,
@@ -215,6 +215,11 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.war_begun"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "crown_clerk"
@@ -240,7 +245,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.council_defied"
+              "value": "story.council_defied, !story.war_begun"
             },
             {
               "name": "npc",
@@ -266,9 +271,98 @@
               "value": "left"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.war_begun"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "customs_marine"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "thorne_war",
+          "type": "npc",
+          "x": 160,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.thorne_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "thorne_war"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "customs_marine_war",
+          "type": "npc",
+          "x": 128,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.thorne_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "customs_guard_war"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "customs_musketeer_war",
+          "type": "npc",
+          "x": 192,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.thorne_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "customs_guard_war"
             }
           ]
         }
@@ -285,7 +379,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 4,
+          "id": 7,
           "name": "customs_out",
           "type": "door",
           "x": 128,
@@ -313,7 +407,7 @@
           ]
         },
         {
-          "id": 5,
+          "id": 8,
           "name": "customs_cellar",
           "type": "door",
           "x": 48,
@@ -374,7 +468,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 6,
+          "id": 9,
           "name": "customs",
           "type": "spawn",
           "x": 128,
@@ -438,10 +532,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 816,
+      "imageheight": 848,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 406,
+      "tilecount": 421,
       "columns": 8,
       "margin": 0,
       "spacing": 0

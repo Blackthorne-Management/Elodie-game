@@ -1,0 +1,5 @@
+{
+  "into the memory and straight back, without touching the capstan": ["down", "echo", "skip", "echo", "skip"],
+  "the pin looked at in the memory and left in": ["down", "echo", "skip", "down*7", "right", "right", "confirm", "down", "confirm", "skip", "left", "up*6", "echo", "skip"],
+  "the pier walked in the present (the marines hold its sea end)": ["down*7", "right", "confirm", "skip"]
+}

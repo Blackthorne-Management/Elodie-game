@@ -10,7 +10,7 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 10).
+and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 11).
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -121,6 +121,22 @@ headless route the Dorini are the least paid and sail. **Fixed (Oct 22, on the C
 `hall_records` was used twice (Zetwal's Hall and the Seat's), so the books `lore.zetwal_quiet_tract` and
 `lore.zetwal_harbor_tolls` could never be read in Pòdlimyè; Zetwal's shelf is now `hall_harbor_records`, and
 `tests/books.test.ts` checks every shelf id is unique. Not built yet: the Quill bonus at the stone, the board's dispatches, the second look at the two books.
+
+**Quest, Chapter 11 (Oct 22):** The War of the Harbor is built on branch `chapter11` (from `chapter10`; the war's
+layers on nine Xaraguá maps, no new map: the landing in seven columns, the gun on the headland, the flank in four
+houses or the house that stood, the gardens' road and the hill camp, the elders' debate, the Ninth Thumbprint and
+Harbors Lie, the conch, the village by dusk, Thorne, Anaco in the cellar, Caona's stand and the chain post's pin in the
+pier's memory, the Turn with the signet's public lie, Trust (Hale, Rael in the four) and Strike (Rael's vanguard, Azzy
+furious and staying), the truth by lamplight, old Benny and Nancy and the Song House, the caney and the card;
+`?chapter=12` at Eightgate's Ardencia Gate). Ahead of its **Nov 10 to 13** slot (on its branch, not merged). Waiting on
+the owner: a human read of every Rael, Benny, Nancy, Anaco, Yari, Azzy and Anissa line in the war (reviewer prompt
+`docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter11-build.md`); the Benny contradiction is settled (Claude's call: the
+passive now reads "He kept the oath, whatever it cost", matching Rael's private line); Hale's look (`docs/quest/ART-PROMPTS.md`
+20); the war's music track (`docs/quest/AUDIO-PROMPTS.md`, a slot plays the Mountain Path's until then). Noted: Chapter
+11's steps pay 58 XP; the route ends at 28, the line without side quests at 26; the gardens' road is a long walk (a
+step and a question on each side), not a door. Not built yet: the market's second stock once the harbor is taken,
+*The First Oath*'s second look, the board's dispatches, the voyage to Eightgate as a scene. The smoke test has Chapter
+11 checks but has not walked the chapter in a browser.
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

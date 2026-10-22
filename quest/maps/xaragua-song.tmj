@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 8,
+  "nextobjectid": 15,
   "layers": [
     {
       "id": 1,
@@ -252,9 +252,70 @@
               "value": "up"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.wounded_sheltered"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "song_apprentice"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "benny_song",
+          "type": "npc",
+          "x": 176,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.wounded_sheltered"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "benny_war"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "nancy_song",
+          "type": "npc",
+          "x": 64,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.wounded_sheltered"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "nancy_war"
             }
           ]
         }
@@ -271,7 +332,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 3,
+          "id": 5,
           "name": "song_out",
           "type": "door",
           "x": 160,
@@ -309,7 +370,46 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 6,
+          "name": "war_song",
+          "type": "trigger",
+          "x": 160,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "war_song"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.song_war_entered"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "clue.ash_road_read, !story.wounded_sheltered"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 11,
@@ -322,7 +422,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 4,
+          "id": 7,
           "name": "song",
           "type": "spawn",
           "x": 160,
@@ -379,7 +479,139 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 5,
+          "id": 8,
+          "name": "song_hamaca_1",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 48,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "hamaca"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "song_hamaca_2",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 96,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "hamaca"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "song_hamaca_3",
+          "type": "puzzle_object",
+          "x": 304,
+          "y": 48,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "hamaca"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "song_hamaca_4",
+          "type": "puzzle_object",
+          "x": 304,
+          "y": 96,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "hamaca"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 12,
           "name": "song_history",
           "type": "puzzle_object",
           "x": 32,
@@ -402,7 +634,7 @@
           ]
         },
         {
-          "id": 6,
+          "id": 13,
           "name": "song_spirit",
           "type": "puzzle_object",
           "x": 80,
@@ -425,7 +657,7 @@
           ]
         },
         {
-          "id": 7,
+          "id": 14,
           "name": "song_accounts",
           "type": "puzzle_object",
           "x": 224,
@@ -456,10 +688,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 816,
+      "imageheight": 848,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 406,
+      "tilecount": 421,
       "columns": 8,
       "margin": 0,
       "spacing": 0

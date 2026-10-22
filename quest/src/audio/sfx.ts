@@ -172,6 +172,21 @@ const RECIPES: Record<SfxId, () => Note[]> = {
     { at, dur: 0.05, wave: 'noise' as const, from: 0, gain: 0.25 },
     { at, dur: 0.06, wave: 'triangle' as const, from: 220, to: 160, gain: 0.3 },
   ]),
+  // Chapter 11: a cannon far off (a thump and a long noise tail), a ragged volley of muskets, the chain running out of
+  // the capstan (fast clicks falling away), and the conch (a low, rising horn).
+  cannon: () => [
+    { at: 0, dur: 0.5, wave: 'sine', from: 90, to: 40, gain: 0.7, release: 0.3 },
+    { at: 0, dur: 0.9, wave: 'noise', from: 0, gain: 0.35, release: 0.7 },
+  ],
+  volley: () => [0, 0.05, 0.11, 0.18, 0.22, 0.3].map((at) => ({ at, dur: 0.12, wave: 'noise' as const, from: 0, gain: 0.3, release: 0.08 })),
+  chain: () => Array.from({ length: 12 }, (_, i) => i * 0.07).flatMap((at, i) => [
+    { at, dur: 0.04, wave: 'noise' as const, from: 0, gain: 0.25 - i * 0.015 },
+    { at, dur: 0.05, wave: 'triangle' as const, from: 320 - i * 12, gain: 0.25 - i * 0.015 },
+  ]),
+  conch: () => [
+    { at: 0, dur: 1.4, wave: 'triangle', from: 196, to: 233, gain: 0.45, attack: 0.15, release: 0.4, vibrato: [5, 4] },
+    { at: 0, dur: 1.4, wave: 'sine', from: 392, to: 466, gain: 0.15, attack: 0.15, release: 0.4 },
+  ],
   // The party falls (Game Over, shot 1): one low note as the battle music cuts.
   fall: () => [
     { at: 0, dur: 1.4, wave: 'triangle', from: 98, to: 92, gain: 0.5, attack: 0.02, release: 0.9 },

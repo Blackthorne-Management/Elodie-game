@@ -55,7 +55,9 @@ Quill and Chapter 2's Conch).
 `chapter9`** (the outline's "Built" section: `reviews/2026-10-22-chapter9-outline.md`), well before the Nov 8 decision
 date. Its route ends at level 24, the band's top, so the Muster (24 to 25) starts where it should. **Chapter 10 is built on branch `chapter10`** (from `chapter9`;
 the outline's "Built" section: `reviews/2026-10-22-chapter10-outline.md`), ahead of its Nov 8 to 10 slot. Its route
-ends at level 25 (8,533), so Chapter 11 (25 to 28) starts at its floor.
+ends at level 25 (8,533), so Chapter 11 (25 to 28) starts at its floor. **Chapter 11 is built on branch `chapter11`** (from `chapter10`; the outline's "Built"
+section: `reviews/2026-10-22-chapter11-outline.md`), ahead of its Nov 10 to 13 slot. Its route ends at level 28
+(10,260), the line without side quests at 26, so Chapter 12 (28 to 30) starts at its floor.
 
 **Reviews by the owner and the objective reviewer, in batches:**
 - Chapters 1 and 2, about Oct 27;

@@ -565,10 +565,31 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
      against Anissa. Private line: "My father kept his oath and it cost him everything. I wanted to know what would
      happen if someone kept the goal instead."
   5. The Regent retreats to Eightgate.
-- **Who joins:** Rael fights as a guest in the Trust route (proposal: guest only, not a roster member).
+- **Who joins:** Rael fights as a guest in the Trust route (proposal: guest only, not a roster member). **Built:** a
+  member for the one fight (`party.rael` with `fight.return`), never on the Status page; a lost fight clears it.
 - **Echo scenes:** Caona's last stand at the harbor in the Revolution (proposal), the place where the debt began.
 - **Bosses:** the betrayer (level 26), then the Regent's champion (Trust, level 28) or Rael (Strike, level 28).
 - **What the player learns:** the whole truth about Rael, and that she now has to decide what to do with it.
+- **Built (Oct 22; the outline `reviews/2026-10-22-chapter11-outline.md`, its "Built" section, and its second
+  review):** the fleet lands on the Canoe Beach (seven columns, a missing column for a house that sailed); the gun on
+  the headland; the flank (the betrayer's hull grounds, his house's companion leads and defies him a second time; or the
+  house that turned stands with the fleet); the gardens' road and the hill camp; *Until the tide* (the elders' debate,
+  the Ninth Thumbprint, Harbors Lie, where the fisher's boy sees Ardencia's black sails off the point); the conch; the
+  village by dusk; Thorne at his desk; Yari in the cellar ("Father."); Caona's stand in the pier's memory and the
+  capstan's pin; the chain running out; **the Turn as the review's 3.1:** the Crown's line lets Ardencia through, Rael
+  comes up the pier with his vanguard and lies in public with the signet's glow, Anissa: "Gigi. His ring.", then
+  *Hold the pier.* (Trust: Rael turns on the *Patience*, fights Hale beside Gianna, the *Patience* runs for Eightgate
+  and the rest strike) or *Strike first.* (his vanguard, Bound never Down, the Broken Army; the fleet escapes; Azzy
+  stays in the party, furious: owner, Oct 22). Either way `story.harbor_taken`. **The truth** by lamplight on the pier,
+  both routes: married to Elodie twenty-five years ago; the Crown alliance a farce ("A man the Crown has bought is shown
+  its ledgers."); the nine doors; the Quiet Crown's founding told here **privately** ("I will answer for it where it
+  can be written down": the Hearing has the public confession, the review's 3.16); the private line as written above;
+  the choice *You tested us.* / *You lied to us for twenty years.*; the Locket and the signet glow together on the Ash
+  Road Accounts (the token's rule); old Benny and Nancy come up the pier and take the wounded to the Song House, where
+  Anissa holds the lamp. The caney: Anaco in his duho, the carved paddle to Yari, Rael "not beside you" at Eightgate,
+  the Regent gone home to his Throne. **Settled (Claude's call, Oct 22):** the private line says Benny "kept his oath"; young
+  Benny's passive (Chapter 3) said the opposite, so it now reads "He kept the oath, whatever it cost" (Rael is the one
+  who kept the goal instead).
 
 ### Chapter 12: The Claim (Eightgate)
 

@@ -94,8 +94,11 @@ describe('the count and the Grudge', () => {
     expect(grudgeCap(boss)).toBe(GRUDGE_MAX_BOSS);
     expect(grudgeCap(story)).toBe(GRUDGE_MAX);
     // Only the chapter bosses (Chapter 2: Thorne; Chapter 6: Grimvald; Chapter 7: the Paper Fox; Chapter 8: Seth Dhanraj;
-    // Chapter 9: the Hushed).
-    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['mangrove_crew', 'assize_hushed', 'oil_store_dhanraj', 'fjord_grimvald', 'file_house_fox', 'thorne_blockade']);
+    // Chapter 9: the Hushed; Chapter 11: the house that sailed to the Crown, Thorne at the customs house, Hale, Rael).
+    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual([
+      'harbor_flank_skarragol', 'harbor_flank_kuroshi', 'harbor_flank_jwaladesh', 'harbor_flank_al_doria', 'customs_thorne', 'flagship_hale',
+      'pier_rael', 'mangrove_crew', 'assize_hushed', 'oil_store_dhanraj', 'fjord_grimvald', 'file_house_fox', 'thorne_blockade',
+    ]);
   });
 
   it('a win clears that fight\'s losses (and so its Grudge); the count stays', () => {
@@ -438,7 +441,13 @@ describe('every story fight has a way back in', () => {
   it('each fight a conversation starts is meant to be lost, or has a foe on a map or a trigger that starts it again', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
-    expect([...started].sort()).toEqual(['assize_hushed', 'bog_chapel_cell', 'camp_lookouts', 'caney_breach', 'deserters_road', 'duel_yard_vikram', 'file_house_fox', 'fjord_grimvald', 'intro_boar', 'mangrove_crew', 'marsh_moths', 'oil_store_dhanraj', 'ordu_bout', 'pier_marines', 'press_gang_cross', 'qasim_vault', 'quay_watch', 'rael_trial', 'salt_road_enforcers', 'stacks_cutpurses', 'thorne_blockade', 'tunnel_bats', 'village_patrol', 'winter_wolves']);
+    expect([...started].sort()).toEqual([
+      'assize_hushed', 'bog_chapel_cell', 'camp_lookouts', 'caney_breach', 'caona_stand', 'customs_thorne', 'deserters_road', 'duel_yard_vikram',
+      'file_house_fox', 'fjord_grimvald', 'flagship_hale', 'harbor_flank_al_doria', 'harbor_flank_jwaladesh', 'harbor_flank_kuroshi',
+      'harbor_flank_skarragol', 'headland_battery', 'intro_boar', 'mangrove_crew', 'marsh_moths', 'oil_store_dhanraj', 'ordu_bout', 'pier_marines',
+      'pier_rael', 'press_gang_cross', 'qasim_vault', 'quay_watch', 'rael_trial', 'salt_road_enforcers', 'stacks_cutpurses', 'thorne_blockade',
+      'thumbprint_picket', 'tunnel_bats', 'village_patrol', 'winter_wolves',
+    ]);
     for (const id of started) {
       const def = battleDef(id);
       expect(def, id).toBeDefined();
@@ -447,7 +456,10 @@ describe('every story fight has a way back in', () => {
       const trigger = Object.values(maps).some((m) => m.triggers.some((t) => !t.once && !t.onEnter && starts(t.dialogue).has(id)));
       // Or a thing on the map that starts it again when used (Chapter 7: the marsh posts bring the moths back).
       const thing = Object.values(maps).some((m) => m.objects.some((o) => starts(o.dialogue).has(id)));
-      expect(foe || trigger || thing, `${id}: nobody waits on the map to fight it again`).toBe(true);
+      // Or an Echo zone whose memory plays it again on every swap in (Chapter 11: Caona's stand on the pier; the Rise
+      // brings the party back to the present, engine/game.ts riseFromFight).
+      const echo = Object.values(maps).some((m) => m.echoZones.some((z) => starts(z.onEcho).has(id)));
+      expect(foe || trigger || thing || echo, `${id}: nobody waits on the map to fight it again`).toBe(true);
     }
   });
 

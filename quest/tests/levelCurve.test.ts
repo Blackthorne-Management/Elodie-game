@@ -20,8 +20,8 @@ describe('the level curve along the scripted route', () => {
   console.log(curveText(report));
   const ch = (n: number) => report.chapters.find((c) => c.chapter === n)!;
 
-  it('measures every chapter the route plays (Chapters 1 to 10 so far), and lists the rest as unplayed', () => {
-    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  it('measures every chapter the route plays (Chapters 1 to 11 so far), and lists the rest as unplayed', () => {
+    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     expect(report.chapters.length + report.unplayed.length).toBe(CHAPTER_LEVELS.length);
     for (const c of report.chapters) expect(c.xp).toBeGreaterThan(c.xpNoSide);
     // XP only grows from one chapter to the next.
@@ -41,8 +41,8 @@ describe('the level curve along the scripted route', () => {
     }
   });
 
-  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15, Chapter 6 at 17, Chapter 7 at 19, Chapter 8 at 21, Chapter 9 at 24, Chapter 10 at 25', () => {
-    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17, 19, 21, 24, 25]);
+  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15, Chapter 6 at 17, Chapter 7 at 19, Chapter 8 at 21, Chapter 9 at 24, Chapter 10 at 25, Chapter 11 at 28', () => {
+    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17, 19, 21, 24, 25, 28]);
     // Chapter 1 was 6 (25 XP a step); Chapter 2 was 10 (its five required side quests, and 80 XP an ambush).
     expect(ch(1).xp).toBeLessThan(xpForLevel(RPG, 5));
     expect(ch(2).xp).toBeLessThan(xpForLevel(RPG, 9));
@@ -130,6 +130,23 @@ describe('the level curve along the scripted route', () => {
     expect(ch(9).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 24));
     // The Cane Road's return is walked on the route (Z-6 and Z-3), and its table pays by the party's level.
     expect(ten.wildSteps).toBeGreaterThan(40);
+  });
+
+  it('Chapter 11 (the War of the Harbor, 25 to 28) ends on 28 on the route and on the played line, and at 26 without side quests', () => {
+    const eleven = ch(11);
+    expect(eleven.level).toBe(28);
+    expect(eleven.played.median).toBe(28);
+    expect(eleven.played.p90).toBeLessThanOrEqual(29);
+    expect(eleven.played.wanderP90).toBeLessThanOrEqual(29);
+    // The story carries the chapter (58 a step and the named fights); the two side quests and the picket pay 40 each.
+    expect(eleven.levelNoSide).toBe(26);
+    expect(eleven.target.to - eleven.levelNoSide).toBeLessThanOrEqual(LEVEL_CURVE.skipSideQuestsMaxUnder);
+    // Chapter 12's band starts at 28: the party arrives at it, not past it (29 needs 10,338), on both lines.
+    expect(eleven.xp).toBeLessThan(xpForLevel(RPG, 29));
+    expect(eleven.played.medianXp).toBeLessThan(xpForLevel(RPG, 29));
+    // Chapter 11 starts where Chapter 10 ended: 25. The Mountain Path and the gardens are walked four times at war.
+    expect(ch(10).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 25));
+    expect(eleven.wildSteps).toBeGreaterThan(200);
   });
 
   it(`skipping every side quest leaves the party at most ${LEVEL_CURVE.skipSideQuestsMaxUnder} levels under the target`, () => {

@@ -2,7 +2,7 @@
 // game by the scripted route the smoke test also drives in the browser (routes/zetwal-act1.json).
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11 } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { partyMembers } from '../src/engine/rpg.ts';
@@ -26,6 +26,11 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   const chapter8: string[] = [];
   const chapter9: string[] = [];
   const chapter10: string[] = [];
+  const chapter11: string[] = [];
+  /** Where the party stood, and what it had fought, once the fleet has landed (the route goes on into Chapter 11). */
+  let atChapter10End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
+  /** Where the party stood as Chapter 11's card shows (the route goes on: closing it, the fleet sails for Eightgate). */
+  let atChapter11End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, as Chapter 9's card shows (the route goes on into Chapter 10). */
   let atChapter9End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, on Agnipur's quay at Chapter 8's end (the route goes on into Chapter 9). */
@@ -79,6 +84,12 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     if (item.kind === 'mark' && item.name === 'chapter8-end') {
       atChapter8End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
     }
+    if (item.kind === 'mark' && item.name === 'war-landing') {
+      atChapter10End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
+    }
+    if (item.kind === 'mark' && item.name === 'chapter11-end') {
+      atChapter11End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
+    }
     if (item.kind === 'mark' && item.name === 'end-card') {
       atChapterEnd = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => KEPT.test(k)));
     }
@@ -125,6 +136,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       if (sim.logic.state.flags.isSet('act9.complete') && sim.logic.state.player.mapId.startsWith('zetwal-')) {
         const id10 = currentObjective(ACT10, sim.logic.state.flags)?.id ?? 'complete';
         if (chapter10.at(-1) !== id10) chapter10.push(id10);
+      }
+      if (sim.logic.state.flags.isSet('act10.complete') && ACT11.maps.includes(sim.logic.state.player.mapId)) {
+        const id11 = currentObjective(ACT11, sim.logic.state.flags)?.id ?? 'complete';
+        if (chapter11.at(-1) !== id11) chapter11.push(id11);
       }
       if (ACT9.maps.includes(sim.logic.state.player.mapId)) {
         const id9 = currentObjective(ACT9, sim.logic.state.flags)?.id ?? 'complete';
@@ -280,7 +295,7 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('Chapter 9: the Mere Stair, the Cross, the audience, the day (Al-3, the debate, Jordyn, Sebastian), the recital, the archive, caught, the Assize, the Hushed, the price, home', () => {
-    const flags = sim.logic.state.flags;
+    const flags = new FlagStoreView(atChapter9End.flags);
     // Every objective in order (the landing is done by the arrival itself; the toccata objective follows the side quests).
     expect(chapter9).toEqual([...ACT9.objectives.map((o) => o.id).filter((id) => id !== 'mere'), 'complete']);
     // The press-gang on the Cross, the bog chapel's cell (Al-3) and the Hushed in the Assize.
@@ -299,15 +314,15 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('Chapter 10: the pier, the camp, the council, the watch, the kitchen, the lamp, the stone, the allies seated, the vote, the whistle, under the point, the tide', () => {
-    const flags = sim.logic.state.flags;
+    const flags = new FlagStoreView(atChapter10End.flags);
     // Every objective in order, the pier's scene first as the party lands.
     expect(chapter10).toEqual([...ACT10.objectives.map((o) => o.id), 'complete']);
     // The crew at the smugglers' landing (Z-6); the route meets no ambush on the Cane Road.
-    expect(sim.battles.slice(atChapter9End.battles.length)).toEqual(['mangrove_crew']);
+    expect(atChapter10End.battles.slice(atChapter9End.battles.length)).toEqual(['mangrove_crew']);
     expect(flags.isSet('act10.complete') && flags.isSet('card.act10_end')).toBe(true);
-    // The fleet sails: Chapter 11 lands on the Canoe Beach below Yucayeque.
-    expect(sim.logic.state.player.mapId).toBe('xaragua-beach');
-    expect(sim.logic.mode).toBe('field');
+    // The fleet sails: Chapter 11 lands on the Canoe Beach below Yucayeque (the landing has played).
+    expect(atChapter10End.map).toBe('xaragua-beach');
+    expect(atChapter10End.mode).toBe('field');
     for (const f of ['story.pier_met', 'story.plaza_camp_seen', 'story.council_condition', 'story.watch_landed', 'story.rahel_met', 'story.blessing', 'story.patricio_told', 'clue.four_accounts', 'clue.signing_morning', 'side.muskets.done', 'anchor.mill_bar', 'side.lonely_cutter.done', 'debate.zetwal_feud_merchants.settled', 'debate.zetwal_feud_temple.settled', 'debate.zetwal_feud_crown.settled', 'story.council_voted', 'story.chain_raised', 'story.inspection_done', 'muster.resolved', 'story.betrayal_seen', 'item.marshal_whistle', 'belief.rael_traitor']) {
       expect(flags.isSet(f), f).toBe(true);
     }
@@ -318,6 +333,30 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     expect(flags.get('army.zetwal')).toBe(60);
     for (const name of ['Rahel', 'Patricia', 'Tío Joaquin', 'Jordyn', 'Ti Jak', 'The Dorini admiral', 'Hrafn', 'Powder-master', 'Crew chief']) expect(speakers).toContain(name);
   });
+  it('Chapter 11: the landing, the gun, the flank, the camp, the tide, the village, Thorne, Anaco, Caona\'s stand, the Turn, the truth, the Song House, the caney', () => {
+    const flags = new FlagStoreView(atChapter11End.flags);
+    // Every objective in order (the route holds the pier: Trust, and Hale's fight follows the Turn in the same scene, so the
+    // pier's end is never the objective on its own; on Strike, Rael waits there).
+    expect(chapter11).toEqual([...ACT11.objectives.map((o) => o.id).filter((id) => id !== 'pier_end'), 'complete']);
+    // The story's fights (the Mountain Path's and the gardens' ambushes left out): the Dorini sailed, so their flank.
+    const story = atChapter11End.battles.slice(atChapter10End.battles.length).filter((b) => !b.startsWith('encounter:'));
+    expect(story).toEqual(['headland_battery', 'harbor_flank_al_doria', 'thumbprint_picket', 'customs_thorne', 'caona_stand', 'flagship_hale']);
+    expect(atChapter11End.map).toBe('xaragua-caney');
+    expect(atChapter11End.mode).toBe('card');
+    for (const f of ['story.landed', 'story.headland_won', 'war.flank_done', 'choice.flank_spared', 'story.camp_reached', 'debate.xaragua_harbor.won', 'ally.xaragua', 'side.ninth_thumbprint.done', 'side.harbors_lie.done', 'story.tide_called', 'story.village_reached', 'story.thorne_taken', 'choice.thorne_spared', 'story.anaco_freed', 'anchor.chain_post', 'story.chain_dropped', 'war.trust', 'war.turn_made', 'story.harbor_won', 'story.harbor_taken', 'clue.ash_road_read', 'story.wounded_sheltered', 'act11.complete', 'card.act11_end']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    // Rael fought beside them on the pier, and is not in the party after it; the truth was told and answered.
+    expect(flags.get('party.rael')).toBe(false);
+    expect(flags.get('belief.rael_traitor')).toBe(false);
+    expect(flags.get('choice.truth_answer')).toBe('tested');
+    expect(flags.isSet('war.strike') || flags.isSet('story.fleet_escaped')).toBe(false);
+    // Closing the card, the fleet sails for Eightgate: Chapter 12 begins at the Ardencia Gate.
+    expect(sim.logic.state.player.mapId).toBe('seat-concourse');
+    expect(sim.logic.mode).toBe('field');
+    for (const name of ['Caona', 'Captain-General Hale', 'Rael', 'Cacique Anaco', 'Governor Thorne', 'Nancy']) expect(speakers).toContain(name);
+  });
+
 
   it('Chapter 3: the two required side quests and the debate are done before noon, and pay', () => {
     for (const id of ['treasurer', 'thief', 'bread']) {

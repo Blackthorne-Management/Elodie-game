@@ -371,7 +371,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken"
             },
             {
               "name": "npc",
@@ -844,7 +844,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken"
             },
             {
               "name": "kind",
@@ -877,7 +877,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken"
             },
             {
               "name": "kind",
@@ -923,10 +923,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 816,
+      "imageheight": 848,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 406,
+      "tilecount": 421,
       "columns": 8,
       "margin": 0,
       "spacing": 0

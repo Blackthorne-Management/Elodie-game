@@ -9,6 +9,7 @@ import { CARDS } from './cards.ts';
 import { DEBATE_MEDIATE_INFLUENCE } from '../config.ts';
 import { localPillar } from '../engine/rpg.ts';
 import { musterTick } from '../engine/ally.ts';
+import { warTick } from '../engine/war.ts';
 import { DEBATE_DIALOGUES } from './debates.ts';
 import { DIALOGUE, DIALOGUE_IDS } from './dialogue.ts';
 import { RPG } from './rpg.ts';
@@ -33,7 +34,10 @@ export const CONTENT: GameContent = {
   rhythms: RHYTHMS,
   rotors: { [SCREENS.id]: SCREENS },
   debateContext: (flags, def) => ({ influence: localPillar(flags, RPG, 'influence', def.city), mediateNeeds: DEBATE_MEDIATE_INFLUENCE }),
-  afterDialogue: (flags) => musterTick(flags, RPG),
+  afterDialogue: (flags) => {
+    musterTick(flags, RPG);
+    warTick(flags);
+  },
 };
 
 /** What the map validator needs to know about the content. */

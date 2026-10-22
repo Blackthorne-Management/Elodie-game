@@ -10,6 +10,8 @@
 // its Grudge; a fight meant to be lost goes on with its scene instead. Keys, gamepad, the touch buttons and
 // taps all work.
 
+import { volleysFor } from '../engine/war.ts';
+import { COMPANIES } from '../data/war.ts';
 import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, VICTORY_MUSIC } from '../audio.config.ts';
 import Phaser from 'phaser';
@@ -261,7 +263,9 @@ export class BattleScene extends Phaser.Scene {
     const purse = battlePurse(flags, RPG, Object.keys(flags.snapshot()));
     // Foes who can walk in mid-fight: a boss phase's guards (Rivera and Jaime), the blades Qasim hires.
     const reserve = battleReserve(def);
-    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve });
+    // The armies' volleys before the first turn (Chapter 11: the whistle asked how many; engine/war.ts).
+    const volleys = volleysFor(flags, def, COMPANIES);
+    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve, volleys });
     this.placeFighters();
     const opening: BattleEvent[] = [];
     if (grudge > 0) opening.push({ kind: 'text', text: GAME_OVER_TEXT.grudge.replace('{p}', String(Math.round(grudge * 100))) });

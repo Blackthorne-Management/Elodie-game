@@ -45,3 +45,15 @@ the harbor mouth, heard from the Council Chamber at the vote). The cellar under 
 (`MUSIC_BY_MAP`). If the owner wants music for the Muster itself (the seven lines at dusk, the fleet at dawn), a prompt:
 "A harbor city's muster at dusk: a slow, proud Haitian kompa-tinged march, a single snare, brass in unison, a drum
 answering a whistle, hopeful and heavy, 88 BPM."
+
+## Sound effects and a music slot added with Chapter 11 (Oct 22)
+
+Chapter 11 adds four sounds made in code (`quest/src/audio/sfx.ts`): **cannon** (the field gun on the headland, the
+*Patience*'s guns, the fleet's gun at the Turn: a low boom and a long rumble), **volley** (the companies' muskets
+answering the whistle: a ragged crackle down a line), **conch** (the head runner's conch at the tide: one long, rising
+horn note) and **chain** (the chain running out of the capstan: a fast iron rattle that slows). The war plays the
+Mountain Path's track in a slot of its own (`harbor_war` in `quest/src/audio.config.ts`) on the beach, the gardens, the
+mountain, the camp and the village until the harbor is taken; then the city's own song (`yucayeque.mp3`) comes back.
+A prompt for the war's own track, when the owner wants one: "A harbor war on a Caribbean island at dusk: Taíno
+conch calls and a deep slit drum under a slow, rising brass line, kompa-tinged snare, a march that carries hope rather
+than triumph, building to a held chord, 92 BPM, loopable."

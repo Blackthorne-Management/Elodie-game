@@ -35,7 +35,8 @@ export function newGameSim(maps: Record<string, GameMap> = loadMaps(), map = STA
  * Battles in a headless run end as a won fight would (the route plays the story, not the fight; the
  * smoke test fights it for real in the browser): the rewards and the won flag, through settleBattle.
  */
-function winBattles(sim: Sim): void {
+/** Wins every fight the way the battle scene would end it (a sim made by hand, from a save, gets it too). */
+export function winBattles(sim: Sim): void {
   sim.onBattle = (id) => {
     const def = battleDef(id);
     if (!def) throw new Error(`No battle "${id}"`);

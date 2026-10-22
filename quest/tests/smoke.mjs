@@ -9,7 +9,7 @@
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
-// 3. Chapters 1 to 10, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
+// 3. Chapters 1 to 11, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
 //    Chapter 3 on, checks its story flags against the simulator's, its fights, the party and its card in the browser).
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
@@ -547,7 +547,7 @@ async function markChecks(page, sim, name) {
 }
 
 /**
- * At each chapter's end (Chapters 3 to 10; Chapters 1 and 2 are checked after the route): the browser has played
+ * At each chapter's end (Chapters 3 to 11; Chapters 1 and 2 are checked after the route): the browser has played
  * the chapter the way the simulator did (its story flags agree with the simulator's, its fights were won, the party
  * and who walks with it), and its end card is up.
  */
@@ -617,6 +617,14 @@ async function chapterEndChecks(page, sim, name) {
       not: [],
       what: 'Chapter 10 in the browser: the watch landed and the Muster begun, the camp, Rahel and Patricio, the blessing, the three feuds settled, the signing, the mangrove crew beaten (and spared), the muskets and the lonely cutter, Ti Jak home, the council\'s vote, the dusk inspection, the chain raised in the night, the betrayer seen and gone, the smugglers\' ledger, and the fleet sailed',
     },
+    'chapter11-end': {
+      act: 11,
+      map: 'xaragua-caney',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund'],
+      flags: ['story.war_begun', 'story.landed', 'story.headland_won', 'war.flank_done', 'story.camp_reached', 'story.hill_road_taken', 'debate.xaragua_harbor.settled', 'side.ninth_thumbprint.done', 'side.harbors_lie.done', 'story.tide_called', 'story.village_reached', 'story.thorne_taken', 'story.anaco_freed', 'anchor.chain_post', 'story.chain_dropped', 'war.turn_made', 'story.harbor_taken', 'clue.ash_road_read', 'belief.rael_truth', 'story.wounded_sheltered', 'ally.xaragua', 'encounter.war_story.headland.won', 'encounter.war_story.picket.won', 'encounter.war_story.thorne.won', 'encounter.war_story.caona.won'],
+      not: ['party.rael', 'belief.rael_traitor'],
+      what: 'Chapter 11 in the browser: the landing, the gun on the headland, the flank, the hill camp and the elders\' debate, the Ninth Thumbprint and Harbors Lie, the tide, the village, Thorne taken, Anaco freed, the chain post\'s pin in the pier\'s memory and the chain down, the Turn, the harbor taken, the truth read by lamplight, the wounded sheltered and Xaraguá allied (Rael out of the roster, no longer believed a traitor)',
+    },
   };
   const end = ends[name];
   if (!end) return;
@@ -631,7 +639,7 @@ async function chapterEndChecks(page, sim, name) {
   const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
   check(notWalking.length === 0, `the whole party walks behind Gianna at Chapter ${end.act}'s end (no sprite for ${notWalking.join(', ')})`);
   // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag.
-  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|army|muster|act\d|card)\./;
+  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|army|muster|war|act\d|card)\./;
   const simFlags = sim.logic.state.flags.snapshot();
   // (The field pays side quests and debates as it goes, `side.<id>.rewarded` and `debate.<id>.paid.<what>`; the
   // simulator has no field, so those are the field's own bookkeeping.)
@@ -654,6 +662,35 @@ async function chapterEndChecks(page, sim, name) {
     const betrayed = s.flags['muster.betrayed'] === true;
     check(turned !== betrayed && turned === (simFlags['muster.turned'] === true) && betrayed === (simFlags['muster.betrayed'] === true) && (!betrayed || s.flags[`muster.gone.${betrayer}`] === true), `the night ends ${betrayed ? 'betrayed (the betrayer\'s ships gone)' : 'turned'}, as in the simulator`);
     if (betrayed) check(s.flags[`army.${betrayer}`] === 0, `the betrayer's house sends no army (${s.flags[`army.${betrayer}`]})`);
+  }
+  // Chapter 11: the harbor taken on either route, and the route the run took at the Turn (Trust: Hale fought, the
+  // harbor won; Strike: the fleet escapes), as the simulator took it; the whistle's volleys spent only on fights won.
+  if (end.act === 11) {
+    const trust = s.flags['war.trust'] === true;
+    const strike = s.flags['war.strike'] === true;
+    check(trust !== strike && trust === (simFlags['war.trust'] === true) && strike === (simFlags['war.strike'] === true), `the Turn: ${trust ? 'Trust (hold the pier)' : 'Strike (strike first)'}, as in the simulator`);
+    check(trust ? s.flags['story.harbor_won'] === true && s.flags['encounter.war_story.hale.won'] === true && !s.flags['story.fleet_escaped'] : s.flags['story.fleet_escaped'] === true && !s.flags['story.harbor_won'], trust ? 'on Trust the harbor is won and Hale\'s flagship beaten' : 'on Strike the Crown fleet escapes');
+    check(s.flags['war.volley_pool'] === simFlags['war.volley_pool'] && s.flags['war.volleys_left'] === simFlags['war.volleys_left'], `the armies' volleys: ${s.flags['war.volleys_left']} of ${s.flags['war.volley_pool']} left, as in the simulator`);
+  }
+}
+
+/**
+ * Chapter 11, the War of the Harbor, at its markers: the fleet landed on the Canoe Beach with the volley pool counted, and
+ * the chain down in the present after the memory (the capstan glows: an anchor). The card is checked with the other
+ * chapters' ends (chapterEndChecks).
+ */
+async function chapter11Checks(page, sim, name) {
+  const marks = ['war-landing', 'war-chain-down'];
+  if (!marks.includes(name)) return;
+  const s = await snap(page);
+  const f = s.flags;
+  if (name === 'war-landing') {
+    check(s.mapId === 'xaragua-beach' && f['story.landed'] === true, '@war-landing: the fleet is on the Canoe Beach and the landing has played');
+    check(typeof f['war.volley_pool'] === 'number' && f['war.volley_pool'] === sim.logic.state.flags.get('war.volley_pool'), `@war-landing: the volley pool is counted (${f['war.volley_pool']})`);
+  }
+  if (name === 'war-chain-down') {
+    check(f['anchor.chain_post'] === true && f['story.chain_dropped'] === true, '@war-chain-down: the pin pulled fifty years ago, the chain is down in the present');
+    check(s.glowed.some((id) => id.startsWith('chain_capstan')), `@war-chain-down: back from the Echo, the capstan glows (${s.glowed.join(', ')})`);
   }
 }
 
@@ -1219,7 +1256,7 @@ async function assizeRestart(browser, errors, at, shots) {
 }
 
 async function playAct(browser, errors) {
-  console.log('Chapters 1 to 10 (scripted route, checked against the simulator after every key):');
+  console.log('Chapters 1 to 11 (scripted route, checked against the simulator after every key):');
   let route = parseRoute(readJson('routes/zetwal-act1.json'));
   let sim = newGameSim();
   // SMOKE_FROM=<marker>: the simulator plays the route up to that marker, and the browser loads its save there.
@@ -1277,6 +1314,7 @@ async function playAct(browser, errors) {
     if (item.kind === 'mark') {
       await markChecks(page, sim, item.name);
       await chapterEndChecks(page, sim, item.name);
+      await chapter11Checks(page, sim, item.name);
       await shoot(page, item.name, shots);
       // The courtroom's restart rule, in a window of its own once this one is done (the route plays on here, its dice
       // untouched; two games at once on one machine starve each other's frames).
@@ -1393,9 +1431,14 @@ async function playAct(browser, errors) {
   // Chapter 10 ends on the sea: the fleet sails to war, onto Xaraguá's Canoe Beach (where Chapter 11 begins), the
   // whole party walking behind Gianna.
   const war = await snap(page);
-  if (war.flags['act10.complete'] === true) {
-    const line = [war.follower, war.yari, war.azzy, war.samira, war.bayarmaa, war.haru, war.vikram, war.edmund];
+  const line = [war.follower, war.yari, war.azzy, war.samira, war.bayarmaa, war.haru, war.vikram, war.edmund];
+  if (war.flags['act10.complete'] === true && war.flags['act11.complete'] !== true) {
     check(voyagedWar && war.mapId === 'xaragua-beach' && war.mode === 'field' && line.every((w) => !!w), 'after Chapter 10\'s card the fleet sails to war (the voyage plays) and the party, Edmund last, stands on Xaraguá\'s Canoe Beach');
+  }
+  // Chapter 11's card closes at Eightgate's Ardencia Gate (where Chapter 12 begins; the voyage there is not a scene yet),
+  // the nine walking behind Gianna and Rael not among them.
+  if (war.flags['act11.complete'] === true) {
+    check(war.mapId === 'seat-concourse' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true, 'after Chapter 11\'s card the party, Edmund last, stands at Eightgate\'s Ardencia Gate');
   }
   if (FROM) {
     await ctx.close();
@@ -1417,7 +1460,7 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
   check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.flags['story.ardencia_asked'] === true, 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
-  check([3, 4, 5, 6, 7, 8, 9, 10].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'xaragua-beach', 'Chapters 3 to 10 played to their end cards in the browser: the fleet has landed on Xaraguá\'s Canoe Beach');
+  check([3, 4, 5, 6, 7, 8, 9, 10, 11].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'seat-concourse', 'Chapters 3 to 11 played to their end cards in the browser: the harbor taken, the party stands at Eightgate\'s Ardencia Gate');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -1532,7 +1575,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'xaragua-beach' && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 10 finished after a reload');
+  check(back.mapId === 'seat-concourse' && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 11 finished after a reload');
   await ctx.close();
   if (assize) await assizeRestart(browser, errors, assize, shots);
   return shots;

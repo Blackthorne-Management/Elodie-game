@@ -736,6 +736,39 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 
 ---
 
+## 20. The War of the Harbor: Hale, the old Crown, the wounded, the war's things (Chapter 11, Yucayeque; art drop 2 or after)
+
+Added Oct 22 with the Chapter 11 build. The game draws placeholders from the looks `hale`, `old_crown_marine`,
+`old_crown_musketeer` and `wounded_soldier` until these arrive (`quest/src/assets.config.ts`), and the tiles and objects
+listed under Places. Make each like section 12: a reference sheet in a new chat (attach Gianna's sheet), then the
+portrait and the walking sprite sheet in the same chat. Rael, Rivera, Jaime, the halberdiers, old Benny, Nancy, Anaco,
+Thorne, the Hushers, the house captains and the companies keep their earlier looks; Rael needs one more expression:
+**by lamplight** (the truth on the pier: hands behind his back, nothing asked).
+
+**Captain-General Hale** (the Regent's Champion; about 50; a big, patient soldier): tall, grey cropped hair and beard,
+a violet coat with gold trim and epaulettes, a black bicorne, a boarding axe. Portrait: **compliments** (default: "The
+Lord Regent's compliments."), **"You. Just you."** (the duel), **going** ("The Regent will hear of this."). Battle
+sprite: Hale with the axe, two boarders behind him.
+
+**The Crown fifty years ago** (the Echo, sepia like every memory): marines in brick-red coats with white cross-belts,
+leather helmets; musketeers the same with long muskets. No faces we know.
+
+**The wounded** (the Song House): soldiers of the seven companies in pale shirts, a red bandage, laid in hamacas; no
+blood shown.
+
+**Places and objects (tiles and backgrounds, no people):** the Crown's field gun on the headland rock (and turned to
+face the harbor mouth); the trader's hull and the betrayer's hull grounded on the sand; the *Patience* in the harbor
+mouth (6 x 3 tiles, the Regent's flagship, violet rag at the masthead); the old chain post's capstan on its pile: rusted
+with its pin, its pin hole empty, spun after the chain runs out; the chain along the water to the *Patience*; Ardencia's
+black-and-crimson ships; a longboat at the pier's end; a hamaca slung between posts; the powder jars with grey
+thumbprints in the wax; a white flag over a struck ship; irons on the cellar post; the Zetwal levy's and the Dorini's
+banners. Battle backdrop: the Canoe Beach at morning, smoke over the headland.
+
+Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |

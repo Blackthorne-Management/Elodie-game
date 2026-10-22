@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 23,
+  "nextobjectid": 59,
   "layers": [
     {
       "id": 1,
@@ -455,12 +455,544 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken, !story.war_begun"
             },
             {
               "name": "npc",
               "type": "string",
               "value": "occ_marine_beach"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "beach_zetwal",
+          "type": "npc",
+          "x": 32,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.tide_called, army.zetwal"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_levy"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "beach_free_brasador",
+          "type": "npc",
+          "x": 64,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.tide_called, army.free_brasador"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_free_brasador"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "beach_skarragol",
+          "type": "npc",
+          "x": 96,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.tide_called, army.skarragol"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_ironvow"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "beach_al_doria",
+          "type": "npc",
+          "x": 128,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.tide_called, army.al_doria"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_dorini"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "beach_jwaladesh",
+          "type": "npc",
+          "x": 160,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.tide_called, army.jwaladesh"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_agnivansh"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "beach_kuroshi",
+          "type": "npc",
+          "x": 192,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.tide_called, army.kuroshi"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_suzumori"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "beach_aldermoor",
+          "type": "npc",
+          "x": 224,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.tide_called, army.aldermoor"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_watch"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "camp_leader_beach",
+          "type": "npc",
+          "x": 256,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.headland_won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "camp_leader_beach"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "fisher_boy_beach",
+          "type": "npc",
+          "x": 272,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.headland_won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "fisher_boy_beach"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "gun_officer",
+          "type": "npc",
+          "x": 432,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.headland_won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "gun_officer"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "gun_musketeer_1",
+          "type": "npc",
+          "x": 416,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.headland_won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "gun_musketeer"
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "gun_musketeer_2",
+          "type": "npc",
+          "x": 448,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.headland_won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "gun_musketeer_b"
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "flank_captain_skarragol",
+          "type": "npc",
+          "x": 240,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.skarragol, story.flank_fought, !war.flank_done"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "flank_hrafn"
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "flank_captain_kuroshi",
+          "type": "npc",
+          "x": 240,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.kuroshi, story.flank_fought, !war.flank_done"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "flank_retainer"
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "flank_captain_jwaladesh",
+          "type": "npc",
+          "x": 240,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.jwaladesh, story.flank_fought, !war.flank_done"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "flank_steward"
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "flank_captain_al_doria",
+          "type": "npc",
+          "x": 240,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.al_doria, story.flank_fought, !war.flank_done"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "flank_admiral"
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "casabe_baker_free",
+          "type": "npc",
+          "x": 208,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "casabe_baker"
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "carver_free",
+          "type": "npc",
+          "x": 256,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "carver"
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "bow_maker_free",
+          "type": "npc",
+          "x": 304,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "bow_maker"
             }
           ]
         }
@@ -477,7 +1009,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 8,
+          "id": 27,
           "name": "beach_village",
           "type": "door",
           "x": 0,
@@ -488,9 +1020,19 @@
           "visible": true,
           "properties": [
             {
+              "name": "closed",
+              "type": "string",
+              "value": "village_held"
+            },
+            {
               "name": "exit",
               "type": "string",
               "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.war_begun|story.tide_called"
             },
             {
               "name": "map",
@@ -505,7 +1047,7 @@
           ]
         },
         {
-          "id": 9,
+          "id": 28,
           "name": "beach_seacave",
           "type": "door",
           "x": 496,
@@ -553,7 +1095,125 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 29,
+          "name": "war_landing",
+          "type": "trigger",
+          "x": 224,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "war_landing"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.war_begun"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "act10.complete"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "headland_step",
+          "type": "trigger",
+          "x": 384,
+          "y": 144,
+          "width": 16,
+          "height": 96,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "headland_battery"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.landed, !story.headland_won"
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "flank_step",
+          "type": "trigger",
+          "x": 304,
+          "y": 144,
+          "width": 16,
+          "height": 80,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "harbor_flank"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.flank_seen"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.headland_won, !war.flank_done"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "hill_road_beach",
+          "type": "trigger",
+          "x": 128,
+          "y": 16,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "hill_road_north"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 11,
@@ -566,7 +1226,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 10,
+          "id": 33,
           "name": "beach",
           "type": "spawn",
           "x": 32,
@@ -589,7 +1249,7 @@
           ]
         },
         {
-          "id": 11,
+          "id": 34,
           "name": "landing",
           "type": "spawn",
           "x": 224,
@@ -608,6 +1268,29 @@
               "name": "facing",
               "type": "string",
               "value": "up"
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "name": "hill_road_in",
+          "type": "spawn",
+          "x": 128,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
             }
           ]
         }
@@ -646,7 +1329,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 12,
+          "id": 36,
           "name": "net_beach",
           "type": "puzzle_object",
           "x": 96,
@@ -684,7 +1367,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 37,
           "name": "net_salt",
           "type": "puzzle_object",
           "x": 448,
@@ -722,7 +1405,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 38,
           "name": "burned_stall_1",
           "type": "puzzle_object",
           "x": 160,
@@ -755,7 +1438,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 39,
           "name": "burned_stall_2",
           "type": "puzzle_object",
           "x": 176,
@@ -788,7 +1471,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 40,
           "name": "burned_stall_3",
           "type": "puzzle_object",
           "x": 208,
@@ -821,7 +1504,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 41,
           "name": "burned_stall_4",
           "type": "puzzle_object",
           "x": 256,
@@ -854,7 +1537,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 42,
           "name": "burned_stall_5",
           "type": "puzzle_object",
           "x": 304,
@@ -887,7 +1570,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 43,
           "name": "burned_stall_6",
           "type": "puzzle_object",
           "x": 336,
@@ -920,7 +1603,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 44,
           "name": "burned_stall_7",
           "type": "puzzle_object",
           "x": 352,
@@ -953,7 +1636,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 45,
           "name": "burned_stall_8",
           "type": "puzzle_object",
           "x": 160,
@@ -986,7 +1669,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 46,
           "name": "burned_stall_9",
           "type": "puzzle_object",
           "x": 352,
@@ -1017,6 +1700,407 @@
               "value": true
             }
           ]
+        },
+        {
+          "id": 47,
+          "name": "fleet_hull_1",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 288,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.chain_dropped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "trader_hull"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 48,
+          "name": "fleet_hull_2",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 288,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.chain_dropped, army.zetwal"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_zetwal"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "name": "fleet_hull_3",
+          "type": "puzzle_object",
+          "x": 176,
+          "y": 288,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.chain_dropped, army.skarragol"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_ironvow"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 50,
+          "name": "fleet_hull_4",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 288,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.chain_dropped, army.kuroshi"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_suzumori"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "name": "fleet_hull_5",
+          "type": "puzzle_object",
+          "x": 336,
+          "y": 288,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.chain_dropped, army.jwaladesh"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_agnivansh"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 52,
+          "name": "fleet_hull_6",
+          "type": "puzzle_object",
+          "x": 416,
+          "y": 288,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.chain_dropped, army.al_doria"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_dorini"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 53,
+          "name": "field_gun",
+          "type": "puzzle_object",
+          "x": 464,
+          "y": 112,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.headland_won"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "field_gun"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 54,
+          "name": "field_gun_turned",
+          "type": "puzzle_object",
+          "x": 464,
+          "y": 112,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "field_gun_turned"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.headland_won"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "field_gun_turned"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 55,
+          "name": "flank_hull_skarragol",
+          "type": "puzzle_object",
+          "x": 0,
+          "y": 240,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.skarragol, story.flank_seen, !war.flank_done"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_ironvow"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 56,
+          "name": "flank_hull_kuroshi",
+          "type": "puzzle_object",
+          "x": 0,
+          "y": 240,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.kuroshi, story.flank_seen, !war.flank_done"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_suzumori"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 57,
+          "name": "flank_hull_jwaladesh",
+          "type": "puzzle_object",
+          "x": 0,
+          "y": 240,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.jwaladesh, story.flank_seen, !war.flank_done"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_agnivansh"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "name": "flank_hull_al_doria",
+          "type": "puzzle_object",
+          "x": 0,
+          "y": 240,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "muster.betrayed, muster.betrayer.al_doria, story.flank_seen, !war.flank_done"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_dorini"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     }
@@ -1027,10 +2111,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 816,
+      "imageheight": 848,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 406,
+      "tilecount": 421,
       "columns": 8,
       "margin": 0,
       "spacing": 0

@@ -14,6 +14,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { BEACH, CAMP, CANEY, CAVE, COMPANIES, CONUCO, FLANK_HOUSES, MOUNTAIN, OCCUPIED_TEXT, SONG, VILLAGE, WAR_DAY_TEXT, WAR_TABLE_TEXT, WAR_TEXT } from '../../src/data/war.ts';
 
 const GRASS = 'ā';
 const TRAIL = 'ē';
@@ -35,7 +36,7 @@ const FREE_CITY = 'encounter.xaragua_story.pier.won, !story.crown_attack';
 
 /** A Crown banner raised over the occupied city. */
 function crownBanner(name: string, x: number, y: number): ObjSpec {
-  return obj(name, x, y, { kind: 'crown_banner', solid: true, era: 'present', if: WAR });
+  return obj(name, x, y, { kind: 'crown_banner', solid: true, era: 'present', if: OCCUPIED_TEXT });
 }
 
 /** Fifty years ago the customs house is older stone; the rest of the land is much as it is. */
@@ -153,8 +154,8 @@ export function xaraguaVillage(): MapSource {
     obj('net_village', 12, 20, { dialogue: 'cut_net_village', kind: 'net_cut', solid: true, era: 'present', if: `${FREE_CITY}, !side.nets.village` }),
     // Occupied: checkpoints on the trails, the Crown's banners, and (on the night of the attack) the patrol
     // on the trail west (the fight starts on arrival; the sergeant restarts it after a lost fight).
-    npc('occ_marine_curfew', 27, 13, 'down', { if: WAR }),
-    npc('occ_marine_trail', 36, 13, 'left', { if: WAR }),
+    npc('occ_marine_curfew', 27, 13, 'down', { if: OCCUPIED_TEXT }),
+    npc('occ_marine_trail', 36, 13, 'left', { if: OCCUPIED_TEXT }),
     npc('patrol_sergeant', 8, 15, 'up', { if: 'story.anaco_taken, !encounter.xaragua_story.patrol.won' }),
     trigger('attack_village', 21, 1, { dialogue: 'attack_village', flag: 'story.attack_village_seen', once: true, onEnter: true, if: 'story.anaco_taken' }),
     crownBanner('crown_banner_village', 28, 14),
@@ -163,14 +164,14 @@ export function xaraguaVillage(): MapSource {
     obj('checkpoint_north', 21, 3, { dialogue: 'checkpoint', kind: 'barricade', solid: true, era: 'present', if: CHECKPOINTS }, 2, 1),
     npc('checkpoint_marine', 23, 3, 'left', { if: CHECKPOINTS }),
     obj('checkpoint_east', 41, 15, { dialogue: 'checkpoint', kind: 'barricade', solid: true, era: 'present', if: CHECKPOINTS }, 1, 2),
-    npc('lamp_oil_shutters', 23, 10, 'right', { if: 'story.refuge' }),
+    npc('lamp_oil_shutters', 23, 10, 'right', { if: 'story.refuge, !story.war_begun' }),
     // The marine posted at her shutters (review 1, finding 3: the seller and the guard are one stop). Gone once the
     // envoy has seen the cacique (the runner's message is passed under his nose otherwise).
     npc('occ_marine_shutters', 22, 12, 'up', { if: 'story.refuge, !story.anaco_visited' }),
     // Out of the customs house after the visit: the fisher's boy runs the word to the cave (review 1, finding 3).
     trigger('word_runner', 29, 12, { dialogue: 'word_runner', flag: 'story.word_runner_seen', once: true, onEnter: true, if: 'story.anaco_visited, !story.escape_planned' }),
-    obj('shutters_weaver', 18, 8, { dialogue: 'shutters_weaver', era: 'present', if: 'story.refuge' }),
-    obj('shutters_family', 9, 3, { dialogue: 'shutters_family', era: 'present', if: 'story.refuge' }),
+    obj('shutters_weaver', 18, 8, { dialogue: 'shutters_weaver', era: 'present', if: 'story.refuge, !story.harbor_taken' }),
+    obj('shutters_family', 9, 3, { dialogue: 'shutters_family', era: 'present', if: 'story.refuge, !story.harbor_taken' }),
     crownBanner('crown_banner_pier', 20, 18),
 
     { layer: 'doors', name: 'village_plaza', x: 21, y: 0, w: 2, props: { target: 'plaza_village', map: 'xaragua-plaza', exit: 'down' } },
@@ -187,9 +188,11 @@ export function xaraguaVillage(): MapSource {
     obj('xaragua_customs_sign', 32, 12, { dialogue: 'xaragua_customs_sign', era: 'present' }),
     obj('pier_sign', 24, 19, { dialogue: 'pier_sign', era: 'present' }),
     // The Crown's ships at anchor (one drawing each, on the lagoon), in the present only.
-    obj('crown_ship_west', 2, 24, { kind: 'crown_ship', solid: true, era: 'present' }, 5, 3),
-    obj('crown_ship_east', 29, 24, { kind: 'crown_ship', solid: true, era: 'present' }, 5, 3),
-    obj('crown_ship_far', 36, 26, { kind: 'crown_ship', solid: true, era: 'present' }, 5, 3),
+    // Chapter 11: on the Strike route the Crown's fleet goes out through the open mouth (story.fleet_escaped).
+    obj('crown_ship_west', 2, 24, { kind: 'crown_ship', solid: true, era: 'present', if: '!story.fleet_escaped' }, 5, 3),
+    obj('crown_ship_east', 29, 24, { kind: 'crown_ship', solid: true, era: 'present', if: '!story.fleet_escaped' }, 5, 3),
+    obj('crown_ship_far', 36, 26, { kind: 'crown_ship', solid: true, era: 'present', if: '!story.fleet_escaped' }, 5, 3),
+    ...warVillage(),
   ];
   return { id: 'xaragua-village', present: g, echo: e, objects };
 }
@@ -233,7 +236,7 @@ export function xaraguaPlaza(): MapSource {
     npc('dancer', 17, 12, 'left', { if: PEACE }),
     npc('plaza_elder', 21, 18, 'up', { if: PEACE }),
     // Occupied: a marine on the dance ground, banners either side of the caney's steps.
-    npc('occ_marine_plaza', 18, 12, 'left', { if: WAR }),
+    npc('occ_marine_plaza', 18, 12, 'left', { if: OCCUPIED_TEXT }),
     crownBanner('crown_banner_batey_west', 12, 6),
     crownBanner('crown_banner_batey_east', 17, 6),
     // The night of the attack: out the back of the caney into a burning plaza.
@@ -317,9 +320,10 @@ export function xaraguaBeach(): MapSource {
     obj('net_salt', 28, 12, { dialogue: 'cut_net_salt', kind: 'net_cut', solid: true, era: 'present', if: `${FREE_CITY}, !side.nets.salt` }),
     // Occupied: the market burned on the night of the attack, a musketeer on the trail.
     ...stalls.map(([x, y], i) => obj(`burned_stall_${i + 1}`, x, y, { kind: 'stall_burned', solid: true, era: 'present', if: WAR })),
-    npc('occ_marine_beach', 13, 8, 'down', { if: WAR }),
+    npc('occ_marine_beach', 13, 8, 'down', { if: `${OCCUPIED_TEXT}, !story.war_begun` }),
 
-    { layer: 'doors', name: 'beach_village', x: 0, y: 7, h: 2, props: { target: 'village_beach', map: 'xaragua-village', exit: 'right' } },
+    // Chapter 11: the village is the Crown's until dusk (its trails held); the way in opens with the tide.
+    { layer: 'doors', name: 'beach_village', x: 0, y: 7, h: 2, props: { target: 'village_beach', map: 'xaragua-village', exit: 'right', if: '!story.war_begun|story.tide_called', closed: 'village_held' } },
     { layer: 'spawns', name: 'beach', x: 2, y: 7, props: { facing: 'right', era: 'present' } },
     // Chapter 11's landing (the fleet off Yucayeque at first light; Chapter 10's voyage ends here).
     { layer: 'spawns', name: 'landing', x: 14, y: 11, props: { facing: 'up', era: 'present' } },
@@ -331,6 +335,7 @@ export function xaraguaBeach(): MapSource {
       y: 8,
       props: { target: 'seacave_out', map: 'xaragua-seacave', exit: 'down', if: 'story.escape_night', closed: 'sea_cave_mouth' },
     },
+    ...warBeach(),
   ];
   return { id: 'xaragua-beach', present: g, echo: e, objects };
 }
@@ -390,7 +395,7 @@ export function xaraguaConuco(): MapSource {
     // The occupied city: the fever-bark tree by the spring pond (the healer asks for its bark for Anaco).
     obj('fever_bark_tree', 29, 18, { dialogue: 'fever_bark_tree', kind: 'ceiba', solid: true, era: 'present' }),
 
-    { layer: 'doors', name: 'conuco_village', x: W - 1, y: 9, h: 2, props: { target: 'village_conuco', map: 'xaragua-village', exit: 'left' } },
+    { layer: 'doors', name: 'conuco_village', x: W - 1, y: 9, h: 2, props: { target: 'village_conuco', map: 'xaragua-village', exit: 'left', if: '!story.war_begun|story.tide_called', closed: 'village_held' } },
     { layer: 'doors', name: 'conuco_mountain', x: 6, y: 0, w: 2, props: { target: 'mountain_conuco', map: 'xaragua-mountain', exit: 'down' } },
     { layer: 'spawns', name: 'conuco', x: W - 3, y: 9, props: { facing: 'left', era: 'present' } },
     // The petroglyph cave (SIG-XAR): dark and flooded; it opens once the lamp-oil seller has lent a lamp.
@@ -401,6 +406,7 @@ export function xaraguaConuco(): MapSource {
       y: 17,
       props: { target: 'cave_out', map: 'xaragua-cave', exit: 'up', if: 'item.oil_lamp', closed: 'petroglyph_cave_mouth' },
     },
+    ...warConuco(),
   ];
   return { id: 'xaragua-conuco', present: g, echo: e, objects };
 }
@@ -440,6 +446,9 @@ export function xaraguaMountain(): MapSource {
     obj('mountain_sign', 16, 19, { dialogue: 'mountain_sign', era: 'present' }),
     // The wild section (guide 6.6): ambushes once the pier fight is won.
     { layer: 'encounters', name: 'mountain_forest', x: 1, y: 1, w: W - 2, h: H - 2, props: { table: 'mountain_path', if: 'encounter.xaragua_story.pier.won, !story.crown_attack' } },
+    // Chapter 11: the war table on the same ground, from the landing until the harbor is taken.
+    { layer: 'encounters', name: 'mountain_war', x: 1, y: 1, w: W - 2, h: H - 2, props: { table: 'harbor_war', if: WAR_TABLE_TEXT } },
+    ...warMountain(),
   ];
   return { id: 'xaragua-mountain', present: g, echo: e, objects };
 }
@@ -495,6 +504,7 @@ export function xaraguaCamp(): MapSource {
     // Since the attack the camp's people shelter in the petroglyph cave.
     npc('camp_leader', 15, 11, 'left', { if: '!story.refuge' }),
     npc('camp_scout', 19, 8, 'left', { if: '!story.refuge' }),
+    ...warCamp(),
 
     { layer: 'doors', name: 'camp_mountain', x: 12, y: H - 1, w: 2, props: { target: 'mountain_camp', map: 'xaragua-mountain', exit: 'up' } },
     { layer: 'spawns', name: 'camp', x: 12, y: H - 3, props: { facing: 'up', era: 'present' } },
@@ -550,8 +560,9 @@ export function xaraguaCaney(): MapSource {
     // once the caney is taken, a Crown captain sits below the duho and a marine holds the doors.
     trigger('xaragua_proof', 9, 6, { dialogue: 'xaragua_proof', flag: 'story.proof_heard', once: true, if: 'story.oath_found' }),
     npc('caney_breach_marine', 9, 8, 'up', { if: 'story.crown_attack, !encounter.xaragua_story.caney.won' }),
-    npc('crown_captain', 17, 3, 'down', { if: 'story.anaco_taken' }),
-    npc('occ_marine_caney', 16, 21, 'right', { if: 'story.anaco_taken' }),
+    npc('crown_captain', 17, 3, 'down', { if: 'story.anaco_taken, !story.harbor_taken' }),
+    npc('occ_marine_caney', 16, 21, 'right', { if: 'story.anaco_taken, !story.harbor_taken' }),
+    ...warCaney(),
     obj('caney_records', 5, 14, { dialogue: 'shelf.caney_records', era: 'present' }, 3, 1),
 
     { layer: 'doors', name: 'caney_out', x: 17, y: H - 1, props: { target: 'plaza_caney', map: 'xaragua-plaza', exit: 'up' } },
@@ -574,7 +585,8 @@ export function xaraguaSongHouse(): MapSource {
 
   const objects: ObjSpec[] = [
     npc('song_keeper', 10, 4, 'down'),
-    npc('song_apprentice', 6, 8, 'up'),
+    npc('song_apprentice', 6, 8, 'up', { if: '!story.wounded_sheltered' }),
+    ...warSong(),
     // The accounts set down from the songs (data/books.ts).
     obj('song_history', 2, 1, { dialogue: 'shelf.song_history', era: 'present' }, 3, 1),
     obj('song_spirit', 5, 1, { dialogue: 'shelf.song_spirit', era: 'present' }, 3, 1),
@@ -600,10 +612,15 @@ export function xaraguaCustoms(): MapSource {
   g.rect(12, 8, 2, 1, '+');
 
   const objects: ObjSpec[] = [
-    npc('crown_clerk', 5, 2, 'down'),
-    // Governor Thorne waits in his office once the council has been defied.
-    npc('thorne', 10, 3, 'down', { if: 'story.council_defied' }),
-    npc('customs_marine', 12, 5, 'left'),
+    npc('crown_clerk', 5, 2, 'down', { if: '!story.war_begun' }),
+    // Governor Thorne waits in his office once the council has been defied (until the war: then his war placement).
+    npc('thorne', 10, 3, 'down', { if: 'story.council_defied, !story.war_begun' }),
+    npc('customs_marine', 12, 5, 'left', { if: '!story.war_begun' }),
+    // Chapter 11, stage two: Thorne at his desk by dusk, a marine and a musketeer in a breastplate beside him (talking
+    // to any of them starts it, and again after a lost fight), until he is taken.
+    npc('thorne_war', 10, 3, 'down', { if: 'story.village_reached, !story.thorne_taken' }),
+    npc('customs_marine_war', 8, 4, 'right', { npc: 'customs_guard_war', if: 'story.village_reached, !story.thorne_taken' }),
+    npc('customs_musketeer_war', 12, 4, 'left', { npc: 'customs_guard_war', if: 'story.village_reached, !story.thorne_taken' }),
     { layer: 'doors', name: 'customs_out', x: 8, y: H - 1, props: { target: 'village_customs', map: 'xaragua-village', exit: 'up' } },
     {
       layer: 'doors',
@@ -666,12 +683,15 @@ export function xaraguaCave(): MapSource {
     npc('echo_spring_keeper', 18, 5, 'left', { era: 'echo' }),
     // The refuge (the Crown attack): the resistance shelters here, with Yari and Anissa in hiding.
     trigger('cave_refuge', 14, 19, { dialogue: 'cave_refuge', flag: 'story.refuge_seen', once: true, onEnter: true, if: 'story.patrol_beaten' }),
-    npc('resistance_leader', 10, 14, 'right', { if: 'story.refuge' }),
-    npc('yari_hidden', 11, 17, 'up', { if: 'story.refuge' }),
-    npc('anissa_hidden', 12, 17, 'up', { if: 'story.refuge' }),
-    npc('refugee_fisher', 18, 14, 'left', { if: 'story.refuge' }),
-    npc('refugee_elder', 19, 17, 'left', { if: 'story.refuge' }),
-    npc('refugee_healer', 17, 18, 'up', { if: 'story.refuge' }),
+    // (In Chapter 11 the resistance has gone back up to the hill camp: data/war.ts.)
+    npc('resistance_leader', 10, 14, 'right', { if: 'story.refuge, !story.war_begun' }),
+    npc('yari_hidden', 11, 17, 'up', { if: 'story.refuge, !story.war_begun' }),
+    npc('anissa_hidden', 12, 17, 'up', { if: 'story.refuge, !story.war_begun' }),
+    npc('refugee_fisher', 18, 14, 'left', { if: 'story.refuge, !story.war_begun' }),
+    npc('refugee_elder', 19, 17, 'left', { if: 'story.refuge, !story.war_begun' }),
+    npc('refugee_healer', 17, 18, 'up', { if: 'story.refuge, !story.war_begun' }),
+    // The Ninth Thumbprint (Chapter 11): the jars at the antechamber's edge, each sealed with the grey thumbprint.
+    obj('powder_jars', CAVE.jars.x, CAVE.jars.y, { dialogue: 'thumbprint_jars', kind: 'powder_jars', solid: true, era: 'present', if: 'side.ninth_thumbprint.accepted, !side.ninth_thumbprint.jars' }, 1, 2),
 
     // The present: black water to the walls, and the buried outlet.
     obj('cave_flood', 14, 8, { dialogue: 'cave_flood', era: 'present', if: '!anchor.cave_sluice' }, 2, 1),
@@ -757,9 +777,188 @@ export function xaraguaCellar(): MapSource {
     { layer: 'doors', name: 'cellar_out', x: 6, y: H - 1, props: { target: 'customs_cellar', map: 'xaragua-customs', exit: 'up' } },
     { layer: 'spawns', name: 'cellar', x: 6, y: H - 3, props: { facing: 'up', era: 'present' } },
     npc('anaco_cell', 6, 2, 'down', { if: '!story.escaped' }),
-    npc('cellar_marine', 10, 5, 'left'),
+    npc('cellar_marine', 10, 5, 'left', { if: '!story.war_begun' }),
+    // Chapter 11: Anaco on the bed, the irons on its post, until Yari walks down the stairs for him.
+    npc('anaco_war', 6, 2, 'down', { npc: 'anaco_cellar', if: 'story.war_begun, !story.anaco_freed' }),
+    obj('cellar_irons', 7, 1, { kind: 'irons', solid: true, era: 'present', if: 'story.war_begun' }),
+    trigger('war_cellar', 6, 7, { dialogue: 'war_cellar', flag: 'story.cellar_war_entered', once: true, onEnter: true, if: 'story.thorne_taken, !story.anaco_freed' }),
   ];
   return { id: 'xaragua-cellar', present: g, echo: g.clone(), objects, interior: true };
+}
+
+// ---- Chapter 11, the War of the Harbor (data/war.ts places it; every placement on story.war_begun or later, so the
+// Chapter 2 maps replay unchanged) ------------------------------------------------------------------------------------
+
+/** The house hull a betrayer's flank grounds in (Chapter 10's hulls). */
+const HOUSE_HULL: Readonly<Record<string, string>> = {
+  skarragol: 'muster_ship_ironvow',
+  kuroshi: 'muster_ship_suzumori',
+  jwaladesh: 'muster_ship_agnivansh',
+  al_doria: 'muster_ship_dorini',
+};
+
+/**
+ * The Canoe Beach at war: the landing, the fleet off the sand (a gap where a house sailed to the Crown), a soldier of
+ * each company on the sand by day, the resistance come down from the gardens, the headland's gun and its crew, the line
+ * the party crosses to take it, the flank (the betrayer's hull and captain, or nothing on the turned route), the
+ * gardens' road north (open once the gun is taken), and the market's three back once the harbor is Yucayeque's.
+ */
+function warBeach(): ObjSpec[] {
+  const b = BEACH;
+  return [
+    trigger('war_landing', b.landing.x, b.landing.y, { dialogue: 'war_landing', flag: 'story.war_begun', once: true, onEnter: true, if: 'act10.complete' }),
+    ...b.fleet.map((f, i) => obj(`fleet_hull_${i + 1}`, f.at.x, f.at.y, { kind: f.kind, solid: true, era: 'present', if: `story.war_begun, !story.chain_dropped${f.army ? `, army.${f.army}` : ''}` }, 3, 1)),
+    ...COMPANIES.map((c, i) => npc(`beach_${c.army}`, b.placed[i]!.x, b.placed[i]!.y, 'up', { npc: c.npc, if: `story.landed, !story.tide_called, army.${c.army}` })),
+    // The camp leader and the fisher's boy wait below the gun until it is taken, then go up the gardens' road.
+    npc('camp_leader_beach', b.campLeader.x, b.campLeader.y, 'left', { if: 'story.landed, !story.headland_won' }),
+    npc('fisher_boy_beach', b.fisherBoy.x, b.fisherBoy.y, 'up', { if: 'story.landed, !story.headland_won' }),
+    obj('field_gun', b.gun.x, b.gun.y, { kind: 'field_gun', solid: true, era: 'present', if: 'story.war_begun, !story.headland_won' }, 1, 2),
+    obj('field_gun_turned', b.gun.x, b.gun.y, { kind: 'field_gun_turned', solid: true, era: 'present', dialogue: 'field_gun_turned', if: 'story.headland_won' }, 1, 2),
+    npc('gun_officer', b.officer.x, b.officer.y, 'left', { if: 'story.war_begun, !story.headland_won' }),
+    ...b.musketeers.map((m, i) => npc(`gun_musketeer_${i + 1}`, m.x, m.y, 'left', { npc: i === 0 ? 'gun_musketeer' : 'gun_musketeer_b', if: 'story.war_begun, !story.headland_won' })),
+    // The headland: the line across the sand the party crosses going east (again until the gun is taken).
+    trigger('headland_step', b.headlandStep.x, b.headlandStep.y, { dialogue: 'headland_battery', if: 'story.landed, !story.headland_won' }, b.headlandStep.w, b.headlandStep.h),
+    // Sails behind us: crossing back west after the gun (once; on the betrayed route the captain stays on the sand after).
+    trigger('flank_step', b.flankStep.x, b.flankStep.y, { dialogue: 'harbor_flank', flag: 'story.flank_seen', once: true, if: 'story.headland_won, !war.flank_done' }, b.flankStep.w, b.flankStep.h),
+    ...FLANK_HOUSES.map((h) => obj(`flank_hull_${h.house}`, b.hull.x, b.hull.y, { kind: HOUSE_HULL[h.house]!, solid: true, era: 'present', if: `muster.betrayed, muster.betrayer.${h.house}, story.flank_seen, !war.flank_done` }, 3, 1)),
+    // The captain on the sand once the fight has begun (the way back in after a Game Over), until the flank is done.
+    ...FLANK_HOUSES.map((h) => npc(`flank_captain_${h.house}`, b.captain.x, b.captain.y, 'right', { npc: h.captainNpc, if: `muster.betrayed, muster.betrayer.${h.house}, story.flank_fought, !war.flank_done` })),
+    // The hill road to the gardens, round behind the village (a long walk, not a door: hill_road_north asks).
+    trigger('hill_road_beach', b.northDoor.x, b.northDoor.y + 1, { dialogue: 'hill_road_north', if: 'story.war_begun' }, 2, 1),
+    { layer: 'spawns', name: 'hill_road_in', x: b.northDoor.x, y: b.northDoor.y + 3, props: { facing: 'down', era: 'present' } },
+    // The harbor is Yucayeque's: the market's three come back to the burned stalls.
+    npc('casabe_baker_free', 13, 3, 'down', { npc: 'casabe_baker', if: 'story.harbor_taken' }),
+    npc('carver_free', 16, 3, 'down', { npc: 'carver', if: 'story.harbor_taken' }),
+    npc('bow_maker_free', 19, 3, 'down', { npc: 'bow_maker', if: 'story.harbor_taken' }),
+  ];
+}
+
+/** The cassava gardens at war: the road from the beach, the war table, the carrier at the cave mouth, the picket. */
+function warConuco(): ObjSpec[] {
+  const c = CONUCO;
+  return [
+    // The hill road down to the beach, round behind the village (hill_road_south asks).
+    trigger('hill_road_conuco', c.beachDoor.x - 1, c.beachDoor.y, { dialogue: 'hill_road_south', if: 'story.war_begun' }, 1, 2),
+    { layer: 'spawns', name: 'hill_road_in', x: c.beachDoor.x - 3, y: c.beachDoor.y, props: { facing: 'left', era: 'present' } },
+    { layer: 'encounters', name: 'conuco_war', x: 1, y: 1, w: 30, h: 15, props: { table: 'harbor_war', if: WAR_TABLE_TEXT } },
+    // The Ninth Thumbprint: a man in a black coat comes out of the cave mouth and walks off east at a walk (once).
+    trigger('thumbprint_carrier', c.carrierStep.x, c.carrierStep.y, { dialogue: 'thumbprint_carrier', flag: 'story.carrier_seen', once: true, if: 'side.ninth_thumbprint.accepted, !side.ninth_thumbprint.jars' }, c.carrierStep.w, c.carrierStep.h),
+    // Coming out with the jars, the Crown's picket on the road (again until it is beaten).
+    trigger('thumbprint_picket', c.picketStep.x, c.picketStep.y, { dialogue: 'thumbprint_picket', if: 'side.ninth_thumbprint.jars, !encounter.war_story.picket.won' }, c.picketStep.w, c.picketStep.h),
+    ...c.picket.map((p, i) => npc(`war_picket_${i + 1}`, p.x, p.y, 'down', { npc: 'war_picket', if: 'side.ninth_thumbprint.jars, !encounter.war_story.picket.won' })),
+  ];
+}
+
+/** The Mountain Path at war: the fisher's boy at the lookout (Harbors Lie), and Salkhi on the trail below. */
+function warMountain(): ObjSpec[] {
+  const m = MOUNTAIN;
+  return [
+    npc('lookout_boy', m.lookoutBoy.x, m.lookoutBoy.y, 'right', { npc: 'fisher_boy_lookout', if: 'side.harbors_lie.accepted, !side.harbors_lie.counted' }),
+    trigger('harbors_lie_view', m.lookoutStep.x, m.lookoutStep.y, { dialogue: 'harbors_lie_count', if: 'side.harbors_lie.accepted, !side.harbors_lie.counted' }, m.lookoutStep.w, m.lookoutStep.h),
+    npc('salkhi_war', m.salkhi.x, m.salkhi.y, 'down', { if: WAR_DAY_TEXT }),
+  ];
+}
+
+/** The hill camp, the resistance's base again: the elders at the fire, the healer's hamacas, the conch, the companies. */
+function warCamp(): ObjSpec[] {
+  const c = CAMP;
+  return [
+    trigger('war_camp', c.gate.x, c.gate.y, { dialogue: 'war_camp', flag: 'story.camp_reached', once: true, onEnter: true, if: 'war.flank_done' }),
+    npc('camp_leader_war', c.campLeader.x, c.campLeader.y, 'left', { if: WAR_DAY_TEXT }),
+    npc('elder_charter_war', c.elderCharter.x, c.elderCharter.y, 'right', { npc: 'debate_elder_charter', if: WAR_DAY_TEXT }),
+    npc('elder_resist_war', c.elderResist.x, c.elderResist.y, 'left', { npc: 'debate_elder_resist', if: WAR_DAY_TEXT }),
+    npc('elder_undecided_war', c.elderUndecided.x, c.elderUndecided.y, 'up', { if: WAR_DAY_TEXT }),
+    npc('healer_war', c.healer.x, c.healer.y, 'down', { if: WAR_DAY_TEXT }),
+    ...c.hamacas.map((h, i) => obj(`camp_hamaca_${i + 1}`, h.x, h.y, { kind: 'hamaca', solid: true, era: 'present', if: WAR_TEXT })),
+    npc('head_runner_war', c.headRunner.x, c.headRunner.y, 'down', { if: WAR_DAY_TEXT }),
+    npc('fisher_boy_war', c.fisherBoy.x, c.fisherBoy.y, 'down', { if: `${WAR_DAY_TEXT}, !side.harbors_lie.accepted|side.harbors_lie.counted` }),
+    npc('canoe_fisher_war', c.canoeFisher.x, c.canoeFisher.y, 'up', { if: WAR_DAY_TEXT }),
+    npc('lamp_oil_war', c.lampOilSeller.x, c.lampOilSeller.y, 'left', { if: WAR_TEXT }),
+    npc('jordyn_war', c.jordyn.x, c.jordyn.y, 'up', { if: WAR_DAY_TEXT }),
+    ...COMPANIES.map((co, i) => npc(`camp_${co.army}`, c.companies[i]!.x, c.companies[i]!.y, 'up', { npc: co.npc, if: `story.camp_reached, !story.tide_called, army.${co.army}` })),
+    obj('powder_jars_camp', c.jars.x, c.jars.y, { kind: 'powder_jars', solid: true, era: 'present', if: 'side.ninth_thumbprint.done, !story.tide_called' }),
+  ];
+}
+
+/**
+ * The Harbor Village by dusk and night: the arrival from the gardens, the companies in the yard ring, Jordyn's seven on
+ * the east trail, the Patience in the mouth with the chain from her bow to the old post's capstan beside the pier's sea
+ * end, the marines holding the pier, the pier head's shimmer (Caona's stand, and the capstan's pawl pin in the memory:
+ * the anchor), the allied hulls round the headland once the chain is down, Ardencia's sails, Rael's longboat, the
+ * Turn's step, the way back into the boss fight, Rael on the pier for the truth, and the struck fleet's white flags.
+ */
+function warVillage(): ObjSpec[] {
+  const v = VILLAGE;
+  return [
+    trigger('war_village', v.westDoor.x, v.westDoor.y, { dialogue: 'war_village', flag: 'story.village_reached', once: true, onEnter: true, if: 'story.tide_called' }),
+    // The pier's landward end (the pier puzzle's fresh-save start, puzzles/xaragua_pier).
+    { layer: 'spawns', name: 'pier_head', x: v.pierZone.x, y: v.pierZone.y - 1, props: { facing: 'down', era: 'present' } },
+    ...COMPANIES.map((c, i) => npc(`yard_${c.army}`, v.yard[i]!.x, v.yard[i]!.y, 'right', { npc: c.npc, if: `story.village_reached, !story.harbor_taken, army.${c.army}` })),
+    npc('jordyn_trail', v.jordyn.x, v.jordyn.y, 'left', { npc: 'jordyn_war', if: `story.village_reached, !story.harbor_taken` }),
+    obj('patience', v.patience.x, v.patience.y, { kind: 'patience', solid: true, era: 'present', if: 'story.war_begun, !story.harbor_taken' }, 6, 3),
+    obj('mouth_chain', v.chain.x, v.chain.y, { kind: 'harbor_chain', era: 'present', if: 'story.war_begun, !story.chain_dropped' }, v.chain.w, v.chain.h),
+    // The old chain post's capstan: rusted with its pin in (before the memory), its pawl's pin hole empty (after), spun.
+    obj('chain_capstan_pinned', v.capstan.x, v.capstan.y, { kind: 'capstan_rusted', solid: true, era: 'present', dialogue: 'capstan_present', if: 'story.war_begun, !anchor.chain_post' }),
+    obj('chain_capstan_pinless', v.capstan.x, v.capstan.y, { kind: 'capstan_pinless', solid: true, era: 'present', dialogue: 'capstan_present', if: 'anchor.chain_post, !story.chain_dropped' }),
+    obj('chain_capstan_spun', v.capstan.x, v.capstan.y, { kind: 'capstan_spun', solid: true, era: 'present', dialogue: 'capstan_present', if: 'story.chain_dropped' }),
+    ...v.pierMarines.map((p, i) => npc(`pier_marine_war_${i + 1}`, p.x, p.y, 'up', { npc: i === 0 ? 'pier_guard_war' : 'pier_guard_war_b', if: 'story.village_reached, !story.chain_dropped' })),
+    // Caona's stand (the Echo battle) and the chain post (M-XAR-3): the pier head's landward boards fifty years ago.
+    {
+      layer: 'echo_zones',
+      name: 'pier_head',
+      x: v.pierZone.x,
+      y: v.pierZone.y,
+      w: v.pierZone.w,
+      h: v.pierZone.h,
+      props: { if: 'item.sun_locket, story.anaco_freed', onEcho: 'pier_echo_enter', onReturn: 'pier_echo_return' },
+    },
+    npc('echo_caona_pier', v.echoCaona.x, v.echoCaona.y, 'down', { era: 'echo', if: 'story.anaco_freed' }),
+    npc('echo_benny_pier', v.echoBenny.x, v.echoBenny.y, 'right', { era: 'echo', if: 'story.anaco_freed' }),
+    obj('chain_capstan_echo', v.capstan.x, v.capstan.y, { kind: 'capstan', solid: true, era: 'echo', dialogue: 'chain_pin_echo' }),
+    { layer: 'anchors', name: 'chain_post', x: v.capstan.x, y: v.capstan.y, props: { object: 'chain_capstan_echo', flag: 'anchor.chain_post' } },
+    // Once the chain has run out: the allied hulls come round the headland, and the Turn's step on the pier.
+    obj('allied_hull_1', v.allies[0]!.x, v.allies[0]!.y, { kind: 'muster_ship_zetwal', solid: true, era: 'present', if: 'story.chain_dropped' }, 3, 1),
+    obj('allied_hull_2', v.allies[1]!.x, v.allies[1]!.y, { kind: 'trader_hull', solid: true, era: 'present', if: 'story.chain_dropped' }, 3, 1),
+    obj('allied_hull_3', v.allies[2]!.x, v.allies[2]!.y, { kind: 'muster_ship_ironvow', solid: true, era: 'present', if: 'story.chain_dropped, army.skarragol' }, 3, 1),
+    trigger('harbor_turn_step', v.turnStep.x, v.turnStep.y, { dialogue: 'harbor_turn', if: 'story.chain_dropped, !war.turn_made' }, v.turnStep.w, v.turnStep.h),
+    obj('ardencia_ship_1', v.ardencia[0]!.x, v.ardencia[0]!.y, { kind: 'ardencia_ship', solid: true, era: 'present', if: 'war.sails_in, !story.fleet_escaped' }, 5, 2),
+    obj('ardencia_ship_2', v.ardencia[1]!.x, v.ardencia[1]!.y, { kind: 'ardencia_ship', solid: true, era: 'present', if: 'war.sails_in, !story.fleet_escaped' }, 5, 2),
+    obj('rael_longboat', v.longboat.x, v.longboat.y, { kind: 'longboat', solid: true, era: 'present', if: 'war.sails_in, !story.wounded_sheltered' }),
+    // The way back into the boss fight after a Game Over (the choice is kept): Hale on Trust, Rael on Strike.
+    npc('hale_pier', v.pierEnd.x, v.pierEnd.y, 'up', { if: 'war.trust, !story.harbor_taken' }),
+    npc('rael_pier', v.pierEnd.x, v.pierEnd.y, 'up', { if: 'war.strike, !story.harbor_taken' }),
+    // After the fight, Rael waits on the pier for her, either route (the truth).
+    npc('rael_truth', v.pierEnd.x, v.pierEnd.y, 'up', { if: 'story.harbor_taken, !clue.ash_road_read' }),
+    // Trust: the Crown's fleet strikes its colours.
+    obj('white_flag_west', 4, 23, { kind: 'white_flag', era: 'present', if: 'story.harbor_won' }),
+    obj('white_flag_east', 31, 23, { kind: 'white_flag', era: 'present', if: 'story.harbor_won' }),
+    obj('white_flag_far', 38, 25, { kind: 'white_flag', era: 'present', if: 'story.harbor_won' }),
+  ];
+}
+
+/** The Caney of Anaco at night: the cacique in his duho, the elders in their circle, Jordyn and Joaquin at the sides. */
+function warCaney(): ObjSpec[] {
+  const c = CANEY;
+  return [
+    trigger('war_caney', c.doors.x, c.doors.y, { dialogue: 'war_caney', flag: 'story.caney_war_entered', once: true, onEnter: true, if: 'story.wounded_sheltered, !act11.complete' }),
+    npc('anaco_duho', c.anaco.x, c.anaco.y, 'down', { npc: 'anaco_free', if: 'story.harbor_taken' }),
+    npc('elder_charter_free', c.elders[0]!.x, c.elders[0]!.y, 'right', { if: 'story.harbor_taken' }),
+    npc('elder_resist_free', c.elders[1]!.x, c.elders[1]!.y, 'left', { if: 'story.harbor_taken' }),
+    npc('elder_undecided_free', c.elders[2]!.x, c.elders[2]!.y, 'up', { if: 'story.harbor_taken' }),
+    npc('jordyn_caney', c.captains[0]!.x, c.captains[0]!.y, 'right', { npc: 'jordyn_war', if: 'story.harbor_taken' }),
+    npc('joaquin_caney', c.captains[1]!.x, c.captains[1]!.y, 'left', { npc: 'joaquin_war', if: 'story.harbor_taken' }),
+  ];
+}
+
+/** The Song House as the shelter: the hamacas slung between the posts, old Benny at the door and Nancy among them. */
+function warSong(): ObjSpec[] {
+  const s = SONG;
+  return [
+    trigger('war_song', s.arrive.x, s.arrive.y, { dialogue: 'war_song', flag: 'story.song_war_entered', once: true, onEnter: true, if: 'clue.ash_road_read, !story.wounded_sheltered' }),
+    ...s.hamacas.map((h, i) => obj(`song_hamaca_${i + 1}`, h.x, h.y, { kind: 'hamaca', solid: true, era: 'present', if: 'story.harbor_taken' }, 1, 2)),
+    npc('benny_song', s.benny.x, s.benny.y, 'up', { npc: 'benny_war', if: 'story.wounded_sheltered' }),
+    npc('nancy_song', s.nancy.x, s.nancy.y, 'right', { npc: 'nancy_war', if: 'story.wounded_sheltered' }),
+  ];
 }
 
 export const XARAGUA_SOURCES: readonly (() => MapSource)[] = [

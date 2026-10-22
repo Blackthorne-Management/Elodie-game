@@ -4,6 +4,7 @@
 
 import type { Condition } from '../engine/conditions.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
+import { CAMP, CAVE, CONUCO, MOUNTAIN } from './war.ts';
 
 const f = (flag: string): Condition => ({ flag });
 const INFLUENCE_ZETWAL = { pillar: 'influence', city: 'zetwal', amount: 1 } as const;
@@ -18,7 +19,7 @@ const SPRINGS_DONE: Condition = { any: [f('debate.xaragua_springs.joined'), f('d
 /** The cane cutter waits at the name stones from the lamp until Chapter 1 ends (decision A, Oct 19). */
 const CUTTER_AT_STONES: Condition = { all: [f('story.anissa_woke'), { notFlag: 'story.zetwal_return' }] };
 
-export const SIDE_QUESTS: readonly SideQuestDef[] = [
+const BUILT_SIDE_QUESTS: readonly SideQuestDef[] = [
   {
     id: 'overdue',
     title: 'The Overdue Shelf',
@@ -978,6 +979,80 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     reward: { gold: 60, pillar: { pillar: 'influence', city: 'zetwal', amount: 1 } },
   },
 ];
+
+// ---- Chapter 11, the War of the Harbor (the outline section 7): the day on the hill, before the tide ------------------
+/** Chapter 11's side quests (the War of the Harbor). */
+export const WAR_SIDE_QUESTS: readonly SideQuestDef[] = [
+  // The elders' choice comes back (STORY 2): the debate at the camp fire, required by the tide's gate.
+  {
+    id: 'harbor_elders',
+    title: 'Whose Harbor?',
+    giver: 'The elders',
+    place: 'The hill camp\'s fire',
+    level: 26,
+    summary: 'At the camp fire, the elder who would have signed the Charter and the elder who would not argue what seven navies are taking the harbor for.',
+    accepted: { any: [f('debate.xaragua_harbor.listened'), f('debate.xaragua_harbor.settled')] },
+    available: f('story.camp_reached'),
+    start: [{ map: 'xaragua-camp', at: { x: CAMP.elderCharter.x, y: CAMP.elderCharter.y } }],
+    nudge: 'The elders are still arguing, Gigi. Yari could stop them.',
+    steps: [
+      { text: 'Listen to the elders at the fire.', done: f('debate.xaragua_harbor.listened'), goals: [{ map: 'xaragua-camp', at: { x: CAMP.elderCharter.x, y: CAMP.elderCharter.y } }] },
+      { text: 'Mediate, or join the debate and argue all three rounds.', done: f('debate.xaragua_harbor.settled'), goals: [{ map: 'xaragua-camp', at: { x: CAMP.elderCharter.x, y: CAMP.elderCharter.y } }] },
+    ],
+    done: f('debate.xaragua_harbor.settled'),
+    closed: f('act11.complete'),
+    closedText: 'Closed: the harbor was taken before the elders agreed what for.',
+    reward: {},
+  },
+  // The Ninth Thumbprint: the safehouse thread's last door (the outline 7.1; the second review's 3.7 and 3.16). Powder for the
+  // canoes at the cave mouth, the carrier seen once from the back, the picket on the gardens' road, and the canoe fisher.
+  {
+    id: 'ninth_thumbprint',
+    title: 'The Ninth Thumbprint',
+    giver: 'Lamp-oil seller',
+    place: 'The hill camp',
+    level: 26,
+    summary: 'The canoes have no powder. Tonight is a new moon, and on new-moon nights jars come to the cave mouth in the gardens. The last ones came with a note: "For the harbor. When they come."',
+    accepted: f('side.ninth_thumbprint.accepted'),
+    available: f('story.camp_reached'),
+    start: [{ map: 'xaragua-camp', at: { x: CAMP.lampOilSeller.x, y: CAMP.lampOilSeller.y } }],
+    nudge: 'The jars at the cave mouth. Somebody brings them. Tonight\'s a new moon.',
+    steps: [
+      { text: 'The cave mouth in the cassava gardens, where the jars are left.', done: f('side.ninth_thumbprint.jars'), goals: [{ map: 'xaragua-cave', at: { x: CAVE.jars.x, y: CAVE.jars.y } }] },
+      { text: 'Back up through the gardens with the jars.', done: f('side.ninth_thumbprint.picket'), goals: [{ map: 'xaragua-conuco', at: { x: 13, y: CONUCO.picketStep.y } }] },
+      { text: 'The canoe fisher, at the camp\'s south edge.', done: f('side.ninth_thumbprint.done'), goals: [{ map: 'xaragua-camp', at: { x: CAMP.canoeFisher.x, y: CAMP.canoeFisher.y } }] },
+    ],
+    done: f('side.ninth_thumbprint.done'),
+    closed: f('act11.complete'),
+    closedText: 'Closed: the canoes went under the pier without the powder.',
+    reward: { gold: 150, xp: 40, pillar: { pillar: 'influence', city: 'xaragua', amount: 2 } },
+  },
+  // Harbors Lie: CAPITALS' "count the Crown ships" made a scene (the outline 7.2): the fisher's boy counts from the lookout,
+  // and the player sees Ardencia's sails off the north point before the Turn.
+  {
+    id: 'harbors_lie',
+    title: 'Harbors Lie',
+    giver: 'Fisher\'s boy',
+    place: 'The hill camp\'s rock',
+    level: 26,
+    summary: 'Forty-two marines. Eleven ships. But the camp leader says count them again from the top of the mountain, because harbors lie.',
+    accepted: f('side.harbors_lie.accepted'),
+    available: f('story.camp_reached'),
+    start: [{ map: 'xaragua-camp', at: { x: CAMP.fisherBoy.x, y: CAMP.fisherBoy.y } }],
+    nudge: 'The boy wants to count ships from the top of the mountain.',
+    steps: [
+      { text: 'The lookout clearing on the Mountain Path, over the sea.', done: f('side.harbors_lie.counted'), goals: [{ map: 'xaragua-mountain', at: { x: MOUNTAIN.lookoutStep.x, y: MOUNTAIN.lookoutStep.y } }] },
+      { text: 'The count to the camp leader.', done: f('side.harbors_lie.done'), goals: [{ map: 'xaragua-camp', at: { x: CAMP.campLeader.x, y: CAMP.campLeader.y } }] },
+    ],
+    done: f('side.harbors_lie.done'),
+    closed: f('act11.complete'),
+    closedText: 'Closed: nobody counted the ships again.',
+    reward: { xp: 40, pillar: { pillar: 'influence', city: 'xaragua', amount: 2 } },
+  },
+];
+
+/** Every side quest, Chapters 1 to 11. */
+export const SIDE_QUESTS: readonly SideQuestDef[] = [...BUILT_SIDE_QUESTS, ...WAR_SIDE_QUESTS];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */
 export const CHAPTER5_QUESTS_DONE: Condition = { all: [f('side.seats.stage1'), f('debate.seat_voices.settled'), f('side.deserters.done')] };

@@ -1327,3 +1327,159 @@ next one to settle); the fluent-speaker check (Wed Nov 18: no new language here;
   - **The other fixes:** taken as written.
 - **Owner decision (Oct 22): stays.** On Strike, Azzy stays in the party, furious, and his anger
   colours the Claim.
+
+## Built (Oct 22): what changed from this outline, and Claude's calls
+
+Built on branch `chapter11` (from `chapter10`), with every fix in the second review
+(`2026-10-22-chapter11-outline-review.md`) and the owner's decision above (on Strike, Azzy stays in the party,
+furious). Code: `quest/src/engine/war.ts` (the volley pool, what is left, the volleys a fight opens with), the volleys,
+`EnemyDef.avoid`, `BattlePhase.leave` and `BattleDef.onLoss` in `engine/battle.ts` and `engine/gameOver.ts`, the Rise out
+of a memory in `engine/game.ts` (`riseFromFight`), `VOLLEY` and Chapter 11's XP a step in `quest/src/config.ts`;
+`quest/src/data/war.ts` (every place a stage direction reads, the seven companies, the four flank houses, the
+conditions), `quest/src/data/warBattles.ts` (the foes and fights), `quest/src/data/dialogue/xaraguaWar.ts` (the scenes,
+the whistle, Xaraguá's people at war, eleven overlays on the built people); the war's layers on nine built Xaraguá maps
+in `quest/tools/maps/xaragua.ts` (no new map) and Eightgate's `ardencia_gate` spawn in `seat.ts`; `ACT11` in
+`quest/src/data/quests.ts`; the Chapter 11 entries in `battles.ts`, `encounters.ts`, `sideQuests.ts`, `debates.ts`,
+`rpg.ts` (Rael as a member for one fight, the four charms, the carved paddle), `npcs.ts`, `speakers.ts`, `objects.ts`,
+`cards.ts`, `weapons.ts`, `puzzles.ts`, `assets.config.ts`, `audio.config.ts`. Tests: `quest/tests/war.test.ts`, and
+the Chapter 11 parts of `act.test.ts`, `goldWalk.test.ts`, `levelCurve.test.ts`, `gameOver.test.ts`, `content.test.ts`;
+puzzle `xaragua_pier`. Commits: engine `2b20adf`, content and the route `ae6d2c6`, tests `d4d8a89`, then these docs.
+
+**The review's fixes, as built:**
+- **The Turn asks its question (3.1).** The black and crimson sails come round the north point; two of the Crown's
+  ships dip their flags; a marine on the pier: "Ardencia! The Lord of Ardencia, for the Crown!" Rael comes up the pier
+  from a longboat with Rivera, Jaime and a halberdier behind him and says the public lie with the signet's glow
+  (`fx: 'signet'`): "Envoy. Ardencia stands with the Crown. Stand aside, and nobody on this pier is hurt." Anissa:
+  "Gigi. His ring." Then ***Hold the pier.*** / ***Strike first.*** On Trust, Rael turns to the water: "Rivera. Jaime.
+  The *Patience*. Bind what you can. Sink nothing with people in it."
+- **The token keeps its rule (3.2).** In the truth the signet is "a plain ring"; Anissa: "It isn't lighting. It lit
+  when he said he stood with the Crown." The Locket and the signet glow together (`fx: 'token'`) only when they are
+  laid on the Ash Road Accounts. A test holds `fx: 'signet'` out of the truth.
+- **The fights retuned from tier-24 gear and the roster order, volleys on (3.3).** Measured below; Strike is now the
+  hard route on purpose (a Bound in half the fights at 27).
+- **Volleys (3.4):** `VOLLEY` = power 50 (a blow at the active fighters' mean ATK, DEF counting), cap 3, a boss takes
+  0.5; a volley never fells. The whistle asks before each named fight with volleys (the headland, the flank, Thorne,
+  Hale; never the Strike: the companies will not fire on the pier with the envoy in the line). A won fight spends what
+  it fired (`war.spent.<id>`), a lost one gives them back. The pool is counted once at the landing (16 on the route).
+- **Strike closes the war (3.5).** `story.harbor_taken` is set on both routes when the pier is decided; every "war
+  over" condition (the ambush tables, the occupation's people, the doors, the moods, the music) reads it.
+  `story.harbor_won` (Trust) and `story.fleet_escaped` (Strike) say how.
+- **The chain fits the map (3.6).** The capstan is at the pier's sea end on its own pile (23, 26), the chain along row
+  27 to the *Patience* at (10, 27); the Echo zone is the pier's landward boards (21 to 22, 19 to 20). The present's
+  reason: the stage-three marines hold the pier's sea end. Haru's opening line names one chain. The present capstan's
+  text: "The pawl's pin hole is empty. Has been for a long time. The Crown made fast to it anyway." When the chain runs
+  out, the allied hulls come in on the village's east edge; Ardencia's ships and Rael's longboat at (23, 27).
+- **The nine doors (3.7):** Haru reads them in the order the built notes found them; Rael: "Eight you opened. The
+  bakery is at your mother's end of the plaza; you walked past it at the festival."
+- **`party.rael` (3.8):** `flagship_hale.onLoss = { 'party.rael': false }` (`BattleDef.onLoss`, applied by
+  `recordLoss`); Hale's restart sets it again. Rael's `joins` also needs `fight.return` and `!story.harbor_taken`, so
+  he is never on the Status page outside the fight.
+- **Levels from Chapter 10's measured end (3.9):** 8,533. Measured below.
+- **Line fixes (3.10):** every row of the table as the review wrote it ("Count them." is Yari's; Vikram's
+  great-grandfather broke a chain; the carved paddle; Benny's "I did not say which lord"; "Her great-grandmother's is
+  the first"; "Titi Aiyana said the hands"; Hale's tip "He wants one of you alone, Gigi. Stay together."; the locked
+  rule's test scoped to Rael's family and guard and to phrases).
+- **Staging (3.11):** the companies land as seven columns of three (x 5 to 17, rows 9 to 11), a banner in each, one
+  screen; a missing house is a missing column. The headland's crew goes down the rock's west foot and away north.
+- **Anissa in the flank (3.12):** behind Gianna through the fight; walked to the healer by a cue before Jordyn's "I
+  only have the one set". Vikram's defiance is earnest.
+- **`leads` and `avoid` (3.13):** each house's companion leads from the gun taken until the flank is done
+  (`story.headland_won`), as `any` with the chapter's own. `avoid` covers area moves; Rael has no Seize.
+- **Thorne (3.14):** HP x5, a second phase at 50% (*Protection Fee*, `weakened`; *The Charter, read aloud* every 3).
+- **Pacing (3.15):** the pier assault is folded into Caona's stand (stage three is the stand). Harbors Lie keeps the
+  lookout on the Mountain Path (the camp's rock has no sea view on the built map).
+- **Small (3.16):** the carrier's clue and Azzy's deflection stay; Benny: "My son. He was always his own. He never
+  explained himself to me either."; a spared Thorne is walked down to a ship's boat for the *Patience* before the
+  Turn; Azzy on Strike: "and you chose to fight him"; Nancy is with Benny at the Song House on both routes; the
+  Quiet Crown's founding is told privately here (the Hearing has the public confession).
+
+**Claude's calls (beyond the review):**
+- **The gardens' road is a walk, not a door.** The beach (east of the village) and the gardens (west of it) cannot sit
+  side by side on the menu's city map, which joins only doors that are close. The road is a step at the beach's north
+  edge and one at the gardens' east edge; each asks ("Take the gardens' road." / "Go down to the beach."), and the
+  party arrives on the other side (`travel.next`). The Journal's arrow points at the road's foot until it is taken
+  (`story.hill_road_taken`).
+- **The levels:** Chapter 11's steps pay **58** (`XP_PER_OBJECTIVE_BY_CHAPTER[10]`; the gate and the caney pay
+  nothing); the two side quests 40 XP each and the picket 40 (it is the Ninth Thumbprint's fight, so it counts as a
+  side quest's). The story carries the chapter so that the line without side quests, which arrives two under, stays
+  two under.
+- **The fights' numbers** (`warBattles.ts`): the betrayers at 26 with HP x7 to x9 and ATK x1.0 to x1.3 by house (Hrafn
+  x8.5 / x1.2 with a softer *Warpath*; the steward x9 / x1.0, his enforcers skirmishers, because Vikram leads that fight
+  and is the glass cannon; the admiral x7 / x1.3 with *Paid Off* 115); Hale 28, x7 / x1.45, *Boarders* 135 every 2;
+  Rael 28, x4.5 / x2.0, Jaime's *Ash Storm* every 2; Thorne 27, x5 / x1.15.
+- **The flank's spoils:** the betrayer's house leaves a charm for the companion who defied it a second time (the tassel
+  charm, the paper seal, the wick ring, the clerk's seal; level 26), spared or bound. Hale drops *Hale's Boarding Axe*.
+- **The debate is required, and settles either way:** won or lost at the fire, the gate opens (a loss: "We will agree
+  after. That is more usual."); mediating (Influence 5) has Yari walk to the fire. Anaco at the caney says which.
+- **Rael is a member for one fight** (`party.rael`, `fight.return`), with his son's kit and his own gear in his base; he
+  leads the four at the pier.
+- **Stability inputs, recorded:** `stability.harbor_trust` or `stability.harbor_strike`, `stability.fleet_struck` or
+  `stability.fleet_escaped`, `stability.xaragua_freed`, `stability.elders_agreed` (mediated).
+- **The war's light and music:** smoke over the sand by day, red at the tide, the free harbor's lamps after; the war's
+  music slot (the mountain path's track until the owner's arrives), then the city's own song once the harbor is taken.
+- **The ambushes:** the war's table (`harbor_war`: marines, musketeers, hushers, great crabs at 25 to 27) covers the
+  whole Mountain Path and the gardens until the harbor is taken, as Chapter 2's did. The route meets four.
+- **Flagged, not changed:** STORY 11 beat 4's private line, "My father kept his oath and it cost him everything. I
+  wanted to know what would happen if someone kept the goal instead.", is built verbatim; young Benny's built passive
+  (Chapter 3, *The iron promise*) reads "He kept the goal, not the oath". The two disagree about what Benny kept. The
+  line follows STORY (the source of truth); the owner should say which is right (one line or one passive to change).
+
+**Measured (Oct 22):**
+
+| Line | Level (XP) |
+|---|---|
+| Route end | 28 (10,260) |
+| No side quests | 26 (8,640) |
+| Played median (ambushes on 282 wild steps, 3.3 on average) | 28 (10,318) |
+| Played p90 / wanderer p90 | 29 / 29 |
+
+Level 29 needs 10,338 and 26 needs 8,623: both lines arrive inside the band, Chapter 12 (28 to 30) starts at its floor.
+
+The fights (`tests/war.test.ts`; actions are party actions, "fall" the share of runs with a fighter Down or Bound; 30
+seeds; tier-24 gear: `muster_robe`, `oilcloth_coat` or `scale_armour`, the warriors' `kingsmere_blade_of_force`;
+"start" is the route's own gear; volleys 3 where the fight has them; the roster order with the house's companion
+lifted second, and the glass line Gianna, Yari, Vikram, Haru):
+
+| Fight | Gear, order | 25 | 26 | 27 | 28 |
+|---|---|---|---|---|---|
+| Headland battery | tier 24, roster | 7.5, 0% | 7.2, 0% | 6.7, 0% | 6.6, 0% |
+| Flank: Hrafn (Bayarmaa leads) | tier 24, roster | 29.3, 23% | 28.2, 7% | 26.0, 3% | 24.0, 3% |
+| | start, roster | 34.0, 57% | 32.2, 43% | 29.7, 27% | 28.5, 13% |
+| Flank: the retainer (Haru leads) | tier 24, roster | 29.4, 43% | 28.9, 30% | 28.1, 27% | 26.4, 3% |
+| Flank: the steward (Vikram leads) | tier 24, roster | 28.7, 50% | 27.8, 43% | 26.2, 33% | 24.1, 20% |
+| Flank: the admiral (Samira leads) | tier 24, roster | 29.0, 20% | 27.8, 3% | 24.9, 3% | 23.3, 0% |
+| The picket | tier 24, roster | 8.3, 0% | 8.1, 0% | 7.7, 0% | 7.6, 0% |
+| Thorne | tier 24, roster | 20.1, 0% | 18.9, 0% | 17.9, 0% | 17.2, 0% |
+| | start, roster | 24.4, 0% | 22.1, 0% | 20.7, 0% | 19.4, 0% |
+| Caona's stand (the Echo three) | | 11.7, 3% | 11.7, 3% | 11.4, 3% | 11.3, 0% |
+| Hale, Rael in the four (Trust) | tier 24, roster | 29.9, 17% | 28.1, 27% | 26.0, 10% | 23.7, 10% |
+| | tier 24, glass | 28.4, 63% | 27.0, 50% | 25.3, 40% | 24.1, 20% |
+| | start, roster | 35.8, 53% | 31.9, 30% | 29.5, 17% | 27.7, 23% |
+| Rael (Strike), a Bound | tier 24, roster | 38.7, 37% | 39.0, 60% | 34.1, 47% | 30.8, 37% |
+| | tier 24, glass | 26.0, 47% | 24.4, 37% | 22.5, 40% | 21.7, 27% |
+| | start, roster | 48.0, 80% | 44.5, 73% | 41.0, 53% | 36.4, 33% |
+
+Every fight was won in every run of every row (no loss on the Strike). At the boss Grudge in start gear, glass line,
+level 25, every flank, Hale and the Strike win 30 of 30. The review's gates: the betrayers and Hale 28 to 34 actions
+at the floor with a fall in one in four (met at 28.7 to 29.9; the falls run from one in five to one in two, highest
+where the glass-cannon companion leads); the Strike a Bound in half the fights at 27 (47%), no loss; Thorne 18 to 22
+(20.1 at the floor). With the volleys held, each fight that has them is one to three actions longer (measured with
+the same bot; the test keeps the gates with volleys on, the common case).
+
+The gold arrow, on from the end of Chapter 10: **599 steps and 21 map changes**, no stall, every objective in order,
+from either Muster night (betrayed: the Dorini's flank; turned: the house stands with the fleet). Every variant (four
+houses x betrayed or turned x Trust or Strike, sixteen) plays to the card by the arrow (`tests/war.test.ts`).
+
+**What Chapter 12 is handed** (`?chapter=12`, Eightgate's Ardencia Gate): `story.harbor_taken`, and
+`story.harbor_won` with `war.trust` or `story.fleet_escaped` with `war.strike`; `war.turn_made`; `story.anaco_freed`,
+`ally.xaragua`, `item.token_xaragua` (the carved paddle); `clue.ash_road_read`, `belief.rael_traitor: false`,
+`choice.truth_answer` (`tested` or `lied`); `story.thorne_taken` with `choice.thorne_spared` or `choice.thorne_broken`;
+`choice.flank_spared` or `choice.flank_bound` (betrayed) or `war.house_stood` (turned); `story.wounded_sheltered`;
+`story.regent_retreated`; the stability inputs above; `party.rael` false; the war's volleys spent
+(`war.spent.<id>`). On the route: Trust, the truth answered "You tested us.", Thorne sent home on the *Patience*, the
+Dorini's admiral invoiced.
+
+**Not built:** the vendors' second stock after the harbor is taken (the market's three are back at their burned
+stalls, with a line each, no shop); *The First Oath*'s second look; the board's dispatches; Caona's Conch (X-4, after
+the release); the voyage to Eightgate as a scene (the card's close lands the party at the Ardencia Gate). The smoke test
+has the Chapter 11 checks at `@war-landing`, `@war-chain-down` and `@chapter11-end`, but has not been run in a browser.

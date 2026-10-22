@@ -20,6 +20,8 @@ import { Battle, battleParty, battlePurse, type Action, type BattleEvent } from 
 import { FlagStore, type FlagReader } from '../src/engine/flags.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from './sim-setup.ts';
+import { volleysFor } from '../src/engine/war.ts';
+import { COMPANIES } from '../src/data/war.ts';
 
 export type Plan = 'attack' | 'surge' | 'spells' | 'skills' | 'smoke' | 'tips';
 
@@ -72,7 +74,8 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
   if (!def) throw new Error(`No battle ${id}`);
   const enemies = def.enemies.map((e) => ENEMIES[e]!).map((e) => (def.level ? { ...e, level: def.level } : e));
   const purse = plan === 'tips' ? battlePurse(flags, RPG, flags instanceof FlagStore ? Object.keys(flags.snapshot()) : []) : {};
-  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK), enemies, [], { seed, grudge, reserve: battleReserve(def), ...purse });
+  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked.
+  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present'), enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES), ...purse });
   const party = new Set(b.party.map((c) => c.key));
   // The heavy blows a tell announces (the tips plan Guards from the tell until the blow lands): a blow on the whole
   // party, or one of 150 or more; a raider's sand is not worth a turn.
@@ -109,6 +112,8 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
 /** The `skills` plan: what a player who uses the whole kit does with this fighter now. */
 export function skillsAction(b: Battle): Action {
   const me = b.actor!;
+  // Bound (Rael's fights): the cords are all there is (the Chapter 11 review's 3.3: the bot stalled without it).
+  if (me.bound) return { kind: 'breakFree' };
   const foes = b.enemies.filter((e) => !e.down);
   if (b.canSurge()) return { kind: 'surge' };
   const ready = me.skills.filter((s) => !s.gold && !s.bribe && b.canUse(me, s));

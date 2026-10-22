@@ -57,6 +57,9 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | X-3 | The Hutia's Hoard | Yucayeque | Ch. 2 | 3 to 8 | no | yes |
 | X-4 | Where the Canoes Sleep (secret) | Yucayeque | Ch. 2 | 5 to 8 | yes (cave) | yes |
 | X-5 | Medicine for the Cacique | Yucayeque | Ch. 2 | 5 to 8 | yes | yes |
+| X-6 | The Ninth Thumbprint (safehouse; built Oct 22, required) | Yucayeque | Ch. 11 | 26 | yes | no |
+| X-7 | Harbors Lie (built Oct 22, required) | Yucayeque | Ch. 11 | 26 | no | no |
+| X-8 | Whose Harbor? (the elders' debate; built Oct 22, required) | Yucayeque | Ch. 11 | 26 | no | no |
 | A-1 | Appraise This | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | no |
 | A-2 | The Missing Saffron | Bab al-Dhahab | Ch. 4 | 11 to 14 | yes | no |
 | A-3 | Sweet Water (safehouse) | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | yes |
@@ -318,6 +321,31 @@ built (owner decision).
 - **Reward:** 120 gold, 100 XP, +2 Influence (Xaraguá). Anaco is well enough to speak at the council (a stronger
   debate in Chapter 2's main beat: +1 round advantage).
 - **Note:** the healer's practice is shown as medicine and care, not as a ritual of a real faith (guide 7.3).
+
+### X-6 The Ninth Thumbprint (Chapter 11; the safehouse thread's last door)
+- **Built (Oct 22; the Chapter 11 outline 7.1 with its second review's 3.7 and 3.16):** the lamp-oil seller at the hill
+  camp: the canoes have no powder; jars come to the cave mouth on new-moon nights, and the last came with a note: "For
+  the harbor. When they come." Steps: 1) the petroglyph cave under the gardens, where a man in a black coat, sash torn
+  off, walks out and away east at a walk (seen once, from the back; Anissa: "He walked like the ones on the strand,
+  Gigi. The black coats." Azzy: "...A lot of people walk like that."); the jars are powder, each with a grey thumbprint
+  in the wax (Haru: "The ninth door."). 2) Back up the gardens' road with the jars: the Crown's picket (two marines and
+  an officer, 26; `thumbprint_picket`, the quest's fight). 3) The canoe fisher at the camp's south edge. Reward: 150
+  gold, 40 XP, +2 Influence (Xaraguá). Required by the tide's gate. In the truth Haru reads the nine doors in the order
+  the notes found them (Z-5's bakery the one not yet opened).
+
+### X-7 Harbors Lie (Chapter 11)
+- **Built (Oct 22; the outline 7.2):** the fisher's boy at the camp counts forty-two marines and eleven ships, and runs
+  off to the lookout clearing on the Mountain Path; from there he counts again: eleven, and four black sails off the
+  point ("They're not Crown and they're not yours." Azzy: "...Ardencia."). The count to the camp leader ("Eleven and
+  four. Then the canoes go for the *Patience*, not the pier."). Reward: 40 XP, +2 Influence (Xaraguá). Required.
+
+### X-8 Whose Harbor? (Chapter 11; the elders' choice comes back)
+- **Built (Oct 22; the outline 7.3):** the debate `xaragua_harbor` at the camp fire, *Won by seven navies: whose
+  harbor?*, the elder for the oath against the elder who would have signed the Charter, the undecided elder listening
+  "for fifty years". Won (Reason, Compassion, Reason) or lost, it settles the gate; mediating (Influence 5 in Xaraguá)
+  has Yari walk to the fire and set the terms ("The harbor stays with the people who fish it. The seven sail home when
+  the chain is down."). Anaco at the caney says which. Xaraguá's Se-5 token, **the carved paddle**, is Anaco's gift to
+  Yari at the caney (`item.token_xaragua`).
 
 ## Bab al-Dhahab (Al-Doria)
 

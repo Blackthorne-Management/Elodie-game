@@ -7,6 +7,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RPG } from '../src/data/rpg.ts';
+import { FlagStore } from '../src/engine/flags.ts';
 import { markShown, pendingShowcases } from '../src/engine/showcase.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { QUEST_ROOT, newGameSim, readJson } from './sim-setup.ts';
@@ -39,21 +40,33 @@ const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string 
   '10': { mark: 'chapter9-end', map: 'zetwal-harbor', spawn: 'harbor_return' },
   // Chapter 11 begins on the Canoe Beach below Yucayeque at first light, off the fleet (Chapter 11's outline, beat 0).
   '11': { mark: 'chapter10-end', map: 'xaragua-beach', spawn: 'landing' },
+  // Chapter 12 begins at Eightgate's Ardencia Gate, off the fleet, after Chapter 11's card (the Regent's retreat).
+  '12': { mark: 'chapter11-end', map: 'seat-concourse', spawn: 'ardencia_gate' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {
   const route = parseRoute(readJson<string[]>('routes/zetwal-act1.json'));
-  const out: Record<string, ChapterStart> = {};
-  for (const [chapter, at] of Object.entries(MARKS)) {
-    const sim = newGameSim();
-    for (const item of route) {
-      if (item.kind === 'mark' && item.name === at.mark) break;
-      sim.run([item]);
+  // One run of the route, cut at each chapter's marker (the route is long: playing it once per chapter is slow).
+  const byMark = new Map(Object.entries(MARKS).map(([chapter, at]) => [at.mark, { chapter, at }]));
+  const found: Record<string, ChapterStart> = {};
+  const sim = newGameSim();
+  for (const item of route) {
+    const hit = item.kind === 'mark' ? byMark.get(item.name) : undefined;
+    if (hit) {
+      // The browser shows each item's popup as it arrives; a player reaching this point has seen them all.
+      const flags = new FlagStore();
+      flags.load(sim.logic.state.flags.snapshot());
+      for (const shown of pendingShowcases(flags, RPG)) markShown(flags, shown.id);
+      const kept = Object.fromEntries(Object.entries(flags.snapshot()).filter(([k]) => k !== 'travel.next' && k !== 'voyage.next').sort(([a], [b]) => a.localeCompare(b)));
+      found[hit.chapter] = { map: hit.at.map, spawn: hit.at.spawn, flags: kept };
     }
-    // The browser shows each item's popup as it arrives; a player reaching this point has seen them all.
-    for (const item of pendingShowcases(sim.logic.state.flags, RPG)) markShown(sim.logic.state.flags, item.id);
-    const flags = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => k !== 'travel.next' && k !== 'voyage.next').sort(([a], [b]) => a.localeCompare(b)));
-    out[chapter] = { map: at.map, spawn: at.spawn, flags };
+    sim.run([item]);
+  }
+  // In chapter order, as before.
+  const out: Record<string, ChapterStart> = {};
+  for (const chapter of Object.keys(MARKS)) {
+    if (!found[chapter]) throw new Error(`No mark @${MARKS[chapter]!.mark} in the route`);
+    out[chapter] = found[chapter]!;
   }
   return out;
 }

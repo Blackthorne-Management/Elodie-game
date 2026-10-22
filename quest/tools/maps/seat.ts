@@ -140,6 +140,8 @@ export function seatConcourse(): MapSource {
     { layer: 'doors', name: 'concourse_hall', x: 23, y: 5, w: 2, props: { target: 'hall_out', map: 'seat-hall', exit: 'down' } },
     { layer: 'doors', name: 'concourse_archive', x: 9, y: 5, props: { target: 'archive_out', map: 'seat-archive', exit: 'down', if: 'story.archive_open', closed: 'archive_chain_closed' } },
     { layer: 'spawns', name: 'iron_gate', x: 44, y: 26, props: { facing: 'right', era: 'present' } },
+    // Chapter 12 begins inside the Ardencia Gate (the Chapter 12 outline's beat 0; Chapter 11's card lands the party here).
+    { layer: 'spawns', name: 'ardencia_gate', x: 33, y: 1, props: { facing: 'down', era: 'present' } },
     // The first walk up to the Hall behind the herald (shown: the bricked gate, the salute, the roof), as the party
     // comes onto the forecourt from any side; again until seen.
     trigger('concourse_arrive', 16, 9, { dialogue: 'concourse_arrive', if: 'story.herald_met, !story.concourse_seen' }, 16, 1),

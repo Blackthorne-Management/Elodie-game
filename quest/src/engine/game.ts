@@ -538,6 +538,15 @@ export class GameLogic {
     this.runner = null;
     this.afterDialogue = [];
     this.leaveLostFight();
+    // A fight lost inside a memory (Chapter 11: Caona's stand) rises in the present, where the shimmer is: the memory's
+    // own flags go as they do on any return (an anchor set in it stays), and Echo takes the party back in.
+    if (this.state.player.era === 'echo') {
+      this.state.player.era = 'present';
+      for (const name of Object.keys(this.state.flags.snapshot())) {
+        if (name.startsWith(ECHO_FLAG_PREFIX)) this.state.flags.clear(name);
+      }
+      this.anchorsAtEntry = null;
+    }
   }
 
   /** Back to the fight's return tile (when one is set and still open), and clear the fight's markers. */
