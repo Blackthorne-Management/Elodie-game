@@ -3,7 +3,10 @@
 
 import type { DialogueScript } from '../engine/dialogue.ts';
 import { SHELF_DIALOGUE } from './books.ts';
+import { ALDORIA_DIALOGUE } from './dialogue/aldoria.ts';
+import { ARDENCIA_DIALOGUE } from './dialogue/ardencia.ts';
 import { XARAGUA_DIALOGUE } from './dialogue/xaragua.ts';
+import { SEAT_DIALOGUE } from './dialogue/seat.ts';
 import { XARAGUA_QUEST_DIALOGUE } from './dialogue/xaraguaQuests.ts';
 import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
 
@@ -145,7 +148,10 @@ export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
   ...TEST_VILLAGE,
   ...Object.fromEntries(ZETWAL_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(XARAGUA_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(ARDENCIA_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(ALDORIA_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(XARAGUA_QUEST_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(SEAT_DIALOGUE.map((d) => [d.id, d])),
   ...SHELF_DIALOGUE,
 };
 

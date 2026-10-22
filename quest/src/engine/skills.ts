@@ -6,7 +6,7 @@
 
 import { SPELL_SLOTS } from '../config.ts';
 import type { FlagReader, FlagStore } from './flags.ts';
-import { SLOTS, equipped, type MemberDef, type RpgContent } from './rpg.ts';
+import { SLOTS, equipped, hasSpellbook, type MemberDef, type RpgContent } from './rpg.ts';
 import type { SkillDef } from './battle.ts';
 
 /** Every skill a member can ever have: spells and SP skills, weapon moves, and the skills gear brings. */
@@ -74,7 +74,7 @@ export function spellSlots(level: number): number {
 }
 
 export function usesSlots(m: MemberDef): boolean {
-  return m.class === 'mage';
+  return hasSpellbook(m);
 }
 
 function spellsFlag(memberId: string): string {

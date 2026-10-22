@@ -7,7 +7,10 @@ import type { EncounterTable } from '../engine/content.ts';
  * Story flags that chapters not built yet will set (owner decision, Oct 14: Chapter 1's only fight is the
  * scripted boar; the wild sections turn violent when the story brings the party back). Maps may read them.
  */
-export const LATER_STORY_FLAGS: readonly string[] = [];
+export const LATER_STORY_FLAGS: readonly string[] = [
+  // Chapter 12, the Claim: the Throne Hall's rope comes down (tools/maps/seat.ts, built now for reuse).
+  'story.claim_begun',
+];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
   // Scripted fights (data/battles.ts), listed here so the Foes page shows them. No map rolls on this table.
@@ -120,6 +123,207 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
         intro: 'Two veiled figures wait on the path, utterly still. "Hush. Where is the little one?"',
         won: 'The veiled pair step back into the mist and are gone.',
         fled: 'You turn and climb another way. They do not follow. Yet.',
+      },
+    ],
+  },
+  // Chapter 3's scripted fights (data/battles.ts), for the Foes page. No map rolls on this table.
+  ardencia_story: {
+    id: 'ardencia_story',
+    groups: [
+      {
+        id: 'rael',
+        weight: 0,
+        level: 13,
+        foes: ['Rael', 'Captain Rivera', 'Jaime'],
+        intro: 'Rael walks onto the sand.',
+        won: 'Rael ends it himself.',
+        fled: 'There is no leaving the ring.',
+      },
+      {
+        id: 'bats',
+        weight: 0,
+        level: 10,
+        foes: ['Cave Bat', 'Cave Bat', 'Cave Bat'],
+        intro: 'Bats pour out of the narrow.',
+        won: 'The bats whirl away down the tube.',
+        fled: 'You back into the dark.',
+      },
+    ],
+  },
+  // Ardencia (Chapter 3; outline section 5): the sea road up the Cinder Flats, levels 8 to 10 on the way up.
+  cinder_flats: {
+    id: 'cinder_flats',
+    groups: [
+      {
+        id: 'salamanders',
+        enemies: ['cinder_salamander', 'cinder_salamander'],
+        weight: 3,
+        level: 8,
+        foes: ['Cinder Salamander', 'Cinder Salamander'],
+        intro: 'Two salamanders slide out of a steaming crack, their backs glowing like coals.',
+        won: 'The salamanders hiss and slip back into the rock.',
+        fled: 'You back off the hot ground. They do not follow into the cool.',
+      },
+      {
+        id: 'bats',
+        enemies: ['cave_bat', 'cave_bat', 'cave_bat'],
+        weight: 2,
+        level: 8,
+        foes: ['Cave Bat', 'Cave Bat', 'Cave Bat'],
+        intro: 'A shriek from a lava tube, and the air is full of wings.',
+        won: 'The bats scatter back into the dark.',
+        fled: 'You cover your heads and run until the shrieking stops.',
+      },
+      {
+        id: 'bandit_deserter',
+        enemies: ['road_bandit', 'brasador_halberdier'],
+        weight: 2,
+        level: 9,
+        foes: ['Road Bandit', 'Brasador Halberdier'],
+        intro: 'A bandit and a deserter in a torn black coat block the road. "Toll for the sea road."',
+        won: 'The deserter throws down his halberd and runs for the strand.',
+        fled: 'You slip back down the road into the steam.',
+      },
+      {
+        id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot'],
+        weight: 1,
+        level: 9,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
+        intro: 'Two veiled figures stand in the steam of a spring. "Hush. Where is the little one?"',
+        won: 'The veiled pair step back into the steam and are gone.',
+        fled: 'You run. The steam closes behind you.',
+      },
+    ],
+  },
+  // After the escape (story.ardencia_escaped): Brasador patrols hunt the party on the strand road. Their hooks
+  // stun; they mean to take the party back, not to kill (no Bound: that is Rael's rule only).
+  cinder_patrols: {
+    id: 'cinder_patrols',
+    groups: [
+      {
+        id: 'halberdiers',
+        enemies: ['brasador_halberdier', 'brasador_halberdier'],
+        weight: 1,
+        level: 11,
+        foes: ['Brasador Halberdier', 'Brasador Halberdier'],
+        intro: 'A Brasador patrol, halberds low. "The Lord wants his guests back. Come quietly."',
+        won: 'The halberdiers fall back up the road toward the walls.',
+        fled: 'You run for the strand. The patrol is slower in its coats.',
+      },
+    ],
+  },
+  // Chapter 4's scripted fight (data/battles.ts), for the Foes page. No map rolls on this table.
+  aldoria_story: {
+    id: 'aldoria_story',
+    groups: [
+      {
+        id: 'qasim',
+        weight: 0,
+        level: 14,
+        foes: ['Guildmaster Qasim', 'Caravan Raider', 'Caravan Raider'],
+        intro: 'Qasim comes down the stair with the guild\'s blades.',
+        won: 'Qasim yields, and his blades walk out.',
+        fled: 'There is no way past them but through.',
+      },
+    ],
+  },
+  // Chapter 5's scripted fight (data/battles.ts), for the Foes page.
+  seat_story: {
+    id: 'seat_story',
+    groups: [
+      {
+        id: 'deserters',
+        weight: 0,
+        level: 14,
+        foes: ['Deserter Sergeant', 'Deserter', 'Deserter'],
+        intro: 'Three men in old Crown coats at the crossroads. "Toll. Everything in the bags."',
+        won: 'The Sergeant lowers his bayonet, and his men step back with him.',
+        fled: 'You back away up the road.',
+      },
+    ],
+  },
+  // The Crossroads Fields outside Eightgate (Chapter 5; the outline section 5): the Crown's own deserters, road
+  // bandits, and the Quiet Crown, who have heard about a little girl who glows. Levels 14 to 15.
+  crossroads: {
+    id: 'crossroads',
+    groups: [
+      {
+        id: 'deserters',
+        enemies: ['deserter', 'deserter'],
+        weight: 3,
+        level: 14,
+        foes: ['Deserter', 'Deserter'],
+        intro: 'Two men in faded Crown coats step out of the grass. "The Regent says we are not here. Pay us anyway."',
+        won: 'They step back into the grass, bayonets down.',
+        fled: 'You run for the road. They do not chase far.',
+      },
+      {
+        id: 'bandits',
+        enemies: ['road_bandit', 'road_bandit', 'road_bandit'],
+        weight: 2,
+        level: 14,
+        foes: ['Road Bandit', 'Road Bandit', 'Road Bandit'],
+        intro: 'Three bandits rise out of the ditch. "Envoys! Envoys always have something."',
+        won: 'The bandits scatter toward the hills.',
+        fled: 'You slip back to the road.',
+      },
+      {
+        id: 'zealots',
+        enemies: ['qc_zealot', 'qc_zealot'],
+        weight: 1,
+        level: 15,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
+        intro: 'Two veiled figures stand very still in the grass. "The little one glows, they say. Hush, and give her to us."',
+        won: 'The veiled pair walk back into the long grass.',
+        fled: 'You run. The grass closes where they stood.',
+      },
+    ],
+  },
+  // The Desert Edge past the caravan gate (Chapter 4; CAPITALS.md 3, re-levelled to 11 to 13 by the outline): raiders on
+  // the caravan road, smugglers, and the Quiet Crown, who have heard about a little girl who glows.
+  desert_edge: {
+    id: 'desert_edge',
+    groups: [
+      {
+        id: 'raiders',
+        enemies: ['caravan_raider', 'caravan_raider'],
+        weight: 3,
+        level: 12,
+        foes: ['Caravan Raider', 'Caravan Raider'],
+        intro: 'Two raiders rise out of the dune, scarves over their faces. "The guild\'s water costs a copper. Your purse costs more."',
+        won: 'The raiders drop back over the dune.',
+        fled: 'You run for the road. Sand slows them more than you.',
+      },
+      {
+        id: 'raider_bandits',
+        enemies: ['caravan_raider', 'road_bandit', 'road_bandit'],
+        weight: 2,
+        level: 11,
+        foes: ['Caravan Raider', 'Road Bandit', 'Road Bandit'],
+        intro: 'A raider and two bandits from the ruined caravanserai. "Toll for the Desert Edge."',
+        won: 'They scatter back toward the ruin.',
+        fled: 'You slip back to the road before they close in.',
+      },
+      {
+        id: 'smugglers',
+        enemies: ['smuggler', 'smuggler'],
+        weight: 2,
+        level: 12,
+        foes: ['Smuggler', 'Smuggler'],
+        intro: 'Smugglers with a string of mules, Crown-stamped crates under the sacking. "You saw sand. Say it."',
+        won: 'The smugglers abandon a crate and drive the mules off.',
+        fled: 'You leave them to their mules.',
+      },
+      {
+        id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot'],
+        weight: 1,
+        level: 13,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
+        intro: 'Two veiled figures stand still in the heat. "The little one glows, they say. Hush, and give her to us."',
+        won: 'The veiled pair walk back into the haze.',
+        fled: 'You run. The heat shimmers where they stood.',
       },
     ],
   },

@@ -3,9 +3,9 @@
 // Anissa run into a boar, which teaches the commands, Anissa's Spark and Surge, and her light.
 // Numbers follow docs/quest/design/COMBAT.md.
 
-import { ANISSA_SP_EVERY, BATTLE_ACTIVE, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST } from '../config.ts';
+import { ANISSA_SP_EVERY, BATTLE_ACTIVE, BRIBE_GOLD_PER_LEVEL, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
 import { ENCOUNTERS } from './encounters.ts';
-import type { BattleDef, EnemyDef, SkillDef } from '../engine/battle.ts';
+import type { BattleDef, EnemyDef, EnemyMove, SkillDef } from '../engine/battle.ts';
 import type { SkillBook } from '../engine/skills.ts';
 import { BOOKS } from './books.ts';
 
@@ -15,6 +15,10 @@ import { BOOKS } from './books.ts';
 
 /** The library books of Pòdlimyè (reading five teaches Mend). */
 const ZETWAL_BOOKS = BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => b.id);
+/** The House of Ledgers' six in Bab al-Dhahab (reading five teaches Baraka of the Scale; the Majlis's two do not count). */
+const ALDORIA_LEDGERS = ['aldoria_letter_numbers', 'aldoria_eight_gates', 'aldoria_on_contracts', 'aldoria_witness_market', 'aldoria_dorini_promise', 'aldoria_city_water'];
+/** La Biblioteca Vieja's six (reading five teaches Ember Ward; the Alcázar's two shelf books do not count). */
+const ARDENCIA_LIBRARY = ['ardencia_brasador_count', 'ardencia_cendre', 'ardencia_oaths', 'ardencia_witness', 'ardencia_iron_trade', 'ardencia_kitchen_maids'];
 
 /** SP skills by member: a mage's spells (equipped into slots), an attacker's few skills. */
 export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
@@ -45,9 +49,62 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       ranks: [{ level: 10, statuses: ['warded'] }],
     },
     {
+      id: 'ember_ward', name: 'Ember Ward', sp: 7, kind: 'status', power: 0, target: 'ally', statuses: ['warded', 'regen'],
+      learn: { lore: { books: ARDENCIA_LIBRARY, count: 5, where: 'La Biblioteca Vieja' } },
+      text: 'Learned in Cenizal: a ward of warm ash on one ally. They take a quarter less damage and heal a little, for 3 turns.',
+    },
+    {
+      id: 'baraka_scale', name: 'Baraka of the Scale', sp: 8, kind: 'status', power: 0, target: 'ally', statuses: ['warded', 'inspired'],
+      learn: { lore: { books: ALDORIA_LEDGERS, count: 5, where: 'the House of Ledgers' } },
+      text: 'Learned in Bab al-Dhahab: the scale weighs true for one ally. They take a quarter less and deal a quarter more, for 3 turns.',
+    },
+    {
       id: 'limye_pou_tout', name: 'Limyè pou Tout', sp: 10, kind: 'heal', power: 80, target: 'allAllies', element: 'light', learn: { level: 4 },
       text: 'Light for all: heals the whole party a little.',
       ranks: [{ level: 11, power: 100 }],
+    },
+  ],
+  // Azzy (COMBAT 9.3): his skills come from the board's Brasador abilities.
+  azzy: [
+    {
+      id: 'la_marca', name: 'La Marca', sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'],
+      text: 'He marks one foe for the house: it takes a quarter more damage for 3 turns.',
+    },
+    {
+      id: 'grito_de_guerra', name: 'Grito de Guerra', sp: 7, kind: 'status', power: 0, target: 'enemy', statuses: ['stunned'], bossChance: 0.5,
+      text: 'A war cry: one foe loses its next action (a boss only half the time).',
+    },
+    {
+      id: 'reinado_de_cenizas', name: 'Reinado de Cenizas', sp: 12, kind: 'damage', stat: 'atk', power: 120, powerPerFell: 40, target: 'enemy', element: 'fire',
+      once: true, heavy: true, text: 'Once per battle: a burning blow, stronger for every foe already felled.',
+    },
+  ],
+  // Samira (COMBAT 9.6; owner approved Oct 20: Daftar spends gold). Each Daftar costs 20 gold plus 10 per level
+  // (Claude's call, so it keeps pace with the fights): 10 HP or 10 damage for every 20 gold, and the realm's
+  // Wealth adds up to 30%; 60 gold buys Inspired.
+  samira: [
+    {
+      id: 'tonic', name: 'Tonic', sp: 6, kind: 'heal', power: 110, target: 'ally', cleanse: true,
+      text: 'A bitter tonic: heals one ally and clears what ails them.',
+    },
+    {
+      id: 'daftar_mend', name: 'Daftar: Remedy', sp: 0, gold: { base: 20, perLevel: 10 }, goldRate: 0.5, kind: 'heal', power: 0, target: 'ally',
+      text: 'She pays for the best: one ally heals 10 HP for every 20 gold spent.',
+    },
+    // Renamed from "Hired Blade" (Chapter 4 review 3.7: it collided with Qasim's Hire Blades); the id stays for saves.
+    {
+      id: 'daftar_strike', name: 'Daftar: Debt Collected', sp: 0, gold: { base: 20, perLevel: 10 }, goldRate: 0.5, kind: 'damage', power: 0, target: 'enemy',
+      text: 'Gold buys a blow no armour stops: 10 damage for every 20 gold spent.',
+    },
+    // Bribe (COMBAT 9.6; Chapter 4): a person takes the purse and walks out. A blade Qasim hired mid-fight was paid
+    // by the guild first, so the purse comes back.
+    {
+      id: 'bribe', name: 'Bribe', sp: 0, gold: { base: 0, perLevel: BRIBE_GOLD_PER_LEVEL }, kind: 'status', power: 0, target: 'enemy', bribe: true,
+      text: 'A purse for one foe who can be bought: they walk out of the fight. A hired blade was paid already: the gold comes back.',
+    },
+    {
+      id: 'daftar_favour', name: 'Daftar: Patronage', sp: 0, gold: { base: 60 }, kind: 'status', power: 0, target: 'ally', statuses: ['inspired'],
+      text: 'A purse for courage: one ally is Inspired for 3 turns (60 gold).',
     },
   ],
   yari: [
@@ -67,10 +124,21 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'pinning_shot', name: 'Pinning Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'enemy', statuses: ['slowed'], learn: { level: 2 }, text: 'Pins a foe: its turns come slower for 3 turns.' },
     { id: 'volley', name: 'Volley', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 60, target: 'randomEnemies', hits: 3, learn: { level: 4 }, text: 'Three arrows at random foes.' },
   ],
+  azzy: [
+    { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
+    { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },
+    { id: 'sweep', name: 'Sweep', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 70, target: 'allEnemies', text: 'A wide cut at every foe.' },
+  ],
   caona: [
     { id: 'quick_shot', name: 'Quick Shot', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A fast arrow. Ready every turn.' },
     { id: 'pinning_shot', name: 'Pinning Shot', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'enemy', statuses: ['slowed'], text: 'Pins a foe: its turns come slower for 3 turns.' },
     { id: 'scouts_mark', name: "Scout's Mark", sp: 0, cooldown: 3, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'She has watched this foe for a week: it takes a quarter more damage for 3 turns.' },
+  ],
+  // Young Lord Benny of Ardencia in the Echo party (from the end of Chapter 3, once Azzy has joined).
+  benny: [
+    { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
+    { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },
+    { id: 'brasador_mark', name: 'La Marca', sp: 0, cooldown: 3, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'He marks one foe for the house: it takes a quarter more damage for 3 turns.' },
   ],
   patricio: [
     { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
@@ -124,6 +192,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // (facing left) until art drop 2 brings painted enemies.
   crown_marine: {
     id: 'crown_marine',
+    bribable: true,
     name: 'Crown Marine',
     look: 'crown_marine',
     level: 3,
@@ -134,6 +203,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // the encounter group. People are drawn from their walking sprites until art drop 2.
   crown_musketeer: {
     id: 'crown_musketeer',
+    bribable: true,
     name: 'Crown Musketeer',
     look: 'crown_musketeer',
     level: 5,
@@ -160,6 +230,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
   road_bandit: {
     id: 'road_bandit',
+    bribable: true,
     name: 'Road Bandit',
     look: 'road_bandit',
     level: 4,
@@ -195,6 +266,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
   smuggler: {
     id: 'smuggler',
+    bribable: true,
     name: 'Smuggler',
     look: 'smuggler',
     level: 7,
@@ -206,6 +278,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
   lookout: {
     id: 'lookout',
+    bribable: true,
     name: 'Lookout',
     look: 'lookout',
     level: 6,
@@ -215,6 +288,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // The night of the attack (Oct 17): the officer leading the marines into the caney.
   marine_lieutenant: {
     id: 'marine_lieutenant',
+    bribable: true,
     name: 'Marine lieutenant',
     look: 'marine_lieutenant',
     level: 6,
@@ -242,8 +316,164 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     // first time and 37 in 40 at the boss Grudge, and Sunthread every turn still wins every time.
     hpScale: 0.9,
   },
+  // ---- Chapter 3, Ardencia (outline section 5; review section 7) ----------------------------------------
+  // The Cinder Flats: salamanders in the hot cracks, bats in the lava tubes (drawn: ENEMY_ART), and Brasador
+  // halberdiers (drawn from their walking sprites until art drop 2).
+  cinder_salamander: {
+    id: 'cinder_salamander',
+    name: 'Cinder Salamander',
+    look: 'cinder_salamander',
+    level: 8,
+    role: 'caster',
+    moves: [
+      { name: 'Ember Spit', power: 95, magic: true },
+      { name: 'Flare', power: 150, magic: true, every: 3, tell: 'The salamander swells, its back glowing white...' },
+    ],
+    weak: ['water'],
+    resist: ['fire'],
+  },
+  cave_bat: {
+    id: 'cave_bat',
+    name: 'Cave Bat',
+    look: 'cave_bat',
+    level: 8,
+    role: 'skirmisher',
+    // Screech (COMBAT's Fogged is not built: Claude's call, Oct 21): it leaves the party Weakened instead.
+    moves: [
+      { name: 'Bite', power: 95 },
+      { name: 'Screech', power: 60, area: true, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The bats wheel up into the roof, all at once...' },
+    ],
+    weak: ['light'],
+  },
+  brasador_halberdier: {
+    id: 'brasador_halberdier',
+    name: 'Brasador Halberdier',
+    look: 'brasador_halberdier',
+    level: 9,
+    role: 'tank',
+    moves: [
+      { name: 'Halberd', power: 105 },
+      { name: 'Hook', power: 90, statuses: ['stunned'], chance: 0.5, every: 3, tell: 'The halberdier turns his blade, hook first...' },
+    ],
+  },
+  // The Trial of Blades (the outline 4.2, retuned by its review 3.3 and 7): Rael, Lord of Ardencia, level 13, a
+  // tank at 3 times HP and 1.2 ATK, wearing La Promesa de Benny (owner decision 2: its Last Stand is his
+  // HP floor). He never targets Anissa (she cannot be hit): his Seize goes for her Spark and Gianna steps in.
+  // Phase 1 is his alone; Captain Azriel Rivera and Jaime walk in at phase 2.
+  rael: {
+    id: 'rael',
+    name: 'Rael',
+    look: 'rael',
+    level: 13,
+    role: 'tank',
+    boss: true,
+    hpScale: 3,
+    atkScale: 1.2,
+    atkPerBound: 0.1,
+    floor: { hp: 1, text: 'La Promesa de Benny glows on his wrist. Rael stands.' },
+    moves: [
+      { name: 'Sword', power: 110 },
+      { name: 'La Marca', power: 90, statuses: ['marked'], every: 2 },
+      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], turns: 2, every: 3, tell: 'He is looking at Anissa, not at you.' },
+    ],
+  },
+  // Captain Azriel Rivera of the royal guard (owner direction, Oct 21): the wall. Most blows meant for Rael go to
+  // him; at 0 HP he steps back from the sand.
+  rivera: {
+    id: 'rivera',
+    name: 'Captain Rivera',
+    look: 'rivera',
+    level: 13,
+    role: 'tank',
+    protects: 'rael',
+    withdraws: { line: 'Stand back, Captain.', speaker: 'Rael' },
+    moves: [
+      { name: 'Halberd', power: 100 },
+      { name: 'Hook', power: 85, statuses: ['stunned'], chance: 0.5, every: 3, tell: 'Rivera turns his halberd, hook first, and watches Yari...' },
+    ],
+  },
+  // Jaime, Rael's advisor and a strong mage: a ward on his lord, and one area spell he takes his time over.
+  jaime: {
+    id: 'jaime',
+    name: 'Jaime',
+    look: 'jaime',
+    level: 13,
+    role: 'caster',
+    withdraws: { line: 'Enough, Jaime. Step back.', speaker: 'Rael' },
+    moves: [
+      { name: 'Ash Bolt', power: 85, magic: true },
+      { name: 'Ward of Ash', power: 0, ally: 'rael', statuses: ['warded'], every: 3 },
+      { name: 'Ash Storm', power: 100, magic: true, area: true, every: 4, tell: 'Jaime lifts both hands. The air over the sand begins to burn...' },
+    ],
+  },
+  // ---- Chapter 4, Al-Doria (the outline section 4 and 5, with its review 3.1 and 3.7) ----------------------------
+  // The guild's blades in green, and the caravan road's raiders: a curved blade, and a fistful of sand in the eyes
+  // (COMBAT's Fogged is not built: it leaves the fighter Weakened, as the bats' Screech does). They take a purse.
+  caravan_raider: {
+    id: 'caravan_raider',
+    name: 'Caravan Raider',
+    look: 'caravan_raider',
+    level: 13,
+    role: 'skirmisher',
+    bribable: true,
+    moves: [
+      { name: 'Scimitar', power: 115 },
+      { name: 'Sand Toss', power: 70, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The raider scoops up a fistful of sand...' },
+    ],
+  },
+  // Guildmaster Qasim (review 3.1): level 14, a brute at 3.5 times HP and 1.1 ATK, the threat in what he buys. Phase 1
+  // he hires a blade every third turn (HIRE_CAP on the field at once); at 40% he forecloses: Seize Assets once (every
+  // fighter Weakened, telegraphed), then the Golden Wall (damage taken halved, its turns, a Surge shatters it). At 0
+  // HP he yields and his blades walk out with him (the Yield step's fallback, as Thorne's fight ends on the win).
+  qasim: {
+    id: 'qasim',
+    name: 'Guildmaster Qasim',
+    look: 'qasim',
+    level: 14,
+    role: 'brute',
+    boss: true,
+    hpScale: 4,
+    atkScale: 1.4,
+    withdraws: { line: 'Enough. Enough! Name your fee.', speaker: 'Qasim' },
+    moves: [
+      { name: 'Cane', power: 120 },
+      { name: 'Hire Blades', power: 0, hire: 'caravan_raider', every: 2, tell: 'Qasim rattles a purse at the stair. "Blades! The guild pays double!"' },
+    ],
+  },
+  // Chapter 5 (the outline 7.1 with its second review 3.3): the Crown's own deserters at the Seat's crossroads, in old
+  // coats. Nobody falls: each withdraws at 0 HP (there is no floor, so the fight always ends), and when the Sergeant
+  // yields his men step back with him. Rally Inspires a man of his (an ally move); no "Order" (no engine for it).
+  deserter_sergeant: {
+    id: 'deserter_sergeant',
+    bribable: true,
+    name: 'Deserter Sergeant',
+    look: 'deserter_sergeant',
+    level: 15,
+    role: 'brute',
+    boss: true,
+    hpScale: 2,
+    withdraws: { line: "Enough. Enough. We're hungry, not dead.", speaker: 'Sergeant' },
+    moves: [
+      { name: 'Bayonet', power: 115 },
+      { name: 'Rally', power: 0, ally: 'deserter', statuses: ['inspired'], every: 3, tell: 'The Sergeant barks at his men: "On your feet! Form up!"' },
+    ],
+  },
+  deserter: {
+    id: 'deserter',
+    bribable: true,
+    name: 'Deserter',
+    look: 'deserter',
+    level: 14,
+    role: 'skirmisher',
+    withdraws: { line: 'The deserter steps back, bayonet down.' },
+    moves: [
+      { name: 'Bayonet', power: 105 },
+      { name: 'Hungry lunge', power: 150, every: 3, tell: 'A deserter crouches low, eyes on your bags...' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
+    bribable: true,
     name: 'Marine sergeant',
     look: 'marine_sergeant',
     level: 4,
@@ -255,7 +485,128 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
 };
 
+/** Rael's moves once the guards are in (phase 2, Unleashed) and once he is cornered (phase 3). */
+const RAEL_UNLEASHED: readonly EnemyMove[] = [
+  { name: 'Sword', power: 110 },
+  { name: 'Grito de Guerra', power: 60, statuses: ['stunned'], every: 2, tell: 'Rael draws a long breath. The gallery goes quiet...' },
+  { name: 'La Marca', power: 90, statuses: ['marked'], every: 3 },
+];
+const RAEL_CORNERED: readonly EnemyMove[] = [
+  { name: 'Sword', power: 115 },
+  {
+    name: 'Reinado de Cenizas', power: 130, powerPerBound: 40, area: true, every: 2, once: true,
+    tell: 'Rael lifts his blade over his head. The sand around him starts to smoke. Guard, everyone!',
+  },
+];
+
+/** Qasim once the guild's money is gone (phase 2, Foreclosure): no more hiring; he seizes, then walls himself in gold. */
+const QASIM_FORECLOSURE: readonly EnemyMove[] = [
+  { name: 'Cane', power: 160 },
+  {
+    name: 'Seize Assets', power: 230, area: true, statuses: ['weakened'], every: 2, once: true,
+    tell: 'Qasim opens the guild ledger at your names. "Seize their assets." Guard, everyone!',
+  },
+  { name: 'Golden Wall', power: 0, ally: 'qasim', statuses: ['gilded'], every: 3, tell: 'Qasim kicks open a strongbox and stacks the gold in front of him!' },
+];
+
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 4: Guildmaster Qasim in the guild vault (the outline beat 8, its review 3.1). Game Over applies; the way
+  // back in is the blade at the stair foot. Samira has joined before it, so it teaches Bribe and her Daftar.
+  qasim_vault: {
+    id: 'qasim_vault',
+    title: "The Guild's Blades",
+    backdrop: 'guild_vault',
+    enemies: ['qasim', 'caravan_raider', 'caravan_raider'],
+    table: 'aldoria_story',
+    group: 'qasim',
+    rewards: { xp: 200, gold: 200 },
+    endsWithBoss: true,
+    phases: [{ below: 0.6, speaker: 'Qasim', text: 'Then I foreclose.', moves: QASIM_FORECLOSURE }],
+    tips: {
+      start: 'Gigi, Samira can Bribe a blade. The ones he hires were paid already: their purse comes back to her.',
+      spark: 'Gigi, Surge! The wall!',
+      tell: 'Guard, everyone!',
+      lowHp: "Samira's Remedy costs gold, Gigi. It heals a lot.",
+    },
+  },
+  // Chapter 5: Deserters' Road (Se-3). Game Over applies; the way back in is the camp itself (its trigger plays again
+  // until the fight is won). Paid flat, not by the ambush rule (review 3.5: one or the other, and the level curve).
+  deserters_road: {
+    id: 'deserters_road',
+    title: "Deserters' Road",
+    backdrop: 'crossroads',
+    // Each at his own level: the Sergeant 15, his men 14.
+    enemies: ['deserter_sergeant', 'deserter', 'deserter'],
+    table: 'seat_story',
+    group: 'deserters',
+    rewards: { xp: 60, gold: 120 },
+    endsWithBoss: true,
+    sideQuest: 'deserters',
+    tips: {
+      start: "They're hungry, Gigi, not cruel. When the Sergeant gives up, they all will.",
+      spark: 'Surge, Gigi!',
+      tell: 'They are going for the bags! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 3: the Trial of Blades (meant to be lost: no goddess, no count, no Grudge, no Yield; outline 4.2 and
+  // its review). Members are Bound at 0 HP. Rael wins whatever the party does: he ends it at the first of every
+  // fighter Bound, La Promesa holding him at 1 HP, three of his turns after Reinado de Cenizas, or the round cap.
+  rael_trial: {
+    id: 'rael_trial',
+    title: 'The Trial of Blades',
+    backdrop: 'duel_court',
+    enemies: ['rael'],
+    table: 'ardencia_story',
+    group: 'rael',
+    rewards: { xp: 0, gold: 0 },
+    meantToLose: { scene: 'rael_after', set: { 'story.trial_fought': true } },
+    binds: true,
+    phases: [
+      {
+        below: 0.66,
+        onSurge: true,
+        speaker: 'Rael',
+        text: 'Good.',
+        moves: RAEL_UNLEASHED,
+        enter: ['rivera', 'jaime'],
+        enterText: 'Captain Rivera and Jaime step onto the sand beside their lord.',
+      },
+      { below: 0.33, speaker: 'Rael', text: 'Again.', moves: RAEL_CORNERED },
+    ],
+    finale: {
+      boss: 'rael',
+      line: 'Enough.',
+      move: 'Cenizas',
+      text: 'Ash rises off the sand in a ring. When it settles, every one of them is on their knees, cords at their wrists.',
+      finisher: 'Reinado de Cenizas',
+      turnsAfter: TRIAL_TURNS_AFTER_FINISHER,
+    },
+    tips: {
+      start: 'Gigi... he isn\'t angry. That\'s worse.',
+      spark: 'Take my light, Gigi. Now.',
+      tell: 'Guard, Gigi! Yari!',
+      lowHp: 'Heal, Gigi. Please.',
+    },
+  },
+  // Chapter 3: Benny's tunnel (outline beat 8): Azzy's first fight, in the front row. Paid below the ambush rule on
+  // purpose (the outline's levels table counts 120 XP).
+  tunnel_bats: {
+    id: 'tunnel_bats',
+    title: "Benny's Tunnel",
+    backdrop: 'lava_tube',
+    enemies: ['cave_bat', 'cave_bat', 'cave_bat'],
+    level: 10,
+    table: 'ardencia_story',
+    group: 'bats',
+    rewards: { xp: 120, gold: 40 },
+    tips: {
+      start: 'Azzy is in front now, Gigi. They can\'t reach you past him. Let him mark one with La Marca.',
+      spark: 'Surge, Gigi!',
+      tell: 'They\'re going to scream! Guard!',
+      lowHp: 'Heal, Gigi!',
+    },
+  },
   // Chapter 2: the first fight in Yucayeque, on the pier the ferry lands at.
   pier_marines: {
     id: 'pier_marines',
@@ -399,6 +750,10 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
 const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   mountain_path: { title: 'The Mountain Path', backdrop: 'mountain_path' },
   cane_road: { title: 'The Cane Road', backdrop: 'cane_road' },
+  cinder_flats: { title: 'The Cinder Flats', backdrop: 'cinder_flats' },
+  cinder_patrols: { title: 'The Sea Road', backdrop: 'cinder_flats' },
+  desert_edge: { title: 'The Desert Edge', backdrop: 'desert_edge' },
+  crossroads: { title: 'The Crossroads Fields', backdrop: 'crossroads' },
 };
 
 /**
@@ -426,4 +781,14 @@ export function battleDef(id: string): BattleDef | undefined {
     group: groupId!,
     rewards: { xp: ENCOUNTER_XP_PER_LEVEL * group.level * foes, gold: ENCOUNTER_GOLD_PER_LEVEL * group.level * foes },
   };
+}
+
+/**
+ * The foes who can walk into a fight once it has begun, by enemy id: a boss phase's guards (Rivera and Jaime in the
+ * Trial of Blades) and the blades a boss hires (Qasim). The battle scene and the simulators build the reserve here.
+ */
+export function battleReserve(def: Pick<BattleDef, 'enemies' | 'phases'>): Record<string, EnemyDef> {
+  const moves = [...def.enemies.flatMap((id) => ENEMIES[id]?.moves ?? []), ...(def.phases ?? []).flatMap((p) => p.moves ?? [])];
+  const ids = [...(def.phases ?? []).flatMap((p) => p.enter ?? []), ...moves.flatMap((m) => (m.hire ? [m.hire] : []))];
+  return Object.fromEntries(ids.filter((id) => ENEMIES[id]).map((id) => [id, ENEMIES[id]!]));
 }

@@ -973,13 +973,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     say(Y, 'They took my father, Marshal. They said the seventh clause gives them our harbor. Our oath stone says nothing of it.'),
     say('patricio_old', 'Because there was no seventh clause when we swore. I would remember. I signed under Caona\'s name.'),
     say('patricio_old', 'The whole city is uneasy. Crown ships sighted off the south reef. People ask me if we are next.'),
-    say('patricio_old', 'Gianna. Benny\'s grandson rules Ardencia now. Lord Rael. They call him ruthless. Benny swore that oath with us.'),
-    say('patricio_old', 'Go to Ardencia. Ask him to stand with Xaraguá, as his grandfather did. Take Yari. Take your papers.'),
+    say('patricio_old', 'Gianna. Benny\'s son rules Ardencia now. Lord Rael. They call him ruthless. Benny swore that oath with us.'),
+    say('patricio_old', 'Go to Ardencia. Ask him to stand with Xaraguá, as his father did. Take Yari. Take your papers.'),
     say(G, 'And if he says no?'),
-    { speaker: 'patricio_old', text: 'Then ask him why his grandfather said yes.', set: { 'story.ardencia_asked': true, 'act2.complete': true } },
+    { speaker: 'patricio_old', text: 'Then ask him why his father said yes.', set: { 'story.ardencia_asked': true, 'act2.complete': true } },
   ]),
   simple('patricio_home_talk', [
-    say('patricio_old', 'Ardencia is east, past the Cane Road. Rael will test you before he listens. Benny always did.'),
+    say('patricio_old', 'Ardencia is across the strait. The trader that brought you home sails again at noon.'),
+    say('patricio_old', 'Rael will test you before he listens. Benny always did.'),
   ]),
   simple('anicette_home_talk', [
     say('anicette', 'Eat something before you go anywhere. Governors and lords can wait for soup.'),

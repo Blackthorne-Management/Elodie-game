@@ -288,7 +288,241 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     closedText: 'Closed: the fire is out. The pilgrim is gone.',
     reward: { xp: 30 },
   },
+  // ---- Chapter 3, Cenizal (outline section 7): the two required side quests and the debate --------------
+  // The Treasurer's Daughter (Ar-2; puzzle M-ARD-1): the records room, Benny's office in the Echo, the niche behind
+  // the tapestry; the steward Zelia opens the room, and at the end takes Gianna to the old lord (FAMILY.md).
+  {
+    id: 'treasurer',
+    title: "The Treasurer's Daughter",
+    giver: "The treasurer's daughter",
+    place: 'The Alcázar',
+    level: 9,
+    summary:
+      'Her father, the city treasurer, "retired" eleven years ago and never came home. His last ledger should be in the Alcázar\'s records room.',
+    accepted: f('side.treasurer.accepted'),
+    available: f('story.trial_set'),
+    start: [{ map: 'ardencia-alcazar', at: { x: 11, y: 8 } }],
+    nudge: 'The young woman at the hall gate has been standing there a long time, Gigi. Ask her.',
+    steps: [
+      { text: 'Ask the steward to open the records room (the Alcázar).', done: f('side.treasurer.zelia'), goals: [{ map: 'ardencia-alcazar', at: { x: 15, y: 5 } }] },
+      { text: 'Look for the last ledger on the treasurers\' shelf.', done: f('side.treasurer.shelf'), goals: [{ map: 'ardencia-alcazar', at: { x: 27, y: 2 } }] },
+      { text: 'The air shimmers in the records room. Ask the memory where treasurers hid their copies.', done: f('clue.niche'), goals: [{ map: 'ardencia-alcazar', at: { x: 26, y: 6 } }], echoGoals: [{ map: 'ardencia-alcazar', at: { x: 30, y: 6 } }] },
+      { text: 'Back in the present, look behind the tapestry on the east wall.', done: f('clue.treasurer_alive'), goals: [{ map: 'ardencia-alcazar', at: { x: 32, y: 6 } }], echoGoals: [{ map: 'ardencia-alcazar', at: { x: 26, y: 6 } }] },
+      { text: "Tell the treasurer's daughter.", done: f('side.treasurer.told'), goals: [{ map: 'ardencia-alcazar', at: { x: 11, y: 8 } }] },
+      {
+        text: 'The steward has a message for you.',
+        done: f('side.treasurer.done'),
+        goals: [
+          { if: f('side.treasurer.benny_open'), map: 'ardencia-alcazar', at: { x: 3, y: 15 } },
+          { map: 'ardencia-alcazar', at: { x: 21, y: 8 } },
+        ],
+      },
+    ],
+    done: f('side.treasurer.done'),
+    reward: { gold: 100, xp: 70, items: [{ id: 'bennys_refusal', n: 1 }], pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
+  },
+  // The Lower Town's debate, as a required quest (outline 7.3): Is a thief who feeds the hungry a thief?
+  {
+    id: 'thief',
+    title: 'Bread and the Oath',
+    giver: "Baker's widow",
+    place: 'The Lower Town',
+    level: 9,
+    summary:
+      'By the soup line, a baker\'s widow and a Witness oath-knight argue: is a thief who feeds the hungry a thief? Hear them out, then make your case.',
+    accepted: { any: [f('debate.ardencia_bread.listened'), f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] },
+    available: f('story.trial_set'),
+    start: [{ map: 'ardencia-lower', at: { x: 18, y: 13 } }],
+    nudge: "They're arguing by the soup line about whether stealing bread is stealing. The old library would give you an answer.",
+    steps: [
+      { text: 'Listen to the debate in the Lower Town.', done: f('debate.ardencia_bread.listened'), goals: [{ map: 'ardencia-lower', at: { x: 18, y: 13 } }] },
+      {
+        text: 'Join the debate and argue all three rounds, or mediate.',
+        done: { any: [f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] },
+        goals: [{ map: 'ardencia-lower', at: { x: 18, y: 13 } }],
+      },
+    ],
+    done: { any: [f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] },
+    reward: { xp: 40 },
+  },
+  // Bread at Night (Ar-1; the rebel safehouse): Azzy's own question. The cook is Amanda, Benny's daughter (FAMILY.md).
+  {
+    id: 'bread',
+    title: 'Bread at Night',
+    giver: 'Azzy',
+    place: 'The court gate',
+    level: 10,
+    summary:
+      "Azzy: his father's poor are not starving, and he does not know why. There is soup in the Lower Town every day, and no one says who pays.",
+    accepted: f('side.bread.accepted'),
+    available: { all: [f('side.treasurer.done'), { any: [f('debate.ardencia_bread.joined'), f('debate.ardencia_bread.mediated')] }] },
+    start: [{ map: 'ardencia-town', at: { x: 28, y: 8 } }],
+    nudge: "Azzy said his father's poor are not starving and he doesn't know why. He wants to show you tonight.",
+    steps: [
+      { text: 'Ask the Lower Town\'s cook who pays for the soup.', done: f('side.bread.cook'), goals: [{ map: 'ardencia-lower', at: { x: 12, y: 6 } }] },
+      { text: 'Look at the barrels by her kitchen door.', done: f('side.bread.thumb'), goals: [{ map: 'ardencia-lower', at: { x: 14, y: 5 } }] },
+      { text: 'Find Azzy at the Lower Town gate, and wait for dark.', done: { any: [f('story.cart_night'), f('side.bread.done')] }, goals: [{ map: 'ardencia-lower', at: { x: 29, y: 11 } }] },
+      { text: 'Watch the lane from the corner by the old well.', done: f('side.bread.done'), goals: [{ map: 'ardencia-lower', at: { x: 18, y: 5 } }] },
+    ],
+    done: f('side.bread.done'),
+    reward: { gold: 150, xp: 80, pillar: { pillar: 'influence', city: 'ardencia', amount: 1 } },
+  },
+  // ---- Chapter 4, Bab al-Dhahab (outline section 7, with its review): the two required side quests and the debate --
+  // Appraise This (A-1; puzzle M-ALD-1): Samira's bet, three stalls, three fakes. Coralie counts the carpet's knots.
+  {
+    id: 'appraise',
+    title: 'Appraise This',
+    giver: 'Samira',
+    place: "The moneychangers' row",
+    level: 12,
+    summary:
+      'Samira bets you cannot spot a fake. Three stalls on the row each sell one fake among real goods: coins, carpets, weights. Find all three.',
+    accepted: f('side.appraise.accepted'),
+    // Samira bets on the Majlis steps (her stall is empty before).
+    available: f('story.samira_steps'),
+    start: [{ map: 'aldoria-bazaar', at: { x: 11, y: 22 } }],
+    nudge: 'Samira bet you can\'t spot a fake, Gigi. She was smiling when she said it. I think she wants you to win.',
+    parallel: true,
+    steps: [
+      { text: 'Find the fake coin at the coin stall.', done: f('side.appraise.coin'), goals: [{ map: 'aldoria-bazaar', at: { x: 15, y: 21 } }] },
+      { text: 'Find the fake carpet at the carpet stall.', done: f('side.appraise.carpet'), goals: [{ map: 'aldoria-bazaar', at: { x: 18, y: 21 } }] },
+      { text: 'Find the fake weight at the weights stall.', done: f('side.appraise.weights'), goals: [{ map: 'aldoria-bazaar', at: { x: 21, y: 21 } }] },
+      { text: 'Tell Samira all three.', done: f('side.appraise.done'), goals: [{ map: 'aldoria-bazaar', at: { x: 11, y: 22 } }] },
+    ],
+    done: f('side.appraise.done'),
+    reward: { gold: 100, xp: 110, pillar: { pillar: 'influence', city: 'al_doria', amount: 1 } },
+  },
+  // The souk square's debate, as a required quest (outline 7.3): Is a bad bargain still sacred?
+  {
+    id: 'bargain',
+    title: 'A Bad Bargain',
+    giver: 'Contract-priest',
+    place: 'The souk square',
+    level: 12,
+    summary:
+      'By the dry fountain, a Witness contract-priest and a Gaze merchant argue: is a bad bargain still sacred? Hear them out, then make your case.',
+    accepted: { any: [f('debate.aldoria_bargain.listened'), f('debate.aldoria_bargain.settled')] },
+    available: f('story.vault_refused'),
+    start: [{ map: 'aldoria-bazaar', at: { x: 18, y: 13 } }],
+    nudge: 'A priest and a merchant are arguing by the fountain about bad bargains. The ledger house would know.',
+    steps: [
+      { text: 'Listen to the debate by the dry fountain.', done: f('debate.aldoria_bargain.listened'), goals: [{ map: 'aldoria-bazaar', at: { x: 18, y: 13 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.aldoria_bargain.settled'), goals: [{ map: 'aldoria-bazaar', at: { x: 18, y: 13 } }] },
+    ],
+    done: f('debate.aldoria_bargain.settled'),
+    reward: { xp: 40 },
+  },
+  // Sweet Water (A-3; the rebel safehouse; puzzle M-ALD-2, the cistern pin): the third ash thumbprint.
+  {
+    id: 'sweet_water',
+    title: 'Sweet Water',
+    giver: 'The children at the fountain',
+    place: 'The souk square',
+    level: 12,
+    summary:
+      'The square\'s fountain stopped when the guild put in its pipes. Now water is a copper a cup, and the children on the rim have empty cups.',
+    accepted: f('side.sweet_water.accepted'),
+    available: f('story.vault_refused'),
+    start: [{ map: 'aldoria-bazaar', at: { x: 21, y: 14 } }],
+    nudge: 'The children on the fountain rim have cups and nothing in them, Gigi. Ask them.',
+    steps: [
+      { text: "Find the water-carrier: her door is east of the square, with a grey mark on it.", done: f('side.sweet_water.carrier'), goals: [{ map: 'aldoria-bazaar', at: { x: 36, y: 12 } }] },
+      {
+        text: 'The old cistern gate, out past the caravan gate. The air shimmers over it.',
+        done: f('anchor.cistern_pin'),
+        goals: [
+          { if: f('story.cistern_seen'), map: 'aldoria-desert', at: { x: 29, y: 7 } },
+          { map: 'aldoria-desert', at: { x: 30, y: 6 } },
+        ],
+        // In the memory: the gate, loose on its pin.
+        echoGoals: [{ map: 'aldoria-desert', at: { x: 31, y: 5 } }],
+      },
+      {
+        text: 'Back to the fountain in the square.',
+        done: f('side.sweet_water.done'),
+        goals: [{ map: 'aldoria-bazaar', at: { x: 22, y: 15 } }],
+        // Still in the memory: the shimmer back out.
+        echoGoals: [{ map: 'aldoria-desert', at: { x: 29, y: 7 } }],
+      },
+    ],
+    done: f('side.sweet_water.done'),
+    reward: { gold: 120, xp: 130, pillar: { pillar: 'influence', city: 'al_doria', amount: 2 } },
+  },
+  // ---- Chapter 5, Eightgate (the outline section 7, with its second review): two required side quests and the debate --
+  // A Seat for Every House (Se-5, stage 1 of 2: the petition round). Yari carries Xaraguá's Petition of Breach to every
+  // chamber in the Throne Hall: seven doors and a wall. Stage 2 (the houses' tokens) runs through Chapters 6 to 12.
+  {
+    id: 'seats',
+    title: 'A Seat for Every House',
+    giver: 'The Master of the Chairs',
+    place: 'The Throne Hall',
+    level: 14,
+    summary:
+      "Xaraguá's Petition of Breach was received forty-nine years ago and never carried to a chamber. Yari has the copies. Carry one to every door.",
+    accepted: f('side.seats.accepted'),
+    available: f('story.elodie_hall'),
+    start: [{ map: 'seat-hall', at: { x: 33, y: 27 } }],
+    nudge: "Yari's paper, Gigi. She wants every house to read it. The Master of the Chairs is by the Hall's door.",
+    parallel: true,
+    steps: [
+      { text: "Al-Doria's envoy (the west wall).", done: f('side.seats.al_doria'), goals: [{ map: 'seat-hall', at: { x: 2, y: 23 } }] },
+      { text: "Skarragol's envoy (the east wall).", done: f('side.seats.skarragol'), goals: [{ map: 'seat-hall', at: { x: 41, y: 15 } }] },
+      { text: "Kuroshi's envoy (the east wall).", done: f('side.seats.kuroshi'), goals: [{ map: 'seat-hall', at: { x: 41, y: 19 } }] },
+      { text: "Jwaladesh's envoy (the east wall).", done: f('side.seats.jwaladesh'), goals: [{ map: 'seat-hall', at: { x: 41, y: 23 } }] },
+      { text: "Aldermoor's legate (the east wall).", done: f('side.seats.aldermoor'), goals: [{ map: 'seat-hall', at: { x: 41, y: 11 } }] },
+      { text: "Ardencia's chamber (the west wall).", done: f('side.seats.ardencia'), goals: [{ map: 'seat-hall', at: { x: 1, y: 19 } }] },
+      { text: "Zetwal's envoy: Mother (the west wall).", done: f('side.seats.zetwal'), goals: [{ map: 'seat-hall', at: { x: 2, y: 11 } }] },
+      { text: "Xaraguá's door, bricked (the west wall).", done: f('side.seats.xaragua'), goals: [{ map: 'seat-hall', at: { x: 1, y: 15 } }] },
+      { text: 'Back to the Master of the Chairs.', done: f('side.seats.stage1'), goals: [{ map: 'seat-hall', at: { x: 32, y: 28 } }] },
+    ],
+    done: f('side.seats.stage1'),
+    reward: { gold: 100, xp: 30, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
+  },
+  // The fountain's debate, as a required quest (Se-2 Four Voices; the outline 7.3): Who may sit the Throne?
+  {
+    id: 'voices',
+    title: 'Four Voices',
+    giver: 'Gaze keeper',
+    place: 'The Concourse fountain',
+    level: 14,
+    summary:
+      "Four people of four faiths argue at the fountain about who may sit the Throne. Your family's chair. Hear them out, then make your case.",
+    accepted: { any: [f('debate.seat_voices.listened'), f('debate.seat_voices.settled')] },
+    available: f('story.coco_plan'),
+    start: [{ map: 'seat-concourse', at: { x: 21, y: 16 } }],
+    nudge: "The fountain's four people are all talking about our family's chair, Gigi. The Hall has books.",
+    steps: [
+      { text: 'Listen to the debate at the fountain.', done: f('debate.seat_voices.listened'), goals: [{ map: 'seat-concourse', at: { x: 21, y: 16 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.seat_voices.settled'), goals: [{ map: 'seat-concourse', at: { x: 21, y: 16 } }] },
+    ],
+    done: f('debate.seat_voices.settled'),
+    reward: { xp: 20, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
+  },
+  // Deserters' Road (Se-3; the chapter's fights): the Crown's own deserters rob pilgrims at the crossroads. The fight
+  // ends by their withdrawal, then a Parley on the map (three answers, all remembered for the War of the Harbor).
+  {
+    id: 'deserters',
+    title: "Deserters' Road",
+    giver: 'Bandaged pilgrim',
+    place: "The Gold Gate's yard",
+    level: 14,
+    summary:
+      'Pilgrims were robbed at the crossroads outside the walls by men in Crown coats. The Regent\'s clerks say there are no deserters.',
+    accepted: f('side.deserters.accepted'),
+    available: f('story.coco_plan'),
+    start: [{ map: 'seat-gateyard', at: { x: 6, y: 15 } }],
+    nudge: 'The pilgrims by the gate are hurt, Gigi. Nobody is helping them.',
+    steps: [
+      { text: 'The crossroads, south of the gate yard: the deserters\' camp.', done: f('side.deserters.fought'), goals: [{ map: 'seat-fields', at: { x: 30, y: 16 } }] },
+      { text: 'Back to the pilgrims in the gate yard.', done: f('side.deserters.done'), goals: [{ map: 'seat-gateyard', at: { x: 6, y: 15 } }] },
+    ],
+    done: f('side.deserters.done'),
+    reward: { gold: 60, xp: 30, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
+  },
 ];
+
+/** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */
+export const CHAPTER5_QUESTS_DONE: Condition = { all: [f('side.seats.stage1'), f('debate.seat_voices.settled'), f('side.deserters.done')] };
 
 /** Chapter 2's five side quests, all done: the lamp-oil seller lends the lamp at dusk (data/quests.ts `dusk`). */
 export const CHAPTER2_QUESTS = ['nets', 'hutia', 'oil', 'medicine', 'springs'] as const;

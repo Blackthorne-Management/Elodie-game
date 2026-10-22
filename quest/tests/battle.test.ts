@@ -258,7 +258,7 @@ describe('the first battle (the boar on the Cane Road)', () => {
     expect(b.outcome).toBe('won');
     const before = gold(flags, RPG);
     const r = settleBattle(flags, RPG, b);
-    expect(r).toEqual({ xp: 40, gold: 12, items: [{ id: 'boar_tusk', n: 1 }] });
+    expect(r).toEqual({ xp: 40, gold: 12, spent: 0, items: [{ id: 'boar_tusk', n: 1 }] });
     expect(gold(flags, RPG)).toBe(before + 12);
     expect(xp(flags, RPG, 'gianna')).toBeGreaterThanOrEqual(40);
     expect(itemCount(flags, 'boar_tusk')).toBe(1);

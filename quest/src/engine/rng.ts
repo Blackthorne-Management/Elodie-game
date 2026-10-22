@@ -33,3 +33,13 @@ export class Rng {
     return this.state;
   }
 }
+
+/** A seed from text (FNV-1a, 32 bits; never 0), so a name such as a fight and its attempt always gives the same dice. */
+export function seedFrom(text: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h || 1;
+}

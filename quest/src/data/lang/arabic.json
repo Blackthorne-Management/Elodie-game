@@ -1,0 +1,17 @@
+{
+  "language": "Arabic (Al-Doria)",
+  "note": "Arabic words and names the quest uses in Al-Doria (House Dorini, Chapter 4). Every entry must be checked by a fluent speaker before release (guide 8; the Opus review asks for it per chapter); verified stays false until then.",
+  "entries": [
+    { "word": "Ahlan wa sahlan", "language": "Arabic", "translation": "Welcome (literally: you are among family, on easy ground)", "verified": false },
+    { "word": "Ahlan", "language": "Arabic", "translation": "Hello, welcome", "verified": false },
+    { "word": "Tfaddal", "language": "Arabic (Levantine)", "translation": "Please, go ahead; here you are", "verified": false },
+    { "word": "Yalla", "language": "Arabic", "translation": "Come on, let's go", "verified": false },
+    { "word": "Habibti", "language": "Arabic", "translation": "My dear (to a girl or woman)", "verified": false },
+    { "word": "Bab al-Dhahab", "language": "Arabic", "translation": "The Gate of Gold (the capital of Al-Doria)", "verified": false },
+    { "word": "Majlis", "language": "Arabic", "translation": "A council, and the hall it sits in", "verified": false },
+    { "word": "Daftar", "language": "Arabic (from Persian)", "translation": "A ledger, an account book", "verified": false },
+    { "word": "Baraka", "language": "Arabic", "translation": "Blessing, good fortune", "verified": false },
+    { "word": "Sakk", "language": "Arabic", "translation": "A written deed or cheque (Samira's coupon, after the release)", "verified": false },
+    { "word": "Dinar", "language": "Arabic", "translation": "A gold coin", "verified": false }
+  ]
+}

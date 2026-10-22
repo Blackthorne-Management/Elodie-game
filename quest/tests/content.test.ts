@@ -27,10 +27,14 @@ function flagsSet(): Set<string> {
   for (const c of CONTENT.cards) out.add(`card.${c.id}`);
   // A won battle sets its encounter flag (engine/battle.ts settleBattle).
   for (const b of Object.values(BATTLES)) out.add(encounterFlag(b.table, b.group, 'won'));
+  // A fight meant to be lost sets its own flags as it ends (engine/gameOver.ts recordLoss: the Trial of Blades).
+  for (const b of Object.values(BATTLES)) for (const f of Object.keys(b.meantToLose?.set ?? {})) out.add(f);
   // A debate sets its outcome flags (engine/debate.ts).
-  for (const d of DEBATES) for (const o of ['listened', 'joined', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
+  for (const d of DEBATES) for (const o of ['listened', 'joined', 'settled', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
   // A rhythm lock played right sets its success flags (engine/game.ts finishRhythm).
   for (const r of Object.values(CONTENT.rhythms ?? {})) for (const f of Object.keys(r.success)) out.add(f);
+  // The purse (engine/rpg.ts gold): fights, rewards, shops and Samira's price in a conversation set it.
+  out.add('gold');
   return out;
 }
 

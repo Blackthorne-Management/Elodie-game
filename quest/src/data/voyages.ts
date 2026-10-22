@@ -49,4 +49,44 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 3 (outline beat 0): the trader that brought them home sails again, by day, north round Zetwal and west
+  // along the coast to Ardencia's sea road, under the black cliffs.
+  zetwal_ardencia: {
+    id: 'zetwal_ardencia',
+    harbor: 'Pòdlimyè, at noon',
+    paddle: 'The trader casts off from the long pier and swings out past the reef.',
+    aboard: 'The sails fill. Ardencia is across the strait.',
+    shore: 'zetwal',
+    start: { x: 119, y: 37 },
+    via: [{ x: 121, y: 9 }],
+    end: { x: 62, y: 14 },
+    captions: [
+      { at: 0, text: 'Out past the reefs of Zetwal...' },
+      { at: 0.35, text: 'North, then west along the coast...' },
+      { at: 0.75, text: '...to the black cliffs of Ardencia.' },
+    ],
+    music: 'farewell',
+  },
+  // Chapter 4 (outline beat 0, with its review 3.12): the trader sails at first light from the Free Brasador camp,
+  // out from Ardencia's north coast, east along the open sea, south past the reefs of Zetwal and down the open sea
+  // to Al-Doria's east coast, abreast of Bab al-Dhahab.
+  ardencia_aldoria: {
+    id: 'ardencia_aldoria',
+    harbor: 'The strand of Ardencia, at first light',
+    paddle: 'A Free Brasador fishing boat rows the party out to the Zetwal trader.',
+    aboard: 'All aboard. The sails fill. Ahead: Al-Doria.',
+    shore: 'ardencia',
+    start: { x: 62, y: 14 },
+    via: [
+      { x: 121, y: 9 },
+      { x: 124, y: 50 },
+    ],
+    end: { x: 117, y: 66 },
+    captions: [
+      { at: 0, text: 'Away from the black cliffs of Ardencia...' },
+      { at: 0.45, text: 'South, past the reefs of Zetwal...' },
+      { at: 0.8, text: '...to the Gate of Gold.' },
+    ],
+    music: 'farewell',
+  },
 };

@@ -371,6 +371,321 @@ export const BOOKS: readonly Book[] = [
       'Nothing else in the bundle is ever waived. The runner has circled it twice. ' +
       'Beside the circle, a question in the runner\'s own hand: who can make the Governor waive anything?',
   },
+  // ---- Ardencia: La Biblioteca Vieja and the Alcázar (Chapter 3) ----------------------------------
+  {
+    id: 'ardencia_brasador_count',
+    title: 'Ash Wars: The Brasador Count',
+    category: 'war',
+    text:
+      'Ardencia keeps its own count of the Ash Wars, and it does not sing. ' +
+      'Raiders burned the highland roads for three summers. The Crown sent letters. Lord Rael sent the grand army. ' +
+      'The count lists every column, every ford and every grave, and the name of the man who dug it. ' +
+      'It lists the prisoners too, by the hundred, and beside each hundred one word: released. ' +
+      'The songs in the taverns say otherwise. They say the ford ran red and the Lord laughed. ' +
+      'The clerk who copied this count has added a line at the bottom: "The Lord has read the songs. He has never ordered one stopped." ' +
+      'Nobody in Cenizal has ever explained why.',
+  },
+  {
+    id: 'ardencia_cendre',
+    title: 'The Ford of Cendre',
+    category: 'history',
+    text:
+      'Cendre is a ford on the highland road, a day north of Cenizal. Twenty-five years ago the Ash Wars ended there. ' +
+      'Lord Rael held the far bank with four hundred men. Beside him stood a young captain of the guard named Rivera. ' +
+      'The raiders came at dawn with Crown powder in their wagons, which the Crown has never explained either. ' +
+      'The fight lasted an hour. Rivera took a blade meant for the Lord and kept standing. ' +
+      'When it was over the Lord walked into the river to his knees and stood there until noon. ' +
+      'The soldiers say he was counting. The Crown chronicle says he was gloating. ' +
+      'Captain Rivera has never said, and he is the only one who would know.',
+  },
+  {
+    id: 'ardencia_oaths',
+    title: 'Oaths of the Ash Road',
+    category: 'law',
+    text:
+      'Every soldier of Ardencia swears the same oath on the same iron, in the duel court, before the elders. ' +
+      'Stand for the house. Do not steal from the house. Do not break the law of the blade. ' +
+      'The Witnesses, who keep the soldiers\' faith, teach that an oath binds the one who swears it, and no one else. ' +
+      'A soldier who steals has broken his oath. A hungry child who steals has sworn nothing, and has broken nothing. ' +
+      'The elders call this teaching dangerous. The Witnesses call it arithmetic. ' +
+      'The law says the oath-breaker answers to the house. It does not say who answers for a house that lets its people starve.',
+  },
+  {
+    id: 'ardencia_witness',
+    title: 'The Witness Among Soldiers',
+    category: 'religion',
+    text:
+      'The Witness is the soldiers\' faith in Ardencia, older than the Accord and younger than the forges. ' +
+      'It has no temple. It has the duel court, the barracks and the road. ' +
+      'A Witness believes the world keeps a ledger of every promise made in it. ' +
+      'Keep the promise, and the ledger balances. Break it, and someone pays, though not always the one who broke it. ' +
+      'So a Witness oath-knight carries the cost of other men\'s broken oaths, on purpose, as a kind of prayer. ' +
+      'The Gaze of Elodie remembers. The Witness keeps accounts. ' +
+      'In Cenizal, people say the difference between them is the difference between a mother and a banker.',
+  },
+  {
+    id: 'ardencia_iron_trade',
+    title: 'The Iron Trade',
+    category: 'trade',
+    text:
+      'Ardencia has iron and fire and almost nothing else. Every loaf in Cenizal was paid for in iron somewhere. ' +
+      'The Crown buys Brasador steel for its marines, and pays late. Zetwal buys it for its harbor chains, and pays on time. ' +
+      'Al-Doria lends against it, and charges for the pleasure. ' +
+      'Three years ago the iron ledgers of the Upper Town began to show a small shortfall every month. Never more than a cart. ' +
+      'The treasurer of that year reported it. Then the treasurer retired. ' +
+      'The shortfall did not. Whoever is taking a cart of the Lord\'s iron every month, the Lower Town has eaten well since.',
+  },
+  {
+    id: 'ardencia_kitchen_maids',
+    title: 'What the Kitchen Maids Say',
+    category: 'gossip',
+    text:
+      'Collected, says the cover, by a kitchen maid of the Alcázar who would rather not be named. ' +
+      'The Lord eats standing up. The Lord has not laughed since the Ash Wars, except once, at a letter from abroad, which he burned. ' +
+      'The old lord Benny takes sugar in his coffee and denies it. The steward counts the spoons. ' +
+      'Somebody in the house sends bread to the Lower Town by night, and every maid knows it, and every maid has decided not to know. ' +
+      'The young lord Azriel reads in the kitchen because it is warm. ' +
+      'He asked the cook once why there are no portraits of his mother. The cook gave him an extra pastry and changed the subject.',
+  },
+  {
+    id: 'ardencia_last_report',
+    title: "The Treasurer's Last Report",
+    category: 'trade',
+    text:
+      'An unsigned report, filed eleven years ago, the last in the treasurers\' row. ' +
+      'Iron sold to the Crown: four hundred carts. Iron paid for by the Crown: three hundred and ten. ' +
+      'The report asks the Lord to press the Crown for the rest. Beside the request, in another hand: Not yet. ' +
+      'Below that, the treasurer again: Then when? There is no answer. ' +
+      'The last page says the treasurer will retire at the end of the month, by his own wish. ' +
+      'The ink of "by his own wish" is darker than the rest, as if someone went over it twice. ' +
+      'The report is not signed. Every other report on the shelf is.',
+  },
+  {
+    id: 'ardencia_blade_law',
+    title: 'The Law of the Blade',
+    category: 'law',
+    text:
+      'Don Alonso, first Lord of Ardencia, made one law before any other: no outsider is heard who has not stood in the ring. ' +
+      'He meant it kindly. A stranger who had faced a Brasador blade and kept her feet had earned the right to speak. ' +
+      'The trial is fought on the sand beside the Alcázar, before the elders. The Lord may fight it himself, or send a champion. ' +
+      'Lord Benny never sent a champion. Lord Rael never has either. ' +
+      'The winner may ask the loser one question, and the loser must answer it, truly, between the blades. ' +
+      'No record says what Don Alonso asked. Every record says he never lost.',
+  },
+  // ---- Al-Doria (Chapter 4): the House of Ledgers' six, and the Majlis's archive of contracts -----------------
+  {
+    id: 'aldoria_letter_numbers',
+    title: 'The Letter-Numbers',
+    category: 'trade',
+    text:
+      'Before the Dorini counted in figures, they counted in letters. Alif was one, ba two, jim three, and so on up the alphabet to a thousand. ' +
+      'A guild ledger written in letter-numbers looks like a poem to a stranger and like a price to a clerk. ' +
+      'The old counting house used them for every entry that mattered, because a thief who could read could still not count. ' +
+      'Kaf is twenty. Ha is five. A careful clerk writes the sum plain in the margin as well, for the day the ink runs. ' +
+      'The careless ones trust the ink. The guild has never lost a ledger to fire. It has lost several to damp.',
+  },
+  {
+    id: 'aldoria_dorini_promise',
+    title: 'The Dorini Promise',
+    category: 'history',
+    text:
+      'House Dorini was a family of moneychangers before it was a house. Its first promise was written on the door of the first counting house: ' +
+      'what is weighed here is weighed true. Every Merchant-Prince since has sworn it on taking the divan. ' +
+      'The Dorini witness, the saying goes, and the Dorini hold. A Dorini witness keeps a copy of what was signed. ' +
+      'It gives that copy to no one, not even the signers, so nobody can change it afterwards. ' +
+      'Fifty years ago the Dorini witnessed the Sun Accord. The ledger of that year is kept with the others, under the guild hall. ' +
+      'Merchants say the Promise is the reason Al-Doria has never needed walls as high as Cenizal\'s.',
+  },
+  {
+    id: 'aldoria_on_contracts',
+    title: 'On Contracts',
+    category: 'law',
+    text:
+      'A contract binds the ones who sign it, and those who consent through them. It binds no one else. ' +
+      'A merchant may sell his own camel; he may not sell his neighbour\'s, however good the price, however fine the seal. ' +
+      'The guild\'s courts have held to this for two hundred years. A bargain over a third party\'s goods binds the third party to nothing, ' +
+      'and the seller owes the buyer back his money. ' +
+      'The Witness priests teach the same: a promise is watched by the one who made it. ' +
+      'Every apprentice copies this book in his first month. Most forget it by his first profit.',
+  },
+  {
+    id: 'aldoria_witness_market',
+    title: 'The Witness in the Market',
+    category: 'religion',
+    text:
+      'The Witness faith came to the bazaar with the first caravans. Its priests sit beside the contract tables and watch. ' +
+      'They do not judge whether a bargain is fair. They judge only whether it was kept. A promise written is a promise watched, they say. ' +
+      'The Gaze keepers, who came later, answer that remembering who was cheated is part of watching. ' +
+      'The two faiths have argued by the dry fountain for as long as there has been a fountain. ' +
+      'Most merchants keep both: the Witness for their contracts, the Gaze for their consciences. On market day, they keep their distance.',
+  },
+  {
+    id: 'aldoria_city_water',
+    title: 'The Water of Bab al-Dhahab',
+    category: 'history',
+    text:
+      'The city drinks from a qanat: a tunnel that carries water underground from the hills past the Desert Edge. ' +
+      'At the cistern head the flow divides. One line feeds the city\'s fountains; the other, built later, feeds the guild\'s tanks. ' +
+      'An iron gate on the old city line can be shut, to clean the channel. The year the guild vault was built, it was found loose. ' +
+      'An engineer of the Zetwal army, in the city for the signing, wanted its iron for the march home. Someone stopped him. ' +
+      'The record does not say who. The city fountain has run dry twice since: in the great drought, and this year.',
+  },
+  {
+    id: 'aldoria_eight_gates',
+    title: 'The Eight Gates',
+    category: 'trade',
+    text:
+      'Eightgate has eight gates, one for each road into the Seat, and every one is watched. ' +
+      'Envoys are searched; merchants are taxed; strangers wait. A Dorini caravan alone passes every gate unquestioned. ' +
+      'The Crown granted it for the guild\'s loans in the Ash Wars, and has never dared take it back. ' +
+      'The caravan master carries the Merchant-Prince\'s pass. Anyone in the caravan is the guild\'s, as far as the gates are concerned. ' +
+      'It is the one thing a Dorini pass is good for in Eightgate. It will get you through a gate. It will not get you through a door.',
+  },
+  {
+    id: 'aldoria_vault_register',
+    title: 'The Vault Register',
+    category: 'history',
+    text:
+      'Register of the guild vault under the guild hall, kept by the chief scribe. ' +
+      'Twelve iron boxes, numbered, in the strongroom behind the balance door. The guild\'s own price opens that door. ' +
+      'The guild knows its price. ' +
+      'Box seven: sealed, "for the bearer of the sun", by order of Yusuf, keeper of the ledger, fifty years ago. Not opened since. ' +
+      'The witness\'s niche, at the far end: the Dorini copy of the Sun Accord. Its lock was cut to a pattern no guildsman holds. ' +
+      'Opened by: no one. Remarks: the guild does not hold the key to its own witness. That was the point.',
+  },
+  {
+    id: 'aldoria_crown_preference',
+    title: "The Crown's Preference",
+    category: 'law',
+    text:
+      'Agreement between His Majesty\'s trade factor and the Dorini guild council, in the Merchant-Prince\'s Majlis. ' +
+      'In return for the guild\'s good offices in the ports, the Crown grants the guild preference in its harbours. ' +
+      'Preference means the first purchase of any cargo landed, at a price the Crown names, before any other buyer may bid. ' +
+      'Schedule of harbours: Pòdlimyè, Cenizal, and, by the seventh clause of the Sun Accord as signed, Yucayeque in Xaraguá. ' +
+      'Signed for the guild by Guildmaster Qasim. Witnessed by the chief scribe. ' +
+      'The space for the Merchant-Prince\'s seal is empty. A note in the margin, in a different hand: "Not by me."',
+  },
+  // ---- Eightgate (Chapter 5): the Throne Hall's records room (four), and the Throne Archive (five of the design's
+  // ten for the release: the outline's cut list). The Seventh Clause joins the Hall's shelf once it is read aloud.
+  {
+    id: 'seat_regent_commission',
+    title: "The Regent's Commission",
+    category: 'law',
+    text:
+      'The Commission was sealed by the Crown of Aldermoor in the year after the Accord. ' +
+      'It names a Regent to keep the Seat while the Throne stands empty. ' +
+      'The Regent holds the Throne for the realm. He does not sit it, and he may not be crowned. ' +
+      'He keeps the peace of the eight gates, the Archive and the Hall, and he calls the Parley. ' +
+      'The Commission runs until a claimant stands on the Throne tile with the houses behind her. ' +
+      'It does not say how many houses. Three Regents have held it. The present one has held it longest. ' +
+      'A note in the margin, in a clerk\'s hand: "Renewed. Renewed. Renewed." ' +
+      'The last renewal is signed by the Regent himself.',
+  },
+  {
+    id: 'seat_petitions_breach',
+    title: 'Petitions of Breach',
+    category: 'law',
+    text:
+      'Under the Founding Compact, a house that believes a treaty broken may petition the Hall in Parley. ' +
+      'The petition is carried to every chamber, and every envoy answers it in the record. ' +
+      'A petition no one carries is not refused. It is simply never heard. ' +
+      'The register lists two hundred and six petitions since the Accord. ' +
+      'One hundred and ninety were heard. Fifteen were withdrawn. ' +
+      'One, from the cacique\'s house of Yucayeque in Xaraguá, is marked "received" and nothing else. ' +
+      'Its date is forty-nine years ago. The space for the chambers\' answers is blank. ' +
+      'Someone has drawn a small circle round the blank, in ink that is not old.',
+  },
+  {
+    id: 'seat_council_eight',
+    title: 'The Council of Eight',
+    category: 'history',
+    text:
+      'Before the Ash Wars, the realm had a council of eight chairs, one for each house, before the Throne. ' +
+      'The houses sat; whoever stood on the Throne tile spoke for all of them, and only while they let her. ' +
+      'The council last sat in full in the year the war began. Its chairs have stood empty since. ' +
+      'At a Parley the envoys stand behind them. At a Claim they may sit. ' +
+      'The Master of the Chairs keeps them dusted, and keeps the tokens the houses give when they agree to sit. ' +
+      'He has not been given one in fifty years. He dusts them anyway.',
+  },
+  {
+    id: 'seat_seventh_clause',
+    title: 'The Seventh Clause',
+    category: 'law',
+    available: { flag: 'clue.seventh_clause_read' },
+    text:
+      'Entered in the Hall\'s record on the day it was read aloud in Parley, at the demand of Zetwal\'s envoy. ' +
+      'Read by the Keeper of the Archive, from a page sealed with the Throne\'s wax fifty years before. ' +
+      '"The harbor of Xaraguá and its waters are given into the keeping of the Crown of Aldermoor," it reads. ' +
+      '"At the Crown\'s pleasure, to be revisited." ' +
+      'The Keeper\'s note: the page bears no signature, only the Throne\'s clerk\'s seal. ' +
+      'The seventh ribbon of the bound Accord carries no witness knot. ' +
+      'The Lord Regent\'s answer: the Charter has stood on it for fifty years. ' +
+      'The envoy of Xaraguá was not present. Xaraguá has no envoy at the Seat.',
+  },
+  {
+    id: 'seat_weaving',
+    title: 'The Weaving',
+    category: 'religion',
+    text:
+      'Before the houses, the faiths say, the goddess Elodie wove the realm out of eight threads, one for each people. ' +
+      'The Gaze says she watches the weaving still, and remembers every knot. ' +
+      'The Witness says she wove it as a contract, and every thread was asked. ' +
+      'The Four Hands say there was no weaving, only land, and that the land remembers on its own. ' +
+      'The Quiet Crown says nothing, which it calls the oldest answer. ' +
+      'Every faith agrees on one thing: there were eight threads. ' +
+      'The Archive\'s copy of this book has a thread sewn into its spine. It is teal.',
+  },
+  {
+    id: 'seat_founding_compact',
+    title: 'The Founding Compact',
+    category: 'law',
+    text:
+      'The Compact is older than the Accord, and the Accord was written under it. ' +
+      'Clause Six: every clause of a treaty made at the Seat is read aloud to every signatory before it is sealed. ' +
+      'A clause not read is not agreed. ' +
+      'Clause Nine: a sealed page may be opened and heard in the Hall, when the envoy of a signatory house demands it in Parley. ' +
+      'Clause Twelve: no steel is drawn inside the eight gates. ' +
+      'The Witness priests call the Compact the realm\'s first contract, and teach it to their apprentices by heart. ' +
+      'The Archive\'s copy is worn thin at Clause Six.',
+  },
+  {
+    id: 'seat_accord_sealed',
+    title: 'The Sun Accord, Sealed',
+    category: 'history',
+    text:
+      'The Sun Accord ended the Ash Wars. It was signed in Pòdlimyè and brought to the Seat to be bound and sealed. ' +
+      'Its binding holds six pages and seven ribbons, one ribbon for each clause. ' +
+      'The signatories were Zetwal, Ardencia, Al-Doria as witness, and the Crown of Aldermoor. ' +
+      'Xaraguá fought in the war and is named in its first page. It is not named among the signatories. ' +
+      'The sealing was done by the Throne\'s clerk, before the Marshal of Zetwal and the Crown\'s envoy. ' +
+      'The record of the sealing says the Lord of Ardencia "was not present at the close." It does not say why.',
+  },
+  {
+    id: 'seat_throne_clerks',
+    title: "The Throne's Clerks",
+    category: 'history',
+    text:
+      'The Throne\'s clerks keep the Seat\'s records, read what is sealed, and seal what is read. ' +
+      'A clerk swears to write only what is said, and to say nothing of what is written. ' +
+      'Most keep the oath. One kept it better than he meant to. ' +
+      'The clerk who sealed the Sun Accord never spoke again after that day. ' +
+      'His fellows said he was ill. His wife said he was ashamed. ' +
+      'He went on working for nine more years, and he wrote in a very beautiful hand. ' +
+      'When he died, his register for the year of the Accord could not be found.',
+  },
+  {
+    id: 'seat_claimant_families',
+    title: 'The Claimant Families',
+    category: 'genealogy',
+    text:
+      'The families with a claim to stand on the Throne tile, by the Founding Compact\'s count. ' +
+      'Rodriguez of Ardencia, through the Brasador line, a claim the house has never pressed. ' +
+      'Jean-Philippe of Zetwal, through Kay Soley, the island\'s old governors. ' +
+      'Stillwater of Aldermoor, through the Crown. Three others are extinct now, or married out, or simply forgotten. ' +
+      'A claimant must be of a claimant family and must stand with the houses behind her. ' +
+      'No claimant has stood on the tile in fifty years, and the Regent has not asked for one. ' +
+      'Someone has written in the margin, in a clerk\'s small hand: "Limyè? A temple name, not a house."',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -384,6 +699,19 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'song_spirit', name: 'Shelf: Springs and Spirits', books: ['xaragua_roots_tides', 'xaragua_opia', 'xaragua_hutia'] },
   { id: 'song_accounts', name: 'Shelf: Accounts', books: ['xaragua_cassava_salt', 'xaragua_charter'] },
   { id: 'caney_records', name: "Shelf: The Cacique's Records", books: ['xaragua_council_minutes', 'xaragua_anaco_letter', 'xaragua_healer_notes', 'xaragua_customs_receipts'] },
+  // Ardencia (Chapter 3): La Biblioteca Vieja's three shelves, and the Alcázar's records room.
+  { id: 'ard_shelf_war', name: 'Shelf: The Ash Wars', books: ['ardencia_brasador_count', 'ardencia_cendre'] },
+  { id: 'ard_shelf_law', name: 'Shelf: Oaths and Faith', books: ['ardencia_oaths', 'ardencia_witness'] },
+  { id: 'ard_shelf_trade', name: 'Shelf: Iron and Gossip', books: ['ardencia_iron_trade', 'ardencia_kitchen_maids'] },
+  { id: 'alcazar_records', name: "Shelf: The Treasurers' Row", books: ['ardencia_last_report', 'ardencia_blade_law'] },
+  // Al-Doria (Chapter 4): the House of Ledgers' three lecterns, and the Majlis's archive of contracts.
+  { id: 'ledgers_trade', name: 'Lectern: Counting and Trade', books: ['aldoria_letter_numbers', 'aldoria_eight_gates'] },
+  { id: 'ledgers_law', name: 'Lectern: Contracts and Faith', books: ['aldoria_on_contracts', 'aldoria_witness_market'] },
+  { id: 'ledgers_city', name: 'Lectern: The City', books: ['aldoria_dorini_promise', 'aldoria_city_water'] },
+  { id: 'majlis_contracts', name: 'Shelf: The Archive of Contracts', books: ['aldoria_vault_register', 'aldoria_crown_preference'] },
+  // Eightgate (Chapter 5): the Throne Hall's records room, and the Throne Archive (readable from the bell on).
+  { id: 'hall_records', name: "Shelf: The Hall's Records", books: ['seat_regent_commission', 'seat_petitions_breach', 'seat_council_eight', 'seat_seventh_clause'] },
+  { id: 'archive_shelves', name: 'Shelves: The Throne Archive', books: ['seat_weaving', 'seat_founding_compact', 'seat_accord_sealed', 'seat_throne_clerks', 'seat_claimant_families'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

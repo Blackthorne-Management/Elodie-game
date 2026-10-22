@@ -28,6 +28,11 @@ export interface DebateAnswer {
 export interface DebateRound {
   /** The opponent's claim. */
   claim: string;
+  /**
+   * Who makes this round's claim, when not the debate's opponent (Eightgate's corner has four voices, one opponent a
+   * round: the Chapter 5 outline 7.3, its second review 4).
+   */
+  speaker?: string;
   answers: Record<Appeal, DebateAnswer>;
 }
 
@@ -64,7 +69,7 @@ export type DebateOutcome = 'won' | 'mediated' | 'provoked';
  * `joined`: Gianna argued all three rounds, won or lost (owner decision, Oct 18: Chapter 1's debate must be taken
  * part in before Yari sails; a lost debate counts as taking part).
  */
-export const debateFlag = (id: string, what: 'listened' | 'joined' | DebateOutcome) => `debate.${id}.${what}`;
+export const debateFlag = (id: string, what: 'listened' | 'joined' | 'settled' | DebateOutcome) => `debate.${id}.${what}`;
 const paidFlag = (id: string, what: 'listened' | DebateOutcome) => `debate.${id}.paid.${what}`;
 
 /** The realm's Concord (0 to 100). */
@@ -113,7 +118,8 @@ export function debateScript(def: DebateDef, flags: FlagReader, ctx: DebateConte
   nodes.menu = { lines: [nar(`A crowd has gathered. The question: ${def.question}`)], choices: menu };
   nodes.listen = { lines: [...def.listen], set: { [debateFlag(def.id, 'listened')]: true } };
   nodes.cannot_mediate = { lines: [nar(`(They will not hear a mediator yet. Influence in this city: ${ctx.influence} of ${ctx.mediateNeeds}.)`)], next: 'menu' };
-  nodes.mediate = { lines: [...def.mediate], set: { [debateFlag(def.id, 'mediated')]: true } };
+  // `settled`: joined (won or lost) or mediated, as one flag a map's text condition can read (Chapter 4's dusk).
+  nodes.mediate = { lines: [...def.mediate], set: { [debateFlag(def.id, 'mediated')]: true, [debateFlag(def.id, 'settled')]: true } };
   nodes.provoke = { lines: [...def.provoke], set: { [debateFlag(def.id, 'provoked')]: true } };
 
   // Rounds: node r<i>_<wins so far>; an answer goes to a<i>_<appeal>_<wins>, then on to the next round.
@@ -126,7 +132,7 @@ export function debateScript(def: DebateDef, flags: FlagReader, ctx: DebateConte
         next: `a${i}_${a}_${wins}`,
       }));
       nodes[`r${i}_${wins}`] = {
-        lines: [nar(`Round ${i + 1} of ${last}.`), { speaker: def.opponent, text: round.claim }],
+        lines: [nar(`Round ${i + 1} of ${last}.`), { speaker: round.speaker ?? def.opponent, text: round.claim }],
         choices,
       };
       for (const a of APPEALS) {
@@ -139,8 +145,8 @@ export function debateScript(def: DebateDef, flags: FlagReader, ctx: DebateConte
       }
     }
   }
-  nodes.won = { lines: [...def.won], set: { [debateFlag(def.id, 'won')]: true, [debateFlag(def.id, 'joined')]: true } };
-  nodes.lost = { lines: [...def.lost], set: { [debateFlag(def.id, 'joined')]: true } };
+  nodes.won = { lines: [...def.won], set: { [debateFlag(def.id, 'won')]: true, [debateFlag(def.id, 'joined')]: true, [debateFlag(def.id, 'settled')]: true } };
+  nodes.lost = { lines: [...def.lost], set: { [debateFlag(def.id, 'joined')]: true, [debateFlag(def.id, 'settled')]: true } };
   return { id, start: 'menu', nodes };
 }
 

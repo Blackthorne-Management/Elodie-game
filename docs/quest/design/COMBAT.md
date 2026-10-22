@@ -70,6 +70,11 @@ A charge-time system shown on the initiative bar (the next 8 turns).
 
 - **Opening times:** each fighter starts at `Delay x U(0.3, 1.0)` from the seeded Rng. An ambush (enemy first strike)
   gives the enemies 0.3 and the party 1.0; a party first strike (approaching from behind on the field) is the reverse.
+- **The dice (built Oct 21):** every fight's seed comes from the save, not the clock: the fight's id and how many
+  times it has been started on this save (`battle.tries.<table>.<group>`; `battleSeed` in `engine/battle.ts`). The
+  same save replays the same fight (the browser test, the simulator); every new try, a retry after Game Over
+  included, rolls new dice. *Claude's call:* the try is counted when the fight starts and saved with the next save, so
+  closing the app mid-fight and loading again replays that fight exactly.
 - Example: Gianna at level 1 (SPD 9) waits 31; Yari (SPD 13) waits 28, so Yari gets about 11% more turns.
 
 ## 4. Commands
@@ -173,6 +178,14 @@ roads 15 to 21, Ch. 9 at 24, Ch. 10 at 25, Ch. 11 at 28, Ch. 12 at 30. Roughly: 
 level plus story, books and quests. The simulation checks that a player who skips all side quests is no more than 2
 levels under the target.
 
+**The level-curve check (built Oct 21):** `npm run level-curve` (`tools/level-curve.ts`, asserted in
+`tests/levelCurve.test.ts`) replays the scripted route, pays what the field pays (fights, side quests, debates) and
+prints each chapter's end level with and without side quests against `src/data/chapterLevels.ts` (STORY.md's table,
+Ardencia 3, Al-Doria 4, the roads in fixed order). Tolerances are `LEVEL_CURVE` in config. First run: Chapter 1 ends
+at level 6 (4 without side quests) against 3, because every Journal step pays a flat 25 (`XP_PER_OBJECTIVE`)
+instead of this section's 10 in Chapter 1; Chapter 2 ends at 9 (8 without side quests) against 8. Random ambushes are
+not counted.
+
 **The three roads (any order):** the first of Skarragol, Kuroshi and Jwaladesh entered is set to levels 15 to 17, the
 second 17 to 19, the third 19 to 21 (`ROAD_TIERS`). Fixed on first entry.
 
@@ -266,6 +279,11 @@ The hutia (proposal): a 1-in-8 chance after a win to steal one shiny extra drop.
 
 ### 9.3 Azzy (Blade-Knight, Brasador)
 
+**Built (Oct 20, fighters as data):** an entry in `data/rpg.ts` (joins on `party.azzy`, which no story sets yet) and
+his skills in `data/battles.ts`. Sangre Ardiente, La Marca, Grito de Guerra (the new Stunned status; on a boss 50%)
+and Reinado de Cenizas (heavy, `ACTION_WEIGHT.heavy = 1.3`) all run. *Claude's call:* as an attacker he also has
+weapon moves (Slash, Heavy Blow, Sweep, as Patricio's), and starts with the Steel Saber and the Officer's coat.
+
 | Skill | SP | Effect | Board |
 |---|---|---|---|
 | Sangre Ardiente | passive | +5% ATK per enemy he fells this battle (max +25%) | Sangre Ardiente |
@@ -293,8 +311,17 @@ The hutia (proposal): a 1-in-8 chance after a win to steal one shiny extra drop.
 
 ### 9.6 Samira (Alchemist, Dorini)
 
-The owner decision of Oct 14 says Wealth is a score that is never spent, so **Daftar spends gold** (**approved by the owner, Oct 20**;
-`STORY.md` open question 5).
+The owner decision of Oct 14 says Wealth is a score that is never spent, so **Daftar spends gold** (owner approved,
+Oct 20).
+
+**Built (Oct 20, fighters as data):** an entry in `data/rpg.ts` (joins on `party.samira`, which no story sets yet),
+Baraka Dorini (+10% battle gold), Tonic, and Daftar as three skills paid in gold: *Remedy* (10 HP per 20 gold),
+*Hired Blade* (10 damage per 20 gold, through any armour) and *Patronage* (Inspired, 60 gold); Wealth adds 1% a point
+up to 30% (`DAFTAR_WEALTH_PER_POINT`, `DAFTAR_WEALTH_MAX`). Gold spent comes off the purse when the fight is won; a
+lost fight gives the moment back, gold included. *Claude's call:* Remedy and Hired Blade cost 20 gold plus 10 per
+Samira's level (a fixed amount per use, so there is no amount to pick on a phone; at level 11 that is 130 gold for
+65 points). She is a mage by gear (staff, robe) without a spellbook: all her skills are always in hand. Not built
+yet: Bribe and Bazaar al-Dhahab (they need human foes and extra turns; Chapter 4 work).
 
 | Skill | SP | Effect | Board |
 |---|---|---|---|
@@ -334,6 +361,11 @@ Running joke (no mechanics): he is out of breath after every battle.
 | Caona (Scout-commander, proposal) | Pathfinder (party SPD +20% for 3 turns, SP 6), Scout's Shot (power 110, never misses, SP 3) |
 
 ## 9.9 Rows and swapping (owner, Oct 15; built)
+
+*Fighters as data (Oct 20):* a member's row (`row`, default by class), Anissa bond (`anissaBond`), spellbook
+(`spellbook`, default for mages) and passive effects (`Passive.effect`) are fields of their entry in `data/rpg.ts`.
+Who fights is the roster order: the first four present members fight, the rest wait to swap in. The Status and
+Equip pages scroll their portrait lists, so all eight fit.
 
 - Up to **8** in the party; **4** fight at once (`BATTLE_ACTIVE`); the rest wait.
 - **Swap** (a command, takes the turn): the fighter trades places with someone waiting, who acts after half a turn
@@ -378,7 +410,7 @@ come up (tests/battle.test.ts). Attacking alone still wins with Yari but costs o
 
 | Status | Effect | Lasts | Cleared by |
 |---|---|---|---|
-| **Bound** | Rael's fights only: at 0 HP a member is Bound, not Down. Out of the fight but recoverable | until freed | **Break Free** (the member's own action on their next turn, 50% chance, 100% on the second try) or Gianna's Comfort on them |
+| **Bound** | Rael's fights only: at 0 HP a member is Bound, not Down. Out of the fight but recoverable | until freed | **Break Free** (the member's own action on their next turn, 50% chance, 100% on the second try) or Gianna's Comfort on them. **Built Oct 21 (Claude's call):** any heal or food frees them (Comfort is not built yet), with what it healed; Break Free frees with a quarter of their HP |
 | **Down** | 0 HP, out of the fight | until revived | revive items, Say Their Names, Rit Solèy, end of battle (revives at 1 HP) |
 | **Marked** | Takes x1.25 damage | 3 turns | |
 | **Stunned** | Skips the next action | 1 action | |
@@ -527,7 +559,7 @@ Boss stats: the standard line x the multipliers in each row (`BOSS_SCALE`). Phas
 |---|---|---|---|---|---|
 | 1 | **Governor Thorne** | Xaraguá customs house (Ch. 2) | 8 | 7 / 1.1 | **1 Paperwork:** hides behind two Crown Marines; *Requisition* (steals an item). **2 (50%) The Charter:** reads the Charter aloud: Hushed on one member each turn, *Protection Fee* (power 150). Yield: Spare (he is sent home to Aldermoor), Spoils, Break. |
 | 2 | **Guildmaster Qasim** (proposal) | Al-Doria guild vault (Ch. 4) | 14 | 7 / 1.1 | **1 Ledger:** *Hire Blades*: pays gold to summon a Caravan Raider each 3 turns (Samira's Bribe on a summoned blade refunds it). **2 (40%) Foreclosure:** *Seize Assets* (Weakened on all), *Golden Wall* (DEF up until hit by a Surge). |
-| 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 3) | 11 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; (*Seize* on Anissa: to redesign, Shield Anissa dropped Oct 15). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. |
+| 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 3) | 11 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; (*Seize* on Anissa: to redesign, Shield Anissa dropped Oct 15). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. **Built Oct 21** (owner decisions: he wins, wearing La Promesa de Benny): level 13, HP x3, ATK x1.2; Seize in phase 1; Captain Rivera and Jaime walk in at phase 2 and step back at 0 HP; the floor and his finale (`docs/quest/reviews/2026-10-20-chapter3-outline.md`, "Built"). |
 | 3b | **Rael, the Harbor Strike** (same boss, Strike route only) | Harbor flank (Ch. 11) | 28 | 9 / 1.2 | Four phases: Measured, Unleashed, Cornered, then **Broken Army** (his guards leave; he only Binds and will not strike Gianna; the fight ends when his army breaks, at 10% HP). |
 | 4 | **Noyan Grimvald** (proposal) | Skarragol frozen fjord (Ch. 6) | tier top (17, 19 or 21) | 8 / 1.2 | **1 Mounted:** *Trample* (all), fast. **2 (50%) Unhorsed:** slower, *Stolen Standard* (Inspired on all his raiders); returning the standard to Bayarmaa (an Item use) breaks it. |
 | 5 | **The Paper Fox** (proposal) | Kuroshi file house (Ch. 7) | tier top | 7 / 1.0 | **1 Screens:** hides among three paper decoys (Haru's Kagemimi or *Lantern* shows the real one). **2 (40%) Sold Secrets:** reads a member's "file": copies their best skill and uses it on them. |

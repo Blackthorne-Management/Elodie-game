@@ -23,6 +23,12 @@ export interface ChapterStart {
 const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string }>> = {
   '2': { mark: 'end-card', map: 'xaragua-village', spawn: 'pier' },
   '3': { mark: 'chapter2-end', map: 'zetwal-harbor', spawn: 'harbor_return' },
+  // Chapter 4 begins on the strand at first light (the trader's ready check: beat 0).
+  '4': { mark: 'chapter3-end', map: 'ardencia-camp', spawn: 'strand' },
+  // Chapter 5 begins as the Dorini caravan comes in at Eightgate's Gold Gate (the caravan's arrival plays).
+  '5': { mark: 'chapter4-end', map: 'seat-gateyard', spawn: 'gold_gate' },
+  // Chapter 6 begins at the Iron Gate after the card (Skarragol's maps come with Chapter 6: this start moves there).
+  '6': { mark: 'chapter5-end', map: 'seat-concourse', spawn: 'iron_gate' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

@@ -129,8 +129,10 @@ export interface GoldWalkOptions {
   maps?: Record<string, GameMap>;
   /** Carry on from this game (default: a new one). */
   sim?: Sim;
-  /** Stop once this holds (default: Chapter 2's last objective done). */
+  /** Stop once this holds (default: the last objective of `through` done). */
   until?: (sim: Sim) => boolean;
+  /** The chapter (quest id) whose end is the default stop (default 'act2'). */
+  through?: string;
   /** At most this many decisions (a line of dialogue, a walk, a press at the goal). */
   maxActions?: number;
 }
@@ -143,8 +145,9 @@ export function goldWalk(opts: GoldWalkOptions = {}): GoldWalk {
   const maxActions = opts.maxActions ?? 20000;
   const logic = sim.logic;
   const flags = logic.state.flags;
-  const act2 = CHAPTERS.at(-1)!;
-  const done = until ?? (() => currentObjective(act2, flags) === null);
+  const last = CHAPTERS.find((q) => q.id === (opts.through ?? 'act2'));
+  if (!last) throw new Error(`no chapter ${opts.through}`);
+  const done = until ?? (() => currentObjective(last, flags) === null);
   const count = { steps: 0 };
   let mapChanges = 0;
   let lastMap = logic.state.player.mapId;
@@ -169,7 +172,8 @@ export function goldWalk(opts: GoldWalkOptions = {}): GoldWalk {
         const options = sensible.length > 0 ? sensible : view.choices;
         const key = `${view.text}|${view.choices.map((c) => c.text).join("/")}`;
         const asked = menus.get(key) ?? 0;
-        menus.set(key, asked + 1);
+        // Capped at the menu's length: once every choice has been tried, a menu met again is a loop (a stall).
+        menus.set(key, Math.min(asked + 1, options.length));
         const pick = options[Math.min(asked, options.length - 1)]!;
         sim.cursor = view.choices.indexOf(pick);
       } else sim.cursor = 0;
@@ -199,7 +203,8 @@ export function goldWalk(opts: GoldWalkOptions = {}): GoldWalk {
       stalls.push(`${where}: no way to ${goal.map} ${goal.at.x},${goal.at.y}`);
       break;
     }
-    const state = `${JSON.stringify(flags.snapshot())}|${p.mapId}|${p.pos.x},${p.pos.y}|${logic.era}|${p.facing}`;
+    // The choices tried so far are part of the state: a quiz answered wrong, met again, is a new try, not a loop.
+    const state = `${JSON.stringify(flags.snapshot())}|${p.mapId}|${p.pos.x},${p.pos.y}|${logic.era}|${p.facing}|${JSON.stringify([...menus])}`;
     if (seen.has(state)) {
       stalls.push(`${where}: back where it was, arrow at ${wp.map} ${wp.at.x},${wp.at.y}${wp.final ? '' : ' (door)'}`);
       break;
@@ -216,7 +221,8 @@ export function goldWalk(opts: GoldWalkOptions = {}): GoldWalk {
 
 const isMain = process.argv[1] !== undefined && import.meta.url === `file://${process.argv[1]}`;
 if (isMain) {
-  const out = goldWalk();
+  // `tools/gold-walk.ts act5` walks to the end of Chapter 5 (default: Chapter 2).
+  const out = goldWalk({ through: process.argv[2] ?? 'act2' });
   console.log(`steps ${out.steps}, map changes ${out.mapChanges}, finished ${out.finished}`);
   console.log(`stalls: ${out.stalls.length ? out.stalls.join('\n  ') : 'none'}`);
   console.log(out.objectives.join(' > '));

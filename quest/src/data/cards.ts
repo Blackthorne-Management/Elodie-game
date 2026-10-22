@@ -25,4 +25,25 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 2 complete',
     lines: ['The Charter', 'Next: Chapter 3, The Trial of Blades', 'Ardencia, and an oath fifty years old...'],
   },
+  // The end of Chapter 3: the strand camp; the trader sails for Al-Doria at first light.
+  {
+    id: 'act3_end',
+    when: 'act3.complete',
+    title: 'Chapter 3 complete',
+    lines: ['The Trial of Blades', 'Next: Chapter 4, The Ledger', 'Al-Doria, and a page that should not exist...'],
+  },
+  // The end of Chapter 4: the caravan gate at first light; the Dorini caravan sets out for Eightgate.
+  {
+    id: 'act4_end',
+    when: 'act4.complete',
+    title: 'Chapter 4 complete',
+    lines: ['The Ledger', 'Next: Chapter 5, The Parley', 'Eightgate, and a seal only the Throne may break...'],
+  },
+  // The end of Chapter 5: the Iron Gate opens on the winter road east (Skarragol first: owner decision, Oct 20).
+  {
+    id: 'act5_end',
+    when: 'act5.complete',
+    title: 'Chapter 5 complete',
+    lines: ['The Parley', 'Next: Chapter 6, The Stolen Standard', 'Skarragol, and a herd that will not stay stolen...'],
+  },
 ];

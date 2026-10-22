@@ -727,3 +727,74 @@ questions now needed by early November (question 1 above is one of them), the fl
    divan; Layla's refusal, her descent into the vault and the purse sent without a word are a mother's scenes.
 2. **Coralie, "Tati Coco"** (FAMILY.md): bumped into in the cloth merchants' row, she helps with the carpet knot
    count and sails on before the vault.
+
+## Built (Oct 22, branch `chapter3`): what is in the game, and Claude's calls
+
+Built in order of authority: the owner's decisions (`design/FAMILY.md`: Coralie; the Layla question, since
+answered (a) by the owner), the second review (`2026-10-21-chapter4-outline-review.md`, every fix in its section
+6), then this outline. Code: `quest/tools/maps/aldoria.ts` (six maps), `quest/src/data/dialogue/aldoria.ts` (every
+scene; beat 0 is `camp_trader_talk` in `dialogue/ardencia.ts`), `ACT4` in `quest/src/data/quests.ts`, `battles.ts`
+(Qasim, the Caravan Raider, `qasim_vault`, Bribe, Baraka of the Scale), `encounters.ts` (`desert_edge`),
+`sideQuests.ts` (`appraise`, `bargain`, `sweet_water`), `debates.ts` (`aldoria_bargain`), `books.ts` (six plus two),
+`voyages.ts` (`ardencia_aldoria`), the route (`@strand` to `@chapter4-end`), `?chapter=5`. Engine: Bribe and hired
+blades, the Golden Wall (`gilded`), a boss who yields (`endsWithBoss`), `debate.<id>.settled`, `gold.pay`, Samira as a
+map follower, a map two chapters share (`questForMap`). Tests: `tests/aldoria.test.ts`, `tests/qasim.test.ts`
+(simulator), `puzzles/aldoria_vault/`, the act, guide, level-curve and chapter-start tests.
+
+**Level curve** (`tools/level-curve.ts`): Chapter 4 ends at **level 14 (3,255 XP)**, 12 without its side quests; the
+party meets Qasim at 13 (about 2,980 XP). On target.
+
+**Claude's calls** (non-drastic, under the Oct 20 rule; the owner can overturn any):
+
+1. **Layla's lines in one place** (`LAYLA` in `dialogue/aldoria.ts`): if the owner picks (b), only that object and its
+   speaker change. A test checks every line she speaks comes from it.
+2. **Qasim** (review 3.1, tuned with a 60-seed bot on the real engine): level 14, brute, HP x4, ATK x1.4; phase 1 *Cane*
+   120 and *Hire Blades* every other turn (a Caravan Raider walks in, at most `HIRE_CAP` = 2 hired standing); phase 2 at
+   60% (*Then I foreclose.*): *Cane* 160, *Seize Assets* once (area 230, Weakened, telegraphed "Guard, everyone!"),
+   *Golden Wall* every third turn (damage taken x0.5 for its turns; a Surge-powered blow shatters it). At 0 HP he
+   yields ("Enough. Enough! Name your fee.") and his blades walk out: the Yield step's fallback, the Spare outcome.
+   200 XP, 200 gold. Bot results: level 14 guarding, 60 of 60 won; level 12 without Guard, about 1 in 5 lost; level 13
+   about 32 actions; an empty purse at 13 still wins. The Yield's three outcomes wait for the economy foundation.
+3. **Bribe** costs 25 gold a Samira level (325 at 13), refunded on a blade Qasim hired; Qasim, beasts and zealots
+   refuse it (the gold stays). Who takes a purse is `bribable` on the enemy. A bribed foe pays no less XP (fights pay
+   a fixed reward). *Daftar: Hired Blade* is renamed *Daftar: Debt Collected* (its id kept for saves).
+4. **The camp is both chapters' map** (review 3.5): `questForMap` picks the latest chapter that has begun, so the camp
+   shows Chapter 3 until its end and then Chapter 4, whose first objective (the lead, no XP) is done by `act3.complete`.
+5. **Beat 0**: the trader's ready check on a fade; the sergeant placed again (he is no map NPC) pledges the strand to
+   Azzy; Yari's coin from "the resistance in the caves", granted only if Chapter 2 did not; no second Free Brasador
+   flag or note. Anissa's "That's our reef" moved to the quay's arrival (the voyage scene has captions only).
+6. **The voyage** (review 3.12): from Ardencia's north coast east, then down the open sea past Zetwal (124,50) to
+   Al-Doria's east coast (117,66). The opening picture has an Ardencia shore (black sand).
+7. **The quay gate** is a closed door whose clerk reads the papers (walking into it asks him). The factor watches.
+8. **Samira's invoice** really costs two gold (`gold.pay`); refusing adds a late fee on the slip, nothing more.
+   After the Majlis she waits on its steps (outline beat 3) and names the three things; her stall says what is left.
+9. **Dusk** (review 3.9) is the door's own condition (A-1, A-3 and the debate settled), not a flag: the debate now sets
+   `debate.<id>.settled` itself, so a map's text condition can read it. Night stays until the caravan's first light.
+10. **A-1**: the bet without the threat (review 3.13: "Then I'll know what you're worth."). Coralie is met by the
+    stalls once the bet is taken, counts the knots at the carpet stall, and leaves when A-1 is reported. Reward 100
+    gold (150 paid, 50 billed), 110 XP, +1 Influence.
+11. **A-3**: the cistern's Echo opens only after the water-carrier (the third ash thumbprint); the pin is an anchor;
+    the fountain runs when the party comes back to it (the children drink, the carrier watches). 120 gold, 130 XP,
+    +2 Influence.
+12. **The vault split** (review 3.4): the strongroom with its twelve boxes is behind the balance door (the guild's
+    price); the sun lock guards only the witness's niche. The balance door needs the Echo (review 3.6): the right
+    weights before Yusuf has spoken "do not hold"; `cheats.json` includes the binary search.
+13. **Anissa** (review 3.2) walks to the edge of the antechamber's Echo with her "I'll hold the door" line, and steps
+    behind Gianna before Qasim's blades come in. Her fight tip is plain (review 3.11). She never jokes.
+14. **Yari's line** (review 3.3): "Patricio. Yusuf. Benny. Sarnai. Sayo. Arjun. Not Caona. She was never asked."
+    Gianna, with Benny's half-sheet: "Six pages he signed. The seventh, he would not."
+15. **The night after the vault**: Samira sends the party up the stair and east to the gate yard to sleep; the
+    caravan scene opens on a fade to first light (purse, coin, a sibling beat between Azzy and Gianna, Azzy and
+    Samira, the card). The party is not walked out of the gate (the stage cannot move the player): the caravan
+    leaves, and the card closes the chapter in the yard. `?chapter=5` starts there until Eightgate's map exists.
+16. **Books**: six in the House of Ledgers (five teach *Baraka of the Scale*: Warded and Inspired on one ally), two in
+    the Majlis's archive of contracts (*The Vault Register*, *The Crown's Preference*, whose margin says Layla never
+    sealed it). Reason in the debate needs *On Contracts*, *The Witness in the Market* or *The Dorini Promise*.
+17. **Placeholders**: Samira (existing look), Layla, Qasim, the Caravan Raider, Coralie, Yusuf and the locksmith are
+    drawn looks; new tiles are pattern placeholders; music slots reuse the city, hall, Echo and cane-road tracks.
+    Arabic and Coralie's French are in new glossaries, all unverified.
+
+**Not built (after the release, or waiting on other work):** A-2, A-4 (box 7 is its hook), A-5 (the factor's hook),
+the Yield's three outcomes, the caravan's land journey (Chapter 5), Samira's battle stance and portrait art, prompts
+for the new looks in `ART-PROMPTS.md`, TILE_ART drawings for the new tiles, the smoke test's Chapter 4 section (the
+smoke test was not run).

@@ -74,6 +74,45 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { flag: 'clue.drum_pattern' },
   },
+  {
+    id: 'ardencia_forge',
+    title: "The forge fortress's channels and Benny's lever (signature puzzle: fire; PUZZLES.md SIG-ARD parts 1 and 2)",
+    map: 'ardencia-forge',
+    spawn: 'cell',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.anissa': true,
+      'story.yari_asked': true,
+      'story.trial_fought': true,
+      'story.forge_held': true,
+      'story.forge_arrived': true,
+      'story.forge_open': true,
+    },
+    // Out through the far wall, with Azzy: the tunnel's wall shuts behind the party.
+    goal: { flag: 'story.tunnel_entered' },
+  },
+  {
+    id: 'aldoria_vault',
+    title: 'The guild vault: the balance door and the sun lock (signature puzzle: the ledger; PUZZLES.md SIG-ALD)',
+    map: 'aldoria-vault',
+    spawn: 'stair',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.anissa': true,
+      'story.yari_asked': true,
+      'party.azzy': true,
+      'story.benny_joined': true,
+      'story.caona_joined': true,
+      'story.samira_met': true,
+      'story.vault_refused': true,
+      'story.vault_entered': true,
+      'story.vault_lamps': true,
+    },
+    // The witness's chest read: the seventh page, sealed with the Throne's wax.
+    goal: { flag: 'clue.sealed_seventh' },
+  },
   // Chapter 2's side quests (Oct 20): the two growth puzzles, in the free city before dusk.
   {
     id: 'xaragua_hutia',
@@ -90,5 +129,29 @@ export const PUZZLES: readonly PuzzleDef[] = [
     spawn: 'camp',
     flags: { ...XARAGUA_FREE, 'story.anaco_met': true, 'side.medicine.accepted': true },
     goal: { flag: 'side.medicine.bark' },
+  },
+  // Chapter 5 (Oct 22): Eightgate's signature puzzle, the sealing in the Throne Archive (PUZZLES.md SIG-SEA, as the
+  // outline's second review 3.4 corrected it): the carved number, the thread in the memory, the keeper's law.
+  {
+    id: 'seat_accord',
+    title: 'The Throne Archive: the drawer the clerk used, and the keeper\'s law (signature puzzle; PUZZLES.md SIG-SEA)',
+    map: 'seat-archive',
+    spawn: 'archive',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'story.yari_asked': true,
+      'party.azzy': true,
+      'party.samira': true,
+      'story.benny_joined': true,
+      'story.caona_joined': true,
+      'story.coco_plan': true,
+      'story.disguised': true,
+      'story.party_split': true,
+      'story.archive_open': true,
+      'story.archive_entered': true,
+    },
+    // Hollis opens the drawer and agrees to take the page to the Parley.
+    goal: { flag: 'story.hollis_agreed' },
   },
 ];

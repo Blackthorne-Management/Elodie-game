@@ -94,6 +94,9 @@ export function storyGoal(quest: QuestDef | null, flags: FlagReader, sideQuests:
   const objective = quest ? currentObjective(quest, flags) : null;
   if (!objective) return null;
   if (objective.followSide) {
+    // The story step that hands the errands out, first (Samira on the Majlis steps).
+    const own = goalNow(objective.goals, objective.echoGoals, flags, era, mapId);
+    if (own) return own;
     const stops = [...sideGoals(sideQuests, flags, era, mapId), ...mysteryGoals(sideQuests, flags)].map((s) => s.goal);
     // In the Echo, the memory's own step first (it is where the player stands).
     return (era === 'echo' ? stops.find((g) => g.echo) : undefined) ?? stops.find((g) => g.map === mapId) ?? stops[0] ?? null;

@@ -704,11 +704,17 @@ async function fightBattle(page, id, shots) {
   const music = await page.waitForFunction(() => window.__audio?.().playing === 'battle', null, { timeout: 15000 }).then(() => true, () => false);
   check(music, `${id}: the battle music plays`);
   let shot = false;
+  // A fight meant to be lost (Chapter 3's Trial of Blades) ends in its scene, never on the goddess's screen.
+  const scripted = !!battleDef(id)?.meantToLose;
   // A lost fight opens the goddess's Game Over screen: Rise, then back into the fight (riseAndRetry).
   const at = await snap(page);
   for (let turn = 0; turn < 260; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
     const st = await snap(page);
+    if (scripted && st.battle?.fallen && !st.gameOver) {
+      await shoot(page, `battle-${id}-bound`, shots);
+      break;
+    }
     if (st.gameOver || st.battle?.fallen) {
       await riseAndRetry(page, id, at);
       continue;
@@ -729,7 +735,7 @@ async function fightBattle(page, id, shots) {
       break;
     }
     const skill = bt.actor === 'gianna' ? 'Sunthread' : null;
-    const want = bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith(skill ?? '-')) ?? 'Back') : skill ? 'Skill' : 'Attack';
+    const want = bt.rows.includes('Break Free') ? 'Break Free' : bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith(skill ?? '-')) ?? 'Back') : skill ? 'Skill' : 'Attack';
     const idx = bt.rows.findIndex((r) => r === want || r.startsWith(want));
     for (let i = 0; i < idx; i++) await page.keyboard.press('ArrowDown');
     await page.keyboard.press('KeyZ');
@@ -738,6 +744,11 @@ async function fightBattle(page, id, shots) {
   await page.waitForFunction(() => window.__quest.snapshot().mode !== 'battle', null, { timeout: 8000 });
   const after = await snap(page);
   const battle = battleDef(id);
+  if (scripted) {
+    const set = Object.keys(battle.meantToLose.set ?? {});
+    check(!after.gameOver && set.every((f) => after.flags[f] === true) && after.flags[`encounter.${battle.table}.${battle.group}.won`] !== true, `${id}: lost as the story means it (no goddess, never won), and its scene plays`);
+    return;
+  }
   check(after.flags[`encounter.${battle.table}.${battle.group}.won`] === true, `${id}: the fight is won in the browser`);
 }
 
@@ -745,7 +756,8 @@ async function fightBattle(page, id, shots) {
 let accidentalFalls = 0;
 
 /**
- * The bot lost a fight on the scripted route (the dice come from the clock): the goddess's screen opens. Skip
+ * The bot lost a fight on the scripted route (the dice come from the save, so a fall replays the same way until the
+ * next try rolls new ones): the goddess's screen opens. Skip
  * (B) to the last screen, Rise (A), and fight again from the moment before: a fight started by stepping on a
  * trigger (the boar's line) is one step back, so step on again; any other waits where it began, so meet the
  * foe again from the same tile (the rematch hook: what talking to the waiting foe does, without walking away

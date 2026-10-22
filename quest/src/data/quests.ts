@@ -4,7 +4,7 @@
 
 import type { JournalNote, QuestDef } from '../engine/quests.ts';
 import { AREITO_BARS, barText } from './rhythms.ts';
-import { CHAPTER2_QUESTS_DONE } from './sideQuests.ts';
+import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './sideQuests.ts';
 
 export const ACT1: QuestDef = {
   id: 'act1',
@@ -526,8 +526,515 @@ export const ACT2: QuestDef = {
   ],
 };
 
+
+/** The Lower Town debate, joined or mediated (Chapter 3's "Until noon"). */
+const ARD_DEBATE_DONE = { any: [{ flag: 'debate.ardencia_bread.joined' }, { flag: 'debate.ardencia_bread.mediated' }] };
+
+/**
+ * Chapter 3, The Trial of Blades (Ardencia, Cenizal; docs/quest/reviews/2026-10-20-chapter3-outline.md with its
+ * review and the owner's decisions). Grandfather's request (done at Chapter 2's end, so the Journal shows this
+ * chapter on the pier), the voyage, the gate and Azzy, the audience, the day in the city (two side quests and the
+ * debate, followed by the arrow), the trial (meant to be lost), the forge fortress and its Echo puzzle, Benny's
+ * tunnel, the sea road and the camp.
+ */
+export const ACT3: QuestDef = {
+  id: 'act3',
+  title: 'Chapter 3: The Trial of Blades',
+  maps: ['ardencia-flats', 'ardencia-town', 'ardencia-alcazar', 'ardencia-lower', 'ardencia-library', 'ardencia-forge', 'ardencia-tunnel', 'ardencia-camp'],
+  objectives: [
+    {
+      id: 'request',
+      title: "Grandfather's request",
+      detail: 'Grandfather asks Gianna to go to Ardencia and ask Lord Rael, Benny\'s son, to stand with Xaraguá.',
+      done: { flag: 'story.ardencia_asked' },
+      // Chapter 2's last scene, shown here so the Journal opens Chapter 3 on the pier: it pays no second XP.
+      noXp: true,
+      goals: [{ map: 'zetwal-harbor', at: { x: 30, y: 12 } }],
+      hints: [
+        'Grandfather is waiting on the pier, Gigi.',
+        'The long pier at the Old Harbor.',
+        'Walk up the long pier to Grandfather and Grandmother.',
+      ],
+    },
+    {
+      id: 'sail',
+      title: 'Sail for Ardencia',
+      detail: 'The trader who brought you home sails for Ardencia from the long pier. Ardencia is across the strait.',
+      done: { flag: 'story.ardencia_arrived' },
+      goals: [{ map: 'zetwal-harbor', at: { x: 31, y: 14 } }],
+      hints: [
+        'Ardencia is across the water, Gigi. We need a boat.',
+        'The trader captain is still on the long pier.',
+        'Talk to the trader captain at the end of the long pier and tell him to sail.',
+      ],
+    },
+    {
+      id: 'gate',
+      title: 'The gate of Cenizal',
+      detail: 'The sea road climbs the Cinder Flats to the red-stone gate of Cenizal. Show your papers at the gate.',
+      done: { flag: 'story.azzy_met' },
+      goals: [{ map: 'ardencia-flats', at: { x: 24, y: 4 } }],
+      hints: [
+        'The road goes up to the city, Gigi. All of it uphill.',
+        'Follow the road north from the black sand, then west to the gate.',
+        'Walk up the road to the halberdiers at the gate and show them your papers.',
+      ],
+    },
+    {
+      id: 'audience',
+      title: 'An audience with the Lord',
+      detail: 'Azzy has gone ahead into the Alcázar, at the head of the plaza. Follow him in.',
+      done: { flag: 'story.trial_set' },
+      goals: [
+        { if: { notFlag: 'story.town_seen' }, map: 'ardencia-town', at: { x: 19, y: 7 } },
+        { map: 'ardencia-alcazar', at: { x: 16, y: 18 } },
+      ],
+      hints: [
+        'Azzy went into the big red house, Gigi.',
+        'The Alcázar is at the top of the plaza.',
+        'Go up the plaza and in through the Alcázar\'s doors.',
+      ],
+    },
+    {
+      id: 'noon',
+      title: 'Until noon',
+      detail: 'The trial is at noon tomorrow. Azzy says: see the city. Finish the quests on your Quests page; Azzy waits at the court gate.',
+      done: { any: [{ all: [{ flag: 'side.treasurer.done' }, { flag: 'side.bread.done' }, ARD_DEBATE_DONE] }, { flag: 'story.trial_fought' }] },
+      followSide: true,
+      hints: [
+        'Noon is a long way off, Gigi. The city has people who need you first.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        "The treasurer's daughter in the Alcázar, the bread debate in the Lower Town, and Azzy's bread at night.",
+      ],
+    },
+    {
+      id: 'trial',
+      title: 'The Trial of Blades',
+      detail: 'Noon. Azzy waits at the gate of the duel court, beside the Alcázar. Stand in the ring.',
+      done: { flag: 'story.trial_fought' },
+      goals: [
+        { if: { notFlag: 'story.noon' }, map: 'ardencia-town', at: { x: 28, y: 8 } },
+        { map: 'ardencia-town', at: { x: 32, y: 9 } },
+      ],
+      hints: [
+        "It's noon, Gigi. I don't want it to be noon.",
+        'Azzy is at the court gate, beside the Alcázar.',
+        'Talk to Azzy at the court gate, then walk into the middle of the ring.',
+      ],
+    },
+    {
+      id: 'guests',
+      title: "The Lord's guests",
+      detail: 'Held in the forge fortress, "as guests". There must be a way out of this hall.',
+      done: { flag: 'story.forge_open' },
+      // A scene the party only watches (Azzy's key): no XP of its own (the level curve, Claude's call Oct 21).
+      noXp: true,
+      goals: [{ map: 'ardencia-forge', at: { x: 26, y: 9 } }],
+      hints: [
+        'Gigi... say something.',
+        'Someone is coming. Wait.',
+        'Wait in the cell. Someone is coming.',
+      ],
+    },
+    {
+      id: 'channels',
+      title: 'The fire has to go somewhere',
+      detail: 'Three channels of lava cross the hall between the cell and the far wall. In the memory, the ditches are dry and the gates turn.',
+      done: { all: [{ flag: 'anchor.forge_gate_a' }, { flag: 'anchor.forge_gate_b' }, { flag: 'anchor.forge_gate_c' }] },
+      // In the present: the shimmer in the armory. In the memory, where the ditches are dry: the gates one by one,
+      // nearest first (the Echo rule, review 1, finding 2).
+      goals: [{ map: 'ardencia-forge', at: { x: 21, y: 9 } }],
+      echoGoals: [
+        { if: { notFlag: 'anchor.forge_gate_a' }, map: 'ardencia-forge', at: { x: 19, y: 7 } },
+        { if: { notFlag: 'anchor.forge_gate_b' }, map: 'ardencia-forge', at: { x: 14, y: 7 } },
+        { map: 'ardencia-forge', at: { x: 9, y: 7 } },
+      ],
+      hints: [
+        'The fire has to go somewhere. Can you choose where?',
+        'In the memory the ditches are dry and the gates turn. Look at where the lava runs now, then change it there.',
+        'Set the gates right, left, right in the memory; then pull Benny\'s lever behind the bellows.',
+      ],
+    },
+    {
+      id: 'lever',
+      title: "Benny's way out",
+      detail: 'The far wall is blank. In the memory, young Lord Benny is by the bellows, with something to show Patricio.',
+      done: { flag: 'party.azzy' },
+      // In the present: the shimmer (or, from a save made after the lever, the hall, where the bell starts). In the
+      // memory: the lever behind the bellows, then the shimmer back out.
+      goals: [
+        { if: { notFlag: 'anchor.benny_lever' }, map: 'ardencia-forge', at: { x: 21, y: 9 } },
+        { map: 'ardencia-forge', at: { x: 19, y: 9 } },
+      ],
+      echoGoals: [
+        { if: { notFlag: 'anchor.benny_lever' }, map: 'ardencia-forge', at: { x: 2, y: 4 } },
+        { map: 'ardencia-forge', at: { x: 21, y: 9 } },
+      ],
+      hints: [
+        'A wall nobody can open is still a door, Gigi. Grandfather says so.',
+        'Lord Benny is by the bellows in the memory, on the far side of the hall.',
+        'In the memory, talk to Benny by the bellows, pull the lever behind them, then come back to the present.',
+      ],
+    },
+    {
+      id: 'tunnel',
+      title: "Benny's tunnel",
+      detail: 'The tunnel runs under the wall to the sea road. Something is moving in the dark ahead.',
+      done: { flag: 'encounter.ardencia_story.bats.won' },
+      goals: [{ map: 'ardencia-tunnel', at: { x: 17, y: 5 } }],
+      hints: [
+        'It is very dark, Gigi. Hold my hand.',
+        'The tunnel goes west, to the sea.',
+        'Walk west along the tunnel. Azzy will go first.',
+      ],
+    },
+    {
+      id: 'sea_road',
+      title: 'The sea road',
+      detail: 'Out under the walls, down the sea road to the strand, west.',
+      done: { flag: 'story.ardencia_escaped' },
+      // The barred mouth first (Amanda lifts the bar as the party comes up to it), then the road.
+      goals: [
+        { if: { notFlag: 'story.tunnel_unbarred' }, map: 'ardencia-tunnel', at: { x: 4, y: 5 } },
+        { map: 'ardencia-flats', at: { x: 5, y: 15 } },
+      ],
+      hints: [
+        'Run, Gigi!',
+        'Down the road, away from the wall.',
+        'Follow the sea road south from the tunnel mouth.',
+      ],
+    },
+    {
+      id: 'camp',
+      title: 'Free Brasador',
+      detail: 'A fishers\' camp on the strand, west along the shore. Patricio\'s trader is waiting there.',
+      done: { flag: 'act3.complete' },
+      goals: [{ map: 'ardencia-camp', at: { x: 21, y: 8 } }],
+      hints: [
+        'Azzy said the camp is west.',
+        'The strand road goes west to the camp.',
+        'Follow the road west off the sea road to the camp on the strand.',
+      ],
+    },
+  ],
+};
+
+/** Samira's three things before dusk: A-1, the debate (joined or mediated) and A-3 (Chapter 4's "Until dusk"). */
+const ALD_DAY_DONE = { all: [{ flag: 'side.appraise.done' }, { flag: 'side.sweet_water.done' }, { flag: 'debate.aldoria_bargain.settled' }] };
+
+/**
+ * Chapter 4, The Ledger (Al-Doria, Bab al-Dhahab; docs/quest/reviews/2026-10-20-chapter4-outline.md with its review of
+ * Oct 21 and the owner's decisions in design/FAMILY.md). The lead (done at Chapter 3's end, so the Journal opens Chapter 4
+ * on the strand: the camp is both chapters' map, review 3.5), the voyage, the quay, Samira, the Majlis, the day in the
+ * city (two side quests and the debate, followed by the arrow), the guild hall by night, the vault's Echo and its
+ * puzzle, the witness's chest, Qasim, the Merchant-Prince's word and the caravan gate.
+ */
+export const ACT4: QuestDef = {
+  id: 'act4',
+  title: 'Chapter 4: The Ledger',
+  maps: ['ardencia-camp', 'aldoria-quay', 'aldoria-bazaar', 'aldoria-majlis', 'aldoria-ledgers', 'aldoria-vault', 'aldoria-desert'],
+  objectives: [
+    {
+      id: 'lead',
+      title: 'The Dorini vault',
+      detail: "Benny's Refusal: \"The bankers of Al-Doria, who witnessed it, hold the signed copy.\" The Dorini, in Bab al-Dhahab.",
+      done: { flag: 'act3.complete' },
+      // Chapter 3's last scene, shown here so the Journal opens Chapter 4 on the strand: it pays no second XP.
+      noXp: true,
+      goals: [{ map: 'ardencia-camp', at: { x: 21, y: 8 } }],
+      hints: ['The paper said the bankers of Al-Doria, Gigi.', "Azzy read it at the fire: the Dorini vault.", 'Sit by the fire with the others. Then the trader.'],
+    },
+    {
+      id: 'sail',
+      title: 'Sail for Al-Doria',
+      detail: 'The trader who waited for Patricio\'s granddaughter sails at first light. He is down by his boat on the strand.',
+      done: { flag: 'story.aldoria_arrived' },
+      goals: [{ map: 'ardencia-camp', at: { x: 8, y: 10 } }],
+      hints: ['The trader said first light, Gigi. It is first light.', 'He is down by the water, at his boat.', 'Talk to the trader captain by his boat on the strand and tell him to sail.'],
+    },
+    {
+      id: 'quay',
+      title: 'Up from the quay',
+      detail: 'The quay of the Gate of Gold. The gate up into the bazaar is at the top of the quay; its clerk reads papers.',
+      done: { flag: 'story.quay_passed' },
+      goals: [{ map: 'aldoria-quay', at: { x: 15, y: 2 } }],
+      hints: ['Everyone here is carrying something, Gigi.', 'The way up into the city is the gate at the top of the quay.', 'Walk up the quay to the gate and show the clerk your papers.'],
+    },
+    {
+      id: 'samira',
+      title: 'The Grand Bazaar',
+      detail: 'Up from the quay, the Grand Bazaar: covered lanes, moneychangers, a price for everything.',
+      done: { flag: 'story.samira_met' },
+      goals: [{ map: 'aldoria-bazaar', at: { x: 21, y: 29 } }],
+      hints: ['So many people, Gigi. Hold my hand.', 'Up the lane from the quay, into the bazaar.', 'Walk up from the quay into the bazaar. Someone is coming to meet you.'],
+    },
+    {
+      id: 'majlis',
+      title: 'The Merchant-Prince',
+      detail: 'Samira: the signed copy is in the guild vault, and the Merchant-Prince refuses everyone. Ask her anyway, at the Majlis.',
+      done: { flag: 'story.vault_refused' },
+      goals: [
+        { if: { notFlag: 'story.majlis_seen' }, map: 'aldoria-bazaar', at: { x: 22, y: 5 } },
+        { map: 'aldoria-majlis', at: { x: 14, y: 7 } },
+      ],
+      hints: ['Her mother, Gigi. She said "my mother".', 'The Majlis is the big domed hall at the head of the square.', 'Go up the square into the Majlis and walk up the hall to the divan.'],
+    },
+    {
+      id: 'dusk',
+      title: 'Until dusk',
+      detail: 'Samira will take you down at dusk if you do three things for her first. They are on your Quests page.',
+      done: { any: [ALD_DAY_DONE, { flag: 'story.vault_entered' }] },
+      followSide: true,
+      // Samira on the Majlis steps first: she hands out the three things (the arrow found her stall empty before).
+      goals: [{ if: { notFlag: 'story.samira_steps' }, map: 'aldoria-bazaar', at: { x: 22, y: 7 } }],
+      hints: [
+        'Dusk is a long way off, Gigi. Samira gave us a list.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        "Samira's three fakes, the priest and the merchant by the fountain, and the children's water.",
+      ],
+    },
+    {
+      id: 'door',
+      title: 'The guild hall by night',
+      detail: "Dusk. Samira waits at the guild hall's green door, west of the square. The doorman has gone to the tea house.",
+      done: { flag: 'story.vault_entered' },
+      goals: [{ map: 'aldoria-bazaar', at: { x: 12, y: 10 } }],
+      hints: ['The lanterns are lit, Gigi.', "The guild hall's green door is on the west side of the square.", 'Talk to Samira at the green door.'],
+    },
+    {
+      id: 'price',
+      title: 'The price of the harbour',
+      detail: 'The balance door wants a weight, and the ledger page that names it is smudged past reading. The air shimmers.',
+      done: { flag: 'story.vault_echo' },
+      // The shimmering floor; in the memory, young Yusuf at his desk (the Echo rule, review 1, finding 2).
+      goals: [{ map: 'aldoria-vault', at: { x: 10, y: 7 } }],
+      echoGoals: [{ map: 'aldoria-vault', at: { x: 10, y: 6 } }],
+      hints: ['The door wants a weight. The page says how much, if you can read it.', 'Yusuf wrote this page. In the memory, watch him write it.', 'Press Echo on the shimmering floor and talk to young Yusuf at his desk.'],
+    },
+    {
+      id: 'balance',
+      title: 'The balance door',
+      detail: 'Yusuf wrote the price of the harbour: twenty-five. Hang the brass weights that make it on the pan.',
+      done: { flag: 'story.vault_outer' },
+      // Claude's call (Oct 22): the price is the puzzle (read in the memory); once Yusuf has said it, the arrow walks
+      // the hooks still wrong for twenty-five (16, 8, 1 on; 4, 2 off), then the pan.
+      goals: [
+        { if: { notFlag: 'puzzle.vault.w16' }, map: 'aldoria-vault', at: { x: 10, y: 11 } },
+        { if: { notFlag: 'puzzle.vault.w8' }, map: 'aldoria-vault', at: { x: 9, y: 11 } },
+        { if: { notFlag: 'puzzle.vault.w1' }, map: 'aldoria-vault', at: { x: 6, y: 11 } },
+        { if: { flag: 'puzzle.vault.w4' }, map: 'aldoria-vault', at: { x: 8, y: 11 } },
+        { if: { flag: 'puzzle.vault.w2' }, map: 'aldoria-vault', at: { x: 7, y: 11 } },
+        { map: 'aldoria-vault', at: { x: 12, y: 5 } },
+      ],
+      // Still in the memory: the shimmer back out (the pan is in the present).
+      echoGoals: [{ map: 'aldoria-vault', at: { x: 10, y: 7 } }],
+      hints: ['Twenty-five, Gigi. He said it out loud.', 'The weights are 1, 2, 4, 8 and 16. Which ones make twenty-five?', 'Back in the present, hang 16, 8 and 1 on the pan. Leave 4 and 2 on the rack.'],
+    },
+    {
+      id: 'sun',
+      title: 'Cut to the sun',
+      detail: "The witness's niche at the far end of the strongroom has a lock no key fits. In the memory, the locksmith is still cutting it.",
+      done: { flag: 'story.vault_inner' },
+      // Cut in the memory (the locksmith's blank), opened in the present.
+      goals: [
+        { if: { flag: 'anchor.vault_sunlock' }, map: 'aldoria-vault', at: { x: 22, y: 7 } },
+        { map: 'aldoria-vault', at: { x: 10, y: 7 } },
+      ],
+      echoGoals: [
+        { if: { notFlag: 'anchor.vault_sunlock' }, map: 'aldoria-vault', at: { x: 22, y: 7 } },
+        { map: 'aldoria-vault', at: { x: 10, y: 7 } },
+      ],
+      hints: ['A key no guildsman holds, Gigi. Who holds it, then?', 'In the memory, the locksmith asks what pattern to cut.', 'In the memory, show the locksmith the Locket\'s sun. Then open the lock in the present.'],
+    },
+    {
+      id: 'ribbons',
+      title: 'Seven ribbons',
+      detail: "The witness's chest is behind the sun lock. In it, the Dorini copy of the Sun Accord.",
+      done: { flag: 'clue.sealed_seventh' },
+      goals: [{ map: 'aldoria-vault', at: { x: 24, y: 7 } }],
+      hints: ['It\'s open, Gigi.', 'The chest is in the niche, behind the lock.', 'Walk into the niche and open the chest.'],
+    },
+    {
+      id: 'blades',
+      title: "The guild's blades",
+      detail: 'Guildmaster Qasim came down the stair with the guild\'s blades. One waits at the foot of the stair.',
+      done: { flag: 'encounter.aldoria_story.qasim.won' },
+      goals: [{ map: 'aldoria-vault', at: { x: 5, y: 3 } }],
+      hints: ['They are still on the stair, Gigi.', 'The blade at the foot of the stair is waiting for you.', 'Talk to the blade at the foot of the stair to face Qasim again.'],
+    },
+    {
+      id: 'word',
+      title: "The Merchant-Prince's word",
+      detail: 'Someone else is coming down the stair.',
+      done: { flag: 'story.layla_pass' },
+      goals: [{ map: 'aldoria-vault', at: { x: 16, y: 7 } }],
+      hints: ['Someone is coming, Gigi.', 'Stay in the strongroom.', 'Wait in the strongroom by the boxes.'],
+    },
+    {
+      id: 'caravan',
+      title: 'The caravan gate',
+      detail: 'The caravan master leaves at first light from the caravan gate, east through the bazaar. Be on it.',
+      done: { flag: 'act4.complete' },
+      goals: [
+        { if: { notFlag: 'story.vault_left' }, map: 'aldoria-vault', at: { x: 4, y: 1 } },
+        { map: 'aldoria-desert', at: { x: 3, y: 12 } },
+      ],
+      hints: ['First light, Gigi. We cannot miss it.', 'Up the stair, then east through the bazaar to the caravan gate.', 'Walk east out of the bazaar to the caravan gate yard.'],
+    },
+  ],
+};
+
+export const ACT5: QuestDef = {
+  id: 'act5',
+  title: 'Chapter 5: The Parley',
+  maps: ['seat-gateyard', 'seat-concourse', 'seat-hall', 'seat-quarter', 'seat-workshop', 'seat-archive', 'seat-fields'],
+  objectives: [
+    {
+      id: 'road',
+      title: 'The Gold Road',
+      detail: 'Nine days with the Dorini caravan, west out of the dunes, to Eightgate: the Seat of the realm, where Mother is.',
+      done: { flag: 'story.seat_arrived' },
+      // Shown, not played: the caravan's arrival is a scene in the gate yard. No XP (review 3.5).
+      noXp: true,
+      goals: [{ map: 'seat-gateyard', at: { x: 28, y: 10 } }],
+      hints: ['We\'re here, Gigi.', 'The caravan is in the Gold Gate\'s yard.', 'Walk into the gate yard.'],
+    },
+    {
+      id: 'herald',
+      title: 'The herald',
+      detail: 'Grey and violet at the inner arch: the Regent\'s Sealbearers. Everyone who comes to Eightgate is announced.',
+      done: { flag: 'story.herald_met' },
+      goals: [{ map: 'seat-gateyard', at: { x: 3, y: 10 } }],
+      hints: ['The men in grey and violet are watching us, Gigi.', 'The inner arch is on the west side of the yard.', 'Walk west across the yard to the Sealbearers at the inner arch.'],
+    },
+    {
+      id: 'welcome',
+      title: "The Regent's welcome",
+      detail: 'The herald waits on the Throne Hall\'s steps, at the north of the Concourse. The Lord Regent receives Zetwal\'s envoy\'s household.',
+      done: { flag: 'story.elodie_hall' },
+      // A scene the player mostly watches (review 3.5): no XP.
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'visited.seat-hall' }, map: 'seat-concourse', at: { x: 23, y: 5 } },
+        { map: 'seat-hall', at: { x: 21, y: 14 } },
+      ],
+      hints: ['Mama is in there, Gigi.', 'The herald is on the steps of the big hall, north of the fountain.', 'Go into the Throne Hall and walk up the nave toward the Throne.'],
+    },
+    {
+      id: 'coco',
+      title: 'Tati Coco',
+      detail: 'Mother: "Your aunt is in the city. The Envoys\' Quarter, south of the fountain: the door with every colour on it."',
+      done: { flag: 'story.coco_plan' },
+      goals: [
+        { if: { notFlag: 'story.coco_met' }, map: 'seat-quarter', at: { x: 13, y: 7 } },
+        { map: 'seat-workshop', at: { x: 10, y: 10 } },
+      ],
+      hints: ['Tati Coco is here, Gigi!', 'The Envoys\' Quarter is south of the fountain, down the lane.', 'Go south from the fountain into the Quarter, to the painted door.'],
+    },
+    {
+      id: 'bell',
+      title: 'Until the bell',
+      detail: 'Coco: "Until the bell, be seen. Stand in a lot of places." Three things, on your Quests page.',
+      done: { any: [CHAPTER5_QUESTS_DONE, { flag: 'story.disguised' }] },
+      followSide: true,
+      noXp: true,
+      hints: [
+        'The bell is tomorrow, Gigi. Coco said be seen.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        "Yari's petition in the Hall, the four voices at the fountain, and the pilgrims at the gate.",
+      ],
+    },
+    {
+      id: 'seamstresses',
+      title: 'The seamstresses',
+      detail: 'Evening. Coco: "Bed. The bell is early and I am not." At the bell, two seamstresses carry the Keeper\'s robes into the Archive.',
+      done: { flag: 'story.archive_entered' },
+      goals: [
+        { if: { notFlag: 'story.disguised' }, map: 'seat-quarter', at: { x: 18, y: 6 } },
+        { if: { notFlag: 'story.archive_open' }, map: 'seat-concourse', at: { x: 9, y: 7 } },
+        { map: 'seat-archive', at: { x: 13, y: 17 } },
+      ],
+      hints: ['Coco said bed, Gigi. Her workshop.', 'In the morning, Coco waits at the Archive\'s chain with the robes.', "Sleep at Coco's workshop, then walk with her to the Archive's chain."],
+    },
+    {
+      id: 'sealing',
+      title: 'The sealing',
+      detail: 'Six pages under glass, seven ribbons, and the seventh tied to nothing. The air shimmers in front of the table.',
+      done: { flag: 'anchor.ribbon_thread' },
+      // The thread is tied in the memory: in the present, the shimmer; in it, the red thread off the sealing table,
+      // then drawer four (the Echo rule, review 1, finding 2).
+      goals: [{ map: 'seat-archive', at: { x: 13, y: 10 } }],
+      echoGoals: [
+        { if: { notFlag: 'echo.thread' }, map: 'seat-archive', at: { x: 13, y: 7 } },
+        { map: 'seat-archive', at: { x: 13, y: 1 } },
+      ],
+      hints: [
+        "Seven ribbons and six pages. Where's the seventh page?",
+        "In the memory, watch where the clerk puts it. The labels have changed since, but the cabinet hasn't.",
+        'Drawer four. Tie the ribbon thread on it in the memory.',
+      ],
+    },
+    {
+      id: 'keeper',
+      title: "The keeper's law",
+      detail: 'The drawer with the faded thread is locked, and Keeper Hollis has the key. He wants a reason a keeper can keep.',
+      done: { flag: 'story.hollis_agreed' },
+      goals: [{ map: 'seat-archive', at: { x: 20, y: 10 } }],
+      // Still in the memory: the shimmer back out (Hollis is in the present).
+      echoGoals: [{ map: 'seat-archive', at: { x: 13, y: 10 } }],
+      hints: ['He has the key on his belt, Gigi.', 'He is a keeper of law. Give him law. The Compact is on the shelves.', 'Read The Founding Compact on the shelves, then argue Reason to Hollis.'],
+    },
+    {
+      id: 'reading',
+      title: 'Read aloud',
+      detail: 'Hollis has the sealed page. The Parley sits at the bell, in the Throne Hall. Mother will have to say it out loud.',
+      done: { flag: 'clue.seventh_clause_read' },
+      // The Parley is watched (review 3.5): no XP; the terms that follow pay.
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'story.party_rejoined' }, map: 'seat-concourse', at: { x: 23, y: 7 } },
+        { map: 'seat-hall', at: { x: 21, y: 28 } },
+      ],
+      hints: ['The others will be at the steps, Gigi.', 'The Hall. Hollis went in with the page.', 'Go out to the Hall\'s steps, then into the Throne Hall.'],
+    },
+    {
+      id: 'terms',
+      title: "The Regent's terms",
+      detail: 'The clause is read. The Lord Regent has something to say to Zetwal\'s envoy\'s household.',
+      done: { flag: 'story.terms_refused' },
+      goals: [{ map: 'seat-hall', at: { x: 21, y: 28 } }],
+      hints: ['He is coming down, Gigi.', 'Stay in the Hall.', 'Hear the Regent out in the Throne Hall.'],
+    },
+    {
+      id: 'fitting',
+      title: 'The fitting',
+      detail: 'Mother has a fitting at her sister\'s. Coco\'s workshop is the one room in Eightgate with no Crown pen in it.',
+      done: { flag: 'story.fitting_done' },
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'story.fitting_arrived' }, map: 'seat-quarter', at: { x: 18, y: 6 } },
+        { map: 'seat-workshop', at: { x: 10, y: 4 } },
+      ],
+      hints: ['Mama is going to Coco\'s, Gigi.', "Coco's workshop, in the Envoys' Quarter.", 'Go to the workshop and through the curtain to the fitting room.'],
+    },
+    {
+      id: 'iron_gate',
+      title: 'The Iron Gate',
+      detail: 'Mother, as the envoy: "If someone were going, they would go east first, up onto the winter plateau." The Iron Gate.',
+      done: { flag: 'act5.complete' },
+      // A card: no XP.
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'visited.seat-concourse' }, map: 'seat-quarter', at: { x: 12, y: 0 } },
+        { map: 'seat-concourse', at: { x: 44, y: 26 } },
+      ],
+      hints: ['East, Gigi. Mama said east.', "Skarragol's gate is the grey iron one, east on the Concourse.", 'Walk to the Iron Gate on the east side of the Concourse.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -628,5 +1135,158 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'clue.first_oath',
     title: 'The first oath',
     text: '"The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us." Sworn by Caona, Patricio and Benny. No seventh clause.',
+  },
+  // Chapter 3.
+  {
+    id: 'trial_set',
+    when: 'story.trial_set',
+    title: 'The Law of the Blade',
+    text: 'No outsider is heard by the Lord of Ardencia until she has stood in the ring. The trial is at noon tomorrow, in the duel court beside the Alcázar.',
+  },
+  {
+    id: 'ardencia_record',
+    when: 'clue.ardencia_record',
+    title: 'The line of Ardencia',
+    text: 'The records room keeps the line in a clerk\'s best hand: Alonso, Benny, Rael, Azriel. Under it, in other ink: "No others recorded."',
+  },
+  {
+    id: 'niche',
+    when: 'clue.niche',
+    title: "Benny's clerk",
+    text: 'Every treasurer since Don Alonso kept his working copies in a niche behind the tapestry on the records room\'s east wall.',
+  },
+  {
+    id: 'treasurer_alive',
+    when: 'clue.treasurer_alive',
+    title: 'The treasurer is alive',
+    text: '"I am alive. I am held where the ash falls. Tell her I am alive." In the treasurer\'s own hand, dated this year. Where the ash falls: unknown.',
+  },
+  {
+    id: 'bread_night',
+    when: 'clue.bread_night',
+    title: 'The ash thumbprint, again',
+    text: 'Bread comes to the Lower Town by night in covered carts, and the driver signs the barrels with an ash thumbprint. Yucayeque\'s oil came the same way.',
+  },
+  {
+    id: 'father_rael',
+    when: 'clue.father_rael',
+    title: "The winner's question",
+    text: 'Rael asked who gave her the Locket. His signet and her Locket glowed together. Elodie is his wife; Gianna and Anissa are his daughters; Azzy is their brother.',
+  },
+  {
+    id: 'rael_traitor',
+    when: 'belief.rael_traitor',
+    title: 'Ardencia stands with the Crown',
+    text: 'Rael told the Crown\'s envoy Ardencia stands with the Crown, and gave his daughters to its ship. Gianna: he sold Xaraguá, then he sold us.',
+  },
+  {
+    id: 'free_brasador',
+    when: 'ally.free_brasador',
+    title: 'Free Brasador',
+    text: 'Soldiers who followed Azzy off the wall. Their price, when the realm musters: Fear 6 (owed, paid at the Muster). Lead: Benny\'s Refusal names the Dorini of Al-Doria.',
+  },
+  // Chapter 4.
+  {
+    id: 'aldoria',
+    when: 'story.quay_passed',
+    title: 'The Gate of Gold',
+    text: 'Bab al-Dhahab, Al-Doria\'s capital. On the quay, Crown crates under the Charter\'s seal go into the Dorini warehouse: Yucayeque\'s cassava and salt fish.',
+  },
+  {
+    id: 'samira_eye',
+    when: 'side.appraise.done',
+    title: 'How Samira looks at things',
+    text: 'Edges, knots, stamps. A real coin is milled, a real carpet tight, a real weight stamped. "Everything has a price. Most things also have a tell."',
+  },
+  {
+    id: 'coralie',
+    when: 'story.coralie_met',
+    title: 'Tati Coco',
+    text: 'Mother\'s sister Coralie, buying Zetwal indigo for a foreign court in the cloth row. She is sailing for Eightgate to dress the Regent\'s guests for the Parley.',
+  },
+  {
+    id: 'thumb_three',
+    when: 'side.sweet_water.done',
+    title: 'The ash thumbprint, a third time',
+    text: 'Yucayeque\'s oil, Cenizal\'s bread, Bab al-Dhahab\'s water: the same grey thumbprint on the door that gives it. Someone is feeding the realm.',
+  },
+  {
+    id: 'changed_cistern',
+    when: 'anchor.cistern_pin',
+    title: 'Something changed',
+    text: 'The old cistern gate stands pinned open: young Patricio stopped an engineer taking it for the iron. The city line runs, and the square\'s fountain with it.',
+  },
+  {
+    id: 'harbor_price',
+    when: 'clue.harbor_price',
+    title: 'Twenty-five',
+    text: 'Young Yusuf, keeper of the ledger: "The price of the harbour. Twenty-five." A debt unwritten is a debt unpaid; a debt written is at least a debt.',
+  },
+  {
+    id: 'changed_sunlock',
+    when: 'anchor.vault_sunlock',
+    title: 'Something changed',
+    text: 'The witness\'s niche in the Dorini vault: its lock was cut to the Locket\'s sun fifty years ago, at Patricio\'s word. No guildsman holds that key.',
+  },
+  {
+    id: 'sealed_seventh',
+    when: 'clue.sealed_seventh',
+    title: 'The seventh page',
+    text: 'The Dorini copy of the Sun Accord: six pages open, signed. The seventh is sealed with the Throne\'s wax. Only the Throne Archive at Eightgate may break it.',
+  },
+  {
+    id: 'benny_note',
+    when: 'item.benny_half_sheet',
+    title: "Benny's half-sheet",
+    text: '"I will not put my name to this page. B. Rodriguez." Young Benny\'s hand, kept with the witness\'s copy at Yusuf\'s word.',
+  },
+  {
+    id: 'dorini_pass',
+    when: 'story.layla_pass',
+    title: 'A Dorini caravan',
+    text: 'The Merchant-Prince: a witness holds, and the seal is the Throne\'s. A Dorini caravan is not stopped at the eight gates. It leaves at first light.',
+  },
+  {
+    id: 'brasador_coin',
+    when: 'clue.brasador_coin',
+    title: "Yari's coin",
+    text: 'Samira: Brasador mint, three years old, worn in oil and salt. "Someone in Ardencia pays someone in Xaraguá." Gianna: he pays the resistance to sell it.',
+  },
+  // Chapter 5 (Eightgate).
+  {
+    id: 'under_crown_eyes',
+    when: 'clue.elodie_locket_line',
+    title: 'Under Crown eyes',
+    text: 'Mother, in the Throne Hall, with the Crown\'s clerk writing: "Believe what your Locket tells you, not what his mouth does."',
+  },
+  {
+    id: 'seven_ribbons',
+    when: 'clue.seven_ribbons',
+    title: 'Seven drawers, seven ribbons',
+    text: 'The Accord under glass: six pages, seven ribbons, the seventh tied to nothing. The Archive\'s cabinet has seven drawers. Only their carved numbers are old.',
+  },
+  {
+    id: 'sealing',
+    when: 'story.sealing_seen',
+    title: 'The sealing',
+    text: 'The Throne\'s clerk read the seventh page to himself and filed it in drawer 4. Benny refused aloud. Grandfather sealed the binding; he said he would remember.',
+  },
+  {
+    id: 'changed_thread',
+    when: 'anchor.ribbon_thread',
+    title: 'Something changed',
+    text: 'A red thread from the seventh ribbon, tied by young Patricio round the handle of drawer 4. The drawers have been moved since. The thread went with it.',
+  },
+  {
+    id: 'seventh_clause_read',
+    when: 'clue.seventh_clause_read',
+    title: 'The seventh clause',
+    text: '"The harbor of Xaraguá and its waters are given into the keeping of the Crown of Aldermoor, at the Crown\'s pleasure, to be revisited." No signature.',
+  },
+  {
+    id: 'in_private',
+    when: 'clue.elodie_tested_line',
+    title: 'In private',
+    text: 'Mother, behind Coco\'s curtain, looking at the pins: "He should never have tested you."',
   },
 ];

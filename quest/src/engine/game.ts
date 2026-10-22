@@ -4,7 +4,7 @@
 // returns a list of effects for the caller to show. Pure TypeScript: no Phaser, no DOM.
 
 import { encounterFlag } from './encounterFlags.ts';
-import { ENCOUNTER_CHANCE_PER_STEP, ENCOUNTER_GRACE_STEPS } from '../config.ts';
+import { ENCOUNTER_CHANCE_PER_STEP, ENCOUNTER_GRACE_STEPS, STARTING_GOLD } from '../config.ts';
 import { evaluate, flagsIn } from './conditions.ts';
 import { debateScript } from './debate.ts';
 import { cardFlag, type CardDef, type EncounterGroup, type EncounterTable, type GameContent } from './content.ts';
@@ -31,6 +31,8 @@ export function seenFlag(mapId: string, objectId: string): string {
 export const FIGHT_RETURN_FLAG = 'fight.return';
 /** The scene a dialogue queued for after its fight is won (the pier: the marines flee, the fisher speaks). */
 export const BATTLE_AFTER_FLAG = 'battle.after';
+/** Gold a conversation charges (a number), paid when it ends. */
+export const GOLD_PAY_FLAG = 'gold.pay';
 
 /** What the player is facing, with the name its label shows. */
 export type Target =
@@ -617,6 +619,13 @@ export class GameLogic {
     const effects: Effect[] = [...this.afterDialogue, { kind: 'sync' }];
     this.afterDialogue = [];
     const flags = this.state.flags;
+    // A price paid in a conversation (flag `gold.pay`: Samira's invoice), taken from the purse.
+    const pay = flags.get(GOLD_PAY_FLAG);
+    flags.clear(GOLD_PAY_FLAG);
+    if (typeof pay === 'number' && pay > 0) {
+      const purse = flags.get('gold');
+      flags.set('gold', Math.max(0, (typeof purse === 'number' ? purse : STARTING_GOLD) - pay));
+    }
     const battle = flags.get('battle.next');
     if (typeof battle === 'string' && battle) {
       flags.clear('battle.next');

@@ -171,6 +171,244 @@ export const DEBATES: readonly DebateDef[] = [
       say(R, 'And better ones.'),
     ],
   },
+  // Cenizal's Lower Town (Chapter 3; outline 7.3), by the soup line: a baker's widow of the Gaze against a Witness
+  // oath-knight (the soldiers' faith: an oath, and what breaking one costs). Required before noon. Reason needs one
+  // of La Biblioteca Vieja's books on oaths, the iron trade or the kitchen gossip.
+  {
+    id: 'ardencia_bread',
+    city: 'ardencia',
+    question: 'Is a thief who feeds the hungry a thief?',
+    ally: 'baker_widow',
+    opponent: 'oath_knight',
+    passing: [
+      say('oath_knight', '...and a stolen loaf is a stolen loaf, widow. The oath has no clause for soup.'),
+      say('baker_widow', 'Then the oath was written by men who never went hungry.'),
+    ],
+    listen: [
+      say('oath_knight', 'Someone is stealing the Lord\'s iron, a cart a month, and feeding this street with it. Everyone knows.'),
+      say('baker_widow', 'Everyone eats. That is what everyone knows.'),
+      say('oath_knight', 'Every soldier here swore on the iron not to steal from the house. A thief who feeds you is still a thief.'),
+      say('baker_widow', 'My husband swore that oath. He died at Cendre. Nobody fed me until the bread came.'),
+      say(A, 'Gigi, they are both a little bit right. Is that allowed?'),
+    ],
+    reasonNeeds: [loreFlag('ardencia_oaths'), loreFlag('ardencia_iron_trade'), loreFlag('ardencia_kitchen_maids')],
+    rounds: [
+      {
+        claim: 'A thief is a thief. The oath against stealing has no clause for soup.',
+        answers: {
+          scripture: { short: 'The Gaze remembers both', text: 'The Gaze remembers who was fed and who took, and judges both. Not one without the other.', strength: 1 },
+          reason: { short: 'The oath binds the swearer', text: 'Your own Witnesses teach it: an oath binds the one who swore it. The hungry swore nothing.', strength: 2 },
+          compassion: { short: 'Ask the child in line', text: 'Ask the child at the front of the line whether she is eating stolen soup.', strength: 0 },
+        },
+      },
+      {
+        claim: 'If the Lord\'s iron feeds them, then the Lord is the thief, or the fool who is robbed.',
+        answers: {
+          scripture: { short: 'Elodie lent the realm', text: 'The temple says the goddess lent the realm to all of us to keep. Iron included.', strength: 1 },
+          reason: { short: 'The shortfall is steady', text: 'One cart a month, never more, for three years. A thief who is never caught is a thief who is allowed.', strength: 2 },
+          compassion: { short: 'Nobody here is fooled', text: 'Nobody on this street thinks the Lord is a fool. They think someone cares.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then tell me, envoy: what do you owe a lord who feeds you with stolen bread?',
+        answers: {
+          scripture: { short: 'Thanks, and the truth', text: 'Thanks, and the truth. The Gaze asks no more than that of anyone.', strength: 1 },
+          reason: { short: 'Nothing he did not pay', text: 'Nothing. If the bread is his, it is a gift. If it is stolen, it was never his to sell.', strength: 1 },
+          compassion: { short: 'To feed the next one', text: 'You owe the next hungry child a bowl, when you can. That is how a street pays its debts.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The soup line murmurs. Someone claps. The widow wipes her eyes.)',
+      1: '(The street is split. Half look at the knight, half at the pot.)',
+      0: '(A few people shrug and go back to their bowls.)',
+    },
+    won: [
+      say('oath_knight', '...The oath binds the swearer. I taught that to recruits for twenty years. I had forgotten.'),
+      say('baker_widow', 'Eat with us, knight. The pot does not ask who you are.'),
+    ],
+    lost: [
+      say('oath_knight', 'A thief is a thief, envoy. Come back when you can tell me otherwise.'),
+      say('baker_widow', 'Do not mind him, child. He argues with the soup, too.'),
+    ],
+    mediate: [
+      say(G, 'You both want the same thing: nobody in this street hungry, and nobody shamed for it.'),
+      say(G, 'Knight, stand the soup line with the cook, and count the bowls. Widow, tell him every name.'),
+      say('oath_knight', 'A Witness counting bowls. My sergeant would laugh.'),
+      say('baker_widow', 'Then let him laugh with a full mouth.'),
+    ],
+    provoke: [
+      say(G, 'You swore oaths to a Lord who lets his people starve!'),
+      nar('The street goes quiet. The knight\'s hand goes to his belt, and stays there.'),
+      say('baker_widow', 'Not in front of the children, envoy. Not here.'),
+    ],
+    after: [
+      say('oath_knight', 'I keep the count now. Three hundred and twelve bowls yesterday.'),
+      say('baker_widow', 'And not one of them stolen. Ask him. He checks.'),
+    ],
+  },
+  // Chapter 4, the souk square by the dry fountain (outline 7.3): a Witness contract-priest (the faith of oaths: a promise
+  // written is a promise watched) against a Gaze merchant (the Gaze remembers who was cheated). Required before dusk.
+  // Reason needs one of the House of Ledgers' books on contracts, the Witness or the Dorini Promise. The third round
+  // turns the Majlis's refusal on the square.
+  {
+    id: 'aldoria_bargain',
+    city: 'al_doria',
+    question: 'Is a bad bargain still sacred?',
+    ally: 'gaze_merchant',
+    opponent: 'contract_priest',
+    opensIf: { flag: 'story.vault_refused' },
+    passing: [
+      say('contract_priest', '...signed is signed, merchant. The Witness does not ask whether you liked the price.'),
+      say('gaze_merchant', 'And the Gaze does not forget who paid it.'),
+    ],
+    listen: [
+      say('contract_priest', 'A promise written is a promise watched. A bad bargain kept is still a kept promise. That is what makes this market work.'),
+      say('gaze_merchant', 'The Crown bought Yucayeque\'s harbour from the guild. Nobody in Yucayeque sold it. Is that bargain sacred too?'),
+      say('contract_priest', 'If it was signed, it is watched. "Sacred" and "just" are different words, my friend.'),
+      say('gaze_merchant', 'Then your Witness watches a theft and calls it a contract.'),
+      say(A, 'Gigi, Yari has gone very quiet.'),
+    ],
+    reasonNeeds: [loreFlag('aldoria_on_contracts'), loreFlag('aldoria_witness_market'), loreFlag('aldoria_dorini_promise')],
+    rounds: [
+      {
+        claim: 'A promise written is a promise watched. A bad bargain kept is still a kept promise.',
+        answers: {
+          scripture: { short: 'The Gaze sees both', text: 'The Gaze remembers the bargain and who was cheated by it, and judges both. Not one without the other.', strength: 1 },
+          reason: { short: 'It binds who consented', text: 'Your own teaching: a contract binds the ones who signed it. A bargain over someone else\'s goods binds them to nothing.', strength: 2 },
+          compassion: { short: 'Ask the one who was sold', text: 'Ask the one who was sold whether they feel watched over.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then is the Crown\'s charter on Xaraguá sacred? It was signed. It is watched.',
+        answers: {
+          scripture: { short: 'Elodie lent the harbours', text: 'The temple says the goddess lent the realm to all of us. Nobody was given a harbour to sell.', strength: 1 },
+          reason: { short: 'Then read it aloud', text: 'Then let the Witness watch it read aloud, every clause, in Yucayeque. See who signed for the harbour.', strength: 2 },
+          compassion: { short: 'Yari is standing here', text: 'The girl beside me is from Yucayeque. Tell her the bargain is sacred.', strength: 0 },
+        },
+      },
+      {
+        claim: 'Then tell me, envoy: what do you owe a house that keeps a bad bargain?',
+        answers: {
+          scripture: { short: 'The truth, out loud', text: 'The truth, said out loud. The Gaze asks no more than that of anyone.', strength: 1 },
+          reason: { short: 'Nothing past its word', text: 'Nothing. A witness holds what was signed. It does not have to like it, or profit from it.', strength: 1 },
+          compassion: { short: 'To pay what it owes', text: 'It owes what every debtor owes: to pay it back to the ones it was taken from.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The moneychangers stop counting. Someone at the back says "Hear, hear.")',
+      1: '(The square is split. Half of them watch the priest, half the merchant.)',
+      0: '(A few people shrug and go back to their stalls.)',
+    },
+    won: [
+      say('contract_priest', '...A contract binds the ones who consented. I teach that to every apprentice. I had stopped hearing it.'),
+      say('gaze_merchant', 'Tea, priest? You can watch me pay for it.'),
+    ],
+    lost: [
+      say('contract_priest', 'Signed is signed, envoy. Come back when you can show me otherwise.'),
+      say('gaze_merchant', 'He will be here. He always is. So will I.'),
+    ],
+    mediate: [
+      say(G, 'You both want the same thing: bargains people can trust, and nobody sold who never agreed.'),
+      say(G, 'Priest, watch the contracts. Merchant, read out who signed them. Together, at the fountain, on market day.'),
+      say('contract_priest', 'A Witness and a Gaze merchant at one table. The guild will think it is a conspiracy.'),
+      say('gaze_merchant', 'Let them. It will be the first honest one.'),
+    ],
+    provoke: [
+      say(G, 'Your Witness watched the Crown buy a harbour from people who did not own it, and said nothing!'),
+      nar('The square goes quiet. Two Majlis guards turn to look.'),
+      say('contract_priest', 'Not here, envoy. Not in front of the guards.'),
+    ],
+    after: [
+      say('contract_priest', 'We read the contracts aloud now, at noon. You would be surprised who stops to listen.'),
+      say('gaze_merchant', 'And who stops coming to the market. Both are good signs.'),
+    ],
+  },
+  // Eightgate's fountain (Chapter 5; the outline 7.3 with its second review 3.10): Se-2 Four Voices, required.
+  // All four faiths, one claim a round (DebateRound.speaker): the Sky-Rider, the Quiet Crown speaker, the Witness
+  // priest; the Gaze keeper is Gianna's side. The sources contradict each other on whether Elodie blessed the Throne
+  // (guide 6.6). Reason needs one of the Hall's books (the Archive is sealed by day) or the Founding Compact.
+  {
+    id: 'seat_voices',
+    city: 'seat',
+    question: 'Who may sit the Throne?',
+    ally: 'gaze_keeper',
+    opponent: 'sky_rider',
+    opensIf: { flag: 'story.coco_plan' },
+    passing: [
+      say('gaze_keeper', '...she blessed it! The sun-marked heirs are her sign.'),
+      say('sky_rider', 'No god touched that chair. It was a prize of the founders\' war.'),
+      say('witness_priest', 'It is a contract between eight houses. Blessed or not.'),
+      say('quiet_speaker', 'And the shouting is the noise the chair makes. Be quiet, all of you.'),
+    ],
+    listen: [
+      say('gaze_keeper', 'Elodie blessed the Throne. The heirs who stand on it carry her sun. That is her sign.'),
+      say('sky_rider', 'The Four Hands remember the land, not the chair. The chair is just a chair. The founders fought over it.'),
+      say('witness_priest', 'Whoever keeps the Founding Compact may sit it, blessed or not. A contract needs no blessing. It needs keeping.'),
+      say('quiet_speaker', 'One hand on the Throne would bring the Quiet. This argument is the noise. It has gone on fifty years.'),
+      say(A, 'Gigi, they are all talking about our family\'s chair.'),
+    ],
+    reasonNeeds: [loreFlag('seat_regent_commission'), loreFlag('seat_council_eight'), loreFlag('seat_petitions_breach'), loreFlag('seat_founding_compact')],
+    rounds: [
+      {
+        speaker: 'sky_rider',
+        claim: 'No god touched that chair. Whoever won the war sat in it. The chair is just a chair.',
+        answers: {
+          scripture: { short: 'She wove eight threads', text: 'Every faith agrees the realm was eight threads. A chair for one thread is not the realm\'s chair.', strength: 1 },
+          reason: { short: 'The houses let her speak', text: 'The council\'s rule: whoever stands on the tile speaks for the houses only while they let her. Not a prize. A loan.', strength: 2 },
+          compassion: { short: 'Ask who lost the war', text: 'Ask the ones who lost that war whether it was just a chair.', strength: 1 },
+        },
+      },
+      {
+        speaker: 'quiet_speaker',
+        claim: 'One hand on the Throne, and the arguing stops. The Quiet is the only peace this realm has never tried.',
+        answers: {
+          scripture: { short: 'She remembers all voices', text: 'The goddess remembers every voice. A peace that silences them is the one thing she cannot remember.', strength: 2 },
+          reason: { short: 'Silence signs nothing', text: 'A contract needs every party heard. A quiet realm cannot agree to anything. It can only be told.', strength: 1 },
+          compassion: { short: 'You sound tired', text: 'You sound tired. Fifty years of shouting would tire anyone. That is not the same as being wrong.', strength: 1 },
+        },
+      },
+      {
+        speaker: 'witness_priest',
+        claim: 'Then you agree with me, envoy. Whoever keeps the Compact may sit it. Even the one who keeps it now.',
+        answers: {
+          scripture: { short: 'Keeping is not holding', text: 'The Gaze keeps a memory. It does not own it. Keeping the Throne is not the same as holding it.', strength: 1 },
+          reason: { short: 'Clause Six, unkept', text: 'The Compact says every clause is read to every signatory. Has every clause been? Then nobody has kept it.', strength: 2 },
+          compassion: { short: 'Ask the bricked gate', text: 'Ask the house whose gate is bricked up whether the Compact was kept for them.', strength: 1 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The pilgrims at the fountain go quiet. Someone at the back nods, slowly.)',
+      1: '(The crowd splits four ways, as it always does here.)',
+      0: '(A Sealbearer looks over. The crowd thins.)',
+    },
+    won: [
+      say('witness_priest', '...A contract unkept by everyone binds no one. I teach that. I had not applied it to the Throne.'),
+      say('sky_rider', 'A loan, not a prize. My grandmother would have liked you.'),
+      say('quiet_speaker', 'I will think about it. Quietly.'),
+    ],
+    lost: [
+      say('witness_priest', 'The Compact is kept, envoy, by whoever is keeping it. Come back with a clause.'),
+      say('gaze_keeper', 'We will be here. We are always here. So is he.'),
+    ],
+    mediate: [
+      say(G, 'You all want the same thing: a Throne nobody can take without the houses.'),
+      say(G, 'Read the Compact aloud here, at the fountain, every Parley. Each of you a clause.'),
+      say('quiet_speaker', 'Aloud. Every Parley. ...That is a great deal of noise.'),
+      say('gaze_keeper', 'Good noise.'),
+    ],
+    provoke: [
+      say(G, 'The Throne is held by a man who has renewed his own commission three times, and you argue about blessings!'),
+      nar('The fountain goes quiet. Two Sealbearers turn and look.'),
+      say('witness_priest', 'Not here, envoy. Not under the Hall\'s windows.'),
+    ],
+    after: [
+      say('witness_priest', 'We read a clause of the Compact aloud here now. The Sealbearers listen. They pretend not to.'),
+      say('quiet_speaker', 'I still think it is noise. I come to hear it anyway.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */

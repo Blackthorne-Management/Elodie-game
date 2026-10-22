@@ -5,7 +5,7 @@
 // coming back from the bridgehead's memory before the pawl is pinned.
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5 } from '../src/data/quests.ts';
 import { findPath } from '../src/engine/sim.ts';
 import type { Sim } from '../src/engine/sim.ts';
 import { goldWalk } from '../tools/gold-walk.ts';
@@ -40,6 +40,31 @@ describe('following only the gold arrow', () => {
 
   it('takes the short way (review 1 measured 2,068 steps and 59 map changes before the occupied city was cut)', () => {
     expect(walk.steps).toBeLessThan(2300);
+    expect(walk.mapChanges).toBeLessThan(60);
+  });
+});
+
+describe('following only the gold arrow on, through Chapters 3, 4 and 5', () => {
+  // On from the end of Chapter 2 (the merge of Chapters 3 to 5, Oct 22: their goals now name the person or thing,
+  // the door, or the shimmer, and every Echo puzzle has its echoGoals).
+  const start = goldWalk({ maps });
+  const walk = goldWalk({ maps, sim: start.sim, through: 'act5' });
+
+  it('finishes Chapter 5 with no stall', () => {
+    expect(start.stalls).toEqual([]);
+    expect(walk.stalls).toEqual([]);
+    expect(walk.finished).toBe(true);
+    for (const f of ['act3.complete', 'act4.complete', 'story.hollis_agreed', 'anchor.ribbon_thread']) expect(walk.sim.logic.state.flags.isSet(f), f).toBe(true);
+  });
+
+  it('meets every objective in order (the ones that begin and end inside one scene are never stopped on)', () => {
+    const skip: Record<string, readonly string[]> = { act3: ['request', 'guests'], act4: ['lead', 'blades', 'word'], act5: ['road', 'terms'] };
+    const expected = [ACT3, ACT4, ACT5].flatMap((q) => q.objectives.filter((o) => !skip[q.id]!.includes(o.id)).map((o) => `${q.id}/${o.id}`));
+    expect(walk.objectives).toEqual(expected);
+  });
+
+  it('takes a reasonable way (measured Oct 22: 1,810 steps and 48 map changes)', () => {
+    expect(walk.steps).toBeLessThan(2100);
     expect(walk.mapChanges).toBeLessThan(60);
   });
 });

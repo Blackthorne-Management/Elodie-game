@@ -1,0 +1,1331 @@
+{
+  "compressionlevel": -1,
+  "width": 26,
+  "height": 14,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 33,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 26,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+157,157,157,157,94,95,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,156,156,156,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,156,156,156,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,156,156,156,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,156,156,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,157,156,156,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 26,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,158,158,158,158,158,158,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,158,158,158,158,158,158,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 26,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+157,157,157,157,94,95,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,156,156,156,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,156,156,156,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,156,156,156,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,9,9,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,156,156,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,156,157,156,156,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,156,156,156,156,156,156,156,156,156,156,156,157,156,156,156,156,156,156,156,156,157,157,157,157,
+157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,
+157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157,157
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 26,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,74,74,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 26,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 26,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,16,16,16,16,16,16,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,16,16,16,16,16,16,0,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 26,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,16,16,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "samira_vault",
+          "type": "npc",
+          "x": 48,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!party.samira"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "samira"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "echo_yusuf",
+          "type": "npc",
+          "x": 160,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_yusuf"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "echo_ledger_clerk",
+          "type": "npc",
+          "x": 192,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_ledger_clerk"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "caona_vault",
+          "type": "npc",
+          "x": 48,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "caona_echo"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "benny_vault",
+          "type": "npc",
+          "x": 64,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "benny_echo"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "echo_locksmith",
+          "type": "npc",
+          "x": 336,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_locksmith"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "stair_blade",
+          "type": "npc",
+          "x": 80,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.qasim_came, !encounter.aldoria_story.qasim.won"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "stair_blade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 8,
+          "name": "vault_stair",
+          "type": "door",
+          "x": 64,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "aldoria-bazaar"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "bazaar_vault"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 9,
+          "name": "vault_arrive",
+          "type": "trigger",
+          "x": 64,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_arrive"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.vault_lamps"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "layla_resume",
+          "type": "trigger",
+          "x": 224,
+          "y": 80,
+          "width": 128,
+          "height": 96,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "layla_descends"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "encounter.aldoria_story.qasim.won, !story.layla_pass"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 11,
+          "name": "stair",
+          "type": "spawn",
+          "x": 64,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 12,
+          "name": "vault_echo",
+          "type": "echo_zone",
+          "x": 48,
+          "y": 112,
+          "width": 144,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.vault_entered"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "vault_echo_enter"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "vault_echo_return"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 13,
+          "name": "sun_lock_anchor",
+          "type": "anchor",
+          "x": 352,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.vault_sunlock"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "sun_lock_blank"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 14,
+          "name": "ledger_page",
+          "type": "puzzle_object",
+          "x": 128,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "ledger_page"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lectern"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "balance_pan",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "balance_pan"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "balance"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "weight_1",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!puzzle.vault.w1"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hook"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "weight_1_hung",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "puzzle.vault.w1"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hung"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "weight_2",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!puzzle.vault.w2"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hook"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "weight_2_hung",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "puzzle.vault.w2"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hung"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "weight_4",
+          "type": "puzzle_object",
+          "x": 128,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!puzzle.vault.w4"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hook"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "weight_4_hung",
+          "type": "puzzle_object",
+          "x": 128,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "puzzle.vault.w4"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hung"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "weight_8",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!puzzle.vault.w8"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hook"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "weight_8_hung",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "puzzle.vault.w8"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hung"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "weight_16",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_16"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!puzzle.vault.w16"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hook"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "weight_16_hung",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_weight_16"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "puzzle.vault.w16"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weight_hung"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "balance_door",
+          "type": "puzzle_object",
+          "x": 208,
+          "y": 112,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "balance_door"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.vault_outer"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "balance_door"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "sun_lock_blank",
+          "type": "puzzle_object",
+          "x": 352,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "sun_lock_blank"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sun_lock"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "box_seven",
+          "type": "puzzle_object",
+          "x": 240,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "box_seven"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "vault_boxes",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 64,
+          "width": 80,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "vault_boxes"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "sun_lock",
+          "type": "puzzle_object",
+          "x": 352,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "sun_lock"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.vault_sunlock"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sun_lock"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "sun_lock_open",
+          "type": "puzzle_object",
+          "x": 352,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "sun_lock"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.vault_sunlock, !story.vault_inner"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sun_lock_cut"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "witness_chest",
+          "type": "puzzle_object",
+          "x": 384,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "witness_chest"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sealed_chest"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 400,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 200,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

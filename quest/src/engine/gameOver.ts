@@ -56,7 +56,11 @@ export type LossOutcome =
  * unless it is a random ambush, one loss at that fight (its Grudge). The caller saves straight after.
  */
 export function recordLoss(flags: FlagStore, def: BattleDef): LossOutcome {
-  if (def.meantToLose) return { kind: 'scripted', scene: def.meantToLose.scene };
+  if (def.meantToLose) {
+    // Its flags are set now, so the save taken as the fight ends never sends the party back into it (review 3.6).
+    for (const [k, v] of Object.entries(def.meantToLose.set ?? {})) flags.set(k, v);
+    return { kind: 'scripted', scene: def.meantToLose.scene };
+  }
   const count = flags.add(GAME_OVER_COUNT_FLAG, 1);
   if (!isRandomFight(def)) flags.add(lossesFlag(def), 1);
   return { kind: 'gameOver', count, grudge: grudgeFor(flags, def) };

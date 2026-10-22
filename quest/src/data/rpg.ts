@@ -6,7 +6,7 @@ import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SUR
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2 } from './quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
@@ -141,6 +141,49 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'fish_stew', name: 'Fish stew', kind: 'consumable', price: 25, heals: 20, healTurns: 3, text: 'Snapper and peppers in a gourd bowl. Restores 20 HP, a little at a time.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
 
+  // Ardencia (Chapter 3): Cenizal's tavern, and the key item from the treasurer's daughter.
+  { id: 'pan_de_ceniza', name: 'Pan de ceniza', kind: 'consumable', price: 25, heals: 35, text: 'Dark bread baked in the ash of the forges. Restores 35 HP.' },
+  { id: 'olla', name: 'Olla de Cenizal', kind: 'consumable', price: 40, heals: 60, healTurns: 3, text: 'Beans, pork and peppers from a clay pot. Restores 60 HP, a little at a time.' },
+  { id: 'cafe_de_olla', name: 'Café de olla', kind: 'consumable', price: 30, restores: 15, text: 'Coffee with cinnamon and cane sugar, stirred in clay. Restores 15 SP.' },
+  {
+    id: 'bennys_refusal',
+    name: "Benny's Refusal (copy)",
+    kind: 'key',
+    price: 0,
+    text: 'Lord Benny\'s refusal to sign a seventh page, fifty years old. The bankers of Al-Doria, it says, hold the signed copy.',
+  },
+  // Al-Doria (Chapter 4): the tea seller's stall, and the key items of the vault and the caravan gate.
+  { id: 'mint_tea', name: 'Mint tea', kind: 'consumable', price: 35, restores: 20, text: 'Green tea with fresh mint, poured from a height so it foams. Restores 20 SP.' },
+  { id: 'dates', name: 'Dates', kind: 'consumable', price: 30, heals: 45, text: 'Medjool dates from the oases past the Desert Edge. Restores 45 HP.' },
+  { id: 'tagine', name: 'Lamb tagine', kind: 'consumable', price: 55, heals: 80, healTurns: 3, text: 'Lamb, apricots and almonds under a clay cone. Restores 80 HP, a little at a time.' },
+  {
+    id: 'brasador_coin',
+    name: "Yari's fare coin",
+    kind: 'key',
+    price: 0,
+    text: 'A Brasador coin from the resistance\'s oil money, given to Yari for the fare. The trader would not take it: "Not Crown, not ours."',
+  },
+  {
+    id: 'benny_half_sheet',
+    name: "Benny's half-sheet",
+    kind: 'key',
+    price: 0,
+    text: 'From the witness\'s chest in the Dorini vault, in young Benny\'s hand: "I will not put my name to this page. B. Rodriguez."',
+  },
+  {
+    id: 'dorini_pass',
+    name: 'Dorini caravan pass',
+    kind: 'key',
+    price: 0,
+    text: 'The Merchant-Prince\'s seal on a caravan pass. A Dorini caravan is not stopped at the eight gates of Eightgate.',
+  },
+  {
+    id: 'petition',
+    name: "Xaraguá's Petition of Breach",
+    kind: 'key',
+    price: 0,
+    text: "Copies in Cacique Anaco's hand, carried by his daughter: the petition the Hall received forty-nine years ago and never heard.",
+  },
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
   // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
   // warriors (defence, HP, slower). Rarity sets the colour behind the picture and how good it is:
@@ -158,6 +201,17 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'padded_vest', level: 3, rarity: 'uncommon', name: 'Padded vest', kind: 'gear', slot: 'armor', armor: 'leather', price: 140, stats: { def: 4, hp: 6, spd: 1, atk: 1 }, text: 'Quilted cotton over leather. Light enough to run in.' },
   // Heavy armour (suits warriors).
   { id: 'officer_coat', name: "Officer's coat", kind: 'gear', slot: 'armor', armor: 'heavy', level: 1, price: 150, stats: { def: 5, hp: 10 }, text: 'Red wool and gold buttons over a mail lining, heavy as a promise.' },
+  { id: 'blackened_plate', level: 10, rarity: 'uncommon', name: 'Blackened plate', kind: 'gear', slot: 'armor', armor: 'heavy', price: 620, stats: { def: 12, hp: 20, spd: -1 }, text: 'Brasador plate, blackened in the forge so it never shines on a night march.' },
+  { id: 'cinder_coat', level: 9, rarity: 'uncommon', name: 'Cinder coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 380, stats: { def: 6, hp: 10, spd: 2 }, text: 'Oiled black leather over quilting. The sparks of the forge roll off it.' },
+  { id: 'ember_robe', level: 9, rarity: 'uncommon', name: 'Ember robe', kind: 'gear', slot: 'armor', armor: 'robe', price: 360, stats: { def: 4, sp: 12, mag: 3 }, text: 'Red wool with a black hem, the robe of the Biblioteca Vieja\'s readers.' },
+  // Al-Doria's tier (Chapter 4: the shops stock tiers 8 and 12).
+  { id: 'merchant_robe', level: 12, rarity: 'uncommon', name: "Merchant's robe", kind: 'gear', slot: 'armor', armor: 'robe', price: 640, stats: { def: 6, sp: 16, mag: 4 }, text: 'Cream silk under a green sash, a slip-book pocket in the sleeve.' },
+  { id: 'desert_leathers', level: 12, rarity: 'uncommon', name: 'Desert leathers', kind: 'gear', slot: 'armor', armor: 'leather', price: 600, stats: { def: 8, hp: 14, spd: 3 }, text: 'Sand-coloured leather over cotton, cool by day, warm by night.' },
+  { id: 'gilded_mail', level: 12, rarity: 'uncommon', name: 'Gilded mail', kind: 'gear', slot: 'armor', armor: 'heavy', price: 820, stats: { def: 15, hp: 26, spd: -1 }, text: 'Guild mail with brass at the collar. The caravan guards wear it under their robes.' },
+  // Eightgate's tier (Chapter 5: the Envoys' Outfitter stocks tier 16; a Throne city's prices).
+  { id: 'keeper_robe', level: 16, rarity: 'uncommon', name: "Keeper's robe", kind: 'gear', slot: 'armor', armor: 'robe', price: 600, stats: { def: 8, sp: 20, mag: 5 }, text: 'Plain grey wool, cut for an archivist who never leaves the stacks. Warm in a cold Hall.' },
+  { id: 'envoy_leathers', level: 16, rarity: 'uncommon', name: "Envoy's leathers", kind: 'gear', slot: 'armor', armor: 'leather', price: 650, stats: { def: 10, hp: 18, spd: 3 }, text: 'Riding leathers for an envoy on the roads between the gates, violet piping at the cuff.' },
+  { id: 'warden_coat', level: 16, rarity: 'uncommon', name: "Warden's coat", kind: 'gear', slot: 'armor', armor: 'heavy', price: 700, stats: { def: 18, hp: 30, spd: -1 }, text: 'Mail under grey wool, the coat the Seat\'s gate wardens wore before there were Sealbearers.' },
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
   // Charms (anyone).
@@ -168,6 +222,10 @@ const ITEM_LIST: ItemDef[] = [
     text: 'A small face carved in dark wood, worn on a cotton cord. The carver says it watches your back.',
   },
   { id: 'cotton_tunic', level: 4, rarity: 'uncommon', name: 'Cotton tunic', kind: 'gear', slot: 'armor', armor: 'leather', price: 230, stats: { def: 4, hp: 8, spd: 2 }, text: 'Thick Yaguana cotton, quilted twice, with a teal border. Light, cool and hard to cut.' },
+  { id: 'iron_ring', name: 'Iron ring', kind: 'gear', slot: 'charm', level: 8, rarity: 'uncommon', price: 260, stats: { atk: 3, def: 2 }, text: 'A plain Brasador ring, hammered thick. For luck, they say, and for punching.' },
+  { id: 'ember_ring', name: 'Ember ring', kind: 'gear', slot: 'charm', level: 10, rarity: 'rare', price: 480, stats: { mag: 3, sp: 6 }, special: { kind: 'spRegen', value: 4, text: '+4% SP each turn.' }, text: 'A ring with a chip of forge-glass that never quite cools. +4% SP each turn in battle.' },
+  { id: 'brass_scale_charm', name: 'Brass-scale charm', kind: 'gear', slot: 'charm', level: 11, rarity: 'uncommon', price: 420, stats: { mag: 3, spd: 2 }, text: 'A moneychanger\'s tiny scale on a cord. It weighs nothing, and you weigh everything.' },
+  { id: 'sand_amulet', name: 'Sand amulet', kind: 'gear', slot: 'charm', level: 12, rarity: 'uncommon', price: 380, stats: { def: 3, hp: 10 }, text: 'Blue glass and silver against the evil eye, and against the desert sun.' },
   // Chapter 2's side quest rewards (Oct 20): the fisher's net float, and the button from the hutia's hoard.
   { id: 'net_float_charm', name: 'Net-float charm', kind: 'gear', slot: 'charm', level: 4, rarity: 'uncommon', price: 120, stats: { spd: 2, hp: 3 }, text: 'A carved gourd float from a Yucayeque net, on a knotted cord. The fisher tied the knot himself.' },
   {
@@ -175,6 +233,7 @@ const ITEM_LIST: ItemDef[] = [
     special: { kind: 'crit', value: 3, text: '+3% critical chance.' },
     text: 'A Crown marine\'s brass button from the hutia\'s hoard, polished by a hutia\'s paws. Lucky, Yari says, for everyone but the marine.',
   },
+  { id: 'sealed_satchel_charm', name: 'Sealed-satchel charm', kind: 'gear', slot: 'charm', level: 15, rarity: 'uncommon', price: 450, stats: { mag: 4, sp: 8, def: 1 }, text: 'A courier\'s tiny brass satchel on a chain, sealed shut. Nobody knows what is in it. Nobody asks.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {
@@ -189,7 +248,7 @@ export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(ITEM_
 
 export const MEMBERS: readonly MemberDef[] = [
   {
-    id: 'gianna', name: 'Gianna', role: 'Archivist-Mage', house: 'Kay Soley', portrait: 'gianna', era: 'present', class: 'mage',
+    id: 'gianna', name: 'Gianna', role: 'Archivist-Mage', house: 'Kay Soley', portrait: 'gianna', era: 'present', class: 'mage', anissaBond: true,
     passives: [
       {
         name: "Anissa's Light",
@@ -212,8 +271,9 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Voice of the Opía', text: 'When any fighter falls, her next shot hits a fifth harder (up to three times).' },
       { name: 'The hutia', text: 'After a win, a 1 in 8 chance her hutia steals something shiny.' },
     ],
-    // She hides in the petroglyph cave while the Crown holds Yucayeque (every marine knows her face).
-    joins: { all: [{ flag: 'story.yari_asked' }, { notFlag: 'story.yari_hidden' }] },
+    // She hides in the petroglyph cave while the Crown holds Yucayeque (every marine knows her face). In Eightgate she
+    // stays at Coco's workshop while the sisters go into the Archive as seamstresses (story.party_split, Chapter 5).
+    joins: { all: [{ flag: 'story.yari_asked' }, { notFlag: 'story.yari_hidden' }, { notFlag: 'story.party_split' }] },
     base: { hp: 50, sp: 16, atk: 12, def: 7, mag: 6, spd: 13 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'yaguana_bow', armor: 'woven_tunic' },
   },
@@ -222,6 +282,40 @@ export const MEMBERS: readonly MemberDef[] = [
     passives: [{ name: 'Hold the line', text: 'When he Guards, the allies behind him take a fifth less damage too.' }],
     base: { hp: 70, sp: 10, atk: 13, def: 12, mag: 3, spd: 7 }, growth: { hp: 8, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'marshal_cutlass', armor: 'officer_coat' },
+  },
+  // The companions to come (fighters as data, Oct 20; COMBAT.md 2 and 9): each is this entry, their skills in
+  // data/battles.ts and a placeholder look (assets.config.ts NPC_SPRITES; a painted battle/<look>.png replaces the
+  // walk sheet in battle). Azzy joins in Ardencia (Chapter 3, the forge); Samira in Al-Doria (Chapter 4, the guild
+  // vault, before Qasim's fight: party.samira).
+  {
+    id: 'azzy', name: 'Azzy', role: 'Blade-Knight', house: 'Brasador', portrait: 'azzy', era: 'present', class: 'warrior',
+    passives: [
+      { name: 'Sangre Ardiente', text: 'Each foe he fells this battle: +5% ATK (up to +25%).', effect: { kind: 'atkPerFell', share: 0.05, max: 0.25 } },
+    ],
+    // Away at Coco's workshop while the sisters are her seamstresses (Chapter 5: story.party_split).
+    joins: { all: [{ flag: 'party.azzy' }, { notFlag: 'story.party_split' }] },
+    base: { hp: 60, sp: 14, atk: 14, def: 10, mag: 4, spd: 9 }, growth: { hp: 7, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 },
+    start: { weapon: 'steel_saber', armor: 'officer_coat' },
+  },
+  {
+    id: 'samira', name: 'Samira', role: 'Alchemist', house: 'Dorini', portrait: 'samira', era: 'present', class: 'mage', spellbook: false,
+    passives: [
+      { name: 'Baraka Dorini', text: 'Gold from battles won with her: +10%.', effect: { kind: 'battleGold', share: 0.1 } },
+      { name: 'Daftar al-Dorini', text: 'She pays in gold for what she needs; the realm\'s Wealth makes each coin go further (+1% a point, up to +30%).' },
+    ],
+    joins: { all: [{ flag: 'party.samira' }, { notFlag: 'story.party_split' }] },
+    base: { hp: 44, sp: 28, atk: 7, def: 6, mag: 12, spd: 11 }, growth: { hp: 5, sp: 3, atk: 1, def: 1, mag: 2, spd: 1 },
+    start: { weapon: 'driftwood_staff_of_focus', armor: 'archivist_robe' },
+  },
+  // Young Lord Benny joins the Echo party once Azzy has joined (STORY.md: the design's rule), at the end of Chapter 3
+  // (story.benny_joined). Chapter 4 has no Echo battle (the plan review's rule): his first Echo there is a walk, at
+  // Yusuf's desk; his first fight in the Echo comes in a later chapter.
+  {
+    id: 'benny', name: 'Benny', role: 'Lord of Ardencia', house: 'Brasador', portrait: 'benny', look: 'benny_young', era: 'echo', class: 'warrior',
+    passives: [{ name: 'The iron promise', text: 'He kept the goal, not the oath: his La Marca is a weapon move, ready every third turn.' }],
+    joins: { flag: 'story.benny_joined' },
+    base: { hp: 66, sp: 12, atk: 14, def: 11, mag: 4, spd: 8 }, growth: { hp: 7, sp: 1, atk: 2, def: 2, mag: 0, spd: 1 },
+    start: { weapon: 'steel_saber', armor: 'officer_coat' },
   },
   // Caona joins the Echo party at the areíto of the first oath (STORY.md Chapter 2, beat 5).
   {
@@ -246,6 +340,25 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   xaragua_carver: { greeting: 'Guatiao! What will it be?', id: 'xaragua_carver', name: "Carver's mat", city: 'xaragua', stock: ['shell_beads', 'carved_charm'] },
   xaragua_bows: { greeting: 'Guatiao! What will it be?', id: 'xaragua_bows', name: "Bow-maker's stall", city: 'xaragua', stock: ['ironwood_bow', 'cotton_tunic'] },
   zetwal_cloth: { id: 'zetwal_cloth', name: 'Cloth row', city: 'zetwal', stock: ['woven_tunic', 'temple_robe'] },
+  // Cenizal (Chapter 3): the smith, the ring-maker and the tavern in the Upper Town; the Free Brasador
+  // quartermaster at the camp sells the smith's armour, for a party that could not buy it before noon (review 3.7).
+  ardencia_forge: { id: 'ardencia_forge', name: 'Brasador smithy', city: 'ardencia', stock: ['blackened_plate', 'cinder_coat', 'ember_robe', 'steel_saber', 'iron_cuirass'] },
+  ardencia_rings: { id: 'ardencia_rings', name: "Ring-maker's stall", city: 'ardencia', stock: ['iron_ring', 'ember_ring'] },
+  ardencia_tavern: { id: 'ardencia_tavern', name: 'Tavern', city: 'ardencia', stock: ['pan_de_ceniza', 'olla', 'cafe_de_olla'] },
+  // Bab al-Dhahab (Chapter 4): the tea seller, the armourer and the amulet seller in the bazaar's lanes.
+  aldoria_tea: { greeting: 'Ahlan wa sahlan! Tea first, then business.', id: 'aldoria_tea', name: "Tea seller's stall", city: 'al_doria', stock: ['mint_tea', 'dates', 'tagine'] },
+  aldoria_armourer: {
+    greeting: 'Tfaddal. Guild steel, desert leather.',
+    id: 'aldoria_armourer',
+    name: "Armourer's stall",
+    city: 'al_doria',
+    stock: ['tideglass_staff_of_tide', 'cacique_bow_of_thunder', 'starfall_staff_of_stars', 'moonshell_bow_of_moon', 'gilded_mail', 'desert_leathers', 'merchant_robe'],
+  },
+  aldoria_amulets: { greeting: 'Ahlan. Against the eye, against the sun.', id: 'aldoria_amulets', name: "Amulet seller's stall", city: 'al_doria', stock: ['brass_scale_charm', 'sand_amulet', 'ember_ring'] },
+  ardencia_camp: { id: 'ardencia_camp', name: 'Free Brasador stores', city: 'ardencia', stock: ['blackened_plate', 'cinder_coat', 'iron_ring', 'pan_de_ceniza'] },
+  // Eightgate (Chapter 5): the Concourse market (one thing from every capital reached) and the Envoys' Outfitter (tier 16).
+  seat_market: { greeting: 'Good day to you, traveller.', id: 'seat_market', name: 'Concourse market', city: 'seat', stock: ['soup_pot', 'casabe', 'pan_de_ceniza', 'dates', 'mint_tea'] },
+  seat_outfitter: { greeting: 'Madam. Do come in.', id: 'seat_outfitter', name: "Envoys' Outfitter", city: 'seat', stock: ['keeper_robe', 'envoy_leathers', 'warden_coat', 'sealed_satchel_charm'] },
 };
 
 /**
@@ -298,16 +411,62 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'xaragua-record', name: 'Record house' },
     ],
   },
+  // Chapter 3 (built Oct 21; CAPITALS.md 4): the Upper Town and its duel court in the middle, the Lower Town west,
+  // the Cinder Flats and the sea road below the walls (south), the strand camp west along the shore.
+  ardencia: {
+    id: 'ardencia',
+    name: 'Cenizal',
+    house: 'Brasador',
+    sections: [
+      { map: 'ardencia-town', name: 'Upper Town', at: { x: 0, y: 0 } },
+      { map: 'ardencia-lower', name: 'Lower Town', at: { x: -33, y: 10 } },
+      { map: 'ardencia-flats', name: 'The Cinder Flats', at: { x: 0, y: 29 } },
+      { map: 'ardencia-camp', name: 'Strand camp', at: { x: -25, y: 41 } },
+      { map: 'ardencia-alcazar', name: 'The Alcázar' },
+      { map: 'ardencia-library', name: 'La Biblioteca Vieja' },
+    ],
+  },
+  // Chapter 4 (built Oct 21; CAPITALS.md 3): the Grand Bazaar and the souk square in the middle, the quay of the Gate
+  // of Gold below it (south), the caravan gate and the Desert Edge east.
+  al_doria: {
+    id: 'al_doria',
+    name: 'Bab al-Dhahab',
+    house: 'Dorini',
+    sections: [
+      { map: 'aldoria-bazaar', name: 'The Grand Bazaar', at: { x: 0, y: 0 } },
+      { map: 'aldoria-quay', name: 'The Gate of Gold', at: { x: 6, y: 32 } },
+      { map: 'aldoria-desert', name: 'The Desert Edge', at: { x: 44, y: 2 } },
+      { map: 'aldoria-majlis', name: 'The Majlis' },
+      { map: 'aldoria-ledgers', name: 'The House of Ledgers' },
+      { map: 'aldoria-vault', name: 'The guild vault' },
+    ],
+  },
+  // Chapter 5 (built Oct 22; CAPITALS.md 5 with the outline's two additions): the Eight Gates Concourse in the middle,
+  // the Gold Gate's yard east, the Envoys' Quarter south, the Crossroads Fields beyond the yard.
+  seat: {
+    id: 'seat',
+    name: 'Eightgate',
+    house: 'Open to all houses',
+    sections: [
+      { map: 'seat-concourse', name: 'The Eight Gates Concourse', at: { x: 0, y: 0 } },
+      { map: 'seat-gateyard', name: "The Gold Gate's yard", at: { x: 48, y: 7 } },
+      { map: 'seat-quarter', name: "The Envoys' Quarter", at: { x: 11, y: 34 } },
+      { map: 'seat-fields', name: 'The Crossroads Fields', at: { x: 48, y: 27 } },
+      { map: 'seat-hall', name: 'The Throne Hall' },
+      { map: 'seat-archive', name: 'The Throne Archive' },
+      { map: 'seat-workshop', name: "Coco's workshop" },
+    ],
+  },
 };
 
 /** The realm around Eightgate, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
 export const REALM: readonly RealmPlace[] = [
   // The realm's neutral city, where every house may come and none may draw steel (so they say). The
   // old seat of the realm stands at its heart; whether Elodie blessed it is argued (data/books.ts).
-  { id: 'seat', name: 'Eightgate', house: 'Open to all houses' },
-  { id: 'ardencia', name: 'Ardencia', house: 'Brasador' },
+  { id: 'seat', name: 'Eightgate', house: 'Open to all houses', city: 'seat' },
+  { id: 'ardencia', name: 'Ardencia', house: 'Brasador', city: 'ardencia' },
   { id: 'zetwal', name: 'Zetwal', house: 'Kay Soley', city: 'zetwal' },
-  { id: 'al_doria', name: 'Al-Doria', house: 'Dorini' },
+  { id: 'al_doria', name: 'Al-Doria', house: 'Dorini', city: 'al_doria' },
   { id: 'skarragol', name: 'Skarragol', house: 'Ironvow' },
   { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori' },
   { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh' },
@@ -326,12 +485,15 @@ export const RPG: RpgContent = {
   pillarRules: [
     { pillar: 'influence', city: 'zetwal', flags: BOOKS.filter((b) => b.id.startsWith('zetwal_')).map((b) => loreFlag(b.id)), each: 1 },
     { pillar: 'influence', city: 'xaragua', flags: BOOKS.filter((b) => b.id.startsWith('xaragua_')).map((b) => loreFlag(b.id)), each: 1 },
+    { pillar: 'influence', city: 'ardencia', flags: BOOKS.filter((b) => b.id.startsWith('ardencia_')).map((b) => loreFlag(b.id)), each: 1 },
+    { pillar: 'influence', city: 'al_doria', flags: BOOKS.filter((b) => b.id.startsWith('aldoria_')).map((b) => loreFlag(b.id)), each: 1 },
+    { pillar: 'influence', city: 'seat', flags: BOOKS.filter((b) => b.id.startsWith('seat_')).map((b) => loreFlag(b.id)), each: 1 },
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
-    { flags: [...ACT1.objectives, ...ACT2.objectives].filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
+    { flags: [...ACT1.objectives, ...ACT2.objectives, ...ACT3.objectives, ...ACT4.objectives, ...ACT5.objectives].filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
     { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
   ],
   levels: LEVELS,

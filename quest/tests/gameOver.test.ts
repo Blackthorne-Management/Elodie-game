@@ -128,7 +128,7 @@ describe('fights meant to be lost', () => {
 
   it('a win sets no won flag (the story goes on with the scene either way)', () => {
     const flags = new FlagStore();
-    settleBattle(flags, RPG, { def: SCRIPTED_LOSS, items: battleItems(flags, RPG), outcome: 'won' } as unknown as Battle);
+    settleBattle(flags, RPG, { def: SCRIPTED_LOSS, items: battleItems(flags, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle);
     expect(flags.has('encounter.test.scripted.won')).toBe(false);
   });
 
@@ -139,8 +139,8 @@ describe('fights meant to be lost', () => {
       expect(CONTENT.dialogue[b.meantToLose!.scene], b.id).toBeDefined();
       expect(isRandomFight(b), b.id).toBe(false);
     }
-    // Chapter 1 and 2 have none yet (the Rael fight waits for the Chapter gate).
-    expect(Object.values(BATTLES).filter((b) => b.meantToLose)).toEqual([]);
+    // Chapters 1 and 2 have none; Chapter 3 has the Trial of Blades, and it is the only one so far.
+    expect(Object.values(BATTLES).filter((b) => b.meantToLose).map((b) => b.id)).toEqual(['rael_trial']);
   });
 
   it('after one, the game logic plays its scene whether the party fell or won', () => {
@@ -377,7 +377,7 @@ describe('losing the boar and coming back', () => {
         sim.logic.riseFromFight();
         return [];
       }
-      settleBattle(flags, RPG, { def, items: battleItems(flags, RPG), outcome: 'won' } as unknown as Battle);
+      settleBattle(flags, RPG, { def, items: battleItems(flags, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle);
       clearLosses(flags, def);
       return sim.logic.battleOver(true);
     };
@@ -436,7 +436,7 @@ describe('every story fight has a way back in', () => {
   it('each fight a conversation starts is meant to be lost, or has a foe on a map or a trigger that starts it again', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
-    expect([...started].sort()).toEqual(['caney_breach', 'intro_boar', 'pier_marines', 'thorne_blockade', 'village_patrol']);
+    expect([...started].sort()).toEqual(['caney_breach', 'deserters_road', 'intro_boar', 'pier_marines', 'qasim_vault', 'rael_trial', 'thorne_blockade', 'tunnel_bats', 'village_patrol']);
     for (const id of started) {
       const def = battleDef(id);
       expect(def, id).toBeDefined();

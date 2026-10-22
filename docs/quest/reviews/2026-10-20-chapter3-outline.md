@@ -632,5 +632,93 @@ Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, bo
 1. **The reveal: the winner's question.** The law gives the winner one question. Rael clears the court and asks
    Gianna "Who gave you that locket?"; his signet and her Locket glow together in his hand, and he tells her in four
    cold sentences. Envoy Cresswell re-enters for the lie and the order to seize her.
+3. **Who stays for the reveal (Oct 21, by pop-up): both.** Jaime stays at the Lord's shoulder and Rivera at the door;
+   both know the family secret from Chapter 3 on, and Jaime's loyalty becomes a thread for later chapters.
 2. **Rael carries La Promesa de Benny.** Its *Last Stand* is the HP floor that keeps him standing on screen. The
    party gets it from him in Chapter 11; Ar-4's secret quest gets a different reward (after the release).
+
+---
+
+## Built (Oct 21, branch `chapter3`): what is in the game, and Claude's calls
+
+Built from this outline in order of authority: the owner's decisions above, the families (`design/STORY.md`, "the
+families are bigger"; `design/FAMILY.md`), the second review (`2026-10-20-chapter3-outline-review.md`, its fixes and
+its section 7 on Rivera and Jaime), then this outline. Code: `quest/tools/maps/ardencia.ts` (eight maps),
+`quest/src/data/dialogue/ardencia.ts` (every scene), `ACT3` in `quest/src/data/quests.ts`, `quest/src/data/battles.ts`
+(Rael, Rivera, Jaime, the halberdiers, salamanders, bats; `rael_trial`, `tunnel_bats`), `quest/src/engine/battle.ts`
+(Bound, phases, the floor, the finale), the route (`quest/routes/zetwal-act1.json`, marks `@ardencia` to
+`@chapter3-end`), `?chapter=4` (the strand camp). Tests: `tests/raelTrial.test.ts`, `tests/ardencia.test.ts`, the
+puzzle replayer (`puzzles/ardencia_forge/`), the act, guide and level-curve tests.
+
+**Claude's calls** (non-drastic, under the Oct 20 rule; the owner can overturn any):
+
+1. **The trial's numbers** (review 3.3 and 7): Rael level 13, tank, HP x3, ATK x1.2, Sangre Ardiente +10% ATK per
+   Bound fighter. Phase 1 is his alone (Sword, La Marca, *Seize* every third turn). The first Surge, or 66% HP, starts
+   phase 2: **Captain Rivera** (tank, level 13; takes 75% of one-target blows meant for Rael; Hook stuns half the
+   time) and **Jaime** (caster, level 13; Ward of Ash on Rael; Ash Storm on everyone, telegraphed, every fourth turn)
+   walk in. Both **step back** at 0 HP ("Stand back, Captain." / "Enough, Jaime. Step back."), never fall. Phase 3 at
+   33%: Reinado de Cenizas once, telegraphed ("Guard, everyone!"), 130 power + 40 per Bound fighter. Rael ends it at
+   the first of: every fighter Bound; **La Promesa de Benny** holding him at 1 HP ("La Promesa de Benny glows on his
+   wrist. Rael stands.", named once, every later blow clamped, multi-hit included); three of his turns after
+   Reinado; or 14 of his turns (`RAEL_TRIAL_MAX_ROUNDS`). The finale: "Enough.", *Cenizas*, every fighter still
+   standing Bound, no damage numbers. A simple bot at level 10 sees Reinado in most runs, reaches the floor in more than
+   a third, and finishes in under 40 actions (median); the route reaches the trial at level 11.
+2. **Seize** (COMBAT 8, Oct 20 rule): he reaches for Anissa; Gianna steps in; 3 Spark torn away; Gianna Marked two
+   turns; no damage. Anissa is never a target.
+3. **Bound**: any heal or food frees a Bound fighter (Comfort is not built), standing with what it healed; Break Free
+   frees with a quarter of their HP. Recorded in `COMBAT.md` 10.
+4. **Items drunk in the trial are not spent** (review 3.3 reversed the outline: a scripted loss spends nothing, like a
+   Game Over). The scripted end sets `story.trial_fought` before the save (`meantToLose.set`), so a reload never
+   refights Rael; a save made during the question replays it on the sand (`reveal_resume`).
+5. **No Burning or Fogged yet**: Ember Spit is plain magic, Screech leaves the party Weakened (half the time).
+6. **The reveal** follows review 3.2: "My grandmother. Grandfather made it, for the Accord." / "And mine made this
+   one." Both glow (`story.signet_glowed`, a long gold glow). "Fifty years later, Patricio's daughter and Benny's son
+   put them together again. Look at me, Gianna Elise." Then the sentences, with "Azzy is your brother" (never a bare
+   "Azriel"). At the lie the signet glows (a short, faint gold); **Anissa says "Gigi. His ring lit again." and
+   Gianna, looking at the sand, does not hear it** (review 3.2's second option). The signet's metal is not named in
+   the game (young Benny's "your sun and my iron" is the house's iron); the art prompt follows the guide (a gold
+   half-sun signet).
+7. **Rivera stays at the door, silent, for the question; Jaime leaves with the elders** (review 7.2). To confirm with
+   the owner with the family placements, since it decides who knows what.
+8. **The court**: Rivera is the captain of the guard (the outline's generic captain): at the Lord's door in the hall,
+   at the ring's edge, the one told "Captain. The forge fortress.", and on the wall beside Rael relaying the order.
+   Jaime walks out of the Lord's door with Cresswell in the audience.
+9. **Rael's family in Chapter 3, in their settled roles**: **Zelia** (the steward) receives the envoy, opens the
+   records room for Ar-2 and, at its end, takes Gianna to **old Benny**, who meets the Locket again ("There it is.
+   Patricio's sun."), with **Nancy** at his side; **Amanda** is the Lower Town's cook (Ar-1: bubbly, loud, a little
+   crazy) and unbars the tunnel's far end; **Joaquin** commands the guns on the wall ("Fire!") and every shot lands
+   wide; Azzy says "Titi Amanda" and "Tío Joaquin". The records room shows the line of Ardencia: "Alonso. Benny. Rael.
+   Azriel." and "No others recorded." A sitting room in the Alcázar is left free for the siblings to come.
+10. **The required day**: Ar-2 The Treasurer's Daughter, the bread debate (a required quest, *Bread and the Oath*,
+    joined or mediated) and Ar-1 Bread at Night, in that order on the arrow; Ar-1 opens when the other two are done
+    or when Gianna asks Azzy about the Lower Town. **Ar-1 has no stealth follow**: the party watches the cart from the
+    corner by the old well (walking there is the input); the cart, the thumbprint and Amanda are acted out.
+11. **Free Brasador's price** (review 3.5): the engine has no ally ledger yet (the economy foundation is not built),
+    so it is a flag (`ally.free_brasador`) and a Journal note with the price (Fear 6, owed, paid at the Muster). The
+    ledger takes it over when it exists.
+12. **The Cinder Flats**: the sea road itself is safe; the cinder fields either side are wild (levels 8 and 9), and
+    after the escape the strand fields have halberdier patrols (level 11). The route walks the road.
+13. **Books**: six in La Biblioteca Vieja (five teach Gianna's **Ember Ward**: warded and regen on one ally) and two in
+    the Alcázar's records room (the outline had nine and four). Reason in the debate needs *Oaths of the Ash Road*,
+    *The Iron Trade* or *What the Kitchen Maids Say*.
+14. **Levels**: "Grandfather's request" (Chapter 2's last scene, so the Journal opens Chapter 3 on the pier) and "The
+    Lord's guests" (a scene the party only watches) pay no XP; Ar-2 pays 70 XP, Ar-1 80, the debate quest 40. The
+    route leaves Ardencia at **level 11** (2,290 XP; level 10 without side quests), with Chapter 2 unchanged.
+15. **The run under the wall**: two shot scenes as the party walks the sea road (no timer, no damage, not failable),
+    then the patrol at the bend falls in behind Azzy.
+16. **The chapter ends at the camp**, before boarding (the trader sails "at first light"); Benny joins the Echo party
+    there; `?chapter=4` starts on the strand.
+17. **Restartable scenes** (review 3.6, 3.7): the gate, the audience, the trial, the question, the cell, the bell, the
+    bats, the tunnel's far end and the camp each replay from a step trigger until their flag is set. The forge's Echo
+    zone starts outside the bars and opens only once Azzy has left the key.
+18. **Music**: slots until the owner's tracks (Cenizal plays the Hall's music, the flats the Mountain Path's, Rael's
+    theme slot the Crown's march under the trial and the question). Spanish words are in a new glossary
+    (`src/data/lang/spanish.json`), all unverified.
+19. **Followers**: Azzy walks third in line behind Anissa and Yari once he joins (the outline's fallback was not
+    needed).
+
+**Not built (after the release, or waiting on the engine or art):** Ar-3, Ar-4 (now old Benny's letter, owner
+decision 2), Ar-5's quest form (its clue is the camp's exchange), the Upper Town's debate corner, `SURGE_ANIM_STAGE`,
+painted art for Rael, Rivera, Jaime and the family (drawn placeholders), kneeling and cord frames (the narration says
+the cords), a timed musket run, a sight-based cart follow, Yield on the ambushes (the economy foundation), the smoke
+test's Chapter 3 screenshots (the bot handles the scripted loss; the smoke test was not run in this build).

@@ -60,6 +60,8 @@ export function zetwalHarbor(): MapSource {
     trigger('zetwal_return', 30, 13, { dialogue: 'zetwal_return', flag: 'story.zetwal_return', once: true, onEnter: true, if: 'story.escaped' }),
     npc('patricio_harbor', 30, 10, 'down', { npc: 'patricio_home', if: 'story.escaped' }),
     npc('anicette_harbor', 31, 10, 'down', { npc: 'anicette_home', if: 'story.escaped' }),
+    // Chapter 3 (Oct 21): the trader who brought them home sails for Ardencia (the voyage zetwal_ardencia).
+    npc('trader_captain', 31, 14, 'left', { if: 'story.zetwal_return, !story.ardencia_arrived' }),
   ];
   return { id: 'zetwal-harbor', present: g, echo: e, objects };
 }

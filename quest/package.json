@@ -14,6 +14,7 @@
     "smoke": "node --experimental-strip-types tests/smoke.mjs",
     "maps:build": "node --experimental-strip-types tools/build-maps.ts",
     "audit:lang": "node --experimental-strip-types tools/audit-lang.ts",
+    "level-curve": "node --experimental-strip-types tools/level-curve.ts",
     "route:expand": "node --experimental-strip-types tools/expand-route.ts",
     "icons": "node --experimental-strip-types tools/make-icons.ts"
   },

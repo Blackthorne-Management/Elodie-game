@@ -5,7 +5,7 @@
 // keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
 
 import type { Condition } from './engine/conditions.ts';
-import { CHAPTER2_QUESTS_DONE } from './data/sideQuests.ts';
+import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './data/sideQuests.ts';
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -174,16 +174,91 @@ export const TILESET = {
     // The occupation (Oct 17): the Crown's banner, and a burned-out market stall.
     { gid: 128, name: 'crown_banner', base: 0xb8403a, accent: 0xf4ecd8, pattern: 'stripes' },
     { gid: 129, name: 'stall_burned', base: 0x3a3440, accent: 0xe0782a, pattern: 'stripes' },
+    // Ardencia (Chapter 3, Oct 21): black sand and cinder ground, black basalt, lava, steaming springs, the red
+    // stone of Cenizal's streets and walls, the duel court's sand, the forge fortress's iron floor and its dry
+    // ditches (fifty years ago), bellows, tapestries and iron bars.
+    { gid: 130, name: 'black_sand', base: 0x3a3440, accent: 0x5a5260, pattern: 'dots' },
+    { gid: 131, name: 'cinder', base: 0x5a4a50, accent: 0x6e5a5a, pattern: 'dots' },
+    { gid: 132, name: 'basalt', base: 0x241e26, accent: 0x3a3238, pattern: 'grid' },
+    { gid: 133, name: 'lava', base: 0xd8582a, accent: 0xf2d04b, pattern: 'wave' },
+    { gid: 134, name: 'hot_spring', base: 0x5aa8b8, accent: 0xe8f0f0, pattern: 'wave' },
+    { gid: 135, name: 'red_stone', base: 0xb0603a, accent: 0x9a4e2e, pattern: 'grid' },
+    { gid: 136, name: 'red_wall', base: 0x8a3a2a, accent: 0x6a2a20, pattern: 'grid' },
+    { gid: 137, name: 'duel_sand', base: 0xe0c890, accent: 0xc8ac70, pattern: 'dots' },
+    { gid: 138, name: 'iron_floor', base: 0x4a4452, accent: 0x5e5866, pattern: 'grid' },
+    { gid: 139, name: 'ditch', base: 0x3a3238, accent: 0x6a4a3a, pattern: 'stripes' },
+    { gid: 140, name: 'bellows', base: 0x6b4426, accent: 0x3a3440, pattern: 'border' },
+    { gid: 141, name: 'tapestry', base: 0x8a3a2a, accent: 0xf2d04b, pattern: 'border' },
+    { gid: 142, name: 'iron_bars', base: 0x1a1420, accent: 0xa8a6b4, pattern: 'stripes' },
+    { gid: 143, name: 'forge_gate', base: 0x4a4a52, accent: 0xe0782a, pattern: 'cross' },
+    { gid: 144, name: 'forge_lever', base: 0x6b4426, accent: 0xc8c8d0, pattern: 'cross' },
+    { gid: 145, name: 'gallery', base: 0x5e3e22, accent: 0x8a3a2a, pattern: 'stripes' },
+    // Al-Doria (Chapter 4, Oct 21): sandstone streets and walls under green domes, zellige tiles, the desert's dunes,
+    // the bazaar's awnings and stalls, the guild vault's stone and iron (the balance, its weights, the sun lock, the
+    // chest), the cistern line dry and running, the caravans' camels (placeholders until art drop 2).
+    { gid: 146, name: 'sandstone', base: 0xe0c89a, accent: 0xc8ac78, pattern: 'grid' },
+    { gid: 147, name: 'sandstone_wall', base: 0xc8a070, accent: 0xa88050, pattern: 'grid' },
+    { gid: 148, name: 'dome', base: 0x1e8449, accent: 0x2ea85e, pattern: 'stripes' },
+    { gid: 149, name: 'zellige', base: 0x2a8a6a, accent: 0xd8b04a, pattern: 'cross' },
+    { gid: 150, name: 'dune', base: 0xe0b878, accent: 0xc89c58, pattern: 'dots' },
+    { gid: 151, name: 'arcade', base: 0xd8c08a, accent: 0x8a6a3a, pattern: 'border' },
+    { gid: 152, name: 'awning', base: 0x1e8449, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 153, name: 'carpet_stall', base: 0x8a3050, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 154, name: 'coin_table', base: 0x6b4426, accent: 0xf2d04b, pattern: 'dots' },
+    { gid: 155, name: 'weights_table', base: 0x6b4426, accent: 0x8e8e9c, pattern: 'grid' },
+    { gid: 156, name: 'vault_floor', base: 0x6e6152, accent: 0x8a7a68, pattern: 'grid' },
+    { gid: 157, name: 'vault_wall', base: 0x3a3238, accent: 0x5a4a50, pattern: 'grid' },
+    { gid: 158, name: 'strongbox', base: 0x4a4452, accent: 0xa8a6b4, pattern: 'grid' },
+    { gid: 159, name: 'channel_dry', base: 0xb89a6a, accent: 0x9c8050, pattern: 'stripes' },
+    { gid: 160, name: 'channel_water', base: 0x3a6fb8, accent: 0x9ad8ff, pattern: 'wave' },
+    { gid: 161, name: 'camel', base: 0xc8a46b, accent: 0x8a6a3a, pattern: 'blob' },
+    { gid: 162, name: 'crate_sealed', base: 0x9c7446, accent: 0xc0392b, pattern: 'cross' },
+    { gid: 163, name: 'ship_hull', base: 0x5e3e22, accent: 0x3a2614, pattern: 'stripes' },
+    { gid: 164, name: 'lectern', base: 0x6b4426, accent: 0xe8d8b0, pattern: 'border' },
+    { gid: 165, name: 'sluice', base: 0x5e5866, accent: 0xa8a6b4, pattern: 'stripes' },
+    { gid: 166, name: 'balance', base: 0x9c7446, accent: 0xf2d04b, pattern: 'cross' },
+    { gid: 167, name: 'weight_hook', base: 0x6e5a3a, accent: 0xb8902a, pattern: 'blob' },
+    { gid: 168, name: 'weight_hung', base: 0xb8902a, accent: 0xfff2a0, pattern: 'blob' },
+    { gid: 169, name: 'balance_door', base: 0x8a6a3a, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 170, name: 'sun_lock', base: 0x5e3e22, accent: 0x8a7a68, pattern: 'blob' },
+    { gid: 171, name: 'sun_lock_cut', base: 0x5e3e22, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 172, name: 'sealed_chest', base: 0x6b4426, accent: 0xc0392b, pattern: 'border' },
+    { gid: 173, name: 'fountain_dry', base: 0xc8b07a, accent: 0x8e8e9c, pattern: 'border' },
+    { gid: 174, name: 'old_gate', base: 0x6e4a2a, accent: 0xa8a6b4, pattern: 'cross' },
+    { gid: 175, name: 'old_gate_open', base: 0x6e4a2a, accent: 0x3a6fb8, pattern: 'stripes' },
     // Chapter 2's side quests (Oct 20): a cut net left on the sand, a glint of something shiny the hutia dropped,
     // the ceiba as a sapling (the memory) and with its low fork (the present, once staked), the stumps of the cut
     // grove, turned earth for planting (the memory), and the young grove behind the rocks.
-    { gid: 130, name: 'net_cut', base: 0xd8bf8a, accent: 0x6b4426, pattern: 'grid' },
-    { gid: 131, name: 'glint', base: 0x2e8a4e, accent: 0x9ad8ff, pattern: 'dots' },
-    { gid: 132, name: 'sapling', base: 0x2e8a4e, accent: 0x8cc860, pattern: 'cross' },
-    { gid: 133, name: 'ceiba_fork', base: 0x2e8a4e, accent: 0x9c7446, pattern: 'cross' },
-    { gid: 134, name: 'stump', base: 0x2e8a4e, accent: 0x9c7446, pattern: 'border' },
-    { gid: 135, name: 'seed_row', base: 0x7a5a38, accent: 0x8cc860, pattern: 'stripes' },
-    { gid: 136, name: 'grove', base: 0x2a5e2f, accent: 0xa8a6b4, pattern: 'blob' },
+    { gid: 176, name: 'net_cut', base: 0xd8bf8a, accent: 0x6b4426, pattern: 'grid' },
+    { gid: 177, name: 'glint', base: 0x2e8a4e, accent: 0x9ad8ff, pattern: 'dots' },
+    { gid: 178, name: 'sapling', base: 0x2e8a4e, accent: 0x8cc860, pattern: 'cross' },
+    { gid: 179, name: 'ceiba_fork', base: 0x2e8a4e, accent: 0x9c7446, pattern: 'cross' },
+    { gid: 180, name: 'stump', base: 0x2e8a4e, accent: 0x9c7446, pattern: 'border' },
+    { gid: 181, name: 'seed_row', base: 0x7a5a38, accent: 0x8cc860, pattern: 'stripes' },
+    { gid: 182, name: 'grove', base: 0x2a5e2f, accent: 0xa8a6b4, pattern: 'blob' },
+    // Eightgate (Chapter 5, Oct 22): the Seat's worn grey-brown stone (the realm map's seat colour, #8f8578), its walls and
+    // slate roofs, the Throne Hall's violet rope and the board's sun-and-rays Throne tile, the council chairs, the Accord
+    // under glass, the seven-drawer cabinet (a drawer, and one with a red thread on its handle), Coco's dress dummies,
+    // mirror and curtain, the eight gates (an arch, the Iron Gate, the bricked teal one), an overturned Crown wagon,
+    // the Regent's violet banner and the Archive's chain. Pattern placeholders until art drop 2.
+    { gid: 183, name: 'seat_stone', base: 0x9a9082, accent: 0x8f8578, pattern: 'grid' },
+    { gid: 184, name: 'seat_wall', base: 0x6e665c, accent: 0x8f8578, pattern: 'grid' },
+    { gid: 185, name: 'slate_roof', base: 0x4a4a5a, accent: 0x3a3a48, pattern: 'stripes' },
+    { gid: 186, name: 'violet_rope', base: 0xc8b8d8, accent: 0x6a5a8a, pattern: 'stripes' },
+    { gid: 187, name: 'throne_sun', base: 0xd8b04a, accent: 0xfff2a0, pattern: 'cross' },
+    { gid: 188, name: 'council_chair', base: 0x6b4426, accent: 0x8f8578, pattern: 'border' },
+    { gid: 189, name: 'glass_case', base: 0x9ad8ff, accent: 0xf4ecd8, pattern: 'border' },
+    { gid: 190, name: 'drawer', base: 0x5e3e22, accent: 0xc8a46b, pattern: 'grid' },
+    { gid: 191, name: 'drawer_thread', base: 0x5e3e22, accent: 0xb8403a, pattern: 'cross' },
+    { gid: 192, name: 'dress_dummy', base: 0xe8a8c0, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 193, name: 'mirror', base: 0xc8c8d0, accent: 0x9ad8ff, pattern: 'border' },
+    { gid: 194, name: 'seat_gate', base: 0x4a4a52, accent: 0x8f8578, pattern: 'cross' },
+    { gid: 195, name: 'iron_gate', base: 0x3a3440, accent: 0xa8a6b4, pattern: 'stripes' },
+    { gid: 196, name: 'bricked', base: 0x8a6a5a, accent: 0x17a5a5, pattern: 'grid' },
+    { gid: 197, name: 'wagon_over', base: 0x7a5530, accent: 0x4a3018, pattern: 'stripes' },
+    { gid: 198, name: 'violet_banner', base: 0x6a5a8a, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 199, name: 'curtain', base: 0x8a3050, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 200, name: 'chain', base: 0x8f8578, accent: 0xa8a6b4, pattern: 'cross' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -255,6 +330,13 @@ const TEAL = 0x17a5a5;
 const HAIR_BLACK = 0x2b2433;
 const HAIR_DARK = 0x2a1a14;
 const WHITE_HAIR = C.h!;
+/** House Dorini's green (Al-Doria, Chapter 4). */
+const DORINI_GREEN = 0x1e8449;
+/** House Brasador's near-black (Ardencia, Chapter 3). */
+const BRASADOR_BLACK = 0x2a2632;
+/** Aldermoor's violet and the Regent's grey-violet (Eightgate, Chapter 5). */
+const SEAT_VIOLET = 0x6a5a8a;
+const SEAT_GREY_VIOLET = 0x5a5468;
 
 /**
  * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
@@ -292,6 +374,11 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   azzy: {
     skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x3a2a24, trim: C.R!, legs: C.K!, build: 'tall',
     accessories: ['sash', 'epaulettes'],
+  },
+  // Samira of the Dorini (Al-Doria, Chapter 4): a placeholder look until her sheet is painted.
+  samira: {
+    skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0x1f6a6a, trim: C.y!, robe: true,
+    headgear: 'wrap', headgearColor: C.y!, accessories: ['satchel', 'sash'],
   },
   // The Quiet Crown: quiet_crown_<m|f>_<tone>, e.g. quiet_crown_f_deep.
   ...QUIET_CROWN,
@@ -433,11 +520,82 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   marine_lieutenant: { skin: C.s!, hair: C.B!, hairStyle: 'cropped', outfit: C.r!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.u!, accessories: ['sash', 'epaulettes'] },
   crown_captain: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: C.u!, trim: C.y!, legs: C.w!, build: 'tall', beard: C.G!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['epaulettes', 'sash'] },
   crown_clerk: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
+  // Ardencia (Chapter 3; drawn placeholders until art drop 2, prompts in docs/quest/ART-PROMPTS.md). Brasador wears
+  // near-black and crimson. Rael: tall, grey at the temples, epaulettes and sash, the signet on his hand.
+  rael: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: BRASADOR_BLACK, trim: C.R!, legs: C.k!, build: 'tall', accessories: ['epaulettes', 'sash', 'emblem'] },
+  rivera: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: C.r!, trim: BRASADOR_BLACK, legs: C.K!, build: 'tall', beard: HAIR_BLACK, headgear: 'helmet', headgearColor: C.i!, accessories: ['sash'] },
+  jaime: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.r!, trim: C.y!, robe: true, beard: HAIR_BLACK, accessories: ['staff', 'emblem'] },
+  brasador_halberdier: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: BRASADOR_BLACK, trim: C.R!, legs: C.K!, headgear: 'helmet', headgearColor: C.i!, accessories: ['staff'] },
+  free_brasador: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: BRASADOR_BLACK, trim: C.w!, legs: C.K!, headgear: 'helmet', headgearColor: C.g!, accessories: ['staff'] },
+  cresswell: { skin: C.T!, hair: C.N!, hairStyle: 'short', outfit: C.u!, trim: C.w!, legs: C.w!, build: 'tall', headgear: 'bicorne', headgearColor: C.u!, accessories: ['sash', 'emblem'] },
+  zelia: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'bun', outfit: BRASADOR_BLACK, trim: C.y!, robe: true, accessories: ['sash'] },
+  joaquin: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.K!, headgear: 'helmet', headgearColor: C.r!, accessories: ['epaulettes'] },
+  amanda: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'curly', outfit: C.o!, trim: C.R!, robe: true, headgear: 'wrap', headgearColor: C.R!, accessories: ['apron'] },
+  benny_old: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'short', outfit: C.r!, trim: C.o!, legs: C.K!, beard: WHITE_HAIR, accessories: ['cane', 'emblem'] },
+  nancy: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.m!, trim: C.y!, robe: true, accessories: ['sash'] },
+  ard_elder: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.r!, trim: C.y!, robe: true, beard: WHITE_HAIR, accessories: ['cane'] },
+  ard_elder_f: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: C.r!, trim: C.w!, robe: true },
+  treasurer_daughter: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: C.g!, trim: C.w!, robe: true },
+  oath_knight: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.G!, trim: C.R!, legs: C.K!, beard: C.B!, accessories: ['sash'] },
+  baker_widow: { skin: C.S!, hair: C.G!, hairStyle: 'bun', outfit: BRASADOR_BLACK, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: C.k!, accessories: ['apron'] },
+  echo_clerk: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x8a7a50, trim: C.N!, legs: C.B!, accessories: ['satchel'] },
+  echo_forgemaster: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x6a5a40, trim: C.e!, legs: C.B!, beard: HAIR_BLACK, accessories: ['apron'] },
+  ard_smith: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: BRASADOR_BLACK, trim: C.e!, legs: C.K!, beard: C.B!, accessories: ['apron'] },
+  ard_librarian: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: C.r!, trim: C.N!, robe: true, accessories: ['satchel'] },
+  ard_villager: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x7a5a48, trim: C.R!, legs: C.K! },
+  ard_villager_f: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x8a6a50, trim: C.R!, robe: true },
+  // Al-Doria (Chapter 4; drawn placeholders until art drop 2, prompts in docs/quest/ART-PROMPTS.md). The Dorini wear
+  // the guild's green and gold. Layla: tall, green and gold, a ledger chain. Qasim: broad, gold rings, a cane.
+  layla: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: DORINI_GREEN, trim: C.y!, robe: true, build: 'tall', headgear: 'wrap', headgearColor: C.y!, accessories: ['sash', 'emblem'] },
+  qasim: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: DORINI_GREEN, trim: C.y!, legs: C.b!, build: 'tall', beard: HAIR_BLACK, headgear: 'wrap', headgearColor: C.w!, accessories: ['cane', 'sash'] },
+  caravan_raider: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xc8a46b, trim: DORINI_GREEN, legs: C.B!, headgear: 'wrap', headgearColor: 0xd8c08a, accessories: ['sash'] },
+  dorini_scribe: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: DORINI_GREEN, trim: C.w!, robe: true, beard: HAIR_BLACK, accessories: ['satchel'] },
+  majlis_guard: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: DORINI_GREEN, trim: C.y!, legs: C.K!, headgear: 'helmet', headgearColor: C.y!, accessories: ['staff'] },
+  aldoria_trader: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0xd8c08a, trim: DORINI_GREEN, legs: C.B!, headgear: 'wrap', headgearColor: C.w!, accessories: ['satchel'] },
+  aldoria_trader_f: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0xb86a3a, trim: C.y!, robe: true, headgear: 'wrap', headgearColor: 0x1e8449 },
+  water_carrier: { skin: C.S!, hair: C.G!, hairStyle: 'bun', outfit: 0x5a7a9a, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: C.w!, accessories: ['apron'] },
+  // Coralie, "Tati Coco" (FAMILY.md, owner, Oct 21): Elodie's sister, the designer who dresses royals; flamboyant.
+  coralie: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'puffs', outfit: C.P!, trim: C.y!, robe: true, build: 'tall', headgear: 'wrap', headgearColor: C.p!, accessories: ['sash', 'satchel'] },
+  echo_yusuf: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x5a6a40, trim: C.N!, robe: true, accessories: ['satchel'] },
+  echo_locksmith: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x6a5a40, trim: C.e!, legs: C.B!, beard: C.G!, accessories: ['apron'] },
+  // Eightgate (Chapter 5, Oct 22; drawn placeholders until art drop 2, prompts in docs/quest/ART-PROMPTS.md). The Crown
+  // and the Regent's household wear Aldermoor's grey-violet; the envoys their houses' colours. The Regent: thin, grey,
+  // a chain of office, no crown. Hollis: old, a grey robe, a key at his belt. The deserters in faded Crown coats.
+  regent: { skin: C.s!, hair: C.G!, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: 0xc8b8d8, robe: true, build: 'tall', accessories: ['emblem', 'sash'] },
+  sealbearer: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: SEAT_GREY_VIOLET, trim: C.I!, legs: C.K!, headgear: 'helmet', headgearColor: SEAT_VIOLET, accessories: ['emblem', 'staff'] },
+  herald: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.K!, headgear: 'cap', headgearColor: SEAT_VIOLET, accessories: ['staff', 'sash'] },
+  regent_clerk: { skin: C.s!, hair: C.B!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
+  chamberlain: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.k!, trim: C.y!, robe: true, accessories: ['staff', 'emblem'] },
+  legate: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.w!, build: 'tall', headgear: 'bicorne', headgearColor: SEAT_GREY_VIOLET, accessories: ['sash', 'epaulettes'] },
+  legate_aide: { skin: C.s!, hair: C.N!, hairStyle: 'curly', outfit: 0x7a7488, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
+  envoy_dorini: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: DORINI_GREEN, trim: C.y!, robe: true, beard: HAIR_BLACK, headgear: 'wrap', headgearColor: C.w!, accessories: ['satchel'] },
+  envoy_ironvow: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'braid', outfit: 0x6e6a78, trim: 0xc8a46b, legs: C.b!, build: 'tall', headgear: 'hood', headgearColor: 0x8a7a68, accessories: ['emblem'] },
+  envoy_suzumori: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.u!, trim: C.w!, robe: true, accessories: ['sash'] },
+  envoy_agnivansh: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0xe0a02a, trim: C.R!, legs: C.B!, headgear: 'wrap', headgearColor: C.o!, accessories: ['sash'] },
+  hollis: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: 0x8e8e9c, trim: C.y!, robe: true, beard: WHITE_HAIR, accessories: ['satchel'] },
+  pilgrim_bandaged: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true, headgear: 'headband', headgearColor: C.w!, accessories: ['staff'] },
+  pilgrim_nobody: { skin: C.S!, hair: C.G!, hairStyle: 'short', outfit: 0x7a6a5a, trim: C.N!, legs: C.B! },
+  sky_rider: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'long', outfit: 0x8a7a68, trim: C.c!, legs: C.b!, headgear: 'brimmed', headgearColor: 0x6e6a78 },
+  quiet_speaker: { skin: SKIN_TONES.tan, hair: HAIR_DARK, hairStyle: 'cropped', outfit: 0x8e8e9c, trim: C.G!, robe: true },
+  deserter_sergeant: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: 0x8a4a40, trim: C.G!, legs: 0xb8b0a0, beard: C.B!, headgear: 'cap', headgearColor: 0x3a3a48, accessories: ['sash'] },
+  deserter: { skin: C.S!, hair: C.B!, hairStyle: 'cropped', outfit: 0x8a4a40, trim: C.G!, legs: 0xb8b0a0, headgear: 'cap', headgearColor: 0x3a3a48 },
+  echo_throne_clerk: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: C.N!, robe: true, accessories: ['satchel'] },
+  echo_crown_envoy: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['sash', 'epaulettes'] },
+  echo_thomas: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: C.w!, legs: C.K!, build: 'small', accessories: ['satchel'] },
+  // Coco's seamstresses (beat 6): a white hood and an apron over grey, for Gianna and Anissa (DISGUISE below).
+  gianna_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x8e8e9c, trim: C.w!, robe: true, headgear: 'hood', headgearColor: C.w!, accessories: ['apron', 'locket'] },
+  anissa_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'puffs', outfit: 0x8e8e9c, trim: C.w!, robe: true, build: 'small', headgear: 'hood', headgearColor: C.w!, accessories: ['apron'] },
 };
 
 /** The player's look in each era. */
 export const PLAYER_LOOK = 'gianna';
 export const ECHO_PLAYER_LOOK = 'patricio_young';
+
+/**
+ * Coco's seamstresses (Chapter 5, beat 6): from the veils in the fitting room until Hollis says "Take off the veil",
+ * Gianna and Anissa wear these looks on the map (in the Echo Anissa still glows, in her apron).
+ */
+export const DISGUISE = { flag: 'story.disguised', player: 'gianna_seamstress', anissa: 'anissa_seamstress' } as const;
 
 /** Anissa holding the door while Gianna is in the Echo: a glowing figure (guide 6.1). */
 export const ANISSA_GLOW = { look: 'anissa', tint: 0xfff2a0, alpha: 0.85, pulseAlpha: 0.45 } as const;
@@ -532,6 +690,30 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     if: { flag: 'story.crown_attack' },
     color: 0x14183a,
     alpha: 0.34,
+  },
+  // The Lower Town by night (Bread at Night, Chapter 3).
+  { maps: ['ardencia-lower'], if: { flag: 'story.cart_night' }, color: 0x101428, alpha: 0.42 },
+  // Al-Doria from dusk to the caravan's first light (Chapter 4, review 3.9): the same condition as the guild hall's
+  // door (Samira's three things done), not a flag of its own, so a debate settled last still brings the night.
+  {
+    maps: ['aldoria-bazaar', 'aldoria-desert'],
+    if: {
+      all: [
+        { flag: 'side.appraise.done' },
+        { flag: 'side.sweet_water.done' },
+        { flag: 'debate.aldoria_bargain.settled' },
+        { notFlag: 'story.caravan_dawn' },
+      ],
+    },
+    color: 0x1a1430,
+    alpha: 0.38,
+  },
+  // The Seat at evening (Chapter 5, beat 5's end): the three required quests done, until the bell (the veils).
+  {
+    maps: ['seat-gateyard', 'seat-concourse', 'seat-quarter', 'seat-fields'],
+    if: { all: [CHAPTER5_QUESTS_DONE, { notFlag: 'story.disguised' }, { notFlag: 'story.archive_entered' }] },
+    color: 0x2a2048,
+    alpha: 0.3,
   },
 ];
 
@@ -859,6 +1041,109 @@ export const BATTLE_ART = {
   shakePx: 2,
 } as const;
 
+// Ardencia (Chapter 3): the Cinder Flats under a hazy sky, black lava and steam; the duel court's sand ring under
+// the Alcázar's red walls; Benny's tunnel, a black lava tube with a glow of lava far down it.
+const ARDENCIA_BACKDROPS = {
+  cinder_flats: {
+    sky: [0x8a6a5a, 0x9a7a66, 0xaa8a72, 0xbc9c80, 0xceae90, 0xdcc0a4],
+    cloud: 0xe8dccc,
+    cloudShade: 0xb8a898,
+    mountainFar: 0x5a4a50,
+    mountainNear: 0x3a3038,
+    trees: 0x2a2430,
+    treesDark: 0x1a1420,
+    field: 0x3a3440,
+    cane: 0x6e6a78,
+    caneDark: 0x4a4452,
+    ground: 0x3a3238,
+    groundDark: 0x241e26,
+    groundLight: 0x5a4a50,
+  },
+  duel_court: {
+    sky: [0x6a9ad0, 0x7aa8d8, 0x8cb6de, 0x9ec4e4, 0xb2d2ea, 0xc8e0ee],
+    cloud: 0xf4f6fa,
+    cloudShade: 0xc8d4e6,
+    mountainFar: 0x9a4a3a,
+    mountainNear: 0x7a2a26,
+    trees: 0x6a2a24,
+    treesDark: 0x4a1a18,
+    field: 0xb0603a,
+    cane: 0xc8784a,
+    caneDark: 0x8e4a2a,
+    ground: 0xd8c08a,
+    groundDark: 0xb8a070,
+    groundLight: 0xe8d4a4,
+  },
+  lava_tube: {
+    sky: [0x0c0a10, 0x141018, 0x1a1420, 0x241a24, 0x3a2224, 0x5a2a20],
+    cloud: 0x3a3440,
+    cloudShade: 0x2a2430,
+    mountainFar: 0x1a1420,
+    mountainNear: 0x14101a,
+    trees: 0x2a2430,
+    treesDark: 0x1a1420,
+    field: 0x241e26,
+    cane: 0xe0782a,
+    caneDark: 0x7a2a26,
+    ground: 0x2a2430,
+    groundDark: 0x1a1420,
+    groundLight: 0x4a4452,
+  },
+} as const;
+
+// Al-Doria (Chapter 4): the Desert Edge's dunes under a white sky; the guild vault, lamplit stone and iron boxes.
+const ALDORIA_BACKDROPS = {
+  desert_edge: {
+    sky: [0xc8d8e8, 0xd4e0ea, 0xe0e6e8, 0xeae8e0, 0xf2e8d4, 0xf6e4c4],
+    cloud: 0xfaf6ee,
+    cloudShade: 0xe0d8c8,
+    mountainFar: 0xc8a070,
+    mountainNear: 0xb08a58,
+    trees: 0x6a7a40,
+    treesDark: 0x4a5a2a,
+    field: 0xe0b878,
+    cane: 0xd8a868,
+    caneDark: 0xb08850,
+    ground: 0xe0c89a,
+    groundDark: 0xc8ac78,
+    groundLight: 0xf0dcb0,
+  },
+  guild_vault: {
+    sky: [0x14101a, 0x1a1420, 0x241e26, 0x3a3238, 0x4a3a2a, 0x6a5a3a],
+    cloud: 0x3a3440,
+    cloudShade: 0x2a2430,
+    mountainFar: 0x3a3238,
+    mountainNear: 0x2a2430,
+    trees: 0x4a4452,
+    treesDark: 0x2a2632,
+    field: 0x6e6152,
+    cane: 0xb8902a,
+    caneDark: 0x6b4426,
+    ground: 0x6e6152,
+    groundDark: 0x4a4038,
+    groundLight: 0x8a7a68,
+  },
+} as const;
+
+// Eightgate (Chapter 5): the Crossroads Fields, a grey-blue sky over flat grass and the Seat's walls far off.
+const SEAT_BACKDROPS = {
+  crossroads: {
+    sky: [0x6a86a8, 0x7a94b2, 0x8aa2bc, 0x9cb0c6, 0xaebed0, 0xc2ccd8],
+    cloud: 0xf0f2f4,
+    cloudShade: 0xc8ccd4,
+    mountainFar: 0x9a9082,
+    mountainNear: 0x8f8578,
+    trees: 0x3f6a3a,
+    treesDark: 0x2e5030,
+    field: 0x6a9a4a,
+    cane: 0x8aaa5a,
+    caneDark: 0x5a7a3a,
+    ground: 0xc9a66b,
+    groundDark: 0xa8885a,
+    groundLight: 0xd8bc84,
+  },
+} as const;
+
 /** The painted scene behind each battle (BattleDef.backdrop), drawn in code until painted art arrives. */
 export const BATTLE_BACKDROPS: Readonly<Record<string, {
   sky: readonly number[];
@@ -939,6 +1224,9 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     groundDark: 0x6b4426,
     groundLight: 0xc8a46b,
   },
+  ...ARDENCIA_BACKDROPS,
+  ...ALDORIA_BACKDROPS,
+  ...SEAT_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

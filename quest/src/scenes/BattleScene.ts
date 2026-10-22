@@ -33,17 +33,20 @@ import {
 import { GAME_OVER, SPARK_MAX, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { GAME_OVER_TEXT } from '../data/gameOver.ts';
 import { clearLosses, grudgeFor, recordLoss } from '../engine/gameOver.ts';
-import { ENEMIES, SKILL_BOOK, battleDef } from '../data/battles.ts';
+import { ENEMIES, SKILL_BOOK, battleDef, battleReserve } from '../data/battles.ts';
 import { RPG } from '../data/rpg.ts';
 import {
   Battle,
   battleEntry,
   battleItems,
   battleParty,
+  battlePurse,
+  goldCost,
   isMove,
   needsTarget,
   settleBattle,
   skillCost,
+  startBattleSeed,
   targetsAllies,
   type Action,
   type BattleEvent,
@@ -111,6 +114,8 @@ const STATUS_TAGS: Readonly<Record<StatusId, { tag: string; good: boolean }>> = 
   regen: { tag: 'REGEN', good: true },
   slowed: { tag: 'SLOW', good: false },
   taunting: { tag: 'TAUNT', good: true },
+  stunned: { tag: 'STUN', good: false },
+  gilded: { tag: 'GOLD', good: true },
 };
 
 const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
@@ -121,6 +126,8 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
   regen: 'Regen',
   slowed: 'Slowed',
   taunting: 'drawing every blow',
+  stunned: 'Stunned',
+  gilded: 'behind a wall of gold',
 };
 
 const VISIBLE_ROWS = 6;
@@ -206,7 +213,6 @@ export class BattleScene extends Phaser.Scene {
     setCurrent(this);
     const cam = this.cameras.main;
     cam.setOrigin(0, 0).setZoom(renderScale());
-    this.seed = Date.now() >>> 0 || 1;
     const def = battleDef(this.battleId);
     this.drawBackdrop(def?.backdrop ?? 'cane_road');
     audio.playMusic(BATTLE_MUSIC);
@@ -234,7 +240,7 @@ export class BattleScene extends Phaser.Scene {
     const flags = rt.logic.state.flags;
     const def = battleDef(this.battleId);
     if (!def) throw new Error(`No battle ${this.battleId}`);
-    const party = battleParty(flags, RPG, SKILL_BOOK);
+    const party = battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present');
     this.extra.forEach((id, i) => {
       const m = RPG.members.find((x) => x.id === id);
       if (m) party.push({ ...battleEntry(flags, RPG, m, SKILL_BOOK, false), id: `${id}${i}` });
@@ -242,10 +248,14 @@ export class BattleScene extends Phaser.Scene {
     // A random ambush fights at its group's level.
     const enemies = def.enemies.map((id) => ENEMIES[id]!).filter(Boolean).map((e) => (def.level ? { ...e, level: def.level } : e));
     const items = battleItems(flags, RPG);
-    this.seed = (this.seed * 1103515245 + 12345) >>> 0;
+    // The dice come from the save: this fight and how many times it has been tried (engine/battle.ts battleSeed).
+    this.seed = startBattleSeed(flags, def);
     // The Grudge: each earlier Game Over at this fight makes the party's blows land harder (engine/gameOver.ts).
     const grudge = grudgeFor(flags, def);
-    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge });
+    const purse = battlePurse(flags, RPG, Object.keys(flags.snapshot()));
+    // Foes who can walk in mid-fight: a boss phase's guards (Rivera and Jaime), the blades Qasim hires.
+    const reserve = battleReserve(def);
+    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve });
     this.placeFighters();
     const opening: BattleEvent[] = [];
     if (grudge > 0) opening.push({ kind: 'text', text: GAME_OVER_TEXT.grudge.replace('{p}', String(Math.round(grudge * 100))) });
@@ -456,6 +466,40 @@ export class BattleScene extends Phaser.Scene {
         }
         return BATTLE_ART.messageMs;
       }
+      case 'bound': {
+        // Cords, not a fall (Rael's fights): the fighter kneels, tinted, with BOUND over them.
+        this.say(`${name(e.who)} is Bound!`);
+        const s = this.sprites.get(e.who);
+        audio.sfx('ally_down');
+        if (s && this.hasStance(s)) this.time.delayedCall(250, () => s.setFrame('1'));
+        else if (s) s.setTint(0xb0a080).setAlpha(0.7);
+        if (s) this.pop(e.who, 'BOUND', BATTLE_ART.crit);
+        return BATTLE_ART.messageMs;
+      }
+      case 'freed': {
+        const s = this.sprites.get(e.who);
+        if (s) {
+          s.clearTint().setAlpha(1);
+          if (this.hasStance(s)) s.setFrame('0');
+        }
+        playFx(this, 'heal', this.centre(e.who));
+        this.pop(e.who, `+${e.hp}`, BATTLE_ART.heal);
+        this.say(`${name(e.who)} is free of the cords!`);
+        return BATTLE_ART.messageMs * 0.8;
+      }
+      case 'withdraw': {
+        // A guard at 0 HP bows and steps back to the ring's edge (no fall, no fade to nothing).
+        this.say(`${name(e.who)} steps back from the fight.`);
+        const s = this.sprites.get(e.who);
+        if (s) this.tweens.add({ targets: s, x: s.x + 40, alpha: 0.25, duration: 600, delay: 200 });
+        return BATTLE_ART.messageMs;
+      }
+      case 'enter': {
+        const c = this.battle.find(e.who);
+        if (c) this.addEnemySprite(c, true);
+        this.say(`${name(e.who)} walks in!`);
+        return BATTLE_ART.messageMs;
+      }
       case 'won':
         this.win();
         return 0;
@@ -481,7 +525,8 @@ export class BattleScene extends Phaser.Scene {
     this.done = true;
     audio.playMusic(VICTORY_MUSIC);
     const items = this.result.items.map((i) => RPG.items[i.id]?.name ?? i.id).join(', ');
-    this.say(`Victory!  +${this.result.xp} XP  +${this.result.gold} gold${items ? `  ${items}` : ''}`);
+    const spent = this.result.spent ? `  (${this.result.spent} spent)` : '';
+    this.say(`Victory!  +${this.result.xp} XP  +${this.result.gold} gold${spent}${items ? `  ${items}` : ''}`);
     const after = this.battle.def.tutorial?.after;
     if (after) this.openTutorial(after);
   }
@@ -553,17 +598,31 @@ export class BattleScene extends Phaser.Scene {
     const b = this.battle;
     const me = b.actor;
     if (!me || me.side !== 'party') return [];
+    // Bound (Rael's fights): the cords are all there is.
+    if (me.bound) {
+      return [
+        {
+          label: 'Break Free',
+          enabled: true,
+          hint: me.breakTries > 0 ? 'The cords are looser now. This time they give.' : 'Strain at the cords: half a chance the first time, sure the second. A heal frees you too.',
+          run: () => this.act({ kind: 'breakFree' }),
+        },
+      ];
+    }
     if (this.menu === 'skills') {
       return [
         ...me.skills
           .filter((s) => !isMove(s))
           .map((s) => {
-            const cost = skillCost(s, me);
+            // Daftar is paid in gold (COMBAT 9.6), the rest in SP.
+            const coins = goldCost(s, me);
+            const cost = coins ? `${coins}g` : String(skillCost(s, me));
+            const price = coins ? `${coins} gold of ${b.purse}` : `${cost} SP`;
             const from = s.source ? ` From the ${s.source}.` : '';
             return {
               label: `${s.source ? '*' : ''}${s.name} ${cost}`,
               enabled: b.canUse(me, s),
-              hint: `${s.text} (${cost} SP)${from}`,
+              hint: `${s.text} (${price})${from}`,
               run: () => this.aimAt(s.name, s.target, 'skills', (target) => ({ kind: 'skill', skill: s.id, target })),
             };
           }),
@@ -650,7 +709,8 @@ export class BattleScene extends Phaser.Scene {
 
   private aimPool(): Combatant[] {
     if (!this.aim) return [];
-    return (this.aim.side === 'enemy' ? this.battle.enemies : this.battle.fighters).filter((c) => !c.down);
+    // A heal or food reaches a Bound fighter (it loosens the cords).
+    return (this.aim.side === 'enemy' ? this.battle.enemies : this.battle.fighters).filter((c) => !c.down || (this.aim!.side === 'ally' && c.bound));
   }
 
   private aimed(): Combatant[] {
@@ -838,19 +898,7 @@ export class BattleScene extends Phaser.Scene {
 
   private placeFighters(): void {
     const b = this.battle;
-    b.enemies.forEach((e) => {
-      const slot = BATTLE_ART.enemySlots[e.slot % BATTLE_ART.enemySlots.length]!;
-      const painted = this.textures.exists(fileKey(ART_FILES.enemy(e.look)));
-      // A person with no enemy drawing (the Crown's marines) stands in as their walking sprite, facing the party.
-      const drawn = this.textures.exists(textureKeyForEnemy(e.look));
-      const img = (drawn
-        ? this.add.image(slot.x, slot.y, textureKeyForEnemy(e.look))
-        : this.add.image(slot.x, slot.y, textureKeyForCharacter(e.look), characterFrame('left', 0)))
-        .setOrigin(0.5, 1)
-        .setScale(painted ? ENEMY_FILE_SCALE : drawn ? BATTLE_ART.enemyScale : BATTLE_ART.partyScale)
-        .setDepth(slot.y);
-      this.sprites.set(e.key, img);
-    });
+    b.enemies.forEach((e) => this.addEnemySprite(e, false));
     for (const p of b.fighters) this.addPartySprite(p.key);
     this.arrange();
     // Anissa, behind everyone.
@@ -861,6 +909,26 @@ export class BattleScene extends Phaser.Scene {
     this.anissaLight = this.add.circle(x, y - 12, 13, ANISSA_GLOW.tint, 0.2).setDepth(y - 1);
     this.tweens.add({ targets: this.anissaLight, scale: 1.15, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
     this.anissa = this.fighterImage(ANISSA_GLOW.look).setPosition(x, y).setDepth(y);
+  }
+
+  /** A foe's picture in its slot (one who walks in mid-fight comes in from the right edge). */
+  private addEnemySprite(e: Combatant, walkIn: boolean): void {
+    const slot = BATTLE_ART.enemySlots[e.slot % BATTLE_ART.enemySlots.length]!;
+    const painted = this.textures.exists(fileKey(ART_FILES.enemy(e.look)));
+    // A person with no enemy drawing (the Crown's marines) stands in as their walking sprite, facing the party.
+    const drawn = this.textures.exists(textureKeyForEnemy(e.look));
+    const img = (drawn
+      ? this.add.image(slot.x, slot.y, textureKeyForEnemy(e.look))
+      : this.add.image(slot.x, slot.y, textureKeyForCharacter(e.look), characterFrame('left', 0)))
+      .setOrigin(0.5, 1)
+      .setScale(painted ? ENEMY_FILE_SCALE : drawn ? BATTLE_ART.enemyScale : BATTLE_ART.partyScale)
+      .setDepth(slot.y);
+    this.sprites.get(e.key)?.destroy();
+    this.sprites.set(e.key, img);
+    if (walkIn) {
+      img.setX(VIEW_WIDTH + 16);
+      this.tweens.add({ targets: img, x: slot.x, duration: 700 });
+    }
   }
 
   private addPartySprite(key: string): Phaser.GameObjects.Image {
@@ -1070,6 +1138,10 @@ export class BattleScene extends Phaser.Scene {
       const aimed = this.menu === 'target' && this.aimed().includes(p);
       if (on || aimed) g.fillStyle(on ? 0x2e2638 : 0x3a3020, 1).fillRect(2, y - 1, 174, rowH);
       text(6, y, `${on ? '>' : ' '}${p.name}`, on ? UI.accentText : p.down ? UI.dimText : UI.text);
+      if (p.bound) {
+        text(54, y, 'BOUND', UI.accentText);
+        return;
+      }
       const low = p.hp / p.maxHp < 0.35;
       bar(54, y + 4, 38, p.hp, p.maxHp, low ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
       text(95, y, `${p.hp}`, low ? '#e88a7a' : UI.text);

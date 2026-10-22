@@ -13,6 +13,17 @@
 *The Echo rule throughout: the era swap works only in Echo Zones, every zone tile is walkable in both eras (the map
 validator checks this), and only objects flagged `anchor` carry a change back to the present.*
 
+*The gold arrow in Chapters 3 to 5 (Claude's call, Oct 22, merging Chapters 3 to 5 with review 1's fixes): the
+gold-arrow walker (`quest/tools/gold-walk.ts`, `quest/tests/goldWalk.test.ts`) now finishes Chapter 5 too. To get
+there, every goal names the person or thing to use (never the empty tile in front of it), the door to walk through,
+or the shimmer; every Echo puzzle has `echoGoals` (the forge gates and Benny's lever, the treasurer's records room,
+the cistern gate, Yusuf and the sun lock in the vault, the red thread and drawer four in the Archive); the sea road
+starts at the barred tunnel mouth; and "Until dusk" in Al-Doria points at Samira on the Majlis steps until she has
+handed out her three things (an objective done through the side quests may name its own goals, which come first;
+"Appraise This" is offered from the steps). The balance door: once Yusuf has said the price, the arrow walks the
+hooks still wrong for twenty-five (16, 8 and 1 on; 4 and 2 off), then the pan. The puzzle is reading the price in
+the memory, and Anissa's third hint already names the weights.*
+
 **Difficulty scale:** 1 (tutorial) to 10 (the hardest secret). Main-path puzzles stay at 6 or below.
 
 ## Index
@@ -234,6 +245,14 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "Seven ribbons and six pages. Where's the seventh page?" / "In the memory, watch where the clerk puts it.
   The labels have changed since, but the cabinet hasn't." / "Drawer four. Tie the ribbon thread on it in the memory."
 - **Difficulty:** 3.
+- **Built (Oct 22; the Chapter 5 outline's second review, 3.4; Claude's call):** the carved numbers today run 6, 2, 7,
+  5, 1, 4, 3 left to right (drawer 4 is sixth, second from the right); in the memory the drawers run 1 to 7, so the
+  clerk files the page fourth from the left. The plates: Kay Soley, Brasador, Dorini, Ironvow, Suzumori, Stillwater,
+  Agnivansh (drawer 4 under Stillwater, the Crown's own; Xaraguá has no drawer, never a signatory). A wrong drawer in
+  the memory costs a re-watch: "Nothing is in this one. The clerk looks up.", the thread goes back to the table and the
+  clerk files the page again. The Parley half: Reason is the Witness argument (a page never read was never agreed;
+  needs *The Founding Compact* or *The Sun Accord, Sealed* read), Scripture works with one more exchange, Compassion
+  sends Gianna to the shelf. Honest difficulty 2 to 3. Files: `quest/puzzles/seat_accord/`.
 
 ### S-SEA The Unknotted Ribbon (secret; `SECRET-ITEMS.md` 9)
 - **Echo:** five questions from the clerk, each with a trap. **Present:** the keeper's cross-examination, each line

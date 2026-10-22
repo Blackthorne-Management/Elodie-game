@@ -2,7 +2,10 @@
 // translation and whether a native or fluent speaker has checked it. `npm run audit:lang` lists the
 // unverified ones.
 
+import arabic from './lang/arabic.json' with { type: 'json' };
+import french from './lang/french.json' with { type: 'json' };
 import kreyol from './lang/kreyol.json' with { type: 'json' };
+import spanish from './lang/spanish.json' with { type: 'json' };
 import taino from './lang/taino.json' with { type: 'json' };
 
 export interface GlossaryEntry {
@@ -18,4 +21,4 @@ export interface Glossary {
   entries: GlossaryEntry[];
 }
 
-export const GLOSSARIES: readonly Glossary[] = [kreyol as Glossary, taino as Glossary];
+export const GLOSSARIES: readonly Glossary[] = [kreyol as Glossary, taino as Glossary, spanish as Glossary, arabic as Glossary, french as Glossary];

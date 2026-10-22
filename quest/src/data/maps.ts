@@ -2,6 +2,27 @@
 
 import type { TiledMap } from '../engine/tiledMap.ts';
 import testVillage from '../../maps/test-village.tmj?raw';
+import aldoriaQuay from '../../maps/aldoria-quay.tmj?raw';
+import aldoriaBazaar from '../../maps/aldoria-bazaar.tmj?raw';
+import aldoriaMajlis from '../../maps/aldoria-majlis.tmj?raw';
+import aldoriaLedgers from '../../maps/aldoria-ledgers.tmj?raw';
+import aldoriaVault from '../../maps/aldoria-vault.tmj?raw';
+import aldoriaDesert from '../../maps/aldoria-desert.tmj?raw';
+import seatGateyard from '../../maps/seat-gateyard.tmj?raw';
+import seatConcourse from '../../maps/seat-concourse.tmj?raw';
+import seatHall from '../../maps/seat-hall.tmj?raw';
+import seatQuarter from '../../maps/seat-quarter.tmj?raw';
+import seatWorkshop from '../../maps/seat-workshop.tmj?raw';
+import seatArchive from '../../maps/seat-archive.tmj?raw';
+import seatFields from '../../maps/seat-fields.tmj?raw';
+import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
+import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
+import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
+import ardenciaLower from '../../maps/ardencia-lower.tmj?raw';
+import ardenciaLibrary from '../../maps/ardencia-library.tmj?raw';
+import ardenciaForge from '../../maps/ardencia-forge.tmj?raw';
+import ardenciaTunnel from '../../maps/ardencia-tunnel.tmj?raw';
+import ardenciaCamp from '../../maps/ardencia-camp.tmj?raw';
 import xaraguaVillage from '../../maps/xaragua-village.tmj?raw';
 import xaraguaPlaza from '../../maps/xaragua-plaza.tmj?raw';
 import xaraguaBeach from '../../maps/xaragua-beach.tmj?raw';
@@ -51,6 +72,27 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'xaragua-record': xaraguaRecord,
   'xaragua-cellar': xaraguaCellar,
   'xaragua-seacave': xaraguaSeaCave,
+  'ardencia-flats': ardenciaFlats,
+  'ardencia-town': ardenciaTown,
+  'ardencia-alcazar': ardenciaAlcazar,
+  'ardencia-lower': ardenciaLower,
+  'ardencia-library': ardenciaLibrary,
+  'ardencia-forge': ardenciaForge,
+  'ardencia-tunnel': ardenciaTunnel,
+  'ardencia-camp': ardenciaCamp,
+  'aldoria-quay': aldoriaQuay,
+  'aldoria-bazaar': aldoriaBazaar,
+  'aldoria-majlis': aldoriaMajlis,
+  'aldoria-ledgers': aldoriaLedgers,
+  'aldoria-vault': aldoriaVault,
+  'aldoria-desert': aldoriaDesert,
+  'seat-gateyard': seatGateyard,
+  'seat-concourse': seatConcourse,
+  'seat-hall': seatHall,
+  'seat-quarter': seatQuarter,
+  'seat-workshop': seatWorkshop,
+  'seat-archive': seatArchive,
+  'seat-fields': seatFields,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

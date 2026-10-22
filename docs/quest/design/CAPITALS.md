@@ -347,6 +347,10 @@ the Crown.
 
 ## 4. Cenizal (Ardencia, House Brasador)
 
+*Built for Chapter 3 (Oct 21) at levels 8 to 11 (the Cinder Flats 8 to 9 on the way up, 11 after the escape), with
+the maps in `quest/tools/maps/ardencia.ts`; where this section differs (it was written when Ardencia was Chapter 4),
+the build follows the Chapter 3 outline.*
+
 **Chapter:** 4 (and a sneak back for Ar-4). **Ruler:** Rael the Ruthless, Lord of Ardencia; his corrupt elders;
 old Benny lives in the keep. Appears to be the enemy. **Free Brasador** wants **Fear** (price 6). **Feel:**
 fire-cracked highlands, red stone and iron, a duel court. Spanish-inspired. Accent red `#b03a2e`.

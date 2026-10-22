@@ -67,6 +67,12 @@ export const LEVELS = {
 /** Shared XP: each main-quest step done, and each lore book read. */
 export const XP_PER_OBJECTIVE = 25;
 export const XP_PER_BOOK = 10;
+/**
+ * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
+ * at most this many levels under its target; LEVEL_CURVE_SLACK is how far under (or over) the target the main
+ * route may land and still count as on target.
+ */
+export const LEVEL_CURVE = { skipSideQuestsMaxUnder: 2, slackUnder: 1, slackOver: 1 } as const;
 
 /** The minimap (src/ui/SideMap.ts): how many tiles it shows across and down (CSS sizes it per layout). */
 export const SIDE_MAP = { tilesW: 32, tilesH: 24 } as const;
@@ -153,7 +159,7 @@ export const HINT_SHOW_MS = 7000;
 /** Turn order: after acting, a fighter waits round(TURN_DELAY_K / (SPD + TURN_DELAY_OFFSET)) x the action's weight. */
 export const TURN_DELAY_K = 1200;
 export const TURN_DELAY_OFFSET = 30;
-export const ACTION_WEIGHT = { attack: 1, skill: 1, item: 0.8, guard: 0.6 } as const;
+export const ACTION_WEIGHT = { attack: 1, skill: 1, heavy: 1.3, item: 0.8, guard: 0.6 } as const;
 /** Damage variance: x U(1 - v, 1 + v). */
 export const DAMAGE_VARIANCE = 0.08;
 /** Hit chance (physical): HIT_BASE + (SPD difference) / 2, clamped. Crit: CRIT_BASE + (SPD difference) / 4. */
@@ -169,16 +175,23 @@ export const MIN_DAMAGE_SHARE = 0.15;
 export const GUARD_MULT = 0.5;
 /** Status effects (COMBAT 10): how many of the affected fighter's own turns they last, and what they do. */
 export const STATUS = {
-  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false },
-  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true },
-  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true },
+  inspired: { turns: 3, dealt: 1.25, taken: 1, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
+  weakened: { turns: 3, dealt: 0.75, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false },
+  marked: { turns: 3, dealt: 1, taken: 1.25, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false },
   /** Ward: damage taken x0.75 (a Chapter 1 proposal; Aldermoor's Ward of Patience is the party-wide one). */
-  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false },
-  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false },
+  warded: { turns: 3, dealt: 1, taken: 0.75, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
+  regen: { turns: 3, dealt: 1, taken: 1, regen: 0.08, spd: 1, taunt: false, bad: false, skip: false, shatter: false },
   /** Slowed (COMBAT's Chilled): SPD x0.7, so turns come later. */
-  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true },
+  slowed: { turns: 3, dealt: 1, taken: 1, regen: 0, spd: 0.7, taunt: false, bad: true, skip: false, shatter: false },
   /** Taunting: foes' one-target attacks go to this fighter first. */
-  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false },
+  taunting: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: true, bad: false, skip: false, shatter: false },
+  /** Stunned (COMBAT 10): the fighter loses their next action (Azzy's Grito de Guerra). */
+  stunned: { turns: 1, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: true, shatter: false },
+  /**
+   * The Golden Wall (Qasim, Chapter 4; the outline review 3.7): gold stacked in front of him, damage taken x0.5 for
+   * its turns. A Surge-powered blow shatters it at once (and lands in full).
+   */
+  gilded: { turns: 3, dealt: 1, taken: 0.5, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: true },
 } as const;
 /**
  * Spell slots (owner, Oct 15): a mage equips only this many of the spells she knows (the level at which
@@ -191,6 +204,37 @@ export const SPELL_SLOTS: readonly { level: number; slots: number }[] = [
 ];
 /** A mage's Attack with a plain staff: a bash at this power (100 with a bladed or spiked staff). */
 export const MAGE_BASH_POWER = 70;
+/**
+ * Samira's Daftar (COMBAT 9.6; owner approved Oct 20: it spends gold): each realm Wealth point makes what the
+ * gold buys DAFTAR_WEALTH_PER_POINT stronger, up to DAFTAR_WEALTH_MAX.
+ */
+export const DAFTAR_WEALTH_PER_POINT = 0.01;
+export const DAFTAR_WEALTH_MAX = 0.3;
+/**
+ * Bound (COMBAT 10; Rael's fights only, BattleDef.binds): at 0 HP a fighter is Bound, not Down. On their turn they
+ * can only Break Free: BOUND_BREAK_CHANCE the first time, sure the second. Any heal frees them too (Claude's call,
+ * Oct 21: Comfort is not built). Freed by Break Free, they stand with BOUND_FREE_HP_SHARE of their HP; freed by a
+ * heal, with what it healed.
+ */
+export const BOUND_BREAK_CHANCE = 0.5;
+export const BOUND_FREE_HP_SHARE = 0.25;
+/** A guard who shields his lord (EnemyDef.protects: Captain Rivera) takes this share of one-target blows meant for him. */
+export const INTERCEPT_CHANCE = 0.75;
+/**
+ * The Trial of Blades (Chapter 3; the outline review 3.3): Rael ends the fight himself at the first of every fighter
+ * Bound, his HP floor holding, or TRIAL_TURNS_AFTER_FINISHER of his own turns after Reinado de Cenizas; the round cap
+ * (his own turns) is only the backstop for a party that stalls in the first two phases.
+ */
+export const RAEL_TRIAL_MAX_ROUNDS = 14;
+export const TRIAL_TURNS_AFTER_FINISHER = 3;
+/**
+ * Bribe (Samira, COMBAT 9.6; Chapter 4): a human foe takes the purse and walks out of the fight. It costs
+ * BRIBE_GOLD_PER_LEVEL gold for each of Samira's levels (325 at level 13); a foe someone hired mid-fight (Qasim's
+ * Hire Blades) was paid by the guild first, so the purse comes back (the refund).
+ */
+export const BRIBE_GOLD_PER_LEVEL = 25;
+/** Qasim's Hire Blades: at most this many hired blades on the field at once (the starting pair aside). */
+export const HIRE_CAP = 2;
 /** Fighters in a battle at once (owner, Oct 15): up to 8 in the party, 4 fight, the rest wait to swap in. */
 export const BATTLE_ACTIVE = 4;
 /** A fighter who swaps in (or replaces a fallen one) waits this share of a full turn before acting. */

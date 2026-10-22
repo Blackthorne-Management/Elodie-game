@@ -159,6 +159,82 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ǖ: { ground: 'cave_wall', deco: 'carving', solid: true },
   ǘ: { ground: 'cave_floor', deco: 'stone_pile', solid: true },
   ĝ: { ground: 'cave', solid: false },
+  // Ardencia (Chapter 3, Oct 21).
+  α: { ground: 'black_sand', solid: false },
+  β: { ground: 'basalt', solid: true },
+  γ: { ground: 'cinder', solid: false },
+  δ: { ground: 'red_stone', solid: false },
+  ε: { ground: 'red_wall', solid: true },
+  ζ: { ground: 'duel_sand', solid: false },
+  η: { ground: 'hot_spring', solid: true },
+  θ: { ground: 'iron_floor', solid: false },
+  ι: { ground: 'lava', solid: true },
+  κ: { ground: 'ditch', solid: false },
+  μ: { ground: 'iron_floor', deco: 'bellows', solid: true },
+  ν: { ground: 'red_wall', deco: 'tapestry', solid: true },
+  π: { ground: 'red_stone', deco: 'barrel', solid: true },
+  σ: { ground: 'iron_floor', deco: 'shelf', solid: true },
+  τ: { ground: 'red_stone', deco: 'stall', solid: true },
+  υ: { ground: 'red_stone', deco: 'gallery', solid: true },
+  φ: { ground: 'red_stone', deco: 'monument', solid: true },
+  χ: { ground: 'red_stone', deco: 'lantern', solid: true },
+  ψ: { ground: 'red_stone', deco: 'banner', solid: true },
+  ω: { ground: 'iron_floor', deco: 'barrel', solid: true },
+  ϊ: { ground: 'cinder', deco: 'stone_pile', solid: true },
+  ϋ: { ground: 'red_stone', deco: 'table', solid: true },
+  ό: { ground: 'red_stone', deco: 'bench', solid: true },
+  ύ: { ground: 'carpet', solid: false },
+  ώ: { ground: 'dais', deco: 'throne', solid: true },
+  Ϗ: { ground: 'red_stone', deco: 'shelf', solid: true },
+  ϐ: { ground: 'black_sand', deco: 'tent', solid: true },
+  ϑ: { ground: 'black_sand', deco: 'firepit', solid: true },
+  // Al-Doria (Chapter 4, Oct 21).
+  б: { ground: 'sandstone', solid: false },
+  Б: { ground: 'sandstone_wall', solid: true },
+  г: { ground: 'dome', solid: true },
+  д: { ground: 'zellige', solid: false },
+  ж: { ground: 'dune', solid: false },
+  Ж: { ground: 'dune', deco: 'palm', solid: true },
+  з: { ground: 'sandstone', deco: 'arcade', solid: true },
+  и: { ground: 'sandstone', deco: 'awning', solid: true },
+  й: { ground: 'sandstone', deco: 'carpet_stall', solid: true },
+  л: { ground: 'sandstone', deco: 'coin_table', solid: true },
+  Л: { ground: 'sandstone', deco: 'weights_table', solid: true },
+  п: { ground: 'vault_floor', solid: false },
+  П: { ground: 'vault_wall', solid: true },
+  ф: { ground: 'vault_floor', deco: 'strongbox', solid: true },
+  ц: { ground: 'channel_dry', solid: false },
+  Ц: { ground: 'channel_water', solid: true },
+  ч: { ground: 'dune', deco: 'camel', solid: true },
+  ш: { ground: 'sandstone', deco: 'crate_sealed', solid: true },
+  Ш: { ground: 'water', deco: 'ship_hull', solid: true },
+  щ: { ground: 'floor', deco: 'lectern', solid: true },
+  ы: { ground: 'sandstone', solid: true },
+  э: { ground: 'dune', deco: 'sluice', solid: true },
+  ю: { ground: 'dune', deco: 'tent', solid: true },
+  я: { ground: 'sandstone', deco: 'lantern', solid: true },
+  Э: { ground: 'sandstone_wall', deco: 'banner', solid: true },
+  Я: { ground: 'sandstone', deco: 'spice', solid: true },
+  Ю: { ground: 'sandstone', deco: 'cloth', solid: true },
+  Ф: { ground: 'vault_floor', deco: 'lectern', solid: true },
+  // Eightgate (Chapter 5, Oct 22).
+  ա: { ground: 'seat_stone', solid: false },
+  բ: { ground: 'seat_wall', solid: true },
+  գ: { ground: 'slate_roof', solid: true },
+  դ: { ground: 'seat_wall', deco: 'violet_banner', solid: true },
+  ե: { ground: 'seat_stone', deco: 'lantern', solid: true },
+  զ: { ground: 'seat_stone', deco: 'cloth', solid: true },
+  ը: { ground: 'seat_stone', deco: 'stall', solid: true },
+  ի: { ground: 'seat_wall', deco: 'banner', solid: true },
+  լ: { ground: 'grass', deco: 'tent', solid: true },
+  խ: { ground: 'grass', deco: 'firepit', solid: true },
+  ծ: { ground: 'path', deco: 'wagon_over', solid: true },
+  կ: { ground: 'marble', deco: 'dress_dummy', solid: true },
+  հ: { ground: 'marble', deco: 'mirror', solid: true },
+  ձ: { ground: 'seat_stone', deco: 'crate', solid: true },
+  ղ: { ground: 'seat_wall', deco: 'seat_gate', solid: true },
+  // The city's own walls (not a building: no grey door is added to them).
+  ճ: { ground: 'seat_wall', solid: true },
 };
 
 export class Grid {
@@ -343,8 +419,8 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
 }
 
 /** Building walls and the roofs above them: stone and tile, and Xaraguá's cane walls under thatch. */
-const WALLS = new Set(['#', 'é']);
-const ROOFS = new Set(['^', 'á']);
+const WALLS = new Set(['#', 'é', 'ε', 'Б', 'բ']);
+const ROOFS = new Set(['^', 'á', 'г', 'գ']);
 
 /**
  * Every building with no way in gets a grey door you cannot open (owner request, Oct 16), in the middle
@@ -398,7 +474,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

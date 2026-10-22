@@ -245,7 +245,7 @@ aloud to the whole party). He goes over the side; his marines fish him out ("The
 the blockade to a Zetwal trader, and the voyage plays home (`xaragua_zetwal`, by night). On Pòdlimyè's long pier,
 Grandmother and Grandfather wait with the pigeons' news; the city is uneasy (Crown sails off the south reef);
 Patricio meets Caona's granddaughter and asks Gianna to go to Ardencia and ask Lord Rael, Benny's son, to stand
-with Xaraguá ("Then ask him why his grandfather said yes"). `act2.complete`; the card: *Chapter 2 complete, The
+with Xaraguá ("Then ask him why his father said yes"). `act2.complete`; the card: *Chapter 2 complete, The
 Charter. Next: Chapter 3, The Trial of Blades*. The Cane Road's ambushes switch on (`story.zetwal_return`).
 `?chapter=3` starts here.
 
@@ -340,8 +340,18 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
 - **Boss:** Rael the Ruthless, Fight 1 (level 11).
 - **What the player learns:** Rael is her father; the token is one token in two halves; the signet glows (the player
   sees it, Gianna does not understand); the shots missed; nobody died.
+- **As built (Oct 21, branch `chapter3`):** beats 5 to 8 follow the owner's decisions of Oct 20 and the families of
+  Oct 21, not the list above: Rael wins (a scripted loss, the party Bound; La Promesa de Benny holds him at 1 HP);
+  the winner's question with the court cleared (Rivera silent at the door, Jaime gone with the elders); the signet
+  glows at the lie and Anissa says so, unheard; the forge cell, Azzy's key, the Echo of Benny's armory (the channels
+  and the lever), the bell, Azzy joining in the dark; Benny's tunnel (Amanda unbars it), the shots wide on Joaquin's
+  order, the camp. Levels 8 to 11 (the party leaves at 11). The whole list of Claude's calls is in
+  `docs/quest/reviews/2026-10-20-chapter3-outline.md`, "Built (Oct 21)".
 
 ### Chapter 4: The Ledger (Al-Doria)
+
+*Built Oct 22 (branch `chapter3`): see `docs/quest/reviews/2026-10-20-chapter4-outline.md`, "Built (Oct 22)", for what is in
+the game and its Claude's calls; the beats below are the earlier design.*
 
 - **Where:** Bab al-Dhahab (proposal name), the port and caravan city of House Dorini.
 - **Level range:** 11 to 14 (after Ardencia, owner, Oct 15).
@@ -392,6 +402,13 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
 - **Echo scenes:** the sealing; a young Thomas Stillwater copying the Crown's record in the gallery (setup for Ch. 9).
 - **Boss:** none.
 - **What the player learns:** the Seventh Clause; Elodie's two lines; the Regent's patience; allies must be won.
+- **Built (Oct 22; the outline `reviews/2026-10-21-chapter5-outline.md`, its "Built" section, and its second review):**
+  the clause is read aloud in the Parley at Elodie's demand, before every house (owner decision, Oct 21). Claude's
+  calls on the staging, recorded there: no Echo skirmish (no fight inside the walls); in the Hall Elodie cuts Gianna
+  off before "Rael" so the Crown's clerk never hears it; Hollis reads the clause only (no signature, no witness knot)
+  and the Regent states no new law; Patricio *sealed the binding* and signed nothing on the seventh page (so his "I
+  would remember" in Chapter 2 is literally true and evasive; see open question 13); Elodie answers "He didn't let
+  them hit me" with a hand on Anissa's head and no words; the roads open east, Skarragol first.
 
 ### Chapters 6 to 8: The three roads (any order)
 
@@ -591,6 +608,9 @@ real people (guide 7.3).
     open: how Al-Doria is reached from Ardencia (proposal in Chapter 4, beat 9).
 13. **Does old Patricio know who he is sending her to?** The Lord of Ardencia is Rael, Gianna's father (Elodie's
     secret husband). Does Patricio know about the marriage when he sends her to Ardencia?
+    *(Oct 22, for the owner's confirmation list, no pop-up: Chapter 5's sealing has young Patricio seal the binding
+    of six pages under protest while a seventh is read to the clerk alone. He signed nothing on it. The payoff is
+    Chapter 10's, at Pòdlimyè.)*
 14. **Who is caught in the occupation?** Proposal: Cacique Anaco is held under guard in his own house; the elders are
     split; the resistance hides in the petroglyph caves.
 

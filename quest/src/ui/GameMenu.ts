@@ -11,7 +11,7 @@ import { ENCOUNTERS } from '../data/encounters.ts';
 import { REALM_MAP } from '../data/realmMap.ts';
 import { RPG } from '../data/rpg.ts';
 import { SKILL_BOOK } from '../data/battles.ts';
-import { isMove, skillCost, type SkillDef } from '../engine/battle.ts';
+import { goldCost, isMove, skillCost, type SkillDef } from '../engine/battle.ts';
 import { equippedSpells, gearSkills, howToLearn, knownMoves, knownSkills, learned, nextRank, spellSlots, toggleSpell, usesSlots } from '../engine/skills.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { encounterFlag } from '../engine/game.ts';
@@ -39,6 +39,7 @@ import {
   xp,
   xpForLevel,
   localPillar,
+  bondActive,
   partyMembers,
   stats,
   unequip,
@@ -104,6 +105,13 @@ function line(a: Pos, b: Pos): Pos[] {
 
 const DEPTH = 6000;
 const TOP = 38; // content starts under the tabs and the purse
+/** Party lists with portraits (Status, Equip) show this many at once and scroll with the cursor (up to 8 fighters). */
+const PORTRAIT_ROWS = 5;
+
+/** The first member shown in a portrait list so the cursor stays in view. */
+function portraitWindow(count: number, cursor: number): number {
+  return Math.max(0, Math.min(cursor - PORTRAIT_ROWS + 1, count - PORTRAIT_ROWS));
+}
 const ROWS = 11; // list rows that fit
 const ROW_H = 12;
 const PILLAR_NAMES: Record<(typeof PILLARS)[number], string> = { influence: 'Influence', wealth: 'Wealth', fear: 'Fear' };
@@ -519,8 +527,10 @@ export class GameMenu {
   private drawStatus(g: Phaser.GameObjects.Graphics): void {
     const ctx = this.ctx!;
     const party = this.party();
+    const top = portraitWindow(party.length, this.cursor);
     party.forEach((m, i) => {
-      const y = TOP + 2 + i * 28;
+      if (i < top || i >= top + PORTRAIT_ROWS) return;
+      const y = TOP + 2 + (i - top) * 28;
       const on = i === this.cursor;
       if (on) g.lineStyle(1, 0xf2d04b, 1).strokeRect(5.5, y - 1.5, 96, 27);
       const key = textureKeyForPortrait(m.portrait);
@@ -608,9 +618,11 @@ export class GameMenu {
   private drawEquip(g: Phaser.GameObjects.Graphics): void {
     const ctx = this.ctx!;
     const fighters = this.fighters();
-    // The party.
+    // The party (a long one scrolls with the cursor).
+    const top = portraitWindow(fighters.length, this.stage === 'top' ? this.cursor : Math.max(0, fighters.indexOf(this.member!)));
     fighters.forEach((m, i) => {
-      const y = TOP + 2 + i * 28;
+      if (i < top || i >= top + PORTRAIT_ROWS) return;
+      const y = TOP + 2 + (i - top) * 28;
       const on = i === this.cursor;
       if (on) g.lineStyle(1, 0xf2d04b, 1).strokeRect(4.5, y - 1.5, 62, 27);
       const key = textureKeyForPortrait(m.portrait);
@@ -754,8 +766,9 @@ export class GameMenu {
       const s = r.skill;
       const mark = r.kind === 'spell' ? (r.on ? '[x] ' : r.known ? '[ ] ' : '    ') : r.kind === 'gear' ? ' *  ' : '    ';
       // Gianna pays a quarter less with Anissa beside her (as in battle).
-      const bond = m.class === 'mage' && !!ctx.flags.get('party.anissa');
-      const cost = isMove(s) ? (s.cooldown ? `wait ${s.cooldown}` : 'any turn') : `${skillCost(s, { anissaBond: bond })} SP`;
+      const bond = bondActive(ctx.flags, RPG, m);
+      const coins = goldCost(s, { level: lv });
+      const cost = isMove(s) ? (s.cooldown ? `wait ${s.cooldown}` : 'any turn') : coins ? `${coins} gold` : `${skillCost(s, { anissaBond: bond })} SP`;
       const colour = !r.known ? UI.dimText : r.kind === 'gear' ? RARITY_ART.rare.text : r.on || r.kind !== 'spell' ? UI.text : UI.dimText;
       this.text(X, y, `${mark}${s.name}`, sel ? UI.accentText : colour, 120);
       this.text(VIEW_WIDTH - 6, y, r.known ? cost : howToLearn(s), UI.dimText).setOrigin(1, 0);
