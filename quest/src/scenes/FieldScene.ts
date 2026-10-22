@@ -2398,6 +2398,15 @@ export class FieldScene extends Phaser.Scene {
     else if (fx === 'ratchet') {
       audio.sfx('ratchet');
       cam.shake(400, 0.004);
+    } else if (fx === 'cannon') {
+      // Chapter 11: a gun in view's edge or off it (the owner's rule: a sound and a shake for an off-screen event).
+      audio.sfx('cannon');
+      cam.shake(320, 0.01);
+    } else if (fx === 'volley') audio.sfx('volley');
+    else if (fx === 'conch') audio.sfx('conch');
+    else if (fx === 'chain') {
+      audio.sfx('chain');
+      cam.shake(700, 0.006);
     } else if (fx === 'fade') {
       cam.fadeOut(250, 0, 0, 0);
       cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => cam.fadeIn(450, 0, 0, 0));

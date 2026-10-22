@@ -63,6 +63,8 @@ export function recordLoss(flags: FlagStore, def: BattleDef): LossOutcome {
   }
   const count = flags.add(GAME_OVER_COUNT_FLAG, 1);
   if (!isRandomFight(def)) flags.add(lossesFlag(def), 1);
+  // What the fight's own scene set for it and a loss takes back (Chapter 11: Rael's place in the four, party.rael).
+  for (const [k, v] of Object.entries(def.onLoss ?? {})) flags.set(k, v);
   return { kind: 'gameOver', count, grudge: grudgeFor(flags, def) };
 }
 

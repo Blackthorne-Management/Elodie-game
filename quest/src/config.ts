@@ -78,8 +78,12 @@ export const LEVELS = {
  * end of 8,028): the Muster is one level wide (24 to 25), so its fixed XP is about 500, and its two side quests and the
  * crew's fight are required by the Chancellor's condition, so their XP rides on the Journal's steps (Z-6 10, Z-3 none,
  * the crew 50 as a story fight): a player cannot skip them, and the line without side quests stays two under, not three.
+ * Chapter 11 pays 58 (Claude's call, Oct 22; measured from Chapter 10's end of 8,533): the war is three levels wide (25 to
+ * 28) and arrives with the line without side quests already two under, so the story carries it (thirteen paying steps and
+ * the named fights) and the two side quests and the picket pay little (40 each): the route ends on 28 (10,260), the
+ * played median on 28 (10,318, under 29's 10,338), and the line without side quests on 26 (8,640, over 26's 8,623).
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70, 40];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70, 40, 58];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
@@ -392,6 +396,14 @@ export const MUSTER = {
 } as const;
 /** Chapter 11's volleys (COMBAT.md 11): one volley for every this many soldiers at sea. */
 export const ARMY_VOLLEY_PER = 10;
+/**
+ * The volleys (Chapter 11, the War of the Harbor; the outline 4.2 with its second review's 3.4, Claude's call): before
+ * each named fight the whistle asks how many volleys, at most `cap` and at most what the pool has left; each falls on
+ * every foe before the first turn as a blow of `power` at the active fighters' mean ATK (DEF counts as against any blow),
+ * a boss taking `bossShare` of it. A volley wounds and never fells (it leaves a foe at least 1 HP: the army softens a
+ * fight, the party wins it). A lost fight gives its volleys back (the companies fire again on the next try).
+ */
+export const VOLLEY = { power: 50, cap: 3, bossShare: 0.5 } as const;
 
 // ---- Random ambushes (owner rule, Oct 17: every ambush is a real battle) ---------------------------------
 

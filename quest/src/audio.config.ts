@@ -52,6 +52,9 @@ export const MUSIC = {
   throne_hall: { file: 'audio/music/crown-customs.mp3', loop: true, overlapS: 2.5 },
   throne_archive: { file: 'audio/music/echo.mp3', loop: true, overlapS: 3.5 },
   crossroads: { file: 'audio/music/cane-road.mp3', loop: true, overlapS: 3.5 },
+  // The War of the Harbor (Chapter 11): a slot until the owner's track arrives (docs/quest/AUDIO-PROMPTS.md); the march of
+  // the mountain path's drums under the war's day and dusk.
+  harbor_war: { file: 'audio/music/mountain-path.mp3', loop: true, overlapS: 3 },
 } as const satisfies Record<string, MusicTrack>;
 
 export type MusicId = keyof typeof MUSIC;
@@ -140,8 +143,21 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'aldermoor-cathedral': 'throne_archive',
 };
 
-/** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */
+/**
+ * Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. Chapter 11
+ * first (the first that holds plays): the war's day and dusk, then the free harbor's own song once it is taken.
+ */
 export const MUSIC_OVERRIDES: readonly { maps: readonly string[]; if: Condition; music: MusicId }[] = [
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-caney'],
+    if: { flag: 'story.harbor_taken' },
+    music: 'yucayeque',
+  },
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp'],
+    if: { all: [{ flag: 'story.war_begun' }, { notFlag: 'story.harbor_taken' }] },
+    music: 'harbor_war',
+  },
   {
     maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-caney'],
     if: { flag: 'story.crown_attack' },
@@ -217,6 +233,12 @@ export const SFX_IDS = [
   // harbor chain's capstan, heard from the Hall (an off-screen event: sound and a shake).
   'whistle',
   'ratchet',
+  // Chapter 11, the War of the Harbor: a cannon (the headland gun, the Patience's ports: in view's edge or off it), the
+  // fleet's volley, the chain running out of the old post's capstan, and the head runner's conch.
+  'cannon',
+  'volley',
+  'chain',
+  'conch',
 ] as const;
 
 export type SfxId = (typeof SFX_IDS)[number];

@@ -71,6 +71,7 @@ import {
   BURNING_BOSS_SHARE,
   SWAP_IN_DELAY,
   SURGE_COST,
+  VOLLEY,
   SURGE_MULT,
   TURN_DELAY_K,
   TURN_DELAY_OFFSET,
@@ -80,6 +81,7 @@ import type { FlagStore, FlagReader } from './flags.ts';
 import { encounterFlag } from './encounterFlags.ts';
 import { Rng, seedFrom } from './rng.ts';
 import { battleSkills, type SkillBook } from './skills.ts';
+import { spentFlag, volleysFlag, type Volleys } from './war.ts';
 import {
   SLOTS,
   addSharedXp,
@@ -287,6 +289,11 @@ export interface EnemyDef {
    * them out; then the one with a `name` (the real one) is named, and the rest go by their own name.
    */
   disguise?: { as: string; name?: string };
+  /**
+   * Never aims a blow at this party member (by member id), one-target or area (Rael at the Harbor Strike will not strike
+   * Gianna: COMBAT 13.3 #3b; the Chapter 11 review's 3.13). With nobody else standing he waits.
+   */
+  avoid?: string;
 }
 
 /**
@@ -308,6 +315,11 @@ export interface BattlePhase {
    * Wall down) sets him Burning, again with every fire blow.
    */
   ignite?: boolean;
+  /**
+   * These foes (by enemy id), if still standing, step back from the fight as the phase starts, with their own withdraw
+   * line (Rael's guards at the Harbor Strike's Broken Army: COMBAT 13.3 #3b, "his guards leave").
+   */
+  leave?: readonly string[];
 }
 
 /**
@@ -379,6 +391,16 @@ export interface BattleDef {
    * Omitted: the party as it stands.
    */
   fighters?: readonly string[];
+  /**
+   * The armies' volleys open it (Chapter 11, engine/war.ts): the whistle before it set war.volleys.<id>, and the battle
+   * scene passes them in (BattleOptions.volleys). A win spends them.
+   */
+  volleys?: boolean;
+  /**
+   * Flags a loss writes (engine/gameOver.ts recordLoss): what the fight's own scene set for it and a Game Over must take
+   * back (Chapter 11: Rael's place in the four, party.rael, on the flagship; the second review's 3.8).
+   */
+  onLoss?: Readonly<Record<string, boolean>>;
 }
 
 /** The most Grudge a fight can build (review 1, finding 1: a boss lost three times has had the fight). */
@@ -499,6 +521,8 @@ export interface Combatant {
   disguise?: { as: string; name?: string };
   /** The foe's own name, under a disguise. */
   trueName?: string;
+  /** Never aims a blow at this party member (EnemyDef.avoid). */
+  avoid?: string;
 }
 
 export interface ActiveStatus {
@@ -572,6 +596,8 @@ export interface BattleOptions {
   wealth?: number;
   /** Foes who can walk in during the fight (a boss phase's `enter`), by enemy id, at their fighting level. */
   reserve?: Readonly<Record<string, EnemyDef>>;
+  /** The armies' volleys before the first turn (engine/war.ts volleysFor; Chapter 11). */
+  volleys?: Volleys;
 }
 
 /** What a gold skill costs this fighter (0 for SP skills). */
@@ -655,6 +681,8 @@ export class Battle {
   private readonly enemyHp: number;
   /** A disguise has been found out (SkillDef.reveal): the paper ones go by their own names from now on. */
   revealed = false;
+  /** The volleys that open the fight (Chapter 11). */
+  private readonly volleys: Volleys;
 
   constructor(def: BattleDef, party: readonly PartyEntry[], enemies: readonly EnemyDef[], items: readonly BattleItem[], opts: BattleOptions) {
     this.def = def;
@@ -666,6 +694,7 @@ export class Battle {
     this.enemyDamage = diff.enemyDamage;
     this.enemyHp = diff.enemyHp;
     this.reserve = opts.reserve ?? {};
+    this.volleys = opts.volleys ?? { count: 0, names: [] };
     this.items = items.map((i) => ({ ...i }));
     const seen = new Map<string, number>();
     // A duel: only the members it names fight (BattleDef.fighters).
@@ -786,6 +815,7 @@ export class Battle {
       masked: !!e.disguise,
       disguise: e.disguise,
       trueName: e.disguise?.name ?? e.name,
+      avoid: e.avoid,
     };
   }
 
@@ -900,7 +930,31 @@ export class Battle {
   start(): BattleEvent[] {
     const events: BattleEvent[] = [];
     events.push(...this.tip('start', this.def.tips?.start));
+    events.push(...this.openingVolleys());
     return [...events, ...this.advance()];
+  }
+
+  /**
+   * The armies' volleys (Chapter 11; config.ts VOLLEY): each falls on every foe as a blow of VOLLEY.power at the active
+   * fighters' mean ATK, DEF counting as against any blow, a boss taking VOLLEY.bossShare; a volley never fells.
+   */
+  private openingVolleys(): BattleEvent[] {
+    const events: BattleEvent[] = [];
+    const fighters = this.fighters.filter((f) => !f.down);
+    if (this.volleys.count <= 0 || fighters.length === 0) return events;
+    const atk = fighters.reduce((n, f) => n + f.atk, 0) / fighters.length;
+    for (let i = 0; i < this.volleys.count; i++) {
+      events.push({ kind: 'text', text: `${this.volleys.names[i] ?? 'The fleet'}: a volley!` });
+      for (const e of this.enemies.filter((x) => !x.down)) {
+        const raw = (atk * VOLLEY.power) / 100;
+        const blow = Math.max(Math.ceil(raw * MIN_DAMAGE_SHARE), raw - e.def * 0.5) * (e.boss ? VOLLEY.bossShare : 1);
+        const amount = Math.min(e.hp - 1, Math.max(1, Math.round(blow)));
+        if (amount <= 0) continue;
+        e.hp -= amount;
+        events.push({ kind: 'damage', from: 'volley', to: e.key, amount, crit: false, surge: false, move: 'Volley', style: 'physical' });
+      }
+    }
+    return events;
   }
 
   /** The current party member's commands that can be used now. */
@@ -1116,8 +1170,15 @@ export class Battle {
 
   private enemyTurn(c: Combatant): BattleEvent[] {
     const events: BattleEvent[] = [];
-    const targets = this.fighters.filter((p) => !p.down);
-    if (targets.length === 0) return events;
+    // A foe who will not strike one of them (EnemyDef.avoid) aims only at the rest, and waits when they are all down.
+    const targets = this.fighters.filter((p) => !p.down && p.key !== c.avoid);
+    if (targets.length === 0) {
+      if (c.avoid && this.fighters.some((p) => !p.down)) {
+        events.push({ kind: 'text', text: `${c.name} lowers his blade. He will not strike her. He waits.` });
+        c.next += turnDelay(spdOf(c), ACTION_WEIGHT.guard);
+      }
+      return events;
+    }
     const ready = (m: EnemyMove, turn: number) => !!m.every && turn % m.every === 0 && !(m.once && this.usedMoves.has(`${c.key}:${m.name}`));
     const heavy = c.moves.find((m) => ready(m, c.phaseTurns));
     let move: EnemyMove = heavy ?? c.moves[0] ?? { name: 'Attack', power: 100 };
@@ -1510,6 +1571,12 @@ export class Battle {
         boss.phaseTurns = 0;
       }
       if (p.text) events.push({ kind: 'text', text: p.text, speaker: p.speaker });
+      // Guards who step back as the phase starts (Rael's at the Broken Army), each with their own line.
+      for (const e of this.enemies.filter((x) => !x.down && !!x.enemyId && (p.leave ?? []).includes(x.enemyId))) {
+        e.down = true;
+        events.push({ kind: 'withdraw', who: e.key });
+        if (e.withdraws) events.push({ kind: 'text', text: e.withdraws.line, speaker: e.withdraws.speaker });
+      }
       const ids = (p.enter ?? []).filter((id) => this.reserve[id]);
       if (ids.length && p.enterText) events.push({ kind: 'text', text: p.enterText });
       for (const id of ids) events.push({ kind: 'enter', who: this.walkIn(id, this.reserve[id]!).key });
@@ -1751,5 +1818,11 @@ export function settleBattle(flags: FlagStore, rpg: RpgContent, battle: Battle):
   }
   // A fight meant to be lost goes on with its story scene either way; it is never marked won.
   if (!battle.def.meantToLose) flags.set(encounterFlag(battle.def.table, battle.def.group, 'won'), true);
+  // The volleys a won fight opened with are spent (Chapter 11, engine/war.ts); a lost one gives them back.
+  if (battle.def.volleys) {
+    const asked = flags.get(volleysFlag(battle.def.id));
+    const n = Math.max(0, Math.min(VOLLEY.cap, Math.floor(typeof asked === 'number' ? asked : 0)));
+    if (n > 0) flags.set(spentFlag(battle.def.id), n);
+  }
   return { xp: xpWon, gold: won, spent, items: [...(r.items ?? [])] };
 }
