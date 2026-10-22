@@ -1,33 +1,24 @@
 // The level curve (tools/level-curve.ts; COMBAT.md 6; plan review 3.6): the scripted route, replayed headlessly, ends
-// each chapter near its target level (src/data/chapterLevels.ts), and a player who skips every side quest is at
-// most LEVEL_CURVE.skipSideQuestsMaxUnder levels under it. The numbers are read from the data, so a change to
-// rewards (Chapter 2's are being retuned) only moves the report.
+// each chapter on its target level (src/data/chapterLevels.ts, within LEVEL_CURVE's slack), and so does the played
+// line (the route's wild steps through the ambush process, seeds 1 to 200: the median, and the 90th percentile at
+// most one over); a player who skips every side quest is at most LEVEL_CURVE.skipSideQuestsMaxUnder levels under.
+// The levels pass (Claude's call, Oct 22): story steps pay by chapter (XP_PER_OBJECTIVE_BY_CHAPTER), ambushes pay by
+// the party's level (AMBUSH_XP), and every chapter built so far is on target on both lines.
 
 import { describe, expect, it } from 'vitest';
-import { LEVEL_CURVE } from '../src/config.ts';
+import { AMBUSH_XP, LEVEL_CURVE } from '../src/config.ts';
+import { battleDef } from '../src/data/battles.ts';
 import { CHAPTER_LEVELS } from '../src/data/chapterLevels.ts';
+import { RPG } from '../src/data/rpg.ts';
+import { ambushXp, battleXp } from '../src/engine/battle.ts';
+import { FlagStore } from '../src/engine/flags.ts';
+import { xpForLevel } from '../src/engine/rpg.ts';
 import { curveText, levelCurve } from '../tools/level-curve.ts';
-
-/**
- * Chapters known to miss their target, with why, so the suite stays green while the report says so plainly. When
- * a chapter comes back on target, its entry must go (the last test fails until it does).
- *
- * Chapter 1 ends about three levels over its target of 3: every Journal step pays XP_PER_OBJECTIVE (25), where
- * COMBAT.md 6 has 10 a step in Chapter 1 (20 + 5 x chapter after). At 10 a step it would end at 4. Reported to the
- * owner (Oct 21); not retuned here because the boar and the Chapter 2 starts are balanced on today's numbers.
- */
-const KNOWN_OFF_TARGET: Readonly<Record<number, string>> = {
-  1: 'over: flat 25 XP per Journal step (COMBAT.md 6 says 10 in Chapter 1)',
-  // Chapter 2's five side quests became required (owner decision Oct 19, built Oct 20 on main and merged into this
-  // branch Oct 22): their rewards, Journal steps, puzzles and the mountain crabs add about 380 XP, so Chapter 2 ends
-  // at 10 against 8, and Chapters 3 and 4 one level higher than they were tuned (12 and 15, both within slack).
-  // Reported to the owner with the merge; Chapter 2's numbers are main's to retune.
-  2: 'over: its five required side quests (merged Oct 22) add about 380 XP',
-};
 
 describe('the level curve along the scripted route', () => {
   const report = levelCurve();
   console.log(curveText(report));
+  const ch = (n: number) => report.chapters.find((c) => c.chapter === n)!;
 
   it('measures every chapter the route plays (Chapters 1 to 5 so far), and lists the rest as unplayed', () => {
     expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5]);
@@ -37,37 +28,27 @@ describe('the level curve along the scripted route', () => {
     for (let i = 1; i < report.chapters.length; i++) expect(report.chapters[i]!.xp).toBeGreaterThan(report.chapters[i - 1]!.xp);
   });
 
-  it('Chapter 3 (Ardencia) leaves the party at level 12 (target 11, plus Chapter 2\'s required side quests), with every side quest on the route', () => {
-    const c3 = report.chapters.find((c) => c.chapter === 3)!;
-    expect(c3.level).toBe(12);
-    expect(c3.levelNoSide).toBeGreaterThanOrEqual(9);
+  it('every chapter lands on its target level on the route line (within LEVEL_CURVE slack)', () => {
+    for (const c of report.chapters) expect(c.onTarget, `Chapter ${c.chapter}: level ${c.level}, target ${c.target.to}`).toBe(true);
   });
 
-  it('Chapter 4 (Al-Doria) leaves the party at level 15 (target 14, plus Chapter 2\'s required side quests), and at 12 without its side quests', () => {
-    const c4 = report.chapters.find((c) => c.chapter === 4)!;
-    // 14 as tuned; 15 since Chapter 2's side quests became required (see KNOWN_OFF_TARGET).
-    expect(c4.level).toBe(15);
-    expect(c4.levelNoSide).toBeGreaterThanOrEqual(12);
-  });
-
-  // Chapter 5 (the outline review 3.5): the tool at 15, the played line (an ambush or two in the fields) at 16. The
-  // chapter pays about 325 XP on the route, which keeps the end at 15 both from today's start (3,470, Chapter 2's
-  // required side quests included) and from the start the review measured (about 3,260, or 3,090 if Chapter 2 is
-  // retuned): 15 needs 3,410 and 16 needs 3,808.
-  it('Chapter 5 (Eightgate) leaves the party at level 15, the target, and at 13 without its side quests; it pays 320 to 337 XP', () => {
-    const c4 = report.chapters.find((c) => c.chapter === 4)!;
-    const c5 = report.chapters.find((c) => c.chapter === 5)!;
-    expect(c5.level).toBe(15);
-    expect(c5.levelNoSide).toBeGreaterThanOrEqual(13);
-    expect(c5.xp - c4.xp).toBeGreaterThanOrEqual(320);
-    expect(c5.xp - c4.xp).toBeLessThanOrEqual(337);
-  });
-
-  it('each chapter lands on its target level (within LEVEL_CURVE slack), except the ones known and reported', () => {
+  it('every chapter lands on its target on the played line too: the median on target, the 90th percentile and the wanderer at most one over', () => {
     for (const c of report.chapters) {
-      if (KNOWN_OFF_TARGET[c.chapter]) continue;
-      expect(c.onTarget, `Chapter ${c.chapter}: level ${c.level}, target ${c.target.to}`).toBe(true);
+      expect(c.played.onTarget, `Chapter ${c.chapter}: played median ${c.played.median}, target ${c.target.to}`).toBe(true);
+      expect(c.played.p90, `Chapter ${c.chapter}: played p90`).toBeLessThanOrEqual(c.target.to + LEVEL_CURVE.slackOver);
+      expect(c.played.wanderP90, `Chapter ${c.chapter}: wanderer p90`).toBeLessThanOrEqual(c.target.to + LEVEL_CURVE.slackOver);
+      expect(c.played.medianXp).toBeGreaterThanOrEqual(c.xp - c.routeAmbushXp);
     }
+  });
+
+  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15', () => {
+    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15]);
+    // Chapter 1 was 6 (25 XP a step); Chapter 2 was 10 (its five required side quests, and 80 XP an ambush).
+    expect(ch(1).xp).toBeLessThan(xpForLevel(RPG, 5));
+    expect(ch(2).xp).toBeLessThan(xpForLevel(RPG, 9));
+    // Chapter 6 starts at 15, the bottom of its band (15 to 17).
+    expect(ch(5).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 15));
+    expect(ch(5).xp).toBeLessThan(xpForLevel(RPG, 16));
   });
 
   it(`skipping every side quest leaves the party at most ${LEVEL_CURVE.skipSideQuestsMaxUnder} levels under the target`, () => {
@@ -76,12 +57,32 @@ describe('the level curve along the scripted route', () => {
       expect(c.skipOk).toBe(true);
     }
   });
+});
 
-  it('the chapters known to be off target are still off (remove an entry once it is fixed)', () => {
-    for (const ch of Object.keys(KNOWN_OFF_TARGET).map(Number)) {
-      const c = report.chapters.find((x) => x.chapter === ch);
-      expect(c, `Chapter ${ch} is not on the route`).toBeDefined();
-      expect(c!.onTarget, `Chapter ${ch} is on target now: take it out of KNOWN_OFF_TARGET`).toBe(false);
-    }
+describe('the ambush rule (AMBUSH_XP: a share of the party\'s next level, by the foes and the level difference)', () => {
+  it('pays as the Chapter 8 outline review worked it out', () => {
+    expect(AMBUSH_XP.share).toBe(0.12);
+    expect(ambushXp(RPG, 15, 15, 3)).toBe(48);
+    expect(ambushXp(RPG, 20, 20, 3)).toBe(57);
+    expect(ambushXp(RPG, 21, 20, 3)).toBe(44);
+    expect(ambushXp(RPG, 23, 21, 2)).toBe(21);
+  });
+
+  it('tapers when the party is over the group, and pays more (to a cap) when it is under', () => {
+    const at = (party: number) => ambushXp(RPG, party, 6, 2);
+    expect(at(8)).toBeLessThan(at(6));
+    expect(at(12)).toBeGreaterThan(0); // never nothing
+    expect(ambushXp(RPG, 6, 9, 2) / ambushXp(RPG, 6, 6, 2)).toBeCloseTo(AMBUSH_XP.max, 1); // three over: 1.75, capped
+    expect(ambushXp(RPG, 6, 6, 6)).toBe(ambushXp(RPG, 6, 6, AMBUSH_XP.maxFoes));
+  });
+
+  it('a won ambush pays by the party\'s level when it ends; a scripted fight pays its own', () => {
+    const def = battleDef('encounter:mountain_path/crabs')!;
+    expect(def.ambush).toEqual({ foes: 2 });
+    const flags = new FlagStore({ 'party.anissa': true, 'xp.shared': xpForLevel(RPG, 6) });
+    expect(battleXp(flags, RPG, def)).toBe(ambushXp(RPG, 6, def.level!, 2));
+    flags.set('xp.shared', xpForLevel(RPG, 4));
+    expect(battleXp(flags, RPG, def)).toBe(ambushXp(RPG, 4, def.level!, 2));
+    expect(battleXp(flags, RPG, battleDef('thorne_blockade')!)).toBe(220);
   });
 });

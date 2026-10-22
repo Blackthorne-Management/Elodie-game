@@ -3,9 +3,10 @@
 // Anissa run into a boar, which teaches the commands, Anissa's Spark and Surge, and her light.
 // Numbers follow docs/quest/design/COMBAT.md.
 
-import { ANISSA_SP_EVERY, BATTLE_ACTIVE, BRIBE_GOLD_PER_LEVEL, ENCOUNTER_GOLD_PER_LEVEL, ENCOUNTER_XP_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
+import { ANISSA_SP_EVERY, BATTLE_ACTIVE, BRIBE_GOLD_PER_LEVEL, ENCOUNTER_GOLD_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
 import { ENCOUNTERS } from './encounters.ts';
-import type { BattleDef, EnemyDef, EnemyMove, SkillDef } from '../engine/battle.ts';
+import { ambushXp, type BattleDef, type EnemyDef, type EnemyMove, type SkillDef } from '../engine/battle.ts';
+import { RPG } from './rpg.ts';
 import type { SkillBook } from '../engine/skills.ts';
 import { BOOKS } from './books.ts';
 
@@ -312,9 +313,11 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     ],
     weak: ['light'],
     // Review 1, finding 1: at full HP and level 9 he was a wall for a party that only attacks, even at the most
-    // Grudge (16 wins in 40 at +50%); at the party's level with a little less HP, Attack alone wins 9 in 40 the
-    // first time and 37 in 40 at the boss Grudge, and Sunthread every turn still wins every time.
-    hpScale: 0.9,
+    // Grudge (16 wins in 40 at +50%); at the party's level (8) with a little less HP (0.9), Attack alone won 9 in
+    // 40 the first time and 37 in 40 at the boss Grudge. The levels pass (Oct 22) brings the party to him a level
+    // lower (7): at 7 with his full HP, Attack alone wins 8 in 40 and 36 in 40 at the boss Grudge, and Sunthread
+    // every turn still wins every time (tools/battle-sim.ts thorne_blockade seacave).
+    hpScale: 1,
   },
   // ---- Chapter 3, Ardencia (outline section 5; review section 7) ----------------------------------------
   // The Cinder Flats: salamanders in the hot cracks, bats in the lava tubes (drawn: ENEMY_ART), and Brasador
@@ -629,7 +632,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     title: 'The Caney',
     backdrop: 'yucayeque_night',
     enemies: ['crown_marine', 'crown_musketeer', 'marine_lieutenant'],
-    level: 6,
+    level: 5, // 6 until the levels pass (Oct 22): the party comes a level lower (6), and the fight stays as it was
     table: 'xaragua_story',
     group: 'caney',
     rewards: { xp: 120, gold: 50, items: [{ id: 'casabe', n: 1 }] },
@@ -646,7 +649,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     title: 'The Harbor at Night',
     backdrop: 'yucayeque_night',
     enemies: ['crown_marine', 'breastplate_musketeer', 'marine_sergeant'],
-    level: 6,
+    level: 5, // 6 until the levels pass (Oct 22), for the same reason
     table: 'xaragua_story',
     group: 'patrol',
     rewards: { xp: 90, gold: 40 },
@@ -663,7 +666,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     title: 'Governor Thorne',
     backdrop: 'yucayeque_night',
     enemies: ['thorne', 'crown_marine', 'crown_musketeer'],
-    level: 8,
+    level: 7, // 8 until the levels pass (Oct 22): the party meets him at 7
     table: 'xaragua_story',
     group: 'thorne',
     rewards: { xp: 220, gold: 120 },
@@ -758,8 +761,8 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
 
 /**
  * Any battle by id: a scripted one (BATTLES), or a random ambush, `encounter:<table>/<group>`, built from its
- * encounter group: its enemies at the group's level, paying ENCOUNTER_XP_PER_LEVEL and ENCOUNTER_GOLD_PER_LEVEL
- * per foe and level.
+ * encounter group: its enemies at the group's level, paying ENCOUNTER_GOLD_PER_LEVEL per foe and level, and XP by
+ * the party's level (AMBUSH_XP; `rewards.xp` is what a party of the group's own level gets).
  */
 export function battleDef(id: string): BattleDef | undefined {
   const scripted = BATTLES[id];
@@ -779,7 +782,8 @@ export function battleDef(id: string): BattleDef | undefined {
     level: group.level,
     table: tableId!,
     group: groupId!,
-    rewards: { xp: ENCOUNTER_XP_PER_LEVEL * group.level * foes, gold: ENCOUNTER_GOLD_PER_LEVEL * group.level * foes },
+    rewards: { xp: ambushXp(RPG, group.level, group.level, foes), gold: ENCOUNTER_GOLD_PER_LEVEL * group.level * foes },
+    ambush: { foes },
   };
 }
 

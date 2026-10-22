@@ -144,7 +144,7 @@ yours; gear has a level and gives only part of its bonus below it.
 
 | Source | XP | Who gets it | Config |
 |---|---|---|---|
-| Story beat (a Journal objective done) | 10 in Ch. 1, then 20 + 5 x chapter | shared (everyone, Echo members too) | `XP_STORY` |
+| Story beat (a Journal objective done) | as built (levels pass, Oct 22): 15 in Ch. 1, then 15 + 5 x chapter (25, 30, 35, 40) | shared (everyone, Echo members too) | `XP_PER_OBJECTIVE_BY_CHAPTER` |
 | Lore book read | 4 | shared | `XP_BOOK` |
 | Puzzle solved (signature / minor / secret) | 60 / 25 / 150 x chapter tier | shared | `XP_PUZZLE` |
 | Side quest | per quest (`SIDE-QUESTS.md`) | shared | data |
@@ -181,10 +181,75 @@ levels under the target.
 **The level-curve check (built Oct 21):** `npm run level-curve` (`tools/level-curve.ts`, asserted in
 `tests/levelCurve.test.ts`) replays the scripted route, pays what the field pays (fights, side quests, debates) and
 prints each chapter's end level with and without side quests against `src/data/chapterLevels.ts` (STORY.md's table,
-Ardencia 3, Al-Doria 4, the roads in fixed order). Tolerances are `LEVEL_CURVE` in config. First run: Chapter 1 ends
-at level 6 (4 without side quests) against 3, because every Journal step pays a flat 25 (`XP_PER_OBJECTIVE`)
-instead of this section's 10 in Chapter 1; Chapter 2 ends at 9 (8 without side quests) against 8. Random ambushes are
-not counted.
+Ardencia 3, Al-Doria 4, the roads in fixed order). Tolerances are `LEVEL_CURVE` in config. First run: Chapter 1 ended
+at level 6 (4 without side quests) against 3, because every Journal step paid a flat 25 instead of this section's 10
+in Chapter 1; Chapter 2 at 9 against 8 (10 once its five side quests became required). The levels pass below fixed
+both.
+
+**The levels pass (Oct 22; Claude's calls, from the Chapter 6, 7 and 8 outline reviews' level findings):**
+
+1. **One ambush rule, relative to the party's level (Claude's call).** A won random ambush paid `10 x group level x
+   foes` (a level-20 trio: 600 XP, more than the whole 20-to-21 gap). It now pays a share of the party's own next
+   level, sized by the foes and scaled by the group's level against the party's (`AMBUSH_XP` in config,
+   `ambushXp` and `battleXp` in `engine/battle.ts`, paid by `settleBattle` at the party's level when the fight ends):
+   `gap = xpForLevel(P + 1) - xpForLevel(P)`, `size = min(foes, 4) / 3`,
+   `relative = clamp(1 + 0.25 x (group level - P), 0.25, 1.5)`, `XP = round(0.12 x gap x size x relative)`.
+   A pair at the party's level pays 8% of a level; a party over its region's level gets less from each fight, one
+   under it more (to x1.5). It applies at every level (the Ch8 review proposed it from 12; one rule everywhere is
+   simpler, and Chapters 1 to 3 were being retuned anyway). Gold is unchanged (`ENCOUNTER_GOLD_PER_LEVEL`). The
+   Chapter 8 review's worked cases hold (party 15, trio at 15: 48; party 20, trio at 20: 57; party 21, trio at 20:
+   44; party 23, pair at 21: 21; `tests/levelCurve.test.ts`).
+2. **The played line (Claude's call on the method, the review's design).** `tools/level-curve.ts` now also records the
+   route's wild steps (each tile walked in an ambush zone, with its table; a map change restarts the grace count),
+   replays them through the ambush process (`ENCOUNTER_GRACE_STEPS`, `ENCOUNTER_CHANCE_PER_STEP`, the table's
+   weights) for seeds 1 to 200, pays each ambush by the rule at the running level in place of the route's own, and
+   reports the median and 90th percentile, and a "wanderer" (150 more wild steps per chapter in that chapter's
+   zones). `tests/levelCurve.test.ts` asserts every chapter is on target on the route line and on the played median,
+   with the played 90th percentile and the wanderer's at most one over.
+3. **Story steps pay by chapter (Claude's call).** `XP_PER_OBJECTIVE_BY_CHAPTER = [15, 25, 30, 35, 40]`: 15 in
+   Chapter 1, then 15 + 5 x chapter (this section's shape, 5 lower than its formula; a later chapter pays the last
+   entry until its own row is added). Chapter 1 pays 15, not 10: at 10 Gianna would meet the boar at level 2, and the
+   boar is balanced on level 3 (`tests/battle.test.ts`); at 15 she still arrives at 3 (175 XP), so the boar fight is
+   exactly as it was (battle-sim at `@cane-road`, unchanged: Attack alone 39 wins in 40, 61% of the party's HP lost;
+   the spells 40 in 40, 25%). The rise from Chapter 3 keeps a player who skips every side quest within two levels
+   (Chapters 4 and 5 were at the edge and fell to three under with the ambush rule).
+4. **Side-quest XP (Claude's call).** Chapter 1: the Overdue Shelf 50 to 30, Soup for the Cousins 40 to 25, A Name in
+   the Cane 50 to 30, A Question of Faith 30 to 20 (gold, items and pillars unchanged). Chapter 4: Appraise This 110
+   to 70, Sweet Water 130 to 80 (what Chapter 4's steps gained, its side quests give back). Chapters 2, 3 and 5
+   unchanged.
+5. **Chapter 2's fights follow the party down a level (Claude's call, to keep review 1's balance).** The party now
+   meets the Crown attack at 6 and Thorne at 7 (it was 7 and 8), so the caney breach and the village patrol fight
+   at 5 (were 6) and Thorne at 7 (was 8) with his full HP (`hpScale` 1, was 0.9). Battle-sim (40 runs, plans as in
+   `tools/battle-sim.ts`), before and after:
+
+   | Fight (marker) | Plan | Before (Grudge 0 / +50%) | After (Grudge 0 / +50%) |
+   |---|---|---|---|
+   | Thorne (`@seacave`) | Attack | 9 / 37 won, 96% / 70% hurt | 8 / 36 won, 97% / 76% hurt |
+   | Thorne | Spells | 40 / 40, 28% / 26% | 40 / 40, 31% / 28% |
+   | Village patrol (`@patrol`) | Attack | 17 / 32 won, 96% / 84% | 20 / 35 won, 93% / 82% |
+   | Village patrol | Spells | 40 / 40, 24% / 12% | 40 / 40, 20% / 12% |
+   | Caney breach (`@attack`) | Attack | 37 / 39 won, 66% / 55% | 38 / 40 won, 64% / 52% |
+   | Caney breach | Spells | 40 / 40, 26% / 13% | 40 / 40, 22% / 13% |
+   | Pier (`@end-card`, unchanged, enemies at their own levels) | Attack | 40 / 40, 42% / 28% | 37 / 40, 63% / 40% |
+
+   The pier, Chapter 2's first fight, is now met a level lower (4) and hurts more; it stays winnable by Attack alone
+   37 times in 40, so it is left as it is.
+
+**The curve after the levels pass** (`npm run level-curve`; seeds 1 to 200 for the played line):
+
+| Ch | Target | Route: end level (XP) | No side quests | Wild steps | Played median (XP) | Played p90 | Wanderer p90 |
+|---|---|---|---|---|---|---|---|
+| 1 | 1-3 | 4 (425) | 3 (275) | 0 | 4 (425) | 4 | 4 |
+| 2 | 3-8 | 8 (1,384) | 7 (1,099) | 71 | 8 (1,384) | 9 | 9 |
+| 3 | 8-11 | 11 (2,249) | 10 (1,714) | 0 | 11 (2,249) | 11 | 11 |
+| 4 | 11-14 | 14 (3,284) | 12 (2,489) | 14 | 14 (3,284) | 14 | 14 |
+| 5 | 14-15 | 15 (3,699) | 13 (2,764) | 16 | 15 (3,699) | 15 | 16 |
+
+Before it: 6, 10, 12, 15, 15 (the route line; ambushes then paid 10 x level x foes). The route walks few wild tiles
+(none in Ardencia: the sea road skirts the Cinder Flats' fields), so the played median sits on the route line; the
+wanderer is what a player who explores the wilds gets. **For the Chapter 6 to 8 outlines:** their level plans assumed
+25 XP a step and an ambush taper; Chapter 6 now starts at 3,699 (level 15), its steps pay 40 until it gets its own
+row, and ambushes follow the rule above, so re-run their sums with `level-curve.ts` when each is built.
 
 **The three roads (any order):** the first of Skarragol, Kuroshi and Jwaladesh entered is set to levels 15 to 17, the
 second 17 to 19, the third 19 to 21 (`ROAD_TIERS`). Fixed on first entry.
@@ -609,7 +674,8 @@ aspirational buys whose half bonus is shown honestly.)
 
 ## 17. Config keys (all in `quest/src/config.ts`)
 
-`LEVELS` (cap, xpBase, xpExponent, bands, gearUnderlevelShare), `XP_STORY`, `XP_BOOK`, `XP_PUZZLE`, `XP_DEBATE`,
+`LEVELS` (cap, xpBase, xpExponent, bands, gearUnderlevelShare), `XP_PER_OBJECTIVE_BY_CHAPTER` and `AMBUSH_XP`
+(built, the levels pass), `XP_STORY`, `XP_BOOK`, `XP_PUZZLE`, `XP_DEBATE`,
 `XP_ENEMY`, `XP_BOSS`, `XP_ROLE`, `XP_BAND`, `XP_BENCH_SHARE`, `SKIP_TRIVIAL_AMBUSH`, `ROAD_TIERS`, `TURN_DELAY_K`,
 `TURN_DELAY_OFFSET`, `ACTION_WEIGHT`, `DAMAGE_VARIANCE`, `HIT_BASE`, `HIT_MIN`, `HIT_MAX`, `CRIT_BASE`, `CRIT_MULT`,
 `MIN_DAMAGE_SHARE`, `GUARD_MULT`, `YIELD_THRESHOLD`, `YIELD_REWARDS`, `PARLEY_CHANCE`, `FEAR_PER_WINS`, `SPARK_ON_ACT`,

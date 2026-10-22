@@ -2,7 +2,7 @@
 // (engine/rpg.ts runs the rules). Owner decision (Oct 14): gold is what you spend; Influence, Wealth
 // and Fear are reputation scores per city and realm-wide; armies are military might.
 
-import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SURGE_COST, XP_PER_BOOK, XP_PER_OBJECTIVE } from '../config.ts';
+import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SURGE_COST, XP_PER_BOOK, XP_PER_OBJECTIVE_BY_CHAPTER } from '../config.ts';
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
@@ -493,7 +493,11 @@ export const RPG: RpgContent = {
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
-    { flags: [...ACT1.objectives, ...ACT2.objectives, ...ACT3.objectives, ...ACT4.objectives, ...ACT5.objectives].filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)), each: XP_PER_OBJECTIVE },
+    // A Journal step pays by its chapter (XP_PER_OBJECTIVE_BY_CHAPTER).
+    ...[ACT1, ACT2, ACT3, ACT4, ACT5].map((act, i) => ({
+      flags: act.objectives.filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)),
+      each: XP_PER_OBJECTIVE_BY_CHAPTER[Math.min(i, XP_PER_OBJECTIVE_BY_CHAPTER.length - 1)]!,
+    })),
     { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
   ],
   levels: LEVELS,

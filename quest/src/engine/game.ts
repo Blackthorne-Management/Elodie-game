@@ -660,7 +660,7 @@ export function parseFightReturn(value: string): { mapId: string; pos: Pos } | n
 }
 
 /** A group from an encounter table, by weight. */
-function pickGroup(table: EncounterTable, rng: Rng): EncounterGroup {
+export function pickGroup(table: EncounterTable, rng: Rng): EncounterGroup {
   const total = table.groups.reduce((n, g) => n + (g.weight ?? 1), 0);
   let roll = rng.next() * total;
   for (const g of table.groups) {

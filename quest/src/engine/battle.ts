@@ -31,6 +31,7 @@
 
 import {
   ACTION_WEIGHT,
+  AMBUSH_XP,
   BATTLE_ACTIVE,
   BOUND_BREAK_CHANCE,
   BOUND_FREE_HP_SHARE,
@@ -85,9 +86,11 @@ import {
   itemCount,
   level,
   memberRow,
+  partyLevel,
   partyMembers,
   removeItem,
   stats,
+  xpForLevel,
   type ItemSpecial,
   type MemberDef,
   type PassiveEffect,
@@ -296,7 +299,10 @@ export interface BattleDef {
   /** The Foes page and the won flag: encounter.<table>.<group>.won (engine/game.ts encounterFlag). */
   table: string;
   group: string;
+  /** `xp` is a random ambush's at a party of its own level (`ambush`: settleBattle pays it at the party's level). */
   rewards: { xp: number; gold: number; items?: readonly { id: string; n: number }[] };
+  /** A random ambush: its XP follows the party's level (AMBUSH_XP, ambushXp). */
+  ambush?: { foes: number };
   /** Anissa's tips, by moment (the first battle teaches the commands). */
   tips?: { start?: string; spark?: string; tell?: string; lowHp?: string };
   /**
@@ -1527,6 +1533,20 @@ export function battleGoldShare(party: readonly Pick<Combatant, 'passives'>[]): 
   return share;
 }
 
+/** What a won ambush of `foes` at `groupLevel` pays a party at `party` level (AMBUSH_XP in config.ts). */
+export function ambushXp(rpg: RpgContent, party: number, groupLevel: number, foes: number, rule: typeof AMBUSH_XP = AMBUSH_XP): number {
+  const gap = xpForLevel(rpg, party + 1) - xpForLevel(rpg, party);
+  const size = Math.min(foes, rule.maxFoes) / rule.sizeOf;
+  const relative = clamp(1 + rule.perLevel * (groupLevel - party), rule.min, rule.max);
+  return Math.max(1, Math.round(rule.share * gap * size * relative));
+}
+
+/** The XP a won battle pays now: its own, or an ambush's at the party's level. */
+export function battleXp(flags: FlagReader, rpg: RpgContent, def: Pick<BattleDef, 'rewards' | 'ambush' | 'level'>): number {
+  if (!def.ambush) return def.rewards.xp;
+  return ambushXp(rpg, partyLevel(flags, rpg, 'present'), def.level ?? 1, def.ambush.foes);
+}
+
 /**
  * After a won battle: XP to the party, gold, drops (into the bag even when it is full: a reward is never
  * lost), the items used, and the Foes page's won flag. Returns what was gained (for the victory screen).
@@ -1538,7 +1558,8 @@ export function settleBattle(flags: FlagStore, rpg: RpgContent, battle: Battle):
     if (used > 0) removeItem(flags, it.id, used);
   }
   if (battle.outcome !== 'won') return { xp: 0, gold: 0, spent: 0, items: [] };
-  addSharedXp(flags, r.xp);
+  const xpWon = battleXp(flags, rpg, battle.def);
+  addSharedXp(flags, xpWon);
   // Gold spent on Daftar comes off the purse; the winnings go on, with Baraka Dorini's share.
   const spent = battle.goldSpent;
   const won = Math.round(r.gold * (1 + battleGoldShare(battle.party)));
@@ -1549,5 +1570,5 @@ export function settleBattle(flags: FlagStore, rpg: RpgContent, battle: Battle):
   }
   // A fight meant to be lost goes on with its story scene either way; it is never marked won.
   if (!battle.def.meantToLose) flags.set(encounterFlag(battle.def.table, battle.def.group, 'won'), true);
-  return { xp: r.xp, gold: won, spent, items: [...(r.items ?? [])] };
+  return { xp: xpWon, gold: won, spent, items: [...(r.items ?? [])] };
 }

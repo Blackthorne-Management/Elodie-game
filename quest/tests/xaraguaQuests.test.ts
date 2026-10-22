@@ -79,7 +79,7 @@ describe("Chapter 2's side quests: the shape", () => {
     expect(byId.lamp_ask!.noXp).toBe(true);
     expect(byId.dusk!.noXp).toBe(true);
     expect(byId.dusk!.followSide).toBe(true);
-    const storyFlags = RPG.xpRules[0]!.flags;
+    const storyFlags = RPG.xpRules[1]!.flags; // the story steps by chapter: index 1 is Chapter 2's
     expect(storyFlags.filter((f) => f === 'item.oil_lamp')).toHaveLength(1);
     expect(storyFlags).not.toContain('story.lamp_asked');
     for (const o of ACT2.objectives.filter((x) => !x.noXp)) expect(JSON.stringify(o.done), o.id).not.toMatch(/side\.|debate\./);

@@ -44,7 +44,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       {
         id: 'caney',
         weight: 0,
-        level: 6,
+        level: 5,
         foes: ['Crown Marine', 'Crown Musketeer', 'Marine lieutenant'],
         intro: 'Marines storm the caney.',
         won: 'The marines fall back to the terrace.',
@@ -62,7 +62,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       {
         id: 'thorne',
         weight: 0,
-        level: 9,
+        level: 7,
         foes: ['Governor Thorne', 'Crown Marine', 'Crown Musketeer'],
         intro: 'Governor Thorne blocks the sea mouth.',
         won: 'Thorne goes over the side.',

@@ -40,7 +40,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       { text: 'Bring all three back to the senior archivist.', done: f('side.overdue.done'), goals: [{ map: 'zetwal-archive', at: { x: 14, y: 4 } }] },
     ],
     done: f('side.overdue.done'),
-    reward: { gold: 60, xp: 50, pillar: INFLUENCE_ZETWAL },
+    reward: { gold: 60, xp: 30, pillar: INFLUENCE_ZETWAL },
   },
   {
     id: 'soup',
@@ -62,7 +62,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       { text: 'Tell the soup vendor.', done: f('side.soup.done'), goals: [{ map: 'zetwal-town', at: { x: 11, y: 12 } }] },
     ],
     done: f('side.soup.done'),
-    reward: { gold: 30, xp: 40, items: [{ id: 'soup_pot', n: 3 }], pillar: INFLUENCE_ZETWAL },
+    reward: { gold: 30, xp: 25, items: [{ id: 'soup_pot', n: 3 }], pillar: INFLUENCE_ZETWAL },
   },
   {
     id: 'cane_name',
@@ -102,7 +102,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       },
     ],
     done: f('side.cane_name.done'),
-    reward: { xp: 50, items: [{ id: 'sun_charm', n: 1 }], pillar: INFLUENCE_ZETWAL },
+    reward: { xp: 30, items: [{ id: 'sun_charm', n: 1 }], pillar: INFLUENCE_ZETWAL },
   },
   // Taking part in the plaza's debate on faith (owner decision, Oct 18): a quest that must be done before Yari
   // sails. Listening, then arguing all three rounds (won or lost), or mediating, finishes it (data/debates.ts).
@@ -127,7 +127,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       },
     ],
     done: { any: [f('debate.zetwal_corner.joined'), f('debate.zetwal_corner.mediated')] },
-    reward: { xp: 30 },
+    reward: { xp: 20 },
   },
   // ---- Chapter 2, Yucayeque (side quests build, Oct 20; docs/quest/reviews/2026-10-19-chapter2-side-quests-outline.md
   // and its owner decisions). Every one lives in the free city and must be done before the lamp-oil seller lends the
@@ -262,7 +262,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
   },
   // Yucayeque's debate by the village fire, as a quest (owner request, Oct 19), like Pòdlimyè's "faith": hear the
   // elder and the Gaze pilgrim out, then argue all three rounds (won or lost) or mediate. Required before dusk with
-  // the other four (Oct 20); 30 XP like Chapter 1's debate (review D8: the side quests pay 20 to 30 XP each).
+  // the other four (Oct 20); 30 XP (Chapter 1's debate paid 30 too until the levels pass, Oct 22; review D8: the side quests pay 20 to 30 XP each).
   {
     id: 'springs',
     title: 'Owned or Remembered',
@@ -390,7 +390,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       { text: 'Tell Samira all three.', done: f('side.appraise.done'), goals: [{ map: 'aldoria-bazaar', at: { x: 11, y: 22 } }] },
     ],
     done: f('side.appraise.done'),
-    reward: { gold: 100, xp: 110, pillar: { pillar: 'influence', city: 'al_doria', amount: 1 } },
+    reward: { gold: 100, xp: 70, pillar: { pillar: 'influence', city: 'al_doria', amount: 1 } },
   },
   // The souk square's debate, as a required quest (outline 7.3): Is a bad bargain still sacred?
   {
@@ -446,7 +446,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       },
     ],
     done: f('side.sweet_water.done'),
-    reward: { gold: 120, xp: 130, pillar: { pillar: 'influence', city: 'al_doria', amount: 2 } },
+    reward: { gold: 120, xp: 80, pillar: { pillar: 'influence', city: 'al_doria', amount: 2 } },
   },
   // ---- Chapter 5, Eightgate (the outline section 7, with its second review): two required side quests and the debate --
   // A Seat for Every House (Se-5, stage 1 of 2: the petition round). Yari carries Xaraguá's Petition of Breach to every

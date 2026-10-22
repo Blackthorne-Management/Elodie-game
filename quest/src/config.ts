@@ -53,8 +53,8 @@ export const BAG_LIMIT = 24;
 
 /**
  * Levelling (engine/rpg.ts). XP to reach level n is round(XP_BASE * (n - 1) ^ XP_EXPONENT): level 2 at
- * 50, 3 at 152, 4 at 290, 5 at 459, 10 at 1683, 30 at about 11,000. Chapter 1 gives about 380 XP
- * (level 3 to 4). Gear worn below its level gives GEAR_UNDERLEVEL_SHARE of its bonus. A foe's level
+ * 50, 3 at 152, 4 at 290, 5 at 459, 10 at 1683, 30 at about 11,000. Chapter 1 gives about 425 XP
+ * (level 4). Gear worn below its level gives GEAR_UNDERLEVEL_SHARE of its bonus. A foe's level
  * against yours: TRIVIAL or more below is grey, HARD or more above is orange, DEADLY or more is red.
  */
 export const LEVELS = {
@@ -64,8 +64,13 @@ export const LEVELS = {
   gearUnderlevelShare: 0.5,
   bands: { trivial: 3, hard: 2, deadly: 5 },
 } as const;
-/** Shared XP: each main-quest step done, and each lore book read. */
-export const XP_PER_OBJECTIVE = 25;
+/**
+ * Shared XP: each main-quest step done, by chapter (index 0 is Chapter 1), and each lore book read. The levels pass
+ * (Claude's call, Oct 22; COMBAT.md 6): a step pays 15 in Chapter 1 (the boar still meets a level-3 Gianna), then
+ * 15 + 5 x chapter; a chapter past the table pays its last entry. The route then ends each chapter on its target
+ * (tools/level-curve.ts): 4, 8, 11, 14, 15.
+ */
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
@@ -301,8 +306,19 @@ export const DEBATE_REWARDS: Readonly<Record<'won' | 'mediated' | 'provoked', { 
 
 // ---- Random ambushes (owner rule, Oct 17: every ambush is a real battle) ---------------------------------
 
-/** What a won ambush pays, per foe and per level of the group (a level-4 pair: 80 XP, 32 gold). */
-export const ENCOUNTER_XP_PER_LEVEL = 10;
+/**
+ * What a won ambush pays in XP (the one rule, Claude's call Oct 22, from the Chapter 6, 7 and 8 outline reviews;
+ * COMBAT.md 6): a share of what the party needs for its next level, sized by the foes and scaled by the group's
+ * level against the party's, so a party over its region's level gets less from each fight and a party under it
+ * catches up:
+ *   gap      = xpForLevel(P + 1) - xpForLevel(P)          (P: the party's level, engine/rpg.ts partyLevel)
+ *   size     = min(foes, maxFoes) / sizeOf
+ *   relative = clamp(1 + perLevel x (group level - P), min, max)
+ *   XP       = round(share x gap x size x relative)
+ * A pair at the party's level pays 8% of a level; about three ambushes on a chapter's route, a third of a level.
+ * Gold is unchanged: ENCOUNTER_GOLD_PER_LEVEL per foe and level (a level-4 pair: 32 gold).
+ */
+export const AMBUSH_XP = { share: 0.12, sizeOf: 3, maxFoes: 4, perLevel: 0.25, min: 0.25, max: 1.5 } as const;
 export const ENCOUNTER_GOLD_PER_LEVEL = 4;
 
 // ---- Game Over (docs/quest/intro/GAME-OVER-STORYBOARD.md; engine/gameOver.ts; scenes/GameOverScene.ts) ----

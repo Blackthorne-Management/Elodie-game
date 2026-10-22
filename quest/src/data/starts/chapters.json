@@ -294,7 +294,7 @@
       "visited.zetwal-square": true,
       "visited.zetwal-temple": true,
       "visited.zetwal-town": true,
-      "xp.shared": 610
+      "xp.shared": 542
     }
   },
   "4": {
@@ -584,7 +584,7 @@
       "visited.zetwal-square": true,
       "visited.zetwal-temple": true,
       "visited.zetwal-town": true,
-      "xp.shared": 730
+      "xp.shared": 662
     }
   },
   "5": {
@@ -947,7 +947,7 @@
       "visited.zetwal-square": true,
       "visited.zetwal-temple": true,
       "visited.zetwal-town": true,
-      "xp.shared": 930
+      "xp.shared": 862
     }
   },
   "6": {
@@ -1375,7 +1375,7 @@
       "visited.zetwal-square": true,
       "visited.zetwal-temple": true,
       "visited.zetwal-town": true,
-      "xp.shared": 990
+      "xp.shared": 922
     }
   }
 }

@@ -104,14 +104,14 @@ lines in `quest/src/data/dialogue/zetwal.ts`. None has a fight.
 - **The Overdue Shelf** (senior archivist, Temple Archive): get back the ferryman's *Tides of the Southern Reach*,
   the soup vendor's *Ninety Ways With Pumpkin* and Anicette's *Ash Wars Gossip, Volume Two*, in any order. Anicette
   asks one question first: how many dead the temple healers counted at Cendre (you must have read the temple record).
-  Volume Two then joins the Tales shelf, margins and all. 60 gold, 50 XP, +1 Influence. (The approved Echo step,
+  Volume Two then joins the Tales shelf, margins and all. 60 gold, 30 XP (50 until the levels pass, Oct 22), +1 Influence. (The approved Echo step,
   Volume One on the shelf fifty years ago, was dropped: the Ash Wars were 25 years ago, so the book did not exist yet.)
 - **Soup for the Cousins** (soup vendor, plaza): carry bowls to the old neighbor, the town guard and the ferryman.
-  Teaches the minimap and tap to talk. 3 Clay-pot soups, 30 gold, 40 XP, +1 Influence.
+  Teaches the minimap and tap to talk. 3 Clay-pot soups, 30 gold, 25 XP (40 until the levels pass), +1 Influence.
 - **A Name in the Cane** (cane cutter, Cane Road): his grandmother ("Grann") is on no name stone. Read the stones
   (a line for "the cutters whose names the Crown did not keep"), use the Echo by the east gate to meet her young
   (Rose-Aimée, called Forty-One by the overseer), write her into Mother Solange's list in the Archive, tell him.
-  Sun-stitched charm, 50 XP, +1 Influence. (Grandmother, not great-grandmother: fifty years back she was young.)
+  Sun-stitched charm, 30 XP (50 until the levels pass), +1 Influence. (Grandmother, not great-grandmother: fifty years back she was young.)
   **Where he stands (decision A, Oct 19):** on the Cane Road until the lamp is lit (the quest can still be taken
   early, from the war room on); after the lamp, at the name stones on the Temple island (he crossed the Chain Bridge
   to hear the names, and listened for one that never came), where accepting the quest reads the stones with him on
@@ -120,7 +120,7 @@ lines in `quest/src/data/dialogue/zetwal.ts`. None has a fight.
   her name there, he walks up to the lamp and says it. The quest's start, its last step, its place in the log and
   Anissa's nudge follow him (`moved` in `sideQuests.ts`).
 - **A Question of Faith** (Gaze keeper, the lawn below the plaza; owner decision, Oct 18): hear the debate on faith,
-  then argue all three rounds or mediate. 30 XP. Required before Yari sails, like the other three.
+  then argue all three rounds or mediate. 20 XP (30 until the levels pass). Required before Yari sails, like the other three.
 - **The order (Batch D, Oct 19).** All four must be done before Yari sails (owner decision, Oct 18). The Journal
   leads through them the short way: the island first (the cutter at the stones, the archivist, the temple record),
   then, after the Hall and the Cane Road, the city's errands on the way back, then the island again.
@@ -306,7 +306,7 @@ built (owner decision).
 - **Steps:** 1) Three stalls each sell one fake among real goods (a coin, a carpet, a scale weight). 2) Inspect each
   item: the fakes have a tell (the coin's edge, the carpet's knot count, the weight's stamp). No fight. 3) Report all
   three to Samira.
-- **Reward:** 150 gold (she pays her bet, then invoices you for the lesson: net 100), 110 XP, +1 Influence (Al-Doria).
+- **Reward:** 150 gold (she pays her bet, then invoices you for the lesson: net 100), 70 XP as built (110 until the levels pass, Oct 22: `COMBAT.md` 6), +1 Influence (Al-Doria).
 
 ### A-2 The Missing Saffron
 - **Giver:** a spice merchant on the caravan gate. **Accept:** read the contract board.
@@ -320,7 +320,7 @@ built (owner decision).
   rebel water-carrier runs free water from a hidden well (grey thumbprint on the door). 3) She needs the old cistern
   line opened. 4) In the Echo, the cistern sluice is open and its gate pin loose; Patricio pins it open (**anchor**:
   water verb). 5) In the present the fountain runs.
-- **Reward:** 120 gold, 130 XP, +2 Influence (Al-Doria), *The Ash Thumbprint (3 of 9)*.
+- **Reward:** 120 gold, 80 XP as built (130 until the levels pass, Oct 22: `COMBAT.md` 6), +2 Influence (Al-Doria), *The Ash Thumbprint (3 of 9)*.
 
 ### A-4 The Uncashed Note (secret item)
 - **Giver:** the old moneychanger in the bazaar. **Accept:** show him the Sun Locket.
