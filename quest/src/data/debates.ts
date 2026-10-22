@@ -325,6 +325,90 @@ export const DEBATES: readonly DebateDef[] = [
       say('gaze_merchant', 'And who stops coming to the market. Both are good signs.'),
     ],
   },
+  // Eightgate's fountain (Chapter 5; the outline 7.3 with its second review 3.10): Se-2 Four Voices, required.
+  // All four faiths, one claim a round (DebateRound.speaker): the Sky-Rider, the Quiet Crown speaker, the Witness
+  // priest; the Gaze keeper is Gianna's side. The sources contradict each other on whether Elodie blessed the Throne
+  // (guide 6.6). Reason needs one of the Hall's books (the Archive is sealed by day) or the Founding Compact.
+  {
+    id: 'seat_voices',
+    city: 'seat',
+    question: 'Who may sit the Throne?',
+    ally: 'gaze_keeper',
+    opponent: 'sky_rider',
+    opensIf: { flag: 'story.coco_plan' },
+    passing: [
+      say('gaze_keeper', '...she blessed it! The sun-marked heirs are her sign.'),
+      say('sky_rider', 'No god touched that chair. It was a prize of the founders\' war.'),
+      say('witness_priest', 'It is a contract between eight houses. Blessed or not.'),
+      say('quiet_speaker', 'And the shouting is the noise the chair makes. Be quiet, all of you.'),
+    ],
+    listen: [
+      say('gaze_keeper', 'Elodie blessed the Throne. The heirs who stand on it carry her sun. That is her sign.'),
+      say('sky_rider', 'The Four Hands remember the land, not the chair. The chair is just a chair. The founders fought over it.'),
+      say('witness_priest', 'Whoever keeps the Founding Compact may sit it, blessed or not. A contract needs no blessing. It needs keeping.'),
+      say('quiet_speaker', 'One hand on the Throne would bring the Quiet. This argument is the noise. It has gone on fifty years.'),
+      say(A, 'Gigi, they are all talking about our family\'s chair.'),
+    ],
+    reasonNeeds: [loreFlag('seat_regent_commission'), loreFlag('seat_council_eight'), loreFlag('seat_petitions_breach'), loreFlag('seat_founding_compact')],
+    rounds: [
+      {
+        speaker: 'sky_rider',
+        claim: 'No god touched that chair. Whoever won the war sat in it. The chair is just a chair.',
+        answers: {
+          scripture: { short: 'She wove eight threads', text: 'Every faith agrees the realm was eight threads. A chair for one thread is not the realm\'s chair.', strength: 1 },
+          reason: { short: 'The houses let her speak', text: 'The council\'s rule: whoever stands on the tile speaks for the houses only while they let her. Not a prize. A loan.', strength: 2 },
+          compassion: { short: 'Ask who lost the war', text: 'Ask the ones who lost that war whether it was just a chair.', strength: 1 },
+        },
+      },
+      {
+        speaker: 'quiet_speaker',
+        claim: 'One hand on the Throne, and the arguing stops. The Quiet is the only peace this realm has never tried.',
+        answers: {
+          scripture: { short: 'She remembers all voices', text: 'The goddess remembers every voice. A peace that silences them is the one thing she cannot remember.', strength: 2 },
+          reason: { short: 'Silence signs nothing', text: 'A contract needs every party heard. A quiet realm cannot agree to anything. It can only be told.', strength: 1 },
+          compassion: { short: 'You sound tired', text: 'You sound tired. Fifty years of shouting would tire anyone. That is not the same as being wrong.', strength: 1 },
+        },
+      },
+      {
+        speaker: 'witness_priest',
+        claim: 'Then you agree with me, envoy. Whoever keeps the Compact may sit it. Even the one who keeps it now.',
+        answers: {
+          scripture: { short: 'Keeping is not holding', text: 'The Gaze keeps a memory. It does not own it. Keeping the Throne is not the same as holding it.', strength: 1 },
+          reason: { short: 'Clause Six, unkept', text: 'The Compact says every clause is read to every signatory. Has every clause been? Then nobody has kept it.', strength: 2 },
+          compassion: { short: 'Ask the bricked gate', text: 'Ask the house whose gate is bricked up whether the Compact was kept for them.', strength: 1 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(The pilgrims at the fountain go quiet. Someone at the back nods, slowly.)',
+      1: '(The crowd splits four ways, as it always does here.)',
+      0: '(A Sealbearer looks over. The crowd thins.)',
+    },
+    won: [
+      say('witness_priest', '...A contract unkept by everyone binds no one. I teach that. I had not applied it to the Throne.'),
+      say('sky_rider', 'A loan, not a prize. My grandmother would have liked you.'),
+      say('quiet_speaker', 'I will think about it. Quietly.'),
+    ],
+    lost: [
+      say('witness_priest', 'The Compact is kept, envoy, by whoever is keeping it. Come back with a clause.'),
+      say('gaze_keeper', 'We will be here. We are always here. So is he.'),
+    ],
+    mediate: [
+      say(G, 'You all want the same thing: a Throne nobody can take without the houses.'),
+      say(G, 'Read the Compact aloud here, at the fountain, every Parley. Each of you a clause.'),
+      say('quiet_speaker', 'Aloud. Every Parley. ...That is a great deal of noise.'),
+      say('gaze_keeper', 'Good noise.'),
+    ],
+    provoke: [
+      say(G, 'The Throne is held by a man who has renewed his own commission three times, and you argue about blessings!'),
+      nar('The fountain goes quiet. Two Sealbearers turn and look.'),
+      say('witness_priest', 'Not here, envoy. Not under the Hall\'s windows.'),
+    ],
+    after: [
+      say('witness_priest', 'We read a clause of the Compact aloud here now. The Sealbearers listen. They pretend not to.'),
+      say('quiet_speaker', 'I still think it is noise. I come to hear it anyway.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */

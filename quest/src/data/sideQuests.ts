@@ -434,7 +434,81 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     done: f('side.sweet_water.done'),
     reward: { gold: 120, xp: 130, pillar: { pillar: 'influence', city: 'al_doria', amount: 2 } },
   },
+  // ---- Chapter 5, Eightgate (the outline section 7, with its second review): two required side quests and the debate --
+  // A Seat for Every House (Se-5, stage 1 of 2: the petition round). Yari carries Xaraguá's Petition of Breach to every
+  // chamber in the Throne Hall: seven doors and a wall. Stage 2 (the houses' tokens) runs through Chapters 6 to 12.
+  {
+    id: 'seats',
+    title: 'A Seat for Every House',
+    giver: 'The Master of the Chairs',
+    place: 'The Throne Hall',
+    level: 14,
+    summary:
+      "Xaraguá's Petition of Breach was received forty-nine years ago and never carried to a chamber. Yari has the copies. Carry one to every door.",
+    accepted: f('side.seats.accepted'),
+    available: f('story.elodie_hall'),
+    start: [{ map: 'seat-hall', at: { x: 33, y: 27 } }],
+    nudge: "Yari's paper, Gigi. She wants every house to read it. The Master of the Chairs is by the Hall's door.",
+    parallel: true,
+    steps: [
+      { text: "Al-Doria's envoy (the west wall).", done: f('side.seats.al_doria'), goals: [{ map: 'seat-hall', at: { x: 3, y: 23 } }] },
+      { text: "Skarragol's envoy (the east wall).", done: f('side.seats.skarragol'), goals: [{ map: 'seat-hall', at: { x: 40, y: 15 } }] },
+      { text: "Kuroshi's envoy (the east wall).", done: f('side.seats.kuroshi'), goals: [{ map: 'seat-hall', at: { x: 40, y: 19 } }] },
+      { text: "Jwaladesh's envoy (the east wall).", done: f('side.seats.jwaladesh'), goals: [{ map: 'seat-hall', at: { x: 40, y: 23 } }] },
+      { text: "Aldermoor's legate (the east wall).", done: f('side.seats.aldermoor'), goals: [{ map: 'seat-hall', at: { x: 40, y: 11 } }] },
+      { text: "Ardencia's chamber (the west wall).", done: f('side.seats.ardencia'), goals: [{ map: 'seat-hall', at: { x: 2, y: 19 } }] },
+      { text: "Zetwal's envoy: Mother (the west wall).", done: f('side.seats.zetwal'), goals: [{ map: 'seat-hall', at: { x: 3, y: 11 } }] },
+      { text: "Xaraguá's door, bricked (the west wall).", done: f('side.seats.xaragua'), goals: [{ map: 'seat-hall', at: { x: 2, y: 15 } }] },
+      { text: 'Back to the Master of the Chairs.', done: f('side.seats.stage1'), goals: [{ map: 'seat-hall', at: { x: 32, y: 28 } }] },
+    ],
+    done: f('side.seats.stage1'),
+    reward: { gold: 100, xp: 30, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
+  },
+  // The fountain's debate, as a required quest (Se-2 Four Voices; the outline 7.3): Who may sit the Throne?
+  {
+    id: 'voices',
+    title: 'Four Voices',
+    giver: 'Gaze keeper',
+    place: 'The Concourse fountain',
+    level: 14,
+    summary:
+      "Four people of four faiths argue at the fountain about who may sit the Throne. Your family's chair. Hear them out, then make your case.",
+    accepted: { any: [f('debate.seat_voices.listened'), f('debate.seat_voices.settled')] },
+    available: f('story.coco_plan'),
+    start: [{ map: 'seat-concourse', at: { x: 22, y: 17 } }],
+    nudge: "The fountain's four people are all talking about our family's chair, Gigi. The Hall has books.",
+    steps: [
+      { text: 'Listen to the debate at the fountain.', done: f('debate.seat_voices.listened'), goals: [{ map: 'seat-concourse', at: { x: 22, y: 17 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.seat_voices.settled'), goals: [{ map: 'seat-concourse', at: { x: 22, y: 17 } }] },
+    ],
+    done: f('debate.seat_voices.settled'),
+    reward: { xp: 20, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
+  },
+  // Deserters' Road (Se-3; the chapter's fights): the Crown's own deserters rob pilgrims at the crossroads. The fight
+  // ends by their withdrawal, then a Parley on the map (three answers, all remembered for the War of the Harbor).
+  {
+    id: 'deserters',
+    title: "Deserters' Road",
+    giver: 'Bandaged pilgrim',
+    place: "The Gold Gate's yard",
+    level: 14,
+    summary:
+      'Pilgrims were robbed at the crossroads outside the walls by men in Crown coats. The Regent\'s clerks say there are no deserters.',
+    accepted: f('side.deserters.accepted'),
+    available: f('story.coco_plan'),
+    start: [{ map: 'seat-gateyard', at: { x: 6, y: 14 } }],
+    nudge: 'The pilgrims by the gate are hurt, Gigi. Nobody is helping them.',
+    steps: [
+      { text: 'The crossroads, south of the gate yard: the deserters\' camp.', done: f('side.deserters.fought'), goals: [{ map: 'seat-fields', at: { x: 30, y: 16 } }] },
+      { text: 'Back to the pilgrims in the gate yard.', done: f('side.deserters.done'), goals: [{ map: 'seat-gateyard', at: { x: 6, y: 14 } }] },
+    ],
+    done: f('side.deserters.done'),
+    reward: { gold: 60, xp: 30, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
+  },
 ];
+
+/** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */
+export const CHAPTER5_QUESTS_DONE: Condition = { all: [f('side.seats.stage1'), f('debate.seat_voices.settled'), f('side.deserters.done')] };
 
 /** Chapter 2's five side quests, all done: the lamp-oil seller lends the lamp at dusk (data/quests.ts `dusk`). */
 export const CHAPTER2_QUESTS = ['nets', 'hutia', 'oil', 'medicine', 'springs'] as const;

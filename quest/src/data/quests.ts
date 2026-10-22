@@ -4,7 +4,7 @@
 
 import type { JournalNote, QuestDef } from '../engine/quests.ts';
 import { AREITO_BARS, barText } from './rhythms.ts';
-import { CHAPTER2_QUESTS_DONE } from './sideQuests.ts';
+import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './sideQuests.ts';
 
 export const ACT1: QuestDef = {
   id: 'act1',
@@ -832,8 +832,152 @@ export const ACT4: QuestDef = {
   ],
 };
 
+export const ACT5: QuestDef = {
+  id: 'act5',
+  title: 'Chapter 5: The Parley',
+  maps: ['seat-gateyard', 'seat-concourse', 'seat-hall', 'seat-quarter', 'seat-workshop', 'seat-archive', 'seat-fields'],
+  objectives: [
+    {
+      id: 'road',
+      title: 'The Gold Road',
+      detail: 'Nine days with the Dorini caravan, west out of the dunes, to Eightgate: the Seat of the realm, where Mother is.',
+      done: { flag: 'story.seat_arrived' },
+      // Shown, not played: the caravan's arrival is a scene in the gate yard. No XP (review 3.5).
+      noXp: true,
+      goals: [{ map: 'seat-gateyard', at: { x: 28, y: 10 } }],
+      hints: ['We\'re here, Gigi.', 'The caravan is in the Gold Gate\'s yard.', 'Walk into the gate yard.'],
+    },
+    {
+      id: 'herald',
+      title: 'The herald',
+      detail: 'Grey and violet at the inner arch: the Regent\'s Sealbearers. Everyone who comes to Eightgate is announced.',
+      done: { flag: 'story.herald_met' },
+      goals: [{ map: 'seat-gateyard', at: { x: 3, y: 10 } }],
+      hints: ['The men in grey and violet are watching us, Gigi.', 'The inner arch is on the west side of the yard.', 'Walk west across the yard to the Sealbearers at the inner arch.'],
+    },
+    {
+      id: 'welcome',
+      title: "The Regent's welcome",
+      detail: 'The herald waits on the Throne Hall\'s steps, at the north of the Concourse. The Lord Regent receives Zetwal\'s envoy\'s household.',
+      done: { flag: 'story.elodie_hall' },
+      // A scene the player mostly watches (review 3.5): no XP.
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'visited.seat-hall' }, map: 'seat-concourse', at: { x: 23, y: 6 } },
+        { map: 'seat-hall', at: { x: 21, y: 14 } },
+      ],
+      hints: ['Mama is in there, Gigi.', 'The herald is on the steps of the big hall, north of the fountain.', 'Go into the Throne Hall and walk up the nave toward the Throne.'],
+    },
+    {
+      id: 'coco',
+      title: 'Tati Coco',
+      detail: 'Mother: "Your aunt is in the city. The Envoys\' Quarter, south of the fountain: the door with every colour on it."',
+      done: { flag: 'story.coco_plan' },
+      goals: [
+        { if: { notFlag: 'story.coco_met' }, map: 'seat-quarter', at: { x: 13, y: 7 } },
+        { map: 'seat-workshop', at: { x: 10, y: 10 } },
+      ],
+      hints: ['Tati Coco is here, Gigi!', 'The Envoys\' Quarter is south of the fountain, down the lane.', 'Go south from the fountain into the Quarter, to the painted door.'],
+    },
+    {
+      id: 'bell',
+      title: 'Until the bell',
+      detail: 'Coco: "Until the bell, be seen. Stand in a lot of places." Three things, on your Quests page.',
+      done: { any: [CHAPTER5_QUESTS_DONE, { flag: 'story.disguised' }] },
+      followSide: true,
+      noXp: true,
+      hints: [
+        'The bell is tomorrow, Gigi. Coco said be seen.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        "Yari's petition in the Hall, the four voices at the fountain, and the pilgrims at the gate.",
+      ],
+    },
+    {
+      id: 'seamstresses',
+      title: 'The seamstresses',
+      detail: 'Evening. Coco: "Bed. The bell is early and I am not." At the bell, two seamstresses carry the Keeper\'s robes into the Archive.',
+      done: { flag: 'story.archive_entered' },
+      goals: [
+        { if: { notFlag: 'story.disguised' }, map: 'seat-quarter', at: { x: 18, y: 7 } },
+        { if: { notFlag: 'story.archive_open' }, map: 'seat-concourse', at: { x: 9, y: 7 } },
+        { map: 'seat-archive', at: { x: 13, y: 17 } },
+      ],
+      hints: ['Coco said bed, Gigi. Her workshop.', 'In the morning, Coco waits at the Archive\'s chain with the robes.', "Sleep at Coco's workshop, then walk with her to the Archive's chain."],
+    },
+    {
+      id: 'sealing',
+      title: 'The sealing',
+      detail: 'Six pages under glass, seven ribbons, and the seventh tied to nothing. The air shimmers in front of the table.',
+      done: { flag: 'anchor.ribbon_thread' },
+      goals: [
+        { if: { notFlag: 'story.sealing_seen' }, map: 'seat-archive', at: { x: 13, y: 10 } },
+        { map: 'seat-archive', at: { x: 13, y: 2 } },
+      ],
+      hints: [
+        "Seven ribbons and six pages. Where's the seventh page?",
+        "In the memory, watch where the clerk puts it. The labels have changed since, but the cabinet hasn't.",
+        'Drawer four. Tie the ribbon thread on it in the memory.',
+      ],
+    },
+    {
+      id: 'keeper',
+      title: "The keeper's law",
+      detail: 'The drawer with the faded thread is locked, and Keeper Hollis has the key. He wants a reason a keeper can keep.',
+      done: { flag: 'story.hollis_agreed' },
+      goals: [{ map: 'seat-archive', at: { x: 19, y: 10 } }],
+      hints: ['He has the key on his belt, Gigi.', 'He is a keeper of law. Give him law. The Compact is on the shelves.', 'Read The Founding Compact on the shelves, then argue Reason to Hollis.'],
+    },
+    {
+      id: 'reading',
+      title: 'Read aloud',
+      detail: 'Hollis has the sealed page. The Parley sits at the bell, in the Throne Hall. Mother will have to say it out loud.',
+      done: { flag: 'clue.seventh_clause_read' },
+      // The Parley is watched (review 3.5): no XP; the terms that follow pay.
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'story.party_rejoined' }, map: 'seat-concourse', at: { x: 23, y: 7 } },
+        { map: 'seat-hall', at: { x: 21, y: 28 } },
+      ],
+      hints: ['The others will be at the steps, Gigi.', 'The Hall. Hollis went in with the page.', 'Go out to the Hall\'s steps, then into the Throne Hall.'],
+    },
+    {
+      id: 'terms',
+      title: "The Regent's terms",
+      detail: 'The clause is read. The Lord Regent has something to say to Zetwal\'s envoy\'s household.',
+      done: { flag: 'story.terms_refused' },
+      goals: [{ map: 'seat-hall', at: { x: 21, y: 28 } }],
+      hints: ['He is coming down, Gigi.', 'Stay in the Hall.', 'Hear the Regent out in the Throne Hall.'],
+    },
+    {
+      id: 'fitting',
+      title: 'The fitting',
+      detail: 'Mother has a fitting at her sister\'s. Coco\'s workshop is the one room in Eightgate with no Crown pen in it.',
+      done: { flag: 'story.fitting_done' },
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'story.fitting_arrived' }, map: 'seat-quarter', at: { x: 18, y: 7 } },
+        { map: 'seat-workshop', at: { x: 10, y: 4 } },
+      ],
+      hints: ['Mama is going to Coco\'s, Gigi.', "Coco's workshop, in the Envoys' Quarter.", 'Go to the workshop and through the curtain to the fitting room.'],
+    },
+    {
+      id: 'iron_gate',
+      title: 'The Iron Gate',
+      detail: 'Mother, as the envoy: "If someone were going, they would go east first, up onto the winter plateau." The Iron Gate.',
+      done: { flag: 'act5.complete' },
+      // A card: no XP.
+      noXp: true,
+      goals: [
+        { if: { notFlag: 'visited.seat-concourse' }, map: 'seat-quarter', at: { x: 12, y: 1 } },
+        { map: 'seat-concourse', at: { x: 44, y: 26 } },
+      ],
+      hints: ['East, Gigi. Mama said east.', "Skarragol's gate is the grey iron one, east on the Concourse.", 'Walk to the Iron Gate on the east side of the Concourse.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -1050,5 +1194,42 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'clue.brasador_coin',
     title: "Yari's coin",
     text: 'Samira: Brasador mint, three years old, worn in oil and salt. "Someone in Ardencia pays someone in Xaraguá." Gianna: he pays the resistance to sell it.',
+  },
+  // Chapter 5 (Eightgate).
+  {
+    id: 'under_crown_eyes',
+    when: 'clue.elodie_locket_line',
+    title: 'Under Crown eyes',
+    text: 'Mother, in the Throne Hall, with the Crown\'s clerk writing: "Believe what your Locket tells you, not what his mouth does."',
+  },
+  {
+    id: 'seven_ribbons',
+    when: 'clue.seven_ribbons',
+    title: 'Seven drawers, seven ribbons',
+    text: 'The Accord under glass: six pages, seven ribbons, the seventh tied to nothing. The Archive\'s cabinet has seven drawers. Only their carved numbers are old.',
+  },
+  {
+    id: 'sealing',
+    when: 'story.sealing_seen',
+    title: 'The sealing',
+    text: 'The Throne\'s clerk read the seventh page to himself and filed it in drawer 4. Benny refused aloud. Grandfather sealed the binding; he said he would remember.',
+  },
+  {
+    id: 'changed_thread',
+    when: 'anchor.ribbon_thread',
+    title: 'Something changed',
+    text: 'A red thread from the seventh ribbon, tied by young Patricio round the handle of drawer 4. The drawers have been moved since. The thread went with it.',
+  },
+  {
+    id: 'seventh_clause_read',
+    when: 'clue.seventh_clause_read',
+    title: 'The seventh clause',
+    text: '"The harbor of Xaraguá and its waters are given into the keeping of the Crown of Aldermoor, at the Crown\'s pleasure, to be revisited." No signature.',
+  },
+  {
+    id: 'in_private',
+    when: 'clue.elodie_tested_line',
+    title: 'In private',
+    text: 'Mother, behind Coco\'s curtain, looking at the pins: "He should never have tested you."',
   },
 ];

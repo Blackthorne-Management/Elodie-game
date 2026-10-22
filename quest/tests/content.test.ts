@@ -33,6 +33,8 @@ function flagsSet(): Set<string> {
   for (const d of DEBATES) for (const o of ['listened', 'joined', 'settled', 'won', 'mediated', 'provoked'] as const) out.add(debateFlag(d.id, o));
   // A rhythm lock played right sets its success flags (engine/game.ts finishRhythm).
   for (const r of Object.values(CONTENT.rhythms ?? {})) for (const f of Object.keys(r.success)) out.add(f);
+  // The purse (engine/rpg.ts gold): fights, rewards, shops and Samira's price in a conversation set it.
+  out.add('gold');
   return out;
 }
 

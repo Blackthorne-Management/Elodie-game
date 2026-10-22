@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { addClosedDoors, openPassages, toTiled, widenDoors, type MapSource } from './maps/painter.ts';
 import { ALDORIA_SOURCES } from './maps/aldoria.ts';
 import { ARDENCIA_SOURCES } from './maps/ardencia.ts';
+import { SEAT_SOURCES } from './maps/seat.ts';
 import { XARAGUA_SOURCES } from './maps/xaragua.ts';
 import { zetwalArchive } from './maps/zetwal-archive.ts';
 import { zetwalHall } from './maps/zetwal-hall.ts';
@@ -21,7 +22,7 @@ import { zetwalTemple } from './maps/zetwal-temple.ts';
 import { zetwalTown } from './maps/zetwal-town.ts';
 import { MAPS_DIR } from './validate-maps.ts';
 
-export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights, zetwalSquare, ...XARAGUA_SOURCES, ...ARDENCIA_SOURCES, ...ALDORIA_SOURCES];
+export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights, zetwalSquare, ...XARAGUA_SOURCES, ...ARDENCIA_SOURCES, ...ALDORIA_SOURCES, ...SEAT_SOURCES];
 
 /** The generated files, as `[path, text]`. */
 export function buildMaps(dir: string = MAPS_DIR): [string, string][] {

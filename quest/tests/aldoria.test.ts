@@ -106,10 +106,10 @@ describe('the strand at first light (beat 0) and the chapter starts', () => {
     expect(Math.max(...path.map((p) => p.x))).toBeGreaterThan(115);
   });
 
-  it('?chapter=5: the gate yard after the card, with Samira in the party, the pass and the coin read', () => {
+  it('?chapter=5: Eightgate\'s Gold Gate after the card, with Samira in the party, the pass and the coin read', () => {
     const logic = startAt('5');
     const flags = logic.state.flags;
-    expect(logic.state.player.mapId).toBe('aldoria-desert');
+    expect(logic.state.player.mapId).toBe('seat-gateyard');
     expect(flags.isSet('act4.complete') && flags.isSet('card.act4_end')).toBe(true);
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toContain('samira');
     for (const f of ['item.dorini_pass', 'item.benny_half_sheet', 'clue.sealed_seventh', 'clue.brasador_coin', 'belief.rael_traitor']) expect(flags.isSet(f), f).toBe(true);

@@ -7,7 +7,10 @@ import type { EncounterTable } from '../engine/content.ts';
  * Story flags that chapters not built yet will set (owner decision, Oct 14: Chapter 1's only fight is the
  * scripted boar; the wild sections turn violent when the story brings the party back). Maps may read them.
  */
-export const LATER_STORY_FLAGS: readonly string[] = [];
+export const LATER_STORY_FLAGS: readonly string[] = [
+  // Chapter 12, the Claim: the Throne Hall's rope comes down (tools/maps/seat.ts, built now for reuse).
+  'story.claim_begun',
+];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
   // Scripted fights (data/battles.ts), listed here so the Foes page shows them. No map rolls on this table.
@@ -222,6 +225,58 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
         intro: 'Qasim comes down the stair with the guild\'s blades.',
         won: 'Qasim yields, and his blades walk out.',
         fled: 'There is no way past them but through.',
+      },
+    ],
+  },
+  // Chapter 5's scripted fight (data/battles.ts), for the Foes page.
+  seat_story: {
+    id: 'seat_story',
+    groups: [
+      {
+        id: 'deserters',
+        weight: 0,
+        level: 14,
+        foes: ['Deserter Sergeant', 'Deserter', 'Deserter'],
+        intro: 'Three men in old Crown coats at the crossroads. "Toll. Everything in the bags."',
+        won: 'The Sergeant lowers his bayonet, and his men step back with him.',
+        fled: 'You back away up the road.',
+      },
+    ],
+  },
+  // The Crossroads Fields outside Eightgate (Chapter 5; the outline section 5): the Crown's own deserters, road
+  // bandits, and the Quiet Crown, who have heard about a little girl who glows. Levels 14 to 15.
+  crossroads: {
+    id: 'crossroads',
+    groups: [
+      {
+        id: 'deserters',
+        enemies: ['deserter', 'deserter'],
+        weight: 3,
+        level: 14,
+        foes: ['Deserter', 'Deserter'],
+        intro: 'Two men in faded Crown coats step out of the grass. "The Regent says we are not here. Pay us anyway."',
+        won: 'They step back into the grass, bayonets down.',
+        fled: 'You run for the road. They do not chase far.',
+      },
+      {
+        id: 'bandits',
+        enemies: ['road_bandit', 'road_bandit', 'road_bandit'],
+        weight: 2,
+        level: 14,
+        foes: ['Road Bandit', 'Road Bandit', 'Road Bandit'],
+        intro: 'Three bandits rise out of the ditch. "Envoys! Envoys always have something."',
+        won: 'The bandits scatter toward the hills.',
+        fled: 'You slip back to the road.',
+      },
+      {
+        id: 'zealots',
+        enemies: ['qc_zealot', 'qc_zealot'],
+        weight: 1,
+        level: 15,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot'],
+        intro: 'Two veiled figures stand very still in the grass. "The little one glows, they say. Hush, and give her to us."',
+        won: 'The veiled pair walk back into the long grass.',
+        fled: 'You run. The grass closes where they stood.',
       },
     ],
   },

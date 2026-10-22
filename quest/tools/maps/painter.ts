@@ -217,6 +217,24 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   Я: { ground: 'sandstone', deco: 'spice', solid: true },
   Ю: { ground: 'sandstone', deco: 'cloth', solid: true },
   Ф: { ground: 'vault_floor', deco: 'lectern', solid: true },
+  // Eightgate (Chapter 5, Oct 22).
+  ա: { ground: 'seat_stone', solid: false },
+  բ: { ground: 'seat_wall', solid: true },
+  գ: { ground: 'slate_roof', solid: true },
+  դ: { ground: 'seat_wall', deco: 'violet_banner', solid: true },
+  ե: { ground: 'seat_stone', deco: 'lantern', solid: true },
+  զ: { ground: 'seat_stone', deco: 'cloth', solid: true },
+  ը: { ground: 'seat_stone', deco: 'stall', solid: true },
+  ի: { ground: 'seat_wall', deco: 'banner', solid: true },
+  լ: { ground: 'grass', deco: 'tent', solid: true },
+  խ: { ground: 'grass', deco: 'firepit', solid: true },
+  ծ: { ground: 'path', deco: 'wagon_over', solid: true },
+  կ: { ground: 'marble', deco: 'dress_dummy', solid: true },
+  հ: { ground: 'marble', deco: 'mirror', solid: true },
+  ձ: { ground: 'seat_stone', deco: 'crate', solid: true },
+  ղ: { ground: 'seat_wall', deco: 'seat_gate', solid: true },
+  // The city's own walls (not a building: no grey door is added to them).
+  ճ: { ground: 'seat_wall', solid: true },
 };
 
 export class Grid {
@@ -401,8 +419,8 @@ export function toTiled(src: MapSource): TiledMap & Record<string, unknown> {
 }
 
 /** Building walls and the roofs above them: stone and tile, and Xaraguá's cane walls under thatch. */
-const WALLS = new Set(['#', 'é', 'ε', 'Б']);
-const ROOFS = new Set(['^', 'á', 'г']);
+const WALLS = new Set(['#', 'é', 'ε', 'Б', 'բ']);
+const ROOFS = new Set(['^', 'á', 'г', 'գ']);
 
 /**
  * Every building with no way in gets a grey door you cannot open (owner request, Oct 16), in the middle
@@ -456,7 +474,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

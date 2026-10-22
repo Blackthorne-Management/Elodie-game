@@ -5,7 +5,7 @@
 // keeps the placeholder). See docs/quest/ART-STYLE.md for sizes, layout and the palette.
 
 import type { Condition } from './engine/conditions.ts';
-import { CHAPTER2_QUESTS_DONE } from './data/sideQuests.ts';
+import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './data/sideQuests.ts';
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -236,6 +236,29 @@ export const TILESET = {
     { gid: 180, name: 'stump', base: 0x2e8a4e, accent: 0x9c7446, pattern: 'border' },
     { gid: 181, name: 'seed_row', base: 0x7a5a38, accent: 0x8cc860, pattern: 'stripes' },
     { gid: 182, name: 'grove', base: 0x2a5e2f, accent: 0xa8a6b4, pattern: 'blob' },
+    // Eightgate (Chapter 5, Oct 22): the Seat's worn grey-brown stone (the realm map's seat colour, #8f8578), its walls and
+    // slate roofs, the Throne Hall's violet rope and the board's sun-and-rays Throne tile, the council chairs, the Accord
+    // under glass, the seven-drawer cabinet (a drawer, and one with a red thread on its handle), Coco's dress dummies,
+    // mirror and curtain, the eight gates (an arch, the Iron Gate, the bricked teal one), an overturned Crown wagon,
+    // the Regent's violet banner and the Archive's chain. Pattern placeholders until art drop 2.
+    { gid: 183, name: 'seat_stone', base: 0x9a9082, accent: 0x8f8578, pattern: 'grid' },
+    { gid: 184, name: 'seat_wall', base: 0x6e665c, accent: 0x8f8578, pattern: 'grid' },
+    { gid: 185, name: 'slate_roof', base: 0x4a4a5a, accent: 0x3a3a48, pattern: 'stripes' },
+    { gid: 186, name: 'violet_rope', base: 0xc8b8d8, accent: 0x6a5a8a, pattern: 'stripes' },
+    { gid: 187, name: 'throne_sun', base: 0xd8b04a, accent: 0xfff2a0, pattern: 'cross' },
+    { gid: 188, name: 'council_chair', base: 0x6b4426, accent: 0x8f8578, pattern: 'border' },
+    { gid: 189, name: 'glass_case', base: 0x9ad8ff, accent: 0xf4ecd8, pattern: 'border' },
+    { gid: 190, name: 'drawer', base: 0x5e3e22, accent: 0xc8a46b, pattern: 'grid' },
+    { gid: 191, name: 'drawer_thread', base: 0x5e3e22, accent: 0xb8403a, pattern: 'cross' },
+    { gid: 192, name: 'dress_dummy', base: 0xe8a8c0, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 193, name: 'mirror', base: 0xc8c8d0, accent: 0x9ad8ff, pattern: 'border' },
+    { gid: 194, name: 'seat_gate', base: 0x4a4a52, accent: 0x8f8578, pattern: 'cross' },
+    { gid: 195, name: 'iron_gate', base: 0x3a3440, accent: 0xa8a6b4, pattern: 'stripes' },
+    { gid: 196, name: 'bricked', base: 0x8a6a5a, accent: 0x17a5a5, pattern: 'grid' },
+    { gid: 197, name: 'wagon_over', base: 0x7a5530, accent: 0x4a3018, pattern: 'stripes' },
+    { gid: 198, name: 'violet_banner', base: 0x6a5a8a, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 199, name: 'curtain', base: 0x8a3050, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 200, name: 'chain', base: 0x8f8578, accent: 0xa8a6b4, pattern: 'cross' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -311,6 +334,9 @@ const WHITE_HAIR = C.h!;
 const DORINI_GREEN = 0x1e8449;
 /** House Brasador's near-black (Ardencia, Chapter 3). */
 const BRASADOR_BLACK = 0x2a2632;
+/** Aldermoor's violet and the Regent's grey-violet (Eightgate, Chapter 5). */
+const SEAT_VIOLET = 0x6a5a8a;
+const SEAT_GREY_VIOLET = 0x5a5468;
 
 /**
  * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
@@ -532,11 +558,44 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   coralie: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'puffs', outfit: C.P!, trim: C.y!, robe: true, build: 'tall', headgear: 'wrap', headgearColor: C.p!, accessories: ['sash', 'satchel'] },
   echo_yusuf: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x5a6a40, trim: C.N!, robe: true, accessories: ['satchel'] },
   echo_locksmith: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x6a5a40, trim: C.e!, legs: C.B!, beard: C.G!, accessories: ['apron'] },
+  // Eightgate (Chapter 5, Oct 22; drawn placeholders until art drop 2, prompts in docs/quest/ART-PROMPTS.md). The Crown
+  // and the Regent's household wear Aldermoor's grey-violet; the envoys their houses' colours. The Regent: thin, grey,
+  // a chain of office, no crown. Hollis: old, a grey robe, a key at his belt. The deserters in faded Crown coats.
+  regent: { skin: C.s!, hair: C.G!, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: 0xc8b8d8, robe: true, build: 'tall', accessories: ['emblem', 'sash'] },
+  sealbearer: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: SEAT_GREY_VIOLET, trim: C.I!, legs: C.K!, headgear: 'helmet', headgearColor: SEAT_VIOLET, accessories: ['emblem', 'staff'] },
+  herald: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.K!, headgear: 'cap', headgearColor: SEAT_VIOLET, accessories: ['staff', 'sash'] },
+  regent_clerk: { skin: C.s!, hair: C.B!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
+  chamberlain: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: C.k!, trim: C.y!, robe: true, accessories: ['staff', 'emblem'] },
+  legate: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.w!, build: 'tall', headgear: 'bicorne', headgearColor: SEAT_GREY_VIOLET, accessories: ['sash', 'epaulettes'] },
+  legate_aide: { skin: C.s!, hair: C.N!, hairStyle: 'curly', outfit: 0x7a7488, trim: C.w!, legs: C.K!, accessories: ['satchel'] },
+  envoy_dorini: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: DORINI_GREEN, trim: C.y!, robe: true, beard: HAIR_BLACK, headgear: 'wrap', headgearColor: C.w!, accessories: ['satchel'] },
+  envoy_ironvow: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'braid', outfit: 0x6e6a78, trim: 0xc8a46b, legs: C.b!, build: 'tall', headgear: 'hood', headgearColor: 0x8a7a68, accessories: ['emblem'] },
+  envoy_suzumori: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.u!, trim: C.w!, robe: true, accessories: ['sash'] },
+  envoy_agnivansh: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0xe0a02a, trim: C.R!, legs: C.B!, headgear: 'wrap', headgearColor: C.o!, accessories: ['sash'] },
+  hollis: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bald', outfit: 0x8e8e9c, trim: C.y!, robe: true, beard: WHITE_HAIR, accessories: ['satchel'] },
+  pilgrim_bandaged: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'short', outfit: C.w!, trim: C.y!, robe: true, headgear: 'headband', headgearColor: C.w!, accessories: ['staff'] },
+  pilgrim_nobody: { skin: C.S!, hair: C.G!, hairStyle: 'short', outfit: 0x7a6a5a, trim: C.N!, legs: C.B! },
+  sky_rider: { skin: C.T!, hair: 0x8a6a3a, hairStyle: 'long', outfit: 0x8a7a68, trim: C.c!, legs: C.b!, headgear: 'brimmed', headgearColor: 0x6e6a78 },
+  quiet_speaker: { skin: SKIN_TONES.tan, hair: HAIR_DARK, hairStyle: 'cropped', outfit: 0x8e8e9c, trim: C.G!, robe: true },
+  deserter_sergeant: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: 0x8a4a40, trim: C.G!, legs: 0xb8b0a0, beard: C.B!, headgear: 'cap', headgearColor: 0x3a3a48, accessories: ['sash'] },
+  deserter: { skin: C.S!, hair: C.B!, hairStyle: 'cropped', outfit: 0x8a4a40, trim: C.G!, legs: 0xb8b0a0, headgear: 'cap', headgearColor: 0x3a3a48 },
+  echo_throne_clerk: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: C.N!, robe: true, accessories: ['satchel'] },
+  echo_crown_envoy: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['sash', 'epaulettes'] },
+  echo_thomas: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: C.w!, legs: C.K!, build: 'small', accessories: ['satchel'] },
+  // Coco's seamstresses (beat 6): a white hood and an apron over grey, for Gianna and Anissa (DISGUISE below).
+  gianna_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x8e8e9c, trim: C.w!, robe: true, headgear: 'hood', headgearColor: C.w!, accessories: ['apron', 'locket'] },
+  anissa_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'puffs', outfit: 0x8e8e9c, trim: C.w!, robe: true, build: 'small', headgear: 'hood', headgearColor: C.w!, accessories: ['apron'] },
 };
 
 /** The player's look in each era. */
 export const PLAYER_LOOK = 'gianna';
 export const ECHO_PLAYER_LOOK = 'patricio_young';
+
+/**
+ * Coco's seamstresses (Chapter 5, beat 6): from the veils in the fitting room until Hollis says "Take off the veil",
+ * Gianna and Anissa wear these looks on the map (in the Echo Anissa still glows, in her apron).
+ */
+export const DISGUISE = { flag: 'story.disguised', player: 'gianna_seamstress', anissa: 'anissa_seamstress' } as const;
 
 /** Anissa holding the door while Gianna is in the Echo: a glowing figure (guide 6.1). */
 export const ANISSA_GLOW = { look: 'anissa', tint: 0xfff2a0, alpha: 0.85, pulseAlpha: 0.45 } as const;
@@ -648,6 +707,13 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     },
     color: 0x1a1430,
     alpha: 0.38,
+  },
+  // The Seat at evening (Chapter 5, beat 5's end): the three required quests done, until the bell (the veils).
+  {
+    maps: ['seat-gateyard', 'seat-concourse', 'seat-quarter', 'seat-fields'],
+    if: { all: [CHAPTER5_QUESTS_DONE, { notFlag: 'story.disguised' }, { notFlag: 'story.archive_entered' }] },
+    color: 0x2a2048,
+    alpha: 0.3,
   },
 ];
 
@@ -1059,6 +1125,25 @@ const ALDORIA_BACKDROPS = {
   },
 } as const;
 
+// Eightgate (Chapter 5): the Crossroads Fields, a grey-blue sky over flat grass and the Seat's walls far off.
+const SEAT_BACKDROPS = {
+  crossroads: {
+    sky: [0x6a86a8, 0x7a94b2, 0x8aa2bc, 0x9cb0c6, 0xaebed0, 0xc2ccd8],
+    cloud: 0xf0f2f4,
+    cloudShade: 0xc8ccd4,
+    mountainFar: 0x9a9082,
+    mountainNear: 0x8f8578,
+    trees: 0x3f6a3a,
+    treesDark: 0x2e5030,
+    field: 0x6a9a4a,
+    cane: 0x8aaa5a,
+    caneDark: 0x5a7a3a,
+    ground: 0xc9a66b,
+    groundDark: 0xa8885a,
+    groundLight: 0xd8bc84,
+  },
+} as const;
+
 /** The painted scene behind each battle (BattleDef.backdrop), drawn in code until painted art arrives. */
 export const BATTLE_BACKDROPS: Readonly<Record<string, {
   sky: readonly number[];
@@ -1141,6 +1226,7 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
   },
   ...ARDENCIA_BACKDROPS,
   ...ALDORIA_BACKDROPS,
+  ...SEAT_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

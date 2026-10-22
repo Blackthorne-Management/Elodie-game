@@ -565,6 +565,127 @@ export const BOOKS: readonly Book[] = [
       'Signed for the guild by Guildmaster Qasim. Witnessed by the chief scribe. ' +
       'The space for the Merchant-Prince\'s seal is empty. A note in the margin, in a different hand: "Not by me."',
   },
+  // ---- Eightgate (Chapter 5): the Throne Hall's records room (four), and the Throne Archive (five of the design's
+  // ten for the release: the outline's cut list). The Seventh Clause joins the Hall's shelf once it is read aloud.
+  {
+    id: 'seat_regent_commission',
+    title: "The Regent's Commission",
+    category: 'law',
+    text:
+      'The Commission was sealed by the Crown of Aldermoor in the year after the Accord. ' +
+      'It names a Regent to keep the Seat while the Throne stands empty. ' +
+      'The Regent holds the Throne for the realm. He does not sit it, and he may not be crowned. ' +
+      'He keeps the peace of the eight gates, the Archive and the Hall, and he calls the Parley. ' +
+      'The Commission runs until a claimant stands on the Throne tile with the houses behind her. ' +
+      'It does not say how many houses. Three Regents have held it. The present one has held it longest. ' +
+      'A note in the margin, in a clerk\'s hand: "Renewed. Renewed. Renewed." ' +
+      'The last renewal is signed by the Regent himself.',
+  },
+  {
+    id: 'seat_petitions_breach',
+    title: 'Petitions of Breach',
+    category: 'law',
+    text:
+      'Under the Founding Compact, a house that believes a treaty broken may petition the Hall in Parley. ' +
+      'The petition is carried to every chamber, and every envoy answers it in the record. ' +
+      'A petition no one carries is not refused. It is simply never heard. ' +
+      'The register lists two hundred and six petitions since the Accord. ' +
+      'One hundred and ninety were heard. Fifteen were withdrawn. ' +
+      'One, from the cacique\'s house of Yucayeque in Xaraguá, is marked "received" and nothing else. ' +
+      'Its date is forty-nine years ago. The space for the chambers\' answers is blank. ' +
+      'Someone has drawn a small circle round the blank, in ink that is not old.',
+  },
+  {
+    id: 'seat_council_eight',
+    title: 'The Council of Eight',
+    category: 'history',
+    text:
+      'Before the Ash Wars, the realm had a council of eight chairs, one for each house, before the Throne. ' +
+      'The houses sat; whoever stood on the Throne tile spoke for all of them, and only while they let her. ' +
+      'The council last sat in full in the year the war began. Its chairs have stood empty since. ' +
+      'At a Parley the envoys stand behind them. At a Claim they may sit. ' +
+      'The Master of the Chairs keeps them dusted, and keeps the tokens the houses give when they agree to sit. ' +
+      'He has not been given one in fifty years. He dusts them anyway.',
+  },
+  {
+    id: 'seat_seventh_clause',
+    title: 'The Seventh Clause',
+    category: 'law',
+    available: { flag: 'clue.seventh_clause_read' },
+    text:
+      'Entered in the Hall\'s record on the day it was read aloud in Parley, at the demand of Zetwal\'s envoy. ' +
+      'Read by the Keeper of the Archive, from a page sealed with the Throne\'s wax fifty years before. ' +
+      '"The harbor of Xaraguá and its waters are given into the keeping of the Crown of Aldermoor," it reads. ' +
+      '"At the Crown\'s pleasure, to be revisited." ' +
+      'The Keeper\'s note: the page bears no signature, only the Throne\'s clerk\'s seal. ' +
+      'The seventh ribbon of the bound Accord carries no witness knot. ' +
+      'The Lord Regent\'s answer: the Charter has stood on it for fifty years. ' +
+      'The envoy of Xaraguá was not present. Xaraguá has no envoy at the Seat.',
+  },
+  {
+    id: 'seat_weaving',
+    title: 'The Weaving',
+    category: 'religion',
+    text:
+      'Before the houses, the faiths say, the goddess Elodie wove the realm out of eight threads, one for each people. ' +
+      'The Gaze says she watches the weaving still, and remembers every knot. ' +
+      'The Witness says she wove it as a contract, and every thread was asked. ' +
+      'The Four Hands say there was no weaving, only land, and that the land remembers on its own. ' +
+      'The Quiet Crown says nothing, which it calls the oldest answer. ' +
+      'Every faith agrees on one thing: there were eight threads. ' +
+      'The Archive\'s copy of this book has a thread sewn into its spine. It is teal.',
+  },
+  {
+    id: 'seat_founding_compact',
+    title: 'The Founding Compact',
+    category: 'law',
+    text:
+      'The Compact is older than the Accord, and the Accord was written under it. ' +
+      'Clause Six: every clause of a treaty made at the Seat is read aloud to every signatory before it is sealed. ' +
+      'A clause not read is not agreed. ' +
+      'Clause Nine: a sealed page may be opened and heard in the Hall, when the envoy of a signatory house demands it in Parley. ' +
+      'Clause Twelve: no steel is drawn inside the eight gates. ' +
+      'The Witness priests call the Compact the realm\'s first contract, and teach it to their apprentices by heart. ' +
+      'The Archive\'s copy is worn thin at Clause Six.',
+  },
+  {
+    id: 'seat_accord_sealed',
+    title: 'The Sun Accord, Sealed',
+    category: 'history',
+    text:
+      'The Sun Accord ended the Ash Wars. It was signed in Pòdlimyè and brought to the Seat to be bound and sealed. ' +
+      'Its binding holds six pages and seven ribbons, one ribbon for each clause. ' +
+      'The signatories were Zetwal, Ardencia, Al-Doria as witness, and the Crown of Aldermoor. ' +
+      'Xaraguá fought in the war and is named in its first page. It is not named among the signatories. ' +
+      'The sealing was done by the Throne\'s clerk, before the Marshal of Zetwal and the Crown\'s envoy. ' +
+      'The record of the sealing says the Lord of Ardencia "was not present at the close." It does not say why.',
+  },
+  {
+    id: 'seat_throne_clerks',
+    title: "The Throne's Clerks",
+    category: 'history',
+    text:
+      'The Throne\'s clerks keep the Seat\'s records, read what is sealed, and seal what is read. ' +
+      'A clerk swears to write only what is said, and to say nothing of what is written. ' +
+      'Most keep the oath. One kept it better than he meant to. ' +
+      'The clerk who sealed the Sun Accord never spoke again after that day. ' +
+      'His fellows said he was ill. His wife said he was ashamed. ' +
+      'He went on working for nine more years, and he wrote in a very beautiful hand. ' +
+      'When he died, his register for the year of the Accord could not be found.',
+  },
+  {
+    id: 'seat_claimant_families',
+    title: 'The Claimant Families',
+    category: 'genealogy',
+    text:
+      'The families with a claim to stand on the Throne tile, by the Founding Compact\'s count. ' +
+      'Rodriguez of Ardencia, through the Brasador line, a claim the house has never pressed. ' +
+      'Jean-Philippe of Zetwal, through Kay Soley, the island\'s old governors. ' +
+      'Stillwater of Aldermoor, through the Crown. Three others are extinct now, or married out, or simply forgotten. ' +
+      'A claimant must be of a claimant family and must stand with the houses behind her. ' +
+      'No claimant has stood on the tile in fifty years, and the Regent has not asked for one. ' +
+      'Someone has written in the margin, in a clerk\'s small hand: "Limyè? A temple name, not a house."',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -588,6 +709,9 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'ledgers_law', name: 'Lectern: Contracts and Faith', books: ['aldoria_on_contracts', 'aldoria_witness_market'] },
   { id: 'ledgers_city', name: 'Lectern: The City', books: ['aldoria_dorini_promise', 'aldoria_city_water'] },
   { id: 'majlis_contracts', name: 'Shelf: The Archive of Contracts', books: ['aldoria_vault_register', 'aldoria_crown_preference'] },
+  // Eightgate (Chapter 5): the Throne Hall's records room, and the Throne Archive (readable from the bell on).
+  { id: 'hall_records', name: "Shelf: The Hall's Records", books: ['seat_regent_commission', 'seat_petitions_breach', 'seat_council_eight', 'seat_seventh_clause'] },
+  { id: 'archive_shelves', name: 'Shelves: The Throne Archive', books: ['seat_weaving', 'seat_founding_compact', 'seat_accord_sealed', 'seat_throne_clerks', 'seat_claimant_families'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

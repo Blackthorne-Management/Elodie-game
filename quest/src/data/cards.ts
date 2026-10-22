@@ -39,4 +39,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 4 complete',
     lines: ['The Ledger', 'Next: Chapter 5, The Parley', 'Eightgate, and a seal only the Throne may break...'],
   },
+  // The end of Chapter 5: the Iron Gate opens on the winter road east (Skarragol first: owner decision, Oct 20).
+  {
+    id: 'act5_end',
+    when: 'act5.complete',
+    title: 'Chapter 5 complete',
+    lines: ['The Parley', 'Next: Chapter 6, The Stolen Standard', 'Skarragol, and a herd that will not stay stolen...'],
+  },
 ];

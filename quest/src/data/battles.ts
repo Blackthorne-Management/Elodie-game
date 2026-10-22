@@ -421,6 +421,37 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Hire Blades', power: 0, hire: 'caravan_raider', every: 2, tell: 'Qasim rattles a purse at the stair. "Blades! The guild pays double!"' },
     ],
   },
+  // Chapter 5 (the outline 7.1 with its second review 3.3): the Crown's own deserters at the Seat's crossroads, in old
+  // coats. Nobody falls: each withdraws at 0 HP (there is no floor, so the fight always ends), and when the Sergeant
+  // yields his men step back with him. Rally Inspires a man of his (an ally move); no "Order" (no engine for it).
+  deserter_sergeant: {
+    id: 'deserter_sergeant',
+    bribable: true,
+    name: 'Deserter Sergeant',
+    look: 'deserter_sergeant',
+    level: 15,
+    role: 'brute',
+    boss: true,
+    hpScale: 2,
+    withdraws: { line: "Enough. Enough. We're hungry, not dead.", speaker: 'Sergeant' },
+    moves: [
+      { name: 'Bayonet', power: 115 },
+      { name: 'Rally', power: 0, ally: 'deserter', statuses: ['inspired'], every: 3, tell: 'The Sergeant barks at his men: "On your feet! Form up!"' },
+    ],
+  },
+  deserter: {
+    id: 'deserter',
+    bribable: true,
+    name: 'Deserter',
+    look: 'deserter',
+    level: 14,
+    role: 'skirmisher',
+    withdraws: { line: 'The deserter steps back, bayonet down.' },
+    moves: [
+      { name: 'Bayonet', power: 105 },
+      { name: 'Hungry lunge', power: 150, every: 3, tell: 'A deserter crouches low, eyes on your bags...' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     bribable: true,
@@ -477,6 +508,26 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       spark: 'Gigi, Surge! The wall!',
       tell: 'Guard, everyone!',
       lowHp: "Samira's Remedy costs gold, Gigi. It heals a lot.",
+    },
+  },
+  // Chapter 5: Deserters' Road (Se-3). Game Over applies; the way back in is the camp itself (its trigger plays again
+  // until the fight is won). Paid flat, not by the ambush rule (review 3.5: one or the other, and the level curve).
+  deserters_road: {
+    id: 'deserters_road',
+    title: "Deserters' Road",
+    backdrop: 'crossroads',
+    enemies: ['deserter_sergeant', 'deserter', 'deserter'],
+    level: 14,
+    table: 'seat_story',
+    group: 'deserters',
+    rewards: { xp: 60, gold: 120 },
+    endsWithBoss: true,
+    sideQuest: 'deserters',
+    tips: {
+      start: "They're hungry, Gigi, not cruel. When the Sergeant gives up, they all will.",
+      spark: 'Surge, Gigi!',
+      tell: 'They are going for the bags! Guard!',
+      lowHp: 'Heal, Gigi.',
     },
   },
   // Chapter 3: the Trial of Blades (meant to be lost: no goddess, no count, no Grudge, no Yield; outline 4.2 and
@@ -680,6 +731,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   cinder_flats: { title: 'The Cinder Flats', backdrop: 'cinder_flats' },
   cinder_patrols: { title: 'The Sea Road', backdrop: 'cinder_flats' },
   desert_edge: { title: 'The Desert Edge', backdrop: 'desert_edge' },
+  crossroads: { title: 'The Crossroads Fields', backdrop: 'crossroads' },
 };
 
 /**

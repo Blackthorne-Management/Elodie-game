@@ -8,6 +8,13 @@ import aldoriaMajlis from '../../maps/aldoria-majlis.tmj?raw';
 import aldoriaLedgers from '../../maps/aldoria-ledgers.tmj?raw';
 import aldoriaVault from '../../maps/aldoria-vault.tmj?raw';
 import aldoriaDesert from '../../maps/aldoria-desert.tmj?raw';
+import seatGateyard from '../../maps/seat-gateyard.tmj?raw';
+import seatConcourse from '../../maps/seat-concourse.tmj?raw';
+import seatHall from '../../maps/seat-hall.tmj?raw';
+import seatQuarter from '../../maps/seat-quarter.tmj?raw';
+import seatWorkshop from '../../maps/seat-workshop.tmj?raw';
+import seatArchive from '../../maps/seat-archive.tmj?raw';
+import seatFields from '../../maps/seat-fields.tmj?raw';
 import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
 import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
 import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
@@ -79,6 +86,13 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'aldoria-ledgers': aldoriaLedgers,
   'aldoria-vault': aldoriaVault,
   'aldoria-desert': aldoriaDesert,
+  'seat-gateyard': seatGateyard,
+  'seat-concourse': seatConcourse,
+  'seat-hall': seatHall,
+  'seat-quarter': seatQuarter,
+  'seat-workshop': seatWorkshop,
+  'seat-archive': seatArchive,
+  'seat-fields': seatFields,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

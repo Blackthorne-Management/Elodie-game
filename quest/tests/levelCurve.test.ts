@@ -29,8 +29,8 @@ describe('the level curve along the scripted route', () => {
   const report = levelCurve();
   console.log(curveText(report));
 
-  it('measures every chapter the route plays (Chapters 1 to 4 so far), and lists the rest as unplayed', () => {
-    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4]);
+  it('measures every chapter the route plays (Chapters 1 to 5 so far), and lists the rest as unplayed', () => {
+    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5]);
     expect(report.chapters.length + report.unplayed.length).toBe(CHAPTER_LEVELS.length);
     for (const c of report.chapters) expect(c.xp).toBeGreaterThan(c.xpNoSide);
     // XP only grows from one chapter to the next.
@@ -48,6 +48,19 @@ describe('the level curve along the scripted route', () => {
     // 14 as tuned; 15 since Chapter 2's side quests became required (see KNOWN_OFF_TARGET).
     expect(c4.level).toBe(15);
     expect(c4.levelNoSide).toBeGreaterThanOrEqual(12);
+  });
+
+  // Chapter 5 (the outline review 3.5): the tool at 15, the played line (an ambush or two in the fields) at 16. The
+  // chapter pays about 325 XP on the route, which keeps the end at 15 both from today's start (3,470, Chapter 2's
+  // required side quests included) and from the start the review measured (about 3,260, or 3,090 if Chapter 2 is
+  // retuned): 15 needs 3,410 and 16 needs 3,808.
+  it('Chapter 5 (Eightgate) leaves the party at level 15, the target, and at 13 without its side quests; it pays 320 to 337 XP', () => {
+    const c4 = report.chapters.find((c) => c.chapter === 4)!;
+    const c5 = report.chapters.find((c) => c.chapter === 5)!;
+    expect(c5.level).toBe(15);
+    expect(c5.levelNoSide).toBeGreaterThanOrEqual(13);
+    expect(c5.xp - c4.xp).toBeGreaterThanOrEqual(320);
+    expect(c5.xp - c4.xp).toBeLessThanOrEqual(337);
   });
 
   it('each chapter lands on its target level (within LEVEL_CURVE slack), except the ones known and reported', () => {

@@ -1,0 +1,589 @@
+{
+  "compressionlevel": -1,
+  "width": 20,
+  "height": 12,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 11,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 12,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,
+184,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,184,
+184,67,67,67,67,67,67,67,69,69,69,69,67,67,67,67,67,67,67,184,
+184,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,184,
+184,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,184,
+184,184,184,184,184,184,184,184,184,67,67,184,184,184,184,184,184,184,184,184,
+184,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,184,
+184,9,67,9,9,9,9,9,9,9,9,9,9,9,9,9,9,67,9,184,
+184,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,184,
+184,9,67,9,9,9,9,9,9,9,9,9,9,9,9,9,9,67,9,184,
+184,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,184,
+184,184,184,184,45,184,184,184,184,184,94,95,184,184,184,184,184,184,184,184
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 12,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,193,0,0,192,0,0,
+0,0,192,0,192,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,192,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192,0,0,
+0,0,0,0,0,0,32,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,192,0,0,0,0,0,0,0,0,0,0,44,0,44,0,192,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 12,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,
+184,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,184,
+184,67,67,67,67,67,67,67,69,69,69,69,67,67,67,67,67,67,67,184,
+184,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,184,
+184,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,184,
+184,184,184,184,184,184,184,184,184,67,67,184,184,184,184,184,184,184,184,184,
+184,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,184,
+184,9,67,9,9,9,9,9,9,9,9,9,9,9,9,9,9,67,9,184,
+184,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,184,
+184,9,67,9,9,9,9,9,9,9,9,9,9,9,9,9,9,67,9,184,
+184,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,184,
+184,184,184,184,45,184,184,184,184,184,94,95,184,184,184,184,184,184,184,184
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 12,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,193,0,0,192,0,0,
+0,0,192,0,192,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,192,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192,0,0,
+0,0,0,0,0,0,32,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,192,0,0,0,0,0,0,0,0,0,0,44,0,44,0,192,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 12,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 12,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,16,
+16,0,16,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,16,
+16,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,16,0,16,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 12,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,16,
+16,0,16,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,16,
+16,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,16,0,16,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "coralie_shop",
+          "type": "npc",
+          "x": 192,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.coco_plan, !story.disguised, !story.terms_refused"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "coralie_seat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 2,
+          "name": "workshop_out",
+          "type": "door",
+          "x": 160,
+          "y": 176,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "seat-quarter"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "quarter_workshop"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 3,
+          "name": "coco_plan",
+          "type": "trigger",
+          "x": 160,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "coco_plan"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.workshop_seen"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.coco_met"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "bell_morning",
+          "type": "trigger",
+          "x": 160,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "seamstresses"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.bell_morning"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seats.stage1, debate.seat_voices.settled, side.deserters.done, !story.disguised"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "fitting_arrive",
+          "type": "trigger",
+          "x": 160,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "fitting_front"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.fitting_arrived"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.terms_refused"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "fitting_step",
+          "type": "trigger",
+          "x": 16,
+          "y": 64,
+          "width": 288,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "fitting"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.fitting_arrived, !story.fitting_done"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 7,
+          "name": "front_room",
+          "type": "spawn",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 8,
+          "name": "curtain",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 80,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "curtain"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.terms_refused"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "curtain"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "coco_dummies",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "coco_dummies"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "workshop_window",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "workshop_window"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 400,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 200,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

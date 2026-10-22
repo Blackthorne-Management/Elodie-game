@@ -45,6 +45,13 @@ export const MUSIC = {
   majlis: { file: 'audio/music/hall.mp3', loop: true, overlapS: 2.5 },
   guild_vault: { file: 'audio/music/echo.mp3', loop: true, overlapS: 3.5 },
   desert_edge: { file: 'audio/music/cane-road.mp3', loop: true, overlapS: 3.5 },
+  // Eightgate (Chapter 5): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md). The Concourse and the
+  // Quarter play the farewell track, the Throne Hall the Crown's march (the Regent), the Archive the Echo's (a clock in
+  // the silence, when it comes), the fields the cane road's.
+  seat: { file: 'audio/music/farewell.mp3', loop: true, overlapS: 2.5 },
+  throne_hall: { file: 'audio/music/crown-customs.mp3', loop: true, overlapS: 2.5 },
+  throne_archive: { file: 'audio/music/echo.mp3', loop: true, overlapS: 3.5 },
+  crossroads: { file: 'audio/music/cane-road.mp3', loop: true, overlapS: 3.5 },
 } as const satisfies Record<string, MusicTrack>;
 
 export type MusicId = keyof typeof MUSIC;
@@ -89,6 +96,13 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'aldoria-ledgers': 'majlis',
   'aldoria-vault': 'guild_vault',
   'aldoria-desert': 'desert_edge',
+  'seat-gateyard': 'seat',
+  'seat-concourse': 'seat',
+  'seat-quarter': 'seat',
+  'seat-workshop': 'home',
+  'seat-hall': 'throne_hall',
+  'seat-archive': 'throne_archive',
+  'seat-fields': 'crossroads',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */

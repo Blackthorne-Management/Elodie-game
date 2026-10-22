@@ -980,9 +980,11 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       'caravan_master',
       'Dorini caravan! Out the gate! Eightgate in nine days, if the camels agree!',
     ),
+    // The card closes the chapter here; when it closes, the caravan arrives at Eightgate's Gold Gate (Chapter 5, beat 0:
+    // the land journey is the card, the outline's fallback, and the arrival is a scene in the gate yard).
     nar('The caravan moves out through the gate. Gianna takes one last look back at the Gate of Gold, and follows.', {
       fx: 'fade',
-      set: { 'act4.complete': true },
+      set: { 'act4.complete': true, 'travel.next': 'seat-gateyard/gold_gate' },
     }),
   ]),
   simple('caravan_master_talk', [
