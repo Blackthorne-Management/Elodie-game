@@ -111,6 +111,14 @@ export class GameLogic {
   /** The tile the last step left (the way back from a fight trigger), or null after a load or a new game. */
   private prevStep: { mapId: string; era: Era; pos: Pos } | null = null;
 
+  /**
+   * Where the encounter dice stand (a save does not carry them: a new session rolls new ambushes). The smoke test's
+   * SMOKE_FROM start reads it to load a save mid-route and roll on as the whole route would have.
+   */
+  get diceState(): number {
+    return this.rng.seed;
+  }
+
   constructor(maps: Readonly<Record<string, GameMap>>, content: GameContent, state: GameState, seed = 1) {
     this.maps = maps;
     this.content = content;

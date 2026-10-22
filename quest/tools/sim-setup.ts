@@ -76,16 +76,17 @@ export function puzzleSim(puzzle: PuzzleDef, maps: Record<string, GameMap> = loa
 
 /**
  * A game loaded from a save code, as the browser loads one (the smoke test's SMOKE_FROM start): a new game on the
- * saved map with the save applied, and the on-enter scenes run.
+ * saved map with the save applied, and the on-enter scenes run. `seed`: the encounter dice (a save does not carry
+ * them; the smoke test passes where the whole route's dice stood, as the browser's ?seed=).
  */
-export function savedSim(code: string, maps: Record<string, GameMap> = loadMaps()): Sim {
+export function savedSim(code: string, maps: Record<string, GameMap> = loadMaps(), seed = 1): Sim {
   const decoded = decodeSave(code);
   if (!decoded.ok) throw new Error(decoded.error);
   const map = maps[decoded.data.mapId];
   if (!map) throw new Error(`No map "${decoded.data.mapId}"`);
   const state = newGame(map, '');
   applySave(state, decoded.data);
-  const sim = new Sim(new GameLogic(maps, CONTENT, state));
+  const sim = new Sim(new GameLogic(maps, CONTENT, state, seed));
   enter(sim);
   return sim;
 }

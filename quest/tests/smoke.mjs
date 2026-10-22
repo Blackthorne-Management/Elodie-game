@@ -9,8 +9,8 @@
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
-// 3. Chapters 1 to 5, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end checks
-//    its story flags, fights and party in the browser).
+// 3. Chapters 1 to 7, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
+//    Chapter 3 on, checks its story flags against the simulator's, its fights, the party and its card in the browser).
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
 //    The route includes a diagonal step (two keys at once). At the route's @markers it checks the
@@ -513,8 +513,9 @@ async function markChecks(page, sim, name) {
 }
 
 /**
- * At each chapter's end (Chapters 3 to 5; Chapters 1 and 2 are checked after the route): the browser has played
- * the chapter the way the simulator did (its story flags, its fights, the party), and its end card is up.
+ * At each chapter's end (Chapters 3 to 7; Chapters 1 and 2 are checked after the route): the browser has played
+ * the chapter the way the simulator did (its story flags agree with the simulator's, its fights were won, the party
+ * and who walks with it), and its end card is up.
  */
 async function chapterEndChecks(page, sim, name) {
   const ends = {
@@ -542,6 +543,22 @@ async function chapterEndChecks(page, sim, name) {
       not: ['story.disguised', 'story.party_split'],
       what: 'Chapter 5 in the browser: the welcome, the bell, the sealing, the keeper, the Parley (the terms refused), the fitting and the Iron Gate',
     },
+    'chapter6-end': {
+      act: 6,
+      map: 'skarragol-quay',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa'],
+      flags: ['party.bayarmaa', 'story.bayarmaa_cleared', 'story.fjord_echoed', 'story.fjord_crossed', 'anchor.wolf_run', 'story.herd_called', 'story.grimvald_beaten', 'choice.grimvald_spared', 'story.standard_planted', 'story.standard_home', 'clue.crown_pays_raiders', 'side.grandson.done', 'side.winter_stores.done', 'debate.skarragol_oath.settled', 'choice.crown_purse_given', 'ally.skarragol', 'item.token_ironvow', 'item.torvald_letter', 'encounter.skarragol_story.wolves.won', 'encounter.skarragol_story.grimvald.won'],
+      not: ['item.crown_purse'],
+      what: 'Chapter 6 in the browser: Bayarmaa joined at the Moot, the fjord crossed through the Echo, the wolves and Grimvald beaten (and spared), the standard home, the horn and the Ironvow token',
+    },
+    'chapter7-end': {
+      act: 7,
+      map: 'kuroshi-pier',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru'],
+      flags: ['story.kuroshi_arrived', 'story.letter_given', 'story.haru_met', 'party.haru', 'story.maze_walked', 'story.marsh_reached', 'story.causeway_lit', 'anchor.screen_peg', 'rotor.screens.solved', 'story.fox_beaten', 'choice.fox_spared', 'story.price_receipts', 'choice.petition_signed', 'choice.samira_names', 'side.spy_ledger.done', 'side.lanterns.done', 'debate.kuroshi_silence.settled', 'ally.kuroshi', 'item.token_suzumori', 'story.haru_left_kirinoura', 'encounter.kuroshi_story.moths.won', 'encounter.kuroshi_story.fox.won'],
+      not: ['story.disguised'],
+      what: 'Chapter 7 in the browser: the letter, Haru met and joined, the fog maze and the marsh causeway, the moths and the Fox beaten (and spared), the screens, the petition and the Suzumori token',
+    },
   };
   const end = ends[name];
   if (!end) return;
@@ -551,6 +568,19 @@ async function chapterEndChecks(page, sim, name) {
   const wrong = end.not.filter((f) => s.flags[f]);
   check(missing.length === 0 && wrong.length === 0, `${end.what}${missing.length ? ` (missing ${missing.join(', ')})` : ''}${wrong.length ? ` (should not be set: ${wrong.join(', ')})` : ''}`);
   check(JSON.stringify(party) === JSON.stringify(end.party), `the party at Chapter ${end.act}'s end is ${end.party.join(', ')} (${party.join(', ')})`);
+  // Who walks with the party: everyone in it beyond Gianna has a sprite in the line behind her.
+  const walkers = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru };
+  const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
+  check(notWalking.length === 0, `the whole party walks behind Gianna at Chapter ${end.act}'s end (no sprite for ${notWalking.join(', ')})`);
+  // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag.
+  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|act\d|card)\./;
+  const simFlags = sim.logic.state.flags.snapshot();
+  // (The field pays side quests and debates as it goes, `side.<id>.rewarded` and `debate.<id>.paid.<what>`; the
+  // simulator has no field, so those are the field's own bookkeeping.)
+  const paid = (k) => k.endsWith('.rewarded') || /^debate\.[^.]+\.paid\./.test(k);
+  const keys = new Set([...Object.keys(simFlags), ...Object.keys(s.flags)].filter((k) => told.test(k) && !paid(k)));
+  const differ = [...keys].filter((k) => JSON.stringify(simFlags[k] ?? null) !== JSON.stringify(s.flags[k] ?? null));
+  check(differ.length === 0, `Chapter ${end.act}'s story flags agree with the simulator's${differ.length ? ` (differ: ${differ.map((k) => `${k} browser=${JSON.stringify(s.flags[k])} sim=${JSON.stringify(simFlags[k])}`).join(', ')})` : ''}`);
   check(s.flags[`act${end.act}.complete`] === true && s.mapId === end.map && s.mode === 'card' && s.card !== null, `Chapter ${end.act} ends in ${end.map} with its card`);
 }
 
@@ -1015,24 +1045,27 @@ async function playRhythm(page, shots) {
 async function handleVoyage(page, shots, landing = 'xaragua-village') {
   await frames(page);
   if (!(await page.evaluate(() => !!window.__voyage))) return false;
-  const tag = landing === 'xaragua-village' ? 'voyage' : 'voyage-home';
+  const tag = landing === 'xaragua-village' ? 'voyage' : landing === 'zetwal-harbor' ? 'voyage-home' : `voyage-${landing}`;
   await page.waitForTimeout(2500);
   await shoot(page, `${tag}-harbor`, shots);
   await page.waitForFunction(() => window.__voyage?.state().phase === 'map', null, { timeout: 10000 });
   await page.waitForTimeout(4000);
   await shoot(page, `${tag}-map`, shots);
-  check(true, `the voyage to ${landing} plays: the canoe to the ship, then the route around Ardencia on the realm map`);
+  check(true, `the voyage to ${landing} plays: the boat to the ship, then the route on the realm map`);
   await page.keyboard.press('KeyX');
   await page.waitForFunction((m) => !window.__voyage && window.__quest?.snapshot().mapId === m, landing, { timeout: 10000 });
   return true;
 }
 
 async function playAct(browser, errors) {
-  console.log('Chapters 1 to 5 (scripted route, checked against the simulator after every key):');
+  console.log('Chapters 1 to 7 (scripted route, checked against the simulator after every key):');
   let route = parseRoute(readJson('routes/zetwal-act1.json'));
   let sim = newGameSim();
   // SMOKE_FROM=<marker>: the simulator plays the route up to that marker, and the browser loads its save there.
   let saveCode = null;
+  // The browser's encounter dice: the simulator's default seed from a new game; from a marker, where the whole route's
+  // dice stand there (a save does not carry them, so a loaded game would roll other ambushes than the route plays).
+  let dice = 1;
   if (FROM) {
     const at = route.findIndex((item) => item.kind === 'mark' && item.name === FROM);
     if (at < 0) throw new Error(`SMOKE_FROM: no marker "@${FROM}" in the route`);
@@ -1044,14 +1077,15 @@ async function playAct(browser, errors) {
     // The browser shows each item's popup as it arrives; a player reaching this point has seen them all.
     for (const it of pendingShowcases(sim.logic.state.flags, RPG)) markShown(sim.logic.state.flags, it.id);
     saveCode = encodeSave(toSaveData(sim.logic.state, 1));
-    sim = savedSim(saveCode);
+    dice = sim.logic.diceState;
+    sim = savedSim(saveCode, undefined, dice);
     route = route.slice(from);
     console.log(`  (starting at @${FROM}, ${route.length} route items left)`);
   }
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   watchErrors(page, errors);
-  await page.goto(`${GAME}&seed=1`); // the simulator's encounter seed, so ambushes match
+  await page.goto(`${GAME}&seed=${dice}`); // the simulator's encounter dice, so ambushes match
   await page.evaluate((c) => {
     localStorage.clear();
     if (c) localStorage.setItem('bloodlines-quest.save', c);
@@ -1078,6 +1112,7 @@ async function playAct(browser, errors) {
     }
     for (const cmd of sim.expand(item)) {
       const mode = sim.logic.mode;
+      const mapBefore = sim.logic.state.player.mapId;
       if (cmd === 'skip') {
         const battles = sim.battles.length;
         const rhythms = sim.rhythms.length;
@@ -1154,7 +1189,10 @@ async function playAct(browser, errors) {
         await frames(page);
       }
       await handleShowcase(page, showcases, shots);
-      if (sim.logic.state.player.mapId === 'xaragua-village' && (await handleVoyage(page, shots))) voyaged = true;
+      // A voyage between chapters (Chapter 1's to Xaraguá; a chapter's card closing on the sea, Chapter 6's longship to
+      // Kirinoura): watch it, then on.
+      const landing = sim.logic.state.player.mapId;
+      if ((landing !== mapBefore || landing === 'xaragua-village') && (await handleVoyage(page, shots, landing)) && landing === 'xaragua-village') voyaged = true;
       await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
     }
   }
@@ -1178,7 +1216,7 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
   check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.flags['story.ardencia_asked'] === true, 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
-  check(['act3', 'act4', 'act5'].every((a) => s.flags[`${a}.complete`] === true && s.flags[`card.${a}_end`] === true) && s.mapId === 'seat-concourse', 'Chapters 3, 4 and 5 played to their end cards in the browser: the party stands at the Iron Gate in the Concourse');
+  check([3, 4, 5, 6, 7].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'kuroshi-pier', 'Chapters 3 to 7 played to their end cards in the browser: the party stands on the Lantern Pier, ready to sail');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -1206,7 +1244,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('The Eight Gates Concourse') && mapSnap.items.includes("The Gold Gate's yard"), 'the city map shows the city the party is in (Eightgate, after Chapter 5)');
+  check(mapSnap.items.includes('The Lantern Pier') && mapSnap.items.includes('The Lantern Quarter'), 'the city map shows the city the party is in (Kirinoura, after Chapter 7)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
@@ -1293,7 +1331,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'seat-concourse' && [1, 2, 3, 4, 5].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 5 finished after a reload');
+  check(back.mapId === 'kuroshi-pier' && [1, 2, 3, 4, 5, 6, 7].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 7 finished after a reload');
   await ctx.close();
   return shots;
 }
