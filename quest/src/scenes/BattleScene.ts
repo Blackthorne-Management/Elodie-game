@@ -47,6 +47,7 @@ import {
   isMove,
   needsTarget,
   settleBattle,
+  woundsFor,
   skillCost,
   startBattleSeed,
   targetsAllies,
@@ -265,7 +266,9 @@ export class BattleScene extends Phaser.Scene {
     const reserve = battleReserve(def);
     // The armies' volleys before the first turn (Chapter 11: the whistle asked how many; engine/war.ts).
     const volleys = volleysFor(flags, def, COMPANIES);
-    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve, volleys });
+    // A Challenge after a Challenge opens with the wounds the first one left (Chapter 12; rules-decisions [42]).
+    const wounds = woundsFor(flags, def, party.map((p) => p.id));
+    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve, volleys, wounds });
     this.placeFighters();
     const opening: BattleEvent[] = [];
     if (grudge > 0) opening.push({ kind: 'text', text: GAME_OVER_TEXT.grudge.replace('{p}', String(Math.round(grudge * 100))) });

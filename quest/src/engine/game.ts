@@ -87,7 +87,9 @@ export type Effect =
   /** A rhythm lock to play (flag `rhythm.next` = "<id>" or "<id>:slow"); the scene reports back with finishRhythm. */
   | { kind: 'rhythm'; lock: string; slow: boolean }
   /** A sea voyage plays before the party lands (data/voyages.ts; flag `voyage.next` beside `travel.next`). */
-  | { kind: 'voyage'; voyage: string };
+  | { kind: 'voyage'; voyage: string }
+  /** The game's last card closed (CardDef.credits): the end credits, then the title (Chapter 12). */
+  | { kind: 'credits' };
 
 export type StepAttempt =
   | { ok: true; to: Pos }
@@ -480,7 +482,10 @@ export class GameLogic {
   }
 
   view(): DialogueView {
-    return this.runner?.view() ?? { kind: 'end' };
+    const v = this.runner?.view() ?? { kind: 'end' };
+    const format = this.content.formatText;
+    if (!format || v.kind === 'end' || !v.text.includes('{')) return v;
+    return { ...v, text: format(v.text, this.state.flags) };
   }
 
   /** Move past the current line (no effect while a choice waits). */
@@ -588,9 +593,26 @@ export class GameLogic {
 
   closeCard(): Effect[] {
     if (this.mode !== 'card') return [];
+    const closed = this.card;
     this.mode = 'field';
     this.card = null;
-    return [{ kind: 'sync' }, ...this.travel()];
+    // Cards in a row (Chapter 12: The End, then the cast): the next one waiting shows at once.
+    const next = this.pendingCard();
+    if (next) return [{ kind: 'sync' }, ...this.showCard(next)];
+    return [{ kind: 'sync' }, ...(closed?.credits ? [{ kind: 'credits' } as Effect] : []), ...this.travel()];
+  }
+
+  /** The first card whose flag is set and that has not been shown. */
+  private pendingCard(): CardDef | undefined {
+    const flags = this.state.flags;
+    return this.content.cards.find((c) => flags.isSet(c.when) && !flags.isSet(cardFlag(c)));
+  }
+
+  private showCard(card: CardDef): Effect[] {
+    this.state.flags.set(cardFlag(card), true);
+    this.mode = 'card';
+    this.card = card;
+    return [{ kind: 'card', card }, { kind: 'save' }]; // the end of an act is always saved
   }
 
   /**
@@ -672,12 +694,9 @@ export class GameLogic {
       const [lock, tempo] = rhythm.split(':');
       effects.push({ kind: 'rhythm', lock: lock!, slow: tempo === 'slow' });
     }
-    const card = this.content.cards.find((c) => flags.isSet(c.when) && !flags.isSet(cardFlag(c)));
+    const card = this.pendingCard();
     if (card) {
-      flags.set(cardFlag(card), true);
-      this.mode = 'card';
-      this.card = card;
-      effects.push({ kind: 'card', card }, { kind: 'save' }); // the end of an act is always saved
+      effects.push(...this.showCard(card));
       return effects;
     }
     effects.push(...this.travel());

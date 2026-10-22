@@ -4,6 +4,7 @@ import type { RhythmDef } from './rhythm.ts';
 import type { RotorDef } from './rotor.ts';
 import type { DebateContext, DebateDef } from './debate.ts';
 import type { DialogueScript, Speaker } from './dialogue.ts';
+import { evaluate, type Condition } from './conditions.ts';
 import type { FlagReader, FlagStore } from './flags.ts';
 
 export interface NpcDef {
@@ -34,6 +35,18 @@ export interface CardDef {
   when: string;
   title: string;
   lines: string[];
+  /**
+   * Lines shown after `lines` only while their condition holds (Chapter 12: the Hollow Throne's card names what strained
+   * the realm on this save; each house's fate by what became of it).
+   */
+  more?: readonly { if: Condition; text: string }[];
+  /** The game's last card: closing it opens the end credits, then the title (Chapter 12; engine/game.ts closeCard). */
+  credits?: boolean;
+}
+
+/** A card's lines as this save shows them (its own, then each `more` line whose condition holds). */
+export function cardLines(card: CardDef, flags: FlagReader): string[] {
+  return [...card.lines, ...(card.more ?? []).filter((m) => evaluate(m.if, flags)).map((m) => m.text)];
 }
 
 /** Short system messages (toasts). */
@@ -104,6 +117,11 @@ export interface GameContent {
    * shares and, when a scene asks, names the Crown's buyer; engine/ally.ts musterTick).
    */
   afterDialogue?: (flags: FlagStore) => void;
+  /**
+   * Fills a line's `{...}` names from the save as it is shown (Chapter 12: the Master of the Chairs reads the realm's three
+   * pillars into the register; the Journal's Stability). Unknown names are left as written.
+   */
+  formatText?: (text: string, flags: FlagReader) => string;
 }
 
 export function cardFlag(card: CardDef): string {

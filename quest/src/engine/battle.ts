@@ -72,6 +72,7 @@ import {
   SWAP_IN_DELAY,
   SURGE_COST,
   VOLLEY,
+  WOUND_FLOOR,
   SURGE_MULT,
   TURN_DELAY_K,
   TURN_DELAY_OFFSET,
@@ -401,6 +402,32 @@ export interface BattleDef {
    * back (Chapter 11: Rael's place in the four, party.rael, on the flagship; the second review's 3.8).
    */
   onLoss?: Readonly<Record<string, boolean>>;
+  /**
+   * The claimant strikes first (Chapter 12's Challenges; docs/rules-decisions.md [42]): this member's opening time is the
+   * lowest on the field, foes included.
+   */
+  opensFirst?: string;
+  /**
+   * Damage carries into the next Challenge ([42]; owner decision, Oct 22: Azzy's comes after the Regent's): a won fight
+   * writes each fighter's HP share as `wounds.<member>` (at least WOUND_FLOOR), and a fight with `wounded` opens with it.
+   */
+  keepsWounds?: boolean;
+  /** Opens with the wounds the last `keepsWounds` fight left (woundsFor), and a win heals them (the flags are cleared). */
+  wounded?: boolean;
+}
+
+/** The flag a fight that keeps its wounds writes for a fighter (their HP share at the end, 0 to 1). */
+export const woundFlag = (member: string) => `wounds.${member}`;
+
+/** The HP shares a `wounded` fight opens with, by member (empty for any other fight). */
+export function woundsFor(flags: FlagReader, def: Pick<BattleDef, 'wounded'>, members: readonly string[]): Record<string, number> {
+  if (!def.wounded) return {};
+  const out: Record<string, number> = {};
+  for (const m of members) {
+    const v = flags.get(woundFlag(m));
+    if (typeof v === 'number') out[m] = Math.max(WOUND_FLOOR, Math.min(1, v));
+  }
+  return out;
 }
 
 /** The most Grudge a fight can build (review 1, finding 1: a boss lost three times has had the fight). */
@@ -598,6 +625,8 @@ export interface BattleOptions {
   reserve?: Readonly<Record<string, EnemyDef>>;
   /** The armies' volleys before the first turn (engine/war.ts volleysFor; Chapter 11). */
   volleys?: Volleys;
+  /** HP shares the party opens with, by member (a Challenge after a Challenge: woundsFor; Chapter 12). */
+  wounds?: Readonly<Record<string, number>>;
 }
 
 /** What a gold skill costs this fighter (0 for SP skills). */
@@ -759,6 +788,17 @@ export class Battle {
       if (!c.active || !c.passives.some((x) => x.kind === 'opensFirst')) continue;
       const first = Math.min(...members.filter((m) => m.active && m !== c).map((m) => m.next));
       if (Number.isFinite(first) && c.next >= first) c.next = Math.max(0, first - 1);
+    }
+    // A Challenge's wounds (Chapter 12): the party opens at the HP the last Challenge left it with.
+    for (const c of members) {
+      const share = opts.wounds?.[c.key];
+      if (share !== undefined) c.hp = Math.max(1, Math.round(c.maxHp * Math.max(WOUND_FLOOR, Math.min(1, share))));
+    }
+    // The claimant strikes first (rules-decisions [42]): her opening time is the lowest on the whole field.
+    const claimant = def.opensFirst ? members.find((m) => m.key === def.opensFirst && m.active) : undefined;
+    if (claimant) {
+      const first = Math.min(...this.combatants.filter((x) => x !== claimant).map((x) => x.next));
+      if (Number.isFinite(first) && claimant.next >= first) claimant.next = Math.max(0, first - 1);
     }
   }
 
@@ -1823,6 +1863,14 @@ export function settleBattle(flags: FlagStore, rpg: RpgContent, battle: Battle):
     const asked = flags.get(volleysFlag(battle.def.id));
     const n = Math.max(0, Math.min(VOLLEY.cap, Math.floor(typeof asked === 'number' ? asked : 0)));
     if (n > 0) flags.set(spentFlag(battle.def.id), n);
+  }
+  // Chapter 12: a Challenge won heals the wounds it opened with; one that keeps its wounds writes them for the next.
+  if (battle.def.wounded) for (const name of Object.keys(flags.snapshot())) if (name.startsWith('wounds.')) flags.clear(name);
+  if (battle.def.keepsWounds) {
+    for (const c of battle.party ?? []) {
+      if (c.side !== 'party' || c.maxHp <= 0) continue;
+      flags.set(woundFlag(c.key), Math.max(WOUND_FLOOR, Math.round((c.hp / c.maxHp) * 100) / 100));
+    }
   }
   return { xp: xpWon, gold: won, spent, items: [...(r.items ?? [])] };
 }

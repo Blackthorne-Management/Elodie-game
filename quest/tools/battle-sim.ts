@@ -11,7 +11,7 @@
 
 import { ENEMIES, SKILL_BOOK, battleDef, battleReserve } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
-import { Battle, battleParty, type Action } from '../src/engine/battle.ts';
+import { Battle, battleParty, woundsFor, type Action } from '../src/engine/battle.ts';
 import type { FlagReader } from '../src/engine/flags.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from './sim-setup.ts';
@@ -48,8 +48,11 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
   const def = battleDef(id);
   if (!def) throw new Error(`No battle ${id}`);
   const enemies = def.enemies.map((e) => ENEMIES[e]!).map((e) => (def.level ? { ...e, level: def.level } : e));
-  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked.
-  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present'), enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES) });
+  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked; a
+  // Challenge after a Challenge opens with the wounds the first left (Chapter 12: woundsFor).
+  const members = battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present');
+  const wounds = woundsFor(flags, def, members.map((p) => p.id));
+  const b = new Battle(def, members, enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES), wounds });
   const party = new Set(b.party.map((c) => c.key));
   let falls = 0;
   const count = (events: readonly { kind: string; who?: string }[]) => {
