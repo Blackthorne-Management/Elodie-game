@@ -3,6 +3,7 @@
 // years ago, the night before the Sun Accord was signed: a revolutionary camp of tents and barricades.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
+import { BEFORE_NIGHT_TEXT, DAY_TEXT, DUSK_TEXT, MUSTER_HOUSES, NIGHT_TEXT, PLAZA } from '../../src/data/muster.ts';
 
 const OPENS_HOME = { if: 'story.elodie_left', closed: 'plaza_door_closed' };
 const OPENS_CITY = { if: 'story.warroom_echo', closed: 'plaza_door_closed' };
@@ -124,11 +125,14 @@ export function zetwalTown(): MapSource {
     npc('festival_kid', 19, 13, 'up'),
     npc('elder', 4, 11, 'right'),
     npc('ferryman', 9, 23, 'down'),
-    npc('pilgrim', 15, 14, 'up'),
+    // The pilgrim came for the festival; at the Muster the plaza is a camp (the Chapter 10 review's 3.6).
+    npc('pilgrim', 15, 14, 'up', { if: '!story.muster_begun' }),
     // Vendors: the charm stand and the market stand on the plaza, the forge by the harbor road.
     npc('charm_seller', 23, 12, 'right'),
     npc('grocer', 11, 13, 'right'),
-    npc('smith', 9, 19, 'left'),
+    npc('smith', 9, 19, 'left', { if: '!story.muster_begun' }),
+    // At the Muster the forge has Kingsmere's tier-24 pieces in too (a shop has no condition: a second stock).
+    npc('smith_muster', 9, 19, 'left', { if: 'story.muster_begun' }),
     // People of the memory.
     npc('echo_soldier', 14, 7, 'down', { era: 'echo' }),
     npc('echo_cook', 20, 13, 'left', { era: 'echo' }),
@@ -160,7 +164,7 @@ export function zetwalTown(): MapSource {
     obj('plaza_lantern_sw', 10, 15, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
     obj('plaza_lantern_se', 25, 15, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
     { layer: 'crowds', name: 'plaza_festival', x: 11, y: 6, w: 14, h: 9, props: { count: '18', looks: 'festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h', if: '!story.anissa_woke' } },
-    { layer: 'crowds', name: 'plaza_evening', x: 11, y: 6, w: 14, h: 9, props: { count: '6', looks: 'festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h', if: 'story.anissa_woke' } },
+    { layer: 'crowds', name: 'plaza_evening', x: 11, y: 6, w: 14, h: 9, props: { count: '6', looks: 'festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h', if: 'story.anissa_woke, !story.muster_begun' } },
     { layer: 'echo_zones', name: 'plaza_stone', x: 11, y: 9, w: 3, h: 2, props: { if: 'item.sun_locket', onEcho: 'plaza_echo_enter' } },
     {
       layer: 'echo_zones',
@@ -192,8 +196,79 @@ export function zetwalTown(): MapSource {
     obj('signing_stage', 17, 3, { dialogue: 'signing_stage_echo', era: 'echo' }),
 
     { layer: 'anchors', name: 'chain_bridge_pin', x: 29, y: 8, props: { object: 'pawl', flag: 'anchor.chain_bridge' } },
+    ...musterPlaza(),
   ];
   return { id: 'zetwal-town', present: g, echo: e, objects };
+}
+
+/**
+ * The Muster (Chapter 10; data/muster.ts places it): the plaza as a camp by day (each house's people, banner and crowd;
+ * Joaquin and the sergeant by the fountain; the Dorini table on the west lane; Jordyn's company with nobody near them),
+ * the companies drawn up in lines at dusk with old Patricio at the stage's foot, the fires banked at night (the
+ * captain's walk is a scene: data/dialogue/zetwalMuster.ts), and the Echo's morning of the signing.
+ */
+function musterPlaza(): ObjSpec[] {
+  const p = PLAZA;
+  const day = DAY_TEXT;
+  const camp = BEFORE_NIGHT_TEXT;
+  const out: ObjSpec[] = [
+    // The camp's scene plays on the first step onto the paving after the pier; the watch walks up on the first step onto
+    // it after the council (the second review's 3.17: onto the plaza, not the pier).
+    trigger('muster_camp', p.paving.x, p.paving.y, { dialogue: 'muster_camp', flag: 'story.plaza_camp_seen', once: true, if: 'story.pier_met' }, p.paving.w, p.paving.h),
+    trigger('muster_watch', p.paving.x, p.paving.y, { dialogue: 'muster_watch', flag: 'story.watch_landed', once: true, if: 'story.council_condition' }, p.paving.w, p.paving.h),
+    // Night: the first step on the paving after the inspection (the fires banked), the buyer's captain leaves his line.
+    trigger('muster_night', p.paving.x, p.paving.y, { dialogue: 'muster_night_walk', flag: 'story.betrayer_walked', once: true, if: NIGHT_TEXT }, p.paving.w, p.paving.h),
+    // Free Brasador by the fountain (Azzy's company; Joaquin carried it).
+    npc('joaquin_day', p.joaquin.x, p.joaquin.y, 'right', { npc: 'joaquin_muster', if: day }),
+    npc('fb_sergeant_day', p.sergeant.x, p.sergeant.y, 'left', { npc: 'fb_sergeant', if: day }),
+    // The Ironvow at the east gate: the quartermaster takes gifts of gold until the whistle; Salkhi has found grass.
+    npc('ironvow_camp', p.ironvowCamp.x, p.ironvowCamp.y, 'up', { if: camp }),
+    ...p.horses.map((h, i) => npc(`muster_horse_${i + 1}`, h.x, h.y, 'left', { npc: 'muster_horse', if: camp })),
+    npc('salkhi_town', p.salkhi.x, p.salkhi.y, 'right', { if: 'story.muster_begun, !act10.complete' }),
+    // The Suzumori under the stage's west end, the Agnivansh under its east end, fourteen tiles apart.
+    npc('suzumori_camp', p.suzumoriCamp.x, p.suzumoriCamp.y, 'down', { if: camp }),
+    obj('suzumori_pole', p.suzumoriPole.x, p.suzumoriPole.y, { kind: 'banner_lantern_pole', solid: true, era: 'present', if: camp }),
+    npc('agnivansh_camp', p.agnivanshCamp.x, p.agnivanshCamp.y, 'down', { if: camp }),
+    obj('agnivansh_lamp', p.agnivanshLamp.x, p.agnivanshLamp.y, { kind: 'brass_lamp_post', solid: true, era: 'present', if: camp }),
+    // The Dorini on the west lane: the table, the admiral (the day), the marines.
+    obj('dorini_table', p.doriniTable.x, p.doriniTable.y, { kind: 'dorini_table', solid: true, era: 'present', if: camp }),
+    npc('admiral_day', p.admiral.x, p.admiral.y, 'down', { npc: 'dorini_admiral', if: day }),
+    obj('fb_banner', 15, 11, { kind: 'banner_free_brasador', solid: true, era: 'present', if: camp }),
+    obj('ironvow_banner', 33, 18, { kind: 'banner_horsetail', solid: true, era: 'present', if: camp }),
+    // Jordyn's company at the plaza's south-east edge, by themselves.
+    npc('jordyn_day', p.jordyn.x, p.jordyn.y, 'left', { npc: 'jordyn_muster', if: `story.watch_landed, ${day}` }),
+    ...p.watch.map((w, i) => npc(`watch_day_${i + 1}`, w.x, w.y, 'left', { npc: 'watch_muster', if: `story.watch_landed, ${day}` })),
+    npc('printer_day', p.printer.x, p.printer.y, 'left', { npc: 'printer_muster', if: `story.watch_landed, ${day}` }),
+    obj('violet_banner', 26, 14, { kind: 'banner_violet', solid: true, era: 'present', if: `story.watch_landed, ${camp}` }),
+    // Old Patricio at the Marshal's stone from the blessing until the vote (the outline's beat 5, the review's 3.3).
+    npc('patricio_stone', p.patricioStone.x, p.patricioStone.y, 'right', { npc: 'patricio_muster', if: `story.blessing, ${day}` }),
+    // The camps (pictures that stroll inside their camp), until the lines are drawn up.
+    { layer: 'crowds', name: 'camp_free_brasador', x: 14, y: 12, w: 6, h: 2, props: { count: '4', looks: 'free_brasador', if: day } },
+    { layer: 'crowds', name: 'camp_dorini', x: 2, y: 11, w: 5, h: 2, props: { count: '3', looks: 'dorini_marine', if: day } },
+    { layer: 'crowds', name: 'camp_ironvow', x: 28, y: 21, w: 6, h: 2, props: { count: '3', looks: 'horn_rider', if: day } },
+    { layer: 'crowds', name: 'camp_suzumori', x: 9, y: 5, w: 4, h: 1, props: { count: '2', looks: 'gate_guard_kq', if: day } },
+    { layer: 'crowds', name: 'camp_agnivansh', x: 24, y: 5, w: 2, h: 1, props: { count: '1', looks: 'flame_keeper', if: day } },
+    // Dusk: the companies in lines across the paving, old Patricio at the stage's foot with the whistle.
+    npc('patricio_dusk', p.stageFoot.x, p.stageFoot.y, 'down', { npc: 'patricio_muster', if: DUSK_TEXT }),
+    ...Object.entries(p.lines).flatMap(([house, tiles]) =>
+      tiles.map((t, i) => npc(`line_${house}_${i + 1}`, t.x, t.y, 'up', { npc: `line_${house}`, if: DUSK_TEXT })),
+    ),
+    ...MUSTER_HOUSES.map((h) => npc(`captain_dusk_${h.house}`, p.captains[h.house]!.x, p.captains[h.house]!.y, 'up', { npc: `${h.captain}_line`, if: DUSK_TEXT })),
+    npc('jordyn_dusk', p.jordynLine.x, p.jordynLine.y, 'up', { npc: 'jordyn_muster', if: DUSK_TEXT }),
+    npc('joaquin_dusk', p.joaquinLine.x, p.joaquinLine.y, 'up', { npc: 'joaquin_muster', if: DUSK_TEXT }),
+    npc('rahel_dusk', p.rahelDusk.x, p.rahelDusk.y, 'left', { npc: 'rahel', if: DUSK_TEXT }),
+    npc('patricia_dusk', p.patriciaDusk.x, p.patriciaDusk.y, 'left', { npc: 'patricia', if: DUSK_TEXT }),
+    // The Echo's morning of the signing (Chapter 10's scene on the built plaza_stone zone): two armies among the tents,
+    // young Benny and Caona at the stage's foot, the Crown's envoy coming up the harbor road (the second review's 3.7:
+    // Echo people are placed, crowds are the present's only).
+    npc('benny_signing', 16, 5, 'down', { npc: 'benny_signing', era: 'echo', if: 'story.muster_begun' }),
+    npc('caona_signing', 19, 5, 'down', { npc: 'caona_signing', era: 'echo', if: 'story.muster_begun' }),
+    ...[[13, 11], [14, 11], [15, 12], [20, 12], [21, 11], [22, 11]].map(([x, y], i) =>
+      npc(`echo_army_${i + 1}`, x!, y!, 'up', { npc: i < 3 ? 'echo_army_zetwal' : 'echo_army_brasador', era: 'echo', if: 'story.muster_begun' }),
+    ),
+  ];
+  // The dawn: nobody on the plaza but the city's own (the companies are at the harbor).
+  return out;
 }
 
 function npc(name: string, x: number, y: number, facing: string, props: Record<string, string> = {}): ObjSpec {

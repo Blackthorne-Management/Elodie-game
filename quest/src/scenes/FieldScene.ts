@@ -63,6 +63,7 @@ import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts
 import { RPG } from '../data/rpg.ts';
 import { addSharedXp, cityOf, level, partyMembers, pillarFlag } from '../engine/rpg.ts';
 import { settleDebates } from '../engine/debate.ts';
+import { musterJournal } from '../engine/ally.ts';
 import { DEBATES } from '../data/debates.ts';
 import { closedNotes, rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
@@ -2036,6 +2037,12 @@ export class FieldScene extends Phaser.Scene {
         lines.push({ text: 'Notes:', color: UI.accentText, gap: 4 });
         for (const n of notes) lines.push({ text: `${n.title}: ${n.text}`, color: UI.dimText });
       }
+      // The Muster (Chapter 10, the second review's 3.5): each house's price and what the Muster counts as paid, from
+      // the landing on, and the soldiers once they are pledged. Least paid, first bought.
+      if (flags.isSet('story.muster_begun')) {
+        lines.push({ text: 'The Muster (least paid, first bought):', color: UI.accentText, gap: 4 });
+        for (const l of musterJournal(flags, RPG)) lines.push({ text: `  ${l}`, color: UI.dimText });
+      }
     }
     return lines;
   }
@@ -2444,7 +2451,12 @@ export class FieldScene extends Phaser.Scene {
     // lie (a short, fainter gold the player sees and Gianna, looking at the sand, does not).
     else if (fx === 'token') cam.flash(1400, 255, 214, 110);
     else if (fx === 'signet') cam.flash(500, 214, 170, 70);
-    else if (fx === 'fade') {
+    // Chapter 10: the Marshal's whistle, and the harbor chain's capstan heard from the Hall (a sound and a small shake).
+    else if (fx === 'whistle') audio.sfx('whistle');
+    else if (fx === 'ratchet') {
+      audio.sfx('ratchet');
+      cam.shake(400, 0.004);
+    } else if (fx === 'fade') {
       cam.fadeOut(250, 0, 0, 0);
       cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => cam.fadeIn(450, 0, 0, 0));
     }

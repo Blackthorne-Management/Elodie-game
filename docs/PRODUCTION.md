@@ -10,7 +10,7 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Wed Oct 22**.
+and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 10).
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -105,6 +105,21 @@ steps pay 70 XP; the route ends at 24, the line without side quests at 22; the d
 of 8). Chapter 9 settles two of the Dec 1 questions as Claude's calls, still the owner's to overrule: the Aldermoor
 ledger (coded accounts on the Ash Road; Haru needs the key) and Patricio in Aldermoor (under a flag of truce, in
 the archive while the war council sits). Not built yet: Al-1, Al-4 (the Clock That Waits), Al-5, Calm and Comfort.
+
+**Quest, Chapter 10 (Oct 22):** The Muster is built on branch `chapter10` (from `chapter9`; the ten Zetwal maps on
+conditions and the new mill cellar: the long pier and Joaquin handing Free Brasador to Azzy, the seven camps with each
+house's share in the Journal, the Speaker's gate and the three feuds, Jordyn's watch with Rahel and Patricia, the
+kitchen and the four accounts, the blessing at the lamp, Patricio's stone, Z-6 with the crew and the powder cellar,
+Z-3 with Ti Jak, the vote and the chain, the whistle at dusk with Anissa's line, the night under the point (exposed and
+turned, or sailed), the signal fire, the tide). Ahead of its **Nov 8 to 10** slot (on its branch, not merged). Waiting
+on the owner: a human read of every Rahel, Patricia, Jordyn, Joaquin and Anissa line (reviewer prompt
+`docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter10-build.md`); the captains named by role (the Suzumori
+retainer, the Agnivansh steward, the Dorini admiral) and Ti Jak's mother's name (Odile); Rahel's and Patricia's ages and
+looks (`docs/quest/ART-PROMPTS.md` 19). Still open (Dec 1 list): question 13, what old Patricio knows (staged so either
+answer fits). Noted: Chapter 10's steps pay 40 XP; the route ends at 25, the line without side quests at 23; on the
+headless route the Dorini are the least paid and sail. **Bug found (pre-existing, not fixed):** the bookshelf id
+`hall_records` is used twice (Zetwal's Hall and the Seat's), so the books `lore.zetwal_quiet_tract` and `lore.zetwal_harbor_tolls` can never be
+read in Pòdlimyè. Not built yet: the Quill bonus at the stone, the board's dispatches, the second look at the two books.
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

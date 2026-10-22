@@ -401,4 +401,35 @@ export const PUZZLES: readonly PuzzleDef[] = [
     flags: { ...KINGSMERE_ASSIZE },
     goal: { flag: 'story.record_read' },
   },
+  // M-ZET-2, the powder cellar (the Chapter 10 outline 8.1 with its second review's 3.12; difficulty 2): under the mill,
+  // the smugglers' second cache behind an inner door that hangs open. Fifty years ago the room was the Revolution's
+  // powder store, and the powder-master said: bar it and pin it when you go. Drop the bar in the memory, and the cache is
+  // shut in, the bar rusted fast into its brackets.
+  {
+    id: 'zetwal_mill',
+    title: 'The powder cellar under the mill: bar it and pin it, fifty years ago (M-ZET-2, Z-6)',
+    map: 'zetwal-mill',
+    spawn: 'mill_stair',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'story.yari_asked': true,
+      'party.azzy': true,
+      'party.samira': true,
+      'party.bayarmaa': true,
+      'party.haru': true,
+      'party.vikram': true,
+      'party.edmund': true,
+      'act9.complete': true,
+      'card.act9_end': true,
+      'story.muster_begun': true,
+      'story.pier_met': true,
+      'story.council_condition': true,
+      'side.muskets.accepted': true,
+      'encounter.muster_story.crew.won': true,
+      'choice.crew_spared': true,
+      'item.smugglers_ledger': true,
+    },
+    goal: { all: [{ flag: 'anchor.mill_bar' }, { flag: 'side.muskets.done' }] },
+  },
 ];

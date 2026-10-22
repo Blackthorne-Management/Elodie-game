@@ -161,4 +161,27 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 10's end into Chapter 11 (the outline beat 9): the fleet out of Pòdlimyè at dawn, the built way round Ardencia
+  // and down the strait to Yucayeque, with the war's captions (a second voyage on the same path: the built one has Yari
+  // paddling out).
+  zetwal_xaragua_war: {
+    id: 'zetwal_xaragua_war',
+    harbor: 'Pòdlimyè, at dawn, the fleet',
+    paddle: 'The chain is down. The trader takes the envoy\'s household out at the head of the fleet.',
+    aboard: 'Seven houses\' sails behind them, and Salkhi on the Ironvow longship, complaining.',
+    shore: 'zetwal',
+    start: { x: 119, y: 37 },
+    via: [
+      { x: 121, y: 9 },
+      { x: 62, y: 9 },
+      { x: 47, y: 14 },
+    ],
+    end: { x: 46, y: 32 },
+    captions: [
+      { at: 0, text: 'Out past the reefs, with every shore that spoke for us...' },
+      { at: 0.25, text: 'North, round the cliffs where the shots went wide...' },
+      { at: 0.7, text: '...and down the strait, to the harbor the seventh clause took.' },
+    ],
+    music: 'farewell',
+  },
 };

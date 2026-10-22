@@ -338,6 +338,10 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ר: { ground: 'chapel_floor', solid: false },
   ש: { ground: 'al_wetflag', deco: 'al_stall', solid: true },
   ת: { ground: 'archive_floor', deco: 'al_shelf', solid: true },
+  // Pòdlimyè at the Muster (Chapter 10, Oct 22): the sugar mill's cellar, and fifty years ago the powder store.
+  Ω: { ground: 'cellar_wall', solid: true },
+  Σ: { ground: 'cellar_floor', solid: false },
+  Ψ: { ground: 'cellar_floor_old', solid: false },
 };
 
 export class Grid {
@@ -577,7 +581,7 @@ export function addClosedDoors(src: MapSource): void {
 
 const DIR_STEP: Readonly<Record<string, readonly [number, number]>> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 /** What a door can widen into: walls, borders and solid ground beside it (never a grey door or water). */
-const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ', 'გ', 'ე', 'ო', 'ზ', 'い', 'か', 'こ', 'そ', 'ख', 'फ', 'ढ', 'ב']);
+const WIDEN_INTO = new Set(['#', '%', '!', 'T', 'Y', 'B', '0', '1', 'Q', 'é', 'í', 'č', 'ď', 'ě', 'ľ', 'ū', 'ǔ', 'ε', 'β', 'Б', 'П', 'բ', 'ճ', 'გ', 'ე', 'ო', 'ზ', 'い', 'か', 'こ', 'そ', 'ख', 'फ', 'ढ', 'ב', 'Ω']);
 /** What the tile in front of the new half may be cleared from (a tree or bush on a border path). */
 const CLEARABLE = new Set(['T', 'Y', 'B', 'í', 'č', 'ď', 'ě']);
 

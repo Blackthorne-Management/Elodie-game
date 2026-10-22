@@ -8,6 +8,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj } from './zetwal-town.ts';
+import { HALL } from '../../src/data/muster.ts';
 
 export function zetwalHall(): MapSource {
   const W = 40;
@@ -117,7 +118,9 @@ export function zetwalHall(): MapSource {
     npc('crown_consul', 9, 19, 'up', { if: '!story.anissa_woke' }),
     npc('crown_consul_gallery', 24, 6, 'right', { npc: 'crown_consul', if: 'story.anissa_woke, !story.envoy_papers' }),
     // East.
-    npc('chancellor', 32, 5, 'down'),
+    // In her office; at the Muster she sits in the Council Chamber beside the Speaker (Chapter 10).
+    npc('chancellor', 32, 5, 'down', { if: '!story.muster_begun' }),
+    npc('chancellor_chamber', HALL.chancellor.x, HALL.chancellor.y, 'down', { npc: 'chancellor', if: 'story.muster_begun' }),
     npc('seal_keeper', 32, 12, 'down'),
     npc('chief_courier', 30, 18, 'down'),
     npc('treasurer', 34, 26, 'up'),

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 19,
+  "nextobjectid": 23,
   "layers": [
     {
       "id": 1,
@@ -580,6 +580,90 @@
               "value": "market_shopper"
             }
           ]
+        },
+        {
+          "id": 14,
+          "name": "debate_dorini_clerk",
+          "type": "npc",
+          "x": 256,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "debate_dorini_clerk"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "debate_hrafn",
+          "type": "npc",
+          "x": 304,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "debate_hrafn"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "market_horse",
+          "type": "npc",
+          "x": 320,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "muster_horse"
+            }
+          ]
         }
       ]
     },
@@ -594,7 +678,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 14,
+          "id": 17,
           "name": "market_heights",
           "type": "door",
           "x": 384,
@@ -622,7 +706,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 18,
           "name": "market_harbor",
           "type": "door",
           "x": 288,
@@ -650,7 +734,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 19,
           "name": "market_plaza",
           "type": "door",
           "x": 560,
@@ -701,7 +785,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 17,
+          "id": 20,
           "name": "market",
           "type": "spawn",
           "x": 544,
@@ -758,7 +842,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 18,
+          "id": 21,
           "name": "iron_market_hall",
           "type": "puzzle_object",
           "x": 208,
@@ -784,6 +868,39 @@
               "value": "iron_market_hall"
             }
           ]
+        },
+        {
+          "id": 22,
+          "name": "convoy_crates",
+          "type": "puzzle_object",
+          "x": 240,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "convoy_crates"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     }
@@ -794,10 +911,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 752,
+      "imageheight": 816,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 374,
+      "tilecount": 406,
       "columns": 8,
       "margin": 0,
       "spacing": 0

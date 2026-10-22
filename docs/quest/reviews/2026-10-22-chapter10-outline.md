@@ -1274,3 +1274,130 @@ no new language).
   so either answer fits, and the question stays on the Dec 1 list.
 - **Owner decision (Oct 22): both.** Where Anissa speaks at the Muster: the
   owner chose both her name to Patricia at the lamp and one public sentence at the dusk inspection.
+
+## Built (Oct 22): what changed from this outline, and Claude's calls
+
+Built on branch `chapter10` (from `chapter9` at `42cac43`), with every fix in the second review
+(`2026-10-22-chapter10-outline-review.md`) and the decisions above applied. Code: `quest/src/engine/ally.ts` (the ledger
+and the Muster, unit tested in `tests/ally.test.ts`), `ALLY_PRICES`, `MUSTER` and `ARMY_VOLLEY_PER` in
+`quest/src/config.ts`, the after-dialogue hook (`GameContent.afterDialogue`, run by `engine/game.ts`), the Journal's
+Muster lines (`scenes/FieldScene.ts`); `quest/src/data/muster.ts` (the places every stage direction reads, the houses'
+table and the conditions `DAY`, `DUSK`, `NIGHT`, `DAWN`, `SEATED`); `quest/src/data/dialogue/zetwalMuster.ts` (the
+chapter's scenes, and ~60 overlays that give the built people of Pòdlimyè a Chapter 10 node); the new map
+`quest/tools/maps/zetwal-mill.ts` and Chapter 10 layers on the ten built Zetwal maps; `ACT10` in `quest/src/data/quests.ts`;
+the Chapter 10 entries in `battles.ts`, `encounters.ts`, `sideQuests.ts`, `debates.ts`, `rpg.ts`, `npcs.ts`,
+`speakers.ts`, `objects.ts`, `cards.ts`, `voyages.ts`, `puzzles.ts`, `assets.config.ts`, `audio.config.ts`. Tests:
+`quest/tests/muster.test.ts`, `ally.test.ts`, and the Chapter 10 parts of `act.test.ts`, `goldWalk.test.ts`,
+`levelCurve.test.ts`, `gameOver.test.ts`, `closedDoors.test.ts`, `content.test.ts`; puzzle `zetwal_mill`. Commits: engine
+`1fb19e8`, content `0bad380`, route and tests `aafccfb`, then these docs.
+
+**The review's fixes, as built:**
+- **Free Brasador follows Azzy (3.1).** Joaquin brings the company up the long pier ("Your company, captain. I only
+  carried it."); at the whistle it is Azzy who calls it to order ("¡Firmes!") and Joaquin stands beside his nephew in
+  the line. Its price is the realm's Fear (6), its army 30.
+- **The family lines (3.2).** Rahel: "I have five children"; Benny's peppers ("They were my peppers. Benny only carried
+  them."), not a husband's; Azzy's name is a soldier's (Azriel Rivera); no braid. Rahel's one line about her son is "My
+  son does not explain himself. He never did. I stopped asking him to when he was nine." and, to "He sold Xaraguá.",
+  only "So they say." No line gives a Rael clue. A test holds Rahel and Patricia to the locked rule's word list.
+- **Open question 13 stays open (3.3).** Old Patricio is not at the blessing (the lamp is Patricia's, Rahel's and the
+  three children's); the kitchen is two old women who knew each other in the Accord's camp, and "Nothing else is said
+  about the year of the Accord." His own scene (the stone) is about the seventh clause and the blank line, which fits
+  either answer. A test keeps him off the blessing's nodes and the word "grandmothers" out of the kitchen.
+- **Levels (3.4).** Planned from Chapter 9's measured end, 24 (8,028). Chapter 10's steps pay **40**
+  (`XP_PER_OBJECTIVE_BY_CHAPTER[9]`; the seated city and the tide pay nothing); the crew 50 XP and 150 gold; Z-6 pays
+  400 gold and 10 XP; Z-3 60 gold and +1 Influence, no XP (its XP moved into the story). Measured below.
+- **The ally ledger (3.5).** Each house's share is in the Journal from the landing on ("The Dorini marines: 8 of
+  Influence 10."; soldiers once pledged). The city's pillar in the price's currency counts in full, the other two at
+  half; lore books count at most 3; a mediated feud pays 2 toward its Influence house (merchants to Al-Doria, temple to
+  Kuroshi); the two Wealth houses (Ironvow, Agnivansh) take gold at their camps, 100 a point, 5 at most, until the
+  whistle. **Al-Doria's price can be paid** (Influence 10: its pillar, its books, the merchants' mediation). The buyer
+  is the least share of the four road houses, ties Dorini, Ironvow, Agnivansh, Suzumori. Free Brasador and the
+  dissidents are never the buyer.
+- **Placements (3.6).** Every person standing on a Zetwal map during the Muster has a Chapter 10 line (their own
+  scene, an overlay node `m_enter`, or a node that reads `story.muster_begun`) or a condition that takes them off it.
+  Off: the veiled woman (the Hushed, beaten), old Patricio at the lamp (he is on the plaza), the pier's old pair (the
+  escape's), the pilgrim, the festival's evening crowd; the smith is replaced by `smith_muster`. A test walks every map.
+- **Engine pieces (3.7).** The ledger, the after-dialogue hook and the Journal's lines are the only engine changes.
+- **The night on the harbor map (3.8, 3.9, 3.10).** At dusk the buyer's captain is drawn leaving his fire and walking
+  down the lane (`muster_night_walk`); the party follows to the quay under the point: the consul with the strongbox
+  outside the raised chain, the launch with its lights out, the captain taking the purse. His satchel lies open with the
+  Quiet Crown's closed hand on the flap, the mark beside one name on Kayla's list (he is *shown* to be theirs, never
+  called it). **Exposed** (share at least 60% and both the buyer's list and the smugglers' ledger in hand): Gianna lays
+  the list and the ledger on the stones, the house's own second comes down the road, the house's companion defies him a
+  second time, and Jordyn walks up with two of the watch and arrests him ("Captain of nothing."); the house turns, its
+  army at three quarters. **Sailed:** he steps into the launch, and his company walks down from the plaza past the party
+  to its ship and follows. Either way Anissa's line ("He walked like the lady with the basket, Gigi.") is in its own
+  node, then the signal fire on the Heights. The captain also stands on the quay after a reload at night.
+- **Dusk, night, dawn (3.11).** `DAY`, `DUSK`, `NIGHT` and `DAWN` are built from `story.council_voted`,
+  `story.inspection_done` and `story.betrayal_seen`, and exactly one holds at a time (tested). `story.fleet_sailed` is
+  set by the tide, with `act10.complete`.
+- **M-ZET-2 (3.12).** The bar is on the *inside* of the powder store's inner door: in the memory the powder-master says
+  "Bar it and pin it when you go"; Patricio drops the bar and the pin is hammered flat (the anchor); back in the
+  present the inner door is shut with fifty years of rust, crowbar marks all over it, and the cache is the levy's at
+  dawn. The outer cellar door is chained from the inside (nobody has had a reason to open it). Difficulty 2.
+- **The crew (3.13).** Measured with the built active order and tier-24 gear (below). The chief is level 25, HP x3, ATK
+  x1.3, a boss; his smuggler and lookout stand in front of him (`protects`); a lookout whistles a bandit in once. He
+  withdraws (nobody dies) and walks up the Cane Road between the cutters.
+- **Anicette (3.14).** The four accounts are laid on the kitchen table only when the player has read all three others;
+  no quiz: "Four hundred dead at the ford, says the Crown's. Forty, say the other three."
+- **Numbers and lines (3.15, 3.16, 3.17).** Z-3 is rewritten around an absence (Ti Jak alone at the mill's cold hearth;
+  the veiled woman is gone): Compassion (his mother Odile's name, from Mother Solange's list), Reason (the purge list:
+  her debt went with her) and Scripture ("Not yet."); Anissa sits down beside him. Jordyn's watch walks up onto the plaza
+  (the merge in 3.17) rather than landing on a second pier.
+
+**Claude's calls (beyond the review):**
+- **The ledger's numbers** (`MUSTER` in `config.ts`): book cap 3, other pillars at half, mediation +2, exposed at 60%,
+  overpaying adds a tenth of the army a point, a house that argued a feud without its mediation brings nine tenths, a
+  turned house three quarters, the city's levy 60, gifts 100 gold a point (5 at most). Concord: the four accounts +3,
+  the lonely cutter +3, once each.
+- **Captains named by role** (the Suzumori retainer, the Agnivansh steward, the Dorini admiral); Hrafn keeps his
+  Chapter 6 name.
+- **The chain is heard at the vote** (a ratchet sound and the boom chain across the harbor mouth on the map).
+- **The night's route is chosen by the shares**: on the scripted route (which, headless, does not settle debate and side
+  quest rewards) the Dorini are the least paid and the captain sails; on the played line (rewards settled) the buyer is
+  exposed and turned. Both are tested in all four houses.
+- **Ti Jak's Reason needs the purge list** (Chapter 9's Al-3), because the book *A Quiet Crown Tract* can never be read:
+  the shelf id `hall_records` is used twice (Zetwal's Hall and the Seat's), the Seat's wins, and
+  `lore.zetwal_quiet_tract` and `lore.zetwal_harbor_tolls` are unreachable. **Pre-existing bug, not fixed here** (fixing
+  it changes Chapter 1's books and pillars).
+- **The forge has no new staff or bow** (the weapons rule: three designs a rarity); the new piece is the robe `muster_robe` (tier
+  24); the smith on the plaza is placed only during the Muster (`smith_muster`) and sells tier-24 stock, while the old
+  smith and his stock are off the map.
+- **Anissa's two lines** as the owner chose: "Anissa. I hold the door." to Patricia at the lamp, and "Anissa. I hold the
+  door. Hold yours." from the fountain's rim at dusk; nobody laughs, and the lines put their fists to their chests.
+- **The signal fire** is lit by the keeper on the Heights at Patricio's asking, and burns as the night ends (the
+  Heights have a cold and a lit fire on conditions).
+
+**Measured (Oct 22):**
+
+| Line | Level (XP) |
+|---|---|
+| Route end | 25 (8,533) |
+| No side quests | 23 (7,033) |
+| Played median (ambushes on 77 wild steps, 0.9 on average) | 25 (8,607) |
+| Played p90 / wanderer p90 | 26 / 26 |
+
+The crew (`mangrove_crew`, 30 seeds, tier-24 gear: `muster_robe`, `oilcloth_coat` or `scale_armour`, and the warriors'
+`kingsmere_blade_of_force`; falls counted across the whole party):
+
+| Party level | Fair bot (skills) | Plain bot (rushes the chief) |
+|---|---|---|
+| 23 | 30/30, 22.2 actions, 0.60 falls | 12/30, 36.3 actions, 6.90 falls |
+| 24 | 30/30, 19.0 actions, 0.13 falls | 24/30, 37.2 actions, 5.33 falls |
+| 25 | 30/30, 17.9 actions, 0.10 falls | 30/30, 37.8 actions, 4.43 falls |
+
+The Cane Road's return (`cane_road_muster`, at 24, 20 seeds): bandits 6.5 actions, smugglers 12.4, hushers 7.3, crabs
+10.7; every group won, no falls. Every fight has a Game Over return (`tests/gameOver.test.ts`).
+
+The gold arrow, on from the end of Chapter 9: **921 steps and 25 map changes**, no stall, every objective in order; the
+night is 95 steps either way (the second walk forces the other route).
+
+**What Chapter 11 is handed** (`?chapter=11`, the Canoe Beach below Yucayeque): `army.<house>` for the six allies and
+`army.zetwal`; `muster.betrayer` and `muster.betrayer.<house>`; `muster.turned` or `muster.betrayed` (with
+`muster.gone.<house>`); `story.fleet_sailed`, `story.betrayal_seen`, `item.marshal_whistle`, `item.smugglers_ledger`. On
+the scripted route: the Dorini sailed; Ironvow 47, Agnivansh 32, Suzumori 14, Free Brasador 9, the dissidents 3, the
+levy 60 (the headless low line; a played game pays more).
+
+**Not built:** the Quill bonus at the stone; the board's dispatches; the count job (built, not on the route); the second
+look at the two books in the kitchen; the Hall's cell line after the arrest (Jordyn's "There's a Hall up the hill with a
+cell in it" is all); the feuds' join multiplier applies, but no scene shows a house that argued bringing fewer.

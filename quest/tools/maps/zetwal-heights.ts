@@ -5,6 +5,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj } from './zetwal-town.ts';
+import { DAY_TEXT } from '../../src/data/muster.ts';
 
 export function zetwalHeights(): MapSource {
   const W = 30;
@@ -60,6 +61,12 @@ export function zetwalHeights(): MapSource {
     obj('lookout', 22, 17, { dialogue: 'lookout_view', era: 'present' }, 3, 1),
     obj('heights_well', 24, 10, { dialogue: 'heights_well', era: 'present' }),
     obj('lookout_sign', 26, 15, { dialogue: 'lookout_sign', era: 'present' }),
+    // The Muster (Chapter 10): the Ironvow drinking the Heights dry by day; the old signal fire, cold, and lit as the
+    // night of the Muster ends ("Nobody has asked me to light it. Yet.").
+    npc('heights_rider_1', 23, 10, 'right', { npc: 'heights_rider', if: DAY_TEXT }),
+    npc('heights_rider_2', 25, 11, 'up', { npc: 'heights_rider', if: DAY_TEXT }),
+    obj('signal_fire_cold', 20, 15, { kind: 'signal_fire_cold', solid: true, era: 'present', dialogue: 'signal_fire', if: 'story.muster_begun, !story.betrayal_seen' }),
+    obj('signal_fire', 20, 15, { kind: 'signal_fire', solid: true, era: 'present', dialogue: 'signal_fire', if: 'story.betrayal_seen' }),
   ];
   return { id: 'zetwal-heights', present: g, echo: e, objects };
 }

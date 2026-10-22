@@ -4,7 +4,7 @@ import type { RhythmDef } from './rhythm.ts';
 import type { RotorDef } from './rotor.ts';
 import type { DebateContext, DebateDef } from './debate.ts';
 import type { DialogueScript, Speaker } from './dialogue.ts';
-import type { FlagReader } from './flags.ts';
+import type { FlagReader, FlagStore } from './flags.ts';
 
 export interface NpcDef {
   id: string;
@@ -99,6 +99,11 @@ export interface GameContent {
   rotors?: Readonly<Record<string, RotorDef>>;
   /** Influence in a debate's city now, and what Mediate needs (the RPG content knows the pillars). */
   debateContext?: (flags: FlagReader, def: DebateDef) => DebateContext;
+  /**
+   * Bookkeeping after every conversation, before its fight, card or journey (Chapter 10: the Muster writes the allies'
+   * shares and, when a scene asks, names the Crown's buyer; engine/ally.ts musterTick).
+   */
+  afterDialogue?: (flags: FlagStore) => void;
 }
 
 export function cardFlag(card: CardDef): string {

@@ -81,4 +81,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 9 complete',
     lines: ["The Regent's Keep", 'Next: Chapter 10, The Muster', 'Zetwal, where the realm must gather before the fleet...'],
   },
+  // The end of Chapter 10: the fleet sails for Xaraguá (Chapter 11's landing).
+  {
+    id: 'act10_end',
+    when: 'act10.complete',
+    title: 'Chapter 10 complete',
+    lines: ['The Muster', 'Next: Chapter 11, The War of the Harbor', 'Xaraguá, where the seventh clause took the harbor...'],
+  },
 ];

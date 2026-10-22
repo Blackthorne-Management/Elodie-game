@@ -3,6 +3,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { DAY_TEXT, TEMPLE } from '../../src/data/muster.ts';
 
 export function zetwalTemple(): MapSource {
   const g = new Grid(30, 20, '.');
@@ -26,7 +27,9 @@ export function zetwalTemple(): MapSource {
   e.set(11, 2, ';');
 
   const objects: ObjSpec[] = [
-    npc('patricio_old', 13, 3, 'right'),
+    // At the lamp for Chapters 1 to 9; at the Muster he is on the pier, at the stone and at the stage (the Chapter 10
+    // review's 3.6), and Patricia stands here.
+    npc('patricio_old', 13, 3, 'right', { if: '!story.muster_begun' }),
     npc('acolyte', 17, 5, 'left'),
     npc('temple_porter', 16, 8, 'down'),
     npc('mourner', 19, 3, 'down'),
@@ -56,6 +59,15 @@ export function zetwalTemple(): MapSource {
     obj('island_lantern_east', 18, 8, { kind: 'lantern_glow', era: 'present', if: 'story.lamp_lit|story.anissa_woke' }),
     obj('lamp_echo', 14, 3, { dialogue: 'lamp_echo', era: 'echo', kind: 'gaze_lamp' }, 2, 1),
     obj('name_stones', 6, 4, { dialogue: 'name_stones', era: 'present' }, 2, 1),
+    // The Muster (Chapter 10): Patricia at the Gaze lamp, where Anissa woke, with Rahel beside her (the review's 3.3:
+    // old Patricio is not at the blessing); the second feud by the lamp, the Suzumori retainer and the Agnivansh steward;
+    // once it is seated, the crane and the brass lamp side by side on the lamp's step.
+    npc('patricia_lamp', TEMPLE.patricia.x, TEMPLE.patricia.y, 'right', { npc: 'patricia', if: `story.rahel_met, ${DAY_TEXT}` }),
+    npc('rahel_lamp', TEMPLE.rahel.x, TEMPLE.rahel.y, 'up', { npc: 'rahel', if: `story.rahel_met, ${DAY_TEXT}` }),
+    npc('debate_retainer', TEMPLE.retainer.x, TEMPLE.retainer.y, 'left', { if: DAY_TEXT }),
+    npc('debate_steward', TEMPLE.steward.x, TEMPLE.steward.y, 'left', { if: DAY_TEXT }),
+    obj('crane_on_step', TEMPLE.crane.x, TEMPLE.crane.y, { kind: 'crane_on_step', era: 'present', if: 'debate.zetwal_feud_temple.mediated' }),
+    obj('lamp_on_step', TEMPLE.brassLamp.x, TEMPLE.brassLamp.y, { kind: 'lamp_on_step', era: 'present', if: 'debate.zetwal_feud_temple.mediated' }),
   ];
   return { id: 'zetwal-temple', present: g, echo: e, objects };
 }

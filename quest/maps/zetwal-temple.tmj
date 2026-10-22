@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 23,
+  "nextobjectid": 29,
   "layers": [
     {
       "id": 1,
@@ -271,6 +271,11 @@
               "value": "right"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.muster_begun"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "patricio_old"
@@ -452,6 +457,118 @@
               "value": "echo_lampwright"
             }
           ]
+        },
+        {
+          "id": 9,
+          "name": "patricia_lamp",
+          "type": "npc",
+          "x": 208,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rahel_met, story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "patricia"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "rahel_lamp",
+          "type": "npc",
+          "x": 192,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.rahel_met, story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rahel"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "debate_retainer",
+          "type": "npc",
+          "x": 272,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "debate_retainer"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "debate_steward",
+          "type": "npc",
+          "x": 288,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.muster_begun, !story.council_voted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "debate_steward"
+            }
+          ]
         }
       ]
     },
@@ -466,7 +583,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 9,
+          "id": 13,
           "name": "temple_bridge",
           "type": "door",
           "x": 16,
@@ -494,7 +611,7 @@
           ]
         },
         {
-          "id": 10,
+          "id": 14,
           "name": "temple_archive",
           "type": "door",
           "x": 160,
@@ -534,7 +651,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 11,
+          "id": 15,
           "name": "yari_lands",
           "type": "trigger",
           "x": 224,
@@ -567,7 +684,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 16,
           "name": "temple_arrive",
           "type": "trigger",
           "x": 32,
@@ -612,7 +729,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 17,
           "name": "temple_start",
           "type": "spawn",
           "x": 48,
@@ -647,7 +764,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 14,
+          "id": 18,
           "name": "temple_grove",
           "type": "echo_zone",
           "x": 80,
@@ -693,7 +810,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 15,
+          "id": 19,
           "name": "yari_canoe",
           "type": "puzzle_object",
           "x": 256,
@@ -721,7 +838,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 20,
           "name": "gaze_lamp",
           "type": "puzzle_object",
           "x": 224,
@@ -749,7 +866,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 21,
           "name": "gaze_lamp_lit",
           "type": "puzzle_object",
           "x": 224,
@@ -777,7 +894,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 22,
           "name": "island_lantern_west",
           "type": "puzzle_object",
           "x": 192,
@@ -805,7 +922,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 23,
           "name": "island_lantern_east",
           "type": "puzzle_object",
           "x": 288,
@@ -833,7 +950,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 24,
           "name": "lamp_echo",
           "type": "puzzle_object",
           "x": 224,
@@ -861,7 +978,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 25,
           "name": "name_stones",
           "type": "puzzle_object",
           "x": 96,
@@ -882,6 +999,62 @@
               "value": "present"
             }
           ]
+        },
+        {
+          "id": 26,
+          "name": "crane_on_step",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "debate.zetwal_feud_temple.mediated"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "crane_on_step"
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "lamp_on_step",
+          "type": "puzzle_object",
+          "x": 240,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "debate.zetwal_feud_temple.mediated"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lamp_on_step"
+            }
+          ]
         }
       ]
     },
@@ -896,7 +1069,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 28,
           "name": "temple_pilgrims",
           "type": "crowd_zone",
           "x": 48,
@@ -932,10 +1105,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 752,
+      "imageheight": 816,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 374,
+      "tilecount": 406,
       "columns": 8,
       "margin": 0,
       "spacing": 0

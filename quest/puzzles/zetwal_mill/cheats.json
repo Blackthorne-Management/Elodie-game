@@ -1,0 +1,5 @@
+{
+  "the inner door pulled shut in the present (it swings open again)": ["up*4", "left", "up", "confirm", "confirm", "skip"],
+  "into the memory and straight back, without touching the bar": ["up*4", "left", "echo", "skip", "echo", "skip"],
+  "the bar looked at in the memory and left alone": ["up*4", "left", "echo", "skip", "up", "confirm", "down", "confirm", "echo", "skip"]
+}

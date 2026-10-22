@@ -74,9 +74,12 @@ export const LEVELS = {
  * Oct 22): at 42 the line without side quests ended one XP short of 17; at 44 it ends on 17 and the route on 19
  * (COMBAT.md 6, "Chapter 7"). Chapter 8 pays 60 (Claude's call, Oct 22): at 44 the line without side quests ended at
  * 18, three under 21; Agnipur's side quests pay less instead (J-2 and J-3 25, the salt road 20), so the route still
- * ends on 21 (COMBAT.md 6, "Chapter 8").
+ * ends on 21 (COMBAT.md 6, "Chapter 8"). Chapter 10 pays 40 (Claude's call, Oct 22; the Chapter 10 second review's 3.4, set from Chapter 9's measured
+ * end of 8,028): the Muster is one level wide (24 to 25), so its fixed XP is about 500, and its two side quests and the
+ * crew's fight are required by the Chancellor's condition, so their XP rides on the Journal's steps (Z-6 10, Z-3 none,
+ * the crew 50 as a story fight): a player cannot skip them, and the line without side quests stays two under, not three.
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70, 40];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
@@ -330,6 +333,65 @@ export const DEBATE_REWARDS: Readonly<Record<'won' | 'mediated' | 'provoked', { 
   mediated: { concord: 10, influence: 1, xp: 25 },
   provoked: { concord: -5, fear: 1 },
 };
+
+// ---- The Muster (Chapter 10; engine/ally.ts; the Chapter 10 outline 7.0 with its second review's 3.5) -------------
+
+/**
+ * Each allied house's price, as the road chapters set it (QUEST-BUILD-GUIDE 6.3), and what the Muster reads to see how
+ * much of it was paid. A house in a `city` reads that city's pillar in its price currency, the city's other two pillars
+ * at MUSTER.otherShare (the guide's "any other currency counts at half value"), lore books counted at most MUSTER.bookCap;
+ * a `realm` house reads the realm's running total of its currency. `army` is the soldiers it brings at a full price
+ * paid (Claude's call: the volleys of Chapter 11 need a number; about 240 full, 140 thin). `pool` houses can be bought by
+ * the Crown (guide 5.6); `tie` breaks an equal share (the guide's "ties go to Dorini", then the roads' order: the second
+ * review's 3.5). `feud` is the mediation at the Muster the house stands in; `mediationPays` the one whose mediation pays
+ * MUSTER.mediationBonus toward the house's price (the two Influence houses: the second review's 3.5); `gifts` houses
+ * take gold at their camp (the two Wealth houses, 100 gold a point, the guide's rule).
+ */
+export interface AllyPrice {
+  name: string;
+  currency: 'influence' | 'wealth' | 'fear';
+  price: number;
+  army: number;
+  city?: string;
+  realm?: boolean;
+  pool?: boolean;
+  tie?: number;
+  feud?: string;
+  mediationPays?: string;
+  gifts?: boolean;
+}
+export const ALLY_PRICES: Readonly<Record<string, AllyPrice>> = {
+  free_brasador: { name: 'Free Brasador', currency: 'fear', price: 6, realm: true, army: 30, feud: 'zetwal_feud_crown' },
+  al_doria: { name: 'The Dorini marines', currency: 'influence', price: 10, city: 'al_doria', army: 40, pool: true, tie: 1, feud: 'zetwal_feud_merchants', mediationPays: 'zetwal_feud_merchants' },
+  skarragol: { name: 'The Ironvow fleet', currency: 'wealth', price: 10, city: 'skarragol', army: 50, pool: true, tie: 2, feud: 'zetwal_feud_merchants', gifts: true },
+  jwaladesh: { name: 'The Flame Keepers', currency: 'wealth', price: 8, city: 'jwaladesh', army: 30, pool: true, tie: 3, feud: 'zetwal_feud_temple', gifts: true },
+  kuroshi: { name: 'The Suzumori network', currency: 'influence', price: 10, city: 'kuroshi', army: 20, pool: true, tie: 4, feud: 'zetwal_feud_temple', mediationPays: 'zetwal_feud_temple' },
+  aldermoor: { name: 'The Stillwater dissidents', currency: 'fear', price: 8, realm: true, army: 12, feud: 'zetwal_feud_crown' },
+};
+/**
+ * The Muster's rules (Claude's calls, the Chapter 10 outline 7.0 with its second review's 3.5): lore books count at most
+ * bookCap toward a price; a city's other currencies count at otherShare; a mediation pays mediationBonus toward its
+ * house's price; the Crown's buyer can be exposed when the house is at least exposeAt paid (with the buyer's list and
+ * the smugglers' ledger in hand); each point overpaid adds overpayPerPoint of the house's army; a house that argued a
+ * feud instead of being mediated brings joinedShare of its soldiers (both houses, won or lost); a turned house brings
+ * turnedShare; Zetwal's own levy is `levy` once the council has voted; a gift is giftGold gold for one point, up to
+ * giftMax gifts at a camp; concord pays these one-off bonuses (Anicette's four accounts, the lonely cutter).
+ */
+export const MUSTER = {
+  bookCap: 3,
+  otherShare: 0.5,
+  mediationBonus: 2,
+  exposeAt: 0.6,
+  overpayPerPoint: 0.1,
+  joinedShare: 0.9,
+  turnedShare: 0.75,
+  levy: 60,
+  giftGold: 100,
+  giftMax: 5,
+  concord: { 'clue.four_accounts': 3, 'side.lonely_cutter.done': 3 } as Readonly<Record<string, number>>,
+} as const;
+/** Chapter 11's volleys (COMBAT.md 11): one volley for every this many soldiers at sea. */
+export const ARMY_VOLLEY_PER = 10;
 
 // ---- Random ambushes (owner rule, Oct 17: every ambush is a real battle) ---------------------------------
 

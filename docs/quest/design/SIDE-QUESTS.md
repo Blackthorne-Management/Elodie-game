@@ -168,6 +168,14 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
 - **Note:** the recruiter is a sincere, unsettling person, not a monster (guide 7.3: loneliness and debt, not
   caricature).
 
+- **Built (Oct 22; Chapter 10, the outline 7.2 rewritten around an absence, the second review's 3.16; Claude's calls;
+  required):** the veiled woman is gone (she was the Hushed, beaten in Chapter 9). The cane cutter says Ti Jak has not
+  come to work; he sits alone at the mill's cold hearth ("She said she'd come back."). **Compassion** works if the
+  party knows his mother's name (Odile, from Mother Solange's list, or the Chapter 1 cane name recorded); **Reason** if
+  they hold Chapter 9's purge list (her debt went with her; the *Quiet Crown Tract* can never be read: the
+  `hall_records` shelf id bug); **Scripture** is "Not yet." Anissa sits down beside him. Reward 60 gold, +1 Influence
+  (Zetwal), +3 Concord; no XP (moved to the story's steps). Closes when the fleet sails.
+
 ### Z-4 The Seventh Stone (secret item)
 - **Giver:** the mourner on the Temple Island (built NPC). **Accept:** talk to her after `story.anissa_woke`.
 - **Steps, puzzle and reward:** see `SECRET-ITEMS.md` 1 and `PUZZLES.md` (S-ZET). Solange's Quill and the skill *Say
@@ -195,6 +203,18 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
   present-day cellar is sealed: the smugglers' second cache is shut in for the army to seize.
 - **Reward:** 600 gold, 380 XP, +2 Fear or +2 Influence (Zetwal, by Yield), and the betrayer's house name is
   underlined in the Journal (this counts as Kuroshi-grade evidence for the Muster's **exposed route**, proposal).
+
+- **Built (Oct 22; Chapter 10, the outline 7.1 with its second review's 3.12 and 3.13; Claude's calls; required):** the
+  crates on the Cane Road, the crew at the smugglers' landing (the chief, level 25, HP x3, ATK x1.3, a smuggler and a
+  lookout in front of him, a bandit whistled in once; 50 XP, 150 gold; he withdraws and walks up the road between the
+  cutters). Spared (+1 Influence) or broken (+2 Fear). The carter's ledger (`item.smugglers_ledger`: muskets "for the
+  Muster's friends" under a closed hand, a house sigil in the margin) is the exposed route's second piece with Kayla's
+  list. Then the powder cellar (M-ZET-2). Reward 400 gold and 10 XP (the chapter's XP is in its steps). Closes when
+  the fleet sails.
+- **The three feuds (Chapter 10, required as the Speaker's gate):** merchants (the Dorini clerk against Hrafn), temple
+  (the Suzumori retainer against the Agnivansh steward), crown (the printer against the Free Brasador sergeant); each a
+  debate, mediated or joined. A mediation pays +2 to its Influence house's price; a house whose feud was argued and not
+  mediated brings nine tenths of its army.
 
 ## Yucayeque (Xaraguá)
 

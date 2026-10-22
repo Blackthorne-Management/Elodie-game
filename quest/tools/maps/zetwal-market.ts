@@ -6,6 +6,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj } from './zetwal-town.ts';
+import { DAY_TEXT, MARKET } from '../../src/data/muster.ts';
 
 export function zetwalMarket(): MapSource {
   const W = 36;
@@ -93,6 +94,12 @@ export function zetwalMarket(): MapSource {
     { layer: 'spawns', name: 'market', x: W - 2, y: 15, props: { facing: 'left', era: 'present' } },
 
     obj('iron_market_hall', 13, 2, { dialogue: 'iron_market_hall', era: 'present', kind: 'iron_market_hall' }, 10, 6),
+    // The Muster (Chapter 10): the first feud under the clock gate, between a Dorini convoy's crates and an Ironvow horse:
+    // the admiral's clerk against Hrafn.
+    npc('debate_dorini_clerk', MARKET.clerk.x, MARKET.clerk.y, 'right', { if: DAY_TEXT }),
+    npc('debate_hrafn', MARKET.hrafn.x, MARKET.hrafn.y, 'left', { if: DAY_TEXT }),
+    obj('convoy_crates', MARKET.crates.x, MARKET.crates.y, { kind: 'convoy_crates', solid: true, era: 'present', if: DAY_TEXT }),
+    npc('market_horse', MARKET.horse.x, MARKET.horse.y, 'left', { npc: 'muster_horse', if: DAY_TEXT }),
   ];
   return { id: 'zetwal-market', present: g, echo: e, objects };
 }

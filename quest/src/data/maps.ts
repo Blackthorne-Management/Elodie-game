@@ -71,6 +71,7 @@ import zetwalRoad from '../../maps/zetwal-road.tmj?raw';
 import zetwalSquare from '../../maps/zetwal-square.tmj?raw';
 import zetwalTemple from '../../maps/zetwal-temple.tmj?raw';
 import zetwalTown from '../../maps/zetwal-town.tmj?raw';
+import zetwalMill from '../../maps/zetwal-mill.tmj?raw';
 
 export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'test-village': testVillage,
@@ -84,6 +85,7 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'zetwal-harbor': zetwalHarbor,
   'zetwal-heights': zetwalHeights,
   'zetwal-square': zetwalSquare,
+  'zetwal-mill': zetwalMill,
   'xaragua-village': xaraguaVillage,
   'xaragua-plaza': xaraguaPlaza,
   'xaragua-beach': xaraguaBeach,

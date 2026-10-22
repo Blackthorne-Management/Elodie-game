@@ -6,7 +6,7 @@ import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SUR
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9 } from './quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
@@ -313,6 +313,9 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'ash_road_accounts', name: 'The Ash Road Accounts', kind: 'key', price: 0, text: 'Columns of figures leaving Ardencia\'s treasury into accounts marked with a cipher and a road. Haru has no key for it yet.' },
   { id: 'thomas_record', name: "Thomas Stillwater's Record", kind: 'key', price: 0, text: 'The Seventh Clause in the Crown\'s words. In the margin: Xaraguá was never asked. T.S. At the foot: Written at a quarter to three, by the tower bell.' },
   { id: 'crown_chronicle', name: 'The Crown Chronicle', kind: 'key', price: 0, text: 'The Crown\'s account of the Ash Wars, the third of four. On the fly-leaf: Written to order. The true count is in Kirinoura. T.S.' },
+  // Chapter 10, the Muster: the smugglers' ledger (Z-6; the exposed route's second piece) and the Dorini seal.
+  { id: 'smugglers_ledger', name: "The smugglers' ledger", kind: 'key', price: 0, text: 'A carter\'s ledger from the mangroves: muskets "for the Muster\'s friends", night after night, under a closed hand. A house\'s sigil is drawn in the last margin.' },
+  { id: 'token_dorini', name: 'The Dorini seal', kind: 'key', price: 0, text: 'A green seal from the admiral\'s ledger, for the chamberlain\'s chair: the Dorini will sit at a Claim. "The guild sits when the guild is paid."' },
   { id: 'purge_list', name: 'The Purge List', kind: 'key', price: 0, text: 'Names and streets, "quiet" beside each, by the Hushed\'s word. On its cover, a grey thumbprint and three words: Warn them first.' },
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
   // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
@@ -355,6 +358,8 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'scale_armour', level: 24, rarity: 'uncommon', name: 'Scale armour', kind: 'gear', slot: 'armor', armor: 'heavy', price: 1000, stats: { def: 18, hp: 30, spd: -1 }, text: 'Brass scales on oiled leather. It rings like a temple when you walk.' },
   // Kingsmere's tier (Chapter 9): Edmund's own greatcoat (tier 20), and the outfitter's oilcloth coat (tier 24).
   { id: 'stillwater_greatcoat', level: 20, rarity: 'uncommon', name: 'Stillwater greatcoat', kind: 'gear', slot: 'armor', armor: 'heavy', price: 820, stats: { def: 14, hp: 24, spd: -1 }, text: 'A long grey greatcoat with a mail lining. It has been apologised in, many times.' },
+  // Pòdlimyè at the Muster (Chapter 10): the Harbor forge's robe for an archivist at war (tier 24).
+  { id: 'muster_robe', level: 24, rarity: 'uncommon', name: 'Indigo campaign robe', kind: 'gear', slot: 'armor', armor: 'robe', price: 900, stats: { def: 11, sp: 26, mag: 7 }, text: 'Zetwal indigo over a quilted lining, cut short for climbing gangways. Tati Coco would have something to say about the hem.' },
   { id: 'oilcloth_coat', level: 24, rarity: 'uncommon', name: 'Oilcloth coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 1000, stats: { def: 17, hp: 28, spd: 1 }, text: 'Kingsmere\'s answer to the weather: waxed cloth over quilting. Nothing gets in, eventually.' },
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
@@ -544,6 +549,14 @@ export const MEMBERS: readonly MemberDef[] = [
 
 export const SHOPS: Readonly<Record<string, ShopDef>> = {
   zetwal_forge: { id: 'zetwal_forge', name: 'Harbor forge', city: 'zetwal', stock: ['sunwood_staff', 'ironwood_bow', 'steel_saber', 'padded_vest', 'iron_cuirass', 'temple_robe', 'lantern_staff', 'goldband_bow'] },
+  // At the Muster (Chapter 10; the second review's 3.6: a shop has no condition, so a second smith placement sells it): the
+  // tier-24 pieces for every class, and the old stock shown honestly beside them.
+  zetwal_forge_muster: {
+    id: 'zetwal_forge_muster',
+    name: 'Harbor forge',
+    city: 'zetwal',
+    stock: ['kingsmere_blade_of_force', 'flame_talwar_of_force', 'muster_robe', 'oilcloth_coat', 'scale_armour', 'steel_ring', 'sunwood_staff', 'ironwood_bow', 'steel_saber', 'iron_cuirass'],
+  },
   zetwal_charms: { id: 'zetwal_charms', name: 'Charm stand', city: 'zetwal', stock: ['sun_charm', 'sea_glass_charm'] },
   zetwal_market: { id: 'zetwal_market', name: 'Market stand', city: 'zetwal', stock: ['soup_pot', 'akasan', 'mango'] },
   // The Iron Market (Oct 15).
@@ -817,13 +830,17 @@ export const RPG: RpgContent = {
     // number to work with; the court's own fall and the published list are not counted twice.
     { pillar: 'fear', city: 'aldermoor', flags: ['story.hushed_beaten', 'story.jordyn_defected', 'choice.hushed_broken'], each: 1 },
     { pillar: 'influence', city: 'aldermoor', flags: ['choice.hushed_tried', 'story.edmund_defied'], each: 1 },
+    // The Muster (Chapter 10): Z-6's crew spared (+1 Influence) or walked up the road (+2 Fear), the design's "by Yield";
+    // the contract board's count of the soldiers (+1 Influence).
+    { pillar: 'influence', city: 'zetwal', flags: ['choice.crew_spared', 'muster.counted'], each: 1 },
+    { pillar: 'fear', city: 'zetwal', flags: ['choice.crew_broken'], each: 2 },
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
     // A Journal step pays by its chapter (XP_PER_OBJECTIVE_BY_CHAPTER).
-    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9].map((act, i) => ({
+    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10].map((act, i) => ({
       flags: act.objectives.filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)),
       each: XP_PER_OBJECTIVE_BY_CHAPTER[Math.min(i, XP_PER_OBJECTIVE_BY_CHAPTER.length - 1)]!,
     })),

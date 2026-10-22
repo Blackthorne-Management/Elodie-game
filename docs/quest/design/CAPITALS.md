@@ -154,6 +154,14 @@ use?* (Both speakers are built NPCs; the debate itself arrives with the Phase 4 
 **Side quests:** Z-1 Soup of the Free, Z-2 Tides of the Southern Reach, Z-3 The Lonely Cutter, Z-4 The Seventh Stone,
 Z-5 Bread With No Debt (all Chapter 1, no fighting); Z-6 Muskets in the Cane (Chapter 10).
 
+*Built Oct 22 (Chapter 10, the Muster): the ten Zetwal maps carry the Muster on conditions (`DAY`, `DUSK`, `NIGHT`,
+`DAWN` in `quest/src/data/muster.ts`): the seven camps and, at dusk, the seven lines on the plaza's paving; the allied
+ships at the long pier, the boom chain across the harbor mouth, the consul's launch under the point at night; the
+Council Chamber's Speaker; the debates on the square and in the market; the lamp's blessing on the Temple island; the
+kitchen in the Limyè house; the Heights' signal fire (cold, then lit); the crew's landing and Ti Jak's hearth on the Cane
+Road. New interior: the mill's cellar (`zetwal-mill`, 14 x 10; the powder store's inner door, M-ZET-2). The town's own
+people each have a Chapter 10 line or are off the map.*
+
 **To finish Chapter 1 (owner: Zetwal complete first), still to build:** the animated intro, the Last Evening and the
 dawn departure scenes (`STORY.md` 2 and Chapter 1 beats 10 and 11), the five Chapter 1 side quests, the debate corner,
 the bakery interior, and the Journal's Quests tab.
