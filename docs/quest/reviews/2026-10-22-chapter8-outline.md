@@ -59,9 +59,9 @@ taken as adopted and this chapter's data is set on it (section 5).
 - **The party on the route:** Gianna, Yari, Azzy, Samira, Bayarmaa, **Haru**, Anissa (seven, six fighters, four
   active: by the built rule the first four joined in `MEMBERS` order, so Gianna, Yari, Azzy, Haru if the Chapter 7
   build placed Haru before Bayarmaa, unless the Chapter 6 review's active-order flag landed); Salkhi as a flag-placed
-  horse on outdoor maps; **level 19** by the tool (5,085 to 5,215 after Chapter 7's dials) and **about 20 to 21 as
-  played** (the Chapter 7 outline's section 5: 20 to 21 unless the taper is tightened to 0.25, which this outline
-  assumes it was). Echo party: Patricio, Caona, Benny. Gold about 1,600 to 2,400 less Kirinoura's armourer.
+  horse on outdoor maps; **level 19** by the tool (5,085 to 5,215 after Chapter 7's dials) and **about 21 as
+  played** (the Chapter 7 outline's section 5: about 6,350 with the taper at 0.25, which this outline assumes landed;
+  section 5 has what that means for this chapter and what it does not). Echo party: Patricio, Caona, Benny. Gold about 1,600 to 2,400 less Kirinoura's armourer.
 - **Key items:** the Locket, the envoy's papers, *Benny's Refusal*, Benny's note, the Dorini pass, the Brasador coin,
   the Ironvow token, **the Suzumori crane (`item.token_suzumori`)**, **the Fog Files (`item.fog_files`)** and the
   Fox's receipts, Titi Kayla's crane, the Crown's purse if kept. **Flags that matter here:** `clue.seventh_clause_read`
@@ -414,7 +414,7 @@ three looks: a thumb's height, a flame in the beam, a tall flame).
 | Map | Size (tiles) | Section | Echo | What is on it |
 |---|---|---|---|---|
 | `jwaladesh-harbor` | 34 x 22 | The Harbor Chain (outdoor) | **the chain lamp's platform** (one zone: Arjun's charge; anchors: the chain lamp, the tower mirror) | The landing, the quay, the chain across the mouth, the chain tower and its lamp, the old watchtower with its bracket (a plank bridge between the two platforms), Dhanraj's oil store (the doors, the jars, the strongbox, the boss trigger; S-JWA's balance lock placed inert at the back), the factor's launch (until `story.dhanraj_beaten`), the harbour-master, the milk stall's awning, the sea-wall lane (open on `story.bazaar_night`), the night watch's pair on the open quay, the harbor stair (sighting 1), the voyage trigger (after `ally.jwaladesh`) |
-| `jwaladesh-bazaar` | 44 x 30 | The Lamp Bazaar (hub, outdoor) | none | The lamp lanes, the dyers' vats and their rooftop stair, the spice row and the debate corner, the milk-and-bread stall, the bead seller, the swordsmith, the contract board, the shrine child's dark shrine (J-4, inert), the runners' hall at the temple steps (J-2), the Exchange's tower and price-board, the library door (west), the temple steps, the duel yard (a sanded square, the duel's trigger), the Court's doors (north centre), the salt gate (east, to the flats); the relay's gust lanes and sheltered lanes (M-JWA-1); day and night variants; Salkhi's placements |
+| `jwaladesh-bazaar` | 44 x 30 | The Lamp Bazaar (hub, outdoor) | **the runners' hearth** at the temple steps (one zone: Arjun's runners, M-JWA-1; no anchor) | The lamp lanes, the dyers' vats and their rooftop stair, the spice row and the debate corner, the milk-and-bread stall, the bead seller, the swordsmith, the contract board, the shrine child's dark shrine (J-4, inert), the runners' hall at the temple steps (J-2), the Exchange's tower and price-board, the library door (west), the temple steps and the Court's doors (north centre; the duel yard is the Court map's outdoor pocket, seen through its rope gate from the steps), the salt gate (east, to the flats); the relay's gust lanes and sheltered lanes (M-JWA-1); day and night variants; Salkhi's placements |
 | `jwaladesh-rooftops` | 30 x 18 | The Roofs (outdoor) | none | Four roofs joined by plank bridges, the four mirrors, the Exchange's tower in the old line, the wick-window at the far end, the beam segments (by flags), Aiyana's placements per mirror, Anissa's spot at the fourth |
 | `jwaladesh-library` | 22 x 14 | The Palm-Leaf Library (interior) | none | The nine books on low shelves in bundles, the librarian (Hindi greeting), the Gaze pilgrim's reading corner |
 | `jwaladesh-court` | 36 x 28 | The Court of the Flame (the seat of government, interior, with the duel yard as an outdoor pocket on its east side) | none | The colonnade to the altar (the curtain, the wick-window, three altar looks), the ruler's seat, the priests' council, the treasury, the envoys' pavilion (the factor and Dhanraj until the duel), the runners' hall door (the hall itself is on the bazaar map: the steps), the duel yard, the records room (three Court books, the ledger after), the back gate and its kitchen lane (J-3's delivery) |
@@ -544,8 +544,8 @@ three enforcers at 21 (J-3), 14 actions, 88%; four jackals at 21 (J-5's caravan,
 party at 20 is strong (Azzy 203 HP, Vikram ATK 82 and SPD 55, Haru SPD 56), so the flats' groups sit at the tier's
 top (20 to 21), not its floor, or they are grey (`LEVELS.bands.trivial = 3`).
 
-**Levels through the chapter** (tool line from 5,150; played line from 5,900; objectives 25, books 10, the signature
-puzzle 60, the minor 25, the debate 15 joined or 25 mediated):
+**Levels through the chapter** (tool line from 5,150; played line from about 6,350; objectives 25, books 10, the
+signature puzzle 60, the minor 25, the debate 15 joined or 25 mediated):
 
 | Point | XP from | Tool total | Level |
 |---|---|---|---|
@@ -557,16 +557,32 @@ puzzle 60, the minor 25, the debate 15 joined or 25 mediated):
 | The library's nine and the Court's three, if read (120) | 120 | 5,955 | 20 |
 
 The tool lands at **20 (5,835 to 5,955)**, 80 to 200 XP under 21 (`slackUnder = 1` holds); without the two side
-quests, 5,575: **20** (`skipSideQuestsMaxUnder = 2` holds). **The played line** inherits Chapters 6 and 7's problem
-and, with the taper at 0.25 from 15, closes it: from 5,900 (Chapter 7's played end at 20, taper applied), the
-chapter's 805 and two salt-flat ambushes (a level-20 trio pays 150 tapered, a level-21 pair 105): 5,900 + 805 + 255 =
-**6,960, level 21**, on target, and with the books 7,080, level **22** by 50 XP (`slackOver = 1` holds). **Without
-the taper** the two ambushes pay 1,020 and the played line is 7,725: **23**, two over, and Chapter 9's band (21 to
-24) starts a level high. **So this chapter's data assumes the taper landed at 0.25 and sets the boss at 100 and the
-quests at 100 as Chapter 7 did; the central session should confirm the taper's number on Chapters 1 to 7's routes
-before this chapter's dials are set.** If the taper is refused, the fallback is Chapter 6's and 7's: lower weights
-and a 24-step grace on the flats, the salt road itself kept safe so J-3's walk meets at most one ambush, and Dhanraj
-at 50. `CHAPTER_LEVELS` 8 keeps `to: 21`; the simulator with Chapter 8's route decides on day 1.
+quests, 5,575: **20** (`skipSideQuestsMaxUnder = 2` holds). The chapter's own content (685 without the books, 805
+with them) is a little under its two-level band (19 to 21 is 936 XP), which is right: a party that arrives on target
+leaves on target, and the books make up the rest.
+
+**The played line is the problem, and it is not this chapter's to solve.** The Chapter 7 outline's played line, with
+the taper at 0.25, ends at about **6,350 (level 21)** against its tool's 5,150 (19): a real player arrives here two
+levels over, carrying Chapters 5 to 7's surplus. From 6,350 this chapter's 685 alone reaches 7,035, which is **level
+23 by 5 XP** (23 is at 7,030), before a single ambush; two tapered ambushes (a level-20 trio pays 150, a level-21 pair
+105) make it 7,290 and the books 7,410: **23** either way, two over the target and outside `slackOver = 1`. Without
+the taper the two ambushes pay 1,020 and the line is 8,055: **24**. Nothing inside Chapter 8 can bring a party that
+arrives at 21 back to 21: cutting every fixed reward to zero would still leave it at 22. So:
+
+- **This chapter's data is set for a party that arrives on target** (Dhanraj 100, the quests 100, the boss and the
+  flats' groups at 20 to 21), and it adds about one level to whatever it inherits, which is what a two-level band
+  with books should do. A 24-step grace on the flats and the salt road kept safe hold its ambushes to about one.
+- **The fix is upstream, and it is the central session's, on day 1:** measure Chapter 7's played end (the Chapter 6
+  review's 3.1 (b): the real routes plus one or two seeded ambushes, not an assumption), and if it is over 6,034,
+  either lower Chapters 6 and 7's fixed data and ambush weights until the party arrives here at 20 (their bosses
+  and quests are already at 100, so the lever left is the ambush rule: a fixed small share of the party's next
+  level per foe group, the review's (c)), or accept the drift and plan Chapter 9 from the **measured** start, not the
+  table's (its band of 21 to 24 is three levels wide and absorbs a 22; a 23 means Chapter 9 ends at 25 and the
+  drift compounds into the war). Either is a balance statement for the milestone note, not a pop-up (the Chapter 6
+  review's reading of the owner's rule); this outline recommends the first.
+
+`CHAPTER_LEVELS` 8 keeps `from: 19, to: 21`; the simulator with Chapter 8's route decides on day 1 whether its own
+dials move at all.
 
 **Gold:** about 1,600 to 2,400 in; the flats' ambushes about 160 each; J-2 250, J-3 300; Dhanraj 300 and the
 strongbox's 400 if kept. Out: the swordsmith's tier-20 gear if not bought in Kirinoura and the tier-24 pieces (a
@@ -1027,9 +1043,10 @@ line alone (the gate holds, so a player cannot) is about 18 minutes.
   Elodie's to name, and Chapter 5 left Coralie at the Seat with "bring me every colour you find". Chapter 9's
   outline should give Sebastian his bump-in cold (a poster for the recital on Kingsmere's quay is enough).
 - **The party leaves with:** Gianna, Yari, Azzy, Samira, Bayarmaa, Haru, **Vikram**, Anissa (eight, seven fighters,
-  four active by `party.active`); Salkhi; **level 20** by the tool (5,835 to 5,955), **21 as played** with the taper
-  (section 5: Chapter 9 should plan for 20 to 21 by the tool and 21 to 22 played at its start, and its band of 21 to
-  24 absorbs it); the Echo party unchanged; gold about 2,000 to 3,000 less the swordsmith and the strongbox if given;
+  four active by `party.active`); Salkhi; **level 20** by the tool (5,835 to 5,955), **about 23 as played** if the
+  party arrived at 21 as the Chapter 7 outline predicts, 21 if the upstream fix lands (section 5: Chapter 9's
+  outline must plan from the measured start, not the table's 21; its band of 21 to 24 absorbs a 22 and not a 23);
+  the Echo party unchanged; gold about 2,000 to 3,000 less the swordsmith and the strongbox if given;
   key items plus the Ironvow, Suzumori and **Agnivansh** tokens (three of Se-5's; Aldermoor's dissidents give no
   token: they are not a house at the chair, which Chapter 9 should say), the Fog Files, the receipts, **the ledger
   of advances**, Titi Kayla's crane, **Titi Aiyana's mirror**; flags `story.jwaladesh_arrived`, `party.vikram`,
@@ -1059,11 +1076,14 @@ line alone (the gate holds, so a player cannot) is about 18 minutes.
 
 ## 15. Risks
 
-- **The level curve closes only if the taper landed.** This is the third road and the one that must leave the party
-  at 21 for Chapter 9; with the taper at 0.25 the played line lands at 21 to 22 and the tool at 20; without it, 23.
-  The number is the central session's, decided once on Chapters 1 to 7's routes, and this chapter's dials (Dhanraj
-  100, the quests 100) are set assuming it. If the owner would rather keep ambushes rich, the alternative is
-  Chapter 9 re-based a level higher, which is a plan change, not a chapter one.
+- **The level curve does not close in this chapter, and cannot.** This is the third road and the one that must leave
+  the party at 21 for Chapter 9. The tool lands at 20; a real player who arrives at 21 (the Chapter 7 outline's
+  prediction with the taper) leaves at **23** whatever this chapter pays, because the surplus is Chapters 5 to 7's
+  (section 5). This chapter's dials (Dhanraj 100, the quests 100, grace 24 on the flats, the salt road safe) are
+  set so it adds one level to what it inherits. The fix is the central session's on day 1: measure Chapter 7's
+  played end, then either tighten the ambush rule and Chapters 6 and 7's weights until the arrival is 20, or plan
+  Chapter 9 from the measured start and say so in the milestone note. If the owner would rather keep ambushes rich,
+  the alternative is Chapters 8 to 12 re-based a level or two higher, which is a plan change, not a chapter one.
 - **Seven fighters and the first-four rule.** If the active-order flag is not built, Vikram never fights in his
   chapter (or Haru never fights again). It is the first thing on day 1, and the sim shows the boss does not depend on
   it, so the fallback (Vikram fourth in `MEMBERS`, Haru benched) is playable and wrong.
