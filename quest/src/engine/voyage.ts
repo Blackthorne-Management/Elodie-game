@@ -20,7 +20,7 @@ export interface VoyageDef {
   paddle: string;
   aboard: string;
   /** The shore it leaves (its roofs), and whether it is night. */
-  shore: 'zetwal' | 'xaragua' | 'ardencia' | 'skarragol' | 'kuroshi' | 'jwaladesh';
+  shore: 'zetwal' | 'xaragua' | 'ardencia' | 'skarragol' | 'kuroshi' | 'jwaladesh' | 'aldermoor';
   night?: boolean;
   music: string;
 }

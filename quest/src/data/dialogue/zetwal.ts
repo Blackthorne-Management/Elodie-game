@@ -2144,6 +2144,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   script('road_watcher_talk', {
     start: {
       speaker: 'road_watcher',
+      // Remembered (Chapter 9, the second review's 3.2): Anissa knows her in the Assize at Kingsmere.
+      set: { 'story.watcher_met': true },
       lines: [
         { text: 'Hush. The road is loud enough without us.' },
         { text: 'Your little sister is very quiet, isn\'t she? Quiet people are precious to us.' },

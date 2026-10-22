@@ -623,6 +623,59 @@ the Ember Jackals (sand-coloured, glowing eyes).
 Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
 sheets; magenta background for portraits and sprites; no text, frames or extra people.
 
+## 18. Edmund, Jordyn, Sebastian, the Almoner and Lady Rosalind (Chapter 9, Kingsmere; art drop 2 or after)
+
+Added Oct 22 with the Chapter 9 build. The game draws placeholders from the looks `edmund`, `jordyn`, `sebastian`,
+`almoner` (the Chapter 1 road watcher's veiled look, on purpose: the recognition is also a picture),
+`almoner_unveiled`, `almswoman`, `rosalind`, `regent`, `sealbearer`, `magistrate_al`, `keep_steward`,
+`witness_bishop`, `assize_clerk`, `regent_watch`, `watch_inside_out`, `echo_old_sealbearer`, `moor_constable`,
+`bog_hound`, `crown_officer`, `printer`, `apprentice`, `clockmaker`, `pie_seller`, `pie_boy`, `pie_mother`,
+`tea_woman`, `al_jeweller`, `al_outfitter`, `qc_hierarch`, `gaze_exile` and `rolls_keeper` until these arrive
+(`quest/src/assets.config.ts`; Stillwater grey with the Regent's violet). Make each like section 12: a reference sheet
+in a new chat (attach Gianna's sheet), then the portrait and the walking sprite sheet in the same chat.
+
+**Edmund Stillwater** (about 22; the Guardian, the chapter's companion; Lady Rosalind's son, Thomas's grandson): white,
+broad and tall, curly brown hair under a grey brimmed hat, a long grey Stillwater greatcoat over a waistcoat, a
+satchel with a tea tin in it, a plain pattern sword. Ridiculously polite. Portrait expressions: **apologetic**
+(default: "Terribly sorry"), **steady** (in front of the Regent: "I'm going with them"), and **gentle** (crouched to
+Anissa's height). Battle stance: sword low, coat squared, a step in front of everyone.
+
+**Jordyn** (about 38; captain of the Regent's watch; Rahel's daughter, Azzy's Titi): Black, tall, close-cropped black
+hair, a straight back. A violet watch coat with gold epaulettes and a sash, a captain's knot at the shoulder; later the
+coat turned inside out. Portrait: **by the book** (default: flat, unreadable), **Mother's jaw** (the arrest), and
+**resigning** (laying the knot on the table).
+
+**Sebastian Jean-Philippe** (about 60; organist to three courts; Elodie's brother): tall, grey hair swept back, a
+neat grey beard, a burgundy velvet coat with gold trim, long hands. Portrait: **showman** (default: a bow to an empty
+nave), **listening** (eyes closed at the organ), **tender** (the blanket through the bars).
+
+**The Almoner** (about 60; the Regent's almoner, the Hushed; the veiled woman by the mill in Chapter 1): veiled, a grey
+hood and a long grey robe, a basket on her arm, the Crown's charities' brooch. Unveiled: a plain woman of sixty, grey
+hair pinned up, no expression to speak of. Portrait: **veiled** (default), **unveiled** ("It is no one's"). Battle
+sprite (the Hushed): veiled, one finger lifted, the almswomen kneeling behind.
+
+**Lady Rosalind Stillwater** (about 55; on the Regent's council; Edmund's mother; Gen III ruler of Aldermoor): grey
+hair in a bun, a grey-violet robe with a silver emblem. Portrait: **seated** (default), **standing** ("Sat.").
+
+**The almswomen** (the Hushed's veils): grey robes, cowls and veils, empty bread baskets. **The Lord Regent** in court
+(as Chapter 5's look, on his own bench).
+
+**Places (backgrounds, no people):** the Mere Stair in the rain (a stone stair up from a flat grey mere, a fishermen's
+shed, a tin-hooded notice post); the heath (heather, a peat road, a printing barn, a roofless bog chapel, the Moor
+Gate's towers); the Market Cross in the rain (wet flagstones, a stone cross, St. Agatha's west front, the keep's
+gatehouse); the great hall by night (pillars, a dais, lamps); the archive (six tall cabinets of drawers, a gallery
+desk, the Ash Wars shelf); the Assize (a bench under the Throne's seal, a dock, a gallery packed with the city); St.
+Agatha's great organ. The battle backdrops `moor_heath`, `market_cross`, `assize_court` and `bog_chapel` use these.
+
+**Also (placeholders may ship):** the keep's steward (keys), the assize clerk (a roll), the Crown magistrate, the
+witness bishop, the sorry constable (oilskin, apologetic), the printer (white beard, an apron), the clockmaker, the pie
+seller and her boy, the tea-shop woman, the Quiet Crown hierarch and the Gaze exile in her faded sun shawl, the Moor
+Constables (oilskins, brimmed hats), the bog hounds (black, low), the Crown officers (violet, bicornes), the Regent's
+Sealbearers (violet helmets, a seal on a staff), the old Sealbearer in the Echo (sepia).
+
+Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
 ---
 
 ## File names (for the conversion)

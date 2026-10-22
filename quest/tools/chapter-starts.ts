@@ -33,8 +33,10 @@ const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string 
   '7': { mark: 'chapter6-end', map: 'kuroshi-pier', spawn: 'pier' },
   // Chapter 8 begins on Agnipur's harbor quay, under the great chain, off the Zetwal trader (the landing plays).
   '8': { mark: 'chapter7-end', map: 'jwaladesh-harbor', spawn: 'landing' },
-  // Chapter 9 begins on Agnipur's quay after the card (Aldermoor's maps come with Chapter 9: this start moves there).
-  '9': { mark: 'chapter8-end', map: 'jwaladesh-harbor', spawn: 'landing' },
+  // Chapter 9 begins on the Mere Stair below Kingsmere, off the Zetwal trader (the landing plays).
+  '9': { mark: 'chapter8-end', map: 'aldermoor-heath', spawn: 'mere_stair' },
+  // Chapter 10 begins on Pòdlimyè's harbor after the card (the Muster's maps come with Chapter 10).
+  '10': { mark: 'chapter9-end', map: 'zetwal-harbor', spawn: 'harbor_return' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

@@ -88,7 +88,23 @@ them); a read of Aiyana's lines (`docs/quest/design/FAMILY.md`, Chapter 8); art 
 Seth Dhanraj (`docs/quest/ART-PROMPTS.md` 17); the Hindi words (`quest/src/data/lang/hindi.json`, all unverified) for
 the Nov 18 check. Noted: Chapter 8's steps pay 60 XP; the route ends at 21, the line without side quests at 19;
 Jwaladesh's price can be as low as 4 of 8, so Agnivansh can be the betrayer. Not built yet: J-1, J-4 (the Unbroken
-Wick), J-5, the voyage on to Aldermoor.
+Wick), J-5 (the voyage on to Aldermoor is built with Chapter 9).
+
+**Quest, Chapter 9 (Oct 22):** The Regent's Keep is built on branch `chapter9` (Kingsmere's six maps, the voyage from
+Agnipur and the Mere Stair in the rain, Sebastian's bill, the press-gang and Edmund joining, the Regent's refusal, the
+day's four (The Purge List with the bog chapel and one door too late, the One Hand debate, Jordyn's offer in the close,
+Sebastian at the organ), the eve, the Toccata and the postern, Thomas's record in the Echo, the mirrored drawer and the
+panel behind the shelf (The Crown Chronicle), caught and arrested, the cells, the Assize and the Hushed unmasked as
+Chapter 1's veiled woman by the mill, the three defiances, the price at dawn, the voyage home). This meets the **Nov 8
+decision date** for Chapter 9 (on its branch, not merged). Waiting on the owner: a human read of every Jordyn,
+Sebastian and Almoner line, and the archive scene against the locked rule (reviewer prompt
+`docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter9-build.md`); the names by role (the printer, the
+clockmaker, the keep's steward, the assize clerk, the Crown magistrate, the witness bishop, the sorry constable);
+art for Edmund, Jordyn, Sebastian, the Almoner and Lady Rosalind (`docs/quest/ART-PROMPTS.md` 18). Noted: Chapter 9's
+steps pay 70 XP; the route ends at 24, the line without side quests at 22; the dissidents' Fear can be short (5 or 6
+of 8). Chapter 9 settles two of the Dec 1 questions as Claude's calls, still the owner's to overrule: the Aldermoor
+ledger (coded accounts on the Ash Road; Haru needs the key) and Patricio in Aldermoor (under a flag of truce, in
+the archive while the war council sits). Not built yet: Al-1, Al-4 (the Clock That Waits), Al-5, Calm and Comfort.
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

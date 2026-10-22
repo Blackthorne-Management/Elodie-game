@@ -131,7 +131,7 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
   taunting: 'drawing every blow',
   stunned: 'Stunned',
   gilded: 'behind a wall of gold',
-  hushed: 'Hushed (no skills)',
+  hushed: 'Hushed (no skills or moves)',
   burning: 'Burning',
   oiled: 'behind a wall of oil (fire does nothing)',
 };

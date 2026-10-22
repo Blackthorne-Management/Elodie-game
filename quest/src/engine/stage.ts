@@ -19,7 +19,7 @@ export const STAGE_NPC = 'npc:';
  * Companions walking with the party (scenes/FieldScene.ts borrows their sprites): a scene may walk, turn or follow
  * them without bringing them on first, as it does Anissa (Chapter 6; before, scenes placed them first).
  */
-export const STAGE_PARTY: ReadonlySet<string> = new Set(['yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram']);
+export const STAGE_PARTY: ReadonlySet<string> = new Set(['yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund']);
 
 /** Actors the scene borrows from the map (they are on stage from the start and need no look). */
 export function isBorrowed(actor: string): boolean {

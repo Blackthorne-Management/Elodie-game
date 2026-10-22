@@ -43,7 +43,8 @@ export function zetwalRoad(): MapSource {
     // The cane cutter (decision A, Oct 19): on the road until the lamp is lit, then at the name stones on the Temple
     // island (zetwal-temple.ts) for the rest of Chapter 1, and back here when Gianna comes home from Xaraguá.
     npc('cane_cutter', 6, 10, 'right', { if: '!story.anissa_woke|story.zetwal_return' }),
-    npc('road_watcher', 36, 8, 'down'),
+    // The veiled woman by the mill (Chapter 1); gone once she has been unmasked in the Assize (Chapter 9).
+    npc('road_watcher', 36, 8, 'down', { if: '!story.hushed_beaten' }),
     { layer: 'doors', name: 'road_gate', x: 0, y: 12, props: { target: 'town_gate', map: 'zetwal-town', exit: 'right' } },
     { layer: 'spawns', name: 'road', x: 2, y: 12, props: { facing: 'right', era: 'present' } },
     obj('road_sign', 4, 11, { dialogue: 'road_sign', era: 'present' }),

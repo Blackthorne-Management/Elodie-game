@@ -77,6 +77,9 @@ export const DESIGNS: readonly Design[] = [
   // bonus until the party reaches it).
   { id: 'agnipur_talwar', name: 'Agnipur Talwar', weapon: 'blade', rarity: 'uncommon', level: 20, price: 760, stats: { atk: 20, spd: 1 }, text: 'A curved sword with a brass hilt, the blade blued with heat. Vikram has argued with it for years.' },
   { id: 'flame_talwar', name: 'Flame Talwar', weapon: 'blade', rarity: 'uncommon', level: 24, price: 900, stats: { atk: 24 }, text: 'A broad talwar from the bazaar\'s swordsmith, a flame chased in brass down the spine.' },
+  // Kingsmere (Chapter 9): Edmund's own pattern sword (tier 20), and the outfitter's plain steel blade (tier 24).
+  { id: 'pattern_sword', name: 'Crown Pattern Sword', weapon: 'blade', rarity: 'uncommon', level: 20, price: 780, stats: { atk: 18, def: 1 }, text: 'A plain straight sword of the Crown\'s pattern, the hilt wrapped in grey cord. Edmund has never drawn it in anger.' },
+  { id: 'kingsmere_blade', name: 'Kingsmere Steel', weapon: 'blade', rarity: 'uncommon', level: 24, price: 850, stats: { atk: 24 }, text: 'A plain steel blade from the outfitter on the Cross. Nothing on it but a maker\'s mark, very small.' },
   { id: 'kirinoura_tanto', name: 'Kirinoura Tanto', weapon: 'blade', rarity: 'uncommon', level: 20, price: 650, stats: { atk: 20 }, text: 'A lacquer-handled tanto from the armourer on the east bank. It weighs nothing, and cuts as if it meant it.' },
 ];
 

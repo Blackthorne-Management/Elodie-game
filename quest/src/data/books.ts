@@ -1245,6 +1245,97 @@ export const BOOKS: readonly Book[] = [
       'The ledger now sits on the Court\'s records shelf beside the contracts it paid for. ' +
       'The junior priest reads it aloud to anyone who asks.',
   },
+  // ---- Kingsmere: the Rolls House (the cut list's five) and the keep's records shelf (Chapter 9) ------------------
+  {
+    id: 'aldermoor_charter',
+    title: 'The Charter, Explained',
+    category: 'law',
+    text:
+      'The Crown\'s legal case for its Charter of Protection over Xaraguá, written for students of the Rolls. ' +
+      'Protection, it says, is a duty, not a right, and a duty needs no one\'s leave. ' +
+      'The Charter rests on the Sun Accord and on its seventh clause, which leaves the harbor to be revisited. ' +
+      'The clause was ratified in the twenty-third year of the Old King, in the Regent\'s keep, before the King\'s justiciar. ' +
+      'The author is careful to say the clause was ratified, and never says by whom. ' +
+      'He spends four pages on the meaning of the word revisited, and concludes that it means whenever the Crown judges best. ' +
+      'A reader has written in the margin, in pencil: and who judges the Crown?',
+  },
+  {
+    id: 'aldermoor_witness_law',
+    title: 'The Witness and the Law',
+    category: 'religion',
+    text:
+      'In Aldermoor the Witness is the law, and the law is an oath. ' +
+      'A witness who swears before the oath-stone has given her word to the Witness, not to the court. ' +
+      'If she swears falsely, the oath is broken, and her evidence falls with her: every word of it, not only the lie. ' +
+      'So a court in Kingsmere does not weigh witnesses. It waits to see whose oath breaks. ' +
+      'The old judges said that a patient court needs no torture and no clever lawyers, only time and a good roll. ' +
+      'The roll is the court\'s own memory: who was present, who was sent for, who spoke. ' +
+      'A roll cannot be sworn against. It is the Witness writing things down.',
+  },
+  {
+    id: 'aldermoor_agatha',
+    title: 'Dame Agatha\'s Patience',
+    category: 'history',
+    text:
+      'Dame Agatha Stillwater founded the house when Aldermoor was a moor with a mere in it and nobody\'s law. ' +
+      'She was not a soldier and she was not rich. She was patient, and she wrote everything down. ' +
+      'Her saying is cut over the Rolls House door: the loud burn out first. ' +
+      'When the lords of the moor quarrelled, she kept their oaths in a book, and read them back to them years later, word for word. ' +
+      'In the end they came to her to settle things, because she remembered. ' +
+      'St. Agatha\'s is named for her, though she would have disliked it. ' +
+      'The house has kept her way: write it down, wait, and let the record speak.',
+  },
+  {
+    id: 'aldermoor_court_circular',
+    title: 'Court Circular',
+    category: 'gossip',
+    text:
+      'The Regent\'s guests this season, in the order the Circular prints them. ' +
+      'The legate\'s household, returned from Eightgate. A Dorini factor, about wool. ' +
+      'Sebastian Jean-Philippe, organist to three courts, whose recital on the eve of the Assize is by the Regent\'s command. ' +
+      'At the Regent\'s table every night, as every season: a lady in grey, who is never named. ' +
+      'The Circular notes that the Crown\'s charities were generous this year, and that the almswomen were seen on the heath. ' +
+      'It does not say what they were doing there. ' +
+      'The Assize sits on the third day. The fleet sails after it, for the harbor.',
+  },
+  {
+    id: 'aldermoor_public_record',
+    title: 'Stillwater\'s Record (public)',
+    category: 'law',
+    text:
+      'The Rolls House edition of Thomas Stillwater\'s record of the seventh clause, as every child in Kingsmere may read it. ' +
+      'The clause is set out in full. The harbor of Xaraguá is to be revisited, at the Throne\'s discretion. ' +
+      'Beneath it: agreed by all the houses of the Accord in the Regent\'s court, before the justiciar, Xaraguá\'s cacique consenting. ' +
+      'The page is very clean. There are no margins. There are no notes. ' +
+      'Thomas Stillwater signed it as clerk, in a neat young hand, and dated it by the year of the reign and nothing else. ' +
+      'Somebody has pencilled a question mark beside the word consenting, and somebody else has rubbed it out.',
+  },
+  {
+    id: 'aldermoor_ratification_minutes',
+    title: 'Minutes of the Ratification',
+    category: 'law',
+    text:
+      'The court\'s own minutes of the day the seventh clause was ratified, in the twenty-third year of the Old King. ' +
+      'The court sat at the keep. The justiciar presided. The clause was read twice, once for each house that asked. ' +
+      'Ardencia refused it aloud and was recorded as refusing. ' +
+      'The minutes list the houses present, and say that the roll was called in the usual way. ' +
+      'They do not copy out the roll. For that, the minutes say, see the roll of the court. ' +
+      'A later hand has added: the roll of that day is kept in the court, and is not lent. ' +
+      'The minutes end with the hour: a quarter past noon.',
+  },
+  {
+    id: 'aldermoor_stillwater_line',
+    title: 'The Stillwater Line',
+    category: 'genealogy',
+    text:
+      'Dame Agatha, who founded the house and wrote everything down. ' +
+      'Thomas, her grandson, a clerk of the Throne at fifteen, who sat in the gallery at Eightgate for the sealing of the Accord. ' +
+      'He kept the Crown\'s records for fifty years and was known for a careful hand and a patient temper. ' +
+      'Rosalind, his daughter, who sits on the Regent\'s council and is said to have never once raised her voice. ' +
+      'Edmund, her son, educated at Kingsmere and on the heath, by a printer the house no longer mentions. ' +
+      'The entry for Edmund ends: has struck an officer of the Crown, and apologised. ' +
+      'The entry for Thomas ends: died at his desk, with a pen in his hand.',
+  },
 ];
 
 export const SHELVES: readonly Shelf[] = [
@@ -1286,6 +1377,10 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'jwa_lib_c', name: 'Shelf: The Bazaar Talks', books: ['jwaladesh_oil_ghee', 'jwaladesh_duels', 'jwaladesh_burned_temple'] },
   { id: 'jwa_treasury', name: 'The Treasury Book', books: ['jwaladesh_treasury_book'] },
   { id: 'jwa_court_records', name: "Shelf: The Court's Records", books: ['jwaladesh_priests_decision', 'jwaladesh_oil_contracts', 'jwaladesh_ledger_advances'] },
+  // Kingsmere (Chapter 9): the Rolls House's two open shelves, and the keep's records shelf in the great hall.
+  { id: 'ald_rolls_a', name: 'Shelf: Law and the Witness', books: ['aldermoor_charter', 'aldermoor_witness_law', 'aldermoor_agatha'] },
+  { id: 'ald_rolls_b', name: 'Shelf: The Court and the Record', books: ['aldermoor_court_circular', 'aldermoor_public_record'] },
+  { id: 'ald_keep_books', name: "Shelf: The Keep's Records", books: ['aldermoor_ratification_minutes', 'aldermoor_stillwater_line'] },
 ];
 
 const BY_ID: ReadonlyMap<string, Book> = new Map(BOOKS.map((b) => [b.id, b]));

@@ -66,6 +66,65 @@ const AGNIPUR_NIGHT: FlagSnapshot = {
   'debate.jwaladesh_hesitation.settled': true,
 };
 
+/** Kingsmere by night (Chapter 9): Vikram and Edmund with the party, the day's four things done, the Toccata begun, in at
+ * the postern, through the iron door into the Crown's archive (data/aldermoor.ts DAY_DONE and KEEP_NIGHT). */
+const KINGSMERE_NIGHT: FlagSnapshot = {
+  ...AGNIPUR_NIGHT,
+  'party.vikram': true,
+  'act8.complete': true,
+  'card.act8_end': true,
+  'ally.jwaladesh': true,
+  'story.aldermoor_arrived': true,
+  'story.moor_gate': true,
+  'story.edmund_met': true,
+  'party.edmund': true,
+  'story.escort_met': true,
+  'story.press_gang_seen': true,
+  'story.court_walked': true,
+  'story.regent_met': true,
+  'story.regent_refused': true,
+  'story.almoner_seen': true,
+  'story.jordyn_seen': true,
+  'story.jordyn_line': true,
+  'story.jordyn_offer': true,
+  'story.sebastian_met': true,
+  'story.chapel_seen': true,
+  'side.purge_list.accepted': true,
+  'side.purge_list.done': true,
+  'clue.list_leaked': true,
+  'family.pie': true,
+  'family.tea': true,
+  'family.constable': true,
+  'story.families_warned': true,
+  'debate.aldermoor_one_hand.listened': true,
+  'debate.aldermoor_one_hand.joined': true,
+  'debate.aldermoor_one_hand.settled': true,
+  'story.recital_begun': true,
+  'story.recital_seen': true,
+  'story.postern_open': true,
+  'story.keep_archive_entered': true,
+};
+/** The Assize at dawn (Chapter 9): caught, a night in the cells, the archive's papers in the court's evidence, the court opened. */
+const KINGSMERE_ASSIZE: FlagSnapshot = {
+  ...KINGSMERE_NIGHT,
+  'clue.first_revisiting': true,
+  'clue.mirror_filing': true,
+  'clue.crown_pact': true,
+  'clue.ash_road_accounts': true,
+  'anchor.thomas_record': true,
+  'story.record_found': true,
+  'side.crown_chronicle.accepted': true,
+  'side.crown_chronicle.done': true,
+  'story.caught': true,
+  'evidence.crown_pact': true,
+  'evidence.ash_road_accounts': true,
+  'evidence.thomas_record': true,
+  'evidence.crown_chronicle': true,
+  'story.cells_night': true,
+  'story.assize_dawn': true,
+  'story.assize_opened': true,
+};
+
 /** Kirinoura on the day (Chapter 7): Bayarmaa with the party, the letter given, Kayla met, the Spy Ledger accepted. */
 const KIRINOURA_DAY: FlagSnapshot = {
   ...BEFORE_LOCKET,
@@ -320,5 +379,26 @@ export const PUZZLES: readonly PuzzleDef[] = [
     spawn: 'stair_head',
     flags: { ...AGNIPUR_DAY, 'side.lamp_relay.accepted': true, 'clue.relay_route': true, 'item.relay_lamp': true },
     goal: { flag: 'side.lamp_relay.done' },
+  },
+  // SIG-ALM part 1 (the Chapter 9 outline, section 3 with its second review's 3.6): the filing floor's memory shows
+  // Thomas filing the pact mirrored (the thirty-second year, not the twenty-third) under the house the lie is about; the
+  // panel behind the Ash Wars shelf (Al-2) holds his true record, loosened in the memory first. Out only with all three.
+  {
+    id: 'aldermoor_archive',
+    title: 'The Crown\'s archive: the year mirrored, the Brasador red, the panel behind the shelf (SIG-ALM part 1, Al-2)',
+    map: 'aldermoor-keep',
+    spawn: 'archive_in',
+    flags: { ...KINGSMERE_NIGHT },
+    goal: { all: [{ flag: 'clue.crown_pact' }, { flag: 'anchor.thomas_record' }, { flag: 'side.crown_chronicle.done' }] },
+  },
+  // SIG-ALM part 2: the courtroom (the clerk's tree). The roll of the court comes from the dock's memory; the record
+  // alone is a word against a word; the Almoner must swear to the public edition first. The three, and it is read.
+  {
+    id: 'aldermoor_assize',
+    title: 'The Assize: the roll from the dock\'s memory, the Almoner pressed, the record laid (SIG-ALM part 2)',
+    map: 'aldermoor-keep',
+    spawn: 'dock',
+    flags: { ...KINGSMERE_ASSIZE },
+    goal: { flag: 'story.record_read' },
   },
 ];

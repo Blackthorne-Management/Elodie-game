@@ -129,6 +129,14 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'jwaladesh-library': 'home',
   'jwaladesh-court': 'majlis',
   'jwaladesh-saltflats': 'crossroads',
+  // Kingsmere (Chapter 9): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md): the square plays the
+  // farewell track, the keep and the court the hall's, the church the archive's, the heath and the close the crossroads.
+  'aldermoor-heath': 'crossroads',
+  'aldermoor-cross': 'seat',
+  'aldermoor-rolls': 'home',
+  'aldermoor-keep': 'majlis',
+  'aldermoor-close': 'crossroads',
+  'aldermoor-cathedral': 'throne_archive',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */

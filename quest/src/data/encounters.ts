@@ -413,6 +413,87 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
     ],
   },
+  // Chapter 9's scripted fights (data/battles.ts), for the Foes page. No map rolls on this table.
+  aldermoor_story: {
+    id: 'aldermoor_story',
+    groups: [
+      {
+        id: 'press_gang',
+        weight: 0,
+        level: 22,
+        foes: ['Moor Constable', 'Crown Officer', 'Moor Constable'],
+        intro: 'The press-gang\'s sergeant gets up out of the wet. His constables close in.',
+        won: 'The sergeant sits down again. The constables apologise.',
+        fled: 'There is no running from a press-gang. Mr. Stillwater will not hear of it.',
+      },
+      {
+        id: 'chapel',
+        weight: 0,
+        level: 23,
+        foes: ['Husher', 'Quiet Crown Zealot', 'Husher', 'Bog Hound'],
+        intro: 'The veils in the bog chapel stand up from their knees, all together.',
+        won: 'The veils go out into the bog. The lantern is left burning.',
+        fled: 'You fall back up the causeway.',
+      },
+      {
+        id: 'hushed',
+        weight: 0,
+        level: 24,
+        foes: ['The Hushed', 'Veil', 'Veil'],
+        intro: 'The Almoner stands in the court and says: enough noise.',
+        won: 'She goes down on one knee in front of the dock.',
+        fled: 'Nobody leaves the court while it sits.',
+      },
+    ],
+  },
+  // The Heath (Chapter 9; the outline section 5 with its second review's 3.5: the realm-wide ambush rule, no taper): trios
+  // at 23 to 24 (the sim: pairs are trivial to this party). Constables and their hounds, the Hushed's veils, the Crown's
+  // musketeers, and a Sealbearer. The road, the landing, the barn's yard, the causeway and the chapel are safe.
+  heath: {
+    id: 'heath',
+    groups: [
+      {
+        id: 'constable_hounds',
+        enemies: ['moor_constable', 'bog_hound', 'bog_hound'],
+        weight: 2,
+        level: 23,
+        foes: ['Moor Constable', 'Bog Hound', 'Bog Hound'],
+        intro: 'A constable with two bog hounds on a lead. "Sorry, madam. The heath is unsafe for guests."',
+        won: 'The constable takes his hounds home. He apologises over his shoulder.',
+        fled: 'You run for the road. The hounds stop at its edge.',
+      },
+      {
+        id: 'hushers',
+        enemies: ['heath_husher', 'heath_husher', 'qc_zealot'],
+        weight: 1,
+        level: 23,
+        foes: ['Husher', 'Husher', 'Quiet Crown Zealot'],
+        intro: 'Three veils in the heather, kneeling to the Hushed\'s word. They stand up, all together.',
+        won: 'The veils go back into the rain.',
+        fled: 'You run for the road. The heather goes quiet behind you.',
+      },
+      {
+        id: 'musketeers',
+        enemies: ['crown_musketeer', 'crown_musketeer', 'crown_officer'],
+        weight: 1,
+        level: 24,
+        foes: ['Crown Musketeer', 'Crown Musketeer', 'Crown Officer'],
+        intro: 'A Crown patrol on the moor, muskets under oilcloth. "Halt. The heath is closed."',
+        won: 'The patrol marches back toward the Moor Gate, wet through.',
+        fled: 'You slip away through the heather.',
+      },
+      {
+        id: 'sealbearer',
+        enemies: ['al_sealbearer', 'crown_musketeer', 'moor_constable'],
+        weight: 1,
+        level: 24,
+        foes: ["Regent's Sealbearer", 'Crown Musketeer', 'Moor Constable'],
+        intro: 'A Sealbearer with a writ, a musketeer and a constable. "By the Throne\'s seal: you are not on the road."',
+        won: 'The Sealbearer folds his writ, very carefully, and leaves.',
+        fled: 'You run for the road. He writes something down.',
+      },
+    ],
+  },
   // Chapter 8's scripted fights (data/battles.ts), for the Foes page. No map rolls on this table.
   jwaladesh_story: {
     id: 'jwaladesh_story',

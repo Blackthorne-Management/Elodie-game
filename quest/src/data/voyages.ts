@@ -125,4 +125,40 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 8's end into Chapter 9 (the outline beat 0): out of Agnipur's bay, round the south-west and north along the
+  // white coast to the Mere Stair below Kingsmere (the trader will not tie up under a Crown gun).
+  jwaladesh_aldermoor: {
+    id: 'jwaladesh_aldermoor',
+    harbor: 'The Harbor Chain, Agnipur',
+    paddle: 'A harbor boat takes them out under the lit chain lamp to the Zetwal trader.',
+    aboard: 'The gold sails go up. North along the white coast, Salkhi in the hold, Vikram at the rail.',
+    shore: 'jwaladesh',
+    start: { x: 42, y: 101 },
+    via: [{ x: 36, y: 118 }, { x: 4, y: 112 }, { x: 6, y: 80 }],
+    end: { x: 14, y: 62 },
+    captions: [
+      { at: 0, text: 'North, past the salt, along the white coast...' },
+      { at: 0.6, text: 'The sea goes from green to grey...' },
+      { at: 0.85, text: '...to the moor, where the Crown keeps its books.' },
+    ],
+    music: 'farewell',
+  },
+  // Chapter 9's end into Chapter 10 (the outline beat 8): out of the mere's mouth, south down the grey coast and east along
+  // the realm's south, home to Pòdlimyè's harbor before the Crown's fleet.
+  aldermoor_zetwal: {
+    id: 'aldermoor_zetwal',
+    harbor: 'The Mere Stair, Kingsmere',
+    paddle: 'The trader\'s boat takes them off the stair at dawn, the rain gone.',
+    aboard: 'The gold sails go up. South, then east, Edmund on the deck with his tea.',
+    shore: 'aldermoor',
+    start: { x: 14, y: 62 },
+    via: [{ x: 6, y: 80 }, { x: 4, y: 112 }, { x: 40, y: 122 }, { x: 110, y: 118 }, { x: 122, y: 80 }],
+    end: { x: 119, y: 37 },
+    captions: [
+      { at: 0, text: 'Out of the mere, down the grey coast...' },
+      { at: 0.5, text: 'East, along the realm\'s south...' },
+      { at: 0.85, text: '...by every shore that spoke for us, home to Zetwal.' },
+    ],
+    music: 'farewell',
+  },
 };

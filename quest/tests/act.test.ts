@@ -2,7 +2,7 @@
 // game by the scripted route the smoke test also drives in the browser (routes/zetwal-act1.json).
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9 } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { partyMembers } from '../src/engine/rpg.ts';
@@ -24,6 +24,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   const chapter6: string[] = [];
   const chapter7: string[] = [];
   const chapter8: string[] = [];
+  const chapter9: string[] = [];
+  /** Where the party stood, and what it had fought, on Agnipur's quay at Chapter 8's end (the route goes on into Chapter 9). */
+  let atChapter8End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, as Chapter 7's card shows (the route goes on into Chapter 8). */
   let atChapter7End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, as Chapter 6's card shows (the route goes on into Chapter 7). */
@@ -67,6 +70,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     if (item.kind === 'mark' && item.name === 'chapter7-end') {
       atChapter7End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
     }
+    if (item.kind === 'mark' && item.name === 'chapter8-end') {
+      atChapter8End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
+    }
     if (item.kind === 'mark' && item.name === 'end-card') {
       atChapterEnd = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => KEPT.test(k)));
     }
@@ -108,6 +114,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       if (ACT8.maps.includes(sim.logic.state.player.mapId)) {
         const id8 = currentObjective(ACT8, sim.logic.state.flags)?.id ?? 'complete';
         if (chapter8.at(-1) !== id8) chapter8.push(id8);
+      }
+      if (ACT9.maps.includes(sim.logic.state.player.mapId)) {
+        const id9 = currentObjective(ACT9, sim.logic.state.flags)?.id ?? 'complete';
+        if (chapter9.at(-1) !== id9) chapter9.push(id9);
       }
       if (eras.at(-1) !== sim.logic.era) eras.push(sim.logic.era);
       if (maps.at(-1) !== sim.logic.state.player.mapId) maps.push(sim.logic.state.player.mapId);
@@ -241,14 +251,14 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('Chapter 8: under the chain, the stair, Aiyana\'s roof, the Court and the duel, the day (J-2, J-3, the debate), the tower, Arjun\'s night, the roofs, the flame, Dhanraj, the price, the quay', () => {
-    const flags = sim.logic.state.flags;
+    const flags = new FlagStoreView(atChapter8End.flags);
     // Every objective in order (the landing is done by the arrival itself, so the route never stops on it).
     expect(chapter8).toEqual([...ACT8.objectives.map((o) => o.id).filter((id) => id !== 'chain'), 'complete']);
     // The duel (lost on the route: the headless run ends a sparring match as a loss), the salt road and the Seth.
-    expect(sim.battles.slice(atChapter7End.battles.length)).toEqual(['duel_yard_vikram', 'salt_road_enforcers', 'oil_store_dhanraj']);
+    expect(atChapter8End.battles.slice(atChapter7End.battles.length)).toEqual(['duel_yard_vikram', 'salt_road_enforcers', 'oil_store_dhanraj']);
     expect(flags.isSet('act8.complete') && flags.isSet('card.act8_end')).toBe(true);
-    expect(sim.logic.state.player.mapId).toBe('jwaladesh-harbor');
-    expect(sim.logic.mode).toBe('field');
+    expect(atChapter8End.map).toBe('jwaladesh-harbor');
+    expect(atChapter8End.mode).toBe('card');
     // Vikram joins at the flame and stays; the Echo party is unchanged.
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram']);
     expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
@@ -256,6 +266,25 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       expect(flags.isSet(f), f).toBe(true);
     }
     for (const name of ['Vikram', 'Aiyana', 'Meera', 'Senior Keeper', 'Junior priest', "The Crown's oil-factor", 'Seth Dhanraj', 'Arjun', 'Chief runner', 'Carter', 'Oil Enforcer']) expect(speakers).toContain(name);
+  });
+
+  it('Chapter 9: the Mere Stair, the Cross, the audience, the day (Al-3, the debate, Jordyn, Sebastian), the recital, the archive, caught, the Assize, the Hushed, the price, home', () => {
+    const flags = sim.logic.state.flags;
+    // Every objective in order (the landing is done by the arrival itself; the toccata objective follows the side quests).
+    expect(chapter9).toEqual([...ACT9.objectives.map((o) => o.id).filter((id) => id !== 'mere'), 'complete']);
+    // The press-gang on the Cross, the bog chapel's cell (Al-3) and the Hushed in the Assize.
+    expect(sim.battles.slice(atChapter8End.battles.length)).toEqual(['press_gang_cross', 'bog_chapel_cell', 'assize_hushed']);
+    expect(flags.isSet('act9.complete') && flags.isSet('card.act9_end')).toBe(true);
+    // Home across the bay: the trader lands them on Zetwal's harbour (Chapter 10 starts there).
+    expect(sim.logic.state.player.mapId).toBe('zetwal-harbor');
+    expect(sim.logic.mode).toBe('field');
+    // Edmund joins at the press-gang on the Cross and leads the order for the chapter; after it he stays, behind the others.
+    expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toContain('edmund');
+    expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
+    for (const f of ['party.edmund', 'ally.aldermoor_dissidents', 'clue.crown_pact', 'anchor.thomas_record', 'story.caught', 'story.hushed_beaten', 'story.jordyn_offer', 'story.sebastian_met', 'story.families_warned', 'side.purge_list.done', 'side.crown_chronicle.done', 'debate.aldermoor_one_hand.settled', 'belief.rael_traitor']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    for (const name of ['Edmund', 'Jordyn', 'Sebastian', 'The Almoner', 'The Lord Regent']) expect(speakers).toContain(name);
   });
 
   it('Chapter 3: the two required side quests and the debate are done before noon, and pay', () => {

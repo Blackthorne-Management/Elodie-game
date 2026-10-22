@@ -776,6 +776,88 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     closedText: 'Closed: the two on the spice row are still at it. They always are.',
     reward: { xp: 15, pillar: { pillar: 'influence', city: 'jwaladesh', amount: 1 } },
   },
+  // ---- Chapter 9, Kingsmere (the outline section 7, with its second review): two required side quests and the debate ----
+  // The Purge List (Al-3; the rebel safehouse, the eighth thumbprint): Edmund's tutor at the printing barn, the bog
+  // chapel's cell (the wild section on the route), the list with the grey thumb on its cover, three families warned on
+  // the Cross (one too late: the review's 3.10), the press. Opens before the court (Claude's call), so the dissidents'
+  // price is paid by the chapter, not by its ending.
+  {
+    id: 'purge_list',
+    title: 'The Purge List',
+    giver: 'The printer',
+    place: 'The printing barn on the heath',
+    level: 23,
+    summary:
+      'The almswomen carry a list to the bog chapel at dusk: names, streets, "quiet" beside each. The printer wants it, to print it.',
+    accepted: f('side.purge_list.accepted'),
+    available: f('story.regent_refused'),
+    start: [{ map: 'aldermoor-heath', at: { x: 19, y: 9 } }],
+    nudge: 'Edmund\'s teacher is out on the heath, Gigi. He said "purged".',
+    steps: [
+      { text: 'The printer at the barn on the heath.', done: f('side.purge_list.accepted'), goals: [{ map: 'aldermoor-heath', at: { x: 19, y: 9 } }] },
+      { text: 'The bog chapel at dusk, south of the road.', done: f('clue.list_leaked'), goals: [{ map: 'aldermoor-heath', at: { x: 27, y: 18 } }] },
+      {
+        text: 'Warn the three on the Cross: the pie shop, the tea shop with the shut door, the constable\'s house.',
+        done: f('story.families_warned'),
+        goals: [
+          { if: { notFlag: 'family.pie' }, map: 'aldermoor-cross', at: { x: 3, y: 11 } },
+          { if: { notFlag: 'family.tea' }, map: 'aldermoor-cross', at: { x: 32, y: 5 } },
+          { map: 'aldermoor-cross', at: { x: 38, y: 22 } },
+        ],
+      },
+      { text: 'Back to the printer, with the list.', done: f('side.purge_list.done'), goals: [{ map: 'aldermoor-heath', at: { x: 19, y: 9 } }] },
+    ],
+    done: f('side.purge_list.done'),
+    closed: f('story.recital_begun'),
+    closedText: 'Closed: the court sat before the list was printed.',
+    reward: { gold: 300, xp: 60, pillar: { pillar: 'fear', city: 'aldermoor', amount: 3 } },
+  },
+  // The Crown Chronicle (Al-2; the third of the four Ash Wars accounts): on the archive's Ash Wars shelf, which stands in
+  // front of Thomas's panel (the review's 3.6: the panel is behind the shelf, so taking the chronicle is the way to the
+  // anchor's present half); its fly-leaf read again beside the record. The archive's door waits for it.
+  {
+    id: 'crown_chronicle',
+    title: 'The Crown Chronicle',
+    giver: 'The Ash Wars shelf',
+    place: 'The Regent\'s archive',
+    level: 23,
+    summary:
+      'The Crown\'s account of the Ash Wars, the third of four. On its fly-leaf, in an old clerk\'s hand: written to order.',
+    accepted: f('side.crown_chronicle.accepted'),
+    available: f('story.keep_archive_entered'),
+    start: [{ map: 'aldermoor-keep', at: { x: 17, y: 2 } }],
+    nudge: 'The shelf by the panel has a book about the Ash Road.',
+    steps: [
+      { text: 'Lift the chronicle down from the Ash Wars shelf.', done: f('side.crown_chronicle.accepted'), goals: [{ map: 'aldermoor-keep', at: { x: 17, y: 2 } }] },
+      { text: 'Read the fly-leaf again, beside the record from the panel.', done: f('side.crown_chronicle.done'), goals: [{ map: 'aldermoor-keep', at: { x: 18, y: 2 } }] },
+    ],
+    done: f('side.crown_chronicle.done'),
+    closed: f('story.caught'),
+    closedText: 'Closed: the watch took the chronicle into evidence before its note was read.',
+    reward: { xp: 40, pillar: { pillar: 'influence', city: 'aldermoor', amount: 2 } },
+  },
+  // The Market Cross's debate, as a required quest (outline 7.3): Should the Throne have one hand?
+  {
+    id: 'one_hand',
+    title: 'One Hand',
+    giver: 'Gaze exile',
+    place: 'The Market Cross',
+    level: 23,
+    summary:
+      'By the Market Cross a Quiet Crown hierarch and a Gaze exile argue whether the Throne should have one hand. Hear them out, then make your case.',
+    accepted: { any: [f('debate.aldermoor_one_hand.listened'), f('debate.aldermoor_one_hand.settled')] },
+    available: f('story.edmund_met'),
+    start: [{ map: 'aldermoor-cross', at: { x: 24, y: 13 } }],
+    nudge: 'The two by the cross are arguing about hands.',
+    steps: [
+      { text: 'Listen to the debate by the cross.', done: f('debate.aldermoor_one_hand.listened'), goals: [{ map: 'aldermoor-cross', at: { x: 24, y: 13 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.aldermoor_one_hand.settled'), goals: [{ map: 'aldermoor-cross', at: { x: 24, y: 13 } }] },
+    ],
+    done: f('debate.aldermoor_one_hand.settled'),
+    closed: f('story.recital_begun'),
+    closedText: 'Closed: the two by the cross are still at it. They always are.',
+    reward: { xp: 15, pillar: { pillar: 'influence', city: 'aldermoor', amount: 1 } },
+  },
 ];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */

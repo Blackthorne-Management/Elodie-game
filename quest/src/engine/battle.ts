@@ -160,6 +160,11 @@ export interface SkillDef {
    */
   gold?: { base: number; perLevel?: number };
   goldRate?: number;
+  /**
+   * A heal by share (Tea Break, Edmund, Chapter 9): each target gets this share of its own max HP back, whatever the
+   * healer's MAG (a tank's heal). `power` is unused for it.
+   */
+  healShare?: number;
   /** Damage skills: this much more power for every foe felled so far this battle (Azzy's Reinado de Cenizas). */
   powerPerFell?: number;
   /**
@@ -258,6 +263,11 @@ export interface EnemyDef {
   boss?: boolean;
   /** ATK times this (a boss's weight behind the blade). */
   atkScale?: number;
+  /**
+   * MAG times this (a caster boss's weight behind her spells; Chapter 9, the Hushed: the second review's 3.1, a caster
+   * boss's spells never scaled with `atkScale`). Omitted: 1 (every boss before Chapter 9).
+   */
+  magScale?: number;
   /** ATK share added for every party fighter Bound (Rael's Sangre Ardiente). */
   atkPerBound?: number;
   /**
@@ -583,7 +593,7 @@ export function enemyStats(def: EnemyDef): { hp: number; atk: number; def: numbe
     hp: Math.round(line('hp') * role.hp * (def.hpScale ?? 1)),
     atk: Math.round(line('atk') * role.atk * (def.atkScale ?? 1)),
     def: Math.round(line('def') * role.def),
-    mag: Math.round(line('mag') * role.mag),
+    mag: Math.round(line('mag') * role.mag * (def.magScale ?? 1)),
     spd: Math.round(line('spd') * role.spd),
   };
 }
@@ -1002,8 +1012,9 @@ export class Battle {
 
   /** Whether a fighter can use a skill now: SP, cooldown, once per battle. */
   canUse(c: Combatant, skill: SkillDef): boolean {
-    // Hushed: no SP skills (Attack's weapon moves still work).
-    if (!isMove(skill) && c.statuses.some((st) => STATUS[st.id].noSkills)) return false;
+    // Hushed: no skills and no weapon moves (Chapter 9, the second review's 3.1, COMBAT 10's row): Attack, Guard and
+    // Item only.
+    if (c.statuses.some((st) => STATUS[st.id].noSkills)) return false;
     if (c.sp < skillCost(skill, c)) return false;
     if (goldCost(skill, c) > this.purse) return false;
     if ((c.cooldowns[skill.id] ?? 0) > 0) return false;
@@ -1416,7 +1427,9 @@ export class Battle {
           if (surge) this.surgeArmed = true;
           events.push(...this.hit(me, t, skill.name, power, type, skill.element));
         } else if (skill.kind === 'heal') {
-          const rolled = bought || Math.round(((me.mag * skill.power) / 100) * (0.95 + this.rng.next() * 0.1));
+          const rolled =
+            bought ||
+            (skill.healShare !== undefined ? Math.max(1, Math.round(t.maxHp * skill.healShare)) : Math.round(((me.mag * skill.power) / 100) * (0.95 + this.rng.next() * 0.1)));
           const amount = Math.min(t.maxHp - t.hp, rolled);
           t.hp += amount;
           events.push({ kind: 'heal', to: t.key, hp: amount, sp: 0, source: skill.name });

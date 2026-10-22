@@ -51,6 +51,10 @@ Quill and Chapter 2's Conch).
 | Nov 16 to 21 | The whole game played through: balance over 30 levels, phones, saves, accessibility, the phrase check, fixes | | | |
 | **Nov 22** | **Release** | | | |
 
+**Where it stands (Oct 22):** Chapters 1 to 8 are built (Chapter 8 on its branch); **Chapter 9 is built on branch
+`chapter9`** (the outline's "Built" section: `reviews/2026-10-22-chapter9-outline.md`), well before the Nov 8 decision
+date. Its route ends at level 24, the band's top, so the Muster (24 to 25) starts where it should.
+
 **Reviews by the owner and the objective reviewer, in batches:**
 - Chapters 1 and 2, about Oct 27;
 - Chapters 3 to 5, about Nov 1;

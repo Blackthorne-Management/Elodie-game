@@ -76,7 +76,7 @@ export const LEVELS = {
  * 18, three under 21; Agnipur's side quests pay less instead (J-2 and J-3 25, the salt road 20), so the route still
  * ends on 21 (COMBAT.md 6, "Chapter 8").
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
@@ -204,8 +204,9 @@ export const STATUS = {
    */
   gilded: { turns: 3, dealt: 1, taken: 0.5, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: true, noSkills: false },
   /**
-   * Hushed (COMBAT 10; Chapter 7, the Husher's Hush): no SP skills for its turns. Attack, the weapon moves under it,
-   * Guard and Item still work.
+   * Hushed (COMBAT 10; Chapter 7, the Husher's Hush): no skills for its turns. Attack, Guard and Item still work. From
+   * Chapter 9 (the second review's 3.1, Claude's call) the weapon moves under Attack are hushed too, as COMBAT 10's
+   * row says ("Attack, Guard, Item still work"): a hushed fighter is down to the plain blow, and DEF carries the fight.
    */
   hushed: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false, noSkills: true },
   /**

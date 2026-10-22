@@ -1475,3 +1475,151 @@ new language).
 - **Owner decision (Oct 22): yes.** The Almoner is the veiled woman from Chapter 1's Cane Road. The
   facts are corrected per review finding 2: the Cane Road by the mill, `choice.warned_watcher`, Gianna's own words,
   and her line "No one. That is the point of us." quoted back at the unmasking.
+
+## Built (Oct 22): what changed from this outline, and Claude's calls
+
+Built on branch `chapter9` (from `chapter8` at `e371293`), with every fix in section 6 of the second review
+(`2026-10-22-chapter9-outline-review.md`) and the decisions above applied. Code: `quest/tools/maps/aldermoor.ts` (six
+maps: the heath, the Market Cross, the Rolls House, the keep, the close, St. Agatha's), `quest/src/data/aldermoor.ts`
+(places and conditions both the maps and the scenes read: `DAY_DONE`, `EVE`, `KEEP_NIGHT`, `LAST_DAWN`, `RAIN`, the
+cabinets), `quest/src/data/dialogue/aldermoor.ts`, `ACT9` in `quest/src/data/quests.ts`, the Aldermoor entries in
+`battles.ts`, `encounters.ts`, `sideQuests.ts`, `debates.ts`, `books.ts`, `rpg.ts`, `npcs.ts`, `speakers.ts`,
+`objects.ts`, `cards.ts`, `voyages.ts`, `weapons.ts`; the engine's `magScale`, Hushed taking the weapon moves and the
+heal by share (`healShare`) in `engine/battle.ts`; Edmund as the eighth follower in `scenes/FieldScene.ts` and a stage
+actor (`STAGE_PARTY`); the shore `aldermoor` in `engine/voyage.ts` and `scenes/VoyageScene.ts`. Tests:
+`quest/tests/aldermoor.test.ts`, `assizeFight.test.ts`, the Chapter 9 parts of `act.test.ts`, `goldWalk.test.ts` and
+`levelCurve.test.ts`; puzzles `aldermoor_archive` and `aldermoor_assize`. Commits: engine `95ce942`, content
+`17a391d`, tests `0d04d6c`, then these docs.
+
+**The review's fixes, as built:**
+- **The boss (3.1).** The Hushed is level 24, **HP x7, MAG x1.25** (`magScale`, new: a caster boss's spells now scale
+  as a striking boss's blows do); two veils (`court_husher`) stand in front of her (`protects: 'the_hushed'`). Hush is
+  an area spell every third turn (half the party, two turns); **Hushed blocks the weapon moves too** (Attack, Guard
+  and Item only; written into `COMBAT.md`). At 60% *Hush the Light* (aimed at Anissa: Gianna steps in, `seize`); at 25%
+  the veil comes off and two more veils come down the gallery stair. She withdraws at 0 HP ("goes down on one knee").
+  The sims count falls across the whole party. The start tip is the review's: "She takes your words, Gigi. Plain
+  blows still land. My light still comes. Edmund, hold them." (Anissa's Light is no skill, so Hush never takes it;
+  Gianna's light spells are resisted and are skills.) Measured with Edmund benched and with a party at 20 (below).
+- **Chapter 1's veiled woman (3.2; owner decision Oct 22: yes).** Her talk on the Cane Road sets `story.watcher_met`;
+  she is placed only while `!story.hushed_beaten`; Anissa's and the Almoner's lines in the court branch three ways
+  ("That's the lady by the mill. On the cane road." / "Your sister told me to stay away from you. I did." / "Your
+  sister has kept you very close."); at the unmasking she says "You wanted a face. It is no one's. That is the point of
+  us."; "the Hushed" is seeded on the purge list and at the bog chapel; the Almoner's veiled look is the road
+  watcher's (`quiet_crown_f_brown`).
+- **Sebastian Jean-Philippe (3.3).** The bill on the heath's notice post; Anissa reads it: "Jean-Philippe. Gigi,
+  that's Grandpapa's name." Gianna: "That's Mummy's brother. He writes to her about the weather." (the organ line is
+  cut).
+- **Anissa (3.4).** She comes through the postern with the party and holds the Echo's door at the archive ("The floor
+  is shimmering, Gigi. I can hold the door."); she is caught and arrested with her sister; Sebastian visits the cell
+  and passes a blanket through the bars.
+- **Levels (3.5).** Planned from 21. Chapter 9's steps pay **70** (`XP_PER_OBJECTIVE_BY_CHAPTER[8]`; three pay nothing:
+  the Mere Stair, the Toccata's follow-the-quest step, home). The Hushed 260, the press-gang 50, the bog chapel's cell
+  40, Al-3 60, Al-2 40, the debate 15, seven books. `CHAPTER_LEVELS` 9 unchanged (21 to 24). Measured below.
+- **Al-2 required (3.6).** Thomas's panel is behind the Ash Wars shelf: lifting the chronicle down is the way to it
+  (Edmund walks the shelf a foot to the right). The archive's door sends the party back in ("Not yet. Thomas's panel.
+  The drawer. The book.") until the pact, the anchor and Al-2 are all done.
+- **The price (3.7), option (a).** Fear at Aldermoor: Al-3 +3, the Hushed beaten +1, Jordyn's defection +1, the
+  Hushed broken before the city +1 (or tried by their law: Influence +1). **Floor 5, ceiling 6** of a price of 8: the
+  dissidents' printer says "Not afraid enough. Not yet. Your Muster can collect the rest." when it is short, and
+  nothing is counted twice (the court is Influence, not Fear).
+- **Story logic (3.8).** The council in the Echo: "And the Marshal sealed the binding." with the protest branched on
+  `choice.patricio_protest`; the dock's Echo is the court and the roll over an empty dock (no Caona, no Patricio);
+  Thomas writes the true record again here, at a quarter to three by the tower bell; on the eve the Almoner stops at
+  St. Agatha's west door, turns and walks back to the keep; the commission is "Under the Throne's seal. No hand."
+  (the Journal: "The Crown disowns any almoner."); Jordyn returns the evidence at dawn by the book; the Regent's "Not
+  today."; St. Agatha's west door is held ("Rehearsal") until Jordyn has named the hour; Haru's "He said he was always
+  at Eightgate." / Edmund: "He says that everywhere."; the door's filing rule has its second line ("Matters touching a
+  clause are filed with the clause.") and the honest drawer's slip reads "removed to the Lord Regent's keeping"; the
+  trader never counts nights at the end; Edmund was the Chapter 5 legate's aide ("Miss Yari. I read your petition, at
+  Eightgate. Somebody should.", when the player met the aide in Chapter 5, `side.seats.aldermoor`), and that aide's look
+  is now Edmund's.
+- **Tone (3.9).** The organ line is cut; Samira's "I may enjoy this" and Anissa's rain line are in separate nodes at the landing; Edmund's sitting line is gone with 3.4;
+  Sebastian's review line is cut; the tip is fixed; "spoken about" in the docs; a human read of the archive scene and
+  every Jordyn, Sebastian and Almoner line is in the reviewer prompt.
+- **Shown (3.10).** One of Al-3's three doors is too late: the tea shop with the shut door. A woman opens it and cannot
+  say her name; Haru reads it off the list and she nods. No line from her, no Anissa in the node. Gianna: "We were too
+  late for one."
+- **Engine claims and budget (3.11).** The escort are stage actors placed at the gate; the rain is a map-mood wash on
+  a condition (`RAIN`, not a tile layer); the cabinets are dialogues whose choices set the year dial and the seal switch
+  (flags with values) and whose pull branches on `eq`; no conditional encounter weight, no grace; Edmund walks as the
+  eighth follower and is borrowed as a stage actor; the shore `aldermoor` is built. Cut from the start: Calm and
+  Comfort (`seize` with the tell), the Long Watch, Stillwater's Patience, the law-seal brooch's special (stats only).
+  The build took about the review's 3 to 3.5 days of work in one session.
+- **Game Over and saves (3.12).** A loss to the Hushed leaves the party in the dock: the watch holds the courtroom's
+  door ("The court will wait, envoy. Mend. Nobody leaves while it sits."), and a step on the dock's edge replays
+  "Enough noise." and the fight (`hushed_again`; tested). The cell's bench has "Sleep." (the dawn), and a save in the
+  cell reloads to the same night. The heath's and the chapel's fights use the built rule (one step back).
+- **Pacing (3.13).** The close's bell is a scene cue; the eve is a condition (`EVE`: the day's four done, the recital
+  not begun), not a global dusk.
+
+**Other Claude's calls in the build:**
+- **Six maps, not five:** the close is its own small outdoor map (`aldermoor-close`, 18 x 7), because the hall and the
+  close share no path and the arrow and the doors must see them apart. The others: `aldermoor-heath` 46 x 28,
+  `-cross` 42 x 30, `-rolls` 22 x 14 (an interior), `-keep` 40 x 30 (the archive, the hall, the courtroom, the yard,
+  the cells), `-cathedral` 26 x 18.
+- **The voyage** `jwaladesh_aldermoor` from Agnipur's quay (Chapter 8's last scene now sets it); `?chapter=9` starts at
+  the foot of the Mere Stair after it; the voyage home `aldermoor_zetwal` lands on Zetwal's harbour, where
+  `?chapter=10` starts.
+- **Edmund joins at the pie shop on the Cross** (the press-gang) and leads (fights second) until `act9.complete`, then last. Built: base HP 58
+  (Aldermoor's Vigil folded in), SP 18, ATK 11, DEF 12, MAG 5, SPD 8; growth HP 7, SP 2, ATK 2, DEF 2, MAG 0, SPD 1;
+  the pattern sword of guarding and the Stillwater greatcoat. **Shield Wall** (8 SP) wards the party, a quarter less for 3 turns (the built
+  `warded`, Claude's call for "x0.5 from the next hit"); **Tea Break** (10 SP) heals each ally 15% of their own max HP
+  (`healShare`, new; no Calm). Weapon moves: Shield Bash, Measured Blow, Hold the Line.
+- **The Rolls House** has five books and the keep two (seven in all), as the cut list allowed; the printer works in
+  the barn's yard (no barn interior).
+- **The Almoner's unveiling** in battle is a line, not a change of look (the field shows the unveiled look after).
+- **XP per objective 70**, the Hushed 260, Al-3 60 (the review's 180 and 280 were planned before the levels pass made
+  steps pay by chapter; the measured curve is on target).
+- **Al-3's family step** is one flag (`story.families_warned`), set when the third door is done in any order.
+- **Names by role:** the printer, the clockmaker, the keep's steward, the assize clerk, the Crown magistrate, the
+  witness bishop, the sorry constable; Jordyn, Sebastian, Lady Rosalind, the Almoner and the Lord Regent as the outline
+  has them.
+
+**Levels (`tools/level-curve.ts`, seeds 1 to 200):**
+
+| Ch | Target | Route end (XP) | No side quests | Played median | Played p90 | Wanderer p90 |
+|---|---|---|---|---|---|---|
+| 7 | 17-19 | 19 (5,493) | 17 (4,243) | 19 (5,525) | 19 | 20 |
+| 8 | 19-21 | 21 (6,448) | 19 (5,113) | 21 (6,480) | 21 | 22 |
+| 9 | 21-24 | **24 (8,028)** | **22 (6,538)** | **24 (8,060)** | 25 | 25 |
+
+Chapters 1 to 8 are unchanged (4, 8, 11, 14, 15, 17, 19, 21). Four wild steps on the route in Chapter 9 (no ambush on
+it). The Muster (24 to 25) is met at 24 (25 needs 8,082). Skipping the side quests' rewards leaves the party two under,
+within the rule.
+
+**Fights (`tools/battle-sim.ts`, 40 runs each, at the route's markers; falls counted across the whole party):**
+
+| Fight | Plan | +0% | +30% | +50% |
+|---|---|---|---|---|
+| The Hushed (`aldermoor-assize`, party 21 with Edmund) | Attack | 31/40, 45.7 actions, 89% hurt, 5.9 falls | 40/40, 37.7, 77%, 4.6 | 40/40, 31.9, 68%, 3.5 |
+| The Hushed | Spells | 40/40, 31.0, 62%, 2.9 falls | 40/40, 24.2, 48%, 1.9 | 40/40, 20.7, 39%, 1.1 |
+| The Hushed | Skills | **40/40, 25.9, 34%, 0.85 falls** (17 runs with a fall) | 40/40, 19.2, 23%, 0.2 | 40/40, 16.1, 19%, 0.1 |
+| The Hushed, Edmund benched (party 21) | Attack | 5/40, 6.6 falls | 28/40, 5.7 | 40/40, 4.7 |
+| The Hushed, Edmund benched | Skills | 40/40, 30.1, 46%, 1.9 falls | 40/40, 0.9 | 40/40, 0.3 |
+| The Hushed, party at 20 with Edmund | Skills | 40/40, 26.9, 38%, 1.4 falls | 40/40, 0.6 | 40/40, 0.2 |
+| The Hushed, party at 20, Edmund benched | Attack | 1/40, 6.9 falls | 17/40, 6.2 | 30/40, 5.9 |
+| The Hushed, party at 20, Edmund benched | Skills | 40/40, 31.7, 55%, 2.5 falls | 40/40, 1.4 | 40/40, 0.7 |
+| Press-gang (`aldermoor-cross`, before Edmund) | Attack | 40/40, 84.4, 47%, 2.5 falls | 40/40, 52.1, 30%, 1.1 | same (capped) |
+| Press-gang | Skills | 40/40, 17.4, 8%, 0 falls | 40/40, 12.6, 8%, 0 | same |
+| Bog chapel's cell (`aldermoor-chapel`) | Attack | 40/40, 20.9, 24%, 0.2 falls | 40/40, 17.7, 22%, 0.1 | same |
+| Bog chapel's cell | Skills | 40/40, 10.6, 11%, 0 falls | 40/40, 8.3, 9%, 0 | same |
+
+The heath's ambushes (at `aldermoor-chapel`): a constable and hounds (Attack 28.4 actions, 28%, 0.9 falls; skills
+11.8, 10%, 0), Hushers (Attack 12.5, 12%, 0; skills 7.0, 7%), musketeers (Attack 17.1, 11%, 0; skills 8.2, 4%), a
+Sealbearer (Attack 81.9, 44%, 2.5 falls, armored; skills 9.5, 5%, 0). The ordinary fights' Grudge is capped at +30%,
+so +50% equals +30% there. No player is trapped in the court: the worst case (a party at 20 without Edmund, Attack
+only) wins 30 of 40 at the Grudge's cap, and any use of the kit wins every time. Every fight has a Game Over with a
+way back in (`tests/gameOver.test.ts`, `tests/aldermoor.test.ts`).
+
+**Gold-arrow walk:** Chapter 9 end to end with no stall, **574 steps and 15 map changes** (Chapter 8: 767 and 19)
+(`tests/goldWalk.test.ts`).
+
+**Puzzles:** `aldermoor_archive` (cheats: the honest year 23 under red, 32 under violet, the panel tried without the
+memory) and `aldermoor_assize` (cheats: the steward pressed three times, the record without the roll, the pact laid,
+the roll and the record with the Almoner never pressed). Honest difficulty: the archive about 3 (the rule over the
+door, the memory's mirrored year and the seal), the court about 3.
+
+**Not built (after the release, as planned):** Al-1 Terribly Sorry, Al-4 The Clock That Waits (the clockmaker's line
+at dawn points at it; the tower is inert), Al-5 Tea With Lady Rosalind, Calm and Comfort, the Long Watch, Stillwater's
+Patience, the brooch's special, the contract board's jobs, painted art (placeholders), the organ's own music (St. Agatha's
+plays an existing track, `audio.config.ts`).

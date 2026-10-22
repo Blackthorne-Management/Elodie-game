@@ -1,0 +1,436 @@
+{
+  "compressionlevel": -1,
+  "width": 18,
+  "height": 7,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 7,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 18,
+      "height": 7,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+334,334,334,334,334,334,334,334,334,94,95,334,334,334,334,334,334,334,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,334,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,334,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,334,
+334,334,334,334,334,334,334,334,334,94,95,334,334,334,334,334,334,334
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 18,
+      "height": 7,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 18,
+      "height": 7,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+334,334,334,334,334,334,334,334,334,94,95,334,334,334,334,334,334,334,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,334,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,334,
+334,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,333,334,
+334,334,334,334,334,334,334,334,334,94,95,334,334,334,334,334,334,334
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 18,
+      "height": 7,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 18,
+      "height": 7,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 18,
+      "height": 7,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 18,
+      "height": 7,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "close_gate",
+          "type": "door",
+          "x": 272,
+          "y": 32,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "aldermoor-cross"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "cross_close"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "close_vestry",
+          "type": "door",
+          "x": 144,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "closed",
+              "type": "string",
+              "value": "vestry_locked"
+            },
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.jordyn_offer, !story.caught"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "aldermoor-cathedral"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "cathedral_vestry"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "close_postern",
+          "type": "door",
+          "x": 144,
+          "y": 96,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "closed",
+              "type": "string",
+              "value": "postern"
+            },
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.postern_open, !story.caught"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "aldermoor-keep"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "keep_postern"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 4,
+          "name": "close_offer",
+          "type": "trigger",
+          "x": 240,
+          "y": 16,
+          "width": 16,
+          "height": 80,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "close_offer"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.jordyn_line, !story.jordyn_offer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 5,
+          "name": "close",
+          "type": "spawn",
+          "x": 256,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 6,
+          "name": "bell_post",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "bell_post"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "bell_post"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 752,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 374,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}
