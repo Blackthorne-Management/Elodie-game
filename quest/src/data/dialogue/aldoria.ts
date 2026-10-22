@@ -55,7 +55,7 @@ const C = 'caona';
  * chooses (b), a Merchant-Prince from another guild family with Layla the harbour banker who pays Samira's debts,
  * these lines and the speaker below change, and nothing else does.
  */
-const LAYLA = {
+export const LAYLA = {
   speaker: 'layla',
   /** Samira, before the Majlis. */
   samiraWarns: 'And the Merchant-Prince will refuse you. My mother refuses everyone.',
@@ -74,6 +74,8 @@ const LAYLA = {
   scribe: "She never does when there's a scribe in the room.",
   purse: "My mother's seal. My debts, to the dinar, and ten over.",
   pays: 'She pays what she owes. She has never once said so.',
+  /** On the divan, before the audience. */
+  divan: 'Speak from the hall, envoy, where the scribe can hear you.',
   /** On the divan, after. */
   divanAfter: 'First light, envoy. The caravan master does not wait for daughters. Anyone\'s.',
 } as const;
@@ -709,7 +711,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
   ]),
   script('layla_talk', {
     start: { lines: [], next: [{ if: { flag: 'story.layla_pass' }, to: 'after' }, { if: { flag: 'story.vault_refused' }, to: 'heard' }, { to: 'divan' }] },
-    divan: { speaker: LAYLA.speaker, lines: [{ text: 'Speak from the hall, envoy, where the scribe can hear you.' }] },
+    divan: { speaker: LAYLA.speaker, lines: [{ text: LAYLA.divan }] },
     heard: { speaker: LAYLA.speaker, lines: [{ text: LAYLA.heard }] },
     after: { speaker: LAYLA.speaker, lines: [{ text: LAYLA.divanAfter }] },
   }),
@@ -734,7 +736,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     say(G, "Your family's vault, and you can't open it?"),
     say(S, "My family's key opens the green door. The balance door opens to the guild's price. Qasim knows it. I don't."),
     // Review 3.2: Anissa waits at the edge of the antechamber's Echo, where Gianna steps in, not alone on the stair.
-    act([{ do: 'walk', actor: 'follower', to: at(4, 6), facing: 'down' }], A, "The air shimmers over the floor, Gigi. I'll hold the door. I always do."),
+    act([{ do: 'walk', actor: 'follower', to: at(4, 6), facing: 'down' }], A, "The air shimmers over the floor. I'll hold the door, Gigi. I always do."),
   ]),
   script('ledger_page', {
     start: {
