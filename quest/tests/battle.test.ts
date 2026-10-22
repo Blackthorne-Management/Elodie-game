@@ -378,9 +378,9 @@ describe('targets, statuses and elements', () => {
     expect(spell.affinity).toBeUndefined();
     // Only the patrol's musketeer wears one in Chapter 2 (the patrol is where the lesson is taught); the Regent's
     // Sealbearers wear the Throne's (Chapter 9, the Heath); in the War of the Harbor (Chapter 11) the Crown's line,
-    // the customs house and the flagship's Sealbearer wear them.
+    // the customs house and the flagship's Sealbearer wear them; at the Claim (Chapter 12) the Regent's own seals.
     expect(Object.values(ENEMIES).filter((e) => e.armored).map((e) => e.id)).toEqual([
-      'breastplate_musketeer', 'al_sealbearer', 'war_breastplate', 'customs_breastplate', 'harbor_sealbearer',
+      'breastplate_musketeer', 'al_sealbearer', 'war_breastplate', 'customs_breastplate', 'harbor_sealbearer', 'claim_sealbearer',
     ]);
     expect(BATTLES.village_patrol!.enemies).toContain('breastplate_musketeer');
   });

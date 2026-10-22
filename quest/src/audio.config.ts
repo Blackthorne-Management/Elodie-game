@@ -55,6 +55,9 @@ export const MUSIC = {
   // The War of the Harbor (Chapter 11): a slot until the owner's track arrives (docs/quest/AUDIO-PROMPTS.md); the march of
   // the mountain path's drums under the war's day and dusk.
   harbor_war: { file: 'audio/music/mountain-path.mp3', loop: true, overlapS: 3 },
+  // The Claim and the Hearing (Chapter 12): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md). The Claim
+  // keeps the Hall's march; the Hearing is the game's theme "again, quietly" (the farewell track until the owner's score).
+  hearing: { file: 'audio/music/farewell.mp3', loop: true, overlapS: 3 },
 } as const satisfies Record<string, MusicTrack>;
 
 export type MusicId = keyof typeof MUSIC;
@@ -104,6 +107,7 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'seat-concourse': 'seat',
   'seat-quarter': 'seat',
   'seat-workshop': 'home',
+  'seat-rooms': 'home',
   'seat-hall': 'throne_hall',
   'seat-archive': 'throne_archive',
   'seat-fields': 'crossroads',
@@ -148,6 +152,12 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
  * first (the first that holds plays): the war's day and dusk, then the free harbor's own song once it is taken.
  */
 export const MUSIC_OVERRIDES: readonly { maps: readonly string[]; if: Condition; music: MusicId }[] = [
+  // Chapter 12: the Hearing and the afternoon after it (the theme, quietly), in the Hall and on the Concourse.
+  {
+    maps: ['seat-hall', 'seat-concourse'],
+    if: { flag: 'story.hearing_called' },
+    music: 'hearing',
+  },
   {
     maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-caney'],
     if: { flag: 'story.harbor_taken' },
@@ -239,6 +249,8 @@ export const SFX_IDS = [
   'volley',
   'chain',
   'conch',
+  // Chapter 12: the Hall's bell above the heralds' stair, heard once (an off-screen event at the Iron Throne's verdict).
+  'hall_bell',
 ] as const;
 
 export type SfxId = (typeof SFX_IDS)[number];

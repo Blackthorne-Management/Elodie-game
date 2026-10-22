@@ -9,8 +9,9 @@
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
-// 3. Chapters 1 to 11, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
-//    Chapter 3 on, checks its story flags against the simulator's, its fights, the party and its card in the browser).
+// 3. Chapters 1 to 12 and the Epilogue, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's
+//    end, from Chapter 3 on, checks its story flags against the simulator's, its fights, the party and its card in the
+//    browser; at the end, the verdict saved, The End, the cast and the credits, then the title, and the save complete).
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
 //    At Chapter 9's Assize (@aldermoor-assize) a second window plays on from the same save and loses the Hushed on
@@ -70,6 +71,8 @@ const { settleRewards } = await import('../src/engine/sideQuests.ts');
 const { settleDebates } = await import('../src/engine/debate.ts');
 const { DEBATES } = await import('../src/data/debates.ts');
 const { addSharedXp, pillarFlag } = await import('../src/engine/rpg.ts');
+const { ending, stability } = await import('../src/engine/stability.ts');
+const { STABILITY_HOUSES } = await import('../src/data/claim.ts');
 
 /**
  * Pay what the field pays (FieldScene.checkProgress, at each sync once a scene is over): finished side quests and
@@ -547,9 +550,10 @@ async function markChecks(page, sim, name) {
 }
 
 /**
- * At each chapter's end (Chapters 3 to 11; Chapters 1 and 2 are checked after the route): the browser has played
- * the chapter the way the simulator did (its story flags agree with the simulator's, its fights were won, the party
- * and who walks with it), and its end card is up.
+ * At each chapter's end (Chapters 3 to 12 and the Epilogue; Chapters 1 and 2 are checked after the route): the browser
+ * has played the chapter the way the simulator did (its story flags agree with the simulator's, its fights were won, the
+ * party and who walks with it), and its end card is up. (Chapter 12's card is the Claim's, `card.claim_stands`, and the
+ * Epilogue's the ending's: `done` names the flag each sets, where it is not `act<n>.complete`.)
  */
 async function chapterEndChecks(page, sim, name) {
   const ends = {
@@ -625,29 +629,55 @@ async function chapterEndChecks(page, sim, name) {
       not: ['party.rael', 'belief.rael_traitor'],
       what: 'Chapter 11 in the browser: the landing, the gun on the headland, the flank, the hill camp and the elders\' debate, the Ninth Thumbprint and Harbors Lie, the tide, the village, Thorne taken, Anaco freed, the chain post\'s pin in the pier\'s memory and the chain down, the Turn, the harbor taken, the truth read by lamplight, the wounded sheltered and Xaraguá allied (Rael out of the roster, no longer believed a traitor)',
     },
+    'chapter12-end': {
+      act: 12,
+      title: 'Chapter 12',
+      done: 'story.hearing_called',
+      card: 'claim_stands',
+      map: 'seat-hall',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund'],
+      flags: ['act11.complete', 'story.claim_arrived', 'story.claim_arrive_seen', 'story.elodie_rooms', 'story.rooms_seen', 'side.seats.handed', 'side.seats.done', 'story.chairs_set', 'side.volume_one.accepted', 'item.volume_one', 'debate.seat_claim.settled', 'story.bell_claim', 'story.bell_hall_seen', 'story.chair_echo_seen', 'anchor.caona_chair', 'story.chair_read', 'clue.petition_original', 'clue.petition_heard', 'story.claim_counted', 'story.claim_begun', 'story.claim_declared', 'story.regent_beaten', 'story.claim_won', 'story.regent_arrested', 'story.signet_laid', 'story.rael_surrendered', 'story.hearing_called', 'encounter.claim_story.regent.won'],
+      not: ['party.rael', 'act12.complete', 'hearing.verdict', 'stability.score', 'story.hall_seated'],
+      what: 'Chapter 12 in the browser: the Ash Road to the Ardencia Gate, Mother\'s rooms, the tokens handed over and the chairs set, Volume One, the corner\'s debate, the bell, the eighth chair\'s Echo and its anchor, the petition filed with the clause, the count, the Claim, the Regent beaten and arrested, Rael\'s signet laid down and the Hearing called (Rael not in the roster, no verdict and no score yet)',
+    },
+    'the-end': {
+      act: 12,
+      title: 'The Epilogue',
+      done: 'act12.complete',
+      card: null,
+      map: 'seat-hall',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund'],
+      flags: ['story.hearing_called', 'story.arrivals_seen', 'story.hearing_arrived', 'story.hearing_seen', 'story.hearing_heard', 'side.volume_one.done', 'hearing.verdict', 'story.ending_played', 'story.ending_seen', 'end.done'],
+      not: ['party.rael', 'story.hall_seated'],
+      what: 'The Epilogue in the browser: nine days later, the witnesses\' arrivals, the Hearing heard, Volume One given, the verdict given and the ending played in the Hall that afternoon',
+    },
   };
   const end = ends[name];
   if (!end) return;
+  const title = end.title ?? `Chapter ${end.act}`;
   const s = await snap(page);
   const party = partyMembers(new FlagStore(s.flags), RPG, 'present').map((m) => m.id);
   const missing = end.flags.filter((f) => !s.flags[f]);
   const wrong = end.not.filter((f) => s.flags[f]);
   check(missing.length === 0 && wrong.length === 0, `${end.what}${missing.length ? ` (missing ${missing.join(', ')})` : ''}${wrong.length ? ` (should not be set: ${wrong.join(', ')})` : ''}`);
-  check(JSON.stringify(party) === JSON.stringify(end.party), `the party at Chapter ${end.act}'s end is ${end.party.join(', ')} (${party.join(', ')})`);
+  check(JSON.stringify(party) === JSON.stringify(end.party), `the party at ${title}'s end is ${end.party.join(', ')} (${party.join(', ')})`);
   // Who walks with the party: everyone in it beyond Gianna has a sprite in the line behind her.
   const walkers = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru, vikram: s.vikram, edmund: s.edmund };
   const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
-  check(notWalking.length === 0, `the whole party walks behind Gianna at Chapter ${end.act}'s end (no sprite for ${notWalking.join(', ')})`);
-  // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag.
-  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|army|muster|war|act\d|card)\./;
+  check(notWalking.length === 0, `the whole party walks behind Gianna at ${title}'s end (no sprite for ${notWalking.join(', ')})`);
+  // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag (and from
+  // Chapter 12 the Claim's, the chairs', the Hearing's, the score and the ending).
+  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|army|muster|war|act\d+|card|claim|seat|hearing|stability|ending|end|wounds)\./;
   const simFlags = sim.logic.state.flags.snapshot();
   // (The field pays side quests and debates as it goes, `side.<id>.rewarded` and `debate.<id>.paid.<what>`; the
   // simulator has no field, so those are the field's own bookkeeping.)
   const paid = (k) => k.endsWith('.rewarded') || /^debate\.[^.]+\.paid\./.test(k);
   const keys = new Set([...Object.keys(simFlags), ...Object.keys(s.flags)].filter((k) => told.test(k) && !paid(k)));
   const differ = [...keys].filter((k) => JSON.stringify(simFlags[k] ?? null) !== JSON.stringify(s.flags[k] ?? null));
-  check(differ.length === 0, `Chapter ${end.act}'s story flags agree with the simulator's${differ.length ? ` (differ: ${differ.map((k) => `${k} browser=${JSON.stringify(s.flags[k])} sim=${JSON.stringify(simFlags[k])}`).join(', ')})` : ''}`);
-  check(s.flags[`act${end.act}.complete`] === true && s.mapId === end.map && s.mode === 'card' && s.card !== null, `Chapter ${end.act} ends in ${end.map} with its card`);
+  check(differ.length === 0, `${title}'s story flags agree with the simulator's${differ.length ? ` (differ: ${differ.map((k) => `${k} browser=${JSON.stringify(s.flags[k])} sim=${JSON.stringify(simFlags[k])}`).join(', ')})` : ''}`);
+  const done = end.done ?? `act${end.act}.complete`;
+  const card = end.card === undefined ? `act${end.act}_end` : end.card;
+  check(s.flags[done] === true && (card === null || s.flags[`card.${card}`] === true) && s.mapId === end.map && s.mode === 'card' && s.card !== null, `${title} ends in ${end.map} with its card (${s.card?.[0]})`);
   // Chapter 9: the watch the city sends with the Muster (seven), and the dissidents' price short as the build allows.
   if (end.act === 9) check(s.flags['army.aldermoor'] === 7, `Aldermoor sends seven of the watch to the Muster (${s.flags['army.aldermoor']})`);
   // Chapter 10: the armies pledged (the six allies and Zetwal's levy, as the simulator counts them), the one betrayer
@@ -672,6 +702,38 @@ async function chapterEndChecks(page, sim, name) {
     check(trust ? s.flags['story.harbor_won'] === true && s.flags['encounter.war_story.hale.won'] === true && !s.flags['story.fleet_escaped'] : s.flags['story.fleet_escaped'] === true && !s.flags['story.harbor_won'], trust ? 'on Trust the harbor is won and Hale\'s flagship beaten' : 'on Strike the Crown fleet escapes');
     check(s.flags['war.volley_pool'] === simFlags['war.volley_pool'] && s.flags['war.volleys_left'] === simFlags['war.volleys_left'], `the armies' volleys: ${s.flags['war.volleys_left']} of ${s.flags['war.volley_pool']} left, as in the simulator`);
   }
+  // Chapter 12: the Regent's chain of office taken; Azzy's answer (shared or renounced, or on the dark Strike answer his
+  // Challenge fought and won); the Accord Stability score so far, read from the browser's save, is the simulator's, and so
+  // is the ending it gives on each verdict (no score is written before the verdict).
+  if (name === 'chapter12-end') {
+    check(s.flags['item.chain_of_office'] >= 1, 'the Regent\'s chain of office is the party\'s');
+    const azzy = ['claim.azzy_share', 'claim.azzy_renounced', 'claim.azzy_challenged'].filter((f) => s.flags[f]);
+    check(azzy.length === 1 && simFlags[azzy[0]] === true && (azzy[0] !== 'claim.azzy_challenged' || s.flags['encounter.claim_story.azzy.won'] === true), `Azzy's answer at the Claim is the simulator's (${azzy.join(', ')})`);
+    const browser = new FlagStore(s.flags);
+    const score = stability(browser, STABILITY_HOUSES);
+    const simScore = stability(sim.logic.state.flags, STABILITY_HOUSES);
+    const on = (flags, verdict) => {
+      const f = new FlagStore(flags.snapshot());
+      f.set(`hearing.${verdict}`, true);
+      return ending(f, STABILITY_HOUSES);
+    };
+    const verdicts = ['pardon', 'exile', 'execution'];
+    const endings = verdicts.map((v) => on(browser, v));
+    check(score === simScore && verdicts.every((v, i) => endings[i] === on(sim.logic.state.flags, v)), `the Accord Stability score so far is ${score} (the simulator's ${simScore}); the endings it gives: ${verdicts.map((v, i) => `${v} ${endings[i]}`).join(', ')}`);
+  }
+  // The Epilogue: the verdict given (one, the simulator's), the score written as the simulator writes it and the ending
+  // its card shows; the save in the browser (written before the ending, and again at its card) holds the verdict.
+  if (name === 'the-end') {
+    const verdicts = ['pardon', 'exile', 'execution'].filter((v) => s.flags[`hearing.${v}`]);
+    check(verdicts.length === 1 && simFlags[`hearing.${verdicts[0]}`] === true, `one verdict, the simulator's (${verdicts.join(', ')})`);
+    const score = s.flags['stability.score'];
+    const end12 = ['just', 'hollow', 'iron'].filter((e) => s.flags[`ending.${e}`]);
+    check(typeof score === 'number' && score === simFlags['stability.score'] && end12.length === 1 && end12[0] === ending(new FlagStore(s.flags), STABILITY_HOUSES) && s.flags[`end.${end12[0]}`] === true, `the Accord Stability score is written (${score}, the simulator's ${simFlags['stability.score']}) and the ending follows it: ${end12.join(', ')}`);
+    const ends12 = { just: 'The Just Throne', hollow: 'The Hollow Throne', iron: 'The Iron Throne' };
+    check(s.card?.[0] === ends12[end12[0]] && s.flags[`card.end_${end12[0]}`] === true, `the ending's card is up: "${s.card?.[0]}"`);
+    const stored = decodeSave(await page.evaluate(() => localStorage.getItem('bloodlines-quest.save')));
+    check(stored.ok && stored.data.flags[`hearing.${verdicts[0]}`] === true && stored.data.flags['hearing.verdict'] === true && stored.data.flags['stability.score'] === score, 'the verdict is saved (the browser\'s save holds it and the score)');
+  }
 }
 
 /**
@@ -691,6 +753,61 @@ async function chapter11Checks(page, sim, name) {
   if (name === 'war-chain-down') {
     check(f['anchor.chain_post'] === true && f['story.chain_dropped'] === true, '@war-chain-down: the pin pulled fifty years ago, the chain is down in the present');
     check(s.glowed.some((id) => id.startsWith('chain_capstan')), `@war-chain-down: back from the Echo, the capstan glows (${s.glowed.join(', ')})`);
+  }
+}
+
+/**
+ * Chapter 12, the Claim, and the Epilogue, the Hearing, at their markers: the arrival's scene on the Concourse, the rooms,
+ * the tokens handed over before the night, the bell, the chairs set and the Echo of the eighth chair, the petition read,
+ * the tile, the Hearing's arrivals nine days later and the verdict's step. The Claim's card (@chapter12-end) and the
+ * ending's (@the-end) are checked with the other chapters' ends (chapterEndChecks).
+ */
+async function chapter12Checks(page, sim, name) {
+  const marks = ['claim-arrival', 'claim-rooms', 'claim-night', 'claim-bell', 'claim-echo', 'claim-count', 'claim-tile', 'hearing-arrivals', 'hearing-verdict'];
+  if (!marks.includes(name)) return;
+  const s = await snap(page);
+  const f = s.flags;
+  const at = (map, mode) => check(s.mapId === map && (!mode || s.mode === mode), `@${name}: ${mode ?? 'on'} ${map} (${s.mode}, ${s.mapId})`);
+  const has = (...flags) => {
+    for (const flag of flags) check(f[flag] === true, `@${name}: ${flag}`);
+  };
+  if (name === 'claim-arrival') {
+    at('seat-concourse', 'dialogue');
+    has('act11.complete', 'story.claim_arrive_seen');
+  }
+  if (name === 'claim-rooms') {
+    at('seat-rooms', 'dialogue');
+    has('story.rooms_seen');
+  }
+  if (name === 'claim-night') {
+    at('seat-concourse', 'field');
+    has('side.volume_one.accepted', 'debate.seat_claim.settled');
+    check(f['side.seats.handed'] !== true, '@claim-night: the tokens are not handed over yet');
+  }
+  if (name === 'claim-bell') {
+    at('seat-concourse', 'field');
+    has('side.seats.handed', 'story.bell_claim');
+  }
+  if (name === 'claim-echo') {
+    at('seat-hall', 'field');
+    has('story.chairs_set', 'side.seats.done');
+  }
+  if (name === 'claim-count') {
+    at('seat-hall', 'field');
+    has('story.chair_read', 'clue.petition_original');
+  }
+  if (name === 'claim-tile') {
+    at('seat-hall', 'field');
+    has('story.claim_begun');
+    check(f['story.claim_won'] !== true, '@claim-tile: the Claim is not won yet');
+  }
+  if (name === 'hearing-arrivals') {
+    at('seat-concourse', 'dialogue');
+    check(f['story.hearing_arrived'] !== true, '@hearing-arrivals: the arrivals are playing');
+  }
+  if (name === 'hearing-verdict') {
+    at('seat-hall', 'field');
+    has('story.hearing_arrived', 'side.volume_one.done', 'story.hearing_heard');
   }
 }
 
@@ -1261,7 +1378,7 @@ async function assizeRestart(browser, errors, at, shots) {
 }
 
 async function playAct(browser, errors) {
-  console.log('Chapters 1 to 11 (scripted route, checked against the simulator after every key):');
+  console.log('Chapters 1 to 12 and the Epilogue (scripted route, checked against the simulator after every key):');
   let route = parseRoute(readJson('routes/zetwal-act1.json'));
   let sim = newGameSim();
   // SMOKE_FROM=<marker>: the simulator plays the route up to that marker, and the browser loads its save there.
@@ -1317,6 +1434,10 @@ async function playAct(browser, errors) {
   let voyagedHome9 = false;
   /** Chapter 10's card closes on the fleet sailing to war (Xaraguá's Canoe Beach, where Chapter 11 begins). */
   let voyagedWar = false;
+  /** The cards shown in the browser, in order (the Epilogue's last ones: the ending's, The End, the cast). */
+  const cardsSeen = [];
+  /** Whether the end credits have rolled (the route's last card closed). */
+  let credited = false;
   /** Whether this run plays Chapter 9's card (so the voyage home after it is watched). */
   let playedCard9 = false;
   /** Where the route stood at @aldermoor-assize, for the courtroom's restart rule. */
@@ -1328,6 +1449,7 @@ async function playAct(browser, errors) {
       await markChecks(page, sim, item.name);
       await chapterEndChecks(page, sim, item.name);
       await chapter11Checks(page, sim, item.name);
+      await chapter12Checks(page, sim, item.name);
       await shoot(page, item.name, shots);
       // The courtroom's restart rule, in a window of its own once this one is done (the route plays on here, its dice
       // untouched; two games at once on one machine starve each other's frames).
@@ -1438,6 +1560,38 @@ async function playAct(browser, errors) {
         if (landing === 'zetwal-harbor' && sim.logic.state.flags.get('act9.complete') === true) voyagedHome9 = true;
         if (landing === 'xaragua-beach' && sim.logic.state.flags.get('act10.complete') === true) voyagedWar = true;
       }
+      // The game's last cards (the Epilogue): the ending's, The End and the cast, then the end credits (a screen of the
+      // browser's own; the simulator stands in the field). A on the credits goes to the title; the save is the Hall after
+      // the end, with the quest complete, and the game opens there again.
+      if (sim.logic.mode === 'card' || (await snap(page)).mode === 'card') {
+        await page.waitForFunction(() => window.__quest.snapshot().mode === 'card', null, { timeout: 15000 });
+        const c = (await snap(page)).card;
+        if (c?.[0]) cardsSeen.push(c[0]);
+      }
+      if (sim.logic.mode === 'field' && sim.logic.state.flags.get('end.done') === true && !credited) {
+        credited = true;
+        await page.waitForFunction(() => window.__quest.snapshot().mode === 'credits', null, { timeout: 15000 });
+        const order = ['The End', 'The cast'].map((t) => cardsSeen.indexOf(t));
+        check(order[0] >= 0 && order[1] > order[0] && cardsSeen.filter((t) => t === 'The cast').length === 4, `after the ending's card, "The End" and the cast's four cards (${cardsSeen.join(' / ')})`);
+        const credits = (await snap(page)).journal;
+        check(credits?.[0] === 'CREDITS' && credits.at(-1) === '(A to the title)', `and the end credits roll (${credits?.length} lines, "${credits?.at(-1)}")`);
+        await shoot(page, 'end-credits', shots);
+        await page.keyboard.up('Shift');
+        await page.keyboard.press('KeyZ');
+        keys++;
+        await page.waitForFunction(() => !!window.__intro, null, { timeout: 15000 });
+        check(true, 'A on the credits goes to the title');
+        await shoot(page, 'title-after-end', shots);
+        const saved = decodeSave(await page.evaluate(() => localStorage.getItem('bloodlines-quest.save')));
+        const fl = saved.ok ? saved.data.flags : {};
+        check(saved.ok && saved.data.mapId === 'seat-hall' && fl['act12.complete'] === true && fl['end.done'] === true && ['the_end', 'cast_1', 'cast_2', 'cast_3', 'cast_4'].every((id) => fl[`card.${id}`] === true), `the save marks the quest complete (Chapter 12 and the Epilogue done, The End and the cast shown; in ${saved.ok ? saved.data.mapId : 'no save'})`);
+        // The game opens on that save again: the Hall after the end, the realm open.
+        await page.reload();
+        await waitReady(page);
+        await page.keyboard.down('Shift');
+        await waitMatch(page, expected(sim), 'the reload after the credits');
+        continue;
+      }
       // A vendor's shop opens when their scene ends (Chapter 11's lamp-oil seller, after the Ninth Thumbprint's ask): a
       // screen of the browser's own (the simulator stays in the field). Close it, as a player who buys nothing does.
       if (sim.logic.mode === 'field' && (await snap(page)).mode === 'shop') {
@@ -1459,8 +1613,13 @@ async function playAct(browser, errors) {
   }
   // Chapter 11's card closes at Eightgate's Ardencia Gate (where Chapter 12 begins; the voyage there is not a scene yet),
   // the nine walking behind Gianna and Rael not among them.
-  if (war.flags['act11.complete'] === true) {
+  if (war.flags['act11.complete'] === true && war.flags['story.claim_arrived'] !== true) {
     check(war.mapId === 'seat-concourse' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true, 'after Chapter 11\'s card the party, Edmund last, stands at Eightgate\'s Ardencia Gate');
+  }
+  // The quest's end: after the credits and the title the save opens in the Throne Hall that afternoon, the whole party
+  // walking behind Gianna again (no longer seated), Rael not among them.
+  if (war.flags['end.done'] === true) {
+    check(credited && war.mapId === 'seat-hall' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true && war.flags['act12.complete'] === true, 'after the credits the game opens on the save in the Throne Hall, the quest complete, the party (Edmund last) behind Gianna');
   }
   if (FROM) {
     await ctx.close();
@@ -1482,7 +1641,8 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
   check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.flags['story.ardencia_asked'] === true, 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
-  check([3, 4, 5, 6, 7, 8, 9, 10, 11].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'seat-concourse', 'Chapters 3 to 11 played to their end cards in the browser: the harbor taken, the party stands at Eightgate\'s Ardencia Gate');
+  check([3, 4, 5, 6, 7, 8, 9, 10, 11].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true), 'Chapters 3 to 11 played to their end cards in the browser');
+  check(s.flags['act12.complete'] === true && s.flags['card.claim_stands'] === true && s.flags['end.done'] === true && s.flags['card.cast_4'] === true && credited && s.mapId === 'seat-hall', 'Chapter 12 and the Epilogue played to the end in the browser: the Claim\'s card, the Hearing, the ending, The End, the cast and the credits; the party stands in the Throne Hall');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -1510,7 +1670,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('Canoe Beach') && mapSnap.items.includes('Caney of Anaco'), 'the city map shows the city the party is in (Yucayeque, where the fleet lands after Chapter 10)');
+  check(mapSnap.items.includes('The Throne Hall') && mapSnap.items.includes('The Eight Gates Concourse'), 'the city map shows the city the party is in (Eightgate, where the quest ends)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
@@ -1597,7 +1757,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'seat-concourse' && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 11 finished after a reload');
+  check(back.mapId === 'seat-hall' && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].every((n) => back.flags[`act${n}.complete`] === true) && back.flags['end.done'] === true, 'the autosave keeps every chapter and the Epilogue finished after a reload');
   await ctx.close();
   if (assize) await assizeRestart(browser, errors, assize, shots);
   return shots;

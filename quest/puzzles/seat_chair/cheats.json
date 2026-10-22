@@ -1,0 +1,5 @@
+{
+  "into the memory and straight back, without cutting anything": ["echo", "skip", "echo", "skip"],
+  "a chair from the heap in the nave cut instead": ["echo", "skip", "down*6", "left*7", "down", "confirm", "skip", "right*7", "up*6", "echo", "skip"],
+  "the present chair turned before the memory: plain oak": ["up", "up", "confirm", "skip"]
+}

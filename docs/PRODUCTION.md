@@ -10,7 +10,7 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 11).
+and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 12 and the Epilogue).
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -141,6 +141,25 @@ volleys left agree with the simulator's. **Fixed (Oct 22, a game bug the smoke f
 their weapon moves had no working Attack while Hushed (Hale's Sealbearer hushed Rael and the fight stalled); Attack now
 strikes plainly while the moves are blocked, as COMBAT.md's Hushed row says. Noted: Chapter 11's lamp-oil seller opens
 the cassava-bread stall's shop (`xaragua_food`) after the Ninth Thumbprint lines; worth a look (a lamp-oil seller selling bread).
+
+**Quest, Chapter 12 and the Epilogue (Oct 22):** The Claim and the Hearing are built on branch `chapter12` (from
+`chapter11`; the ash road and Azzy's question on Strike, the seven armies at the gates, Elodie in the arch and in her
+rooms (the new map `seat-rooms`), Volume One, the corner's debate, the tokens on the steps, the night and the bell, old
+Patricio at dawn, the chairs set, the Echo of the eighth chair (puzzle `seat_chair`), the count, the Regent's Challenge,
+Azzy's share, renounce or (the dark route only) Challenge, the chairs filling, Clause Six, the Regent arrested, Rael's
+signet; then the Hearing nine days later, the witnesses, the verdict, Accord Stability and the Just, Hollow or Iron
+ending, The End and the cast). The whole quest now plays from the intro to the credits on the headless route. Ahead of
+its **Nov 13 to 16** slot (on its branch, not merged). Waiting on the owner: a human read of every Elodie, Rael, Azzy,
+Benny, Patricio and Anissa line in the Claim and the Hearing (reviewer prompt
+`docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter12-build.md`); the dedication line for the credits (the
+cast is in; the dedication is a slot); the Stability dials if Strike should reach the Just Throne more often
+(`quest/src/config.ts STABILITY`; built: Trust with a pardon 85, Just; Strike with a pardon 50 to 62, Hollow, unless Azzy
+shares); looks for the Master of the Chairs, the treasurer's daughter and the corner's follower; the Hearing's music
+(a slot plays the Hall's until then). Still open: question 13 (what old Patricio knows; the build fits either answer).
+Noted: Chapter 12's steps pay 120 XP; the route ends on 30 (the cap), the line without side quests on 28; the Regent
+was tuned down from the outline's adds (the owner's HP x6, ATK x1.6, MAG x2.0 stand) and runs 40 actions at 30, 41.6
+at 28 with the roster four. Not built yet: the books' second looks, the voyage to Eightgate as a scene, the board's
+dispatches. The smoke test has Chapter 12 checks at every marker but has not walked the chapter in a browser.
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 41,
+  "nextobjectid": 132,
   "layers": [
     {
       "id": 1,
@@ -357,7 +357,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "!story.elodie_hall|story.hollis_agreed"
+              "value": "!story.elodie_hall|story.hollis_agreed, !act11.complete"
             },
             {
               "name": "npc",
@@ -383,9 +383,14 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.claim_won|ending.iron"
+            },
+            {
               "name": "npc",
               "type": "string",
-              "value": "sealbearer"
+              "value": "rope_sealbearer_a"
             }
           ]
         },
@@ -406,9 +411,14 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.claim_won|ending.iron"
+            },
+            {
               "name": "npc",
               "type": "string",
-              "value": "sealbearer"
+              "value": "rope_sealbearer_b"
             }
           ]
         },
@@ -485,6 +495,11 @@
               "value": "right"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "envoy_dorini"
@@ -506,6 +521,11 @@
               "name": "facing",
               "type": "string",
               "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
             },
             {
               "name": "npc",
@@ -531,6 +551,11 @@
               "value": "left"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "legate_aide"
@@ -552,6 +577,11 @@
               "name": "facing",
               "type": "string",
               "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
             },
             {
               "name": "npc",
@@ -577,6 +607,11 @@
               "value": "left"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "envoy_suzumori"
@@ -600,6 +635,11 @@
               "value": "left"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "envoy_agnivansh"
@@ -621,6 +661,11 @@
               "name": "facing",
               "type": "string",
               "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
             },
             {
               "name": "npc",
@@ -674,6 +719,1658 @@
               "value": "hall_herald"
             }
           ]
+        },
+        {
+          "id": 15,
+          "name": "echo_chamberlain_old",
+          "type": "npc",
+          "x": 400,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_chamberlain_old"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "hall_echo_clerk",
+          "type": "npc",
+          "x": 416,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "hall_echo_clerk"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "echo_mason",
+          "type": "npc",
+          "x": 32,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_mason"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "caona_hall",
+          "type": "npc",
+          "x": 48,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "caona_hall"
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "benny_hall",
+          "type": "npc",
+          "x": 64,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "benny_hall"
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "chamberlain_claim",
+          "type": "npc",
+          "x": 416,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "chamberlain_claim"
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "elodie_claim",
+          "type": "npc",
+          "x": 32,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "elodie_claim"
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "claim_clerk",
+          "type": "npc",
+          "x": 32,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "claim_clerk"
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "rosalind_claim",
+          "type": "npc",
+          "x": 656,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rosalind_claim"
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "layla_claim",
+          "type": "npc",
+          "x": 32,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called, !muster.betrayed|!muster.betrayer.al_doria"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "layla_claim"
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "patricio_claim",
+          "type": "npc",
+          "x": 192,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "patricio_claim"
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "jordyn_claim",
+          "type": "npc",
+          "x": 480,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called, !story.regent_arrested"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "jordyn_claim"
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "benny_claim",
+          "type": "npc",
+          "x": 32,
+          "y": 304,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim, !story.hearing_called, war.strike"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "benny_claim"
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "regent_claim_npc",
+          "type": "npc",
+          "x": 368,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.claim_counted, !story.regent_arrested"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "regent_claim_npc"
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "hale_claim",
+          "type": "npc",
+          "x": 400,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.claim_counted, war.strike, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "hale_claim"
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "thorne_claim",
+          "type": "npc",
+          "x": 272,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.claim_counted, choice.thorne_spared, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "thorne_claim"
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "azzy_challenge",
+          "type": "npc",
+          "x": 336,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "claim.challenge, !claim.azzy_challenged"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "azzy_challenge"
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "hollis_claim",
+          "type": "npc",
+          "x": 400,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "clue.petition_original, !story.hearing_called"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "hollis_claim"
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "name": "rael_hearing",
+          "type": "npc",
+          "x": 336,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rael_hearing"
+            }
+          ]
+        },
+        {
+          "id": 34,
+          "name": "jordyn_hearing",
+          "type": "npc",
+          "x": 336,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "jordyn_hearing"
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "name": "rivera_hearing",
+          "type": "npc",
+          "x": 320,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rivera_hearing"
+            }
+          ]
+        },
+        {
+          "id": 36,
+          "name": "jaime_hearing",
+          "type": "npc",
+          "x": 352,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "jaime_hearing"
+            }
+          ]
+        },
+        {
+          "id": 37,
+          "name": "hollis_hearing",
+          "type": "npc",
+          "x": 400,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "hollis_hearing"
+            }
+          ]
+        },
+        {
+          "id": 38,
+          "name": "chamberlain_hearing",
+          "type": "npc",
+          "x": 416,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "chamberlain_hearing"
+            }
+          ]
+        },
+        {
+          "id": 39,
+          "name": "elodie_hearing",
+          "type": "npc",
+          "x": 224,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "elodie_hearing"
+            }
+          ]
+        },
+        {
+          "id": 40,
+          "name": "treasurer_hearing",
+          "type": "npc",
+          "x": 192,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "treasurer_hearing"
+            }
+          ]
+        },
+        {
+          "id": 41,
+          "name": "daughter_hearing",
+          "type": "npc",
+          "x": 208,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "daughter_hearing"
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "name": "amanda_hearing",
+          "type": "npc",
+          "x": 224,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "amanda_hearing"
+            }
+          ]
+        },
+        {
+          "id": 43,
+          "name": "lamp_oil_hearing",
+          "type": "npc",
+          "x": 240,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "lamp_oil_hearing"
+            }
+          ]
+        },
+        {
+          "id": 44,
+          "name": "printer_hearing",
+          "type": "npc",
+          "x": 192,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "printer_hearing"
+            }
+          ]
+        },
+        {
+          "id": 45,
+          "name": "benny_hearing",
+          "type": "npc",
+          "x": 208,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "benny_hearing"
+            }
+          ]
+        },
+        {
+          "id": 46,
+          "name": "nancy_hearing",
+          "type": "npc",
+          "x": 224,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "nancy_hearing"
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "name": "anicette_hearing",
+          "type": "npc",
+          "x": 240,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "anicette_hearing"
+            }
+          ]
+        },
+        {
+          "id": 48,
+          "name": "patricio_gallery",
+          "type": "npc",
+          "x": 416,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "patricio_gallery"
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "name": "sebastian_gallery",
+          "type": "npc",
+          "x": 432,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "sebastian_gallery"
+            }
+          ]
+        },
+        {
+          "id": 50,
+          "name": "rahel_gallery",
+          "type": "npc",
+          "x": 448,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rahel_gallery"
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "name": "patricia_gallery",
+          "type": "npc",
+          "x": 464,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "patricia_gallery"
+            }
+          ]
+        },
+        {
+          "id": 52,
+          "name": "zelia_gallery",
+          "type": "npc",
+          "x": 480,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "zelia_gallery"
+            }
+          ]
+        },
+        {
+          "id": 53,
+          "name": "follower_gallery",
+          "type": "npc",
+          "x": 432,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "follower_gallery"
+            }
+          ]
+        },
+        {
+          "id": 54,
+          "name": "gallery_pilgrim",
+          "type": "npc",
+          "x": 448,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "gallery_pilgrim"
+            }
+          ]
+        },
+        {
+          "id": 55,
+          "name": "camp_leader_gallery",
+          "type": "npc",
+          "x": 464,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "camp_leader_gallery"
+            }
+          ]
+        },
+        {
+          "id": 56,
+          "name": "hearing_clerk",
+          "type": "npc",
+          "x": 480,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "hearing_clerk"
+            }
+          ]
+        },
+        {
+          "id": 57,
+          "name": "yari_hall",
+          "type": "npc",
+          "x": 256,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, !hearing.execution"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "yari_hall"
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "name": "azzy_hall",
+          "type": "npc",
+          "x": 288,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "azzy_hall"
+            }
+          ]
+        },
+        {
+          "id": 59,
+          "name": "samira_hall",
+          "type": "npc",
+          "x": 304,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "samira_hall"
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "name": "edmund_hall",
+          "type": "npc",
+          "x": 384,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "edmund_hall"
+            }
+          ]
+        },
+        {
+          "id": 61,
+          "name": "rosalind_hall",
+          "type": "npc",
+          "x": 368,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rosalind_hall"
+            }
+          ]
+        },
+        {
+          "id": 62,
+          "name": "layla_hall",
+          "type": "npc",
+          "x": 320,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, !muster.betrayed|!muster.betrayer.al_doria"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "layla_hall"
+            }
+          ]
+        },
+        {
+          "id": 63,
+          "name": "bayarmaa_hall",
+          "type": "npc",
+          "x": 400,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, !muster.betrayed|!muster.betrayer.skarragol"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "bayarmaa_hall"
+            }
+          ]
+        },
+        {
+          "id": 64,
+          "name": "bayarmaa_hall_apart",
+          "type": "npc",
+          "x": 288,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, muster.betrayed, muster.betrayer.skarragol"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "bayarmaa_hall"
+            }
+          ]
+        },
+        {
+          "id": 65,
+          "name": "haru_hall",
+          "type": "npc",
+          "x": 432,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, !muster.betrayed|!muster.betrayer.kuroshi"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "haru_hall"
+            }
+          ]
+        },
+        {
+          "id": 66,
+          "name": "haru_hall_apart",
+          "type": "npc",
+          "x": 288,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, muster.betrayed, muster.betrayer.kuroshi"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "haru_hall"
+            }
+          ]
+        },
+        {
+          "id": 67,
+          "name": "vikram_hall",
+          "type": "npc",
+          "x": 464,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, !muster.betrayed|!muster.betrayer.jwaladesh"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "vikram_hall"
+            }
+          ]
+        },
+        {
+          "id": 68,
+          "name": "vikram_hall_apart",
+          "type": "npc",
+          "x": 288,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hall_seated, muster.betrayed, muster.betrayer.jwaladesh"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "vikram_hall"
+            }
+          ]
+        },
+        {
+          "id": 69,
+          "name": "elodie_after",
+          "type": "npc",
+          "x": 224,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "hearing.verdict, !hearing.execution"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "elodie_after"
+            }
+          ]
+        },
+        {
+          "id": 70,
+          "name": "rael_table",
+          "type": "npc",
+          "x": 352,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "hearing.pardon"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rael_table"
+            }
+          ]
+        },
+        {
+          "id": 71,
+          "name": "hollis_after_hall",
+          "type": "npc",
+          "x": 400,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "hollis_after"
+            }
+          ]
+        },
+        {
+          "id": 72,
+          "name": "chamberlain_after",
+          "type": "npc",
+          "x": 416,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "hearing.verdict"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "chamberlain_after"
+            }
+          ]
+        },
+        {
+          "id": 73,
+          "name": "benny_iron",
+          "type": "npc",
+          "x": 352,
+          "y": 448,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "ending.iron"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "benny_iron"
+            }
+          ]
         }
       ]
     },
@@ -688,7 +2385,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 15,
+          "id": 74,
           "name": "hall_out",
           "type": "door",
           "x": 336,
@@ -699,9 +2396,19 @@
           "visible": true,
           "properties": [
             {
+              "name": "closed",
+              "type": "string",
+              "value": "hall_claim_closed"
+            },
+            {
               "name": "exit",
               "type": "string",
               "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!story.claim_declared|story.claim_won"
             },
             {
               "name": "map",
@@ -728,7 +2435,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 16,
+          "id": 75,
           "name": "hall_welcome",
           "type": "trigger",
           "x": 16,
@@ -751,7 +2458,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 76,
           "name": "chamberlain_step",
           "type": "trigger",
           "x": 16,
@@ -774,7 +2481,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 77,
           "name": "parley_step",
           "type": "trigger",
           "x": 16,
@@ -795,6 +2502,143 @@
               "value": "story.party_rejoined, !story.terms_refused"
             }
           ]
+        },
+        {
+          "id": 78,
+          "name": "bell_hall",
+          "type": "trigger",
+          "x": 336,
+          "y": 464,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "bell_hall"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.bell_hall_seen"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.bell_claim"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 79,
+          "name": "claim_tile",
+          "type": "trigger",
+          "x": 336,
+          "y": 48,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "claim_declare"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.claim_begun, !story.regent_beaten"
+            }
+          ]
+        },
+        {
+          "id": 80,
+          "name": "hearing",
+          "type": "trigger",
+          "x": 352,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "hearing"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.hearing_seen"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_arrived"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 81,
+          "name": "ending",
+          "type": "trigger",
+          "x": 336,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "ending"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.ending_played"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "hearing.verdict"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     },
@@ -809,7 +2653,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 19,
+          "id": 82,
           "name": "nave",
           "type": "spawn",
           "x": 336,
@@ -830,6 +2674,75 @@
               "value": "up"
             }
           ]
+        },
+        {
+          "id": 83,
+          "name": "eighth_chair",
+          "type": "spawn",
+          "x": 256,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            }
+          ]
+        },
+        {
+          "id": 84,
+          "name": "hearing_step",
+          "type": "spawn",
+          "x": 352,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            }
+          ]
+        },
+        {
+          "id": 85,
+          "name": "afternoon",
+          "type": "spawn",
+          "x": 336,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            }
+          ]
         }
       ]
     },
@@ -842,7 +2755,36 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 86,
+          "name": "eighth_chair_echo",
+          "type": "echo_zone",
+          "x": 240,
+          "y": 160,
+          "width": 48,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.chairs_set, !story.claim_declared"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "chair_echo"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "chair_echo_return"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 13,
@@ -853,7 +2795,31 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 87,
+          "name": "caona_chair_anchor",
+          "type": "anchor",
+          "x": 32,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.caona_chair"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "echo_chair_xaragua"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 14,
@@ -866,7 +2832,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 20,
+          "id": 88,
           "name": "throne_tile",
           "type": "puzzle_object",
           "x": 336,
@@ -887,6 +2853,11 @@
               "value": "present"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.claim_begun"
+            },
+            {
               "name": "kind",
               "type": "string",
               "value": "throne_sun"
@@ -899,7 +2870,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 89,
           "name": "throne_rope",
           "type": "puzzle_object",
           "x": 256,
@@ -937,7 +2908,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 90,
           "name": "regent_offices",
           "type": "puzzle_object",
           "x": 272,
@@ -970,7 +2941,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 91,
           "name": "heralds_stair",
           "type": "puzzle_object",
           "x": 416,
@@ -1003,7 +2974,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 92,
           "name": "hall_records",
           "type": "puzzle_object",
           "x": 32,
@@ -1026,7 +2997,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 93,
           "name": "chair_zetwal",
           "type": "puzzle_object",
           "x": 224,
@@ -1059,7 +3030,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 94,
           "name": "chair_xaragua",
           "type": "puzzle_object",
           "x": 256,
@@ -1080,6 +3051,11 @@
               "value": "present"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.caona_chair"
+            },
+            {
               "name": "kind",
               "type": "string",
               "value": "council_chair"
@@ -1092,7 +3068,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 95,
           "name": "chair_ardencia",
           "type": "puzzle_object",
           "x": 288,
@@ -1125,7 +3101,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 96,
           "name": "chair_al_doria",
           "type": "puzzle_object",
           "x": 320,
@@ -1158,7 +3134,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 97,
           "name": "chair_aldermoor",
           "type": "puzzle_object",
           "x": 368,
@@ -1191,7 +3167,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 98,
           "name": "chair_skarragol",
           "type": "puzzle_object",
           "x": 400,
@@ -1224,7 +3200,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 99,
           "name": "chair_kuroshi",
           "type": "puzzle_object",
           "x": 432,
@@ -1257,7 +3233,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 100,
           "name": "chair_jwaladesh",
           "type": "puzzle_object",
           "x": 464,
@@ -1290,7 +3266,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 101,
           "name": "chamber_zetwal",
           "type": "puzzle_object",
           "x": 16,
@@ -1323,7 +3299,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 102,
           "name": "chamber_xaragua",
           "type": "puzzle_object",
           "x": 16,
@@ -1356,7 +3332,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 103,
           "name": "chamber_ardencia",
           "type": "puzzle_object",
           "x": 16,
@@ -1389,7 +3365,7 @@
           ]
         },
         {
-          "id": 36,
+          "id": 104,
           "name": "chamber_al_doria",
           "type": "puzzle_object",
           "x": 16,
@@ -1422,7 +3398,7 @@
           ]
         },
         {
-          "id": 37,
+          "id": 105,
           "name": "chamber_aldermoor",
           "type": "puzzle_object",
           "x": 672,
@@ -1455,7 +3431,7 @@
           ]
         },
         {
-          "id": 38,
+          "id": 106,
           "name": "chamber_skarragol",
           "type": "puzzle_object",
           "x": 672,
@@ -1488,7 +3464,7 @@
           ]
         },
         {
-          "id": 39,
+          "id": 107,
           "name": "chamber_kuroshi",
           "type": "puzzle_object",
           "x": 672,
@@ -1521,7 +3497,7 @@
           ]
         },
         {
-          "id": 40,
+          "id": 108,
           "name": "chamber_jwaladesh",
           "type": "puzzle_object",
           "x": 672,
@@ -1552,6 +3528,720 @@
               "value": true
             }
           ]
+        },
+        {
+          "id": 109,
+          "name": "token_on_xaragua",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seats.xaragua_set"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "token_paddle"
+            }
+          ]
+        },
+        {
+          "id": 110,
+          "name": "token_on_al_doria",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seats.al_doria_set"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "token_seal"
+            }
+          ]
+        },
+        {
+          "id": 111,
+          "name": "token_on_skarragol",
+          "type": "puzzle_object",
+          "x": 400,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seats.skarragol_set"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "token_braid"
+            }
+          ]
+        },
+        {
+          "id": 112,
+          "name": "token_on_kuroshi",
+          "type": "puzzle_object",
+          "x": 432,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seats.kuroshi_set"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "token_crane"
+            }
+          ]
+        },
+        {
+          "id": 113,
+          "name": "token_on_jwaladesh",
+          "type": "puzzle_object",
+          "x": 464,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seats.jwaladesh_set"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "token_lamp"
+            }
+          ]
+        },
+        {
+          "id": 114,
+          "name": "chair_xaragua_cut",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "chair_xaragua_cut"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.caona_chair"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair_cut"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 115,
+          "name": "petition_on_chair",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "clue.petition_original"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "petition_chair"
+            }
+          ]
+        },
+        {
+          "id": 116,
+          "name": "echo_plan_table",
+          "type": "puzzle_object",
+          "x": 384,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_seating_plan"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "table"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 117,
+          "name": "echo_petition_desk",
+          "type": "puzzle_object",
+          "x": 384,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "echo.petition_received, !echo.petition_filed"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "paper"
+            }
+          ]
+        },
+        {
+          "id": 118,
+          "name": "echo_chair_1",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 288,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_cluster"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 119,
+          "name": "echo_chair_2",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 288,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_cluster"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 120,
+          "name": "echo_chair_3",
+          "type": "puzzle_object",
+          "x": 176,
+          "y": 288,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_cluster"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 121,
+          "name": "echo_chair_4",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 288,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_cluster"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 122,
+          "name": "echo_chair_5",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 320,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_cluster"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 123,
+          "name": "echo_chair_6",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 320,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_cluster"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 124,
+          "name": "echo_chair_7",
+          "type": "puzzle_object",
+          "x": 176,
+          "y": 320,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_cluster"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 125,
+          "name": "echo_chair_xaragua",
+          "type": "puzzle_object",
+          "x": 32,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "echo_chair_xaragua"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "council_chair"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 126,
+          "name": "echo_door_bricking",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "bricked"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 127,
+          "name": "throne_tile_open",
+          "type": "puzzle_object",
+          "x": 336,
+          "y": 32,
+          "width": 32,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.claim_begun"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "throne_sun"
+            }
+          ]
+        },
+        {
+          "id": 128,
+          "name": "clerk_table",
+          "type": "puzzle_object",
+          "x": 384,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "claim_register"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "clue.petition_original"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "table"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 129,
+          "name": "refusal_on_table",
+          "type": "puzzle_object",
+          "x": 384,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refusal_laid"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "paper"
+            }
+          ]
+        },
+        {
+          "id": 130,
+          "name": "signet_step",
+          "type": "puzzle_object",
+          "x": 336,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.signet_laid, !story.signet_returned, !story.rael_exiled, !story.rael_taken"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "signet_step"
+            }
+          ]
+        },
+        {
+          "id": 131,
+          "name": "witness_bench",
+          "type": "puzzle_object",
+          "x": 176,
+          "y": 176,
+          "width": 64,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.hearing_called, !hearing.verdict"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "witness_bench"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     }
@@ -1562,10 +4252,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 848,
+      "imageheight": 864,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 421,
+      "tilecount": 431,
       "columns": 8,
       "margin": 0,
       "spacing": 0

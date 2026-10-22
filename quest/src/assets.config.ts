@@ -510,6 +510,19 @@ export const TILESET = {
     { gid: 419, name: 'irons', base: 0x3a3c42, accent: 0x8a8c92, pattern: 'dots' },
     { gid: 420, name: 'banner_zetwal', base: 0x2a5a8a, accent: 0xf2d04b, pattern: 'stripes' },
     { gid: 421, name: 'banner_dorini', base: 0x1e8449, accent: 0xd8c08a, pattern: 'stripes' },
+    // The Claim (Chapter 12, Oct 22; data/claim.ts): the houses' tokens on their chairs (the carved paddle, the Dorini seal, the
+    // braid, the crane, the lamp), the eighth chair turned with the oath cut into its back, the signet on the dais's step,
+    // the witnesses' bench, Xaraguá's gate open, and the petition on its chair.
+    { gid: 422, name: 'token_paddle', base: 0x6b4426, accent: 0x17a5a5, pattern: 'stripes' },
+    { gid: 423, name: 'token_seal', base: 0x6b4426, accent: 0x1e8449, pattern: 'dots' },
+    { gid: 424, name: 'token_braid', base: 0x6b4426, accent: 0x9a9ca2, pattern: 'stripes' },
+    { gid: 425, name: 'token_crane', base: 0x6b4426, accent: 0xf4eee0, pattern: 'cross' },
+    { gid: 426, name: 'token_lamp', base: 0x6b4426, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 427, name: 'council_chair_cut', base: 0x6b4426, accent: 0x17a5a5, pattern: 'border' },
+    { gid: 428, name: 'signet_step', base: 0xd8b04a, accent: 0xb03a2e, pattern: 'dots' },
+    { gid: 429, name: 'witness_bench', base: 0x8f8578, accent: 0x6b4426, pattern: 'stripes' },
+    { gid: 430, name: 'gate_open', base: 0x3a3028, accent: 0x17a5a5, pattern: 'border' },
+    { gid: 431, name: 'petition_chair', base: 0x6b4426, accent: 0xe8d8b0, pattern: 'cross' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -1001,6 +1014,12 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   old_crown_marine: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: 0x9a4a3a, trim: C.w!, legs: C.w!, headgear: 'helmet', headgearColor: 0x5a4a3a, accessories: ['sash'] },
   old_crown_musketeer: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: 0x9a4a3a, trim: C.w!, legs: C.w!, headgear: 'brimmed', headgearColor: 0x5a4a3a, accessories: ['sash'] },
   wounded_soldier: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xd8d0c0, trim: 0xb8403a, legs: C.K!, accessories: ['sash'] },
+  // The Claim and the Hearing (Chapter 12, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md): the
+  // Quiet Crown follower who took off the veil (a woman of the Concourse in plain grey, a bread basket), the Ardencian
+  // treasurer held eleven years (a thin man in a good coat ten years old), and the Master of the Chairs forty-nine years ago.
+  qc_follower: { skin: SKIN_TONES.medium, hair: HAIR_DARK, hairStyle: 'bun', outfit: 0x8e8e9c, trim: 0xd8d0c0, robe: true, accessories: ['satchel'] },
+  ard_treasurer: { skin: C.T!, hair: C.G!, hairStyle: 'short', outfit: 0x4a3a30, trim: 0x8a7a5a, legs: C.K!, build: 'tall', beard: C.G! },
+  echo_chamberlain: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: C.k!, trim: C.y!, robe: true, accessories: ['staff', 'emblem'] },
 };
 
 /** The player's look in each era. */
@@ -1754,6 +1773,22 @@ const KINGSMERE_BACKDROPS = {
     ground: 0x8a8c90,
     groundDark: 0x6e7074,
     groundLight: 0xa8aab0,
+  },
+  // The Throne Hall at the bell (Chapter 12, the Claim): grey-brown stone, the violet of the Sealbearers, the sun tile's gold.
+  throne_hall: {
+    sky: [0x2a2622, 0x34302a, 0x3e3a32, 0x48443a, 0x524e44, 0x5c584e],
+    cloud: 0xd8b04a,
+    cloudShade: 0x8a7440,
+    mountainFar: 0x5a5048,
+    mountainNear: 0x463e36,
+    trees: 0x6a5a8a,
+    treesDark: 0x3a3048,
+    field: 0x8f8578,
+    cane: 0x6b4426,
+    caneDark: 0x3a2a1e,
+    ground: 0x9a9084,
+    groundDark: 0x7a7064,
+    groundLight: 0xd8b04a,
   },
   bog_chapel: {
     sky: [0x2a2a34, 0x34343e, 0x3e3e48, 0x484852, 0x52525c, 0x5c5c66],

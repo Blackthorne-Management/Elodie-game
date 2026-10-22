@@ -16,7 +16,7 @@
 
 import { ENEMIES, SKILL_BOOK, battleDef, battleReserve } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
-import { Battle, battleParty, battlePurse, type Action, type BattleEvent } from '../src/engine/battle.ts';
+import { Battle, battleParty, battlePurse, woundsFor, type Action, type BattleEvent } from '../src/engine/battle.ts';
 import { FlagStore, type FlagReader } from '../src/engine/flags.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from './sim-setup.ts';
@@ -74,8 +74,11 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
   if (!def) throw new Error(`No battle ${id}`);
   const enemies = def.enemies.map((e) => ENEMIES[e]!).map((e) => (def.level ? { ...e, level: def.level } : e));
   const purse = plan === 'tips' ? battlePurse(flags, RPG, flags instanceof FlagStore ? Object.keys(flags.snapshot()) : []) : {};
-  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked.
-  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present'), enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES), ...purse });
+  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked; a
+  // Challenge after a Challenge opens with the wounds the first left (Chapter 12: woundsFor).
+  const members = battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present');
+  const wounds = woundsFor(flags, def, members.map((p) => p.id));
+  const b = new Battle(def, members, enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES), wounds, ...purse });
   const party = new Set(b.party.map((c) => c.key));
   // The heavy blows a tell announces (the tips plan Guards from the tell until the blow lands): a blow on the whole
   // party, or one of 150 or more; a raider's sand is not worth a turn.

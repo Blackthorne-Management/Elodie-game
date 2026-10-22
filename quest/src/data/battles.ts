@@ -4,6 +4,7 @@
 // Numbers follow docs/quest/design/COMBAT.md.
 
 import { WAR_BATTLES, WAR_ENEMIES } from './warBattles.ts';
+import { CLAIM_BATTLES, CLAIM_ENEMIES } from './claimBattles.ts';
 import { ANISSA_SP_EVERY, BATTLE_ACTIVE, BRIBE_GOLD_PER_LEVEL, ENCOUNTER_GOLD_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
 import { ENCOUNTERS } from './encounters.ts';
 import { ambushXp, type BattleDef, type EnemyDef, type EnemyMove, type SkillDef } from '../engine/battle.ts';
@@ -1003,6 +1004,8 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   },
   // Chapter 11, the War of the Harbor (data/warBattles.ts).
   ...WAR_ENEMIES,
+  // Chapter 12, the Claim (data/claimBattles.ts).
+  ...CLAIM_ENEMIES,
 };
 
 /** Rael's moves once the guards are in (phase 2, Unleashed) and once he is cornered (phase 3). */
@@ -1068,6 +1071,8 @@ const QASIM_FORECLOSURE: readonly EnemyMove[] = [
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
   // Chapter 11, the War of the Harbor (data/warBattles.ts).
   ...WAR_BATTLES,
+  // Chapter 12, the Claim (data/claimBattles.ts).
+  ...CLAIM_BATTLES,
   // Chapter 10, Z-6: the crew at the smugglers' landing (the outline 7.1 and section 5; the second review's 3.13 keeps x3 /
   // x1.3 with protects). Game Over applies; the way back in is the cart track's foot (the trigger plays again until won).
   // Not marked as a side quest's fight: Z-6 is required by the Chancellor's condition, so its fight is the story's (the
@@ -1647,6 +1652,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   salt_flats: { title: 'The Salt Flats', backdrop: 'salt_flats' },
   heath: { title: 'The Heath', backdrop: 'moor_heath' },
   harbor_war: { title: 'The War of the Harbor', backdrop: 'mountain_path' },
+  crossroads_war: { title: 'The Crossroads Fields', backdrop: 'crossroads' },
 };
 
 /**

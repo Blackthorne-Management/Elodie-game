@@ -8,8 +8,8 @@ import type { EncounterTable } from '../engine/content.ts';
  * scripted boar; the wild sections turn violent when the story brings the party back). Maps may read them.
  */
 export const LATER_STORY_FLAGS: readonly string[] = [
-  // Chapter 12, the Claim: the Throne Hall's rope comes down (tools/maps/seat.ts, built now for reuse).
-  'story.claim_begun',
+  // Chapter 12, the Claim: the Throne Hall's rope comes down (tools/maps/seat.ts). Built now (Oct 22): the list is kept for
+  // flags a map reads before a chapter that sets them exists; none is left.
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
@@ -515,6 +515,51 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       { id: 'caona', weight: 0, level: 27, foes: ['Crown Marine (old uniform)', 'Crown Musketeer (old uniform)'], intro: 'The Crown\'s longboats come in under the old sails.', won: 'The marines go back to the boats.', fled: 'You step back off the pier.' },
       { id: 'hale', weight: 0, level: 28, foes: ['Captain-General Hale', "Regent's Sealbearer", 'Crown Marine'], intro: 'Hale comes up the pier\'s end.', won: 'Hale is on the boards.', fled: 'You back up the pier.' },
       { id: 'rael', weight: 0, level: 28, foes: ['Rael', 'Captain Rivera', 'Jaime', 'Brasador Halberdier'], intro: 'Rael does not draw.', won: 'His army breaks.', fled: 'You back up the pier.' },
+    ],
+  },
+  // Chapter 12's scripted fights (data/claimBattles.ts), for the Foes page. No map rolls on this table.
+  claim_story: {
+    id: 'claim_story',
+    groups: [
+      { id: 'regent', weight: 0, level: 30, foes: ['The Lord Regent', "Regent's Sealbearer", "Regent's Sealbearer"], intro: 'The Regent comes down the dais\'s step.', won: 'The Regent is on one knee on the step.', fled: 'You step back from the tile.' },
+      { id: 'azzy', weight: 0, level: 29, foes: ['Azzy'], intro: 'Azzy stops at the dais\'s foot.', won: 'Azzy is on one knee.', fled: 'You step back from the tile.' },
+    ],
+  },
+  // Chapter 12's table on the Crossroads Fields (the outline section 5; the second review's 3.15: four to nine actions, nobody
+  // down, XP for a floor player, not tuned): the Regent's men and the last veils outside the walls, from the chapter's start.
+  crossroads_war: {
+    id: 'crossroads_war',
+    groups: [
+      {
+        id: 'veils',
+        enemies: ['husher', 'al_sealbearer'],
+        weight: 2,
+        level: 29,
+        foes: ['Husher', "Regent's Sealbearer"],
+        intro: 'A veil and a Sealbearer stand in the long grass together. "The Hall is shut, envoy. So is the road."',
+        won: 'The Sealbearer walks back toward the walls. The veil does not look back.',
+        fled: 'You run for the road. Neither of them follows.',
+      },
+      {
+        id: 'marines',
+        enemies: ['crown_marine', 'crown_marine', 'crown_officer'],
+        weight: 3,
+        level: 28,
+        foes: ['Crown Marine', 'Crown Marine', 'Crown Officer'],
+        intro: 'Crown marines from the Patience, a long way from the sea. "Halt! In the Regent\'s name!"',
+        won: 'The marines go back toward the Gold Gate\'s road.',
+        fled: 'You go back to the road. They do not follow.',
+      },
+      {
+        id: 'seals',
+        enemies: ['al_sealbearer', 'al_sealbearer', 'crown_marine'],
+        weight: 1,
+        level: 30,
+        foes: ["Regent's Sealbearer", "Regent's Sealbearer", 'Crown Marine'],
+        intro: 'Two Sealbearers and a marine on the crossroads. "By the Lord Regent\'s writ: turn back."',
+        won: 'The Sealbearers set their seals down in the grass, and go.',
+        fled: 'You turn back. The writ stays where it was read.',
+      },
     ],
   },
   // Chapter 11's war table (the outline section 5): the beach's pickets and crabs, the gardens' road and the Mountain Path,

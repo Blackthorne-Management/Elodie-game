@@ -42,6 +42,8 @@ const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string 
   '11': { mark: 'chapter10-end', map: 'xaragua-beach', spawn: 'landing' },
   // Chapter 12 begins at Eightgate's Ardencia Gate, off the fleet, after Chapter 11's card (the Regent's retreat).
   '12': { mark: 'chapter11-end', map: 'seat-concourse', spawn: 'ardencia_gate' },
+  // The Epilogue begins on the Concourse on the Hearing's morning, nine days after the Claim (the arrivals play).
+  epilogue: { mark: 'chapter12-end', map: 'seat-concourse', spawn: 'hearing_morning' },
 };
 
 export function chapterStarts(): Record<string, ChapterStart> {

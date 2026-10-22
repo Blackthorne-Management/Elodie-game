@@ -122,6 +122,19 @@ Harbors lie." becomes the Journal's flank step and the boy's count from the look
 STORY's private line, "My father kept his oath and it cost him everything", stands; young Benny's passive (Chapter 3)
 now reads "He kept the oath, whatever it cost" instead of "He kept the goal, not the oath".
 
+**Built in Chapter 12 and the Epilogue (Oct 22):** **Elodie** at last: in her rooms, of Rael's testing, "No. He tested
+which of you would stand in front of the other. I told him never to. That is the part I will not forgive, and he knows
+it." and, paying Chapter 1's "Stay close to your sister", "You stayed close."; she never puts her sister's beating on
+Anissa. At the count she speaks Anissa's names, so the realm hears she is Rael's daughter; at the Hearing, "I married
+him. I knew what he was doing. I did not agree with the testing, and I said so, and I stayed. Write all three." and,
+after a pardon, she walks from Zetwal's chair to the clerk's table and stands beside him (their one moment). **Rael**
+gives the confession in public ("What you are now is what you do."; "I never asked the eggs how they felt. I am asking
+now."). **Old Benny** lays *Benny's Refusal* before his son and says nothing. **Azzy and Rael:** on Trust Azzy hands back
+the boarding axe from the pier, haft first; on Strike he walks over and stands in front of him; then "Marshal."
+"Warden." **Old Patricio** is silent at dawn and at the Hearing; he speaks at the Claim of the sealing only, at the
+chair he cut (owner decision, Oct 22); question 13 stays open. **Anissa** never jokes and is never hit; her last line in
+the Just Throne is "I'll hold the door, Gigi."
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

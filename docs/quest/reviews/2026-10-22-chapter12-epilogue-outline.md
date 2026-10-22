@@ -1295,3 +1295,117 @@ The second review is in `2026-10-22-chapter12-epilogue-outline-review.md`. The b
 **Owner questions:** asked as pop-ups, one at a time. The build goes ahead with the recommendation.
 1. **Owner decision (Oct 22): yes, as recommended.** Azzy's Challenge goes only to a Strike player who answers "the realm had to see him beaten". It comes after the Regent, with Gianna's wounds carried over.
 2. **Owner decision (Oct 22): yes, as recommended.** Old Patricio speaks when the petition is heard at the Claim, about the sealing only, at the chair his young self cut. At Rael's Hearing he is present and silent. This leaves open question 13 open.
+
+## Built (Oct 22): what changed from this outline, and Claude's calls
+
+Built on branch `chapter12` (from `chapter11`), with every fix in the second review
+(`2026-10-22-chapter12-epilogue-outline-review.md`), the decisions above and the owner's two decisions of Oct 22. Code:
+`quest/src/engine/stability.ts` (Accord Stability: the parts, the score, the ending, the Hollow card's costs, written once
+after the verdict), the Challenge's wounds and the claimant first in `engine/battle.ts` (`BattleDef.keepsWounds`,
+`wounded`, `opensFirst`; `woundsFor`; `WOUND_FLOOR`), cards in a row with lines by flag and the end credits in
+`engine/game.ts` and `engine/content.ts` (`CardDef.more`, `CardDef.credits`, `GameContent.formatText`), `STABILITY`,
+`WOUND_FLOOR` and Chapter 12's XP row in `quest/src/config.ts`; `quest/src/data/claim.ts` (every place a stage direction
+reads, the token chairs, the gate companies, the conditions), `quest/src/data/claimBattles.ts` (the Regent, his
+Sealbearers, Azzy), `quest/src/data/dialogue/seatClaim.ts` (every scene of the chapter and the Epilogue, the people, the
+overlays); the new map `seat-rooms` and the Claim's and the Hearing's layers on `seat-concourse`, `seat-hall` and
+`seat-fields` in `quest/tools/maps/seat.ts`; `ACT12` and `EPILOGUE` in `quest/src/data/quests.ts`; the Chapter 12 entries
+in `battles.ts`, `encounters.ts`, `sideQuests.ts` (`seats_claim`, `volume_one`, `claim_corner`), `debates.ts`
+(`seat_claim`), `rpg.ts` (the chain of office, Volume One), `cards.ts` (the Claim's card, the three endings, The End and
+the cast), `npcs.ts`, `speakers.ts`, `objects.ts`, `puzzles.ts`, `assets.config.ts`, `audio.config.ts` (the Hearing's slot,
+the hall bell). Tests: `quest/tests/claim.test.ts`, `quest/tests/stability.test.ts`, and the Chapter 12 parts of
+`act.test.ts`, `goldWalk.test.ts`, `levelCurve.test.ts`, `gameOver.test.ts`, `content.test.ts`; puzzle `seat_chair`;
+`chapter12Checks` in `tests/smoke.mjs`. Commits: engine `f573f7e`, content and the route `28a0a8d`, tests `867963b`, then
+these docs.
+
+**The owner's decisions, as built:**
+- **Azzy's Challenge** comes only on the dark route: Strike, and on the ash road "Because the realm had to see him
+  beaten." (`choice.strike_why`). It follows the Regent's, Gianna alone (`fighters: ['gianna']`), opening with the HP
+  share the Regent's fight left her (`wounds.gianna`, never under `WOUND_FLOOR` 0.25); it binds, pays nothing, and a won
+  Challenge clears the wounds. A lost one is played again with the same wounds (they carry until it is won).
+- **Old Patricio** arrives at dawn through Zetwal's gate, silent (a look and a nod; his two lines there were cut in the
+  build so that he speaks only where the owner said), and speaks at the Claim when the petition is heard, of the sealing
+  only, at the eighth chair his young self cut. At the Hearing he sits in the gallery and says nothing; he and Rael
+  exchange one look. Question 13 stays open. A test holds every `patricio_old` line to the chair's node and his own talk.
+
+**The second review's fixes, as built:** the Seventh Clause answered at the Claim under Clause Six (the filled chairs
+answer the Petitions of Breach); the Regent first, then Azzy; the claimant strikes first in both Challenges; the count
+reads the realm's pillars live (`{realm.influence}` and the others through `formatText`); Elodie speaks Anissa's names;
+the Regent's Commission, Clause Twelve (he fights with his chain of office, not steel) and the Council of Eight; the
+Master of the Chairs sets each token on its chair; the Regent at HP x6, ATK x1.6, MAG x2.0 with a group attack every
+second turn, one version of him; Azzy at HP x4, ATK x1.2; Anissa's tips true of the fight (none in Azzy's); the
+recalibrated Stability table (five saves tested); the Regent arrested on the Almoner's commission under his own seal;
+the Hearing nine days later with the arrivals shown; "I'll hold the door, Gigi." as Anissa opens the Hall in the Just
+ending; the joking lines cut (a test holds the solemn scenes); the bench and gallery by the nave; the final Echo puzzle
+new (`seat_chair`); The End card answering the intro's first line, then the cast; the verdict confirmed (Exile and
+Execution ask twice) with a save before it; headless routes to all three endings, on both Turn routes, in `npm test`.
+
+**Claude's calls (beyond the review):**
+- **The levels:** Chapter 12's steps pay **120** (`XP_PER_OBJECTIVE_BY_CHAPTER[11]`; the ash road, the wait until the
+  bell, the bell and Rael's surrender pay nothing, nor does the Epilogue); the Regent 420; *A Seat for Every House* 40 and
+  *Volume One* 20 (required quests: the Chapter 10 rule, what cannot be skipped rides on the steps). The route ends on
+  30, the cap; the line without side quests at 28, the band's floor.
+- **The Regent tuned down from the outline's adds** (the HP, ATK and MAG scales stand as decided): two Sealbearers in
+  front of him and one more at a third (not one at two thirds and two at a third), *The Charter, read* at 110 and *One
+  Hand* at 130 (from 140 and 160). With the outline's adds the roster four took 42 to 45 actions with a fall in nine
+  fights of ten; now 40 at the route's level with a fall in one in four.
+- **Azzy shares or renounces by what the player did at the fair** (`choice.azzy_ordu`, Chapter 6), not a new question:
+  "the choice on the spot" is his, read from the player's earlier answer. On Strike he says he is still angry either way.
+- **The companions sit** for the Hearing (`story.hall_seated` keeps them off the field and out of the roster's joins
+  until the ending, when they are back).
+- **The afternoon is a step, not a journey:** after the verdict the party is moved on the same map (`travel.next` to
+  `seat-hall/afternoon`); the guide test allows a same-map journey.
+- **Every scene that plays on arrival is `once` with its own flag** (the validator's rule): `story.claim_arrive_seen`,
+  `story.rooms_seen`, `story.bell_hall_seen`, `story.arrivals_seen`, `story.hearing_seen`, `story.ending_played`.
+- **The tokens are handed over on the steps** the night before (`side.seats.handed`), then set by the Master of the
+  Chairs at the bell; a chair whose token the party never had stays bare (`seat.bare.<house>`), and a bare chair costs
+  Stability. Al-Doria's chair follows the Muster: a sold Al-Doria leaves it bare, like any other house.
+- **Volume One's Concord** (2) is paid through `MUSTER.concord`, like Chapter 10's one-off bonuses.
+- **Layla's lines** come from the `LAYLA` constant (`claimSeal`, `claimAnswer`, `claimTalk`, `councilSits`, `hallTalk`).
+- **Cut or not built:** Influence over Fear at the count (the threshold of 9 with 2 in each pillar is read, not a
+  second gate); the tier-28 shop (decided); the books' second looks; the voyage to Eightgate as a scene (the card's close
+  lands the party on the ash road at the Ardencia Gate); the board's dispatches.
+
+**Measured (Oct 22):**
+
+| Line | Level (XP) |
+|---|---|
+| Route end | 30 (11,455) |
+| No side quests | 28 (9,795) |
+| Played median (no wild steps on the route) | 30 (11,513) |
+| Played p90 / wanderer p90 | 30 / 30 |
+
+The Regent is met at 29 on the route.
+
+The fights (`tests/claim.test.ts`; actions are party actions, "fall" the share of runs with a fighter Down or Bound
+anywhere in the party; 20 to 30 seeds; tier-24 gear as Chapter 11's; the roster four is Gianna, Yari, Azzy, Samira, the
+glass line Gianna, Yari, Vikram, Haru; "start" is the route's own gear):
+
+| Fight | Gear, order | 28 | 30 |
+|---|---|---|---|
+| The Regent | tier 24, roster | 41.6, 53% | 39.7, 23% |
+| | tier 24, glass | 23.9, 7% | 22.2, 0% |
+| | start, roster, boss Grudge | 30.2, 13% | |
+| | start, glass, boss Grudge | 17.8, 0% | |
+| Azzy's Challenge (after the Regent, Gianna alone, wounded) | tier 24 | 18 of 20 won, 13.2 | 20 of 20, 13.0 |
+| Crossroads Fields: veils / marines / seals | tier 24, roster | 5.1 / 8.1 / 6.9, 0% | |
+
+The Regent is won in every run of every row. Samira deals almost nothing under the test's bot (her kit is support),
+which is why the roster four is nearly twice the glass line's length; at 28 (the line without side quests) the roster
+runs 41.6 actions, over the 40 gate by a little. A lost Azzy's Challenge at 28 is won on the next try in every seed.
+
+The gold arrow, on from the end of Chapter 11: **229 steps and 6 map changes** through Chapter 12, **5** through the
+Epilogue (it is played in the Hall), no stall, every objective in order, from either Muster night. Every variant (four
+houses x betrayed or turned x Trust or Strike, sixteen) plays to the end by the arrow with a pardon, and Exile,
+Execution and the dark route too (`tests/claim.test.ts`). Stability on the route (Trust, every chair, a pardon): 85, the
+Just Throne. Strike with a pardon: 50 to 62, Hollow. Exile: 75, Hollow. Execution: Iron. The dark route: 40, Hollow.
+
+**Not built:** the books' second looks; the voyage as a scene; the board's dispatches; the dedication in the credits
+(the cast is in; the owner's dedication line is waiting). The smoke test has the Chapter 12 checks at every marker from
+`@claim-arrival` to `@the-end`, but has not been run in a browser.
+
+**Flagged for the owner (not changed):**
+- Question 13 (does old Patricio know of the marriage?) stays open; the build fits either answer.
+- The Stability dials (`config.ts STABILITY`) decide which saves reach the Just Throne: on the built route Trust with a
+  pardon is Just (85) and Strike with a pardon is Hollow unless Azzy shares. If the owner wants Strike to reach Just more
+  often, `harborStrike` (-15) is the dial.
+- The roster four at 28 runs the Regent at 41.6 actions; the HP x6 the owner decided is what sets it.

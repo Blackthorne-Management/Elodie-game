@@ -31,6 +31,7 @@ import {
 import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { CHAPTERS, JOURNAL_NOTES } from '../data/quests.ts';
+import { cardLines } from '../engine/content.ts';
 import { evaluate } from '../engine/conditions.ts';
 import type { Effect, GameLogic, Target } from '../engine/game.ts';
 import { DIRS, type Dir8, type Era, type Pos } from '../engine/types.ts';
@@ -84,7 +85,7 @@ import { Toast } from '../ui/Toast.ts';
 import { openExportDialog, openImportDialog } from '../ui/saveCodeDialog.ts';
 import { tilemapKey } from './BootScene.ts';
 
-type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase' | 'battle' | 'rhythm' | 'gameover';
+type UiMode = 'field' | 'dialogue' | 'card' | 'menu' | 'journal' | 'modal' | 'shop' | 'showcase' | 'battle' | 'rhythm' | 'gameover' | 'credits';
 
 /** How long the glow on an object changed through the Echo lasts. */
 const CHANGED_GLOW_MS = 3600;
@@ -550,6 +551,16 @@ export class FieldScene extends Phaser.Scene {
           input.clearPresses();
         }
         break;
+      case 'credits':
+        // The end credits (Chapter 12): A or B goes to the title; the save is the Hall after the end.
+        if (input.pressed('up')) this.panel.scrollBy(-12);
+        if (input.pressed('down')) this.panel.scrollBy(12);
+        if (input.pressed('cancel') || input.pressed('menu') || input.pressed('confirm')) {
+          this.panel.close();
+          this.leaving = true;
+          this.scene.start('intro', { opening: 'title' });
+        }
+        break;
       case 'journal':
         if (input.pressed('up')) this.panel.scrollBy(-12);
         if (input.pressed('down')) this.panel.scrollBy(12);
@@ -767,6 +778,10 @@ export class FieldScene extends Phaser.Scene {
           break;
         case 'voyage':
           voyage = e.voyage;
+          break;
+        case 'credits':
+          // The game's last card closed (Chapter 12): the end credits, then the title (the save keeps the realm open).
+          this.openCredits(true);
           break;
       }
     }
@@ -2035,7 +2050,8 @@ export class FieldScene extends Phaser.Scene {
       const notes = [...journalNotes(JOURNAL_NOTES, flags), ...closedNotes(SIDE_QUESTS, flags)];
       if (notes.length > 0) {
         lines.push({ text: 'Notes:', color: UI.accentText, gap: 4 });
-        for (const n of notes) lines.push({ text: `${n.title}: ${n.text}`, color: UI.dimText });
+        const format = this.logic.content.formatText;
+        for (const n of notes) lines.push({ text: `${n.title}: ${format ? format(n.text, flags) : n.text}`, color: UI.dimText });
       }
       // The Muster (Chapter 10, the second review's 3.5): each house's price and what the Muster counts as paid, from
       // the landing on, and the soldiers once they are pledged. Least paid, first bought.
@@ -2048,17 +2064,18 @@ export class FieldScene extends Phaser.Scene {
   }
 
   /** The Credits screen: the art and sound the quest uses, with authors and licences (data/credits.ts). */
-  private openCredits(): void {
+  private openCredits(atTheEnd = false): void {
     const lines: PanelLine[] = [{ text: 'CREDITS', color: UI.accentText }];
     CREDITS_INTRO.forEach((t, i) => lines.push({ text: t, color: i === 0 ? UI.text : UI.dimText, gap: i === 0 ? 4 : 0 }));
     for (const c of CREDITS) {
       lines.push({ text: `${c.title} by ${c.author} (${c.licence})`, color: UI.text, gap: 4 });
       lines.push({ text: `${c.use}. ${c.url}`, color: UI.dimText });
     }
-    lines.push({ text: '(B to close)', color: UI.dimText, gap: 4 });
+    lines.push({ text: atTheEnd ? '(A to the title)' : '(B to close)', color: UI.dimText, gap: 4 });
     this.menu.close();
     this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
-    this.mode = 'journal';
+    this.mode = atTheEnd ? 'credits' : 'journal';
+    this.rt.input.clearPresses();
   }
 
   private showCard(): void {
@@ -2072,7 +2089,7 @@ export class FieldScene extends Phaser.Scene {
     this.mode = 'card';
     const lines: PanelLine[] = [
       { text: card.title, color: UI.cardTitle, center: true },
-      ...card.lines.map((t, i) => ({ text: t, center: true, gap: i === 0 ? 10 : 2 })),
+      ...cardLines(card, this.logic.state.flags).map((t, i) => ({ text: t, center: true, gap: i === 0 ? 10 : 2 })),
       { text: '(A to continue)', color: UI.dimText, center: true, gap: 16 },
     ];
     const art = CARD_ART[card.id];
@@ -2462,6 +2479,10 @@ export class FieldScene extends Phaser.Scene {
       cam.shake(320, 0.01);
     } else if (fx === 'volley') audio.sfx('volley');
     else if (fx === 'conch') audio.sfx('conch');
+    else if (fx === 'hall_bell') {
+      audio.sfx('hall_bell');
+      cam.shake(200, 0.003);
+    }
     else if (fx === 'chain') {
       audio.sfx('chain');
       cam.shake(700, 0.006);
@@ -2711,7 +2732,7 @@ export class FieldScene extends Phaser.Scene {
       battle: battleSnapshot(),
       gameOver: gameOverSnapshot(),
       minimap: this.minimap?.visible ? this.minimap.place : null,
-      journal: this.mode === 'journal' ? this.panel.snapshot() : null,
+      journal: this.mode === 'journal' || this.mode === 'credits' ? this.panel.snapshot() : null,
       card: this.mode === 'card' ? this.panel.snapshot() : null,
       toast: this.toast.lastMessage,
       hint: this.hint.lastHint,

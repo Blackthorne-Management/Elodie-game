@@ -83,7 +83,7 @@ export const LEVELS = {
  * the named fights) and the two side quests and the picket pay little (40 each): the route ends on 28 (10,260), the
  * played median on 28 (10,318, under 29's 10,338), and the line without side quests on 26 (8,640, over 26's 8,623).
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70, 40, 58];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70, 40, 58, 120];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
@@ -392,7 +392,9 @@ export const MUSTER = {
   levy: 60,
   giftGold: 100,
   giftMax: 5,
-  concord: { 'clue.four_accounts': 3, 'side.lonely_cutter.done': 3 } as Readonly<Record<string, number>>,
+  // (Chapter 12 pays its one-off bonus here too: Volume One back in Grandmother's hands completes the Overdue Books thread,
+  // SIDE-QUESTS Se-1's +2 Concord; engine/ally.ts musterTick pays every entry once, in any chapter.)
+  concord: { 'clue.four_accounts': 3, 'side.lonely_cutter.done': 3, 'side.volume_one.done': 2 } as Readonly<Record<string, number>>,
 } as const;
 /** Chapter 11's volleys (COMBAT.md 11): one volley for every this many soldiers at sea. */
 export const ARMY_VOLLEY_PER = 10;
@@ -404,6 +406,63 @@ export const ARMY_VOLLEY_PER = 10;
  * fight, the party wins it). A lost fight gives its volleys back (the companies fire again on the next try).
  */
 export const VOLLEY = { power: 50, cap: 3, bossShare: 0.5 } as const;
+
+// ---- Chapter 12, the Claim, and the Hearing ------------------------------------------------------------------------
+
+/**
+ * Accord Stability (engine/stability.ts; the Chapter 12 outline 4.2 as its second review's 3.5 recalibrated it, Claude's
+ * call, Oct 22): one score, 0 to 100, from what the player did across the game, shown once, after the Hearing's verdict.
+ * Every number is a dial for the whole-game pass. On paper: Trust, every house kept and every chair set, a pardon, about
+ * 100 (Just); the same on Strike about 75 (Hollow) unless Azzy shares the Claim (80, Just); the darkest Strike save
+ * about 33. The ending: Iron on an execution; Just on a pardon with the score at `just` or more; else Hollow.
+ */
+export const STABILITY = {
+  start: 40,
+  /** Each flank house whose army sailed with the fleet; a house that turned at the Muster and stood instead. */
+  houseKept: 4,
+  houseTurned: 2,
+  /** The Unpaid Debt: the cacique freed, the elders agreed (mediated), Xaraguá an ally; the Seventh Ribbon (after the release). */
+  xaraguaFreed: 5,
+  eldersAgreed: 5,
+  xaraguaAlly: 2,
+  seventhRibbon: 15,
+  /** The Harbor Turn. */
+  harborTrust: 10,
+  harborStrike: -15,
+  fleetStruck: 5,
+  fleetEscaped: -5,
+  /** The Hearing's verdict. */
+  pardon: 10,
+  exile: 0,
+  execution: -15,
+  /** Concord: (concord - concordFrom) / concordPer, clamped to plus or minus concordMax. */
+  concordFrom: 75,
+  concordPer: 5,
+  concordMax: 5,
+  /** Azzy at the Claim. */
+  share: 5,
+  renounce: 0,
+  challenge: -10,
+  /** The chairs: every token chair set; each bare one. */
+  everyChair: 5,
+  bareChair: -5,
+  /** The Yields: kept (spared, tried) or broken. */
+  yieldKept: 2,
+  yieldBroken: -2,
+  /** The earlier bosses spared (Grimvald, the Paper Fox, Dhanraj). */
+  bossSpared: 1,
+  /** A pardon reaches the Just Throne from this score. */
+  just: 80,
+  /** The Hollow card names at most this many of the costliest strains. */
+  hollowLines: 3,
+} as const;
+
+/**
+ * Damage carries between Challenges (docs/rules-decisions.md [42]; owner decision, Oct 22: Azzy's Challenge comes after the
+ * Regent's, with Gianna's wounds carried over). A fighter who fell in the first Challenge starts the next at this share of
+ * her HP, not at none (Claude's call: a Challenge she cannot act in is not a Challenge).
+ */
+export const WOUND_FLOOR = 0.25;
 
 // ---- Random ambushes (owner rule, Oct 17: every ambush is a real battle) ---------------------------------
 

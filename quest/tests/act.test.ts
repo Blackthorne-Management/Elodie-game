@@ -2,7 +2,7 @@
 // game by the scripted route the smoke test also drives in the browser (routes/zetwal-act1.json).
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11, ACT12, EPILOGUE } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { partyMembers } from '../src/engine/rpg.ts';
@@ -27,6 +27,12 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   const chapter9: string[] = [];
   const chapter10: string[] = [];
   const chapter11: string[] = [];
+  const chapter12: string[] = [];
+  const epilogue: string[] = [];
+  /** Where the party stood once Chapter 11's card closed (the route goes on: Chapter 12 begins at the Ardencia Gate). */
+  let atClaimArrival: { map: string; mode: string } = { map: '', mode: '' };
+  /** As Chapter 12's card shows (the Claim stands; the route goes on into the Epilogue). */
+  let atChapter12End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, once the fleet has landed (the route goes on into Chapter 11). */
   let atChapter10End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood as Chapter 11's card shows (the route goes on: closing it, the fleet sails for Eightgate). */
@@ -90,6 +96,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     if (item.kind === 'mark' && item.name === 'chapter11-end') {
       atChapter11End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
     }
+    if (item.kind === 'mark' && item.name === 'claim-arrival') atClaimArrival = { map: sim.logic.state.player.mapId, mode: sim.logic.mode };
+    if (item.kind === 'mark' && item.name === 'chapter12-end') {
+      atChapter12End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
+    }
     if (item.kind === 'mark' && item.name === 'end-card') {
       atChapterEnd = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => KEPT.test(k)));
     }
@@ -140,6 +150,15 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       if (sim.logic.state.flags.isSet('act10.complete') && ACT11.maps.includes(sim.logic.state.player.mapId)) {
         const id11 = currentObjective(ACT11, sim.logic.state.flags)?.id ?? 'complete';
         if (chapter11.at(-1) !== id11) chapter11.push(id11);
+      }
+      // Chapter 12 (Eightgate again, after Chapter 11's card) and the Epilogue (from the Hearing's morning).
+      if (sim.logic.state.flags.isSet('act11.complete') && ACT12.maps.includes(sim.logic.state.player.mapId) && !sim.logic.state.flags.isSet('story.hearing_called')) {
+        const id12 = currentObjective(ACT12, sim.logic.state.flags)?.id ?? 'complete';
+        if (chapter12.at(-1) !== id12) chapter12.push(id12);
+      }
+      if (sim.logic.state.flags.isSet('story.hearing_called') && EPILOGUE.maps.includes(sim.logic.state.player.mapId)) {
+        const idE = currentObjective(EPILOGUE, sim.logic.state.flags)?.id ?? 'complete';
+        if (epilogue.at(-1) !== idE) epilogue.push(idE);
       }
       if (ACT9.maps.includes(sim.logic.state.player.mapId)) {
         const id9 = currentObjective(ACT9, sim.logic.state.flags)?.id ?? 'complete';
@@ -351,10 +370,45 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     expect(flags.get('belief.rael_traitor')).toBe(false);
     expect(flags.get('choice.truth_answer')).toBe('tested');
     expect(flags.isSet('war.strike') || flags.isSet('story.fleet_escaped')).toBe(false);
-    // Closing the card, the fleet sails for Eightgate: Chapter 12 begins at the Ardencia Gate.
-    expect(sim.logic.state.player.mapId).toBe('seat-concourse');
-    expect(sim.logic.mode).toBe('field');
+    // Closing the card, the fleet sails for Eightgate: Chapter 12 begins at the Ardencia Gate, Mother in the arch.
+    expect(atClaimArrival.map).toBe('seat-concourse');
+    expect(atClaimArrival.mode).toBe('dialogue');
     for (const name of ['Caona', 'Captain-General Hale', 'Rael', 'Cacique Anaco', 'Governor Thorne', 'Nancy']) expect(speakers).toContain(name);
+  });
+
+  it('Chapter 12: the Ash Road, Mother\'s rooms, the night (the tokens, the corner, Volume One), the bell, the eighth chair, Hollis, the count, the Claim, Rael', () => {
+    const flags = new FlagStoreView(atChapter12End.flags);
+    // Every objective in order (the bell is rung in the same talk that hands the tokens over once the rest is done; the
+    // petition filed, and Rael's coming, are inside the scenes that begin them; the card follows at once).
+    expect(chapter12).toEqual(ACT12.objectives.map((o) => o.id).filter((id) => id !== 'bell' && id !== 'filed' && id !== 'rael'));
+    // The one story fight: the Regent's Challenge (the route holds the pier, so Azzy renounces; no duel).
+    expect(atChapter12End.battles.slice(atChapter11End.battles.length).filter((b) => !b.startsWith('encounter:'))).toEqual(['claim_regent']);
+    expect(atChapter12End.map).toBe('seat-hall');
+    expect(atChapter12End.mode).toBe('card');
+    for (const f of ['story.claim_arrived', 'story.elodie_rooms', 'side.volume_one.accepted', 'debate.seat_claim.settled', 'side.seats.handed', 'story.bell_claim', 'side.seats.done', 'story.chairs_set', 'anchor.caona_chair', 'story.chair_read', 'clue.petition_original', 'story.claim_counted', 'story.claim_begun', 'story.claim_declared', 'story.regent_beaten', 'claim.azzy_renounced', 'story.claim_won', 'clue.petition_heard', 'story.regent_arrested', 'story.rael_surrendered', 'story.hearing_called', 'card.claim_stands']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    // The chairs as the Muster left them: the Dorini sailed, so Al-Doria's chair is bare; the other four token chairs are set.
+    expect(flags.isSet('seat.bare.al_doria')).toBe(true);
+    for (const h of ['xaragua', 'skarragol', 'kuroshi', 'jwaladesh']) expect(flags.isSet(`side.seats.${h}_set`), h).toBe(true);
+    expect(flags.get('choice.claim_why')).toBe('xaragua');
+    expect(flags.isSet('claim.azzy_share') || flags.isSet('claim.azzy_challenged')).toBe(false);
+    for (const name of ['Elodie', 'Master of the Chairs', 'Keeper Hollis', 'The Lord Regent', 'Lady Rosalind', 'Caona', 'Quiet Crown follower']) expect(speakers).toContain(name);
+  });
+
+  it('the Epilogue: nine days later, the Hearing, the verdict (the route pardons), the Just Throne, The End and the cast', () => {
+    // The arrivals walk straight on into the Hearing; the afternoon's scene plays on arriving in it.
+    expect(epilogue).toEqual([...EPILOGUE.objectives.map((o) => o.id).filter((id) => id !== 'hearing' && id !== 'throne'), 'complete']);
+    const f = sim.logic.state.flags;
+    for (const flag of ['story.hearing_arrived', 'side.volume_one.done', 'story.hearing_heard', 'hearing.pardon', 'hearing.verdict', 'story.signet_returned', 'ending.just', 'act12.complete', 'end.just', 'end.done', 'card.the_end', 'card.cast_4']) {
+      expect(f.isSet(flag), flag).toBe(true);
+    }
+    expect(f.get('story.hall_seated')).toBe(false);
+    expect(f.getNumber('stability.score')).toBeGreaterThanOrEqual(80);
+    // The game is over and the Hall is open: the party stands on the tile, in the field, the companions back in the line.
+    expect(sim.logic.state.player.mapId).toBe('seat-hall');
+    expect(sim.logic.mode).toBe('field');
+    for (const name of ['Rael', 'Benny', 'Amanda', 'The treasurer', 'Lamp-oil seller', 'The printer', 'Rahel', 'Anicette']) expect(speakers).toContain(name);
   });
 
 

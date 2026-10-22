@@ -603,6 +603,18 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
   time (proposal), and Caona's oath is spoken aloud in both eras.
 - **Boss:** the Lord Regent (level 30).
 - **What the player learns:** the board game's Claim and Challenge, in story form.
+- **Built (Oct 22; the outline `reviews/2026-10-22-chapter12-epilogue-outline.md`, its decisions and its "Built"
+  section):** the ash road to Eightgate (on Strike, Azzy's question: *"Because I didn't believe him."* or *"Because the
+  realm had to see him beaten."*); seven armies at the gates; Elodie in the Ardencia Gate's arch, then her rooms in the
+  Quarter (the testing she will not forgive; "You stayed close."; Volume One on her shelf); the corner's debate; the
+  tokens handed to the Master of the Chairs on the steps; the night and the bell; old Patricio through Zetwal's gate at
+  dawn, silent; the chairs set, one by one, a bare chair for a house that sold; **the Echo of the eighth chair** (young
+  Patricio cuts the oath's first line into Xaraguá's chair; the petition filed with it); the count, the realm's pillars
+  read aloud, Elodie speaking Anissa's names; Gianna on the tile; **the Regent's Challenge** (his chain of office, his
+  Sealbearers, Hush the Light: Gianna steps in); "...It is a tile."; Azzy shares or renounces (by what the player said at
+  the fair), or, on the dark route only, Challenges her (Gianna alone, wounded; owner decision, Oct 22); the chairs fill;
+  the Petitions of Breach answered under Clause Six; old Patricio at the chair he cut, of the sealing only; the Regent
+  arrested on the Almoner's commission under his own seal; Rael walks up the nave and lays his signet on the step.
 
 ### Epilogue: The Hearing
 
@@ -618,6 +630,16 @@ Elodie, Azzy, Anissa (and old Benny and old Patricio may speak). Verdicts:
 
 Endings (Accord Stability, guide 5.7): **The Just Throne** (canon), **The Hollow Throne**, **The Iron Throne**.
 Rael at the Hearing: "I never asked the eggs how they felt. I am asking now."
+
+**Built (Oct 22):** nine days later, the arrivals walk in (Volume One back in Grandmother's hands); every witness walks
+to the clerk's table and speaks there (the rebel leaders, the treasurer's family, the cells, Elodie: "I married him. I
+knew what he was doing. I did not agree with the testing, and I said so, and I stayed.", Azzy, Anissa); Rael's public
+confession; old Patricio in the gallery, silent, one look with Rael (question 13 stays open). The verdict is confirmed
+(Exile and Execution ask twice) and saved before. On a pardon, old Benny lays *Benny's Refusal* before his son; the
+Locket and the signet glow together; "Marshal." "Warden." Accord Stability (`engine/stability.ts`, the dials in
+`config.ts STABILITY`) is shown once, after the verdict: **Iron** on an execution; **Just** on a pardon at 80 or more;
+else **Hollow**, whose card names what cost the realm most. The Just Throne ends with Anissa opening the Hall's doors:
+"I'll hold the door, Gigi." Then the *The End* card answers the intro's first line, the cast, the credits and the title.
 
 ---
 

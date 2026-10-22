@@ -6,6 +6,9 @@ import { debateFlag } from '../src/engine/debate.ts';
 import { describe, expect, it } from 'vitest';
 import { musterFlagsWritten } from '../src/engine/ally.ts';
 import { warFlagsWritten } from '../src/engine/war.ts';
+import { stabilityFlagsWritten } from '../src/engine/stability.ts';
+import { STABILITY_HOUSES } from '../src/data/claim.ts';
+import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { VOLLEY_BATTLES } from '../src/data/warBattles.ts';
 import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
@@ -43,6 +46,10 @@ function flagsSet(): Set<string> {
   for (const f of musterFlagsWritten()) out.add(f);
   // The war writes its volley pool, what is left and what each won fight spent from code (engine/war.ts; Chapter 11).
   for (const f of warFlagsWritten(VOLLEY_BATTLES)) out.add(f);
+  // The Hearing's verdict writes the Accord's Stability and the ending from code (engine/stability.ts; Chapter 12).
+  for (const f of stabilityFlagsWritten(STABILITY_HOUSES)) out.add(f);
+  // A finished side quest puts its reward items in the bag (engine/sideQuests.ts settleRewards; Chapter 12 reads one).
+  for (const q of SIDE_QUESTS) for (const it of q.reward.items ?? []) out.add(`item.${it.id}`);
   // A pushed rotor writes its screens' facings and looks, and its solved flag (engine/rotor.ts; Chapter 7's screens).
   for (const r of Object.values(CONTENT.rotors ?? {})) {
     out.add(rotorMovedFlag(r.id)).add(r.solved);
