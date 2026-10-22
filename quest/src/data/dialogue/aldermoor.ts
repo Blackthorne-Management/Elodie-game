@@ -1095,14 +1095,14 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         { text: 'Back.', next: 'menu' },
       ],
     },
-    steward: {
-      lines: [
-        { if: { notFlag: 'assize.steward_pressed' }, speaker: 'keep_steward', text: 'Sealed at the bell. Open at the end. The seal broken. I keep the keys, envoy. I know when they turn.' },
-        { if: { flag: 'assize.steward_pressed' }, speaker: RG, text: 'The envoy will come to the point. The steward is not lying; he is boring.' },
-      ],
+    // Pressed once, the steward answers; again, the Regent cuts in (two nodes: a node's set lands before its lines).
+    steward: { lines: [], next: [{ if: { flag: 'assize.steward_pressed' }, to: 'steward_again' }, { to: 'steward_first' }] },
+    steward_first: {
+      lines: [{ speaker: 'keep_steward', text: 'Sealed at the bell. Open at the end. The seal broken. I keep the keys, envoy. I know when they turn.' }],
       set: { 'assize.steward_pressed': true },
       next: 'menu',
     },
+    steward_again: { lines: [say(RG, 'The envoy will come to the point. The steward is not lying; he is boring.')], next: 'menu' },
     almoner: {
       lines: [
         say(AL, 'Agreed in this very court, envoy, before the justiciar. It is in the public edition. Every child may read it.', { set: { 'assize.pressed_almoner': true } }),

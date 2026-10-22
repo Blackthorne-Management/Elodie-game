@@ -5,7 +5,7 @@
 // coming back from the bridgehead's memory before the pawl is pinned.
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9 } from '../src/data/quests.ts';
 import { findPath } from '../src/engine/sim.ts';
 import type { Sim } from '../src/engine/sim.ts';
 import { goldWalk } from '../tools/gold-walk.ts';
@@ -146,6 +146,38 @@ describe('following only the gold arrow on, through Chapter 8', () => {
   it('takes a reasonable way (measured Oct 22: 767 steps and 19 map changes)', () => {
     expect(walk.steps).toBeLessThan(950);
     expect(walk.mapChanges).toBeLessThan(30);
+  });
+});
+
+describe('following only the gold arrow on, through Chapter 9', () => {
+  // On from the end of Chapter 8 (Chapter 9, Oct 22): the voyage north, the Mere Stair and the notice, Edmund on the
+  // heath road, the press-gang on the Cross, the audience, the day (the printer and the bog chapel for Al-3, the three
+  // families, the debate, Jordyn in the close, Sebastian at the organ), the eve, the recital, the postern by night, the
+  // filing floor's memory, the cabinets dial by dial and seal by seal, the panel behind the shelf (Al-2), caught, the
+  // cells, the Assize, the Hushed, the price at dawn, the stair home.
+  const start = goldWalk({ maps });
+  const mid = goldWalk({ maps, sim: start.sim, through: 'act5' });
+  const six = goldWalk({ maps, sim: mid.sim, through: 'act6' });
+  const seven = goldWalk({ maps, sim: six.sim, through: 'act7' });
+  const eight = goldWalk({ maps, sim: seven.sim, through: 'act8' });
+  const walk = goldWalk({ maps, sim: eight.sim, through: 'act9' });
+
+  it('finishes Chapter 9 with no stall', () => {
+    expect(walk.stalls).toEqual([]);
+    expect(walk.finished).toBe(true);
+    for (const f of ['party.edmund', 'story.jordyn_offer', 'story.sebastian_met', 'side.purge_list.done', 'story.families_warned', 'debate.aldermoor_one_hand.settled', 'story.recital_begun', 'clue.crown_pact', 'anchor.thomas_record', 'side.crown_chronicle.done', 'story.caught', 'story.hushed_beaten', 'ally.aldermoor_dissidents', 'act9.complete']) {
+      expect(walk.sim.logic.state.flags.isSet(f), f).toBe(true);
+    }
+  });
+
+  it('meets every objective in order (the landing, the Hushed and the price are inside the scenes that begin them)', () => {
+    const inside = ['mere', 'hushed', 'price'];
+    expect(walk.objectives).toEqual(ACT9.objectives.filter((o) => !inside.includes(o.id)).map((o) => `act9/${o.id}`));
+  });
+
+  it('takes a reasonable way (measured Oct 22: 574 steps and 15 map changes)', () => {
+    expect(walk.steps).toBeLessThan(750);
+    expect(walk.mapChanges).toBeLessThan(25);
   });
 });
 

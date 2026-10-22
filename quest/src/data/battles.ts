@@ -838,6 +838,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     level: 24,
     role: 'caster',
     armored: true,
+    withdraws: { line: 'The Sealbearer lowers the seal, and walks off into the rain.' },
     moves: [
       { name: 'Writ', power: 100, magic: true, statuses: ['weakened'], chance: 0.6 },
       { name: 'Seal', power: 130, magic: true, statuses: ['hushed'], every: 3, tell: 'The Sealbearer lifts the Throne\'s seal...' },
@@ -993,8 +994,8 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       },
     ],
     tips: {
-      // The answer, said at the start (the second review's 3.9: her light is resisted, so the tip does not promise it).
-      start: 'She takes your words, Gigi. Plain blows still land. My light still comes. Edmund, hold them.',
+      // The answer, said at the start (the second review's 3.9: light is resisted, so the tip says so and names blows).
+      start: 'She takes your words, Gigi. Plain blows still land. Light just slides off her. Edmund, hold them.',
       spark: 'Surge, Gigi! On her!',
       tell: 'The court\'s going quiet! Guard!',
       lowHp: 'Gigi. Plain blows. Then heal, when you can.',

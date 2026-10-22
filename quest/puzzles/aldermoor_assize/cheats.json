@@ -1,0 +1,48 @@
+{
+  "the steward pressed three times (the Regent: he is not lying, he is boring)": [
+    "up*4",
+    "confirm*10",
+    "down*2",
+    "confirm"
+  ],
+  "Thomas's record laid without the court's roll (a word against a word)": [
+    "up*4",
+    "confirm",
+    "down",
+    "confirm",
+    "confirm",
+    "confirm*4",
+    "down*2",
+    "confirm"
+  ],
+  "the Crown's pact laid (it proves a chair was paid for; nobody said it was not)": [
+    "up*4",
+    "confirm",
+    "down",
+    "confirm",
+    "down",
+    "confirm",
+    "confirm",
+    "down*2",
+    "confirm"
+  ],
+  "the roll from the dock's memory and the record, the Almoner never pressed (she has not sworn to the edition)": [
+    "echo",
+    "confirm*7",
+    "echo",
+    "confirm",
+    "up*4",
+    "confirm",
+    "down",
+    "confirm",
+    "confirm",
+    "confirm*3",
+    "down",
+    "confirm",
+    "down",
+    "confirm",
+    "confirm*4",
+    "down*2",
+    "confirm"
+  ]
+}
