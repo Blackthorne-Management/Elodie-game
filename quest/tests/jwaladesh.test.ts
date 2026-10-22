@@ -129,6 +129,15 @@ describe('the owner\'s rules as content checks', () => {
     expect(aiyana.map((l) => l.text).join(' ')).not.toMatch(/held it level|on a roof/i);
   });
 
+  it('the carter says the back gate to Gianna\'s face, then sets off down the road while the next line reads (never spoken from off the map)', () => {
+    const seals = JWALADESH_DIALOGUE.find((d) => d.id === 'salt_road_after')!.nodes['seals']!.lines;
+    const said = seals.findIndex((l) => l.text.startsWith('The Court\'s back gate.'));
+    expect(seals[said]!.stage ?? []).toEqual([]);
+    const off = seals[said + 1]!;
+    expect(off.stage).toEqual([expect.objectContaining({ do: 'exit', actor: 'npc:carter', async: true })]);
+    expect(off.set?.['story.salt_road_cleared']).toBe(true);
+  });
+
   it('the carter gives the thumbprints no man behind them; Azzy\'s line ends on Gianna\'s, and he says nothing', () => {
     const carter = allLines.filter((l) => l.speaker === 'carter');
     for (const l of carter) expect(l.text).not.toMatch(/\bhe\b|\bhim\b|\bhis\b/i);

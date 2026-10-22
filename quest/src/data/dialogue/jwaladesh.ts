@@ -1076,12 +1076,12 @@ function carterSealNodes(): Record<string, DialogueNode> {
         say(Y, 'Yucayeque\'s oil. Cenizal\'s bread. Bab al-Dhahab\'s water. Ordvik\'s grain. Kirinoura\'s paper. Now this.'),
         say(Y, 'The same hand.'),
         say(CT, 'Seven, if you count right. Somebody is feeding the realm. Not for a goddess.'),
-        act(
-          [{ do: 'exit', actor: 'npc:carter', to: at(1, 13) }],
-          CT,
-          'The Court\'s back gate. I will walk beside the cart; you walk beside me.',
-          { set: { 'story.salt_road_cleared': true } },
-        ),
+        // He says it to Gianna's face, then sets off down the road while the line reads (the smoke test, Oct 22: with
+        // the walk first and waited for, the line waited for him to cross forty tiles and was spoken from off the map).
+        say(CT, 'The Court\'s back gate. I will walk beside the cart; you walk beside me.'),
+        act([{ do: 'exit', actor: 'npc:carter', to: at(1, 13), async: true }], '', 'The carter sets off back down the road to the city.', {
+          set: { 'story.salt_road_cleared': true },
+        }),
       ],
     },
   };

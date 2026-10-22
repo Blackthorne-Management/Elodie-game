@@ -9,7 +9,7 @@
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
-// 3. Chapters 1 to 7, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
+// 3. Chapters 1 to 8, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
 //    Chapter 3 on, checks its story flags against the simulator's, its fights, the party and its card in the browser).
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
@@ -61,7 +61,7 @@ const { RPG } = await import('../src/data/rpg.ts');
 const { partyMembers } = await import('../src/engine/rpg.ts');
 const { FlagStore } = await import('../src/engine/flags.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
-const { battleDef } = await import('../src/data/battles.ts');
+const { ENEMIES, battleDef } = await import('../src/data/battles.ts');
 const { GODDESS_WORDS } = await import('../src/data/gameOver.ts');
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
@@ -434,7 +434,7 @@ function expected(sim) {
   };
 }
 
-async function waitMatch(page, exp, what) {
+async function waitMatch(page, exp, what, timeout = 6000) {
   try {
     await page.waitForFunction(
       (e) => {
@@ -450,10 +450,13 @@ async function waitMatch(page, exp, what) {
         }
       },
       exp,
-      { timeout: 6000 },
+      { timeout },
     );
   } catch {
     const s = await snap(page).catch(() => null);
+    // A staged scene still acting it out (the junior priest walks the length of the Court to the back gate before
+    // the line; Chapter 8): the line comes once he is there. Give it a while longer; a hung scene still fails.
+    if (s?.stage?.busy && timeout === 6000) return waitMatch(page, exp, what, 20000);
     throw new Error(`Browser and simulator disagree after ${what}.\nexpected ${JSON.stringify(exp)}\nbrowser  ${JSON.stringify(s && { ...s, flags: undefined })}`);
   }
 }
@@ -513,7 +516,7 @@ async function markChecks(page, sim, name) {
 }
 
 /**
- * At each chapter's end (Chapters 3 to 7; Chapters 1 and 2 are checked after the route): the browser has played
+ * At each chapter's end (Chapters 3 to 8; Chapters 1 and 2 are checked after the route): the browser has played
  * the chapter the way the simulator did (its story flags agree with the simulator's, its fights were won, the party
  * and who walks with it), and its end card is up.
  */
@@ -559,6 +562,14 @@ async function chapterEndChecks(page, sim, name) {
       not: ['story.disguised'],
       what: 'Chapter 7 in the browser: the letter, Haru met and joined, the fog maze and the marsh causeway, the moths and the Fox beaten (and spared), the screens, the petition and the Suzumori token',
     },
+    'chapter8-end': {
+      act: 8,
+      map: 'jwaladesh-harbor',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram'],
+      flags: ['story.jwaladesh_arrived', 'story.court_heard', 'story.vikram_seen', 'story.vikram_challenged', 'choice.duel_lost', 'story.salt_road_cleared', 'clue.arjun_seen', 'clue.arjun_charge', 'clue.relay_route', 'anchor.chain_lamp', 'anchor.tower_mirror', 'story.tower_open', 'story.beam_at_temple', 'story.flame_seen', 'party.vikram', 'story.dhanraj_beaten', 'choice.dhanraj_spared', 'item.dhanraj_ledger', 'clue.crown_holds_oil', 'story.crane_accepted', 'choice.advances_given', 'choice.petition_jwa_signed', 'side.lamp_relay.done', 'side.anonymous_oil.done', 'debate.jwaladesh_hesitation.settled', 'ally.jwaladesh', 'item.token_agnivansh', 'story.vikram_left_agnipur', 'encounter.jwaladesh_story.salt_road.won', 'encounter.jwaladesh_story.dhanraj.won'],
+      not: ['choice.duel_won', 'encounter.jwaladesh_story.duel.won', 'choice.dhanraj_broken'],
+      what: 'Chapter 8 in the browser: the Court heard, the duel lost as meant, the salt road cleared, Arjun\'s night and the relay, the tower mirror and the roofs\' beam, Vikram joined at the flame, Dhanraj beaten (and spared), the price paid and the Agnivansh token',
+    },
   };
   const end = ends[name];
   if (!end) return;
@@ -569,7 +580,7 @@ async function chapterEndChecks(page, sim, name) {
   check(missing.length === 0 && wrong.length === 0, `${end.what}${missing.length ? ` (missing ${missing.join(', ')})` : ''}${wrong.length ? ` (should not be set: ${wrong.join(', ')})` : ''}`);
   check(JSON.stringify(party) === JSON.stringify(end.party), `the party at Chapter ${end.act}'s end is ${end.party.join(', ')} (${party.join(', ')})`);
   // Who walks with the party: everyone in it beyond Gianna has a sprite in the line behind her.
-  const walkers = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru };
+  const walkers = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru, vikram: s.vikram };
   const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
   check(notWalking.length === 0, `the whole party walks behind Gianna at Chapter ${end.act}'s end (no sprite for ${notWalking.join(', ')})`);
   // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag.
@@ -788,6 +799,9 @@ async function fightBattle(page, id, shots) {
   let shot = false;
   // A fight meant to be lost (Chapter 3's Trial of Blades) ends in its scene, never on the goddess's screen.
   const scripted = !!battleDef(id)?.meantToLose;
+  // A sparring match the party can also win (Chapter 8's duel: Vikram withdraws at 0 HP, and a win plays its other
+  // line): the route plays it lost, as the simulator does, so the bot only guards until Gianna falls.
+  const throwIt = scripted && battleDef(id).enemies.some((e) => ENEMIES[e]?.withdraws);
   // A lost fight opens the goddess's Game Over screen: Rise, then back into the fight (riseAndRetry).
   const at = await snap(page);
   for (let turn = 0; turn < 260; turn++) {
@@ -817,7 +831,7 @@ async function fightBattle(page, id, shots) {
       break;
     }
     const skill = bt.actor === 'gianna' ? 'Sunthread' : null;
-    const want = bt.rows.includes('Break Free') ? 'Break Free' : bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith(skill ?? '-')) ?? 'Back') : skill ? 'Skill' : 'Attack';
+    const want = throwIt && bt.menu !== 'skills' ? 'Guard' : bt.rows.includes('Break Free') ? 'Break Free' : bt.rows.includes('Surge') ? 'Surge' : bt.menu === 'skills' ? (bt.rows.find((r) => r.startsWith(skill ?? '-')) ?? 'Back') : skill ? 'Skill' : 'Attack';
     const idx = bt.rows.findIndex((r) => r === want || r.startsWith(want));
     for (let i = 0; i < idx; i++) await page.keyboard.press('ArrowDown');
     await page.keyboard.press('KeyZ');
@@ -1058,7 +1072,7 @@ async function handleVoyage(page, shots, landing = 'xaragua-village') {
 }
 
 async function playAct(browser, errors) {
-  console.log('Chapters 1 to 7 (scripted route, checked against the simulator after every key):');
+  console.log('Chapters 1 to 8 (scripted route, checked against the simulator after every key):');
   let route = parseRoute(readJson('routes/zetwal-act1.json'));
   let sim = newGameSim();
   // SMOKE_FROM=<marker>: the simulator plays the route up to that marker, and the browser loads its save there.
@@ -1182,15 +1196,23 @@ async function playAct(browser, errors) {
         if (mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel' || cmd === 'up' || cmd === 'down')) await finishTyping(page);
         // A card closes on A only once it shows (a press while the scene before it ends is not for the card).
         if (sim.logic.mode === 'card') await page.waitForFunction(() => window.__quest.snapshot().mode === 'card', null, { timeout: 15000 });
+        const battles = sim.battles.length;
         sim.press(cmd);
         if (cmd.includes('-')) await pressDiagonal(page, cmd);
         else await page.keyboard.press(KEYS[cmd]);
         keys++;
         await frames(page);
+        // A line read on with A started a fight (Chapter 8's duel, at the end of Vikram's challenge): fight it in the
+        // browser; the simulator has it settled and stands at the first line after it.
+        if (sim.battles.length > battles) {
+          await page.keyboard.up('Shift');
+          await fightBattle(page, sim.battles.at(-1), shots);
+          await page.keyboard.down('Shift');
+        }
       }
       await handleShowcase(page, showcases, shots);
       // A voyage between chapters (Chapter 1's to Xaraguá; a chapter's card closing on the sea, Chapter 6's longship to
-      // Kirinoura): watch it, then on.
+      // Kirinoura, Chapter 7's trader to Agnipur): watch it, then on.
       const landing = sim.logic.state.player.mapId;
       if ((landing !== mapBefore || landing === 'xaragua-village') && (await handleVoyage(page, shots, landing)) && landing === 'xaragua-village') voyaged = true;
       await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
@@ -1216,7 +1238,7 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
   check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.flags['story.ardencia_asked'] === true, 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
-  check([3, 4, 5, 6, 7].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'kuroshi-pier', 'Chapters 3 to 7 played to their end cards in the browser: the party stands on the Lantern Pier, ready to sail');
+  check([3, 4, 5, 6, 7, 8].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'jwaladesh-harbor', 'Chapters 3 to 8 played to their end cards in the browser: the party stands at the Harbor Chain in Agnipur');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -1244,7 +1266,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('The Lantern Pier') && mapSnap.items.includes('The Lantern Quarter'), 'the city map shows the city the party is in (Kirinoura, after Chapter 7)');
+  check(mapSnap.items.includes('The Harbor Chain') && mapSnap.items.includes('The Lamp Bazaar'), 'the city map shows the city the party is in (Agnipur, after Chapter 8)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
@@ -1331,7 +1353,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'kuroshi-pier' && [1, 2, 3, 4, 5, 6, 7].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 7 finished after a reload');
+  check(back.mapId === 'jwaladesh-harbor' && [1, 2, 3, 4, 5, 6, 7, 8].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 8 finished after a reload');
   await ctx.close();
   return shots;
 }

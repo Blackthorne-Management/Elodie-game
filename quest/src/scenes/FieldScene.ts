@@ -220,6 +220,11 @@ export class FieldScene extends Phaser.Scene {
   private npcPlaced = new Map<number, NpcPlacement>();
   /** People walking to their new place (engine/walkers.ts), by the placement they walk to. */
   private walkers = new Map<number, { mover: Mover; at: Pos; tiles: Pos[]; look: string; facing: Dir8 }>();
+  /**
+   * People from the map still walking off when their scene ended (an async exit, Chapter 8's carter down the salt
+   * road): they walk on to where they were going and are gone, rather than vanish mid-step or turn back.
+   */
+  private goers: { sprite: Phaser.GameObjects.Image; mover: Mover; at: Pos; tiles: Pos[]; look: string; facing: Dir8 }[] = [];
   /** The people a scene's stage directions put on the map (engine/stage.ts), by actor name. */
   private stageActors = new Map<string, StageActor>();
   /** The cues still to start for the current line, and what to do once the blocking ones have finished. */
@@ -331,6 +336,7 @@ export class FieldScene extends Phaser.Scene {
     this.npcSprites = new Map();
     this.npcPlaced = new Map();
     this.walkers = new Map();
+    this.goers = [];
     // A scene can end on another map (out of the caney into the plaza): the old map's actors went with it.
     this.stageActors = new Map();
     this.stageQueue = [];
@@ -497,6 +503,7 @@ export class FieldScene extends Phaser.Scene {
     const input = this.rt.input;
     input.update();
     this.tickWalkers(delta);
+    this.tickGoers(delta);
     this.tickCrowd(delta);
     this.tickGuide(delta);
     if (this.cardArt && this.mode !== 'card') {
@@ -1273,6 +1280,38 @@ export class FieldScene extends Phaser.Scene {
     this.updateFollowerLook();
     this.syncCrowd(); // the crowd is not part of the memory
     this.refreshGuide(); // nor are the quest arrows
+  }
+
+  /** Walk on everyone who was still leaving as their scene ended; at the end of their way they are gone. */
+  private tickGoers(delta: number): void {
+    // Backwards, so one who is gone can be taken out as the loop goes.
+    for (let i = this.goers.length - 1; i >= 0; i--) {
+      const g = this.goers[i]!;
+      if (!g.sprite.scene) {
+        this.goers.splice(i, 1);
+        continue;
+      }
+      if (!g.mover.moving) {
+        const first = g.tiles.shift();
+        if (first) g.mover.start(g.at, first);
+      }
+      g.mover.update(delta, speedPx(false), (reached) => {
+        g.at = reached;
+        return g.tiles.shift() ?? null;
+      });
+      const glide = g.mover.glide;
+      if (glide) {
+        const dir = combine(glide.to.x > glide.from.x ? 'right' : glide.to.x < glide.from.x ? 'left' : null, glide.to.y > glide.from.y ? 'down' : glide.to.y < glide.from.y ? 'up' : null);
+        if (dir) g.facing = dir;
+      }
+      const p = g.mover.point(g.at);
+      g.sprite.setPosition(p.x, p.y).setDepth(10 + p.y);
+      if (g.mover.moving) setLook(g.sprite, g.look, g.facing, g.mover.frame());
+      else {
+        g.sprite.destroy();
+        this.goers.splice(i, 1);
+      }
+    }
   }
 
   /** Walk each walking person a frame along their route; at the end they face the way their place says. */
@@ -2312,6 +2351,14 @@ export class FieldScene extends Phaser.Scene {
           a.sprite.setVisible(this.logic.era !== 'echo' || a.borrowed === 'follower');
         }
       } else {
+        // Someone from the map still walking off, who is no longer on the map once the scene is over (the carter down
+        // the salt road): walks on out of the picture.
+        if (a.leaving && a.sprite.visible && (a.mover.moving || a.tiles.length > 0) && !this.logic.npcs().some((n) => n.objectId === a.borrowed)) {
+          this.npcSprites.delete(a.borrowed);
+          this.walkers.delete(a.borrowed);
+          this.goers.push({ sprite: a.sprite, mover: a.mover, at: a.at, tiles: a.tiles, look: a.look, facing: a.facing });
+          continue;
+        }
         // Someone from the map walks back to their place (or is put back, if they had left the stage).
         const placed = this.npcPlaced.get(a.borrowed);
         if (!placed) continue;
