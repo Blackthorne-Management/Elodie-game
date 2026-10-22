@@ -28,6 +28,11 @@ export interface DebateAnswer {
 export interface DebateRound {
   /** The opponent's claim. */
   claim: string;
+  /**
+   * Who makes this round's claim, when not the debate's opponent (Eightgate's corner has four voices, one opponent a
+   * round: the Chapter 5 outline 7.3, its second review 4).
+   */
+  speaker?: string;
   answers: Record<Appeal, DebateAnswer>;
 }
 
@@ -127,7 +132,7 @@ export function debateScript(def: DebateDef, flags: FlagReader, ctx: DebateConte
         next: `a${i}_${a}_${wins}`,
       }));
       nodes[`r${i}_${wins}`] = {
-        lines: [nar(`Round ${i + 1} of ${last}.`), { speaker: def.opponent, text: round.claim }],
+        lines: [nar(`Round ${i + 1} of ${last}.`), { speaker: round.speaker ?? def.opponent, text: round.claim }],
         choices,
       };
       for (const a of APPEALS) {

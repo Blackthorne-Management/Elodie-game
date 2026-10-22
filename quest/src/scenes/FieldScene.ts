@@ -9,6 +9,7 @@
 import Phaser from 'phaser';
 import {
   ANISSA_GLOW,
+  DISGUISE,
   CARD_ART,
   QUEST_ARROW,
   CHARACTER_LABEL_GAP,
@@ -682,6 +683,7 @@ export class FieldScene extends Phaser.Scene {
           break;
         case 'sync':
           this.syncActors();
+          this.refreshDisguise();
           this.applyMood();
           this.checkProgress();
           break;
@@ -1019,7 +1021,19 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private playerLook(): string {
-    return this.logic.era === 'echo' ? ECHO_PLAYER_LOOK : PLAYER_LOOK;
+    if (this.logic.era === 'echo') return ECHO_PLAYER_LOOK;
+    return this.logic.state.flags.isSet(DISGUISE.flag) ? DISGUISE.player : PLAYER_LOOK;
+  }
+
+  /** Anissa following (and glowing in the Echo): in Coco's apron while the sisters are her seamstresses. */
+  private anissaLook(): string {
+    return this.logic.state.flags.isSet(DISGUISE.flag) ? DISGUISE.anissa : ANISSA_GLOW.look;
+  }
+
+  /** The veils go on and come off inside a scene: the player and Anissa take up the look the story gives them now. */
+  private refreshDisguise(): void {
+    if (this.player) setLook(this.player, this.playerLook(), this.logic.state.player.facing);
+    if (this.follower) setLook(this.follower.sprite, this.anissaLook(), this.follower.facing);
   }
 
   // ---- Labels, markers and the Echo glow -----------------------------------------------------
@@ -1538,8 +1552,8 @@ export class FieldScene extends Phaser.Scene {
       tryDirs.map((d) => stepFrom(p.pos, d)).find((t) => this.logic.isOpen(t, 'present') && !this.logic.npcs('present').some((n) => samePos(n.pos, t))) ??
       p.pos;
     const w = tileToWorld(spot);
-    const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(ANISSA_GLOW.look)).setOrigin(0.5, 1).setDepth(10 + w.y - 1);
-    setLook(sprite, ANISSA_GLOW.look, p.facing);
+    const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(this.anissaLook())).setOrigin(0.5, 1).setDepth(10 + w.y - 1);
+    setLook(sprite, this.anissaLook(), p.facing);
     // She starts on the other foot from Gianna.
     this.follower = { sprite, pos: spot, from: spot, facing: p.facing, glow: null, distance: WALK_CYCLE_PX / 2, lastT: 1 };
     this.updateFollowerLook();
@@ -1649,7 +1663,7 @@ export class FieldScene extends Phaser.Scene {
     f.glow = null;
     if (echo) {
       f.sprite.setTint(ANISSA_GLOW.tint).setAlpha(ANISSA_GLOW.alpha);
-      setLook(f.sprite, ANISSA_GLOW.look, 'down');
+      setLook(f.sprite, this.anissaLook(), 'down');
       f.glow = this.tweens.add({ targets: f.sprite, alpha: ANISSA_GLOW.pulseAlpha, duration: 700, yoyo: true, repeat: -1 });
     } else {
       f.sprite.clearTint().setAlpha(1);
@@ -1660,7 +1674,7 @@ export class FieldScene extends Phaser.Scene {
     if (this.logic.era === 'echo') return;
     // Anissa steps where Gianna was; Yari steps where Anissa was (or where Gianna was, without her).
     const anissaWas = this.follower ? { ...this.follower.pos } : null;
-    const anissaMoved = this.follower ? this.stepFollower(this.follower, playerFrom, ANISSA_GLOW.look) : false;
+    const anissaMoved = this.follower ? this.stepFollower(this.follower, playerFrom, this.anissaLook()) : false;
     const yariWas = this.yari ? { ...this.yari.pos } : null;
     let yariMoved = false;
     if (this.yari) {
@@ -1700,7 +1714,7 @@ export class FieldScene extends Phaser.Scene {
   /** Anissa walks her step in time with Gianna's (`t` is how far through it Gianna is). */
   private moveFollower(t: number): void {
     if (this.logic.era === 'echo') return;
-    if (this.follower) this.moveOneFollower(this.follower, t, ANISSA_GLOW.look);
+    if (this.follower) this.moveOneFollower(this.follower, t, this.anissaLook());
     if (this.yari) this.moveOneFollower(this.yari, t, 'yari');
     if (this.azzy) this.moveOneFollower(this.azzy, t, 'azzy');
     if (this.samira) this.moveOneFollower(this.samira, t, 'samira');
@@ -1952,6 +1966,7 @@ export class FieldScene extends Phaser.Scene {
         return;
       case 'sync':
         this.syncActors();
+        this.refreshDisguise();
         return;
     }
   }
@@ -1983,7 +1998,7 @@ export class FieldScene extends Phaser.Scene {
     }
     if (id === STAGE_FOLLOWER && this.follower) {
       const f = this.follower;
-      const a: StageActor = { sprite: f.sprite, look: ANISSA_GLOW.look, at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'follower' };
+      const a: StageActor = { sprite: f.sprite, look: this.anissaLook(), at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'follower' };
       this.stageActors.set(id, a);
       return a;
     }
