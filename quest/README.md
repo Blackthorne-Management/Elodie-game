@@ -132,11 +132,11 @@ npm run route:expand -- <puzzle> '["goto 3,4","confirm"]'   # turn a goto route 
 
 `npm run smoke` keeps the Phase 1 checks (on the test village), drags the touch stick on a phone-size
 screen (right, then up-right for a diagonal step; the ring floats to the thumb and returns to rest),
-checks Anissa's hints and the Journal, then plays Chapters 1 to 9 in the browser from a new game by
+checks Anissa's hints and the Journal, then plays Chapters 1 to 10 in the browser from a new game by
 the route in `routes/zetwal-act1.json` (which includes a diagonal step, pressed as two keys at once;
 each chapter's end from Chapter 3 checks its story flags against the simulator's, its fights, the party and who walks
 with it; a meant-to-lose fight the party could win, Chapter 8's duel, is played lost by guarding; at Chapter 9's Assize a second window loses the Hushed on purpose and
-checks the courtroom's restart rule: the party stays by the dock, and the dock's edge starts the fight again). `SMOKE_FROM=<marker>` (e.g. `chapter5-end`) runs only the route from that marker on: the simulator plays up
+checks the courtroom's restart rule: the party stays by the dock, and the dock's edge starts the fight again; Chapter 10's end checks the armies, the betrayer and the night's outcome against the simulator's, and the fleet's voyage to Xaraguá's Canoe Beach). The smoke's simulator pays finished side quests and debates whenever it stands in the field, as the field does, so it predicts the played line (the headless route alone, which pays none, is the low line: at the Muster the Dorini sail; played, the buyer is exposed and turned). `SMOKE_FROM=<marker>` (e.g. `chapter5-end`) runs only the route from that marker on: the simulator plays up
 to it and the browser loads its save there, with the encounter dice where the whole route's stood (`?seed=`).
 From a chapter-end marker the browser starts after its card, so the voyage that card closes on is watched only
 from the marker before it (e.g. `kirinoura-petition` for the trader to Agnipur).

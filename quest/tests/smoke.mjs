@@ -9,7 +9,7 @@
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
-// 3. Chapters 1 to 9, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
+// 3. Chapters 1 to 10, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
 //    Chapter 3 on, checks its story flags against the simulator's, its fights, the party and its card in the browser).
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
@@ -67,6 +67,27 @@ const { ENEMIES, battleDef } = await import('../src/data/battles.ts');
 const { GODDESS_WORDS } = await import('../src/data/gameOver.ts');
 const { SIDE_QUESTS } = await import('../src/data/sideQuests.ts');
 const { settleRewards } = await import('../src/engine/sideQuests.ts');
+const { settleDebates } = await import('../src/engine/debate.ts');
+const { DEBATES } = await import('../src/data/debates.ts');
+const { addSharedXp, pillarFlag } = await import('../src/engine/rpg.ts');
+
+/**
+ * Pay what the field pays (FieldScene.checkProgress, at each sync once a scene is over): finished side quests and
+ * settled debates. The headless simulator has no field, so on its own it plays the low line (no rewards); the smoke's
+ * simulator pays them too whenever it stands in the field, so it predicts the game a player plays. Chapter 10's Muster
+ * turns on it: its shares follow the purse, and with the rewards paid the buyer is exposed and turned, not sailed.
+ */
+function settleAsField(sim) {
+  if (sim.logic.mode !== 'field') return;
+  const flags = sim.logic.state.flags;
+  const addPillar = (p, city, n) => {
+    const f = pillarFlag(p, city);
+    const v = flags.get(f);
+    flags.set(f, (typeof v === 'number' ? v : 0) + n);
+  };
+  settleDebates(flags, DEBATES, addPillar, (n) => addSharedXp(flags, n));
+  settleRewards(flags, RPG, SIDE_QUESTS);
+}
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
@@ -526,7 +547,7 @@ async function markChecks(page, sim, name) {
 }
 
 /**
- * At each chapter's end (Chapters 3 to 9; Chapters 1 and 2 are checked after the route): the browser has played
+ * At each chapter's end (Chapters 3 to 10; Chapters 1 and 2 are checked after the route): the browser has played
  * the chapter the way the simulator did (its story flags agree with the simulator's, its fights were won, the party
  * and who walks with it), and its end card is up.
  */
@@ -588,6 +609,14 @@ async function chapterEndChecks(page, sim, name) {
       not: ['choice.hushed_broken'],
       what: 'Chapter 9 in the browser: the Mere Stair and the escort, the press-gang and Edmund joined, Al-3\'s families warned and the bog chapel\'s cell, the purge list, the chronicle and the debate, Jordyn\'s offer, the recital and the postern, Thomas\'s record in the archive, caught, the cells, the Assize, the Hushed beaten (and tried by their law), the Regent\'s refusal, Jordyn\'s defection and the dissidents',
     },
+    'chapter10-end': {
+      act: 10,
+      map: 'zetwal-harbor',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund'],
+      flags: ['story.muster_begun', 'story.watch_landed', 'story.plaza_camp_seen', 'story.rahel_met', 'story.patricio_told', 'story.blessing', 'debate.zetwal_feud_temple.settled', 'debate.zetwal_feud_merchants.settled', 'debate.zetwal_feud_crown.settled', 'clue.signing_morning', 'clue.four_accounts', 'story.crew_seen', 'choice.crew_spared', 'side.muskets.done', 'side.lonely_cutter.done', 'story.ti_jak_home', 'story.council_condition', 'story.council_voted', 'story.inspection_done', 'story.chain_raised', 'story.betrayal_seen', 'story.betrayer_walked', 'muster.resolved', 'item.smugglers_ledger', 'story.fleet_sailed', 'encounter.muster_story.crew.won'],
+      not: [],
+      what: 'Chapter 10 in the browser: the watch landed and the Muster begun, the camp, Rahel and Patricio, the blessing, the three feuds settled, the signing, the mangrove crew beaten (and spared), the muskets and the lonely cutter, Ti Jak home, the council\'s vote, the dusk inspection, the chain raised in the night, the betrayer seen and gone, the smugglers\' ledger, and the fleet sailed',
+    },
   };
   const end = ends[name];
   if (!end) return;
@@ -602,7 +631,7 @@ async function chapterEndChecks(page, sim, name) {
   const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
   check(notWalking.length === 0, `the whole party walks behind Gianna at Chapter ${end.act}'s end (no sprite for ${notWalking.join(', ')})`);
   // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag.
-  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|act\d|card)\./;
+  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|army|muster|act\d|card)\./;
   const simFlags = sim.logic.state.flags.snapshot();
   // (The field pays side quests and debates as it goes, `side.<id>.rewarded` and `debate.<id>.paid.<what>`; the
   // simulator has no field, so those are the field's own bookkeeping.)
@@ -613,6 +642,19 @@ async function chapterEndChecks(page, sim, name) {
   check(s.flags[`act${end.act}.complete`] === true && s.mapId === end.map && s.mode === 'card' && s.card !== null, `Chapter ${end.act} ends in ${end.map} with its card`);
   // Chapter 9: the watch the city sends with the Muster (seven), and the dissidents' price short as the build allows.
   if (end.act === 9) check(s.flags['army.aldermoor'] === 7, `Aldermoor sends seven of the watch to the Muster (${s.flags['army.aldermoor']})`);
+  // Chapter 10: the armies pledged (the six allies and Zetwal's levy, as the simulator counts them), the one betrayer
+  // named twice (muster.betrayer and muster.betrayer.<house>), and the night's outcome: turned or betrayed, never both.
+  if (end.act === 10) {
+    const armies = ['al_doria', 'aldermoor', 'free_brasador', 'jwaladesh', 'kuroshi', 'skarragol', 'zetwal'];
+    const counts = armies.map((h) => `${h} ${s.flags[`army.${h}`]}`).join(', ');
+    check(armies.every((h) => typeof s.flags[`army.${h}`] === 'number' && s.flags[`army.${h}`] === simFlags[`army.${h}`]), `the armies pledged at the Muster are the simulator's (${counts})`);
+    const betrayer = s.flags['muster.betrayer'];
+    check(typeof betrayer === 'string' && betrayer === simFlags['muster.betrayer'] && s.flags[`muster.betrayer.${betrayer}`] === true && Object.keys(s.flags).filter((k) => k.startsWith('muster.betrayer.')).length === 1, `one betrayer, named as the simulator names them (${betrayer})`);
+    const turned = s.flags['muster.turned'] === true;
+    const betrayed = s.flags['muster.betrayed'] === true;
+    check(turned !== betrayed && turned === (simFlags['muster.turned'] === true) && betrayed === (simFlags['muster.betrayed'] === true) && (!betrayed || s.flags[`muster.gone.${betrayer}`] === true), `the night ends ${betrayed ? 'betrayed (the betrayer\'s ships gone)' : 'turned'}, as in the simulator`);
+    if (betrayed) check(s.flags[`army.${betrayer}`] === 0, `the betrayer's house sends no army (${s.flags[`army.${betrayer}`]})`);
+  }
 }
 
 /**
@@ -1081,7 +1123,7 @@ async function handleVoyage(page, shots, landing = 'xaragua-village') {
   if (!(await page.evaluate(() => !!window.__voyage))) return false;
   // Home to Zetwal twice (Chapter 2's escape, Chapter 9's trader across the bay): each its own pictures.
   const home = (await snap(page)).flags['act9.complete'] === true ? 'voyage-home-ch9' : 'voyage-home';
-  const tag = landing === 'xaragua-village' ? 'voyage' : landing === 'zetwal-harbor' ? home : `voyage-${landing}`;
+  const tag = landing === 'xaragua-village' ? 'voyage' : landing === 'zetwal-harbor' ? home : landing === 'xaragua-beach' ? 'voyage-war' : `voyage-${landing}`;
   await page.waitForTimeout(2500);
   await shoot(page, `${tag}-harbor`, shots);
   await page.waitForFunction(() => window.__voyage?.state().phase === 'map', null, { timeout: 10000 });
@@ -1177,7 +1219,7 @@ async function assizeRestart(browser, errors, at, shots) {
 }
 
 async function playAct(browser, errors) {
-  console.log('Chapters 1 to 9 (scripted route, checked against the simulator after every key):');
+  console.log('Chapters 1 to 10 (scripted route, checked against the simulator after every key):');
   let route = parseRoute(readJson('routes/zetwal-act1.json'));
   let sim = newGameSim();
   // SMOKE_FROM=<marker>: the simulator plays the route up to that marker, and the browser loads its save there.
@@ -1198,6 +1240,7 @@ async function playAct(browser, errors) {
     saveCode = encodeSave(toSaveData(sim.logic.state, 1));
     dice = sim.logic.diceState;
     sim = savedSim(saveCode, undefined, dice);
+    settleAsField(sim);
     route = route.slice(from);
     console.log(`  (starting at @${FROM}, ${route.length} route items left)`);
   }
@@ -1222,6 +1265,10 @@ async function playAct(browser, errors) {
   let voyaged = false;
   /** Chapter 9's card closes on the trader home across the bay (Zetwal's harbour, where Chapter 10 begins). */
   let voyagedHome9 = false;
+  /** Chapter 10's card closes on the fleet sailing to war (Xaraguá's Canoe Beach, where Chapter 11 begins). */
+  let voyagedWar = false;
+  /** Whether this run plays Chapter 9's card (so the voyage home after it is watched). */
+  let playedCard9 = false;
   /** Where the route stood at @aldermoor-assize, for the courtroom's restart rule. */
   let assize = null;
   let keys = 0;
@@ -1234,6 +1281,13 @@ async function playAct(browser, errors) {
       // The courtroom's restart rule, in a window of its own once this one is done (the route plays on here, its dice
       // untouched; two games at once on one machine starve each other's frames).
       if (item.name === 'aldermoor-assize') assize = { code: encodeSave(toSaveData(sim.logic.state, 1)), dice: sim.logic.diceState, rest: route.slice(route.indexOf(item) + 1) };
+      if (item.name === 'chapter9-end') playedCard9 = true;
+      // Chapter 9 ends on the sea: the trader home across the bay, onto Zetwal's harbour, where the Muster's landing
+      // begins (checked here, before Chapter 10 plays on).
+      if (item.name === 'muster-landing' && playedCard9) {
+        const home = await snap(page);
+        check(voyagedHome9 && home.mapId === 'zetwal-harbor' && !!home.edmund, 'after Chapter 9\'s card the trader sails home (the voyage plays) and the party, Edmund last, stands on Zetwal\'s harbour');
+      }
       continue;
     }
     for (const cmd of sim.expand(item)) {
@@ -1329,14 +1383,20 @@ async function playAct(browser, errors) {
       if ((landing !== mapBefore || landing === 'xaragua-village') && (await handleVoyage(page, shots, landing))) {
         if (landing === 'xaragua-village') voyaged = true;
         if (landing === 'zetwal-harbor' && sim.logic.state.flags.get('act9.complete') === true) voyagedHome9 = true;
+        if (landing === 'xaragua-beach' && sim.logic.state.flags.get('act10.complete') === true) voyagedWar = true;
       }
+      settleAsField(sim);
       await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
     }
   }
   await page.keyboard.up('Shift');
-  // Chapter 9 ends on the sea: the trader home across the bay, onto Zetwal's harbour (where Chapter 10 begins).
-  const home = await snap(page);
-  if (home.flags['act9.complete'] === true) check(voyagedHome9 && home.mapId === 'zetwal-harbor' && home.mode === 'field' && !!home.edmund, 'after Chapter 9\'s card the trader sails home (the voyage plays) and the party, Edmund last, stands on Zetwal\'s harbour');
+  // Chapter 10 ends on the sea: the fleet sails to war, onto Xaraguá's Canoe Beach (where Chapter 11 begins), the
+  // whole party walking behind Gianna.
+  const war = await snap(page);
+  if (war.flags['act10.complete'] === true) {
+    const line = [war.follower, war.yari, war.azzy, war.samira, war.bayarmaa, war.haru, war.vikram, war.edmund];
+    check(voyagedWar && war.mapId === 'xaragua-beach' && war.mode === 'field' && line.every((w) => !!w), 'after Chapter 10\'s card the fleet sails to war (the voyage plays) and the party, Edmund last, stands on Xaraguá\'s Canoe Beach');
+  }
   if (FROM) {
     await ctx.close();
     if (assize) await assizeRestart(browser, errors, assize, shots);
@@ -1357,7 +1417,7 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
   check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.flags['story.ardencia_asked'] === true, 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
-  check([3, 4, 5, 6, 7, 8, 9].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'zetwal-harbor', 'Chapters 3 to 9 played to their end cards in the browser: the party is home on Zetwal\'s Old Harbor');
+  check([3, 4, 5, 6, 7, 8, 9, 10].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'xaragua-beach', 'Chapters 3 to 10 played to their end cards in the browser: the fleet has landed on Xaraguá\'s Canoe Beach');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -1385,7 +1445,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('The Old Harbor') && mapSnap.items.includes('Festival Plaza'), 'the city map shows the city the party is in (Pòdlimyè, home after Chapter 9)');
+  check(mapSnap.items.includes('Canoe Beach') && mapSnap.items.includes('Caney of Anaco'), 'the city map shows the city the party is in (Yucayeque, where the fleet lands after Chapter 10)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
@@ -1472,7 +1532,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'zetwal-harbor' && [1, 2, 3, 4, 5, 6, 7, 8, 9].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 9 finished after a reload');
+  check(back.mapId === 'xaragua-beach' && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 10 finished after a reload');
   await ctx.close();
   if (assize) await assizeRestart(browser, errors, assize, shots);
   return shots;
