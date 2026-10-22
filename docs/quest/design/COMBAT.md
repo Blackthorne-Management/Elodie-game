@@ -295,6 +295,24 @@ guide 6.3). From the built `pillarRules` and side quests, read by hand (Jwalades
 
 Any of the four can be the least paid; a test that computes all four ranges from the data belongs with the Muster.
 
+**The Muster's ledger (built Oct 22, Chapter 10; Claude's calls, the second review's 3.5; `ALLY_PRICES` and `MUSTER` in
+`quest/src/config.ts`, `quest/src/engine/ally.ts`, `tests/ally.test.ts`):**
+
+| House | Price | Army | Also counts | Tie |
+|---|---|---|---|---|
+| Al-Doria (Dorini) | Influence 10 | 40 | the merchants' mediation +2 | 1 |
+| Skarragol (Ironvow) | Wealth 10 | 50 | gold at the camp, 100 a point, 5 at most | 2 |
+| Jwaladesh (Agnivansh) | Wealth 8 | 30 | gold at the camp | 3 |
+| Kuroshi (Suzumori) | Influence 10 | 20 | the temple mediation +2 | 4 |
+| Free Brasador | Fear 6 (the realm's) | 30 | never the buyer | |
+| Aldermoor dissidents | Fear 8 (the realm's) | 12 | never the buyer | |
+
+The city's pillar in the price's currency counts in full and the other two at half; lore books count at most 3. Shares
+are in the Journal from the landing. At the inspection the least share of the four road houses is the buyer; its army
+waits for the night (turned: three quarters; sailed: none). Exposed needs a 60% share, Kayla's list and the smugglers'
+ledger. Paying over the price adds a tenth of the army per point; a feud argued and not mediated brings nine tenths. The
+city's levy is 60. Gifts close at the whistle.
+
 **Chapter 9 (built Oct 22; Claude's calls):** its steps pay **70** (`XP_PER_OBJECTIVE_BY_CHAPTER[8]`; three pay nothing:
 the Mere Stair, the Toccata's follow-the-quest step, home). Aldermoor pays the Hushed 260, the press-gang 50, the bog
 chapel's cell 40, Al-3 60, Al-2 40, the debate 15; seven books. Measured: route 24 (8,028), without side quests 22
@@ -305,6 +323,12 @@ chapel's cell 40, Al-3 60, Al-2 40, the debate 15; seven books. Measured: route 
 |---|---|---|---|---|---|---|
 | 8 | 19-21 | 21 (6,448) | 19 (5,113) | 21 (6,480) | 21 | 22 |
 | 9 | 21-24 | 24 (8,028) | 22 (6,538) | 24 (8,060) | 25 | 25 |
+| 10 | 24-25 | 25 (8,533) | 23 (7,033) | 25 (8,607) | 26 | 26 |
+
+**Chapter 10 (built Oct 22; Claude's calls, the second review's 3.4):** set from Chapter 9's measured end (24, 8,028):
+its steps pay **40** (`XP_PER_OBJECTIVE_BY_CHAPTER[9]`; the seated city and the tide pay nothing); the crew 50; Z-6 10
+XP, Z-3 none (their XP moved into the steps); the feuds pay through the debates. 77 wild steps on the Cane Road (0.9
+ambushes on average). Chapter 11 (25 to 28) starts at its floor.
 
 **The three roads (any order):** the first of Skarragol, Kuroshi and Jwaladesh entered is set to levels 15 to 17, the
 second 17 to 19, the third 19 to 21 (`ROAD_TIERS`). Fixed on first entry.
@@ -595,7 +619,9 @@ Durations count the affected fighter's own turns. Lengths are `STATUS_DURATION` 
 - **The War of the Harbor** (Chapter 11) is three linked battles. Each allied group's **Armies** number buys
   reinforcements: between stages, the player calls in allies; each 10 soldiers pledged gives one round of an allied
   volley (power 150 to all enemies) in the next stage (`ARMY_VOLLEY_PER = 10`, proposal). Overpaying an ally's price
-  adds soldiers (guide 6.3).
+  adds soldiers (guide 6.3). **Built (Oct 22, Chapter 10):** `ARMY_VOLLEY_PER = 10` is in `config.ts`; the Muster
+  writes `army.<house>` for the six allies and `army.zetwal` (the levy, 60), and `muster.turned` or `muster.betrayed`
+  for Chapter 11's flank fight (the ledger above).
 
 ## 12. Game Over: the goddess's second chance (owner decisions, Oct 19; built)
 
@@ -683,9 +709,9 @@ Levels are where each type appears; one type is reused across regions with a pal
 
 | # | Enemy | Human? | Role | Signature move | Regions and levels |
 |---|---|---|---|---|---|
-| 1 | Road Bandit | yes | Skirmisher | Cutpurse (steals 10 gold) | Xaraguá 3 to 6; Al-Doria 8 to 10; Zetwal Cane Road (return) 22 to 24; Seat fields 28 to 30 |
-| 2 | Smuggler | yes | Brute | Crate Throw (power 140) | Al-Doria 9 to 11; Zetwal Cane Road 22 to 25 |
-| 3 | Lookout | yes | Support | Whistle (calls one Road Bandit, once); Spotter (ally SPD +20%) | Zetwal Cane Road 22 to 24; Skarragol road tier |
+| 1 | Road Bandit | yes | Skirmisher | Cutpurse (steals 10 gold) | Xaraguá 3 to 6; Al-Doria 8 to 10; Zetwal Cane Road (return) 22 to 24 (built Oct 22: 24); Seat fields 28 to 30 |
+| 2 | Smuggler | yes | Brute | Crate Throw (power 140) | Al-Doria 9 to 11; Zetwal Cane Road 22 to 25 (built Oct 22: 25, and the crew at the smugglers' landing, the chief at 25) |
+| 3 | Lookout | yes | Support | Whistle (calls one Road Bandit, once); Spotter (ally SPD +20%) | Zetwal Cane Road 22 to 24 (built Oct 22: 24 to 25, and the crew's lookouts); Skarragol road tier |
 | 4 | Quiet Crown Zealot | yes | Support | Frighten (Calm -1), Charity (heals an ally) | every wild section from Ch. 2; Zetwal 22 to 25 |
 | 5 | Husher | yes | Caster | Hush (Hushed), Steal Voice (drain 8 SP), Seize (aimed at Anissa) | Kuroshi and Aldermoor tiers; Seat 28 to 30; Zetwal 23 to 25 |
 | 6 | Crown Marine | yes | Skirmisher | Bayonet (power 110) | Xaraguá 3 to 8; Harbor 25 to 28; Echo battles (old uniform) |

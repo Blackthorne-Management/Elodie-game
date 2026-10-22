@@ -678,6 +678,64 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 
 ---
 
+## 19. Rahel, Patricia, Joaquin and Jordyn at the Muster, the captains, Ti Jak (Chapter 10, Pòdlimyè; art drop 2 or after)
+
+Added Oct 22 with the Chapter 10 build. The game draws placeholders from the looks `rahel`, `patricia`,
+`joaquin_free`, `jordyn_free`, `dorini_admiral`, `dorini_marine`, `agnivansh_steward`, `zetwal_levy`, `ti_jak`,
+`powder_master` and `crew_chief` until these arrive (`quest/src/assets.config.ts`), and the tiles and objects listed
+under Places. Make each like section 12: a reference sheet in a new chat (attach Gianna's sheet), then the portrait and
+the walking sprite sheet in the same chat.
+
+**Rahel** (Rael's mother, an old woman; formidable, warm with grandchildren; ages and skin tone to be set by the
+owner, from the family's sheets): tall, straight-backed, grey hair in a bun, a black shawl over a long black robe with a
+deep red trim, a Brasador brooch; **no braid** (the second review's 3.2). Portrait expressions: **formidable**
+(default: "Not you, envoy: her."), **warm** (to Anissa: "The best things are."), and **closed** ("So they say.": a face
+that gives nothing either way; this matters for the locked rule).
+
+**Patricia** (Rahel's mother, the eldest of the family; the family's memory; sharp-eyed, unhurried): small, white hair in a bun, a
+plum-grey robe with a white trim, a cane she does not use. Portrait: **looking** (default: one thing at a time), **blessing** (a hand
+raised at the lamp), **listening** ("Say it. I'm old.").
+
+**Joaquin, Free Brasador** (as Chapter 4, now in the company's black with white trim, a green helmet and epaulettes):
+portrait **handing over** ("Your company, captain. I only carried it.").
+
+**Jordyn, freed** (as section 18, the coat turned inside out to its grey lining, the violet showing at the seams, the
+epaulettes kept, no knot): portrait **by the book** (default), **arresting** ("Captain of nothing.").
+
+**The Dorini admiral** (about 50; the Dorini marines' commander): bearded, a braid, a Dorini-green coat with gold trim,
+a bicorne, a ledger satchel. Portrait: **reckoning** (default), **bought** (on the quay at night, not looking at you).
+**The Dorini marines:** green coats and caps, staffs.
+
+**The Agnivansh steward** (about 55): grey beard, a saffron robe with brass trim, the house emblem, a satchel; carries
+the brass lamp at the inspection. Portrait: **dignified** (default), **bought**.
+
+**The Suzumori retainer** and **Hrafn** keep their Chapter 7 and Chapter 6 looks; each needs one more expression:
+**bought** (the night on the quay).
+
+**Ti Jak** (16; a cane cutter): slight, cropped hair, a sun-faded work shirt with an orange sash, a cutter's
+blade. Portrait: **alone** (default, by the cold hearth), **...Odile** (hearing her name), **going** (the blade on his
+shoulder).
+
+**The powder-master** (the Echo, fifty years ago; sepia): bald, grey-bearded, a leather apron over brown, red trim.
+**The crew chief** (a smuggler, 40s): bald, black beard, a red cap and red trim on a dark coat, a satchel. Battle
+sprite: the chief with two crew in front of him. Portrait: **say it** (default: "You saw cane. Say it."), **sitting on
+the sand** (beaten, cap in hands). **The Zetwal levy:** blue coats with yellow trim and caps, staffs.
+
+**Places and objects (tiles and backgrounds, no people):** the seven allied ships at the long pier, by day and at dawn
+under sail (`muster_ship_*`); Jordyn's coaster; the boom chain across the harbor mouth; the Crown consul's launch with
+its lights out under the point; the consul's strongbox (shut, open); the bought captain's satchel with the closed hand
+pressed in ash on its flap; the evidence laid on the quay stones (Kayla's list and the ledger); the house banners on
+the plaza (horse-tail standard, brass lamp, fan, ledger, the Free Brasador black, the violet coats); the Dorini
+clerk's table; the convoy crates; a paper crane and the brass lamp on the Temple step; the four accounts on the kitchen
+table; the Heights' signal fire, cold and burning; the mill's cellar (walls, old and new floor, a lantern behind
+glass, musket crates), the powder store's inner door (open on one hinge; barred and pinned in the Echo; the bar rusted
+fast fifty years on). Battle backdrop: the smugglers' landing in the mangroves at dusk.
+
+Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |

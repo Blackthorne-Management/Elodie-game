@@ -91,6 +91,21 @@ Eightgate's recital and then Pòdlimyè ("I was always somewhere being famous.")
 neither says a word about anyone's goodness, the arrows or the thumbprints; a test holds them to it. The reviewer
 prompt asks for a human read of every Jordyn, Sebastian and Almoner line.
 
+**Built in Chapter 10 (Oct 22):** **Rahel** comes up the long pier with Jordyn's company and her mother. In the Limyè
+kitchen she and Anicette greet each other ("Madame." / "Madame."), Anicette remembers Benny's peppers ("They were my
+peppers. Benny only carried them."), and nothing else is said of the year of the Accord. She sits Anissa by her ("They
+tell me you glow. I have five children, and not one of them glows. I would have liked one that did."), says of her son
+only "My son does not explain himself. He never did. I stopped asking him to when he was nine." and, to "He sold
+Xaraguá.", "So they say." She brings Kayla's unsigned paper crane. **Patricia** (the eldest) blesses the three at the
+Gaze lamp, one at a time: Azzy ("Azriel Rodriguez. You fired on nobody, and you were fired on by family."), Gianna ("You
+count everything twice. So do I. Count them at dusk. Harbors lie."), and Anissa, who tells her her name: "Anissa. I hold
+the door." ("Then hold it."). **Jordyn** walks her company up onto the plaza, answers the whistle ("Watch!") and on the
+exposed night arrests the bought captain ("Captain of nothing."). **Joaquin** brings Free Brasador up the pier and hands
+it to Azzy: "Your company, captain. I only carried it." **Claude's calls (the locked rule):** Rahel and Patricia say
+nothing of Rael that reads only one way, nothing of anyone's goodness, the arrows, the thumbprints, an oath or a
+locket; no line gives a Rael clue; old Patricio is not at the blessing (open question 13 stays open). A test holds the
+word list; the reviewer prompt asks for a human read of every Rahel, Patricia, Jordyn, Joaquin and Anissa line.
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

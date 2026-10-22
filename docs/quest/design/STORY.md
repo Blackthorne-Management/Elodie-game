@@ -528,7 +528,7 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
      Chapter 1 by the built side quest The Overdue Shelf (owner approved, Oct 14). This beat becomes Anicette
      talking it through with players who have read all four, who can tell which is false (proposal).
   4. **The Betrayal.** The Crown out-pays the least-paid of Al-Doria, Skarragol, Kuroshi and Jwaladesh (ties to
-     Dorini). The betrayer is revealed as a secret member of the Quiet Crown. **Exposed route:** with the Kuroshi
+     Dorini). The betrayer is shown with the Quiet Crown's mark (built; the second review's 3.10: shown, not told). **Exposed route:** with the Kuroshi
      evidence and that house's price at least 60 percent paid, Gianna confronts them here and turns them into a late
      ally.
   5. The fleet sails for Xaraguá.
@@ -536,6 +536,17 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
 - **Echo scenes:** the plaza camp on the morning of the signing (the same place, armies then and now).
 - **Boss:** none (the Cane Road has random encounters at levels 22 to 25).
 - **What the player learns:** who the Crown bought; that unity has to be built, not inherited.
+- **Built (Oct 22; the outline `reviews/2026-10-22-chapter10-outline.md`, its "Built" section, and its second
+  review):** the long pier (the allied ships, Joaquin handing Free Brasador to Azzy), the seven camps on the plaza with
+  each house's share in the Journal, the Speaker's gate ("Until the allies are seated"), the three feuds as debates
+  (merchants, temple, crown) with a mediation each, Jordyn's watch walking up with Rahel and Patricia, the kitchen and
+  the four accounts, the blessing at the lamp (Anissa's name to Patricia), Patricio's stone and the blank line, Z-6 (the
+  crew at the smugglers' landing and the powder cellar's bar in the Echo) and Z-3 (Ti Jak, alone), the vote and the
+  chain, the whistle at dusk (Azzy: "¡Firmes!"; Anissa from the fountain: "Anissa. I hold the door. Hold yours."), the
+  night under the point (the buyer's captain walks down to the consul's launch; exposed and turned, or sailed with his
+  company), the signal fire on the Heights, the tide at dawn. Beat 4 as built: the betrayer is **shown** with the Quiet
+  Crown's closed hand on his satchel, never called a member. Claude's calls: the Muster's ledger numbers (`MUSTER`), the
+  captains named by role, Ti Jak's Reason through the purge list.
 
 ### Chapter 11: The War of the Harbor (Xaraguá)
 

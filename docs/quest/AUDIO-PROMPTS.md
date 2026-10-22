@@ -36,3 +36,12 @@ guitar, no horns, no kompa. **In the game since Oct 16** (`src/audio.config.ts`)
 | 13 | `caney.mp3` | Caney of Anaco, Song House | Solemn great house of the chief: low slit drum, rain stick, a slow flute over a soft drone, dignified and a little worried (the chief is ill), 70 BPM |
 | 14 | `mountain-path.mp3` | The Mountain Path, the hill camp | Misty cloud-forest trail: bird-like flute calls, light shakers, a low drum pulse, adventurous and watchful, 100 BPM |
 | 15 | `crown-customs.mp3` | Crown Customs House | The Crown's foreign office: stiff harpsichord and a slow snare, cold and orderly, out of place on the island, 84 BPM |
+
+## Sound effects added with Chapter 10 (Oct 22; made in code, no prompt needed)
+
+Claude makes the sound effects in code (`quest/src/audio/sfx.ts`). Chapter 10 adds two: **whistle** (Patricio's brass
+whistle at the dusk inspection, two notes, high then low) and **ratchet** (the capstan raising the boom chain across
+the harbor mouth, heard from the Council Chamber at the vote). The cellar under the mill plays the city track
+(`MUSIC_BY_MAP`). If the owner wants music for the Muster itself (the seven lines at dusk, the fleet at dawn), a prompt:
+"A harbor city's muster at dusk: a slow, proud Haitian kompa-tinged march, a single snare, brass in unison, a drum
+answering a whistle, hopeful and heavy, 88 BPM."

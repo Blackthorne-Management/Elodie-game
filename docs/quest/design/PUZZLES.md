@@ -93,6 +93,12 @@ the memory, and Anissa's third hint already names the weights.*
 - **Logic:** bar the cellar in the Echo so that in the present the smugglers are shut out of their own cache (and the
   allied army can take it).
 - **Anchor:** the cellar bar.
+- **Built (Oct 22; the Chapter 10 outline 8.1 with its second review's 3.12; Claude's calls):** the bar is on the
+  *inside*: the cache is behind the powder store's inner door, which hangs open on one hinge with empty brackets. In the
+  memory (Anissa holds the door) the powder-master says "Marshal. Bar it and pin it when you go."; Patricio drops the
+  bar and hammers the pin flat (`anchor.mill_bar`). In the present the door is shut with fifty years of rust, crowbar
+  marks on it ("somebody tried, last night"), and the cache is the levy's at dawn. The way in is the smugglers'
+  ledger ("Second cache under the mill"). Map `zetwal-mill` (14 x 10), puzzle `zetwal_mill`, three cheat files.
 - **Hints:** "They keep going back to the mill, Gigi. What's under it?" / "The mill was a powder store in the war.
   Stores have doors that lock." / "In the memory, drop the bar across the cellar door. Then come back."
 - **Difficulty:** 2.
