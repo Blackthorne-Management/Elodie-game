@@ -26,6 +26,19 @@ describe('lore books', () => {
     for (const b of BOOKS) expect(`${b.title} (read)`.length, b.id).toBeLessThanOrEqual(36);
   });
 
+  it('every bookshelf id is unique, so no shelf hides another (Zetwal\'s Hall and the Seat\'s both used hall_records)', () => {
+    const ids = SHELVES.map((s) => s.id);
+    expect(ids.filter((id, i) => ids.indexOf(id) !== i)).toEqual([]);
+    // Every placed shelf object is unique too (the map object id is the shelf id).
+    const placed = Object.values(loadMaps()).flatMap((m) => m.objects.filter((o) => o.dialogue?.startsWith('shelf.')).map((o) => o.id));
+    expect(placed.filter((id, i) => placed.indexOf(id) !== i)).toEqual([]);
+    // The two books on Zetwal's Harbor Records shelf can be read in Pòdlimyè's Hall.
+    const zetwal = CONTENT.dialogue[shelfDialogueId('hall_harbor_records')]!;
+    const view = new DialogueRunner(zetwal, CONTENT.speakers, new FlagStore()).view();
+    expect(view.kind === 'choice' && view.choices.map((c) => c.text)).toEqual([...['zetwal_harbor_tolls', 'zetwal_quiet_tract'].map((id) => BOOKS.find((b) => b.id === id)!.title), 'Leave']);
+    expect(loadMaps()['zetwal-hall']!.objects.find((o) => o.id === 'hall_harbor_records')?.dialogue).toBe(shelfDialogueId('hall_harbor_records'));
+  });
+
   it('every shelf stands on a map and lists at most eight books plus Leave', () => {
     const maps = Object.values(loadMaps());
     for (const s of SHELVES) {

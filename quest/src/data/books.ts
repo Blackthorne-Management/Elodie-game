@@ -1343,7 +1343,7 @@ export const SHELVES: readonly Shelf[] = [
   { id: 'archive_faith', name: 'Shelf: Faith', books: ['zetwal_gaze_primer', 'zetwal_blessed_seat', 'zetwal_say_their_names', 'zetwal_four_hands'] },
   { id: 'archive_tales', name: 'Shelf: Tales and Notes', books: ['zetwal_bridge_tale', 'zetwal_hutia_lamp', 'zetwal_overdue', 'zetwal_ash_wars_anicette'] },
   { id: 'hall_law', name: 'Shelf: Law and Houses', books: ['zetwal_sun_accord', 'zetwal_crown_chronicle', 'zetwal_eight_houses'] },
-  { id: 'hall_records', name: 'Shelf: Harbor Records', books: ['zetwal_harbor_tolls', 'zetwal_quiet_tract'] },
+  { id: 'hall_harbor_records', name: 'Shelf: Harbor Records', books: ['zetwal_harbor_tolls', 'zetwal_quiet_tract'] },
   // Xaraguá: the Song House and the Caney of Anaco (CAPITALS.md 2).
   { id: 'song_history', name: 'Shelf: Songs of the Line', books: ['xaragua_song_guanin', 'xaragua_caona_road', 'xaragua_first_oath', 'xaragua_caciques'] },
   { id: 'song_spirit', name: 'Shelf: Springs and Spirits', books: ['xaragua_roots_tides', 'xaragua_opia', 'xaragua_hutia'] },

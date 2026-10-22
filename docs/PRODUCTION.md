@@ -117,9 +117,10 @@ on the owner: a human read of every Rahel, Patricia, Jordyn, Joaquin and Anissa 
 retainer, the Agnivansh steward, the Dorini admiral) and Ti Jak's mother's name (Odile); Rahel's and Patricia's ages and
 looks (`docs/quest/ART-PROMPTS.md` 19). Still open (Dec 1 list): question 13, what old Patricio knows (staged so either
 answer fits). Noted: Chapter 10's steps pay 40 XP; the route ends at 25, the line without side quests at 23; on the
-headless route the Dorini are the least paid and sail. **Bug found (pre-existing, not fixed):** the bookshelf id
-`hall_records` is used twice (Zetwal's Hall and the Seat's), so the books `lore.zetwal_quiet_tract` and `lore.zetwal_harbor_tolls` can never be
-read in Pòdlimyè. Not built yet: the Quill bonus at the stone, the board's dispatches, the second look at the two books.
+headless route the Dorini are the least paid and sail. **Fixed (Oct 22, on the Chapter 11 branch):** the bookshelf id
+`hall_records` was used twice (Zetwal's Hall and the Seat's), so the books `lore.zetwal_quiet_tract` and
+`lore.zetwal_harbor_tolls` could never be read in Pòdlimyè; Zetwal's shelf is now `hall_harbor_records`, and
+`tests/books.test.ts` checks every shelf id is unique. Not built yet: the Quill bonus at the stone, the board's dispatches, the second look at the two books.
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

@@ -949,7 +949,7 @@
         },
         {
           "id": 24,
-          "name": "hall_records",
+          "name": "hall_harbor_records",
           "type": "puzzle_object",
           "x": 544,
           "y": 160,
@@ -961,7 +961,7 @@
             {
               "name": "dialogue",
               "type": "string",
-              "value": "shelf.hall_records"
+              "value": "shelf.hall_harbor_records"
             },
             {
               "name": "era",
