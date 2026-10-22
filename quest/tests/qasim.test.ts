@@ -2,7 +2,8 @@
 // blade walks in every other turn, at most HIRE_CAP standing), Samira's Bribe (refunded on a hired blade, full price on
 // the starting pair, refused by Qasim himself), the Golden Wall (damage halved, shattered by a Surge), Seize Assets
 // (telegraphed), and his yield (his blades walk out with him; the fight is won). Then the balance targets the review
-// asked for, played by a simple bot over many seeds: a real threat at level 12 without Guard, none at 14 with it.
+// asked for, played by a simple bot over many seeds: a real threat at level 10 without Guard, none at 12 with it (two under
+// the outline's levels since the levels pass brought the route to his vault at 11: COMBAT 12.5).
 
 import { describe, expect, it } from 'vitest';
 import { BRIBE_GOLD_PER_LEVEL, HIRE_CAP, STATUS } from '../src/config.ts';
@@ -38,9 +39,9 @@ function until(b: Battle, who: string, max = 80): BattleEvent[] {
 }
 
 describe("Qasim's fight is data", () => {
-  it('a level-14 brute boss at 4x HP with two blades; the threat is in what he buys; 200 XP, Game Over applies', () => {
+  it('a level-12 brute boss at 4x HP with two blades; the threat is in what he buys; 200 XP, Game Over applies', () => {
     const q = ENEMIES.qasim!;
-    expect(q.level).toBe(14);
+    expect(q.level).toBe(12);
     expect(q.role).toBe('brute');
     expect(q.boss).toBe(true);
     expect(q.hpScale).toBeGreaterThanOrEqual(3);
@@ -157,26 +158,26 @@ describe('balance (review 3.1: a real threat, 20 to 30-odd actions, tuned with s
   const lost = (rs: ReturnType<typeof runs>) => rs.filter((r) => !r.won).length;
   const mean = (rs: ReturnType<typeof runs>) => rs.reduce((n, r) => n + r.actions, 0) / rs.length;
 
-  it('at level 14, guarding on his tell, the party never loses', () => {
-    expect(lost(runs(14, true))).toBe(0);
+  it('at level 12, guarding on his tell, the party never loses', () => {
+    expect(lost(runs(12, true))).toBe(0);
   });
 
-  it('at level 12 without Guard he wins a measurable share (at least one fight in ten)', () => {
-    expect(lost(runs(12, false))).toBeGreaterThanOrEqual(6);
+  it('at level 10 without Guard he wins a measurable share (at least one fight in ten)', () => {
+    expect(lost(runs(10, false))).toBeGreaterThanOrEqual(6);
   });
 
-  it('at level 13 (where the route meets him) the fight lasts about 20 to 36 party actions', () => {
-    const m = mean(runs(13, true));
+  it('at level 11 (where the route meets him) the fight lasts about 20 to 36 party actions', () => {
+    const m = mean(runs(11, true));
     expect(m).toBeGreaterThanOrEqual(20);
     expect(m).toBeLessThanOrEqual(36);
   });
 
-  it('with an empty purse (Tonic only) a careful party still wins at 13 (review 5.4)', () => {
-    expect(lost(runs(13, true, 0))).toBeLessThanOrEqual(3);
+  it('with an empty purse (Tonic only) a careful party still wins at 11 (review 5.4)', () => {
+    expect(lost(runs(11, true, 0))).toBeLessThanOrEqual(3);
   });
 
   it('with a full purse Samira bribes his hires and loses no gold to them', () => {
-    const rs = runs(13, true, 1000, 20);
+    const rs = runs(11, true, 1000, 20);
     expect(rs.some((r) => r.events.some((e) => e.kind === 'text' && e.text.includes('takes the purse')))).toBe(true);
     for (const r of rs) expect(r.goldSpent).toBe(0);
   });

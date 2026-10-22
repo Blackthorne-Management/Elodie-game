@@ -464,7 +464,9 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     id: 'caravan_raider',
     name: 'Caravan Raider',
     look: 'caravan_raider',
-    level: 13,
+    // 11 (was 13): Qasim's blades follow the party down with him (COMBAT 12.5, Oct 22). The desert's ambushes set
+    // their own group level.
+    level: 11,
     role: 'skirmisher',
     bribable: true,
     moves: [
@@ -472,7 +474,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Sand Toss', power: 70, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The raider scoops up a fistful of sand...' },
     ],
   },
-  // Guildmaster Qasim (review 3.1): level 14, a brute at 3.5 times HP and 1.1 ATK, the threat in what he buys. Phase 1
+  // Guildmaster Qasim (review 3.1): level 12, a brute at 4 times HP and 1.4 ATK, the threat in what he buys. Phase 1
   // he hires a blade every third turn (HIRE_CAP on the field at once); at 40% he forecloses: Seize Assets once (every
   // fighter Weakened, telegraphed), then the Golden Wall (damage taken halved, its turns, a Surge shatters it). At 0
   // HP he yields and his blades walk out with him (the Yield step's fallback, as Thorne's fight ends on the win).
@@ -480,7 +482,9 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     id: 'qasim',
     name: 'Guildmaster Qasim',
     look: 'qasim',
-    level: 14,
+    // 12 (was 14; Claude's call, Oct 22): the levels pass brought the party to his vault at 11, not 13, so he follows it
+    // down two levels, as Chapter 2's fights did (COMBAT 12.5, "Qasim follows the party down").
+    level: 12,
     role: 'brute',
     boss: true,
     hpScale: 4,

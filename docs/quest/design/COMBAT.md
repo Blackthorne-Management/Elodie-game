@@ -605,6 +605,32 @@ Anissa now opens with the answer ("He hates the light, Gigi. Sunthread. Yari, th
 party's level (8, was 9) and Thorne has 90% of his HP (`hpScale: 0.9`): numbers in 12 above. `tools/battle-sim.ts`
 replays any scripted fight under the three plans (attack, surge, spells) at each Grudge step.
 
+**Qasim follows the party down (Oct 22; Claude's call).** The smoke test's bot lost Chapter 4's `qasim_vault` twice
+before winning. The cause: the levels pass (section 6) brings the route's party to the vault at **level 11**
+(Gianna, Yari, Azzy and Samira, who joins in the scene just before), where the fight was tuned for 13 (Qasim 14, his
+blades 13; `tests/qasim.test.ts` played it at 12 to 14). As Chapter 2's fights did, the fight follows the party down:
+**Qasim level 12 (was 14), the Caravan Raider 11 (was 13)**; his HP x4, ATK x1.4, Seize Assets 230 and the tips are
+unchanged (the desert's raider ambushes set their own group level). `qasim.test.ts`'s balance cases move down two
+levels with him (no loss at 12 guarding; a real threat at 10 without Guard; 20 to 36 actions at 11).
+`tools/battle-sim.ts` gained two plans for it, **smoke** (the smoke bot: Surge, Gianna's Sunthread, everyone else
+Attack) and **tips** (the skills plan with the party's gold, doing what Anissa's tips say: Guard after Seize Assets
+is announced, Samira's Remedy on one below 40%, her Bribe on a blade), and the marker `fight` (the party the moment the
+route starts the fight, Samira included; `@chest`, the marker before it, has no Samira). Measured
+(`battle-sim.ts qasim_vault fight 200`, wins of 200 at Grudge 0 / +10% / +20% / +30%):
+
+| Plan | Before (Qasim 14, blades 13) | After (Qasim 12, blades 11) |
+|---|---|---|
+| Attack, Surge | 0 / 0 / 0 / 0 | 0 / 0 / 0 / 0 |
+| Spells | 0 / 3 / 20 / 47 | 50 / 86 / 120 / 153 |
+| Smoke bot | 0 / 0 / 0 / 5 | 15 / 41 / 55 / 85 |
+| Skills (no gold, no Guard) | 20 / 54 / 94 / 117 | 153 / 174 / 194 / 198 (68% of HP lost at 0) |
+| Tips (Guard, Remedy, Bribe) | 160 / 187 / 192 / 193 | 200 / 200 / 200 / 200 (51% of HP lost, 23 turns) |
+
+The player who follows Anissa now never loses (was 1 in 5 the first time); one who uses the whole kit but ignores the
+Guard and the purse loses about 1 in 4 the first time and 1 in 8 at +10%, which is the threat the outline review
+asked for. Attack alone still cannot win: the vault is a skills fight, and its opening tip says so. Anissa's tips
+were already the answer (Bribe a blade, Guard on the ledger, Samira's Remedy), so they are unchanged.
+
 ## 13. Enemies
 
 ### 13.1 Stat lines by level
@@ -661,7 +687,7 @@ Boss stats: the standard line x the multipliers in each row (`BOSS_SCALE`). Phas
 | # | Boss | Where | Level | HP x / ATK x | Phases |
 |---|---|---|---|---|---|
 | 1 | **Governor Thorne** | Xaraguá customs house (Ch. 2) | 8 | 7 / 1.1 | **1 Paperwork:** hides behind two Crown Marines; *Requisition* (steals an item). **2 (50%) The Charter:** reads the Charter aloud: Hushed on one member each turn, *Protection Fee* (power 150). Yield: Spare (he is sent home to Aldermoor), Spoils, Break. |
-| 2 | **Guildmaster Qasim** (proposal) | Al-Doria guild vault (Ch. 4) | 14 | 7 / 1.1 | **1 Ledger:** *Hire Blades*: pays gold to summon a Caravan Raider each 3 turns (Samira's Bribe on a summoned blade refunds it). **2 (40%) Foreclosure:** *Seize Assets* (Weakened on all), *Golden Wall* (DEF up until hit by a Surge). |
+| 2 | **Guildmaster Qasim** (proposal) | Al-Doria guild vault (Ch. 4) | 14 (built: 12, Oct 22, section 12.5) | 7 / 1.1 | **1 Ledger:** *Hire Blades*: pays gold to summon a Caravan Raider each 3 turns (Samira's Bribe on a summoned blade refunds it). **2 (40%) Foreclosure:** *Seize Assets* (Weakened on all), *Golden Wall* (DEF up until hit by a Surge). |
 | 3 | **Rael the Ruthless, the Trial of Blades** | Ardencia duel court (Ch. 3) | 11 | 9 / 1.2 | Exactly the guide's (5.8). **1 Measured:** single-target pressure, La Marca; (*Seize* on Anissa: to redesign, Shield Anissa dropped Oct 15). **2 (66%) Unleashed:** Grito de Guerra, two Brasador guards; Surge to break through. **3 (33%) Cornered:** Reinado de Cenizas (scaled by how many are Bound); a clean Surge plus Comfort wins. Sangre Ardiente: +10% ATK per member Bound. Members are **Bound**, never Down. He is defeated, not killed. **Built Oct 21** (owner decisions: he wins, wearing La Promesa de Benny): level 13, HP x3, ATK x1.2; Seize in phase 1; Captain Rivera and Jaime walk in at phase 2 and step back at 0 HP; the floor and his finale (`docs/quest/reviews/2026-10-20-chapter3-outline.md`, "Built"). |
 | 3b | **Rael, the Harbor Strike** (same boss, Strike route only) | Harbor flank (Ch. 11) | 28 | 9 / 1.2 | Four phases: Measured, Unleashed, Cornered, then **Broken Army** (his guards leave; he only Binds and will not strike Gianna; the fight ends when his army breaks, at 10% HP). |
 | 4 | **Noyan Grimvald** (proposal) | Skarragol frozen fjord (Ch. 6) | tier top (17, 19 or 21) | 8 / 1.2 | **1 Mounted:** *Trample* (all), fast. **2 (50%) Unhorsed:** slower, *Stolen Standard* (Inspired on all his raiders); returning the standard to Bayarmaa (an Item use) breaks it. |

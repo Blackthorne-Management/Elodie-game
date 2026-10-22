@@ -220,7 +220,7 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       {
         id: 'qasim',
         weight: 0,
-        level: 14,
+        level: 12,
         foes: ['Guildmaster Qasim', 'Caravan Raider', 'Caravan Raider'],
         intro: 'Qasim comes down the stair with the guild\'s blades.',
         won: 'Qasim yields, and his blades walk out.',
