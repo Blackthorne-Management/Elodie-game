@@ -17,6 +17,7 @@ import { MESSAGES } from './messages.ts';
 import { NPCS, NPC_IDS } from './npcs.ts';
 import { DOORS, OBJECTS } from './objects.ts';
 import { SPEAKERS } from './speakers.ts';
+import { SCREENS } from './kuroshi.ts';
 
 export const CONTENT: GameContent = {
   npcs: NPCS,
@@ -29,6 +30,7 @@ export const CONTENT: GameContent = {
   encounters: ENCOUNTERS,
   debates: DEBATE_DIALOGUES,
   rhythms: RHYTHMS,
+  rotors: { [SCREENS.id]: SCREENS },
   debateContext: (flags, def) => ({ influence: localPillar(flags, RPG, 'influence', def.city), mediateNeeds: DEBATE_MEDIATE_INFLUENCE }),
 };
 

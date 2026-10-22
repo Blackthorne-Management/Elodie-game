@@ -364,6 +364,36 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   echo_horse_3: n('echo_horse_3', 'echo_horse', 'Steppe horse', 'echo_horse_talk'),
   echo_horse_4: n('echo_horse_4', 'echo_horse', 'Steppe horse', 'echo_horse_talk'),
   crown_sentry: n('crown_sentry', 'echo_crown_sentry', 'Crown sentry'),
+
+  // Chapter 7, Kirinoura (Oct 22). Named from the design: Haru, Kayla, Kaede, Sayo. Everyone else by role until the
+  // owner approves names (the outline's proposals Ashdown, Omura and Mibu stay proposals; section 11).
+  harbour_master: n('harbour_master', 'harbour_master', 'Harbour-master'),
+  salkhi_pier: n('salkhi_pier', 'horse_grey', 'Salkhi'),
+  salkhi_quarter: n('salkhi_quarter', 'horse_grey', 'Salkhi'),
+  salkhi_marsh: n('salkhi_marsh', 'horse_grey', 'Salkhi'),
+  gate_guard_kq: n('gate_guard_kq', 'gate_guard_kq', 'Gate guard'),
+  debate_balance_keeper: n('debate_balance_keeper', 'balance_keeper', 'Balance-keeper (debating)', 'debate:kuroshi_silence'),
+  debate_whisperer: n('debate_whisperer', 'whisperer', 'Veiled speaker (debating)', 'debate:kuroshi_silence'),
+  kq_fisher_woman: n('kq_fisher_woman', 'kq_fisher_woman', 'Fisher woman'),
+  kq_fisher_boy: n('kq_fisher_boy', 'kq_fisher_boy', "Fisher's boy"),
+  kq_old_fisher: n('kq_old_fisher', 'kq_old_fisher', 'Old fisher'),
+  kq_tea: { ...n('kq_tea', 'kq_vendor', 'Tea house'), shop: 'kirinoura_tea' },
+  kq_paper: { ...n('kq_paper', 'kq_vendor', 'Paper-maker'), shop: 'kirinoura_paper' },
+  kq_armourer: { ...n('kq_armourer', 'kq_armourer', 'Armourer'), shop: 'kirinoura_armourer' },
+  kayla: n('kayla', 'kayla', 'Kayla, cipher clerk'),
+  sayo_clerk: n('sayo_clerk', 'echo_sayo_clerk', "Sayo's clerk"),
+  kq_librarian: n('kq_librarian', 'kq_librarian', 'Librarian'),
+  suzumori_elder: n('suzumori_elder', 'suzumori_elder', 'Suzumori elder'),
+  stacks_cutpurse: n('stacks_cutpurse', 'fog_cutpurse', 'Fog Cutpurse'),
+  kaede: n('kaede', 'kaede', 'Lady Kaede Suzumori'),
+  retainer_neutral: n('retainer_neutral', 'retainer_neutral', 'Retainer for neutrality'),
+  retainer_war: n('retainer_war', 'retainer_war', 'Retainer for war'),
+  signal_master: n('signal_master', 'signal_master', 'Signal master'),
+  crown_observer: n('crown_observer', 'crown_observer', "The Crown's observer"),
+  broker: n('broker', 'paper_fox', "The observer's guest"),
+  keeper_files: n('keeper_files', 'keeper_files', 'Keeper of files'),
+  fox_bound: n('fox_bound', 'paper_fox', 'The Paper Fox (kneeling)'),
+  sayo: n('sayo', 'echo_sayo', 'Lady Sayo Suzumori'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

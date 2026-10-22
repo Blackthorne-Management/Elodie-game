@@ -60,4 +60,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 6 complete',
     lines: ['The Stolen Standard', 'Next: Chapter 7, The Fog Files', 'Kuroshi, and a city that knows what you said before you say it...'],
   },
+  // The end of Chapter 7: a Zetwal trader across the bay to Jwaladesh (the roads in their fixed order).
+  {
+    id: 'act7_end',
+    when: 'act7.complete',
+    title: 'Chapter 7 complete',
+    lines: ['The Fog Files', 'Next: Chapter 8, The Dying Flame', 'Jwaladesh, where the sky is on fire and the flame is going out...'],
+  },
 ];

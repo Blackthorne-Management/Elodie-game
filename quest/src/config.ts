@@ -72,7 +72,7 @@ export const LEVELS = {
  * line without side quests reaches Chapter 6 already two under (13 against 15) and must not fall to three; Ordvik's
  * side quests pay less to keep the played line on 17 (COMBAT.md 6, "Chapter 6").
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter

@@ -53,6 +53,14 @@ const scriptLines = (id: string) => Object.values(CONTENT.dialogue[id]!.nodes).f
 const allLines = SKARRAGOL_DIALOGUE.flatMap((d) => scriptLines(d.id).map((l) => ({ d: d.id, ...l })));
 
 describe('the chapter starts', () => {
+  it('Chapter 6\'s card closes on the quay and the longship sails south to Kirinoura (Chapter 7)', () => {
+    const sim = simAt('chapter6-end');
+    expect(sim.logic.mode).toBe('card');
+    sim.press('confirm');
+    expect(sim.logic.state.player.mapId).toBe('kuroshi-pier');
+    expect(sim.logic.dialogueId).toBe('pier_arrive');
+  });
+
   it('Chapter 5\'s card closes at the Iron Gate and the party walks up the winter road onto the plateau', () => {
     const sim = simAt('chapter5-end');
     expect(sim.logic.mode).toBe('card');
@@ -73,10 +81,10 @@ describe('the chapter starts', () => {
     expect(state.flags.isSet('story.skarragol_arrived')).toBe(true);
   });
 
-  it('?chapter=7: Ordvik\'s quay after the card, Bayarmaa with them, the token and Torvald\'s letter in the bag', () => {
+  it('?chapter=7: Kirinoura\'s pier off the longship, Bayarmaa with them, the token and Torvald\'s letter in the bag', () => {
     const at7 = starts['7']!;
     const flags = new FlagStore(at7.flags);
-    expect(at7.map).toBe('skarragol-quay');
+    expect(at7.map).toBe('kuroshi-pier');
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa']);
     for (const f of ['act6.complete', 'card.act6_end', 'item.token_ironvow', 'item.torvald_letter', 'ally.skarragol', 'story.bayarmaa_cleared']) expect(flags.isSet(f), f).toBe(true);
   });

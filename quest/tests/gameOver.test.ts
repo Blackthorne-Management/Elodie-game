@@ -93,8 +93,8 @@ describe('the count and the Grudge', () => {
     expect(GRUDGE_MAX_BOSS).toBeGreaterThan(GRUDGE_MAX);
     expect(grudgeCap(boss)).toBe(GRUDGE_MAX_BOSS);
     expect(grudgeCap(story)).toBe(GRUDGE_MAX);
-    // Only the chapter bosses (Chapter 2: Thorne; Chapter 6: Grimvald).
-    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['fjord_grimvald', 'thorne_blockade']);
+    // Only the chapter bosses (Chapter 2: Thorne; Chapter 6: Grimvald; Chapter 7: the Paper Fox).
+    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['fjord_grimvald', 'file_house_fox', 'thorne_blockade']);
   });
 
   it('a win clears that fight\'s losses (and so its Grudge); the count stays', () => {
@@ -436,14 +436,16 @@ describe('every story fight has a way back in', () => {
   it('each fight a conversation starts is meant to be lost, or has a foe on a map or a trigger that starts it again', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
-    expect([...started].sort()).toEqual(['camp_lookouts', 'caney_breach', 'deserters_road', 'fjord_grimvald', 'intro_boar', 'ordu_bout', 'pier_marines', 'qasim_vault', 'rael_trial', 'thorne_blockade', 'tunnel_bats', 'village_patrol', 'winter_wolves']);
+    expect([...started].sort()).toEqual(['camp_lookouts', 'caney_breach', 'deserters_road', 'file_house_fox', 'fjord_grimvald', 'intro_boar', 'marsh_moths', 'ordu_bout', 'pier_marines', 'qasim_vault', 'rael_trial', 'stacks_cutpurses', 'thorne_blockade', 'tunnel_bats', 'village_patrol', 'winter_wolves']);
     for (const id of started) {
       const def = battleDef(id);
       expect(def, id).toBeDefined();
       if (def!.meantToLose) continue;
       const foe = Object.values(maps).some((m) => m.npcs.some((n) => starts(CONTENT.npcs[n.npc]?.dialogue).has(id)));
       const trigger = Object.values(maps).some((m) => m.triggers.some((t) => !t.once && !t.onEnter && starts(t.dialogue).has(id)));
-      expect(foe || trigger, `${id}: nobody waits on the map to fight it again`).toBe(true);
+      // Or a thing on the map that starts it again when used (Chapter 7: the marsh posts bring the moths back).
+      const thing = Object.values(maps).some((m) => m.objects.some((o) => starts(o.dialogue).has(id)));
+      expect(foe || trigger || thing, `${id}: nobody waits on the map to fight it again`).toBe(true);
     }
   });
 

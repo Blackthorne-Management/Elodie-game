@@ -608,6 +608,91 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     closedText: 'Closed: the traders are still shouting. They always are.',
     reward: { xp: 20, pillar: { pillar: 'influence', city: 'skarragol', amount: 1 } },
   },
+  // ---- Chapter 7, Kirinoura (the outline section 7, with its second review): two required side quests and the debate ----
+  // The Spy Ledger (K-2; Kayla; the Ash Wars account 2 of 4; M-KUR-1): the sealed stacks behind the Lantern Library. The
+  // Echo at Kayla's desk teaches the shelving rule on a Revolution file (the review's 3.3); the Ash Wars row is worked out
+  // in the present. Kayla's glyph card at the end is her help with the screens and the spy map (the review's 3.4).
+  {
+    id: 'spy_ledger',
+    title: 'The Spy Ledger',
+    giver: 'Kayla, cipher clerk',
+    place: 'The Lantern Library',
+    level: 18,
+    summary:
+      'Four accounts of the Ash Wars, and three of them lie. Kirinoura\'s is in the sealed stacks behind the library, shelved by a cipher Kayla keeps.',
+    accepted: f('side.spy_ledger.accepted'),
+    available: f('story.letter_given'),
+    start: [{ map: 'kuroshi-library', at: { x: 9, y: 5 } }],
+    nudge: 'The clerk at the library keeps looking at Azzy, Gigi.',
+    steps: [
+      { text: 'Meet the clerk at the back desk of the Lantern Library.', done: f('side.spy_ledger.accepted'), goals: [{ map: 'kuroshi-library', at: { x: 9, y: 5 } }] },
+      {
+        text: 'The Echo at Kayla\'s desk is older than the stacks\' door.',
+        done: f('clue.shelf_mark'),
+        goals: [{ map: 'kuroshi-library', at: { x: 9, y: 8 } }],
+        echoGoals: [{ map: 'kuroshi-library', at: { x: 9, y: 8 } }],
+      },
+      {
+        text: 'Into the stacks by the high window; find the Ash Wars ledger by the shelving rule.',
+        done: { any: [f('item.spy_ledger'), f('side.spy_ledger.done')] },
+        goals: [{ map: 'kuroshi-library', at: { x: 20, y: 10 } }],
+        echoGoals: [{ map: 'kuroshi-library', at: { x: 9, y: 8 } }],
+      },
+      { text: 'Back to Kayla with the ledger.', done: f('side.spy_ledger.done'), goals: [{ map: 'kuroshi-library', at: { x: 9, y: 5 } }] },
+    ],
+    done: f('side.spy_ledger.done'),
+    closed: f('story.haru_met'),
+    closedText: 'Closed: the lantern hour came first. The ledger stays in the stacks.',
+    reward: { gold: 200, xp: 50, pillar: { pillar: 'influence', city: 'kuroshi', amount: 2 } },
+  },
+  // Lanterns for the Lost (K-3; the rebel safehouse; M-KUR-2): the fishers' boats steer home by the marsh posts. On the
+  // route: the lit posts show the causeway to the file house's back door, so the quest is never an errand.
+  {
+    id: 'lanterns',
+    title: 'Lanterns for the Lost',
+    giver: 'Fisher woman',
+    place: 'The marsh road',
+    level: 18,
+    summary:
+      'The fishers\' boats went out before the fog and steer home by the marsh posts. The posts are dark, and nobody will light them: the code is a Suzumori secret.',
+    accepted: f('side.lanterns.accepted'),
+    available: f('story.letter_given'),
+    start: [{ map: 'kuroshi-quarter', at: { x: 37, y: 2 } }],
+    nudge: 'The fishers\' boy has a lantern and nothing to light it for.',
+    steps: [
+      // No goal until Haru has joined: the arrow does not lead toward the fog before the maze can be walked (the
+      // review's 4: followSide); after, it points at the maze gate, where the code is learned.
+      { text: 'Someone must know the posts\' code.', done: f('clue.lantern_code'), goals: [{ if: f('party.haru'), map: 'kuroshi-fogmaze', at: { x: 14, y: 27 } }] },
+      { text: 'Light the marsh posts by the huts: left, then right.', done: f('story.boats_home'), goals: [{ map: 'kuroshi-marsh', at: { x: 21, y: 12 } }] },
+      { text: 'The old fisher at the huts.', done: f('side.lanterns.done'), goals: [{ map: 'kuroshi-marsh', at: { x: 16, y: 14 } }] },
+    ],
+    done: f('side.lanterns.done'),
+    closed: f('ally.kuroshi'),
+    closedText: 'Closed: the fishers lit their own posts in the end.',
+    reward: { gold: 250, xp: 50, pillar: { pillar: 'influence', city: 'kuroshi', amount: 1 } },
+  },
+  // The middle bridge's debate, as a required quest (outline 7.3): Is silence virtue or concealment?
+  {
+    id: 'silence',
+    title: 'Silence or Concealment',
+    giver: 'Balance-keeper',
+    place: 'The middle bridge',
+    level: 18,
+    summary:
+      'On the middle bridge a Witness balance-keeper and a veiled speaker argue whether silence is a virtue or a hiding place. Hear them out, then make your case.',
+    accepted: { any: [f('debate.kuroshi_silence.listened'), f('debate.kuroshi_silence.settled')] },
+    available: f('story.letter_given'),
+    start: [{ map: 'kuroshi-quarter', at: { x: 26, y: 11 } }],
+    nudge: 'The two on the middle bridge are arguing about not talking.',
+    steps: [
+      { text: 'Listen to the debate on the middle bridge.', done: f('debate.kuroshi_silence.listened'), goals: [{ map: 'kuroshi-quarter', at: { x: 26, y: 11 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.kuroshi_silence.settled'), goals: [{ map: 'kuroshi-quarter', at: { x: 26, y: 11 } }] },
+    ],
+    done: f('debate.kuroshi_silence.settled'),
+    closed: f('story.haru_met'),
+    closedText: 'Closed: the keepers are still at it. They always are.',
+    reward: { xp: 15, pillar: { pillar: 'influence', city: 'kuroshi', amount: 1 } },
+  },
 ];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */

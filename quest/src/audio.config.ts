@@ -111,6 +111,16 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'skarragol-plateau': 'crossroads',
   'skarragol-quay': 'crossroads',
   'skarragol-fjord': 'throne_archive',
+  // Kirinoura (Chapter 7): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md): the quarter and the
+  // pier play the farewell track, the Hall the hall's, the library home, the maze, the marsh and the file house the
+  // Echo's.
+  'kuroshi-quarter': 'seat',
+  'kuroshi-pier': 'crossroads',
+  'kuroshi-hall': 'majlis',
+  'kuroshi-library': 'home',
+  'kuroshi-fogmaze': 'throne_archive',
+  'kuroshi-marsh': 'throne_archive',
+  'kuroshi-filehouse': 'throne_archive',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */

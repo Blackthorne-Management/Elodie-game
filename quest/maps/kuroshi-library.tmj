@@ -1,0 +1,1038 @@
+{
+  "compressionlevel": -1,
+  "width": 22,
+  "height": 14,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 29,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,238,238,238,238,238,238,238,238,238,94,95,238,238,238,238,238,238,238,238,238,238
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,33,33,33,33,0,33,33,33,33,0,33,33,33,33,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,32,32,0,0,0,0,74,74,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,32,32,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,240,240,240,240,240,240,240,240,240,240,240,240,240,240,238,240,240,240,240,240,238,
+238,238,238,238,238,238,238,238,238,238,94,95,238,238,238,238,238,238,238,238,238,238
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,33,33,33,33,0,33,33,33,33,0,33,33,33,33,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,32,32,0,0,0,0,74,74,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,32,32,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,0,16,16,16,16,0,16,16,16,16,16,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,16,16,0,0,0,0,16,16,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,16,16,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 22,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,0,16,16,16,16,0,16,16,16,16,16,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,16,16,0,0,0,0,16,16,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,16,16,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,16,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "kayla",
+          "type": "npc",
+          "x": 144,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "kayla"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "sayo_clerk",
+          "type": "npc",
+          "x": 144,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "sayo_clerk"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "kq_librarian",
+          "type": "npc",
+          "x": 48,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "kq_librarian"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "suzumori_elder",
+          "type": "npc",
+          "x": 208,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "suzumori_elder"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "stacks_cutpurse_a",
+          "type": "npc",
+          "x": 288,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.spy_ledger.accepted, !story.stacks_cleared, !side.spy_ledger.done"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "stacks_cutpurse"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "stacks_cutpurse_b",
+          "type": "npc",
+          "x": 288,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.spy_ledger.accepted, !story.stacks_cleared, !side.spy_ledger.done"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "stacks_cutpurse"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "stacks_cutpurse_c",
+          "type": "npc",
+          "x": 288,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.spy_ledger.accepted, !story.stacks_cleared, !side.spy_ledger.done"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "stacks_cutpurse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 8,
+          "name": "library_out",
+          "type": "door",
+          "x": 160,
+          "y": 208,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "kuroshi-quarter"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "quarter_library"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 9,
+          "name": "kayla_meet",
+          "type": "trigger",
+          "x": 16,
+          "y": 144,
+          "width": 224,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "kayla_meet"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.letter_given, !story.kayla_met"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "stacks_seen",
+          "type": "trigger",
+          "x": 304,
+          "y": 32,
+          "width": 16,
+          "height": 128,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stacks_seen"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.spy_ledger.accepted, !story.stacks_cleared, !side.spy_ledger.done"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 11,
+          "name": "library",
+          "type": "spawn",
+          "x": 160,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 12,
+          "name": "desk_echo",
+          "type": "echo_zone",
+          "x": 128,
+          "y": 128,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.spy_ledger.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "clerk_echo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 13,
+          "name": "kur_lib_a",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 16,
+          "width": 64,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shelf.kur_lib_a"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "kur_lib_b",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 16,
+          "width": 64,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shelf.kur_lib_b"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "kur_lib_c",
+          "type": "puzzle_object",
+          "x": 176,
+          "y": 16,
+          "width": 64,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "shelf.kur_lib_c"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "kayla_desk",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 96,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "kayla_desk"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "clerk_desk_echo",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 96,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "clerk_desk_echo"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "stacks_seal",
+          "type": "puzzle_object",
+          "x": 240,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stacks_seal"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "paper_seal"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "stacks_window",
+          "type": "puzzle_object",
+          "x": 240,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.spy_ledger.accepted"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "window"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "stack_1",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "stack_2",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "stack_3",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "stack_4",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "stack_5",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "stack_6",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "stack_7",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "stack_8",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "stack_9",
+          "type": "puzzle_object",
+          "x": 320,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "stack_9"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 560,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 275,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

@@ -16,6 +16,7 @@ import { ACT1, JOURNAL_NOTES } from '../src/data/quests.ts';
 import { flagsIn } from '../src/engine/conditions.ts';
 import { checkDialogue, flagsReadBy, flagsSetBy } from '../src/engine/dialogue.ts';
 import { loadMaps } from '../tools/sim-setup.ts';
+import { rotorFlag, rotorLookFlag, rotorMovedFlag } from '../src/engine/rotor.ts';
 
 const maps = loadMaps();
 
@@ -35,6 +36,14 @@ function flagsSet(): Set<string> {
   for (const r of Object.values(CONTENT.rhythms ?? {})) for (const f of Object.keys(r.success)) out.add(f);
   // The purse (engine/rpg.ts gold): fights, rewards, shops and Samira's price in a conversation set it.
   out.add('gold');
+  // A pushed rotor writes its screens' facings and looks, and its solved flag (engine/rotor.ts; Chapter 7's screens).
+  for (const r of Object.values(CONTENT.rotors ?? {})) {
+    out.add(rotorMovedFlag(r.id)).add(r.solved);
+    r.start.forEach((_, i) => {
+      out.add(rotorFlag(r.id, i));
+      for (let d = 0; d < 4; d++) out.add(rotorLookFlag(r.id, i, d));
+    });
+  }
   return out;
 }
 

@@ -6,6 +6,8 @@ import type { JournalNote, QuestDef } from '../engine/quests.ts';
 import { AREITO_BARS, barText } from './rhythms.ts';
 import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './sideQuests.ts';
 import { FAIR, FJORD, HERD, HORN_DAY_DONE, MOOT, PLATEAU, QUAY } from './skarragol.ts';
+import { FILEHOUSE, HALL, LANTERN_DAY_DONE, LIBRARY, MARSH, MARSH_CODE, MAZE, PIER, QUARTER, SCREENS_SOLUTION } from './kuroshi.ts';
+import type { Goal } from '../engine/guide.ts';
 
 export const ACT1: QuestDef = {
   id: 'act1',
@@ -1200,8 +1202,181 @@ export const ACT6: QuestDef = {
   ],
 };
 
+const KUR_MAPS = ['kuroshi-pier', 'kuroshi-quarter', 'kuroshi-library', 'kuroshi-hall', 'kuroshi-filehouse', 'kuroshi-fogmaze', 'kuroshi-marsh'];
+const fh = (i: number): Goal => ({ map: 'kuroshi-filehouse', at: { ...FILEHOUSE.screens[i]! } });
+const fhZone = { map: 'kuroshi-filehouse', at: { x: FILEHOUSE.zone.x, y: FILEHOUSE.zone.y + 1 } };
+const mazeZone = { map: 'kuroshi-fogmaze', at: { x: MAZE.zone.x + 1, y: MAZE.zone.y } };
+/** Each plaza's south side, where its posts light (the arrow walks the maze plaza by plaza, as it walked the fjord). */
+const plazaGate = (i: number): Goal => ({ map: 'kuroshi-fogmaze', at: { x: MAZE.plazas[i]!.x, y: MAZE.plazas[i]!.y + 2 } });
+/** The marsh post that still shows the wrong light (the arrow points at it; the player decides the colour). */
+const postGoals: Goal[] = MARSH_CODE.map((colour, i) => ({
+  if: { notFlag: `marsh.p${i + 1}_${colour}` },
+  map: 'kuroshi-marsh',
+  at: { ...MARSH.posts[i]! },
+}));
+
+/**
+ * Chapter 7, The Fog Files (Kirinoura, Kuroshi; the second road: docs/quest/reviews/2026-10-21-chapter7-outline.md with
+ * its second review). Into the mist, the letter at the Hall's gate, the day until the lantern hour (K-2 and the debate,
+ * followed by the arrow), the lantern hour (Haru joins), Sayo's lanterns and the fog maze, K-3 and the marsh posts on
+ * the way, the back door, Sayo's war room and the screens, the spy map, the Paper Fox, the files read with Kayla, the
+ * petition, the pier.
+ */
+export const ACT7: QuestDef = {
+  id: 'act7',
+  title: 'Chapter 7: The Fog Files',
+  maps: KUR_MAPS,
+  objectives: [
+    {
+      id: 'mist',
+      title: 'Into the mist',
+      detail: 'South from Ordvik on the longship, into the fog, to Kirinoura, where the lanterns are lit at noon.',
+      done: { flag: 'story.kuroshi_arrived' },
+      noXp: true,
+      goals: [{ map: 'kuroshi-pier', at: { ...PIER.spawn } }],
+      hints: ['It is so grey, Gigi.', 'There is a stair at the top of the pier.', 'Walk up the pier to the stair.'],
+    },
+    {
+      id: 'announced',
+      title: 'Announced',
+      detail: 'Torvald\'s letter is for Lady Kaede Suzumori. Her Hall of Screens is across the main bridge.',
+      done: { flag: 'story.letter_given' },
+      goals: [{ map: 'kuroshi-quarter', at: { x: QUARTER.hallGate.x, y: QUARTER.gateRow } }],
+      hints: ['The letter, Gigi. For the lady.', 'The Hall is across the main bridge, at the top of the quarter.', 'Walk to the main bridge in front of the Hall\'s gate.'],
+    },
+    {
+      id: 'lantern',
+      title: 'Until the lantern hour',
+      detail: 'Kaede hears the letter at the lantern hour. Until then the library\'s clerk, and the keepers on the middle bridge.',
+      done: { any: [LANTERN_DAY_DONE, { flag: 'story.haru_met' }] },
+      followSide: true,
+      noXp: true,
+      hints: [
+        'The lantern hour is at dusk, Gigi. There is a day first.',
+        'Follow the arrow. Your Quests page knows what is left.',
+        'The clerk in the Lantern Library, and the two arguing on the middle bridge.',
+      ],
+    },
+    {
+      id: 'lantern_hour',
+      title: 'The lantern hour',
+      detail: 'Dusk. The envoy is called to the Hall of Screens. Up the corridor to Lady Kaede\'s dais.',
+      done: { flag: 'story.haru_met' },
+      goals: [{ map: 'kuroshi-hall', at: { x: HALL.kaede.x, y: HALL.sceneRow } }],
+      hints: ['The lanterns are lit, Gigi.', 'The Hall\'s gate is open now.', 'Go into the Hall of Screens and walk up the corridor to the dais.'],
+    },
+    {
+      id: 'way_in',
+      title: "Sayo's way in",
+      detail: 'Haru: his grandmother\'s people talked through the fog with lanterns. The maze is past the torii, north-east.',
+      done: { flag: 'clue.lantern_code' },
+      goals: [mazeZone],
+      hints: ['The posts in the maze are dark, Gigi.', 'It\'s shimmering by the maze gate. Someone lit them, once.', 'Stand on the shimmer by the maze gate and use the Locket.'],
+    },
+    {
+      id: 'maze',
+      title: 'The fog maze',
+      detail: 'Six plazas in the fog, three posts at each. Two white and a red: left. Three white: on. One white, two red: right.',
+      done: { flag: 'story.maze_walked' },
+      goals: [
+        { if: { flag: 'story.maze_j6' }, map: 'kuroshi-fogmaze', at: { x: MAZE.gap.x, y: MAZE.gap.y + 1 } },
+        { if: { flag: 'story.maze_j5' }, ...plazaGate(5) },
+        { if: { flag: 'story.maze_j4' }, ...plazaGate(4) },
+        { if: { flag: 'story.maze_j3' }, ...plazaGate(3) },
+        { if: { flag: 'story.maze_j2' }, ...plazaGate(2) },
+        { if: { flag: 'story.maze_j1' }, ...plazaGate(1) },
+        plazaGate(0),
+      ],
+      // Still in the memory after the agents: the shimmer back out.
+      echoGoals: [mazeZone],
+      hints: ['Read the lanterns, Gigi. Left to right.', 'Two white and a red means left. Three white, straight on. One white, two red, right.', 'At each plaza, read the three posts and take that way: left, on, right, right, left, on.'],
+    },
+    {
+      id: 'lanterns',
+      title: 'Lanterns for the lost',
+      detail: 'The fishers\' boats steer home by the marsh posts: left, then right. The posts are by the huts.',
+      done: { flag: 'side.lanterns.done' },
+      noXp: true,
+      goals: [{ if: { flag: 'story.boats_home' }, map: 'kuroshi-marsh', at: { ...MARSH.oldFisher } }, ...postGoals, { map: 'kuroshi-marsh', at: { ...MARSH.oldFisher } }],
+      hints: ['The boats can\'t see the way home, Gigi.', 'Left, then right. You know what left looks like.', 'The fork\'s posts two white and a red; the bend\'s one white and two red.'],
+    },
+    {
+      id: 'back_door',
+      title: 'The back door',
+      detail: 'The lit posts show a second causeway, east to the signal tower: Sayo\'s way into the file house.',
+      done: { flag: 'story.filehouse_entered' },
+      goals: [{ map: 'kuroshi-marsh', at: { ...MARSH.tower } }],
+      hints: ['There\'s a causeway now, Gigi.', 'East along it, to the tower.', 'Walk the second causeway east to the signal tower\'s door.'],
+    },
+    {
+      id: 'sayo',
+      title: "Sayo's war room",
+      detail: 'The file house was Lady Sayo\'s war room. Her map hung on the west wall, where it shimmers.',
+      done: { flag: 'anchor.screen_peg' },
+      goals: [fhZone],
+      echoGoals: [{ map: 'kuroshi-filehouse', at: { ...FILEHOUSE.screens[4]! } }],
+      hints: ['It\'s shimmering by the wall, Gigi.', 'Sayo said a screen was loose.', 'In the memory, fix the loose screen in the middle of the room.'],
+    },
+    {
+      id: 'screens',
+      title: 'The screens',
+      detail: 'Pushing a screen turns it and its neighbours. The lanes open when every screen faces north.',
+      done: { flag: 'rotor.screens.solved' },
+      goals: [
+        { if: { notFlag: 'rotor.screens.1.n' }, ...fh(SCREENS_SOLUTION[0]!) },
+        { if: { notFlag: 'rotor.screens.5.n' }, ...fh(SCREENS_SOLUTION[1]!) },
+        { if: { notFlag: 'rotor.screens.7.n' }, ...fh(SCREENS_SOLUTION[3]!) },
+        ...[0, 2, 3, 6, 8].map((i) => ({ if: { notFlag: `rotor.screens.${i}.n` }, ...fh(i) })),
+      ],
+      echoGoals: [fhZone],
+      hints: ['The middle one doesn\'t move now, Gigi.', 'Turn the screens until they all face north.', 'Push the north screen, the east one twice, then the south one.'],
+    },
+    {
+      id: 'spy_map',
+      title: "Sayo's map",
+      detail: 'The faded square on the west wall, read with Sayo\'s map remembered and Kayla\'s glyphs.',
+      done: { flag: 'story.spy_map_read' },
+      goals: [{ map: 'kuroshi-filehouse', at: { x: FILEHOUSE.map.x, y: FILEHOUSE.map.y + 1 } }],
+      hints: ['The pins, Gigi. Kayla\'s glyphs.', 'Read the wall where the map hung.', 'Read the faded square on the west wall.'],
+    },
+    {
+      id: 'fox',
+      title: 'The Paper Fox',
+      detail: 'Sayo\'s map marks a floor stone under the north stack. The buyer\'s files are kept there.',
+      done: { flag: 'story.fox_beaten' },
+      goals: [{ map: 'kuroshi-filehouse', at: { ...FILEHOUSE.stone } }],
+      hints: ['Someone is at the north stack, Gigi.', 'The lanes are open. The floor stone.', 'Walk through the lanes to the floor stone under the north stack.'],
+    },
+    {
+      id: 'files',
+      title: 'The Fog Files',
+      detail: 'Two files in a lacquer box. Kayla reads what nobody else can, at her desk in the Lantern Library.',
+      done: { flag: 'clue.buyers_mark' },
+      goals: [{ map: 'kuroshi-library', at: { ...LIBRARY.kayla } }],
+      hints: ['Titi Kayla will be at her desk, Gigi.', 'The Lantern Library, on the west canal.', 'Take the box to Kayla at her desk in the library.'],
+    },
+    {
+      id: 'petition',
+      title: 'The petition',
+      detail: 'Dawn. The council hears the petition. Lady Kaede asked for proof the Crown had been inside her file house.',
+      done: { flag: 'ally.kuroshi' },
+      goals: [{ map: 'kuroshi-hall', at: { x: HALL.kaede.x, y: HALL.sceneRow } }],
+      hints: ['The council is sitting, Gigi.', 'The Hall, up the corridor.', 'Go up the Hall\'s corridor to Lady Kaede with the receipts.'],
+    },
+    {
+      id: 'west',
+      title: 'West',
+      detail: 'A Zetwal trader at the pier, across the bay to Jwaladesh. Haru is coming too.',
+      done: { flag: 'act7.complete' },
+      noXp: true,
+      goals: [{ map: 'kuroshi-pier', at: { x: 13, y: 10 } }],
+      hints: ['A boat, Gigi.', 'Down the stair to the pier.', 'Walk down to the end of the pier.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -1498,6 +1673,91 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'item.token_ironvow',
     title: 'Ironvow sits',
     text: 'Torvald cut a braid from the standard for the chamberlain\'s chair: Ironvow will sit with Zetwal at a Claim. A letter for Kuroshi, too.',
+  },
+  // Chapter 7 (Kirinoura).
+  {
+    id: 'neutrality_order',
+    when: 'story.haru_met',
+    title: 'The Neutrality Order',
+    text: 'The file house is sealed. No file leaves it, no envoy enters it, no informant is named. It protects the people who tell Kirinoura things.',
+  },
+  {
+    id: 'kayla',
+    when: 'story.kayla_met',
+    title: 'Kayla',
+    text: 'Rael\'s half-sister, a cipher clerk in Kirinoura\'s Lantern Library. She knows what the files say and nothing else, she says.',
+  },
+  {
+    id: 'shelf_rule',
+    when: 'clue.shelf_mark',
+    title: 'The stacks\' cipher',
+    text: 'Sayo\'s clerk, fifty years ago: crane for the Crown, pine for the war, the row for the years. Oldest at the top.',
+  },
+  {
+    id: 'spy_ledger',
+    when: 'side.spy_ledger.done',
+    title: 'The Ash Wars: account 2 of 4',
+    text: 'The Suzumori spy ledger: forty-one Crown marines taken on the Ash Road, nine dead, all nine by the Crown\'s own volleys.',
+  },
+  {
+    id: 'sayo_lanterns',
+    when: 'clue.lantern_code',
+    title: "Sayo's lanterns",
+    text: 'Three posts, read left to right. White, white, red: left. White, white, white: on. White, red, red: right. Never written down.',
+  },
+  {
+    id: 'thumb_five',
+    when: 'side.lanterns.done',
+    title: 'The marsh press',
+    text: 'Oil, bread, water, grain, and now paper: the same grey thumbprint. Kirinoura\'s rebels print what the council says in private.',
+  },
+  {
+    id: 'sayo_network',
+    when: 'clue.sayo_network',
+    title: "Sayo's network",
+    text: 'Lady Sayo pinned every Crown movement of the war to her wall map. Her people died for the slips. "When you win, write them down."',
+  },
+  {
+    id: 'changed_screen_peg',
+    when: 'anchor.screen_peg',
+    title: 'Something changed',
+    text: 'The middle screen in the file house is pegged fast, facing north: young Patricio drove its peg home in Sayo\'s war room.',
+  },
+  {
+    id: 'sayo_map',
+    when: 'story.spy_map_read',
+    title: "Sayo's map",
+    text: 'Kayla\'s glyphs on the pin holes: the north stack, under the stone. The buyer\'s files are kept there.',
+  },
+  {
+    id: 'fox_receipts',
+    when: 'clue.fox_receipts',
+    title: "The Fox's receipts",
+    text: 'Eleven years of copies from the file house, sold to "the Throne\'s observer" in Throne sols, each countersigned in violet.',
+  },
+  {
+    id: 'buyers_mark',
+    when: 'clue.buyers_mark',
+    title: "The buyer's mark",
+    text: 'A Crown buying-list: four prices, every name cut away, a closed hand beside one. The Crown has bought, or will buy, a house.',
+  },
+  {
+    id: 'ardencia_outflows',
+    when: 'clue.ardencia_outflows',
+    title: 'Gold out of Ardencia',
+    text: 'Twenty years of gold out of Ardencia\'s treasury, every season, to places in a cipher no one in Kirinoura holds.',
+  },
+  {
+    id: 'suzumori_network',
+    when: 'ally.kuroshi',
+    title: 'The Suzumori network',
+    text: 'Price: Influence 10, owed at the Muster. Laid on the dais: the receipts, and what was chosen. Least paid, first bought.',
+  },
+  {
+    id: 'suzumori_token',
+    when: 'item.token_suzumori',
+    title: 'Suzumori sits',
+    text: 'Kaede folded a crane from the turned order for the chamberlain\'s chair. Agnipur will not take it. Take it anyway, she said.',
   },
   {
     id: 'in_private',

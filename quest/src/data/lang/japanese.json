@@ -1,0 +1,22 @@
+{
+  "language": "Japanese (Kuroshi's fog city)",
+  "note": "Japanese words and names the quest uses in Kirinoura (House Suzumori, Chapter 7). Every entry must be checked by a fluent speaker before release (guide 8; the Nov 18 check); verified stays false until then.",
+  "entries": [
+    { "word": "Irasshaimase", "language": "Japanese", "translation": "Welcome (to the shop)!", "verified": false },
+    { "word": "Konnichiwa", "language": "Japanese", "translation": "Good day, hello", "verified": false },
+    { "word": "Yōkoso", "language": "Japanese", "translation": "Welcome", "verified": false },
+    { "word": "Arigatou gozaimasu", "language": "Japanese", "translation": "Thank you (polite)", "verified": false },
+    { "word": "Kirinoura", "language": "Japanese", "translation": "Mist bay (Kuroshi's capital; kiri, mist, and ura, bay)", "verified": false },
+    { "word": "Kuroshi", "language": "Japanese", "translation": "The fog city's realm (the board game's name)", "verified": false },
+    { "word": "Suzumori", "language": "Japanese", "translation": "A house name: bell and grove", "verified": false },
+    { "word": "Kagemimi", "language": "Japanese", "translation": "Shadow-ear (Haru's listening skill)", "verified": false },
+    { "word": "Sasayaki Ha", "language": "Japanese", "translation": "Whispering blade", "verified": false },
+    { "word": "Ayatsuri", "language": "Japanese", "translation": "The puppeteer's strings (to manipulate)", "verified": false },
+    { "word": "Haru", "language": "Japanese", "translation": "Spring (a name)", "verified": false },
+    { "word": "Kaede", "language": "Japanese", "translation": "Maple (a name)", "verified": false },
+    { "word": "Sayo", "language": "Japanese", "translation": "A woman's name (night, small, a gentle sound)", "verified": false },
+    { "word": "Genzō", "language": "Japanese", "translation": "A man's name (Sayo's father in the Suzumori Line)", "verified": false },
+    { "word": "Tanto", "language": "Japanese", "translation": "A short blade", "verified": false },
+    { "word": "Kimono", "language": "Japanese", "translation": "A robe, a garment", "verified": false }
+  ]
+}

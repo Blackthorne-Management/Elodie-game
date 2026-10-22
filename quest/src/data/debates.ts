@@ -487,6 +487,85 @@ export const DEBATES: readonly DebateDef[] = [
       say('sky_rider', 'The sky was behind the pole. It counts.'),
     ],
   },
+  // Kirinoura's middle bridge (Chapter 7; the outline 7.3 with its review's 3.10): Is silence virtue or concealment?
+  // Required. The Witness balance-keeper is Gianna's side; the veiled speaker is a public street speaker of the Quiet
+  // Crown, reasonable and unhurried, not a Husher (the Chapter 1 recruiter's precedent): he never looks at Anissa, never
+  // names her. The player may argue his side: Kirinoura's neutrality is the silence he means, and the chapter answers
+  // him with the receipts. Reason needs one of the library's three silence books.
+  {
+    id: 'kuroshi_silence',
+    city: 'kuroshi',
+    question: 'Is silence virtue or concealment?',
+    ally: 'balance_keeper',
+    opponent: 'whisperer',
+    opensIf: { flag: 'story.letter_given' },
+    passing: [
+      say('whisperer', '...silence is what you call it when you are the one not telling.'),
+      say('balance_keeper', 'And a lie is what you call it when you are the one not listening.'),
+    ],
+    listen: [
+      say('balance_keeper', 'An oath kept in silence is still kept. The Witness hears what is not said.'),
+      say('balance_keeper', 'Silence is the room an honest word waits in.'),
+      say('whisperer', 'Your council is silent. The Throne is silent. Every house keeps its files and calls it prudence.'),
+      say('whisperer', 'One hand would need no silence. It would simply say.'),
+      say(A, 'The quiet one wants everybody to talk, Gigi. The loud one wants everybody quiet.'),
+    ],
+    reasonNeeds: [loreFlag('kuroshi_balance_silence'), loreFlag('kuroshi_informants_petition'), loreFlag('kuroshi_genzo_ear')],
+    rounds: [
+      {
+        claim: 'A city that writes everything down and reads none of it out is not keeping faith. It is keeping files.',
+        answers: {
+          scripture: { short: 'The Witness hears', text: 'The Witness hears what is kept, and what is told. Keeping is not lying.', strength: 1 },
+          reason: { short: 'Files protect people', text: 'The Informants\' Petition: a name in a file is a name a broker cannot sell. Silence is the only law they have.', strength: 2 },
+          compassion: { short: 'Ask the informant', text: 'Ask the fisher who told Sayo where the marines slept whether she wanted it read aloud.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then the Throne\'s silence protects people too. You cannot have one silence and not the other.',
+        answers: {
+          scripture: { short: 'Elodie remembers', text: 'Elodie remembers what kings forget. A silence that forgets is not the same as one that keeps.', strength: 1 },
+          reason: { short: 'Who is silent, for whom', text: 'Balance and Silence: a silence kept for the weak is a shield; one kept for the strong is a wall.', strength: 2 },
+          compassion: { short: 'Look who it hides', text: 'Look at who each silence hides. One hides fishers. The other hides a page.', strength: 1 },
+        },
+      },
+      {
+        claim: 'So you would have the people speak, envoy, and their councils keep quiet? Who decides which is which?',
+        answers: {
+          scripture: { short: 'The Gaze decides', text: 'The Gaze sees both. Neither is ours to choose alone.', strength: 1 },
+          reason: { short: 'The law decides', text: 'A law that names the informants, and keeps them safe. Then their silence is no one\'s price.', strength: 1 },
+          compassion: { short: 'Those it costs', text: 'The ones it costs most decide. Ask them. They are on the marsh, lighting posts.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(On the bridge, a clerk stops writing. A tea seller says "So!" and pours for everyone.)',
+      1: '(Half the bridge nods at the keeper, half at the veil. A lantern-lighter nods at both.)',
+      0: '(The bridge goes back to its own business, quietly.)',
+    },
+    won: [
+      say('whisperer', 'A shield and a wall. ...Then build the shield where I can see it, envoy.'),
+      say('balance_keeper', 'He will hold you to it. So will I.'),
+    ],
+    lost: [
+      say('whisperer', 'Silence, envoy, all the way down. Come back when somebody says something.'),
+      say('balance_keeper', 'She will. Then we will listen.'),
+    ],
+    mediate: [
+      say(G, 'You both want the people safe, and the powerful seen.'),
+      say('whisperer', 'Then name the people in the law, and the powerful in the street.'),
+      say('balance_keeper', 'That is the Informants\' Petition. It has been on the shelf fifty years.'),
+      say('whisperer', 'Then take it down.'),
+    ],
+    provoke: [
+      say(G, 'Your city sells silence by the page. Ask the Crown\'s man what it costs!'),
+      nar('The bridge goes very quiet. A clerk writes something down.'),
+      say('balance_keeper', 'Not here, envoy. Everything on this bridge is written down.'),
+    ],
+    after: [
+      say('balance_keeper', 'The order is lifted for the Throne and kept for the people. A shield, not a wall.'),
+      say('whisperer', 'For now. Write it down.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */

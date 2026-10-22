@@ -124,6 +124,28 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       text: 'Once per battle: a raid her grandmother would know. A heavy blow, and her next turn comes at once.',
     },
   ],
+  // Haru (COMBAT 9.5; the outline section 9.1 with its review's 3.6): Kagemimi listens (the next move told; a disguise
+  // found out: the Paper Fox named, Marked, his paper no longer in the way); Sasayaki Ha's strip of a buff and
+  // Ayatsuri's redirect are not built: their fallbacks are Weakened and a Stun (a boss half the time); Paper Smoke's
+  // evasion is the built Warded, on the whole party.
+  haru: [
+    {
+      id: 'kagemimi', name: 'Kagemimi', sp: 3, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], reveal: true,
+      text: 'He listens: one foe\'s next move is told, and a foe in disguise is found out and marked.',
+    },
+    {
+      id: 'sasayaki_ha', name: 'Sasayaki Ha', sp: 6, kind: 'damage', stat: 'atk', power: 110, target: 'enemy', statuses: ['weakened'], bossChance: 0.5,
+      text: 'The whispering blade: a cut, and the foe hits a quarter softer (a boss half the time).',
+    },
+    {
+      id: 'paper_smoke', name: 'Paper Smoke', sp: 5, kind: 'status', power: 0, target: 'allAllies', statuses: ['warded'],
+      text: 'Burning paper and smoke: the whole party takes a quarter less damage for 3 turns.',
+    },
+    {
+      id: 'ayatsuri', name: 'Ayatsuri', sp: 14, kind: 'status', power: 0, target: 'enemy', statuses: ['stunned'], bossChance: 0.5, once: true,
+      text: 'Once per battle: the puppeteer\'s word. One foe\'s next action is wasted (a boss half the time).',
+    },
+  ],
   yari: [
     { id: 'trackers_mark', name: "Tracker's Mark", sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'Marks one foe: it takes a quarter more damage for 3 turns.' },
     { id: 'arrow_rain', name: 'Arrow Rain', sp: 9, kind: 'damage', stat: 'atk', power: 75, target: 'allEnemies', element: 'wind', learn: { level: 6 }, text: 'Arrows on the wind, at every foe.' },
@@ -155,6 +177,11 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A sabre cut from the saddle. Ready every turn.' },
     { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },
     { id: 'horse_tail_sweep', name: 'Horse-Tail Sweep', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 70, target: 'allEnemies', text: 'She wheels Salkhi through the line: every foe.' },
+  ],
+  haru: [
+    { id: 'quick_cut', name: 'Quick Cut', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A short, fast cut. Ready every turn.' },
+    { id: 'twin_cut', name: 'Twin Cut', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 75, target: 'randomEnemies', hits: 2, text: 'Two cuts at foes at random. Needs 2 turns to ready again.' },
+    { id: 'throat_cut', name: 'Throat Cut', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 150, target: 'enemy', text: 'One cut, exactly placed. Needs 3 turns to ready again.' },
   ],
   // Young Lord Benny of Ardencia in the Echo party (from the end of Chapter 3, once Azzy has joined).
   benny: [
@@ -570,6 +597,84 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Trample', power: 100, area: true, every: 2, tell: 'Grimvald turns his horse and spurs it straight at the line...' },
     ],
   },
+  // ---- Chapter 7, Kuroshi (the outline section 5 with its review 3.6; COMBAT 13.2 and 13.3) -------------------------
+  // The marsh's moths and cutpurses (COMBAT's Smoke is a smoke bomb that weakens; Pickpocket has no engine support and
+  // is cut), the first Hushers of the game (Hush is the built Hushed now; Steal Voice is cut; Seize goes to Gianna,
+  // never to Anissa), and the Paper Fox with his paper decoys.
+  lantern_moth: {
+    id: 'lantern_moth',
+    name: 'Lantern Moth',
+    look: 'lantern_moth',
+    level: 18,
+    role: 'skirmisher',
+    hpScale: 0.6,
+    weak: ['fire'],
+    moves: [
+      { name: 'Dust', power: 80 },
+      { name: 'Glare', power: 50, area: true, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The moths all turn their wings to the lantern light at once...' },
+    ],
+  },
+  fog_cutpurse: {
+    id: 'fog_cutpurse',
+    name: 'Fog Cutpurse',
+    look: 'fog_cutpurse',
+    level: 18,
+    role: 'skirmisher',
+    bribable: true,
+    withdraws: { line: 'The cutpurse is gone into the fog.' },
+    moves: [
+      { name: 'Knife', power: 100 },
+      { name: 'Smoke bomb', power: 60, area: true, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The cutpurse pulls a paper ball from her sleeve and bites the fuse...' },
+    ],
+  },
+  husher: {
+    id: 'husher',
+    name: 'Husher',
+    look: 'husher',
+    level: 18,
+    role: 'caster',
+    resist: ['light'],
+    withdraws: { line: 'The Husher steps back into the fog without a sound.' },
+    moves: [
+      { name: 'Whisper', power: 90, magic: true },
+      { name: 'Hush', power: 60, magic: true, statuses: ['hushed'], every: 3, tell: 'The Husher lifts a finger to the veil. The fog goes quiet...' },
+      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you, at the back of the line...' },
+    ],
+  },
+  // The Fox's paper decoys: the same mask, the same name ("Paper Fox?" with a letter), a hidden HP bar, and three of
+  // four one-target blows meant for him land on paper until Kagemimi finds him out. Torn by any blow that hits them all.
+  paper_decoy: {
+    id: 'paper_decoy',
+    name: 'Paper decoy',
+    look: 'paper_fox',
+    level: 19,
+    role: 'caster',
+    hpScale: 0.35,
+    weak: ['fire', 'light'],
+    protects: 'paper_fox',
+    disguise: { as: 'Paper Fox?' },
+    moves: [{ name: 'Paper cut', power: 75, magic: true }],
+  },
+  // The Paper Fox, the broker who sells Kuroshi's files to the Crown (COMBAT 13.3; the outline section 5 with its review
+  // 3.6): level 19, a skirmisher boss; phase 2 at 40% (COMBAT's number, recorded); Sold Secrets reads one fighter's file
+  // and turns their own best blow on them with his ATK. At 0 HP he withdraws: nobody dies. Scaling: battle-sim at
+  // @kirinoura-fox (the outline's Built section).
+  paper_fox: {
+    id: 'paper_fox',
+    name: 'The Paper Fox',
+    look: 'paper_fox',
+    level: 19,
+    role: 'skirmisher',
+    boss: true,
+    hpScale: 12,
+    atkScale: 1.8,
+    disguise: { as: 'Paper Fox?', name: 'The Paper Fox' },
+    withdraws: { line: 'Enough. Take the files. They were never mine to sell.', speaker: 'The Paper Fox' },
+    moves: [
+      { name: 'Paper knife', power: 110 },
+      { name: 'Fold', power: 0, hire: 'paper_decoy', every: 3, tell: 'The Fox folds a sheet in half, and in half again: another of him is coming.' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     bribable: true,
@@ -608,6 +713,12 @@ const GRIMVALD_UNHORSED: readonly EnemyMove[] = [
 ];
 /** Grimvald with the standard gone from his hand (phase 3): the axe only. */
 const GRIMVALD_BROKEN: readonly EnemyMove[] = [{ name: 'Axe', power: 110 }];
+/** The Paper Fox's second phase (40%): the knife, Sold Secrets every other turn, a fold now and then. */
+const FOX_SECRETS: readonly EnemyMove[] = [
+  { name: 'Paper knife', power: 110 },
+  { name: 'Sold Secrets', power: 120, mirror: true, every: 2, tell: 'The Fox opens a file with a name on it, and reads...' },
+  { name: 'Fold', power: 0, hire: 'paper_decoy', every: 5, tell: 'The Fox folds a sheet in half, and in half again: another of him is coming.' },
+];
 
 /** Qasim once the guild's money is gone (phase 2, Foreclosure): no more hiring; he seizes, then walls himself in gold. */
 const QASIM_FORECLOSURE: readonly EnemyMove[] = [
@@ -707,6 +818,70 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       start: "It's a bout, Gigi. Nobody gets hurt past the bout. Azzy wants to win it.",
       spark: 'Surge!',
       tell: 'She is turning wide! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 7: the Paper Fox in the file house (the outline beat 7, its review 3.6). Game Over applies; the way back in
+  // is the north stack's trigger. The decoys come first in the list, then he deals the places (EnemyDef.disguise).
+  file_house_fox: {
+    id: 'file_house_fox',
+    title: 'The Paper Fox',
+    backdrop: 'file_house',
+    enemies: ['paper_decoy', 'paper_fox', 'paper_decoy', 'paper_decoy'],
+    table: 'kuroshi_story',
+    group: 'fox',
+    rewards: { xp: 140, gold: 300 },
+    endsWithBoss: true,
+    boss: true,
+    phases: [
+      {
+        below: 0.4,
+        speaker: 'The Paper Fox',
+        text: 'You keep files too. Everyone does.',
+        moves: FOX_SECRETS,
+      },
+    ],
+    tips: {
+      // The one thing that matters, said at the start (review 1, finding 1): Kagemimi finds him; blows that hit them all tear paper.
+      start: 'Haru can hear which one breathes, Gigi. Kagemimi! Then hit the real one. Blows that hit them all tear paper.',
+      spark: 'Surge, Gigi! Tear them all!',
+      tell: 'He is reading somebody\'s file! Guard!',
+      lowHp: 'Heal, Gigi. Please.',
+    },
+  },
+  // Chapter 7, K-2: three Fog Cutpurses in the sealed stacks, seen (the stealth's fail-safe). Paid flat (data).
+  stacks_cutpurses: {
+    id: 'stacks_cutpurses',
+    title: 'The Sealed Stacks',
+    backdrop: 'file_house',
+    enemies: ['fog_cutpurse', 'fog_cutpurse', 'fog_cutpurse'],
+    level: 19,
+    table: 'kuroshi_story',
+    group: 'cutpurses',
+    rewards: { xp: 30, gold: 150 },
+    sideQuest: 'spy_ledger',
+    tips: {
+      start: 'Three of them, Gigi. Samira says a purse works on cutpurses.',
+      spark: 'Surge, Gigi!',
+      tell: 'Smoke! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 7, K-3: the lantern moths at the lit posts. Paid flat (data).
+  marsh_moths: {
+    id: 'marsh_moths',
+    title: 'The Marsh Posts',
+    backdrop: 'fog_marsh',
+    enemies: ['lantern_moth', 'lantern_moth', 'lantern_moth', 'lantern_moth'],
+    level: 18,
+    table: 'kuroshi_story',
+    group: 'moths',
+    rewards: { xp: 30, gold: 100 },
+    sideQuest: 'lanterns',
+    tips: {
+      start: 'They want the light, Gigi. Hit them all at once.',
+      spark: 'Surge, Gigi!',
+      tell: 'The glare! Guard!',
       lowHp: 'Heal, Gigi.',
     },
   },
@@ -955,6 +1130,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   desert_edge: { title: 'The Desert Edge', backdrop: 'desert_edge' },
   crossroads: { title: 'The Crossroads Fields', backdrop: 'crossroads' },
   winter_plateau: { title: 'The Winter Plateau', backdrop: 'winter_plateau' },
+  fog_marsh: { title: 'The Fog Marsh', backdrop: 'fog_marsh' },
 };
 
 /**

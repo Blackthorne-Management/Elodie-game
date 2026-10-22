@@ -600,7 +600,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     act([{ do: 'look', actor: 'npc:salkhi_quay' }], '', 'Salkhi is loaded last, complaining the whole length of the quay.'),
     say(BY, 'South along the fjord coast. Into the mist, where the lanterns are.'),
     say(A, 'Bayarmaa\'s coming too, Gigi.'),
-    say(G, 'She is.', { fx: 'fade', set: { 'act6.complete': true } }),
+    say(G, 'She is.', { fx: 'fade', set: { 'act6.complete': true, 'travel.next': 'kuroshi-pier/pier', 'voyage.next': 'skarragol_kuroshi' } }),
   ]),
   simple('longship_ready', [nar('An Ironvow longship, oars up, a slate-grey disc on her prow. She sails when the envoy says.')]),
   simple('quay_hulls', [

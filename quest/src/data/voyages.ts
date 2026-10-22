@@ -89,4 +89,22 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 6's end into Chapter 7 (the outline beat 0, with its review's 3.9: Ordvik's dot is inland, so the longship
+  // sets out from Skarragol's south coast): south-west along the coast, round the point, into the mist off Kirinoura.
+  skarragol_kuroshi: {
+    id: 'skarragol_kuroshi',
+    harbor: 'The Longship Quay, Ordvik',
+    paddle: 'The Ironvow longship pulls out from the quay, oars in time, Salkhi complaining in the stern.',
+    aboard: 'The sail goes up. South along the fjord coast.',
+    shore: 'skarragol',
+    start: { x: 104, y: 104 },
+    via: [{ x: 96, y: 116 }],
+    end: { x: 66, y: 115 },
+    captions: [
+      { at: 0, text: 'South along the fjord coast...' },
+      { at: 0.5, text: 'Round the point, where the water goes grey...' },
+      { at: 0.8, text: '...into the mist, where the lanterns are.' },
+    ],
+    music: 'farewell',
+  },
 };

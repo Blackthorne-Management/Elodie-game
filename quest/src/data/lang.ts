@@ -4,6 +4,7 @@
 
 import arabic from './lang/arabic.json' with { type: 'json' };
 import french from './lang/french.json' with { type: 'json' };
+import japanese from './lang/japanese.json' with { type: 'json' };
 import kreyol from './lang/kreyol.json' with { type: 'json' };
 import mongolian from './lang/mongolian.json' with { type: 'json' };
 import norse from './lang/norse.json' with { type: 'json' };
@@ -23,4 +24,4 @@ export interface Glossary {
   entries: GlossaryEntry[];
 }
 
-export const GLOSSARIES: readonly Glossary[] = [kreyol as Glossary, taino as Glossary, spanish as Glossary, arabic as Glossary, french as Glossary, mongolian as Glossary, norse as Glossary];
+export const GLOSSARIES: readonly Glossary[] = [kreyol as Glossary, taino as Glossary, spanish as Glossary, arabic as Glossary, french as Glossary, mongolian as Glossary, norse as Glossary, japanese as Glossary];

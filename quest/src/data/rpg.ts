@@ -6,7 +6,7 @@ import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SUR
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6 } from './quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
@@ -159,6 +159,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'airag', name: 'Airag', kind: 'consumable', price: 35, restores: 16, text: "Fermented mare's milk, sour and fizzing. Restores 16 SP." },
   { id: 'hot_broth', name: 'Hot broth', kind: 'consumable', price: 30, heals: 40, healTurns: 3, text: 'Mutton broth from the food tent, too hot to drink fast. Restores 40 HP, a little at a time.' },
   { id: 'salkhi_treats', name: "Salkhi's treats", kind: 'consumable', price: 10, heals: 1, text: 'Dried apple rings in a felt pouch. Restores 1 HP. Salkhi, watching: "Finally."' },
+  // Kirinoura's tea house (Chapter 7).
+  { id: 'rice_ball', name: 'Rice ball', kind: 'consumable', price: 45, heals: 60, text: 'Rice pressed round a pickled plum, wrapped in seaweed. Restores 60 HP.' },
+  { id: 'green_tea', name: 'Green tea', kind: 'consumable', price: 40, restores: 18, text: 'A bowl of whisked green tea, bitter and bright. Restores 18 SP.' },
+  { id: 'miso_broth', name: 'Miso broth', kind: 'consumable', price: 35, heals: 45, healTurns: 3, text: 'Miso and spring onion, too hot to drink fast. Restores 45 HP, a little at a time.' },
   { id: 'dates', name: 'Dates', kind: 'consumable', price: 30, heals: 45, text: 'Medjool dates from the oases past the Desert Edge. Restores 45 HP.' },
   { id: 'tagine', name: 'Lamb tagine', kind: 'consumable', price: 55, heals: 80, healTurns: 3, text: 'Lamb, apricots and almonds under a clay cone. Restores 80 HP, a little at a time.' },
   {
@@ -219,6 +223,50 @@ const ITEM_LIST: ItemDef[] = [
     price: 0,
     text: 'A sealed horn-case for Kaede Suzumori of Kuroshi, from the chieftain of the Ironvow. Kuroshi speaks to those Skarragol has spoken for.',
   },
+  // Chapter 7, Kirinoura: the spy ledger out of the stacks (K-2), Kayla's glyph card, Haru's lantern and Kayla's crane
+  // (Anissa's), the Fog Files from under the floor stone, and Suzumori's token for the chamberlain's chair.
+  {
+    id: 'spy_ledger',
+    name: 'The Suzumori spy ledger',
+    kind: 'key',
+    price: 0,
+    text: 'A thick ledger bound in grey, out of the sealed stacks: the Ash Wars, as Kirinoura\'s informants counted them. Kayla will want it back.',
+  },
+  {
+    id: 'kayla_glyphs',
+    name: "Kayla's glyph card",
+    kind: 'key',
+    price: 0,
+    text: 'A paper card in Kayla\'s small hand: Lady Sayo\'s house glyphs, crane and pine and the rest. "You will need these where you are going. I did not say where."',
+  },
+  {
+    id: 'haru_lantern',
+    name: "Haru's lantern",
+    kind: 'key',
+    price: 0,
+    text: 'A folding paper lantern, unlit. Haru gave it to Anissa at the maze gate: "Hold this. It makes you harder to lose." She is holding it.',
+  },
+  {
+    id: 'kayla_crane',
+    name: "Titi Kayla's crane",
+    kind: 'key',
+    price: 0,
+    text: 'A paper crane Kayla folded while she listened, pushed across the desk to Anissa. "It keeps my hands from writing things down."',
+  },
+  {
+    id: 'fog_files',
+    name: 'The Fog Files',
+    kind: 'key',
+    price: 0,
+    text: 'A lacquer box from under the file house floor: The Buyer\'s Mark, a Crown list with every name cut away, and The Ledger of Outflows, in cipher.',
+  },
+  {
+    id: 'token_suzumori',
+    name: 'Suzumori token',
+    kind: 'key',
+    price: 0,
+    text: 'A paper crane folded from the margin of the turned Neutrality Order, the Suzumori seal pressed into its wing. "For the chamberlain\'s chair. Suzumori sits."',
+  },
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
   // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
   // warriors (defence, HP, slower). Rarity sets the colour behind the picture and how good it is:
@@ -251,6 +299,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'braided_cloak', level: 15, rarity: 'uncommon', name: 'Braided riding coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 560, stats: { def: 9, hp: 14, spd: 2 }, text: 'Grey felt over leather, the hem braided so it never catches on a saddle.' },
   { id: 'fur_mantle', level: 16, rarity: 'uncommon', name: 'Fur mantle', kind: 'gear', slot: 'armor', armor: 'heavy', price: 720, stats: { def: 17, hp: 32, spd: -1 }, text: 'Wolf fur over a mail shirt. On the plateau nobody asks whose wolf.' },
   { id: 'felt_robe', level: 16, rarity: 'uncommon', name: "Skald's felt robe", kind: 'gear', slot: 'armor', armor: 'robe', price: 620, stats: { def: 8, sp: 22, mag: 5 }, text: 'Thick blue-grey felt with tally marks stitched down the sleeve, one for every saga its owner knows.' },
+  // Kirinoura's tier (Chapter 7): Haru's own travelling kimono (tier 16), and the armourer's tier-20 lacquer, sold
+  // honestly at half its bonus until the party reaches it.
+  { id: 'grey_kimono', level: 16, rarity: 'uncommon', name: 'Grey travelling kimono', kind: 'gear', slot: 'armor', armor: 'leather', price: 600, stats: { def: 9, hp: 12, spd: 3 }, text: 'Plain grey over a quilted vest, with more pockets than a kimono should have.' },
+  { id: 'lacquered_armour', level: 20, rarity: 'uncommon', name: 'Lacquered armour', kind: 'gear', slot: 'armor', armor: 'leather', price: 800, stats: { def: 12, hp: 18, spd: 2 }, text: 'Black lacquered plates laced with violet cord. Light, and loud in the fog.' },
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
   // Charms (anyone).
@@ -275,6 +327,7 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'sealed_satchel_charm', name: 'Sealed-satchel charm', kind: 'gear', slot: 'charm', level: 15, rarity: 'uncommon', price: 450, stats: { mag: 4, sp: 8, def: 1 }, text: 'A courier\'s tiny brass satchel on a chain, sealed shut. Nobody knows what is in it. Nobody asks.' },
   { id: 'round_shield_charm', name: 'Round-shield charm', kind: 'gear', slot: 'charm', level: 16, rarity: 'uncommon', price: 450, stats: { def: 4, hp: 8 }, text: 'A hand-sized wooden shield boss on a thong. Rap it twice for luck before a crossing.' },
   { id: 'horse_tack_charm', name: 'Horse-tack charm', kind: 'gear', slot: 'charm', level: 15, rarity: 'uncommon', price: 300, stats: { spd: 4, atk: 1 }, text: 'A bronze bridle ring, worn smooth. Whoever wears it rides first.' },
+  { id: 'silk_mask_charm', name: 'Silk mask charm', kind: 'gear', slot: 'charm', level: 20, rarity: 'uncommon', price: 400, stats: { spd: 4, def: 2 }, text: 'A little silk fox mask on a cord, from the paper-maker. Nobody remembers who wore it.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {
@@ -362,6 +415,18 @@ export const MEMBERS: readonly MemberDef[] = [
     base: { hp: 56, sp: 16, atk: 13, def: 8, mag: 4, spd: 15 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 0, spd: 2 },
     start: { weapon: 'steppe_sabre_of_swiftness', armor: 'braided_cloak' },
   },
+  // Haru Suzumori (Chapter 7; COMBAT 9.5, the outline section 9.1 with its review's 3.6 and 3.10): he joins at the Hall at
+  // the lantern hour (party.haru), before the maze, and leads in his own chapter like Bayarmaa in hers (no third
+  // "placed before" entry: after the chapter the roster's order holds and Swap brings him in). The fastest in the
+  // party; Kagemimi finds out the Paper Fox among his decoys.
+  {
+    id: 'haru', name: 'Haru', role: 'Shadow agent', house: 'Suzumori', portrait: 'haru', era: 'present', class: 'warrior',
+    passives: [{ name: 'Definitely not a spy', text: 'He listens before he moves: Kagemimi tells a foe\'s next move, and finds out a disguise.' }],
+    joins: { flag: 'party.haru' },
+    leads: { all: [{ flag: 'party.haru' }, { notFlag: 'act7.complete' }] },
+    base: { hp: 44, sp: 22, atk: 11, def: 7, mag: 9, spd: 16 }, growth: { hp: 5, sp: 3, atk: 2, def: 1, mag: 1, spd: 2 },
+    start: { weapon: 'paper_knife_of_swiftness', armor: 'grey_kimono' },
+  },
   // Young Lord Benny joins the Echo party once Azzy has joined (STORY.md: the design's rule), at the end of Chapter 3
   // (story.benny_joined). Chapter 4 has no Echo battle (the plan review's rule): his first Echo there is a walk, at
   // Yusuf's desk; his first fight in the Echo comes in a later chapter.
@@ -420,6 +485,11 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   ordvik_furrier: { greeting: 'Heill! Fur for the plateau.', id: 'ordvik_furrier', name: 'Furrier', city: 'skarragol', stock: ['braided_cloak', 'fur_mantle', 'felt_robe', 'round_shield_charm', 'steppe_sabre_of_force'] },
   ordvik_horses: { greeting: 'Bayarlalaa. Tack, rings, treats.', id: 'ordvik_horses', name: "Horse-trader's corral", city: 'skarragol', stock: ['horse_tack_charm', 'salkhi_treats'] },
   plunder_store: { greeting: 'Heill. Raided fair and square.', id: 'plunder_store', name: 'Plunder store', city: 'skarragol', stock: ['fur_mantle', 'felt_robe', 'round_shield_charm', 'steppe_sabre_of_guarding'] },
+  // Kirinoura (Chapter 7): the tea house, the paper-maker and the armourer on the east bank (tier 20, and Ordvik's
+  // tier-16 pieces for a party that skipped the furrier).
+  kirinoura_tea: { greeting: 'Irasshaimase! Rice balls, green tea, miso.', id: 'kirinoura_tea', name: 'Tea house', city: 'kuroshi', stock: ['rice_ball', 'green_tea', 'miso_broth'] },
+  kirinoura_paper: { greeting: 'Irasshaimase. Paper, silk, and quiet.', id: 'kirinoura_paper', name: 'Paper-maker', city: 'kuroshi', stock: ['silk_mask_charm'] },
+  kirinoura_armourer: { greeting: 'Irasshaimase. Lacquer and steel.', id: 'kirinoura_armourer', name: 'Armourer', city: 'kuroshi', stock: ['lacquered_armour', 'kirinoura_tanto_of_force', 'braided_cloak', 'fur_mantle'] },
 };
 
 /**
@@ -533,6 +603,22 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'skarragol-saga', name: 'The Saga Tent' },
     ],
   },
+  // Chapter 7 (built Oct 22; CAPITALS.md 7 with the outline's pier and maze, and the file house as its own room): the
+  // Lantern Quarter in the middle, the pier down its stair, the fog maze north, the Fog Marsh east.
+  kuroshi: {
+    id: 'kuroshi',
+    name: 'Kirinoura',
+    house: 'Suzumori',
+    sections: [
+      { map: 'kuroshi-quarter', name: 'The Lantern Quarter', at: { x: 0, y: 0 } },
+      { map: 'kuroshi-pier', name: 'The Lantern Pier', at: { x: 0, y: 30 } },
+      { map: 'kuroshi-fogmaze', name: 'The fog maze' },
+      { map: 'kuroshi-marsh', name: 'The Fog Marsh', at: { x: 42, y: -12 } },
+      { map: 'kuroshi-library', name: 'The Lantern Library' },
+      { map: 'kuroshi-hall', name: 'The Hall of Screens' },
+      { map: 'kuroshi-filehouse', name: 'The file house' },
+    ],
+  },
 };
 
 /** The realm around Eightgate, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
@@ -544,7 +630,7 @@ export const REALM: readonly RealmPlace[] = [
   { id: 'zetwal', name: 'Zetwal', house: 'Kay Soley', city: 'zetwal' },
   { id: 'al_doria', name: 'Al-Doria', house: 'Dorini', city: 'al_doria' },
   { id: 'skarragol', name: 'Skarragol', house: 'Ironvow', city: 'skarragol' },
-  { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori' },
+  { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori', city: 'kuroshi' },
   { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh' },
   { id: 'aldermoor', name: 'Aldermoor', house: 'Stillwater' },
   { id: 'xaragua', name: 'Xaraguá', house: 'Yaguana', city: 'xaragua' },
@@ -573,13 +659,19 @@ export const RPG: RpgContent = {
     { pillar: 'influence', city: 'skarragol', flags: ['side.grandson.polite'], each: 2 },
     { pillar: 'fear', city: 'skarragol', flags: ['side.grandson.bout_won'], each: 2 },
     { pillar: 'fear', city: 'skarragol', flags: ['choice.grimvald_broken'], each: 1 },
+    { pillar: 'influence', city: 'kuroshi', flags: BOOKS.filter((b) => b.id.startsWith('kuroshi_')).map((b) => loreFlag(b.id)), each: 1 },
+    // Kirinoura's price (Influence 10; outline beat 9 with its review's 3.10): only what is laid on the dais counts as
+    // paid, and the petition and Samira's offer are choices, so Suzumori can be the least-paid house.
+    { pillar: 'influence', city: 'kuroshi', flags: ['story.price_receipts'], each: 2 },
+    { pillar: 'influence', city: 'kuroshi', flags: ['choice.petition_signed', 'choice.samira_names', 'choice.fox_spared'], each: 1 },
+    { pillar: 'fear', city: 'kuroshi', flags: ['choice.fox_broken'], each: 1 },
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
     // A Journal step pays by its chapter (XP_PER_OBJECTIVE_BY_CHAPTER).
-    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6].map((act, i) => ({
+    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7].map((act, i) => ({
       flags: act.objectives.filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)),
       each: XP_PER_OBJECTIVE_BY_CHAPTER[Math.min(i, XP_PER_OBJECTIVE_BY_CHAPTER.length - 1)]!,
     })),

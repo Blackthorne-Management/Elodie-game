@@ -380,6 +380,87 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
       },
     ],
   },
+  // Chapter 7's scripted fights (data/battles.ts), for the Foes page.
+  kuroshi_story: {
+    id: 'kuroshi_story',
+    groups: [
+      {
+        id: 'cutpurses',
+        weight: 0,
+        level: 19,
+        foes: ['Fog Cutpurse', 'Fog Cutpurse', 'Fog Cutpurse'],
+        intro: 'Three cutpurses in the sealed stacks turn round with their arms full of boxes.',
+        won: 'The cutpurses drop the boxes and go out by the window.',
+        fled: 'You back out by the window.',
+      },
+      {
+        id: 'moths',
+        weight: 0,
+        level: 18,
+        foes: ['Lantern Moth', 'Lantern Moth', 'Lantern Moth', 'Lantern Moth'],
+        intro: 'Lantern moths come out of the fog at the lit post.',
+        won: 'The moths scatter into the fog.',
+        fled: 'You step back from the light.',
+      },
+      {
+        id: 'fox',
+        weight: 0,
+        level: 19,
+        foes: ['The Paper Fox', 'Paper decoy', 'Paper decoy', 'Paper decoy'],
+        intro: 'The broker puts on his paper fox mask, and three of him step out from behind the screens.',
+        won: 'The Paper Fox kneels among torn paper.',
+        fled: 'There is no way out of the file house but past him.',
+      },
+    ],
+  },
+  // The Fog Marsh (Chapter 7; the outline section 5, re-levelled by the levels pass's ambush rule): moths at the lights,
+  // cutpurses on the reed paths, and the first Hushers, who came for a girl who glows. Levels 17 to 19, the tier's top.
+  // The causeways are safe; only the reed paths roll.
+  fog_marsh: {
+    id: 'fog_marsh',
+    groups: [
+      {
+        id: 'moths',
+        enemies: ['lantern_moth', 'lantern_moth', 'lantern_moth', 'lantern_moth'],
+        weight: 2,
+        level: 17,
+        foes: ['Lantern Moth', 'Lantern Moth', 'Lantern Moth', 'Lantern Moth'],
+        intro: 'Pale wings out of the fog, turning toward your light all at once.',
+        won: 'The moths drift off into the fog.',
+        fled: 'You shutter the light and back away.',
+      },
+      {
+        id: 'cutpurses',
+        enemies: ['fog_cutpurse', 'fog_cutpurse'],
+        weight: 2,
+        level: 18,
+        foes: ['Fog Cutpurse', 'Fog Cutpurse'],
+        intro: 'Two grey hoods in the reeds. "Purses, envoys. The fog takes a toll."',
+        won: 'The cutpurses melt back into the reeds.',
+        fled: 'You run for the causeway. They do not follow onto it.',
+      },
+      {
+        id: 'cutpurse_husher',
+        enemies: ['fog_cutpurse', 'husher'],
+        weight: 1,
+        level: 18,
+        foes: ['Fog Cutpurse', 'Husher'],
+        intro: 'A cutpurse, and behind her a veiled figure who makes no sound at all.',
+        won: 'The veiled one steps back into the fog, and the cutpurse after it.',
+        fled: 'You run for the causeway.',
+      },
+      {
+        id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot', 'husher'],
+        weight: 1,
+        level: 19,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot', 'Husher'],
+        intro: 'Three veils in the reeds. "The little one glows, they say. Even in the fog."',
+        won: 'The veils go back into the fog without a word.',
+        fled: 'You run. The reeds close where they stood.',
+      },
+    ],
+  },
   // The Desert Edge past the caravan gate (Chapter 4; CAPITALS.md 3, re-levelled to 11 to 13 by the outline): raiders on
   // the caravan road, smugglers, and the Quiet Crown, who have heard about a little girl who glows.
   desert_edge: {
