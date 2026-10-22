@@ -180,7 +180,7 @@ describe('the Assize (SIG-ALM part 2)', () => {
     expect(allLines.map((l) => l.text)).toContain('A margin against a public edition is a word against a word. The court needs the court.');
   });
 
-  it('a Game Over at the Hushed leaves the party in the dock, the watch on the door, and the dock\'s edge starts the fight again', () => {
+  it('a Game Over at the Hushed leaves the party in the court by the dock, the watch on the door, and the dock\'s edge starts the fight again', () => {
     const s = simAt('aldermoor-assize');
     s.onBattle = (id) => {
       recordLoss(s.logic.state.flags, BATTLES[id]!);

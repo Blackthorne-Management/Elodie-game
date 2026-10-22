@@ -9,10 +9,12 @@
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
-// 3. Chapters 1 to 8, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
+// 3. Chapters 1 to 9, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end, from
 //    Chapter 3 on, checks its story flags against the simulator's, its fights, the party and its card in the browser).
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
+//    At Chapter 9's Assize (@aldermoor-assize) a second window plays on from the same save and loses the Hushed on
+//    purpose: the party stays by the dock (the court sits on), and the dock's edge starts the fight again.
 //    The route includes a diagonal step (two keys at once). At the route's @markers it checks the
 //    name label and markers, the lamp, the winch, the bridge before and after (and the glow the
 //    Echo change leaves), and takes screenshots at desktop and landscape phone (844x390) sizes.
@@ -63,6 +65,8 @@ const { FlagStore } = await import('../src/engine/flags.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
 const { ENEMIES, battleDef } = await import('../src/data/battles.ts');
 const { GODDESS_WORDS } = await import('../src/data/gameOver.ts');
+const { SIDE_QUESTS } = await import('../src/data/sideQuests.ts');
+const { settleRewards } = await import('../src/engine/sideQuests.ts');
 
 const PORT = Number(process.env.SMOKE_PORT ?? 4183);
 const URL_BASE = `http://127.0.0.1:${PORT}/`;
@@ -410,7 +414,13 @@ async function hintsAndJournal(browser, errors) {
 
 const KEYS = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight', confirm: 'KeyZ', cancel: 'KeyX', echo: 'KeyE' };
 
-/** A diagonal press: both arrow keys down in the same instant (one task, so no frame runs between), then up. */
+/**
+ * A tap of the route's direction keys: down and up in the same instant (one task, so no frame runs between). A
+ * diagonal is both arrows at once. A straight step is tapped the same way: with keydown and keyup sent apart, a slow
+ * headless frame (50 to 100 ms in software rendering) could leave the key held past a running step's 125 ms, and the
+ * game (rightly) walks on while a key is held: one step more than the route asked (seen twice on Chapter 9's heath).
+ */
+const STRAIGHT = new Set(['up', 'down', 'left', 'right']);
 async function pressDiagonal(page, cmd) {
   const codes = cmd.split('-').map((d) => KEYS[d]);
   await page.evaluate((cs) => {
@@ -516,7 +526,7 @@ async function markChecks(page, sim, name) {
 }
 
 /**
- * At each chapter's end (Chapters 3 to 8; Chapters 1 and 2 are checked after the route): the browser has played
+ * At each chapter's end (Chapters 3 to 9; Chapters 1 and 2 are checked after the route): the browser has played
  * the chapter the way the simulator did (its story flags agree with the simulator's, its fights were won, the party
  * and who walks with it), and its end card is up.
  */
@@ -570,6 +580,14 @@ async function chapterEndChecks(page, sim, name) {
       not: ['choice.duel_won', 'encounter.jwaladesh_story.duel.won', 'choice.dhanraj_broken'],
       what: 'Chapter 8 in the browser: the Court heard, the duel lost as meant, the salt road cleared, Arjun\'s night and the relay, the tower mirror and the roofs\' beam, Vikram joined at the flame, Dhanraj beaten (and spared), the price paid and the Agnivansh token',
     },
+    'chapter9-end': {
+      act: 9,
+      map: 'aldermoor-heath',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund'],
+      flags: ['story.aldermoor_arrived', 'story.escort_met', 'story.press_gang_seen', 'story.edmund_met', 'party.edmund', 'story.edmund_defied', 'story.sebastian_met', 'story.jordyn_seen', 'story.jordyn_offer', 'story.families_warned', 'story.chapel_seen', 'side.purge_list.done', 'side.crown_chronicle.done', 'debate.aldermoor_one_hand.settled', 'story.recital_seen', 'story.postern_open', 'story.keep_archive_entered', 'anchor.thomas_record', 'story.record_found', 'clue.crown_pact', 'item.crown_pact', 'item.thomas_record', 'item.crown_chronicle', 'story.caught', 'story.cells_night', 'story.assize_dawn', 'story.assize_opened', 'story.record_read', 'story.hushed_revealed', 'story.hushed_beaten', 'choice.hushed_tried', 'clue.hushed_regent', 'story.regent_refused', 'story.jordyn_defected', 'story.price_seen', 'ally.aldermoor_dissidents', 'encounter.aldermoor_story.press_gang.won', 'encounter.aldermoor_story.chapel.won', 'encounter.aldermoor_story.hushed.won'],
+      not: ['choice.hushed_broken'],
+      what: 'Chapter 9 in the browser: the Mere Stair and the escort, the press-gang and Edmund joined, Al-3\'s families warned and the bog chapel\'s cell, the purge list, the chronicle and the debate, Jordyn\'s offer, the recital and the postern, Thomas\'s record in the archive, caught, the cells, the Assize, the Hushed beaten (and tried by their law), the Regent\'s refusal, Jordyn\'s defection and the dissidents',
+    },
   };
   const end = ends[name];
   if (!end) return;
@@ -580,7 +598,7 @@ async function chapterEndChecks(page, sim, name) {
   check(missing.length === 0 && wrong.length === 0, `${end.what}${missing.length ? ` (missing ${missing.join(', ')})` : ''}${wrong.length ? ` (should not be set: ${wrong.join(', ')})` : ''}`);
   check(JSON.stringify(party) === JSON.stringify(end.party), `the party at Chapter ${end.act}'s end is ${end.party.join(', ')} (${party.join(', ')})`);
   // Who walks with the party: everyone in it beyond Gianna has a sprite in the line behind her.
-  const walkers = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru, vikram: s.vikram };
+  const walkers = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru, vikram: s.vikram, edmund: s.edmund };
   const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
   check(notWalking.length === 0, `the whole party walks behind Gianna at Chapter ${end.act}'s end (no sprite for ${notWalking.join(', ')})`);
   // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag.
@@ -593,6 +611,8 @@ async function chapterEndChecks(page, sim, name) {
   const differ = [...keys].filter((k) => JSON.stringify(simFlags[k] ?? null) !== JSON.stringify(s.flags[k] ?? null));
   check(differ.length === 0, `Chapter ${end.act}'s story flags agree with the simulator's${differ.length ? ` (differ: ${differ.map((k) => `${k} browser=${JSON.stringify(s.flags[k])} sim=${JSON.stringify(simFlags[k])}`).join(', ')})` : ''}`);
   check(s.flags[`act${end.act}.complete`] === true && s.mapId === end.map && s.mode === 'card' && s.card !== null, `Chapter ${end.act} ends in ${end.map} with its card`);
+  // Chapter 9: the watch the city sends with the Muster (seven), and the dissidents' price short as the build allows.
+  if (end.act === 9) check(s.flags['army.aldermoor'] === 7, `Aldermoor sends seven of the watch to the Muster (${s.flags['army.aldermoor']})`);
 }
 
 /**
@@ -1059,7 +1079,9 @@ async function playRhythm(page, shots) {
 async function handleVoyage(page, shots, landing = 'xaragua-village') {
   await frames(page);
   if (!(await page.evaluate(() => !!window.__voyage))) return false;
-  const tag = landing === 'xaragua-village' ? 'voyage' : landing === 'zetwal-harbor' ? 'voyage-home' : `voyage-${landing}`;
+  // Home to Zetwal twice (Chapter 2's escape, Chapter 9's trader across the bay): each its own pictures.
+  const home = (await snap(page)).flags['act9.complete'] === true ? 'voyage-home-ch9' : 'voyage-home';
+  const tag = landing === 'xaragua-village' ? 'voyage' : landing === 'zetwal-harbor' ? home : `voyage-${landing}`;
   await page.waitForTimeout(2500);
   await shoot(page, `${tag}-harbor`, shots);
   await page.waitForFunction(() => window.__voyage?.state().phase === 'map', null, { timeout: 10000 });
@@ -1071,8 +1093,91 @@ async function handleVoyage(page, shots, landing = 'xaragua-village') {
   return true;
 }
 
+/**
+ * Chapter 9's courtroom restart rule (the outline's 3.12), in a second window from the same save at @aldermoor-assize:
+ * the route plays on to the Hushed, the party falls on purpose (the test switch), and after Rise the court still sits:
+ * the party stands where the fight began (by the dock, not walked out of the court), the fight unwon; a step onto the dock's edge replays the
+ * Almoner's "Enough noise." and the fight, with a Grudge. The main window's route and dice are untouched.
+ */
+async function assizeRestart(browser, errors, at, shots) {
+  console.log('The Assize again (the courtroom\'s restart rule, from @aldermoor-assize):');
+  // The save the first window's player has: the side quests' rewards paid (the field pays them as each closes; the
+  // simulator has no field) and every item's popup seen. The simulator plays on from the route's own state.
+  const fork = savedSim(at.code, undefined, at.dice);
+  settleRewards(fork.logic.state.flags, RPG, SIDE_QUESTS);
+  for (const it of pendingShowcases(fork.logic.state.flags, RPG)) markShown(fork.logic.state.flags, it.id);
+  const code = encodeSave(toSaveData(fork.logic.state, 1));
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  await page.goto(`${GAME}&seed=${at.dice}`);
+  await page.evaluate((c) => {
+    localStorage.clear();
+    localStorage.setItem('bloodlines-quest.save', c);
+  }, code);
+  await page.reload();
+  await waitReady(page);
+  const sim = savedSim(at.code, undefined, at.dice);
+  await waitMatch(page, expected(sim), 'the Assize (second window): the start');
+  await page.keyboard.down('Shift');
+  let started = false;
+  for (const item of at.rest) {
+    if (started) break;
+    if (item.kind === 'mark') continue;
+    for (const cmd of sim.expand(item)) {
+      await handleShowcase(page, new Set(), []);
+      if (sim.logic.mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel' || cmd === 'up' || cmd === 'down')) await finishTyping(page);
+      sim.press(cmd);
+      if (cmd.includes('-') || STRAIGHT.has(cmd)) await pressDiagonal(page, cmd);
+      else await page.keyboard.press(KEYS[cmd]);
+      await frames(page);
+      if (sim.battles.includes('assize_hushed')) {
+        started = true;
+        break;
+      }
+      await waitMatch(page, expected(sim), `${cmd} (the Assize, second window: ${JSON.stringify(item)})`);
+    }
+  }
+  await page.keyboard.up('Shift');
+  check(started, 'the Assize (second window): the route reaches the Hushed');
+  await page.waitForFunction(() => window.__quest.snapshot().battle, null, { timeout: 15000 });
+  const before = await snap(page);
+  check(await page.evaluate(() => window.__quest.loseBattle()), 'the Assize: the test switch makes the party fall to the Hushed');
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver, null, { timeout: 15000 });
+  await page.keyboard.press('KeyX');
+  await page.waitForFunction(() => window.__quest.snapshot().gameOver?.countShown, null, { timeout: 15000 });
+  await page.keyboard.press('KeyZ');
+  await page.waitForFunction(() => { const s = window.__quest?.snapshot(); return s && !s.gameOver && !s.moving && (s.mode === 'field' || s.mode === 'showcase'); }, null, { timeout: 15000 });
+  for (let i = 0; i < 5 && (await handleShowcase(page, new Set(), [])); i++) await frames(page);
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 5000 });
+  const risen = await snap(page);
+  // Where the fight began: at the clerk's table, just above the dock's edge (the clerk's tree is read there).
+  const inCourt = risen.mapId === 'aldermoor-keep' && risen.x >= 5 && risen.x <= 9 && risen.y >= 20 && risen.y <= 24;
+  check(inCourt && risen.x === before.x && risen.y === before.y, `after Rise the court still sits: the party stands where the fight began, by the dock (${risen.mapId} ${risen.x},${risen.y})`);
+  check(risen.flags['encounter.aldermoor_story.hushed.won'] !== true && risen.flags['story.hushed_beaten'] !== true && risen.flags['story.record_read'] === true, 'and the Hushed is not beaten: the trial waits on her');
+  await shoot(page, 'assize-risen', shots);
+  // The dock's edge (the row just above the dock, y 22) starts the fight again.
+  for (let i = 0; i < 3 && (await snap(page)).mode === 'field'; i++) {
+    await page.keyboard.press((await snap(page)).y < 22 ? 'ArrowDown' : 'ArrowUp');
+    await page.waitForFunction(() => { const s = window.__quest.snapshot(); return !s.moving || s.mode !== 'field'; }, null, { timeout: 3000 });
+    await frames(page);
+  }
+  const first = await finishTyping(page);
+  check(first.mode === 'dialogue' && first.dialogue?.speaker === 'The Almoner' && first.dialogue.text === 'Enough noise.', `a step onto the dock's edge replays the Almoner's "Enough noise." (${first.dialogue?.speaker}: ${first.dialogue?.text})`);
+  await shoot(page, 'assize-again', shots);
+  for (let i = 0; i < 40; i++) {
+    const t = await finishTyping(page);
+    if (t.mode !== 'dialogue') break;
+    await page.keyboard.press('KeyZ');
+    await frames(page);
+  }
+  await page.waitForFunction(() => window.__quest.snapshot().battle, null, { timeout: 15000 });
+  check((await snap(page)).battle.grudge > 0, 'and the Hushed is fought again, with a Grudge');
+  await ctx.close();
+}
+
 async function playAct(browser, errors) {
-  console.log('Chapters 1 to 8 (scripted route, checked against the simulator after every key):');
+  console.log('Chapters 1 to 9 (scripted route, checked against the simulator after every key):');
   let route = parseRoute(readJson('routes/zetwal-act1.json'));
   let sim = newGameSim();
   // SMOKE_FROM=<marker>: the simulator plays the route up to that marker, and the browser loads its save there.
@@ -1115,6 +1220,10 @@ async function playAct(browser, errors) {
   /** The staged scenes already photographed. */
   const stagedShots = new Set();
   let voyaged = false;
+  /** Chapter 9's card closes on the trader home across the bay (Zetwal's harbour, where Chapter 10 begins). */
+  let voyagedHome9 = false;
+  /** Where the route stood at @aldermoor-assize, for the courtroom's restart rule. */
+  let assize = null;
   let keys = 0;
   const started = Date.now();
   for (const item of route) {
@@ -1122,6 +1231,9 @@ async function playAct(browser, errors) {
       await markChecks(page, sim, item.name);
       await chapterEndChecks(page, sim, item.name);
       await shoot(page, item.name, shots);
+      // The courtroom's restart rule, in a window of its own once this one is done (the route plays on here, its dice
+      // untouched; two games at once on one machine starve each other's frames).
+      if (item.name === 'aldermoor-assize') assize = { code: encodeSave(toSaveData(sim.logic.state, 1)), dice: sim.logic.diceState, rest: route.slice(route.indexOf(item) + 1) };
       continue;
     }
     for (const cmd of sim.expand(item)) {
@@ -1198,7 +1310,7 @@ async function playAct(browser, errors) {
         if (sim.logic.mode === 'card') await page.waitForFunction(() => window.__quest.snapshot().mode === 'card', null, { timeout: 15000 });
         const battles = sim.battles.length;
         sim.press(cmd);
-        if (cmd.includes('-')) await pressDiagonal(page, cmd);
+        if (cmd.includes('-') || STRAIGHT.has(cmd)) await pressDiagonal(page, cmd);
         else await page.keyboard.press(KEYS[cmd]);
         keys++;
         await frames(page);
@@ -1214,13 +1326,20 @@ async function playAct(browser, errors) {
       // A voyage between chapters (Chapter 1's to Xaraguá; a chapter's card closing on the sea, Chapter 6's longship to
       // Kirinoura, Chapter 7's trader to Agnipur): watch it, then on.
       const landing = sim.logic.state.player.mapId;
-      if ((landing !== mapBefore || landing === 'xaragua-village') && (await handleVoyage(page, shots, landing)) && landing === 'xaragua-village') voyaged = true;
+      if ((landing !== mapBefore || landing === 'xaragua-village') && (await handleVoyage(page, shots, landing))) {
+        if (landing === 'xaragua-village') voyaged = true;
+        if (landing === 'zetwal-harbor' && sim.logic.state.flags.get('act9.complete') === true) voyagedHome9 = true;
+      }
       await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
     }
   }
   await page.keyboard.up('Shift');
+  // Chapter 9 ends on the sea: the trader home across the bay, onto Zetwal's harbour (where Chapter 10 begins).
+  const home = await snap(page);
+  if (home.flags['act9.complete'] === true) check(voyagedHome9 && home.mapId === 'zetwal-harbor' && home.mode === 'field' && !!home.edmund, 'after Chapter 9\'s card the trader sails home (the voyage plays) and the party, Edmund last, stands on Zetwal\'s harbour');
   if (FROM) {
     await ctx.close();
+    if (assize) await assizeRestart(browser, errors, assize, shots);
     return shots;
   }
   const s = await snap(page);
@@ -1238,7 +1357,7 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
   check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.flags['story.ardencia_asked'] === true, 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
-  check([3, 4, 5, 6, 7, 8].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'jwaladesh-harbor', 'Chapters 3 to 8 played to their end cards in the browser: the party stands at the Harbor Chain in Agnipur');
+  check([3, 4, 5, 6, 7, 8, 9].every((n) => s.flags[`act${n}.complete`] === true && s.flags[`card.act${n}_end`] === true) && s.mapId === 'zetwal-harbor', 'Chapters 3 to 9 played to their end cards in the browser: the party is home on Zetwal\'s Old Harbor');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -1266,7 +1385,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('The Harbor Chain') && mapSnap.items.includes('The Lamp Bazaar'), 'the city map shows the city the party is in (Agnipur, after Chapter 8)');
+  check(mapSnap.items.includes('The Old Harbor') && mapSnap.items.includes('Festival Plaza'), 'the city map shows the city the party is in (Pòdlimyè, home after Chapter 9)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
@@ -1353,8 +1472,9 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'jwaladesh-harbor' && [1, 2, 3, 4, 5, 6, 7, 8].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 8 finished after a reload');
+  check(back.mapId === 'zetwal-harbor' && [1, 2, 3, 4, 5, 6, 7, 8, 9].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 9 finished after a reload');
   await ctx.close();
+  if (assize) await assizeRestart(browser, errors, assize, shots);
   return shots;
 }
 

@@ -1545,7 +1545,7 @@ actor (`STAGE_PARTY`); the shore `aldermoor` in `engine/voyage.ts` and `scenes/V
   eighth follower and is borrowed as a stage actor; the shore `aldermoor` is built. Cut from the start: Calm and
   Comfort (`seize` with the tell), the Long Watch, Stillwater's Patience, the law-seal brooch's special (stats only).
   The build took about the review's 3 to 3.5 days of work in one session.
-- **Game Over and saves (3.12).** A loss to the Hushed leaves the party in the dock: the watch holds the courtroom's
+- **Game Over and saves (3.12).** A loss to the Hushed leaves the party in the court where the fight began (at the clerk's table, just above the dock; checked in the browser by the smoke test, Oct 22): the watch holds the courtroom's
   door ("The court will wait, envoy. Mend. Nobody leaves while it sits."), and a step on the dock's edge replays
   "Enough noise." and the fight (`hushed_again`; tested). The cell's bench has "Sleep." (the dawn), and a save in the
   cell reloads to the same night. The heath's and the chapel's fights use the built rule (one step back).
