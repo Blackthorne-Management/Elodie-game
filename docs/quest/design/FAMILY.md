@@ -37,6 +37,14 @@ Every role below is shown on the map (owner rule): they walk in, help and walk o
 kitchen in Ar-1, the tunnel's far end), Joaquin (the guns on the wall), old Benny and Nancy (the quiet rooms, Ar-2's
 last step). Azzy calls them Titi Amanda and Tío Joaquin.
 
+**Built in Chapter 4 (Oct 22):** Coralie, "Tati Coco", in Bab al-Dhahab's cloth merchants' row (met on the way along the
+A-1 stalls; she sees the Locket before she sees the girls: "That is Papa's sun."), counts the carpet's knots at A-1's
+carpet stall, says goodbye when A-1 is reported to Samira and walks down to the quay with her indigo, before the vault.
+Her hook for Chapter 5: "Eightgate. Someone has to dress the Regent's guests for this Parley." **Claude's call (review
+5.1, to confirm with the family placements):** Gianna asks her "Did you know? About Mother. And Lord Rael." and she
+deflects with love: "That is your mother's to tell, chérie. Not mine. She'll be at Eightgate. Make her tell you." So
+Coralie knows, and Chapter 5's confrontation stays Elodie's. Azzy does not know her (she is Elodie's side).
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

@@ -332,6 +332,9 @@ All of this chapter's key beats are the guide's (5.6, 5.8) and are kept exactly.
 
 ### Chapter 4: The Ledger (Al-Doria)
 
+*Built Oct 22 (branch `chapter3`): see `docs/quest/reviews/2026-10-20-chapter4-outline.md`, "Built (Oct 22)", for what is in
+the game and its Claude's calls; the beats below are the earlier design.*
+
 - **Where:** Bab al-Dhahab (proposal name), the port and caravan city of House Dorini.
 - **Level range:** 11 to 14 (after Ardencia, owner, Oct 15).
 - **Beats:**
