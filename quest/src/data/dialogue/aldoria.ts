@@ -78,6 +78,12 @@ export const LAYLA = {
   divan: 'Speak from the hall, envoy, where the scribe can hear you.',
   /** On the divan, after. */
   divanAfter: 'First light, envoy. The caravan master does not wait for daughters. Anyone\'s.',
+  /** At Eightgate for the Claim (Chapter 12): the seal brought to the chair, the petition answered, the council. */
+  claimSeal: 'The Dorini sit. The seal is the guild\'s, and so is the chair.',
+  claimAnswer: 'Al-Doria: breach. The ledger has said so for fifty years.',
+  claimTalk: 'The guild sits at a Claim. It has the seal to say so.',
+  councilSits: 'Al-Doria sits. The guild is paid, and has said so in writing.',
+  hallTalk: 'The guild sits. The guild is paying attention.',
 } as const;
 
 /** The three brass weights that make twenty-five (PUZZLES.md SIG-ALD), and the two that stay on the rack. */

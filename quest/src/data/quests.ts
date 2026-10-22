@@ -11,6 +11,7 @@ import { BAZAAR, COURT, DAY_DONE, HARBOR, MIRROR_SOLUTION, ROOFTOPS, mirrorFlag 
 import { CATHEDRAL, CLOSE, CROSS, DAY_DONE as KINGSMERE_DAY_DONE, HEATH, KEEP, cabinetOf, PACT_DRAWER } from './aldermoor.ts';
 import { HARBOR as MUSTER_HARBOR, HALL as MUSTER_HALL, HOUSE, PLAZA, SEATED, TEMPLE } from './muster.ts';
 import { BEACH, CAMP, CANEY, SONG, TIDE_READY, VILLAGE } from './war.ts';
+import { BELL_READY, CONCOURSE, HALL as THRONE_HALL, ROOMS } from './claim.ts';
 import type { Goal } from '../engine/guide.ts';
 
 export const ACT1: QuestDef = {
@@ -1974,8 +1975,145 @@ export const ACT11: QuestDef = {
   ],
 };
 
+// ---- Chapter 12, the Claim, and the Epilogue, the Hearing (Eightgate again; data/claim.ts) ---------------------------------
+
+const CLAIM_MAPS = ['seat-gateyard', 'seat-concourse', 'seat-hall', 'seat-quarter', 'seat-workshop', 'seat-archive', 'seat-fields', 'seat-rooms'];
+const concourse = (p: { x: number; y: number }): Goal => ({ map: 'seat-concourse', at: { x: p.x, y: p.y } });
+const hall = (p: { x: number; y: number }): Goal => ({ map: 'seat-hall', at: { x: p.x, y: p.y } });
+
+export const ACT12: QuestDef = {
+  id: 'act12',
+  title: 'Chapter 12: The Claim',
+  maps: CLAIM_MAPS,
+  objectives: [
+    {
+      id: 'ash_road',
+      title: 'The Ash Road',
+      detail: 'North to Ardencia\'s strand, three days south on the Ash Road, and in at Eightgate\'s Ardencia Gate at dusk.',
+      done: { flag: 'story.claim_arrived' },
+      noXp: true,
+      goals: [concourse(CONCOURSE.elodieStop)],
+      hints: ['Mama\'s at the gate, Gigi.', 'In the gate\'s arch.', 'Walk into the Ardencia Gate\'s arch.'],
+    },
+    {
+      id: 'rooms',
+      title: 'Mother\'s rooms',
+      detail: 'Mother said: not here. Her rooms, in the Crown\'s wing of the Envoys\' Quarter, when you have seen the city.',
+      done: { flag: 'story.elodie_rooms' },
+      goals: [{ map: 'seat-rooms', at: { x: ROOMS.elodieMeet.x, y: ROOMS.elodieMeet.y } }],
+      hints: ['Mama said her rooms, Gigi.', 'South, through the Envoys\' Quarter.', 'The Crown\'s wing in the Quarter: the door with the clerk outside it.'],
+    },
+    {
+      id: 'until_bell',
+      title: 'Until the bell',
+      detail: 'The Regent receives Zetwal\'s envoy at the bell. Before then: the houses\' tokens to the Master of the Chairs, the corner by the fountain, and Grandmother\'s book.',
+      done: { any: [BELL_READY, { flag: 'story.bell_claim' }] },
+      followSide: true,
+      noXp: true,
+      hints: ['The man with the lantern is waiting for the tokens, Gigi.', 'Your Quests page, Gigi.', 'The Hall\'s steps, the fountain, and Mama\'s shelf.'],
+    },
+    {
+      id: 'bell',
+      title: 'The bell',
+      detail: 'The tokens are handed over, the corner has spoken, and the book is in the bag. The Master of the Chairs waits on the Hall\'s steps for the word.',
+      done: { flag: 'story.bell_claim' },
+      goals: [concourse(CONCOURSE.chamberlain)],
+      hints: ['It\'s nearly dawn, Gigi.', 'The Hall\'s steps.', 'Tell the Master of the Chairs: at the bell.'],
+    },
+    {
+      id: 'chair',
+      title: 'The eighth chair',
+      detail: 'The floor by Xaraguá\'s chair is shimmering. Anissa can hold the door.',
+      done: { flag: 'story.chair_read' },
+      goals: [hall({ x: THRONE_HALL.echoZone.x + 1, y: THRONE_HALL.echoZone.y + 1 })],
+      echoGoals: [
+        { if: { all: [{ flag: 'story.chair_echo_seen' }, { notFlag: 'anchor.caona_chair' }] }, ...hall(THRONE_HALL.echoXaraguaChair) },
+        hall({ x: THRONE_HALL.echoZone.x + 1, y: THRONE_HALL.echoZone.y + 1 }),
+      ],
+      hints: ['There\'s something at the foot of Yari\'s chair, Gigi. The floor\'s shimmering.', 'In the memory, Grandfather is in this Hall with Caona. She wants something written. The plan on the table says where.', 'In the memory, cut the oath into the chair by the door the masons are bricking up. Then come back and turn it.'],
+    },
+    {
+      id: 'filed',
+      title: 'Filed with the clause',
+      detail: 'Keeper Hollis has come up from the Archive with something filed with the seventh clause.',
+      done: { flag: 'clue.petition_original' },
+      goals: [hall({ x: THRONE_HALL.echoZone.x + 1, y: THRONE_HALL.echoZone.y + 1 })],
+      hints: ['Keeper Hollis is coming, Gigi.', 'By Yari\'s chair.', 'Wait by the eighth chair.'],
+    },
+    {
+      id: 'count',
+      title: 'The count',
+      detail: 'The Master of the Chairs is at the rope\'s end with the register. A claimant is counted before she stands.',
+      done: { flag: 'story.claim_counted' },
+      goals: [hall(THRONE_HALL.chamberlain)],
+      hints: ['The man with the register is waiting, Gigi.', 'The rope\'s end, by the dais.', 'Talk to the Master of the Chairs.'],
+    },
+    {
+      id: 'claim',
+      title: 'The Claim',
+      detail: 'The rope is down. The Throne tile is on the dais. A claimant goes up alone.',
+      done: { flag: 'story.claim_won' },
+      goals: [hall(THRONE_HALL.tile)],
+      hints: ['It\'s yours to stand on, Gigi.', 'Up the dais.', 'Walk onto the Throne tile.'],
+    },
+    {
+      id: 'rael',
+      title: 'Rael',
+      detail: 'Someone is coming up the nave.',
+      done: { flag: 'story.hearing_called' },
+      noXp: true,
+      goals: [hall(THRONE_HALL.tile)],
+      hints: ['Gigi...', 'The nave.', 'Watch the nave.'],
+    },
+  ],
+};
+
+export const EPILOGUE: QuestDef = {
+  id: 'epilogue',
+  title: 'Epilogue: The Hearing',
+  maps: CLAIM_MAPS,
+  objectives: [
+    {
+      id: 'arrivals',
+      title: 'Nine days later',
+      detail: 'The witnesses were sent for. They are coming in at their gates.',
+      done: { flag: 'story.hearing_arrived' },
+      noXp: true,
+      goals: [concourse(CONCOURSE.hearingMorning)],
+      hints: ['They\'re coming, Gigi.', 'The Concourse.', 'Wait in front of the Hall.'],
+    },
+    {
+      id: 'hearing',
+      title: 'The Hearing',
+      detail: 'The Hall hears Lord Rael Rodriguez of Ardencia. A Hearing is not a trial: witnesses speak, the accused answers each, the Throne decides.',
+      done: { flag: 'story.hearing_heard' },
+      noXp: true,
+      goals: [hall(THRONE_HALL.step)],
+      hints: ['Gigi, the Hall.', 'The dais\'s step.', 'The Hall.'],
+    },
+    {
+      id: 'verdict',
+      title: 'The verdict',
+      detail: 'The Throne decides. The Master of the Chairs is waiting for the word.',
+      done: { flag: 'hearing.verdict' },
+      noXp: true,
+      goals: [hall(THRONE_HALL.chamberlain)],
+      hints: ['He\'s waiting for you, Gigi.', 'The Master of the Chairs.', 'Talk to the Master of the Chairs: the Throne decides.'],
+    },
+    {
+      id: 'throne',
+      title: 'The Throne',
+      detail: 'That afternoon, in the Hall.',
+      done: { flag: 'story.ending_seen' },
+      noXp: true,
+      goals: [hall(THRONE_HALL.afternoon)],
+      hints: ['Gigi.', 'The Hall.', 'The Hall.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11, ACT12, EPILOGUE];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -2601,5 +2739,36 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'story.wounded_sheltered',
     title: 'The Song House',
     text: 'The wounded of seven companies in hamacas between the song-keepers\' posts. Old Benny counted them in. Anissa held the lamp.',
+  },
+  // Chapter 12, the Claim, and the Hearing.
+  {
+    id: 'eighth_chair',
+    when: 'story.chair_read',
+    title: 'The eighth chair',
+    text: 'Caona said the oath in this Hall forty-nine years ago and nobody wrote it down. Grandfather did. It is on the chair.',
+  },
+  {
+    id: 'filed',
+    when: 'clue.petition_original',
+    title: 'Filed with the clause',
+    text: 'Xaraguá\'s own Petition of Breach was filed with the seventh clause, under the page. Keeper Hollis found it. It is on the eighth chair.',
+  },
+  {
+    id: 'count',
+    when: 'story.claim_counted',
+    title: 'The count',
+    text: 'Nine of the realm\'s regard across the three pillars, and two in each. Counted as Jean-Philippe, by Mother, and Rodriguez, by Father.',
+  },
+  {
+    id: 'heard',
+    when: 'clue.petition_heard',
+    title: 'Heard',
+    text: 'Forty-nine years late, every chair answered Xaraguá\'s petition. The seventh clause was never agreed.',
+  },
+  {
+    id: 'stability',
+    when: 'stability.score',
+    title: 'The Accord\'s Stability',
+    text: '{stability.score} of 100, as the realm stood when the Throne decided.',
   },
 ];

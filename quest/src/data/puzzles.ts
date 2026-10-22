@@ -470,4 +470,38 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { all: [{ flag: 'anchor.chain_post' }, { flag: 'story.chain_dropped' }] },
   },
+  // The eighth chair (the Chapter 12 outline section 8 with its second review's 3.12; difficulty 2): forty-nine years ago the
+  // chairs stood in a heap in the nave and the masons were bricking up a chamber door. The chamberlain's plan puts Xaraguá's
+  // chair "by the wall it has no chamber in". Cut the oath into that one in the memory, and in the present Yari turns the
+  // eighth chair round and reads it; a chair from the heap goes to Aldermoor's place with the line on it.
+  {
+    id: 'seat_chair',
+    title: 'The eighth chair: cut the oath where they sit, forty-nine years ago (the Claim)',
+    map: 'seat-hall',
+    spawn: 'eighth_chair',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.yari': true,
+      'party.azzy': true,
+      'party.samira': true,
+      'story.yari_asked': true,
+      'act5.complete': true,
+      'card.act5_end': true,
+      'act11.complete': true,
+      'card.act11_end': true,
+      'story.claim_arrive_seen': true,
+      'story.claim_arrived': true,
+      'story.rooms_seen': true,
+      'story.elodie_rooms': true,
+      'side.seats.handed': true,
+      'debate.seat_claim.settled': true,
+      'side.volume_one.accepted': true,
+      'story.bell_claim': true,
+      'story.bell_hall_seen': true,
+      'story.chairs_set': true,
+      'side.seats.done': true,
+    },
+    goal: { all: [{ flag: 'anchor.caona_chair' }, { flag: 'story.chair_read' }] },
+  },
 ];

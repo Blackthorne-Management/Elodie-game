@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 13,
+  "nextobjectid": 17,
   "layers": [
     {
       "id": 1,
@@ -610,7 +610,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.seat_arrived"
+              "value": "story.seat_arrived, !act11.complete"
             },
             {
               "name": "table",
@@ -633,7 +633,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.seat_arrived"
+              "value": "story.seat_arrived, !act11.complete"
             },
             {
               "name": "table",
@@ -656,7 +656,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.seat_arrived"
+              "value": "story.seat_arrived, !act11.complete"
             },
             {
               "name": "table",
@@ -679,12 +679,104 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.seat_arrived"
+              "value": "story.seat_arrived, !act11.complete"
             },
             {
               "name": "table",
               "type": "string",
               "value": "crossroads"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "fields_war_nw",
+          "type": "encounter_zone",
+          "x": 16,
+          "y": 16,
+          "width": 320,
+          "height": 176,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "act11.complete"
+            },
+            {
+              "name": "table",
+              "type": "string",
+              "value": "crossroads_war"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "fields_war_ne",
+          "type": "encounter_zone",
+          "x": 400,
+          "y": 16,
+          "width": 320,
+          "height": 176,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "act11.complete"
+            },
+            {
+              "name": "table",
+              "type": "string",
+              "value": "crossroads_war"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "fields_war_sw",
+          "type": "encounter_zone",
+          "x": 16,
+          "y": 256,
+          "width": 320,
+          "height": 176,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "act11.complete"
+            },
+            {
+              "name": "table",
+              "type": "string",
+              "value": "crossroads_war"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "fields_war_se",
+          "type": "encounter_zone",
+          "x": 624,
+          "y": 256,
+          "width": 96,
+          "height": 176,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "act11.complete"
+            },
+            {
+              "name": "table",
+              "type": "string",
+              "value": "crossroads_war"
             }
           ]
         }
@@ -697,10 +789,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 848,
+      "imageheight": 864,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 421,
+      "tilecount": 431,
       "columns": 8,
       "margin": 0,
       "spacing": 0

@@ -11,6 +11,14 @@
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { DRAWER_NUMBERS, DRAWER_X0 } from '../../src/data/seatArchive.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { AFTER_TEXT, BENCH_SPOTS, CH12_TEXT, CLAIM_DAY_TEXT, CONCOURSE, EVE_TEXT, GALLERY_SPOTS, GATE_COMPANIES, HALL, HEARING_TEXT, NIGHT_TEXT, ROOMS, TOKEN_CHAIRS } from '../../src/data/claim.ts';
+
+/** Chapter 12 not begun: the Chapter 5 people who would be wrong in the Claim's city (the outline section 3). */
+const CH5_ONLY = '!act11.complete';
+/** A house that did not sail to the Crown at the Muster (its people sit at the Claim). */
+const keptText = (house: string) => `!muster.betrayed|!muster.betrayer.${house}`;
+/** A house that did. */
+const betrayedText = (house: string) => `muster.betrayed, muster.betrayer.${house}`;
 
 const STONE = 'ա';
 const WALL = 'բ';
@@ -83,7 +91,7 @@ export function seatGateyard(): MapSource {
     trigger('seat_arrive', 28, 10, { dialogue: 'seat_arrive', flag: 'story.seat_arrived', once: true, onEnter: true }),
     // At the inner arch: the Sealbearer reads the papers, and the Regent's herald comes for them (again until he has).
     trigger('arch_step', 3, 1, { dialogue: 'herald_arch', if: '!story.herald_met' }, 1, H - 2),
-    npc('caravan_master_seat', 22, 7, 'down'),
+    npc('caravan_master_seat', 22, 7, 'down', { if: CH5_ONLY }),
     npc('seat_gate_clerk', 28, 12, 'left'),
     npc('arch_sealbearer_a', 1, 8, 'right', { npc: 'sealbearer' }),
     npc('arch_sealbearer_b', 1, 11, 'right', { npc: 'sealbearer' }),
@@ -137,7 +145,8 @@ export function seatConcourse(): MapSource {
   const objects: ObjSpec[] = [
     { layer: 'doors', name: 'concourse_yard', x: W - 1, y: 16, h: 2, props: { target: 'yard_concourse', map: 'seat-gateyard', exit: 'left' } },
     { layer: 'doors', name: 'concourse_quarter', x: 23, y: H - 1, w: 2, props: { target: 'quarter_concourse', map: 'seat-quarter', exit: 'up' } },
-    { layer: 'doors', name: 'concourse_hall', x: 23, y: 5, w: 2, props: { target: 'hall_out', map: 'seat-hall', exit: 'down' } },
+    // Chapter 12: the Hall is shut by night until the bell (the outline beat 0; the review's 3.3).
+    { layer: 'doors', name: 'concourse_hall', x: 23, y: 5, w: 2, props: { target: 'hall_out', map: 'seat-hall', exit: 'down', if: '!act11.complete|story.bell_claim', closed: 'hall_shut_night' } },
     { layer: 'doors', name: 'concourse_archive', x: 9, y: 5, props: { target: 'archive_out', map: 'seat-archive', exit: 'down', if: 'story.archive_open', closed: 'archive_chain_closed' } },
     { layer: 'spawns', name: 'iron_gate', x: 44, y: 26, props: { facing: 'right', era: 'present' } },
     // Chapter 12 begins inside the Ardencia Gate (the Chapter 12 outline's beat 0; Chapter 11's card lands the party here).
@@ -153,7 +162,9 @@ export function seatConcourse(): MapSource {
     trigger('parley_steps', 17, 6, { dialogue: 'parley_steps', if: 'story.hollis_agreed, !story.party_rejoined' }, 14, 2),
     // After the fitting, Coco walks them to the Iron Gate (again until the chapter ends).
     trigger('iron_gate_step', 43, 24, { dialogue: 'iron_gate', if: 'story.fitting_done, !act5.complete' }, 4, 5),
-    gate('gate_xaragua', 14, 0, 'bricked', 2, 1),
+    obj('gate_xaragua', 14, 0, { kind: 'bricked', solid: true, era: 'present', dialogue: 'gate_xaragua', if: '!story.hearing_called' }, 2, 1),
+    // Nine days after the Claim the masons take the bricks out (the Hearing's morning: the island's witnesses walk in).
+    obj('gate_xaragua_open', 14, 0, { kind: 'gate_open', solid: true, era: 'present', dialogue: 'gate_xaragua_open', if: 'story.hearing_called' }, 2, 1),
     gate('gate_ardencia', 33, 0, 'seat_gate', 2, 1),
     gate('gate_zetwal', 44, 0, 'seat_gate', 2, 1),
     gate('gate_aldermoor', 0, 16, 'seat_gate', 1, 2),
@@ -165,13 +176,13 @@ export function seatConcourse(): MapSource {
     npc('herald_steps', 23, 7, 'down', { npc: 'herald', if: 'story.herald_met, !story.regent_met' }),
     npc('chain_sealbearer_a', 7, 6, 'down', { npc: 'sealbearer', if: '!story.hollis_agreed' }),
     npc('chain_sealbearer_b', 12, 6, 'down', { npc: 'sealbearer', if: '!story.hollis_agreed' }),
-    npc('halberdier_a', 32, 1, 'down', { npc: 'seat_halberdier' }),
-    npc('halberdier_b', 35, 1, 'down', { npc: 'seat_halberdier' }),
+    npc('halberdier_a', 32, 1, 'down', { npc: 'seat_halberdier', if: CH5_ONLY }),
+    npc('halberdier_b', 35, 1, 'down', { npc: 'seat_halberdier', if: CH5_ONLY }),
     // The debate corner by the fountain (data/debates.ts seat_voices): any of the four starts it.
-    npc('debate_gaze', 21, 16, 'right', { npc: 'debate_gaze' }),
-    npc('debate_rider', 25, 16, 'left', { npc: 'debate_rider' }),
-    npc('debate_witness', 21, 18, 'right', { npc: 'debate_witness' }),
-    npc('debate_quiet', 25, 18, 'left', { npc: 'debate_quiet' }),
+    npc('debate_gaze', 21, 16, 'right', { npc: 'debate_gaze', if: CH5_ONLY }),
+    npc('debate_rider', 25, 16, 'left', { npc: 'debate_rider', if: CH5_ONLY }),
+    npc('debate_witness', 21, 18, 'right', { npc: 'debate_witness', if: CH5_ONLY }),
+    npc('debate_quiet', 25, 18, 'left', { npc: 'debate_quiet', if: CH5_ONLY }),
     npc('seat_market', 8, 27, 'up'),
     npc('seat_outfitter', 14, 27, 'up'),
     // In the morning Coco waits at the chain with the Keeper's robes (until the chain is lifted).
@@ -180,8 +191,43 @@ export function seatConcourse(): MapSource {
     npc('escort_pilgrim', 42, 28, 'right', { npc: 'pilgrim_escort', if: 'side.deserters.spared, story.fitting_done' }),
     npc('escort_deserter', 43, 29, 'right', { npc: 'deserter_escort', if: 'side.deserters.spared, story.fitting_done' }),
     { layer: 'crowds', name: 'concourse_day', x: 30, y: 20, w: 12, h: 8, props: { count: '5', looks: 'pilgrim,aldoria_trader,clerk,porter', if: SEAT_DAY } },
+    ...concourseClaim(),
   ];
   return { id: 'seat-concourse', present: g, echo: g.clone(), objects };
+}
+
+/**
+ * The Concourse in Chapter 12 (the outline section 3 with its second review's 3.3 and 3.9): the arrival in the Ardencia
+ * Gate's arch at dusk (Elodie and the clerk), the companies at their gates, Jordyn at the fountain, the corner's new debate,
+ * the Master of the Chairs on the Hall's steps by night with four Sealbearers, and the Hearing's morning nine days later.
+ */
+function concourseClaim(): ObjSpec[] {
+  const C = CONCOURSE;
+  const companies: ObjSpec[] = GATE_COMPANIES.flatMap((c) => [
+    npc(`gate_${c.army}_captain`, c.captain.at.x, c.captain.at.y, c.captain.facing, { if: `${CH12_TEXT}, army.${c.army}` }),
+    npc(`gate_${c.army}_soldier`, c.soldier.at.x, c.soldier.at.y, c.soldier.facing, { if: `${CH12_TEXT}, army.${c.army}` }),
+  ]);
+  return [
+    // The arrival (beat 0): plays on entering at the Ardencia Gate until Elodie has spoken.
+    trigger('claim_arrive', C.arrive.x, C.arrive.y, { dialogue: 'claim_arrive', flag: 'story.claim_arrive_seen', once: true, onEnter: true, if: CH12_TEXT }),
+    npc('elodie_arch', C.elodie.x, C.elodie.y, 'up', { if: `${CH12_TEXT}, !story.claim_arrived` }),
+    npc('arch_clerk', C.clerk.x, C.clerk.y, 'up', { if: `${CH12_TEXT}, !story.claim_arrived` }),
+    ...companies,
+    npc('claim_jordyn', C.jordyn.x, C.jordyn.y, 'up', { if: EVE_TEXT }),
+    // The corner after the Harbor Turn (data/debates.ts seat_claim): any of the three starts it.
+    npc('claim_gaze', C.debateGaze.x, C.debateGaze.y, 'right', { if: `${CH12_TEXT}, !story.hearing_called` }),
+    npc('claim_follower', C.debateFollower.x, C.debateFollower.y, 'left', { if: `${CH12_TEXT}, !story.hearing_called` }),
+    npc('claim_witness', C.debateWitness.x, C.debateWitness.y, 'right', { if: `${CH12_TEXT}, !story.hearing_called` }),
+    // The Hall's steps: two Sealbearers by day, four by night; the Master of the Chairs with his lantern after Mother's rooms.
+    npc('steps_sealbearer_a', 22, 6, 'down', { if: EVE_TEXT }),
+    npc('steps_sealbearer_d', 25, 6, 'down', { if: EVE_TEXT }),
+    npc('steps_sealbearer_b', 20, 7, 'down', { if: `${CH12_TEXT}, !story.hearing_called` }),
+    npc('steps_sealbearer_c', 27, 7, 'down', { if: `${CH12_TEXT}, !story.hearing_called` }),
+    npc('chamberlain_night', C.chamberlain.x, C.chamberlain.y, 'down', { if: NIGHT_TEXT }),
+    // Nine days later (the second review's 3.9): the Hearing's witnesses walk in at their gates.
+    { layer: 'spawns', name: 'hearing_morning', x: C.hearingMorning.x, y: C.hearingMorning.y, props: { facing: 'up', era: 'present' } },
+    trigger('hearing_arrivals', C.hearingMorning.x, C.hearingMorning.y, { dialogue: 'hearing_arrivals', flag: 'story.arrivals_seen', once: true, onEnter: true, if: 'story.hearing_called' }),
+  ];
 }
 
 /** The council chairs, west to east before the Throne (Se-5; Chapter 12 fills them by token). */
@@ -235,7 +281,8 @@ export function seatHall(): MapSource {
   g.set(34, 28, '$');
 
   const objects: ObjSpec[] = [
-    { layer: 'doors', name: 'hall_out', x: 21, y: H - 1, props: { target: 'concourse_hall', map: 'seat-concourse', exit: 'up' } },
+    // Chapter 12: nobody leaves the Hall while a Challenge stands (the Assize's shape).
+    { layer: 'doors', name: 'hall_out', x: 21, y: H - 1, props: { target: 'concourse_hall', map: 'seat-concourse', exit: 'up', if: '!story.claim_declared|story.claim_won', closed: 'hall_claim_closed' } },
     { layer: 'spawns', name: 'nave', x: 21, y: 29, props: { facing: 'up', era: 'present' } },
     // The Regent's welcome (beat 3), as the party walks up the nave (again until Elodie has spoken).
     trigger('hall_welcome', 1, 14, { dialogue: 'hall_welcome', if: '!story.elodie_hall' }, W - 2, 1),
@@ -244,35 +291,140 @@ export function seatHall(): MapSource {
     // The Parley at the bell (beats 8 and 9), as they come in with the Keeper (again until the terms are refused).
     trigger('parley_step', 1, 28, { dialogue: 'parley', if: 'story.party_rejoined, !story.terms_refused' }, W - 2, 1),
     // The Throne tile on its dais, and the violet rope before it (Chapter 12 takes the rope away).
-    obj('throne_tile', 21, 2, { kind: 'throne_sun', solid: true, era: 'present', dialogue: 'throne_tile' }, 2, 2),
+    obj('throne_tile', 21, 2, { kind: 'throne_sun', solid: true, era: 'present', dialogue: 'throne_tile', if: '!story.claim_begun' }, 2, 2),
     obj('throne_rope', 16, 5, { kind: 'violet_rope', solid: true, era: 'present', if: '!story.claim_begun', dialogue: 'throne_rope' }, 12, 1),
     obj('regent_offices', 17, 1, { kind: 'door_closed', solid: true, era: 'present', dialogue: 'regent_offices' }),
     obj('heralds_stair', 26, 1, { kind: 'door_closed', solid: true, era: 'present', dialogue: 'heralds_stair' }),
     obj('hall_records', 2, 29, { dialogue: 'shelf.hall_records', era: 'present' }, 6, 1),
-    ...CHAIRS.map(([house, x]) => obj(`chair_${house}`, x, 8, { kind: 'council_chair', solid: true, era: 'present', dialogue: `chair_${house}` })),
+    // The eighth chair is turned round in Chapter 12 once its oath is cut (chair_xaragua_cut).
+    ...CHAIRS.map(([house, x]) => obj(`chair_${house}`, x, 8, { kind: 'council_chair', solid: true, era: 'present', dialogue: `chair_${house}`, ...(house === 'xaragua' ? { if: '!anchor.caona_chair' } : {}) })),
     ...Object.entries(CHAMBERS).map(([house, [x, y]]) =>
       obj(`chamber_${house}`, x, y, { kind: house === 'xaragua' ? 'bricked' : 'door_closed', solid: true, era: 'present', dialogue: `chamber_${house}` }),
     ),
     // The Regent at the Throne's foot, a hand on its arm: there for the welcome, gone up the stair for the day, back
     // when the Parley sits at the bell (and after).
-    npc('regent', 23, 3, 'down', { if: '!story.elodie_hall|story.hollis_agreed' }),
-    npc('rope_sealbearer_a', 15, 6, 'down', { npc: 'sealbearer' }),
-    npc('rope_sealbearer_b', 28, 6, 'down', { npc: 'sealbearer' }),
+    npc('regent', 23, 3, 'down', { if: `!story.elodie_hall|story.hollis_agreed, ${CH5_ONLY}` }),
+    // The rope's Sealbearers: gone with the rope's Regent, back at its posts in the Iron Throne (they serve whoever sits).
+    npc('rope_sealbearer_a', 15, 6, 'down', { if: '!story.claim_won|ending.iron' }),
+    npc('rope_sealbearer_b', 28, 6, 'down', { if: '!story.claim_won|ending.iron' }),
     // Elodie at Zetwal's chamber door, the clerk at her shoulder: there for the welcome; inside for the day until
     // the petition comes to her door; there again for the Parley.
     npc('elodie_hall', 2, 11, 'right', { if: '!story.elodie_hall|side.seats.accepted, !story.terms_refused' }),
     npc('parley_clerk', 2, 12, 'right', { if: '!story.elodie_hall|side.seats.accepted, !story.terms_refused' }),
-    npc('envoy_dorini', 2, 23, 'right'),
-    npc('legate', 41, 11, 'left'),
-    npc('legate_aide', 41, 12, 'left'),
-    npc('envoy_ironvow', 41, 15, 'left'),
-    npc('envoy_suzumori', 41, 19, 'left'),
-    npc('envoy_agnivansh', 41, 23, 'left'),
-    npc('chamberlain', 33, 28, 'left'),
+    npc('envoy_dorini', 2, 23, 'right', { if: CH5_ONLY }),
+    npc('legate', 41, 11, 'left', { if: CH5_ONLY }),
+    npc('legate_aide', 41, 12, 'left', { if: CH5_ONLY }),
+    npc('envoy_ironvow', 41, 15, 'left', { if: CH5_ONLY }),
+    npc('envoy_suzumori', 41, 19, 'left', { if: CH5_ONLY }),
+    npc('envoy_agnivansh', 41, 23, 'left', { if: CH5_ONLY }),
+    npc('chamberlain', 33, 28, 'left', { if: CH5_ONLY }),
     npc('hall_herald_a', 19, 30, 'up', { npc: 'hall_herald' }),
     npc('hall_herald_b', 24, 30, 'up', { npc: 'hall_herald' }),
+    ...hallClaim(),
   ];
   return { id: 'seat-hall', present: g, echo: g.clone(), objects, interior: true };
+}
+
+/**
+ * The Throne Hall in Chapter 12 and the Epilogue (the outline sections 3, 8 and 14 with its second review's 3.3, 3.8, 3.11
+ * and 3.12): the tokens on their chairs, the eighth chair turned, the Echo forty-nine years ago south of it, the houses' people
+ * at their doors at the bell, the tile open, the Regent, the Hearing's bench and gallery near the nave, the afternoon.
+ */
+function hallClaim(): ObjSpec[] {
+  const X = Object.fromEntries(CHAIRS) as Record<string, number>;
+  const tokenKinds: Record<string, string> = { xaragua: 'token_paddle', al_doria: 'token_seal', skarragol: 'token_braid', kuroshi: 'token_crane', jwaladesh: 'token_lamp' };
+  const B = HALL.behind;
+  const seated = 'story.hall_seated';
+  const cluster: ObjSpec[] = HALL.echoCluster.map((p, i) => obj(`echo_chair_${i + 1}`, p.x, p.y, { kind: 'council_chair', solid: true, era: 'echo', dialogue: 'echo_chair_cluster' }));
+  return [
+    // The bell: the Master of the Chairs sets the tokens (once the Hall is entered at the bell).
+    trigger('bell_hall', HALL.nave.x, HALL.nave.y, { dialogue: 'bell_hall', flag: 'story.bell_hall_seen', once: true, onEnter: true, if: 'story.bell_claim' }),
+    ...TOKEN_CHAIRS.map((c) => obj(`token_on_${c.house}`, X[c.house]!, 8, { kind: tokenKinds[c.house]!, era: 'present', if: `side.seats.${c.house}_set` })),
+    obj('chair_xaragua_cut', X.xaragua!, 8, { kind: 'council_chair_cut', solid: true, era: 'present', dialogue: 'chair_xaragua_cut', if: 'anchor.caona_chair' }),
+    obj('petition_on_chair', X.xaragua!, 8, { kind: 'petition_chair', era: 'present', if: 'clue.petition_original' }),
+    // The Echo: the eighth chair, forty-nine years ago (south of it: the chair is solid).
+    {
+      layer: 'echo_zones',
+      name: 'eighth_chair_echo',
+      x: HALL.echoZone.x,
+      y: HALL.echoZone.y,
+      w: HALL.echoZone.w,
+      h: HALL.echoZone.h,
+      props: { if: 'story.chairs_set, !story.claim_declared', onEcho: 'chair_echo', onReturn: 'chair_echo_return' },
+    },
+    { layer: 'spawns', name: 'eighth_chair', x: HALL.echoZone.x + 1, y: HALL.echoZone.y + 1, props: { facing: 'up', era: 'present' } },
+    obj('echo_plan_table', HALL.echoPlanTable.x, HALL.echoPlanTable.y, { kind: 'table', solid: true, era: 'echo', dialogue: 'echo_seating_plan' }),
+    obj('echo_petition_desk', HALL.echoPlanTable.x, HALL.echoPlanTable.y, { kind: 'paper', era: 'echo', if: 'echo.petition_received, !echo.petition_filed' }),
+    ...cluster,
+    obj('echo_chair_xaragua', HALL.echoXaraguaChair.x, HALL.echoXaraguaChair.y, { kind: 'council_chair', solid: true, era: 'echo', dialogue: 'echo_chair_xaragua' }),
+    obj('echo_door_bricking', 1, 15, { kind: 'bricked', solid: true, era: 'echo' }),
+    { layer: 'anchors', name: 'caona_chair_anchor', x: HALL.echoXaraguaChair.x, y: HALL.echoXaraguaChair.y, props: { object: 'echo_chair_xaragua', flag: 'anchor.caona_chair' } },
+    npc('echo_chamberlain_old', HALL.echoChamberlain.x, HALL.echoChamberlain.y, 'left', { era: 'echo' }),
+    npc('hall_echo_clerk', HALL.echoClerk.x, HALL.echoClerk.y, 'left', { era: 'echo' }),
+    npc('echo_mason', HALL.echoMason.x, HALL.echoMason.y, 'left', { era: 'echo' }),
+    npc('caona_hall', HALL.echoCaona.x, HALL.echoCaona.y, 'right', { era: 'echo' }),
+    npc('benny_hall', HALL.echoBenny.x, HALL.echoBenny.y, 'right', { era: 'echo' }),
+    // The count, the tile, the Challenge (beat 4). The rope comes down on story.claim_begun (the Chapter 5 hook); the tile
+    // becomes a step: a second, open tile (the review's 3.8: the built one is solid), and its lower row the claim's trigger.
+    obj('throne_tile_open', 21, 2, { kind: 'throne_sun', era: 'present', if: 'story.claim_begun' }, 2, 2),
+    trigger('claim_tile', HALL.tile.x, HALL.tile.y, { dialogue: 'claim_declare', if: 'story.claim_begun, !story.regent_beaten' }, 2, 1),
+    npc('chamberlain_claim', HALL.chamberlain.x, HALL.chamberlain.y, 'left', { if: CLAIM_DAY_TEXT }),
+    npc('elodie_claim', HALL.elodieDoor.x, HALL.elodieDoor.y, 'right', { if: CLAIM_DAY_TEXT }),
+    npc('claim_clerk', HALL.clerkDoor.x, HALL.clerkDoor.y, 'right', { if: CLAIM_DAY_TEXT }),
+    npc('rosalind_claim', HALL.rosalindDoor.x, HALL.rosalindDoor.y, 'left', { if: CLAIM_DAY_TEXT }),
+    npc('layla_claim', HALL.laylaDoor.x, HALL.laylaDoor.y, 'right', { if: `${CLAIM_DAY_TEXT}, ${keptText('al_doria')}` }),
+    npc('patricio_claim', HALL.patricio.x, HALL.patricio.y, 'up', { if: CLAIM_DAY_TEXT }),
+    npc('jordyn_claim', 30, 7, 'left', { if: `${CLAIM_DAY_TEXT}, !story.regent_arrested` }),
+    npc('benny_claim', HALL.bennyDoor.x, HALL.bennyDoor.y, 'right', { if: `${CLAIM_DAY_TEXT}, war.strike` }),
+    npc('regent_claim_npc', HALL.regent.x, HALL.regent.y, 'down', { if: 'story.claim_counted, !story.regent_arrested' }),
+    npc('hale_claim', HALL.hale.x, HALL.hale.y, 'down', { if: 'story.claim_counted, war.strike, !story.hearing_called' }),
+    npc('thorne_claim', HALL.thorne.x, HALL.thorne.y, 'down', { if: 'story.claim_counted, choice.thorne_spared, !story.hearing_called' }),
+    npc('azzy_challenge', HALL.foot.x, HALL.foot.y - 1, 'up', { if: 'claim.challenge, !claim.azzy_challenged' }),
+    npc('hollis_claim', HALL.hollis.x, HALL.hollis.y, 'left', { if: 'clue.petition_original, !story.hearing_called' }),
+    obj('clerk_table', HALL.clerkTable.x, HALL.clerkTable.y, { kind: 'table', solid: true, era: 'present', dialogue: 'claim_register', if: 'clue.petition_original' }),
+    obj('refusal_on_table', HALL.clerkTable.x, HALL.clerkTable.y, { kind: 'paper', era: 'present', if: 'story.refusal_laid' }),
+    obj('signet_step', HALL.foot.x, HALL.foot.y - 1, { kind: 'signet_step', era: 'present', if: 'story.signet_laid, !story.signet_returned, !story.rael_exiled, !story.rael_taken' }),
+    // The Hearing, nine days later (the review's 3.11: the bench and the gallery near the nave, on one screen with the dais).
+    { layer: 'spawns', name: 'hearing_step', x: HALL.step.x, y: HALL.step.y, props: { facing: 'down', era: 'present' } },
+    trigger('hearing', HALL.step.x, HALL.step.y, { dialogue: 'hearing', flag: 'story.hearing_seen', once: true, onEnter: true, if: 'story.hearing_arrived' }),
+    obj('witness_bench', HALL.bench.x, HALL.bench.y, { kind: 'witness_bench', solid: true, era: 'present', if: HEARING_TEXT }, HALL.bench.w, 1),
+    npc('rael_hearing', HALL.rael.x, HALL.rael.y, 'up', { if: HEARING_TEXT }),
+    npc('jordyn_hearing', HALL.jordynBehind.x, HALL.jordynBehind.y, 'up', { if: HEARING_TEXT }),
+    npc('rivera_hearing', HALL.rivera.x, HALL.rivera.y, 'up', { if: HEARING_TEXT }),
+    npc('jaime_hearing', HALL.jaime.x, HALL.jaime.y, 'up', { if: HEARING_TEXT }),
+    npc('hollis_hearing', HALL.hollis.x, HALL.hollis.y, 'left', { if: HEARING_TEXT }),
+    npc('chamberlain_hearing', HALL.chamberlain.x, HALL.chamberlain.y, 'left', { if: HEARING_TEXT }),
+    npc('elodie_hearing', B.zetwal.x, B.zetwal.y, 'up', { if: HEARING_TEXT }),
+    ...(['treasurer', 'daughter', 'amanda', 'lamp_oil', 'printer', 'benny', 'nancy', 'anicette'] as const).map((w, i) =>
+      npc(`${w}_hearing`, BENCH_SPOTS[i]!.x, BENCH_SPOTS[i]!.y, 'up', { if: HEARING_TEXT }),
+    ),
+    ...(['patricio_gallery', 'sebastian_gallery', 'rahel_gallery', 'patricia_gallery', 'zelia_gallery', 'follower_gallery', 'gallery_pilgrim', 'camp_leader_gallery', 'hearing_clerk'] as const).map((w, i) =>
+      npc(w, GALLERY_SPOTS[i]!.x, GALLERY_SPOTS[i]!.y, 'up', { if: HEARING_TEXT }),
+    ),
+    // The houses' people behind their chairs, from the Hearing to the end (the companions out of the line meanwhile:
+    // story.hall_seated in data/rpg.ts). Yari leaves at the Iron Throne's verdict; a betrayed house's companion stands apart.
+    npc('yari_hall', B.xaragua.x, B.xaragua.y, 'up', { if: `${seated}, !hearing.execution` }),
+    npc('azzy_hall', B.ardencia.x, B.ardencia.y, 'up', { if: seated }),
+    npc('samira_hall', HALL.samira.x, HALL.samira.y, 'up', { if: seated }),
+    npc('edmund_hall', HALL.edmund.x, HALL.edmund.y, 'up', { if: seated }),
+    npc('rosalind_hall', B.aldermoor.x, B.aldermoor.y, 'up', { if: seated }),
+    npc('layla_hall', B.al_doria.x, B.al_doria.y, 'up', { if: `${seated}, ${keptText('al_doria')}` }),
+    ...(['skarragol', 'kuroshi', 'jwaladesh'] as const).flatMap((h) => {
+      const who = { skarragol: 'bayarmaa', kuroshi: 'haru', jwaladesh: 'vikram' }[h];
+      return [
+        npc(`${who}_hall`, B[h].x, B[h].y, 'up', { if: `${seated}, ${keptText(h)}` }),
+        npc(`${who}_hall_apart`, 18, 11, 'up', { npc: `${who}_hall`, if: `${seated}, ${betrayedText(h)}` }),
+      ];
+    }),
+    // That afternoon, and after the end (the save keeps the Hall open).
+    { layer: 'spawns', name: 'afternoon', x: HALL.afternoon.x, y: HALL.afternoon.y, props: { facing: 'down', era: 'present' } },
+    trigger('ending', HALL.afternoon.x, HALL.afternoon.y, { dialogue: 'ending', flag: 'story.ending_played', once: true, onEnter: true, if: 'hearing.verdict' }),
+    npc('elodie_after', B.zetwal.x, B.zetwal.y, 'up', { if: `${AFTER_TEXT}, !hearing.execution` }),
+    npc('rael_table', HALL.rael.x + 1, HALL.rael.y, 'up', { if: 'hearing.pardon' }),
+    npc('hollis_after_hall', HALL.hollis.x, HALL.hollis.y, 'left', { npc: 'hollis_after', if: AFTER_TEXT }),
+    npc('chamberlain_after', HALL.chamberlain.x, HALL.chamberlain.y, 'left', { if: AFTER_TEXT }),
+    npc('benny_iron', HALL.doorsInside.x + 1, HALL.doorsInside.y - 1, 'up', { if: 'ending.iron' }),
+  ];
 }
 
 /**
@@ -292,7 +444,8 @@ export function seatQuarter(): MapSource {
   house(g, 16, 2, 6, 5);
   g.set(18, 6, 'D');
   house(g, 22, 2, 5, 5);
-  g.set(24, 6, '@');
+  // The Crown's wing: Zetwal's envoy's rooms (locked in Chapter 5; Mother's rooms in Chapter 12).
+  g.set(24, 6, 'D');
   put(g, BANNER, [[3, 6], [9, 6]]);
   // South of the lane: the drying lines and the embassies' gardens.
   g.rect(3, 12, 7, 1, CLOTH_LINE).rect(16, 12, 8, 1, CLOTH_LINE);
@@ -300,14 +453,18 @@ export function seatQuarter(): MapSource {
 
   const objects: ObjSpec[] = [
     { layer: 'doors', name: 'quarter_concourse', x: 12, y: 0, w: 2, props: { target: 'concourse_quarter', map: 'seat-concourse', exit: 'down' } },
-    { layer: 'doors', name: 'quarter_workshop', x: 18, y: 6, props: { target: 'workshop_out', map: 'seat-workshop', exit: 'down' } },
+    // Chapter 12: Coco is dressing a wedding in Al-Doria; her door is shut with a note (the outline beat 1).
+    { layer: 'doors', name: 'quarter_workshop', x: 18, y: 6, props: { target: 'workshop_out', map: 'seat-workshop', exit: 'down', if: CH5_ONLY, closed: 'coco_note' } },
+    { layer: 'doors', name: 'quarter_rooms', x: 24, y: 6, props: { target: 'rooms_out', map: 'seat-rooms', exit: 'down', if: 'story.claim_arrived', closed: 'crown_wing_closed' } },
     { layer: 'spawns', name: 'lane', x: 12, y: 2, props: { facing: 'down', era: 'present' } },
     // Coco comes out of her door to the sisters (again until she has).
     trigger('coco_step', 11, 7, { dialogue: 'coco_welcome', if: 'story.elodie_hall, !story.coco_met' }, 6, 2),
     obj('crown_wing', 24, 6, { dialogue: 'crown_wing', era: 'present' }),
     obj('coco_door_paint', 17, 6, { dialogue: 'coco_door_paint', era: 'present' }),
     obj('drying_cloth', 16, 12, { dialogue: 'drying_cloth', era: 'present' }, 8, 1),
-    npc('wing_sealbearer', 25, 7, 'left', { npc: 'sealbearer' }),
+    npc('wing_sealbearer', 25, 7, 'left', { npc: 'sealbearer', if: CH5_ONLY }),
+    // Chapter 12: the clerk waits in the lane outside Mother's door, for once (the outline beat 1).
+    npc('rooms_clerk', 21, 7, 'right', { if: 'story.claim_arrived, !story.bell_claim' }),
     // Coco in her doorway through the day (what is left), and at evening ("Bed.").
     npc('coralie_door', 20, 8, 'down', { npc: 'coralie_seat', if: 'story.coco_plan, !story.disguised, !story.terms_refused' }),
     npc('embassy_porter', 6, 7, 'down'),
@@ -410,7 +567,7 @@ export function seatArchive(): MapSource {
       props: { if: 'story.archive_entered', onEcho: 'sealing_enter', onReturn: 'sealing_return' },
     },
     npc('hollis', 20, 10, 'left', { if: '!story.hollis_agreed' }),
-    npc('hollis_after', 20, 10, 'left', { npc: 'hollis', if: 'story.terms_refused' }),
+    npc('hollis_after', 20, 10, 'left', { npc: 'hollis', if: 'story.terms_refused, !story.bell_claim' }),
     npc('coralie_archive', 21, 11, 'left', { npc: 'coralie_seat', if: 'story.archive_open, !story.hollis_agreed' }),
     // Fifty years ago.
     npc('echo_throne_clerk', 13, 6, 'down', { era: 'echo' }),
@@ -453,12 +610,44 @@ export function seatFields(): MapSource {
     npc('deserter_b', 35, 20, 'up', { npc: 'deserter', if: 'side.deserters.accepted, !side.deserters.fought' }),
     obj('crown_wagon', 33, 19, { dialogue: 'crown_wagon', era: 'present' }, 2, 1),
     obj('pilgrim_camp', 8, 4, { dialogue: 'pilgrim_camp', era: 'present' }),
-    { layer: 'encounters', name: 'fields_nw', x: 1, y: 1, w: 20, h: 11, props: { table: 'crossroads', if: 'story.seat_arrived' } },
-    { layer: 'encounters', name: 'fields_ne', x: 25, y: 1, w: 20, h: 11, props: { table: 'crossroads', if: 'story.seat_arrived' } },
-    { layer: 'encounters', name: 'fields_sw', x: 1, y: 16, w: 20, h: 11, props: { table: 'crossroads', if: 'story.seat_arrived' } },
-    { layer: 'encounters', name: 'fields_se', x: 39, y: 16, w: 6, h: 11, props: { table: 'crossroads', if: 'story.seat_arrived' } },
+    { layer: 'encounters', name: 'fields_nw', x: 1, y: 1, w: 20, h: 11, props: { table: 'crossroads', if: `story.seat_arrived, ${CH5_ONLY}` } },
+    { layer: 'encounters', name: 'fields_ne', x: 25, y: 1, w: 20, h: 11, props: { table: 'crossroads', if: `story.seat_arrived, ${CH5_ONLY}` } },
+    { layer: 'encounters', name: 'fields_sw', x: 1, y: 16, w: 20, h: 11, props: { table: 'crossroads', if: `story.seat_arrived, ${CH5_ONLY}` } },
+    { layer: 'encounters', name: 'fields_se', x: 39, y: 16, w: 6, h: 11, props: { table: 'crossroads', if: `story.seat_arrived, ${CH5_ONLY}` } },
+    // Chapter 12: the Regent's men and the last veils outside the walls (data/encounters.ts crossroads_war, 28 to 30).
+    { layer: 'encounters', name: 'fields_war_nw', x: 1, y: 1, w: 20, h: 11, props: { table: 'crossroads_war', if: CH12_TEXT } },
+    { layer: 'encounters', name: 'fields_war_ne', x: 25, y: 1, w: 20, h: 11, props: { table: 'crossroads_war', if: CH12_TEXT } },
+    { layer: 'encounters', name: 'fields_war_sw', x: 1, y: 16, w: 20, h: 11, props: { table: 'crossroads_war', if: CH12_TEXT } },
+    { layer: 'encounters', name: 'fields_war_se', x: 39, y: 16, w: 6, h: 11, props: { table: 'crossroads_war', if: CH12_TEXT } },
   ];
   return { id: 'seat-fields', present: g, echo: g.clone(), objects };
 }
 
-export const SEAT_SOURCES: readonly (() => MapSource)[] = [seatGateyard, seatConcourse, seatHall, seatQuarter, seatWorkshop, seatArchive, seatFields];
+/**
+ * Zetwal's rooms at the Seat, Mother's (Chapter 12, new; CAPITALS 5 listed them and Chapter 5 never built them): a desk, the
+ * lamp in the window (lit all night once she has spoken), the shelf with Grandmother's Volume One, the window on the
+ * Concourse. The clerk waits in the lane outside, for once.
+ */
+export function seatRooms(): MapSource {
+  const W = 14;
+  const H = 10;
+  const g = new Grid(W, H, WALL);
+  g.rect(1, 1, W - 2, H - 2, 'o');
+  g.set(ROOMS.elodieDesk.x, ROOMS.elodieDesk.y - 1, '$');
+  g.rect(ROOMS.shelf.x, ROOMS.shelf.y, 3, 1, 'h');
+  g.set(ROOMS.door.x, ROOMS.door.y, 'D');
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'rooms_out', x: ROOMS.door.x, y: ROOMS.door.y, props: { target: 'quarter_rooms', map: 'seat-quarter', exit: 'up' } },
+    { layer: 'spawns', name: 'rooms', x: ROOMS.spawn.x, y: ROOMS.spawn.y, props: { facing: 'up', era: 'present' } },
+    // Mother's scene (beat 1): on coming in, until she has spoken.
+    trigger('rooms_scene', ROOMS.spawn.x, ROOMS.spawn.y, { dialogue: 'rooms_scene', flag: 'story.rooms_seen', once: true, onEnter: true, if: 'story.claim_arrived' }),
+    npc('elodie_rooms', ROOMS.elodieDesk.x, ROOMS.elodieDesk.y, 'down', { if: '!story.bell_claim' }),
+    obj('rooms_shelf', ROOMS.shelf.x, ROOMS.shelf.y, { dialogue: 'rooms_shelf', era: 'present' }, 3, 1),
+    obj('rooms_lamp', ROOMS.lamp.x, ROOMS.lamp.y, { kind: 'lamp_lit', solid: true, era: 'present', dialogue: 'rooms_lamp', if: 'story.elodie_rooms' }),
+    obj('rooms_lamp_cold', ROOMS.lamp.x, ROOMS.lamp.y, { kind: 'lamp', solid: true, era: 'present', dialogue: 'rooms_lamp', if: '!story.elodie_rooms' }),
+    obj('rooms_window', 7, 0, { kind: 'window', solid: true, era: 'present', dialogue: 'rooms_window' }),
+  ];
+  return { id: 'seat-rooms', present: g, echo: g.clone(), objects, interior: true };
+}
+
+export const SEAT_SOURCES: readonly (() => MapSource)[] = [seatGateyard, seatConcourse, seatHall, seatQuarter, seatWorkshop, seatArchive, seatFields, seatRooms];

@@ -192,6 +192,12 @@ const RECIPES: Record<SfxId, () => Note[]> = {
     { at: 0, dur: 1.4, wave: 'triangle', from: 98, to: 92, gain: 0.5, attack: 0.02, release: 0.9 },
     { at: 0, dur: 1.2, wave: 'sine', from: 196, to: 185, gain: 0.18, attack: 0.02, release: 0.8 },
   ],
+  // The Hall's bell (Chapter 12): low, heavy, once.
+  hall_bell: () => [
+    { at: 0, dur: 1.9, wave: 'sine', from: 147, gain: 0.5, attack: 0.005, release: 1.8 },
+    { at: 0, dur: 1.7, wave: 'sine', from: 294, gain: 0.2, attack: 0.005, release: 1.6 },
+    { at: 0, dur: 1.4, wave: 'triangle', from: 441, gain: 0.08, attack: 0.005, release: 1.3, vibrato: [2, 3] },
+  ],
   // The goddess's soft bell, with a long tail (a recorded one replaces it: GAME_OVER_BELL_FILE).
   bell: () => [
     { at: 0, dur: 1.9, wave: 'sine', from: 784, gain: 0.32, attack: 0.005, release: 1.7 },

@@ -1050,6 +1050,85 @@ export const DEBATES: readonly DebateDef[] = [
       say('elder_charter', 'And the seven sail home. I will count them out myself.'),
     ],
   },
+  // Chapter 12, the Claim (the outline 7.3; guide 7.2: after the Harbor Turn every hub's corner asks it, and the Quiet Crown's
+  // own followers speak for themselves): at the fountain, by night, before the bell. The Gaze keeper on Gianna's side; an
+  // unveiled follower of the Quiet Crown, a woman of the Concourse who fed the pilgrims, against; the Witness priest listens
+  // and turns the crowd. Mediate: Gianna says the thing the Hearing will make law. Required by the bell (data/claim.ts).
+  {
+    id: 'seat_claim',
+    city: 'seat',
+    question: 'A faith that began as a tool: is it still a faith?',
+    ally: 'gaze_keeper',
+    opponent: 'qc_follower',
+    opensIf: { flag: 'story.elodie_rooms' },
+    passing: [
+      say('qc_follower', '...we were lonely. Somebody gave us bread and a name for the quiet.'),
+      say('gaze_keeper', 'And now they say a lord made it, to use you.'),
+    ],
+    listen: [
+      say('qc_follower', 'We were lonely. Somebody gave us bread and a name for the quiet. Now they say a lord made us, as a tool.'),
+      say('qc_follower', 'Was I a tool when I fed the pilgrims at the Gold Gate? I took off the veil last week. I still feed them.'),
+      say('gaze_keeper', 'The Gaze remembers what was done. Not who meant it.'),
+      say('witness_priest', 'And the Witness asks who swore, and to what. I am listening to both of you.'),
+      say(A, 'She isn\'t wearing the veil, Gigi. She\'s just a lady by a fountain.'),
+    ],
+    reasonNeeds: [loreFlag('seat_founding_compact'), loreFlag('seat_weaving'), 'side.purge_list.done'],
+    rounds: [
+      {
+        claim: 'Who made us? If a lord made the Quiet Crown, are we his?',
+        answers: {
+          scripture: { short: 'The Gaze remembers', text: 'The Gaze remembers what was done, not who meant it. Nobody owns a prayer because he paid for the room.', strength: 2 },
+          reason: { short: 'The purge list', text: 'The purge list came to the cells with a thumb on it: warn the families first. They did. A tool does not warn anyone.', strength: 1 },
+          compassion: { short: 'You fed them', text: 'You fed the pilgrims at the gate. Nobody told you to. Whoever made the room, that was you.', strength: 1 },
+        },
+      },
+      {
+        claim: 'What did we do? Veils came for a child. They wore the same veil I did.',
+        answers: {
+          scripture: { short: 'The Four Hands', text: 'The Four Hands do not ask what you wore. They ask what you did with your hands.', strength: 1 },
+          reason: { short: 'The almoner\'s cells', text: 'The almoner turned some of the cells against her. Not all of them. The Hall has the paper that says whose they were.', strength: 1 },
+          compassion: { short: 'My sister counted you', text: 'My sister held a door for a year against people in your veils. She does not hate you. She counted you.', strength: 2 },
+        },
+      },
+      {
+        claim: 'Then what are we now, envoy, with no lord and no veil?',
+        answers: {
+          scripture: { short: 'What the goddess sees', text: 'What the goddess sees: people at a fountain, arguing about her. That is a faith.', strength: 1 },
+          reason: { short: 'The Compact', text: 'The Compact protects every faith that keeps it. It does not ask how one began.', strength: 2 },
+          compassion: { short: 'Yours', text: 'Yours. Nobody else\'s, for the first time. That is frightening. It is also yours.', strength: 1 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(Round the fountain, the Witness priest nods, once, and the crowd with him.)',
+      1: '(The fountain splashes. The crowd is split down the middle.)',
+      0: '(The follower folds her arms, and looks at the Hall\'s steps.)',
+    },
+    won: [
+      say('witness_priest', 'Then the Witness hears them as a faith. Let the Hall hear them too.'),
+      say('qc_follower', 'I will still feed the pilgrims. I would like it to be my own bread.'),
+    ],
+    lost: [
+      say('qc_follower', 'You argue well, envoy. Ask me again when he has said it.'),
+      say('witness_priest', 'The Hall will hear it tomorrow. We can agree after.'),
+    ],
+    mediate: [
+      nar('Gianna steps up onto the fountain\'s rim, where the corner can see her.'),
+      say(G, 'A thing is what it does now. Tomorrow a man will say in that Hall that he made you.'),
+      say(G, 'What you do after he says it is yours.'),
+      { speaker: 'qc_follower', text: '...Then we will listen to him say it.', set: { 'stability.corner_mediated': true } },
+      say('witness_priest', 'Then the Witness will listen with you.'),
+    ],
+    provoke: [
+      say(G, 'Your veils came for my sister. Whose bread was that?'),
+      nar('The fountain goes quiet. The follower looks at her hands.'),
+      say('gaze_keeper', 'That was cruel, envoy. It was also true.'),
+    ],
+    after: [
+      say('qc_follower', 'Tomorrow he says it. I will be in the gallery.'),
+      say('gaze_keeper', 'The Gaze remembers. So will she.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */

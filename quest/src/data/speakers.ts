@@ -393,4 +393,10 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   crew_chief: s('crew_chief', 'Crew chief'),
   smuggler: s('smuggler', 'Smuggler'),
   signing_envoy: s('signing_envoy', "The Crown's envoy", 'echo_crown_envoy'),
+  // Chapter 12, the Claim, and the Epilogue (Oct 22).
+  ard_treasurer: s('ard_treasurer', 'The treasurer'),
+  qc_follower: s('qc_follower', 'Quiet Crown follower'),
+  echo_chamberlain: s('echo_chamberlain', 'Master of the Chairs, that day'),
+  mason: s('mason', 'Mason', 'echo_builder'),
+  regent_clerk: s('regent_clerk', "The Crown's clerk"),
 };

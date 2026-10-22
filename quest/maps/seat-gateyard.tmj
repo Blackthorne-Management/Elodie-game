@@ -271,6 +271,11 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!act11.complete"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "caravan_master_seat"
@@ -771,10 +776,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 848,
+      "imageheight": 864,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 421,
+      "tilecount": 431,
       "columns": 8,
       "margin": 0,
       "spacing": 0

@@ -4,6 +4,7 @@
 
 import type { Condition } from '../engine/conditions.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
+import { CONCOURSE, HALL, ROOMS } from './claim.ts';
 import { CAMP, CAVE, CONUCO, MOUNTAIN } from './war.ts';
 
 const f = (flag: string): Condition => ({ flag });
@@ -1051,8 +1052,80 @@ export const WAR_SIDE_QUESTS: readonly SideQuestDef[] = [
   },
 ];
 
-/** Every side quest, Chapters 1 to 11. */
-export const SIDE_QUESTS: readonly SideQuestDef[] = [...BUILT_SIDE_QUESTS, ...WAR_SIDE_QUESTS];
+/**
+ * Chapter 12, the Claim (the outline section 7 with its second review's 3.3 and 3.9): two required side quests, both the ends
+ * of threads the whole game carried, and the corner's debate as a quest. Each is in the bell's condition (data/claim.ts).
+ */
+export const CLAIM_SIDE_QUESTS: readonly SideQuestDef[] = [
+  // A Seat for Every House, stage 2 (Se-5): the companions hand their houses' tokens to the Master of the Chairs on the Hall's
+  // steps by night, and at the bell he sets each on its chair (his Chapter 5 promise; the review's 3.3).
+  {
+    id: 'seats_claim',
+    title: 'A Seat for Every House',
+    giver: 'The Master of the Chairs',
+    place: 'The Hall\'s steps, by night',
+    level: 28,
+    summary: 'The chairs fill at a Claim, not a Parley. The Master of the Chairs is on the Hall\'s steps with a lantern, waiting for the houses\' tokens.',
+    accepted: f('side.seats.handed'),
+    available: f('story.elodie_rooms'),
+    start: [{ map: 'seat-concourse', at: { x: CONCOURSE.chamberlain.x, y: CONCOURSE.chamberlain.y } }],
+    nudge: 'The chairs are bare. The man with the lantern says so.',
+    steps: [
+      { text: 'Hand the Master of the Chairs the houses\' tokens, on the Hall\'s steps.', done: f('side.seats.handed'), goals: [{ map: 'seat-concourse', at: { x: CONCOURSE.chamberlain.x, y: CONCOURSE.chamberlain.y } }] },
+      { text: 'At the bell, in the Hall: each token on its chair.', done: f('side.seats.done'), goals: [{ if: f('story.bell_claim'), map: 'seat-hall', at: { x: HALL.nave.x, y: HALL.nave.y - 2 } }] },
+    ],
+    done: f('side.seats.done'),
+    closed: f('story.claim_won'),
+    closedText: 'Closed: the chairs filled as they stood.',
+    reward: { xp: 40, pillar: { pillar: 'influence', city: 'seat', amount: 2 } },
+  },
+  // Volume One (Se-1, closed here; the Overdue Books thread): on Mother's shelf, Grandmother's missing book, with Mother's
+  // margins. It goes back into Grandmother's hands when Zetwal's people walk in for the Hearing (the review's 3.9).
+  {
+    id: 'volume_one',
+    title: 'Volume One',
+    giver: 'Mother',
+    place: 'Mother\'s rooms, the Envoys\' Quarter',
+    level: 28,
+    summary: 'Ash Wars Gossip, Volume One: the one Grandmother never got back. It is on Mother\'s shelf, and Mother has written in it.',
+    accepted: f('side.volume_one.accepted'),
+    available: f('story.elodie_rooms'),
+    start: [{ map: 'seat-rooms', at: { x: ROOMS.shelf.x + 1, y: ROOMS.shelf.y } }],
+    nudge: 'Grandmother\'s book is on Mama\'s shelf. The missing one.',
+    steps: [
+      { text: 'Read Mother\'s margins.', done: f('side.volume_one.accepted'), goals: [{ map: 'seat-rooms', at: { x: ROOMS.shelf.x + 1, y: ROOMS.shelf.y } }] },
+      { text: 'Give it back to Grandmother, in front of people.', done: f('side.volume_one.done'), goals: [{ if: f('story.hearing_called'), map: 'seat-concourse', at: { x: CONCOURSE.hearingMorning.x, y: CONCOURSE.hearingMorning.y } }] },
+    ],
+    done: f('side.volume_one.done'),
+    closed: f('act12.complete'),
+    closedText: 'Closed: Grandmother never got it back. She says she knew she wouldn\'t.',
+    reward: { xp: 20, pillar: { pillar: 'influence', city: 'seat', amount: 1 } },
+  },
+  // The corner after the Harbor Turn (the outline 7.3): Is it still a faith?
+  {
+    id: 'claim_corner',
+    title: 'Is It Still a Faith?',
+    giver: 'Quiet Crown follower',
+    place: 'The Concourse fountain, by night',
+    level: 28,
+    summary: 'At the fountain, a woman who wore the Quiet Crown\'s veil until last week asks the corner whether a faith that began as a lord\'s tool is still a faith.',
+    accepted: { any: [f('debate.seat_claim.listened'), f('debate.seat_claim.settled')] },
+    available: f('story.elodie_rooms'),
+    start: [{ map: 'seat-concourse', at: { x: CONCOURSE.debateFollower.x, y: CONCOURSE.debateFollower.y } }],
+    nudge: 'The corner by the fountain is asking about the veils, Gigi. They want you.',
+    steps: [
+      { text: 'Listen to the corner by the fountain.', done: f('debate.seat_claim.listened'), goals: [{ map: 'seat-concourse', at: { x: CONCOURSE.debateFollower.x, y: CONCOURSE.debateFollower.y } }] },
+      { text: 'Mediate, or join and argue all three rounds.', done: f('debate.seat_claim.settled'), goals: [{ map: 'seat-concourse', at: { x: CONCOURSE.debateFollower.x, y: CONCOURSE.debateFollower.y } }] },
+    ],
+    done: f('debate.seat_claim.settled'),
+    closed: f('story.bell_claim'),
+    closedText: 'Closed: the bell rang before the corner had finished.',
+    reward: {},
+  },
+];
+
+/** Every side quest, Chapters 1 to 12. */
+export const SIDE_QUESTS: readonly SideQuestDef[] = [...BUILT_SIDE_QUESTS, ...WAR_SIDE_QUESTS, ...CLAIM_SIDE_QUESTS];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */
 export const CHAPTER5_QUESTS_DONE: Condition = { all: [f('side.seats.stage1'), f('debate.seat_voices.settled'), f('side.deserters.done')] };

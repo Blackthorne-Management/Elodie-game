@@ -7,7 +7,7 @@ import { flagsIn } from '../engine/conditions.ts';
 import type { Condition } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11 } from './quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11, ACT12, EPILOGUE } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 import { WAR_BATTLES } from './warBattles.ts';
 
@@ -406,6 +406,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'tassel_charm', name: 'Tassel of the standard', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { atk: 4, hp: 6 }, text: 'A horse-tail tassel cut from the Ironvow standard Hrafn sold. Bayarmaa tied it on herself.' },
   { id: 'paper_seal_charm', name: 'Paper seal', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { mag: 4, spd: 2 }, text: 'A Suzumori file seal, folded small. Haru says it is definitely not a spy\'s.' },
   { id: 'wick_ring', name: 'Wick-ring', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { atk: 4, sp: 4 }, text: 'A brass ring from the steward\'s lamp, where the wick went. Vikram wears it on his thumb.' },
+  // The Claim (Chapter 12): the Regent's chain of office, left on the dais's step (tier 28; the outline section 5).
+  { id: 'chain_of_office', name: 'Chain of office', kind: 'gear', slot: 'charm', level: 28, rarity: 'uncommon', price: 600, stats: { def: 6, mag: 4 }, text: 'The Lord Regent\'s chain of office, left on the dais\'s step. It weighs what it weighed on him.' },
+  // Volume One (Se-1, closed in Chapter 12): Grandmother's missing book, from Mother's shelf, with Mother's margins.
+  { id: 'volume_one', name: 'Ash Wars Gossip, Volume One', kind: 'key', price: 0, text: 'Grandmother lent it to Mother twenty years ago. Mother has written in the margins, which Grandmother will not forgive.' },
   { id: 'clerk_seal_charm', name: "Clerk's seal", kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { mag: 4, def: 2 }, text: 'The Merchant-Prince\'s clerk\'s seal, given back. Samira says it is the first thing the guild ever gave her for free.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
@@ -453,8 +457,10 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'The hutia', text: 'After a win, a 1 in 8 chance her hutia steals something shiny.' },
     ],
     // She hides in the petroglyph cave while the Crown holds Yucayeque (every marine knows her face). In Eightgate she
-    // stays at Coco's workshop while the sisters go into the Archive as seamstresses (story.party_split, Chapter 5).
-    joins: { all: [{ flag: 'story.yari_asked' }, { notFlag: 'story.yari_hidden' }, { notFlag: 'story.party_split' }] },
+    // stays at Coco's workshop while the sisters go into the Archive as seamstresses (story.party_split, Chapter 5). At the
+    // Hearing and the afternoon after it (Chapter 12) every companion stands behind a chair, out of the line
+    // (story.hall_seated: tools/maps/seat.ts places them; it is cleared at the end).
+    joins: { all: [{ flag: 'story.yari_asked' }, { notFlag: 'story.yari_hidden' }, { notFlag: 'story.party_split' }, { notFlag: 'story.hall_seated' }] },
     base: { hp: 50, sp: 16, atk: 12, def: 7, mag: 6, spd: 13 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'yaguana_bow', armor: 'woven_tunic' },
   },
@@ -474,7 +480,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Sangre Ardiente', text: 'Each foe he fells this battle: +5% ATK (up to +25%).', effect: { kind: 'atkPerFell', share: 0.05, max: 0.25 } },
     ],
     // Away at Coco's workshop while the sisters are her seamstresses (Chapter 5: story.party_split).
-    joins: { all: [{ flag: 'party.azzy' }, { notFlag: 'story.party_split' }] },
+    joins: { all: [{ flag: 'party.azzy' }, { notFlag: 'story.party_split' }, { notFlag: 'story.hall_seated' }] },
     base: { hp: 60, sp: 14, atk: 14, def: 10, mag: 4, spd: 9 }, growth: { hp: 7, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'steel_saber', armor: 'officer_coat' },
   },
@@ -484,7 +490,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Baraka Dorini', text: 'Gold from battles won with her: +10%.', effect: { kind: 'battleGold', share: 0.1 } },
       { name: 'Daftar al-Dorini', text: 'She pays in gold for what she needs; the realm\'s Wealth makes each coin go further (+1% a point, up to +30%).' },
     ],
-    joins: { all: [{ flag: 'party.samira' }, { notFlag: 'story.party_split' }] },
+    joins: { all: [{ flag: 'party.samira' }, { notFlag: 'story.party_split' }, { notFlag: 'story.hall_seated' }] },
     leads: flankLeads('al_doria'),
     base: { hp: 44, sp: 28, atk: 7, def: 6, mag: 12, spd: 11 }, growth: { hp: 5, sp: 3, atk: 1, def: 1, mag: 2, spd: 1 },
     start: { weapon: 'driftwood_staff_of_focus', armor: 'archivist_robe' },
@@ -498,7 +504,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: "Ironvow's Oath", text: 'Her opening time is always the lowest in the party: she rides first.', effect: { kind: 'opensFirst' } },
       { name: 'Salkhi', text: 'Her grey mare fights beside her: Hoofbeat is the mare\'s kick.' },
     ],
-    joins: { flag: 'party.bayarmaa' },
+    joins: { all: [{ flag: 'party.bayarmaa' }, { notFlag: 'story.hall_seated' }] },
     leads: { any: [{ all: [{ flag: 'party.bayarmaa' }, { notFlag: 'act6.complete' }] }, flankLeads('skarragol')] },
     base: { hp: 56, sp: 16, atk: 13, def: 8, mag: 4, spd: 15 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 0, spd: 2 },
     start: { weapon: 'steppe_sabre_of_swiftness', armor: 'braided_cloak' },
@@ -510,7 +516,7 @@ export const MEMBERS: readonly MemberDef[] = [
   {
     id: 'haru', name: 'Haru', role: 'Shadow agent', house: 'Suzumori', portrait: 'haru', era: 'present', class: 'warrior',
     passives: [{ name: 'Definitely not a spy', text: 'He listens before he moves: Kagemimi tells a foe\'s next move, and finds out a disguise.' }],
-    joins: { flag: 'party.haru' },
+    joins: { all: [{ flag: 'party.haru' }, { notFlag: 'story.hall_seated' }] },
     leads: { any: [{ all: [{ flag: 'party.haru' }, { notFlag: 'act7.complete' }] }, flankLeads('kuroshi')] },
     base: { hp: 44, sp: 22, atk: 11, def: 7, mag: 9, spd: 16 }, growth: { hp: 5, sp: 3, atk: 2, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'paper_knife_of_swiftness', armor: 'grey_kimono' },
@@ -526,7 +532,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Rakt Ki Pyaas', text: 'When his blow fells a foe, his next turn comes at once.', effect: { kind: 'turnOnFell' } },
       { name: 'Out of breath', text: 'After every battle. It changes nothing in the fight. He says so.' },
     ],
-    joins: { flag: 'party.vikram' },
+    joins: { all: [{ flag: 'party.vikram' }, { notFlag: 'story.hall_seated' }] },
     leads: { any: [{ all: [{ flag: 'party.vikram' }, { notFlag: 'act8.complete' }] }, flankLeads('jwaladesh')] },
     base: { hp: 40, sp: 20, atk: 15, def: 5, mag: 8, spd: 15 }, growth: { hp: 4, sp: 3, atk: 3, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'agnipur_talwar_of_force', armor: 'saffron_coat' },
@@ -543,7 +549,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: "Stillwater's Patience", text: 'After the release: once a battle, he cancels a foe\'s boast.' },
       { name: 'Terribly sorry', text: 'He apologises to every foe before he hits them. He means it.' },
     ],
-    joins: { flag: 'party.edmund' },
+    joins: { all: [{ flag: 'party.edmund' }, { notFlag: 'story.hall_seated' }] },
     leads: { all: [{ flag: 'party.edmund' }, { notFlag: 'act9.complete' }] },
     base: { hp: 58, sp: 18, atk: 11, def: 12, mag: 5, spd: 8 }, growth: { hp: 7, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'pattern_sword_of_guarding', armor: 'stillwater_greatcoat' },
@@ -738,6 +744,8 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'seat-hall', name: 'The Throne Hall' },
       { map: 'seat-archive', name: 'The Throne Archive' },
       { map: 'seat-workshop', name: "Coco's workshop" },
+      // Chapter 12: Zetwal's rooms at the Seat, in the Crown's wing of the Quarter.
+      { map: 'seat-rooms', name: "Mother's rooms" },
     ],
   },
   // Chapter 6 (built Oct 22; CAPITALS.md 6 with the outline's quay): the Horse-Fair in the middle with the Moot Tent in
@@ -874,7 +882,7 @@ export const RPG: RpgContent = {
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
     // A Journal step pays by its chapter (XP_PER_OBJECTIVE_BY_CHAPTER).
-    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11].map((act, i) => ({
+    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11, ACT12, EPILOGUE].map((act, i) => ({
       flags: act.objectives.filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)),
       each: XP_PER_OBJECTIVE_BY_CHAPTER[Math.min(i, XP_PER_OBJECTIVE_BY_CHAPTER.length - 1)]!,
     })),

@@ -15,6 +15,7 @@ import { XARAGUA_QUEST_DIALOGUE } from './dialogue/xaraguaQuests.ts';
 import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
 import { MUSTER_DIALOGUE, MUSTER_OVERLAYS, overlay } from './dialogue/zetwalMuster.ts';
 import { WAR_DIALOGUE, WAR_OVERLAYS } from './dialogue/xaraguaWar.ts';
+import { CLAIM_DIALOGUE, CLAIM_OVERLAYS } from './dialogue/seatClaim.ts';
 
 const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
   villager_talk: {
@@ -164,14 +165,16 @@ const BASE: Record<string, DialogueScript> = {
   ...Object.fromEntries(ALDERMOOR_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(MUSTER_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(WAR_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(CLAIM_DIALOGUE.map((d) => [d.id, d])),
   ...SHELF_DIALOGUE,
 };
 
 /**
- * Chapter 10's lines over the built conversations of Pòdlimyè's people, and Chapter 11's over Xaraguá's (each overlay plays
+ * Chapter 10's lines over the built conversations of Pòdlimyè's people, Chapter 11's over Xaraguá's and Chapter 12's over
+ * Eightgate's (each overlay plays
  * its own nodes while its condition holds: data/dialogue/zetwalMuster.ts overlay).
  */
-for (const o of [...MUSTER_OVERLAYS, ...WAR_OVERLAYS]) {
+for (const o of [...MUSTER_OVERLAYS, ...WAR_OVERLAYS, ...CLAIM_OVERLAYS]) {
   const base = BASE[o.id];
   if (!base) throw new Error(`Muster overlay on a missing conversation: ${o.id}`);
   BASE[o.id] = overlay(base, o);
