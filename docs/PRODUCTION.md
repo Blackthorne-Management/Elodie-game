@@ -135,8 +135,12 @@ passive now reads "He kept the oath, whatever it cost", matching Rael's private 
 20); the war's music track (`docs/quest/AUDIO-PROMPTS.md`, a slot plays the Mountain Path's until then). Noted: Chapter
 11's steps pay 58 XP; the route ends at 28, the line without side quests at 26; the gardens' road is a long walk (a
 step and a question on each side), not a door. Not built yet: the market's second stock once the harbor is taken,
-*The First Oath*'s second look, the board's dispatches, the voyage to Eightgate as a scene. The smoke test has Chapter
-11 checks but has not walked the chapter in a browser.
+*The First Oath*'s second look, the board's dispatches, the voyage to Eightgate as a scene. The smoke test walks Chapter
+11 in a browser (Oct 22, after the merge onto Chapter 10): its fights won, the story flags, the Turn's route and the
+volleys left agree with the simulator's. **Fixed (Oct 22, a game bug the smoke found):** a fighter whose Attack opens
+their weapon moves had no working Attack while Hushed (Hale's Sealbearer hushed Rael and the fight stalled); Attack now
+strikes plainly while the moves are blocked, as COMBAT.md's Hushed row says. Noted: Chapter 11's lamp-oil seller opens
+the cassava-bread stall's shop (`xaragua_food`) after the Ninth Thumbprint lines; worth a look (a lamp-oil seller selling bread).
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

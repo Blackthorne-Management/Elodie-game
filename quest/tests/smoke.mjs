@@ -903,7 +903,9 @@ async function fightBattle(page, id, shots) {
   const throwIt = scripted && battleDef(id).enemies.some((e) => ENEMIES[e]?.withdraws);
   // A lost fight opens the goddess's Game Over screen: Rise, then back into the fight (riseAndRetry).
   const at = await snap(page);
-  for (let turn = 0; turn < 260; turn++) {
+  // Each pass is one key the bot decides (a move, a target): a long boss fight (Chapter 11's Hale, some 40 rounds for the
+  // smoke's plain plan, with a Rise or two) takes several hundred.
+  for (let turn = 0; turn < 1500; turn++) {
     await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return !b || !b.busy; }, null, { timeout: 20000 });
     const st = await snap(page);
     if (scripted && st.battle?.fallen && !st.gameOver) {
@@ -936,7 +938,10 @@ async function fightBattle(page, id, shots) {
     await page.keyboard.press('KeyZ');
     await page.waitForTimeout(120);
   }
-  await page.waitForFunction(() => window.__quest.snapshot().mode !== 'battle', null, { timeout: 8000 });
+  await page.waitForFunction(() => window.__quest.snapshot().mode !== 'battle', null, { timeout: 8000 }).catch(async () => {
+    const s = await snap(page);
+    throw new Error(`${id}: the fight never ended in the browser (${JSON.stringify(s.battle)})`);
+  });
   const after = await snap(page);
   const battle = battleDef(id);
   if (scripted) {
@@ -1267,10 +1272,18 @@ async function playAct(browser, errors) {
   if (FROM) {
     const at = route.findIndex((item) => item.kind === 'mark' && item.name === FROM);
     if (at < 0) throw new Error(`SMOKE_FROM: no marker "@${FROM}" in the route`);
-    sim.run(route.slice(0, at));
+    // Played as the full run plays it: the field pays finished side quests and debates as it goes, so the save holds
+    // their rewards (and the item showcases they bring are seen below), not a pile paid at the browser's first sync.
+    const play = (items) => {
+      for (const it of items) for (const cmd of sim.expand(it)) {
+        sim.press(cmd);
+        settleAsField(sim);
+      }
+    };
+    play(route.slice(0, at));
     // A marker on a chapter's end card: on to the field after it.
     let from = at + 1;
-    for (; sim.logic.mode !== 'field' && from < route.length; from++) sim.run([route[from]]);
+    for (; sim.logic.mode !== 'field' && from < route.length; from++) play([route[from]]);
     if (sim.logic.mode !== 'field') throw new Error(`SMOKE_FROM: the route never reaches the field after @${FROM}`);
     // The browser shows each item's popup as it arrives; a player reaching this point has seen them all.
     for (const it of pendingShowcases(sim.logic.state.flags, RPG)) markShown(sim.logic.state.flags, it.id);
@@ -1383,6 +1396,8 @@ async function playAct(browser, errors) {
               if (await handleVoyage(page, shots, want)) voyaged = true;
               continue;
             }
+            // A fight can finish a side quest, and the field pays it at once: its reward's showcase over the scene.
+            if (await handleShowcase(page, showcases, shots)) continue;
             const t = await finishTyping(page);
             if (t.mode === 'dialogue') {
               await page.keyboard.press('KeyZ');
@@ -1422,6 +1437,13 @@ async function playAct(browser, errors) {
         if (landing === 'xaragua-village') voyaged = true;
         if (landing === 'zetwal-harbor' && sim.logic.state.flags.get('act9.complete') === true) voyagedHome9 = true;
         if (landing === 'xaragua-beach' && sim.logic.state.flags.get('act10.complete') === true) voyagedWar = true;
+      }
+      // A vendor's shop opens when their scene ends (Chapter 11's lamp-oil seller, after the Ninth Thumbprint's ask): a
+      // screen of the browser's own (the simulator stays in the field). Close it, as a player who buys nothing does.
+      if (sim.logic.mode === 'field' && (await snap(page)).mode === 'shop') {
+        await page.keyboard.press('KeyX');
+        keys++;
+        await page.waitForFunction(() => window.__quest.snapshot().mode !== 'shop', null, { timeout: 3000 });
       }
       settleAsField(sim);
       await waitMatch(page, expected(sim), `${cmd} (route: ${JSON.stringify(item)})`);
