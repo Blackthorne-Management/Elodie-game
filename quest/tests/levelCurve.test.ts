@@ -20,8 +20,8 @@ describe('the level curve along the scripted route', () => {
   console.log(curveText(report));
   const ch = (n: number) => report.chapters.find((c) => c.chapter === n)!;
 
-  it('measures every chapter the route plays (Chapters 1 to 5 so far), and lists the rest as unplayed', () => {
-    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5]);
+  it('measures every chapter the route plays (Chapters 1 to 6 so far), and lists the rest as unplayed', () => {
+    expect(report.chapters.map((c) => c.chapter)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(report.chapters.length + report.unplayed.length).toBe(CHAPTER_LEVELS.length);
     for (const c of report.chapters) expect(c.xp).toBeGreaterThan(c.xpNoSide);
     // XP only grows from one chapter to the next.
@@ -41,14 +41,26 @@ describe('the level curve along the scripted route', () => {
     }
   });
 
-  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15', () => {
-    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15]);
+  it('the levels pass, as measured Oct 22: Chapter 1 ends at 4, Chapter 2 at 8, Chapter 3 at 11, Chapter 4 at 14, Chapter 5 at 15, Chapter 6 at 17', () => {
+    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17]);
     // Chapter 1 was 6 (25 XP a step); Chapter 2 was 10 (its five required side quests, and 80 XP an ambush).
     expect(ch(1).xp).toBeLessThan(xpForLevel(RPG, 5));
     expect(ch(2).xp).toBeLessThan(xpForLevel(RPG, 9));
     // Chapter 6 starts at 15, the bottom of its band (15 to 17).
     expect(ch(5).xp).toBeGreaterThanOrEqual(xpForLevel(RPG, 15));
     expect(ch(5).xp).toBeLessThan(xpForLevel(RPG, 16));
+  });
+
+  it('Chapter 6 (Skarragol, 15 to 17) ends on 17 on the route and on the played line, and at 15 without side quests', () => {
+    const six = ch(6);
+    expect(six.level).toBe(17);
+    expect(six.played.median).toBe(17);
+    expect(six.played.p90).toBeLessThanOrEqual(18);
+    expect(six.played.wanderP90).toBeLessThanOrEqual(18);
+    expect(six.levelNoSide).toBe(15);
+    // Kuroshi's band starts at 17: the party arrives at it, not past it.
+    expect(six.xp).toBeLessThan(xpForLevel(RPG, 18));
+    expect(six.played.medianXp).toBeLessThan(xpForLevel(RPG, 18));
   });
 
   it(`skipping every side quest leaves the party at most ${LEVEL_CURVE.skipSideQuestsMaxUnder} levels under the target`, () => {

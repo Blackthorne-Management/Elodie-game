@@ -2,7 +2,7 @@
 // game by the scripted route the smoke test also drives in the browser (routes/zetwal-act1.json).
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6 } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { partyMembers } from '../src/engine/rpg.ts';
@@ -21,6 +21,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   const chapter3: string[] = [];
   const chapter4: string[] = [];
   const chapter5: string[] = [];
+  const chapter6: string[] = [];
+  /** Where the party stood, and what it had fought, as Chapter 5's card shows (the route goes on into Chapter 6). */
+  let atChapter5End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, at Chapter 4's end (the route goes on into Chapter 5). */
   let atChapter4End: { flags: FlagSnapshot; map: string; battles: string[] } = { flags: {}, map: '', battles: [] };
   /** The story's flags and where the party stood at Chapter 3's end (the route goes on into Chapter 4). */
@@ -48,6 +51,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     }
     if (item.kind === 'mark' && item.name === 'chapter4-end') {
       atChapter4End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles] };
+    }
+    if (item.kind === 'mark' && item.name === 'chapter5-end') {
+      atChapter5End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
     }
     if (item.kind === 'mark' && item.name === 'end-card') {
       atChapterEnd = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => KEPT.test(k)));
@@ -78,6 +84,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       if (ACT5.maps.includes(sim.logic.state.player.mapId)) {
         const id5 = currentObjective(ACT5, sim.logic.state.flags)?.id ?? 'complete';
         if (chapter5.at(-1) !== id5) chapter5.push(id5);
+      }
+      if (ACT6.maps.includes(sim.logic.state.player.mapId)) {
+        const id6 = currentObjective(ACT6, sim.logic.state.flags)?.id ?? 'complete';
+        if (chapter6.at(-1) !== id6) chapter6.push(id6);
       }
       if (eras.at(-1) !== sim.logic.era) eras.push(sim.logic.era);
       if (maps.at(-1) !== sim.logic.state.player.mapId) maps.push(sim.logic.state.player.mapId);
@@ -153,14 +163,15 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('Chapter 5: the Gold Gate, the herald, the welcome, Coco, the day, the bell, the sealing, the keeper, the Parley, the fitting, the Iron Gate', () => {
-    const flags = sim.logic.state.flags;
+    const flags = new FlagStoreView(atChapter5End.flags);
     // Every objective in order (the Regent's terms are refused in the same scene the clause is read in, so the route
     // never stops on them; the Gold Road is done by the arrival itself, before the route takes a step).
     expect(chapter5).toEqual([...ACT5.objectives.map((o) => o.id).filter((id) => !['road', 'terms'].includes(id)), 'complete']);
-    expect(sim.battles.slice(atChapter4End.battles.length)).toEqual(['deserters_road']);
+    expect(atChapter5End.battles.slice(atChapter4End.battles.length)).toEqual(['deserters_road']);
     expect(flags.isSet('act5.complete') && flags.isSet('card.act5_end')).toBe(true);
-    expect(sim.logic.state.player.mapId).toBe('seat-concourse');
-    expect(sim.logic.mode).toBe('field');
+    // The card shows at the Iron Gate; closing it takes the party up the winter road (Chapter 6).
+    expect(atChapter5End.map).toBe('seat-concourse');
+    expect(atChapter5End.mode).toBe('card');
     // The party is whole again after the Archive; the Echo party is unchanged.
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira']);
     expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
@@ -169,6 +180,24 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     }
     expect(flags.isSet('story.disguised') || flags.isSet('story.party_split')).toBe(false);
     for (const name of ['The Lord Regent', 'Elodie', 'Tati Coco', 'Keeper Hollis', 'Master of the Chairs', 'Herald', 'Deserter sergeant', 'Benny', "The Throne's clerk"]) expect(speakers).toContain(name);
+  });
+
+  it('Chapter 6: the winter road, the fair, the Moot, the day, the fjord\'s five swaps, Sarnai\'s raid, the herd, Grimvald, the horn, the longship', () => {
+    const flags = sim.logic.state.flags;
+    // Every objective in order (the winter road is done by the arrival itself; the ride round and the price are done
+    // inside the scenes that begin them, so the route never stops on them).
+    expect(chapter6).toEqual([...ACT6.objectives.map((o) => o.id).filter((id) => !['road', 'round', 'price'].includes(id)), 'complete']);
+    expect(sim.battles.slice(atChapter5End.battles.length)).toEqual(['winter_wolves', 'fjord_grimvald']);
+    expect(flags.isSet('act6.complete') && flags.isSet('card.act6_end') && flags.isSet('card.round_fjord')).toBe(true);
+    expect(sim.logic.state.player.mapId).toBe('skarragol-quay');
+    expect(sim.logic.mode).toBe('field');
+    // Bayarmaa joins at the Moot and stays; the Echo party is unchanged.
+    expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa']);
+    expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
+    for (const f of ['party.bayarmaa', 'story.bayarmaa_cleared', 'ally.skarragol', 'clue.herd_whistle', 'clue.crown_pays_raiders', 'anchor.wolf_run', 'story.herd_unseen', 'story.standard_planted', 'side.grandson.done', 'side.winter_stores.done', 'debate.skarragol_oath.settled', 'item.token_ironvow', 'item.torvald_letter', 'belief.rael_traitor']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    for (const name of ['Bayarmaa', 'Salkhi', 'Torvald', 'Lawspeaker', 'Hrafn', "The Crown's envoy", 'Grimvald', 'Sarnai', 'Envoy in white', 'Herder']) expect(speakers).toContain(name);
   });
 
   it('Chapter 3: the two required side quests and the debate are done before noon, and pay', () => {

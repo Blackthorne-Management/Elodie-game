@@ -93,8 +93,8 @@ describe('the count and the Grudge', () => {
     expect(GRUDGE_MAX_BOSS).toBeGreaterThan(GRUDGE_MAX);
     expect(grudgeCap(boss)).toBe(GRUDGE_MAX_BOSS);
     expect(grudgeCap(story)).toBe(GRUDGE_MAX);
-    // Only the chapter bosses (Chapter 2: Thorne).
-    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['thorne_blockade']);
+    // Only the chapter bosses (Chapter 2: Thorne; Chapter 6: Grimvald).
+    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['fjord_grimvald', 'thorne_blockade']);
   });
 
   it('a win clears that fight\'s losses (and so its Grudge); the count stays', () => {
@@ -436,7 +436,7 @@ describe('every story fight has a way back in', () => {
   it('each fight a conversation starts is meant to be lost, or has a foe on a map or a trigger that starts it again', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
-    expect([...started].sort()).toEqual(['caney_breach', 'deserters_road', 'intro_boar', 'pier_marines', 'qasim_vault', 'rael_trial', 'thorne_blockade', 'tunnel_bats', 'village_patrol']);
+    expect([...started].sort()).toEqual(['camp_lookouts', 'caney_breach', 'deserters_road', 'fjord_grimvald', 'intro_boar', 'ordu_bout', 'pier_marines', 'qasim_vault', 'rael_trial', 'thorne_blockade', 'tunnel_bats', 'village_patrol', 'winter_wolves']);
     for (const id of started) {
       const def = battleDef(id);
       expect(def, id).toBeDefined();
