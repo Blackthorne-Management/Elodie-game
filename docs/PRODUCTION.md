@@ -150,7 +150,7 @@ Patricio at dawn, the chairs set, the Echo of the eighth chair (puzzle `seat_cha
 Azzy's share, renounce or (the dark route only) Challenge, the chairs filling, Clause Six, the Regent arrested, Rael's
 signet; then the Hearing nine days later, the witnesses, the verdict, Accord Stability and the Just, Hollow or Iron
 ending, The End and the cast). The whole quest now plays from the intro to the credits on the headless route. Ahead of
-its **Nov 13 to 16** slot (on its branch, not merged). Waiting on the owner: a human read of every Elodie, Rael, Azzy,
+its **Nov 13 to 16** slot (merged Oct 22 onto Chapter 11's merge). Waiting on the owner: a human read of every Elodie, Rael, Azzy,
 Benny, Patricio and Anissa line in the Claim and the Hearing (reviewer prompt
 `docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter12-build.md`); the dedication line for the credits (the
 cast is in; the dedication is a slot); the Stability dials if Strike should reach the Just Throne more often
@@ -160,7 +160,11 @@ shares); looks for the Master of the Chairs, the treasurer's daughter and the co
 Noted: Chapter 12's steps pay 120 XP; the route ends on 30 (the cap), the line without side quests on 28; the Regent
 was tuned down from the outline's adds (the owner's HP x6, ATK x1.6, MAG x2.0 stand) and runs 40 actions at 30, 41.6
 at 28 with the roster four. Not built yet: the books' second looks, the voyage to Eightgate as a scene, the board's
-dispatches. The smoke test has Chapter 12 checks at every marker but has not walked the chapter in a browser.
+dispatches. The smoke test walks Chapter 12 and the Epilogue in a browser (Oct 22, after the merge; from
+`chapter11-end`): the story flags agree with the simulator's, the Regent won, Accord Stability 95 before the verdict and
+100 after the pardon, the Just Throne, The End, the cast and the credits, the title, and the save marking the quest
+complete. No game bugs found; one test fix (a Challenge's `wounds.*` are the browser fight's HP, which the simulator does
+not write, so they are not compared).
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

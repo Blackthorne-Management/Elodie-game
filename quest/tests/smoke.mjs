@@ -666,8 +666,9 @@ async function chapterEndChecks(page, sim, name) {
   const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
   check(notWalking.length === 0, `the whole party walks behind Gianna at ${title}'s end (no sprite for ${notWalking.join(', ')})`);
   // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag (and from
-  // Chapter 12 the Claim's, the chairs', the Hearing's, the score and the ending).
-  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|army|muster|war|act\d+|card|claim|seat|hearing|stability|ending|end|wounds)\./;
+  // Chapter 12 the Claim's, the chairs', the Hearing's, the score and the ending; not a Challenge's `wounds.*`, the HP
+  // the browser's fight left, which the simulator's fights, won outright, do not write).
+  const told = /^(story|choice|clue|anchor|encounter|party|ally|belief|debate|side|army|muster|war|act\d+|card|claim|seat|hearing|stability|ending|end)\./;
   const simFlags = sim.logic.state.flags.snapshot();
   // (The field pays side quests and debates as it goes, `side.<id>.rewarded` and `debate.<id>.paid.<what>`; the
   // simulator has no field, so those are the field's own bookkeeping.)
