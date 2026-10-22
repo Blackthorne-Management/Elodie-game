@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 33,
+  "nextobjectid": 35,
   "layers": [
     {
       "id": 1,
@@ -854,9 +854,9 @@
           "id": 19,
           "name": "concourse_arrive",
           "type": "trigger",
-          "x": 16,
+          "x": 256,
           "y": 144,
-          "width": 736,
+          "width": 256,
           "height": 16,
           "rotation": 0,
           "visible": true,
@@ -875,6 +875,52 @@
         },
         {
           "id": 20,
+          "name": "concourse_arrive_w",
+          "type": "trigger",
+          "x": 256,
+          "y": 96,
+          "width": 16,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "concourse_arrive"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.herald_met, !story.concourse_seen"
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "concourse_arrive_e",
+          "type": "trigger",
+          "x": 496,
+          "y": 96,
+          "width": 16,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "concourse_arrive"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.herald_met, !story.concourse_seen"
+            }
+          ]
+        },
+        {
+          "id": 22,
           "name": "chain_step",
           "type": "trigger",
           "x": 112,
@@ -897,7 +943,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 23,
           "name": "parley_steps",
           "type": "trigger",
           "x": 272,
@@ -920,7 +966,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 24,
           "name": "iron_gate_step",
           "type": "trigger",
           "x": 688,
@@ -955,7 +1001,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 23,
+          "id": 25,
           "name": "iron_gate",
           "type": "spawn",
           "x": 704,
@@ -1012,7 +1058,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 24,
+          "id": 26,
           "name": "gate_xaragua",
           "type": "puzzle_object",
           "x": 224,
@@ -1045,7 +1091,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 27,
           "name": "gate_ardencia",
           "type": "puzzle_object",
           "x": 528,
@@ -1078,7 +1124,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 28,
           "name": "gate_zetwal",
           "type": "puzzle_object",
           "x": 704,
@@ -1111,7 +1157,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 29,
           "name": "gate_aldermoor",
           "type": "puzzle_object",
           "x": 0,
@@ -1144,7 +1190,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 30,
           "name": "gate_jwaladesh",
           "type": "puzzle_object",
           "x": 128,
@@ -1177,7 +1223,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 31,
           "name": "gate_kuroshi",
           "type": "puzzle_object",
           "x": 496,
@@ -1210,7 +1256,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 32,
           "name": "gate_skarragol",
           "type": "puzzle_object",
           "x": 752,
@@ -1243,7 +1289,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 33,
           "name": "seat_fountain",
           "type": "puzzle_object",
           "x": 368,
@@ -1278,7 +1324,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 32,
+          "id": 34,
           "name": "concourse_day",
           "type": "crowd_zone",
           "x": 480,

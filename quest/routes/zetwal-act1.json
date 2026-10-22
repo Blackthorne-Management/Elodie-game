@@ -897,7 +897,7 @@
   "goto 1,10",
   "left",
   "@concourse",
-  "goto 46,10",
+  "goto 23,10",
   "up",
   "skip",
   "@welcome",

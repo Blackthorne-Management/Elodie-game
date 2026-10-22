@@ -215,7 +215,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     nar('The Eight Gates Concourse: a ring road round a fountain, and in the ring wall the realm\'s gates, each in its house\'s colours.'),
     act(
       [
-        { do: 'place', actor: 'yari', look: 'yari', at: at(17, 8), facing: 'up' },
+        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 10), facing: 'up' },
         { do: 'look', actor: 'yari' },
         { do: 'walk', actor: 'yari', to: at(15, 1), facing: 'up' },
         { do: 'wait', ms: 900 },
@@ -223,7 +223,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
       '',
       'Yari steps out of the line and stops in front of a gate bricked up in teal stone. She says nothing.',
     ),
-    act([{ do: 'walk', actor: 'yari', to: at(19, 9), facing: 'up' }, { do: 'look', actor: 'npc:seat_halberdier' }], '', 'She comes back into the line without a word.'),
+    act([{ do: 'walk', actor: 'yari', to: at(22, 10), facing: 'up' }, { do: 'look', actor: 'npc:seat_halberdier' }], '', 'She comes back into the line without a word.'),
     act(
       [{ do: 'face', actor: 'npc:seat_halberdier', facing: 'player' }],
       '',

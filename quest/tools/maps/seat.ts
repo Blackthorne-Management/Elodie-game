@@ -140,8 +140,11 @@ export function seatConcourse(): MapSource {
     { layer: 'doors', name: 'concourse_hall', x: 23, y: 5, w: 2, props: { target: 'hall_out', map: 'seat-hall', exit: 'down' } },
     { layer: 'doors', name: 'concourse_archive', x: 9, y: 5, props: { target: 'archive_out', map: 'seat-archive', exit: 'down', if: 'story.archive_open', closed: 'archive_chain_closed' } },
     { layer: 'spawns', name: 'iron_gate', x: 44, y: 26, props: { facing: 'right', era: 'present' } },
-    // The first walk up to the Hall behind the herald (shown: the bricked gate, the salute, the roof); again until seen.
-    trigger('concourse_arrive', 1, 9, { dialogue: 'concourse_arrive', if: 'story.herald_met, !story.concourse_seen' }, W - 2, 1),
+    // The first walk up to the Hall behind the herald (shown: the bricked gate, the salute, the roof), as the party
+    // comes onto the forecourt from any side; again until seen.
+    trigger('concourse_arrive', 16, 9, { dialogue: 'concourse_arrive', if: 'story.herald_met, !story.concourse_seen' }, 16, 1),
+    trigger('concourse_arrive_w', 16, 6, { dialogue: 'concourse_arrive', if: 'story.herald_met, !story.concourse_seen' }, 1, 3),
+    trigger('concourse_arrive_e', 31, 6, { dialogue: 'concourse_arrive', if: 'story.herald_met, !story.concourse_seen' }, 1, 3),
     // The bell: Coco talks the chain off the Archive's door (again until it is lifted).
     trigger('chain_step', 7, 7, { dialogue: 'archive_chain', if: 'story.disguised, !story.archive_open' }, 6, 2),
     // Out of the Archive with the page: the others meet them on the Hall's steps (again until they have).
