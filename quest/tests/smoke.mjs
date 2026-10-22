@@ -9,7 +9,8 @@
 //    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
-// 3. The whole of Act I, Zetwal, from a new game, by the scripted route routes/zetwal-act1.json.
+// 3. Chapters 1 to 5, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's end checks
+//    its story flags, fights and party in the browser).
 //    The headless simulator (src/engine/sim.ts) replays the same route alongside, so after every key
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
 //    The route includes a diagonal step (two keys at once). At the route's @markers it checks the
@@ -28,6 +29,8 @@
 // Usage: npm run smoke            (builds first)
 //        SKIP_BUILD=1 npm run smoke
 //        SHOT_DIR=/some/dir npm run smoke   (where screenshots go; default: the OS temp dir)
+//        SMOKE_FROM=chapter2-end npm run smoke   (only the scripted route, from that marker: the simulator plays
+//                                                  up to it, and the browser loads its save there)
 
 import { execSync, spawn, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -51,7 +54,12 @@ const { chromium } = loadPlaywright();
 // --experimental-strip-types).
 const { parseRoute } = await import('../src/engine/sim.ts');
 const { decodeSave, encodeSave } = await import('../src/engine/save.ts');
-const { newGameSim, readJson } = await import('../tools/sim-setup.ts');
+const { newGameSim, readJson, savedSim } = await import('../tools/sim-setup.ts');
+const { toSaveData } = await import('../src/engine/state.ts');
+const { markShown, pendingShowcases } = await import('../src/engine/showcase.ts');
+const { RPG } = await import('../src/data/rpg.ts');
+const { partyMembers } = await import('../src/engine/rpg.ts');
+const { FlagStore } = await import('../src/engine/flags.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
 const { battleDef } = await import('../src/data/battles.ts');
 const { GODDESS_WORDS } = await import('../src/data/gameOver.ts');
@@ -63,6 +71,8 @@ const URL_BASE = `http://127.0.0.1:${PORT}/`;
 const GAME = `${URL_BASE}?intro=0&install=0`;
 const VILLAGE = `${URL_BASE}?intro=0&install=0&map=test-village`;
 const SHOT_DIR = process.env.SHOT_DIR ?? tmpdir();
+// SMOKE_FROM=<marker> (e.g. chapter2-end): only the scripted route, from that marker of routes/zetwal-act1.json on.
+const FROM = process.env.SMOKE_FROM ?? '';
 
 function check(cond, message) {
   if (!cond) throw new Error(`Smoke check failed: ${message}`);
@@ -500,6 +510,48 @@ async function markChecks(page, sim, name) {
   if (name === 'cane-road') check(s.guide?.final === true && (s.guide.arrow || s.guide.mark), `on the Cane Road the quest arrow or marker shows the way to the boar (${JSON.stringify(s.guide)})`);
   if (name === 'square') check(!!s.guide && (s.guide.arrow || s.guide.mark), `in Accord Square the quest arrow shows the way (${JSON.stringify(s.guide)})`);
   if (name === 'square') check(!!s.sideGuide && (s.sideGuide.arrow || s.sideGuide.mark), `and a silver one shows a side quest's way (${JSON.stringify(s.sideGuide)})`);
+}
+
+/**
+ * At each chapter's end (Chapters 3 to 5; Chapters 1 and 2 are checked after the route): the browser has played
+ * the chapter the way the simulator did (its story flags, its fights, the party), and its end card is up.
+ */
+async function chapterEndChecks(page, sim, name) {
+  const ends = {
+    'chapter3-end': {
+      act: 3,
+      map: 'ardencia-camp',
+      party: ['gianna', 'anissa', 'yari', 'azzy'],
+      flags: ['story.forge_open', 'story.trial_fought', 'story.signet_glowed', 'clue.father_rael', 'belief.rael_traitor', 'anchor.forge_gate_a', 'anchor.forge_gate_b', 'anchor.forge_gate_c', 'anchor.benny_lever', 'story.ardencia_escaped', 'ally.free_brasador', 'encounter.ardencia_story.bats.won'],
+      not: ['encounter.ardencia_story.rael.won'],
+      what: 'Chapter 3 in the browser: the trial lost as the story means it, the forge Echo\'s gates and lever, Azzy joined, the tunnel and the sea road to the camp',
+    },
+    'chapter4-end': {
+      act: 4,
+      map: 'aldoria-desert',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira'],
+      flags: ['story.samira_joined', 'clue.sealed_seventh', 'clue.harbor_price', 'clue.brasador_coin', 'item.dorini_pass', 'anchor.vault_sunlock', 'anchor.cistern_pin', 'side.sweet_water.done', 'side.appraise.done', 'debate.aldoria_bargain.settled', 'story.coralie_met', 'story.coralie_left', 'encounter.aldoria_story.qasim.won'],
+      not: [],
+      what: 'Chapter 4 in the browser: Samira joined in the vault, the sun lock and the cistern pin, Qasim beaten, the seventh page sealed, the caravan',
+    },
+    'chapter5-end': {
+      act: 5,
+      map: 'seat-concourse',
+      party: ['gianna', 'anissa', 'yari', 'azzy', 'samira'],
+      flags: ['clue.elodie_locket_line', 'clue.elodie_tested_line', 'clue.seventh_clause_read', 'anchor.ribbon_thread', 'story.hollis_agreed', 'story.terms_refused', 'side.seats.stage1', 'side.deserters.done', 'debate.seat_voices.settled', 'belief.rael_traitor', 'encounter.seat_story.deserters.won'],
+      not: ['story.disguised', 'story.party_split'],
+      what: 'Chapter 5 in the browser: the welcome, the bell, the sealing, the keeper, the Parley (the terms refused), the fitting and the Iron Gate',
+    },
+  };
+  const end = ends[name];
+  if (!end) return;
+  const s = await snap(page);
+  const party = partyMembers(new FlagStore(s.flags), RPG, 'present').map((m) => m.id);
+  const missing = end.flags.filter((f) => !s.flags[f]);
+  const wrong = end.not.filter((f) => s.flags[f]);
+  check(missing.length === 0 && wrong.length === 0, `${end.what}${missing.length ? ` (missing ${missing.join(', ')})` : ''}${wrong.length ? ` (should not be set: ${wrong.join(', ')})` : ''}`);
+  check(JSON.stringify(party) === JSON.stringify(end.party), `the party at Chapter ${end.act}'s end is ${end.party.join(', ')} (${party.join(', ')})`);
+  check(s.flags[`act${end.act}.complete`] === true && s.mapId === end.map && s.mode === 'card' && s.card !== null, `Chapter ${end.act} ends in ${end.map} with its card`);
 }
 
 /**
@@ -976,14 +1028,34 @@ async function handleVoyage(page, shots, landing = 'xaragua-village') {
 }
 
 async function playAct(browser, errors) {
-  console.log('Act I, Zetwal (scripted route, checked against the simulator after every key):');
-  const route = parseRoute(readJson('routes/zetwal-act1.json'));
-  const sim = newGameSim();
+  console.log('Chapters 1 to 5 (scripted route, checked against the simulator after every key):');
+  let route = parseRoute(readJson('routes/zetwal-act1.json'));
+  let sim = newGameSim();
+  // SMOKE_FROM=<marker>: the simulator plays the route up to that marker, and the browser loads its save there.
+  let saveCode = null;
+  if (FROM) {
+    const at = route.findIndex((item) => item.kind === 'mark' && item.name === FROM);
+    if (at < 0) throw new Error(`SMOKE_FROM: no marker "@${FROM}" in the route`);
+    sim.run(route.slice(0, at));
+    // A marker on a chapter's end card: on to the field after it.
+    let from = at + 1;
+    for (; sim.logic.mode !== 'field' && from < route.length; from++) sim.run([route[from]]);
+    if (sim.logic.mode !== 'field') throw new Error(`SMOKE_FROM: the route never reaches the field after @${FROM}`);
+    // The browser shows each item's popup as it arrives; a player reaching this point has seen them all.
+    for (const it of pendingShowcases(sim.logic.state.flags, RPG)) markShown(sim.logic.state.flags, it.id);
+    saveCode = encodeSave(toSaveData(sim.logic.state, 1));
+    sim = savedSim(saveCode);
+    route = route.slice(from);
+    console.log(`  (starting at @${FROM}, ${route.length} route items left)`);
+  }
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   watchErrors(page, errors);
   await page.goto(`${GAME}&seed=1`); // the simulator's encounter seed, so ambushes match
-  await page.evaluate(() => localStorage.clear());
+  await page.evaluate((c) => {
+    localStorage.clear();
+    if (c) localStorage.setItem('bloodlines-quest.save', c);
+  }, saveCode);
   await page.reload();
   await waitReady(page);
   await waitMatch(page, expected(sim), 'the start');
@@ -1000,6 +1072,7 @@ async function playAct(browser, errors) {
   for (const item of route) {
     if (item.kind === 'mark') {
       await markChecks(page, sim, item.name);
+      await chapterEndChecks(page, sim, item.name);
       await shoot(page, item.name, shots);
       continue;
     }
@@ -1086,6 +1159,10 @@ async function playAct(browser, errors) {
     }
   }
   await page.keyboard.up('Shift');
+  if (FROM) {
+    await ctx.close();
+    return shots;
+  }
   const s = await snap(page);
   check(voyaged, 'Chapter 1 ends with the voyage to Xaraguá, not a jump');
   check(s.flags['act1.complete'] === true && s.flags['card.act1_end'] === true, `played Act I to the end card in the browser (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
@@ -1100,7 +1177,8 @@ async function playAct(browser, errors) {
   check(s.flags['story.papers_checked'] === true && s.flags['story.anaco_found'] === true, 'the occupied city: the three clues place Anaco in the customs cellar, and the papers open the trail to the beach');
   check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
-  check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.mapId === 'zetwal-harbor', 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
+  check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.flags['story.ardencia_asked'] === true, 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
+  check(['act3', 'act4', 'act5'].every((a) => s.flags[`${a}.complete`] === true && s.flags[`card.${a}_end`] === true) && s.mapId === 'seat-concourse', 'Chapters 3, 4 and 5 played to their end cards in the browser: the party stands at the Iron Gate in the Concourse');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');
   // The Items page shows the Locket again, now with the Anchors ability learned at the bridge.
   await menuTab(page, 'Items');
@@ -1128,7 +1206,7 @@ async function playAct(browser, errors) {
   // The Map page: the city drawn from its real maps, then (A) the realm shaped like the board's map.
   await menuTab(page, 'Map');
   let mapSnap = (await snap(page)).menu;
-  check(mapSnap.items.includes('The Old Harbor') && mapSnap.items.includes('Festival Plaza'), 'the city map shows the city the party is in (Pòdlimyè, home after Chapter 2)');
+  check(mapSnap.items.includes('The Eight Gates Concourse') && mapSnap.items.includes("The Gold Gate's yard"), 'the city map shows the city the party is in (Eightgate, after Chapter 5)');
   await shoot(page, 'city-map', shots);
   await page.keyboard.press('KeyZ');
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.includes('Ardencia'), null, { timeout: 2000 });
@@ -1215,7 +1293,7 @@ async function playAct(browser, errors) {
   await page.reload();
   await waitReady(page);
   const back = await snap(page);
-  check(back.mapId === 'zetwal-harbor' && back.flags['act1.complete'] === true && back.flags['act2.complete'] === true, 'the autosave keeps Chapters 1 and 2 finished after a reload');
+  check(back.mapId === 'seat-concourse' && [1, 2, 3, 4, 5].every((n) => back.flags[`act${n}.complete`] === true), 'the autosave keeps Chapters 1 to 5 finished after a reload');
   await ctx.close();
   return shots;
 }
@@ -1244,6 +1322,14 @@ async function main() {
   const errors = [];
   try {
     await waitForServer(URL_BASE);
+    if (FROM) {
+      console.log(`SMOKE_FROM=${FROM}: only the scripted route, from @${FROM}.`);
+      const shots = await playAct(browser, errors);
+      check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
+      console.log(`Screenshots: ${shots.map((f) => join(SHOT_DIR, f)).join(', ')}`);
+      console.log('Smoke test passed (from a marker; run without SMOKE_FROM for the whole test).');
+      return;
+    }
 
     // ---- Desktop, keyboard ------------------------------------------------------------------
     console.log('Desktop (keyboard):');

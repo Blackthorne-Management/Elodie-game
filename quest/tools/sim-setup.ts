@@ -74,6 +74,22 @@ export function puzzleSim(puzzle: PuzzleDef, maps: Record<string, GameMap> = loa
   return sim;
 }
 
+/**
+ * A game loaded from a save code, as the browser loads one (the smoke test's SMOKE_FROM start): a new game on the
+ * saved map with the save applied, and the on-enter scenes run.
+ */
+export function savedSim(code: string, maps: Record<string, GameMap> = loadMaps()): Sim {
+  const decoded = decodeSave(code);
+  if (!decoded.ok) throw new Error(decoded.error);
+  const map = maps[decoded.data.mapId];
+  if (!map) throw new Error(`No map "${decoded.data.mapId}"`);
+  const state = newGame(map, '');
+  applySave(state, decoded.data);
+  const sim = new Sim(new GameLogic(maps, CONTENT, state));
+  enter(sim);
+  return sim;
+}
+
 export function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(join(QUEST_ROOT, path), 'utf8')) as T;
 }

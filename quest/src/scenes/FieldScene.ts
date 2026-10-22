@@ -1943,7 +1943,7 @@ export class FieldScene extends Phaser.Scene {
       case 'enter': {
         const a = this.stageActor(c.actor, c.look, c.from, c.facing ?? 'down');
         this.walkActor(a, c.to, c.run ?? false, c.facing, false);
-        if (!c.async) this.stageBlocking = a;
+        if (!c.async) this.waitFor(a);
         return;
       }
       case 'walk':
@@ -1951,7 +1951,7 @@ export class FieldScene extends Phaser.Scene {
         const a = this.borrowActor(c.actor);
         if (!a) return;
         this.walkActor(a, c.to, c.run ?? false, c.do === 'walk' ? c.facing : undefined, c.do === 'exit');
-        if (!c.async) this.stageBlocking = a;
+        if (!c.async) this.waitFor(a);
         return;
       }
       case 'face':
@@ -1976,6 +1976,15 @@ export class FieldScene extends Phaser.Scene {
         this.refreshDisguise();
         return;
     }
+  }
+
+  /**
+   * The scene waits for this walker to arrive. Someone already standing where the walk ends (Anissa trailing
+   * Gianna can be on the very tile a scene sends her to) has arrived: nothing to wait for, or the scene would
+   * hang there with the line never shown.
+   */
+  private waitFor(a: StageActor): void {
+    if (a.mover.moving || a.tiles.length > 0) this.stageBlocking = a;
   }
 
   /** An actor by name: one already on stage, or someone borrowed from the map (an NPC, or Anissa following). */
@@ -2099,6 +2108,8 @@ export class FieldScene extends Phaser.Scene {
       this.stageWaitMs -= delta;
       if (this.stageWaitMs <= 0) this.runStage();
     }
+    // The scene waits for nobody (its walker left the map, or Yari left the party mid-scene): read on.
+    if (this.staging && !this.stageBlocking && this.stageWaitMs <= 0) this.runStage();
     if (this.mode === 'dialogue') {
       const followed = this.stageCamera ? this.stageActors.get(this.stageCamera) : undefined;
       const target = followed ? followed.mover.point(followed.at) : this.mover.point(this.logic.state.player.pos);

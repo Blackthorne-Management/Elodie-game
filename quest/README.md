@@ -132,8 +132,10 @@ npm run route:expand -- <puzzle> '["goto 3,4","confirm"]'   # turn a goto route 
 
 `npm run smoke` keeps the Phase 1 checks (on the test village), drags the touch stick on a phone-size
 screen (right, then up-right for a diagonal step; the ring floats to the thumb and returns to rest),
-checks Anissa's hints and the Journal, then plays the whole of Act I in the browser from a new game by
-the route in `routes/zetwal-act1.json` (which includes a diagonal step, pressed as two keys at once).
+checks Anissa's hints and the Journal, then plays Chapters 1 to 5 in the browser from a new game by
+the route in `routes/zetwal-act1.json` (which includes a diagonal step, pressed as two keys at once;
+each chapter's end checks its story flags, fights and party). `SMOKE_FROM=<marker>` (e.g. `chapter2-end`)
+runs only the route from that marker on: the simulator plays up to it and the browser loads its save there.
 The headless simulator replays the same route alongside, so after every key the browser must show
 exactly the map, tile, facing, era, mode and dialogue line the engine predicts; at the route's
 `@markers` the name label and the markers must match the engine too, and after the bridge the changed
