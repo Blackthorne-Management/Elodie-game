@@ -62,6 +62,7 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'zetwal-market': 'city',
   'zetwal-harbor': 'city',
   'zetwal-square': 'city',
+  'zetwal-mill': 'city',
   'zetwal-heights': 'city',
   'zetwal-house': 'home',
   'zetwal-temple': 'temple',
@@ -212,6 +213,10 @@ export const SFX_IDS = [
   // The Game Over screen: the low note as the party falls, and the goddess's soft bell.
   'fall',
   'bell',
+  // Chapter 10, the Muster: the Marshal's whistle (two notes, high and low: the Echo and the dusk hear the same), and the
+  // harbor chain's capstan, heard from the Hall (an off-screen event: sound and a shake).
+  'whistle',
+  'ratchet',
 ] as const;
 
 export type SfxId = (typeof SFX_IDS)[number];

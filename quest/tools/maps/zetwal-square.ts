@@ -7,6 +7,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj } from './zetwal-town.ts';
+import { DAY_TEXT, SQUARE } from '../../src/data/muster.ts';
 
 export function zetwalSquare(): MapSource {
   const W = 36;
@@ -81,6 +82,9 @@ export function zetwalSquare(): MapSource {
     obj('hall_of_accord', 13, 1, { era: 'present', kind: 'hall_of_accord' }, 9, 8),
     obj('accord_statue', 16, 12, { dialogue: 'accord_statue', era: 'present', kind: 'accord_statue' }, 3, 2),
     obj('hall_sign', 24, 10, { dialogue: 'hall_sign', era: 'present' }),
+    // The Muster (Chapter 10): the third feud at the Signers' statue, the printer against the Free Brasador sergeant.
+    npc('debate_printer', SQUARE.printer.x, SQUARE.printer.y, 'right', { if: DAY_TEXT }),
+    npc('debate_sergeant', SQUARE.sergeant.x, SQUARE.sergeant.y, 'left', { if: DAY_TEXT }),
   ];
   return { id: 'zetwal-square', present: g, echo: e, objects };
 }

@@ -7,6 +7,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { DAY_TEXT, ROAD } from '../../src/data/muster.ts';
 
 export function zetwalRoad(): MapSource {
   const W = 44;
@@ -29,6 +30,8 @@ export function zetwalRoad(): MapSource {
 
   // The burned sugar mill (north-east), with a broken wall and a cold hearth.
   g.rect(33, 2, 6, 1, '%').rect(33, 2, 1, 2, '%').rect(38, 2, 1, 2, '%').set(35, 3, '&');
+  // The mill's cellar door in its north wall (Chapter 10, Z-6: the second cache under the mill).
+  g.set(ROAD.millDoor.x, ROAD.millDoor.y, 'D').set(ROAD.millDoor.x - 1, ROAD.millDoor.y, 'D');
 
   // The smugglers' landing: crates under cane leaves by the water.
   g.set(23, 18, 'X').set(26, 18, 'X').rect(24, 18, 2, 1, 'n').rect(24, 19, 2, 1, 'k');
@@ -59,7 +62,29 @@ export function zetwalRoad(): MapSource {
     npc('echo_cane_worker', 2, 16, 'up', { era: 'echo' }),
     // Everything past the safe stretch by the gate is wild, once the story returns to Zetwal (no fights
     // in Chapter 1).
-    { layer: 'encounters', name: 'cane_fields', x: 9, y: 1, w: W - 10, h: H - 2, props: { table: 'cane_road', if: 'story.zetwal_return' } },
+    { layer: 'encounters', name: 'cane_fields', x: 9, y: 1, w: W - 10, h: H - 2, props: { table: 'cane_road', if: 'story.zetwal_return, !story.muster_begun' } },
+    // The Muster (Chapter 10): the road's return tier, 24 to 25 (the built table above was levelled for Chapter 2's end).
+    { layer: 'encounters', name: 'cane_fields_muster', x: 9, y: 1, w: W - 10, h: H - 2, props: { table: 'cane_road_muster', if: 'story.muster_begun' } },
+    // Z-6, Muskets in the Cane: the crew at the smugglers' landing, in front of the cache (again until it is beaten);
+    // the chief on the sand after it, until his crew's fate is chosen; the mill's cellar door (with the ledger).
+    trigger('mangrove_crew', ROAD.crewStep.x, ROAD.crewStep.y, { dialogue: 'mangrove_crew', if: 'side.muskets.accepted, !encounter.muster_story.crew.won' }, ROAD.crewStep.w, ROAD.crewStep.h),
+    npc('crew_chief_npc', ROAD.chief.x, ROAD.chief.y, 'up', { if: 'side.muskets.accepted, !encounter.muster_story.crew.won' }),
+    npc('crew_smuggler_npc', ROAD.smuggler.x, ROAD.smuggler.y, 'up', { if: 'side.muskets.accepted, !encounter.muster_story.crew.won' }),
+    ...ROAD.lookouts.map((l, i) => npc(`crew_lookout_${i + 1}`, l.x, l.y, 'up', { npc: 'crew_lookout_npc', if: 'side.muskets.accepted, !encounter.muster_story.crew.won' })),
+    npc('crew_chief_down', ROAD.chief.x, ROAD.chief.y, 'up', { if: 'encounter.muster_story.crew.won, !item.smugglers_ledger' }),
+    {
+      layer: 'doors',
+      name: 'road_mill',
+      x: ROAD.millDoor.x - 1,
+      y: ROAD.millDoor.y,
+      w: 2,
+      props: { target: 'mill_out', map: 'zetwal-mill', exit: 'down', if: 'item.smugglers_ledger', closed: 'mill_cellar_closed' },
+    },
+    // Z-3, The Lonely Cutter: Ti Jak by the cold hearth, waiting for the veiled one, until he walks home.
+    npc('ti_jak', ROAD.tiJak.x, ROAD.tiJak.y, 'down', { if: 'side.lonely_cutter.accepted, !story.ti_jak_home' }),
+    // The Ironvow horse lines inside the east gate.
+    npc('road_horse_1', 3, 9, 'right', { npc: 'muster_horse', if: DAY_TEXT }),
+    npc('road_horse_2', 5, 15, 'right', { npc: 'muster_horse', if: DAY_TEXT }),
   ];
   return { id: 'zetwal-road', present: g, echo: e, objects };
 }

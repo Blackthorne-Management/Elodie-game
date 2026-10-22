@@ -13,6 +13,7 @@ import { ALDERMOOR_DIALOGUE } from './dialogue/aldermoor.ts';
 import { SKARRAGOL_DIALOGUE } from './dialogue/skarragol.ts';
 import { XARAGUA_QUEST_DIALOGUE } from './dialogue/xaraguaQuests.ts';
 import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
+import { MUSTER_DIALOGUE, MUSTER_OVERLAYS, overlay } from './dialogue/zetwalMuster.ts';
 
 const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
   villager_talk: {
@@ -148,7 +149,7 @@ const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
   },
 };
 
-export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
+const BASE: Record<string, DialogueScript> = {
   ...TEST_VILLAGE,
   ...Object.fromEntries(ZETWAL_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(XARAGUA_DIALOGUE.map((d) => [d.id, d])),
@@ -160,7 +161,17 @@ export const DIALOGUE: Readonly<Record<string, DialogueScript>> = {
   ...Object.fromEntries(KUROSHI_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(JWALADESH_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(ALDERMOOR_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(MUSTER_DIALOGUE.map((d) => [d.id, d])),
   ...SHELF_DIALOGUE,
 };
+
+/** Chapter 10's lines over the built conversations of Pòdlimyè's people (data/dialogue/zetwalMuster.ts overlay). */
+for (const o of MUSTER_OVERLAYS) {
+  const base = BASE[o.id];
+  if (!base) throw new Error(`Muster overlay on a missing conversation: ${o.id}`);
+  BASE[o.id] = overlay(base, o);
+}
+
+export const DIALOGUE: Readonly<Record<string, DialogueScript>> = BASE;
 
 export const DIALOGUE_IDS: readonly string[] = Object.keys(DIALOGUE);

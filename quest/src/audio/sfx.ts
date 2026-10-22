@@ -162,6 +162,16 @@ const RECIPES: Record<SfxId, () => Note[]> = {
     { at: 0, dur: 0.18, wave: 'sine', from: 160, to: 70, gain: 0.7, release: 0.12 },
     { at: 0, dur: 0.03, wave: 'noise', from: 0, gain: 0.25 },
   ],
+  // The Marshal's whistle (Chapter 10): two notes, high and low, a breath between.
+  whistle: () => [
+    { at: 0, dur: 0.42, wave: 'sine', from: 2093, gain: 0.3, attack: 0.02, release: 0.08, vibrato: [6, 7] },
+    { at: 0.5, dur: 0.6, wave: 'sine', from: 1568, gain: 0.3, attack: 0.02, release: 0.2, vibrato: [6, 7] },
+  ],
+  // The harbor chain's capstan (Chapter 10), far off: a ratchet, click by click.
+  ratchet: () => [0, 0.16, 0.32, 0.48, 0.64].flatMap((at) => [
+    { at, dur: 0.05, wave: 'noise' as const, from: 0, gain: 0.25 },
+    { at, dur: 0.06, wave: 'triangle' as const, from: 220, to: 160, gain: 0.3 },
+  ]),
   // The party falls (Game Over, shot 1): one low note as the battle music cuts.
   fall: () => [
     { at: 0, dur: 1.4, wave: 'triangle', from: 98, to: 92, gain: 0.5, attack: 0.02, release: 0.9 },

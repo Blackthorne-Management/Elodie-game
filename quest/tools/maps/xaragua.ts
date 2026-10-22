@@ -321,6 +321,8 @@ export function xaraguaBeach(): MapSource {
 
     { layer: 'doors', name: 'beach_village', x: 0, y: 7, h: 2, props: { target: 'village_beach', map: 'xaragua-village', exit: 'right' } },
     { layer: 'spawns', name: 'beach', x: 2, y: 7, props: { facing: 'right', era: 'present' } },
+    // Chapter 11's landing (the fleet off Yucayeque at first light; Chapter 10's voyage ends here).
+    { layer: 'spawns', name: 'landing', x: 14, y: 11, props: { facing: 'up', era: 'present' } },
     // The sea cave: closed by the tide, until the night of the lowest tide (the escape, Chapter 2's end).
     {
       layer: 'doors',

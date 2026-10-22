@@ -3,6 +3,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { HOUSE } from '../../src/data/muster.ts';
 
 export function zetwalHouse(): MapSource {
   const g = new Grid(20, 12, 'o');
@@ -18,7 +19,8 @@ export function zetwalHouse(): MapSource {
   e.rect(1, 8, 1, 2, 'b').rect(6, 4, 2, 1, 'A').rect(17, 9, 1, 2, 'A');
 
   const objects: ObjSpec[] = [
-    npc('anicette', 12, 4, 'right'),
+    // At home, except the dawn of the fleet, when she is on the quay (the Muster, Chapter 10).
+    npc('anicette', 12, 4, 'right', { if: '!story.betrayal_seen' }),
     npc('echo_aide', 12, 4, 'right', { era: 'echo' }),
     npc('echo_messenger', 17, 7, 'left', { era: 'echo' }),
     npc('echo_guard', 7, 8, 'down', { era: 'echo' }),
@@ -44,6 +46,10 @@ export function zetwalHouse(): MapSource {
     obj('loose_board', 17, 2, { dialogue: 'loose_board', era: 'present', kind: 'loose_board', if: 'anchor.night_orders' }),
     obj('floor_cache', 17, 2, { dialogue: 'floor_cache', era: 'echo' }),
     { layer: 'anchors', name: 'night_orders_cache', x: 17, y: 2, props: { object: 'floor_cache', flag: 'anchor.night_orders' } },
+    // The Muster (Chapter 10): two grandmothers at the kitchen table, as the party comes in after the watch has landed
+    // (again until it is played); the four accounts laid on the table once Anicette has heard which one lies.
+    trigger('muster_kitchen', HOUSE.door.x, HOUSE.door.y, { dialogue: 'muster_kitchen', flag: 'story.rahel_met', once: true, onEnter: true, if: 'story.watch_landed' }),
+    obj('accounts_on_table', HOUSE.accounts.x, HOUSE.accounts.y, { kind: 'accounts_on_table', era: 'present', if: 'clue.four_accounts' }),
   ];
   return { id: 'zetwal-house', present: g, echo: e, objects, interior: true };
 }

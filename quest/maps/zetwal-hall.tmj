@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 32,
+  "nextobjectid": 33,
   "layers": [
     {
       "id": 1,
@@ -627,6 +627,11 @@
               "value": "down"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.muster_begun"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "chancellor"
@@ -635,6 +640,34 @@
         },
         {
           "id": 14,
+          "name": "chancellor_chamber",
+          "type": "npc",
+          "x": 144,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.muster_begun"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "chancellor"
+            }
+          ]
+        },
+        {
+          "id": 15,
           "name": "seal_keeper",
           "type": "npc",
           "x": 512,
@@ -657,7 +690,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 16,
           "name": "chief_courier",
           "type": "npc",
           "x": 480,
@@ -680,7 +713,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 17,
           "name": "treasurer",
           "type": "npc",
           "x": 544,
@@ -703,7 +736,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 18,
           "name": "scribe",
           "type": "npc",
           "x": 80,
@@ -726,7 +759,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "scribe_2",
           "type": "npc",
           "x": 144,
@@ -761,7 +794,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 19,
+          "id": 20,
           "name": "hall_out",
           "type": "door",
           "x": 304,
@@ -812,7 +845,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 20,
+          "id": 21,
           "name": "hall",
           "type": "spawn",
           "x": 304,
@@ -869,7 +902,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 22,
           "name": "head_seat",
           "type": "puzzle_object",
           "x": 304,
@@ -892,7 +925,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 23,
           "name": "hall_law",
           "type": "puzzle_object",
           "x": 448,
@@ -915,7 +948,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 24,
           "name": "hall_records",
           "type": "puzzle_object",
           "x": 544,
@@ -938,7 +971,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 25,
           "name": "council_desk",
           "type": "puzzle_object",
           "x": 80,
@@ -961,7 +994,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 26,
           "name": "pigeon_loft",
           "type": "puzzle_object",
           "x": 560,
@@ -984,7 +1017,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 27,
           "name": "courier_map",
           "type": "puzzle_object",
           "x": 528,
@@ -1007,7 +1040,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 28,
           "name": "treasury_chests",
           "type": "puzzle_object",
           "x": 528,
@@ -1030,7 +1063,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 29,
           "name": "portrait_patricio",
           "type": "puzzle_object",
           "x": 208,
@@ -1053,7 +1086,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 30,
           "name": "portrait_solange",
           "type": "puzzle_object",
           "x": 416,
@@ -1076,7 +1109,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 31,
           "name": "portrait_elodie",
           "type": "puzzle_object",
           "x": 208,
@@ -1099,7 +1132,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 32,
           "name": "portrait_founders",
           "type": "puzzle_object",
           "x": 416,
@@ -1130,10 +1163,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 752,
+      "imageheight": 816,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 374,
+      "tilecount": 406,
       "columns": 8,
       "margin": 0,
       "spacing": 0

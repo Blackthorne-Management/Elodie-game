@@ -844,6 +844,76 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Seal', power: 130, magic: true, statuses: ['hushed'], every: 3, tell: 'The Sealbearer lifts the Throne\'s seal...' },
     ],
   },
+  // Chapter 10, the Muster (the outline section 5 with its second review's 3.13): the Cane Road's return at 24 to 25 and Z-6's
+  // crew at the smugglers' landing. The lookout's whistle calls a bandit once; the crew stands in front of its chief
+  // (protects: the Chapter 7 to 9 reviews' decoy finding), and the chief withdraws at 0 HP: nobody dies.
+  cane_bandit: {
+    id: 'cane_bandit',
+    bribable: true,
+    name: 'Road Bandit',
+    look: 'road_bandit',
+    level: 24,
+    role: 'skirmisher',
+    moves: [
+      { name: 'Knife', power: 110 },
+      { name: 'Dirty trick', power: 150, every: 3, tell: 'The bandit grins and palms a fistful of sand...' },
+    ],
+  },
+  cane_lookout: {
+    id: 'cane_lookout',
+    bribable: true,
+    name: 'Lookout',
+    look: 'lookout',
+    level: 24,
+    role: 'skirmisher',
+    moves: [
+      { name: 'Sling', power: 100 },
+      { name: 'Whistle', power: 0, hire: 'cane_bandit', every: 2, once: true, tell: 'The lookout puts two fingers to his mouth...' },
+    ],
+  },
+  crew_lookout: {
+    id: 'crew_lookout',
+    bribable: true,
+    name: 'Lookout',
+    look: 'lookout',
+    level: 24,
+    role: 'skirmisher',
+    protects: 'crew_chief',
+    withdraws: { line: 'The lookout drops his sling and runs for the mangroves.' },
+    moves: [
+      { name: 'Sling', power: 100 },
+      { name: 'Whistle', power: 0, hire: 'cane_bandit', every: 2, once: true, tell: 'The lookout puts two fingers to his mouth...' },
+    ],
+  },
+  crew_smuggler: {
+    id: 'crew_smuggler',
+    bribable: true,
+    name: 'Smuggler',
+    look: 'smuggler',
+    level: 24,
+    role: 'brute',
+    protects: 'crew_chief',
+    withdraws: { line: 'The smuggler throws down his cudgel and wades off into the mangroves.' },
+    moves: [
+      { name: 'Cudgel', power: 110 },
+      { name: 'Crate throw', power: 140, every: 3, tell: 'The smuggler hoists a Crown-stamped crate overhead...' },
+    ],
+  },
+  crew_chief: {
+    id: 'crew_chief',
+    name: 'Crew chief',
+    look: 'crew_chief',
+    level: 25,
+    role: 'brute',
+    boss: true,
+    hpScale: 3,
+    atkScale: 1.3,
+    withdraws: { line: 'Enough! Keep the cellar. Keep the cane. We were paid to carry, not to die.', speaker: 'Crew chief' },
+    moves: [
+      { name: 'Cudgel', power: 120 },
+      { name: 'The whole stack', power: 130, area: true, every: 3, tell: 'The chief gets his shoulder under a stack of crates. Guard, everyone!' },
+    ],
+  },
   heath_husher: {
     id: 'heath_husher',
     name: 'Husher',
@@ -969,6 +1039,27 @@ const QASIM_FORECLOSURE: readonly EnemyMove[] = [
 ];
 
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 10, Z-6: the crew at the smugglers' landing (the outline 7.1 and section 5; the second review's 3.13 keeps x3 /
+  // x1.3 with protects). Game Over applies; the way back in is the cart track's foot (the trigger plays again until won).
+  // Not marked as a side quest's fight: Z-6 is required by the Chancellor's condition, so its fight is the story's (the
+  // level curve's line without side quests cannot skip it; Claude's call).
+  mangrove_crew: {
+    id: 'mangrove_crew',
+    title: 'The Smugglers\' Landing',
+    backdrop: 'cane_road',
+    enemies: ['crew_lookout', 'crew_smuggler', 'crew_chief', 'crew_lookout'],
+    table: 'muster_story',
+    group: 'crew',
+    rewards: { xp: 50, gold: 150 },
+    endsWithBoss: true,
+    boss: true,
+    tips: {
+      start: 'They stand in front of him, Gigi. The lookouts first, before they whistle.',
+      spark: 'Surge, Gigi!',
+      tell: 'The crates! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
   // Chapter 9: the Hushed in the Assize (the outline beat 7, its second review's 3.1 and 3.12). Game Over applies; the way
   // back in is the dock's gate (the court's doors are held by the watch while it sits). Two veils at her side step in
   // front of her (protects); she turns to the bench at 60%; at 25% her veil comes off and two more come down the stair.
@@ -1517,6 +1608,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
 const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   mountain_path: { title: 'The Mountain Path', backdrop: 'mountain_path' },
   cane_road: { title: 'The Cane Road', backdrop: 'cane_road' },
+  cane_road_muster: { title: 'The Cane Road', backdrop: 'cane_road' },
   cinder_flats: { title: 'The Cinder Flats', backdrop: 'cinder_flats' },
   cinder_patrols: { title: 'The Sea Road', backdrop: 'cinder_flats' },
   desert_edge: { title: 'The Desert Edge', backdrop: 'desert_edge' },

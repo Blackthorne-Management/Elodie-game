@@ -449,6 +449,68 @@ export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {
   // The Heath (Chapter 9; the outline section 5 with its second review's 3.5: the realm-wide ambush rule, no taper): trios
   // at 23 to 24 (the sim: pairs are trivial to this party). Constables and their hounds, the Hushed's veils, the Crown's
   // musketeers, and a Sealbearer. The road, the landing, the barn's yard, the causeway and the chapel are safe.
+  // Chapter 10, the Muster: the Cane Road's return (24 to 25, trios: a pair is trivial at 24; the outline section 5), from
+  // the landing (story.muster_begun); the built table above stays for Chapters 2 and 3.
+  cane_road_muster: {
+    id: 'cane_road_muster',
+    groups: [
+      {
+        id: 'bandits',
+        enemies: ['road_bandit', 'road_bandit', 'road_bandit'],
+        weight: 3,
+        level: 24,
+        foes: ['Road Bandit', 'Road Bandit', 'Road Bandit'],
+        intro: 'Three bandits step out of the cane, knives low. "Muster toll, envoy. Everything you carry."',
+        won: 'They drop their knives and vanish between the stalks.',
+        fled: 'You sprint back down the road. Their laughter follows you.',
+      },
+      {
+        id: 'smugglers',
+        enemies: ['smuggler', 'smuggler', 'cane_lookout'],
+        weight: 2,
+        level: 25,
+        foes: ['Smuggler', 'Smuggler', 'Lookout'],
+        intro: 'Smugglers, hauling Crown-stamped crates through the field toward the mangroves. "You saw cane. Say it."',
+        won: 'The smugglers abandon a crate and scatter toward the mangroves.',
+        fled: 'You slip away before the lookout can whistle for more.',
+      },
+      {
+        id: 'hushers',
+        enemies: ['qc_zealot', 'qc_zealot', 'husher'],
+        weight: 1,
+        level: 25,
+        foes: ['Quiet Crown Zealot', 'Quiet Crown Zealot', 'Husher'],
+        intro: 'Three veils rise out of the ditch without a sound. "The little one glows, they say. Even at home."',
+        won: 'The veils back away into the cane, still watching.',
+        fled: 'You run. When you look back, the road behind you is empty.',
+      },
+      {
+        id: 'crabs',
+        enemies: ['mangrove_crab', 'mangrove_crab', 'road_bandit'],
+        weight: 2,
+        level: 24,
+        foes: ['Mangrove Crab', 'Mangrove Crab', 'Road Bandit'],
+        intro: 'Two great mangrove crabs come up out of the ditch, and a bandit behind them who thinks he trained them.',
+        won: 'The crabs go back into the ditch. The bandit goes after them.',
+        fled: 'You back away. Crabs are slow. Bandits are not.',
+      },
+    ],
+  },
+  // Chapter 10's scripted fight (data/battles.ts), for the Foes page. No map rolls on this table.
+  muster_story: {
+    id: 'muster_story',
+    groups: [
+      {
+        id: 'crew',
+        weight: 0,
+        level: 25,
+        foes: ['Crew chief', 'Smuggler', 'Lookout', 'Lookout'],
+        intro: 'A crew stands in front of its crates.',
+        won: 'The crew is gone into the mangroves.',
+        fled: 'You back away up the cart track.',
+      },
+    ],
+  },
   heath: {
     id: 'heath',
     groups: [

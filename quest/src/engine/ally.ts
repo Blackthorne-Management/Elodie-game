@@ -159,3 +159,20 @@ export function musterJournal(flags: FlagStore, rpg: RpgContent): string[] {
     return `${s.name}: ${s.points} of ${names[s.currency]} ${s.price}.${tail}`;
   });
 }
+
+/** Every flag the Muster writes from code (musterTick and resolveMuster), for the content checks. */
+export function musterFlagsWritten(): string[] {
+  const houses = Object.keys(ALLY_PRICES);
+  return [
+    'muster.betrayer',
+    'muster.exposed_possible',
+    'muster.resolved',
+    'muster.turned_army',
+    'muster.turned_paid',
+    'army.zetwal',
+    'concord',
+    ...houses.flatMap((h) => [`muster.share.${h}`, `muster.short.${h}`, `army.${h}`]),
+    ...Object.entries(ALLY_PRICES).filter(([, d]) => d.pool).map(([h]) => `muster.betrayer.${h}`),
+    ...Object.keys(MUSTER.concord).map((f) => `concord.paid.${f}`),
+  ];
+}

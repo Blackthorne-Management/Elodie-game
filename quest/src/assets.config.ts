@@ -10,6 +10,10 @@ import { FAIR_DUSK } from './data/skarragol.ts';
 import { NIGHT, QUARTER_DUSK } from './data/kuroshi.ts';
 import { DAWN as AGNIPUR_DAWN, NIGHT as AGNIPUR_NIGHT } from './data/jwaladesh.ts';
 import { EVE as KINGSMERE_EVE, KEEP_NIGHT, LAST_DAWN as KINGSMERE_DAWN, RAIN as KINGSMERE_RAIN } from './data/aldermoor.ts';
+import { DAWN as MUSTER_DAWN, DUSK as MUSTER_DUSK, NIGHT as MUSTER_NIGHT } from './data/muster.ts';
+
+/** Pòdlimyè's outdoor maps (the Muster's dusk, night and dawn wash over them). */
+const MUSTER_OUTDOORS = ['zetwal-town', 'zetwal-harbor', 'zetwal-square', 'zetwal-market', 'zetwal-heights', 'zetwal-road', 'zetwal-temple'];
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -451,6 +455,42 @@ export const TILESET = {
     { gid: 372, name: 'cell_bench', base: 0x5a4a3a, accent: 0x3a2e24, pattern: 'stripes' },
     { gid: 373, name: 'gallery_desk', base: 0x5a3e2a, accent: 0xf4eee0, pattern: 'grid' },
     { gid: 374, name: 'chapel_lantern', base: 0x3a3a40, accent: 0xf2d04b, pattern: 'blob' },
+    // Pòdlimyè at the Muster (Chapter 10, Oct 22): the mill's cellar and the powder store; the houses' hulls (a colour
+    // and a flag each), Jordyn's coaster, the Crown's launch, the harbor chain, the signal fire; the camps' banners and the
+    // Dorini table; the crane and the brass lamp on one step; the consul's strongbox, the satchel with the closed hand,
+    // the evidence laid on the quay; the cellar's inner door, open and barred, and its oak bar in the memory.
+    { gid: 375, name: 'cellar_wall', base: 0x4a3e34, accent: 0x2e2620, pattern: 'border' },
+    { gid: 376, name: 'cellar_floor', base: 0x6a5a48, accent: 0x54463a, pattern: 'dots' },
+    { gid: 377, name: 'cellar_floor_old', base: 0x5e5444, accent: 0x7a6a50, pattern: 'grid' },
+    { gid: 378, name: 'muster_ship_ironvow', base: 0x5a5a62, accent: 0x8a7a68, pattern: 'stripes' },
+    { gid: 379, name: 'muster_ship_suzumori', base: 0x6e6a78, accent: 0xf2d04b, pattern: 'border' },
+    { gid: 380, name: 'muster_ship_agnivansh', base: 0x8a5a3a, accent: 0xd8b04a, pattern: 'cross' },
+    { gid: 381, name: 'muster_ship_dorini', base: 0x2e6a4a, accent: 0xd8c08a, pattern: 'border' },
+    { gid: 382, name: 'muster_ship_zetwal', base: 0x2a5a8a, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 383, name: 'jordyn_coaster', base: 0x5a4a3a, accent: 0x8a8690, pattern: 'border' },
+    { gid: 384, name: 'crown_launch', base: 0x2a2632, accent: 0x6a5a8a, pattern: 'stripes' },
+    { gid: 385, name: 'harbor_chain', base: 0x3a3c42, accent: 0x8a8c92, pattern: 'grid' },
+    { gid: 386, name: 'signal_fire', base: 0x8a3b2a, accent: 0xf2a050, pattern: 'blob' },
+    { gid: 387, name: 'signal_fire_cold', base: 0x5a4a3a, accent: 0x2a2018, pattern: 'cross' },
+    { gid: 388, name: 'banner_horsetail', base: 0x6e6a78, accent: 0x8a6a3a, pattern: 'stripes' },
+    { gid: 389, name: 'banner_lantern_pole', base: 0x6e6a78, accent: 0xf4eee0, pattern: 'blob' },
+    { gid: 390, name: 'brass_lamp_post', base: 0x8a5a3a, accent: 0xd8b04a, pattern: 'blob' },
+    { gid: 391, name: 'dorini_table', base: 0x2e6a4a, accent: 0xf4eee0, pattern: 'border' },
+    { gid: 392, name: 'banner_free_brasador', base: 0x1e1a1e, accent: 0xd8d0c0, pattern: 'stripes' },
+    { gid: 393, name: 'banner_violet', base: 0x8a8690, accent: 0x5a4a7a, pattern: 'stripes' },
+    { gid: 394, name: 'convoy_crates', base: 0x8a6a42, accent: 0x2e6a4a, pattern: 'cross' },
+    { gid: 395, name: 'crane_on_step', base: 0xf4eee0, accent: 0x6e6a78, pattern: 'cross' },
+    { gid: 396, name: 'lamp_on_step', base: 0xd8b04a, accent: 0xf2a050, pattern: 'blob' },
+    { gid: 397, name: 'accounts_on_table', base: 0xf4eee0, accent: 0x8a3b2a, pattern: 'grid' },
+    { gid: 398, name: 'consul_strongbox', base: 0x3a2e24, accent: 0xd8b04a, pattern: 'border' },
+    { gid: 399, name: 'strongbox_open', base: 0x3a2e24, accent: 0xf2d04b, pattern: 'grid' },
+    { gid: 400, name: 'closed_hand_satchel', base: 0x5a4030, accent: 0x9a9a9a, pattern: 'blob' },
+    { gid: 401, name: 'laid_evidence', base: 0xf4eee0, accent: 0x3a3a40, pattern: 'stripes' },
+    { gid: 402, name: 'mill_door_open', base: 0x2a2018, accent: 0x6a5440, pattern: 'border' },
+    { gid: 403, name: 'mill_door_barred', base: 0x5a4030, accent: 0x3a3c42, pattern: 'cross' },
+    { gid: 404, name: 'mill_bar_echo', base: 0x6a5440, accent: 0x8a8c92, pattern: 'stripes' },
+    { gid: 405, name: 'musket_crates', base: 0x5a4a3a, accent: 0x6a5a8a, pattern: 'cross' },
+    { gid: 406, name: 'cellar_lantern', base: 0x3a3a40, accent: 0xf2d04b, pattern: 'blob' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -919,6 +959,22 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   gaze_exile: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'long', outfit: 0xc8a050, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: 0xd8b860, accessories: ['staff'] },
   rolls_keeper: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: 0x2a2632, trim: 0x2e86c1, robe: true, accessories: ['satchel'] },
   verger: { skin: C.S!, hair: C.G!, hairStyle: 'bald', outfit: 0x2a2632, trim: 0xd8d0c0, robe: true, accessories: ['staff'] },
+  // Pòdlimyè at the Muster (Chapter 10, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 19).
+  // Rahel: tall, straight, a black shawl and a Brasador brooch (the second review's 3.2: no steppe braid); Patricia: small,
+  // white-haired, a cane she does not use; Joaquin without the sash; Jordyn's coat turned inside out; the Dorini admiral
+  // (Rashid, by role) in green with a ledger; the Agnivansh steward (Prakash, by role) in saffron; the Zetwal levy; Ti Jak,
+  // sixteen, a cutter's blade; the powder-master fifty years ago; the crew's chief, a smuggler with a red cap.
+  rahel: { skin: C.T!, hair: C.G!, hairStyle: 'bun', outfit: 0x1e1a1e, trim: 0xb8403a, robe: true, build: 'tall', accessories: ['emblem'] },
+  patricia: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: 0x5a4a5a, trim: C.w!, robe: true, build: 'small', accessories: ['cane'] },
+  joaquin_free: { skin: C.T!, hair: HAIR_DARK, hairStyle: 'short', outfit: BRASADOR_BLACK, trim: C.w!, legs: C.K!, headgear: 'helmet', headgearColor: C.g!, accessories: ['epaulettes'] },
+  jordyn_free: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x8a8690, trim: SEAT_VIOLET, legs: C.K!, build: 'tall', accessories: ['epaulettes'] },
+  dorini_admiral: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: DORINI_GREEN, trim: C.y!, legs: C.K!, beard: HAIR_BLACK, headgear: 'bicorne', headgearColor: DORINI_GREEN, accessories: ['satchel', 'epaulettes'] },
+  dorini_marine: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: DORINI_GREEN, trim: C.w!, legs: C.K!, headgear: 'cap', headgearColor: DORINI_GREEN, accessories: ['staff'] },
+  agnivansh_steward: { skin: AGNI_SKIN, hair: 0x4a4a52, hairStyle: 'short', outfit: AGNI_SAFFRON, trim: AGNI_BRASS, robe: true, beard: 0x4a4a52, accessories: ['emblem', 'satchel'] },
+  zetwal_levy: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x2a5a8a, trim: C.y!, legs: C.K!, headgear: 'cap', headgearColor: 0x2a5a8a, accessories: ['staff'] },
+  ti_jak: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xa89c86, trim: C.o!, legs: C.B!, build: 'small', accessories: ['staff'] },
+  powder_master: { skin: C.T!, hair: C.G!, hairStyle: 'bald', outfit: 0x6a5230, trim: C.R!, legs: C.b!, beard: C.G!, accessories: ['apron'] },
+  crew_chief: { skin: C.T!, hair: C.B!, hairStyle: 'bald', outfit: 0x3a3440, trim: 0xb8403a, legs: C.B!, beard: C.B!, headgear: 'cap', headgearColor: 0xb8403a, accessories: ['satchel'] },
 };
 
 /** The player's look in each era. */
@@ -1099,6 +1155,11 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
   { maps: ['aldermoor-cross', 'aldermoor-keep', 'aldermoor-cathedral', 'aldermoor-heath'], if: KINGSMERE_EVE, color: 0x2a2440, alpha: 0.34 },
   { maps: ['aldermoor-heath', 'aldermoor-cross'], if: KINGSMERE_DAWN, color: 0xd8a070, alpha: 0.12 },
   { maps: ['aldermoor-heath', 'aldermoor-cross'], if: KINGSMERE_RAIN, color: 0x5a6a80, alpha: 0.22 },
+  // Pòdlimyè at the Muster (Chapter 10; data/muster.ts): the dusk of the inspection (lanterns, orange), the night under the
+  // point (deep blue), the dawn of the fleet (warm gold), on the outdoor maps.
+  { maps: MUSTER_OUTDOORS, if: MUSTER_NIGHT, color: 0x101830, alpha: 0.45 },
+  { maps: MUSTER_OUTDOORS, if: MUSTER_DUSK, color: 0xf2a050, alpha: 0.18 },
+  { maps: MUSTER_OUTDOORS, if: MUSTER_DAWN, color: 0xd8a070, alpha: 0.12 },
 ];
 
 /**

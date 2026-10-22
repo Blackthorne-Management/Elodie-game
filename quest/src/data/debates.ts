@@ -6,6 +6,8 @@
 import type { DebateDef } from '../engine/debate.ts';
 import type { DialogueLine } from '../engine/dialogue.ts';
 import { loreFlag } from './books.ts';
+import type { StageCue } from '../engine/stage.ts';
+import { TEMPLE } from './muster.ts';
 
 const K = 'gaze_keeper';
 const Q = 'recruiter_a';
@@ -14,8 +16,12 @@ const BY = 'bayarmaa';
 const A = 'anissa';
 const R = 'roots_elder';
 const P = 'gaze_pilgrim';
+const S = 'samira';
+const JO = 'jordyn';
 const say = (speaker: string, text: string): DialogueLine => ({ speaker, text });
 const nar = (text: string): DialogueLine => ({ speaker: '', text });
+const act = (stage: StageCue[], speaker: string, text: string): DialogueLine => ({ speaker, text, stage });
+const at = (x: number, y: number) => ({ x, y });
 
 export const DEBATES: readonly DebateDef[] = [
   {
@@ -720,6 +726,250 @@ export const DEBATES: readonly DebateDef[] = [
     after: [
       say('qc_hierarch', 'A hand in the light. I will think about it, in the light.'),
       say('gaze_exile', 'Think out loud. That is all the goddess asks.'),
+    ],
+  },
+  // ---- Chapter 10, the Muster in Pòdlimyè: the three feuds, the chapter's required mediations (the outline 7.3 with its
+  // second review's 3.5: the Influence houses are each a feud's ally, and a mediation pays two toward that house's price).
+  // City zetwal, so Mediate is the built Influence 5 there; they open once the Chancellor has set the condition.
+  {
+    id: 'zetwal_feud_merchants',
+    city: 'zetwal',
+    question: 'Is a convoy taken on the steppe stolen, or taxed?',
+    ally: 'dorini_clerk',
+    opponent: 'hrafn',
+    opensIf: { flag: 'story.council_condition' },
+    passing: [
+      say('dorini_clerk', '...one convoy, eleven wagons, forty-two horses. The guild has the receipts.'),
+      say('hrafn', 'The steppe has no receipts. It has grass.'),
+    ],
+    listen: [
+      say('dorini_clerk', 'A convoy is a contract with the road. Your riders broke it, and the guild has the receipts for what they took.'),
+      say('hrafn', 'The steppe has no road. It has grass, and whoever rides it.'),
+      say('hrafn', 'You paid the Crown\'s toll for fifty years without a word. You can pay ours for one convoy.'),
+      say('dorini_clerk', 'The Crown\'s toll had a receipt.'),
+      say(A, 'They both sound tired, Gigi. Like they\'ve had this argument for years.'),
+    ],
+    reasonNeeds: [loreFlag('zetwal_harbor_tolls'), loreFlag('skarragol_crown_offer'), loreFlag('aldoria_on_contracts')],
+    rounds: [
+      {
+        claim: 'Eleven wagons went onto the steppe and seven came off it. That is theft, in any language with a ledger.',
+        speaker: 'dorini_clerk',
+        answers: {
+          scripture: { short: 'The Gaze sees both', text: 'The Gaze remembers the raid. It also remembers the blockade that emptied the steppe\'s salt first.', strength: 2 },
+          reason: { short: 'Contracts bind both', text: 'On Contracts: a contract binds both hands. The road\'s toll was never agreed with the people who live on it.', strength: 1 },
+          compassion: { short: 'Who went hungry', text: 'Ask the drivers who lost their wagons, and the riders who lost a winter. Neither of them set the price.', strength: 1 },
+        },
+      },
+      {
+        claim: 'The blockade cost the steppe three winters. A convoy is a cheap price for three winters.',
+        answers: {
+          scripture: { short: 'Two wrongs', text: 'A winter taken and a convoy taken are both remembered. The goddess does not subtract.', strength: 1 },
+          reason: { short: 'The Crown\'s toll', text: 'The Crown\'s toll is the thing you both paid. It is the thing you are both sailing against tomorrow.', strength: 1 },
+          compassion: { short: 'Both poorer', text: 'Three winters of fish and no salt. Three seasons of a convoy. Both of you are poorer because the Crown wanted you to be.', strength: 2 },
+        },
+      },
+      {
+        claim: 'Then who sails first, envoy? The thief, or the one he robbed?',
+        answers: {
+          scripture: { short: 'Nobody is first', text: 'In the Gaze\'s eyes nobody sails first. The names are read together.', strength: 1 },
+          reason: { short: 'Who knows the water', text: 'The one who knows the strait sails first, and the one who knows the shore lands first. That is not a prize.', strength: 2 },
+          compassion: { short: 'Side by side', text: 'Side by side. Then neither of you has to watch the other\'s back.', strength: 1 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(Round the clock gate, a Dorini clerk puts his pen down, and an Ironvow rider takes his hand off his horse\'s bridle.)',
+      1: '(Half the market nods at the clerk, half at the jarl. The goat herder\'s goat bleats at both.)',
+      0: '(The market goes back to shouting prices.)',
+    },
+    won: [
+      say('hrafn', 'Side by side. My riders will hate it. They will do it.'),
+      say('dorini_clerk', 'I will tell the admiral. He will want a receipt.'),
+    ],
+    lost: [
+      say('hrafn', 'Words, envoy. The steppe has heard words.'),
+      say('dorini_clerk', 'And the guild has filed them.'),
+    ],
+    mediate: [
+      say(G, 'Dorini salt to the steppe, at the old price. Ironvow horses to the guild\'s caravans, at the old price. Both written down.'),
+      say(S, 'I\'ll write it. In the guild\'s hand, so nobody can say they didn\'t read it.'),
+      say('hrafn', '...At the old price.'),
+      say('dorini_clerk', 'The admiral will sign it. He likes a price that does not move.'),
+      nar('The clerk and the jarl shake hands over the Ironvow horse\'s neck. The horse puts up with it.'),
+      say(S, 'That is the most expensive sentence I have ever written, and I am going to invoice both of them for it.'),
+    ],
+    provoke: [
+      say(G, 'Your guild sold the Crown\'s salt for fifty years, and your riders sold their own fleet to it. Which of you is the thief?'),
+      nar('The market goes very quiet. Somebody\'s horse stamps.'),
+      say('hrafn', 'Careful, envoy.'),
+    ],
+    after: [
+      say('hrafn', 'Side by side. I have told my riders. They are still complaining.'),
+      say('dorini_clerk', 'At the old price. I have it in writing.'),
+    ],
+  },
+  {
+    id: 'zetwal_feud_temple',
+    city: 'zetwal',
+    question: 'Can a burned temple be rebuilt by the hands that burned it?',
+    ally: 'muster_retainer',
+    opponent: 'agnivansh_steward',
+    opensIf: { flag: 'story.council_condition' },
+    passing: [
+      say('agnivansh_steward', '...on a paper you knew was false.'),
+      say('muster_retainer', 'On the Crown\'s word. We have stopped taking it.'),
+    ],
+    listen: [
+      say('muster_retainer', 'We burned it on the Crown\'s word. We have stopped taking the Crown\'s word. What else would you have us stop?'),
+      say('agnivansh_steward', 'They burned the temple on a paper that was false. They knew it was false.'),
+      say('agnivansh_steward', 'The elder who signed it is still alive, and still sorry, and sorry does not rebuild a roof.'),
+      say('muster_retainer', 'Then let us rebuild the roof.'),
+      say(A, 'The grey one wants to help, Gigi. The saffron one isn\'t ready.'),
+    ],
+    reasonNeeds: [loreFlag('kuroshi_burned_temple'), loreFlag('jwaladesh_priests_decision'), loreFlag('zetwal_four_hands'), loreFlag('jwaladesh_burned_temple')],
+    rounds: [
+      {
+        claim: 'The hands that burned it would build it crooked. Let them pay, and let others build.',
+        answers: {
+          scripture: { short: 'Remembered hands', text: 'A thing done is remembered, and so is the hand that stopped doing it. The goddess remembers both.', strength: 2 },
+          reason: { short: 'The Crown\'s paper', text: 'The paper was the Crown\'s. Both your houses were written down as "the ash" on the same page; I heard it read at Eightgate.', strength: 1 },
+          compassion: { short: 'Let them carry', text: 'Let them carry the stones, at least. Some debts can only be paid by carrying.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Sorry does not rebuild a roof.',
+        answers: {
+          scripture: { short: 'Sorry is a start', text: 'The Gaze does not ask for sorry. It asks for what you do after.', strength: 1 },
+          reason: { short: 'The same page', text: 'You are both "the ash" on the Crown\'s page. The roof was burned by the hand that wrote that word.', strength: 1 },
+          compassion: { short: 'A beginning', text: 'He stood in front of your flame, Meera said. That is not an apology. It is a beginning.', strength: 2 },
+        },
+      },
+      {
+        claim: 'And if they build it, envoy, whose temple is it?',
+        answers: {
+          scripture: { short: 'The goddess\'s', text: 'It was never yours or theirs. It was the people\'s who came to it.', strength: 1 },
+          reason: { short: 'The ones who pray', text: 'It is the temple of whoever prays in it. That is how temples have always been owned.', strength: 1 },
+          compassion: { short: 'One night each', text: 'One night on your altar, one night on theirs. That is how the crane and the lamp did it.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(By the lamp, a Suzumori guard and an Agnivansh keeper find they are standing on the same step.)',
+      1: '(The island\'s pilgrims murmur. Half of them were never sure whose temple it was.)',
+      0: '(The lamp burns on. Nobody moves.)',
+    },
+    won: [
+      say('agnivansh_steward', 'One night each. ...I will say it to the Keepers. They will not like it either.'),
+      say('muster_retainer', 'Nobody likes it. That is how you know it is fair.'),
+    ],
+    lost: [
+      say('agnivansh_steward', 'Not today, envoy.'),
+      say('muster_retainer', 'Today is the only day we have.'),
+    ],
+    mediate: [
+      act([{ do: 'look', actor: 'player' }], '', 'Gianna sets Kaede\'s paper crane on the lamp\'s step, beside the Agnivansh brass lamp.'),
+      act(
+        [
+          { do: 'sync' },
+          { do: 'walk', actor: 'haru', to: at(TEMPLE.crane.x - 1, TEMPLE.crane.y + 1), facing: 'up', async: true },
+          { do: 'walk', actor: 'vikram', to: at(TEMPLE.brassLamp.x + 1, TEMPLE.brassLamp.y + 1), facing: 'up' },
+        ],
+        '',
+        'Haru and Vikram, who have walked three chapters together, say nothing, and stand on the same step.',
+      ),
+      say('agnivansh_steward', 'One night on our altar. One night on theirs.'),
+      nar('The Suzumori retainer closes his fan.'),
+    ],
+    provoke: [
+      say(G, 'Your elder signed a false paper, and your Keepers hid the flame from the city. Which of you burned the temple?'),
+      nar('The island goes quiet. The lamp hisses.'),
+      say('agnivansh_steward', 'Not in front of the lamp, envoy.'),
+    ],
+    after: [
+      say('agnivansh_steward', 'One night on our altar.'),
+      say('muster_retainer', 'One night on theirs.'),
+    ],
+  },
+  {
+    id: 'zetwal_feud_crown',
+    city: 'zetwal',
+    question: 'Are the Crown\'s own people the Crown?',
+    ally: 'printer',
+    opponent: 'fb_sergeant',
+    opensIf: { flag: 'story.council_condition' },
+    passing: [
+      say('fb_sergeant', '...Kingsmere accents. I do not care whose vote they had.'),
+      say('printer', 'I never had a vote.'),
+    ],
+    listen: [
+      say('printer', 'I set type in Kingsmere for forty years under a Crown I never voted for. My people purged. My families quiet.'),
+      say('printer', 'I am not the Crown. I am what the Crown does to its own.'),
+      say('fb_sergeant', 'Crown raiders burned the highland roads when I was nine. My father\'s road. They had Kingsmere accents.'),
+      say('fb_sergeant', 'I do not care whose vote they had.'),
+      say(A, 'The man with the ink wants somebody to sit with him, Gigi.'),
+    ],
+    reasonNeeds: [loreFlag('zetwal_ash_wars_temple'), loreFlag('kuroshi_spy_ledger'), loreFlag('zetwal_ash_wars_anicette'), loreFlag('zetwal_crown_chronicle'), 'side.crown_chronicle.done', 'clue.four_accounts'],
+    rounds: [
+      {
+        claim: 'They wore the Crown\'s coat. A coat is a choice.',
+        answers: {
+          scripture: { short: 'The Gaze counts people', text: 'The Gaze counts people, not crowns. It counted the raiders, and it counted the printer.', strength: 1 },
+          reason: { short: 'Written to order', text: 'The Crown\'s chronicle of those roads was written to order. The raiders were the Crown\'s; the clerk who wrote it down was Kingsmere\'s.', strength: 2 },
+          compassion: { short: 'Coats turned', text: 'These coats are turned inside out. They chose that too, in front of the Crown.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Kingsmere sent the raiders. Kingsmere\'s people can carry the blame.',
+        answers: {
+          scripture: { short: 'Each their own', text: 'Each carries their own. That is the whole of what the goddess asks.', strength: 1 },
+          reason: { short: 'Not the same people', text: 'The four accounts agree on one thing: the raiders and the people who paid for them were not the same. The Crown spent forty years making sure you\'d think so.', strength: 2 },
+          compassion: { short: 'A pie-shop boy', text: 'He hit a sergeant for a pie-shop boy, and said sorry after. That is the whole of Kingsmere\'s people in one act.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then what are they, envoy, if not the Crown?',
+        answers: {
+          scripture: { short: 'Remembered', text: 'People who will be remembered for what they did next. Same as you.', strength: 1 },
+          reason: { short: 'Witnesses', text: 'Witnesses. They saw the Crown from inside, and they walked out to say so.', strength: 1 },
+          compassion: { short: 'Neighbours', text: 'Twelve people who walked to the coast to stand in your plaza. Neighbours, if you let them.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(Round the statue, a Free Brasador soldier moves over on the step, to make room for a violet coat.)',
+      1: '(The square is split. The nursemaid\'s six take sides loudly.)',
+      0: '(The square goes back to staring at the violet coats.)',
+    },
+    won: [
+      say('fb_sergeant', 'Neighbours. ...I will sit with them. I will not like it.'),
+      say('printer', 'Nobody likes me. I am a printer.'),
+    ],
+    lost: [
+      say('fb_sergeant', 'They had Kingsmere accents, envoy.'),
+      say('printer', 'So do I.'),
+    ],
+    mediate: [
+      act(
+        [
+          { do: 'enter', actor: 'jordyn_s', look: 'jordyn_free', from: at(17, 21), to: at(17, 14), facing: 'up' },
+          { do: 'look', actor: 'jordyn_s' },
+        ],
+        JO,
+        'I arrested the Crown\'s almoner in the Crown\'s court. The men behind me left the Crown\'s watch in front of the Crown.',
+      ),
+      say(JO, 'If that is the Crown, the Crown has resigned.'),
+      act([{ do: 'wait', ms: 900 }], 'fb_sergeant', '...Terribly sorry, Captain.'),
+      say('edmund', 'That\'s my line.'),
+      act([{ do: 'exit', actor: 'jordyn_s', to: at(17, 21) }], '', 'The printer and the sergeant stand either side of the statue of the signers.'),
+    ],
+    provoke: [
+      say(G, 'Your company fired on Brasador\'s own envoy from a wall. Whose people are you?'),
+      nar('The square goes still. A Free Brasador soldier puts his hand on his sword.'),
+      say('fb_sergeant', 'Careful, envoy. That was our captain\'s escape.'),
+    ],
+    after: [
+      say('fb_sergeant', 'Neighbours. I am told.'),
+      say('printer', 'I am printing it. Then it will be true.'),
     ],
   },
 ];

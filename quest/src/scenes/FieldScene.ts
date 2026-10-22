@@ -2393,7 +2393,12 @@ export class FieldScene extends Phaser.Scene {
     // lie (a short, fainter gold the player sees and Gianna, looking at the sand, does not).
     else if (fx === 'token') cam.flash(1400, 255, 214, 110);
     else if (fx === 'signet') cam.flash(500, 214, 170, 70);
-    else if (fx === 'fade') {
+    // Chapter 10: the Marshal's whistle, and the harbor chain's capstan heard from the Hall (a sound and a small shake).
+    else if (fx === 'whistle') audio.sfx('whistle');
+    else if (fx === 'ratchet') {
+      audio.sfx('ratchet');
+      cam.shake(400, 0.004);
+    } else if (fx === 'fade') {
       cam.fadeOut(250, 0, 0, 0);
       cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => cam.fadeIn(450, 0, 0, 0));
     }

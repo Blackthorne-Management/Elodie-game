@@ -9,6 +9,7 @@ import { FAIR, FJORD, HERD, HORN_DAY_DONE, MOOT, PLATEAU, QUAY } from './skarrag
 import { FILEHOUSE, HALL, LANTERN_DAY_DONE, LIBRARY, MARSH, MARSH_CODE, MAZE, PIER, QUARTER, SCREENS_SOLUTION } from './kuroshi.ts';
 import { BAZAAR, COURT, DAY_DONE, HARBOR, MIRROR_SOLUTION, ROOFTOPS, mirrorFlag } from './jwaladesh.ts';
 import { CATHEDRAL, CLOSE, CROSS, DAY_DONE as KINGSMERE_DAY_DONE, HEATH, KEEP, cabinetOf, PACT_DRAWER } from './aldermoor.ts';
+import { HARBOR as MUSTER_HARBOR, HALL as MUSTER_HALL, HOUSE, PLAZA, SEATED, TEMPLE } from './muster.ts';
 import type { Goal } from '../engine/guide.ts';
 
 export const ACT1: QuestDef = {
@@ -1692,8 +1693,135 @@ export const ACT9: QuestDef = {
   ],
 };
 
+
+const plazaAt = (x: number, y: number): Goal => ({ map: 'zetwal-town', at: { x, y } });
+/** The paving's west edge, by the lane up from the harbor (the camp's scene starts on any step onto the paving). */
+const pavingStep = plazaAt(10, 11);
+/** The paving's north edge, below the steps down from Accord Square (the watch walks up from the harbor lane). */
+const pavingFromSteps = plazaAt(18, 5);
+const speaker: Goal = { map: 'zetwal-hall', at: { ...MUSTER_HALL.speaker } };
+
+/**
+ * Chapter 10, The Muster (Pòdlimyè, Zetwal again: docs/quest/reviews/2026-10-22-chapter10-outline.md with its second
+ * review). The long pier and the whistle given back, the camp on the plaza (Joaquin brings Azzy's company), the council
+ * at noon (the Chancellor's condition), the watch walks up (Jordyn, Rahel, Patricia), two grandmothers in the kitchen,
+ * Patricia's blessing at the lamp, the Marshal's answer at the stone, until the allies are seated (the three feuds, Z-6
+ * and Z-3, followed by the arrow), the council's word and the chain, the whistle at dusk, under the point by night, the
+ * tide.
+ */
+export const ACT10: QuestDef = {
+  id: 'act10',
+  title: 'Chapter 10: The Muster',
+  // Only the maps Chapter 1 also lists, and the mill (the Old Harbor, the Heights and the archive belong to no chapter:
+  // the Journal follows the latest begun there, so Chapters 1 to 3 keep theirs).
+  maps: ['zetwal-town', 'zetwal-house', 'zetwal-temple', 'zetwal-hall', 'zetwal-road', 'zetwal-market', 'zetwal-square', 'zetwal-mill'],
+  objectives: [
+    {
+      id: 'pier',
+      title: 'The long pier',
+      detail: 'Home to Pòdlimyè, and the Old Harbor full of hulls that are not Zetwal\'s.',
+      done: { flag: 'story.pier_met' },
+      goals: [{ map: 'zetwal-harbor', at: { ...MUSTER_HARBOR.landing } }],
+      hints: ['The harbor\'s full, Gigi.', 'Grandmother and Grandfather are on the pier.', 'Walk up the long pier.'],
+    },
+    {
+      id: 'camp',
+      title: 'The camp on the plaza',
+      detail: 'The Festival Plaza is a camp. Seven kinds of soldier, and Tío Joaquin by the fountain.',
+      done: { flag: 'story.plaza_camp_seen' },
+      goals: [pavingStep],
+      hints: ['There are drums on the plaza, Gigi.', 'Up from the harbor, along the shore.', 'Walk onto the plaza\'s paving.'],
+    },
+    {
+      id: 'council',
+      title: 'The council at noon',
+      detail: 'The council sits at noon in the Hall of the Accord. The Chancellor waits for the envoy\'s answer.',
+      done: { flag: 'story.council_condition' },
+      goals: [speaker],
+      hints: ['The council sits at noon, Gigi.', 'Up the steps, into the Hall, the Council Chamber on the left.', 'Talk to the Speaker in the Council Chamber.'],
+    },
+    {
+      id: 'watch',
+      title: 'The watch lands',
+      detail: 'Titi Jordyn said she would be at the Muster, and bring her mother, and her mother\'s mother.',
+      done: { flag: 'story.watch_landed' },
+      goals: [pavingFromSteps],
+      hints: ['Somebody\'s coming up from the harbor, Gigi.', 'Back down to the plaza.', 'Walk onto the plaza\'s paving.'],
+    },
+    {
+      id: 'kitchen',
+      title: 'Two grandmothers',
+      detail: 'Rahel said she would come to Grandmother\'s house. There are things one says in a kitchen.',
+      done: { flag: 'story.rahel_met' },
+      goals: [{ map: 'zetwal-house', at: { ...HOUSE.door } }],
+      hints: ['Grandmother will have laid the table, Gigi.', 'Home, on the north-west side of the plaza.', 'Go into our house.'],
+    },
+    {
+      id: 'blessing',
+      title: 'The lamp',
+      detail: 'Patricia went over to the Temple island to look at the Gaze lamp. She asked for the three of you.',
+      done: { flag: 'story.blessing' },
+      goals: [{ map: 'zetwal-temple', at: { ...TEMPLE.patricia } }],
+      hints: ['She asked for us, Gigi.', 'Over the Chain Bridge, into the temple.', 'Talk to Patricia, by the Gaze lamp.'],
+    },
+    {
+      id: 'stone',
+      title: 'The Marshal\'s answer',
+      detail: 'Grandfather is at the Marshal\'s stone, on the plaza. You carry Thomas\'s true record, and the court\'s roll.',
+      done: { flag: 'story.patricio_told' },
+      goals: [plazaAt(PLAZA.patricioStone.x, PLAZA.patricioStone.y)],
+      hints: ['Grandfather\'s by his stone, Gigi.', 'The Marshal\'s stone, on the plaza\'s west side.', 'Talk to Grandfather at the stone.'],
+    },
+    {
+      id: 'seated',
+      title: 'Until the allies are seated',
+      detail: 'The Chancellor\'s condition: the three feuds seated, and the Cane Road the city\'s again. Then the council votes.',
+      done: { any: [SEATED, { flag: 'story.council_voted' }] },
+      followSide: true,
+      noXp: true,
+      hints: ['Three feuds and a road, Gigi.', 'Follow the arrow. Your Quests page knows what is left.', 'The Iron Market, the Gaze lamp, Accord Square, and the Cane Road.'],
+    },
+    {
+      id: 'vote',
+      title: 'The council\'s word',
+      detail: 'The city is seated. The Speaker will call the vote.',
+      done: { flag: 'story.council_voted' },
+      goals: [speaker],
+      hints: ['The council is waiting, Gigi.', 'Up to the Hall.', 'Talk to the Speaker in the Council Chamber.'],
+    },
+    {
+      id: 'whistle',
+      title: 'The Marshal\'s whistle',
+      detail: 'Dusk. Seven companies in lines on the plaza, and Grandfather at the stage\'s foot with the whistle.',
+      done: { flag: 'story.inspection_done' },
+      goals: [plazaAt(PLAZA.stageFoot.x, PLAZA.stageFoot.y)],
+      hints: ['Grandfather\'s at the stage, Gigi.', 'Your Journal shows who is least paid. You can still give the Ironvow and the Agnivansh gold.', 'Talk to Grandfather at the stage\'s foot.'],
+    },
+    {
+      id: 'night',
+      title: 'Under the point',
+      detail: 'Night. A captain left his fire with a satchel, and went down to the Old Harbor.',
+      done: { flag: 'story.betrayal_seen' },
+      goals: [
+        { if: { notFlag: 'story.betrayer_walked' }, ...pavingFromSteps },
+        { map: 'zetwal-harbor', at: { x: MUSTER_HARBOR.quayStrip.x, y: MUSTER_HARBOR.roadRow } },
+      ],
+      hints: ['He walked like he knew where he was going, Gigi.', 'Down to the Old Harbor.', 'Follow him to the quay, west along the harbor road.'],
+    },
+    {
+      id: 'tide',
+      title: 'The tide',
+      detail: 'Dawn. The fleet is warped out, waiting. The trader takes the envoy\'s household at its head.',
+      done: { flag: 'act10.complete' },
+      noXp: true,
+      goals: [{ map: 'zetwal-harbor', at: { x: MUSTER_HARBOR.tide.x, y: MUSTER_HARBOR.tide.y } }],
+      hints: ['The ships are waiting, Gigi.', 'The long pier.', 'Walk down the long pier.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -2197,5 +2325,90 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'clue.elodie_tested_line',
     title: 'In private',
     text: 'Mother, behind Coco\'s curtain, looking at the pins: "He should never have tested you."',
+  },
+  // Chapter 10, the Muster.
+  {
+    id: 'whistle_lent',
+    when: 'story.whistle_lent',
+    title: "The Marshal's whistle",
+    text: 'Given back to Grandfather for the day, on the long pier: "Then it\'s yours again. For today."',
+  },
+  {
+    id: 'council_condition',
+    when: 'story.council_condition',
+    title: "The Chancellor's condition",
+    text: 'Seat the feuds (the Ironvow and the Dorini, the Suzumori and the Agnivansh, Kingsmere\'s people), and clear the Cane Road. Then the council votes.',
+  },
+  {
+    id: 'dorini_marines',
+    when: 'story.plaza_camp_seen',
+    title: 'The Dorini marines',
+    text: 'Forty marines and an invoice. Price: Influence 10, owed at the Muster (the admiral: "Kirinoura\'s files say you paid it in books."). Least paid, first bought.',
+  },
+  {
+    id: 'four_accounts',
+    when: 'clue.four_accounts',
+    title: 'The four accounts',
+    text: 'The temple\'s record, the Suzumori ledger, Grandmother\'s Volume Two: forty dead at the ford. The Crown\'s chronicle: four hundred, written to order. Read the true one aloud at the Hearing.',
+  },
+  {
+    id: 'patricio_answer',
+    when: 'story.patricio_told',
+    title: "The Marshal's answer",
+    text: 'Six pages, counted and sealed. The seventh was read to the Crown\'s clerk in the next room. "Leave it blank. Blank is honest."',
+  },
+  {
+    id: 'smugglers_ledger',
+    when: 'item.smugglers_ledger',
+    title: 'Muskets in the cane',
+    text: 'Crown muskets for "the Muster\'s friends", under the closed hand, and a house\'s sigil drawn in the margin. The second cache is under the mill.',
+  },
+  ...(['skarragol', 'kuroshi', 'jwaladesh', 'al_doria'] as const).map((h) => ({
+    id: `ledger_sigil_${h}`,
+    when: `muster.betrayer.${h}`,
+    title: "The ledger's sigil",
+    text: `The sigil in the smugglers' margin is ${{ skarragol: 'a horse-tail standard: the Ironvow', kuroshi: 'a grey paper lantern: the Suzumori', jwaladesh: 'a brass lamp: the Agnivansh', al_doria: 'a green pennant: the Dorini' }[h]}.`,
+  })),
+  {
+    id: 'changed_mill_bar',
+    when: 'anchor.mill_bar',
+    title: 'Something changed',
+    text: 'The inner door under the mill is barred and pinned: young Patricio dropped the powder-master\'s bar fifty years ago. The cache is shut in.',
+  },
+  {
+    id: 'signing_morning',
+    when: 'clue.signing_morning',
+    title: 'The morning of the signing',
+    text: 'Fifty years ago two armies stood on the plaza and signed six clauses. Today seven stand on it, and the seventh page is in Gianna\'s bag.',
+  },
+  {
+    id: 'lonely_cutter',
+    when: 'side.lonely_cutter.done',
+    title: 'The lonely cutter',
+    text: 'Ti Jak waited at the mill for the veiled woman. His mother was Odile, a cutter; somebody keeps her name. He went home.',
+  },
+  {
+    id: 'under_the_point',
+    when: 'story.betrayal_seen',
+    title: 'Under the point',
+    text: 'The Crown bought a captain at a free harbor, in the dark, with the muskets already in the cane. A closed hand on his satchel. "It will be quieter soon."',
+  },
+  {
+    id: 'muster_turned',
+    when: 'muster.turned',
+    title: 'Turned',
+    text: 'The house sails with the envoy; its captain sits in the Hall\'s cell. Jordyn arrested him by the book.',
+  },
+  {
+    id: 'muster_betrayed',
+    when: 'muster.betrayed',
+    title: 'Sailed to the Crown',
+    text: 'The captain stepped into the Crown\'s launch, and his company went down to its ship in the dark. They will be on the Crown\'s side of the harbor.',
+  },
+  {
+    id: 'dorini_token',
+    when: 'item.token_dorini',
+    title: 'The Dorini sit',
+    text: 'The admiral gave a green seal for the chamberlain\'s chair: "The guild sits when the guild is paid."',
   },
 ];

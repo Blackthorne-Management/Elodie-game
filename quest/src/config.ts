@@ -74,10 +74,12 @@ export const LEVELS = {
  * Oct 22): at 42 the line without side quests ended one XP short of 17; at 44 it ends on 17 and the route on 19
  * (COMBAT.md 6, "Chapter 7"). Chapter 8 pays 60 (Claude's call, Oct 22): at 44 the line without side quests ended at
  * 18, three under 21; Agnipur's side quests pay less instead (J-2 and J-3 25, the salt road 20), so the route still
- * ends on 21 (COMBAT.md 6, "Chapter 8"). Chapter 10 pays 20 (Claude's call, Oct 22; the Chapter 10 second review's 3.4): the
- * Muster is one level wide (24 to 25) and Chapter 9 ends high in 24 (8,028), so its fixed XP is sized to about 400.
+ * ends on 21 (COMBAT.md 6, "Chapter 8"). Chapter 10 pays 40 (Claude's call, Oct 22; the Chapter 10 second review's 3.4, set from Chapter 9's measured
+ * end of 8,028): the Muster is one level wide (24 to 25), so its fixed XP is about 500, and its two side quests and the
+ * crew's fight are required by the Chancellor's condition, so their XP rides on the Journal's steps (Z-6 10, Z-3 none,
+ * the crew 50 as a story fight): a player cannot skip them, and the line without side quests stays two under, not three.
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70, 20];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60, 70, 40];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
