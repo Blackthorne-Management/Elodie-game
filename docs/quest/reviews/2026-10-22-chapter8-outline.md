@@ -399,3 +399,781 @@ means walked and acted on the map with stage cues (`enter`, `walk`, `face`, `loo
 - Journal: **North** (done `act8.complete`; pays no XP: a card).
 
 ---
+
+## 3. The maps (six, drawn in code like Cenizal, Ordvik and Kirinoura: `tools/maps/jwaladesh.ts` through `painter.ts`)
+
+Registered in `data/maps.ts` and `CITIES` (`data/rpg.ts`, city id `jwaladesh`, name Agnipur, house Agnivansh). The
+look: white stone and saffron, brass everywhere, salt-white ground beyond the walls, a sky painted orange at the
+horizon on every outdoor map (the salt's glare), the one new brick tower in a city of old white domes. Accent
+`#e67e22` (CAPITALS). Tiles for the tool: `WHITESTONE`, `SALT`, `SCRUB`, `QUAY`, `MOLE`, `CHAIN` (an `above`
+object, two looks: taut, slack), `BRASS`, `SAFFRON` (the Court's floor), `COLONNADE`, `ROOF`, `PLANK` (the rooftop
+bridges), `JAR` (object), `MIRROR` (object, five looks: face-down and four orientations), `BEAM` (an `above` object,
+four orientations, placed by flags), `LAMP` (object, two looks), `CURTAIN` (object, two looks), `ALTAR` (object,
+three looks: a thumb's height, a flame in the beam, a tall flame).
+
+| Map | Size (tiles) | Section | Echo | What is on it |
+|---|---|---|---|---|
+| `jwaladesh-harbor` | 34 x 22 | The Harbor Chain (outdoor) | **the chain lamp's platform** (one zone: Arjun's charge; anchors: the chain lamp, the tower mirror) | The landing, the quay, the chain across the mouth, the chain tower and its lamp, the old watchtower with its bracket (a plank bridge between the two platforms), Dhanraj's oil store (the doors, the jars, the strongbox, the boss trigger; S-JWA's balance lock placed inert at the back), the factor's launch (until `story.dhanraj_beaten`), the harbour-master, the milk stall's awning, the sea-wall lane (open on `story.bazaar_night`), the night watch's pair on the open quay, the harbor stair (sighting 1), the voyage trigger (after `ally.jwaladesh`) |
+| `jwaladesh-bazaar` | 44 x 30 | The Lamp Bazaar (hub, outdoor) | none | The lamp lanes, the dyers' vats and their rooftop stair, the spice row and the debate corner, the milk-and-bread stall, the bead seller, the swordsmith, the contract board, the shrine child's dark shrine (J-4, inert), the runners' hall at the temple steps (J-2), the Exchange's tower and price-board, the library door (west), the temple steps, the duel yard (a sanded square, the duel's trigger), the Court's doors (north centre), the salt gate (east, to the flats); the relay's gust lanes and sheltered lanes (M-JWA-1); day and night variants; Salkhi's placements |
+| `jwaladesh-rooftops` | 30 x 18 | The Roofs (outdoor) | none | Four roofs joined by plank bridges, the four mirrors, the Exchange's tower in the old line, the wick-window at the far end, the beam segments (by flags), Aiyana's placements per mirror, Anissa's spot at the fourth |
+| `jwaladesh-library` | 22 x 14 | The Palm-Leaf Library (interior) | none | The nine books on low shelves in bundles, the librarian (Hindi greeting), the Gaze pilgrim's reading corner |
+| `jwaladesh-court` | 36 x 28 | The Court of the Flame (the seat of government, interior, with the duel yard as an outdoor pocket on its east side) | none | The colonnade to the altar (the curtain, the wick-window, three altar looks), the ruler's seat, the priests' council, the treasury, the envoys' pavilion (the factor and Dhanraj until the duel), the runners' hall door (the hall itself is on the bazaar map: the steps), the duel yard, the records room (three Court books, the ledger after), the back gate and its kitchen lane (J-3's delivery) |
+| `jwaladesh-saltflats` | 46 x 28 | The Salt Flats (wild, outdoor) | none | The caravan road east from the salt gate to the salt-road shrine (J-3's carter waits there), the pans and scrub off the road (the ambush layer, `salt_flats`), a Crown oil-cart heading for the coast (placed, a line), the jackals' den |
+
+Six maps: CAPITALS' five with the **rooftops** split out (the mirrors need their own plank-bridge lanes and a flat
+plane for the beam; a roof layer on the bazaar's map would be the hub's whole `above` layer) and the Court's runners'
+hall folded into the bazaar's temple steps (a runners' hall needs the lanes outside it, not a room). The Court is
+36 x 28, the seat paragraph's size. **Outdoor areas, buildings aside: six** (the quay and mole, the bazaar's lanes,
+the rooftops, the duel yard, the salt road, the pans), the owner's rule. The seat is central (at the head of the
+bazaar, the temple steps rising from the market), large, staffed, and full of people who disagree (Meera, two
+priests, the chamberlain, the treasurer with an empty book, the Crown's factor, the chief runner, Dhanraj as a
+guest). The market is the lamp lanes (brass and no oil; nothing like a plaza, a souk or a fair). The validator's
+rules hold: every zone tile walkable in both eras (the lamp's platform); no NPC or door inside a zone; the two
+anchors are Echo-era puzzle objects (the taper at the lamp, the mirror at the bracket) whose dialogue sets
+`anchor.chain_lamp` and `anchor.tower_mirror`, read by the present lamp, bracket and beam.
+
+**Drawn placeholders** (code, through `assets.config.ts`): a mirror as a 1 x 2 object with five looks; a beam
+segment as four `above` tiles; the chain as an `above` strip with two looks; a brass lamp 1 x 2 with two looks; the
+curtain 2 x 2; the altar 2 x 2 with three looks; a jar 1 x 1; an oil ring on the floor as a flag look of the store's
+tiles; a saffron recolour of the Chapter 5 envoy's shape for the Court's people.
+
+---
+
+## 4. The Echo and the fights: what the engine has and what this chapter uses
+
+- **The Echo party** is Patricio, Caona and Benny, as data; the field draws only Gianna's sprite in the Echo, so
+  Arjun's charge is staged with Arjun, the seven riders, the Crown's hulls and the chain as Echo-era NPCs, walkers and
+  objects, and the taper and the mirror as Echo-era puzzle objects. Caona and Benny are one line each ("Benny is
+  with the Zetwal ships."), not drawn. No new system.
+- **No Echo battle.** The charge is seven riders against a tower, and Patricio is at the lamp: a battle would put him
+  on the mole, where the story has him lighting the signal; and the Echo-battle foundation is kept for the chapters
+  that need it (Chapter 11's harbor). The cannon, the two fallen riders and the chain dropping are walkers, a sound
+  and a shake (the owner's rule for off-screen events, used for an on-screen one that is too big to fight). Claude's
+  call, section 12.
+- **The present's fights** use what Chapters 3, 4, 6 and 7 built: enemies as data with `moves`, `every`, `tell`,
+  `area`, `magic`, `statuses`, `hire`, `protects`, `withdraws`; battles with `phases` (`below`, `onSurge`, `enter`),
+  `rewards`, `endsWithBoss`, `meantToLose` and `finale`. There is no `burning` status, no fire immunity (only
+  `resist` at x0.5), no delay on items, no sparring rule and no solo-fighter rule (section 10 has each, with its
+  fallback). Everything below is written to those shapes.
+- **Vikram as a fighter** is a `MemberDef` in `rpg.ts` plus `SKILLS.vikram` and `MOVES.vikram` in `battles.ts` and a
+  placeholder look (section 9); `joins: { flag: 'party.vikram' }`. Two of his four skills need small engine pieces
+  (section 10); the other two are data.
+- **Who fights.** With Vikram the party has **seven** fighters and `BATTLE_ACTIVE` is 4. By the built rule the active
+  four are the first four joined in `MEMBERS` order, so without the Chapter 6 review's active-order flag (3.9) Vikram
+  is benched in his own chapter, which is a bug. **This outline requires the flag** (`party.active`, set at the join:
+  Vikram replaces the fourth for this chapter; the order is the player's afterwards): if Chapter 6 or 7 built it, this
+  is data; if not, it is this chapter's first engine piece (section 10). The sim ran him active with Azzy (Haru
+  benched), active with Haru (Azzy benched), and benched: all three win every seed (section 5), so the fight does not
+  depend on him, but the chapter does.
+
+---
+
+## 5. The chapter's fights and levels
+
+**Enemies (new data, `COMBAT.md` 13.2 and 13.3, in the engine's shapes):**
+
+| Enemy | Role | Level | Moves | Note |
+|---|---|---|---|---|
+| **Oil Enforcer** (`oil_enforcer`) | brute, `bribable`, resists fire | 20 to 21 | Cudgel 110; **Oil Flask** 90, `burning` 60% (section 10; fallback `weakened`), every 3, tell "The enforcer uncorks a flask and swings it by the neck..." | COMBAT's Burning, built as a status if the piece lands |
+| **Ember Jackal** (`ember_jackal`) | skirmisher, resists fire, weak to water | 20 to 21 | Bite 100; Ember Snap 120, every 3, tell "The jackal's coat sparks. It crouches..." | COMBAT's Scavenge (heals on a kill) has no engine support: cut. Animals never bribed; flee at the end as the engine's last-foe rule does |
+| **Road Bandit** (built, `road_bandit`) | as built | 20 | as built | the design's "Oil Enforcer and Road Bandit" group |
+| **Quiet Crown Zealot** (built, `qc_zealot`) | caster | 21 | as built | "The little one glows, they say. Even in the salt." |
+| **Vikram, sparring** (`vikram_duel`) | skirmisher, `hpScale 2`, `atkScale 1.2`, `withdraws` | 20 | Quick Thrust 100; Ember Cut 130, every 2, tell "Vikram draws a breath he does not have and the blade glows..." | the duel only; no XP, no gold, no Game Over (section 10) |
+| **Seth Dhanraj** (`seth_dhanraj`) | brute, `boss`, resists fire | **21** | section below | the Crown-backed oil hoarder |
+
+**Seth Dhanraj, two phases, sim-checked:** level 21, `hpScale 6`, `atkScale 1.5` (the brute line at 21 with those
+gives about 1,690 HP and 107 ATK before the Story difficulty's 0.8 and 0.7). COMBAT's 8 / 1.1 on the standard line
+is 8 x 1.4 once the brute's HP is counted, and the sim shows it ends in 44 to 48 party actions with nobody hurt: too
+long for a fight whose trick is a wall, not a knife.
+
+1. **Hoard:** *Ledger Staff* 120; ***Oil Wall*** (`power 0`, `ally: 'seth_dhanraj'`, `statuses: ['oiled']`, every 3,
+   tell "Dhanraj kicks a jar over. Oil spreads in a ring at his feet; nothing burns there."): the `oiled` status
+   (section 10) makes him **immune to fire** and halves other damage for its turns, and **a Surge shatters it** (the
+   built `shatter`, as the Golden Wall): Anissa's light is what breaks the wall of oil, which is the chapter's
+   picture. Fallback: the built `gilded` (no fire immunity; the sim used it). Two Oil Enforcers at his side from the
+   start (COMBAT's "Oil Enforcers").
+2. **Price Spike** (`below: 0.5`): "Then the price goes up."; `enter: ['oil_enforcer', 'oil_enforcer']` at 21,
+   `enterText` "Two more enforcers come in from the back with flasks."; moves *Ledger Staff* 130 and ***Price
+   Spike*** (`power 0`, `itemDelay: 1`, every 2, tell "Dhanraj opens the ledger. 'Everything you carry just got
+   dearer.'": for the rest of the fight the party's items cost a full extra turn of delay, COMBAT's rule, section 10;
+   fallback: a 150 area blow every 2, which the sim used, with the tell ending "Guard, everyone!"). **Lighting his
+   oil:** once the wall is shattered, **any fire skill** on him (Vikram's Ember Cut, Azzy's Reinado, Gianna's Ember
+   Flare from the lantern staff) sets `burning` on him for the rest of the fight (COMBAT's "lighting his oil Burns
+   him": in data, a `weak: ['fire']` and `burnsOnFire: true` on the phase, section 10; fallback: he is simply weak to
+   fire in phase 2).
+3. At 0 HP he `withdraws` ("Enough. The oil is yours. It was always going to be somebody's."), and the enforcers go
+   out the back: nobody dies. `endsWithBoss`: a standing enforcer leaves as he falls.
+
+| Scaling tried (Gianna, Yari, Azzy, Vikram; 30 seeds; Story difficulty; the wall as `gilded`, Price Spike as the area blow) | Party 19 | Party 20 | Party 21 |
+|---|---|---|---|
+| hp x5, atk x1.3 | 30/30 won, 37 actions, 0 down, 67% HP left | 30/30, 35, 0, 60% | 30/30, 32, 0, 67% |
+| **hp x6, atk x1.5, phase 2 at 50% (chosen)** | **30/30, 41, 0, 64%** | **30/30, 39, 0, 65%** | **30/30, 37, 0, 71%** |
+| hp x7, atk x1.5 | 30/30, 44, 0, 57% | 30/30, 42, 0, 63% | 30/30, 41, 0, 63% |
+| hp x8, atk x1.6 (COMBAT's, with the role) | 30/30, 48, 0, 63% | 30/30, 44, 0, 59% | 30/30, 43, 0, 65% |
+| hp x10, atk x1.8 | 26/30, 59, 0.73, 58% | 29/30, 55, 0.20, 67% | 30/30, 52, 0, 67% |
+| hp x7, atk x1.6, phase 2 at 50%, with Haru active, Azzy benched | 30/30, 44, 0, 66% | 30/30, 43, 0, 69% | 30/30, 40, 0, 70% |
+| hp x7, atk x1.6 with Vikram benched (the built order) | 30/30, 43, 0, 60% | 30/30, 40, 0, 63% | 30/30, 39, 0, 66% |
+
+So x6 / x1.5 gives a boss of about 39 party actions at 20 (nine or ten of Gianna's turns, four enemies on the field
+for most of it), where Grimvald sat at 29 and the Fox at 26: longer because the enforcers must be cut down twice,
+and the stand-in wall halves *all* damage for three turns at a time. The real Oil Wall halves only fire to zero and
+the rest to half, and the real Burning costs a glass cannon 6% a turn, so the honest fight is shorter and sharper
+than the sim's: **x6 is the ceiling, and the simulator with the built statuses decides on day 1 whether it holds or
+drops to x5.** Nobody down in any seed at x6; Game Over applies (not meant to lose); the way back in is the store's
+doors.
+
+**The duel, sim-checked (Gianna alone against Vikram at 20, `hpScale 2`, `atkScale 1.2`):** Gianna wins 17 of 30 at
+19, 25 of 30 at 20, 27 of 30 at 21, in about 8 actions, with about half her HP left. That is the shape the design
+asks for: a sparring match she can lose at the tier's floor and usually wins at its top, over in a minute, with no
+Game Over either way (section 10). At x1.5 / x1.0 she never loses; at x3 / x1.3 she rarely wins. Both outcomes play
+the same scene with one line changed.
+
+**The other fights:**
+
+| Fight | Where | Foes | Level | Party then | Pays (data) |
+|---|---|---|---|---|---|
+| Ambushes (`salt_flats`, from `story.jwaladesh_arrived`) | the pans off the salt road | Ember Jackal x3 (20); Oil Enforcer x2 (21, weight 2; weight 1 after `choice.dhanraj_broken`); Oil Enforcer + Road Bandit (20); Quiet Crown Zealot x2 + Oil Enforcer (21) | 20 to 21 | 19 to 21 | the encounter rule, tapered (below) |
+| **The duel** (`duel_yard_vikram`) | the duel yard | Vikram at 20 (sparring) | 20 | 19 to 20 | 0 XP, 0 gold (a sparring match; the objective is `noXp`) |
+| **The salt-road enforcers** (`salt_road_enforcers`, J-3's seizure) | the salt-road shrine | Oil Enforcer x3 at 21 | 21 | 19 to 20 | 60 XP, 150 gold (data) |
+| **The night watch** (`quay_watch`, the sea-wall's fail-safe) | the open quay at night | Oil Enforcer x2 at 21 | 21 | 20 | 40 XP, 100 gold (data) |
+| **Seth Dhanraj** (`oil_store_dhanraj`) | the oil store | Dhanraj 21 + two enforcers 21 (two more at 50%) | 21 | 20 to 21 | **100 XP, 300 gold**, items: the ledger (key), the strongbox (400 gold, giftable) |
+
+Sim-check of the ambushes (same bot): three jackals at 20, 30/30 in 7 actions with 93% HP left; two enforcers at 21,
+8 actions, 94%; an enforcer and a bandit at 20, 5 actions; **two zealots and an enforcer at 21**, 9 actions, 90%;
+three enforcers at 21 (J-3), 14 actions, 88%; four jackals at 21 (J-5's caravan, after the release), 11 actions. The
+party at 20 is strong (Azzy 203 HP, Vikram ATK 82 and SPD 55, Haru SPD 56), so the flats' groups sit at the tier's
+top (20 to 21), not its floor, or they are grey (`LEVELS.bands.trivial = 3`).
+
+**Levels through the chapter** (tool line from 5,150; played line from 5,900; objectives 25, books 10, the signature
+puzzle 60, the minor 25, the debate 15 joined or 25 mediated):
+
+| Point | XP from | Tool total | Level |
+|---|---|---|---|
+| Start (the quay) | | 5,150 | 19 |
+| Under the chain, the mirrors are down, the Court's one word, Arjun's lamp, Arjun's mirror, the roofs, the flame seen, the oil, the Flame Keepers (nine objectives at 25; the duel and the card are `noXp`) | 225 | 5,375 | 19 |
+| SIG-JWA (60), M-JWA-1 (25), the debate joined (15) | 100 | 5,475 | 19 |
+| J-2 (100 XP), J-3 (100) and its enforcers (60) | 260 | 5,735 | **20** |
+| Dhanraj (100) | 100 | 5,835 | 20 |
+| The library's nine and the Court's three, if read (120) | 120 | 5,955 | 20 |
+
+The tool lands at **20 (5,835 to 5,955)**, 80 to 200 XP under 21 (`slackUnder = 1` holds); without the two side
+quests, 5,575: **20** (`skipSideQuestsMaxUnder = 2` holds). **The played line** inherits Chapters 6 and 7's problem
+and, with the taper at 0.25 from 15, closes it: from 5,900 (Chapter 7's played end at 20, taper applied), the
+chapter's 805 and two salt-flat ambushes (a level-20 trio pays 150 tapered, a level-21 pair 105): 5,900 + 805 + 255 =
+**6,960, level 21**, on target, and with the books 7,080, level **22** by 50 XP (`slackOver = 1` holds). **Without
+the taper** the two ambushes pay 1,020 and the played line is 7,725: **23**, two over, and Chapter 9's band (21 to
+24) starts a level high. **So this chapter's data assumes the taper landed at 0.25 and sets the boss at 100 and the
+quests at 100 as Chapter 7 did; the central session should confirm the taper's number on Chapters 1 to 7's routes
+before this chapter's dials are set.** If the taper is refused, the fallback is Chapter 6's and 7's: lower weights
+and a 24-step grace on the flats, the salt road itself kept safe so J-3's walk meets at most one ambush, and Dhanraj
+at 50. `CHAPTER_LEVELS` 8 keeps `to: 21`; the simulator with Chapter 8's route decides on day 1.
+
+**Gold:** about 1,600 to 2,400 in; the flats' ambushes about 160 each; J-2 250, J-3 300; Dhanraj 300 and the
+strongbox's 400 if kept. Out: the swordsmith's tier-20 gear if not bought in Kirinoura and the tier-24 pieces (a
+talwar for Vikram about 900, scale armour about 1,000, the flame-bead bracelet, which J-2 gives, is not sold), the
+milk stall, the bead seller's brass lamp charm (resists fire, 300 gold, useful on the flats). Nothing in the chapter
+requires spending; the strongbox is the one place gold buys Wealth, and it is optional and says so.
+
+---
+
+## 6. The required-before gate: "Until the night lamp"
+
+- **In the story:** the Court has refused; Aiyana has a key to the chain tower and says the watch changes at the
+  night lamp, "about now" after dark; Vikram has gone to find her. So the day is the party's, and the city names
+  what is in it without saying "quests": Aiyana, on the roof: "The runners on the temple steps still practise the
+  relay with nothing to carry. Go and see why. And the junior priest wants to tell you something his Court has told
+  him not to; he's in the colonnade pretending to sweep." The debate is on the spice row, on the way to both.
+- **In the Journal:** the objective **Until the night lamp**, `followSide`, done when J-2, J-3 and the debate (joined
+  or mediated) are done, **or** when `story.tower_open` is already set (a save at the tower never sticks).
+- **On the map:** Aiyana at the harbor stair is a step trigger that waits for the three (`if:
+  'side.lamp_relay.done, side.anonymous_oil.done, debate.jwaladesh_hesitation.joined|debate.jwaladesh_hesitation.mediated'`);
+  until then she is worded from the flags: "The runners are still on the steps." / "The priest is still sweeping." /
+  "The two on the spice row are still at it." Anissa: "Your Quests page, Gigi."
+- **The night variant** (`story.bazaar_night`) is set when the third completes; it clears on `story.flame_seen`
+  (beat 6: the city comes to the Court at night; dawn is beat 8's variant, `story.court_dawn`).
+- **A second, softer gate, by the ground:** the sea-wall lane on the harbor map opens on `clue.relay_route` (J-2's
+  Echo), so a player who skipped J-2 would meet the night watch on the open quay (a winnable fight, not a block): J-2
+  is required by the counter and *useful* by the ground, which is the Opus minimum's "two required side quests" with
+  one of them never feeling like an errand. J-3's oil is what the runners carry up the hill after Dhanraj falls (beat
+  7's walkers read `side.anonymous_oil.done`, which the gate guarantees).
+- **Order the arrow follows:** J-2 (the temple steps, nearest the Court's doors), the debate (the spice row, on the
+  way to the salt gate), J-3 (the salt gate, the flats, the back gate); then the harbor stair.
+- **No soft-locks:** the duel ends either way and the scene after it is the same; J-2's gust lanes return the lamp
+  to its start and the runners repeat the direction ("Not the main street. Never the main street."); J-3's enforcers
+  are winnable and Game Over returns the party to the salt-road shrine; the flats' ambushes are at the party's level;
+  the four mirrors can be turned any number of times (every state is reachable; a wrong beam is a line, not a
+  state); Dhanraj's trigger restarts; the debate's Provoke does not resolve it.
+
+---
+
+## 7. The two required side quests and the debate
+
+Why these, from J-1 to J-5 and the Opus minimum: **J-4 Oil for the Little Lamps** is the secret item (after the
+release; the shrine child is placed with her line and the store's balance lock is inert). **J-1 Win Every Argument**
+opens only after Vikram joins, which is beat 6: a quest that opens at the chapter's end is a quest the player does
+in Chapter 9's time, and its three rematches are three more sparring fights; after the release, when the sparring
+rule exists for the duel anyway, it is cheap, and it is the first thing to add. **J-5 Jackals on the Salt Road** is
+an escort fight with no Echo and no story; after the release, with the caravan as a walker. That leaves **J-2 The
+Lamp Relay**, the chapter's minor Echo (M-JWA-1: Arjun's runners' sheltered lanes, no anchor), the rite that the
+dying flame has made pointless and the boss's fall makes real again (the runners carry the oil), the route to the
+chain tower at night, and the flame-bead bracelet (the city's gear quirk, guide 8); and **J-3 The Anonymous Oil**,
+the rebel safehouse (the seventh ash thumbprint, which no chapter may skip), the one quest that walks the wild
+section, the chapter's one optional-feeling fight, and the oil the runners carry. No new quest is added.
+
+### 7.1 The Lamp Relay (J-2; the runners; M-JWA-1)
+
+- **Opens:** the runners' hall at the temple steps, from `story.court_heard`. Shows as *??? The temple steps* until
+  spoken to. The chief runner (an old woman with a lamp on a pole, the runners' badge): "Every new moon for fifty
+  years the runners carried the sea's fire from the chain lamp to the wick: harbor to temple before it gutters, and
+  the wind off the sea tries to put it out the whole way. The chain lamp has been dark two years. We practise with
+  kitchen fire so we don't forget the way. Nobody has told us to stop." Accepted when spoken to
+  (`side.lamp_relay.accepted`).
+- **Steps:** 1) **The Echo** (M-JWA-1): the zone is the runners' hall's hearth; swap: Arjun's runners (three figures in
+  saffron with lamps, the Echo palette) set off from the hall at a run (walkers) and the first of them says, to
+  Patricio, "Never the main street, Marshal: left at the dyers, through the arch, along the wall," and the three are
+  seen taking exactly that way across the bazaar's Echo lanes (the arch and the wall are the same in both eras; the
+  Exchange's tower is not there in the Echo, which the player sees). `clue.relay_route`. 2) **The present:** the
+  chief runner lights a lamp from the hearth and gives it to Gianna (a key item while carried, `item.relay_lamp`,
+  with a look on her sprite: a lamp in her hand): carry it from the harbor stair's foot to the temple steps. The
+  bazaar's **main street** and the open lanes are **gust tiles** (trigger strips that put the lamp out: "The wind
+  comes off the sea. The lamp gutters, and goes out." and return the player to the stair's foot with it relit); the
+  **sheltered lanes** (left at the dyers, through the arch, along the wall) are safe. The engine has no timer and no
+  step count; a gust lane that returns the player is the Chapter 7 fog-return trigger again, data only (section 10:
+  the step counter is optional and not recommended). 3) At the steps the chief runner takes the lamp and sets it in
+  the hall's bracket (shown): "That's the way. When there's something to carry, you'll know it." `side.lamp_relay.done`.
+- **Reward:** 100 XP, 250 gold, +1 Wealth (Jwaladesh), the **flame-bead bracelet** (a charm, level 20: fire skills
+  +15%, built as `special: { kind: 'elementBoost', element: 'fire', share: 0.15 }`, a new special kind of about ten
+  lines, or as `mag: 4, atk: 2` if the piece is cut; Vikram's and Azzy's), the Journal note *The relay*: "Harbor to
+  temple before it gutters: left at the dyers, through the arch, along the wall. The sea-wall lane is the same idea."
+- **Why it fits:** the design's quest as written (the timing route and Arjun's runners); the chapter's minor Echo; the
+  route the party needs at night (the sea-wall lane opens on `clue.relay_route`); and the rite the chapter restores
+  in beat 7, so the quest is not an errand but the first half of a thing the story finishes.
+
+### 7.2 The Anonymous Oil (J-3; the rebel safehouse)
+
+- **Opens:** the junior priest in the Court's colonnade, from `story.court_heard`. Shows as *??? The sweeping priest*.
+  Accepted when spoken to (`side.anonymous_oil.accepted`): "Oil comes to the back gate. Not from the Seth; from
+  nobody. A carter from the salt road, every few nights, with jars he will not be paid for. The Court takes it and
+  does not ask, because the Court has one word. Tonight he's late, and the Seth's men have started watching the salt
+  road. If you were going that way." (The design's "watch the gate" opened out onto the flats, so the wild section is
+  walked by a required quest: Claude's call, section 12.)
+- **Steps:** 1) Out through the salt gate at dusk onto the **Salt Flats** (the ambush layer; the salt road itself is
+  safe, as Ardencia's road and Kirinoura's causeway were). 2) At the **salt-road shrine** (a Four Hands flame shrine,
+  dark), the **carter**: a cart of jars under sacking and a man who speaks Kreyol-accented English and does not give
+  his name ("The jars are for the wick. Nobody sent them. Write that down if you must write something."). Three Oil
+  Enforcers come up the road behind the party (shown: `enter` from the east, `walk` to the cart): "The Seth's
+  contract says every jar on this road is his." The fight `salt_road_enforcers` (three at 21, winnable; after it the
+  road is clear, `story.salt_road_cleared`). 3) **The jars, close up:** the grey **ash thumbprint** on every seal (the
+  safehouse: `side.anonymous_oil.done`, the thumbprint count up one: seven). Haru: "Oil, bread, water, grain, paper.
+  Now oil again. The same thumb, in six cities." The carter, going: "Seven, if you count right. Somebody is feeding the
+  realm, and he isn't doing it for a goddess." (The Journal note the design gives at five thumbprints is already
+  unlocked; this is its echo in a man's mouth, and reads either way.) 4) **The back gate:** the cart to the Court's
+  kitchen lane (the carter walks it; the party walks beside); the junior priest takes the jars in at the back gate
+  (shown) and says the quest's last line: "Nobody. Again. I have stopped asking and started counting."
+- **Reward:** 100 XP, 300 gold, +2 Wealth (Jwaladesh), the Journal note *The salt-road carter*: "Oil for the wick from
+  nobody, with the ash thumbprint on the seal. Seven of nine. In Agnipur the rebels' oil goes to a temple that will
+  not say it needs it."
+- **Why it fits:** the safehouse thread (the design's steps and reward, with the enforcers' seizure kept as the
+  fight); the wild section on the route; and the oil the runners carry up the hill after Dhanraj falls, so the quest
+  is seen paying off in the chapter's own ending.
+
+### 7.3 The debate, required: *Is hesitation a sin, or is remembering mercy?* (the spice row)
+
+- **Where:** the debate corner on the bazaar's spice row. **Opens:** from `story.court_heard`.
+- **The two speakers** (guide 7.2): a **Flame Keeper** of the Four Hands ("The flame is a hand. A hand that waits is
+  a hand that has let go. Rani Tejaswini said it: hesitation is the only true death. The Crown did not hesitate at
+  our chain; Arjun did not hesitate at theirs.") against a **Gaze pilgrim** from Zetwal, elderly, in a sun-marked
+  shawl, here for the flame ("A goddess who remembers is a goddess who waits. The one who waits is the one who can
+  forgive. Your Arjun rode; five came home; somebody remembered the two, or nobody would know their names."). The
+  built debate shape (listen, join, mediate, provoke; three rounds; scripture, reason, compassion): the ally is the
+  **pilgrim** (Gianna's faith), the opponent the **Keeper**. The player may argue the Keeper's side, which is the
+  point of the question: the chapter's Court hesitated for a month behind a curtain and called it keeping the flame,
+  and its son settles arguments by not hesitating; the chapter answers both with a lamp that was lit once and kept
+  burning fifty years by a patient measure (S-JWA's theme, stated by the debate before the item exists).
+- **Reason needs** one of *Rani Tejaswini's Flame*, *The Flame Keepers* or *The Harbor Chain* (`reasonNeeds`; the
+  library is open all day). **Mediate** needs the built Influence 5 at Jwaladesh (listen +1, books +1 each: reachable
+  by a reader). Rewards: the built `DEBATE_REWARDS`. A mediation's line from Vikram, if he has joined (the corner
+  stays open after the flame): "I have settled this argument eleven times. It keeps coming back. That is the first
+  thing I have ever found that does." Anissa's line after, the only judgement: "The fire one wants everyone to hurry,
+  Gigi. And the sun one wants everyone to wait. The lamp on the chain did both. It waited fifty years and then it
+  was quick."
+- **The quest:** *Is hesitation a sin, or is remembering mercy?*, required, done on joined or mediated. After the
+  Harbor Turn the corner rewrites itself (Chapter 11's build). No faith is a cult; the Keeper is a believer, not a
+  zealot, and the Quiet Crown's zealots are on the flats, where no line joins them to him.
+
+### 7.4 Books, vendors and the board
+
+- **The Palm-Leaf Library (9, `CAPITALS.md` 8):** *Rani Tejaswini's Flame* (the founder; the doctrine), *The Harbor
+  Chain* (Arjun's charge: seven rode out, five came home; a reader has the Echo's roll call before the Echo),
+  *The Law of the Flame* (who may tend it, who pays for its oil: the price in the city's own words), *The Flame
+  Keepers* (the fire sect), *Oil, Ghee and Grain* (prices since the hoarders cornered the oil: "forty the measure,
+  was four"), *The Relay* (the runners' rite; the sheltered lanes named, so a reader has M-JWA-1's idea), *Duels Over
+  Breakfast* (gossip: Vikram's eleven duels this month, "all over arguments, all won, all on one breath"), *The
+  Burned Temple, Our Account* (the Suzumori fire from the side that lost the temple; pairs with Kirinoura's *The
+  Burned Temple*: a reader of both has the feud from both sides, K-5's seed), *The Agnivansh Line* (Tejaswini, Arjun,
+  Meera, Vikram). Reading one gives +1 Influence (Jwaladesh) and 10 XP.
+- **The Court (3):** *The Treasury Book* (blank after the spring), *The Priests' Decision* (readable at the council:
+  the vote to hide the flame's failing, four to three), *Oil Contracts* (all signed with Seth Dhanraj; after beat 7,
+  *Dhanraj's Ledger of Advances* beside it).
+- **Vendors (guide 8; one new glossary `hindi.json`, every entry `verified: false` for the Nov 18 check):** the
+  milk-and-bread stall ("Namaste!": spiced milk 18 SP, flatbread heals 50, lentil stew 40 HP over 3 turns), the bead
+  seller ("Namaste.": the brass lamp charm, a charm, level 20, def 3, resists fire; the flame-bead bracelet is J-2's
+  reward and is not sold), the swordsmith ("Dhanyavaad." on a sale: a talwar for Vikram, level 24, atk 24, `blade`;
+  scale armour, heavy, level 24, def 18, hp 30, spd -1; Kirinoura's tier-20 short blade and lacquered armour for a
+  player who skipped them).
+- **The contract board:** "escort a salt caravan" (J-5, after the release, with a line: "The Seth's enforcers took
+  the last one"), "run the lamp relay" (J-2's own notice), "clean the rooftop mirrors (Influence)": built as a
+  one-line job that pays +1 Influence once the mirrors are turned (`story.beam_at_temple`), because the player has
+  just done it.
+- **Anissa's nudges** (mystery quests, under 128 characters): "The woman on the roof keeps looking at Azzy, Gigi." /
+  "The runners have lamps and nothing to light them for." / "The priest with the broom isn't sweeping." / "The two
+  by the spices are arguing about waiting."
+
+---
+
+## 8. The Echo puzzle: the relay of lamps and mirrors (SIG-JWA, design difficulty 4; honest 4)
+
+The design (`PUZZLES.md`): the temple's wick needs light from the harbor's chain lamp, carried by bronze mirrors on
+four rooftops; the chain lamp is dead and a newer tower blocks the old line; in the Echo, the night of Arjun's
+charge, the lamp stands ready but unlit and the old watchtower has an empty bracket and a spare mirror; light the
+lamp in the Echo (it stays lit) and bolt the mirror facing the temple quarter; in the present, turn the four roof
+mirrors to carry the beam round the new tower: east, north, north, west. Kept exactly; the staging:
+
+1. **The lamp, Echo (anchor 1):** the harbor map's zone is the chain lamp's platform (three tiles); the Echo scene
+   (beat 4) ends with Arjun handing Patricio the taper; the lamp is an Echo-era puzzle object whose `use` sets
+   `anchor.chain_lamp` ("The taper catches. The lamp takes the flame as if it had been waiting."); the present lamp
+   reads it (lit look; the scene glows it on the swap back).
+2. **The mirror, Echo (anchor 2):** the plank bridge to the watchtower's platform is walkable in both eras; the
+   bracket is an Echo-era puzzle object whose `use` with the spare mirror (an Echo-era object at the tower's foot:
+   pick it up, a key item for the Echo only) sets `anchor.tower_mirror`; the present bracket reads it (a mirror in
+   it, faced at the temple quarter; the first beam segment drawn from the lamp to the bracket and from the bracket
+   towards the bazaar, ending on the Exchange's tower on the bazaar map: a beam object with `if: anchor.tower_mirror`).
+   The order of the two anchors is free; the Journal records both.
+3. **The roofs, present (the turns):** four mirror objects, each with an orientation flag `mirror.<n>` of 0 to 3 (the
+   built flags-with-values; `use` steps it and the look follows), each unlocked by Aiyana's walk-up (a look change on
+   `story.rooftops_entered`, so the player never waits on her). Beam segments are `above` objects with `if`
+   conditions on the flags: segment 1 shows when `mirror.1 = east`; segment 2 when 1 is east and 2 is north; and so
+   on; the wrong orientations draw a short stub into brick with a line ("The light lands on brick."). The temple's
+   window trigger fires `story.beam_at_temple` when all four are right (1 east, 2 north, 3 north, 4 held by Anissa
+   at the window: the fourth is her disc, so the player turns three and the fourth is a cue). **Pure data:** the
+   built puzzle objects, flags with values, `if` conditions and anchors do all of it; nothing like Chapter 7's rotor
+   group is needed (each mirror is independent). Honest difficulty 4: the tower is the only trick, and the Echo's
+   watchtower line (the tower is not there fifty years ago) is the clue.
+4. **Aiyana's part** (the settled "opens the way"): the chain tower's key (the way in: `story.tower_open`), the
+   bracket locks (the way through: her walk-ups), the disc for Anissa (the last mirror); she never turns a mirror
+   herself and never says which way.
+5. **Anissa's hints** (3 minutes stuck; `PUZZLES.md`'s wording): "Light needs a road too, Gigi." / "The lamp was lit
+   in Arjun's time. It can be again, and stay lit. And the old tower is missing its mirror." / "Light the chain lamp
+   and bolt the tower mirror in the memory; then turn the roof mirrors: east, north, north, west."
+
+Files: `puzzles/jwaladesh_chain/solution.json` (the Echo: the taper, the bracket, both orders) and
+`puzzles/jwaladesh_mirrors/solution.json` and `cheats.json` (the four orientations; a route that turns the mirrors
+before the anchors are set, which draws nothing: the mirrors turn but no beam arrives, so it is a cheat that fails
+honestly; a route that leaves mirror 2 facing west, the old line into the tower). Both replayed by
+`tests/puzzles.test.ts`.
+
+**The minor (M-JWA-1, J-2):** the hearth zone, the runners' walk and line, the gust strips and the sheltered lanes.
+Hints as `PUZZLES.md`. Difficulty 3. Files `puzzles/jwaladesh_relay/`.
+
+**The secret (S-JWA, after the release):** the store's balance lock and the three jars are placed inert; the shrine
+child says her line; the Unbroken Wick is Chapter 8's post-release item. Nothing here makes it harder: the store is
+reachable after the boss, and the Echo zone at its back is drawn now and switched off.
+
+---
+
+## 9. Vikram and Aiyana: how the companion joins and plays, and the family beat
+
+### 9.1 Vikram
+
+- **Who he is on the map:** Meera's son, Arjun's grandson; "must win every argument by duel, always out of breath"
+  (approved). Twelve duels this month, all over arguments, all won on one breath. He talks in short runs broken by
+  breathing; the breathing is the joke and the character, never a weakness in the fight. His warmth is for the
+  flame, not the Court. One line to Anissa, no joke: at the relit flame, he crouches to her height: "You held the
+  last mirror. In this house, that makes you a Keeper of the Flame." (She says nothing; she looks at the flame.)
+  `story.anissa_keeper` (a Journal line, no item).
+- **When he joins:** at the flame (beat 6), as a fighter, before the boss (`party.vikram`); he leaves Agnipur with
+  the party at the price (beat 8, `story.vikram_left_agnipur`). `STORY.md` says "Vikram defies the priests and joins"
+  after Dhanraj falls; this outline splits it (Claude's call, section 12), as Chapters 6 and 7 did: the defiance is
+  tearing the curtain, and the player plays the Fire duelist in the Fire duelist's chapter, against the one boss
+  whose wall is made for fire.
+- **His data entry** (`rpg.ts` `MEMBERS`, with the active-order flag so he fights here), sim-checked at 20 (hp 124,
+  atk 82, def 28, mag 27, spd 55: the hardest hitter in the party after Azzy, the second fastest, the lowest DEF of
+  any fighter: a glass cannon, as the guide says): `{ id: 'vikram', name: 'Vikram', role: 'Fire duelist', house:
+  'Agnivansh', portrait: 'vikram', era: 'present', class: 'warrior', joins: { flag: 'party.vikram' }, base: { hp: 40,
+  sp: 20, atk: 15, def: 5, mag: 8, spd: 15 }, growth: { hp: 4, sp: 3, atk: 3, def: 1, mag: 1, spd: 2 }, start: {
+  weapon: 'talwar_of_agnipur', armor: 'saffron_coat' } }` (two new items at tier 20; his own, not shop stock: a
+  curved sword with a brass hilt and a saffron duelling coat).
+- **His skills** (COMBAT 9.7, in the engine's shapes): **Agni ki Shakti** (passive: his skills cost 1 SP less, minimum
+  1: a `PassiveEffect` kind `spLess`, section 10; Gianna's discount is the precedent); **Ember Cut** (SP 4, power 130,
+  fire, `burning` 30% with `bossChance 0.3`; fallback `weakened`); **Rakt Ki Pyaas** (passive: after he fells an
+  enemy, a free Attack at once: `PassiveEffect` kind `attackOnFell`, section 10; fallback: text only); **Ananta
+  Yuddha** (SP 15, `once`: for one round every party skill costs 0 SP: a `freeRound` skill kind, section 10;
+  fallback: `inspired` on all allies, which is what a free round is for). Moves: **Quick Thrust** (100), **Flame
+  Lunge** (160, fire, cooldown 2), **Twin Flame** (two hits of 80 at random foes, fire, cooldown 3). Battle look: a
+  placeholder recolour of the walk sheet until art.
+- **After this chapter:** if Agnivansh is the house the Crown buys, he stays and defies his house a second time
+  (STORY 6.9, Chapter 11's build); Steward Prakash (COMBAT 13.3) would be the senior Keeper, who is alive and
+  unconvinced at the price: the betrayer's seed, as Hrafn is Skarragol's and Mibu is Kuroshi's. His running joke
+  gets one line per later chapter and none at the Hearing.
+
+### 9.2 Aiyana (FAMILY.md, settled)
+
+- **Who she is on the map:** Rahel's daughter by a man of the Asian continent; Kayla's full sister; Rael's
+  half-sister; Azzy's Titi Aiyana. Bright, restless, hands-on: she talks fast, finishes other people's sentences
+  with a number, and is never without a tool in her hand. She is the Court's engineer of the great flame: the wick,
+  the reservoir, the mirrors, the chain lamp's oil (which she has filled every new moon for two years without being
+  told to stop). She is the only person in Agnipur who has measured the flame, and she measures it every morning.
+  She is not an NPC with a quest flag: her roof is where the chapter's trouble is seen, her key is the Echo's door,
+  her brackets are the puzzle's present half, her disc is Anissa's.
+- **The rule for her lines (the locked rule: Gianna cannot learn Rael is good until near the end):** Aiyana knows
+  Gianna and Anissa are Rael's daughters (Kayla wrote: "three lines, which for Kayla is a scream"); she says so once,
+  on the roof, without his name ("I am not going to talk about Cenizal on a roof"). She says nothing about the
+  marriage, nothing about his work, nothing about the thumbprint on the jars (she is at the Court when the cart
+  comes in, and does not see it). Her one clue-level line, the only time she speaks of him, at the altar at dawn,
+  measuring: "He used to hold the rod for me when we were small. Never said a word. Just held it level." It reads
+  either way, which is the design's rule for every Rael clue. A content test checks no Aiyana line contains "good",
+  "innocent", "feeds", "the arrows" or "thumbprint".
+- **Her touch for Anissa (no joke):** the disc on the roof ("You hold the last one. Don't look into it."), and, at
+  the tower's foot, "If you see a lantern, say so. Don't shout. Just say it." After the chapter Anissa keeps the disc
+  (`item.aiyana_disc`, a key item: *Titi Aiyana's mirror*, one line of text), as she keeps Kayla's crane.
+- **The family beat with Azzy:** shorter than Kayla's, as the Chapter 7 outline asked (two Titis in two chapters,
+  so his line comes first): "Titi Aiyana." / "Azriel. You've got your grandfather's hands. Don't waste them holding
+  things." At the quay: "Azriel: don't hold things." (The same line twice is the whole relationship.) Azzy, after,
+  to Gianna, the one time he says it: "Three of them. Three of his sisters, in three cities, and not one of them
+  will say his name to you." Gianna: "Then they know what he is." Azzy: "Or what you are." (Reads either way; tested
+  the same.)
+- **Placeholder look:** a leather apron over saffron, a wrench, hair tied up with a strip of cloth; `aiyana`. Art
+  through `ART-PROMPTS.md` when the outline is approved. **Later:** FAMILY.md places her here only; she does not come
+  to the Muster (Rahel, Patricia and Jordyn do). Her line about Jordyn (beat 8) is the family's hand-off to Chapter 9.
+
+### 9.3 Salkhi in the salt, and the others
+
+- Salkhi: a flag-placed horse on the quay, the bazaar and the salt gate (not the roofs, not the Court): "Salt." /
+  outside the library: "She reads. In every country. I have stopped expecting to be consulted." / at the salt gate:
+  "I will not go onto the salt. The salt gets into my feet and my opinions." / on the quay at the end: "No grass. I
+  have stopped asking." Never in a node with an Anissa line.
+- Haru has the feud: he sets the crane on the step and says nothing; at the price he says one thing: "Grandmother's
+  files say the paper was false. I will bring you the paper." (K-5 after the release; the line is a promise, not a
+  quest.) Bayarmaa has Dhanraj's walk up the hill. Samira has the ledger and the strongbox. Yari has the quay and the
+  duel ("He can't breathe." / "He still won.").
+
+---
+
+## 10. New systems the chapter needs (honest effort, in Opus builder-days)
+
+| Need | What exists | What to build | Fallback | Effort |
+|---|---|---|---|---|
+| **Vikram as data** | fighters as data | his `MemberDef`, skills, moves, looks, two start items, the join flag | none needed | 0.2 |
+| **The active-order flag** (`party.active`: the four who fight, set by the story at a join and changeable by the player later; the Chapter 6 review 3.9) | the first-four rule | if Chapter 6 or 7 built it: data (Vikram replaces the fourth at the flame); if not: one list flag read by `battleParty` (about 30 lines) and a test | the first-four rule with Vikram's entry placed fourth (`MEMBERS` order: Gianna, Yari, Azzy, Vikram, Haru, Bayarmaa, Samira), which benches Haru from now on | 0.15 |
+| **Burning** (`STATUS.burning`: `regen: -0.06`, `bad: true`, 3 turns; a fighter at 1 HP is not killed by it) | the status table with `regen`; the per-turn regen tick | one status row and a clamp where the tick applies (about 10 lines), a test | `weakened` | 0.1 |
+| **The Oil Wall** (`STATUS.oiled`: `taken: 0.5`, `shatter: true`, `immune: ['fire']`: a new per-status field read where element multipliers are applied) | `gilded` (halves, shatters on a Surge); `ELEMENT_RESIST` | one status row, one field, one line in the damage formula (about 10 lines), a test | `gilded` | 0.1 |
+| **Price Spike** (`itemDelay` on an `EnemyMove`: while set, the party's item actions carry `ACTION_WEIGHT.item + n`) | `ACTION_WEIGHT`; the turn-delay formula | a per-battle modifier set by the move and read where an item's weight is taken (about 15 lines), a test | a 150 area blow every 2 | 0.1 |
+| **Lit oil** (`burnsOnFire: true` on a phase: the first fire hit on the boss after the wall is gone sets `burning` on him for the rest of the fight) | phases; statuses on enemies | one check in the hit path (about 10 lines) | `weak: ['fire']` on the phase's enemy (a phase cannot change weakness today: a second small piece, or the boss is simply weak to fire from the start, which the Oil Wall hides until it falls) | 0.05 |
+| **The sparring fight** (`sparring: true` on `BattleDef`: no Game Over; a party loss ends the fight as a `lost` outcome that plays the same after-scene with `choice.duel_lost`; no XP, no gold, no Grudge) | `meantToLose` (ends on a scripted finale); `withdraws` | one branch where a loss would go to Game Over (about 20 lines), a test | `meantToLose` with a `finale` that fires on the party's first fighter down, plus the normal win: two exits, one scene | 0.1 |
+| **The solo fighter** (`fighters: ['gianna']` on `BattleDef`: the active party for this fight only) | `battleParty` builds the active four | one filter in `battleParty` when the def names fighters (about 10 lines), a test | the four fight him ("All of you. I don't mind.") and his scaling drops to x1.2 / x1.0 | 0.1 |
+| **Vikram's passives and Ananta Yuddha** (`spLess` on `PassiveEffect`; `attackOnFell`; a `freeRound` skill: for one round the party's skills cost 0) | `PassiveEffect` kinds `battleGold`, `atkPerFell`; Gianna's discount; `once` skills | three small pieces (about 50 lines together), each with a test | `spLess`: none (data, trivially); `attackOnFell`: text only; `freeRound`: `inspired` on all allies | 0.3 |
+| **The flame-bead bracelet's special** (`elementBoost`) | `ItemSpecial` kinds (`spRegen`) | one kind read where element multipliers apply (about 10 lines) | `mag: 4, atk: 2` | 0.05 |
+| **The mirrors, the beam, the lamp, the chain, the curtain, the altar** (objects with looks by flag values and `if` conditions; the gust strips) | puzzle objects with `use`, flags with values, `if`, anchors; door-like triggers | map data only | none | 0 |
+| **Two-era Echo scenes with walkers** (the riders on the mole; the runners; the city coming in; the relay up the hill) | walkers, Echo-era NPCs and objects, `echo.*` flags; the cannon as an audio slot and a shake | data; the shake exists if Chapter 2's cannon built it, else a 0.05 piece | lines | 0.05 |
+| **The sea voyages** (`kuroshi_jwaladesh` is Chapter 7's; `jwaladesh_aldermoor`) | `VoyageDef` | one `VoyageDef` | a card | 0.05 |
+| **The ambush taper at 0.25 from level 15** (section 5; realm-wide; Chapters 6 and 7's call) | Chapter 6's or 7's `ENCOUNTER_XP_TAPER` if it landed | one number; `levelCurve.test.ts` re-asserted for Chapters 1 to 7 | flats' weights and grace, Dhanraj at 50 | 0.05 |
+| **One glossary** (Hindi) | `lang.ts`, `audit:lang` | one JSON file, every entry `verified: false` | none | 0.05 |
+| **Chapter wiring** | `CHAPTERS`, `chapters.json`, the route, `CHAPTER_LEVELS` (has 8), `MARKS` | `ACT8` in `quests.ts`; `'9'` in `MARKS` (Chapter 9's landing); the route to `@chapter8-end`; `?chapter=8` | none | 0.25 |
+
+About **one and a half builder-days** of engine and wiring; the statuses, the sparring rule and Vikram's three
+pieces are the only parts that are not data, and every one has a fallback that keeps the scene. Nothing here needs
+a stealth system, an Echo battle, a Yield step, a timer, a step counter or region levels. The signature puzzle is
+data, which is the first time since Chapter 2 and is why this chapter fits two and a half days with two engine
+statuses in it.
+
+---
+
+## 11. People, with placeholder looks (drawn in code, `assets.config.ts` NPC looks; art drops in through the config)
+
+| Person | Role | Look (placeholder) | Later |
+|---|---|---|---|
+| **Vikram** | the companion (section 9.1) | a new member look: saffron coat, a curved sword, bent double between lines (an idle frame); a battle recolour | the betrayer-defies-his-house scene if Agnivansh is bought; one breathless line per chapter |
+| **Aiyana** | the flame's engineer; Azzy's Titi; the key, the brackets, the disc (section 9.2) | leather apron over saffron, a wrench, hair tied up; `aiyana` | FAMILY.md: here only |
+| **Meera** | the Court's ruler, Vikram's mother; the ruler he defies; the one word; the price | saffron and white, a measuring rod's twin (the ruler's rod), seated; `meera` | the Muster (an envoy or her son); the Dec 1 list's Gen III ruler for this chapter |
+| **The senior Keeper** ("Steward Prakash", COMBAT's name) | the order's voice; the betrayer's seed | saffron, a veil of office | Steward Prakash, the Agnivansh betrayer variant (Ch. 10 to 11) if Jwaladesh's price is least paid |
+| **The junior priest** | J-3's giver; the broom; reads the ledger at dawn | saffron, a broom | |
+| **The chamberlain**, the **treasurer** (an empty book) | the seat's staff | | |
+| **The Crown's oil-factor** ("Mr. Pelham", proposal) | the customer; the offer; gone by the boss | Aldermoor violet, the Chapter 5 clerk's shape, a ledger | a line in Chapter 9's keep (the purchasing office) |
+| **Seth Dhanraj** ("the Seth" until approved; *Seth* is a merchant's honorific, for the fluent check) | the boss | white with a ledger under one arm, a gold chain; `seth_dhanraj` | kneeling at the colonnade's foot if spared |
+| **Arjun** (Echo) | Gen II; the charge; the taper | a saffron coat, a lance, the Echo palette; his seven riders (one look, two with a fallen frame) | S-JWA's oil store after the release |
+| **Arjun's runners** (Echo) | M-JWA-1 | three in saffron with lamps, the Echo palette | |
+| **The chief runner**, three **runners** | J-2 | a lamp on a pole; lamps | the relay up the hill (beat 7) |
+| **The salt-road carter** | J-3 | plain, a cart, no name | |
+| **The shrine child** | J-4's seed, placed, one line | small, a dark lamp | J-4 after the release |
+| **The Flame Keeper**, the **Gaze pilgrim** | the debate | saffron with a flame sigil; the Chapter 1 pilgrim look in a sun shawl | the post-Harbor corner |
+| **The librarian**, three **vendors**, the **harbour-master**, the **dyer** (the quay's loser), a **lamp-seller** (the cart) | | | |
+| **Oil Enforcers**, **Ember Jackals**, **Road Bandits**, **Zealots** | the flats, the salt road, the quay, the store | enforcer: a cudgel and a flask, white and grey; jackal: a 1 x 1 sprite with sparking fur; the built bandit and zealot recoloured | the Harbor's enforcer frame if Agnivansh is bought |
+| **Young Patricio** (the player in the Echo; Caona and Benny as data, not drawn) | beat 4, J-2 | the Echo palette | |
+
+Voices: Vikram in short runs with the breath between; Aiyana fast and exact, with numbers; Meera dry, final, warm
+once; the senior Keeper repeating the one word; the junior priest quiet and counting; the factor in the Regent's
+courteous register ("The Throne would of course keep the lamp lit"); Dhanraj courteous and lawful ("I do not hoard. I
+hold."); Arjun plain and sure; the carter Kreyol-accented and unnamed. No one in Agnipur sounds like Kirinoura:
+people here say the thing, and the Court is the only one that will not.
+
+---
+
+## 12. Owner questions (owner rule, Oct 20: only decisions that drastically change the story's flow; one at a time)
+
+**None required.** I looked for one and found a near-miss, below first. If the second review disagrees with any of
+these, it becomes a pop-up with the recommendation first and the build goes ahead on it.
+
+- **Near-miss: Patricio lights Arjun's lamp.** The design says "a lamp lit in the Echo stays lit", and anchors are
+  things Patricio does, so the hand on the taper is Zetwal's. That makes Agnipur's sacred flame, renewed in front of
+  the city in this chapter, a fire lit fifty years ago by Zetwal's Marshal at Arjun's asking ("the signal is for
+  Zetwal's ships, and a Zetwal hand should light it"). It is the alliance's point made in one object, and it reads
+  as Arjun's choice, not Zetwal's claim. If the owner would rather the hand be Agnivansh's, Arjun lights the lamp
+  and Patricio's anchor is the mirror alone: the puzzle loses one of its two anchors and nothing else moves.
+  Recommendation: keep it; it is not a change to the story's flow, so it is a Claude's call here and not a pop-up.
+
+The Claude's calls, each with its reason:
+
+- **The sacred thing the envoy went to sell is the keeping of the Harbor Chain**, and the Crown's offer is oil for the
+  chain. *Reason:* Chapter 5's line needs an object; the chain is Arjun's and the Echo's; the three roads' pattern
+  (a thief so a council can sell, files so neutrality is a fiction, a hoarder so a temple must sell) needs the thing
+  the temple would sell to be the thing the Crown wants, and the Crown wants harbors (Chapter 11).
+- **Vikram duels Gianna alone, as a sparring fight with no Game Over, and the scene after is the same either way**
+  (section 5, section 10). *Reason:* the design's beat as written ("a sparring battle, he is out of breath at the end
+  either way"); a fight the player can lose without punishment is new to the game and small to build; four against
+  one would not be a duel.
+- **Vikram joins at the flame, before the boss, and leaves at the price** (section 9.1), splitting `STORY.md`'s
+  "defies the priests and joins". *Reason:* Chapters 6 and 7's precedent; the player plays the Fire duelist against
+  the oil boss; the chapter's end is the same.
+- **The active-order flag is required**, not optional (section 4). *Reason:* seven fighters and the first-four rule
+  bench the new companion in his own chapter.
+- **J-3 walks the Salt Flats** (the carter at the salt-road shrine, then the back gate) rather than watching the gate
+  (section 7.2). *Reason:* the wild section needs a reason on the route; the design's enforcer seizure is kept as the
+  fight; the thumbprint and the delivery are unchanged.
+- **J-2 and J-3 are the required two; J-1 is the first post-release quest; J-5 after; J-4's shrine and lock are
+  placed inert** (section 7).
+- **The relay is gust lanes, not a timer** (section 7.1). *Reason:* the engine has no timer or step counter; the fog
+  maze's return trigger is the same idea in the engine's words; a countdown is a system for one quest.
+- **The signature puzzle is data: independent mirrors with flag values, beam segments on `if` conditions, two
+  anchors** (section 8). *Reason:* the built puzzle objects do it; the rotor group was Kuroshi's trick, not this
+  city's.
+- **Anissa holds the fourth mirror** (beat 5). *Reason:* `SECRET-ITEMS.md` 4 says the chapter is about the light she
+  carries; it gives her a part in the present with no danger and no joke; the fourth bracket is seized so the puzzle
+  needs her and the player turns three.
+- **Dhanraj at hp x6, atk x1.5 on the brute line, with the Oil Wall as a shatterable status and Price Spike as an
+  item delay** (section 5, section 10). *Reason:* the sim; COMBAT's phases in the engine's words, with the Surge as
+  the thing that breaks oil, as it broke gold and the standard.
+- **The Crown's factor is gone by the boss, not unmasked; Dhanraj's ledger is the proof, read aloud.** *Reason:*
+  Chapters 5, 6 and 7's pattern; the Regent stays three moves ahead; the ledger names Kingsmere's purchasing office,
+  which is Chapter 9's door and nothing more.
+- **The price scene reads Jwaladesh's Wealth and pays the store, the strongbox (if given), the two tokens and the
+  petition**; `ally.jwaladesh` is set regardless, with the Journal's count (beat 8). *Reason:* the Chapter 3, 6 and 7
+  pattern; the guide's "gold gifted counts" used for the first time, where it means something (Throne money to a
+  temple); the betrayal's rule stated the same way a third time.
+- **The crane is refused at the step and accepted at the altar** (beats 2 and 8). *Reason:* the feud is shown, not
+  told, and takes one step without K-5; Kaede's "take the crane anyway" pays.
+- **Aiyana knows the girls are Rael's daughters, says so once without his name, and her one line about him is the
+  rod** (section 9.2). *Reason:* Kayla's precedent (Chapter 7, section 9.2); the content test guards it.
+- **Aiyana names Jordyn in the Regent's guard** (beat 8). *Reason:* FAMILY.md places Jordyn there; the family that
+  has one sister in every city is how Chapter 9 gets a door; it is a seed, not a plan.
+- **No Echo battle; the charge is staged** (section 4).
+- **Side-quest and fight XP at the built curve's scale (100 / 100 / 100 for Dhanraj) and the taper at 0.25 from 15
+  assumed** (section 5), realm-wide. *Reason:* the numbers; the simulator decides on day 1.
+- **Six maps: the rooftops split out, the runners' hall folded into the temple steps, the store built as the arena
+  with S-JWA inert** (section 3).
+- **The Court of the Flame is 36 x 28** (the seat paragraph's size), as Chapters 5 to 7 chose.
+- **Meera is clean; the senior Keeper (Prakash) is the betrayer's seed.** *Reason:* "defies the priests" is the
+  guide's; a corrupt mother would be the same family tragedy twice; COMBAT already names Steward Prakash.
+- **Names are proposals** (Meera, Vikram, Arjun, Tejaswini, Seth Dhanraj from the design; Pelham and Prakash's
+  placement new), people named by role in the build until the owner approves.
+
+---
+
+## 13. Length
+
+Estimated from Chapter 2's measured route (1,020 steps, about 40 minutes) and Chapters 6 and 7's estimates (760 and
+830 steps, about 30 minutes):
+
+| Part | Steps | Transitions | Lines | Fights |
+|---|---|---|---|---|
+| The voyage, the quay, the cart turned back, the duel on the stair, up into the bazaar | ~80 | 2 | ~20 | |
+| The bazaar: the lanes, the Exchange, the shrine child, the roof and Aiyana | ~80 | 2 | ~25 | |
+| The Court: the crane, the one word, the offer, Vikram, the duel yard | ~70 | 2 | ~45 | the duel |
+| J-2: the runners, the Echo, the relay through the lanes | ~120 | 2 | ~20 | |
+| The debate on the spice row, the books | ~50 | 2 | ~30 | |
+| J-3: the salt gate, the flats, the carter, the enforcers, the back gate | ~140 | 3 | ~25 | the enforcers, 0 to 1 ambush |
+| The harbor at night: the sea-wall, the tower, Arjun's charge (both eras) | ~90 | 2 | ~35 | 0 to 1 (the watch) |
+| The roofs: four mirrors, the disc, the beam | ~60 | 2 | ~15 | |
+| The flame, the store, Dhanraj, the Yield, the relay up the hill | ~80 | 3 | ~35 | the boss |
+| The price, the token, Jordyn's name, the quay, the card | ~70 | 3 | ~40 | |
+| **Chapter 8** | **~840** | **23** | **~290** | 3 to 5 |
+
+About **30 to 33 minutes**, the plan's number, with the library's nine books and the swordsmith on top. The main
+line alone (the gate holds, so a player cannot) is about 18 minutes.
+
+---
+
+## 14. Continuity into Chapter 9 (Aldermoor, The Regent's Keep; 21 to 24)
+
+- **The lead:** Dhanraj's ledger (`item.dhanraj_ledger`, `clue.crown_holds_oil`): every advance drawn on "the
+  Throne's purchasing office, Kingsmere" and countersigned by the factor, with *Hold until the Court signs for the
+  chain*: the Crown's purse is in the Regent's keep, with "everything else the Throne has bought this year" (Meera).
+  The voyage `jwaladesh_aldermoor` north along the west coast from (37, 91) to Kingsmere at (22, 62). `?chapter=9`
+  starts where Chapter 9's outline puts the landing (Kingsmere's moor-side quay or the heath road; the Crown's
+  capital will not let an envoy's ship in by the front, which is Chapter 9's first beat to decide).
+- **Jordyn and Sebastian:** Aiyana's "Jordyn's in Kingsmere. In the Regent's guard" (beat 8) is the family's
+  hand-off: Chapter 9 bumps into Jordyn (disciplined, blunt, fair; she opens the keep's postern when she decides) and
+  into **Sebastian**, Elodie's brother, whose organ recital in Kingsmere's cathedral covers the archive break-in
+  (FAMILY.md, settled). Nothing in this chapter mentions Sebastian: the Zetwal side of the family is Coralie's and
+  Elodie's to name, and Chapter 5 left Coralie at the Seat with "bring me every colour you find". Chapter 9's
+  outline should give Sebastian his bump-in cold (a poster for the recital on Kingsmere's quay is enough).
+- **The party leaves with:** Gianna, Yari, Azzy, Samira, Bayarmaa, Haru, **Vikram**, Anissa (eight, seven fighters,
+  four active by `party.active`); Salkhi; **level 20** by the tool (5,835 to 5,955), **21 as played** with the taper
+  (section 5: Chapter 9 should plan for 20 to 21 by the tool and 21 to 22 played at its start, and its band of 21 to
+  24 absorbs it); the Echo party unchanged; gold about 2,000 to 3,000 less the swordsmith and the strongbox if given;
+  key items plus the Ironvow, Suzumori and **Agnivansh** tokens (three of Se-5's; Aldermoor's dissidents give no
+  token: they are not a house at the chair, which Chapter 9 should say), the Fog Files, the receipts, **the ledger
+  of advances**, Titi Kayla's crane, **Titi Aiyana's mirror**; flags `story.jwaladesh_arrived`, `party.vikram`,
+  `party.active`, `story.vikram_left_agnipur`, `ally.jwaladesh` with Jwaladesh's Wealth 4 to 11,
+  `clue.relay_route`, `clue.arjun_charge`, **`clue.crown_holds_oil`**, `anchor.chain_lamp`, `anchor.tower_mirror`,
+  `story.crane_accepted`, `choice.duel_won|duel_lost`, `choice.patricio_arjun`, `choice.dhanraj_spared|broken`,
+  `choice.advances_given`, `side.lamp_relay.done`, `side.anonymous_oil.done` (the thumbprint count: **seven**),
+  `story.anissa_keeper`, the debate's outcome, `act8.complete`.
+- **What Gianna believes:** unchanged. No Rael clue moved here; the "nobody dies" pattern grew by one (Dhanraj and
+  his enforcers withdrew); the anonymous oil is the seventh thumbprint and the carter's "he isn't doing it for a
+  goddess" is the thread's one line in a mouth. Azzy's "three of his sisters, in three cities, and not one of them
+  will say his name to you" is the family's pattern named once; Chapter 9's Jordyn is the fourth, and the one who
+  acts.
+- **What the realm knows:** the Crown pays a thief so a council can sell (6), buys a city's files so its neutrality
+  is a fiction (7), and funds a hoarder so a temple must sell its chain (8): the same hand three ways, and all three
+  purses are drawn on Kingsmere. Three of four houses have been spoken for; one of the four has a closed hand beside
+  its name; Hrafn, Mibu and Prakash are alive and unconvinced. The Muster's betrayal rule has been stated three times
+  in the same words.
+- **The feuds for the Muster:** Suzumori and Agnivansh have taken one step (the crane on the altar; Haru's promise
+  of the paper); Dorini and Ironvow have not (Chapter 6's fair had Samira); Stillwater's dissidents are Chapter 9's.
+- **Nothing built in Chapters 3 to 7 is touched** except `CHAPTERS`, `chapters.json`, the route, `encounters.ts`
+  (`salt_flats`), `MEMBERS` (Vikram's entry) and `party.active` (if new), the voyages, the taper's number, and the
+  statuses (`burning`, `oiled`) and the two battle fields (`sparring`, `fighters`), each behind a test that Chapters
+  2 to 7's fights replay unchanged.
+
+---
+
+## 15. Risks
+
+- **The level curve closes only if the taper landed.** This is the third road and the one that must leave the party
+  at 21 for Chapter 9; with the taper at 0.25 the played line lands at 21 to 22 and the tool at 20; without it, 23.
+  The number is the central session's, decided once on Chapters 1 to 7's routes, and this chapter's dials (Dhanraj
+  100, the quests 100) are set assuming it. If the owner would rather keep ambushes rich, the alternative is
+  Chapter 9 re-based a level higher, which is a plan change, not a chapter one.
+- **Seven fighters and the first-four rule.** If the active-order flag is not built, Vikram never fights in his
+  chapter (or Haru never fights again). It is the first thing on day 1, and the sim shows the boss does not depend on
+  it, so the fallback (Vikram fourth in `MEMBERS`, Haru benched) is playable and wrong.
+- **Two new statuses in the damage path.** `burning` (a negative regen) and `oiled` (an immunity field) touch the
+  one formula every fight uses. Each is ten lines behind a test, and `battle.test.ts` must replay Chapters 2 to 7's
+  fights unchanged before either lands. The fallbacks (`weakened`, `gilded`) are the sim's and are known to play.
+- **The sparring rule is new.** A fight with no Game Over has never been built; the `meantToLose` + `finale` fallback
+  exists and plays the same scene with two exits. Build the rule, and if it costs more than an hour, take the
+  fallback: the duel is a minute of the chapter, and the scene after it is what matters.
+- **Arjun's charge is the chapter's heart and is easy to make a cutscene.** The riders are walkers on the mole; the
+  cannon is a sound and a shake; the chain is an object that changes look; the taper and the mirror are things
+  Patricio does. If the build runs short, the riders keep their walk and the two fallen are a line.
+- **Aiyana's lines are the chapter's tightrope, as Kayla's were.** The content test (section 9.2) is the guard; the
+  reviewer should read every Aiyana line, and Azzy's "or what you are", against the locked rule.
+- **Anissa on the roof.** She holds the disc; she is never the beam's source or anything's target; the enforcer's
+  "Who lit that?" is a voice from the store, not a man at the tower; the Zealots' line is on the flats; nothing in
+  the Court looks at her. Her two touches are the disc and Vikram's "Keeper", neither a joke, and Vikram's breathing
+  is never in a node with her lines.
+- **Tone.** Vikram is out of breath in six places (the stair, the Court, the duel, the roof, the store, the quay)
+  and the line is different each time; "argument settled" is said twice. Salkhi stays outdoors; Samira's pricing
+  stops at the altar, where it becomes the strongbox's line. No jokes in Arjun's Echo, at the flame, at the ledger
+  or at "the word was wrong".
+- **The Crown's hand stays the Regent's, not the Hushed's.** The ledger is countersigned by the factor and drawn on
+  Kingsmere's purchasing office; the buyer's mark is Chapter 7's; nobody joins them. That join is Chapter 9's.
+- **Faith on the map.** The Four Hands' Flame Keepers are a fictional sect and the Court is a court, not a temple of
+  any real faith; the duel-over-breakfast comedy is Vikram's, never the Keepers'; *Seth* as an honorific and the
+  greetings go to the fluent reader. No real faith is shown as a cult (guide 7.3).
+- **Languages.** Three vendor greetings and a few words (*Agnipur*, *Agni ki Shakti*, *Rakt Ki Pyaas*, *Ananta
+  Yuddha*, *Seth*, *talwar*, the board game's own) in Hindi, every one `verified: false` for the Nov 18 check, and
+  the Opus review's ask for a fluent reader as this outline is approved.
+- **Names.** Every new name is a proposal; the build names people by role; the owner's yes on Meera, Vikram, Arjun
+  and Dhanraj (all from the design) is the only one that matters for the dialogue's shape. Meera as the Gen III
+  ruler Vikram defies is on the Dec 1 list (STORY 6.10), now needed by early November.
+- **Chapter 7 may land late, and its review may change its end.** Everything here except the voyage's start and the
+  crane can be built from the Chapter 7 outline's section 14 state before Chapter 7 is done; `?chapter=8` needs
+  Chapter 7's route; until then the chapter is tested from a hand-written start save with section 1's state. If the
+  Chapter 7 review moves Haru's join, the active order or the taper, sections 1, 4 and 5 move with it and nothing
+  else.
+
+---
+
+## 16. Build plan (small steps, each checked before the next; sized to two and a half builder-days, about Nov 2 to 5)
+
+**Day 1 (Opus with Sonnet on maps and content):**
+1. **Docs and the numbers (morning, 1 hour):** the second review; `STORY.md` Chapter 8 rewritten to this outline
+   (the chain as the sacred thing, Vikram's split join, Aiyana, the duel as a solo sparring fight, J-3 on the flats),
+   `CAPITALS.md` 8 re-sized (six maps, the rooftops, the Court at 36 x 28, the runners' hall on the steps),
+   `SIDE-QUESTS.md` J-2 and J-3 marked for the release with the new numbers and J-1, J-4, J-5 after, `PUZZLES.md`
+   SIG-JWA's staging (data only, Anissa's disc) and M-JWA-1's gust lanes, `COMBAT.md` 9.7 with Vikram's stat line and
+   13.3 with Dhanraj's scaling and the wall, `FAMILY.md` Aiyana's row marked built, Vikram's, Aiyana's, Meera's,
+   Arjun's and Dhanraj's prompts into `ART-PROMPTS.md`. **The taper's number confirmed** on Chapters 1 to 7's routes;
+   **the active-order flag's state checked** (built in 6 or 7, or built now).
+2. **Engine and data (Opus, half a day):** Vikram as data (entry, skills, moves, looks, two items), `party.active`
+   if needed, `burning`, `oiled`, `itemDelay`, `burnsOnFire`, `sparring`, `fighters`, `spLess`, `attackOnFell`,
+   `freeRound`, `elementBoost` (each a few lines, each with a unit test; `fighters.test.ts` grows by one;
+   `battle.test.ts` re-asserts Chapters 2 to 7's fights), the glossary, the voyage.
+3. **Maps (Sonnet, the rest of the day), the harbor and the roofs first:** `tools/maps/jwaladesh.ts` with the six
+   maps of section 3; the harbor's zone, the two anchors and the lamp replayed headless by a draft
+   `puzzles/jwaladesh_chain/solution.json`, then the rooftops' four mirrors and beam segments by
+   `puzzles/jwaladesh_mirrors/`, before the bazaar is drawn; then the bazaar with its gust strips and sheltered lanes
+   and `puzzles/jwaladesh_relay/`; the Court with the three altar looks and the duel yard; the library; the flats
+   with the salt road, the shrine and the ambush layer; the night and dawn variants; validated; the city entry in
+   `CITIES`.
+4. **Content (Haiku and Sonnet, in parallel):** twelve books (*The Harbor Chain* written against the Echo's roll call
+   and *The Burned Temple, Our Account* against Kirinoura's), the `salt_flats` table and `jwaladesh_story` groups, the
+   four enemies, the sparring Vikram and Dhanraj with his phases, the vendors and the five items, the looks (section
+   11), the speakers, the audio slots (a lamp lit, oil poured, cannon, a curtain torn, blades on sand; the bazaar
+   plays the farewell track until Agnipur has its own).
+
+**Day 2 (Opus with Sonnet on dialogue):**
+5. **Dialogue and the story wiring (the morning):** `data/dialogue/jwaladesh.ts` staged from the beats, in this order
+   so an interruption leaves a playable chapter: the quay, the cart, the stair; the bazaar and Aiyana's roof; the
+   Court, the crane, the one word, the offer, Vikram, the duel; the tower, Arjun's charge, the anchors; the roofs
+   and the disc; the flame, the curtain, Vikram joins; Dhanraj and the Yield, the relay up the hill; the price, the
+   token, Jordyn's name; the quay and the card. `ACT8` in `quests.ts` with hints and goals; the Journal notes (*The
+   relay*, *The salt-road carter*, *Arjun's charge*, *The Flame Keepers*, *Aiyana*).
+6. **The quests (early afternoon):** J-2 (the runners, the Echo, the gust lanes, the bracelet), J-3 (the priest, the
+   flats, the carter, the enforcers, the back gate), the debate *Is hesitation a sin, or is remembering mercy?* (two
+   speakers, three rounds, the Reason books), the mirror job on the board.
+7. **The puzzle files and tests (late afternoon):** `puzzles/jwaladesh_chain/`, `puzzles/jwaladesh_mirrors/`,
+   `puzzles/jwaladesh_relay/`; an `oil_store_dhanraj` bot test on seeds at 19, 20 and 21 with the real statuses (the
+   scratch sim's bot moved into `tests/`), and a `duel_yard_vikram` test that both outcomes end the fight and play the
+   scene; quests, guide, debate, side-quest, maps, stage and content tests green; the content tests: no Salkhi line
+   in a node with an Anissa line; no Aiyana line with "good", "innocent", "feeds", "the arrows" or "thumbprint"; no
+   Vikram breathing line in a node with an Anissa line; no line joining "Crown" or "Regent" to "glows" or "little
+   one".
+8. **The route (evening):** Chapter 8's route from its chapter start to `@chapter8-end`; `chapter-starts.ts` with
+   chapter 9; `act.test.ts`; `tools/level-curve.ts` run and the XP dials set (section 5); the smoke test's Chapter 8
+   section with screenshots of the dead lamp over the chain, the cart turned back, Vikram bent double on the stair,
+   Azzy on the roof with the wrench, the curtained altar, the duel yard, the runners' Echo, the carter's jars with the
+   thumbprint, the charge on the mole in the Echo, the lit lamp in the present, the four mirrors and the beam, Anissa
+   with the disc, the curtain torn and the wick in the beam, Dhanraj in his ring of oil, the relay up the hill, the
+   crane on the altar, at 844 x 390 and 390 x 844.
+
+**Day 3 (morning):**
+9. **Full browser test:** the chapter end to end on a phone; the duel lost and won; Game Over on a flats ambush (back
+   to the salt-road shrine) and on Dhanraj (back to the store's doors); a save in the tower and on the roofs; `npm
+   test`, typecheck, lint, build; the reviewer prompt in `reviews/reviewer-prompts/` (the Chapters 6 to 9 batch, about
+   Nov 9); then Chapter 9's outline, which overlaps with this build from day 2.
+
+**If day 2 runs over, cut in this order:** the night and dawn variants (lines), the library's books from nine to five
+(*Rani Tejaswini's Flame*, *The Harbor Chain*, *The Law of the Flame*, *Oil, Ghee and Grain*, *The Relay*), the
+night watch's fight (the sea-wall open to everyone), Price Spike's item delay (the area blow), Ananta Yuddha's free
+round and Rakt Ki Pyaas (their fallbacks), the strongbox as a gift (a line), the mirror job on the board. Never cut:
+Vikram active in battle, the duel as a fight that ends either way, Arjun's charge staged with the two anchors, the
+four mirrors turned by the player with Anissa's disc, the curtain torn and the wick caught in the beam, Dhanraj's
+wall broken by a Surge, the ledger read with the crane on the altar, the price with the token, the two required
+quests and the debate.
+
+Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, most urgent first: art drop 1 (Fri Oct
+24); card art, portraits and the card back before the rules and card text freeze (Fri Oct 31); order B with proofs
+(Mon Nov 3); the Dec 1 story questions, now needed by early November (the Gen III rulers each companion defies:
+Meera is this chapter's); the fluent-speaker check (Wed Nov 18: this chapter adds Hindi, a few words).
