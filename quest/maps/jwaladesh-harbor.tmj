@@ -287,7 +287,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "!story.flame_seen"
+              "value": "!side.lamp_relay.done|!side.anonymous_oil.done|!debate.jwaladesh_hesitation.settled"
             },
             {
               "name": "npc",
@@ -315,7 +315,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "!story.flame_seen"
+              "value": "!side.lamp_relay.done|!side.anonymous_oil.done|!debate.jwaladesh_hesitation.settled"
             },
             {
               "name": "npc",
@@ -343,7 +343,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "!story.tower_open"
+              "value": "!side.lamp_relay.done|!side.anonymous_oil.done|!debate.jwaladesh_hesitation.settled"
             },
             {
               "name": "npc",

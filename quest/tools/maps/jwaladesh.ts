@@ -46,6 +46,8 @@ const DAIS = '{';
 
 /** The night: the day's three things done, until the store is opened at dawn (data/jwaladesh.ts NIGHT). */
 const NIGHT_TEXT = `${DAY_DONE_TEXT}, !story.dhanraj_beaten`;
+/** The day: any of the three still to do (the watch on the store and the tower, Aiyana on her roof). */
+const DAY_TEXT = '!side.lamp_relay.done|!side.anonymous_oil.done|!debate.jwaladesh_hesitation.settled';
 
 function put(g: Grid, ch: string, at: readonly (readonly [number, number])[]): void {
   for (const [x, y] of at) g.set(x, y, ch);
@@ -121,9 +123,9 @@ export function jwaladeshHarbor(): MapSource {
     obj('balance_lock', HARBOR.balanceLock.x, HARBOR.balanceLock.y, { kind: 'balance_lock', solid: true, era: 'present', dialogue: 'balance_lock' }),
     obj('factor_launch', HARBOR.launch.x, HARBOR.launch.y, { kind: 'crown_launch', solid: true, era: 'present', if: '!story.flame_seen', dialogue: 'factor_launch' }, 2, 1),
     obj('lane_jars', HARBOR.laneJars.x, HARBOR.laneJars.y, { kind: 'jar_stack', solid: true, era: 'present', if: '!clue.relay_route', dialogue: 'lane_jars' }),
-    npc('store_enforcer_a', HARBOR.storeEnforcers[0]!.x, HARBOR.storeEnforcers[0]!.y, 'down', { if: '!story.flame_seen' }),
-    npc('store_enforcer_b', HARBOR.storeEnforcers[1]!.x, HARBOR.storeEnforcers[1]!.y, 'down', { if: '!story.flame_seen' }),
-    npc('tower_enforcer', HARBOR.towerEnforcer.x, HARBOR.towerEnforcer.y, 'right', { if: '!story.tower_open' }),
+    npc('store_enforcer_a', HARBOR.storeEnforcers[0]!.x, HARBOR.storeEnforcers[0]!.y, 'down', { if: DAY_TEXT }),
+    npc('store_enforcer_b', HARBOR.storeEnforcers[1]!.x, HARBOR.storeEnforcers[1]!.y, 'down', { if: DAY_TEXT }),
+    npc('tower_enforcer', HARBOR.towerEnforcer.x, HARBOR.towerEnforcer.y, 'right', { if: DAY_TEXT }),
     npc('aiyana_harbor', HARBOR.aiyana.x, HARBOR.aiyana.y, 'left', { npc: 'aiyana', if: `${DAY_DONE_TEXT}, !story.tower_open` }),
     npc('aiyana_quay', HARBOR.gate.x + 1, HARBOR.gateRow, 'down', { npc: 'aiyana', if: 'ally.jwaladesh, !act8.complete' }),
     npc('jw_harbour_master', HARBOR.harbourMaster.x, HARBOR.harbourMaster.y, 'down'),
@@ -200,8 +202,8 @@ export function jwaladeshBazaar(): MapSource {
     trigger('aiyana_meet', BAZAAR.roof.x, BAZAAR.roof.y + 1, { dialogue: 'aiyana_meet', if: 'story.jwaladesh_arrived, !story.aiyana_met' }, BAZAAR.roof.w, 1),
     // The wind off the sea on the main street: with the relay lamp in hand it goes out (J-2, M-JWA-1's present half).
     ...BAZAAR.gusts.map((p, i) => trigger(`gust_${i + 1}`, p.x, p.y, { dialogue: 'relay_gust', if: 'item.relay_lamp' }, 3, 1)),
-    // The night variant (the Court's doors stay open; Aiyana is at the harbor).
-    npc('aiyana', BAZAAR.aiyana.x, BAZAAR.aiyana.y, 'down', { if: '!story.court_heard' }),
+    // Aiyana on her roof all day; at the night lamp's hour she is at the chain tower.
+    npc('aiyana', BAZAAR.aiyana.x, BAZAAR.aiyana.y, 'down', { if: DAY_TEXT }),
     npc('chief_runner', BAZAAR.chiefRunner.x, BAZAAR.chiefRunner.y, 'down'),
     ...BAZAAR.runners.map((r, i) => npc(`runner_${'ab'[i]}`, r.x, r.y, 'down', { npc: 'runner', if: '!story.dhanraj_beaten' })),
     npc('debate_flame_keeper', BAZAAR.keeper.x, BAZAAR.keeper.y, 'down'),

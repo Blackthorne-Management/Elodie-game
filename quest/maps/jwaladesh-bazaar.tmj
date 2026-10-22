@@ -343,7 +343,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "!story.court_heard"
+              "value": "!side.lamp_relay.done|!side.anonymous_oil.done|!debate.jwaladesh_hesitation.settled"
             },
             {
               "name": "npc",
