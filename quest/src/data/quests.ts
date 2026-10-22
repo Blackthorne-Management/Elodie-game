@@ -53,6 +53,8 @@ export const ACT1: QuestDef = {
       detail: 'Stand on the shimmering tiles by the map table and press Echo. Then talk to the people there.',
       done: { flag: 'story.warroom_echo' },
       goals: [{ map: 'zetwal-house', at: { x: 14, y: 6 } }],
+      // In the memory: the aide by the shelves has the night orders (review 1, finding 2).
+      echoGoals: [{ map: 'zetwal-house', at: { x: 12, y: 4 } }],
       hints: [
         'The air by the map table is shimmering, Gigi. Do you see it?',
         'Stand on the shimmering tiles and press Echo. I will hold the door.',
@@ -64,7 +66,13 @@ export const ACT1: QuestDef = {
       title: 'Leave word for later',
       detail: 'Grandfather keeps copies of his papers under the loose board by the window seat. Leave the night orders there.',
       done: { flag: 'anchor.night_orders' },
-      goals: [{ map: 'zetwal-house', at: { x: 17, y: 2 } }],
+      // The copy is only in the memory: in the present, back to the shimmer; in it, the aide for the copy (it
+      // is gone after a return), then the board by the window.
+      goals: [{ map: 'zetwal-house', at: { x: 14, y: 6 } }],
+      echoGoals: [
+        { if: { notFlag: 'echo.orders_copy' }, map: 'zetwal-house', at: { x: 12, y: 4 } },
+        { map: 'zetwal-house', at: { x: 17, y: 2 } },
+      ],
       hints: [
         "Grandfather hid things for later, didn't he? Grandmother always says so.",
         'The aide said where the copy goes: the loose board by the window.',
@@ -76,10 +84,10 @@ export const ACT1: QuestDef = {
       title: 'Fifty years under the floor',
       detail: 'Return to the present on the shimmering tiles, then look under the window seat.',
       done: { flag: 'clue.night_orders' },
-      goals: [
-        { if: { notFlag: 'story.warroom_returned' }, map: 'zetwal-house', at: { x: 14, y: 6 } },
-        { map: 'zetwal-house', at: { x: 17, y: 2 } },
-      ],
+      // In the memory, the shimmer back out; in the present, the board (review 1, finding 2: an early return,
+      // story.warroom_returned, is not the orders in hand).
+      goals: [{ map: 'zetwal-house', at: { x: 17, y: 2 } }],
+      echoGoals: [{ map: 'zetwal-house', at: { x: 14, y: 6 } }],
       hints: [
         'Come back, Gigi. I want to see if it is still there.',
         'Press Echo on the shimmering tiles to come back, then look under the window seat.',
@@ -91,11 +99,16 @@ export const ACT1: QuestDef = {
       title: 'Cross to the Temple island',
       detail: 'The rope bridge has fallen. The night orders: turn the winch to lower the Chain Bridge, then drive the iron pin through the pawl.',
       done: { flag: 'story.bridge_crossed' },
+      // In the present: the bridgehead shimmer, then (pinned) across. In the memory: the winch, the pawl, then the
+      // shimmer back out (review 1, finding 2).
       goals: [
         { if: { flag: 'anchor.chain_bridge' }, map: 'zetwal-town', at: { x: 31, y: 9 } },
-        { if: { flag: 'story.winch_lowered' }, map: 'zetwal-town', at: { x: 29, y: 8 } },
-        { if: { flag: 'story.bridge_echo_seen' }, map: 'zetwal-town', at: { x: 28, y: 8 } },
         { map: 'zetwal-town', at: { x: 28, y: 10 } },
+      ],
+      echoGoals: [
+        { if: { flag: 'anchor.chain_bridge' }, map: 'zetwal-town', at: { x: 28, y: 10 } },
+        { if: { flag: 'echo.chain_bridge_down' }, map: 'zetwal-town', at: { x: 29, y: 8 } },
+        { map: 'zetwal-town', at: { x: 28, y: 8 } },
       ],
       hints: [
         'Gigi, what if the old bridge could just... go back?',
@@ -187,6 +200,11 @@ export const ACT1: QuestDef = {
       goals: [
         { if: { all: [{ flag: 'side.cane_name.stones' }, { notFlag: 'clue.cane_name' }] }, map: 'zetwal-road', at: { x: 3, y: 14 } },
         { map: 'zetwal-road', at: { x: 9, y: 12 } },
+      ],
+      // In the Cane Road's memory: the cane worker by the roses, then the shimmer back out.
+      echoGoals: [
+        { if: { notFlag: 'clue.cane_name' }, map: 'zetwal-road', at: { x: 2, y: 16 } },
+        { map: 'zetwal-road', at: { x: 3, y: 14 } },
       ],
       hints: [
         "Yari won't leave the cane cutters with that boar, Gigi. Neither will I.",
@@ -382,11 +400,15 @@ export const ACT2: QuestDef = {
       title: 'What the stones remember',
       detail: 'The petroglyph cave is under the rocks in the cassava gardens, west of the village. Its carved chamber is flooded.',
       done: { flag: 'clue.drum_pattern' },
+      // In the present: the shimmer in the antechamber, then (drained) the carved wall. In the memory: the lower
+      // sluice, then the shimmer back out (review 1, finding 2).
       goals: [
-        { if: { flag: 'story.cave_drained_seen' }, map: 'xaragua-cave', at: { x: 5, y: 2 } },
-        { if: { flag: 'anchor.cave_sluice' }, map: 'xaragua-cave', at: { x: 14, y: 14 } },
-        { if: { flag: 'story.cave_echo_seen' }, map: 'xaragua-cave', at: { x: 3, y: 7 } },
+        { if: { flag: 'anchor.cave_sluice' }, map: 'xaragua-cave', at: { x: 5, y: 2 } },
         { map: 'xaragua-cave', at: { x: 14, y: 14 } },
+      ],
+      echoGoals: [
+        { if: { flag: 'anchor.cave_sluice' }, map: 'xaragua-cave', at: { x: 14, y: 14 } },
+        { map: 'xaragua-cave', at: { x: 3, y: 7 } },
       ],
       hints: [
         'The water came from somewhere, and it has to go somewhere.',
@@ -415,6 +437,8 @@ export const ACT2: QuestDef = {
         { if: { flag: 'story.lock_opened' }, map: 'xaragua-record', at: { x: 7, y: 2 } },
         { map: 'xaragua-plaza', at: { x: 21, y: 12 } },
       ],
+      // Still in the areíto's memory: the shimmer in the batey back out (the stones are tapped in the present).
+      echoGoals: [{ map: 'xaragua-plaza', at: { x: 14, y: 13 } }],
       hints: [
         'The stones round the dance ground are carved with drums. Drums are for tapping.',
         'Tap the whole song on the standing stone by the record house: long marks are two beats, short marks one.',
@@ -445,21 +469,23 @@ export const ACT2: QuestDef = {
         'Go down to the Harbor Village, take the trail west to the gardens, and into the petroglyph cave.',
       ],
     },
+    // Review 1 (Oct 21), finding 3: the occupied city was a fetch loop. The seller and the marine at her shutters are
+    // one stop, and the customs house's register is on the way to the Governor: no climb to the caney.
     {
       id: 'held',
       title: 'Where is Anaco held?',
-      detail: 'The Crown holds Yucayeque. Only Gianna, Zetwal\'s envoy, can walk the streets. Find out where they keep the cacique.',
+      detail: 'The Crown holds Yucayeque. Only Gianna, Zetwal\'s envoy, can walk the streets. Find out where they keep the cacique (and cut the healer\'s fever bark by the spring pond on the way).',
       done: { flag: 'story.anaco_found' },
+      // The healer's fever bark first: its tree is on the way from the cave into the city.
       goals: [
-        { if: { notFlag: 'clue.held_seller' }, map: 'xaragua-village', at: { x: 23, y: 10 } },
-        { if: { notFlag: 'clue.held_ledger' }, map: 'xaragua-customs', at: { x: 5, y: 2 } },
-        { if: { notFlag: 'story.papers_checked' }, map: 'xaragua-village', at: { x: 23, y: 3 } },
-        { map: 'xaragua-caney', at: { x: 16, y: 21 } },
+        { if: { all: [{ flag: 'story.bark_asked' }, { notFlag: 'item.fever_bark' }, { notFlag: 'story.anaco_visited' }] }, map: 'xaragua-conuco', at: { x: 29, y: 18 } },
+        { if: { any: [{ notFlag: 'clue.held_seller' }, { notFlag: 'clue.held_guard' }] }, map: 'xaragua-village', at: { x: 23, y: 10 } },
+        { map: 'xaragua-customs', at: { x: 5, y: 2 } },
       ],
       hints: [
         'Someone in the city has seen where they took him.',
-        'The marines talk. So do the people they are guarding.',
-        'Ask the lamp-oil seller in the village, read the clerk\'s register in the customs house, and listen to the marine at the caney doors (show your papers at the checkpoint).',
+        'The lamp-oil seller sees everything from her doorway. And the customs house writes everything down.',
+        'Ask the lamp-oil seller at her shutters in the village, then read the clerk\'s register in the customs house.',
       ],
     },
     {
@@ -480,30 +506,21 @@ export const ACT2: QuestDef = {
       ],
     },
     {
-      id: 'word',
-      title: 'Word to the cave',
-      detail: 'Anaco told Gianna the one gap in the Crown\'s blockade. Carry it to Yari and the resistance in the petroglyph cave.',
-      done: { flag: 'story.escape_planned' },
-      goals: [{ map: 'xaragua-cave', at: { x: 11, y: 17 } }],
-      hints: [
-        'Yari will want to hear every word her father said.',
-        'The resistance is in the petroglyph cave, in the cassava gardens.',
-        'Go back to the petroglyph cave and tell Yari what Anaco said.',
-      ],
-    },
-    {
       id: 'blockade',
       title: 'Through the blockade',
-      detail: 'At the lowest tide the sea cave on the Canoe Beach opens to the sea. Get Yari out past the Crown\'s ships.',
+      detail: 'A runner has carried Anaco\'s word to the cave. Tonight, at the lowest tide, meet Yari and Anissa at the sea cave on the Canoe Beach, and get Yari out past the Crown\'s ships.',
       done: { flag: 'story.escaped' },
+      // The trail east is barred until the envoy shows her papers (finding 7 of review 1: the arrow on the barricade
+      // itself); then the sea cave mouth, where Yari and Anissa come up from the waterline; then the sea mouth.
       goals: [
-        { if: { notFlag: 'story.escape_night' }, map: 'xaragua-cave', at: { x: 11, y: 17 } },
+        { if: { notFlag: 'story.papers_checked' }, map: 'xaragua-village', at: { x: 41, y: 15 } },
+        { if: { notFlag: 'story.escape_night' }, map: 'xaragua-beach', at: { x: 31, y: 8 } },
         { map: 'xaragua-seacave', at: { x: 19, y: 5 } },
       ],
       hints: [
         'The tide, Gigi. Everything is the tide here.',
-        'The sea cave is at the east end of the Canoe Beach.',
-        'Meet Yari at the sea cave on the Canoe Beach at low tide.',
+        'The trail east to the Canoe Beach is barred. Show them your papers. The sea cave is at the east end of the beach.',
+        'Show your papers at the barricade on the east trail, then go to the sea cave on the Canoe Beach. Yari will meet you there.',
       ],
     },
   ],
@@ -579,7 +596,7 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     id: 'anaco_held',
     when: 'story.anaco_found',
     title: 'Where Anaco is held',
-    text: 'In the cellar of the Crown Customs House: carried in by the back after midnight (the lamp-oil seller), "one guest, native, elderly" in the register (the clerk), and the marines\' talk at the caney.',
+    text: 'In the cellar of the Crown Customs House: carried in by the back after midnight (the lamp-oil seller), "snug in the Governor\'s cellar" (the marine at her shutters), and "one guest, native, elderly" in the register (the clerk).',
   },
   {
     id: 'sea_cave_route',

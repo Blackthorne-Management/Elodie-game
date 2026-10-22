@@ -57,7 +57,7 @@ const HELD_FOUND: DialogueNode = {
   set: { 'story.anaco_found': true },
   lines: [
     say(G, '(Carried in by the back after midnight. "One guest, native, elderly" in the register.)'),
-    say(G, '(And the marines joke about the Governor\'s cellar.)'),
+    say(G, '(And a marine jokes about the Governor\'s cellar.)'),
     say(G, '(He is under the customs house. In the cellar, under Thorne\'s own floor.)'),
   ],
 };
@@ -317,8 +317,10 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     done: { lines: [say('crown_marine', '...')] },
   }),
   // The fight is won, but the caney is lost: a Crown captain takes the cacique.
-  // Staged: the beaten marines run off; a captain and two marines march in; Anaco walks out to meet them, and
-  // is led away down the hall and out of the doors.
+  // Staged: the beaten marines run off; a captain and six marines march in and level their muskets past the
+  // children at the elders in the circle (review 1, Oct 21, finding 4: Gianna does not surrender Anaco to fewer
+  // men than she just beat; she surrenders him to a firing line aimed at the elders). Anaco walks out to meet
+  // them, and is led away down the hall and out of the doors.
   simple('caney_after', [
     act(
       [
@@ -327,6 +329,10 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         { do: 'place', actor: 'lieutenant', look: 'marine_lieutenant', at: at(11, 6), facing: 'left' },
         { do: 'place', actor: 'marine', look: 'crown_marine', at: at(12, 5), facing: 'left' },
         { do: 'place', actor: 'musketeer', look: 'crown_musketeer', at: at(12, 7), facing: 'left' },
+        // The elders, behind the children in the council circle.
+        { do: 'place', actor: 'elder_charter', look: 'elder_charter', at: at(3, 6), facing: 'right' },
+        { do: 'place', actor: 'elder_resist', look: 'elder_resist', at: at(5, 5), facing: 'right' },
+        { do: 'place', actor: 'elder_undecided', look: 'elder_undecided', at: at(5, 7), facing: 'right' },
       ],
       'marine_lieutenant',
       'Fall back! Fall back!',
@@ -341,17 +347,24 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'Beaten by children! This is insane! We will be back, all of us!',
     ),
     act([{ do: 'wait', ms: 900 }], Y, 'They ran. Gianna, they ran!'),
-    // The captain and his men: through the doors and up the hall.
+    // The captain and six men: through the doors and up the hall, into a firing line at the circle's opening.
     act(
       [
         { do: 'enter', actor: 'guard_a', look: 'crown_marine', from: at(17, 24), to: at(13, 5), facing: 'left', run: true, async: true },
         { do: 'enter', actor: 'guard_b', look: 'crown_musketeer', from: at(18, 24), to: at(13, 7), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_c', look: 'crown_musketeer', from: at(17, 24), to: at(11, 5), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_d', look: 'crown_musketeer', from: at(18, 24), to: at(11, 7), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_e', look: 'crown_marine', from: at(17, 24), to: at(12, 4), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_f', look: 'crown_musketeer', from: at(18, 24), to: at(12, 8), facing: 'left', run: true, async: true },
         { do: 'look', actor: 'captain' },
         { do: 'enter', actor: 'captain', look: 'crown_captain', from: at(17, 23), to: at(12, 6), facing: 'left' },
       ],
       'crown_captain',
       'By order of Governor Thorne, this house and this harbor are under the protection of the Crown. Where is the cacique?',
     ),
+    act([{ do: 'face', actor: 'yari', facing: 'right' }], Y, '(an arrow drawn to her cheek) Not one step further, captain.'),
+    act([{ do: 'look', actor: 'elder_resist' }], 'crown_captain', 'Muskets! Over the children. On the old ones in the circle.'),
+    act([{ do: 'look', actor: 'player' }], 'crown_captain', 'Any arrow, and the elders die first. Lower it, girl.'),
     // Anaco comes out of the healer's room on his cane, all the way up to the captain.
     act(
       [
@@ -385,6 +398,11 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         { do: 'exit', actor: 'anaco', to: at(18, 25), async: true },
         { do: 'exit', actor: 'guard_b', to: at(18, 25), async: true },
         { do: 'wait', ms: 700 },
+        // The firing line backs out last, muskets still on the circle.
+        { do: 'exit', actor: 'guard_c', to: at(17, 25), async: true },
+        { do: 'exit', actor: 'guard_d', to: at(18, 25), async: true },
+        { do: 'exit', actor: 'guard_e', to: at(17, 25), async: true },
+        { do: 'exit', actor: 'guard_f', to: at(18, 25), async: true },
         { do: 'exit', actor: 'captain', to: at(17, 25) },
         { do: 'look', actor: 'player' },
         { do: 'face', actor: 'yari', facing: 'left' },
@@ -426,6 +444,12 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'You! The cacique\'s girl! I told you the Governor would hear.',
     ),
     say(Y, 'And I told you to tell him slowly.'),
+    // Review 1, finding 1: the breastplate that turns plain blows, shown before the fight (Anissa's tip names it).
+    {
+      speaker: 'marine_sergeant',
+      text: 'This time I brought steel. A Crown breastplate. Your sticks will bounce right off it.',
+      stage: [{ do: 'walk', actor: 'marine_b', to: at(22, 4), facing: 'up' }],
+    },
     { speaker: 'marine_sergeant', text: 'Take her!', set: { 'battle.next': 'village_patrol', 'battle.after': 'patrol_after' } },
   ]),
   script('patrol_again', {
@@ -492,6 +516,18 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say(A, 'I\'m coming too.'),
     say(G, 'Not this time. Thorne knows you glow, Anissa. Stay with Yari. Keep each other safe.'),
     say(A, '...Come back before the lamp goes out.'),
+    // The healer's request, here rather than on a second trip back to the cave (review 1, finding 3): the bark tree
+    // is on Gianna's way into the city.
+    act(
+      [{ do: 'face', actor: 'healer', facing: 'player' }],
+      'behique',
+      'Envoy. Wherever they keep him, his fever comes with the tide. He needs fever bark.',
+    ),
+    {
+      speaker: 'behique',
+      text: 'The tall tree by the spring pond in the gardens, east of the water. Thin strips, from the sunny side. Crush it into his water.',
+      set: { 'story.bark_asked': true },
+    },
     say(Y, 'Gianna. Bring my father home.'),
     act(
       [
@@ -652,8 +688,17 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     closed: { lines: [say('crown_marine', 'The trail is closed. Show your papers at the barricade, or turn round.')] },
     passed: { lines: [say('crown_marine', 'The envoy. Go where you like, miss. I am told I never saw you.')] },
   }),
+  // One stop for two clues (review 1, Oct 21, finding 3: the seller and the guard are the same stop): the lamp-oil
+  // seller tells what she saw, and the marine posted at her shutters walks over to close them and says the rest.
   script('lamp_oil_shutters_talk', {
-    start: { lines: [], next: [{ if: { flag: 'clue.held_seller' }, to: 'again' }, { to: 'first' }] },
+    start: {
+      lines: [],
+      next: [
+        { if: { notFlag: 'clue.held_seller' }, to: 'first' },
+        { if: { notFlag: 'clue.held_guard' }, to: 'marine' },
+        { to: 'again' },
+      ],
+    },
     first: {
       set: { 'clue.held_seller': true },
       lines: [
@@ -663,10 +708,34 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say('lamp_oil_seller', 'After midnight, four marines and a hammock. Not to the ships. Round the back of the customs house.'),
         say('lamp_oil_seller', 'And down. You could hear them on the stairs. Old stairs. They complain.'),
       ],
+      next: [{ if: { notFlag: 'clue.held_guard' }, to: 'marine' }, HELD_CHECK],
+    },
+    marine: {
+      set: { 'clue.held_guard': true },
+      lines: [
+        act(
+          [
+            { do: 'look', actor: 'npc:occ_marine_shutters' },
+            { do: 'walk', actor: 'npc:occ_marine_shutters', to: at(23, 11), facing: 'up' },
+            { do: 'look', actor: 'player' },
+          ],
+          'crown_marine',
+          'Shutters closed, mother. Governor\'s orders.',
+        ),
+        say('lamp_oil_seller', 'I am talking to the envoy. Will you stop me talking to the envoy?'),
+        say(G, 'She was telling me about the customs house stairs. Old stairs, she says. They complain.'),
+        say('crown_marine', 'So does the old chief. Snug in the Governor\'s cellar, under the customs house. Better quarters than mine.'),
+        say('crown_marine', '...I did not say that. You are very easy to talk to, miss.'),
+      ],
       next: [HELD_CHECK],
     },
     again: { lines: [say('lamp_oil_seller', 'The back of the customs house, and down. My lamp is lit for him.')] },
     found: HELD_FOUND,
+  }),
+  script('occ_marine_shutters_talk', {
+    start: { lines: [], next: [{ if: { flag: 'clue.held_guard' }, to: 'again' }, { to: 'plain' }] },
+    plain: { lines: [say('crown_marine', 'Shutters closed after dark, miss. Not you. You are the envoy. Everybody else.')] },
+    again: { lines: [say('crown_marine', 'I have said too much already, miss. That is what my sergeant says too.')] },
   }),
   simple('shutters_weaver', [
     nar('A voice behind the shutter: the weaver.'),
@@ -730,6 +799,28 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     },
     after: { lines: [say('anaco', 'The sea cave. Lowest tide. And tell her I said not to argue.')] },
   }),
+  // Word to the cave (review 1, finding 3: no walk back to the cave). Out of the customs house after the visit, the
+  // fisher's boy who counts the Crown's boots slips out from behind the weaver's house to take the message.
+  simple('word_runner', [
+    act(
+      [
+        { do: 'enter', actor: 'runner', look: 'fisher_boy', from: at(20, 13), to: at(28, 12), facing: 'right', run: true },
+        { do: 'face', actor: 'player', facing: 'left' },
+      ],
+      'fisher_boy',
+      '(whispering) Envoy! The cave sent me. Is he alive?',
+    ),
+    say(G, 'Alive. The bark helped. Tell Yari: at the lowest tide, the sea cave on the Canoe Beach opens to the open sea.'),
+    say(G, 'Her great-grandmother\'s people hid their canoes in it. The Crown never found them.'),
+    say(G, 'And tell her Anaco stays. He would sink the canoe and bring the Governor after her. He said not to argue.'),
+    say('fisher_boy', 'The lowest tide is tonight, before midnight. The camp leader says so. They will come along the waterline after dark.'),
+    act(
+      [{ do: 'exit', actor: 'runner', to: at(0, 15), run: true }],
+      'fisher_boy',
+      'The marines watch the harbor mouth, not the cliffs. Meet them at the sea cave!',
+      { 'story.escape_planned': true },
+    ),
+  ]),
   simple('cellar_marine_talk', [
     say('crown_marine', 'Ten minutes, miss. I am counting. I am on six. ...Seven.'),
   ]),
@@ -931,7 +1022,14 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   ]),
   // The sea cave's mouth while the tide is up (the door opens on the night of the escape).
   script('sea_cave_mouth', {
-    start: { lines: [], next: [{ if: { flag: 'story.escape_planned' }, to: 'soon' }, { to: 'tide' }] },
+    start: {
+      lines: [],
+      next: [
+        { if: { all: [{ flag: 'story.escape_planned' }, { notFlag: 'story.escape_night' }] }, to: 'meet' },
+        { if: { flag: 'story.escape_planned' }, to: 'soon' },
+        { to: 'tide' },
+      ],
+    },
     tide: {
       lines: [
         nar('A dark mouth in the cliff, half full of sea. The water breathes in and out of it.'),
@@ -942,6 +1040,34 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         nar('The sea cave, half full of water. Somewhere in there is a ledge where the canoes slept.'),
         nar('Not yet: Yari will say when the tide is lowest.'),
+      ],
+    },
+    // The night of the lowest tide (review 1, finding 3): the runner carried the word, and Yari and Anissa come along
+    // the waterline to meet Gianna at the mouth. Yari's answer to her father is heard here.
+    meet: {
+      set: { 'story.escape_night': true, 'story.yari_hidden': false, 'party.anissa': true },
+      lines: [
+        act(
+          [
+            { do: 'look', actor: 'yari' },
+            { do: 'enter', actor: 'yari', look: 'yari', from: at(24, 13), to: at(30, 10), facing: 'up', async: true },
+            { do: 'enter', actor: 'anissa', look: 'anissa', from: at(25, 13), to: at(31, 10), facing: 'up' },
+            { do: 'look', actor: 'player' },
+            { do: 'face', actor: 'player', facing: 'down' },
+          ],
+          '',
+          'Night. The water is going out. Two shapes come up the sand from the waterline, and one of them glows.',
+        ),
+        say(Y, 'Your runner found us. He said you saw him.'),
+        say(G, 'He watched the ships from his window all day. This is the only way out.'),
+        say(Y, 'Then we take him out the same way.'),
+        say(G, 'He says no. He would sink the canoe and bring the Governor after you. He said to tell you not to argue.'),
+        say(Y, '...He knew I would.'),
+        say(A, 'I\'m coming. The sea cave is darker than ours, and I glow. You need me, Gigi.'),
+        say(G, '...Yes. I do. Stay right behind me.'),
+        say(Y, 'Tonight, then. I go, and I come back with help. Zetwal\'s help. Gianna\'s grandfather owes us an oath.'),
+        nar('The tide has drawn back from the mouth. There is a way in now, over wet rock.'),
+        nar('(Yari and Anissa join you again.)'),
       ],
     },
   }),

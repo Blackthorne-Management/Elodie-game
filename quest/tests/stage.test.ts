@@ -49,6 +49,21 @@ describe('stage directions', () => {
     // Nothing is told in narration alone: every line is someone speaking.
     expect(lines.every((l) => l.speaker !== '')).toBe(true);
   });
+
+  // Review 1 (Oct 21), finding 4: the captain comes with more men than the children just beat, muskets on the
+  // elders, and says so; only then does Anaco give himself up.
+  it('Anaco gives himself up to a firing line aimed at the elders, not to fewer men than were just beaten', () => {
+    const after = stageCues(script('caney_after'));
+    const guards = after.filter((c) => c.do === 'enter' && c.actor.startsWith('guard_'));
+    expect(guards.length).toBeGreaterThanOrEqual(4);
+    expect(guards.length).toBeLessThanOrEqual(6);
+    for (const who of ['elder_charter', 'elder_resist', 'elder_undecided']) expect(after).toContainEqual(expect.objectContaining({ do: 'place', actor: who }));
+    const lines = Object.values(script('caney_after').nodes).flatMap((n) => n.lines);
+    const threat = lines.findIndex((l) => l.speaker === 'crown_captain' && l.text.includes('elders die first'));
+    const chains = lines.findIndex((l) => l.text.includes('no use to me in chains'));
+    expect(threat).toBeGreaterThan(0);
+    expect(chains).toBeGreaterThan(threat);
+  });
 });
 
 // Chapter 1, the same in the demo and the full game (owner, Oct 17: identical up to leaving Zetwal).

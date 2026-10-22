@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 36,
+  "nextobjectid": 38,
   "layers": [
     {
       "id": 1,
@@ -690,6 +690,34 @@
         },
         {
           "id": 14,
+          "name": "occ_marine_shutters",
+          "type": "npc",
+          "x": 352,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.refuge, !story.anaco_visited"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "occ_marine_shutters"
+            }
+          ]
+        },
+        {
+          "id": 15,
           "name": "marine_sergeant",
           "type": "npc",
           "x": 336,
@@ -717,7 +745,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 16,
           "name": "pier_marine_a",
           "type": "npc",
           "x": 352,
@@ -745,7 +773,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 17,
           "name": "pier_marine_b",
           "type": "npc",
           "x": 336,
@@ -785,7 +813,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 17,
+          "id": 18,
           "name": "village_plaza",
           "type": "door",
           "x": 336,
@@ -813,7 +841,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "village_beach",
           "type": "door",
           "x": 688,
@@ -841,7 +869,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 20,
           "name": "village_conuco",
           "type": "door",
           "x": 0,
@@ -869,7 +897,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 21,
           "name": "village_customs",
           "type": "door",
           "x": 464,
@@ -909,7 +937,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 22,
           "name": "attack_village",
           "type": "trigger",
           "x": 336,
@@ -947,7 +975,45 @@
           ]
         },
         {
-          "id": 22,
+          "id": 23,
+          "name": "word_runner",
+          "type": "trigger",
+          "x": 464,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "word_runner"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.word_runner_seen"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_visited, !story.escape_planned"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
           "name": "xaragua_arrival",
           "type": "trigger",
           "x": 336,
@@ -992,7 +1058,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 23,
+          "id": 25,
           "name": "pier",
           "type": "spawn",
           "x": 336,
@@ -1049,7 +1115,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 24,
+          "id": 26,
           "name": "net_village",
           "type": "puzzle_object",
           "x": 192,
@@ -1087,7 +1153,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 27,
           "name": "crown_banner_village",
           "type": "puzzle_object",
           "x": 448,
@@ -1120,7 +1186,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 28,
           "name": "checkpoint_north",
           "type": "puzzle_object",
           "x": 336,
@@ -1158,7 +1224,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 29,
           "name": "checkpoint_east",
           "type": "puzzle_object",
           "x": 656,
@@ -1196,7 +1262,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 30,
           "name": "shutters_weaver",
           "type": "puzzle_object",
           "x": 288,
@@ -1224,7 +1290,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 31,
           "name": "shutters_family",
           "type": "puzzle_object",
           "x": 144,
@@ -1252,7 +1318,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 32,
           "name": "crown_banner_pier",
           "type": "puzzle_object",
           "x": 320,
@@ -1285,7 +1351,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 33,
           "name": "xaragua_customs_sign",
           "type": "puzzle_object",
           "x": 512,
@@ -1308,7 +1374,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 34,
           "name": "pier_sign",
           "type": "puzzle_object",
           "x": 384,
@@ -1331,7 +1397,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 35,
           "name": "crown_ship_west",
           "type": "puzzle_object",
           "x": 32,
@@ -1359,7 +1425,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 36,
           "name": "crown_ship_east",
           "type": "puzzle_object",
           "x": 464,
@@ -1387,7 +1453,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 37,
           "name": "crown_ship_far",
           "type": "puzzle_object",
           "x": 576,

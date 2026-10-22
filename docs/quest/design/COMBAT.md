@@ -437,6 +437,10 @@ and the owner's decisions at its end; the screen: `docs/quest/intro/GAME-OVER-ST
   up to +30% (`GRUDGE_STEP = 0.1`, `GRUDGE_MAX = 0.3`), saved per fight (`gameover.<table>.<group>`) and cleared by a
   win. The battle shows it at the start ("Grudge +20%: every blow lands harder this time.") and in its top bar.
   **Random ambushes give no Grudge** (owner correction, Oct 19) but do show the goddess and count.
+- **A chapter's boss climbs higher** (review 1, Oct 21, finding 1; Claude's call): a battle marked `boss: true`
+  keeps adding +10% up to +50% (`GRUDGE_MAX_BOSS = 0.5`). Today only Thorne (`thorne_blockade`). Measured with the
+  party as the route leaves it (Gianna and Yari 8, 40 seeds): Attack alone wins 9 of 40 the first time, 23 at +10%,
+  29 at +20%, 30 at +30%, 35 at +40% and 37 at +50%; Sunthread and Aimed Shot win 40 of 40 at every step.
 - **The battle tutorial** (the boar's pages) shows once per save: a later try skips the pages already seen.
 - **Every story fight has a way back in** (a test): a foe waiting on the map whose talk starts it again, or a step
   trigger that fires again; no fight trigger fires on entering a map again; a fight trigger never covers a spawn or a
@@ -452,6 +456,19 @@ and the owner's decisions at its end; the screen: `docs/quest/intro/GAME-OVER-ST
   them unnecessary.
 - **Numbers** in `GAME_OVER` (`quest/src/config.ts`): the battle fade, the fall (6 s, its shots), the loop (4 s), the
   rise (1.5 s), the reduced-motion fades, and the count where her first line changes (10).
+
+## 12.5 Breastplates: the fight before the boss asks for the skills (review 1, Oct 21, finding 1; Claude's call)
+
+Every fight from the boar to the night of the attack fell to the Attack button, so Thorne, the first that did not,
+was a wall. An enemy can now be `armored` (`quest/src/data/battles.ts`): the plain **Attack** command does only
+`ARMOR_PLAIN_SHARE` (0.25) of its damage to it, shown as *Resist*; skills (Sunthread, Aimed Shot and the rest) are not
+slowed. The **Musketeer in a Breastplate** (`breastplate_musketeer`, the patrol's musketeer) is the only one so far:
+the sergeant boasts of the steel before the fight, and Anissa's opening tip says "Plain blows bounce off that
+breastplate, Gigi! Use your light. Yari, Aimed Shot!". Measured (party level 7, 40 seeds): Attack alone wins 17 of
+40 the first time (was 38) and 32 at +30%; the skills win 40 of 40 with a quarter of the party's HP lost. At Thorne,
+Anissa now opens with the answer ("He hates the light, Gigi. Sunthread. Yari, the musketeer."), the fight is at the
+party's level (8, was 9) and Thorne has 90% of his HP (`hpScale: 0.9`): numbers in 12 above. `tools/battle-sim.ts`
+replays any scripted fight under the three plans (attack, surge, spells) at each Grudge step.
 
 ## 13. Enemies
 

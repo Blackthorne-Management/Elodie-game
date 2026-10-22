@@ -368,6 +368,7 @@ The real harms are **few and non-lethal**, and he is **not redeemed in the momen
 - **Anissa:** stays at the Echo Site, visible as a glowing figure holding the door. She cannot be hurt there. Her **hints** still work.
 - **Validation:** the swap is refused (soft sound, "The memory will not hold here") if the target tile is not walkable in the other era. The map validator guarantees this never happens inside a zone.
 - **Anchors:** only objects flagged `anchor` in Tiled carry changes back to the present.
+- **The gold arrow inside a memory (review 1, Oct 21; built Oct 22):** every Echo puzzle gives its objective (or side-quest step) `echoGoals` next to its `goals`: in the Echo, the first Echo goal on this map whose condition holds is where the arrow points (the person to talk to in the memory, the thing to change, then the shimmer back out); in the present, the usual goals. Without one, the arrow stays hidden in the memory, as before. `quest/tests/goldWalk.test.ts` walks Chapters 1 and 2 following only the gold arrow (`quest/tools/gold-walk.ts`) and fails on any stall, so a new chapter's Echo puzzle without its Echo goals fails the build.
 - **Echo party:** an ancestor is a **palette and headgear swap** of the modern sprite, which saves most of the art cost.
 - **Different feel:** the Present party leans on magic, healing and ranged; the Echo party leans on melee and guarding. This is deliberate variety.
 

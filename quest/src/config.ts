@@ -198,6 +198,11 @@ export const SWAP_IN_DELAY = 0.5;
 /** Elemental weakness and resistance (COMBAT 5). */
 export const ELEMENT_WEAK = 1.5;
 export const ELEMENT_RESIST = 0.5;
+/**
+ * A breastplate (review 1, Oct 21, finding 1: a fight before Thorne that the Attack button alone cannot carry): an
+ * armored foe takes this share of a plain Attack's damage. Skills (Sunthread, Aimed Shot) are not slowed.
+ */
+export const ARMOR_PLAIN_SHARE = 0.25;
 /** Anissa's Spark: per Gianna action, per Guard; a Surge spends SURGE_COST and multiplies the next hit. */
 export const SPARK_ON_ACT = 1;
 export const SPARK_ON_GUARD = 2;
@@ -215,6 +220,11 @@ export const GIANNA_SP_DISCOUNT = 0.25;
  */
 export const GRUDGE_STEP = 0.1;
 export const GRUDGE_MAX = 0.3;
+/**
+ * A chapter's boss climbs higher (review 1, finding 1: at +30% a party that only attacks still lost Thorne one try
+ * in four): a fight marked `boss` in data/battles.ts keeps adding GRUDGE_STEP up to this.
+ */
+export const GRUDGE_MAX_BOSS = 0.5;
 /** Story difficulty (the default): enemies hit softer and have less HP. */
 export const DIFFICULTY = { story: { enemyDamage: 0.7, enemyHp: 0.8 } } as const;
 /** Enemy stat lines by level: base + per level, then the role's multipliers. */

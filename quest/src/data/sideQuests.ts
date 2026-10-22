@@ -9,10 +9,11 @@ const f = (flag: string): Condition => ({ flag });
 const INFLUENCE_ZETWAL = { pillar: 'influence', city: 'zetwal', amount: 1 } as const;
 const INFLUENCE_XARAGUA = { pillar: 'influence', city: 'xaragua', amount: 1 } as const;
 const PIER_WON = f('encounter.xaragua_story.pier.won');
-/** Yucayeque's quests close when the Crown takes the city (review D4): the givers are gone from the maps. */
-const CLOSES_AT_ATTACK: Condition = { not: f('story.crown_attack') };
-/** Accepted, and the city still free. */
-const acceptedFree = (flag: string): Condition => ({ all: [f(flag), CLOSES_AT_ATTACK] });
+/**
+ * Yucayeque's quests close when the Crown takes the city (review D4; review 1, finding 5: closed, not hidden): the
+ * givers are gone from the maps, and one left unfinished shows on the Quests page and in the Journal as closed.
+ */
+const CLOSED_AT_ATTACK: Condition = f('story.crown_attack');
 const SPRINGS_DONE: Condition = { any: [f('debate.xaragua_springs.joined'), f('debate.xaragua_springs.mediated')] };
 /** The cane cutter waits at the name stones from the lamp until Chapter 1 ends (decision A, Oct 19). */
 const CUTTER_AT_STONES: Condition = { all: [f('story.anissa_woke'), { notFlag: 'story.zetwal_return' }] };
@@ -89,7 +90,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     ],
     steps: [
       { text: 'Look for her on the name stones (the Temple island).', done: f('side.cane_name.stones'), goals: [{ map: 'zetwal-temple', at: { x: 6, y: 4 } }] },
-      { text: 'Find where the road remembers her: the shimmer by the east gate, on the Cane Road.', done: f('clue.cane_name'), goals: [{ map: 'zetwal-road', at: { x: 3, y: 14 } }] },
+      { text: 'Find where the road remembers her: the shimmer by the east gate, on the Cane Road.', done: f('clue.cane_name'), goals: [{ map: 'zetwal-road', at: { x: 3, y: 14 } }], echoGoals: [{ map: 'zetwal-road', at: { x: 2, y: 16 } }] },
       { text: "Write her name in Mother Solange's list (the Temple Archive).", done: f('side.cane_name.recorded'), goals: [{ map: 'zetwal-archive', at: { x: 9, y: 7 } }] },
       {
         text: 'Tell the cane cutter.',
@@ -131,7 +132,7 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
   // ---- Chapter 2, Yucayeque (side quests build, Oct 20; docs/quest/reviews/2026-10-19-chapter2-side-quests-outline.md
   // and its owner decisions). Every one lives in the free city and must be done before the lamp-oil seller lends the
   // cave lamp at dusk (data/quests.ts `dusk`). Each closes when the Crown takes the city: no longer offered, and one
-  // left unfinished in an old save drops off the Quests page instead of staying open forever (CLOSES_AT_ATTACK).
+  // left unfinished in an old save shows as closed, with what became of it, instead of staying open forever.
   // Listed in the order they lie on the ground; the arrow does the ones on the map the player is on first.
   {
     id: 'nets',
@@ -141,8 +142,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     level: 4,
     summary:
       'Last night someone cut three of the village\'s nets where they were drying, "for the harbor\'s safety", the marines said. The fisher from the pier needs them back to mend.',
-    accepted: acceptedFree('side.nets.accepted'),
-    available: { all: [PIER_WON, CLOSES_AT_ATTACK] },
+    accepted: f('side.nets.accepted'),
+    available: PIER_WON,
     start: [{ map: 'xaragua-village', at: { x: 18, y: 20 } }],
     nudge: 'The fisher from the pier keeps looking at his empty drying posts, Gigi. Ask him.',
     parallel: true,
@@ -153,6 +154,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       { text: 'Bring all three to the fisher by the pier.', done: f('side.nets.done'), goals: [{ map: 'xaragua-village', at: { x: 18, y: 20 } }] },
     ],
     done: f('side.nets.done'),
+    closed: CLOSED_AT_ATTACK,
+    closedText: 'Closed: the Crown took the beach the night the guns fired. Nobody mends nets under curfew.',
     reward: { gold: 70, xp: 25, items: [{ id: 'net_float_charm', n: 1 }], pillar: INFLUENCE_XARAGUA },
   },
   // The hutia's hoard (PUZZLES.md M-XAR-1): the first growth puzzle. A stake driven beside the old ceiba when it was a
@@ -165,8 +168,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     level: 4,
     summary:
       'A hutia took the small girl\'s bead in the cassava gardens. Hutias think shiny things are stars, and this one keeps its stars somewhere.',
-    accepted: acceptedFree('side.hutia.accepted'),
-    available: { all: [PIER_WON, CLOSES_AT_ATTACK] },
+    accepted: f('side.hutia.accepted'),
+    available: PIER_WON,
     start: [{ map: 'xaragua-conuco', at: { x: 16, y: 14 } }],
     nudge: 'That little girl in the gardens lost her bead to a hutia. Yari went very quiet when she said it.',
     steps: [
@@ -178,22 +181,21 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       {
         text: 'The hollow is out of reach. In the memory at the foot of the old ceiba, help the tree.',
         done: f('anchor.hutia_stake'),
-        goals: [
-          { if: f('echo.hutia_memory'), map: 'xaragua-conuco', at: { x: 2, y: 9 } },
-          { map: 'xaragua-conuco', at: { x: 2, y: 10 } },
-        ],
+        // The shimmer at the ceiba's roots; in the memory, the sapling (review 1, finding 2: Echo goals).
+        goals: [{ map: 'xaragua-conuco', at: { x: 2, y: 10 } }],
+        echoGoals: [{ map: 'xaragua-conuco', at: { x: 2, y: 9 } }],
       },
       {
         text: 'Back in the present, climb to the hollow.',
         done: f('side.hutia.hoard'),
-        goals: [
-          { if: f('echo.hutia_memory'), map: 'xaragua-conuco', at: { x: 2, y: 10 } },
-          { map: 'xaragua-conuco', at: { x: 2, y: 9 } },
-        ],
+        goals: [{ map: 'xaragua-conuco', at: { x: 2, y: 9 } }],
+        echoGoals: [{ map: 'xaragua-conuco', at: { x: 2, y: 10 } }],
       },
       { text: 'Give the small girl her bead.', done: f('side.hutia.done'), goals: [{ map: 'xaragua-conuco', at: { x: 16, y: 14 } }] },
     ],
     done: f('side.hutia.done'),
+    closed: CLOSED_AT_ATTACK,
+    closedText: 'Closed: the small girl\'s family fled the gardens on the night of the attack. Her bead is still in the hollow.',
     reward: { gold: 80, xp: 25, items: [{ id: 'brass_button_charm', n: 1 }], pillar: INFLUENCE_XARAGUA },
   },
   // Offered with the lamp (owner decision, Oct 19: the lamp waits for dusk); it ends at the hill camp, so one climb
@@ -206,8 +208,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     level: 5,
     summary:
       'Two jars of the oil that comes by canoe after dark are due at the hill camp up the Mountain Path. The marines follow the lamp-oil seller now. Nobody stops the envoy\'s daughter.',
-    accepted: acceptedFree('side.oil.accepted'),
-    available: { all: [f('story.thorne_met'), CLOSES_AT_ATTACK] },
+    accepted: f('side.oil.accepted'),
+    available: f('story.thorne_met'),
     start: [{ map: 'xaragua-village', at: { x: 23, y: 10 } }],
     nudge: 'The lamp-oil seller has jars to send up the mountain, and the marines follow her now. She could use the envoy\'s daughter.',
     steps: [
@@ -215,6 +217,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       { text: 'Look at the mark the leader showed you, on the post by the fire.', done: f('side.oil.done'), goals: [{ map: 'xaragua-camp', at: { x: 17, y: 10 } }] },
     ],
     done: f('side.oil.done'),
+    closed: CLOSED_AT_ATTACK,
+    closedText: 'Closed: the jars never reached the hill camp. Its people shelter in the cave now.',
     reward: { gold: 80, xp: 25, pillar: INFLUENCE_XARAGUA },
   },
   // The healer's cure (PUZZLES.md M-XAR-2), at the hill camp where Caona's scouts camped (A Healer's Notes). Offered at
@@ -227,8 +231,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     level: 5,
     summary:
       'The pond tree\'s bark only holds the cacique\'s fever. The old cure was the bark of a grove above the cave, where Caona\'s scouts camped, and the Crown\'s road crews cut it down years ago.',
-    accepted: acceptedFree('side.medicine.accepted'),
-    available: { all: [f('story.anaco_met'), CLOSES_AT_ATTACK] },
+    accepted: f('side.medicine.accepted'),
+    available: f('story.anaco_met'),
     start: [{ map: 'xaragua-caney', at: { x: 30, y: 5 } }],
     nudge: 'The healer in the caney wants a bark nobody can find any more. Maybe we can, Gigi.',
     steps: [
@@ -236,23 +240,24 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       {
         text: "In the memory at the camp fire, plant the grove where the road crews will never cut it.",
         done: f('anchor.healer_grove'),
-        goals: [
+        // The shimmer at the fire; in the memory, the scout healer for the seeds, then the place behind the rocks.
+        goals: [{ map: 'xaragua-camp', at: { x: 13, y: 10 } }],
+        echoGoals: [
           { if: f('echo.grove_seeds'), map: 'xaragua-camp', at: { x: 12, y: 4 } },
-          { if: f('echo.camp_memory'), map: 'xaragua-camp', at: { x: 16, y: 7 } },
-          { map: 'xaragua-camp', at: { x: 13, y: 10 } },
+          { map: 'xaragua-camp', at: { x: 16, y: 7 } },
         ],
       },
       {
         text: 'Back in the present, cut bark from the grove.',
         done: f('side.medicine.bark'),
-        goals: [
-          { if: f('echo.camp_memory'), map: 'xaragua-camp', at: { x: 13, y: 10 } },
-          { map: 'xaragua-camp', at: { x: 12, y: 4 } },
-        ],
+        goals: [{ map: 'xaragua-camp', at: { x: 12, y: 4 } }],
+        echoGoals: [{ map: 'xaragua-camp', at: { x: 13, y: 10 } }],
       },
       { text: 'Bring the grove bark to the healer in the caney.', done: f('side.medicine.done'), goals: [{ map: 'xaragua-caney', at: { x: 30, y: 5 } }] },
     ],
     done: f('side.medicine.done'),
+    closed: CLOSED_AT_ATTACK,
+    closedText: 'Closed: the caney is the Governor\'s house now. The healer brews what she can in the cave.',
     reward: { gold: 100, xp: 30, pillar: { pillar: 'influence', city: 'xaragua', amount: 2 } },
   },
   // Yucayeque's debate by the village fire, as a quest (owner request, Oct 19), like Pòdlimyè's "faith": hear the
@@ -266,10 +271,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     level: 4,
     summary:
       'By the village fire, an elder of the Roots and Tides argues with a pilgrim of the Gaze from Zetwal: is the land owned, or remembered? Hear them out, then make your own case.',
-    accepted: {
-      all: [{ any: [f('debate.xaragua_springs.listened'), f('debate.xaragua_springs.joined'), f('debate.xaragua_springs.mediated')] }, CLOSES_AT_ATTACK],
-    },
-    available: { all: [PIER_WON, CLOSES_AT_ATTACK] },
+    accepted: { any: [f('debate.xaragua_springs.listened'), f('debate.xaragua_springs.joined'), f('debate.xaragua_springs.mediated')] },
+    available: PIER_WON,
     start: [{ map: 'xaragua-village', at: { x: 9, y: 7 } }],
     nudge: 'The elder by the village fire is still arguing with that pilgrim. The Song House would give you an answer.',
     steps: [
@@ -281,6 +284,8 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
       },
     ],
     done: SPRINGS_DONE,
+    closed: CLOSED_AT_ATTACK,
+    closedText: 'Closed: the fire is out. The pilgrim is gone.',
     reward: { xp: 30 },
   },
 ];

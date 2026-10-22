@@ -2,10 +2,10 @@
 // every objective's goal is where the scripted route actually completes it.
 
 import { describe, expect, it } from 'vitest';
-import { CHAPTERS } from '../src/data/quests.ts';
+import { ACT1, CHAPTERS } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { FlagStore } from '../src/engine/flags.ts';
-import { goalFor, mysteryGoals, mysteryQuests, sideGoals, sideNudges, storyGoal, waypoint, type Goal } from '../src/engine/guide.ts';
+import { goalFor, goalNow, mysteryGoals, mysteryQuests, sideGoals, sideNudges, storyGoal, waypoint, type Goal } from '../src/engine/guide.ts';
 import { currentObjective, questForJournal } from '../src/engine/quests.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from '../tools/sim-setup.ts';
@@ -34,10 +34,51 @@ describe('the way to a goal', () => {
   });
 });
 
+// Review 1 (Oct 21), finding 2: the arrow inside the Echo.
+describe('in the Echo, the Echo goals come first', () => {
+  const goals: Goal[] = [{ map: 'm', at: { x: 1, y: 1 } }];
+  const echoGoals: Goal[] = [
+    { if: { flag: 'echo.done' }, map: 'm', at: { x: 2, y: 2 } },
+    { map: 'm', at: { x: 3, y: 3 } },
+    { map: 'other', at: { x: 4, y: 4 } },
+  ];
+
+  it('in the present, the usual goals; in the Echo, the first Echo goal that holds, marked as one', () => {
+    const f = new FlagStore();
+    expect(goalNow(goals, echoGoals, f, 'present')).toEqual(goals[0]);
+    expect(goalNow(goals, echoGoals, f, 'echo', 'm')).toEqual({ map: 'm', at: { x: 3, y: 3 }, echo: true });
+    f.set('echo.done', true);
+    expect(goalNow(goals, echoGoals, f, 'echo', 'm')?.at).toEqual({ x: 2, y: 2 });
+  });
+
+  it("only this map's Echo goals (a memory's doors are shut); with none, the usual goal, unmarked (no arrow in the Echo)", () => {
+    const f = new FlagStore();
+    expect(goalNow(goals, echoGoals, f, 'echo', 'other')).toEqual({ map: 'other', at: { x: 4, y: 4 }, echo: true });
+    expect(goalNow(goals, echoGoals, f, 'echo', 'elsewhere')).toEqual(goals[0]);
+    expect(goalNow(goals, undefined, f, 'echo', 'm')?.echo).toBeUndefined();
+  });
+
+  it('every Echo puzzle of Chapters 1 and 2 has its Echo goals, each on a map with an Echo zone', () => {
+    const withEcho = (id: string) => CHAPTERS.flatMap((q) => q.objectives).find((o) => o.id === id)?.echoGoals ?? [];
+    for (const id of ['first_echo', 'hide_orders', 'read_orders', 'bridge', 'boar', 'cave', 'lock']) expect(withEcho(id).length, id).toBeGreaterThan(0);
+    const steps = SIDE_QUESTS.flatMap((q) => q.steps.map((s, i) => ({ who: `${q.id}#${i}`, s })));
+    for (const who of ['cane_name#1', 'hutia#1', 'hutia#2', 'medicine#1', 'medicine#2']) expect(steps.find((x) => x.who === who)?.s.echoGoals?.length, who).toBeGreaterThan(0);
+    const all = [...CHAPTERS.flatMap((q) => q.objectives.flatMap((o) => o.echoGoals ?? [])), ...steps.flatMap((x) => x.s.echoGoals ?? [])];
+    for (const g of all) expect(maps[g.map]?.echoZones.length, g.map).toBeGreaterThan(0);
+  });
+
+  it("read_orders: an early return (story.warroom_returned) is not the orders in hand: in the memory, the shimmer; in the present, the board", () => {
+    const readOrders = ACT1.objectives.find((o) => o.id === 'read_orders')!;
+    const f = new FlagStore({ 'story.warroom_returned': true });
+    expect(goalNow(readOrders.goals, readOrders.echoGoals, f, 'echo', 'zetwal-house')?.at).toEqual({ x: 14, y: 6 });
+    expect(goalNow(readOrders.goals, readOrders.echoGoals, f, 'present', 'zetwal-house')?.at).toEqual({ x: 17, y: 2 });
+  });
+});
+
 describe('every goal is real', () => {
   const goals = [
-    ...CHAPTERS.flatMap((q) => q.objectives.flatMap((o) => (o.goals ?? []).map((g) => ({ who: `${q.id}/${o.id}`, g })))),
-    ...SIDE_QUESTS.flatMap((q) => q.steps.flatMap((s, i) => (s.goals ?? []).map((g) => ({ who: `${q.id}#${i}`, g })))),
+    ...CHAPTERS.flatMap((q) => q.objectives.flatMap((o) => [...(o.goals ?? []), ...(o.echoGoals ?? [])].map((g) => ({ who: `${q.id}/${o.id}`, g })))),
+    ...SIDE_QUESTS.flatMap((q) => q.steps.flatMap((s, i) => [...(s.goals ?? []), ...(s.echoGoals ?? [])].map((g) => ({ who: `${q.id}#${i}`, g })))),
   ];
 
   it('every objective and every side-quest step has a goal, on a map that exists, inside it', () => {
@@ -62,7 +103,7 @@ describe('the arrows follow the scripted route (every chapter it plays)', () => 
     const mapId = sim.logic.state.player.mapId;
     const quest = questForJournal(CHAPTERS, mapId, flags);
     const before = quest ? currentObjective(quest, flags) : null;
-    const goal = storyGoal(quest, flags, SIDE_QUESTS, mapId);
+    const goal = storyGoal(quest, flags, SIDE_QUESTS, mapId, sim.logic.era);
     if (before && sim.logic.mode === 'field') {
       steps++;
       if (!goal) problems.push(`${before.id}: no goal holds (on ${mapId})`);

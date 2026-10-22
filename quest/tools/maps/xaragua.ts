@@ -164,6 +164,11 @@ export function xaraguaVillage(): MapSource {
     npc('checkpoint_marine', 23, 3, 'left', { if: CHECKPOINTS }),
     obj('checkpoint_east', 41, 15, { dialogue: 'checkpoint', kind: 'barricade', solid: true, era: 'present', if: CHECKPOINTS }, 1, 2),
     npc('lamp_oil_shutters', 23, 10, 'right', { if: 'story.refuge' }),
+    // The marine posted at her shutters (review 1, finding 3: the seller and the guard are one stop). Gone once the
+    // envoy has seen the cacique (the runner's message is passed under his nose otherwise).
+    npc('occ_marine_shutters', 22, 12, 'up', { if: 'story.refuge, !story.anaco_visited' }),
+    // Out of the customs house after the visit: the fisher's boy runs the word to the cave (review 1, finding 3).
+    trigger('word_runner', 29, 12, { dialogue: 'word_runner', flag: 'story.word_runner_seen', once: true, onEnter: true, if: 'story.anaco_visited, !story.escape_planned' }),
     obj('shutters_weaver', 18, 8, { dialogue: 'shutters_weaver', era: 'present', if: 'story.refuge' }),
     obj('shutters_family', 9, 3, { dialogue: 'shutters_family', era: 'present', if: 'story.refuge' }),
     crownBanner('crown_banner_pier', 20, 18),

@@ -16,6 +16,11 @@ export interface Objective {
   hints: string[];
   /** Where it is done, for the quest arrow (engine/guide.ts): the first goal whose condition holds. */
   goals?: readonly Goal[];
+  /**
+   * Inside the Echo, these come first (engine/guide.ts goalNow): who to talk to in the memory, what to change,
+   * and the shimmer back out once the change is made.
+   */
+  echoGoals?: readonly Goal[];
   /** Done through the side quests (Pòdlimyè's errands): the arrow leads to the next side quest's stop instead. */
   followSide?: boolean;
   /**

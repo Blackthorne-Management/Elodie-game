@@ -13,12 +13,12 @@ import { debateFlag } from '../src/engine/debate.ts';
 import { DialogueRunner } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { gold, itemCount, pillarFlag, xp } from '../src/engine/rpg.ts';
-import { questPlace, rewardFlag, settleRewards, sideQuestStatus, visibleSteps } from '../src/engine/sideQuests.ts';
+import { closedNotes, questClosed, questPlace, rewardFlag, settleRewards, sideQuestStatus, visibleSteps, type SideQuestDef } from '../src/engine/sideQuests.ts';
 import { activeNpcs } from '../src/engine/world.ts';
 import { ACT1 } from '../src/data/quests.ts';
 import type { FlagSnapshot } from '../src/engine/flags.ts';
 import { GameLogic } from '../src/engine/game.ts';
-import { goalFor, mysteryGoals, sideGoals, sideNudges } from '../src/engine/guide.ts';
+import { goalFor, mysteryGoals, mysteryQuests, sideGoals, sideNudges } from '../src/engine/guide.ts';
 import { decodeSave, encodeSave } from '../src/engine/save.ts';
 import { Sim } from '../src/engine/sim.ts';
 import { applySave, newGame, toSaveData } from '../src/engine/state.ts';
@@ -424,3 +424,45 @@ describe('a save that finished Chapter 1 before the ferry existed (owner report,
   });
 });
 
+// Review 1 (Oct 21), finding 5, the general rule: a side quest the story moves past is closed, never left dangling.
+describe('a side quest can close unfinished', () => {
+  const q: SideQuestDef = {
+    id: 'test_closing',
+    title: 'Test',
+    giver: 'Someone',
+    place: 'Somewhere',
+    level: 1,
+    summary: 'A test.',
+    accepted: { flag: 'side.test_closing.accepted' },
+    available: { flag: 'open' },
+    start: [{ map: 'm', at: { x: 0, y: 0 } }],
+    nudge: 'Go on.',
+    steps: [{ text: 'Do it.', done: { flag: 'side.test_closing.done' }, goals: [{ map: 'm', at: { x: 1, y: 1 } }] }],
+    done: { flag: 'side.test_closing.done' },
+    closed: { flag: 'story.moved_on' },
+    closedText: 'Closed: too late.',
+    reward: { gold: 5 },
+  };
+
+  it('active until the story moves on; then closed, off the arrows and the mystery list, with its Journal line', () => {
+    const flags = new FlagStore({ open: true, 'side.test_closing.accepted': true });
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    expect(sideGoals([q], flags)).toHaveLength(1);
+    flags.set('story.moved_on', true);
+    expect(sideQuestStatus(flags, q)).toBe('closed');
+    expect(questClosed(q, flags)).toBe(true);
+    expect(sideGoals([q], flags)).toEqual([]);
+    expect(closedNotes([q], flags)).toEqual([{ id: 'test_closing', title: 'Test', text: 'Closed: too late.' }]);
+    // No reward for a closed quest.
+    expect(settleRewards(flags, RPG, [q])).toEqual([]);
+  });
+
+  it('never offered once closed; a quest finished in time stays done', () => {
+    const flags = new FlagStore({ open: true, 'story.moved_on': true });
+    expect(sideQuestStatus(flags, q)).toBe('unknown');
+    expect(mysteryQuests([q], flags)).toEqual([]);
+    flags.set('side.test_closing.done', true);
+    expect(sideQuestStatus(flags, q)).toBe('done');
+    expect(closedNotes([q], flags)).toEqual([]);
+  });
+});

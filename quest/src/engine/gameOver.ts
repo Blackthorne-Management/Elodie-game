@@ -7,8 +7,8 @@
 //
 // Where the party stands afterwards (the return tile) is the game logic's (engine/game.ts riseFromFight).
 
-import { GAME_OVER, GRUDGE_MAX, GRUDGE_STEP } from '../config.ts';
-import type { BattleDef } from './battle.ts';
+import { GAME_OVER, GRUDGE_STEP } from '../config.ts';
+import { grudgeCap, type BattleDef } from './battle.ts';
 import type { FlagReader, FlagStore } from './flags.ts';
 
 /** Game Overs on this save (owner decision, Oct 19: a random fight counts too). */
@@ -35,12 +35,13 @@ export function fightLosses(flags: FlagReader, def: Pick<BattleDef, 'table' | 'g
 }
 
 /**
- * The Grudge a fight starts with: +GRUDGE_STEP per Game Over at it, up to GRUDGE_MAX. Random ambushes give
- * none (owner decision, Oct 19), nor do fights meant to be lost.
+ * The Grudge a fight starts with: +GRUDGE_STEP per Game Over at it, up to GRUDGE_MAX (a chapter's boss: up to
+ * GRUDGE_MAX_BOSS, engine/battle.ts grudgeCap). Random ambushes give none (owner decision, Oct 19), nor do fights
+ * meant to be lost.
  */
-export function grudgeFor(flags: FlagReader, def: Pick<BattleDef, 'id' | 'table' | 'group' | 'meantToLose'>): number {
+export function grudgeFor(flags: FlagReader, def: Pick<BattleDef, 'id' | 'table' | 'group' | 'meantToLose' | 'boss'>): number {
   if (isRandomFight(def) || def.meantToLose) return 0;
-  return Math.min(GRUDGE_MAX, Math.round(fightLosses(flags, def) * GRUDGE_STEP * 1000) / 1000);
+  return Math.min(grudgeCap(def), Math.round(fightLosses(flags, def) * GRUDGE_STEP * 1000) / 1000);
 }
 
 /** What losing a fight leads to. */

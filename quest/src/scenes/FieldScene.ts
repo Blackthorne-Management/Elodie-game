@@ -63,7 +63,7 @@ import { RPG } from '../data/rpg.ts';
 import { addSharedXp, cityOf, level, partyMembers, pillarFlag } from '../engine/rpg.ts';
 import { settleDebates } from '../engine/debate.ts';
 import { DEBATES } from '../data/debates.ts';
-import { rewardText, settleRewards } from '../engine/sideQuests.ts';
+import { closedNotes, rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { mysteryGoals, sideGoals, sideNudges, storyGoal, waypoint, type Waypoint } from '../engine/guide.ts';
 import { questArrows, setQuestArrows } from '../ui/questArrows.ts';
@@ -1354,10 +1354,15 @@ export class FieldScene extends Phaser.Scene {
   private refreshGuide(): void {
     const flags = this.logic.state.flags;
     const maps = this.logic.maps;
-    const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags, SIDE_QUESTS, this.map.id);
-    this.pointers.story.way = goal ? waypoint(maps, this.map.id, goal, flags) : null;
-    const on = questArrows() && this.logic.era === 'present';
-    const sides = [...sideGoals(SIDE_QUESTS, flags), ...mysteryGoals(SIDE_QUESTS, flags)]
+    const era = this.logic.era;
+    const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags, SIDE_QUESTS, this.map.id, era);
+    // In the Echo only an Echo goal is shown (review 1, Oct 21, finding 2: who to talk to in the memory, what to
+    // change, the shimmer back out); any other goal lies behind the memory's shut doors.
+    const shown = (g: { echo?: boolean } | null) => !!g && (era === 'present' || !!g.echo);
+    this.pointers.story.way = goal && shown(goal) ? waypoint(maps, this.map.id, goal, flags) : null;
+    const on = questArrows();
+    const sides = [...sideGoals(SIDE_QUESTS, flags, era, this.map.id), ...(era === 'present' ? mysteryGoals(SIDE_QUESTS, flags) : [])]
+      .filter((s) => shown(s.goal))
       .map((s) => waypoint(maps, this.map.id, s.goal, flags))
       .filter((w): w is Waypoint => w !== null);
     // The silver pointer: a side quest's stop on this map before one through a door, the nearest first.
@@ -1373,7 +1378,8 @@ export class FieldScene extends Phaser.Scene {
   /** Both pointers, each frame: hidden off the field, in the Echo, in a scene, or with the setting off. */
   private tickGuide(delta: number): void {
     this.guideT += delta;
-    const show = questArrows() && this.mode === 'field' && this.logic.era === 'present' && !this.staging && !this.leaving;
+    // In the Echo, refreshGuide keeps only Echo goals, so whatever pointer is left may show there too.
+    const show = questArrows() && this.mode === 'field' && !this.staging && !this.leaving;
     for (const kind of ['story', 'side'] as const) this.tickPointer(kind, show);
   }
 
@@ -1682,7 +1688,8 @@ export class FieldScene extends Phaser.Scene {
         lines.push({ text: 'Done:', color: UI.accentText, gap: 4 });
         for (const e of done) lines.push({ text: `  [x] ${e.title}`, color: UI.doneText });
       }
-      const notes = journalNotes(JOURNAL_NOTES, flags);
+      // Side quests the story closed unfinished (review 1, finding 5) say what became of them, with the notes.
+      const notes = [...journalNotes(JOURNAL_NOTES, flags), ...closedNotes(SIDE_QUESTS, flags)];
       if (notes.length > 0) {
         lines.push({ text: 'Notes:', color: UI.accentText, gap: 4 });
         for (const n of notes) lines.push({ text: `${n.title}: ${n.text}`, color: UI.dimText });

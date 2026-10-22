@@ -2,7 +2,7 @@
 // the boar's warning, The Heir Rises, rewards, and that the first battle is winnable but not trivial.
 
 import { describe, expect, it } from 'vitest';
-import { ANISSA_SP_SHARE, DIFFICULTY, ELEMENT_WEAK, STATUS, SURGE_COST, SURGE_MULT } from '../src/config.ts';
+import { ANISSA_SP_SHARE, ARMOR_PLAIN_SHARE, DIFFICULTY, ELEMENT_WEAK, STATUS, SURGE_COST, SURGE_MULT } from '../src/config.ts';
 import { BATTLES, ENEMIES, MOVES, SKILLS, SKILL_BOOK } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { Battle, reachable, battleItems, battleParty, enemyStats, settleBattle, skillCost, turnDelay, type BattleEvent, type PartyEntry } from '../src/engine/battle.ts';
@@ -354,6 +354,31 @@ describe('targets, statuses and elements', () => {
     expect(w.affinity).toBe(1);
     expect(w.element).toBe('light');
     expect(w.amount / n.amount).toBeCloseTo(ELEMENT_WEAK, 0);
+  });
+
+  // Review 1, finding 1: the patrol's breastplate musketeer (a fight before Thorne that Attack alone cannot carry).
+  it('an armored foe takes ARMOR_PLAIN_SHARE of a plain Attack, shown as a resist; skills are not slowed', () => {
+    const strong = gianna({ stats: { hp: 42, sp: 34, atk: 40, def: 7, mag: 18, spd: 9 } });
+    const pair = () => {
+      const b = new Battle(def, [strong], [{ ...boar, armored: true }], [soup], { seed: 21 });
+      const c = new Battle(def, [strong], [boar], [soup], { seed: 21 });
+      b.start();
+      c.start();
+      return [b, c] as const;
+    };
+    const dmg = (events: BattleEvent[]) => events.find((e) => e.kind === 'damage') as Extract<BattleEvent, { kind: 'damage' }>;
+    const [b, c] = pair();
+    const armored = dmg(b.act({ kind: 'attack', target: boarKey }));
+    const plain = dmg(c.act({ kind: 'attack', target: boarKey }));
+    expect(armored.affinity).toBe(-1);
+    expect(armored.amount / plain.amount).toBeCloseTo(ARMOR_PLAIN_SHARE, 1);
+    const [b2, c2] = pair();
+    const spell = dmg(b2.act({ kind: 'skill', skill: 'sunthread', target: boarKey }));
+    expect(spell.amount).toBe(dmg(c2.act({ kind: 'skill', skill: 'sunthread', target: boarKey })).amount);
+    expect(spell.affinity).toBeUndefined();
+    // Only the patrol's musketeer wears one in Chapter 2 (the patrol is where the lesson is taught).
+    expect(Object.values(ENEMIES).filter((e) => e.armored).map((e) => e.id)).toEqual(['breastplate_musketeer']);
+    expect(BATTLES.village_patrol!.enemies).toContain('breastplate_musketeer');
   });
 
   it('items can be given to any ally and say what was used', () => {

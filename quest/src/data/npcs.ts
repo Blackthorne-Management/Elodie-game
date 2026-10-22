@@ -174,6 +174,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   // The occupied city, second half (Oct 17).
   checkpoint_marine: n('checkpoint_marine', 'crown_marine', 'Crown marine'),
   lamp_oil_shutters: n('lamp_oil_shutters', 'lamp_oil_seller', 'Lamp-oil seller'),
+  occ_marine_shutters: n('occ_marine_shutters', 'crown_marine', 'Crown marine'),
   anaco_cell: n('anaco_cell', 'anaco', 'Cacique Anaco'),
   cellar_marine: n('cellar_marine', 'crown_marine', 'Crown marine'),
   // Chapter 2's end: Thorne at the blockade, and the family waiting on the pier at home.

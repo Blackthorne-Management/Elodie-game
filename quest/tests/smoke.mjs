@@ -369,9 +369,12 @@ async function hintsAndJournal(browser, errors) {
   check(s.mapId === 'zetwal-town' && s.mode === 'dialogue', 'a new game opens in Zetwal with the festival scene');
   await finishDialogue(page);
   const first = ACT1.objectives[0];
-  await page.waitForFunction((h) => window.__quest.snapshot().hint === h, first.hints[0], { timeout: 5000 });
+  // The hint clock counts play time from Phaser's frame delta, which a throttled headless browser under-counts (review 1,
+  // Oct 21, finding 9: a 1.2 s hint arrived after about 5 s): plenty of margin over the 1.2 s asked for.
+  const HINT_WAIT_MS = 15000;
+  await page.waitForFunction((h) => window.__quest.snapshot().hint === h, first.hints[0], { timeout: HINT_WAIT_MS });
   check(true, `after being stuck, Anissa offers a hint ("${first.hints[0]}")`);
-  await page.waitForFunction((h) => window.__quest.snapshot().hint === h, first.hints[1], { timeout: 5000 });
+  await page.waitForFunction((h) => window.__quest.snapshot().hint === h, first.hints[1], { timeout: HINT_WAIT_MS });
   check(true, 'her hints escalate');
   await menuSelect(page, "Anissa's hints");
   await page.waitForFunction(() => window.__quest.snapshot().menu?.items.some((t) => t === "Anissa's hints: Off"), null, { timeout: 2000 });
@@ -1081,8 +1084,8 @@ async function playAct(browser, errors) {
   check(s.flags['story.anaco_taken'] === true && s.flags['story.patrol_beaten'] === true, 'the Crown attack: the caney fight and the patrol fight were won in the browser, and Anaco was taken');
   check(s.flags['story.refuge'] === true && s.flags['story.escape_night'] === true, 'the refuge: Yari and Anissa hid in the cave, then came out for the escape');
   check(s.flags['story.yari_hidden'] === false && s.flags['party.anissa'] === true && s.follower !== null, 'Yari is back in the party, and Anissa follows Gianna again');
-  check(s.flags['story.papers_checked'] === true && s.flags['story.anaco_found'] === true, 'the occupied city: papers shown at the checkpoint, and the three clues place Anaco in the customs cellar');
-  check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true, 'the envoy visited Anaco with the fever bark, and carried the escape plan to the cave');
+  check(s.flags['story.papers_checked'] === true && s.flags['story.anaco_found'] === true, 'the occupied city: the three clues place Anaco in the customs cellar, and the papers open the trail to the beach');
+  check(s.flags['story.anaco_visited'] === true && s.flags['story.escape_planned'] === true && s.flags['story.word_runner_seen'] === true, 'the envoy visited Anaco with the fever bark, and a runner carried the escape plan to the cave');
   check(s.flags['encounter.xaragua_story.thorne.won'] === true && s.flags['story.escaped'] === true, 'Governor Thorne was beaten at the sea mouth, and Yari escaped through the blockade');
   check(s.flags['act2.complete'] === true && s.flags['card.act2_end'] === true && s.mapId === 'zetwal-harbor', 'home to Zetwal: Grandfather asks for Ardencia, and Chapter 2 ends with its card');
   check(showcases.has('sun_locket') && s.flags['shown.item.sun_locket'] === true, 'the Locket showcase played once and was closed');

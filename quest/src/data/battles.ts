@@ -143,6 +143,21 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Volley', power: 180, every: 2, tell: 'The musketeer kneels and takes aim...' },
     ],
   },
+  // The patrol's musketeer on the night of the attack (review 1, Oct 21, finding 1): a Crown breastplate. A plain
+  // Attack glances off it (engine/battle.ts `armored`); Sunthread and Yari's Aimed Shot do not, so the fight before
+  // Thorne is the one that asks for the skills the boar taught.
+  breastplate_musketeer: {
+    id: 'breastplate_musketeer',
+    name: 'Musketeer in a Breastplate',
+    look: 'crown_musketeer',
+    level: 5,
+    role: 'caster',
+    moves: [
+      { name: 'Bayonet jab', power: 90 },
+      { name: 'Volley', power: 180, every: 2, tell: 'The musketeer kneels and takes aim...' },
+    ],
+    armored: true,
+  },
   road_bandit: {
     id: 'road_bandit',
     name: 'Road Bandit',
@@ -222,6 +237,10 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'The Charter, read aloud', power: 80, area: true, every: 4, tell: 'Thorne unrolls the Charter: "Clause the seventh..."' },
     ],
     weak: ['light'],
+    // Review 1, finding 1: at full HP and level 9 he was a wall for a party that only attacks, even at the most
+    // Grudge (16 wins in 40 at +50%); at the party's level with a little less HP, Attack alone wins 9 in 40 the
+    // first time and 37 in 40 at the boss Grudge, and Sunthread every turn still wins every time.
+    hpScale: 0.9,
   },
   marine_sergeant: {
     id: 'marine_sergeant',
@@ -275,13 +294,13 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     id: 'village_patrol',
     title: 'The Harbor at Night',
     backdrop: 'yucayeque_night',
-    enemies: ['crown_marine', 'crown_musketeer', 'marine_sergeant'],
+    enemies: ['crown_marine', 'breastplate_musketeer', 'marine_sergeant'],
     level: 6,
     table: 'xaragua_story',
     group: 'patrol',
     rewards: { xp: 90, gold: 40 },
     tips: {
-      start: 'The sergeant again! He never learns.',
+      start: "Plain blows bounce off that breastplate, Gigi! Use your light. Yari, Aimed Shot!",
       spark: 'Surge!',
       tell: 'Bayonets! Guard!',
       lowHp: "You're hurt, Gigi.",
@@ -293,12 +312,15 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     title: 'Governor Thorne',
     backdrop: 'yucayeque_night',
     enemies: ['thorne', 'crown_marine', 'crown_musketeer'],
-    level: 9,
+    level: 8,
     table: 'xaragua_story',
     group: 'thorne',
     rewards: { xp: 220, gold: 120 },
+    // The chapter's boss: his Grudge climbs to GRUDGE_MAX_BOSS (review 1, finding 1).
+    boss: true,
     tips: {
-      start: 'It\'s him, Gigi! The marines first, or Thorne first?',
+      // Review 1, finding 1: the one thing that matters, said at the start.
+      start: 'He hates the light, Gigi. Sunthread. Yari, the musketeer.',
       spark: 'All my light, Gigi! Surge!',
       tell: 'He\'s aiming! Guard!',
       lowHp: 'Gigi, heal! Please!',

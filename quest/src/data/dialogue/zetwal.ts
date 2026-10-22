@@ -820,7 +820,13 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         say(A, '...Did he know you were there?'),
         say(G, "I don't think so. But he felt something."),
         { if: { flag: 'anchor.night_orders' }, speaker: G, text: 'He hid his night orders under the window seat. I made sure of it.' },
-        { if: { notFlag: 'anchor.night_orders' }, speaker: G, text: 'He keeps his papers under the window seat. I should go back and leave the orders there.' },
+        // Review 1 (Oct 21), finding 6: only once the aide has handed over the orders does Gianna speak of them.
+        {
+          if: { all: [{ flag: 'story.warroom_echo' }, { notFlag: 'anchor.night_orders' }] },
+          speaker: G,
+          text: 'He keeps his papers under the window seat. I should go back and leave the orders there.',
+        },
+        { if: { notFlag: 'story.warroom_echo' }, speaker: G, text: 'I need to go back. Someone was bringing him something.' },
       ],
     },
   }),

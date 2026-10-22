@@ -13,6 +13,8 @@ export interface SideQuestStep {
   done: Condition;
   /** Where it is done, for the minimap's side-quest dot (engine/guide.ts). */
   goals?: readonly Goal[];
+  /** Inside the Echo, these come first (engine/guide.ts goalNow). */
+  echoGoals?: readonly Goal[];
 }
 
 export interface SideQuestReward {
@@ -51,10 +53,17 @@ export interface SideQuestDef {
   parallel?: boolean;
   /** Holds once it is finished (usually the last step's flag). */
   done: Condition;
+  /**
+   * The story has moved on without it (review 1, Oct 21, finding 5: a quest must never dangle forever): once this
+   * holds, an unfinished quest is over. It leaves the arrows and the mystery list, and the Quests page and the
+   * Journal show it closed, with `closedText` saying what became of it.
+   */
+  closed?: Condition;
+  closedText?: string;
   reward: SideQuestReward;
 }
 
-export type SideQuestStatus = 'unknown' | 'active' | 'done';
+export type SideQuestStatus = 'unknown' | 'active' | 'done' | 'closed';
 
 function movedNow(q: SideQuestDef, flags: FlagReader) {
   return q.moved?.find((m) => evaluate(m.if, flags));
@@ -70,9 +79,25 @@ export function questNudge(q: SideQuestDef, flags: FlagReader): string | undefin
   return movedNow(q, flags)?.nudge ?? q.nudge;
 }
 
+/** Whether the story has closed the quest (finished or not). */
+export function questClosed(q: SideQuestDef, flags: FlagReader): boolean {
+  return !!q.closed && evaluate(q.closed, flags);
+}
+
+/**
+ * Where a quest stands: done once finished (that never changes); closed when the story closed it after it was
+ * accepted; a quest closed before it was ever accepted stays unknown (and is never offered again).
+ */
 export function sideQuestStatus(flags: FlagReader, q: SideQuestDef): SideQuestStatus {
   if (evaluate(q.done, flags)) return 'done';
-  return evaluate(q.accepted, flags) ? 'active' : 'unknown';
+  const accepted = evaluate(q.accepted, flags);
+  if (questClosed(q, flags)) return accepted ? 'closed' : 'unknown';
+  return accepted ? 'active' : 'unknown';
+}
+
+/** The Journal's lines for quests the story closed unfinished ("Owned or Remembered: The fire is out..."). */
+export function closedNotes(quests: readonly SideQuestDef[], flags: FlagReader): { id: string; title: string; text: string }[] {
+  return quests.filter((q) => sideQuestStatus(flags, q) === 'closed').map((q) => ({ id: q.id, title: q.title, text: q.closedText ?? 'Closed: the story moved on.' }));
 }
 
 /** The steps the log shows: every finished one, then the current one (later steps stay hidden). */

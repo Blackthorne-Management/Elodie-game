@@ -965,11 +965,14 @@ export class GameMenu {
     const flags = this.ctx!.flags;
     const active = SIDE_QUESTS.filter((q) => sideQuestStatus(flags, q) === 'active');
     const done = SIDE_QUESTS.filter((q) => sideQuestStatus(flags, q) === 'done');
+    // Closed by the story before they were finished (review 1, finding 5): listed last, with what became of them.
+    const closed = SIDE_QUESTS.filter((q) => sideQuestStatus(flags, q) === 'closed');
     return [
       { kind: 'main' },
       ...active.map((q) => ({ kind: 'side' as const, q })),
       ...mysteryQuests(SIDE_QUESTS, flags).map((q) => ({ kind: 'mystery' as const, q })),
       ...done.map((q) => ({ kind: 'side' as const, q })),
+      ...closed.map((q) => ({ kind: 'side' as const, q })),
     ];
   }
 
@@ -985,7 +988,8 @@ export class GameMenu {
         { text: `Someone at ${place.startsWith('The ') ? 'the' + place.slice(3) : 'the ' + place} may need Gianna's help. Look for the silver dot on the map, or ask Anissa.`, gap: 4 },
       ];
     }
-    const done = sideQuestStatus(ctx.flags, q) === 'done';
+    const status = sideQuestStatus(ctx.flags, q);
+    const done = status === 'done';
     const band = levelBand(RPG, partyLevel(ctx.flags, RPG, ctx.era), q.level);
     const lines: PanelLine[] = [
       { text: q.title, color: UI.accentText },
@@ -994,6 +998,10 @@ export class GameMenu {
       { text: q.summary, gap: 4 },
     ];
     for (const s of visibleSteps(ctx.flags, q)) lines.push({ text: `${s.done ? '[x]' : '[ ]'} ${s.text}`, color: s.done ? UI.doneText : UI.text });
+    if (status === 'closed') {
+      lines.push({ text: q.closedText ?? 'Closed: the story moved on.', color: UI.dimText, gap: 4 });
+      return lines;
+    }
     lines.push({ text: `Reward: ${rewardText(q, RPG)}`, color: done ? UI.doneText : UI.dimText, gap: 4 });
     return lines;
   }
@@ -1018,7 +1026,7 @@ export class GameMenu {
     const entries = this.questEntries();
     const flags = this.ctx!.flags;
     const labels = entries.map((e) =>
-      e.kind === 'main' ? 'Main: Chapter 1' : e.kind === 'mystery' ? `??? ${questPlace(e.q, flags)}` : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : ''}${e.q.title}`,
+      e.kind === 'main' ? 'Main: Chapter 1' : e.kind === 'mystery' ? `??? ${questPlace(e.q, flags)}` : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : sideQuestStatus(flags, e.q) === 'closed' ? '[-] ' : ''}${e.q.title}`,
     );
     this.drawList(labels, this.cursor, 6, TOP + 2, ROWS, this.stage === 'top');
     if (entries.length === 1) this.text(6, TOP + 2 + 2 * ROW_H, '  No side quests yet.', UI.dimText);

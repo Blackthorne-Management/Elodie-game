@@ -15,13 +15,12 @@ import { FlagStore, type FlagSnapshot } from '../src/engine/flags.ts';
 import { mysteryGoals, mysteryQuests, sideGoals, sideNudges, storyGoal, waypoint } from '../src/engine/guide.ts';
 import { currentObjective } from '../src/engine/quests.ts';
 import { gold, itemCount, pillarFlag, sharedXp } from '../src/engine/rpg.ts';
-import { rewardFlag, settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
+import { closedNotes, rewardFlag, settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { activeNpcs } from '../src/engine/world.ts';
 import { loadMaps } from '../tools/sim-setup.ts';
 
 const maps = loadMaps();
 const quest = (id: string) => SIDE_QUESTS.find((q) => q.id === id)!;
-const FOUR = ['nets', 'hutia', 'oil', 'medicine'] as const;
 
 /** Talk to `id`, picking the choices whose text starts with each of `picks` in turn; returns every line shown. */
 function talk(flags: FlagStore, id: string, picks: string[] = []): string[] {
@@ -126,16 +125,27 @@ describe('mystery quests: offered from their moment, until the Crown takes the c
     }
   });
 
-  it('every one closes at the attack (review D4): not offered, and one left half done drops off the page', () => {
+  // Review D4, and review 1 (Oct 21) finding 5: closed, not just hidden.
+  it('every one closes at the attack: not offered any more, and one left half done shows as closed, with what became of it', () => {
     const half: FlagSnapshot = { 'side.nets.accepted': true, 'side.hutia.accepted': true, 'side.oil.accepted': true, 'side.medicine.accepted': true, 'debate.xaragua_springs.listened': true };
     const before = day(half);
     for (const id of CHAPTER2_QUESTS) expect(sideQuestStatus(before, quest(id)), id).toBe('active');
+    expect(closedNotes(SIDE_QUESTS, before)).toEqual([]);
     const after = day({ ...half, 'story.crown_attack': true });
     for (const id of CHAPTER2_QUESTS) {
-      expect(sideQuestStatus(after, quest(id)), id).toBe('unknown');
+      expect(sideQuestStatus(after, quest(id)), id).toBe('closed');
+      expect(quest(id).closedText, id).toMatch(/^Closed: /);
       expect(mysteryQuests(SIDE_QUESTS, after).map((q) => q.id), id).not.toContain(id);
       expect(sideGoals(SIDE_QUESTS, after).map((g) => g.id), id).not.toContain(id);
     }
+    // The Journal says what became of each.
+    expect(closedNotes(SIDE_QUESTS, after).map((n) => n.id)).toEqual([...CHAPTER2_QUESTS]);
+    expect(closedNotes(SIDE_QUESTS, after).find((n) => n.id === 'springs')?.text).toBe('Closed: the fire is out. The pilgrim is gone.');
+    // Never accepted: it simply is not offered any more (never closed, never a mystery).
+    const untouched = day({ 'story.crown_attack': true });
+    for (const id of CHAPTER2_QUESTS) expect(sideQuestStatus(untouched, quest(id)), id).toBe('unknown');
+    expect(mysteryQuests(SIDE_QUESTS, untouched).filter((q) => (CHAPTER2_QUESTS as readonly string[]).includes(q.id))).toEqual([]);
+    expect(closedNotes(SIDE_QUESTS, untouched)).toEqual([]);
   });
 
   it('a quest finished before the attack stays done after it', () => {
@@ -367,11 +377,11 @@ describe('old saves', () => {
 });
 
 describe('every quest closes with the free city (data)', () => {
-  it("each one's accepted and available conditions read the attack", () => {
-    for (const id of FOUR) {
+  it('each one closes at the attack (its `closed` condition reads it), with a line for the Journal', () => {
+    for (const id of CHAPTER2_QUESTS) {
       const q = quest(id);
-      expect(JSON.stringify(q.available), id).toContain('story.crown_attack');
-      expect(JSON.stringify(q.accepted), id).toContain('story.crown_attack');
+      expect(JSON.stringify(q.closed), id).toContain('story.crown_attack');
+      expect(q.closedText, id).toBeTruthy();
     }
   });
 });

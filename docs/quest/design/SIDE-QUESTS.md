@@ -232,8 +232,19 @@ cave, and all live in the free city.
   adds: "The grove bark went with the caney."
 - **Owned or Remembered** (the debate by the village fire): now required with the other four; 30 XP (was 60); listed
   as *Harbor Village*; the arrow points at the elder (the fire itself cannot be talked to).
-- **Every quest closes at the Crown attack** (review D4): neither offered nor shown half done once
-  `story.crown_attack` is set; a quest finished before stays done.
+- **Every quest closes at the Crown attack** (review D4): no longer offered once `story.crown_attack` is set; a quest
+  finished before stays done. **Closed, not hidden** (review 1, Oct 21, finding 5, the general rule for every chapter
+  from now on): a side quest can carry a `closed` condition and a `closedText` (`quest/src/engine/sideQuests.ts`).
+  Once `closed` holds, an accepted but unfinished quest is *closed*: off the arrows and the mystery list, listed last
+  on the Quests page as `[-] Title` with its closing line, and the line also shows in the Journal's notes. Never
+  accepted, it is simply never offered again. Chapter 2's five close at the attack. Their closing lines (Claude's
+  call): Cut Nets "the Crown took the beach the night the guns fired. Nobody mends nets under curfew."; The Hutia's
+  Hoard "the small girl's family fled the gardens on the night of the attack. Her bead is still in the hollow."; Oil
+  From a Stranger "the jars never reached the hill camp. Its people shelter in the cave now."; Medicine for the Cacique
+  "the caney is the Governor's house now. The healer brews what she can in the cave."; Owned or Remembered "the fire
+  is out. The pilgrim is gone." (the review's own words). Only an old save can see them: the dusk gate needs all five.
+- **The arrow in the memories** (review 1, finding 2): the hutia's sapling and the camp's scout healer and planting
+  spot are Echo goals (`echoGoals`), so the arrow shows inside those memories and then leads back to the shimmer.
 - **The arrow** does what is on the map the player is on first (`engine/guide.ts` `storyGoal`), so it climbs the
   mountain once for both mountain quests. Its order from the seller: the nets, the debate, the hutia, the camp (oil,
   then the grove), the healer in the caney, the seller at dusk.

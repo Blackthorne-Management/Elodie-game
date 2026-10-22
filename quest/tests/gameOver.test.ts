@@ -4,14 +4,14 @@
 // every story fight has a way back in.
 
 import { describe, expect, it } from 'vitest';
-import { GAME_OVER, GRUDGE_MAX, GRUDGE_STEP } from '../src/config.ts';
+import { GAME_OVER, GRUDGE_MAX, GRUDGE_MAX_BOSS, GRUDGE_STEP } from '../src/config.ts';
 import { BATTLES, battleDef } from '../src/data/battles.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { GAME_OVER_TEXT, GODDESS_WORDS } from '../src/data/gameOver.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { RHYTHMS } from '../src/data/rhythms.ts';
 import { DEBATES } from '../src/data/debates.ts';
-import { battleItems, settleBattle, type Battle, type BattleDef } from '../src/engine/battle.ts';
+import { battleItems, grudgeCap, settleBattle, type Battle, type BattleDef } from '../src/engine/battle.ts';
 import type { GameContent } from '../src/engine/content.ts';
 import type { DialogueScript } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
@@ -79,6 +79,22 @@ describe('the count and the Grudge', () => {
     expect(grudgeFor(flags, story)).toBeCloseTo(GRUDGE_MAX);
     // Another fight has its own Grudge.
     expect(grudgeFor(flags, BATTLES.caney_breach!)).toBe(0);
+  });
+
+  // Review 1 (Oct 21), finding 1: a chapter's boss lost three times has had the fight.
+  it("a boss's Grudge keeps climbing to GRUDGE_MAX_BOSS, and the battle takes all of it", () => {
+    const flags = new FlagStore();
+    const boss = BATTLES.thorne_blockade!;
+    expect(boss.boss).toBe(true);
+    for (let i = 0; i < 3; i++) recordLoss(flags, boss);
+    expect(grudgeFor(flags, boss)).toBeCloseTo(0.3);
+    for (let i = 0; i < 5; i++) recordLoss(flags, boss);
+    expect(grudgeFor(flags, boss)).toBeCloseTo(GRUDGE_MAX_BOSS);
+    expect(GRUDGE_MAX_BOSS).toBeGreaterThan(GRUDGE_MAX);
+    expect(grudgeCap(boss)).toBe(GRUDGE_MAX_BOSS);
+    expect(grudgeCap(story)).toBe(GRUDGE_MAX);
+    // Only the chapter bosses (Chapter 2: Thorne).
+    expect(Object.values(BATTLES).filter((b) => b.boss).map((b) => b.id)).toEqual(['thorne_blockade']);
   });
 
   it('a win clears that fight\'s losses (and so its Grudge); the count stays', () => {

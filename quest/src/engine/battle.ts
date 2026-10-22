@@ -23,6 +23,7 @@ import {
   BATTLE_ACTIVE,
   ANISSA_SP_EVERY,
   ANISSA_SP_SHARE,
+  ARMOR_PLAIN_SHARE,
   CRIT_BASE,
   CRIT_MAX,
   CRIT_MIN,
@@ -35,6 +36,7 @@ import {
   ENEMY_STAT_LINE,
   GIANNA_SP_DISCOUNT,
   GRUDGE_MAX,
+  GRUDGE_MAX_BOSS,
   GRUDGE_STEP,
   GUARD_MULT,
   MAGE_BASH_POWER,
@@ -165,6 +167,8 @@ export interface EnemyDef {
   resist?: readonly Element[];
   /** HP times this (a teaching foe that lasts long enough to show its moves: the boar). */
   hpScale?: number;
+  /** A breastplate: a plain Attack does only ARMOR_PLAIN_SHARE of its damage (skills are not slowed). */
+  armored?: boolean;
 }
 
 export interface BattleDef {
@@ -194,6 +198,13 @@ export interface BattleDef {
    * sets no won flag. Never on a random ambush (tests/gameOver.test.ts).
    */
   meantToLose?: { scene: string };
+  /** A chapter's boss: its Grudge climbs to GRUDGE_MAX_BOSS instead of GRUDGE_MAX (grudgeCap). */
+  boss?: boolean;
+}
+
+/** The most Grudge a fight can build (review 1, finding 1: a boss lost three times has had the fight). */
+export function grudgeCap(def: Pick<BattleDef, 'boss'>): number {
+  return def.boss ? GRUDGE_MAX_BOSS : GRUDGE_MAX;
 }
 
 /**
@@ -270,6 +281,8 @@ export interface Combatant {
   weapon?: string;
   weak: readonly Element[];
   resist: readonly Element[];
+  /** A plain Attack does ARMOR_PLAIN_SHARE of its damage. */
+  armored: boolean;
   statuses: ActiveStatus[];
   /** Fighting now (the first four of the party, and every foe); false: waiting to swap in. */
   active: boolean;
@@ -384,7 +397,7 @@ export class Battle {
   constructor(def: BattleDef, party: readonly PartyEntry[], enemies: readonly EnemyDef[], items: readonly BattleItem[], opts: BattleOptions) {
     this.def = def;
     this.rng = new Rng(opts.seed);
-    this.grudge = Math.min(GRUDGE_MAX, opts.grudge ?? 0);
+    this.grudge = Math.min(grudgeCap(def), opts.grudge ?? 0);
     const diff = DIFFICULTY[opts.difficulty ?? 'story'];
     this.enemyDamage = diff.enemyDamage;
     this.items = items.map((i) => ({ ...i }));
@@ -416,6 +429,7 @@ export class Battle {
       weapon: p.weapon,
       weak: [],
       resist: [],
+      armored: false,
       statuses: [],
       active: i < BATTLE_ACTIVE,
       row: p.row ?? 'back',
@@ -455,6 +469,7 @@ export class Battle {
         anissaBond: false,
         weak: e.weak ?? [],
         resist: e.resist ?? [],
+        armored: e.armored ?? false,
         statuses: [],
         active: true,
         row: 'front',
@@ -531,7 +546,7 @@ export class Battle {
     if (action.kind === 'attack') {
       const t = this.find(action.target);
       if (!t || t.down || t.side !== 'enemy') return [];
-      events.push(...this.hit(me, t, 'Attack', me.bash, 'physical'));
+      events.push(...this.hit(me, t, 'Attack', me.bash, 'physical', undefined, true));
     } else if (action.kind === 'skill') {
       const skill = me.skills.find((s) => s.id === action.skill);
       if (!skill) return [];
@@ -599,7 +614,7 @@ export class Battle {
    * the Game Over screen, and the next try takes its Grudge from the save: engine/gameOver.ts grudgeFor).
    */
   static retry(prev: Battle, party: readonly PartyEntry[], enemies: readonly EnemyDef[], items: readonly BattleItem[], seed: number): Battle {
-    return new Battle(prev.def, party, enemies, items, { seed, grudge: Math.min(GRUDGE_MAX, prev.grudge + GRUDGE_STEP) });
+    return new Battle(prev.def, party, enemies, items, { seed, grudge: Math.min(grudgeCap(prev.def), prev.grudge + GRUDGE_STEP) });
   }
 
   // ---- Inside the battle --------------------------------------------------------------------------
@@ -681,7 +696,8 @@ export class Battle {
   }
 
   /** One blow or spell from `a` to `b` (COMBAT 5). */
-  private hit(a: Combatant, b: Combatant, move: string, power: number, type: 'physical' | 'magic', element?: Element): BattleEvent[] {
+  /** `plain`: the Attack command (a breastplate stops most of it). */
+  private hit(a: Combatant, b: Combatant, move: string, power: number, type: 'physical' | 'magic', element?: Element, plain = false): BattleEvent[] {
     const events: BattleEvent[] = [];
     if (type === 'physical') {
       const hitChance = clamp(HIT_BASE + (a.spd - b.spd) / 2, HIT_MIN, HIT_MAX);
@@ -720,6 +736,10 @@ export class Battle {
     } else if (element && b.resist.includes(element)) {
       affinity = -1;
       dmg *= ELEMENT_RESIST;
+    }
+    if (plain && b.armored) {
+      affinity = -1;
+      dmg *= ARMOR_PLAIN_SHARE;
     }
     if (b.guarding) dmg *= GUARD_MULT;
     const amount = Math.max(1, Math.round(dmg));

@@ -188,6 +188,24 @@ Details and Claude's calls: `SIDE-QUESTS.md`, Yucayeque. Measured on the scripte
 counted): the chapter is 1,640 steps and 49 map changes (was 1,023 and 37); the party is level 8 at the Crown attack
 (was 7), level 9 at Thorne (even; was 8) and level 10 at the end (was 9). An arrow-follower climbs the mountain once.
 
+**Review 1 fixes (Oct 22; `reviews/2026-10-21-review-1.md`; Claude's calls under the owner's Oct 20 rule):**
+- **Anaco's surrender** (finding 4): the captain comes with six marines, not two; they form a firing line at the
+  council circle's opening and level their muskets past the children at the elders behind them. Yari draws ("Not one
+  step further, captain."); the captain: "Muskets! Over the children. On the old ones in the circle." and "Any arrow,
+  and the elders die first. Lower it, girl." Only then does Anaco walk out and say "You are no use to me in chains".
+- **The occupied city, shorter** (finding 3): the healer asks for the fever bark in the refuge scene itself; the
+  arrow takes the bark tree on the way into the city; the lamp-oil seller and the marine posted at her shutters are
+  one stop (the marine walks over to close the shutters and lets slip the Governor's cellar); the customs register
+  completes the three clues, and the Governor and the cellar are in the same building. **Word to the cave is folded
+  into the visit:** on leaving the customs house after seeing Anaco, the fisher's boy (who counts the Crown's boots)
+  slips out from behind the weaver's house, takes the message and runs it west. The papers are shown at the east
+  barricade on the way to the beach, and **Yari and Anissa meet Gianna at the sea cave mouth** at the lowest tide
+  (they come up the sand from the waterline; Yari's "He knew I would" is said there). Measured on the scripted route:
+  from the refuge to the sea cave, 191 steps and 9 map changes (review 1: 441 and 19 for held to blockade); the
+  Journal loses the *Word to the cave* objective. The caney marine still gossips if the player goes there.
+- **The fights** (finding 1): the patrol's musketeer wears a breastplate, Thorne's tip names the light, and a boss's
+  Grudge climbs to +50% (`COMBAT.md` 12 and 12.5).
+
 **Built Oct 17 (the Crown attack, the midpoint; owner decision Oct 17: Anaco is taken prisoner):** Gianna and Yari
 bring the oath stone's words to the elders in the caney (`story.proof_shown`); as the vote turns, the harbor guns
 fire (Thorne's watcher saw where they went). Marines storm the caney: a fight (`caney_breach`: marine, musketeer,
