@@ -63,6 +63,7 @@ import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts
 import { RPG } from '../data/rpg.ts';
 import { addSharedXp, cityOf, level, partyMembers, pillarFlag } from '../engine/rpg.ts';
 import { settleDebates } from '../engine/debate.ts';
+import { musterJournal } from '../engine/ally.ts';
 import { DEBATES } from '../data/debates.ts';
 import { closedNotes, rewardText, settleRewards } from '../engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
@@ -1996,6 +1997,12 @@ export class FieldScene extends Phaser.Scene {
       if (notes.length > 0) {
         lines.push({ text: 'Notes:', color: UI.accentText, gap: 4 });
         for (const n of notes) lines.push({ text: `${n.title}: ${n.text}`, color: UI.dimText });
+      }
+      // The Muster (Chapter 10, the second review's 3.5): each house's price and what the Muster counts as paid, from
+      // the landing on, and the soldiers once they are pledged. Least paid, first bought.
+      if (flags.isSet('story.muster_begun')) {
+        lines.push({ text: 'The Muster (least paid, first bought):', color: UI.accentText, gap: 4 });
+        for (const l of musterJournal(flags, RPG)) lines.push({ text: `  ${l}`, color: UI.dimText });
       }
     }
     return lines;

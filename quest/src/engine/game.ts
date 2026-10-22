@@ -622,6 +622,7 @@ export class GameLogic {
     const effects: Effect[] = [...this.afterDialogue, { kind: 'sync' }];
     this.afterDialogue = [];
     const flags = this.state.flags;
+    this.content.afterDialogue?.(flags);
     // A price paid in a conversation (flag `gold.pay`: Samira's invoice), taken from the purse.
     const pay = flags.get(GOLD_PAY_FLAG);
     flags.clear(GOLD_PAY_FLAG);
