@@ -432,4 +432,42 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { all: [{ flag: 'anchor.mill_bar' }, { flag: 'side.muskets.done' }] },
   },
+  // The chain post's capstan (the Chapter 11 outline beat 6 with its second review's 3.6; difficulty 2): the Crown's chain
+  // runs from the Patience to the old post at the pier's sea end. Fifty years ago, after Caona's stand, the post had a new
+  // capstan with an iron pin through its pawl. Pull the pin in the memory, and in the present the capstan cannot hold the
+  // chain: it runs out into the harbor.
+  {
+    id: 'xaragua_pier',
+    title: 'Caona\'s stand and the chain post\'s pawl: pull the pin fifty years ago (the War of the Harbor)',
+    map: 'xaragua-village',
+    spawn: 'pier_head',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.yari': true,
+      'party.azzy': true,
+      'party.samira': true,
+      'party.bayarmaa': true,
+      'party.haru': true,
+      'party.vikram': true,
+      'party.edmund': true,
+      'story.benny_joined': true,
+      'story.xaragua_arrived': true,
+      'story.escaped': true,
+      'story.crown_attack': true,
+      'encounter.xaragua_story.pier.won': true,
+      'act10.complete': true,
+      'card.act10_end': true,
+      'story.war_begun': true,
+      'story.landed': true,
+      'story.headland_won': true,
+      'war.flank_done': true,
+      'story.camp_reached': true,
+      'story.tide_called': true,
+      'story.village_reached': true,
+      'story.thorne_taken': true,
+      'story.anaco_freed': true,
+    },
+    goal: { all: [{ flag: 'anchor.chain_post' }, { flag: 'story.chain_dropped' }] },
+  },
 ];

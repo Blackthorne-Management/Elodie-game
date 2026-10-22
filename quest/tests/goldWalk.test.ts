@@ -5,13 +5,13 @@
 // coming back from the bridgehead's memory before the pawl is pinned.
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11 } from '../src/data/quests.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { GameLogic } from '../src/engine/game.ts';
 import { Sim, findPath } from '../src/engine/sim.ts';
 import { newGame } from '../src/engine/state.ts';
 import { goldWalk } from '../tools/gold-walk.ts';
-import { loadMaps, newGameSim } from '../tools/sim-setup.ts';
+import { loadMaps, newGameSim, winBattles } from '../tools/sim-setup.ts';
 
 const maps = loadMaps();
 
@@ -198,7 +198,9 @@ describe('following only the gold arrow on, through Chapter 9', () => {
     state.flags.load(dusk);
     if (exposedFirst) state.flags.clear('muster.exposed_possible');
     else state.flags.set('muster.exposed_possible', true);
-    const otherNight = goldWalk({ maps, sim: new Sim(new GameLogic(maps, CONTENT, state)), through: 'act10' });
+    const otherSim = new Sim(new GameLogic(maps, CONTENT, state));
+    winBattles(otherSim);
+    const otherNight = goldWalk({ maps, sim: otherSim, through: 'act10' });
 
     it('finishes Chapter 10 with no stall', () => {
       expect(ten.stalls).toEqual([]);
@@ -224,6 +226,44 @@ describe('following only the gold arrow on, through Chapter 9', () => {
       console.log(`chapter 10 gold walk: ${ten.steps + night.steps} steps, ${ten.mapChanges + night.mapChanges} map changes; night ${exposedFirst ? 'exposed' : 'sailed'} (${night.steps} steps; the other way ${otherNight.steps})`);
       expect(ten.steps + night.steps).toBeLessThan(1400);
       expect(ten.mapChanges + night.mapChanges).toBeLessThan(40);
+    });
+
+    describe('and on through Chapter 11, from either night', () => {
+      // On from the end of Chapter 10 (Chapter 11, Oct 22): the landing, the gun on the headland, the flank (the house that
+      // sailed) or the house that stood, the gardens' road, the camp, the elders, the Ninth Thumbprint and Harbors Lie as the
+      // arrow finds them, the conch, the village by dusk, Thorne, Anaco, Caona's stand in the pier's memory, the chain, the
+      // Turn (the first choice: hold the pier), Hale, the truth, the Song House and the caney. Each night walks on.
+      const eleven = goldWalk({ maps, sim: night.sim, through: 'act11' });
+      const otherEleven = goldWalk({ maps, sim: otherNight.sim, through: 'act11' });
+
+      it('finishes Chapter 11 with no stall, betrayed and turned', () => {
+        for (const w of [eleven, otherEleven]) {
+          expect(w.stalls).toEqual([]);
+          expect(w.finished).toBe(true);
+          const f = w.sim.logic.state.flags;
+          for (const flag of ['story.landed', 'story.headland_won', 'war.flank_done', 'story.camp_reached', 'debate.xaragua_harbor.settled', 'side.ninth_thumbprint.done', 'side.harbors_lie.done', 'story.tide_called', 'story.thorne_taken', 'story.anaco_freed', 'story.chain_dropped', 'war.trust', 'story.harbor_taken', 'clue.ash_road_read', 'story.wounded_sheltered', 'act11.complete']) {
+            expect(f.isSet(flag), flag).toBe(true);
+          }
+          expect(f.get('party.rael')).toBe(false);
+        }
+        // The betrayed night fights the flank on the beach; the turned night's house stands with the fleet instead.
+        const flank = (w: typeof eleven) => w.sim.battles.filter((b) => b.startsWith('harbor_flank_'));
+        expect(flank(exposedFirst ? otherEleven : eleven)).toHaveLength(1);
+        expect(flank(exposedFirst ? eleven : otherEleven)).toHaveLength(0);
+        expect((exposedFirst ? eleven : otherEleven).sim.logic.state.flags.isSet('war.house_stood')).toBe(true);
+      });
+
+      it('meets every objective in order (the landing, and the pier\'s end on Trust, are inside the scenes that begin them)', () => {
+        const inside = ['landed', 'pier_end'];
+        for (const w of [eleven, otherEleven]) expect(w.objectives).toEqual(ACT11.objectives.filter((o) => !inside.includes(o.id)).map((o) => `act11/${o.id}`));
+      });
+
+      it('takes a reasonable way (measured Oct 22: 599 steps and 21 map changes, either night)', () => {
+        console.log(`chapter 11 gold walk: ${eleven.steps} steps, ${eleven.mapChanges} map changes; the other night ${otherEleven.steps} steps`);
+        expect(eleven.steps).toBeLessThan(800);
+        expect(otherEleven.steps).toBeLessThan(800);
+        expect(eleven.mapChanges).toBeLessThan(30);
+      });
     });
   });
 });

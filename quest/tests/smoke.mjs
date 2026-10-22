@@ -503,6 +503,35 @@ async function markChecks(page, sim, name) {
 }
 
 /**
+ * Chapter 11, the War of the Harbor, at its markers: the fleet landed on the Canoe Beach with the volley pool counted, the
+ * chain down in the present after the memory (the capstan glows: an anchor), and at the card the harbor taken, the truth
+ * read, Rael out of the roster and the browser agreeing with the simulator on every one of them.
+ */
+async function chapter11Checks(page, sim, name) {
+  const marks = ['war-landing', 'war-chain-down', 'chapter11-end'];
+  if (!marks.includes(name)) return;
+  const s = await snap(page);
+  const f = s.flags;
+  if (name === 'war-landing') {
+    check(s.mapId === 'xaragua-beach' && f['story.landed'] === true, '@war-landing: the fleet is on the Canoe Beach and the landing has played');
+    check(typeof f['war.volley_pool'] === 'number' && f['war.volley_pool'] === sim.logic.state.flags.get('war.volley_pool'), `@war-landing: the volley pool is counted (${f['war.volley_pool']})`);
+  }
+  if (name === 'war-chain-down') {
+    check(f['anchor.chain_post'] === true && f['story.chain_dropped'] === true, '@war-chain-down: the pin pulled fifty years ago, the chain is down in the present');
+    check(s.glowed.some((id) => id.startsWith('chain_capstan')), `@war-chain-down: back from the Echo, the capstan glows (${s.glowed.join(', ')})`);
+  }
+  if (name === 'chapter11-end') {
+    check(s.mode === 'card' && s.mapId === 'xaragua-caney', `@chapter11-end: the card shows in the caney (${s.mode}, ${s.mapId})`);
+    for (const flag of ['story.harbor_taken', 'clue.ash_road_read', 'story.wounded_sheltered', 'act11.complete']) {
+      check(f[flag] === true, `@chapter11-end: ${flag}`);
+    }
+    check(f['party.rael'] === false && f['belief.rael_traitor'] === false, '@chapter11-end: Rael is not in the roster, and Gianna no longer believes him a traitor');
+    const sideOpen = ['harbor_elders', 'ninth_thumbprint', 'harbors_lie'].filter((q) => f[`side.${q}.done`] !== true && q !== 'harbor_elders');
+    check(sideOpen.length === 0, `@chapter11-end: the war's side quests are done on the route (${sideOpen.join(', ') || 'all'})`);
+  }
+}
+
+/**
  * The item showcase is browser-only (the simulator has no screen): when one is up, check it (the first
  * time each item shows), photograph the Locket's, skip its rise with A and close it with a tap.
  */
@@ -1000,6 +1029,7 @@ async function playAct(browser, errors) {
   for (const item of route) {
     if (item.kind === 'mark') {
       await markChecks(page, sim, item.name);
+      await chapter11Checks(page, sim, item.name);
       await shoot(page, item.name, shots);
       continue;
     }
