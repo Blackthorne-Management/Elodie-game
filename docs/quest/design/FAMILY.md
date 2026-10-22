@@ -106,6 +106,22 @@ nothing of Rael that reads only one way, nothing of anyone's goodness, the arrow
 locket; no line gives a Rael clue; old Patricio is not at the blessing (open question 13 stays open). A test holds the
 word list; the reviewer prompt asks for a human read of every Rahel, Patricia, Jordyn, Joaquin and Anissa line.
 
+**Built in Chapter 11 (Oct 22):** after the Turn, the family speaks. **Rael**, by lamplight on the pier: "Your mother
+and I married twenty-five years ago, in the year I was given the name you know me by."; to Azzy (Trust): "You have
+your grandfather's hands and your mother's patience. Neither is a reason to disobey." and Azzy: "Titi Aiyana said the
+hands." (on Strike Azzy says nothing to his father at all, and stays in the party, furious: owner, Oct 22). He sends
+Gianna to "your Titi Amanda" about the flour (the Lower Town's kitchen). **Old Benny and Nancy** come up the pier on a
+second longboat with two Ardencian surgeons; Rael: "I brought my father where I meant to stand. He asked to come. He
+always asks." Benny to Gianna: "The Locket. I said I made the other half for a lord who did not deserve one yet. I did
+not say which lord."; at the Song House: "Forty. I count. It is what I do at the end of a thing." and of his son: "My
+son. He was always his own. He never explained himself to me either." (not "his mother's": Rael's mother is Rahel, and
+Nancy is beside him). **Nancy** takes Anissa's hand ("Child. There are hurt people on this island and a lamp to hold.
+Show me where.") and walks the wounded up to the Song House; to Gianna: "Zelia will want to hear that you ate
+something." **Joaquin** counts Free Brasador's wounded ("Nobody from the wall."). Patricia's "Count them at dusk.
+Harbors lie." becomes the Journal's flank step and the boy's count from the lookout. **Not settled (flagged):** STORY's
+private line, "My father kept his oath and it cost him everything", against young Benny's built passive, "He kept the
+goal, not the oath" (Chapter 3); the line is built as STORY has it.
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

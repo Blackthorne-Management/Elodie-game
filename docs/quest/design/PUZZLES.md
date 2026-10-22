@@ -43,6 +43,7 @@ the memory, and Anissa's third hint already names the weights.*
 | M-ZET-2 | The powder cellar | Pòdlimyè, Cane Road | 10 | minor (Z-6) | Door | 2 |
 | M-XAR-1 | The hutia's tree | Yucayeque | 2 | minor (X-3, built) | Growth | 2 |
 | M-XAR-2 | The healer's grove | Yucayeque | 2 | minor (X-5, built) | Growth | 2 |
+| M-XAR-3 | The chain post's pawl | Yucayeque | 11 | story (built Oct 22) | the war | 2 |
 | M-ALD-1 | Spot the fakes | Bab al-Dhahab | 3 | minor (A-1) | observation (present only) | 1 |
 | M-ALD-2 | The cistern pin | Bab al-Dhahab | 3 | minor (A-3) | Water | 2 |
 | M-ARD-1 | The clerk's niche | Cenizal | 4 | minor (Ar-2) | Social | 2 |
@@ -152,6 +153,21 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   / "Plant the seeds behind the rocks she pointed to, in the memory."
 - **Difficulty:** 2.
 
+
+### M-XAR-3 The chain post's pawl (Chapter 11; built Oct 22, `quest/puzzles/xaragua_pier/`)
+- **Place:** the Harbor Village's pier, by dusk. The Crown's chain runs from the *Patience* in the mouth along row 27 to
+  the old chain post's capstan on its own pile at the pier's sea end (23, 26). The marines hold the sea end; the pier's
+  landward boards shimmer (the Echo zone, 21 to 22, rows 19 to 20; it opens once Anaco is free).
+- **Logic:** fifty years ago, after Caona's stand (the chapter's Echo battle: the pier assault folded into it), the
+  post had a new capstan with an iron pin through its pawl. Caona: "They'll chain the mouth next time they come,
+  Marshal. Everyone does. Make it so it won't hold." Pull the pin in the memory (`anchor.chain_post`); back in the
+  present the capstan spins and the chain runs out into the harbor (`story.chain_dropped`).
+- **Cheats:** into the memory and straight back; the pin looked at and left in; the pier walked in the present (the
+  marines hold it).
+- **Hints:** "The chain's tied to the old post, Gigi. It looks like the bridge's winch." / "Grandfather was on this
+  pier with Caona. The boards shimmer." / "In the memory, pull the pin out of the capstan's pawl. Then come back and
+  watch the chain."
+- **Difficulty:** 2 (the bridge's rule, Chapter 1, turned round: a pin taken out instead of driven in).
 ### S-XAR Where the Canoes Sleep (secret; full steps in `SECRET-ITEMS.md` 3)
 - **Present:** four tide states by resting; the water never reaches the canoe ledge. **Echo:** no rockfall; a weir at
   the cave mouth. **Anchor:** the weir gate dropped at High tide.
