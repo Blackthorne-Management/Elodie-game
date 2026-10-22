@@ -67,6 +67,16 @@ is still himself." **Claude's calls (review 3.4):** no Alcázar backstory, no "s
 ("You are family." / "I am family who is a clerk. Both are written."), and she never names the Quiet Crown; a test
 holds her lines to the locked rule. Haru is not her kin.
 
+**Built in Chapter 8 (Oct 22):** Aiyana on the dyers' roof in the Lamp Bazaar, under a mirror's bracket with a wrench,
+the Court's engineer of the great flame ("Whatever burns, I keep"). Azzy crosses the roof, takes the wrench and says
+"Titi Aiyana"; Kayla wrote ahead ("Three lines, which for Kayla is a lot"). She opens the way through the Dying Flame:
+she gets the party to the Court at noon, opens the chain tower's gate at the night lamp's hour, unbolts the roof
+mirrors and keeps the rooftops' ladder, and stands by the last bracket while Anissa holds the disc. **Claude's calls
+(the second review's 3.5):** she says only what she measures (the flame's height, the mirrors turned down, the oil);
+never Cenizal, never the Locket, never a word about her brother or the thumbprints; at the lit lamp she "looks at
+Gianna for a long moment, and does not ask"; the rod line is cut. A test holds her lines to the locked rule. One line
+to read with the owner's ear: "Azriel. You've got your grandfather's hands."
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

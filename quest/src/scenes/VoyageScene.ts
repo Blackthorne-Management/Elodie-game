@@ -31,6 +31,7 @@ const SHORES: Readonly<Record<VoyageDef['shore'], { sand: number; land: number; 
   ardencia: { sand: 0x3a3440, land: 0x241e26, roof: 0x2a2632 },
   skarragol: { sand: 0x8e8e86, land: 0x8a9a70, roof: 0xa89878 },
   kuroshi: { sand: 0x4a4650, land: 0x3a4a44, roof: 0x5a5468 },
+  jwaladesh: { sand: 0xece4d0, land: 0xd8c8a0, roof: 0xe67e22 },
 };
 
 export class VoyageScene extends Phaser.Scene {

@@ -2,7 +2,7 @@
 // game by the scripted route the smoke test also drives in the browser (routes/zetwal-act1.json).
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8 } from '../src/data/quests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { partyMembers } from '../src/engine/rpg.ts';
@@ -23,6 +23,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   const chapter5: string[] = [];
   const chapter6: string[] = [];
   const chapter7: string[] = [];
+  const chapter8: string[] = [];
+  /** Where the party stood, and what it had fought, as Chapter 7's card shows (the route goes on into Chapter 8). */
+  let atChapter7End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, as Chapter 6's card shows (the route goes on into Chapter 7). */
   let atChapter6End: { flags: FlagSnapshot; map: string; battles: string[]; mode: string } = { flags: {}, map: '', battles: [], mode: '' };
   /** Where the party stood, and what it had fought, as Chapter 5's card shows (the route goes on into Chapter 6). */
@@ -61,6 +64,9 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     if (item.kind === 'mark' && item.name === 'chapter6-end') {
       atChapter6End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
     }
+    if (item.kind === 'mark' && item.name === 'chapter7-end') {
+      atChapter7End = { flags: sim.logic.state.flags.snapshot(), map: sim.logic.state.player.mapId, battles: [...sim.battles], mode: sim.logic.mode };
+    }
     if (item.kind === 'mark' && item.name === 'end-card') {
       atChapterEnd = Object.fromEntries(Object.entries(sim.logic.state.flags.snapshot()).filter(([k]) => KEPT.test(k)));
     }
@@ -98,6 +104,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       if (ACT7.maps.includes(sim.logic.state.player.mapId)) {
         const id7 = currentObjective(ACT7, sim.logic.state.flags)?.id ?? 'complete';
         if (chapter7.at(-1) !== id7) chapter7.push(id7);
+      }
+      if (ACT8.maps.includes(sim.logic.state.player.mapId)) {
+        const id8 = currentObjective(ACT8, sim.logic.state.flags)?.id ?? 'complete';
+        if (chapter8.at(-1) !== id8) chapter8.push(id8);
       }
       if (eras.at(-1) !== sim.logic.era) eras.push(sim.logic.era);
       if (maps.at(-1) !== sim.logic.state.player.mapId) maps.push(sim.logic.state.player.mapId);
@@ -212,14 +222,15 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('Chapter 7: the mist, the letter, the day (K-2 and the debate), the lantern hour, the maze, the marsh, the file house, the Fox, the files, the petition, the pier', () => {
-    const flags = sim.logic.state.flags;
+    const flags = new FlagStoreView(atChapter7End.flags);
     // Every objective in order (the landing is done by the arrival itself, so the route never stops on it).
     expect(chapter7).toEqual([...ACT7.objectives.map((o) => o.id).filter((id) => id !== 'mist'), 'complete']);
     // The stacks are walked unseen on the route: the moths and the Fox are its fights.
-    expect(sim.battles.slice(atChapter6End.battles.length)).toEqual(['marsh_moths', 'file_house_fox']);
+    expect(atChapter7End.battles.slice(atChapter6End.battles.length)).toEqual(['marsh_moths', 'file_house_fox']);
     expect(flags.isSet('act7.complete') && flags.isSet('card.act7_end')).toBe(true);
-    expect(sim.logic.state.player.mapId).toBe('kuroshi-pier');
-    expect(sim.logic.mode).toBe('field');
+    // The card shows on the pier; closing it sails the Zetwal trader across the bay to Agnipur (Chapter 8).
+    expect(atChapter7End.map).toBe('kuroshi-pier');
+    expect(atChapter7End.mode).toBe('card');
     // Haru joins at the lantern hour and stays; the Echo party is unchanged.
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru']);
     expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
@@ -227,6 +238,24 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
       expect(flags.isSet(f), f).toBe(true);
     }
     for (const name of ['Haru', 'Kayla', 'Kaede', 'Signal master', 'Retainer for neutrality', 'Retainer for war', "The Crown's observer", 'The broker', 'The Paper Fox', 'Sayo', 'Old fisher']) expect(speakers).toContain(name);
+  });
+
+  it('Chapter 8: under the chain, the stair, Aiyana\'s roof, the Court and the duel, the day (J-2, J-3, the debate), the tower, Arjun\'s night, the roofs, the flame, Dhanraj, the price, the quay', () => {
+    const flags = sim.logic.state.flags;
+    // Every objective in order (the landing is done by the arrival itself, so the route never stops on it).
+    expect(chapter8).toEqual([...ACT8.objectives.map((o) => o.id).filter((id) => id !== 'chain'), 'complete']);
+    // The duel (lost on the route: the headless run ends a sparring match as a loss), the salt road and the Seth.
+    expect(sim.battles.slice(atChapter7End.battles.length)).toEqual(['duel_yard_vikram', 'salt_road_enforcers', 'oil_store_dhanraj']);
+    expect(flags.isSet('act8.complete') && flags.isSet('card.act8_end')).toBe(true);
+    expect(sim.logic.state.player.mapId).toBe('jwaladesh-harbor');
+    expect(sim.logic.mode).toBe('field');
+    // Vikram joins at the flame and stays; the Echo party is unchanged.
+    expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram']);
+    expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
+    for (const f of ['party.vikram', 'story.vikram_left_agnipur', 'ally.jwaladesh', 'item.token_agnivansh', 'item.token_suzumori', 'item.token_ironvow', 'item.dhanraj_ledger', 'item.aiyana_disc', 'clue.crown_holds_oil', 'clue.relay_route', 'clue.arjun_charge', 'anchor.chain_lamp', 'anchor.tower_mirror', 'story.crane_accepted', 'side.lamp_relay.done', 'side.anonymous_oil.done', 'debate.jwaladesh_hesitation.settled', 'story.anissa_keeper', 'choice.duel_lost', 'belief.rael_traitor']) {
+      expect(flags.isSet(f), f).toBe(true);
+    }
+    for (const name of ['Vikram', 'Aiyana', 'Meera', 'Senior Keeper', 'Junior priest', "The Crown's oil-factor", 'Seth Dhanraj', 'Arjun', 'Chief runner', 'Carter', 'Oil Enforcer']) expect(speakers).toContain(name);
   });
 
   it('Chapter 3: the two required side quests and the debate are done before noon, and pay', () => {

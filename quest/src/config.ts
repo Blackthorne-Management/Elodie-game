@@ -72,9 +72,11 @@ export const LEVELS = {
  * line without side quests reaches Chapter 6 already two under (13 against 15) and must not fall to three; Ordvik's
  * side quests pay less to keep the played line on 17 (COMBAT.md 6, "Chapter 6"). Chapter 7 pays 44 (Claude's call,
  * Oct 22): at 42 the line without side quests ended one XP short of 17; at 44 it ends on 17 and the route on 19
- * (COMBAT.md 6, "Chapter 7").
+ * (COMBAT.md 6, "Chapter 7"). Chapter 8 pays 60 (Claude's call, Oct 22): at 44 the line without side quests ended at
+ * 18, three under 21; Agnipur's side quests pay less instead (J-2 and J-3 25, the salt road 20), so the route still
+ * ends on 21 (COMBAT.md 6, "Chapter 8").
  */
-export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44];
+export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44, 60];
 export const XP_PER_BOOK = 10;
 /**
  * The level-curve check (tools/level-curve.ts, COMBAT.md 6): a player who skips every side quest may end a chapter
@@ -206,7 +208,22 @@ export const STATUS = {
    * Guard and Item still work.
    */
   hushed: { turns: 2, dealt: 1, taken: 1, regen: 0, spd: 1, taunt: false, bad: true, skip: false, shatter: false, noSkills: true },
+  /**
+   * Burning (COMBAT 10; Chapter 8, the Oil Enforcer's flask, Vikram's Ember Cut, Seth Dhanraj's lit oil): loses 6% of
+   * max HP at the start of each of its own turns, for 3 turns; a boss loses BURNING_BOSS_SHARE instead (the Chapter 8
+   * outline review's 3.1: an uncapped tick on a boss is half a fight's damage). Never takes the last HP.
+   */
+  burning: { turns: 3, dealt: 1, taken: 1, regen: -0.06, spd: 1, taunt: false, bad: true, skip: false, shatter: false, noSkills: false },
+  /**
+   * The Oil Wall (Seth Dhanraj, Chapter 8): a ring of oil at his feet, damage taken x0.5 and fire does nothing
+   * (STATUS_IMMUNE) for its turns. A Surge-powered blow shatters it at once, as it does the Golden Wall.
+   */
+  oiled: { turns: 3, dealt: 1, taken: 0.5, regen: 0, spd: 1, taunt: false, bad: false, skip: false, shatter: true, noSkills: false },
 } as const;
+/** Elements a status makes its bearer immune to (the Oil Wall: fire). */
+export const STATUS_IMMUNE: Readonly<Partial<Record<keyof typeof STATUS, readonly ('light' | 'fire' | 'water' | 'wind' | 'earth')[]>>> = { oiled: ['fire'] };
+/** A boss's Burning tick, as a share of max HP (the Chapter 8 review's 3.1: capped on bosses). */
+export const BURNING_BOSS_SHARE = 0.02;
 /**
  * Spell slots (owner, Oct 15): a mage equips only this many of the spells she knows (the level at which
  * each count starts). Skills that come with rare or better gear are free: they never take a slot.

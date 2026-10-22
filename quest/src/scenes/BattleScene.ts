@@ -117,6 +117,8 @@ const STATUS_TAGS: Readonly<Record<StatusId, { tag: string; good: boolean }>> = 
   stunned: { tag: 'STUN', good: false },
   gilded: { tag: 'GOLD', good: true },
   hushed: { tag: 'HUSH', good: false },
+  burning: { tag: 'BURN', good: false },
+  oiled: { tag: 'OIL', good: true },
 };
 
 const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
@@ -130,6 +132,8 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
   stunned: 'Stunned',
   gilded: 'behind a wall of gold',
   hushed: 'Hushed (no skills)',
+  burning: 'Burning',
+  oiled: 'behind a wall of oil (fire does nothing)',
 };
 
 const VISIBLE_ROWS = 6;

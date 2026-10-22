@@ -566,6 +566,84 @@ export const DEBATES: readonly DebateDef[] = [
       say('whisperer', 'For now. Write it down.'),
     ],
   },
+  // Agnipur's spice row (Chapter 8; the outline 7.3 with its review's 3.10): Is hesitation a sin, or is remembering
+  // mercy? Required. The Gaze pilgrim is Gianna's side; the Flame Keeper is a believer of the Four Hands, not a zealot
+  // (no Quiet Crown line joins him). The player may argue his side: the Court hesitated behind a curtain, and its son
+  // settles arguments by not hesitating; the chapter answers both with a lamp lit quick and kept fifty years.
+  {
+    id: 'jwaladesh_hesitation',
+    city: 'jwaladesh',
+    question: 'Is hesitation a sin, or is remembering mercy?',
+    ally: 'gaze_pilgrim',
+    opponent: 'flame_keeper',
+    opensIf: { flag: 'story.court_heard' },
+    passing: [
+      say('flame_keeper', '...a hand that waits is a hand that has let go.'),
+      say('gaze_pilgrim', 'And a hand that never waits never holds anything long enough to remember it.'),
+    ],
+    listen: [
+      say('flame_keeper', 'The flame is a hand. Rani Tejaswini said it: hesitation is the only true death.'),
+      say('flame_keeper', 'The Crown did not hesitate at our chain. Arjun did not hesitate at theirs.'),
+      say('gaze_pilgrim', 'A goddess who remembers is a goddess who waits. The one who waits is the one who can forgive.'),
+      say('gaze_pilgrim', 'Your Arjun rode; five came home. Somebody remembered the two, or nobody would know their names.'),
+      say(A, 'The fire one wants everyone to hurry, Gigi. The sun one wants everyone to wait.'),
+    ],
+    reasonNeeds: [loreFlag('jwaladesh_tejaswini'), loreFlag('jwaladesh_flame_keepers'), loreFlag('jwaladesh_harbor_chain')],
+    rounds: [
+      {
+        claim: 'A Court that waits a month behind a curtain is not keeping a flame. It is watching one die and calling it prayer.',
+        answers: {
+          scripture: { short: 'Elodie remembers', text: 'Elodie remembers what is hidden. She does not punish it; she waits for it to be shown.', strength: 1 },
+          reason: { short: 'The flame was kept', text: 'The Flame Keepers: the wick is tended in the open. A curtain is not the rite. Waiting is not the sin; hiding is.', strength: 2 },
+          compassion: { short: 'Ask the runners', text: 'Ask the runners who practise every new moon with kitchen fire whether they have stopped hoping.', strength: 1 },
+        },
+      },
+      {
+        claim: 'Then hurry is the virtue. Arjun did not ask leave of the Court. Seven rode at a tower and the chain fell.',
+        answers: {
+          scripture: { short: 'The Gaze sees', text: 'The Gaze sees the riders and the ones who stayed to light the lamp. Both were the charge.', strength: 1 },
+          reason: { short: 'Two never came home', text: 'The Harbor Chain: seven rode out, five came home. Somebody had to remember the two. That is not hesitation.', strength: 2 },
+          compassion: { short: 'Their mothers', text: 'Ask the mothers of the two whether the hurry was a virtue. Then ask whether they would undo it.', strength: 1 },
+        },
+      },
+      {
+        claim: 'So you would have us wait, envoy, while the oil is in a warehouse and the Crown is in our pavilion?',
+        answers: {
+          scripture: { short: 'Elodie waits', text: 'Elodie waited fifty years for Xaraguá to be heard. She is still waiting. So am I.', strength: 1 },
+          reason: { short: 'Waiting is a measure', text: 'Rani Tejaswini\'s Flame: the lamp was lit in one night and kept for fifty years. Quick once, then patient.', strength: 1 },
+          compassion: { short: 'Not wait. Remember.', text: 'Not wait. Remember who is cold tonight, and go and get the oil. Remembering is what makes you go.', strength: 2 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(On the spice row a vendor bangs a ladle on a pot. "So!" Somebody hands round cardamom.)',
+      1: '(Half the row nods at the Keeper, half at the pilgrim. A lamp-seller nods at both.)',
+      0: '(The spice row goes back to selling spice with no oil to cook it in.)',
+    },
+    won: [
+      say('flame_keeper', 'Quick once, then patient. ...That is the lamp on the chain. I will say it in the temple.'),
+      say('gaze_pilgrim', 'And I will remember that you said it.'),
+    ],
+    lost: [
+      say('flame_keeper', 'Hesitation, envoy. Come back when you have stopped hesitating.'),
+      say('gaze_pilgrim', 'She will. Then we will both still be here.'),
+    ],
+    mediate: [
+      say(G, 'You both want the flame kept. One of you by hands, one by memory.'),
+      say('flame_keeper', 'Then the hands go to the quay for the oil.'),
+      say('gaze_pilgrim', 'And the memory goes with them, so the two who did not come home are named when it is lit.'),
+      say('flame_keeper', 'That is the runners\' rite. We have been arguing about the runners.'),
+    ],
+    provoke: [
+      say(G, 'Your Court hid its own flame behind a curtain. Is that the hand that does not wait?'),
+      nar('The spice row goes very quiet. A vendor puts down his ladle.'),
+      say('flame_keeper', 'Not here, envoy. The Court\'s son says that every morning, with a sword.'),
+    ],
+    after: [
+      say('flame_keeper', 'The lamp on the chain did both. It was lit quick, and then it waited fifty years.'),
+      say('gaze_pilgrim', 'Write that down, Keeper. I will.'),
+    ],
+  },
 ];
 
 /** The debates by the dialogue id their NPCs use. */

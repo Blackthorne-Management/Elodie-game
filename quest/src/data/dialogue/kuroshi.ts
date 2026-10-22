@@ -1088,6 +1088,6 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     act([{ do: 'look', actor: 'npc:salkhi_pier' }], '', 'Salkhi is loaded last, and makes a point of saying nothing about soup.'),
     act([{ do: 'look', actor: 'haru' }], H, 'Across the bay. The salt flats. Where the sky is on fire, they say.'),
     say(A, 'Haru\'s coming too, Gigi.'),
-    say(G, 'He is.', { fx: 'fade', set: { 'act7.complete': true } }),
+    say(G, 'He is.', { fx: 'fade', set: { 'act7.complete': true, 'travel.next': 'jwaladesh-harbor/landing', 'voyage.next': 'kuroshi_jwaladesh' } }),
   ]),
 ];

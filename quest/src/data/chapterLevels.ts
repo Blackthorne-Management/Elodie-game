@@ -20,7 +20,7 @@ export const CHAPTER_LEVELS: readonly ChapterLevels[] = [
   { chapter: 5, place: 'Eightgate', from: 14, to: 15, mark: 'chapter5-end' },
   { chapter: 6, place: 'Skarragol', from: 15, to: 17, mark: 'chapter6-end' },
   { chapter: 7, place: 'Kuroshi', from: 17, to: 19, mark: 'chapter7-end' },
-  { chapter: 8, place: 'Jwaladesh', from: 19, to: 21 },
+  { chapter: 8, place: 'Jwaladesh', from: 19, to: 21, mark: 'chapter8-end' },
   { chapter: 9, place: 'Aldermoor', from: 21, to: 24 },
   { chapter: 10, place: 'Zetwal again', from: 24, to: 25 },
   { chapter: 11, place: 'Xaraguá again', from: 25, to: 28 },

@@ -28,6 +28,12 @@ import kuroshiHall from '../../maps/kuroshi-hall.tmj?raw';
 import kuroshiFilehouse from '../../maps/kuroshi-filehouse.tmj?raw';
 import kuroshiFogmaze from '../../maps/kuroshi-fogmaze.tmj?raw';
 import kuroshiMarsh from '../../maps/kuroshi-marsh.tmj?raw';
+import jwaladeshHarbor from '../../maps/jwaladesh-harbor.tmj?raw';
+import jwaladeshBazaar from '../../maps/jwaladesh-bazaar.tmj?raw';
+import jwaladeshRooftops from '../../maps/jwaladesh-rooftops.tmj?raw';
+import jwaladeshLibrary from '../../maps/jwaladesh-library.tmj?raw';
+import jwaladeshCourt from '../../maps/jwaladesh-court.tmj?raw';
+import jwaladeshSaltflats from '../../maps/jwaladesh-saltflats.tmj?raw';
 import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
 import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
 import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
@@ -119,6 +125,12 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'kuroshi-filehouse': kuroshiFilehouse,
   'kuroshi-fogmaze': kuroshiFogmaze,
   'kuroshi-marsh': kuroshiMarsh,
+  'jwaladesh-harbor': jwaladeshHarbor,
+  'jwaladesh-bazaar': jwaladeshBazaar,
+  'jwaladesh-rooftops': jwaladeshRooftops,
+  'jwaladesh-library': jwaladeshLibrary,
+  'jwaladesh-court': jwaladeshCourt,
+  'jwaladesh-saltflats': jwaladeshSaltflats,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

@@ -10,7 +10,7 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Sun Oct 19**.
+and ticks items off here as they land. Last updated **Wed Oct 22**.
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -76,7 +76,19 @@ the price). Waiting on the owner: the proposal names (Kaede is used as the outli
 keeper of files, the Crown's observer and the broker are built by role until approved); art for Haru, Kayla, Kaede,
 the Paper Fox and Sayo (`docs/quest/ART-PROMPTS.md` 16); the Japanese words (`quest/src/data/lang/japanese.json`, all
 unverified) for the Nov 18 check. Noted: Chapter 7's story steps pay 44 XP; the route ends at 19, the line without
-side quests at 17. Not built yet: K-1, K-4 (the Nightingale Key), K-5, the voyage on to Jwaladesh.
+side quests at 17. Not built yet: K-1, K-4 (the Nightingale Key), K-5 (the voyage on to Jwaladesh is built with Chapter 8).
+
+**Quest, Chapter 8 (Oct 22):** The Dying Flame is built on branch `chapter8` (Agnipur's six maps, the voyage from
+Kirinoura, Aiyana on the dyers' roof, the Court at noon and Vikram's duel, the day's three required things (The Lamp
+Relay, The Anonymous Oil on the salt road, the hesitation debate), the night lamp's hour, Arjun's charge in the Echo
+with Patricio's hand on the taper, the roof mirrors and Anissa's disc, the flame caught in the beam and Vikram joining,
+Seth Dhanraj in the oil store, the price at dawn). Waiting on the owner: the names by role (the senior Keeper, the
+chamberlain, the Crown's oil factor, the chief runner, the carter; Meera, Aiyana and Seth Dhanraj as the outline has
+them); a read of Aiyana's lines (`docs/quest/design/FAMILY.md`, Chapter 8); art for Vikram, Aiyana, Meera, Arjun and
+Seth Dhanraj (`docs/quest/ART-PROMPTS.md` 17); the Hindi words (`quest/src/data/lang/hindi.json`, all unverified) for
+the Nov 18 check. Noted: Chapter 8's steps pay 60 XP; the route ends at 21, the line without side quests at 19;
+Jwaladesh's price can be as low as 4 of 8, so Agnivansh can be the betrayer. Not built yet: J-1, J-4 (the Unbroken
+Wick), J-5, the voyage on to Aldermoor.
 
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):

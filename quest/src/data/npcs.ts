@@ -394,6 +394,37 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   keeper_files: n('keeper_files', 'keeper_files', 'Keeper of files'),
   fox_bound: n('fox_bound', 'paper_fox', 'The Paper Fox (kneeling)'),
   sayo: n('sayo', 'echo_sayo', 'Lady Sayo Suzumori'),
+
+  // Chapter 8, Agnipur (Oct 22). Named from the design and FAMILY.md: Vikram, Aiyana, Meera, Arjun, Seth Dhanraj;
+  // everyone else by role (the outline's Pelham and Prakash stay proposals; section 11).
+  aiyana: n('aiyana', 'aiyana', 'Aiyana, engineer of the flame'),
+  store_enforcer_a: n('store_enforcer_a', 'oil_enforcer', 'Oil Enforcer'),
+  store_enforcer_b: n('store_enforcer_b', 'oil_enforcer', 'Oil Enforcer'),
+  tower_enforcer: n('tower_enforcer', 'oil_enforcer', 'Oil Enforcer'),
+  jw_harbour_master: n('jw_harbour_master', 'jw_harbour_master', 'Harbour-master'),
+  salkhi_harbor: n('salkhi_harbor', 'horse_grey', 'Salkhi'),
+  salkhi_bazaar: n('salkhi_bazaar', 'horse_grey', 'Salkhi'),
+  arjun: n('arjun', 'echo_arjun', 'Arjun of the Agnivansh'),
+  chief_runner: n('chief_runner', 'chief_runner', 'Chief runner'),
+  runner: n('runner', 'runner', 'Runner'),
+  echo_runner: n('echo_runner', 'echo_runner', "Arjun's runner"),
+  debate_flame_keeper: n('debate_flame_keeper', 'flame_keeper', 'Flame Keeper (debating)', 'debate:jwaladesh_hesitation'),
+  debate_gaze_pilgrim: n('debate_gaze_pilgrim', 'pilgrim', 'Gaze pilgrim (debating)', 'debate:jwaladesh_hesitation'),
+  shrine_child: n('shrine_child', 'shrine_child', 'Shrine child'),
+  jw_milk: { ...n('jw_milk', 'jw_vendor', 'Milk-and-bread stall'), shop: 'agnipur_milk' },
+  jw_beads: { ...n('jw_beads', 'jw_vendor', 'Bead seller'), shop: 'agnipur_beads' },
+  jw_swordsmith: { ...n('jw_swordsmith', 'jw_swordsmith', 'Swordsmith'), shop: 'agnipur_swords' },
+  jw_librarian: n('jw_librarian', 'jw_librarian', 'Librarian'),
+  meera: n('meera', 'meera', 'Meera of the Agnivansh'),
+  senior_keeper: n('senior_keeper', 'senior_keeper', 'Senior Keeper'),
+  junior_priest: n('junior_priest', 'junior_priest', 'Junior priest'),
+  jw_chamberlain: n('jw_chamberlain', 'chamberlain_jw', 'Chamberlain'),
+  vikram_npc: n('vikram_npc', 'vikram', 'Vikram'),
+  oil_factor: n('oil_factor', 'oil_factor', "The Crown's oil-factor"),
+  dhanraj_guest: n('dhanraj_guest', 'seth_dhanraj', "The factor's guest"),
+  dhanraj_kneeling: n('dhanraj_kneeling', 'seth_dhanraj', 'Seth Dhanraj (kneeling)'),
+  carter: n('carter', 'carter', 'Carter'),
+  carter_gate: n('carter_gate', 'carter', 'Carter'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

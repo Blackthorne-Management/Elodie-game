@@ -107,4 +107,22 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 7's end into Chapter 8 (the outline beat 0, with its review's 3.8: Agnipur's dot is inland, so the trader
+  // lands at the head of its bay): west out of the mist off Kirinoura, across the bay, to Agnipur's harbor chain.
+  kuroshi_jwaladesh: {
+    id: 'kuroshi_jwaladesh',
+    harbor: 'The Lantern Pier, Kirinoura',
+    paddle: 'A pier-boat takes them out through the mist to the Zetwal trader, lanterns on its rail.',
+    aboard: 'The gold sails go up. West across the bay, Salkhi in the hold, complaining.',
+    shore: 'kuroshi',
+    start: { x: 66, y: 115 },
+    via: [{ x: 50, y: 108 }],
+    end: { x: 42, y: 101 },
+    captions: [
+      { at: 0, text: 'Out of the mist, west across the bay...' },
+      { at: 0.6, text: 'The water goes from grey to green...' },
+      { at: 0.85, text: '...to the salt flats, where the sky is on fire.' },
+    ],
+    music: 'farewell',
+  },
 };

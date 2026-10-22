@@ -8,6 +8,7 @@ import type { Condition } from './engine/conditions.ts';
 import { CHAPTER2_QUESTS_DONE, CHAPTER5_QUESTS_DONE } from './data/sideQuests.ts';
 import { FAIR_DUSK } from './data/skarragol.ts';
 import { NIGHT, QUARTER_DUSK } from './data/kuroshi.ts';
+import { DAWN as AGNIPUR_DAWN, NIGHT as AGNIPUR_NIGHT } from './data/jwaladesh.ts';
 import { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt } from './assets.pixels.ts';
 
 export { ECHO_SHIMMER, ENEMY_ART, ITEM_ART, OBJECT_ART, PALETTE, TILE_ART, WEAPON_ART, type BattleWeaponArt, type ObjectArt, type PixelArt };
@@ -344,6 +345,66 @@ export const TILESET = {
     { gid: 273, name: 'lanes_shut', base: 0xdcd8cc, accent: 0x7d3c98, pattern: 'stripes' },
     { gid: 274, name: 'tea_bowl', base: 0x5a3a32, accent: 0x7fbf7a, pattern: 'blob' },
     { gid: 275, name: 'crane_paper', base: 0xfafaf0, accent: 0x7d3c98, pattern: 'cross' },
+    // Agnipur, Jwaladesh (Chapter 8, Oct 22): white stone and saffron, brass, salt-white ground beyond the walls, the
+    // one new brick tower; the harbor's chain, lamp and bracket; the roof mirrors (face-down and four facings) and the
+    // beam; the curtain and the altar's three looks; jars, carts and the oil store. Accent #e67e22 (CAPITALS 8).
+    { gid: 276, name: 'jw_stone', base: 0xece4d0, accent: 0xd8ccb0, pattern: 'grid' },
+    { gid: 277, name: 'jw_wall', base: 0xf4eee0, accent: 0xc8bca0, pattern: 'border' },
+    { gid: 278, name: 'jw_dome', base: 0xfaf6ec, accent: 0xe67e22, pattern: 'blob' },
+    { gid: 279, name: 'jw_quay', base: 0xe0d8c4, accent: 0xc4b89c, pattern: 'grid' },
+    { gid: 280, name: 'jw_sea', base: 0x2a6a8a, accent: 0x4a8aa8, pattern: 'wave' },
+    { gid: 281, name: 'jw_mole', base: 0xc8c0aa, accent: 0x9a9280, pattern: 'dots' },
+    { gid: 282, name: 'jw_tower', base: 0xa8582a, accent: 0x7a3a1a, pattern: 'grid' },
+    { gid: 283, name: 'saffron_floor', base: 0xe8a040, accent: 0xc87a28, pattern: 'grid' },
+    { gid: 284, name: 'jw_column', base: 0xf4eee0, accent: 0xd8b04a, pattern: 'stripes' },
+    { gid: 285, name: 'jw_roof', base: 0xe0d4b8, accent: 0xc0b090, pattern: 'dots' },
+    { gid: 286, name: 'jw_plank', base: 0x9a7a52, accent: 0x6a5236, pattern: 'stripes' },
+    { gid: 287, name: 'jw_void', base: 0x6a5a4a, accent: 0x4a3e34, pattern: 'dots' },
+    { gid: 288, name: 'jw_road', base: 0xd8c8a0, accent: 0xb8a880, pattern: 'dots' },
+    { gid: 289, name: 'scrub', base: 0x9a9a6a, accent: 0x6a6a44, pattern: 'blob' },
+    { gid: 290, name: 'jw_stair', base: 0xe0d8c4, accent: 0xa89c80, pattern: 'stripes' },
+    { gid: 291, name: 'arch', base: 0xf4eee0, accent: 0xe67e22, pattern: 'border' },
+    { gid: 292, name: 'oil_jar', base: 0xb87a3a, accent: 0x5a3a1a, pattern: 'blob' },
+    { gid: 293, name: 'store_floor', base: 0x8a7a62, accent: 0x6a5a46, pattern: 'grid' },
+    { gid: 294, name: 'store_wall', base: 0x6a5a4a, accent: 0x4a3e34, pattern: 'border' },
+    { gid: 295, name: 'dye_vat', base: 0x3a5ab8, accent: 0xe67e22, pattern: 'blob' },
+    { gid: 296, name: 'brass_stall', base: 0xd8a840, accent: 0xe67e22, pattern: 'stripes' },
+    { gid: 297, name: 'jw_steps', base: 0xf4eee0, accent: 0xe8a040, pattern: 'stripes' },
+    { gid: 298, name: 'palm_floor', base: 0xd8c49a, accent: 0xb8a47a, pattern: 'grid' },
+    { gid: 299, name: 'jar_cart', base: 0x8a6a42, accent: 0xb87a3a, pattern: 'border' },
+    { gid: 300, name: 'tower_floor', base: 0xd0c6ae, accent: 0xa89c80, pattern: 'grid' },
+    { gid: 301, name: 'chain_taut', base: 0x3a3a40, accent: 0x8a8a92, pattern: 'cross' },
+    { gid: 302, name: 'chain_slack', base: 0x2a6a8a, accent: 0x3a3a40, pattern: 'wave' },
+    { gid: 303, name: 'lamp_dark', base: 0x5a4a3a, accent: 0x8a7a5a, pattern: 'border' },
+    { gid: 304, name: 'lamp_lit', base: 0xf2d04b, accent: 0xe67e22, pattern: 'blob' },
+    { gid: 305, name: 'bracket_empty', base: 0x5a4a3a, accent: 0xa89c80, pattern: 'cross' },
+    { gid: 306, name: 'bracket_mirror', base: 0xd8b04a, accent: 0xfafaf0, pattern: 'blob' },
+    { gid: 307, name: 'gate_shut', base: 0x6a5a4a, accent: 0xd8b04a, pattern: 'stripes' },
+    { gid: 308, name: 'store_doors', base: 0x5a3a1a, accent: 0x8a6a42, pattern: 'stripes' },
+    { gid: 309, name: 'mirror_down', base: 0x8a7a5a, accent: 0x5a4a3a, pattern: 'grid' },
+    { gid: 310, name: 'mirror_n', base: 0xd8b04a, accent: 0xfafaf0, pattern: 'stripes' },
+    { gid: 311, name: 'mirror_e', base: 0xd8b04a, accent: 0xfafaf0, pattern: 'border' },
+    { gid: 312, name: 'mirror_s', base: 0xb8903a, accent: 0x8a6a2a, pattern: 'stripes' },
+    { gid: 313, name: 'mirror_w', base: 0xb8903a, accent: 0x8a6a2a, pattern: 'border' },
+    { gid: 314, name: 'beam_h', base: 0xfff2a0, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 315, name: 'beam_v', base: 0xfff2a0, accent: 0xf2d04b, pattern: 'cross' },
+    { gid: 316, name: 'curtain', base: 0xe67e22, accent: 0xd8b04a, pattern: 'stripes' },
+    { gid: 317, name: 'altar_thumb', base: 0xd8b04a, accent: 0xf2d04b, pattern: 'dots' },
+    { gid: 318, name: 'altar_tall', base: 0xf2d04b, accent: 0xe67e22, pattern: 'blob' },
+    { gid: 319, name: 'wick_window', base: 0x8a8a92, accent: 0x6a6a72, pattern: 'grid' },
+    { gid: 320, name: 'wick_window_lit', base: 0xfff2a0, accent: 0xf2d04b, pattern: 'grid' },
+    { gid: 321, name: 'jar_stack', base: 0xb87a3a, accent: 0x8a5a2a, pattern: 'grid' },
+    { gid: 322, name: 'price_board', base: 0xd8b04a, accent: 0x3a2a1a, pattern: 'stripes' },
+    { gid: 323, name: 'hearth', base: 0x6a4a3a, accent: 0xe67e22, pattern: 'blob' },
+    { gid: 324, name: 'shrine_dark', base: 0xf4eee0, accent: 0x5a4a3a, pattern: 'cross' },
+    { gid: 325, name: 'crown_hull', base: 0x6a5a8a, accent: 0x3a3a40, pattern: 'border' },
+    { gid: 326, name: 'capstan', base: 0x6a5236, accent: 0x3a3a40, pattern: 'cross' },
+    { gid: 327, name: 'balance_lock', base: 0xd8b04a, accent: 0x5a4a3a, pattern: 'cross' },
+    { gid: 328, name: 'oil_cart', base: 0x6a5a8a, accent: 0xb87a3a, pattern: 'border' },
+    { gid: 329, name: 'jackal_den', base: 0x9a8a6a, accent: 0x5a4a3a, pattern: 'blob' },
+    { gid: 330, name: 'salt_shrine', base: 0xf4eee0, accent: 0xe67e22, pattern: 'cross' },
+    { gid: 331, name: 'carter_cart', base: 0x8a6a42, accent: 0xd8c8a0, pattern: 'border' },
+    { gid: 332, name: 'trader_ship', base: 0xa04040, accent: 0xd8c08a, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -431,6 +492,11 @@ const IRONVOW_SLATE = 0x5d6d7e;
 const SUZUMORI_VIOLET = 0x7d3c98;
 const KUROSHI_SKIN = 0xd8a880;
 const KUROSHI_SKIN_WARM = 0xc8946a;
+/** Agnivansh saffron (Agnipur, Chapter 8; CAPITALS.md 8 accent #e67e22), brass, and two skin tones of the city. */
+const AGNI_SAFFRON = 0xe67e22;
+const AGNI_BRASS = 0xd8b04a;
+const AGNI_SKIN = 0xb07850;
+const AGNI_SKIN_DEEP = 0x8a5a3a;
 
 /**
  * Every character look, keyed by the `look` of an NPC in data/npcs.ts. `gianna` is the player in the
@@ -743,6 +809,33 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   echo_sayo: { skin: KUROSHI_SKIN, hair: 0x4a4a52, hairStyle: 'bun', outfit: 0x6e6a78, trim: SUZUMORI_VIOLET, robe: true, accessories: ['satchel', 'emblem'] },
   echo_sayo_clerk: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x8a8690, trim: 0x2a2a38, robe: true, accessories: ['satchel'] },
   echo_agent: { skin: KUROSHI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x6e6a78, trim: 0x3a3644, legs: 0x2a2632, headgear: 'hood', headgearColor: 0x6e6a78 },
+  // Agnipur (Chapter 8, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 17). Saffron and
+  // white, brass, leather aprons; the Crown's oil-factor in Aldermoor violet; the Echo's Arjun, his riders and runners
+  // in the memory's palette.
+  vikram: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: AGNI_SAFFRON, trim: AGNI_BRASS, legs: 0xf4eee0, accessories: ['sash'] },
+  aiyana: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'bun', outfit: AGNI_SAFFRON, trim: 0x6a4a2a, legs: 0x5a3a1a, headgear: 'headband', headgearColor: 0xf4eee0, accessories: ['apron', 'satchel'] },
+  meera: { skin: AGNI_SKIN, hair: 0x4a4a52, hairStyle: 'bun', outfit: 0xf4eee0, trim: AGNI_SAFFRON, robe: true, accessories: ['sash', 'staff'] },
+  senior_keeper: { skin: AGNI_SKIN_DEEP, hair: WHITE_HAIR, hairStyle: 'bald', outfit: AGNI_SAFFRON, trim: AGNI_BRASS, robe: true, beard: WHITE_HAIR, accessories: ['veil'] },
+  junior_priest: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: AGNI_SAFFRON, trim: 0xf4eee0, robe: true, accessories: ['staff'] },
+  chamberlain_jw: { skin: AGNI_SKIN_DEEP, hair: 0x4a4a52, hairStyle: 'short', outfit: 0xf4eee0, trim: AGNI_BRASS, robe: true, beard: 0x4a4a52, accessories: ['emblem'] },
+  oil_factor: { skin: C.T!, hair: C.B!, hairStyle: 'short', outfit: SEAT_VIOLET, trim: C.y!, legs: C.w!, accessories: ['satchel'] },
+  seth_dhanraj: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0xf4eee0, trim: AGNI_BRASS, robe: true, beard: HAIR_BLACK, headgear: 'wrap', headgearColor: 0xf4eee0, accessories: ['satchel', 'emblem'] },
+  echo_arjun: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0x9a6a3a, trim: AGNI_BRASS, legs: 0x5a4a3a, build: 'tall', beard: HAIR_BLACK, accessories: ['staff', 'sash'] },
+  echo_runner: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0xb8905a, trim: 0x6e5a44, legs: 0x5a4a3a, accessories: ['sash'] },
+  echo_agnivansh_rider: { skin: AGNI_SKIN_DEEP, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x9a6a3a, trim: 0x6e5a44, legs: 0x5a4a3a, headgear: 'helmet', headgearColor: 0x8a7a68, accessories: ['staff'] },
+  chief_runner: { skin: AGNI_SKIN_DEEP, hair: WHITE_HAIR, hairStyle: 'bun', outfit: AGNI_SAFFRON, trim: 0xf4eee0, legs: 0x5a3a1a, accessories: ['staff', 'sash'] },
+  runner: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: AGNI_SAFFRON, trim: 0xf4eee0, legs: 0xf4eee0, accessories: ['sash'] },
+  carter: { skin: AGNI_SKIN_DEEP, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x8a7a5a, trim: 0x5a4a3a, legs: 0x5a4a3a, headgear: 'wrap', headgearColor: 0xd8c8a0 },
+  shrine_child: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0xf4eee0, trim: AGNI_SAFFRON, build: 'small' },
+  flame_keeper: { skin: AGNI_SKIN_DEEP, hair: HAIR_BLACK, hairStyle: 'long', outfit: AGNI_SAFFRON, trim: 0xb8403a, robe: true, accessories: ['emblem'] },
+  lamp_seller: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0xd8c8a0, trim: AGNI_BRASS, legs: 0x5a4a3a, headgear: 'cap', headgearColor: AGNI_SAFFRON },
+  dyer: { skin: AGNI_SKIN_DEEP, hair: HAIR_BLACK, hairStyle: 'curly', outfit: 0x3a5ab8, trim: AGNI_SAFFRON, legs: 0x3a5ab8, accessories: ['apron'] },
+  oil_enforcer: { skin: AGNI_SKIN_DEEP, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xd8d0c0, trim: 0x6a6a72, legs: 0x4a4a52, build: 'tall', beard: HAIR_BLACK, accessories: ['satchel'] },
+  ember_jackal: { skin: 0xc87a3a, hair: 0xe67e22, hairStyle: 'short', outfit: 0xd89a5a, trim: 0xf2d04b, build: 'wolf' },
+  jw_vendor: { skin: AGNI_SKIN, hair: HAIR_BLACK, hairStyle: 'bun', outfit: AGNI_SAFFRON, trim: 0xf4eee0, robe: true, accessories: ['apron'] },
+  jw_swordsmith: { skin: AGNI_SKIN_DEEP, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x4a4a52, trim: AGNI_BRASS, legs: 0x2a2632, beard: HAIR_BLACK, accessories: ['apron'] },
+  jw_librarian: { skin: AGNI_SKIN, hair: WHITE_HAIR, hairStyle: 'long', outfit: 0xf4eee0, trim: AGNI_SAFFRON, robe: true, accessories: ['satchel'] },
+  jw_harbour_master: { skin: AGNI_SKIN_DEEP, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x2a3a58, trim: AGNI_BRASS, legs: 0x2a2632, headgear: 'wrap', headgearColor: AGNI_SAFFRON, beard: 0x4a4a52 },
 };
 
 /** The player's look in each era. */
@@ -901,6 +994,20 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     if: { flag: 'story.quarter_dawn' },
     color: 0xa8aab0,
     alpha: 0.28,
+  },
+  // Agnipur (Chapter 8): night on the harbor, the bazaar, the roofs and the Court from the night lamp's hour until the
+  // store is opened (data/jwaladesh.ts NIGHT, a condition: the day's three things done); dawn at the Court after.
+  {
+    maps: ['jwaladesh-harbor', 'jwaladesh-bazaar', 'jwaladesh-rooftops', 'jwaladesh-court', 'jwaladesh-library'],
+    if: AGNIPUR_NIGHT,
+    color: 0x1e2448,
+    alpha: 0.38,
+  },
+  {
+    maps: ['jwaladesh-court', 'jwaladesh-harbor'],
+    if: AGNIPUR_DAWN,
+    color: 0xf2a050,
+    alpha: 0.14,
   },
 ];
 
@@ -1370,6 +1477,40 @@ const KUROSHI_BACKDROPS = {
   },
 } as const;
 
+// Agnipur (Chapter 8): the Salt Flats under an orange sky; the oil store, jars and lamplight; the duel yard's sand.
+const JWALADESH_BACKDROPS = {
+  salt_flats: {
+    sky: [0xc8603a, 0xd8784a, 0xe8925a, 0xf0aa70, 0xf4c08a, 0xf8d8a8],
+    cloud: 0xfaf0dc,
+    cloudShade: 0xe8d0b0,
+    mountainFar: 0xe0c8a8,
+    mountainNear: 0xc8a888,
+    trees: 0x9a9a6a,
+    treesDark: 0x6a6a44,
+    field: 0xf4ecd8,
+    cane: 0xe8e0c8,
+    caneDark: 0xc8c0aa,
+    ground: 0xf4ecd8,
+    groundDark: 0xd8d0c0,
+    groundLight: 0xfaf6ec,
+  },
+  oil_store: {
+    sky: [0x1a1410, 0x2a1e16, 0x3a2a1e, 0x4a3626, 0x5a422e, 0x6a5038],
+    cloud: 0xd8b04a,
+    cloudShade: 0xb87a3a,
+    mountainFar: 0x6a5a4a,
+    mountainNear: 0x4a3e34,
+    trees: 0xb87a3a,
+    treesDark: 0x5a3a1a,
+    field: 0x8a7a62,
+    cane: 0xb87a3a,
+    caneDark: 0x5a3a1a,
+    ground: 0x8a7a62,
+    groundDark: 0x6a5a46,
+    groundLight: 0xa89a82,
+  },
+} as const;
+
 const SKARRAGOL_BACKDROPS = {
   winter_plateau: {
     sky: [0x7a8a9a, 0x8a98a6, 0x9aa6b2, 0xaab4be, 0xbcc4cc, 0xccd2d8],
@@ -1503,6 +1644,7 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
   ...SEAT_BACKDROPS,
   ...SKARRAGOL_BACKDROPS,
   ...KUROSHI_BACKDROPS,
+  ...JWALADESH_BACKDROPS,
 };
 
 /** Battle effects (scenes/battleFx.ts): colours by kind. Only the effects move; the fighters only shiver. */

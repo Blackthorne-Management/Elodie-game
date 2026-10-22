@@ -121,6 +121,14 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'kuroshi-fogmaze': 'throne_archive',
   'kuroshi-marsh': 'throne_archive',
   'kuroshi-filehouse': 'throne_archive',
+  // Agnipur (Chapter 8): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md): the bazaar and the quay
+  // play the farewell track, the Court the hall's, the library home, the roofs and the flats the crossroads.
+  'jwaladesh-harbor': 'crossroads',
+  'jwaladesh-bazaar': 'seat',
+  'jwaladesh-rooftops': 'crossroads',
+  'jwaladesh-library': 'home',
+  'jwaladesh-court': 'majlis',
+  'jwaladesh-saltflats': 'crossroads',
 };
 
 /** Yucayeque occupied (Chapter 2, after the Crown attack): the Crown's march over the town, the cave stays quiet. */

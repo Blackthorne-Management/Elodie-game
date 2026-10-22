@@ -693,6 +693,89 @@ export const SIDE_QUESTS: readonly SideQuestDef[] = [
     closedText: 'Closed: the keepers are still at it. They always are.',
     reward: { xp: 15, pillar: { pillar: 'influence', city: 'kuroshi', amount: 1 } },
   },
+  // ---- Chapter 8, Agnipur (the outline section 7, with its second review): two required side quests and the debate ----
+  // The Lamp Relay (J-2; the runners; M-JWA-1): the runners' hearth remembers the sheltered way (the Echo), and the wind
+  // off the sea puts the lamp out on the main street. Run for real at the chapter's end, with oil.
+  {
+    id: 'lamp_relay',
+    title: 'The Lamp Relay',
+    giver: 'Chief runner',
+    place: 'The temple steps',
+    level: 20,
+    summary:
+      'Every new moon for fifty years the runners carried the sea\'s fire from the chain lamp to the wick. The lamp is dark; they practise with kitchen fire.',
+    accepted: f('side.lamp_relay.accepted'),
+    available: f('story.court_heard'),
+    start: [{ map: 'jwaladesh-bazaar', at: { x: 13, y: 2 } }],
+    nudge: 'The runners have lamps and nothing to light them for.',
+    steps: [
+      { text: 'Ask the chief runner on the temple steps.', done: f('side.lamp_relay.accepted'), goals: [{ map: 'jwaladesh-bazaar', at: { x: 13, y: 2 } }] },
+      {
+        text: 'The runners\' hearth remembers the way better than she does.',
+        done: f('clue.relay_route'),
+        goals: [{ map: 'jwaladesh-bazaar', at: { x: 14, y: 3 } }],
+        echoGoals: [{ map: 'jwaladesh-bazaar', at: { x: 14, y: 3 } }],
+      },
+      {
+        text: 'Take a lamp from the chief runner.',
+        done: { any: [f('item.relay_lamp'), f('side.lamp_relay.done')] },
+        goals: [{ map: 'jwaladesh-bazaar', at: { x: 13, y: 2 } }],
+        // Still in the memory after the runners: the shimmer back out.
+        echoGoals: [{ map: 'jwaladesh-bazaar', at: { x: 14, y: 3 } }],
+      },
+      { text: 'From the harbor stair\'s head to the temple steps. Not the main street.', done: f('side.lamp_relay.done'), goals: [{ map: 'jwaladesh-bazaar', at: { x: 13, y: 2 } }] },
+    ],
+    done: f('side.lamp_relay.done'),
+    closed: f('story.tower_open'),
+    closedText: 'Closed: the night came first. The runners practise with kitchen fire.',
+    reward: { gold: 250, xp: 25, items: [{ id: 'flame_bead_bracelet', n: 1 }], pillar: { pillar: 'wealth', city: 'jwaladesh', amount: 1 } },
+  },
+  // The Anonymous Oil (J-3; the rebel safehouse, the seventh thumbprint): out to the salt road (the wild section on the
+  // route, the outline's Claude's call), the Seth's enforcers, the carter's jars, the Court's back gate.
+  {
+    id: 'anonymous_oil',
+    title: 'The Anonymous Oil',
+    giver: 'Junior priest',
+    place: 'The Court of the Flame',
+    level: 20,
+    summary:
+      'Oil comes to the Court\'s back gate from nobody: a carter from the salt road, with jars he will not be paid for. Tonight he is late.',
+    accepted: f('side.anonymous_oil.accepted'),
+    available: f('story.court_heard'),
+    start: [{ map: 'jwaladesh-court', at: { x: 15, y: 9 } }],
+    nudge: 'The priest with the broom isn\'t sweeping.',
+    steps: [
+      { text: 'The junior priest in the colonnade.', done: f('side.anonymous_oil.accepted'), goals: [{ map: 'jwaladesh-court', at: { x: 15, y: 9 } }] },
+      { text: 'The salt road, east of the bazaar: the carter at the shrine.', done: f('story.salt_road_cleared'), goals: [{ map: 'jwaladesh-saltflats', at: { x: 41, y: 12 } }] },
+      { text: 'The carter at the Court\'s back gate.', done: f('side.anonymous_oil.done'), goals: [{ map: 'jwaladesh-court', at: { x: 3, y: 24 } }] },
+    ],
+    done: f('side.anonymous_oil.done'),
+    closed: f('story.tower_open'),
+    closedText: 'Closed: the carter came through the back gate on his own.',
+    reward: { gold: 300, xp: 25, pillar: { pillar: 'wealth', city: 'jwaladesh', amount: 2 } },
+  },
+  // The spice row's debate, as a required quest (outline 7.3): Is hesitation a sin, or is remembering mercy?
+  {
+    id: 'hesitation',
+    title: 'Hesitation or Mercy',
+    giver: 'Gaze pilgrim',
+    place: 'The spice row',
+    level: 20,
+    summary:
+      'On the spice row a Flame Keeper and a Gaze pilgrim argue whether hesitation is a sin, or remembering a mercy. Hear them out, then make your case.',
+    accepted: { any: [f('debate.jwaladesh_hesitation.listened'), f('debate.jwaladesh_hesitation.settled')] },
+    available: f('story.court_heard'),
+    start: [{ map: 'jwaladesh-bazaar', at: { x: 30, y: 17 } }],
+    nudge: 'The two by the spices are arguing about waiting.',
+    steps: [
+      { text: 'Listen to the debate on the spice row.', done: f('debate.jwaladesh_hesitation.listened'), goals: [{ map: 'jwaladesh-bazaar', at: { x: 30, y: 17 } }] },
+      { text: 'Join the debate and argue all three rounds, or mediate.', done: f('debate.jwaladesh_hesitation.settled'), goals: [{ map: 'jwaladesh-bazaar', at: { x: 30, y: 17 } }] },
+    ],
+    done: f('debate.jwaladesh_hesitation.settled'),
+    closed: f('story.tower_open'),
+    closedText: 'Closed: the two on the spice row are still at it. They always are.',
+    reward: { xp: 15, pillar: { pillar: 'influence', city: 'jwaladesh', amount: 1 } },
+  },
 ];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */

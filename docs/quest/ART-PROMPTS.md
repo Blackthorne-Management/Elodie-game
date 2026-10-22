@@ -576,6 +576,55 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 
 ---
 
+## 17. Vikram, Aiyana, Meera, Arjun and Seth Dhanraj (Chapter 8, Agnipur; art drop 2 or after)
+
+Added Oct 22 with the Chapter 8 build. The game draws placeholders from the looks `vikram`, `aiyana`, `meera`,
+`senior_keeper`, `junior_priest`, `chamberlain_jw`, `oil_factor`, `seth_dhanraj`, `echo_arjun`, `echo_runner`,
+`echo_agnivansh_rider`, `chief_runner`, `runner`, `carter`, `shrine_child`, `flame_keeper`, `lamp_seller`, `dyer`,
+`oil_enforcer`, `ember_jackal`, `jw_vendor`, `jw_swordsmith`, `jw_librarian` and `jw_harbour_master` until these
+arrive (`quest/src/assets.config.ts`; Agnivansh saffron `#e67e22` with brass). Make each like section 12: a reference
+sheet in a new chat (attach Gianna's sheet), then the portrait and the walking sprite sheet in the same chat.
+
+**Vikram of the Agnivansh** (about 20; the Fire duelist, the chapter's companion): South Asian, tall and lean, short
+black hair pushed back, a quick grin and a quicker temper. A saffron duelling coat with brass buttons over cream
+trousers, a red sash, a curved talwar at the hip. Portrait expressions: **challenging** (default: "Again"),
+**out of breath** (after every fight; hands on knees), and **set** (tearing the curtain in front of his mother).
+Battle stance: empty-handed, side-on, front foot forward, ready to lunge.
+
+**Aiyana** (about 30; the Court's engineer of the great flame; Rahel's daughter, Kayla's full sister, Azzy's Titi):
+her sister Kayla's features (Rahel's daughters by the same man of the Asian continent), black hair in a working bun under a cream headband, soot on one
+cheek. A leather apron over a saffron tunic, a satchel of tools, a wrench in her hand. Portrait: **measuring**
+(default: squinting at something only she can see), **dry**.
+
+**Meera** (about 50; the high priestess of the flame, Vikram's mother): straight-backed, grey hair in a bun, a cream
+robe with a saffron border, a brass staff. Portrait: **unbending** (default), **tired** (at the flame), and **giving**
+(once, handing the crane back at dawn).
+
+**Seth Dhanraj** (about 55; the oil hoarder, the boss): heavy, comfortable, a black beard trimmed close, a cream
+turban and robe with brass buttons, a ledger staff, rings. Battle sprite: among oil jars, a ring of spilled oil at his
+feet (the Oil Wall). Portrait: **reasonable** (default: a man explaining a price), **withdrawing**.
+
+**Arjun of the Agnivansh** (the Echo, fifty years ago; Vikram's grandfather): tall, bearded, long hair, a brown riding
+coat with brass, a lance; sepia like every Echo portrait. His seven riders (saffron pennants, lances) and his runners
+(bare-armed, a lamp each) in the same palette. Portrait: **certain** ("Hesitation is the only true death").
+
+**Places (backgrounds, no people):** Agnipur's harbor at dusk (white domes, the great chain across the mouth, the
+chain tower and its lamp); the Lamp Bazaar (lamp-sellers, dyers' cloth drying on roofs, bronze mirrors on rooftops);
+the rooftops at night (mirrors on brackets, the new brick Exchange tower blocking the old line); the Court of the
+Flame (a long colonnade, an altar curtained in saffron silk, a low flame in a brass bowl); the salt flats (white salt,
+a cart road, heat haze). The battle backdrops `salt_flats` and `oil_store` (stacked oil jars, a lamp-lit warehouse)
+use these.
+
+**Also (placeholders may ship):** the senior Keeper (cream robe, a tall lamp), the junior priest (a broom), the
+chamberlain, the Crown's oil factor (Aldermoor violet, a ledger), the chief runner and the runners, the carter (a salt
+cart), the shrine child, the Flame Keeper and the pilgrim at the debate, the Oil Enforcers (brown leather, oil flasks),
+the Ember Jackals (sand-coloured, glowing eyes).
+
+Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |

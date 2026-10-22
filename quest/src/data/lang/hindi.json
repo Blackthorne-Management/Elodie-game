@@ -1,0 +1,22 @@
+{
+  "language": "Hindi (Jwaladesh's city of the flame)",
+  "note": "Hindi words and names the quest uses in Agnipur (House Agnivansh, Chapter 8). Every entry must be checked by a fluent speaker before release (guide 8; the Nov 18 check); verified stays false until then.",
+  "entries": [
+    { "word": "Namaste", "language": "Hindi", "translation": "Hello (a greeting, with respect)", "verified": false },
+    { "word": "Dhanyavaad", "language": "Hindi", "translation": "Thank you", "verified": false },
+    { "word": "Agnipur", "language": "Hindi", "translation": "City of fire (agni, fire, and pur, city)", "verified": false },
+    { "word": "Jwaladesh", "language": "Hindi", "translation": "Land of flame (the board game's name for the realm)", "verified": false },
+    { "word": "Agnivansh", "language": "Hindi", "translation": "Line of fire (a house name)", "verified": false },
+    { "word": "Agni ki Shakti", "language": "Hindi", "translation": "The power of fire (Vikram's gift)", "verified": false },
+    { "word": "Rakt Ki Pyaas", "language": "Hindi", "translation": "Thirst for blood (Vikram's fury)", "verified": false },
+    { "word": "Ananta Yuddha", "language": "Hindi", "translation": "Endless war (Vikram's battle cry)", "verified": false },
+    { "word": "Seth", "language": "Hindi", "translation": "A merchant's honorific (a wealthy trader)", "verified": false },
+    { "word": "Talwar", "language": "Hindi", "translation": "A curved sword", "verified": false },
+    { "word": "Rani", "language": "Hindi", "translation": "Queen", "verified": false },
+    { "word": "Tejaswini", "language": "Hindi", "translation": "Radiant (a name)", "verified": false },
+    { "word": "Arjun", "language": "Hindi", "translation": "Bright, shining (a name)", "verified": false },
+    { "word": "Meera", "language": "Hindi", "translation": "A woman's name", "verified": false },
+    { "word": "Vikram", "language": "Hindi", "translation": "Valour (a name)", "verified": false },
+    { "word": "Dhanraj", "language": "Hindi", "translation": "King of wealth (a name)", "verified": false }
+  ]
+}

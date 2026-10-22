@@ -146,6 +146,18 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
       text: 'Once per battle: the puppeteer\'s word. One foe\'s next action is wasted (a boss half the time).',
     },
   ],
+  // Vikram (COMBAT 9.7; the outline section 9.1 with its review's 3.8): Ember Cut is fire and sets Burning (a boss only a
+  // third of the time); Ananta Yuddha's free round is the fallback the review named, Inspired on the whole party, once.
+  vikram: [
+    {
+      id: 'ember_cut', name: 'Ember Cut', sp: 4, kind: 'damage', stat: 'atk', power: 130, target: 'enemy', element: 'fire', statuses: ['burning'], bossChance: 0.3,
+      text: 'A cut with the blade glowing: fire, and the foe burns (a boss a third of the time).',
+    },
+    {
+      id: 'ananta_yuddha', name: 'Ananta Yuddha', sp: 15, kind: 'status', power: 0, target: 'allAllies', statuses: ['inspired'], once: true,
+      text: 'Once per battle: endless war. The whole party hits a quarter harder for 3 turns.',
+    },
+  ],
   yari: [
     { id: 'trackers_mark', name: "Tracker's Mark", sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'], text: 'Marks one foe: it takes a quarter more damage for 3 turns.' },
     { id: 'arrow_rain', name: 'Arrow Rain', sp: 9, kind: 'damage', stat: 'atk', power: 75, target: 'allEnemies', element: 'wind', learn: { level: 6 }, text: 'Arrows on the wind, at every foe.' },
@@ -182,6 +194,11 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'quick_cut', name: 'Quick Cut', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A short, fast cut. Ready every turn.' },
     { id: 'twin_cut', name: 'Twin Cut', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 75, target: 'randomEnemies', hits: 2, text: 'Two cuts at foes at random. Needs 2 turns to ready again.' },
     { id: 'throat_cut', name: 'Throat Cut', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 150, target: 'enemy', text: 'One cut, exactly placed. Needs 3 turns to ready again.' },
+  ],
+  vikram: [
+    { id: 'quick_thrust', name: 'Quick Thrust', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A duellist\'s thrust. Ready every turn.' },
+    { id: 'flame_lunge', name: 'Flame Lunge', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 160, target: 'enemy', element: 'fire', text: 'A lunge with fire on the blade. Needs 2 turns to ready again.' },
+    { id: 'twin_flame', name: 'Twin Flame', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'randomEnemies', hits: 2, element: 'fire', text: 'Two fiery cuts at foes at random. Needs 3 turns to ready again.' },
   ],
   // Young Lord Benny of Ardencia in the Echo party (from the end of Chapter 3, once Azzy has joined).
   benny: [
@@ -679,6 +696,88 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Fold', power: 0, hire: 'paper_decoy', every: 3, tell: 'The Fox folds a sheet in half, and in half again: another of him is coming.' },
     ],
   },
+  // ---- Chapter 8, Jwaladesh (the outline section 5 with its review 3.1; COMBAT 13.2 and 13.3) ----------------------
+  // The Seth's Oil Enforcers (Oil Flask is the built Burning now) and the salt pans' ember jackals (COMBAT's Scavenge,
+  // a heal on a kill, has no engine support and is cut); Vikram sparring in the duel yard; Seth Dhanraj, the Crown-backed
+  // oil hoarder, and the enforcers at his side who step in front of him.
+  oil_enforcer: {
+    id: 'oil_enforcer',
+    name: 'Oil Enforcer',
+    look: 'oil_enforcer',
+    level: 20,
+    role: 'brute',
+    bribable: true,
+    resist: ['fire'],
+    withdraws: { line: 'The enforcer drops his cudgel and goes, flask and all.' },
+    moves: [
+      { name: 'Cudgel', power: 110 },
+      { name: 'Oil Flask', power: 90, statuses: ['burning'], chance: 0.6, every: 3, tell: 'The enforcer uncorks a flask and swings it by the neck...' },
+    ],
+  },
+  store_enforcer: {
+    id: 'store_enforcer',
+    name: 'Oil Enforcer',
+    look: 'oil_enforcer',
+    level: 21,
+    role: 'brute',
+    bribable: true,
+    resist: ['fire'],
+    protects: 'seth_dhanraj',
+    withdraws: { line: 'The enforcer backs out of the store\'s back door.' },
+    moves: [
+      { name: 'Cudgel', power: 110 },
+      { name: 'Oil Flask', power: 90, statuses: ['burning'], chance: 0.6, every: 3, tell: 'The enforcer uncorks a flask and swings it by the neck...' },
+    ],
+  },
+  ember_jackal: {
+    id: 'ember_jackal',
+    name: 'Ember Jackal',
+    look: 'ember_jackal',
+    level: 20,
+    role: 'skirmisher',
+    resist: ['fire'],
+    weak: ['water'],
+    moves: [
+      { name: 'Bite', power: 100 },
+      { name: 'Ember Snap', power: 120, every: 3, tell: 'The jackal\'s coat sparks. It crouches...' },
+    ],
+  },
+  // Vikram in the duel yard (the outline 5, its review 3.9): a sparring match, Gianna alone; it ends either way. HP x2.5
+  // and ATK x1.0 (battle-sim at @jwaladesh-court: her whole kit wins 39 in 40; light alone 10; the staff none).
+  vikram_duel: {
+    id: 'vikram_duel',
+    name: 'Vikram',
+    look: 'vikram',
+    level: 20,
+    role: 'skirmisher',
+    hpScale: 2.5,
+    atkScale: 1,
+    withdraws: { line: 'Enough... Enough. I need... a moment.', speaker: 'Vikram' },
+    moves: [
+      { name: 'Quick Thrust', power: 100 },
+      { name: 'Ember Cut', power: 130, every: 2, tell: 'Vikram draws a breath he does not have, and the blade glows...' },
+    ],
+  },
+  // Seth Dhanraj (COMBAT 13.3; the outline section 5 with its review 3.1): level 21, a brute boss. The Oil Wall halves
+  // what he takes and fire does nothing to it, and a Surge shatters it; at half his HP the price goes up (Price Spike:
+  // a blow at everyone, the review's fold of the item delay into the blow), two more enforcers come in, and from then a
+  // fire blow lights his oil (BattlePhase.ignite). At 0 HP he withdraws: nobody dies. Scaling (Claude's call): HP x5,
+  // ATK x1.2, Price Spike 100 (battle-sim at @jwaladesh-store: the kit wins 40 in 40 with 0.9 falls; Attack alone 0).
+  seth_dhanraj: {
+    id: 'seth_dhanraj',
+    name: 'Seth Dhanraj',
+    look: 'seth_dhanraj',
+    level: 21,
+    role: 'brute',
+    boss: true,
+    hpScale: 5,
+    atkScale: 1.2,
+    withdraws: { line: 'Enough. The oil is yours. It was always going to be somebody\'s.', speaker: 'Seth Dhanraj' },
+    moves: [
+      { name: 'Ledger Staff', power: 120 },
+      { name: 'Oil Wall', power: 0, ally: 'seth_dhanraj', statuses: ['oiled'], every: 3, tell: 'Dhanraj kicks a jar over. Oil spreads in a ring at his feet; nothing burns there.' },
+    ],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     bribable: true,
@@ -724,6 +823,13 @@ const FOX_SECRETS: readonly EnemyMove[] = [
   { name: 'Fold', power: 0, hire: 'paper_decoy', every: 5, tell: 'The Fox folds a sheet in half, and in half again: another of him is coming.' },
 ];
 
+/** Dhanraj when the price goes up (phase 2, 50%): the staff, Price Spike at everyone, the wall now and then. */
+const DHANRAJ_PRICE_SPIKE: readonly EnemyMove[] = [
+  { name: 'Ledger Staff', power: 130 },
+  { name: 'Price Spike', power: 100, area: true, every: 2, tell: 'Dhanraj opens the ledger. "Everything you carry just got dearer." Guard, everyone!' },
+  { name: 'Oil Wall', power: 0, ally: 'seth_dhanraj', statuses: ['oiled'], every: 5, tell: 'Dhanraj kicks another jar over. The oil runs round his feet again.' },
+];
+
 /** Qasim once the guild's money is gone (phase 2, Foreclosure): no more hiring; he seizes, then walls himself in gold. */
 const QASIM_FORECLOSURE: readonly EnemyMove[] = [
   { name: 'Cane', power: 160 },
@@ -735,6 +841,92 @@ const QASIM_FORECLOSURE: readonly EnemyMove[] = [
 ];
 
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 8: Seth Dhanraj in the oil store (the outline beat 7, its review 3.1). Game Over applies; the way back in is
+  // the store's doorway. Two enforcers at his side step in front of him (protects); two more at half his HP.
+  oil_store_dhanraj: {
+    id: 'oil_store_dhanraj',
+    title: 'Seth Dhanraj',
+    backdrop: 'oil_store',
+    enemies: ['store_enforcer', 'seth_dhanraj', 'store_enforcer'],
+    table: 'jwaladesh_story',
+    group: 'dhanraj',
+    rewards: { xp: 140, gold: 300 },
+    endsWithBoss: true,
+    boss: true,
+    phases: [
+      {
+        below: 0.5,
+        speaker: 'Seth Dhanraj',
+        text: 'Then the price goes up.',
+        moves: DHANRAJ_PRICE_SPIKE,
+        enter: ['store_enforcer', 'store_enforcer'],
+        enterText: 'Two more enforcers come in from the back with flasks.',
+        ignite: true,
+      },
+    ],
+    tips: {
+      // The one thing that matters, said at the start (review 1, finding 1): the wall breaks to the light, and his oil burns.
+      start: 'Fire runs off his oil, Gigi! Surge to break the wall. When it\'s down, Vikram\'s fire will catch.',
+      spark: 'Surge, Gigi! The wall!',
+      tell: 'The price is going up! Guard!',
+      lowHp: 'Heal, Gigi. Please.',
+    },
+  },
+  // Chapter 8: the duel in the yard (the outline beat 2, its review 3.9): Gianna alone, a sparring match that ends either
+  // way; no goddess, no Grudge, no XP; the same scene after it, with one line changed.
+  duel_yard_vikram: {
+    id: 'duel_yard_vikram',
+    title: 'The Duel Yard',
+    backdrop: 'duel_court',
+    enemies: ['vikram_duel'],
+    table: 'jwaladesh_story',
+    group: 'duel',
+    rewards: { xp: 0, gold: 0 },
+    meantToLose: { scene: 'vikram_after', set: { 'choice.duel_lost': true } },
+    fighters: ['gianna'],
+    endsWithBoss: true,
+    tips: {
+      start: 'He\'s fast, Gigi, and he\'s already tired. Your light, and mend when he cuts you. He runs out of breath first.',
+      spark: 'Surge, Gigi!',
+      tell: 'The blade\'s glowing! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 8, J-3: three Oil Enforcers on the salt road (the carter's jars). Paid flat (data).
+  salt_road_enforcers: {
+    id: 'salt_road_enforcers',
+    title: 'The Salt Road',
+    backdrop: 'salt_flats',
+    enemies: ['oil_enforcer', 'oil_enforcer', 'oil_enforcer'],
+    level: 21,
+    table: 'jwaladesh_story',
+    group: 'salt_road',
+    rewards: { xp: 20, gold: 150 },
+    sideQuest: 'anonymous_oil',
+    tips: {
+      start: 'Three of them, Gigi. Their flasks burn. Samira says a purse works on enforcers.',
+      spark: 'Surge, Gigi!',
+      tell: 'A flask! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
+  // Chapter 8: the night watch on the open quay (the sea-wall lane's fail-safe). Paid flat (data).
+  quay_watch: {
+    id: 'quay_watch',
+    title: 'The Night Watch',
+    backdrop: 'oil_store',
+    enemies: ['oil_enforcer', 'oil_enforcer'],
+    level: 21,
+    table: 'jwaladesh_story',
+    group: 'watch',
+    rewards: { xp: 30, gold: 100 },
+    tips: {
+      start: 'Two of them, Gigi. Quickly, before the store hears.',
+      spark: 'Surge, Gigi!',
+      tell: 'A flask! Guard!',
+      lowHp: 'Heal, Gigi.',
+    },
+  },
   // Chapter 6: Noyan Grimvald at his tent (the outline beat 7, its review 3.3). Game Over applies; the way back in is
   // the tent's trigger. The phases always come: unhorsed at half, the standard falls at a quarter (a Surge in that
   // phase brings it sooner). Paid 120, below the outline's 150 (its review 3.1), the level curve's number.
@@ -1135,6 +1327,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   crossroads: { title: 'The Crossroads Fields', backdrop: 'crossroads' },
   winter_plateau: { title: 'The Winter Plateau', backdrop: 'winter_plateau' },
   fog_marsh: { title: 'The Fog Marsh', backdrop: 'fog_marsh' },
+  salt_flats: { title: 'The Salt Flats', backdrop: 'salt_flats' },
 };
 
 /**

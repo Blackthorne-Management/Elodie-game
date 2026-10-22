@@ -5,7 +5,7 @@
 // coming back from the bridgehead's memory before the pawl is pinned.
 
 import { describe, expect, it } from 'vitest';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7 } from '../src/data/quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8 } from '../src/data/quests.ts';
 import { findPath } from '../src/engine/sim.ts';
 import type { Sim } from '../src/engine/sim.ts';
 import { goldWalk } from '../tools/gold-walk.ts';
@@ -117,6 +117,35 @@ describe('following only the gold arrow on, through Chapter 7', () => {
   it('takes a reasonable way (measured Oct 22: 720 steps and 16 map changes)', () => {
     expect(walk.steps).toBeLessThan(900);
     expect(walk.mapChanges).toBeLessThan(25);
+  });
+});
+
+describe('following only the gold arrow on, through Chapter 8', () => {
+  // On from the end of Chapter 7 (Chapter 8, Oct 22): the voyage, the quay and the stair, Aiyana's roof, the Court and
+  // the duel, the day (the runners' hearth and the relay up the runners' way, the priest and the salt road, the spice
+  // row), the night lamp, Arjun's night (the taper, the spare mirror, the bracket), the roofs mirror by mirror, the
+  // flame, the Seth, the price, the quay.
+  const start = goldWalk({ maps });
+  const mid = goldWalk({ maps, sim: start.sim, through: 'act5' });
+  const six = goldWalk({ maps, sim: mid.sim, through: 'act6' });
+  const seven = goldWalk({ maps, sim: six.sim, through: 'act7' });
+  const walk = goldWalk({ maps, sim: seven.sim, through: 'act8' });
+
+  it('finishes Chapter 8 with no stall', () => {
+    expect(walk.stalls).toEqual([]);
+    expect(walk.finished).toBe(true);
+    for (const f of ['story.aiyana_met', 'story.court_heard', 'side.lamp_relay.done', 'side.anonymous_oil.done', 'debate.jwaladesh_hesitation.settled', 'anchor.chain_lamp', 'anchor.tower_mirror', 'story.beam_at_temple', 'party.vikram', 'story.dhanraj_beaten', 'ally.jwaladesh', 'act8.complete']) {
+      expect(walk.sim.logic.state.flags.isSet(f), f).toBe(true);
+    }
+  });
+
+  it('meets every objective in order (the landing is inside the scene that begins it)', () => {
+    expect(walk.objectives).toEqual(ACT8.objectives.filter((o) => o.id !== 'chain').map((o) => `act8/${o.id}`));
+  });
+
+  it('takes a reasonable way (measured Oct 22: 767 steps and 19 map changes)', () => {
+    expect(walk.steps).toBeLessThan(950);
+    expect(walk.mapChanges).toBeLessThan(30);
   });
 });
 

@@ -67,6 +67,8 @@ import {
   SPARK_ON_ACT,
   SPARK_ON_GUARD,
   STATUS,
+  STATUS_IMMUNE,
+  BURNING_BOSS_SHARE,
   SWAP_IN_DELAY,
   SURGE_COST,
   SURGE_MULT,
@@ -291,6 +293,11 @@ export interface BattlePhase {
   enter?: readonly string[];
   /** Shown as they walk in. */
   enterText?: string;
+  /**
+   * Lit oil (Seth Dhanraj, Chapter 8; COMBAT 13.3): from this phase on, a fire blow that lands on the boss (his Oil
+   * Wall down) sets him Burning, again with every fire blow.
+   */
+  ignite?: boolean;
 }
 
 /**
@@ -357,6 +364,11 @@ export interface BattleDef {
   sideQuest?: string;
   /** A chapter's boss: its Grudge climbs to GRUDGE_MAX_BOSS instead of GRUDGE_MAX (grudgeCap). */
   boss?: boolean;
+  /**
+   * Only these members fight (by id), whoever else is in the party: a duel (Chapter 8, Vikram challenges Gianna alone).
+   * Omitted: the party as it stands.
+   */
+  fighters?: readonly string[];
 }
 
 /** The most Grudge a fight can build (review 1, finding 1: a boss lost three times has had the fight). */
@@ -576,10 +588,15 @@ export function enemyStats(def: EnemyDef): { hp: number; atk: number; def: numbe
   };
 }
 
-/** Gianna's discount: a quarter less, rounded down, at least 1. */
-export function skillCost(skill: SkillDef, c: Pick<Combatant, 'anissaBond'>): number {
+/**
+ * Gianna's discount: a quarter less, rounded down, at least 1. Agni ki Shakti (Vikram, Chapter 8; PassiveEffect
+ * `spLess`): so many SP less, at least 1.
+ */
+export function skillCost(skill: SkillDef, c: Pick<Combatant, 'anissaBond'> & { passives?: readonly PassiveEffect[] }): number {
   if (skill.sp <= 0) return 0;
-  return c.anissaBond ? Math.max(1, Math.floor(skill.sp * (1 - GIANNA_SP_DISCOUNT))) : skill.sp;
+  const less = (c.passives ?? []).reduce((n, p) => n + (p.kind === 'spLess' ? p.sp : 0), 0);
+  const base = less > 0 ? Math.max(1, skill.sp - less) : skill.sp;
+  return c.anissaBond ? Math.max(1, Math.floor(base * (1 - GIANNA_SP_DISCOUNT))) : base;
 }
 
 /** Charge time after an action. */
@@ -641,7 +658,9 @@ export class Battle {
     this.reserve = opts.reserve ?? {};
     this.items = items.map((i) => ({ ...i }));
     const seen = new Map<string, number>();
-    const members: Combatant[] = party.map((p, i) => ({
+    // A duel: only the members it names fight (BattleDef.fighters).
+    const roster = def.fighters ? party.filter((p) => def.fighters!.includes(p.id)) : party;
+    const members: Combatant[] = roster.map((p, i) => ({
       key: p.id,
       name: p.name,
       side: 'party',
@@ -906,6 +925,7 @@ export class Battle {
     }
     const events: BattleEvent[] = [];
     let weight: number = ACTION_WEIGHT.attack;
+    const fellsBefore = me.fells;
     if (action.kind === 'attack') {
       const aimed = this.find(action.target);
       if (!aimed || aimed.down || aimed.side !== 'enemy') return [];
@@ -964,6 +984,11 @@ export class Battle {
       this.spark = Math.min(SPARK_MAX, this.spark + (action.kind === 'guard' ? SPARK_ON_GUARD : SPARK_ON_ACT));
       if (this.spark !== before) events.push({ kind: 'spark', value: this.spark });
       if (this.spark >= SURGE_COST) events.push(...this.tip('spark', this.def.tips?.spark));
+    }
+    // Rakt Ki Pyaas (Vikram; PassiveEffect `turnOnFell`): a foe felled by this action, and his next turn comes at once.
+    if (me.fells > fellsBefore && action.kind !== 'swap' && me.passives.some((p) => p.kind === 'turnOnFell') && this.enemies.some((e) => !e.down)) {
+      weight = 0;
+      events.push({ kind: 'text', text: `${me.name} does not stop to breathe: he goes again.` });
     }
     me.next += turnDelay(spdOf(me), weight);
     events.push(...this.endTurn(me));
@@ -1046,9 +1071,17 @@ export class Battle {
       hp += c.regenHp;
       c.regenTurns--;
     }
+    let burn = 0;
     for (const st of c.statuses) {
       const share = STATUS[st.id].regen;
       if (share > 0) hp += Math.max(1, Math.round(c.maxHp * share));
+      // Burning: a share of max HP lost (a boss's capped), never the last HP.
+      if (share < 0) burn += Math.max(1, Math.round(c.maxHp * (c.boss ? Math.min(-share, BURNING_BOSS_SHARE) : -share)));
+    }
+    burn = Math.min(burn, c.hp - 1);
+    if (burn > 0) {
+      c.hp -= burn;
+      events.push({ kind: 'text', text: `${c.name} burns (${burn}).` });
     }
     for (const s of c.specials) {
       if (s.kind === 'regen') hp += Math.max(1, Math.round((c.maxHp * s.value) / 100));
@@ -1189,6 +1222,18 @@ export class Battle {
     for (const st of a.statuses) dmg *= STATUS[st.id].dealt;
     for (const st of b.statuses) dmg *= STATUS[st.id].taken;
     let affinity: 1 | -1 | undefined;
+    // Immune (the Oil Wall: fire does nothing while it stands).
+    const immune = !!element && b.statuses.some((st) => STATUS_IMMUNE[st.id]?.includes(element));
+    if (immune) {
+      events.push({ kind: 'text', text: `The fire runs off the oil around ${b.name}. Nothing burns there.` });
+      events.push({ kind: 'damage', from: a.key, to: b.key, amount: 0, crit: false, surge, move, style: type, element, affinity: -1 });
+      return events;
+    }
+    // Lit oil: from a phase that ignites, a fire blow on the boss sets him Burning (BattlePhase.ignite).
+    if (element === 'fire' && b.boss && a.side === 'party' && this.def.phases?.slice(0, this.phase).some((p) => p.ignite)) {
+      events.push(...this.giveStatus(b, 'burning'));
+      events.push({ kind: 'text', text: `The oil at ${b.name}'s feet catches.` });
+    }
     if (element && b.weak.includes(element)) {
       affinity = 1;
       dmg *= ELEMENT_WEAK;

@@ -1,0 +1,4 @@
+{
+  "straight up the main street (the wind puts the lamp out, again and again)": ["up*7", "skip", "up*7", "skip", "up*20", "left*8", "up", "confirm", "skip"],
+  "the runners' way to the central lane, then up the main street (the wind at the Exchange)": ["up*3","left*18","up*9","right*18","up*7","skip","up*20","left*8","up","confirm","skip"]
+}

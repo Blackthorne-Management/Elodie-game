@@ -768,7 +768,7 @@ export class GameMenu {
       // Gianna pays a quarter less with Anissa beside her (as in battle).
       const bond = bondActive(ctx.flags, RPG, m);
       const coins = goldCost(s, { level: lv });
-      const cost = isMove(s) ? (s.cooldown ? `wait ${s.cooldown}` : 'any turn') : coins ? `${coins} gold` : `${skillCost(s, { anissaBond: bond })} SP`;
+      const cost = isMove(s) ? (s.cooldown ? `wait ${s.cooldown}` : 'any turn') : coins ? `${coins} gold` : `${skillCost(s, { anissaBond: bond, passives: (m.passives ?? []).flatMap((x) => (x.effect ? [x.effect] : [])) })} SP`;
       const colour = !r.known ? UI.dimText : r.kind === 'gear' ? RARITY_ART.rare.text : r.on || r.kind !== 'spell' ? UI.text : UI.dimText;
       this.text(X, y, `${mark}${s.name}`, sel ? UI.accentText : colour, 120);
       this.text(VIEW_WIDTH - 6, y, r.known ? cost : howToLearn(s), UI.dimText).setOrigin(1, 0);

@@ -1,0 +1,5 @@
+{
+  "the bracket bolted with no mirror in hand (the spare is at the watchtower's foot)": ["up*2","left*11","up*5","left","echo","skip","up","right*4","confirm","skip","left*4","up","confirm","skip"],
+  "the present lamp and bracket, with no memory (nothing to light, nothing to bolt)": ["up*2","left*11","up*6","left*2","up","confirm","skip","right*5","confirm","skip"],
+  "the mirror bolted but the lamp never lit (the taper still in hand)": ["up*2","left*11","up*5","left","echo","skip","down","right*3","down","confirm","skip","up*2","right","confirm","skip"]
+}

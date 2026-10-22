@@ -6,7 +6,7 @@ import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SUR
 import { flagsIn } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7 } from './quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
@@ -163,6 +163,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'rice_ball', name: 'Rice ball', kind: 'consumable', price: 45, heals: 60, text: 'Rice pressed round a pickled plum, wrapped in seaweed. Restores 60 HP.' },
   { id: 'green_tea', name: 'Green tea', kind: 'consumable', price: 40, restores: 18, text: 'A bowl of whisked green tea, bitter and bright. Restores 18 SP.' },
   { id: 'miso_broth', name: 'Miso broth', kind: 'consumable', price: 35, heals: 45, healTurns: 3, text: 'Miso and spring onion, too hot to drink fast. Restores 45 HP, a little at a time.' },
+  // Agnipur's milk-and-bread stall (Chapter 8).
+  { id: 'spiced_milk', name: 'Spiced milk', kind: 'consumable', price: 40, restores: 18, text: 'Hot milk with cardamom and a thread of saffron. Restores 18 SP.' },
+  { id: 'flatbread', name: 'Flatbread', kind: 'consumable', price: 40, heals: 50, text: 'Flatbread from the stall\'s clay oven, still blistered. Restores 50 HP.' },
+  { id: 'lentil_stew', name: 'Lentil stew', kind: 'consumable', price: 35, heals: 40, healTurns: 3, text: 'Yellow lentils and cumin, too hot to eat fast. Restores 40 HP, a little at a time.' },
   { id: 'dates', name: 'Dates', kind: 'consumable', price: 30, heals: 45, text: 'Medjool dates from the oases past the Desert Edge. Restores 45 HP.' },
   { id: 'tagine', name: 'Lamb tagine', kind: 'consumable', price: 55, heals: 80, healTurns: 3, text: 'Lamb, apricots and almonds under a clay cone. Restores 80 HP, a little at a time.' },
   {
@@ -267,6 +271,36 @@ const ITEM_LIST: ItemDef[] = [
     price: 0,
     text: 'A paper crane folded from the margin of the turned Neutrality Order, the Suzumori seal pressed into its wing. "For the chamberlain\'s chair. Suzumori sits."',
   },
+  // Chapter 8, Agnipur: the runners' relay lamp (carried, J-2), Dhanraj's ledger of advances, Agnivansh's token for the
+  // chamberlain's chair, and Titi Aiyana's mirror (Anissa's, after the roofs).
+  {
+    id: 'relay_lamp',
+    name: "The runners' lamp",
+    kind: 'key',
+    price: 0,
+    text: 'A brass lamp on a pole, lit at the runners\' hearth. Harbor to temple before it gutters. Not the main street.',
+  },
+  {
+    id: 'dhanraj_ledger',
+    name: "Dhanraj's Ledger of Advances",
+    kind: 'key',
+    price: 0,
+    text: 'Every jar in Agnipur\'s harbor, bought with advances from the Throne\'s purchasing office, Kingsmere. "Hold until the Court signs for the chain."',
+  },
+  {
+    id: 'token_agnivansh',
+    name: 'Agnivansh token',
+    kind: 'key',
+    price: 0,
+    text: 'A small brass lamp, lit from the Court\'s flame by Meera herself. "For the chamberlain\'s chair. Agnivansh sits, and burns."',
+  },
+  {
+    id: 'aiyana_disc',
+    name: "Titi Aiyana's mirror",
+    kind: 'key',
+    price: 0,
+    text: 'A polished bronze disc the size of a plate, from Aiyana\'s apron. Anissa held the last of the light in it. She is keeping it.',
+  },
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
   // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
   // warriors (defence, HP, slower). Rarity sets the colour behind the picture and how good it is:
@@ -303,6 +337,9 @@ const ITEM_LIST: ItemDef[] = [
   // honestly at half its bonus until the party reaches it.
   { id: 'grey_kimono', level: 16, rarity: 'uncommon', name: 'Grey travelling kimono', kind: 'gear', slot: 'armor', armor: 'leather', price: 600, stats: { def: 9, hp: 12, spd: 3 }, text: 'Plain grey over a quilted vest, with more pockets than a kimono should have.' },
   { id: 'lacquered_armour', level: 20, rarity: 'uncommon', name: 'Lacquered armour', kind: 'gear', slot: 'armor', armor: 'leather', price: 800, stats: { def: 12, hp: 18, spd: 2 }, text: 'Black lacquered plates laced with violet cord. Light, and loud in the fog.' },
+  // Agnipur's tier (Chapter 8): Vikram's own saffron duelling coat (tier 20), and the swordsmith's scale (tier 24).
+  { id: 'saffron_coat', level: 20, rarity: 'uncommon', name: 'Saffron duelling coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 780, stats: { def: 11, hp: 16, spd: 2 }, text: 'Saffron silk over a quilted vest, cut for a man who fights before breakfast.' },
+  { id: 'scale_armour', level: 24, rarity: 'uncommon', name: 'Scale armour', kind: 'gear', slot: 'armor', armor: 'heavy', price: 1000, stats: { def: 18, hp: 30, spd: -1 }, text: 'Brass scales on oiled leather. It rings like a temple when you walk.' },
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
   // Charms (anyone).
@@ -328,6 +365,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'round_shield_charm', name: 'Round-shield charm', kind: 'gear', slot: 'charm', level: 16, rarity: 'uncommon', price: 450, stats: { def: 4, hp: 8 }, text: 'A hand-sized wooden shield boss on a thong. Rap it twice for luck before a crossing.' },
   { id: 'horse_tack_charm', name: 'Horse-tack charm', kind: 'gear', slot: 'charm', level: 15, rarity: 'uncommon', price: 300, stats: { spd: 4, atk: 1 }, text: 'A bronze bridle ring, worn smooth. Whoever wears it rides first.' },
   { id: 'silk_mask_charm', name: 'Silk mask charm', kind: 'gear', slot: 'charm', level: 20, rarity: 'uncommon', price: 400, stats: { spd: 4, def: 2 }, text: 'A little silk fox mask on a cord, from the paper-maker. Nobody remembers who wore it.' },
+  // Agnipur (Chapter 8): the runners' beads (J-2's reward: the fallback for fire skills +15%, as stats) and the bead
+  // seller's brass lamp charm.
+  { id: 'flame_bead_bracelet', name: 'Flame-bead bracelet', kind: 'gear', slot: 'charm', level: 20, rarity: 'uncommon', price: 400, stats: { mag: 4, atk: 2 }, text: 'Red glass beads on a runner\'s cord, each with a fleck of gold in it. Fire likes them.' },
+  { id: 'brass_lamp_charm', name: 'Brass lamp charm', kind: 'gear', slot: 'charm', level: 20, rarity: 'uncommon', price: 300, stats: { def: 3, hp: 10 }, text: 'A thumb-sized brass lamp on a cord, empty. The bead seller swears it keeps the heat off.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {
@@ -427,6 +468,22 @@ export const MEMBERS: readonly MemberDef[] = [
     base: { hp: 44, sp: 22, atk: 11, def: 7, mag: 9, spd: 16 }, growth: { hp: 5, sp: 3, atk: 2, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'paper_knife_of_swiftness', armor: 'grey_kimono' },
   },
+  // Vikram of the Agnivansh (Chapter 8; COMBAT 9.7, the outline section 9.1 with its review's 3.8 and 3.9): he joins at
+  // the flame, when he tears the curtain and defies the priests (party.vikram), before the boss, and leads in his own
+  // chapter like Bayarmaa and Haru in theirs. The hardest hitter after Azzy, the second fastest, the lowest DEF: a glass
+  // cannon. Agni ki Shakti (skills cost 1 SP less) and Rakt Ki Pyaas (a felling blow, and his next turn at once) are real.
+  {
+    id: 'vikram', name: 'Vikram', role: 'Fire duelist', house: 'Agnivansh', portrait: 'vikram', era: 'present', class: 'warrior',
+    passives: [
+      { name: 'Agni ki Shakti', text: 'The power of fire: his skills cost 1 SP less (never under 1).', effect: { kind: 'spLess', sp: 1 } },
+      { name: 'Rakt Ki Pyaas', text: 'When his blow fells a foe, his next turn comes at once.', effect: { kind: 'turnOnFell' } },
+      { name: 'Out of breath', text: 'After every battle. It changes nothing in the fight. He says so.' },
+    ],
+    joins: { flag: 'party.vikram' },
+    leads: { all: [{ flag: 'party.vikram' }, { notFlag: 'act8.complete' }] },
+    base: { hp: 40, sp: 20, atk: 15, def: 5, mag: 8, spd: 15 }, growth: { hp: 4, sp: 3, atk: 3, def: 1, mag: 1, spd: 2 },
+    start: { weapon: 'agnipur_talwar_of_force', armor: 'saffron_coat' },
+  },
   // Young Lord Benny joins the Echo party once Azzy has joined (STORY.md: the design's rule), at the end of Chapter 3
   // (story.benny_joined). Chapter 4 has no Echo battle (the plan review's rule): his first Echo there is a walk, at
   // Yusuf's desk; his first fight in the Echo comes in a later chapter.
@@ -490,6 +547,11 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   kirinoura_tea: { greeting: 'Irasshaimase! Rice balls, green tea, miso.', id: 'kirinoura_tea', name: 'Tea house', city: 'kuroshi', stock: ['rice_ball', 'green_tea', 'miso_broth'] },
   kirinoura_paper: { greeting: 'Irasshaimase. Paper, silk, and quiet.', id: 'kirinoura_paper', name: 'Paper-maker', city: 'kuroshi', stock: ['silk_mask_charm'] },
   kirinoura_armourer: { greeting: 'Irasshaimase. Lacquer and steel.', id: 'kirinoura_armourer', name: 'Armourer', city: 'kuroshi', stock: ['lacquered_armour', 'kirinoura_tanto_of_force', 'braided_cloak', 'fur_mantle'] },
+  // Agnipur (Chapter 8): the milk-and-bread stall, the bead seller and the swordsmith in the Lamp Bazaar (tier 24, shown
+  // honestly at half bonus, and Kirinoura's tier-20 pieces for a party that skipped the armourer).
+  agnipur_milk: { greeting: 'Namaste! Spiced milk, flatbread, lentil stew.', id: 'agnipur_milk', name: 'Milk-and-bread stall', city: 'jwaladesh', stock: ['spiced_milk', 'flatbread', 'lentil_stew'] },
+  agnipur_beads: { greeting: 'Namaste. Charms for the heat.', id: 'agnipur_beads', name: 'Bead seller', city: 'jwaladesh', stock: ['brass_lamp_charm'] },
+  agnipur_swords: { greeting: 'Namaste. Talwars and scale.', id: 'agnipur_swords', name: 'Swordsmith', city: 'jwaladesh', stock: ['flame_talwar_of_force', 'scale_armour', 'lacquered_armour', 'kirinoura_tanto_of_force'] },
 };
 
 /**
@@ -619,6 +681,22 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'kuroshi-filehouse', name: 'The file house' },
     ],
   },
+  // Chapter 8 (built Oct 22; CAPITALS.md 8 with the outline's six maps): the Lamp Bazaar in the middle with the Court of
+  // the Flame at its head, the Harbor Chain down the stair, the Salt Flats east of the salt gate; the roofs, the library
+  // and the Court as buildings at their doors.
+  jwaladesh: {
+    id: 'jwaladesh',
+    name: 'Agnipur',
+    house: 'Agnivansh',
+    sections: [
+      { map: 'jwaladesh-bazaar', name: 'The Lamp Bazaar', at: { x: 0, y: 0 } },
+      { map: 'jwaladesh-harbor', name: 'The Harbor Chain', at: { x: 5, y: 30 } },
+      { map: 'jwaladesh-saltflats', name: 'The Salt Flats', at: { x: 44, y: 1 } },
+      { map: 'jwaladesh-rooftops', name: 'The roofs' },
+      { map: 'jwaladesh-library', name: 'The Palm-Leaf Library' },
+      { map: 'jwaladesh-court', name: 'The Court of the Flame' },
+    ],
+  },
 };
 
 /** The realm around Eightgate, as on the board (Ardencia north, then clockwise); shapes in data/realmMap.ts. */
@@ -631,7 +709,7 @@ export const REALM: readonly RealmPlace[] = [
   { id: 'al_doria', name: 'Al-Doria', house: 'Dorini', city: 'al_doria' },
   { id: 'skarragol', name: 'Skarragol', house: 'Ironvow', city: 'skarragol' },
   { id: 'kuroshi', name: 'Kuroshi', house: 'Suzumori', city: 'kuroshi' },
-  { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh' },
+  { id: 'jwaladesh', name: 'Jwaladesh', house: 'Agnivansh', city: 'jwaladesh' },
   { id: 'aldermoor', name: 'Aldermoor', house: 'Stillwater' },
   { id: 'xaragua', name: 'Xaraguá', house: 'Yaguana', city: 'xaragua' },
 ];
@@ -665,13 +743,22 @@ export const RPG: RpgContent = {
     { pillar: 'influence', city: 'kuroshi', flags: ['story.price_receipts'], each: 2 },
     { pillar: 'influence', city: 'kuroshi', flags: ['choice.petition_signed', 'choice.samira_names', 'choice.fox_spared'], each: 1 },
     { pillar: 'fear', city: 'kuroshi', flags: ['choice.fox_broken'], each: 1 },
+    { pillar: 'influence', city: 'jwaladesh', flags: BOOKS.filter((b) => b.id.startsWith('jwaladesh_')).map((b) => loreFlag(b.id)), each: 1 },
+    // Agnipur's price (Wealth 8; outline beat 8 with its review's 3.4): only what is laid at the altar's foot counts, and
+    // the store and the strongbox are choices, so the floor is 4 (J-2 +1, J-3 +2, the jars the city carried up +1) and
+    // Agnivansh can be the least-paid house; a player who signs the store over and gives the advances pays 10.
+    { pillar: 'wealth', city: 'jwaladesh', flags: ['choice.dhanraj_spared'], each: 3 },
+    { pillar: 'wealth', city: 'jwaladesh', flags: ['choice.dhanraj_broken'], each: 1 },
+    { pillar: 'wealth', city: 'jwaladesh', flags: ['choice.advances_given'], each: 4 },
+    { pillar: 'influence', city: 'jwaladesh', flags: ['choice.petition_jwa_signed', 'choice.dhanraj_spared', 'story.crane_accepted'], each: 1 },
+    { pillar: 'fear', city: 'jwaladesh', flags: ['choice.dhanraj_broken'], each: 1 },
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
     // A Journal step pays by its chapter (XP_PER_OBJECTIVE_BY_CHAPTER).
-    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7].map((act, i) => ({
+    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8].map((act, i) => ({
       flags: act.objectives.filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)),
       each: XP_PER_OBJECTIVE_BY_CHAPTER[Math.min(i, XP_PER_OBJECTIVE_BY_CHAPTER.length - 1)]!,
     })),

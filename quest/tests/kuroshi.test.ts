@@ -71,10 +71,11 @@ describe('the chapter starts', () => {
     expect(state.flags.isSet('item.torvald_letter')).toBe(true);
   });
 
-  it('?chapter=8: Kirinoura\'s pier after the card, Haru with them, the Fog Files, the clues and the Suzumori token in hand', () => {
+  it('?chapter=8: Agnipur\'s quay off the Zetwal trader, Haru with them, the Fog Files, the clues and the Suzumori token in hand', () => {
     const at8 = starts['8']!;
     const flags = new FlagStore(at8.flags);
-    expect(at8.map).toBe('kuroshi-pier');
+    expect(at8.map).toBe('jwaladesh-harbor');
+    expect(at8.spawn).toBe('landing');
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toEqual(['gianna', 'anissa', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru']);
     for (const f of ['act7.complete', 'card.act7_end', 'ally.kuroshi', 'item.token_suzumori', 'item.token_ironvow', 'item.fog_files', 'clue.buyers_mark', 'clue.ardencia_outflows', 'story.haru_left_kirinoura', 'belief.rael_traitor']) {
       expect(flags.isSet(f), f).toBe(true);
