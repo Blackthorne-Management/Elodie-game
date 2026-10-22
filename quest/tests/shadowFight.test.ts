@@ -75,7 +75,7 @@ describe('Sold Secrets and Hushed', () => {
     expect(read).toMatch(/haru's name on it: Chop|gianna's name on it: Bolt/);
   });
 
-  it('Hushed takes the SP skills away for its turns; the weapon moves still work', () => {
+  it('Hushed takes the skills away for its turns, the weapon moves too (Chapter 9: Attack, Guard and Item only)', () => {
     const b = new Battle(DEF, [member('haru', [listen, chop, bolt])], [HUSHER], [], { seed: 2 });
     b.start();
     for (let i = 0; i < 20 && !b.find('haru')!.statuses.some((s) => s.id === 'hushed'); i++) b.act({ kind: 'guard' });
@@ -83,6 +83,6 @@ describe('Sold Secrets and Hushed', () => {
     expect(me.statuses.some((s) => s.id === 'hushed')).toBe(true);
     expect(b.canUse(me, bolt)).toBe(false);
     expect(b.canUse(me, listen)).toBe(false);
-    expect(b.canUse(me, chop)).toBe(true);
+    expect(b.canUse(me, chop)).toBe(false);
   });
 });
