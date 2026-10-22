@@ -68,7 +68,11 @@ export type PassiveEffect =
   | { kind: 'battleGold'; share: number }
   | { kind: 'atkPerFell'; share: number; max: number }
   /** Ironvow's Oath (Bayarmaa, Chapter 6): her opening time is the lowest in the party, so she acts first of them. */
-  | { kind: 'opensFirst' };
+  | { kind: 'opensFirst' }
+  /** Agni ki Shakti (Vikram, Chapter 8): his SP skills cost this much less (at least 1). */
+  | { kind: 'spLess'; sp: number }
+  /** Rakt Ki Pyaas (Vikram, Chapter 8): when his action fells a foe, his next turn comes at once. */
+  | { kind: 'turnOnFell' };
 
 export interface ItemDef {
   id: string;
