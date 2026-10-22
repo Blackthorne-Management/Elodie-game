@@ -116,6 +116,7 @@ const STATUS_TAGS: Readonly<Record<StatusId, { tag: string; good: boolean }>> = 
   taunting: { tag: 'TAUNT', good: true },
   stunned: { tag: 'STUN', good: false },
   gilded: { tag: 'GOLD', good: true },
+  hushed: { tag: 'HUSH', good: false },
 };
 
 const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
@@ -128,6 +129,7 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
   taunting: 'drawing every blow',
   stunned: 'Stunned',
   gilded: 'behind a wall of gold',
+  hushed: 'Hushed (no skills)',
 };
 
 const VISIBLE_ROWS = 6;
@@ -1096,7 +1098,9 @@ export class BattleScene extends Phaser.Scene {
       const top = s.y - s.displayHeight - 14;
       const label = text(s.x, top, `${e.name}  Lv ${e.level}`, UI.text, { stroke: '#14101a', strokeThickness: 2 }).setOrigin(0.5, 0);
       const w = Math.max(40, Math.min(70, Math.ceil(label.width)));
-      bar(Math.round(s.x - w / 2), top + 10, w, e.hp, e.maxHp, e.hp / e.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
+      // A foe in disguise (the Paper Fox's decoys) shows no HP until Kagemimi finds them out.
+      if (e.masked) bar(Math.round(s.x - w / 2), top + 10, w, 1, 1, BATTLE_ART.hpMasked);
+      else bar(Math.round(s.x - w / 2), top + 10, w, e.hp, e.maxHp, e.hp / e.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
       tags(Math.round(s.x - w / 2), top + 14, e);
     }
 

@@ -168,6 +168,11 @@ export interface SkillDef {
   bribe?: boolean;
   /** Its statuses land on a boss only this often (0 to 1); on other foes always (Grito de Guerra: 0.5). */
   bossChance?: number;
+  /**
+   * Kagemimi (Haru, Chapter 7): the target's next move is told, and a foe in disguise is found out: the real one is
+   * named and Marked, and the paper ones stop stepping in front of him for the rest of the fight (EnemyDef.disguise).
+   */
+  reveal?: boolean;
   /** How it is learned (omitted: known from the start). */
   learn?: { level?: number; lore?: { books: readonly string[]; count: number; where: string } };
   ranks?: readonly SkillRank[];
@@ -224,6 +229,12 @@ export interface EnemyMove {
    * most HIRE_CAP hired ones on the field at once (otherwise the normal attack).
    */
   hire?: string;
+  /**
+   * Sold Secrets (the Paper Fox, Chapter 7; the second review's 3.6): he reads one fighter's file and uses that
+   * fighter's strongest damage skill on them, at its power, with his own ATK (Story's damage share applies as to any
+   * blow). `power` is the floor when the fighter has nothing stronger.
+   */
+  mirror?: boolean;
 }
 
 export interface EnemyDef {
@@ -258,6 +269,12 @@ export interface EnemyDef {
   protects?: string;
   /** A person who takes a purse (Samira's Bribe); beasts, zealots and bosses refuse. */
   bribable?: boolean;
+  /**
+   * In disguise (the Paper Fox and his paper decoys, Chapter 7): every foe with a disguise shows as `as` with a letter
+   * dealt at random, stands in a shuffled place, and keeps its HP bar hidden, until a reveal (SkillDef.reveal) finds
+   * them out; then the one with a `name` (the real one) is named, and the rest go by their own name.
+   */
+  disguise?: { as: string; name?: string };
 }
 
 /**
@@ -455,6 +472,11 @@ export interface Combatant {
   bribable: boolean;
   /** Walked in mid-fight, paid by the boss (Hire Blades): a Bribe on them is refunded. */
   hired: boolean;
+  /** In disguise and not found out yet (EnemyDef.disguise): the battle screen hides the HP bar. */
+  masked: boolean;
+  disguise?: { as: string; name?: string };
+  /** The foe's own name, under a disguise. */
+  trueName?: string;
 }
 
 export interface ActiveStatus {
@@ -604,6 +626,8 @@ export class Battle {
   private readonly usedMoves = new Set<string>();
   private readonly reserve: Readonly<Record<string, EnemyDef>>;
   private readonly enemyHp: number;
+  /** A disguise has been found out (SkillDef.reveal): the paper ones go by their own names from now on. */
+  revealed = false;
 
   constructor(def: BattleDef, party: readonly PartyEntry[], enemies: readonly EnemyDef[], items: readonly BattleItem[], opts: BattleOptions) {
     this.def = def;
@@ -661,6 +685,7 @@ export class Battle {
       atkPerBound: 0,
       bribable: false,
       hired: false,
+      masked: false,
     }));
     const foes: Combatant[] = enemies.map((e, idx) => {
       const n = (seen.get(e.id) ?? 0) + 1;
@@ -668,6 +693,7 @@ export class Battle {
       return this.foe(e, n, enemies.filter((x) => x.id === e.id).length > 1, idx);
     });
     this.combatants = [...members, ...foes];
+    this.dealDisguises(foes);
     // Opening times: a share of a full delay, from the dice (COMBAT 3).
     for (const c of this.combatants) c.next = Math.round(turnDelay(c.spd) * (0.3 + this.rng.next() * 0.7));
     // Ironvow's Oath: her opening time is the lowest in the party.
@@ -728,7 +754,60 @@ export class Battle {
       protects: e.protects,
       bribable: !!e.bribable && !e.boss,
       hired: false,
+      masked: !!e.disguise,
+      disguise: e.disguise,
+      trueName: e.disguise?.name ?? e.name,
     };
+  }
+
+  /**
+   * Foes in disguise (the Paper Fox and his decoys) take the same name with a letter dealt at random, and shuffle their
+   * places, so neither the name nor the place gives the real one away (the second review's 3.6).
+   */
+  private dealDisguises(foes: Combatant[]): void {
+    const masked = foes.filter((f) => f.disguise);
+    if (masked.length === 0) return;
+    const letters = this.rng.shuffle(masked.map((_, i) => String.fromCharCode(65 + i)));
+    const slots = this.rng.shuffle(masked.map((f) => f.slot));
+    masked.forEach((f, i) => {
+      f.name = `${f.disguise!.as} ${letters[i]}`;
+      f.slot = slots[i]!;
+    });
+  }
+
+  /** The disguised foes' next free letter (a decoy folded in mid-fight). */
+  private nextDisguiseLetter(): string {
+    const used = new Set(this.enemies.filter((e) => e.disguise).map((e) => e.name.slice(-1)));
+    for (let i = 0; i < 26; i++) {
+      const l = String.fromCharCode(65 + i);
+      if (!used.has(l)) return l;
+    }
+    return '?';
+  }
+
+  /**
+   * Kagemimi on a foe: its next move is told; and if it or anyone with it is in disguise, the disguise is found out.
+   * The real one is named and Marked; the paper ones lose their protection and go by their own names.
+   */
+  private revealFrom(me: Combatant, t: Combatant): BattleEvent[] {
+    const events: BattleEvent[] = [];
+    const next = t.moves.find((m) => !!m.every && (t.phaseTurns + 1) % m.every === 0) ?? t.moves[0];
+    if (next && !t.down) events.push({ kind: 'text', text: `${me.name} listens: ${t.name} means to use ${next.name} next.` });
+    if (this.revealed || !this.enemies.some((e) => e.masked && !e.down)) return events;
+    this.revealed = true;
+    for (const e of this.enemies.filter((x) => x.disguise)) {
+      e.masked = false;
+      if (e.disguise!.name) {
+        e.name = e.disguise!.name;
+        if (!e.down) events.push(...this.giveStatus(e, 'marked'));
+      } else {
+        e.name = `${e.trueName ?? e.name} ${e.name.slice(-1)}`;
+        e.protects = undefined;
+      }
+    }
+    const real = this.enemies.find((e) => e.disguise?.name && !e.down);
+    if (real) events.push({ kind: 'text', text: `${me.name} has heard which one breathes. ${real.name} is found out; the rest are only paper.` });
+    return events;
   }
 
   /** Party fighters Bound now. */
@@ -898,6 +977,8 @@ export class Battle {
 
   /** Whether a fighter can use a skill now: SP, cooldown, once per battle. */
   canUse(c: Combatant, skill: SkillDef): boolean {
+    // Hushed: no SP skills (Attack's weapon moves still work).
+    if (!isMove(skill) && c.statuses.some((st) => STATUS[st.id].noSkills)) return false;
     if (c.sp < skillCost(skill, c)) return false;
     if (goldCost(skill, c) > this.purse) return false;
     if ((c.cooldowns[skill.id] ?? 0) > 0) return false;
@@ -1019,7 +1100,16 @@ export class Battle {
       }
       move = c.moves[0] ?? { name: 'Attack', power: 100 };
     }
-    if (ally) {
+    if (move.mirror) {
+      // Sold Secrets: one fighter's file, read aloud, and their own best blow turned on them with his ATK.
+      const t = this.rng.pick(reachable(targets));
+      const best = t.skills.filter((s) => s.kind === 'damage' && !s.gold && s.power > 0).sort((x, y) => y.power - x.power)[0];
+      const power = Math.max(move.power, best?.power ?? 0);
+      const copied = best && best.power >= move.power ? best.name : move.name;
+      events.push({ kind: 'use', who: c.key, name: move.name, targets: [t.key] });
+      events.push({ kind: 'text', text: `${c.name} reads from a file with ${t.name}'s name on it: ${copied}.` });
+      events.push(...this.strike(c, t, { ...move, name: `${move.name}: ${copied}`, power }));
+    } else if (ally) {
       events.push({ kind: 'use', who: c.key, name: move.name, targets: [ally.key] });
       for (const st of move.statuses ?? []) events.push(...this.giveStatus(ally, st, move.turns));
     } else if (gianna && move.seize !== undefined) {
@@ -1300,6 +1390,7 @@ export class Battle {
       }
     }
     if (surge) this.surgeArmed = false;
+    if (skill.reveal) for (const t of targets) if (t.side === 'enemy') events.push(...this.revealFrom(me, t));
     return events;
   }
 
@@ -1373,6 +1464,14 @@ export class Battle {
     const n = this.enemies.filter((x) => x.enemyId === id).length + 1;
     const slot = [0, 1, 2, 3].find((k) => !this.enemies.some((x) => x.slot === k && !x.down)) ?? this.enemies.length;
     const c = this.foe(e, n, n > 1, slot);
+    if (c.disguise) {
+      if (this.revealed) {
+        // Found out already: a fresh fold is plainly paper.
+        c.masked = false;
+        c.protects = undefined;
+        c.name = `${c.trueName ?? c.name} ${this.nextDisguiseLetter()}`;
+      } else c.name = `${c.disguise.as} ${this.nextDisguiseLetter()}`;
+    }
     c.next = (this.actor?.next ?? 0) + Math.round(turnDelay(c.spd) * 0.5);
     this.combatants.push(c);
     return c;

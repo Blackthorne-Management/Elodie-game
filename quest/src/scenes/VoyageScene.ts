@@ -24,6 +24,15 @@ const REALM_KEY = 'voyage-realm';
 
 export type VoyagePhase = 'harbor' | 'map' | 'done';
 
+/** Each harbor's shore on the opening picture: its strand, the land behind it, and its roofs. */
+const SHORES: Readonly<Record<VoyageDef['shore'], { sand: number; land: number; roof: number }>> = {
+  zetwal: { sand: 0xd8c08a, land: 0x4f9a4a, roof: 0xa04040 },
+  xaragua: { sand: 0xd8c08a, land: 0x4f9a4a, roof: 0xc8a46b },
+  ardencia: { sand: 0x3a3440, land: 0x241e26, roof: 0x2a2632 },
+  skarragol: { sand: 0x8e8e86, land: 0x8a9a70, roof: 0xa89878 },
+  kuroshi: { sand: 0x4a4650, land: 0x3a4a44, roof: 0x5a5468 },
+};
+
 export class VoyageScene extends Phaser.Scene {
   private voyageId = '';
   private phase: VoyagePhase = 'harbor';
@@ -99,10 +108,12 @@ export class VoyageScene extends Phaser.Scene {
     g.fillStyle(night ? 0x1c4058 : 0x3a7fa0, 1).fillRect(0, 34, 120, VIEW_HEIGHT - 34);
     // The shore on the west: sand, green, roofs (Pòdlimyè's red tile, or Yucayeque's thatch), the pier.
     // Ardencia's strand is black sand under basalt (Chapter 4's voyage leaves from the Free Brasador camp).
-    const black = voyage.shore === 'ardencia';
-    g.fillStyle(night ? 0x6a5e48 : black ? 0x3a3440 : 0xd8c08a, 1).fillRect(0, 34, 46, VIEW_HEIGHT - 34);
-    g.fillStyle(night ? 0x24402a : black ? 0x241e26 : 0x4f9a4a, 1).fillRect(0, 34, 30, VIEW_HEIGHT - 34);
-    const roof = voyage.shore === 'xaragua' ? 0xc8a46b : black ? 0x2a2632 : 0xa04040;
+    // Ordvik's quay is grey shingle under felt and slate (Chapter 7's longship); Kirinoura's pier is black lacquer and
+    // violet-grey roofs in the fog (Chapter 8's trader, when it is built).
+    const shore = SHORES[voyage.shore];
+    g.fillStyle(night ? 0x6a5e48 : shore.sand, 1).fillRect(0, 34, 46, VIEW_HEIGHT - 34);
+    g.fillStyle(night ? 0x24402a : shore.land, 1).fillRect(0, 34, 30, VIEW_HEIGHT - 34);
+    const roof = shore.roof;
     for (const [x, y] of [[4, 44], [14, 70], [6, 104], [16, 134]] as const) {
       g.fillStyle(night ? 0x5a4a30 : roof, 1).fillRect(x, y, 10, 6);
       g.fillStyle(night ? 0x4a4038 : 0x9a8a78, 1).fillRect(x + 1, y + 6, 8, 5);

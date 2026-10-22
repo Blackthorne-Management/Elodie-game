@@ -1,6 +1,7 @@
 // The shapes of game content the engine runs (the content itself lives in src/data).
 
 import type { RhythmDef } from './rhythm.ts';
+import type { RotorDef } from './rotor.ts';
 import type { DebateContext, DebateDef } from './debate.ts';
 import type { DialogueScript, Speaker } from './dialogue.ts';
 import type { FlagReader } from './flags.ts';
@@ -47,6 +48,10 @@ export interface Messages {
   doorInEcho: string;
   enterEcho: string;
   leaveEcho: string;
+  /** A screen pushed in a rotor grid (engine/rotor.ts): it turned; every screen faces north; it is pegged and will not. */
+  rotorTurned?: string;
+  rotorSolved?: string;
+  rotorPegged?: string;
 }
 
 /** One kind of ambush in a wild section: who jumps out, and how it reads before the fight. */
@@ -90,6 +95,8 @@ export interface GameContent {
   debates?: Readonly<Record<string, DebateDef>>;
   /** Rhythm locks (engine/rhythm.ts), by id; a dialogue opens one with flag `rhythm.next`. */
   rhythms?: Readonly<Record<string, RhythmDef>>;
+  /** Grids of pivoting screens (engine/rotor.ts), by id; a dialogue pushes one with flag `rotor.push`. */
+  rotors?: Readonly<Record<string, RotorDef>>;
   /** Influence in a debate's city now, and what Mediate needs (the RPG content knows the pillars). */
   debateContext?: (flags: FlagReader, def: DebateDef) => DebateContext;
 }

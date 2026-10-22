@@ -1085,6 +1085,8 @@ export const BATTLE_ART = {
   bandAlpha: 0.78,
   hpBar: 0x7fbf7a,
   hpLow: 0xd8584a,
+  /** A foe in disguise (Chapter 7's paper decoys): a grey bar, full, until it is found out. */
+  hpMasked: 0x8a8494,
   spBar: 0x5a8ad8,
   sparkBar: 0xfff2a0,
   cursor: 0xf2d04b,

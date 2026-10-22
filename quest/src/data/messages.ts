@@ -9,4 +9,7 @@ export const MESSAGES: Messages = {
   doorInEcho: 'The memory does not reach past this door.',
   enterEcho: 'Echo: fifty years ago',
   leaveEcho: 'The present',
+  rotorTurned: 'The screens turn on their pivots.',
+  rotorSolved: 'Every screen faces north. The lanes are open.',
+  rotorPegged: 'That screen is pegged fast. It turns nothing now.',
 };
