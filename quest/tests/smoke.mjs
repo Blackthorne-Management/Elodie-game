@@ -966,7 +966,7 @@ async function playAct(browser, errors) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   watchErrors(page, errors);
-  await page.goto(GAME);
+  await page.goto(`${GAME}&seed=1`); // the simulator's encounter seed, so ambushes match
   await page.evaluate(() => localStorage.clear());
   await page.reload();
   await waitReady(page);
