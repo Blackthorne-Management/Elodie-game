@@ -284,6 +284,11 @@ describe('Yucayeque\'s people at war, and after', () => {
       }
     });
   }
+  it('the lamp-oil seller only speaks at war: no shop sells lamp oil, and the cassava-bread stall stays the baker\'s', () => {
+    expect(CONTENT.npcs.lamp_oil_war!.shop).toBeUndefined();
+    const breadSellers = Object.values(CONTENT.npcs).filter((n) => n.shop === 'xaragua_food').map((n) => n.id);
+    expect(breadSellers.every((id) => id.startsWith('casabe_baker'))).toBe(true);
+  });
 });
 
 // ---- Every variant plays through -------------------------------------------------------------------------------------------

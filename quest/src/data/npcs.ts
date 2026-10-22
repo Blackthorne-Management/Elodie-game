@@ -550,7 +550,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   fisher_boy_war: n('fisher_boy_war', 'fisher_boy', "Fisher's boy", 'harbors_lie_boy'),
   canoe_fisher_war: n('canoe_fisher_war', 'canoe_fisher', 'Canoe fisher', 'war_canoe_fisher'),
   camp_leader_war: n('camp_leader_war', 'camp_leader', 'Camp leader'),
-  lamp_oil_war: { ...n('lamp_oil_war', 'lamp_oil_seller', 'Lamp-oil seller', 'thumbprint_lamp_oil'), shop: 'xaragua_food' },
+  lamp_oil_war: n('lamp_oil_war', 'lamp_oil_seller', 'Lamp-oil seller', 'thumbprint_lamp_oil'),
   jordyn_war: n('jordyn_war', 'jordyn_free', 'Jordyn'),
   thorne_war: n('thorne_war', 'thorne', 'Governor Thorne', 'customs_thorne'),
   customs_guard_war: n('customs_guard_war', 'crown_marine', 'Crown marine', 'customs_thorne'),

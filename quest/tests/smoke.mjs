@@ -1592,8 +1592,8 @@ async function playAct(browser, errors) {
         await waitMatch(page, expected(sim), 'the reload after the credits');
         continue;
       }
-      // A vendor's shop opens when their scene ends (Chapter 11's lamp-oil seller, after the Ninth Thumbprint's ask): a
-      // screen of the browser's own (the simulator stays in the field). Close it, as a player who buys nothing does.
+      // A vendor's shop opens when their scene ends (a vendor whose talk comes before their wares): a screen of the
+      // browser's own (the simulator stays in the field). Close it, as a player who buys nothing does.
       if (sim.logic.mode === 'field' && (await snap(page)).mode === 'shop') {
         await page.keyboard.press('KeyX');
         keys++;

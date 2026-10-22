@@ -139,8 +139,9 @@ step and a question on each side), not a door. Not built yet: the market's secon
 11 in a browser (Oct 22, after the merge onto Chapter 10): its fights won, the story flags, the Turn's route and the
 volleys left agree with the simulator's. **Fixed (Oct 22, a game bug the smoke found):** a fighter whose Attack opens
 their weapon moves had no working Attack while Hushed (Hale's Sealbearer hushed Rael and the fight stalled); Attack now
-strikes plainly while the moves are blocked, as COMBAT.md's Hushed row says. Noted: Chapter 11's lamp-oil seller opens
-the cassava-bread stall's shop (`xaragua_food`) after the Ninth Thumbprint lines; worth a look (a lamp-oil seller selling bread).
+strikes plainly while the moves are blocked, as COMBAT.md's Hushed row says. **Fixed (Oct 22):** Chapter 11's lamp-oil
+seller (`lamp_oil_war`) opened the cassava-bread stall's shop (`xaragua_food`) after the Ninth Thumbprint lines; no shop
+sells lamp oil, so she now only speaks (Claude's call; `tests/war.test.ts` holds it).
 
 **Quest, Chapter 12 and the Epilogue (Oct 22):** The Claim and the Hearing are built on branch `chapter12` (from
 `chapter11`; the ash road and Azzy's question on Strike, the seven armies at the gates, Elodie in the arch and in her
