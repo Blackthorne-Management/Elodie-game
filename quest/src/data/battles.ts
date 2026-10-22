@@ -516,8 +516,8 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     id: 'deserters_road',
     title: "Deserters' Road",
     backdrop: 'crossroads',
+    // Each at his own level: the Sergeant 15, his men 14.
     enemies: ['deserter_sergeant', 'deserter', 'deserter'],
-    level: 14,
     table: 'seat_story',
     group: 'deserters',
     rewards: { xp: 60, gold: 120 },

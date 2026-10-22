@@ -130,4 +130,28 @@ export const PUZZLES: readonly PuzzleDef[] = [
     flags: { ...XARAGUA_FREE, 'story.anaco_met': true, 'side.medicine.accepted': true },
     goal: { flag: 'side.medicine.bark' },
   },
+  // Chapter 5 (Oct 22): Eightgate's signature puzzle, the sealing in the Throne Archive (PUZZLES.md SIG-SEA, as the
+  // outline's second review 3.4 corrected it): the carved number, the thread in the memory, the keeper's law.
+  {
+    id: 'seat_accord',
+    title: 'The Throne Archive: the drawer the clerk used, and the keeper\'s law (signature puzzle; PUZZLES.md SIG-SEA)',
+    map: 'seat-archive',
+    spawn: 'archive',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'story.yari_asked': true,
+      'party.azzy': true,
+      'party.samira': true,
+      'story.benny_joined': true,
+      'story.caona_joined': true,
+      'story.coco_plan': true,
+      'story.disguised': true,
+      'story.party_split': true,
+      'story.archive_open': true,
+      'story.archive_entered': true,
+    },
+    // Hollis opens the drawer and agrees to take the page to the Parley.
+    goal: { flag: 'story.hollis_agreed' },
+  },
 ];
