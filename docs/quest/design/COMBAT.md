@@ -244,12 +244,20 @@ both.
 | 3 | 8-11 | 11 (2,249) | 10 (1,714) | 0 | 11 (2,249) | 11 | 11 |
 | 4 | 11-14 | 14 (3,284) | 12 (2,489) | 14 | 14 (3,284) | 14 | 14 |
 | 5 | 14-15 | 15 (3,699) | 13 (2,764) | 16 | 15 (3,699) | 15 | 16 |
+| 6 | 15-17 | 17 (4,579) | 15 (3,474) | 38 | 17 (4,611) | 17 | 18 |
 
 Before it: 6, 10, 12, 15, 15 (the route line; ambushes then paid 10 x level x foes). The route walks few wild tiles
 (none in Ardencia: the sea road skirts the Cinder Flats' fields), so the played median sits on the route line; the
 wanderer is what a player who explores the wilds gets. **For the Chapter 6 to 8 outlines:** their level plans assumed
 25 XP a step and an ambush taper; Chapter 6 now starts at 3,699 (level 15), its steps pay 40 until it gets its own
 row, and ambushes follow the rule above, so re-run their sums with `level-curve.ts` when each is built.
+
+**Chapter 6 (built Oct 22; Claude's calls):** its steps pay **65** (`XP_PER_OBJECTIVE_BY_CHAPTER[5]`), not the
+formula's 45: the line without side quests reaches Chapter 6 two under (13 against 15) and the formula would leave it
+three under; Ordvik's side quests and fights pay less than its outline planned (S-5 50, S-3 60 and its wolves 40, the
+debate 20, Grimvald 120, the lookouts 40, the bout 0) so the route and the played line end on 17, not 18. Eleven books
+at 10. Measured: route 17 (4,579), without side quests 15 (3,474), played median 17 (4,611), p90 17, wanderer 18.
+Kuroshi (17 to 19) is met at 17. Chapters 7 and 8 get their own rows when built.
 
 **The three roads (any order):** the first of Skarragol, Kuroshi and Jwaladesh entered is set to levels 15 to 17, the
 second 17 to 19, the third 19 to 21 (`ROAD_TIERS`). Fixed on first entry.
@@ -364,6 +372,15 @@ weapon moves (Slash, Heavy Blow, Sweep, as Patricio's), and starts with the Stee
 | Raider's Charge | 5 | Hit, power 130, and her delay this turn is halved | Raider's Charge |
 | Hoofbeat | 6 | Salkhi kicks: power 90 to one enemy, Stunned 1 turn 25% | |
 | The Great Raid | 16 | Once per battle: take two full turns in a row | The Great Raid |
+
+**Built (Oct 22; Chapter 6):** base HP 56, SP 16, ATK 13, DEF 8, MAG 4, SPD 15; growth HP 6, SP 2, ATK 2, DEF 1, SPD 2
+(the fastest in the party). Starts with a Steppe Sabre of Swiftness and a braided riding coat. Ironvow's Oath is real
+(`opensFirst`: her opening time is the party's lowest); Raider's Charge 130 with weight 0.5; Hoofbeat 90, Stunned on a
+boss a quarter of the time; The Great Raid 150, once, weight 0 (her next turn at once). Moves: Slash, Heavy Blow,
+Horse-Tail Sweep (every foe). She fights second, after Gianna, from the Moot until the chapter ends (`MemberDef.leads`).
+**Noyan Grimvald** (13.3), built: level 17 brute, hp x5, atk x1.3 (sim numbers in the Chapter 6 outline's Built
+section); phases at half (unhorsed, two reavers ride in, the Stolen Standard inspires them) and at a quarter or a Surge
+in that phase (the standard falls); he withdraws at 0 HP.
 
 ### 9.5 Haru (Shadow agent, Suzumori)
 

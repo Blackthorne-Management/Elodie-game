@@ -59,6 +59,14 @@ on the owner: whether Coralie knows the family secret (built as Chapter 4 has it
 to change); art drop 2 for the Regent, Hollis and Coco (`docs/quest/ART-PROMPTS.md` 14). Noted: Chapter 2's required
 side quests (merged Oct 22) put the party one level higher from Chapter 3 on (Chapter 2 ends at 10, target 8).
 
+**Quest, Chapter 6 (Oct 22):** The Stolen Standard is built on branch `chapter6` (Ordvik's six maps, the fair in
+uproar, the Moot and Bayarmaa's bond, the day's three required things (Grandson of the Steppe, The Winter Stores, the
+oath debate), the fjord's five swaps and Sarnai's raid, the herd, Grimvald, the horn and the price, the longship).
+Waiting on the owner: the proposal names (the lawspeaker Ketil, the trading jarl Sigrún, the Crown's envoy Pelham, the
+envoy in white Chuluun, the herder Oyuun; built by role until approved); art for Bayarmaa, Salkhi, Torvald, Grimvald
+and Sarnai (`docs/quest/ART-PROMPTS.md` 15); the Mongolian and Old Norse words (`quest/src/data/lang/`) for the Nov 18
+check. Noted: Chapter 6's story steps pay 65 XP (the line without side quests was at its limit).
+
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):
 - [x] **Approved Oct 20:** Samira's *Daftar* skill spends **gold** instead of the

@@ -72,11 +72,11 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | Se-3 | Deserters' Road (built Oct 22, required) | Eightgate | Ch. 5 | 14 to 16 | yes | no |
 | Se-4 | The Unknotted Ribbon (secret) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | yes |
 | Se-5 | A Seat for Every House (stage 1 built Oct 22, required) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | no |
-| S-1 | Salkhi Has Opinions | Ordvik | Ch. 6 | road tier | no | no |
-| S-2 | The Fleet for Sale | Ordvik | Ch. 6 | road tier | no | no |
-| S-3 | The Winter Stores (safehouse) | Ordvik | Ch. 6 | road tier | yes | yes |
-| S-4 | The Cairn of Nine Riders (secret) | Ordvik | Ch. 6 | road tier | yes (plateau) | yes |
-| S-5 | Grandson of the Steppe | Ordvik | Ch. 6 | road tier | optional | no |
+| S-1 | Salkhi Has Opinions (after the release; its lines are Salkhi's in the story) | Ordvik | Ch. 6 | road tier | no | no |
+| S-2 | The Fleet for Sale (folded into the price scene, Oct 22; the race after the release) | Ordvik | Ch. 6 | road tier | no | no |
+| S-3 | The Winter Stores (safehouse; built Oct 22, required) | Ordvik | Ch. 6 | 16 | yes | yes |
+| S-4 | The Cairn of Nine Riders (secret; after the release, the cairns placed) | Ordvik | Ch. 6 | road tier | yes (plateau) | yes |
+| S-5 | Grandson of the Steppe (built Oct 22, required) | Ordvik | Ch. 6 | 16 | optional | no |
 | K-1 | Definitely Not a Spy | Kirinoura | Ch. 7 | road tier | no | no |
 | K-2 | The Spy Ledger | Kirinoura | Ch. 7 | road tier | if seen | yes |
 | K-3 | Lanterns for the Lost (safehouse) | Kirinoura | Ch. 7 | road tier | yes | no |
@@ -417,6 +417,10 @@ built (owner decision).
   Jwaladesh's lamp, the Aldermoor dissidents' law-seal, and Zetwal's sun cloth. Place them in the Throne Hall before the
   Claim.
 - **Reward:** 400 XP, +5 Accord Stability, and the standing council scene in the Just Throne ending (guide 5.7).
+- **Claude's call (Oct 22, the Chapter 6 outline review 3.6):** a token is given **when the alliance is made**, not when
+  its price is paid in full (prices are owed, paid at the Muster; a token given only at 10 of 10 would leave the chairs
+  empty). Skarragol's braid is the first, given in Ordvik's price scene. Toward a price, Influence and Fear count at
+  half value when the Muster computes it (the guide's rule); Ordvik's Journal note says what each payment was worth.
 
 ## Ordvik (Skarragol)
 
@@ -454,6 +458,14 @@ built (owner decision).
   "share").
 
 ## Kirinoura (Kuroshi)
+
+- **Built (Oct 22; the Chapter 6 outline section 7 with its review's 3.5):** the envoy is of the khatun's household,
+  Ironvow's eastern clans (no separate polity); his offer is two hundred riders "the day you take your mother's name".
+  Three answers, all kept in `choice.azzy_ordu` for Chapter 12: refuse politely (+2 Influence at Ordvik), refuse with a
+  show of strength (a sparring bout with the champion in white, who steps back at 0 HP: +2 Fear), or ask Gianna (the
+  corral rail: +1 Influence, tips the Claim toward sharing). 50 XP, 150 gold. S-3 (built): the wolves at the store (a
+  fight), the boulder rolled in the memory (`anchor.wolf_run`), the wall now, the fourth ash thumbprint; 60 XP, 200
+  gold, +1 Wealth. Both close (`closed`) if the story is past them.
 
 ### K-1 Definitely Not a Spy
 - **Giver:** Haru (unseen). **Accept:** the hutia notices someone following.

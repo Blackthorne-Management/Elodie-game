@@ -282,6 +282,16 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   herd."
 - **Difficulty:** 5.
 
+- **Built (Oct 22; the Chapter 6 outline section 8 with its review's 3.2 and 3.7):** the present is the edge of the
+  freeze (open water, first floes); six zones; stretches 1, 3 and 5 are ice only in the memory, 2 and 4 floes only now,
+  with dead ends off zones 1 and 3 and off the first stretch. Five swaps cross; Sarnai's raid plays from a step trigger
+  on the far shore's floe in the memory (and from its `onEcho`), and teaches the whistle (`clue.herd_whistle`). The herd
+  is six horses (distinct NPCs, walked): whistle at the herd (the west lookout leaves the gap), then at the picket line
+  inside the ring (the east lookout follows the horses), the approach unseen (`story.herd_unseen`, +1 Influence).
+  Talking to a lookout is the fight (`camp_lookouts`), and after it the gaps are open: no soft-lock. The arrow walks
+  the crossing zone by zone (flag triggers on each zone). Files: `quest/puzzles/skarragol_fjord/` and
+  `quest/puzzles/skarragol_gully/` (M-SKA-1). Honest difficulty 4.
+
 ### M-SKA-1 The wolf run (S-3)
 - **Present:** wolves get into the winter store through a gully. **Echo:** a loose boulder on the slope above the gully;
   Patricio is strong enough to roll it. **Anchor:** the boulder.

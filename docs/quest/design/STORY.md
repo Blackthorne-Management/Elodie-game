@@ -427,6 +427,13 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
 - **Who joins:** Bayarmaa (Raider) and her horse (proposal name: **Salkhi**, "wind").
 - **Price:** Wealth 10.
 - **Learns:** Sarnai broke the Crown once by speed; the Crown buys whole councils; Azzy's mother's people are watching.
+- **Built (Oct 22; the outline `reviews/2026-10-21-chapter6-outline.md`, its "Built" section, and its second review):**
+  Claude's calls on the staging: Bayarmaa joins at the Moot under the envoy's bond (before the fjord) and clears her
+  name at the horn; the thief's pay is an unsigned compensation-office voucher, not a confession; Torvald is clean and
+  Hrafn is the sale's voice; the present is the edge of the freeze (Sarnai's raid won; the spring ice took half her
+  riders home); Azzy's mother's people are the khatun's household of Ironvow's eastern clans; the standard falls from
+  Grimvald's hand in the fight's third phase; the way back round the fjord's head is the chapter's one card. The roads
+  play Skarragol first (15 to 17), then Kuroshi and Jwaladesh (owner decision, Oct 20).
 
 #### Chapter 7: The Fog Files (Kuroshi)
 

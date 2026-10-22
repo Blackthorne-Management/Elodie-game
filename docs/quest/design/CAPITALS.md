@@ -507,6 +507,11 @@ Every House.
 
 ## 6. Ordvik (Skarragol, House Ironvow)
 
+*Built Oct 22 (Chapter 6): six maps (`quest/tools/maps/skarragol.ts`): the Winter Plateau (46 x 30), the Horse-Fair hub
+(46 x 30), the Great Moot Tent (36 x 26, the seat paragraph's size), the Saga Tent (22 x 16), the Longship Quay
+(28 x 14, split out of the hub so the fleet for sale is walked past) and the Frozen Fjord with the thief's camp
+(40 x 34). Five outdoor areas, buildings aside.*
+
 **Chapter:** 6 (one of the three roads). **Ruler:** the clan council (proposal: led by **Torvald**, Bayarmaa's father).
 Wants **Wealth** (price 10): plunder rights and compensation for blockade losses. **Feel:** a fjord bay where longships
 meet a steppe camp of great tents; horses everywhere. Fused Nordic / Mongolian-inspired. Accent slate `#5d6d7e`.

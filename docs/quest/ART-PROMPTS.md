@@ -490,6 +490,46 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 
 ---
 
+## 15. Bayarmaa, Salkhi, Torvald, Hrafn, Grimvald and Sarnai (Chapter 6, Ordvik; art drop 2 or after)
+
+Added Oct 22 with the Chapter 6 build. The game draws placeholders from the looks `bayarmaa`, `horse_grey` (Salkhi),
+`torvald`, `hrafn`, `grimvald`, `echo_sarnai`, `steppe_reaver`, `steppe_wolf`, `ordu_envoy`, `hostage_envoy` until these
+arrive (`quest/src/assets.config.ts`; horses and wolves are drawn on four legs). Make each like section 12: a reference
+sheet in a new chat (attach Gianna's sheet), then the portrait and the walking sprite sheet in the same chat.
+
+**Bayarmaa Ironvow** (about 19; the Raider, the chapter's companion): lean and sharp-shouldered, warm tan skin, a long
+black braid down her back, dark eyes that look past you at the horizon. A grey felt riding coat to the knee with a
+slate-blue collar and a braided hem, a wide sash, riding boots, a curved steppe sabre at her hip with a horsehair grip.
+Portrait expressions: **flat** (default: says little), **fierce** (the Moot, defying her council), and **soft** (only
+for her horse, or the moment she gives Anissa her fur). Battle stance: empty-handed, weight forward, as if about to
+ride.
+
+**Salkhi** (Bayarmaa's grey mare; she talks): a dappled grey steppe mare, short and sturdy, a dark mane, a slate-blue
+saddle-cloth, an expression of enormous dignity and mild contempt. Walking sheet on four legs (same 3 x 4 layout).
+Portrait: **unimpressed** (default) and **vindicated**.
+
+**Torvald** (about 55; chieftain of the Ironvow, Bayarmaa's father): big, tired, grey-blond hair and beard, a bear-fur
+mantle over brown wool, no crown, the standard's slate disc as a brooch. Portrait: **tired** (default), **exact**.
+
+**Hrafn** (about 45; the raiding jarl): black hair and beard cut short, a black cloak with a raven stitched on it, an
+axe at his belt. Portrait: **blunt** (default).
+
+**Noyan Grimvald** (about 50; the boss, a raider chief the Crown paid): huge, a wolf-fur coat with Throne gold coins
+sewn in the hem, a red sash, the Ironvow standard (nine horse-tails under a slate disc) strapped across his back. Battle
+sprite: mounted on a black horse (phase 1) and on foot (phase 2). Portrait: **paid** (default: a man who says so).
+
+**Sarnai Ironvow** (the Echo, fifty years ago; Bayarmaa's grandmother): Bayarmaa's face, older, a grey hood, a bone
+whistle on a cord, beside a grey horse; sepia like every Echo portrait. Portrait: **certain**.
+
+**Also (placeholders may ship):** the lawspeaker (old, a staff, painted hides), the trading jarl (a fair braid, a tally
+stick), the Crown's envoy (Aldermoor violet, a ledger), the envoy in white (a white felt coat with a silver mare), the
+champion in white, the herder (a crook, a red headband), the steppe reavers (horse-tail helms), the steppe wolves.
+
+Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |
