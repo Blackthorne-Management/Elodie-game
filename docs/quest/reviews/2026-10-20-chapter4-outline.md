@@ -721,10 +721,17 @@ questions now needed by early November (question 1 above is one of them), the fl
 
 ---
 
+## Owner decisions (Oct 21, by pop-up)
+
+1. **Layla Dorini rules Al-Doria as Merchant-Prince, and she is Samira's mother.** Samira defies her own mother on the
+   divan; Layla's refusal, her descent into the vault and the purse sent without a word are a mother's scenes.
+2. **Coralie, "Tati Coco"** (FAMILY.md): bumped into in the cloth merchants' row, she helps with the carpet knot
+   count and sails on before the vault.
+
 ## Built (Oct 22, branch `chapter3`): what is in the game, and Claude's calls
 
-Built in order of authority: the owner's decisions (`design/FAMILY.md`: Coralie; the Layla question, being asked,
-built on the recommendation (a)), the second review (`2026-10-21-chapter4-outline-review.md`, every fix in its section
+Built in order of authority: the owner's decisions (`design/FAMILY.md`: Coralie; the Layla question, since
+answered (a) by the owner), the second review (`2026-10-21-chapter4-outline-review.md`, every fix in its section
 6), then this outline. Code: `quest/tools/maps/aldoria.ts` (six maps), `quest/src/data/dialogue/aldoria.ts` (every
 scene; beat 0 is `camp_trader_talk` in `dialogue/ardencia.ts`), `ACT4` in `quest/src/data/quests.ts`, `battles.ts`
 (Qasim, the Caravan Raider, `qasim_vault`, Bribe, Baraka of the Scale), `encounters.ts` (`desert_edge`),

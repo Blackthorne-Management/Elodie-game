@@ -95,8 +95,8 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
   });
 
   it('Chapter 2: the pier, Anaco, the council, Thorne, the cave, the lock, the proof, the attack, the occupied city, Thorne; home to Zetwal', () => {
-    expect(atChapter2End.battles).toEqual(['intro_boar', 'pier_marines', 'caney_breach', 'village_patrol', 'thorne_blockade']);
-    expect(chapter2).toEqual(['pier', 'anaco', 'council', 'thorne', 'lamp', 'cave', 'areito', 'lock', 'proof', 'escape', 'held', 'visit', 'word', 'blockade']);
+    expect(atChapter2End.battles).toEqual(['intro_boar', 'pier_marines', 'encounter:mountain_path/crabs', 'caney_breach', 'village_patrol', 'thorne_blockade']);
+    expect(chapter2).toEqual(['pier', 'anaco', 'council', 'thorne', 'lamp_ask', 'dusk', 'lamp', 'cave', 'areito', 'lock', 'proof', 'escape', 'held', 'visit', 'word', 'blockade']);
     expect(atChapter2End.flags['clue.seventh_clause']).toBe(true);
     expect(atChapter2End.flags['card.xaragua_falls']).toBe(true);
     expect(atChapter2End.flags['card.act2_end']).toBe(true);
@@ -109,7 +109,7 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     // ends inside the one long scene from the trial to Azzy's key, so the route never stops on it).
     expect(chapter3).toEqual([...ACT3.objectives.map((o) => o.id).filter((id) => id !== 'request' && id !== 'guests'), 'complete']);
     expect(flags.isSet('story.forge_open')).toBe(true);
-    expect(atChapter3End.battles.slice(5)).toEqual(['rael_trial', 'tunnel_bats']);
+    expect(atChapter3End.battles.slice(6)).toEqual(['rael_trial', 'tunnel_bats']);
     expect(flags.isSet('act3.complete') && flags.isSet('card.act3_end')).toBe(true);
     expect(atChapter3End.map).toBe('ardencia-camp');
     // The trial is lost, never won; the question is asked and the halves glow; Gianna believes the lie.
@@ -127,7 +127,7 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     // Every objective in order (the lead was done at Chapter 3's end; "The guild's blades" and "The Merchant-Prince's
     // word" begin and end inside the one scene from the chest to Layla's descent, so the route never stops on them).
     expect(chapter4).toEqual([...ACT4.objectives.map((o) => o.id).filter((id) => !['lead', 'blades', 'word'].includes(id)), 'complete']);
-    expect(sim.battles.slice(7)).toEqual(['qasim_vault']);
+    expect(sim.battles.slice(8)).toEqual(['qasim_vault']);
     expect(flags.isSet('act4.complete') && flags.isSet('card.act4_end')).toBe(true);
     expect(sim.logic.state.player.mapId).toBe('aldoria-desert');
     // Samira joins in the vault, before the fight; the copy stays, the seventh page is sealed; the pass and the coin.

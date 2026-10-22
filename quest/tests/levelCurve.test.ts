@@ -18,6 +18,11 @@ import { curveText, levelCurve } from '../tools/level-curve.ts';
  */
 const KNOWN_OFF_TARGET: Readonly<Record<number, string>> = {
   1: 'over: flat 25 XP per Journal step (COMBAT.md 6 says 10 in Chapter 1)',
+  // Chapter 2's five side quests became required (owner decision Oct 19, built Oct 20 on main and merged into this
+  // branch Oct 22): their rewards, Journal steps, puzzles and the mountain crabs add about 380 XP, so Chapter 2 ends
+  // at 10 against 8, and Chapters 3 and 4 one level higher than they were tuned (12 and 15, both within slack).
+  // Reported to the owner with the merge; Chapter 2's numbers are main's to retune.
+  2: 'over: its five required side quests (merged Oct 22) add about 380 XP',
 };
 
 describe('the level curve along the scripted route', () => {
@@ -32,15 +37,16 @@ describe('the level curve along the scripted route', () => {
     for (let i = 1; i < report.chapters.length; i++) expect(report.chapters[i]!.xp).toBeGreaterThan(report.chapters[i - 1]!.xp);
   });
 
-  it('Chapter 3 (Ardencia) leaves the party at level 11, the outline\'s target, with every side quest on the route', () => {
+  it('Chapter 3 (Ardencia) leaves the party at level 12 (target 11, plus Chapter 2\'s required side quests), with every side quest on the route', () => {
     const c3 = report.chapters.find((c) => c.chapter === 3)!;
-    expect(c3.level).toBe(11);
+    expect(c3.level).toBe(12);
     expect(c3.levelNoSide).toBeGreaterThanOrEqual(9);
   });
 
-  it('Chapter 4 (Al-Doria) leaves the party at level 14, the outline review\'s target, and at 12 without its side quests', () => {
+  it('Chapter 4 (Al-Doria) leaves the party at level 15 (target 14, plus Chapter 2\'s required side quests), and at 12 without its side quests', () => {
     const c4 = report.chapters.find((c) => c.chapter === 4)!;
-    expect(c4.level).toBe(14);
+    // 14 as tuned; 15 since Chapter 2's side quests became required (see KNOWN_OFF_TARGET).
+    expect(c4.level).toBe(15);
     expect(c4.levelNoSide).toBeGreaterThanOrEqual(12);
   });
 

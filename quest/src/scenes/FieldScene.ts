@@ -1374,7 +1374,7 @@ export class FieldScene extends Phaser.Scene {
   private refreshGuide(): void {
     const flags = this.logic.state.flags;
     const maps = this.logic.maps;
-    const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags, SIDE_QUESTS);
+    const goal = storyGoal(questForJournal(CHAPTERS, this.map.id, flags), flags, SIDE_QUESTS, this.map.id);
     this.pointers.story.way = goal ? waypoint(maps, this.map.id, goal, flags) : null;
     const on = questArrows() && this.logic.era === 'present';
     const sides = [...sideGoals(SIDE_QUESTS, flags), ...mysteryGoals(SIDE_QUESTS, flags)]

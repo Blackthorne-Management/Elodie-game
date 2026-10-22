@@ -4,6 +4,7 @@
 
 import type { JournalNote, QuestDef } from '../engine/quests.ts';
 import { AREITO_BARS, barText } from './rhythms.ts';
+import { CHAPTER2_QUESTS_DONE } from './sideQuests.ts';
 
 export const ACT1: QuestDef = {
   id: 'act1',
@@ -331,15 +332,48 @@ export const ACT2: QuestDef = {
         'Down in the village, go into the Crown Customs House. Thorne is in his office.',
       ],
     },
+    // The lamp-oil seller will not hand over a cave lamp under the Governor's spyglass (Chapter 2 side quests, Oct 20):
+    // asking her is the refusal that starts the gate below. No story XP here: the lamp itself pays, at dusk.
     {
-      id: 'lamp',
+      id: 'lamp_ask',
       title: 'A light for the cave',
       detail: 'The first oath was carved in the petroglyph cave in the cassava gardens, and the cave is dark. Find a lamp.',
-      done: { flag: 'item.oil_lamp' },
+      done: { any: [{ flag: 'story.lamp_asked' }, { flag: 'item.oil_lamp' }] },
+      noXp: true,
       goals: [{ map: 'xaragua-village', at: { x: 23, y: 10 } }],
       hints: [
         'The keepers said the oath was carved in a cave. It is dark in caves, Gigi.',
         'Everyone in the village buys lamp oil from the same seller. She stands by the customs house.',
+        'Talk to the lamp-oil seller beside the Crown Customs House in the Harbor Village.',
+      ],
+    },
+    // The side quests' gate (owner decision, Oct 19: after Thorne's watching scene, before the cave). The lamp-oil
+    // seller lends the cave lamp at dusk, when the night canoe brings her oil and the Governor's glass is off them:
+    // "Let him watch us do ordinary things all day." Done through the side quests (the arrow follows what is left);
+    // it only orders what they already pay for (no story XP). A save that already has the lamp has passed it.
+    {
+      id: 'dusk',
+      title: 'Until dusk',
+      detail:
+        "The lamp-oil seller lends her lamp at dusk, when the night canoe brings the oil and the Governor's glass is off you. Until then, let him watch you do ordinary things: finish every quest on your Quests page.",
+      done: { any: [CHAPTER2_QUESTS_DONE, { flag: 'item.oil_lamp' }] },
+      followSide: true,
+      noXp: true,
+      hints: [
+        'The lamp waits for dusk, Gigi. Until then, half of Yucayeque asked us for help. Let the Governor watch us give it.',
+        'Follow the arrow, Gigi. It knows what is left better than I do.',
+        "The fisher's nets, the girl's hutia, the oil jars and the healer's bark up the mountain, and the argument by the fire.",
+      ],
+    },
+    {
+      id: 'lamp',
+      title: 'The lamp at dusk',
+      detail: "Dusk. The night canoe has brought the lamp-oil seller her oil, and the Governor's glass has gone in. She will lend you the lamp now.",
+      done: { flag: 'item.oil_lamp' },
+      goals: [{ map: 'xaragua-village', at: { x: 23, y: 10 } }],
+      hints: [
+        'It is dusk, Gigi. The lamp-oil seller said she would have the lamp for us now.',
+        'She stands by the Crown Customs House, in the Harbor Village.',
         'Talk to the lamp-oil seller beside the Crown Customs House in the Harbor Village.',
       ],
     },
@@ -875,6 +909,25 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'clue.sea_cave_route',
     title: 'The gap in the blockade',
     text: 'Anaco: three ships across the harbor mouth and a chain between the two nearest. But at the lowest tide the sea cave on the Canoe Beach opens to the sea, where the canoes slept in his grandmother\'s time.',
+  },
+  // Chapter 2's side quests (Oct 20).
+  {
+    id: 'ash_thumbprint',
+    when: 'side.oil.done',
+    title: 'The ash thumbprint',
+    text: 'The oil that comes by canoe after dark is left at the cave mouth on new-moon nights, each jar sealed with a grey thumbprint in ash. The same print is on the hill camp\'s post. "Someone who hates the Crown more than we do. Or loves us more."',
+  },
+  {
+    id: 'changed_hutia_stake',
+    when: 'anchor.hutia_stake',
+    title: 'Something changed',
+    text: 'The old ceiba in the cassava gardens has a low fork now: young Patricio staked it when it was a sapling, and it grew round the stake.',
+  },
+  {
+    id: 'changed_healer_grove',
+    when: 'anchor.healer_grove',
+    title: 'Something changed',
+    text: 'A grove stands behind the rocks at the hill camp: young Patricio planted it where no road would ever go, and no road crew ever cut it.',
   },
   {
     id: 'first_oath',

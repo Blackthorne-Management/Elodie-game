@@ -8,6 +8,7 @@
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { AREITO_BARS, barText } from '../rhythms.ts';
+import { MEDICINE_OFFER } from './xaraguaQuests.ts';
 
 function say(speaker: string, text: string, translation?: string): DialogueLine {
   return translation ? { speaker, text, translation } : { speaker, text };
@@ -165,7 +166,17 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say(Y, 'Then I will be there.'),
         say('anaco', 'Be there. Be quiet, if you can. You cannot. Go.'),
       ],
+      next: 'med_intro',
     },
+    // Medicine for the Cacique (Chapter 2 side quest, Oct 20): the healer is in the room, and stops the envoy on her
+    // way out (review D2: offered in a conversation the story already walks through).
+    med_intro: {
+      lines: [
+        act([{ do: 'walk', actor: 'npc:behique', to: at(31, 5) }, { do: 'face', actor: 'npc:behique', facing: 'player' }], 'behique', 'Envoy. A word, before you go to the council.'),
+      ],
+      next: 'med_offer',
+    },
+    ...MEDICINE_OFFER,
     again: { lines: [say('anaco', 'The council circle is across the hall, on the west side. Go, before they vote without you.')] },
     after: { lines: [say('anaco', 'You shouted at the whole council. Your grandmother would have laughed. Then she would have hidden you.')] },
   }),
@@ -569,6 +580,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     ask: {
       set: { 'story.bark_asked': true },
       lines: [
+        // Medicine for the Cacique (Oct 20): the grove bark was brewed in the caney, and went with it.
+        { speaker: 'behique', text: 'The grove bark went with the caney. The pond tree\'s will hold him till I can brew more.', if: { flag: 'side.medicine.done' } },
         say('behique', 'The cacique\'s fever comes with the tide. Wherever they keep him, he needs his medicine.'),
         say('behique', 'Fever bark: the tall tree by the spring pond in the gardens, east of the water. Thin strips, from the sunny side.'),
         say('behique', 'Crush it into his water. You can walk to him. I cannot.'),
@@ -722,9 +735,6 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   ]),
 
   // The Harbor Village (the hub).
-  simple('canoe_fisher_talk', [
-    say('canoe_fisher', 'Three Crown ships in our harbor, and they still buy our fish. They pay in paper. Paper does not swim.'),
-  ]),
   simple('weaver_talk', [
     say('weaver', 'This hammock took me a month. A marine offered me a Crown penny for it. I offered him the sea.'),
   ]),
@@ -739,43 +749,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('crown_marine_2_talk', [
     say('crown_marine', 'Six weeks on this island and I still can\'t find the end of the forest. Or the beginning.'),
   ]),
-  // The lamp-oil seller (STORY.md beat 3, Rael clue 6): once Thorne has warned Gianna off, she lends the lamp
-  // for the petroglyph cave.
-  script('lamp_oil_seller_talk', {
-    start: {
-      lines: [],
-      next: [
-        { if: { flag: 'item.oil_lamp' }, to: 'after' },
-        { if: { flag: 'story.thorne_met' }, to: 'lamp' },
-        { to: 'oil' },
-      ],
-    },
-    oil: {
-      lines: [
-        say('lamp_oil_seller', 'Guatiao!', 'Friend!'),
-        say('lamp_oil_seller', 'Lamp oil for the long nights. It comes by canoe, after dark, from someone I have never met.'),
-        say('lamp_oil_seller', 'Every jar paid for in advance. I stopped asking who. The jars stopped asking me.'),
-      ],
-    },
-    lamp: {
-      set: { 'item.oil_lamp': true },
-      lines: [
-        say('lamp_oil_seller', 'You came out of the Governor\'s house with your chin up. That is rare. Most come out looking at their feet.'),
-        say(A, 'We need a light for the petroglyph cave. A real one.'),
-        say('lamp_oil_seller', 'The cave! Nobody has been in there since the water rose. My grandmother said the stones inside could sing.'),
-        say('lamp_oil_seller', 'Take this lamp. The oil is the good kind, from the canoe that comes after dark.'),
-        say(G, 'Who sends it?'),
-        say('lamp_oil_seller', 'Twenty years I have asked that. Someone who wants the Yaguana to see in the dark. Go on.'),
-        nar('(Gianna received the oil lamp.)'),
-      ],
-    },
-    after: {
-      lines: [
-        say('lamp_oil_seller', 'The cave is in the cassava gardens, west of the village, under the rocks. Mind the water.'),
-        say('lamp_oil_seller', 'And bring my lamp back. Or do not. Another one will come by canoe.'),
-      ],
-    },
-  }),
+  // The lamp-oil seller, the fisher, the small girl, the healer, the camp leader and the ash-marked post talk in
+  // dialogue/xaraguaQuests.ts (Chapter 2's side quests, Oct 20).
   script('xaragua_customs_sign', {
     start: { lines: [], next: [{ if: { flag: 'story.crown_attack' }, to: 'charter' }, { to: 'customs' }] },
     customs: {
@@ -941,6 +916,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('carver_talk', [
     say('carver', 'Guatiao.', 'Friend.'),
     say('carver', 'Shell beads for quick feet, carved charms for a careful back. I carve what the wood already wants to be.'),
+    // The Hutia's Hoard (Chapter 2 side quest): the hutia has been at his mat too.
+    { speaker: 'carver', text: 'And if you see a hutia with a brass button and my best fish hook, tell it I want them back.', if: { all: [{ flag: 'side.hutia.accepted' }, { notFlag: 'side.hutia.hoard' }] } },
   ]),
   simple('bow_maker_talk', [
     say('bow_maker', 'Guatiao!', 'Friend!'),
@@ -1050,9 +1027,6 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('cassava_farmer_2_talk', [
     say('cassava_farmer', 'The path up the mountain goes to the hill camp. Nobody lives there. Nobody you have heard of.'),
   ]),
-  simple('conuco_kid_talk', [
-    say('conuco_kid', 'I found a hutia in the cassava. It took my bead and ran. Hutias think shiny things are stars.'),
-  ]),
   // The cave mouth while there is no lamp (the door into xaragua-cave opens once Gianna has one).
   script('petroglyph_cave_mouth', {
     start: { lines: [], next: [{ if: { flag: 'story.council_defied' }, to: 'oath' }, { to: 'closed' }] },
@@ -1066,7 +1040,9 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         nar('The petroglyph cave. Somewhere inside, the first oath was carved where the water rises.'),
         say(A, 'It is so dark in there, Gigi. We need a lamp, a real one.'),
-        say(Y, 'The lamp-oil seller by the customs house. Everyone in the village buys from her.'),
+        { speaker: Y, text: 'The lamp-oil seller by the customs house. Everyone in the village buys from her.', if: { notFlag: 'story.lamp_asked' } },
+        // The side quests' gate (Oct 20): she has promised the lamp at dusk.
+        { speaker: Y, text: 'She said dusk. Until then the Governor watches us do ordinary things.', if: { flag: 'story.lamp_asked' } },
       ],
     },
   }),
@@ -1196,14 +1172,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say('hill_runner', 'Messages go up the mountain on feet and come down on feet. The Crown has horses. Horses hate this path.'),
   ]),
   simple('mountain_sign', [nar('Up: the hill camp. Down: the cassava gardens. Sideways: a long fall.')]),
-  simple('camp_leader_talk', [
-    say('camp_leader', 'You are the envoy\'s daughter. Good. You never saw this camp. Neither did I.'),
-  ]),
   simple('camp_scout_talk', [
     say('camp_scout', 'We count the Crown\'s ships from up here. Some days there are more. Never fewer.'),
-  ]),
-  simple('ash_thumbprint', [
-    nar('On the post by the fire, a grey thumbprint pressed in ash. Someone left it here on purpose.'),
   ]),
 
   // The Caney of Anaco (the seat of government).
@@ -1221,9 +1191,6 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('elder_undecided_talk', [
     say('elder_undecided', 'One says yes, one says no, and they both look at me. I have been looking at the ceiling.'),
-  ]),
-  simple('behique_talk', [
-    say('behique', 'The cacique sleeps. His fever comes and goes like the tide. Speak softly near his room.'),
   ]),
   simple('crown_liaison_talk', [
     say('crown_liaison', 'Governor Thorne sends his regards to the cacique. Daily. In writing. With a copy for the file.'),

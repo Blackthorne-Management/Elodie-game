@@ -54,6 +54,8 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   echo_spring_keeper: s('echo_spring_keeper', 'Spring keeper'),
   echo_areito_drummer: s('echo_areito_drummer', 'Drummer'),
   echo_areito_singer: s('echo_areito_singer', 'Singer'),
+  echo_hutia_scout: s('echo_hutia_scout', 'Scout'),
+  echo_scout_healer: s('echo_scout_healer', "Scouts' healer"),
   caona: s('caona', 'Caona'),
   benny: s('benny', 'Benny'),
 

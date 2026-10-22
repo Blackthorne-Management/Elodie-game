@@ -62,11 +62,16 @@ export function waypoint(maps: Readonly<Record<string, GameMap>>, fromMap: strin
 /**
  * The story's goal now: the current objective of the chapter the Journal shows. An objective done through the
  * side quests (`followSide`) leads to the next side quest's stop: one in progress first, else one not started.
+ * Given the map the player is on (`mapId`), a stop on that map comes first (Chapter 2 side quests, Oct 20: the
+ * arrow does what is here before it leads away, so Yucayeque's quests take one climb up the mountain).
  */
-export function storyGoal(quest: QuestDef | null, flags: FlagReader, sideQuests: readonly SideQuestDef[] = []): Goal | null {
+export function storyGoal(quest: QuestDef | null, flags: FlagReader, sideQuests: readonly SideQuestDef[] = [], mapId?: string): Goal | null {
   const objective = quest ? currentObjective(quest, flags) : null;
   if (!objective) return null;
-  if (objective.followSide) return sideGoals(sideQuests, flags)[0]?.goal ?? mysteryGoals(sideQuests, flags)[0]?.goal ?? null;
+  if (objective.followSide) {
+    const stops = [...sideGoals(sideQuests, flags), ...mysteryGoals(sideQuests, flags)].map((s) => s.goal);
+    return stops.find((g) => g.map === mapId) ?? stops[0] ?? null;
+  }
   return goalFor(objective.goals, flags);
 }
 

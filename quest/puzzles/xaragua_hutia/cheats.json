@@ -1,0 +1,5 @@
+{
+  "climb the old ceiba in the present, no memory": ["down", "left*27", "up", "confirm", "skip", "confirm", "skip"],
+  "leave the sapling unstaked in the memory": ["down", "left*27", "up", "confirm", "skip", "echo", "skip", "confirm", "down", "confirm", "skip", "echo", "skip", "confirm", "skip"],
+  "press Echo away from the roots": ["down", "left*20", "echo", "skip", "left*7", "up", "confirm", "skip", "confirm", "skip"]
+}
