@@ -960,3 +960,504 @@ clockmaker's line at the stair are the seed; nothing here makes the Patient Hour
 the hall whenever the keep is open, and the Echo zone at its top is drawn now and switched off).
 
 ---
+
+## 9. Edmund, Jordyn, Sebastian and Anissa: how the companion joins and plays, and the family beats
+
+### 9.1 Edmund
+
+- **Who he is on the map:** Rosalind's son, Thomas's grandson; "ridiculously polite, apologizes to enemies before
+  hitting them; tea breaks heal" (approved). He takes his hat off before a fight and puts it back on after; he says
+  "terribly sorry" to the man he has just knocked down and means it; he has written to every one of them. His
+  warmth is for people, not the Crown, and his politeness is not weakness: he is the one who breaks the family's
+  seal on the archive and the one who says "I'm going with them" to the Regent's face. The joke is the apology and
+  the tea; the character is that he is sorry and does it anyway. One line to Anissa, no joke: the hat ("Hats get hit
+  here. People don't, as a rule."); she keeps it (`item.edmund_hat`, a key item: *Edmund's hat*, one line of text),
+  as she keeps Kayla's crane and Aiyana's mirror.
+- **When he joins:** at the pie shop (beat 1), as a fighter, before the keep (`party.edmund`, `party.active`); he
+  defies the Regent in the court (beat 7, `story.edmund_defied`) and leaves Kingsmere with the party at the stair.
+  `STORY.md` says "Edmund defies the Regent and joins" after the Hushed; this outline splits it (Claude's call, section
+  12), as Chapters 6, 7 and 8 did: the player plays the Guardian in the Guardian's chapter, against the one boss whose
+  weapon is silence, and the defiance is said where it costs him his mother's seat.
+- **His data entry** (`rpg.ts` `MEMBERS`, with the active-order flag so he fights here), sim-checked at 22 (hp 221,
+  atk 63, def 59, mag 5, spd 29: the most HP and DEF of any fighter, the slowest; a tank, as the guide says): `{ id:
+  'edmund', name: 'Edmund', role: 'Guardian', house: 'Stillwater', portrait: 'edmund', era: 'present', class:
+  'warrior', joins: { flag: 'party.edmund' }, base: { hp: 58, sp: 18, atk: 11, def: 12, mag: 5, spd: 8 }, growth: {
+  hp: 7, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 }, start: { weapon: 'pattern_sword', armor: 'stillwater_greatcoat' } }`
+  (two new items at tier 20; his own, not shop stock: a plain straight sword of the Crown's pattern, and a grey
+  greatcoat with a mail lining; the sim folded Aldermoor's Vigil into the base, +10% HP).
+- **His skills** (COMBAT 9.8, in the engine's shapes): **Aldermoor's Vigil** (passive: +10% max HP: a `PassiveEffect`
+  kind `hpShare`, section 10; or folded into the base, which the sim did); **The Long Watch** (passive: on any turn he
+  takes no aggressive action, DEF +5%, stacking to +25%: `PassiveEffect` kind `defPerGuard`, section 10; fallback:
+  text only); **Shield Wall** (SP 8: every ally's next hit taken x0.5: a `shielded` status that spends itself on one
+  hit, section 10; fallback `warded` for 3 turns, which the sim used); **Tea Break** (SP 10: the party heals 15% of
+  max HP and Anissa +1 Calm, "Terribly sorry, one moment": a heal by share, section 10; fallback a heal by power
+  tuned to it; the Calm part if Calm is built); **Stillwater's Patience** (passive, once per battle: cancel an enemy's
+  buff: Chapter 7's `strip` as a `once` skill at SP 0, if `strip` landed; fallback: cut, with the board's text in his
+  Status page). Moves: **Shield Bash** (100), **Measured Blow** (150, cooldown 2), **Hold the Line** (`taunting` on
+  himself, cooldown 3: the Warden's Taunt shape, built for Patricio). Battle look: a placeholder recolour of the walk
+  sheet until art (hat off).
+- **After this chapter:** the Stillwater dissidents against everyone at the Muster (the hardest of the three feuds:
+  guide 5.4) is his scene; "terribly sorry" gets one line per later chapter and none at the Hearing, where he stands
+  with his mother.
+
+### 9.2 Jordyn (FAMILY.md, settled)
+
+- **Who she is on the map:** Rahel's daughter by a Black military man; Rael's half-sister; Azzy's Titi Jordyn.
+  Disciplined, blunt, fair: she stands with her hands behind her back, says the thing once, and keeps the law in front
+  of the Regent's people and the family in a whisper. Captain of the Regent's watch (the keep's guard, not his
+  Sealbearers: the watch arrests, the Sealbearers serve the Throne's writs, and the difference is the chapter's
+  hinge). She is not an NPC with a quest flag: her line at the door is the chapter's second beat, her postern is the
+  Echo's door, her arrest is what puts the party in the dock instead of the bog, her resignation is the dissidents'
+  army, and her company is Chapter 10's and Chapter 11's.
+- **The rule for her lines (the locked rule: Gianna cannot learn Rael is good until near the end):** Jordyn knows
+  Gianna and Anissa are Rael's daughters (Kayla and Aiyana's precedent: the family knows; "Mother writes: Kayla
+  writes to Mother, and Mother writes to everyone"); she says so once, in the close, without his name. She says
+  nothing about the marriage, nothing about his work, nothing about the thumbprint (she is in the keep when the list
+  is taken, and the watch does not go to the bog chapel: "I'd have to arrest the Regent's charities."). Her one
+  clue-level line, the only time she speaks of him, at the stair: "He wrote to me once in twenty years. One line:
+  'Keep the law.' I have." It reads either way, which is the design's rule for every Rael clue. A content test checks
+  no Jordyn line contains "good", "innocent", "feeds", "the arrows" or "thumbprint", and the reviewer prompt asks for
+  a human read of every Jordyn line (the Chapter 7 review's point that the test would not have caught Kayla's three).
+- **Why she defects for law and not for family, and why it is settled:** FAMILY.md says she "defects and opens the
+  keep's postern"; this outline keeps both and gives them an order: the postern in secret (beat 5), the arrest by the
+  book (beat 6, which keeps her cover and the party alive), the resignation in open court (beat 7). The settled line
+  is kept; the arrest is the Claude's call (section 12), and its reason is that a watch captain who defects by
+  opening a door is a traitor, while one who arrests the envoy, puts her before the Assize and then resigns in it is
+  the fair woman the owner described.
+- **Her touches for Anissa (no joke):** "Don't bring the little one into the rain." / "Put her where four hundred
+  people can see her." / at the stair, crouching: "That's the bravest thing I've seen in that building. Don't do it
+  again without me there."
+- **The family beat with Azzy:** shorter than Aiyana's, as the Chapter 8 outline asked (the fourth Titi in four
+  chapters, so his line comes first and is cut off): "Titi—" / "Captain of the Regent's watch, sir." Then, in the
+  close: "Azriel. You've got Mother's jaw. Don't lead with it." At the cells: "Mother's jaw. I said." At the stair: "I'll
+  bring Mother. And her mother." (Rahel's line for Azzy is Chapter 10's.) Azzy, after, to Gianna, the one time:
+  "Four of them. Four of his sisters, and this one arrests people." / "She said she hasn't decided." / "She's in the
+  rain." (Reads either way; tested the same.)
+- **Placeholder look:** the Regent's violet with a captain's knot, a tall Black woman, hair cropped, hands behind her
+  back (an idle frame); `jordyn`. Art through `ART-PROMPTS.md` when the outline is approved. **Later:** Chapter 10:
+  she arrives at the Muster with her company, Rahel and Patricia (FAMILY.md; the Muster's outline places her); Chapter
+  11: she leads a company in the War of the Harbor (an army's name in the volley data). `army.aldermoor` is her seven
+  and the barn's lot.
+
+### 9.3 Sebastian (FAMILY.md, settled)
+
+- **Who he is on the map:** Elodie's brother, Coralie's; a world-renowned organist who plays across the realm for
+  fame; proud, gentle, a showman: he says who he is to the whole nave, goes down on one knee on wet flags for a child
+  who hums, and reviews his own slow movement. The Regent's guest for the season (the Regent commands his recital on
+  the eve of the Assize because "he likes loud things done in order"). He does not know why the party has come and
+  does not ask twice; he knows what hour to be loud at. His help is acted out: the organ heard across the square
+  before he is seen, the Toccata that plays under the whole break-in as an audio slot, the court kept in its pews
+  ("if the Regent stands up before the end I shall start the Toccata again"), the cells with the Regent's leave, the
+  gallery at the Assize, the stair at dawn.
+- **The secret:** he does not know it (Claude's call, section 12): FAMILY.md gives the secret to Jaime, Rivera and
+  Tati Coco and to nobody else; a showman who cannot keep a note quiet is the last person Elodie would tell, and the
+  chapter is better for an uncle who loves his nieces without knowing their father. His one line about Rael is not
+  about Rael: "Your mother has written to me about the weather for twenty years. I have come to believe the weather in
+  Zetwal is extremely interesting." (Reads either way; tested with Jordyn's.)
+- **His name:** Sebastian **Limyè**, as the Chapter 5 outline named Coralie Limyè (Elodie's public name, carried by
+  her siblings in public; the guide's "shared with Anissa and Elodie" is the household's, and the bill on the notice
+  post is how a stranger would print it). Anissa reading the name on the bill is the bump-in's seed.
+- **His touches for Anissa (no joke):** "Who hums." / the loft ("the one place in Kingsmere where four hundred people
+  can see you and not one of them can reach you") / "You turned every page on the beat." She keeps the recital bill
+  (`item.recital_bill`, a key item: *Uncle Sebastian's recital*, one line of text).
+- **Placeholder look:** a broad man in a velvet coat, sleeves pushed up, grey at the temples; `sebastian`. **Later:**
+  FAMILY.md places him here only; he says he will come to Pòdlimyè "to hear the drums" after his Eightgate recital,
+  which is a door Chapter 10's outline may open (the Muster) or Chapter 12's (an organ in Eightgate during the Claim
+  is a thing a showman would do), and need not.
+
+### 9.4 Anissa in this chapter
+
+- She is looked at by the Regent (one breath, no line), by the Sealbearer at the gate (a breath too long), by the
+  almswomen (their veiled heads turn) and by the whole court from the loft; she is spoken to by nobody in Kingsmere
+  except the Hushed, once, in the dock, and that line is the Hushed's undoing. She is never hit, never a target of
+  a blow (Hush the Light is a whisper at her and Gianna steps in front, shown; Seize is the built path, Gianna's),
+  and she carries three things out of the city: a hat, a bill, and the one line she said in court. Her Surge gesture
+  is at stage 3 (`SURGE_ANIM_STAGE`), one short of sure.
+- **Her line in the court** ("Gigi. That's the lady from the plaza.") is the chapter's one step on the thread *Anissa
+  finds her voice* (STORY 4: shy lines, the first Surge, Calm attacks, she speaks at the Muster, she speaks at the
+  Hearing): a sentence, not a speech, said to her sister and heard by a court, before the Muster's speech. It is not a
+  joke and nothing near it is: the Hushed answers it, Gianna steps in front, and the fight begins.
+- **No comedy in a node with her:** Edmund's hat line is earnest; Sebastian's "who hums" is earnest; Salkhi is on the
+  boat, the heath and the square and never in the church, the keep or the court; Samira prices nothing after the
+  archive; Vikram is out of breath once (the hall) and not in the dock.
+
+### 9.5 The Regent, the Almoner and Rosalind
+
+- **The Lord Regent Aldric Vane** (the guide's name; the Chapter 5 look): at home, seated, never raising his voice,
+  three moves ahead in every scene: he names the new companions, he names the uncle, he lets the envoy into the
+  archive to be caught, he gives up a margin to keep a clause, he dismisses his agent in a sentence, he withdraws the
+  charge, he sets the tide. He never speaks to Anissa and never admits the Almoner was his (the commission is in his
+  hand and the Crown "keeps no almoner"). Nothing in this chapter is provable against him, which is why Chapter 12 is
+  a Challenge and not a trial.
+- **The Almoner** (the Hushed; role-named in the build; proposal name **Mrs. Sallow**, for the fluent check of its
+  register): the lady in grey of the *Court Circular*; the Crown's charities (the Quiet Crown's "charity that
+  creates debt" in a basket); the veiled woman of Chapter 1's plaza (the near-miss in section 12); the head the cells
+  kneel to, who was given the cells and never told by whom they were made. Unveiled, she is a plain woman of sixty
+  with a brooch, which is the design's point ("a hand with no face"). She never names Rael because she cannot.
+- **Lady Rosalind Stillwater** (the Dec 1 list's Gen III ruler Edmund defies): on the council bench in the hall and the
+  court; two lines to her son ("You've hit someone." / "Sat."); the one who stands for the record to be read, because
+  a Stillwater wrote it. Al-5's tea is after the release; her withdrawal and her place at the Hearing are paid here.
+
+---
+
+## 10. New systems the chapter needs (honest effort, in Opus builder-days)
+
+| Need | What exists | What to build | Fallback | Effort |
+|---|---|---|---|---|
+| **Edmund as data** | fighters as data | his `MemberDef`, skills, moves, looks, two start items, the join flag | none needed | 0.2 |
+| **`magScale` on `EnemyDef`** (a boss's spells scaled as `atkScale` scales blows) | `atkScale` in `enemyStats` | one field, one line in `enemyStats`, a test; the Chapter 5 to 8 bosses are unchanged (none sets it) | none: without it the Hushed is harmless at any HP (section 5); if it cannot land, her moves become physical (`magic` off) with `atkScale 2.2`, which the sim did not run and the build must | 0.05 |
+| **`hushed`** (`STATUS.hushed`: `skills: false` for 2 turns; Attack, Guard, Item work; the menu greys skills) | Chapter 7's piece if it landed | if not: one field read where a skill is chosen, one status row, the greying (about 20 lines), a test | `weakened` (the sim's softer stand-in) | 0.1 |
+| **Calm and Comfort** (COMBAT 8: Anissa's Calm 0 to 3 under her Spark; an `EnemyMove.calm` field lowers it, shown as the enemy turning to her and Gianna stepping in; at 0 Surge is unavailable; Gianna's **Comfort** (SP 2, hers 1: Calm +2); Tea Break +1; Calm 3 at every battle's start) | Spark, Surge, `seize` (Gianna steps in), the Surge gesture | a Calm counter on the battle, one move field, one skill kind `calm`, the scene's bar (about 60 lines), a test; `COMFORT_CALM` in config | `seize: 3` with Hush the Light's tell (the sim's); Quiet Crown as `weakened` alone; Comfort cut | 0.3 |
+| **Shield Wall** (`STATUS.shielded`: `taken: 0.5`, spent on one hit: a per-status `hits: 1` field) | the status table; `gilded` | one status row, one field, one line where a hit is taken (about 12 lines), a test | `warded` for 3 turns (the sim's) | 0.1 |
+| **Tea Break's heal by share** (`SkillDef.healShare`: a share of each target's max HP) | heals by power against MAG | one branch in the heal path (about 8 lines), a test | a heal by power tuned to about 15% at 22 | 0.05 |
+| **The Long Watch** (`PassiveEffect` kind `defPerGuard`: +5% DEF per own turn with no aggressive action, to +25%, reset on an attack) | `PassiveEffect` kinds `battleGold`, `atkPerFell`, Chapter 8's `spLess`, `attackOnFell` | one kind (about 20 lines), a test | text only | 0.1 |
+| **Aldermoor's Vigil** (`PassiveEffect` kind `hpShare`) | the kinds above | one kind (about 6 lines) | folded into his base HP (the sim's) | 0.02 |
+| **Stillwater's Patience** (`strip` on a `once` skill) | Chapter 7's `strip` if it landed | data | cut, with the board's text | 0 |
+| **The Crown Officer's role** | `ENEMY_ROLE` has four roles | data: the role Chapter 2 gave its lieutenant; COMBAT 13.1's `support` row is not built and this chapter does not build it | none needed | 0 |
+| **The sightline strips** (trigger strips that return the party to the postern with a line) | the Chapter 7 fog-return trigger (a door-like trigger that lands on the same map) | map data only | none | 0 |
+| **The evidence mirror** (`evidence.*` flags set when Jordyn takes the items; the Quests page's *held by the court*; the items back on `story.record_read`) | key items as flags; `if` conditions | data (a dialogue `set`); one line of Quests-page text per item if the page can show a note, else the Journal's | the Journal note alone | 0.05 |
+| **The cabinets and the panel** (puzzle objects with two flags-with-values and a pull; the panel's anchor) | puzzle objects with `use`, flags with values, `if`, anchors | map data only | none | 0 |
+| **The courtroom tree** (press, lay, rest; `if` on clues and evidence) | dialogue trees with `if` and `set` | data (about 30 nodes) | none | 0 |
+| **The dock's Echo zone** (an `onEcho` scene that is lines only, no anchor; the swap back puts the player in the dock) | zones with `onEcho` / `onReturn` | map data only | none | 0 |
+| **The rain** (an `above` layer on outdoor maps, off on `story.hushed_beaten`) | Kirinoura's fog layer by flag | map data only (four tiles cycling if the tool animates `above`; else static, as the Chapter 7 review allowed for fog) | static rain | 0.02 |
+| **The recital's audio slot** (a track that plays on `story.recital_begun` across three maps and stops on `story.caught`) | `audio.config.ts` slots by map; the farewell track | one slot keyed by flag rather than map (about 10 lines in `audioPlan.ts`), or the same track set as the three maps' music under the flag | the cathedral's music alone, and silence in the keep | 0.05 |
+| **The pigeons, the escort, the court's walk, the dissidents' line, Jordyn's seven** | walkers, `enter`, `exit`, `sync` | data | lines | 0 |
+| **The law-seal brooch's special** (`yieldWealthLess`) | `ItemSpecial` kinds; the Yield step if built | one kind if the Yield step exists | def 3, hp 8 and the text | 0.03 |
+| **The sea voyage** (`aldermoor_zetwal`) | `VoyageDef` | one `VoyageDef` | a card | 0.05 |
+| **The active-order flag** (`party.active`) | Chapter 8's | data (Edmund replaces the fourth at the hat) | the first-four rule with Edmund fourth in `MEMBERS`, which benches Vikram from now on: playable and wrong | 0 (assumed) |
+| **Chapter wiring** | `CHAPTERS`, `chapters.json`, the route, `CHAPTER_LEVELS` (has 9), `MARKS` | `ACT9` in `quests.ts`; `'10'` in `MARKS` (Pòdlimyè's long pier); the route to `@chapter9-end`; `?chapter=9`; `story.zetwal_return` set by Chapter 10's landing, not here | none | 0.25 |
+
+About **one and a quarter builder-days** of engine and wiring; `magScale`, `hushed` (if Chapter 7 did not land it),
+Calm and Edmund's three pieces are the only parts that are not data, and every one has a fallback that keeps the
+scene. Nothing here needs a stealth system, an Echo battle, a Yield step, a timer, a party-order screen or region
+levels. Both halves of the signature puzzle are data (the cabinets are flags with values; the court is a dialogue
+tree), which is the second chapter in a row where the Echo puzzle costs no engine, and why this chapter fits two and
+a half days with a new boss field and Calm in it.
+
+---
+
+## 11. People, with placeholder looks (drawn in code, `assets.config.ts` NPC looks; art drops in through the config)
+
+| Person | Role | Look (placeholder) | Later |
+|---|---|---|---|
+| **Edmund Stillwater** | the companion (section 9.1) | a new member look: a good grey coat, a hat (off before a fight), a straight sword; a battle recolour | the Muster's hardest feud; the Hearing beside his mother |
+| **Jordyn** | captain of the watch; Azzy's Titi; the postern, the arrest, the resignation (section 9.2) | the Regent's violet with a captain's knot, hands behind her back; `jordyn` | Chapter 10 (her company, Rahel, Patricia), Chapter 11 (a company in the war); on the drop-2 list with the chapter's boss |
+| **Sebastian Limyè** | the organist; Gianna's uncle; the Toccata (section 9.3) | a velvet coat, sleeves up, grey temples; `sebastian` | a door for Chapter 10 or 12, not a plan |
+| **Lord Regent Aldric Vane** | the antagonist; presides; three moves ahead (section 9.5) | the Chapter 5 `regent` look, seated | the boss of Chapter 12 |
+| **The Almoner** (the Hushed; "Mrs. Sallow", proposal) | the boss; the lady in grey; the plaza's veiled woman | grey, a basket, a veil; a second look unveiled (grey hair pinned, a brooch); `the_hushed` | held in the keep's cells or shown to the city; on the drop-2 list (the boss of 9) |
+| **Lady Rosalind Stillwater** | the council; Edmund's mother; "Sat." | grey-violet, a council chain, seated; `rosalind` | Al-5 after the release; the Hearing |
+| **The Crown magistrate**, the **clerk of the court**, the **keep's steward**, the **chamberlain**, the **postmaster**, the **bishop of the Witness** | the seat's staff; the court | violet recolours of the Chapter 5 clerk's shape | the magistrate at the Hearing, if the epilogue wants a Crown voice |
+| **Thomas Stillwater** (Echo) | Gen II; the clerk; the record | the Chapter 5 boy clerk, a season older, the Echo palette | S-ALM's tower after the release |
+| **The old-uniform Sealbearer** (Echo), the **council's voices** (lines only) | the first revisiting | the Chapter 2 Echo marine recolour | |
+| **The justiciar** and **the roll clerk** (Echo, the dock) | the ratification | the Echo palette, a bench | S-SEA's hearing after the release reuses the clerk's register |
+| **The printer**, three **apprentices** | Al-3; the price | an inked apron; `printer` | the Muster (the dissidents' voice) |
+| **The clockmaker** | Al-4's seed, one line | a loupe; `clockmaker` | Al-4 after the release |
+| **The sorry constable** | the cells; Al-3's third family; the price | oilskins, no coat at dawn | |
+| **The pie-shop boy** and his **mother** | the press-gang; the recital; the price | flour; an apron | |
+| **The Quiet Crown hierarch**, the **Gaze exile** | the debate | a plain grey stole; the Chapter 1 pilgrim look in a faded sun shawl | the post-Assize line; the post-Harbor corner |
+| **The keeper of the rolls**, three **vendors**, the **verger**, the **escort pair**, the **Moor Gate's Sealbearer** | | | |
+| **Moor Constables**, **Bog Hounds**, **Hushers**, **Sealbearers**, **Crown Musketeers**, **Crown Officers**, **Zealots**, **almswomen** (Hushers in grey) | the Heath, the chapel, the square, the court | constable: oilskins and a truncheon (the marine recolour); hound: a 1 x 1 sprite, black, low; Sealbearer: the Chapter 5 look; the built musketeer and zealot recoloured; the Husher as Chapter 7 drew it with a grey veil | the Seat's Sealbearers at 28 to 30 (Chapter 12) |
+| **Young Patricio** (the player in the Echo; Caona and Benny as data, not drawn) | beat 5, the dock | the Echo palette | |
+
+Voices: Edmund apologising in full sentences; Jordyn in short flat ones with the law in them; Sebastian in long ones
+with himself in them; the Regent in the courteous register of Chapters 5 to 8's Crown men, now from a chair; the
+Almoner in the same register until "Enough noise", then bare; Rosalind in two words; the magistrate formal; the
+printer plain and angry; the constables sorry. Nobody in Kingsmere sounds like Agnipur: people here say nothing
+plainly, and the clerk who did wrote it in a margin.
+
+---
+
+## 12. Owner questions (owner rule, Oct 20: only decisions that drastically change the story's flow; one at a time)
+
+**None required.** I looked for one and found a near-miss, below first. If the second review disagrees with any of
+these, it becomes a pop-up with the recommendation first and the build goes ahead on it.
+
+- **Near-miss: the Hushed is the veiled woman from Chapter 1's plaza.** The built Chapter 1 has a veiled, hooded
+  stranger who looks at Anissa and to whom Gianna can say "Stay away from her" (`choice.stay_away`, remembered); the
+  design says the Chapter 1 recruiters and the veiled woman speak of "the Hushed" as their leader. This outline makes
+  the Regent's almoner that woman, unmasked in the court with the Chapter 1 line quoted back, and Anissa's one line
+  in the chapter is recognising her. It changes no flow (the Hushed is still the Regent's agent, unmasked in his
+  court, and Rael is still confessed at the Hearing) and it gives a faceless figure a face the player has already
+  seen, which is what "unmasked" should mean in a game that shows. If the owner would rather the plaza's woman stay a
+  recruiter and the Hushed a stranger, the Almoner's line to Anissa becomes "Your sister has kept you very close"
+  for everyone, Anissa's line becomes "Gigi. She's the one with the basket," and nothing else moves. Recommendation:
+  keep it; it is not a change to the story's flow, so it is a Claude's call here and not a pop-up.
+
+The Claude's calls, each with its reason:
+
+- **The Regent presides at Kingsmere's Assize, and the Crown's fleet sails after it.** *Reason:* the design's "the
+  courtroom trial before the Regent" and "revealed inside the Regent's court" need him in Kingsmere; Chapter 5 had
+  him at Eightgate and Chapter 12 has him there again; an assize is why a Regent goes home, and a fleet after it is
+  Chapter 11's war given a date.
+- **The landing is the Mere Stair, the escort walks the party in, and the city is watched by constables who are
+  sorry** (beats 0 and 1). *Reason:* the Chapter 8 outline's hand-off; "tired, polite and watched" shown by people
+  who follow, not by a speech; ordinary Stillwater people are not villains.
+- **Edmund joins at the pie shop as a fighter and defies the Regent in the court** (section 9.1), splitting
+  `STORY.md`'s "defies the Regent and joins". *Reason:* Chapters 6 to 8's precedent; the Guardian against the boss
+  whose weapon is silence; the defiance where it costs him.
+- **Jordyn opens the postern in secret, arrests the party by the book when they are caught, and resigns in open
+  court with six of the watch** (section 9.2). *Reason:* FAMILY.md's "defects and opens the keep's postern" kept and
+  given an order; the arrest is what puts the party before the Assize instead of on the heath, keeps her cover until
+  the court, and is the fair woman the owner described; her seven are the dissidents' army and Chapter 11's company.
+- **Anissa sits in the organ loft with Sebastian during the break-in, seen by the court, and is in the dock with
+  Gianna for the trial** (beats 3, 5, 7). *Reason:* Jordyn's condition ("put her where four hundred people can see
+  her"); the owner's rule that she holds the door is kept in spirit (she is the thing everyone is watching while the
+  door is open) and her hints still reach Gianna in the Echo; the boss needs her in the room, and the dock is where
+  the accused stand.
+- **The Echo is the first revisiting, a season after the sealing, and Patricio hides Thomas's record** (beat 5;
+  section 8). *Reason:* `STORY.md` 6.4's proposal ("under a flag of truce to negotiate the peace") is kept in
+  substance (a flag of truce; Thomas meets him there) and moved a season later so the war council can hear of Benny's
+  refusal and order the record cleaned in the same scene, which is what the chapter's Echo is for; anchors are things
+  Patricio does. Recorded for the Dec 1 list as a refinement of the proposal, not a new question.
+- **The pact is bait; the Almoner springs it; the Regent dismisses her in a sentence and the commission is in his
+  hand and never provable** (beats 6 and 7). *Reason:* three moves ahead, as in Chapters 5 to 8; the design's "the
+  Quiet Crown has been bent to hunt Anissa by the Regent's people" shown by where she stood and who set her down;
+  Chapter 12 stays a Challenge.
+- **The courtroom's rule is the Witness's: a forsworn witness's evidence falls with her** (beat 7). *Reason:* guide
+  7.1 (Aldermoor's faith is law as an oath); it makes the puzzle's logic the city's, not a courtroom drama's.
+- **Thomas's record is read into the roll, Rosalind stands for it, and Al-5's outcome is paid in the main story**
+  (beat 7; section 7). *Reason:* the plan's minimum ("Thomas's record") shown as a thing done in front of the city;
+  the Gen III ruler Edmund defies does her turning in the court, which is cheaper and better than a tea after the
+  release.
+- **The Hushed at hp x7 with `magScale 2`, `hushed` as her status, Hush the Light as Calm -2 with `seize` as the
+  fallback, Quiet Crown as Weakened and Calm -1, two Hushers at the start and two at the end; she falls and is taken,
+  not withdrawn** (section 5, section 10). *Reason:* the sim; COMBAT's three phases in the engine's words; the owner's
+  redesign of her Anissa move; a boss whose cells kneel to her has nowhere to withdraw to.
+- **The Hushed's end is a choice (tried under the Witness's law, or shown to the city), and she names nobody.**
+  *Reason:* the Chapter 8 pattern (Dhanraj); the design's "no member knows" kept in her mouth.
+- **The dissidents' price is paid in Fear by the court, Jordyn's company, the published list and Edmund's going; no
+  token, no betrayal line; `ally.aldermoor_dissidents` set regardless with the Journal's count** (beat 8). *Reason:*
+  the Chapter 3, 6, 7 and 8 pattern; the dissidents are not a house at the chair (the Chapter 8 outline's ask) and
+  not among the four the Crown can buy (guide 5.6).
+- **Al-3 and Al-2 are the required two; Al-3 opens before the court; Al-2's Echo step is replaced by Thomas's own
+  margin in the present; Al-1 is the first post-release quest; Al-5's tea after; Al-4's tower inert** (section 7).
+- **St. Agatha's is added and Rosalind's Townhouse waits** (section 3). *Reason:* the settled Sebastian line.
+- **Five maps; the keep is 40 x 30; the Heath carries the landing** (section 3).
+- **The Heath's groups are trios at 23 to 24** (section 5). *Reason:* the sim: pairs are trivial to this party.
+- **The chapter's data adds two levels to a measured start, and `CHAPTER_LEVELS` 9 is set on day 1 from the
+  measurement** (section 5). *Reason:* the numbers; the Chapter 6 to 8 reviews' rule.
+- **Sebastian does not know the family secret; Jordyn knows the daughters and nothing else; each has one line about
+  Rael that reads either way** (sections 9.2, 9.3). *Reason:* FAMILY.md's list of who knows; Kayla's and Aiyana's
+  precedent; the content test and a human read guard it.
+- **Sebastian is a Limyè in public** (section 9.3). *Reason:* the Chapter 5 outline's Coralie.
+- **No Echo battle; the council is heard through a door** (section 4).
+- **Names are proposals** (Edmund, Rosalind, Thomas, Agatha, Aldric Vane from the design; Mrs. Sallow new; St.
+  Agatha's new), people named by role in the build until the owner approves.
+
+---
+
+## 13. Length
+
+Estimated from Chapter 2's measured route (1,020 steps, about 40 minutes) and Chapters 6 to 8's estimates (760, 830
+and 840 steps, about 30 minutes each):
+
+| Part | Steps | Transitions | Lines | Fights |
+|---|---|---|---|---|
+| The voyage, the Mere Stair, the notice post, the heath road, the Moor Gate | ~90 | 2 | ~20 | 0 to 1 ambush |
+| The Market Cross: the lady in grey, the press-gang, Edmund | ~70 | 1 | ~35 | the press-gang |
+| The keep: the hall, Jordyn at the door, the Regent's answer | ~70 | 2 | ~40 | |
+| The close after the bell | ~30 | 2 | ~20 | |
+| St. Agatha's: the organ, Sebastian | ~50 | 2 | ~30 | |
+| Al-3: the barn, the bog chapel, three doors, the barn again | ~160 | 4 | ~35 | the chapel, 0 to 1 ambush |
+| The debate on the cross, the Rolls House | ~50 | 2 | ~30 | |
+| The eve: the court's walk, the recital, the close, the keep by night, the archive (both eras), the cabinets | ~120 | 4 | ~45 | |
+| Caught, the cells | ~40 | 2 | ~25 | |
+| The Assize: the witnesses, the dock's Echo, the exposure, the Hushed, the Yield, the three defiances | ~60 | 1 | ~55 | the boss |
+| The price, Jordyn's going, Sebastian's, the stair, the card | ~70 | 2 | ~35 | |
+| **Chapter 9** | **~810** | **24** | **~370** | 3 to 5 |
+
+About **33 to 36 minutes**, the plan's number: fewer steps than Chapter 8 and more lines, because a court is a room
+where people talk. The main line alone (the gate holds, so a player cannot) is about 20 minutes.
+
+---
+
+## 14. Continuity into Chapter 10 (Pòdlimyè, The Muster; 24 to 25, ten minutes plus side content)
+
+- **The lead:** the Crown's fleet sails after the Assize (the Regent, twice); the allies must assemble before it
+  reaches Xaraguá. The voyage `aldermoor_zetwal` from the mere's mouth to Pòdlimyè (22, 62 to 91, 37); `?chapter=10`
+  starts on Pòdlimyè's long pier; Chapter 10's landing sets the built `story.zetwal_return` (the Cane Road's ambushes
+  at 22 to 25, `cane_road`, built).
+- **Who arrives at the Muster from here:** Jordyn's company by land and a ship she finds (seven of the watch, the
+  barn's lot: `army.aldermoor`), with **Rahel** and **Patricia** (FAMILY.md: "She arrives with Jordyn's company";
+  Patricia "comes with Rahel"); Chapter 10's outline stages their arrival on the plaza and gives Rahel her scene with
+  Gianna and Anissa and her line for Azzy, and Patricia her blessing. **Joaquin** brings Free Brasador (Chapter 3's
+  seed). Sebastian is a door, not a plan.
+- **The feuds for the Muster:** Suzumori and Agnivansh have taken one step (Chapter 8); Dorini and Ironvow have not;
+  **the Stillwater dissidents against everyone** is this chapter's: the printer's people are the Crown's own, Edmund
+  is a councillor's son, and Jordyn's company wears the Regent's violet inside out. The Muster's third mediation has
+  its faces.
+- **The betrayal:** unchanged. Aldermoor is not among the four; nothing here names the closed hand; the Almoner says
+  "I was given the cells" and no more; Prakash, Mibu and Hrafn are where Chapters 6 to 8 left them. The exposed route's
+  Kuroshi evidence is still the Fog Files.
+- **The party leaves with:** Gianna, Yari, Azzy, Samira, Bayarmaa, Haru, Vikram, **Edmund**, Anissa (nine, eight
+  fighters, four active by `party.active`); Salkhi; **level 22 by the tool** (6,785 to 6,925), **24 as played** from
+  the assumed start of 22 (23 from 21, 25 from 23: section 5; Chapter 10's outline plans from the measured end, and
+  its band of 24 to 25 absorbs either neighbour); the Echo party unchanged; gold about 2,500 to 3,500 less the
+  outfitter; key items plus **the Crown's pact**, **the Ash Road Accounts** (coded; Haru reads them after the Harbor
+  Turn), **Thomas Stillwater's True Record**, **the Crown Chronicle** (the third account), **the purge list**, Edmund's
+  hat, the recital bill, the Almoner's brooch; flags `story.aldermoor_arrived`, `party.edmund`, `party.active`,
+  `story.edmund_defied`, `story.jordyn_defected`, `story.rosalind_withdrew`, `ally.aldermoor_dissidents` with
+  Aldermoor's Fear 6 to 10, `army.aldermoor`, `clue.first_revisiting`, `clue.crown_pact`, `clue.ash_road_accounts`,
+  `clue.ratification`, `clue.hushed_regent`, `clue.list_leaked`, `anchor.thomas_record`, `story.record_read`,
+  `story.hushed_beaten`, `choice.patricio_thomas`, `choice.hushed_tried|broken`, `side.purge_list.done` (the
+  thumbprint count: **eight**), `side.crown_chronicle.done`, the debate's outcome, `act9.complete`.
+- **What Gianna believes:** her father took the Crown's gold for a chair and spent it where nobody can read
+  (`belief.rael_traitor` unchanged, now with a receipt). No clue moved here; the "nobody dies" pattern grew by one
+  (the Hushed fell and was taken, not killed); the eighth thumbprint was found inside the cult's own cells with "Warn
+  them first" on it; Jordyn's "Keep the law" and Sebastian's weather are the family's two lines, both reading either
+  way. Azzy's "four of his sisters, and this one arrests people" is the pattern named once more; Chapter 10's Rahel is
+  the mother, and the one who speaks.
+- **What the realm knows:** the Crown pays a thief (6), buys files (7), funds a hoarder (8), and at home keeps an
+  almoner whose cells hunt a child and a court that dismisses her in a sentence (9): the same hand four ways, and the
+  fourth is the Regent's own house. The Crown always meant to keep the harbor (the council, fifty years ago, in its
+  own voice). Thomas's record is in the Assize's roll. The fleet sails.
+- **S-SEA (the Seventh Ribbon, after the release)** is now finishable: Thomas's record exists in the present.
+- **Nothing built in Chapters 3 to 8 is touched** except `CHAPTERS`, `chapters.json`, the route, `encounters.ts`
+  (`heath`), `MEMBERS` (Edmund's entry), the voyages, `enemyStats` (`magScale`, one line), the statuses (`hushed` if
+  new, `shielded`) and Calm, each behind a test that Chapters 2 to 8's fights replay unchanged.
+
+---
+
+## 15. Risks
+
+- **The level curve, again, and the band's width.** The tool lands at 22 against a target of 24, and the honest
+  reason is STORY's band (three levels in 35 minutes). This chapter's data adds two levels to whatever it inherits;
+  the fix is the measurement on day 1 and `CHAPTER_LEVELS` 9 set from it, said in the milestone note (section 5). If
+  the central session would rather the chapter pay three levels, the only honest lever is the Heath (ambushes at full
+  weight, no taper), which is the lever every review has asked to be turned down.
+- **The Hushed is harmless without `magScale`.** This is the chapter's one hard engine fact: a caster boss's spells do
+  not scale in the built engine, and the sim shows her at any HP cannot put a fighter down. One line fixes it; the
+  fallback (physical moves with `atkScale`) is unsimulated. Build the line on day 1 and re-run the sim with the real
+  `hushed` before the courtroom is wired.
+- **`hushed` and Calm touch the one path every fight uses.** Each is behind a test; `battle.test.ts` must replay
+  Chapters 2 to 8's fights unchanged before either lands. The fallbacks (`weakened`, `seize`) are the sim's and play.
+- **Edmund must matter in his own fight.** The sim wins faster with him benched because it has no `hushed`; with the
+  real status, Guard-heavy play and Shield Wall are the answer to a court that takes your words. Day 1's sim with the
+  built status must show Edmund active beating Edmund benched; if it does not, the Hushers' Hush goes to every 2 and
+  his Long Watch is built, not text.
+- **Eight fighters and the active-order flag.** If `party.active` did not land in Chapter 8, Edmund fourth in
+  `MEMBERS` benches Vikram a chapter after his own. It is the first thing checked on day 1.
+- **The courtroom is the chapter's heart and is easy to make a cutscene.** The witnesses are a tree the player
+  presses; the roll is an Echo the player steps into; the record is a thing the player asks the clerk for; the
+  exposure is Gianna's line only after the two are laid; the three defiances are walkers (Rosalind stands, Edmund
+  steps, Jordyn's seven step out). If the build runs short, the tree keeps its three presses and the Echo, and the
+  defiances keep their walks and lose a line each.
+- **Jordyn's and Sebastian's lines are the chapter's tightrope, as Kayla's and Aiyana's were.** The content test
+  (section 9.2) is the guard; the reviewer should read every Jordyn and Sebastian line, and Azzy's "she's in the
+  rain", against the locked rule.
+- **Anissa in the dock.** She is behind Gianna on the dock's bench; the Hushed turns to her and Gianna steps in front
+  before the fight starts; Hush the Light is a whisper and Calm, never a blow; the almswomen's heads turn and nobody's
+  hand does; the Regent's breath is the Chapter 5 beat. Her one line is earnest and answered. Edmund's hat and
+  Sebastian's pages are her two touches and neither is a joke, and no Salkhi, Samira or Vikram line shares a node with
+  hers.
+- **The Regent's hand is seen and never proven.** That is by design (Chapter 12 is a Challenge), but the reviewer
+  should check that the chapter does not accidentally prove it: the commission is read by Jordyn and denied by him;
+  the Journal's note says "in the Regent's hand, which the Crown denies."
+- **Tone.** Edmund is sorry in seven places (the sergeant, the city, the hat, the archive's seal, the Captain, the
+  Regent, the deck) and the line is different each time; "terribly sorry" is said four times. The Regent is cold and
+  never cruel; the constables are sorry; the Crown is a court. No jokes in the close, the archive, the cells, the
+  dock or at "Sat."
+- **The Echo's date.** The first revisiting is a refinement of the Dec 1 proposal; if the owner's answer on Dec 1 is
+  "before the peace", the council's lines change to the Crown's intention before the signing ("'To be revisited'
+  will mean when we choose") and Benny's refusal becomes "Ardencia will refuse"; the scene, the order and the anchor
+  do not move.
+- **Faith on the map.** The Witness is a fictional faith of oaths, and the court uses it as law; the Quiet Crown's
+  hierarch is a believer and its Hushers are a bent cell; no real faith is shown as a cult (guide 7.3); the
+  cathedral is "St. Agatha's" for a fictional founder, and the fluent check (Nov 18) has no new language here, only
+  the register.
+- **Names.** Every new name is a proposal; the build names people by role; Rosalind as the Gen III ruler Edmund
+  defies is on the Dec 1 list (STORY 6.10), now needed by early November, and this chapter's court answers it in
+  practice.
+- **Chapter 8 may land late, and its review may change its end.** Everything here except the voyage's start can be
+  built from the Chapter 8 outline's section 14 state before Chapter 8 is done; `?chapter=9` needs Chapter 8's route;
+  until then the chapter is tested from a hand-written start save with section 1's state. If the Chapter 8 review
+  moves Vikram's join, the active order or the taper, sections 1, 4 and 5 move with it and nothing else.
+- **The Nov 8 decision date.** The plan says that if Chapter 9 is not built by Nov 8 the owner chooses between
+  Chapters 1 to 9 polished and all twelve plainer. This outline is sized to Nov 5 to 8 with the cuts in section 16;
+  the milestone note on Nov 8 should say which half of the cut list was used.
+
+---
+
+## 16. Build plan (small steps, each checked before the next; sized to two and a half builder-days, about Nov 5 to 8)
+
+**Day 1 (Opus with Sonnet on maps and content):**
+1. **Docs and the numbers (morning, 1 hour):** the second review; `STORY.md` Chapter 9 rewritten to this outline
+   (the Mere Stair, Edmund's split join, Jordyn's three acts, Sebastian's loft, the first revisiting, the Witness's
+   rule, the Almoner, the price in Fear), `CAPITALS.md` 9 re-sized (five maps, St. Agatha's, the keep at 40 x 30, the
+   Townhouse after the release), `SIDE-QUESTS.md` Al-2 and Al-3 marked for the release with the new numbers and
+   Al-2's Echo step replaced, Al-1, Al-4, Al-5 after, `PUZZLES.md` SIG-ALM's staging (the cabinets, the tree),
+   `COMBAT.md` 9.8 with Edmund's stat line, 13.3 with the Hushed's scaling and `magScale`, 8 with Calm as built,
+   `FAMILY.md` Jordyn's and Sebastian's rows marked built with the Claude's calls (the arrest; Sebastian does not
+   know), `STORY.md` 6.4's refinement noted for the Dec 1 list, Edmund's, Jordyn's, Sebastian's, the Regent's seated
+   look, the Almoner's two looks and Rosalind's prompts into `ART-PROMPTS.md`. **The played start measured** (the
+   Chapter 6 review's 3.1 (b)) and **`CHAPTER_LEVELS` 9 set from it**; **the active-order flag's state checked**;
+   **`hushed` and `strip` checked** (Chapter 7's).
+2. **Engine and data (Opus, half a day):** `magScale` (first), `hushed` if new, Calm and Comfort with `EnemyMove.calm`,
+   `shielded`, `healShare`, `defPerGuard`, `hpShare`, Edmund as data (entry, skills, moves, looks, two items), the
+   Heath's six enemies and the Hushed with her phases and two looks, the audio slot keyed by flag (each a few lines,
+   each with a unit test; `fighters.test.ts` grows by one; `battle.test.ts` re-asserts Chapters 2 to 8's fights), the
+   voyage. **The sim re-run with the built `hushed` and `magScale`** (the scratch bot moved into `tests/`): x7 holds
+   or drops to x6; Edmund active beats Edmund benched.
+3. **Maps (Sonnet, the rest of the day), the keep first:** `tools/maps/aldermoor.ts` with the five maps of section 3;
+   the archive's zone, the panel's anchor and the six cabinets replayed headless by a draft
+   `puzzles/aldermoor_archive/solution.json`, then the courtroom with the dock's zone and the clerk's table, before
+   the square is drawn; then the Heath with the stair, the road, the barn, the chapel and the ambush layer; the
+   square with its variants; the Rolls House; the cathedral with the loft; the rain layer; validated; the city entry
+   in `CITIES`.
+4. **Content (Haiku and Sonnet, in parallel):** fourteen books (*The Charter of Protection, Explained* written to give
+   the year; the public and true editions of Thomas's record written against each other; *The Witness and the Law*
+   written to give the court's rule), the `heath` table and `aldermoor_story` groups, the vendors and the five items,
+   the looks (section 11), the speakers, the audio slots (rain, a hat hitting a sergeant, an organ, a seal breaking, a
+   cabinet drawer, a court's murmur, a veil; the square plays the farewell track until Kingsmere has its own).
+
+**Day 2 (Opus with Sonnet on dialogue):**
+5. **Dialogue and the story wiring (the morning):** `data/dialogue/aldermoor.ts` staged from the beats, in this order
+   so an interruption leaves a playable chapter: the stair, the post, the road, the gate; the square, the lady in
+   grey, the press-gang, Edmund; the hall, Jordyn at the door, the Regent; the close; the organ, Sebastian; the eve,
+   the recital, the postern, the keep by night, the archive in both eras, the cabinets; caught, the cells; the Assize
+   (the tree, the dock's Echo, the exposure, the Hushed, the Yield, the three defiances); the price, the goings, the
+   stair, the card. `ACT9` in `quests.ts` with hints and goals; the Journal notes (*The first revisiting*, *The mirror
+   file*, *The roll*, *The ash thumbprint (8 of 9)*, *The four accounts: three read*, *The Stillwater dissidents*,
+   *Jordyn*, *Sebastian*).
+6. **The quests (early afternoon):** Al-3 (the printer, the chapel, the list and its cover, three doors, the press),
+   Al-2 (the shelf, the fly-leaf's two looks), the debate *Should the Throne have one hand?* (two speakers, three
+   rounds, the Reason books, the hierarch's line after), the board's two jobs.
+7. **The puzzle files and tests (late afternoon):** `puzzles/aldermoor_archive/`, `puzzles/aldermoor_assize/`; an
+   `assize_hushed` bot test on seeds at 21 to 24 with the real statuses, with Edmund active and benched; a
+   `press_gang_cross` and `bog_chapel_cell` test; quests, guide, debate, side-quest, maps, stage and content tests
+   green; the content tests: no Salkhi, Samira or Vikram line in a node with an Anissa line; no Jordyn or Sebastian
+   line with "good", "innocent", "feeds", "the arrows" or "thumbprint"; no line joining "Regent" to "almoner" in the
+   Journal without "denies"; no line naming the closed hand or the thumbprint "the Quiet Crown's" or "Rael's".
+8. **The route (evening):** Chapter 9's route from its chapter start to `@chapter9-end`; `chapter-starts.ts` with
+   chapter 10; `act.test.ts`; `tools/level-curve.ts` run and the XP dials set (section 5); the smoke test's Chapter 9
+   section with screenshots of the notice post in the rain, the escort on the road, the lady in grey crossing the
+   square, Edmund with his hat off, the Regent seated with the Almoner behind him, Jordyn at the door, Jordyn in the
+   close, Sebastian coming down the loft stair, the court walking to the church, Anissa in the loft, the postern
+   unbarred, the archive's cabinets, the Echo's gallery with Thomas, the panel open, the standoff in the hall, the
+   cells, the dock with the roll in the Echo, the clerk comparing hands, Rosalind standing, "Enough noise", the
+   unveiling, Jordyn's seven stepping out, the dissidents' line at dawn, at 844 x 390 and 390 x 844.
+
+**Day 3 (morning):**
+9. **Full browser test:** the chapter end to end on a phone; the court lost (Game Over returns to the courtroom's
+   doors with the record read) and won; both of the Hushed's ends; Game Over on a Heath ambush (back to the road) and
+   at the chapel (back to the road); a save in the cells and on the eve; `npm test`, typecheck, lint, build; the
+   reviewer prompt in `reviews/reviewer-prompts/` (the Chapters 6 to 9 batch, about Nov 9); the Nov 8 milestone note
+   with the level statement; then Chapter 10's outline, which overlaps with this build from day 2.
+
+**If day 2 runs over, cut in this order:** the eve and dawn variants (lines), the Rolls House's books from nine to five
+(*The Charter of Protection, Explained*, *The Witness and the Law*, *Dame Agatha's Patience*, *Court Circular*,
+*Thomas Stillwater's Record (public edition)*), the sightline strips (the hall dark and empty: "the Sealbearers are at
+the recital"), the Long Watch and Stillwater's Patience (their fallbacks), Calm and Comfort (`seize` with the tell),
+the law-seal brooch's special, the board's two jobs, the escort pair on the road (a line at the gate). Never cut:
+Edmund active in battle, Jordyn's three acts (the postern, the arrest, the resignation), Sebastian's organ heard
+before he is seen and playing under the break-in, the Echo with the council through the door and the panel as the
+anchor, the cabinets with the year and the seal, the dock's Echo, the Almoner's lie broken by the roll and the
+record, the Hushed with `magScale` and `hushed`, the three defiances walked, the price with the count, the two
+required quests and the debate.
+
+Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, most urgent first: art drop 1 (Fri Oct
+24); card art, portraits and the card back before the rules and card text freeze (Fri Oct 31); order B with proofs
+(Mon Nov 3); the Nov 8 decision date (this chapter is the one it is about); the Dec 1 story questions, now needed by
+early November (the Aldermoor ledger and Patricio in Aldermoor are both paid in this chapter as Claude's calls, the
+second refined; Rosalind is this chapter's Gen III ruler); the fluent-speaker check (Wed Nov 18: this chapter adds no
+new language).
