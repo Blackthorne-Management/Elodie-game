@@ -994,8 +994,9 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       },
     ],
     tips: {
-      // The answer, said at the start (the second review's 3.9: light is resisted, so the tip says so and names blows).
-      start: 'She takes your words, Gigi. Plain blows still land. Light just slides off her. Edmund, hold them.',
+      // The answer, said at the start (the second review's 3.9, its wording): her light is resisted and Gianna's light
+      // spells are skills, which Hush takes, so the tip names blows; Anissa's Light (no skill, never hushed) still comes.
+      start: 'She takes your words, Gigi. Plain blows still land. My light still comes. Edmund, hold them.',
       spark: 'Surge, Gigi! On her!',
       tell: 'The court\'s going quiet! Guard!',
       lowHp: 'Gigi. Plain blows. Then heal, when you can.',

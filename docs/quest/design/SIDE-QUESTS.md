@@ -570,6 +570,13 @@ built (owner decision).
   the Echo, Thomas Stillwater's colleague is ordered to "write the Brasador wars large"; Patricio sees the order
   (information; no anchor). 3) Note it in the Journal.
 - **Reward:** 320 XP, +2 Influence (Aldermoor), the chronicle (with the Echo note that it was written to order).
+- **Built (Oct 22; the Chapter 9 outline with its second review's 3.6; Claude's calls; required):** the Ash Wars
+  shelf in the archive stands in front of Thomas's panel: lifting the chronicle down is the way to the anchor's present
+  half (Edmund walks the shelf a foot aside). Its fly-leaf, in Thomas's old hand: "Written to order. The purchasing
+  office asked for the Brasador wars large. And I wrote them large. The true count is in Kirinoura. T.S." Step 2 is
+  reading it again beside the record from the panel ("The same hand. Fifty years apart."). The archive's door waits for
+  it. Reward 40 XP (the steps pay the chapter's levels), +2 Influence (Aldermoor); it goes into the court's evidence and
+  comes back at dawn. Closes if the party is caught before it is read.
 
 ### Al-3 The Purge List (rebel safehouse)
 - **Giver:** a dissident printer. **Accept:** after the courtroom.
@@ -578,6 +585,14 @@ built (owner decision).
   the Quiet Crown leaked it on purpose.
 - **Reward:** 500 gold, 380 XP, +3 Fear (Aldermoor dissidents: price Fear 8), *The Ash Thumbprint (8 of 9)*. The 9th
   is in Elodie's rooms at the Seat (seen in Se-1).
+- **Built (Oct 22; the outline 7.2 with its second review's 3.10; Claude's calls; required):** opens after the Regent's
+  refusal, before the court (so the price is paid by the chapter): the printer (Edmund's old tutor) at the barn on the
+  heath; the bog chapel at dusk, where the veils kneel to the Hushed's word (a fight: two veils and a bog hound, 40 XP);
+  the list ("By the Hushed's word", "quiet" beside each name); three doors on the Cross in any order: the pie shop and
+  the sorry constable's in time, **the tea shop too late** (a woman who cannot say her name; Haru reads it off the
+  list and she nods; no line from her, no Anissa in the node); back to the printer. The eighth thumbprint is on the
+  barn's door ("Eight cities, and the same thumb.") and on the list's cover. Reward 300 gold, 60 XP, +3 Fear. Closes
+  if the recital begins first. The debate (One Hand, by the cross) is the day's other required quest.
 
 ### Al-4 The Clock That Waits (secret item)
 - **Giver:** a dissident clockmaker. **Accept:** after the courtroom.

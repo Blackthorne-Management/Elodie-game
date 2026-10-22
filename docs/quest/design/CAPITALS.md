@@ -819,6 +819,14 @@ clockmaker (Al-4), a constable who is sorry about all this, a Quiet Crown hierar
 **Side quests:** Al-1 Terribly Sorry, Al-2 The Crown Chronicle, Al-3 The Purge List, Al-4 The Clock That Waits, Al-5
 Tea With Lady Rosalind.
 
+*Built Oct 22 (Chapter 9): six maps (`quest/tools/maps/aldermoor.ts`): the heath (46 x 28, the Mere Stair, the
+notice post, the printing barn, the bog chapel, the Moor Gate), the Market Cross hub (42 x 30, St. Agatha's west door,
+the close's gate, the keep's gatehouse, the Rolls House, the pie shop and the tea shop), the Rolls House (22 x 14), the
+Regent's keep (40 x 30: the archive, the great hall, the courtroom, the yard, the cells), the close (18 x 7, its own
+map: the bell post, the vestry door, the postern) and St. Agatha's (26 x 18, the great organ, the oath-stone). Al-1,
+Al-4 (S-ALM) and Al-5 are not built (after the release). The rain, the eve, the keep by night and the last dawn are
+map moods on conditions (`RAIN`, `EVE`, `KEEP_NIGHT`, `LAST_DAWN` in `quest/src/data/aldermoor.ts`).*
+
 ---
 
 ## Cultural review list (from these sheets)

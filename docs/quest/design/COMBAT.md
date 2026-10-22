@@ -49,7 +49,7 @@ Level 1 stats and growth per level (base / growth). The built members are unchan
 | Bayarmaa | 52 / 6 | 14 / 2 | 13 / 2 | 8 / 1 | 4 / 0 | 15 / 2 | proposal |
 | Haru | 44 / 5 | 22 / 3 | 11 / 2 | 7 / 1 | 9 / 1 | 16 / 2 | proposal |
 | Vikram | 38 / 4 | 18 / 2 | 15 / 3 | 6 / 1 | 6 / 1 | 15 / 2 | proposal (lowest HP, as Agnivansh's Gen IV) |
-| Edmund | 66 / 8 | 14 / 2 | 10 / 2 | 14 / 3 | 5 / 1 | 6 / 1 | proposal (+10% max HP from *Aldermoor's Vigil*) |
+| Edmund | 66 / 8 | 14 / 2 | 10 / 2 | 14 / 3 | 5 / 1 | 6 / 1 | proposal (+10% max HP from *Aldermoor's Vigil*). **Built Oct 22 (Chapter 9):** 58 / 7, 18 / 2, 11 / 2, 12 / 2, 5 / 0, 8 / 1 (the Vigil folded into the base) |
 
 ## 3. Turn order and speed
 
@@ -291,8 +291,20 @@ guide 6.3). From the built `pillarRules` and side quests, read by hand (Jwalades
 | Skarragol (Ch. 6) | Wealth 10 | about 2 (The Winter Stores 1, Samira's letter 1) | about 8 | can never be paid in full by choices alone; gold gifted counts |
 | Kuroshi (Ch. 7) | Influence 10 | about 7 (K-2 2, K-3 1, the debate's quest 1, listening 1, the receipts 2) | above 10 | the petition, Samira's names, the Fox spared and the books add |
 | Jwaladesh (Ch. 8) | Wealth 8 | **4** (Dhanraj broken 1, J-2 1, J-3 2; the advances kept) | **10** (spared 3, given 4) | `tests/jwaladesh.test.ts` |
+| Aldermoor dissidents (Ch. 9; not a betrayer house) | Fear 8 | **5** (Al-3 3, the Hushed beaten 1, Jordyn's defection 1; tried by their law) | **6** (broken before the city +1) | the second review's option (a): it can be short ("Not yet"); `tests/aldermoor.test.ts` |
 
 Any of the four can be the least paid; a test that computes all four ranges from the data belongs with the Muster.
+
+**Chapter 9 (built Oct 22; Claude's calls):** its steps pay **70** (`XP_PER_OBJECTIVE_BY_CHAPTER[8]`; three pay nothing:
+the Mere Stair, the Toccata's follow-the-quest step, home). Aldermoor pays the Hushed 260, the press-gang 50, the bog
+chapel's cell 40, Al-3 60, Al-2 40, the debate 15; seven books. Measured: route 24 (8,028), without side quests 22
+(6,538), played median 24 (8,060), p90 25, wanderer p90 25; four wild steps on the route. The Muster (24 to 25) is met at
+24 (25 needs 8,082).
+
+| Ch | Target | Route end (XP) | No side quests | Played median | Played p90 | Wanderer p90 |
+|---|---|---|---|---|---|---|
+| 8 | 19-21 | 21 (6,448) | 19 (5,113) | 21 (6,480) | 21 | 22 |
+| 9 | 21-24 | 24 (8,028) | 22 (6,538) | 24 (8,060) | 25 | 25 |
 
 **The three roads (any order):** the first of Skarragol, Kuroshi and Jwaladesh entered is set to levels 15 to 17, the
 second 17 to 19, the third 19 to 21 (`ROAD_TIERS`). Fixed on first entry.
@@ -488,6 +500,14 @@ fire cuts at random). His breathing is never in a scene with Anissa's lines.
 | Tea Break | 10 | The party heals 15% of max HP and Anissa +1 Calm ("Terribly sorry, one moment") | |
 | Stillwater's Patience | passive | Once per battle, cancel an enemy enrage or a Grudge-like buff | Stillwater's Patience |
 
+**Built (Oct 22; Chapter 9; Claude's calls, the outline's cut list):** he joins at the pie shop on the Cross (the press-gang) with the pattern sword
+of guarding and the Stillwater greatcoat, and leads (fights second, after Gianna) until Chapter 9 ends, then last.
+Aldermoor's Vigil is folded into his base HP. **Shield Wall** wards the whole party (the built `warded`: a quarter less
+for 3 turns). **Tea Break** heals each ally 15% of their own max HP (`healShare`, new: a tank's heal, whatever his MAG;
+no Calm). The Long Watch and Stillwater's Patience are after the release (their text says so). Weapon moves: Shield
+Bash (100, every turn), Measured Blow (150, every 3), Hold the Line (taunt and ward for 2 turns). "Terribly sorry":
+he apologises before he hits (a passive's text, no effect).
+
 ### 9.9 The Echo party
 
 | Member | Skills |
@@ -550,7 +570,7 @@ come up (tests/battle.test.ts). Attacking alone still wins with Yari but costs o
 | **Down** | 0 HP, out of the fight | until revived | revive items, Say Their Names, Rit Solèy, end of battle (revives at 1 HP) |
 | **Marked** | Takes x1.25 damage | 3 turns | |
 | **Stunned** | Skips the next action | 1 action | |
-| **Hushed** | Cannot use skills (Attack, Guard, Item still work). **Built Oct 22 (Chapter 7):** SP skills are blocked; weapon moves (no SP) still work (`STATUS.noSkills`) | 2 turns | Tidewash, Tonic |
+| **Hushed** | Cannot use skills (Attack, Guard, Item still work). **Built Oct 22 (Chapter 7):** SP skills are blocked; weapon moves (no SP) still work (`STATUS.noSkills`). **Built Oct 22 (Chapter 9, the outline review's 3.1):** the weapon moves are blocked too: Attack, Guard and Item only | 2 turns | Tidewash, Tonic |
 | **Frightened** | Anissa only: see Calm (Section 8) | until Comfort | Comfort |
 | **Burning** | Loses 6% max HP each turn. **Built Oct 22 (Chapter 8):** a boss loses only `BURNING_BOSS_SHARE` (2%); it never takes the last HP | 3 turns | Tidewash, water items |
 | **Oiled** (the Oil Wall; built Oct 22, Chapter 8) | Damage taken x0.5; fire does nothing (`STATUS_IMMUNE`); a Surge shatters it | 3 turns | a Surge |
@@ -701,7 +721,7 @@ Boss stats: the standard line x the multipliers in each row (`BOSS_SCALE`). Phas
 | 4 | **Noyan Grimvald** (proposal) | Skarragol frozen fjord (Ch. 6) | tier top (17, 19 or 21) | 8 / 1.2 | **1 Mounted:** *Trample* (all), fast. **2 (50%) Unhorsed:** slower, *Stolen Standard* (Inspired on all his raiders); returning the standard to Bayarmaa (an Item use) breaks it. |
 | 5 | **The Paper Fox** (proposal) | Kuroshi file house (Ch. 7) | tier top | 7 / 1.0 | **1 Screens:** hides among three paper decoys (Haru's Kagemimi or *Lantern* shows the real one). **2 (40%) Sold Secrets:** reads a member's "file": copies their best skill and uses it on them. **Built Oct 22 (Claude's calls, the second review's 3.6):** level 19, HP x12, ATK x1.8 (x10 / x1.6 left the kit 14% hurt). He and three paper decoys all show as *Paper Fox? A* to *D*, letters and places dealt at random, HP bars hidden; the decoys step in front of him and rustle (a real move). Kagemimi (or the reveal) names and Marks him, and the decoys turn plain paper and stop stepping in front; area blows tear paper. Fold brings another decoy every 3 turns (every 5 in phase 2). Phase 2 at **40%**: *Sold Secrets* every other turn uses the power of a member's best damage skill (the move's own 120 as a floor) with the Fox's ATK, aimed at them ("reads from a file with X's name on it"). He yields at 0 HP and is bound. 140 XP, 300 gold. |
 | 6 | **Seth Dhanraj** (proposal) | Jwaladesh oil store (Ch. 8) | tier top | 8 / 1.1 | **1 Hoard:** *Oil Wall* (fire immunity), Oil Enforcers. **2 (50%) Price Spike:** each turn the party's next item costs 1 extra turn of delay; lighting his oil (any fire skill after the wall falls) Burns him. **Built Oct 22 (Claude's calls, the second review's 3.1):** level 21, HP x5, ATK x1.2 (x5 / x1.5 put the kit at two falls a fight). Two store enforcers protect him; the Oil Wall every 3 turns (half damage, fire does nothing, a Surge shatters it). Phase 2 at 50%: two more enforcers, *Price Spike* a 100-power area blow every other turn (the item delay cut), the oil lit (a fire blow sets him Burning, capped at 2% a turn). He withdraws at 0 HP and the fight ends. 140 XP, 300 gold. Tip: "Fire runs off his oil, Gigi! Surge to break the wall. When it's down, Vikram's fire will catch." Skills plan 40/40, 33% lost, 0.9 falls; Attack alone 0/40. |
-| 7 | **The Hushed** | Aldermoor Regent's keep (Ch. 9) | 24 | 9 / 1.1 | **1 Silence:** Hush on two members a turn, Hushers. **2 (60%) Hush the Light:** aims at Anissa every other turn (to redesign, Shield Anissa dropped Oct 15; Comfort). **3 (25%) Unmasked:** the voice behind the veil; *Quiet Crown* (Weakened all, Calm -1). |
+| 7 | **The Hushed** | Aldermoor Regent's keep (Ch. 9) | 24 | 9 / 1.1 | **1 Silence:** Hush on two members a turn, Hushers. **2 (60%) Hush the Light:** aims at Anissa every other turn (to redesign, Shield Anissa dropped Oct 15; Comfort). **3 (25%) Unmasked:** the voice behind the veil; *Quiet Crown* (Weakened all, Calm -1). **Built Oct 22 (Claude's calls, the second review's 3.1):** a caster, level 24, HP x7, **MAG x1.25** (`magScale`, new); two veils step in front of her (`protects`); Hush is an area spell every third turn (half the party, 2 turns); at 60% Hush the Light (aimed at Anissa: Gianna steps in, `seize`; Calm and Comfort are after the release); at 25% the veil comes off and two more veils come in. She resists light; Anissa's tip: "She takes your words, Gigi. Plain blows still land. My light still comes. Edmund, hold them." She withdraws at 0 HP. Measured in the Chapter 9 outline's Built section. |
 | 8 | **The Betrayer** (four variants by house) | Harbor flank (Ch. 11) | 26 | 8 / 1.2 | Shared frame, house moves: Dorini *Paid Off* (Bribes your benched members' turns away), Ironvow *Warpath* (two turns in a row), Suzumori *Marionette* (redirects your action), Agnivansh *Endless War* (no SP costs for a round). Proposal names: Admiral Rashid, Chief Hrafn, Councillor Mibu, Steward Prakash. Skipped if turned at the Muster. |
 | 9 | **The Regent's Champion** (proposal: Captain-General Hale) | Regent's flagship (Ch. 11, Trust route) | 28 | 9 / 1.25 | Rael fights beside the party as a guest. **1 Boarding:** marines and musketeers. **2 (50%) Champion's Duel:** challenges one member; others are Stunned 1 turn when he does. |
 | 10 | **Lord Regent Aldric Vane** | Throne Hall (Ch. 12) | 30 | 10 / 1.25 | The Claim and Challenge. **1 The Patient Court:** two Sealbearers shield him (he cannot be hurt while both stand). **2 (66%) The Charter:** binds the realm: each turn he copies the pillar the party has most of as a shield (Wealth: gold drain; Fear: Stunned; Influence: Hushed). **3 (33%) One Hand:** Quiet Crown power; aims at Anissa each turn; Dawn Surge breaks his last shield. On defeat: Azzy's choice. |

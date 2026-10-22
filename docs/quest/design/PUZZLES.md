@@ -433,6 +433,20 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   remembers who was here." / "The pact is under the Accord's year reversed. In court, the second witness lies: show
   Thomas's copy."
 - **Difficulty:** 6.
+- **Built (Oct 22; the Chapter 9 outline with its second review's 3.6, 3.8 and 3.11; Claude's calls):**
+  - **The archive:** six cabinets, a decade each of the Old King's reign; each is a dialogue with a year dial and a
+    seal switch (flags with values) and a drawer that opens on `eq`. The rule is cut over the door ("Filed by the year
+    of the reign and the seal of the house the matter concerns. Matters touching a clause are filed with the
+    clause."). The filing floor's memory (Anissa holds the door) shows Thomas filing the pact in the mirror and
+    Patricio leaning on the panel (the anchor, `anchor.thomas_record`). The pact is in **32 under the Brasador red**;
+    23 under red holds a slip ("removed to the Lord Regent's keeping"); 32 under violet a tax roll. The panel is behind
+    the Ash Wars shelf (Al-2). No guards' loop in the room (the night's Sealbearers are in the hall: lamp strips
+    send the party back to the postern). Honest difficulty about 3.
+  - **The courtroom:** the clerk's tree (press a witness: the steward, the Almoner, the captain; lay evidence: the
+    roll, the record, the pact, the chronicle). The dock's memory is the roll read over an empty dock ("Xaraguá: not
+    present. Not sent for."). The record alone is "a word against a word"; the Almoner must swear to the public edition
+    first; the three together read "Xaraguá was never asked. T.S." into the roll. Honest difficulty about 3.
+  - Cheat files `aldermoor_archive` and `aldermoor_assize`.
 
 ### S-ALM The Clock That Waits (secret; `SECRET-ITEMS.md` 7)
 - **Present:** a rusted clock, a vault, "a quarter to three". **Echo:** 11:10, gears of 5, 7 and 12, a 12-turn spring,

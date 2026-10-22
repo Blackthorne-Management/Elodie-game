@@ -208,7 +208,7 @@ describe('the Assize (SIG-ALM part 2)', () => {
   });
 });
 
-describe('Edmund joins on the heath and leads in his chapter', () => {
+describe('Edmund joins at the press-gang on the Cross and leads in his chapter', () => {
   it('he fights second, after Gianna, until the chapter ends; then last', () => {
     const flags = simAt('aldermoor-assize').logic.state.flags;
     expect(battleParty(flags, RPG, SKILL_BOOK).map((p) => p.id)).toEqual(['gianna', 'edmund', 'yari', 'azzy', 'samira', 'bayarmaa', 'haru', 'vikram']);
@@ -248,8 +248,10 @@ describe('the Hushed (the second review\'s 3.1)', () => {
     expect(ENEMIES.court_husher!.protects).toBe('the_hushed');
     const tip = BATTLES.assize_hushed!.tips?.start ?? '';
     expect(tip).toMatch(/plain blows/i);
-    // Her light is resisted, so Anissa's tip never promises it.
-    expect(tip).not.toMatch(/light (still )?(comes|works|lands)/i);
+    // Gianna's light spells are resisted (and are skills, which Hush takes), so the tip never promises them; Anissa's
+    // Light is no skill and still comes (the second review's 3.9 wording).
+    expect(tip).not.toMatch(/your light/i);
+    expect(tip).toMatch(/My light still comes/);
     expect(tip).toMatch(/Edmund/);
   });
 

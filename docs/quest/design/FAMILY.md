@@ -77,6 +77,20 @@ never Cenizal, never the Locket, never a word about her brother or the thumbprin
 Gianna for a long moment, and does not ask"; the rod line is cut. A test holds her lines to the locked rule. One line
 to read with the owner's ear: "Azriel. You've got your grandfather's hands."
 
+**Built in Chapter 9 (Oct 22):** **Jordyn** (Rahel's daughter, Azzy's Titi) is captain of the Regent's watch in
+Kingsmere. She meets the party in the hall, makes her offer in the close at the bell (the keep's watch is hers on the
+recital's night; the postern's hour), arrests them herself when the Almoner catches them ("Under arrest, Almoner. Not
+under you."; "Mother's jaw. I said."), testifies in the Assize, reads the Almoner's commission ("Under the Throne's seal.
+No hand."), lays her captain's knot on the clerk's table and walks out with six of the watch. At dawn she returns the
+evidence by the book, sends her company by the moor road to the Muster ("And I'll bring Mother. And her mother.") and
+says of Rael only: "He wrote to me once in twenty years. One line: 'Keep the law.' I have." **Sebastian
+Jean-Philippe** (Elodie's brother; the bill on the heath: "that's Grandpapa's name") is the organist to three courts:
+heard before he is seen at St. Agatha's ("I'm your uncle Sebastian."), plays the Agatha Toccata (twice, the slow
+part) while the party is in the archive, brings a blanket to the cell, sits in the gallery at the Assize, and leaves for
+Eightgate's recital and then Pòdlimyè ("I was always somewhere being famous."). **Claude's calls (the locked rule):**
+neither says a word about anyone's goodness, the arrows or the thumbprints; a test holds them to it. The reviewer
+prompt asks for a human read of every Jordyn, Sebastian and Almoner line.
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

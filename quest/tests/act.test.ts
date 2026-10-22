@@ -278,7 +278,7 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     // Home across the bay: the trader lands them on Zetwal's harbour (Chapter 10 starts there).
     expect(sim.logic.state.player.mapId).toBe('zetwal-harbor');
     expect(sim.logic.mode).toBe('field');
-    // Edmund joins on the heath and leads the order for the chapter; after it he stays, behind the others.
+    // Edmund joins at the press-gang on the Cross and leads the order for the chapter; after it he stays, behind the others.
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toContain('edmund');
     expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
     for (const f of ['party.edmund', 'ally.aldermoor_dissidents', 'clue.crown_pact', 'anchor.thomas_record', 'story.caught', 'story.hushed_beaten', 'story.jordyn_offer', 'story.sebastian_met', 'story.families_warned', 'side.purge_list.done', 'side.crown_chronicle.done', 'debate.aldermoor_one_hand.settled', 'belief.rael_traitor']) {

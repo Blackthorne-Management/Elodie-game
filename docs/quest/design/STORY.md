@@ -130,7 +130,8 @@ guide are marked **(proposal)**.
       Grandmother's and at the dock), Yari's answer (at the canoe, and "I told you about the two ships. Count
       them." in Yucayeque), the soup vendor's greeting (when the soup is delivered), the envoy's answer (at
       Xaraguá's council: "They asked Zetwal to thank them for protecting our waters too. We didn't."), and "Stay
-      away from her" to the veiled woman (the hooded stranger on the plaza). **The Last Evening (proposal), on
+      away from her" to the veiled woman on the Cane Road by the mill (`choice.warned_watcher`; the hooded stranger
+      on the plaza brings it up after the lamp; she is Chapter 9's Almoner, the Hushed: owner, Oct 22). **The Last Evening (proposal), on
       top:** the city reacts to the lights (built lines). A Quiet Crown watcher on the Cane Road notices Anissa
       (built). Elodie's absence is felt: the Hall clerk shows Gianna the blank seventh line on the Marshal's stone
       and the seven-ribbon note.
@@ -500,6 +501,18 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
 - **Boss:** the Hushed (level 24).
 - **What the player learns:** the Crown always meant to keep the harbor; Rael took the Crown's gold; the Quiet Crown
   has been bent to hunt Anissa by the Regent's people.
+- **Built (Oct 22; the outline `reviews/2026-10-22-chapter9-outline.md`, its "Built" section, and its second review):**
+  Kingsmere's six maps (the heath, the Market Cross, the Rolls House, the keep, the close, St. Agatha's), the voyage
+  from Agnipur and the Mere Stair in the rain, Sebastian's bill ("that's Grandpapa's name"), the press-gang at the pie shop
+  on the Cross and Edmund joining, the Regent's refusal in the hall, the day's four (Al-3 The Purge List with the bog
+  chapel and one door too late, the One Hand debate, Jordyn's offer in the close, Sebastian at the organ), the eve (the
+  Almoner turns back at the west door), the Toccata and the postern, the filing floor's memory (Thomas writes the true
+  record again at a quarter to three; Patricio leans on the panel; Anissa holds the door), the mirrored drawer and the
+  panel behind the shelf (Al-2), caught by the Almoner and arrested by Jordyn, the cells and Sebastian's blanket, the
+  Assize (the dock's memory of the roll, the Almoner pressed, the record read into the roll), the Hushed unmasked as the
+  veiled woman by the mill, the three defiances (Edmund, Rosalind's "Sat.", Jordyn's knot), the price at dawn and the
+  voyage home. Claude's calls: the close as its own map, the rain as a wash, the price of Fear 8 paid to at most 6 (floor
+  5: "Not yet. Your Muster can collect the rest."), the Almoner's commission under the seal with no hand.
 
 ### Chapter 10: The Muster (Pòdlimyè, return)
 
@@ -607,7 +620,9 @@ real people (guide 7.3).
    Anissa and whom the members *believe* to be the head of the Quiet Crown. Rael is the true founder above all
    cells, unknown to every member. Two reveals: the Hushed unmasked in the Regent's court (Chapter 9), Rael's
    confession at the Hearing (late). In Chapter 1 the recruiters and the veiled woman speak of "the Hushed" as their
-   leader and never of Rael.
+   leader and never of Rael. **Built (Chapter 9, Oct 22; owner decision):** the Hushed is the Regent's almoner, the
+   veiled woman by the mill on the Cane Road in Chapter 1 ("No one. That is the point of us."); Anissa knows her in the
+   Assize, and her commission is "under the Throne's seal, no hand", which the Crown disowns.
 4. **Patricio in every land.** The Echo party is always Patricio's (guide 6.1), so he must have been in every capital
    during the war, including the Crown's own Aldermoor. Proposal: he went to Kingsmere under a flag of truce to
    negotiate the peace (that is when Thomas Stillwater met him). Owner to confirm.

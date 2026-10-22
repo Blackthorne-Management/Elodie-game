@@ -150,8 +150,8 @@ describe('following only the gold arrow on, through Chapter 8', () => {
 });
 
 describe('following only the gold arrow on, through Chapter 9', () => {
-  // On from the end of Chapter 8 (Chapter 9, Oct 22): the voyage north, the Mere Stair and the notice, Edmund on the
-  // heath road, the press-gang on the Cross, the audience, the day (the printer and the bog chapel for Al-3, the three
+  // On from the end of Chapter 8 (Chapter 9, Oct 22): the voyage north, the Mere Stair and the notice, the heath road,
+  // the press-gang on the Cross and Edmund, the audience, the day (the printer and the bog chapel for Al-3, the three
   // families, the debate, Jordyn in the close, Sebastian at the organ), the eve, the recital, the postern by night, the
   // filing floor's memory, the cabinets dial by dial and seal by seal, the panel behind the shelf (Al-2), caught, the
   // cells, the Assize, the Hushed, the price at dawn, the stair home.
