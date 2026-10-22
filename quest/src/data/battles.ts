@@ -3,6 +3,7 @@
 // Anissa run into a boar, which teaches the commands, Anissa's Spark and Surge, and her light.
 // Numbers follow docs/quest/design/COMBAT.md.
 
+import { WAR_BATTLES, WAR_ENEMIES } from './warBattles.ts';
 import { ANISSA_SP_EVERY, BATTLE_ACTIVE, BRIBE_GOLD_PER_LEVEL, ENCOUNTER_GOLD_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
 import { ENCOUNTERS } from './encounters.ts';
 import { ambushXp, type BattleDef, type EnemyDef, type EnemyMove, type SkillDef } from '../engine/battle.ts';
@@ -67,6 +68,21 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
   ],
   // Azzy (COMBAT 9.3): his skills come from the board's Brasador abilities.
   azzy: [
+    {
+      id: 'la_marca', name: 'La Marca', sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'],
+      text: 'He marks one foe for the house: it takes a quarter more damage for 3 turns.',
+    },
+    {
+      id: 'grito_de_guerra', name: 'Grito de Guerra', sp: 7, kind: 'status', power: 0, target: 'enemy', statuses: ['stunned'], bossChance: 0.5,
+      text: 'A war cry: one foe loses its next action (a boss only half the time).',
+    },
+    {
+      id: 'reinado_de_cenizas', name: 'Reinado de Cenizas', sp: 12, kind: 'damage', stat: 'atk', power: 120, powerPerFell: 40, target: 'enemy', element: 'fire',
+      once: true, heavy: true, text: 'Once per battle: a burning blow, stronger for every foe already felled.',
+    },
+  ],
+  // Rael in the four for one fight (Chapter 11, Trust: data/rpg.ts MEMBERS rael): his son's kit is his own.
+  rael: [
     {
       id: 'la_marca', name: 'La Marca', sp: 4, kind: 'status', power: 0, target: 'enemy', statuses: ['marked'],
       text: 'He marks one foe for the house: it takes a quarter more damage for 3 turns.',
@@ -213,6 +229,11 @@ export const MOVES: Readonly<Record<string, readonly SkillDef[]>> = {
     { id: 'quick_thrust', name: 'Quick Thrust', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A duellist\'s thrust. Ready every turn.' },
     { id: 'flame_lunge', name: 'Flame Lunge', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 160, target: 'enemy', element: 'fire', text: 'A lunge with fire on the blade. Needs 2 turns to ready again.' },
     { id: 'twin_flame', name: 'Twin Flame', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 80, target: 'randomEnemies', hits: 2, element: 'fire', text: 'Two fiery cuts at foes at random. Needs 3 turns to ready again.' },
+  ],
+  rael: [
+    { id: 'slash', name: 'Slash', sp: 0, cooldown: 0, kind: 'damage', stat: 'atk', power: 100, target: 'enemy', text: 'A clean cut. Ready every turn.' },
+    { id: 'heavy_blow', name: 'Heavy Blow', sp: 0, cooldown: 2, kind: 'damage', stat: 'atk', power: 170, target: 'enemy', text: 'Both hands on the hilt. Needs 2 turns to ready again.' },
+    { id: 'sweep', name: 'Sweep', sp: 0, cooldown: 3, kind: 'damage', stat: 'atk', power: 70, target: 'allEnemies', text: 'A wide cut at every foe.' },
   ],
   // Young Lord Benny of Ardencia in the Echo party (from the end of Chapter 3, once Azzy has joined).
   benny: [
@@ -976,6 +997,8 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Fix bayonets', power: 150, every: 3, tell: 'The sergeant barks: "Fix bayonets!" Steel glints...' },
     ],
   },
+  // Chapter 11, the War of the Harbor (data/warBattles.ts).
+  ...WAR_ENEMIES,
 };
 
 /** Rael's moves once the guards are in (phase 2, Unleashed) and once he is cornered (phase 3). */
@@ -1039,6 +1062,8 @@ const QASIM_FORECLOSURE: readonly EnemyMove[] = [
 ];
 
 export const BATTLES: Readonly<Record<string, BattleDef>> = {
+  // Chapter 11, the War of the Harbor (data/warBattles.ts).
+  ...WAR_BATTLES,
   // Chapter 10, Z-6: the crew at the smugglers' landing (the outline 7.1 and section 5; the second review's 3.13 keeps x3 /
   // x1.3 with protects). Game Over applies; the way back in is the cart track's foot (the trigger plays again until won).
   // Not marked as a side quest's fight: Z-6 is required by the Chancellor's condition, so its fight is the story's (the
@@ -1617,6 +1642,7 @@ const WILDS: Readonly<Record<string, { title: string; backdrop: string }>> = {
   fog_marsh: { title: 'The Fog Marsh', backdrop: 'fog_marsh' },
   salt_flats: { title: 'The Salt Flats', backdrop: 'salt_flats' },
   heath: { title: 'The Heath', backdrop: 'moor_heath' },
+  harbor_war: { title: 'The War of the Harbor', backdrop: 'mountain_path' },
 };
 
 /**

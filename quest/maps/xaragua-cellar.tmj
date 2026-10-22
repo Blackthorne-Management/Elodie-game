@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 5,
+  "nextobjectid": 8,
   "layers": [
     {
       "id": 1,
@@ -222,9 +222,42 @@
               "value": "left"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.war_begun"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "cellar_marine"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "anaco_war",
+          "type": "npc",
+          "x": 96,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.anaco_freed"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "anaco_cellar"
             }
           ]
         }
@@ -241,7 +274,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 3,
+          "id": 4,
           "name": "cellar_out",
           "type": "door",
           "x": 96,
@@ -279,7 +312,46 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 5,
+          "name": "war_cellar",
+          "type": "trigger",
+          "x": 96,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "war_cellar"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.cellar_war_entered"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.thorne_taken, !story.anaco_freed"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 11,
@@ -292,7 +364,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 4,
+          "id": 6,
           "name": "cellar",
           "type": "spawn",
           "x": 96,
@@ -347,7 +419,41 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 7,
+          "name": "cellar_irons",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "irons"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
     }
   ],
   "tilesets": [
@@ -356,10 +462,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 816,
+      "imageheight": 848,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 406,
+      "tilecount": 421,
       "columns": 8,
       "margin": 0,
       "spacing": 0

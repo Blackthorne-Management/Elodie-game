@@ -10,6 +10,7 @@ import { FILEHOUSE, HALL, LANTERN_DAY_DONE, LIBRARY, MARSH, MARSH_CODE, MAZE, PI
 import { BAZAAR, COURT, DAY_DONE, HARBOR, MIRROR_SOLUTION, ROOFTOPS, mirrorFlag } from './jwaladesh.ts';
 import { CATHEDRAL, CLOSE, CROSS, DAY_DONE as KINGSMERE_DAY_DONE, HEATH, KEEP, cabinetOf, PACT_DRAWER } from './aldermoor.ts';
 import { HARBOR as MUSTER_HARBOR, HALL as MUSTER_HALL, HOUSE, PLAZA, SEATED, TEMPLE } from './muster.ts';
+import { BEACH, CAMP, CANEY, SONG, TIDE_READY, VILLAGE } from './war.ts';
 import type { Goal } from '../engine/guide.ts';
 
 export const ACT1: QuestDef = {
@@ -1820,8 +1821,161 @@ export const ACT10: QuestDef = {
   ],
 };
 
+const XARAGUA_MAPS = ['xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song', 'xaragua-customs', 'xaragua-cave', 'xaragua-cellar', 'xaragua-record', 'xaragua-seacave'];
+const beach = (x: number, y: number): Goal => ({ map: 'xaragua-beach', at: { x, y } });
+const village = (x: number, y: number): Goal => ({ map: 'xaragua-village', at: { x, y } });
+
+/**
+ * Chapter 11, The War of the Harbor (Yucayeque, Xaraguá again: docs/quest/reviews/2026-10-22-chapter11-outline.md with
+ * every fix of its second review, and the owner's decision of Oct 22: on Strike, Azzy stays). The landing on the Canoe
+ * Beach, the gun on the headland (stage one), the flank (the betrayer, or the house that stayed), the hill camp, until
+ * the tide (the elders' debate, The Ninth Thumbprint, Harbors Lie, followed by the arrow), the conch, the village by
+ * dusk, the customs house (stage two: Thorne), Anaco in the cellar, Caona's stand and the chain (stage three: the Echo
+ * battle and the anchor), the Harbor Turn, the pier's end (Hale with Rael beside her, or Rael), the truth and the Ash
+ * Road read, the Song House, the Regent's retreat. Every step pays XP_PER_OBJECTIVE_BY_CHAPTER[10] but the gate and the
+ * card.
+ */
+export const ACT11: QuestDef = {
+  id: 'act11',
+  title: 'Chapter 11: The War of the Harbor',
+  maps: XARAGUA_MAPS,
+  objectives: [
+    {
+      id: 'landed',
+      title: 'The strait at first light',
+      detail: 'The fleet cannot pass the chain across the harbor mouth. It lands on the Canoe Beach, as the escape left it.',
+      done: { flag: 'story.landed' },
+      goals: [beach(BEACH.landing.x, BEACH.landing.y)],
+      hints: ['The fire on the hill, Gigi. That\'s them.', 'We\'re on the Canoe Beach.', 'Walk up the sand.'],
+    },
+    {
+      id: 'headland',
+      title: 'The gun on the headland',
+      detail: 'A Crown field gun on the headland rock covers the beach and the gardens\' road. Nothing goes up the hill until it is quiet.',
+      done: { flag: 'story.headland_won' },
+      goals: [beach(BEACH.headlandStep.x, 11)],
+      hints: ['The gun, Gigi. It covers the whole beach.', 'East along the sand, to the headland\'s foot.', 'Walk east along the sand to the gun\'s crew.'],
+    },
+    {
+      id: 'flank',
+      title: 'Sails behind us',
+      detail: 'Great-grandmother Patricia said to count them at dusk, because harbors lie. Haru is counting now.',
+      done: { flag: 'war.flank_done' },
+      goals: [{ if: { notFlag: 'story.flank_seen' }, ...beach(BEACH.flankStep.x, 11) }, beach(BEACH.captain.x, BEACH.captain.y)],
+      hints: ['Haru is looking back at the fleet, Gigi.', 'Back west along the sand.', 'Walk back west along the beach.'],
+    },
+    {
+      id: 'camp',
+      title: 'The hill camp',
+      detail: 'The resistance is back on the hill. The gardens\' road climbs off the beach\'s north edge, round behind the village, and the Mountain Path goes on above it.',
+      done: { flag: 'story.camp_reached' },
+      // The gardens' road is a long walk, not a door (data/dialogue/xaraguaWar.ts hill_road_north): the arrow points at it first.
+      goals: [
+        { if: { notFlag: 'story.hill_road_taken' }, ...beach(BEACH.northDoor.x, BEACH.northDoor.y + 1) },
+        { map: 'xaragua-camp', at: { x: CAMP.gate.x, y: CAMP.gate.y } },
+      ],
+      hints: ['The camp leader went up the hill, Gigi.', 'North off the beach, through the gardens, up the mountain.', 'Up the gardens\' road and the Mountain Path to the hill camp.'],
+    },
+    {
+      id: 'until_tide',
+      title: 'Until the tide',
+      detail: 'The assault goes at the lowest tide, at dusk. Before then: the elders must agree, the canoes need powder, and someone must count the ships.',
+      done: { any: [TIDE_READY, { flag: 'story.tide_called' }] },
+      followSide: true,
+      noXp: true,
+      hints: ['The elders are still arguing, Gigi. Yari could stop them.', 'Your Quests page, Gigi.', 'The fire, the lookout over the sea, and the cave mouth in the gardens.'],
+    },
+    {
+      id: 'tide',
+      title: 'The tide',
+      detail: 'Everything is ready. The head runner has the conch on the camp\'s rock, and waits for the word.',
+      done: { flag: 'story.tide_called' },
+      goals: [{ map: 'xaragua-camp', at: { x: CAMP.headRunner.x, y: CAMP.headRunner.y } }],
+      hints: ['It\'s nearly dusk, Gigi.', 'The rock at the camp\'s north end.', 'Talk to the head runner with the conch.'],
+    },
+    {
+      id: 'village',
+      title: 'The village by dusk',
+      detail: 'Down the mountain and through the gardens, into the Harbor Village by its west trail, with the companies behind.',
+      done: { flag: 'story.village_reached' },
+      goals: [village(VILLAGE.westDoor.x, VILLAGE.westDoor.y)],
+      hints: ['The conch has gone, Gigi.', 'Down the mountain, through the gardens.', 'Into the Harbor Village by the gardens\' trail.'],
+    },
+    {
+      id: 'customs',
+      title: 'The customs house',
+      detail: 'Governor Thorne is at his desk in the customs house, and the cellar is behind him.',
+      done: { flag: 'story.thorne_taken' },
+      goals: [{ map: 'xaragua-customs', at: { x: 10, y: 3 } }],
+      hints: ['The Governor is still at his desk, Gigi.', 'The stone house with the Crown\'s flag.', 'Talk to Governor Thorne in the customs house.'],
+    },
+    {
+      id: 'anaco',
+      title: 'Anaco',
+      detail: 'The cacique is in the cellar under the customs house. Yari is already at the stairs.',
+      done: { flag: 'story.anaco_freed' },
+      goals: [{ map: 'xaragua-cellar', at: { x: 6, y: 6 } }],
+      hints: ['Yari won\'t wait, Gigi.', 'The cellar stairs, behind the clerks\' desks.', 'Down the cellar stairs.'],
+    },
+    {
+      id: 'pier',
+      title: 'Caona\'s stand',
+      detail: 'The Crown\'s chain is made fast to the old post at the pier\'s sea end, and the marines hold it. The pier head\'s boards shimmer.',
+      done: { flag: 'story.chain_dropped' },
+      goals: [village(VILLAGE.pierZone.x, VILLAGE.pierZone.y)],
+      echoGoals: [
+        { if: { notFlag: 'encounter.war_story.caona.won' }, ...village(VILLAGE.echoCaona.x, VILLAGE.echoCaona.y) },
+        { if: { notFlag: 'anchor.chain_post' }, ...village(VILLAGE.capstan.x, VILLAGE.capstan.y) },
+        village(VILLAGE.pierZone.x, VILLAGE.pierZone.y),
+      ],
+      hints: ['The chain\'s tied to the old post, Gigi. It looks like the bridge\'s winch.', 'Grandfather was on this pier with Caona. The boards shimmer.', 'In the memory, pull the pin out of the capstan\'s pawl. Then come back and watch the chain.'],
+    },
+    {
+      id: 'turn',
+      title: 'The Harbor Turn',
+      detail: 'The chain is down and the mouth is open. Something is coming round the north point.',
+      done: { flag: 'war.turn_made' },
+      goals: [village(VILLAGE.turnStep.x, VILLAGE.turnStep.y)],
+      hints: ['Gigi. The sails.', 'Down the pier.', 'Walk down the pier.'],
+    },
+    {
+      id: 'pier_end',
+      title: 'The pier\'s end',
+      detail: 'Whatever was decided on the pier, it is not finished.',
+      done: { flag: 'story.harbor_taken' },
+      goals: [village(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y)],
+      hints: ['Gigi...', 'The pier\'s end.', 'Talk to whoever waits at the pier\'s end.'],
+    },
+    {
+      id: 'truth',
+      title: 'The truth',
+      detail: 'Rael is waiting on the pier, by lamplight. He has not asked to be forgiven.',
+      done: { flag: 'clue.ash_road_read' },
+      goals: [village(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y)],
+      hints: ['He\'s still on the pier, Gigi.', 'The pier\'s end.', 'Talk to Rael.'],
+    },
+    {
+      id: 'song',
+      title: 'The Song House',
+      detail: 'The wounded of seven companies are being carried up to the Song House on the Areíto Plaza.',
+      done: { flag: 'story.wounded_sheltered' },
+      goals: [{ map: 'xaragua-song', at: { ...SONG.arrive } }],
+      hints: ['They\'re carrying them up the hill, Gigi.', 'The Areíto Plaza, through the village\'s north trail.', 'Into the Song House, west of the plaza.'],
+    },
+    {
+      id: 'caney',
+      title: 'The Regent\'s retreat',
+      detail: 'The cacique is back in his duho. The elders and the captains are in the caney.',
+      done: { flag: 'act11.complete' },
+      noXp: true,
+      goals: [{ map: 'xaragua-caney', at: { ...CANEY.doors } }],
+      hints: ['They\'re waiting for us, Gigi.', 'The caney, at the head of the plaza.', 'Into the Caney of Anaco.'],
+    },
+  ],
+};
+
 /** The chapters in story order (the Journal and the hints use the one whose maps you are on). */
-export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10];
+export const CHAPTERS: readonly QuestDef[] = [ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11];
 
 export const JOURNAL_NOTES: readonly JournalNote[] = [
   {
@@ -2410,5 +2564,42 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'item.token_dorini',
     title: 'The Dorini sit',
     text: 'The admiral gave a green seal for the chamberlain\'s chair: "The guild sits when the guild is paid."',
+  },
+  // Chapter 11, the War of the Harbor.
+  {
+    id: 'war_fleet',
+    when: 'story.landed',
+    title: 'The fleet',
+    text: 'One volley for every ten soldiers at sea. Before each fight the whistle asks how many: three at most. A volley wounds; it never fells.',
+  },
+  {
+    id: 'harbors_lie',
+    when: 'side.harbors_lie.done',
+    title: 'Harbors lie',
+    text: 'Eleven Crown hulls, the Patience in the middle with the chain from her bow. Four black sails off the north point, counted and not explained.',
+  },
+  {
+    id: 'thumb_nine',
+    when: 'side.ninth_thumbprint.done',
+    title: 'The ash thumbprint (9 of 9)',
+    text: 'Nine doors. Nine thumbprints. The last one was powder for a harbor, left by a man in a black coat who did not want to be thanked.',
+  },
+  {
+    id: 'caona_stand',
+    when: 'anchor.chain_post',
+    title: 'Caona\'s stand',
+    text: 'Caona held this pier so two armies could land. Then the Marshal pulled the chain post\'s pin and dropped it in the harbor. Fifty years later it is the third\'s turn.',
+  },
+  {
+    id: 'ash_road_read',
+    when: 'clue.ash_road_read',
+    title: 'The Ash Road, read',
+    text: 'The Locket and the signet together lit the page. The columns are nine doors: the oil, the bread, the water, the grain, the paper, a bakery, the wick, a list, the powder.',
+  },
+  {
+    id: 'song_house',
+    when: 'story.wounded_sheltered',
+    title: 'The Song House',
+    text: 'The wounded of seven companies in hamacas between the song-keepers\' posts. Old Benny counted them in. Anissa held the lamp.',
   },
 ];

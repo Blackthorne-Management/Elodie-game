@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 38,
+  "nextobjectid": 73,
   "layers": [
     {
       "id": 1,
@@ -567,7 +567,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken"
             },
             {
               "name": "npc",
@@ -595,7 +595,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken"
             },
             {
               "name": "npc",
@@ -679,7 +679,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.war_begun"
             },
             {
               "name": "npc",
@@ -799,6 +799,436 @@
               "value": "pier_marine"
             }
           ]
+        },
+        {
+          "id": 18,
+          "name": "yard_zetwal",
+          "type": "npc",
+          "x": 144,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken, army.zetwal"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_levy"
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "yard_free_brasador",
+          "type": "npc",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken, army.free_brasador"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_free_brasador"
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "yard_skarragol",
+          "type": "npc",
+          "x": 192,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken, army.skarragol"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_ironvow"
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "yard_al_doria",
+          "type": "npc",
+          "x": 208,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken, army.al_doria"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_dorini"
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "yard_jwaladesh",
+          "type": "npc",
+          "x": 144,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken, army.jwaladesh"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_agnivansh"
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "yard_kuroshi",
+          "type": "npc",
+          "x": 176,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken, army.kuroshi"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_suzumori"
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "yard_aldermoor",
+          "type": "npc",
+          "x": 208,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken, army.aldermoor"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_watch"
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "jordyn_trail",
+          "type": "npc",
+          "x": 592,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.harbor_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "jordyn_war"
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "pier_marine_war_1",
+          "type": "npc",
+          "x": 336,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.chain_dropped"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "pier_guard_war"
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "pier_marine_war_2",
+          "type": "npc",
+          "x": 352,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.village_reached, !story.chain_dropped"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "pier_guard_war_b"
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "echo_caona_pier",
+          "type": "npc",
+          "x": 352,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_freed"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_caona_pier"
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "echo_benny_pier",
+          "type": "npc",
+          "x": 320,
+          "y": 304,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_freed"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_benny_pier"
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "hale_pier",
+          "type": "npc",
+          "x": 336,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "war.trust, !story.harbor_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "hale_pier"
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "rael_pier",
+          "type": "npc",
+          "x": 336,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "war.strike, !story.harbor_taken"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rael_pier"
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "rael_truth",
+          "type": "npc",
+          "x": 336,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_taken, !clue.ash_road_read"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "rael_truth"
+            }
+          ]
         }
       ]
     },
@@ -813,7 +1243,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 18,
+          "id": 33,
           "name": "village_plaza",
           "type": "door",
           "x": 336,
@@ -841,7 +1271,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 34,
           "name": "village_beach",
           "type": "door",
           "x": 688,
@@ -869,7 +1299,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 35,
           "name": "village_conuco",
           "type": "door",
           "x": 0,
@@ -897,7 +1327,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 36,
           "name": "village_customs",
           "type": "door",
           "x": 464,
@@ -937,7 +1367,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 37,
           "name": "attack_village",
           "type": "trigger",
           "x": 336,
@@ -975,7 +1405,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 38,
           "name": "word_runner",
           "type": "trigger",
           "x": 464,
@@ -1013,7 +1443,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 39,
           "name": "xaragua_arrival",
           "type": "trigger",
           "x": 336,
@@ -1044,6 +1474,67 @@
               "value": true
             }
           ]
+        },
+        {
+          "id": 40,
+          "name": "war_village",
+          "type": "trigger",
+          "x": 16,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "war_village"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.village_reached"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.tide_called"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 41,
+          "name": "harbor_turn_step",
+          "type": "trigger",
+          "x": 336,
+          "y": 368,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "harbor_turn"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.chain_dropped, !war.turn_made"
+            }
+          ]
         }
       ]
     },
@@ -1058,7 +1549,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 25,
+          "id": 42,
           "name": "pier",
           "type": "spawn",
           "x": 336,
@@ -1079,6 +1570,29 @@
               "value": "up"
             }
           ]
+        },
+        {
+          "id": 43,
+          "name": "pier_head",
+          "type": "spawn",
+          "x": 336,
+          "y": 288,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            }
+          ]
         }
       ]
     },
@@ -1091,7 +1605,36 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 44,
+          "name": "pier_head",
+          "type": "echo_zone",
+          "x": 336,
+          "y": 304,
+          "width": 32,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, story.anaco_freed"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "pier_echo_enter"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "pier_echo_return"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 13,
@@ -1102,7 +1645,31 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 45,
+          "name": "chain_post",
+          "type": "anchor",
+          "x": 368,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.chain_post"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "chain_capstan_echo"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 14,
@@ -1115,7 +1682,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 26,
+          "id": 46,
           "name": "net_village",
           "type": "puzzle_object",
           "x": 192,
@@ -1153,7 +1720,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 47,
           "name": "crown_banner_village",
           "type": "puzzle_object",
           "x": 448,
@@ -1171,7 +1738,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken"
             },
             {
               "name": "kind",
@@ -1186,7 +1753,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 48,
           "name": "checkpoint_north",
           "type": "puzzle_object",
           "x": 336,
@@ -1224,7 +1791,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 49,
           "name": "checkpoint_east",
           "type": "puzzle_object",
           "x": 656,
@@ -1262,7 +1829,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 50,
           "name": "shutters_weaver",
           "type": "puzzle_object",
           "x": 288,
@@ -1285,12 +1852,12 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.harbor_taken"
             }
           ]
         },
         {
-          "id": 31,
+          "id": 51,
           "name": "shutters_family",
           "type": "puzzle_object",
           "x": 144,
@@ -1313,12 +1880,12 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.harbor_taken"
             }
           ]
         },
         {
-          "id": 32,
+          "id": 52,
           "name": "crown_banner_pier",
           "type": "puzzle_object",
           "x": 320,
@@ -1336,7 +1903,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.crown_attack"
+              "value": "story.crown_attack, !story.harbor_taken"
             },
             {
               "name": "kind",
@@ -1351,7 +1918,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 53,
           "name": "xaragua_customs_sign",
           "type": "puzzle_object",
           "x": 512,
@@ -1374,7 +1941,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 54,
           "name": "pier_sign",
           "type": "puzzle_object",
           "x": 384,
@@ -1397,7 +1964,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 55,
           "name": "crown_ship_west",
           "type": "puzzle_object",
           "x": 32,
@@ -1413,6 +1980,11 @@
               "value": "present"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.fleet_escaped"
+            },
+            {
               "name": "kind",
               "type": "string",
               "value": "crown_ship"
@@ -1425,7 +1997,7 @@
           ]
         },
         {
-          "id": 36,
+          "id": 56,
           "name": "crown_ship_east",
           "type": "puzzle_object",
           "x": 464,
@@ -1441,6 +2013,11 @@
               "value": "present"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.fleet_escaped"
+            },
+            {
               "name": "kind",
               "type": "string",
               "value": "crown_ship"
@@ -1453,7 +2030,7 @@
           ]
         },
         {
-          "id": 37,
+          "id": 57,
           "name": "crown_ship_far",
           "type": "puzzle_object",
           "x": 576,
@@ -1469,6 +2046,11 @@
               "value": "present"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!story.fleet_escaped"
+            },
+            {
               "name": "kind",
               "type": "string",
               "value": "crown_ship"
@@ -1477,6 +2059,496 @@
               "name": "solid",
               "type": "bool",
               "value": true
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "name": "patience",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 432,
+          "width": 96,
+          "height": 48,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.harbor_taken"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "patience"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 59,
+          "name": "mouth_chain",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 432,
+          "width": 80,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.chain_dropped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "harbor_chain"
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "name": "chain_capstan_pinned",
+          "type": "puzzle_object",
+          "x": 368,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "capstan_present"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !anchor.chain_post"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "capstan_rusted"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 61,
+          "name": "chain_capstan_pinless",
+          "type": "puzzle_object",
+          "x": 368,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "capstan_present"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.chain_post, !story.chain_dropped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "capstan_pinless"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 62,
+          "name": "chain_capstan_spun",
+          "type": "puzzle_object",
+          "x": 368,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "capstan_present"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.chain_dropped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "capstan_spun"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 63,
+          "name": "chain_capstan_echo",
+          "type": "puzzle_object",
+          "x": 368,
+          "y": 416,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "chain_pin_echo"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "capstan"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 64,
+          "name": "allied_hull_1",
+          "type": "puzzle_object",
+          "x": 656,
+          "y": 352,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.chain_dropped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_zetwal"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 65,
+          "name": "allied_hull_2",
+          "type": "puzzle_object",
+          "x": 656,
+          "y": 384,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.chain_dropped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "trader_hull"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 66,
+          "name": "allied_hull_3",
+          "type": "puzzle_object",
+          "x": 656,
+          "y": 416,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.chain_dropped, army.skarragol"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "muster_ship_ironvow"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 67,
+          "name": "ardencia_ship_1",
+          "type": "puzzle_object",
+          "x": 544,
+          "y": 352,
+          "width": 80,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "war.sails_in, !story.fleet_escaped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "ardencia_ship"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 68,
+          "name": "ardencia_ship_2",
+          "type": "puzzle_object",
+          "x": 560,
+          "y": 384,
+          "width": 80,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "war.sails_in, !story.fleet_escaped"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "ardencia_ship"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 69,
+          "name": "rael_longboat",
+          "type": "puzzle_object",
+          "x": 368,
+          "y": 432,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "war.sails_in, !story.wounded_sheltered"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "longboat"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 70,
+          "name": "white_flag_west",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_won"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "white_flag"
+            }
+          ]
+        },
+        {
+          "id": 71,
+          "name": "white_flag_east",
+          "type": "puzzle_object",
+          "x": 496,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_won"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "white_flag"
+            }
+          ]
+        },
+        {
+          "id": 72,
+          "name": "white_flag_far",
+          "type": "puzzle_object",
+          "x": 608,
+          "y": 400,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.harbor_won"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "white_flag"
             }
           ]
         }
@@ -1489,10 +2561,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 816,
+      "imageheight": 848,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 406,
+      "tilecount": 421,
       "columns": 8,
       "margin": 0,
       "spacing": 0

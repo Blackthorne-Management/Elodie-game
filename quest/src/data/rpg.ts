@@ -4,10 +4,15 @@
 
 import { ANISSA_SP_EVERY, ANISSA_SP_SHARE, BAG_LIMIT, LEVELS, STARTING_GOLD, SURGE_COST, XP_PER_BOOK, XP_PER_OBJECTIVE_BY_CHAPTER } from '../config.ts';
 import { flagsIn } from '../engine/conditions.ts';
+import type { Condition } from '../engine/conditions.ts';
 import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } from '../engine/rpg.ts';
 import { BOOKS, loreFlag } from './books.ts';
-import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10 } from './quests.ts';
+import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11 } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
+import { WAR_BATTLES } from './warBattles.ts';
+
+/** What the flank's fight pays (the turned route pays it through war.house_stood instead). */
+const WAR_FLANK_XP = WAR_BATTLES.harbor_flank_al_doria!.rewards.xp;
 
 const zero = { hp: 0, sp: 0, atk: 0, def: 0, mag: 0, spd: 0 };
 
@@ -316,6 +321,9 @@ const ITEM_LIST: ItemDef[] = [
   // Chapter 10, the Muster: the smugglers' ledger (Z-6; the exposed route's second piece) and the Dorini seal.
   { id: 'smugglers_ledger', name: "The smugglers' ledger", kind: 'key', price: 0, text: 'A carter\'s ledger from the mangroves: muskets "for the Muster\'s friends", night after night, under a closed hand. A house\'s sigil is drawn in the last margin.' },
   { id: 'token_dorini', name: 'The Dorini seal', kind: 'key', price: 0, text: 'A green seal from the admiral\'s ledger, for the chamberlain\'s chair: the Dorini will sit at a Claim. "The guild sits when the guild is paid."' },
+  // Chapter 11, the War of the Harbor: Xaraguá's seat token (Se-5: a carved paddle, given by Anaco to Yari to Gianna), and
+  // the charm the betrayer's house leaves on the sand for the companion who defied it a second time (STORY 6.9's stat boost).
+  { id: 'token_xaragua', name: 'The carved paddle', kind: 'key', price: 0, text: 'A canoe paddle no longer than a hand, carved with the three names of the first oath. For the Yaguana chair. "Mine to carry. Yours to set down."' },
   { id: 'purge_list', name: 'The Purge List', kind: 'key', price: 0, text: 'Names and streets, "quiet" beside each, by the Hushed\'s word. On its cover, a grey thumbprint and three words: Warn them first.' },
   // Gear (owner decision, Oct 15): staffs for mages, bows for archers, blades for warriors; anyone may
   // wear any armour, but robes suit mages (magic, SP), leather archers (speed, attack) and heavy armour
@@ -395,6 +403,10 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'law_seal_brooch', name: 'Law-seal brooch', kind: 'gear', slot: 'charm', level: 22, rarity: 'uncommon', price: 350, stats: { def: 3, hp: 8 }, text: 'A silver brooch with the Witness\'s seal. Kingsmere lawyers wear it to court. Thieves dislike it.' },
   { id: 'steel_ring', name: 'Plain steel ring', kind: 'gear', slot: 'charm', level: 22, rarity: 'uncommon', price: 320, stats: { atk: 3, def: 3 }, text: 'A plain steel ring, very well made. The jeweller says plain is the hardest thing to make.' },
   { id: 'charity_brooch', name: "The Crown's charity", kind: 'gear', slot: 'charm', level: 24, rarity: 'uncommon', price: 500, stats: { def: 4, mag: 4 }, text: 'The Almoner\'s brooch: the Crown\'s charities, a small closed hand in silver. Taken in the Assize.' },
+  { id: 'tassel_charm', name: 'Tassel of the standard', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { atk: 4, hp: 6 }, text: 'A horse-tail tassel cut from the Ironvow standard Hrafn sold. Bayarmaa tied it on herself.' },
+  { id: 'paper_seal_charm', name: 'Paper seal', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { mag: 4, spd: 2 }, text: 'A Suzumori file seal, folded small. Haru says it is definitely not a spy\'s.' },
+  { id: 'wick_ring', name: 'Wick-ring', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { atk: 4, sp: 4 }, text: 'A brass ring from the steward\'s lamp, where the wick went. Vikram wears it on his thumb.' },
+  { id: 'clerk_seal_charm', name: "Clerk's seal", kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { mag: 4, def: 2 }, text: 'The Merchant-Prince\'s clerk\'s seal, given back. Samira says it is the first thing the guild ever gave her for free.' },
   { id: 'sea_glass_charm', name: 'Sea-glass charm', kind: 'gear', slot: 'charm', level: 1, price: 70, stats: { spd: 2 }, text: 'Green sea glass on a cord. Light on the neck, quick on the feet.' },
   { id: 'boar_tusk', name: 'Boar-tusk charm', kind: 'gear', slot: 'charm', level: 1, rarity: 'uncommon', price: 60, stats: { atk: 2, hp: 4 }, text: 'A tusk from the cane-field boar, on a cord. A story to tell.' },
   {
@@ -406,6 +418,14 @@ const ITEM_LIST: ItemDef[] = [
 ];
 
 export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(ITEM_LIST.map((i) => [i.id, i]));
+
+/**
+ * The companion of the house that sailed to the Crown leads the flank on the Canoe Beach (Chapter 11; STORY 6.9, the second
+ * defiance; the second review's 3.13: from the gun taken until the flank is done, so not the headland's fight).
+ */
+function flankLeads(house: string): Condition {
+  return { all: [{ flag: `muster.betrayer.${house}` }, { flag: 'muster.betrayed' }, { flag: 'story.headland_won' }, { notFlag: 'war.flank_done' }] };
+}
 
 export const MEMBERS: readonly MemberDef[] = [
   {
@@ -465,6 +485,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Daftar al-Dorini', text: 'She pays in gold for what she needs; the realm\'s Wealth makes each coin go further (+1% a point, up to +30%).' },
     ],
     joins: { all: [{ flag: 'party.samira' }, { notFlag: 'story.party_split' }] },
+    leads: flankLeads('al_doria'),
     base: { hp: 44, sp: 28, atk: 7, def: 6, mag: 12, spd: 11 }, growth: { hp: 5, sp: 3, atk: 1, def: 1, mag: 2, spd: 1 },
     start: { weapon: 'driftwood_staff_of_focus', armor: 'archivist_robe' },
   },
@@ -478,7 +499,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Salkhi', text: 'Her grey mare fights beside her: Hoofbeat is the mare\'s kick.' },
     ],
     joins: { flag: 'party.bayarmaa' },
-    leads: { all: [{ flag: 'party.bayarmaa' }, { notFlag: 'act6.complete' }] },
+    leads: { any: [{ all: [{ flag: 'party.bayarmaa' }, { notFlag: 'act6.complete' }] }, flankLeads('skarragol')] },
     base: { hp: 56, sp: 16, atk: 13, def: 8, mag: 4, spd: 15 }, growth: { hp: 6, sp: 2, atk: 2, def: 1, mag: 0, spd: 2 },
     start: { weapon: 'steppe_sabre_of_swiftness', armor: 'braided_cloak' },
   },
@@ -490,7 +511,7 @@ export const MEMBERS: readonly MemberDef[] = [
     id: 'haru', name: 'Haru', role: 'Shadow agent', house: 'Suzumori', portrait: 'haru', era: 'present', class: 'warrior',
     passives: [{ name: 'Definitely not a spy', text: 'He listens before he moves: Kagemimi tells a foe\'s next move, and finds out a disguise.' }],
     joins: { flag: 'party.haru' },
-    leads: { all: [{ flag: 'party.haru' }, { notFlag: 'act7.complete' }] },
+    leads: { any: [{ all: [{ flag: 'party.haru' }, { notFlag: 'act7.complete' }] }, flankLeads('kuroshi')] },
     base: { hp: 44, sp: 22, atk: 11, def: 7, mag: 9, spd: 16 }, growth: { hp: 5, sp: 3, atk: 2, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'paper_knife_of_swiftness', armor: 'grey_kimono' },
   },
@@ -506,7 +527,7 @@ export const MEMBERS: readonly MemberDef[] = [
       { name: 'Out of breath', text: 'After every battle. It changes nothing in the fight. He says so.' },
     ],
     joins: { flag: 'party.vikram' },
-    leads: { all: [{ flag: 'party.vikram' }, { notFlag: 'act8.complete' }] },
+    leads: { any: [{ all: [{ flag: 'party.vikram' }, { notFlag: 'act8.complete' }] }, flankLeads('jwaladesh')] },
     base: { hp: 40, sp: 20, atk: 15, def: 5, mag: 8, spd: 15 }, growth: { hp: 4, sp: 3, atk: 3, def: 1, mag: 1, spd: 2 },
     start: { weapon: 'agnipur_talwar_of_force', armor: 'saffron_coat' },
   },
@@ -526,6 +547,19 @@ export const MEMBERS: readonly MemberDef[] = [
     leads: { all: [{ flag: 'party.edmund' }, { notFlag: 'act9.complete' }] },
     base: { hp: 58, sp: 18, atk: 11, def: 12, mag: 5, spd: 8 }, growth: { hp: 7, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 },
     start: { weapon: 'pattern_sword_of_guarding', armor: 'stillwater_greatcoat' },
+  },
+  // Rael, Lord of Ardencia, beside Gianna for one fight (Chapter 11, the Trust route; the outline 4.3 with the second
+  // review's 3.8): never a roster member. He is in the party only while party.rael holds (the Turn's line before the
+  // flagship fight sets it; its after-scene and a loss, BattleDef.onLoss, clear it) and a fight is on (fight.return, set as
+  // a fight starts and cleared as it ends), so the Status page and the gear screen never show him. His son's kit; no
+  // Anissa bond; no gear but his own (in his base).
+  {
+    id: 'rael', name: 'Rael', role: 'Lord of Ardencia (beside you)', house: 'Brasador', portrait: 'rael', look: 'rael', era: 'present', class: 'warrior',
+    passives: [{ name: 'Sangre Ardiente', text: 'Each foe he fells this battle: +5% ATK (up to +25%).', effect: { kind: 'atkPerFell', share: 0.05, max: 0.25 } }],
+    joins: { all: [{ flag: 'party.rael' }, { flag: 'fight.return' }, { notFlag: 'story.harbor_taken' }] },
+    leads: { flag: 'party.rael' },
+    base: { hp: 92, sp: 18, atk: 30, def: 26, mag: 5, spd: 11 }, growth: { hp: 8, sp: 2, atk: 2, def: 2, mag: 0, spd: 1 },
+    start: { weapon: 'steel_saber', armor: 'officer_coat' },
   },
   // Young Lord Benny joins the Echo party once Azzy has joined (STORY.md: the design's rule), at the end of Chapter 3
   // (story.benny_joined). Chapter 4 has no Echo battle (the plan review's rule): his first Echo there is a walk, at
@@ -840,11 +874,14 @@ export const RPG: RpgContent = {
   // XP from the story's steps and the books read (fights pay their own, data/battles.ts).
   xpRules: [
     // A Journal step pays by its chapter (XP_PER_OBJECTIVE_BY_CHAPTER).
-    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10].map((act, i) => ({
+    ...[ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11].map((act, i) => ({
       flags: act.objectives.filter((o) => !o.noXp).flatMap((o) => flagsIn(o.done)),
       each: XP_PER_OBJECTIVE_BY_CHAPTER[Math.min(i, XP_PER_OBJECTIVE_BY_CHAPTER.length - 1)]!,
     })),
     { flags: BOOKS.map((b) => loreFlag(b.id)), each: XP_PER_BOOK },
+    // Chapter 11: on the turned route the house that stayed pays what the flank's fight pays on the betrayed one (the outline
+    // section 5: an exposed Muster is not a level behind a betrayed one).
+    { flags: ['war.house_stood'], each: WAR_FLANK_XP },
   ],
   levels: LEVELS,
 };

@@ -491,6 +491,25 @@ export const TILESET = {
     { gid: 404, name: 'mill_bar_echo', base: 0x6a5440, accent: 0x8a8c92, pattern: 'stripes' },
     { gid: 405, name: 'musket_crates', base: 0x5a4a3a, accent: 0x6a5a8a, pattern: 'cross' },
     { gid: 406, name: 'cellar_lantern', base: 0x3a3a40, accent: 0xf2d04b, pattern: 'blob' },
+    // The War of the Harbor (Chapter 11, Oct 22; data/war.ts): the Crown's field gun (and turned to the sea), the trader's
+    // hull, the Patience (violet pennant), the old chain post's capstan rusted, its pin hole empty, spun loose, Ardencia's
+    // black and crimson ships, Rael's longboat, a hamaca, the powder jars with the thumbprint, a white flag, the irons,
+    // and two banners the Muster had none of (Zetwal's, the Dorini's).
+    { gid: 407, name: 'field_gun', base: 0x3a3a40, accent: 0xb03a2e, pattern: 'cross' },
+    { gid: 408, name: 'field_gun_turned', base: 0x3a3a40, accent: 0x2a5a8a, pattern: 'cross' },
+    { gid: 409, name: 'trader_hull', base: 0x6a5236, accent: 0x2a5a8a, pattern: 'stripes' },
+    { gid: 410, name: 'patience', base: 0x3a2e40, accent: 0x6a5a8a, pattern: 'border' },
+    { gid: 411, name: 'capstan_rusted', base: 0x6a4a36, accent: 0x8a5a3a, pattern: 'cross' },
+    { gid: 412, name: 'capstan_pinless', base: 0x6a4a36, accent: 0x2a2018, pattern: 'dots' },
+    { gid: 413, name: 'capstan_spun', base: 0x5a4a3a, accent: 0x9a9ca2, pattern: 'blob' },
+    { gid: 414, name: 'ardencia_ship', base: 0x1e1a1e, accent: 0xb03a2e, pattern: 'stripes' },
+    { gid: 415, name: 'longboat', base: 0x4e3a2a, accent: 0xb03a2e, pattern: 'border' },
+    { gid: 416, name: 'hamaca', base: 0xe8e0c8, accent: 0x17a5a5, pattern: 'stripes' },
+    { gid: 417, name: 'powder_jars', base: 0x8a6a42, accent: 0x9a9a9a, pattern: 'blob' },
+    { gid: 418, name: 'white_flag', base: 0xf4eee0, accent: 0xd8d0c0, pattern: 'border' },
+    { gid: 419, name: 'irons', base: 0x3a3c42, accent: 0x8a8c92, pattern: 'dots' },
+    { gid: 420, name: 'banner_zetwal', base: 0x2a5a8a, accent: 0xf2d04b, pattern: 'stripes' },
+    { gid: 421, name: 'banner_dorini', base: 0x1e8449, accent: 0xd8c08a, pattern: 'stripes' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -975,6 +994,13 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   ti_jak: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xa89c86, trim: C.o!, legs: C.B!, build: 'small', accessories: ['staff'] },
   powder_master: { skin: C.T!, hair: C.G!, hairStyle: 'bald', outfit: 0x6a5230, trim: C.R!, legs: C.b!, beard: C.G!, accessories: ['apron'] },
   crew_chief: { skin: C.T!, hair: C.B!, hairStyle: 'bald', outfit: 0x3a3440, trim: 0xb8403a, legs: C.B!, beard: C.B!, headgear: 'cap', headgearColor: 0xb8403a, accessories: ['satchel'] },
+  // The War of the Harbor (Chapter 11, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 20):
+  // Captain-General Hale, the Regent's Champion, in a violet coat with a boarding axe; the Crown's marines and musketeers
+  // fifty years ago in the old uniform (a faded red, white crossbelts, a tall cap); a wounded soldier, bandaged.
+  hale: { skin: C.s!, hair: C.G!, hairStyle: 'cropped', outfit: SEAT_VIOLET, trim: C.y!, legs: C.K!, build: 'tall', beard: C.G!, headgear: 'bicorne', headgearColor: 0x2a2632, accessories: ['epaulettes', 'staff'] },
+  old_crown_marine: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: 0x9a4a3a, trim: C.w!, legs: C.w!, headgear: 'helmet', headgearColor: 0x5a4a3a, accessories: ['sash'] },
+  old_crown_musketeer: { skin: C.T!, hair: C.B!, hairStyle: 'cropped', outfit: 0x9a4a3a, trim: C.w!, legs: C.w!, headgear: 'brimmed', headgearColor: 0x5a4a3a, accessories: ['sash'] },
+  wounded_soldier: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xd8d0c0, trim: 0xb8403a, legs: C.K!, accessories: ['sash'] },
 };
 
 /** The player's look in each era. */
@@ -1074,6 +1100,26 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     if: { all: [{ any: [CHAPTER2_QUESTS_DONE, { flag: 'item.oil_lamp' }] }, { notFlag: 'story.crown_attack' }] },
     color: 0x4a2a5a,
     alpha: 0.24,
+  },
+  // The War of the Harbor (Chapter 11), before the occupation's wash (the first that holds is drawn): the free harbor's
+  // night with every lamp lit; the dusk of the tide, red on the water; the war's day, smoke over the sand.
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain', 'xaragua-camp'],
+    if: { flag: 'story.harbor_taken' },
+    color: 0x1e2250,
+    alpha: 0.3,
+  },
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain', 'xaragua-camp'],
+    if: { flag: 'story.tide_called' },
+    color: 0x5a2030,
+    alpha: 0.28,
+  },
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain', 'xaragua-camp'],
+    if: { flag: 'story.war_begun' },
+    color: 0x3a3028,
+    alpha: 0.16,
   },
   {
     maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain'],
@@ -1853,6 +1899,22 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     ground: 0x9c7446,
     groundDark: 0x6b4426,
     groundLight: 0xc8a46b,
+  },
+  // The Canoe Beach at war (Chapter 11): morning over the headland, the fleet's sails on a pale sea, the coral sand.
+  canoe_beach: {
+    sky: [0x5a96c8, 0x6aa6d2, 0x7cb4da, 0x90c2e0, 0xa6d0e6, 0xc2e0ec],
+    cloud: 0xf6f8fa,
+    cloudShade: 0xcad8e6,
+    mountainFar: 0x8a9a9a,
+    mountainNear: 0x6a7a74,
+    trees: 0x2e8a4e,
+    treesDark: 0x1f6a3a,
+    field: 0x1fa5a8,
+    cane: 0x7fe0d6,
+    caneDark: 0x2fb3b0,
+    ground: 0xe0d0a8,
+    groundDark: 0xc0ac80,
+    groundLight: 0xf0e4c4,
   },
   ...ARDENCIA_BACKDROPS,
   ...ALDORIA_BACKDROPS,

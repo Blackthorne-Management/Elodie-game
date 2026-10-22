@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 23,
+  "nextobjectid": 24,
   "layers": [
     {
       "id": 1,
@@ -315,7 +315,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.war_begun"
             },
             {
               "name": "npc",
@@ -343,7 +343,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.war_begun"
             },
             {
               "name": "npc",
@@ -371,7 +371,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.war_begun"
             },
             {
               "name": "npc",
@@ -399,7 +399,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.war_begun"
             },
             {
               "name": "npc",
@@ -427,7 +427,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.war_begun"
             },
             {
               "name": "npc",
@@ -455,7 +455,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "story.refuge"
+              "value": "story.refuge, !story.war_begun"
             },
             {
               "name": "npc",
@@ -711,6 +711,44 @@
       "objects": [
         {
           "id": 14,
+          "name": "powder_jars",
+          "type": "puzzle_object",
+          "x": 304,
+          "y": 224,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "thumbprint_jars"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.ninth_thumbprint.accepted, !side.ninth_thumbprint.jars"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "powder_jars"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 15,
           "name": "cave_flood",
           "type": "puzzle_object",
           "x": 224,
@@ -738,7 +776,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 16,
           "name": "cave_rubble",
           "type": "puzzle_object",
           "x": 416,
@@ -761,7 +799,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 17,
           "name": "cave_drained",
           "type": "puzzle_object",
           "x": 64,
@@ -794,7 +832,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 18,
           "name": "lower_sluice_old",
           "type": "puzzle_object",
           "x": 48,
@@ -827,7 +865,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "cave_carvings",
           "type": "puzzle_object",
           "x": 80,
@@ -850,7 +888,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 20,
           "name": "cave_carvings_east",
           "type": "puzzle_object",
           "x": 272,
@@ -873,7 +911,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 21,
           "name": "upper_sluice",
           "type": "puzzle_object",
           "x": 416,
@@ -901,7 +939,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 22,
           "name": "lower_sluice",
           "type": "puzzle_object",
           "x": 48,
@@ -929,7 +967,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 23,
           "name": "cave_chalk",
           "type": "puzzle_object",
           "x": 80,
@@ -960,10 +998,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 816,
+      "imageheight": 848,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 406,
+      "tilecount": 421,
       "columns": 8,
       "margin": 0,
       "spacing": 0

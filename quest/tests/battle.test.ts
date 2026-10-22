@@ -377,8 +377,11 @@ describe('targets, statuses and elements', () => {
     expect(spell.amount).toBe(dmg(c2.act({ kind: 'skill', skill: 'sunthread', target: boarKey })).amount);
     expect(spell.affinity).toBeUndefined();
     // Only the patrol's musketeer wears one in Chapter 2 (the patrol is where the lesson is taught); the Regent's
-    // Sealbearers wear the Throne's (Chapter 9, the Heath).
-    expect(Object.values(ENEMIES).filter((e) => e.armored).map((e) => e.id)).toEqual(['breastplate_musketeer', 'al_sealbearer']);
+    // Sealbearers wear the Throne's (Chapter 9, the Heath); in the War of the Harbor (Chapter 11) the Crown's line,
+    // the customs house and the flagship's Sealbearer wear them.
+    expect(Object.values(ENEMIES).filter((e) => e.armored).map((e) => e.id)).toEqual([
+      'breastplate_musketeer', 'al_sealbearer', 'war_breastplate', 'customs_breastplate', 'harbor_sealbearer',
+    ]);
     expect(BATTLES.village_patrol!.enemies).toContain('breastplate_musketeer');
   });
 

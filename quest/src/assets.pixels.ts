@@ -3533,6 +3533,30 @@ export const WEAPON_ART: Readonly<Record<string, BattleWeaponArt>> = {
       '..................',
     ],
   },
+  // Hale's boarding axe (Chapter 11): a short haft, a broad head with a hook behind it, until art.
+  boarding_axe: {
+    grip: { x: 3, y: 14 },
+    rows: [
+      '..................',
+      '..................',
+      '..........kkkk....',
+      '.........kWWIIk...',
+      '........kWWIIIk...',
+      '........kWIIIk....',
+      '.........kkIk.....',
+      '.........kIk......',
+      '........kIk.......',
+      '.......kIk........',
+      '......kpk.........',
+      '.....kpk..........',
+      '....kpk...........',
+      '...kpk............',
+      '..kpk.............',
+      '.kppk.............',
+      '..kk..............',
+      '..................',
+    ],
+  },
   kingsmere_blade: {
     grip: { x: 3, y: 14 },
     rows: [

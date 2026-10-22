@@ -382,6 +382,10 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   layla_clerk: s('layla_clerk', "The Merchant-Prince's clerk", 'dorini_scribe'),
   lawspeaker_rider: s('lawspeaker_rider', "The lawspeaker's rider", 'horn_rider'),
   levy: s('levy', 'Zetwal levy', 'zetwal_levy'),
+  // Chapter 11, the War of the Harbor.
+  hale: s('hale', 'Captain-General Hale'),
+  harbor_sergeant: s('harbor_sergeant', "The Harbor councillor's sergeant", 'zetwal_levy'),
+  crown_officer: s('crown_officer', 'Crown officer'),
   dorini_marine: s('dorini_marine', 'Dorini marine'),
   watch_turned: s('watch_turned', 'The watch', 'watch_inside_out'),
   ti_jak: s('ti_jak', 'Ti Jak'),

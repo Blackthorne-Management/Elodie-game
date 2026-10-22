@@ -88,4 +88,11 @@ export const CARDS: readonly CardDef[] = [
     title: 'Chapter 10 complete',
     lines: ['The Muster', 'Next: Chapter 11, The War of the Harbor', 'Xaraguá, where the seventh clause took the harbor...'],
   },
+  // The end of Chapter 11: the Regent has gone home to his Throne (Chapter 12's start, inside Eightgate's Ardencia Gate).
+  {
+    id: 'act11_end',
+    when: 'act11.complete',
+    title: 'Chapter 11 complete',
+    lines: ['The War of the Harbor', 'Next: Chapter 12, The Claim', 'Eightgate, where someone must go and stand on the Throne...'],
+  },
 ];

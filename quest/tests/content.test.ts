@@ -5,6 +5,8 @@ import { DEBATES } from '../src/data/debates.ts';
 import { debateFlag } from '../src/engine/debate.ts';
 import { describe, expect, it } from 'vitest';
 import { musterFlagsWritten } from '../src/engine/ally.ts';
+import { warFlagsWritten } from '../src/engine/war.ts';
+import { VOLLEY_BATTLES } from '../src/data/warBattles.ts';
 import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { LATER_STORY_FLAGS } from '../src/data/encounters.ts';
@@ -39,6 +41,8 @@ function flagsSet(): Set<string> {
   out.add('gold');
   // The Muster writes the allies' shares, the buyer and the armies from code (engine/ally.ts; Chapter 10).
   for (const f of musterFlagsWritten()) out.add(f);
+  // The war writes its volley pool, what is left and what each won fight spent from code (engine/war.ts; Chapter 11).
+  for (const f of warFlagsWritten(VOLLEY_BATTLES)) out.add(f);
   // A pushed rotor writes its screens' facings and looks, and its solved flag (engine/rotor.ts; Chapter 7's screens).
   for (const r of Object.values(CONTENT.rotors ?? {})) {
     out.add(rotorMovedFlag(r.id)).add(r.solved);

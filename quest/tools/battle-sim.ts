@@ -15,6 +15,8 @@ import { Battle, battleParty, type Action } from '../src/engine/battle.ts';
 import type { FlagReader } from '../src/engine/flags.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from './sim-setup.ts';
+import { volleysFor } from '../src/engine/war.ts';
+import { COMPANIES } from '../src/data/war.ts';
 
 export type Plan = 'attack' | 'surge' | 'spells' | 'skills';
 
@@ -46,7 +48,8 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
   const def = battleDef(id);
   if (!def) throw new Error(`No battle ${id}`);
   const enemies = def.enemies.map((e) => ENEMIES[e]!).map((e) => (def.level ? { ...e, level: def.level } : e));
-  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK), enemies, [], { seed, grudge, reserve: battleReserve(def) });
+  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked.
+  const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present'), enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES) });
   const party = new Set(b.party.map((c) => c.key));
   let falls = 0;
   const count = (events: readonly { kind: string; who?: string }[]) => {
@@ -73,6 +76,8 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
 /** The `skills` plan: what a player who uses the whole kit does with this fighter now. */
 export function skillsAction(b: Battle): Action {
   const me = b.actor!;
+  // Bound (Rael's fights): the cords are all there is (the Chapter 11 review's 3.3: the bot stalled without it).
+  if (me.bound) return { kind: 'breakFree' };
   const foes = b.enemies.filter((e) => !e.down);
   if (b.canSurge()) return { kind: 'surge' };
   const ready = me.skills.filter((s) => !s.gold && !s.bribe && b.canUse(me, s));

@@ -8,6 +8,7 @@ import type { DialogueLine } from '../engine/dialogue.ts';
 import { loreFlag } from './books.ts';
 import type { StageCue } from '../engine/stage.ts';
 import { TEMPLE } from './muster.ts';
+import { CAMP } from './war.ts';
 
 const K = 'gaze_keeper';
 const Q = 'recruiter_a';
@@ -970,6 +971,83 @@ export const DEBATES: readonly DebateDef[] = [
     after: [
       say('fb_sergeant', 'Neighbours. I am told.'),
       say('printer', 'I am printing it. Then it will be true.'),
+    ],
+  },
+  // Chapter 11, the War of the Harbor (the outline 7.3): the elders' choice of Chapter 2 comes back at the hill camp's fire.
+  // The elder who would not sign the Charter against the elder who would have; the undecided elder turns the vote. Yari
+  // mediates: the oath's first line and the Muster's rule in one breath. Required by the tide's gate (data/war.ts).
+  {
+    id: 'xaragua_harbor',
+    city: 'xaragua',
+    question: 'Won by seven navies: whose harbor?',
+    ally: 'elder_resist',
+    opponent: 'elder_charter',
+    opensIf: { flag: 'story.camp_reached' },
+    passing: [
+      say('elder_charter', '...seven navies, and when the Crown goes, which of the seven goes home?'),
+      say('elder_resist', 'All of them. It was sworn.'),
+    ],
+    listen: [
+      say('elder_resist', 'The harbor stays with the people who fish it. It was sworn, three names on a stone. Seven navies or none.'),
+      say('elder_charter', 'We could not fight three warships with canoes. I said sign, and live. I was not wrong about the canoes.'),
+      say('elder_charter', 'Now we have seven of someone else\'s. The Charter said protection. So do they. Which of them goes home?'),
+      say('elder_undecided', 'I am listening to both of you. I have been listening for fifty years.'),
+      say(A, 'Yari knows what the oath says, Gigi. She says it in her sleep.'),
+    ],
+    reasonNeeds: [loreFlag('xaragua_first_oath'), loreFlag('xaragua_charter'), loreFlag('xaragua_council_minutes'), loreFlag('zetwal_sun_accord'), 'story.patricio_told'],
+    rounds: [
+      {
+        claim: 'The Crown offered protection, and took the harbor. Seven navies offer protection. Why is that different?',
+        answers: {
+          scripture: { short: 'The Four Hands', text: 'The Four Hands gave no one the right to sell what the hands held. The Gaze remembers who fished it.', strength: 1 },
+          reason: { short: 'A clause nobody swore', text: 'The Charter cites a clause nobody here swore. The seventh page was read to a clerk in another room. Grandfather was there.', strength: 2 },
+          compassion: { short: 'Anaco in chains', text: 'The cacique said he was no use to you in chains. He is in them now. Which of the seven put him there?', strength: 1 },
+        },
+      },
+      {
+        claim: 'When the chain is down, who stays in the harbor? The Ironvow? The Dorini? They will want paying.',
+        answers: {
+          scripture: { short: 'Each to their own shore', text: 'Each carries their own home. The goddess asks nothing else of a guest.', strength: 1 },
+          reason: { short: 'The Muster\'s rule', text: 'Every house signed the same rule at the Muster: they sail home when the chain is down. It is written in seven hands.', strength: 1 },
+          compassion: { short: 'They came for Caona', text: 'They came because Caona\'s name is on a stone in Pòdlimyè. Nobody pays a debt by taking another harbor.', strength: 2 },
+        },
+      },
+      {
+        claim: 'Then whose chain is it, envoy, once the Crown\'s is gone?',
+        answers: {
+          scripture: { short: 'Nobody\'s', text: 'Nobody\'s. A harbor with a chain across it is a cell with water in it.', strength: 1 },
+          reason: { short: 'The oath\'s first line', text: 'The oath\'s first line: the harbor stays with the people who fish it. A chain is not in it.', strength: 2 },
+          compassion: { short: 'The fisher\'s boy\'s', text: 'Ask the boy who counts the ships. He has never seen the mouth without a Crown hull in it.', strength: 1 },
+        },
+      },
+    ],
+    crowd: {
+      2: '(Round the fire, the undecided elder nods, once.)',
+      1: '(The fire cracks. The camp is split down the middle.)',
+      0: '(The elder for the Charter folds her arms.)',
+    },
+    won: [
+      { speaker: 'elder_undecided', text: 'Then that is what we are taking it for.', set: { 'ally.xaragua': true } },
+      say('elder_charter', 'I said sign and live. I would rather live this way.'),
+    ],
+    lost: [
+      say('elder_charter', 'You argue well, envoy. Ask me again when the chain is down.'),
+      say('elder_undecided', 'We will agree after. That is more usual.'),
+    ],
+    mediate: [
+      act([{ do: 'walk', actor: 'yari', to: at(CAMP.mediator.x, CAMP.mediator.y), facing: 'up' }], 'yari', 'The harbor stays with the people who fish it. The seven sail home when the chain is down.'),
+      say('yari', 'I\'ll say it to each captain, and you\'ll hear me.'),
+      { speaker: 'elder_undecided', text: 'Then that is what we are taking it for.', set: { 'ally.xaragua': true, 'stability.elders_agreed': true } },
+      say('elder_resist', 'Caona\'s great-granddaughter. Of course it was.'),
+    ],
+    provoke: [
+      say(G, 'You wanted the Charter. You have the Charter. How is the harbor?'),
+      nar('The fire goes quiet. The elder for the Charter looks at the ground.'),
+      say('elder_resist', 'That was cruel, envoy. It was also true.'),
+    ],
+    after: [
+      say('elder_resist', 'The harbor stays with the people who fish it.'),
+      say('elder_charter', 'And the seven sail home. I will count them out myself.'),
     ],
   },
 ];
