@@ -56,6 +56,17 @@ Elodie speaks, and waves them off at the Iron Gate. Every line that turns on whe
 only (and, if she does not know, she leaves the fitting room before Elodie speaks). Elodie meets Azzy once:
 "Azriel." (Claude's call, review 5.1.)
 
+**Built in Chapter 7 (Oct 22):** Kayla at her desk in the Lantern Library, met as the party walks up to it. She gives
+K-2 (the Spy Ledger), and at its end hands Gianna **Sayo's house glyphs**, a paper card (`item.kayla_glyphs`): the
+file house's screens and Sayo's spy map are marked in them, so she helps decode both without leaving the library, as
+the settled line says (the second review's 3.4). After the Fox she reads the Fog Files: "Four lines, four prices. The
+names were cut before it reached the Fox. Somebody knew the list would be sold." / "A closed hand. It is not a Crown
+seal, and it is not a house's." / "Ardencia's counting-house hand. Kirinoura has copied enough of it to know it."
+Her one line about Rael reads both ways: "He writes to me twice a year. He never says anything. That is how I know he
+is still himself." **Claude's calls (review 3.4):** no Alcázar backstory, no "say his name", no Rodriguez surname
+("You are family." / "I am family who is a clerk. Both are written."), and she never names the Quiet Crown; a test
+holds her lines to the locked rule. Haru is not her kin.
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

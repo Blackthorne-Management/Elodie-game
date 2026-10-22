@@ -479,6 +479,14 @@ built (owner decision).
   (stealth; seen: a fight with Fog Cutpurses). 3) In the Echo, Sayo's clerk files the ledger under a cipher shelf
   mark; learn it. 4) Find it in the present by the mark.
 - **Reward:** 280 XP, +2 Influence (Kuroshi), the ledger book (Ash Wars account 2 of 4).
+- **Built (Oct 22; the Chapter 7 outline 7.1 with its second review's 3.3 and 3.4; Claude's calls):** the giver is
+  Kayla, the cipher clerk at the Lantern Library (not a file house archivist), who is met by walking up to her desk.
+  The sealed stacks are behind the library's paper partition: three Fog Cutpurses work the shelves, and stepping into
+  their sightline is the fight (`stacks_cutpurses`, 30 XP), after which the stacks are clear. The Echo teaches the
+  shelving rule on a Revolution file (M-KUR-1); the ledger is found by the rule and taken back to Kayla's desk. She
+  hands Gianna Sayo's house glyphs (`item.kayla_glyphs`): "You will need these where you are going. I did not say
+  where." 50 XP, 200 gold, +2 Influence (Kuroshi), the book. Required before the lantern hour; closes if the story is
+  past it (`story.haru_met`).
 
 ### K-3 Lanterns for the Lost (rebel safehouse)
 - **Giver:** a fisher's family at the marsh edge. **Accept:** talk to them.
@@ -486,6 +494,12 @@ built (owner decision).
   the right signal order (the signature puzzle's lantern code, simpler). 3) The fishers were hiding a rebel press (grey
   thumbprint on the ink).
 - **Reward:** 300 gold, 260 XP, +1 Influence (Kuroshi), *The Ash Thumbprint (6 of 9)*.
+- **Built (Oct 22; the outline 7.2 with its second review's 3.7 and 3.8; Claude's calls):** the fisher's wife and boy
+  ask on the quarter by day; the marsh is reached only through the fog maze (the quarter's marsh road is shut by the
+  fog order until the causeway is lit), so the quest's step past the asking waits for Haru. Six posts, the code left
+  then right (M-KUR-2); the Lantern Moths rise first (`marsh_moths`, 30 XP), then the boats come home as objects, and
+  the press in the huts carries the fifth grey thumbprint on the built route. 50 XP, 250 gold, +1 Influence (Kuroshi).
+  Required (the way on to the file house's back door); closes on `ally.kuroshi`.
 
 ### K-4 The Letter in the Floor (secret item)
 - **Giver:** the old floor-maker. **Accept:** with Haru in the party.

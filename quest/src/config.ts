@@ -70,7 +70,9 @@ export const LEVELS = {
  * 15 + 5 x chapter; a chapter past the table pays its last entry. The route then ends each chapter on its target
  * (tools/level-curve.ts): 4, 8, 11, 14, 15. Chapter 6 pays 65, not the formula's 45 (Claude's call, Oct 22): the
  * line without side quests reaches Chapter 6 already two under (13 against 15) and must not fall to three; Ordvik's
- * side quests pay less to keep the played line on 17 (COMBAT.md 6, "Chapter 6").
+ * side quests pay less to keep the played line on 17 (COMBAT.md 6, "Chapter 6"). Chapter 7 pays 44 (Claude's call,
+ * Oct 22): at 42 the line without side quests ended one XP short of 17; at 44 it ends on 17 and the route on 19
+ * (COMBAT.md 6, "Chapter 7").
  */
 export const XP_PER_OBJECTIVE_BY_CHAPTER: readonly number[] = [15, 25, 30, 35, 40, 65, 44];
 export const XP_PER_BOOK = 10;

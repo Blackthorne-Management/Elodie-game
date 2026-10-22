@@ -582,6 +582,13 @@ S-5 Grandson of the Steppe.
 
 ## 7. Kirinoura (Kuroshi, House Suzumori)
 
+*Built Oct 22 (Chapter 7): seven maps (`quest/tools/maps/kuroshi.ts`): the Lantern Pier (28 x 14, split out of the
+hub like Ordvik's quay), the Lantern Quarter hub (42 x 30), the Lantern Library (22 x 14, with the sealed stacks behind
+a paper partition), the Hall of Screens (36 x 26, the seat paragraph's size), the file house (22 x 16; Claude's call:
+its own room behind the Hall's signal room, so the screens, Sayo's map and the Fox have the floor to themselves), the
+fog maze (30 x 30; on the city map a placed building north of the quarter, no position of its own) and the Fog Marsh
+(46 x 28). Lady Sayo's House (K-4) is not built (after the release). Fog and dusk are map moods, not weather.*
+
 **Chapter:** 7 (one of the three roads). **Ruler:** the spymaster council (proposal: led by **Kaede Suzumori**, Haru's
 mother). Wants **Influence** (price 10): recognition and legal protection for their informants. **Feel:** a fogbound
 harbor city of lacquer, paper screens and lanterns. Japanese-inspired. Accent violet `#7d3c98`.

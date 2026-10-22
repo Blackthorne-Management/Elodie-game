@@ -67,6 +67,17 @@ envoy in white Chuluun, the herder Oyuun; built by role until approved); art for
 and Sarnai (`docs/quest/ART-PROMPTS.md` 15); the Mongolian and Old Norse words (`quest/src/data/lang/`) for the Nov 18
 check. Noted: Chapter 6's story steps pay 65 XP (the line without side quests was at its limit).
 
+**Quest, Chapter 7 (Oct 22):** The Fog Files is built on branch `chapter7` (Kirinoura's seven maps, the longship's
+voyage, Haru's three sightings, the Hall's gate until the lantern hour, the day's required things (The Spy Ledger with
+Kayla and the sealed stacks, the silence debate on the middle bridge), Haru joining at the lantern hour, the fog maze
+with Sayo's lantern code, the marsh posts and the boats home (Lanterns for the Lost), the file house's screens with the
+pegged anchor, Sayo's spy map read with Kayla's glyph card, the Paper Fox in disguise, the files read, the petition and
+the price). Waiting on the owner: the proposal names (Kaede is used as the outline settled her; the signal master, the
+keeper of files, the Crown's observer and the broker are built by role until approved); art for Haru, Kayla, Kaede,
+the Paper Fox and Sayo (`docs/quest/ART-PROMPTS.md` 16); the Japanese words (`quest/src/data/lang/japanese.json`, all
+unverified) for the Nov 18 check. Noted: Chapter 7's story steps pay 44 XP; the route ends at 19, the line without
+side quests at 17. Not built yet: K-1, K-4 (the Nightingale Key), K-5, the voyage on to Jwaladesh.
+
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):
 - [x] **Approved Oct 20:** Samira's *Daftar* skill spends **gold** instead of the

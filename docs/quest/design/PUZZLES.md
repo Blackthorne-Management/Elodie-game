@@ -326,6 +326,20 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   memory. Two white and a red means left." / "Peg the screen by the map in the memory, then turn the screens north,
   east, east, south."
 - **Difficulty:** 5.
+- **Built (Oct 22; the Chapter 7 outline section 8 with its second review's 3.1, 3.7 and 3.8; Claude's calls):**
+  `kuroshi-fogmaze` (30 x 30), `kuroshi-filehouse` and `engine/rotor.ts`; replays `quest/puzzles/kuroshi_fogmaze/` and
+  `kuroshi_screens/`.
+  - *The maze:* six plazas, each entered from the south with three ways on; the route is left, straight, right, right,
+    left, straight. In the Echo (the gate yard, Anissa holds the door) Sayo's agents light **nine posts**, three for
+    each code, so all three patterns are seen; the Journal keeps them. In the present each plaza's three posts show its
+    way on once the party has the code. A wrong way turns the party back **to the plaza it left**, not to the gate;
+    the far gap turns a party that walked it blind (no code) back to the gate, so the code is needed, not guessed.
+  - *The screens:* a 3 x 3 grid, pushes turn a screen and its four neighbours. Unpegged, the loose centre slips back
+    east after every push, so the grid never opens (the review's fix a: no long unpegged solution exists, the cheat
+    test passes); pegged in Sayo's war room (the anchor `anchor.screen_peg`), it holds north and cannot be pushed,
+    and four pushes (north, east, east, south: screens 1, 5, 5, 7) open the lanes.
+  - *The spy map:* the pins read only with Kayla's glyph card (`item.kayla_glyphs`) and `clue.sayo_network`
+    (`story.spy_map_read`).
 
 ### M-KUR-1 The cipher shelf mark (K-2)
 - **Present:** the stacks are shelved by a cipher. **Echo:** Sayo's clerk files the ledger and says the mark aloud.
@@ -333,6 +347,11 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "Every shelf has a mark. Only one matters." / "Sayo's clerk said it out loud, in the memory." / "Shelf
   mark: crane, pine, third row."
 - **Difficulty:** 3.
+- **Built (Oct 22; the second review's 3.3, Claude's call):** the Echo at Kayla's desk shows Sayo's clerk filing a
+  **Revolution** file and saying the rule aloud ("Crane for the Crown. Pine for the war. The row for the years.";
+  `clue.shelf_mark`); the Ash Wars were twenty-five years ago, so the ledger is found in the present by applying the
+  rule: crane and pine, the third row (nine shelves on the stacks' east wall, three of them crane-and-pine). A wrong
+  shelf says what it holds. Replay: `quest/puzzles/kuroshi_stacks/`.
 
 ### M-KUR-2 The marsh lanterns (K-3)
 - Uses the lantern code from SIG-KUR (learned in the Echo there) to light the marsh posts and guide the fishers home.
@@ -340,6 +359,10 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "Do you remember Sayo's lanterns?" / "The fishers need to turn left, then right." / "Two white and a red,
   then one white and two red."
 - **Difficulty:** 3.
+- **Built (Oct 22; Claude's calls):** six posts in two rows of three (the fork and the bend); each tap cycles white,
+  red, dark. When all six are lit the check plays: left then right brings the moths up first (the fight), then the
+  boats home and the causeway lit (`story.causeway_lit`); anything else is "wrong", with no reset. Replay:
+  `quest/puzzles/kuroshi_posts/`.
 
 ### S-KUR The Letter in the Floor (secret; `SECRET-ITEMS.md` 8)
 - **Present:** a 5 x 5 singing floor, relaid. **Echo:** the informant's melody, with one rest on a silent board.
