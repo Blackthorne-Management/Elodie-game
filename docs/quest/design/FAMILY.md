@@ -30,7 +30,7 @@ Every role below is shown on the map (owner rule): they walk in, help and walk o
 
 | Who | Suggested personality | Where met | How they help | Status |
 |---|---|---|---|---|
-| **Coralie, "Tati Coco"** | Flamboyant, generous, fearless | Ch. 4, Al-Doria's bazaar, and Ch. 5, Eightgate | Bumped into in the cloth merchants' row buying dyes; she helps with a side quest (the carpet knot count) and sails on before the vault. In Eightgate she is dressing the royals for the Parley, and smuggles Gigi and Anissa into the sealed Archive disguised as her seamstresses | **settled (owner, Oct 21: both)** |
+| **Coralie, "Tati Coco"** | Flamboyant, generous, fearless | Ch. 4, Al-Doria's bazaar, and Ch. 5, Eightgate | Bumped into in the cloth merchants' row buying dyes; she helps with a side quest (the carpet knot count) and sails on before the vault. In Eightgate she is dressing the royals for the Parley, and smuggles Gigi and Anissa into the sealed Archive disguised as her seamstresses | **settled (owner, Oct 21: both). She knows the family secret (Elodie and Rael) and keeps it: "That is your mother's to tell" (owner, Oct 22)** |
 | **Sebastian** | Proud, gentle, a showman | Ch. 9, Kingsmere's cathedral | His recital on the great organ covers the noise while the party breaks into the Regent's archive | **settled (owner, Oct 21)** |
 
 ## Rael's royal guard (Ch. 3)
