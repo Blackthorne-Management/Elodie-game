@@ -528,12 +528,23 @@ built (owner decision).
 - **Steps:** carry a lit lamp from the harbor to the temple before it gutters (a timing route with wind gusts); in the
   Echo, Arjun's runners show the sheltered alleys (route knowledge; no anchor).
 - **Reward:** 250 gold, 220 XP, *Flame-bead bracelet* (fire skills +15%, level 16), +1 Wealth (Jwaladesh).
+- **Built (Oct 22; the Chapter 8 outline 7.1 with its second review's 3.11; Claude's calls; required):** the chief
+  runner on the temple steps gives it; the relay lamp is lit at the harbor stair's head and goes out in the main
+  street's two gust strips (the run starts again at the stair); the runners' minor Echo at their hearth teaches the
+  way (left at the dyers, through the arch, along the wall), which is also the roof mirrors' clue. Reward 250 gold,
+  25 XP (the steps pay the chapter's levels), the Flame-bead bracelet as stats (no fire bonus), +1 Wealth.
 
 ### J-3 The Anonymous Oil (rebel safehouse)
 - **Giver:** a junior priest. **Accept:** talk to him in the temple yard.
 - **Steps:** 1) Oil arrives at the temple's back gate at night. 2) Watch the gate; an Oil Enforcer gang tries to seize
   it (optional fight). 3) The jars carry the grey thumbprint.
 - **Reward:** 300 gold, 260 XP, +2 Wealth (Jwaladesh), *The Ash Thumbprint (7 of 9)*.
+- **Built (Oct 22; the outline 7.2 with its second review's 3.2 and 3.5; Claude's calls; required):** the junior
+  priest in the colonnade gives it; the oil comes by the salt road, not to the back gate at night: Oil Enforcers stop
+  the carter's cart on the salt flats (a fight, 20 XP), and the jars at the Court's back gate carry the grey
+  thumbprint. Yari counts the seven places; the carter says "Somebody is feeding the realm. Not for a goddess." (no
+  "he"). Reward 300 gold, 25 XP, +2 Wealth. The hesitation debate (the senior Keeper against a pilgrim on the spice
+  row) is the day's third required thing; all three close if the story is past them.
 
 ### J-4 Oil for the Little Lamps (secret item)
 - **Giver:** a child keeping a street shrine. **Accept:** after Seth Dhanraj falls.

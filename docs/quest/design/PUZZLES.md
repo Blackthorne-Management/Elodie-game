@@ -386,6 +386,14 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   old tower is missing its mirror." / "Light the chain lamp and bolt the tower mirror in the memory; then turn the
   roof mirrors: east, north, north, west."
 - **Difficulty:** 4.
+- **Built (Oct 22; the Chapter 8 outline section 8 with its second review's 3.11; Claude's calls):** the Echo is the
+  chain tower on the night of Arjun's charge: Arjun stands outside the zone and puts a lit taper in Patricio's hand
+  with his own hand over it; the lamp and the spare mirror (bolted in the bracket) are Echo objects whose anchors
+  (`anchor.chain_lamp`, `anchor.tower_mirror`) the present's lamp, bracket and beam read. The rooftops (Aiyana's ladder)
+  open only with both anchors. Three mirrors turn (a flag per facing, south none); the answer is **east, north,
+  north**, and the fourth is the rusted bracket Anissa holds the disc in. The beam is drawn only when all are right;
+  the old line lands on the Exchange's brick. Honest difficulty about 3 (the review's 3 to 4). Cheat file
+  `jwaladesh_mirrors`.
 
 ### M-JWA-1 The lamp relay (J-2)
 - **Present:** carry a lamp through gusty lanes before it gutters. **Echo:** Arjun's runners use sheltered alleys.
@@ -393,6 +401,9 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "The wind comes off the sea." / "Arjun's runners never took the main street." / "Left at the dyers, through
   the arch, along the wall."
 - **Difficulty:** 3.
+- **Built (Oct 22):** the lamp goes out on the main street's two gust strips; the runners' way along the west wall
+  lane keeps it lit. Honest difficulty 1 to 2 (the runner says the way aloud in the Echo). Cheat file
+  `jwaladesh_relay`.
 
 ### S-JWA Oil for the Little Lamps (secret; `SECRET-ITEMS.md` 4)
 - **Present:** a balance with a sooty weight. **Echo:** jars of 10, 7 and 3; the roll call (five came home). **Anchor:**

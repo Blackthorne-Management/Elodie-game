@@ -734,6 +734,14 @@ Flame Keeper, a Gaze pilgrim.
 **Side quests:** J-1 Win Every Argument, J-2 The Lamp Relay, J-3 The Anonymous Oil, J-4 Oil for the Little Lamps, J-5
 Jackals on the Salt Road.
 
+*Built Oct 22 (Chapter 8): six maps (`quest/tools/maps/jwaladesh.ts`): the harbor (34 x 22, the chain tower's yard,
+the mole, Dhanraj's oil store), the Lamp Bazaar hub (44 x 30, the temple steps, the dyers' roof, the spice row, the
+Exchange's tower), the rooftops (30 x 18, an interior up Aiyana's ladder: three mirrors and the fourth bracket), the
+library (22 x 14), the Court of the Flame (36 x 28, the colonnade, the altar, the envoys' pavilion, the duel yard, the
+back gate) and the salt flats (46 x 28, the salt road, the carter, the jackals' den). J-1, J-4 (S-JWA, the Unbroken
+Wick) and J-5 are not built (after the release); the contract board's mirror job is not offered. Night and dawn are
+map moods and conditions (`NIGHT`, `DAWN` in `quest/src/data/jwaladesh.ts`).*
+
 ---
 
 ## 9. Kingsmere (Aldermoor, House Stillwater)

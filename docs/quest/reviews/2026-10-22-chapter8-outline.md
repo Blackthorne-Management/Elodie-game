@@ -1197,3 +1197,115 @@ Every step ends with the owner reminded of `docs/PRODUCTION.md`'s open items, mo
 24); card art, portraits and the card back before the rules and card text freeze (Fri Oct 31); order B with proofs
 (Mon Nov 3); the Dec 1 story questions, now needed by early November (the Gen III rulers each companion defies:
 Meera is this chapter's); the fluent-speaker check (Wed Nov 18: this chapter adds Hindi, a few words).
+
+## Built (Oct 22): what changed from this outline, and Claude's calls
+
+Built on branch `chapter8` (from `chapter7` at `fe47909`), with the second review's fixes
+(`2026-10-22-chapter8-outline-review.md` section 6) applied. Code: `quest/tools/maps/jwaladesh.ts` (six maps: the
+harbor, the bazaar, the rooftops, the library, the Court of the Flame, the salt flats), `quest/src/data/jwaladesh.ts`
+(places and conditions both the maps and the scenes read), `quest/src/data/dialogue/jwaladesh.ts`, `ACT8` in
+`quest/src/data/quests.ts`, the Agnipur entries in `battles.ts`, `encounters.ts`, `sideQuests.ts`, `debates.ts`,
+`books.ts`, `rpg.ts`, `npcs.ts`, `speakers.ts`, `objects.ts`, `cards.ts`, `voyages.ts`, `lang/hindi.json`; the
+engine's Burning, Oil Wall, lit oil, duel fighters and Vikram's two passives in `engine/battle.ts` and `engine/rpg.ts`;
+Vikram as the seventh follower in `scenes/FieldScene.ts`; the shore `jwaladesh` in `scenes/VoyageScene.ts`; tests in
+`quest/tests/jwaladesh.test.ts` and `flameFight.test.ts`; puzzles `jwaladesh_chain`, `jwaladesh_mirrors` and
+`jwaladesh_relay`.
+
+**The review's fixes, as built:**
+- **The boss (3.1).** The sims count falls across the whole party (`b.party`). Dhanraj is level 21, **HP x5, ATK
+  x1.2** (Claude's call: x5 / x1.5 put the kit at two falls a fight). Two store enforcers stand with him and step in
+  front of him (`protects: 'seth_dhanraj'`); at **50%** two more come in from the back, Price Spike starts and the oil is
+  lit (the phase `ignite`: a fire blow on him then sets him Burning). **Price Spike is a 100-power area blow every
+  other turn** (Claude's call: the item delay is cut, as the outline's own cut list allows). The Oil Wall comes back
+  every 3 turns: half damage, fire does nothing ("Nothing burns there"), a Surge shatters it. **Burning on a boss is
+  capped** at `BURNING_BOSS_SHARE` 2% of max HP a turn (6% on anyone else) and never takes the last HP. The start tip
+  names the answer: "Fire runs off his oil, Gigi! Surge to break the wall. When it's down, Vikram's fire will catch."
+- **Levels (3.6).** The one ambush rule is the realm-wide one already built (`AMBUSH_XP`: a 0.12 share by the party's
+  level, sized by foes); `tools/level-curve.ts` has the played line (seeds 1 to 200) and the wanderer, and
+  `tests/levelCurve.test.ts` asserts both for Chapter 8. Chapter 8's steps pay **60** (Claude's call:
+  `XP_PER_OBJECTIVE_BY_CHAPTER[7]`; at 44 the line without side quests ended three under 19). J-2 and J-3 pay 25 each,
+  the debate 15, the salt road's enforcers 20, the quay watch 30, Dhanraj 140, thirteen books. Three objectives pay
+  nothing (`noXp`: the chain, the night lamp's follow-the-quest step, the north). Measured:
+
+  | Ch | Target | Route end (XP) | No side quests | Played median | Played p90 | Wanderer p90 |
+  |---|---|---|---|---|---|---|
+  | 6 | 15-17 | 17 (4,579) | 15 (3,474) | 17 (4,611) | 17 | 18 |
+  | 7 | 17-19 | 19 (5,493) | 17 (4,243) | 19 (5,525) | 19 | 20 |
+  | 8 | 19-21 | **21 (6,448)** | **19 (5,113)** | **21 (6,480)** | 21 | 22 |
+
+  Wild steps on the route: 0 in Chapter 8. Aldermoor (21 to 24) is met at 21.
+- **Continuity (3.2, 3.3).** The thumbprint count (Yari's line: "Yucayeque's oil. Cenizal's bread. Bab al-Dhahab's
+  water. Ordvik's grain. Kirinoura's paper. Now this.") names no house; the carter says "Somebody is feeding the
+  realm", with no "he". The Suzumori crane is refused at the step (Haru sets it there; the token leaves the bag), set
+  on the altar by Meera at the flame, and **returned to Gianna at dawn** (`item.token_suzumori` again).
+- **Price (3.4).** Agnivansh's motive is Wealth, price 8, paid in flags (`pillarRules`): Dhanraj spared +3 or broken
+  +1, the advances given +4, the books and J-2, J-3 as Wealth at Jwaladesh (J-2 +1, J-3 +2). **Floor 4** (broken, the
+  advances kept, the required side quests), **ceiling 10** (spared and given). The route spares and gives. The four
+  ranges are in `COMBAT.md` 6 (one table).
+- **Aiyana and the carter (3.5).** No Cenizal, no Locket link (at the lit lamp she "looks at Gianna for a long moment,
+  and does not ask"), no rod line; she says only what she measures. A test bans Rael, Cenizal, Rodriguez, the Locket,
+  "good", "innocent", "feeds", the arrows and the thumbprints in her lines, and "he", "him" and "his" in the carter's. The reviewer prompt asks for a human read of every Aiyana, carter and
+  Azzy line.
+- **Patricio's lamp (3.7).** Arjun puts a lit taper in Patricio's hand and closes his own hand over it; the player
+  presses the lamp, and the lamp takes the flame. Patricio never rides; he watches the charge from the platform.
+- **Engine claims (3.8, 3.9).** The mirrors are one flag per facing (`mirror.N_e`, `_n`, `_w`; south is none);
+  the encounter weights are plain (no conditional weights, no per-zone grace); Vikram is the seventh follower
+  (`placeVikram`); the riders and the city are stage actors; Arjun stands outside the Echo zone; Anissa holds the disc
+  at the fourth bracket in one end scene; the duel is `meantToLose` with `fighters: ['gianna']`.
+- **Story logic (3.10).** The flame is never out, only low; the reservoir is one measure every new moon from Aiyana's
+  own pay; the Court sits at noon; the night is a condition (`NIGHT` in `data/jwaladesh.ts`: the day's three things
+  done and the store not yet taken), so whichever finishes last brings the night lamp's hour; dawn is another
+  (`DAWN`).
+- **The puzzle (3.11).** The beam lights only when all three mirrors are right (east, north, north) and the fourth is
+  held; the runners' way (left at the dyers, through the arch, along the wall) is the clue taught in J-2's minor Echo;
+  the relay lamp goes out in the bazaar's two gust strips unless carried the runners' way; the rooftops' ladder opens
+  only with both anchors. Honest difficulty (the review's): Arjun's anchors about 2, the roof mirrors 3 to 4, M-JWA-1 1 to 2.
+- **Tone (3.12).** Yari takes the duel-rope line; "Just saying it" is cut; the thumbprint count is Yari's; Dhanraj
+  never says "Throne sols".
+- **Length (3.13).** Not measured in a browser (the build ran no smoke). The gold walk takes 767 steps and 19 map
+  changes, against Chapter 7's 720 and 16: about the same length.
+
+**Other Claude's calls in the build:**
+- **Six maps** as the outline planned: `jwaladesh-harbor` 34 x 22, `-bazaar` 44 x 30, `-rooftops` 30 x 18 (an
+  interior), `-library` 22 x 14, `-court` 36 x 28, `-saltflats` 46 x 28.
+- **The voyage** `kuroshi_jwaladesh` from Kirinoura's pier (Chapter 7's last scene now sets it); `?chapter=8` starts
+  on Agnipur's quay after it, `?chapter=9` on the same quay after the card.
+- **Vikram joins at the flame**, before the store, so he fights Dhanraj and leads there (`leads` until
+  `act8.complete`). Built: base HP 40, SP 20, ATK 15, DEF 5, MAG 8, SPD 15; growth HP 4, SP 3, ATK 3, DEF 1, MAG 1,
+  SPD 2; he starts with the Agnipur talwar of Force and his saffron coat.
+- **The fallbacks** the outline's cut list allowed: Ananta Yuddha is Inspired on the whole party, once a battle (not a
+  free round); Rakt Ki Pyaas gives his next turn at once after a felling blow (not a free Attack); Price Spike without
+  the item delay; the flame bead bracelet is stats, not an effect; the relay lamp has no carried sprite (a key item and
+  a line when it goes out).
+- **The duel** is Gianna alone against Vikram (HP x2.5, ATK x1). Lost or won, the same scene after
+  (`vikram_after`); losing sets `choice.duel_lost`. The skills plan wins 39 of 40; Attack alone never does.
+- **Names by role:** the senior Keeper, the junior priest, the chamberlain, the Crown's oil factor, the chief runner,
+  the carter; Meera, Aiyana, Arjun and Seth Dhanraj by the outline's names.
+- **The ledger** (`jwa_court_records`) is on the Court's records shelf from the moment Dhanraj is beaten; read with
+  the crane on the altar at the flame scene.
+- `?chapter=9` stands in for Chapter 9's start until Aldermoor is built (no voyage on).
+
+**Fights (`tools/battle-sim.ts`, 40 runs each, at the route's markers; falls counted across the whole party):**
+
+| Fight | Plan | +0% | +30% | +50% |
+|---|---|---|---|---|
+| Seth Dhanraj (`jwaladesh-store`) | Attack | 0/40, 75.5 actions, 100% lost, 7.0 falls | 16/40, 6.0 falls | 29/40, 4.7 falls |
+| Seth Dhanraj | Spells | 40/40, 42.9, 65%, 2.4 falls | 40/40, 31.2, 45%, 1.7 | 40/40, 26.4, 40%, 1.4 |
+| Seth Dhanraj | Skills | **40/40, 41.2, 33%, 0.9 falls** (33 runs with a fall) | 40/40, 27.3, 31%, 0.7 | 40/40, 22.9, 25%, 0.5 |
+| The duel (`jwaladesh-court`, Gianna alone) | Attack | 0/40, 3.1 actions | | |
+| The duel | Skills | 39/40, 7.0, 38% (meant to lose: no Game Over, no Grudge) | | |
+| Salt road enforcers (`jwaladesh-salt`) | Attack | 40/40, 30.5, 38%, 1.6 falls | 40/40, 24.4, 31%, 1.1 | same (capped) |
+| Salt road enforcers | Skills | 40/40, 14.9, 10%, 0.1 falls | | |
+| Quay watch (`jwaladesh-night`) | Attack | 40/40, 21.8, 21%, 0.7 falls | 40/40, 16.9, 17%, 0.1 | same (capped) |
+| Quay watch | Skills | 40/40, 10.7, 8% | | |
+
+The salt flats' ambushes: jackals (Attack 16.8 actions, 20% lost, 0.5 falls; skills 6.7, 8%), enforcers (as the quay
+watch), an enforcer and a bandit (Attack 15.6, 19%, 0.5 falls; skills 7.2, 7%), Hushers (Attack 21.8, 26%, 0.1 falls;
+skills 10.8, 15%). The ordinary fights' Grudge is capped at +30%, so +50% equals +30% there. Every fight but the duel
+has a Game Over with a way back in (`tests/gameOver.test.ts`).
+
+**Gold-arrow walk:** Chapter 8 end to end with no stall, 767 steps and 19 map changes (`tests/goldWalk.test.ts`).
+
+**Not built (after the release, as planned):** J-1, J-4 and S-JWA (the Unbroken Wick: the shrine child is placed with
+one line, the lock is inert), J-5, the mirror job on the contract board, Gianna's lamp sprite, the next leg's voyage
+(`jwaladesh_aldermoor`, with Chapter 9), painted art (placeholders).

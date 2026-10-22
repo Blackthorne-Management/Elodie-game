@@ -819,7 +819,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
           AI,
           'That\'s Arjun\'s bracket. I\'ve never seen a mirror in it. Who...',
         ),
-        nar('She looks at the Locket in Gianna\'s hand, and does not ask.'),
+        nar('She looks at Gianna for a long moment, and does not ask.'),
         say(AI, 'Right. The roofs. Up the dyers\' stair, then my ladder. I\'ll unbolt the mirrors.'),
         act([{ do: 'exit', actor: 'aiyana_tower', to: at(HARBOR.gate.x, HARBOR.gate.y + 1), run: true }], EN, 'Who lit that? Who is up there?'),
       ],

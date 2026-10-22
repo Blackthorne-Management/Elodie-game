@@ -466,6 +466,15 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
   Crown-backed hoarder; **boss: Seth Dhanraj** (proposal), the oil hoarder; Vikram defies the priests and joins.
 - **Who joins:** Vikram (Fire duelist). **Price:** Wealth 8.
 - **Learns:** a faith can be starved by a market; Arjun broke a chain; the Crown pays for shortages.
+- **Built (Oct 22; the outline `reviews/2026-10-22-chapter8-outline.md`, its "Built" section, and its second review):**
+  Agnipur's six maps, the voyage from Kirinoura, the Court at noon, the duel (Gianna alone; lost or won, the same
+  scene), the day's three required things (The Lamp Relay, The Anonymous Oil, the hesitation debate on the spice
+  row), the night lamp's hour, Arjun's charge staged in the Echo with two anchors (Patricio lights the chain lamp with
+  Arjun's hand over his on the taper; the tower mirror bolted), the roof mirrors with Anissa holding the last, the
+  curtain torn and the wick caught in the beam (the flame was never out, only low), Vikram joining at the flame, Seth
+  Dhanraj in the oil store, the price at dawn and the crane given back. Claude's calls: the Court and the Crown's
+  factor by role; Dhanraj withdraws, nobody dies; the carter and the thumbprints name no man and no house; the price
+  is Wealth 8 paid in choices (floor 4, ceiling 10).
 
 ### Chapter 9: The Regent's Keep (Aldermoor)
 
