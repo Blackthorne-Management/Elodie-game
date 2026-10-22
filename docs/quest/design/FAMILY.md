@@ -45,6 +45,17 @@ Her hook for Chapter 5: "Eightgate. Someone has to dress the Regent's guests for
 deflects with love: "That is your mother's to tell, chérie. Not mine. She'll be at Eightgate. Make her tell you." So
 Coralie knows, and Chapter 5's confrontation stays Elodie's. Azzy does not know her (she is Elodie's side).
 
+**Built in Chapter 5 (Oct 22):** Coralie in Eightgate, continued from Chapter 4 as built (she knows, and deflects). She
+comes out of her painted door in the Envoys' Quarter to the sisters ("Gold. I said gold when you were four..."; to
+Anissa, held a moment longer: "There you are."), remembers the bazaar ("You found her, then. Did she tell you?" /
+"Not yet." / "She will. Not in that Hall."), plans the seamstresses for Keeper Hollis's robes, tells Azzy once that she
+made "his" wedding coat while Gianna is at the mirror, talks the Archive's chain off its Sealbearer ("the door could
+count to two but not to three"), fits Hollis while the sisters read the page, stays pinning in the fitting room while
+Elodie speaks, and waves them off at the Iron Gate. Every line that turns on whether she knows is in one object,
+`COCO` in `quest/src/data/dialogue/seat.ts`, so the owner's answer to the question being asked now changes those lines
+only (and, if she does not know, she leaves the fitting room before Elodie speaks). Elodie meets Azzy once:
+"Azriel." (Claude's call, review 5.1.)
+
 ## Rael's royal guard (Ch. 3)
 
 | Who | Role | Status |

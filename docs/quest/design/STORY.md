@@ -384,6 +384,13 @@ the game and its Claude's calls; the beats below are the earlier design.*
 - **Echo scenes:** the sealing; a young Thomas Stillwater copying the Crown's record in the gallery (setup for Ch. 9).
 - **Boss:** none.
 - **What the player learns:** the Seventh Clause; Elodie's two lines; the Regent's patience; allies must be won.
+- **Built (Oct 22; the outline `reviews/2026-10-21-chapter5-outline.md`, its "Built" section, and its second review):**
+  the clause is read aloud in the Parley at Elodie's demand, before every house (owner decision, Oct 21). Claude's
+  calls on the staging, recorded there: no Echo skirmish (no fight inside the walls); in the Hall Elodie cuts Gianna
+  off before "Rael" so the Crown's clerk never hears it; Hollis reads the clause only (no signature, no witness knot)
+  and the Regent states no new law; Patricio *sealed the binding* and signed nothing on the seventh page (so his "I
+  would remember" in Chapter 2 is literally true and evasive; see open question 13); Elodie answers "He didn't let
+  them hit me" with a hand on Anissa's head and no words; the roads open east, Skarragol first.
 
 ### Chapters 6 to 8: The three roads (any order)
 
@@ -583,6 +590,9 @@ real people (guide 7.3).
     open: how Al-Doria is reached from Ardencia (proposal in Chapter 4, beat 9).
 13. **Does old Patricio know who he is sending her to?** The Lord of Ardencia is Rael, Gianna's father (Elodie's
     secret husband). Does Patricio know about the marriage when he sends her to Ardencia?
+    *(Oct 22, for the owner's confirmation list, no pop-up: Chapter 5's sealing has young Patricio seal the binding
+    of six pages under protest while a seventh is read to the clerk alone. He signed nothing on it. The payoff is
+    Chapter 10's, at Pòdlimyè.)*
 14. **Who is caught in the occupation?** Proposal: Cacique Anaco is held under guard in his own house; the elders are
     split; the resistance hides in the petroglyph caves.
 

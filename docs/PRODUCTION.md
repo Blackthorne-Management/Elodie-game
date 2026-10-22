@@ -52,6 +52,13 @@ Waiting on the owner: confirm Rivera stays silent at the door for the reveal and
 art drop 2 for Rael, Rivera and Jaime (`docs/quest/ART-PROMPTS.md` 13); the Spanish words for the phrasebook check
 (`quest/src/data/lang/spanish.json`).
 
+**Quest, Chapter 5 (Oct 22):** The Parley is built on branch `chapter3` (Eightgate's seven maps, the Regent's
+welcome, Tati Coco and the seamstresses, the sealing Echo and the drawer puzzle, the clause read aloud in the Parley,
+the fitting, the Iron Gate; Deserters' Road, the petition round and the four voices as the required quests). Waiting
+on the owner: whether Coralie knows the family secret (built as Chapter 4 has it: she knows and deflects; one object
+to change); art drop 2 for the Regent, Hollis and Coco (`docs/quest/ART-PROMPTS.md` 14). Noted: Chapter 2's required
+side quests (merged Oct 22) put the party one level higher from Chapter 3 on (Chapter 2 ends at 10, target 8).
+
 **Quest story questions for the owner** (from the design pack, `docs/quest/design/STORY.md` section 6; one at a time,
 most urgent first; settled so far: the capital's name, where the Accord was signed, who the Hushed is, chapters):
 - [x] **Approved Oct 20:** Samira's *Daftar* skill spends **gold** instead of the

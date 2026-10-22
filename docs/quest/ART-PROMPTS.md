@@ -461,6 +461,35 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 
 ---
 
+## 14. The Lord Regent, Keeper Hollis and Coralie (Chapter 5; art drop 2)
+
+Added Oct 22 with the Chapter 5 build (the Opus review names the Regent for drop 2; Hollis and Coco carry the
+chapter's two longest scenes). The game draws placeholders from the looks `regent`, `hollis`, `coralie` until these
+arrive (`quest/src/assets.config.ts`). Make each like section 12: a reference sheet in a new chat (attach Gianna's
+sheet), then the portrait and the walking sprite sheet in the same chat (attach Gianna's sprite sheet).
+
+**The Lord Regent Aldric Vane** (about 60; the antagonist, never raises his voice): thin and very upright, close-cut
+grey hair, clean-shaven, pale skin, pale grey eyes, a patient half-smile. A long robe of Aldermoor grey-violet with a
+lighter lilac lining, a heavy silver chain of office with the Throne's seal (a sun and eight rays) on his chest, **no
+crown**. One hand always rests as if on the arm of a chair. Portrait expressions: **courteous** (default),
+**patient**, and **one breath too long** (the look he gives Anissa: still, unreadable).
+
+**Keeper Hollis** (about 75; the Throne's archivist): small, stooped, bald with a white fringe and a short white beard,
+warm brown skin, sharp eyes behind small round spectacles, ink on his fingers. A plain grey wool robe, old leather
+slippers, a single iron key on a cord at his belt. Portrait expressions: **dry** (default), **unimpressed**, and
+**moved** (the moment he hears his own argument from someone else).
+
+**Coralie, "Tati Coco"** (about 45; Elodie's sister, designer to royals; Chapter 4 and 5): tall, deep brown skin, black
+hair in two high puffs wrapped in a violet silk scarf, gold hoops, a tape measure round her neck and pins in her
+mouth. One long dress made of **eight colours** (gold, teal, crimson, green, grey, indigo, saffron, violet) in bold
+panels, so she reads at a glance. Portrait expressions: **delighted** (default), **fierce**, and **tender** (for
+Anissa).
+
+Rules for all three (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; magenta background for portraits and sprites; no text, frames or extra people.
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |

@@ -234,6 +234,14 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "Seven ribbons and six pages. Where's the seventh page?" / "In the memory, watch where the clerk puts it.
   The labels have changed since, but the cabinet hasn't." / "Drawer four. Tie the ribbon thread on it in the memory."
 - **Difficulty:** 3.
+- **Built (Oct 22; the Chapter 5 outline's second review, 3.4; Claude's call):** the carved numbers today run 6, 2, 7,
+  5, 1, 4, 3 left to right (drawer 4 is sixth, second from the right); in the memory the drawers run 1 to 7, so the
+  clerk files the page fourth from the left. The plates: Kay Soley, Brasador, Dorini, Ironvow, Suzumori, Stillwater,
+  Agnivansh (drawer 4 under Stillwater, the Crown's own; Xaraguá has no drawer, never a signatory). A wrong drawer in
+  the memory costs a re-watch: "Nothing is in this one. The clerk looks up.", the thread goes back to the table and the
+  clerk files the page again. The Parley half: Reason is the Witness argument (a page never read was never agreed;
+  needs *The Founding Compact* or *The Sun Accord, Sealed* read), Scripture works with one more exchange, Compassion
+  sends Gianna to the shelf. Honest difficulty 2 to 3. Files: `quest/puzzles/seat_accord/`.
 
 ### S-SEA The Unknotted Ribbon (secret; `SECRET-ITEMS.md` 9)
 - **Echo:** five questions from the clerk, each with a trap. **Present:** the keeper's cross-examination, each line

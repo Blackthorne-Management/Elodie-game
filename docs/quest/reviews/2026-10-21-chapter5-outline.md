@@ -907,3 +907,110 @@ in this chapter needs it).
 
 1. **The Seventh Clause is first read aloud in the Parley,** at Elodie's demand, before every house; the Regent cannot
    refuse in public.
+
+---
+
+## Built (Oct 22, branch `chapter3`): what is in the game, and Claude's calls
+
+Built in order of authority: the owner's decision above (the clause is read in the Parley, at Elodie's demand),
+`design/FAMILY.md` (Coralie, continued from Chapter 4 as built: she knows, and deflects), the second review
+(`2026-10-21-chapter5-outline-review.md`, every fix in its section 6), then this outline. Code:
+`quest/tools/maps/seat.ts` (seven maps), `quest/src/data/dialogue/seat.ts` (every scene), `quest/src/data/seatArchive.ts`
+(the cabinet), `ACT5` and six Journal notes in `quest/src/data/quests.ts`, `battles.ts` (the Deserter Sergeant, the
+deserters, `deserters_road`), `encounters.ts` (`crossroads`, `seat_story`), `sideQuests.ts` (`seats`, `voices`,
+`deserters`), `debates.ts` (`seat_voices`), `books.ts` (four in the Hall, five in the Archive), `rpg.ts` (the Seat as a
+city, the Outfitter, the petition), `cards.ts` (`act5_end`), the route (`@seat` to `@chapter5-end`), `?chapter=5` and
+`?chapter=6`. Engine: a debate round may name its own speaker (`DebateRound.speaker`); the seamstresses' looks on the
+map (`DISGUISE`). Tests: `quest/tests/seat.test.ts`, `puzzles/seat_accord/`, the act, guide, level-curve,
+chapter-start, Game Over and door tests.
+
+**Level curve** (`tools/level-curve.ts`): Chapter 5 pays **325 XP** on the route and ends at **level 15 (3,795 XP)**,
+13 without its side quests. The route now *arrives* at 15 (3,470), not 14: Chapter 2's five side quests became
+required on main (Oct 20) and, merged here on Oct 22, add about 380 XP before Chapter 3, so Chapters 2 to 4 each end
+one or two levels higher than they were tuned (reported to the owner; Chapter 2's numbers are main's to retune). A
+test pins Chapter 5's pay to 320 to 337 XP, so it ends at 15 from either start: 3,470 + 325 = 3,795 (16 is 3,808), or,
+if Chapter 2 is retuned back, 3,090 + 325 = 3,415 (15 is 3,410). A real player who fights one or two ambushes in the
+Crossroads Fields (280 to 450 XP each) leaves at 16, the review's "played line".
+
+**Claude's calls** (non-drastic, under the Oct 20 rule; the owner can overturn any):
+
+1. **The land journey is the card** (the outline's fallback): Chapter 4's last line now also sets `travel.next`, so
+   when its card closes the party is at Eightgate's Gold Gate and the caravan's arrival plays there (the caravan
+   master's line, Samira's tolls, "Mama's here"). No land mode for the voyage plotter yet.
+2. **Seven maps**, sized as the outline (the Hall 44 x 32). The eight gates sit on the ring wall on the side their
+   country lies on the realm map (Xaraguá north-west, bricked; Ardencia north; Zetwal north-east; Al-Doria east, through
+   the gate yard; Skarragol south-east, the Iron Gate; Kuroshi south; Jwaladesh south-west; Aldermoor west). **The
+   Throne tile is at the far (north) end of the nave, on the dais** (review 3.14 asked to pick one), behind a violet
+   rope (`if: !story.claim_begun`, a flag Chapter 12 sets) with screens either side; the chairs are objects; the nave
+   is clear for the Regent's fight.
+3. **The arch** (review 3.7): the Sealbearer reads the papers, looks at Anissa a breath too long, and rules "Your
+   papers say envoy. A house has one voice at a Parley, and Zetwal's is already seated."
+4. **The welcome** (review 3.1, 3.14): the Regent names each of them (Anaco "under guard in the customs house"), adds
+   "Lord Rael promised you to me by ship. You came by caravan.", and never speaks to Anissa. Gianna starts "Mother.
+   In Ardencia, Lord Rael—"; Elodie cuts her off for the clerk ("The envoy's household will report to the envoy's
+   rooms."), then says the Locket line low. A test checks no line in Eightgate has "Rael" and "father" together.
+5. **Coralie** (FAMILY.md; Chapter 4's version, the owner being asked now): her lines that turn on what she knows are
+   one object, `COCO` in `dialogue/seat.ts`: the welcome remembers the bazaar ("You found her, then. Did she tell
+   you?" / "Not yet." / "She will. Not in that Hall."; review 3.12), the wedding-coat line to Azzy while Gianna is at
+   the mirror, and her staying in the fitting room ("I know where every pin goes in this family."). If the owner says
+   she does not know, those lines change and she leaves before Elodie speaks. She never says Rael's name, never jokes
+   about Anissa, and is not in the Hall. Samira's thread price moved to the plan scene (review 3.11).
+6. **The evening is a condition, not a flag** (Chapter 4's dusk rule): the three quests done and the veils not on.
+   The outline's `story.seat_eve` is not used. The wash is the only evening visual (no lamp or Sealbearer variant).
+7. **Se-5 stage 1** (the petition round): the chamberlain stops them on the way out of the Hall; Yari gives out copies
+   (`item.petition`); seven doors and the bricked wall, any order; the legate refuses and his aide, "Terribly sorry",
+   takes it (Edmund's first mention, unnamed); Ironvow's envoy looks at Azzy: "Your mother's people would know you,
+   boy." (review 5.3). Reward 100 gold, 30 XP, +1 Influence (Seat).
+8. **The four voices** (review 3.10): one debate, one claim a round, each from its own speaker (the Sky-Rider, the
+   Quiet Crown speaker, the Witness priest; the Gaze keeper on Gianna's side). Reason needs a Hall book or the
+   Compact; Mediate at the built 5; the built rewards (+10 Concord on a mediation). Quest reward 20 XP, +1 Influence.
+9. **Deserters' Road** (review 3.3): the Sergeant (level 15, a brute; *Rally* Inspires one of his men; *Order* cut, as
+   it has no engine) and two deserters (14). No floor; all three withdraw at 0 HP, and when the Sergeant yields his
+   men step back with him (`endsWithBoss`). A fair bot wins 20 of 20 seeds at level 14 and nobody falls. Pays 60 XP and
+   120 gold flat (not the ambush rule). The camp's trigger plays the fight again after a Game Over. The Parley on the
+   map: escort the pilgrims (spared: they are at the Iron Gate with an escort at the end), Samira pays 120 (only with
+   120 in the purse), or Azzy's threat. The three are remembered as flags for the War of the Harbor; the per-answer
+   pillar (+1 Wealth or +1 Fear) is not built: every answer gives the quest's +1 Influence. Reward 60 gold, 30 XP.
+10. **The party split** on the `story.yari_hidden` pattern: `story.party_split` on Yari's, Azzy's and Samira's `joins`
+    (no new system), from the veils to the Hall's steps. No `echoParty` override (review section 4: not needed).
+11. **The seamstress looks**: `DISGUISE` in `assets.config.ts` (a white hood and an apron over grey for Gianna and
+    Anissa, placeholders); in the Echo Anissa glows in her apron.
+12. **SIG-SEA** (review 3.4): the carved numbers today run 6, 2, 7, 5, 1, 4, 3, so drawer 4 is sixth from the left
+    (second from the right) today and fourth in the memory. The plates: Kay Soley, Brasador, Dorini, Ironvow, Suzumori,
+    **Stillwater**, Agnivansh: drawer 4 is under the Crown's own house (not one the party visits next), and Xaraguá has
+    no drawer (it was never a signatory). A wrong drawer in the memory costs a re-watch: "Nothing is in this one. The
+    clerk looks up.", the thread goes back to the table and the clerk files the page again. The keeper's law: Reason is
+    the Witness argument (needs *The Founding Compact* or *The Sun Accord, Sealed*, on the Archive's shelves);
+    Scripture works with one more exchange; Compassion sends Gianna to the Compact.
+13. **Patricio sealed the binding and signed nothing on the seventh page** (review 3.6): his choice ("Under protest of
+    time" / "Write that I did not read it") is remembered (`choice.patricio_protest`); the Journal note says
+    "Grandfather sealed the binding; he said he would remember." On the owner's confirmation list beside STORY open
+    question 13; no pop-up.
+14. **Hollis reads the clause only** (review 3.2): then "No signature. The clerk's seal alone. And the seventh ribbon
+    carries no witness knot." The Regent: "Read it. The Charter has stood on it for fifty years. It will stand on it
+    tomorrow." No "read aloud = in force"; nothing of S-SEA's answers. Hollis cites the Founding Compact (its Clause Nine, in the Archive's book).
+15. **Elodie** (review 3.8, 5.1, 5.2): "Azriel." to Azzy, and a word with Samira, in the front room before the curtain;
+    behind it, the explanation (the hostage, the two bloodlines, "so no one would count you"), the tested line, and
+    after Anissa's "He didn't let them hit me" a hand on her head and no words.
+16. **East, not north** (review 3.9): "If someone were going, they would go east first, up onto the winter plateau."
+    Coco at the Iron Gate: "East! Up onto the plateau!"
+17. **Books**: the cut list's five in the Archive and the Hall's four (*The Seventh Clause* joins the Hall's shelf once
+    read). Each pays 10 XP and +1 Influence (Seat), like every capital's; *The Claimant Families* lists Jean-Philippe
+    and Rodriguez, with the margin "Limyè? A temple name, not a house." (review 3.13).
+18. **No boss and no Echo battle** (the outline's call stands; review 4's reason correction noted: the Echo party
+    exists as data, the call is on story grounds).
+19. **The Journal**: six objectives pay (the herald, Coco, the seamstresses, the sealing, the keeper's law, the terms);
+    the Gold Road, the welcome, Until the bell, Read aloud, the fitting and the Iron Gate are `noXp` (review 3.5).
+20. **Starts**: `?chapter=5` at the Gold Gate (the arrival plays); `?chapter=6` at the Iron Gate after the card, until
+    Skarragol's maps exist.
+21. **Thomas Stillwater** is "A boy clerk" on his label (named in Chapter 9). The clerk's register (S-SEA's hook) is
+    placed in the memory and inert.
+22. **Shops**: the Concourse market (one healing item from each capital) and the Envoys' Outfitter (tier 16: a keeper's
+    robe, envoy's leathers, a warden's coat, a sealed-satchel charm). Music slots reuse farewell, the Crown's march,
+    the Echo and the cane road.
+
+**Not built (after the release, or waiting on other work):** the land-journey mode (the card stands in), the
+Pilgrims' stall and its faith tokens, Se-1, Se-4 (S-SEA), Se-5 stage 2 (the tokens, Chapters 6 to 12), the Archive's
+other five books, Se-3's per-answer pillar, the evening's lamps and doubled Sealbearers, the smoke test's Chapter 5
+section (the smoke test was not run), TILE_ART drawings for the new tiles, painted looks (prompts in `ART-PROMPTS.md`
+14), the Husher.
