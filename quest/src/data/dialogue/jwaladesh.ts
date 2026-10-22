@@ -781,7 +781,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
       next: 'check',
     },
     check: { lines: [], next: [{ if: { flag: 'anchor.tower_mirror' }, to: 'charge' }, { to: 'wait' }] },
-    wait: { lines: [say(AR, 'The bracket, Marshal. The spare mirror is at its foot.')] },
+    wait: { lines: [nar('Arjun watches the old tower\'s empty bracket, and waits.')] },
     ...chargeNodes(),
   }),
   simple('arjun_lamp_lit', [nar('Arjun\'s lamp, burning over the Crown\'s chain.')]),
@@ -1013,7 +1013,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
     sign: {
       lines: [
         say(Y, 'Xaraguá\'s Petition of Breach. The Hall never heard it. Will Agnipur sign it?'),
-        nar('Meera reads it through, and signs under the Suzumori seal.', { set: { 'choice.petition_jwa_signed': true } }),
+        nar('Meera reads it through, slowly, and signs it.', { set: { 'choice.petition_jwa_signed': true } }),
       ],
       next: 'token',
     },

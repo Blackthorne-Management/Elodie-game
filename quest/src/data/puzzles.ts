@@ -33,6 +33,39 @@ const XARAGUA_FREE: FlagSnapshot = {
 };
 
 /** Ordvik at dusk (Chapter 6): Bayarmaa with the party, the day's three things done, set out for the fjord. */
+/** Agnipur after the Court (Chapter 8): Vikram met, Aiyana met, the Court heard (the duel fought). */
+const AGNIPUR_DAY: FlagSnapshot = {
+  ...BEFORE_LOCKET,
+  'item.sun_locket': true,
+  'story.yari_asked': true,
+  'party.azzy': true,
+  'party.samira': true,
+  'party.bayarmaa': true,
+  'party.haru': true,
+  'act7.complete': true,
+  'card.act7_end': true,
+  'story.jwaladesh_arrived': true,
+  'story.harbor_seen': true,
+  'story.vikram_seen': true,
+  'story.bazaar_seen': true,
+  'story.aiyana_met': true,
+  'story.vikram_challenged': true,
+  'story.court_heard': true,
+};
+/** Agnipur at the night lamp's hour (Chapter 8): the day's three things done (data/jwaladesh.ts DAY_DONE). */
+const AGNIPUR_NIGHT: FlagSnapshot = {
+  ...AGNIPUR_DAY,
+  'side.lamp_relay.accepted': true,
+  'side.lamp_relay.done': true,
+  'clue.relay_route': true,
+  'side.anonymous_oil.accepted': true,
+  'side.anonymous_oil.done': true,
+  'story.salt_road_cleared': true,
+  'debate.jwaladesh_hesitation.listened': true,
+  'debate.jwaladesh_hesitation.joined': true,
+  'debate.jwaladesh_hesitation.settled': true,
+};
+
 /** Kirinoura on the day (Chapter 7): Bayarmaa with the party, the letter given, Kayla met, the Spy Ledger accepted. */
 const KIRINOURA_DAY: FlagSnapshot = {
   ...BEFORE_LOCKET,
@@ -263,5 +296,29 @@ export const PUZZLES: readonly PuzzleDef[] = [
     spawn: 'marsh',
     flags: { ...KIRINOURA_NIGHT, 'clue.lantern_code': true, 'story.maze_walked': true, 'story.marsh_reached': true, 'side.lanterns.accepted': true },
     goal: { flag: 'story.boats_home' },
+  },
+  {
+    id: 'jwaladesh_chain',
+    title: 'Arjun\'s night: the chain lamp lit and the tower mirror bolted, in the memory (SIG-JWA part 1)',
+    map: 'jwaladesh-harbor',
+    spawn: 'landing',
+    flags: { ...AGNIPUR_NIGHT, 'story.tower_open': true },
+    goal: { all: [{ flag: 'anchor.chain_lamp' }, { flag: 'anchor.tower_mirror' }] },
+  },
+  {
+    id: 'jwaladesh_mirrors',
+    title: 'The roof mirrors round the Exchange\'s tower: east, north, north, and Anissa\'s disc (SIG-JWA part 2)',
+    map: 'jwaladesh-rooftops',
+    spawn: 'roofs',
+    flags: { ...AGNIPUR_NIGHT, 'story.tower_open': true, 'anchor.chain_lamp': true, 'anchor.tower_mirror': true, 'clue.arjun_charge': true },
+    goal: { flag: 'story.beam_at_temple' },
+  },
+  {
+    id: 'jwaladesh_relay',
+    title: 'The lamp relay: the runners\' way up the hill, not the main street (minor puzzle; PUZZLES.md M-JWA-1)',
+    map: 'jwaladesh-bazaar',
+    spawn: 'stair_head',
+    flags: { ...AGNIPUR_DAY, 'side.lamp_relay.accepted': true, 'clue.relay_route': true, 'item.relay_lamp': true },
+    goal: { flag: 'side.lamp_relay.done' },
   },
 ];

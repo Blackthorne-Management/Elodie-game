@@ -1,0 +1,5 @@
+{
+  "the old line: the first mirror north, straight at the new tower (the light lands on brick)": ["skip","up*3","right*3","confirm","skip","confirm","skip","up","right*2","down","right*9","confirm","skip","confirm","skip","up*2","right*2","up*3","left*2","up","right","confirm","skip","confirm","skip"],
+  "the second mirror turned past north to west": ["skip","up*3","right*3","confirm","skip","up","right*2","down","right*9","confirm","skip","confirm","skip","confirm","skip","up*2","right*2","up*3","left*2","up","right","confirm","skip","confirm","skip"],
+  "the first mirror left facing south: the light never comes round": ["skip","up*2","right*4","up","right*9","confirm","skip","confirm","skip","up*2","right*2","up*3","left*2","up","right","confirm","skip","confirm","skip"]
+}

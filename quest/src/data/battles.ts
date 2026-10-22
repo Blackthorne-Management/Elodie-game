@@ -738,15 +738,16 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Ember Snap', power: 120, every: 3, tell: 'The jackal\'s coat sparks. It crouches...' },
     ],
   },
-  // Vikram in the duel yard (the outline 5, its review 3.9): a sparring match, Gianna alone; it ends either way.
+  // Vikram in the duel yard (the outline 5, its review 3.9): a sparring match, Gianna alone; it ends either way. HP x2.5
+  // and ATK x1.0 (battle-sim at @jwaladesh-court: her whole kit wins 39 in 40; light alone 10; the staff none).
   vikram_duel: {
     id: 'vikram_duel',
     name: 'Vikram',
     look: 'vikram',
     level: 20,
     role: 'skirmisher',
-    hpScale: 2,
-    atkScale: 1.2,
+    hpScale: 2.5,
+    atkScale: 1,
     withdraws: { line: 'Enough... Enough. I need... a moment.', speaker: 'Vikram' },
     moves: [
       { name: 'Quick Thrust', power: 100 },
@@ -756,8 +757,8 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // Seth Dhanraj (COMBAT 13.3; the outline section 5 with its review 3.1): level 21, a brute boss. The Oil Wall halves
   // what he takes and fire does nothing to it, and a Surge shatters it; at half his HP the price goes up (Price Spike:
   // a blow at everyone, the review's fold of the item delay into the blow), two more enforcers come in, and from then a
-  // fire blow lights his oil (BattlePhase.ignite). At 0 HP he withdraws: nobody dies. Scaling: battle-sim at
-  // @jwaladesh-store (the outline's Built section).
+  // fire blow lights his oil (BattlePhase.ignite). At 0 HP he withdraws: nobody dies. Scaling (Claude's call): HP x5,
+  // ATK x1.2, Price Spike 100 (battle-sim at @jwaladesh-store: the kit wins 40 in 40 with 0.9 falls; Attack alone 0).
   seth_dhanraj: {
     id: 'seth_dhanraj',
     name: 'Seth Dhanraj',
@@ -766,7 +767,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     role: 'brute',
     boss: true,
     hpScale: 5,
-    atkScale: 1.4,
+    atkScale: 1.2,
     withdraws: { line: 'Enough. The oil is yours. It was always going to be somebody\'s.', speaker: 'Seth Dhanraj' },
     moves: [
       { name: 'Ledger Staff', power: 120 },
@@ -821,7 +822,7 @@ const FOX_SECRETS: readonly EnemyMove[] = [
 /** Dhanraj when the price goes up (phase 2, 50%): the staff, Price Spike at everyone, the wall now and then. */
 const DHANRAJ_PRICE_SPIKE: readonly EnemyMove[] = [
   { name: 'Ledger Staff', power: 130 },
-  { name: 'Price Spike', power: 120, area: true, every: 2, tell: 'Dhanraj opens the ledger. "Everything you carry just got dearer." Guard, everyone!' },
+  { name: 'Price Spike', power: 100, area: true, every: 2, tell: 'Dhanraj opens the ledger. "Everything you carry just got dearer." Guard, everyone!' },
   { name: 'Oil Wall', power: 0, ally: 'seth_dhanraj', statuses: ['oiled'], every: 5, tell: 'Dhanraj kicks another jar over. The oil runs round his feet again.' },
 ];
 
@@ -881,7 +882,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     fighters: ['gianna'],
     endsWithBoss: true,
     tips: {
-      start: 'He\'s fast, Gigi, and he\'s already tired. Your light. Make him run out of breath.',
+      start: 'He\'s fast, Gigi, and he\'s already tired. Your light, and mend when he cuts you. He runs out of breath first.',
       spark: 'Surge, Gigi!',
       tell: 'The blade\'s glowing! Guard!',
       lowHp: 'Heal, Gigi.',
