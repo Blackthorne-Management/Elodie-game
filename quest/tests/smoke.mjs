@@ -491,6 +491,11 @@ async function waitMatch(page, exp, what, timeout = 6000) {
     // A staged scene still acting it out (the junior priest walks the length of the Court to the back gate before
     // the line; Chapter 8): the line comes once he is there. Give it a while longer; a hung scene still fails.
     if (s?.stage?.busy && timeout === 6000) return waitMatch(page, exp, what, 20000);
+    // A staged walk that ended just as the wait ran out (the man in the black coat leaves the cave; Chapter 11): the
+    // browser already matches, or is about to. Check once more before calling it a disagreement.
+    if (s && timeout === 6000 && !s.moving && s.mapId === exp.mapId && s.x === exp.x && s.y === exp.y && s.mode === exp.mode) {
+      return waitMatch(page, exp, what, 6001);
+    }
     throw new Error(`Browser and simulator disagree after ${what}.\nexpected ${JSON.stringify(exp)}\nbrowser  ${JSON.stringify(s && { ...s, flags: undefined })}`);
   }
 }
