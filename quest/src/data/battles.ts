@@ -997,6 +997,23 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Hush', power: 120, magic: true, area: true, statuses: ['hushed'], chance: 0.5, every: 3, tell: 'The grey veil tilts. The court goes quiet, all at once... Guard!' },
     ],
   },
+  // J-1 Win Every Argument (built Oct 27): the three who out-argued Vikram, sparring with him in turn. A bout, not a
+  // fight: each steps back at 0 HP, laughing.
+  spar_spice: {
+    id: 'spar_spice', name: 'Spice-seller', look: 'jw_vendor', level: 19, role: 'skirmisher', hpScale: 1.5,
+    withdraws: { line: 'Enough! My pepper needs me.' },
+    moves: [{ name: 'Pestle', power: 90 }, { name: 'Pepper in the Eyes', power: 60, statuses: ['weakened'], every: 3, tell: 'She opens a twist of red pepper...' }],
+  },
+  spar_dyer: {
+    id: 'spar_dyer', name: 'Dyer', look: 'dyer', level: 19, role: 'skirmisher', hpScale: 1.5,
+    withdraws: { line: 'Enough. You have blue on your sleeve now. It will not come out.' },
+    moves: [{ name: 'Wet Cloth', power: 90 }, { name: 'Indigo Slap', power: 130, every: 3, tell: 'The dyer swings a sodden length of blue cloth round and round...' }],
+  },
+  spar_wrestler: {
+    id: 'spar_wrestler', name: 'Old wrestler', look: 'jw_wrestler', level: 19, role: 'brute', hpScale: 1.2,
+    withdraws: { line: 'Ha! Enough. You breathed on that one. I heard it.' },
+    moves: [{ name: 'Clinch', power: 90 }, { name: 'Hip Throw', power: 140, every: 3, tell: 'The old wrestler settles low, and his hands open...' }],
+  },
   marine_sergeant: {
     id: 'marine_sergeant',
     bribable: true,
@@ -1220,6 +1237,25 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       lowHp: 'Heal, Gigi.',
     },
   },
+  // Chapter 8, J-1 (built Oct 27): Vikram alone against each of the three who out-argued him. Optional; paid little.
+  ...Object.fromEntries(
+    (['spice', 'dyer', 'wrestler'] as const).map((who) => [
+      `argue_${who}`,
+      {
+        id: `argue_${who}`,
+        title: 'A rematch',
+        backdrop: 'duel_court',
+        enemies: [`spar_${who}`],
+        table: 'jwaladesh_side',
+        group: `argue_${who}`,
+        rewards: { xp: 10, gold: 0 },
+        fighters: ['vikram'],
+        endsWithBoss: true,
+        sideQuest: 'argue',
+        tips: { start: 'Breathe, Vikram. In on the cut, out on the word.', tell: 'Watch their hands, Vikram!' },
+      } satisfies BattleDef,
+    ]),
+  ),
   // Chapter 8, J-3: three Oil Enforcers on the salt road (the carter's jars). Paid flat (data).
   salt_road_enforcers: {
     id: 'salt_road_enforcers',

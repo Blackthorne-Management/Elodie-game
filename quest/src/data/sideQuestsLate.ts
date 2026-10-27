@@ -11,6 +11,7 @@
 import type { Condition } from '../engine/conditions.ts';
 import type { RpgContent } from '../engine/rpg.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
+import { ARGUERS, BAZAAR, HARBOR, OIL_STORE } from './jwaladesh.ts';
 import { FLOOR_MAKER, HALL, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
 const f = (flag: string): Condition => ({ flag });
@@ -82,8 +83,75 @@ const KUROSHI: readonly SideQuestDef[] = [
   },
 ];
 
-/** Every side quest built Oct 27, in chapter order. */
-export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...KUROSHI];
+// ---- Chapter 8 (Agnipur) -------------------------------------------------------------------------------------------
 
-/** Pillars that follow a quest's answers (data/rpg.ts pillarRules). */
-export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [];
+const AGNIPUR_DAWN: Condition = all(f('story.dhanraj_beaten'), { notFlag: 'act8.complete' });
+const arguer = (who: keyof typeof ARGUERS) => ({ map: 'jwaladesh-bazaar', at: { x: ARGUERS[who].x, y: ARGUERS[who].y + 1 } });
+
+const AGNIPUR: readonly SideQuestDef[] = [
+  // J-1: the three who out-argued Vikram, won back by a bout or by Gianna's answer.
+  {
+    id: 'argue',
+    title: 'Win Every Argument',
+    giver: 'Vikram',
+    place: 'The Lamp Bazaar',
+    level: 21,
+    summary: 'Three people in the bazaar out-argued Vikram while he was out of breath. He wants every argument back: by the blade, or by the envoy\'s answer.',
+    accepted: f('side.argue.accepted'),
+    available: all(AGNIPUR_DAWN, f('party.vikram')),
+    start: [arguer('spice')],
+    nudge: 'Vikram keeps glaring at a spice-seller, Gigi. And at a dyer. And at an old man on the temple steps.',
+    parallel: true,
+    steps: [
+      { text: 'The spice-seller on the spice row.', done: f('side.argue.spice'), goals: [arguer('spice')] },
+      { text: 'The dyer by the dyers\' lane.', done: f('side.argue.dyer'), goals: [arguer('dyer')] },
+      { text: 'The old wrestler on the temple steps.', done: f('side.argue.wrestler'), goals: [arguer('wrestler')] },
+    ],
+    done: f('side.argue.done'),
+    closed: f('act8.complete'),
+    closedText: 'Closed: the trader sailed. Vikram says he would have won the rest.',
+    reward: { gold: 300, xp: LATE_XP.argue },
+  },
+  // J-4 (S-JWA): the shrine child, the balance lock, the lamp-maker's jars, the Unbroken Wick.
+  {
+    id: 'little_lamps',
+    title: 'Oil for the Little Lamps',
+    giver: 'The shrine child',
+    place: 'The spice row',
+    level: 21,
+    summary: 'A child\'s street shrine burned for fifty years on its own sealed oil, until the Seth\'s men took the jar. It is behind a door with scales on it.',
+    accepted: f('side.little_lamps.accepted'),
+    available: AGNIPUR_DAWN,
+    start: [{ map: 'jwaladesh-bazaar', at: { x: BAZAAR.shrineChild.x, y: BAZAAR.shrineChild.y + 1 } }],
+    nudge: 'The little girl by the dark shrine is still waiting for her oil, Gigi.',
+    steps: [
+      { text: 'The shrine child on the spice row.', done: f('side.little_lamps.accepted'), goals: [{ map: 'jwaladesh-bazaar', at: { x: BAZAAR.shrineChild.x, y: BAZAAR.shrineChild.y + 1 } }] },
+      {
+        text: 'The balance lock in the oil store wants a measure. The store remembers the night the riders came home.',
+        done: f('clue.five_home'),
+        goals: [{ map: 'jwaladesh-bazaar', at: { ...BAZAAR.harbor } }, { map: 'jwaladesh-harbor', at: { x: OIL_STORE.zone.x + 1, y: OIL_STORE.zone.y } }],
+        echoGoals: [{ map: 'jwaladesh-harbor', at: { x: OIL_STORE.zone.x + 1, y: OIL_STORE.zone.y } }],
+      },
+      {
+        text: 'The measure of those who came home, poured exactly, sealed in the lamp-maker\'s reservoir.',
+        done: f('story.lock_balanced'),
+        goals: [{ map: 'jwaladesh-harbor', at: { x: HARBOR.balanceLock.x, y: HARBOR.balanceLock.y + 1 } }],
+        echoGoals: [{ map: 'jwaladesh-harbor', at: { x: OIL_STORE.lampMaker.x, y: OIL_STORE.lampMaker.y + 1 } }],
+      },
+      { text: 'The reservoir to the shrine child.', done: f('side.little_lamps.done'), goals: [{ map: 'jwaladesh-bazaar', at: { x: BAZAAR.shrineChild.x, y: BAZAAR.shrineChild.y + 1 } }] },
+    ],
+    done: f('side.little_lamps.done'),
+    closed: f('act8.complete'),
+    closedText: 'Closed: the trader sailed. The runners will fill her lamp. It will go out again.',
+    reward: { xp: LATE_XP.littleLamps, pillar: { pillar: 'influence', city: 'jwaladesh', amount: 2 } },
+  },
+];
+
+/** Every side quest built Oct 27, in chapter order. */
+export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...KUROSHI, ...AGNIPUR];
+
+/** Pillars that follow a quest's answers (data/rpg.ts pillarRules): J-1's Fear by the blade, or Influence by the word. */
+export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [
+  { pillar: 'fear', city: 'jwaladesh', flags: ['side.argue.fear'], each: 1 },
+  { pillar: 'influence', city: 'jwaladesh', flags: ['side.argue.influence'], each: 1 },
+];

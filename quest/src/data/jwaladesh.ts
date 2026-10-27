@@ -207,7 +207,7 @@ export const WICK_POURS: readonly (readonly [number, number | 'r'])[] = [
 
 /** J-1 Win Every Argument: the three who out-argued Vikram while he was out of breath, at dawn. */
 export const ARGUERS = {
-  spice: at(26, 18),
+  spice: at(26, 17),
   dyer: at(6, 24),
   wrestler: at(27, 3),
 } as const;

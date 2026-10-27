@@ -376,6 +376,26 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { flag: 'story.sayo_box_open' },
   },
+  // J-4's secret (S-JWA, built Oct 27): the roll call in the memory (five came home), then the pours: 10 into 7, 7 into 3,
+  // 3 into 10, three times round, until the 7 holds five; the 7 into the reservoir, which seals (the anchor).
+  {
+    id: 'jwaladesh_wick',
+    title: 'The little lamps\' measure: five, poured exactly between jars of 10, 7 and 3 (secret item; PUZZLES.md S-JWA)',
+    map: 'jwaladesh-harbor',
+    spawn: 'oil_store',
+    flags: {
+      ...AGNIPUR_NIGHT,
+      'story.tower_open': true,
+      'anchor.chain_lamp': true,
+      'anchor.tower_mirror': true,
+      'story.beam_at_temple': true,
+      'story.flame_seen': true,
+      'party.vikram': true,
+      'story.dhanraj_beaten': true,
+      'side.little_lamps.accepted': true,
+    },
+    goal: { flag: 'anchor.reservoir_sealed' },
+  },
   {
     id: 'jwaladesh_chain',
     title: 'Arjun\'s night: the chain lamp lit and the tower mirror bolted, in the memory (SIG-JWA part 1)',

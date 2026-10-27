@@ -75,6 +75,12 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   sayo_floor_nailed: { name: 'The singing floor' },
   sayo_floor_echo: { name: 'The singing floor' },
   sayo_desk_echo: { name: "Sayo's desk" },
+  // J-4 Oil for the Little Lamps (Oct 27).
+  echo_jar_0: { name: 'The ten-measure jar' },
+  echo_jar_1: { name: 'The seven-measure jar' },
+  echo_jar_2: { name: 'The three-measure jar' },
+  echo_reservoir: { name: "The lamp-maker's reservoir" },
+  lit_shrine: { name: "The child's shrine" },
   kayla_desk: { name: "Kayla's desk" },
   clerk_desk_echo: { name: "The clerk's desk" },
   stacks_seal: { name: 'The sealed stacks' },

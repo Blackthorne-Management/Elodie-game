@@ -4,7 +4,10 @@
 
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { BATTLES, ENEMIES, SKILL_BOOK } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
+import { Battle, battleItems, battleParty } from '../src/engine/battle.ts';
+import { skillsAction } from '../tools/battle-sim.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { LATE_SIDE_QUESTS, LATE_XP } from '../src/data/sideQuestsLate.ts';
 import { localPillar, sharedXp } from '../src/engine/rpg.ts';
@@ -78,6 +81,94 @@ describe('K-1 Definitely Not a Spy (Kirinoura, at dawn)', () => {
     expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.notASpy);
     expect(localPillar(flags, RPG, 'influence', 'kuroshi') - influence).toBe(1);
     expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).not.toContain('not_a_spy');
+  });
+});
+
+/** Agnipur at dawn, the price paid, the party at the Court, out on the bazaar's head. */
+function agnipurDawn(): Sim {
+  const sim = simAt('jwaladesh-price');
+  settleRewards(sim.logic.state.flags, RPG, SIDE_QUESTS);
+  if (sim.logic.map.id === 'jwaladesh-court') sim.run(['goto 17,27']);
+  expect(sim.logic.map.id).toBe('jwaladesh-bazaar');
+  return sim;
+}
+
+describe('J-1 Win Every Argument (Agnipur, at dawn)', () => {
+  it('Vikram asks for all three back: one bout, two answers (a wrong one first), and the pillar follows the answers', () => {
+    const sim = agnipurDawn();
+    const flags = sim.logic.state.flags;
+    const q = quest('argue');
+    expect(sideQuestStatus(flags, q)).toBe('unknown');
+    // The old wrestler on the temple steps: Vikram spars (the first choice), and the bout's scene plays after it.
+    sim.run(['goto 27,4', 'up', 'confirm']);
+    for (let i = 0; i < 8 && sim.logic.mode === 'dialogue' && sim.logic.view().kind !== 'choice'; i++) sim.run(['confirm']);
+    sim.run(['confirm', 'skip']);
+    expect(sim.battles.at(-1)).toBe('argue_wrestler');
+    for (const f of ['side.argue.accepted', 'side.argue.wrestler', 'side.argue.wrestler_spar']) expect(flags.isSet(f), f).toBe(true);
+    // The dyer: Gianna answers, wrongly, then rightly.
+    sim.run(['goto 6,25', 'up', 'confirm', 'down', 'confirm', 'confirm', 'skip']);
+    expect(flags.isSet('side.argue.dyer')).toBe(false);
+    sim.run(['up', 'confirm', 'down', 'confirm', 'down', 'confirm', 'skip']);
+    expect(flags.isSet('side.argue.dyer')).toBe(true);
+    // The spice-seller: the right answer, and the end.
+    sim.run(['goto 26,18', 'up', 'confirm', 'down', 'confirm', 'down', 'confirm', 'skip']);
+    for (const f of ['side.argue.spice', 'side.argue.done', 'side.argue.influence']) expect(flags.isSet(f), f).toBe(true);
+    expect(flags.isSet('side.argue.fear')).toBe(false);
+    const influence = localPillar(flags, RPG, 'influence', 'jwaladesh');
+    const fresh = new FlagStore({ ...flags.snapshot(), 'side.argue.influence': false });
+    expect(influence - localPillar(fresh, RPG, 'influence', 'jwaladesh')).toBe(1);
+    const xp = sharedXp(flags, RPG);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('argue');
+    expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.argue);
+  });
+});
+
+describe('J-1\'s bouts: Vikram alone, at the route\'s level', () => {
+  it('a player who uses his kit wins each of the three; they step back at 0 HP (nobody falls)', () => {
+    const flags = simAt('jwaladesh-price').logic.state.flags;
+    for (const who of ['spice', 'dyer', 'wrestler']) {
+      const def = BATTLES[`argue_${who}`]!;
+      expect(def.fighters).toEqual(['vikram']);
+      expect(ENEMIES[`spar_${who}`]!.withdraws, who).toBeDefined();
+      let wins = 0;
+      for (let seed = 1; seed <= 20; seed++) {
+        const b = new Battle(def, battleParty(flags, RPG, SKILL_BOOK), def.enemies.map((id) => ENEMIES[id]!), battleItems(flags, RPG), { seed });
+        b.start();
+        for (let t = 0; t < 200 && !b.outcome; t++) b.act(skillsAction(b));
+        if (b.outcome === 'won') wins++;
+      }
+      expect(wins, who).toBeGreaterThanOrEqual(19);
+    }
+  });
+});
+
+describe('J-4 Oil for the Little Lamps (the Unbroken Wick)', () => {
+  it('the shrine child asks; the roll call and the pours fifty years ago; the lock balances; her lamp burns; Anissa keeps the wick', () => {
+    const sim = agnipurDawn();
+    const flags = sim.logic.state.flags;
+    const q = quest('little_lamps');
+    sim.run(['goto 38,18', 'up', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    // Down the stair to the quay, into the oil store, and the puzzle's own solution.
+    sim.run(['goto 21,29']);
+    expect(sim.logic.map.id).toBe('jwaladesh-harbor');
+    sim.run(['goto 27,8']);
+    sim.run(readJson<string[]>('puzzles/jwaladesh_wick/solution.json'));
+    expect(flags.isSet('anchor.reservoir_sealed')).toBe(true);
+    sim.run(['down', 'echo', 'skip']);
+    expect(sim.logic.era).toBe('present');
+    // The balance lock on the back door.
+    sim.run(['goto 24,5', 'up', 'confirm', 'skip']);
+    for (const f of ['story.lock_balanced', 'item.sealed_reservoir']) expect(flags.isSet(f), f).toBe(true);
+    // Back up to the shrine.
+    sim.run(['goto 16,0']);
+    expect(sim.logic.map.id).toBe('jwaladesh-bazaar');
+    sim.run(['goto 38,18', 'up', 'confirm', 'skip']);
+    for (const f of ['side.little_lamps.done', 'item.unbroken_wick']) expect(flags.isSet(f), f).toBe(true);
+    expect(flags.isSet('item.sealed_reservoir')).toBe(false);
+    const xp = sharedXp(flags, RPG);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('little_lamps');
+    expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.littleLamps);
   });
 });
 

@@ -660,6 +660,10 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   floor_maker: n('floor_maker', 'floor_maker', 'Old floor-maker'),
   sayo_house: n('sayo_house', 'echo_sayo', 'Lady Sayo Suzumori'),
   sayo_informant: n('sayo_informant', 'echo_agent', "Sayo's man in grey"),
+  arguer_spice: n('arguer_spice', 'jw_vendor', 'Spice-seller'),
+  arguer_dyer: n('arguer_dyer', 'dyer', 'Dyer'),
+  arguer_wrestler: n('arguer_wrestler', 'jw_wrestler', 'Old wrestler'),
+  echo_lamp_maker: n('echo_lamp_maker', 'echo_lamp_maker', 'Lamp-maker', 'lamp_maker_talk'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

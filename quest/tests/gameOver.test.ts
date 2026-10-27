@@ -443,7 +443,7 @@ describe('every story fight has a way back in', () => {
     const started = new Set<string>();
     for (const d of Object.values(CONTENT.dialogue)) for (const b of battlesStarted(d)) started.add(b);
     expect([...started].sort()).toEqual([
-      'assize_hushed', 'bog_chapel_cell', 'camp_lookouts', 'caney_breach', 'caona_stand', 'claim_azzy', 'claim_regent', 'customs_thorne', 'deserters_road', 'duel_yard_vikram',
+      'argue_dyer', 'argue_spice', 'argue_wrestler', 'assize_hushed', 'bog_chapel_cell', 'camp_lookouts', 'caney_breach', 'caona_stand', 'claim_azzy', 'claim_regent', 'customs_thorne', 'deserters_road', 'duel_yard_vikram',
       'file_house_fox', 'fjord_grimvald', 'flagship_hale', 'harbor_flank_al_doria', 'harbor_flank_jwaladesh', 'harbor_flank_kuroshi',
       'harbor_flank_skarragol', 'headland_battery', 'intro_boar', 'mangrove_crew', 'marsh_moths', 'oil_store_dhanraj', 'ordu_bout', 'pier_marines',
       'pier_rael', 'press_gang_cross', 'qasim_vault', 'quay_watch', 'rael_trial', 'salt_road_enforcers', 'stacks_cutpurses', 'thorne_blockade',
