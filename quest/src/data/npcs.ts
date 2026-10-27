@@ -663,6 +663,22 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   hollis_after: n('hollis_after', 'hollis', 'Keeper Hollis'),
   chamberlain_after: n('chamberlain_after', 'chamberlain', 'The Master of the Chairs'),
   benny_iron: n('benny_iron', 'benny_old', 'Benny'),
+  // The side quests built Oct 27 (K-1, K-4; J-1, J-4; Al-1, Al-4, Al-5): data/dialogue/kuroshiQuests.ts,
+  // jwaladeshQuests.ts and aldermoorQuests.ts.
+  floor_maker: n('floor_maker', 'floor_maker', 'Old floor-maker'),
+  sayo_house: n('sayo_house', 'echo_sayo', 'Lady Sayo Suzumori'),
+  sayo_informant: n('sayo_informant', 'echo_agent', "Sayo's man in grey"),
+  arguer_spice: n('arguer_spice', 'jw_vendor', 'Spice-seller'),
+  arguer_dyer: n('arguer_dyer', 'dyer', 'Dyer'),
+  arguer_wrestler: n('arguer_wrestler', 'jw_wrestler', 'Old wrestler'),
+  echo_lamp_maker: n('echo_lamp_maker', 'echo_lamp_maker', 'Lamp-maker', 'lamp_maker_talk'),
+  letter_sergeant: n('letter_sergeant', 'crown_officer', 'Press-gang sergeant'),
+  letter_constable: n('letter_constable', 'moor_constable', 'Moor Constable'),
+  letter_bandit: n('letter_bandit', 'road_bandit', 'Highwayman'),
+  letter_goose: n('letter_goose', 'goose', 'A goose'),
+  letter_footman: n('letter_footman', 'hall_page', "The Regent's footman"),
+  clockmaker_dawn: n('clockmaker_dawn', 'clockmaker', 'Clockmaker'),
+  rosalind_home: n('rosalind_home', 'rosalind', 'Lady Rosalind Stillwater'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

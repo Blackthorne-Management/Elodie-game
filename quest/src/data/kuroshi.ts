@@ -4,6 +4,7 @@
 
 import type { Condition } from '../engine/conditions.ts';
 import type { RotorDef } from '../engine/rotor.ts';
+import type { FloorDef } from '../engine/secrets.ts';
 
 type P = { readonly x: number; readonly y: number };
 const at = (x: number, y: number): P => ({ x, y });
@@ -195,3 +196,73 @@ export const MARSH = {
 } as const;
 /** The marsh posts lit for "left, then right": the fork two white and a red, the bend one white and two red. */
 export const MARSH_CODE: readonly ('white' | 'red')[] = [...CODE.left, ...CODE.right];
+
+// ---- Built Oct 27 (the owner, Oct 27: the side quests once after the release): K-1 and K-4 -------------------------------
+
+/**
+ * Lady Sayo's House (K-4, S-KUR; 20 x 14, interior): the entry with the Echo zone, the listening room with the 5 x 5
+ * nightingale floor, the lacquer box on its low table beyond the floor, Sayo's writing desk (the memory). Its door is on
+ * the house's east side on the quarter (SAYO_DOOR), shut until the floor-maker lifts the latch.
+ */
+export const SAYO_HOUSE = {
+  w: 20,
+  h: 14,
+  door: at(10, 13),
+  spawn: at(10, 12),
+  /** The floor's top-left board (5 x 5 boards, x 8 to 12, y 4 to 8). */
+  floor: at(8, 4),
+  box: at(10, 2),
+  desk: at(4, 3),
+  sayo: at(4, 4),
+  /** The informant waits by the entry in the memory, and walks the floor when asked. */
+  informant: at(14, 10),
+  /** The Echo zone in the entry (x, y, w, h): Sayo's house, the night her network warned the Marshal. */
+  zone: { x: 9, y: 11, w: 3, h: 1 },
+} as const;
+
+/** The door into Sayo's House from the quarter (the house's east side), and where the old floor-maker waits at dawn. */
+export const SAYO_DOOR = at(9, 3);
+export const FLOOR_MAKER = at(11, 2);
+
+/**
+ * The nightingale floor (SECRET-ITEMS.md 8, PUZZLES.md S-KUR; engine/secrets.ts). Pitches 1 (low, a circle) to 5 (high,
+ * a star). The message is eight notes and one rest. Fifty years ago the informant walks it with his rest on the one
+ * silent board; the boards were relaid since, so now no board is silent: the nail in the memory makes one. The walk now
+ * (map tiles): (8,8) (9,7) (9,6) (10,5) [the nail, (11,6)] (12,7) (12,8) (11,8) (10,7); the nail at (11,6) or (11,7).
+ */
+export const NIGHTINGALE: FloorDef = {
+  id: 'sayo',
+  map: 'kuroshi-sayo-house',
+  origin: SAYO_HOUSE.floor,
+  present: [
+    [4, 1, 3, 1, 3],
+    [5, 1, 2, 3, 1],
+    [2, 4, 2, 2, 2],
+    [2, 1, 2, 2, 5],
+    [3, 1, 1, 1, 3],
+  ],
+  echo: [
+    [5, 3, 0, 1, 4],
+    [3, 2, 1, 5, 4],
+    [1, 4, 5, 2, 3],
+    [4, 5, 1, 1, 2],
+    [2, 3, 3, 4, 2],
+  ],
+  melody: [3, 1, 4, 2, 0, 5, 3, 1, 2],
+  open: 'story.sayo_box_open',
+  anchor: 'anchor.floor_nail',
+};
+/** The informant's walk fifty years ago (boards, c and r), the rest on the silent board. */
+export const INFORMANT_WALK: readonly { c: number; r: number }[] = [
+  { c: 2, r: 4 },
+  { c: 2, r: 3 },
+  { c: 1, r: 2 },
+  { c: 1, r: 1 },
+  { c: 2, r: 0 },
+  { c: 3, r: 1 },
+  { c: 4, r: 2 },
+  { c: 3, r: 3 },
+  { c: 4, r: 4 },
+];
+/** The pitches as the ripples draw them (the puzzle works with the sound off). */
+export const PITCH_SHAPES = ['silence', 'a circle', 'a square', 'a triangle', 'a diamond', 'a star'] as const;

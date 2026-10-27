@@ -118,6 +118,8 @@ export function skillsAction(b: Battle): Action {
   // Bound (Rael's fights): the cords are all there is (the Chapter 11 review's 3.3: the bot stalled without it).
   if (me.bound) return { kind: 'breakFree' };
   const foes = b.enemies.filter((e) => !e.down);
+  // Anissa gone quiet (Calm 0): Gianna goes to her first, so the Surge can come again.
+  if (b.calm === 0 && b.canComfort()) return { kind: 'comfort' };
   if (b.canSurge()) return { kind: 'surge' };
   const ready = me.skills.filter((s) => !s.gold && !s.bribe && b.canUse(me, s));
   const reveal = ready.find((s) => s.reveal);

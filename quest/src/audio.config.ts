@@ -129,6 +129,8 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'kuroshi-fogmaze': 'throne_archive',
   'kuroshi-marsh': 'throne_archive',
   'kuroshi-filehouse': 'throne_archive',
+  // Lady Sayo's House (K-4, Oct 27): the library's quiet.
+  'kuroshi-sayo-house': 'home',
   // Agnipur (Chapter 8): slots until the owner's tracks arrive (docs/quest/AUDIO-PROMPTS.md): the bazaar and the quay
   // play the farewell track, the Court the hall's, the library home, the roofs and the flats the crossroads.
   'jwaladesh-harbor': 'crossroads',
@@ -145,6 +147,9 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'aldermoor-keep': 'majlis',
   'aldermoor-close': 'crossroads',
   'aldermoor-cathedral': 'throne_archive',
+  // Al-4's clock tower and Al-5's townhouse (Oct 27): the Echo's track, and home.
+  'aldermoor-clocktower': 'throne_archive',
+  'aldermoor-townhouse': 'home',
 };
 
 /**
@@ -262,6 +267,16 @@ export const SFX_IDS = [
   'stone_7',
   'stone_hush',
   'stones_chord',
+  // The secret items (Oct 27): the singing floor's five boards and a nailed one (Kirinoura), the informant's message
+  // walked on it, and oil poured from jar to jar (Agnipur).
+  'board_0',
+  'board_1',
+  'board_2',
+  'board_3',
+  'board_4',
+  'board_5',
+  'nightingale',
+  'pour',
 ] as const;
 
 export type SfxId = (typeof SFX_IDS)[number];

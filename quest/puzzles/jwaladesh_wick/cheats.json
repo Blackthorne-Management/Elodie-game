@@ -1,0 +1,51 @@
+{
+  "the full ten straight into the reservoir: it seals on ten": [
+    "up",
+    "echo",
+    "skip",
+    "up",
+    "confirm",
+    "confirm",
+    "down*2",
+    "confirm",
+    "down",
+    "confirm"
+  ],
+  "the ten into the seven, and the seven into the reservoir: it seals on seven": [
+    "up",
+    "echo",
+    "skip",
+    "up",
+    "confirm",
+    "confirm",
+    "confirm",
+    "confirm",
+    "down",
+    "confirm",
+    "down*2",
+    "confirm",
+    "down",
+    "confirm"
+  ],
+  "the three-jar's measure into the reservoir: it seals on three": [
+    "up",
+    "echo",
+    "skip",
+    "up",
+    "confirm",
+    "confirm",
+    "confirm",
+    "confirm",
+    "down",
+    "confirm",
+    "down",
+    "confirm",
+    "confirm",
+    "down*2",
+    "confirm",
+    "down*2",
+    "confirm",
+    "down",
+    "confirm"
+  ]
+}

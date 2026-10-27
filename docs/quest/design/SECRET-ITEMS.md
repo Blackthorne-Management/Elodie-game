@@ -177,6 +177,16 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 - **Why it fits:** Jwaladesh's sacred flame is dying for want of oil; a lamp kept lit for fifty years by an exact,
   patient measure answers "hesitation is the only true death" with something steadier. It strengthens the light
   Anissa carries.
+- **Built (Oct 27; Claude's calls):** the balance lock is the one the Chapter 8 map already has on the oil store's back
+  door (the lamp-maker's back room of shrine reservoirs); the Echo is the store's floor on the night **after** the
+  charge, when the company came home (a roll call of "five came home" cannot come the night before). The pours are a
+  conversation with the lamp-maker (pick a jar, then where it goes; the jars' measures shown each time); the reservoir
+  seals on any one pour, and a wrong amount gets a new reservoir (the Echo resets that object). The wick is the
+  lamp-maker's white spare in the reservoir's neck, "for when it is opened"; the child lights her shrine and gives it to
+  Anissa. A key item, held: its effects come from carrying it (`ItemDef.boons`, numbers in `config.ts` SECRET_ITEMS).
+  **Dawn Surge was never built**, so it arrives with the Wick (a Surge made at 9 Spark or more spends 9, heals the
+  fighters 30% and clears every bad status); the base game's Dawn Surge at 10 stays unbuilt (it would move every fight's
+  balance this close to the release). Calm never below 1 needed Calm itself: built with it (`COMBAT.md` 8).
 
 ## 5. La Promesa de Benny (Cenizal, Ardencia)
 
@@ -258,6 +268,14 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
 - **Why it fits:** House Stillwater wins by outlasting everyone (*The Long Game*, *Aldermoor's Vigil*). A clock that
   waited fifty years for the right hour is their virtue in one object, and it shows that a Stillwater wrote down the
   truth.
+- **Built (Oct 27; Claude's calls):** the real-time puzzle is turn-based: every action counts its seconds (a key turn
+  1, a rewind 10 while the clock runs on, a wait 1), and the watchman climbs at 90, so the arithmetic is the design's
+  and waiting alone still fails. The key, the spring and the quill are a conversation at the works; the clock's face,
+  the spring's turns and the seconds left are shown each time. Thomas's spare quill lies on the tower's sill (he climbed
+  to read the hour for his record). Caught, the watchman says "it's always eleven ten when I come up" and resets the
+  hands. The vault holds Agatha's movement ("For the long game. A."); Edmund fits it in Thomas's watch. A legendary
+  relic like Solange's Quill (worn by anyone, SPD +3, DEF +2, growing); Stop the Clock is its once-a-battle skill: the
+  party fighters standing all act again before the first foe. Clock tower: its own 12 x 10 map behind the hall.
 
 ## 8. The Nightingale Key (Kirinoura, Kuroshi)
 
@@ -287,6 +305,16 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   per capital (talking them out raises Concord).
 - **Why it fits:** House Suzumori's power is listening (*Kagemimi*, the Shadow's Ear). Their real nightingale floors
   warned of intruders; here one carries a message across fifty years.
+- **Built (Oct 27; Claude's calls):** the tune is triangle, circle, diamond, square, (the silent board), star,
+  triangle, circle, square; the informant walks it in the memory and says nothing, the shapes are written in the
+  narration (the puzzle works with the sound off), and the ripples show each board's shape and colour as it is walked.
+  The nail is driven by facing the floor in the memory (a row, then a board); it can be pulled and set again, so a
+  wrong nail never locks the quest. Two nails make a walk now (the middle row's fourth board, or the row below it);
+  `quest/puzzles/kuroshi_floor` uses the first and checks a far one fails. Sayo's letter is a farewell to the Marshal
+  and names nobody. A key item, held. **Kagemimi for everyone** shows each foe's next move above it every round (the
+  same prediction Haru's Kagemimi makes); the silver sigil marks the Quiet Crown's people on every map. **Not built:**
+  the hidden conversation per capital (talking a cell member out for Concord): it needs a scene in each of nine
+  capitals, after the release.
 
 ## 9. The Seventh Ribbon (Eightgate)
 

@@ -32,11 +32,12 @@ import {
   textureKeyForEnemy,
   textureKeyForWeapon,
 } from '../assets.config.ts';
-import { GAME_OVER, SPARK_MAX, STATUS, SURGE_COST, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { CALM_MAX, GAME_OVER, SPARK_MAX, STATUS, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { GAME_OVER_TEXT } from '../data/gameOver.ts';
 import { clearLosses, grudgeFor, recordLoss } from '../engine/gameOver.ts';
 import { ENEMIES, SKILL_BOOK, battleDef, battleReserve } from '../data/battles.ts';
 import { RPG } from '../data/rpg.ts';
+import { battleBoons } from '../engine/rpg.ts';
 import {
   Battle,
   battleEntry,
@@ -268,7 +269,9 @@ export class BattleScene extends Phaser.Scene {
     const volleys = volleysFor(flags, def, COMPANIES);
     // A Challenge after a Challenge opens with the wounds the first one left (Chapter 12; rules-decisions [42]).
     const wounds = woundsFor(flags, def, party.map((p) => p.id));
-    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve, volleys, wounds });
+    // What the secret items carried bring (the Unbroken Wick, the Nightingale Key).
+    const boons = battleBoons(flags, RPG);
+    this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve, volleys, wounds, boons });
     this.placeFighters();
     const opening: BattleEvent[] = [];
     if (grudge > 0) opening.push({ kind: 'text', text: GAME_OVER_TEXT.grudge.replace('{p}', String(Math.round(grudge * 100))) });
@@ -448,6 +451,7 @@ export class BattleScene extends Phaser.Scene {
         return BATTLE_ART.messageMs;
       }
       case 'spark':
+      case 'calm':
         return 0;
       case 'surge': {
         const g = this.battle.party.find((p) => p.anissaBond);
@@ -703,7 +707,23 @@ export class BattleScene extends Phaser.Scene {
         run: () => this.openMenu('swap'),
       },
     ];
-    if (b.canSurge()) rows.unshift({ label: 'Surge', enabled: true, hint: "Anissa's light: your next blow or spell hits half again as hard. Free.", run: () => this.act({ kind: 'surge' }) });
+    // Comfort (COMBAT 8): while Anissa's Calm is not full, Gianna can go to her (first when she has gone quiet).
+    if (me.anissaBond && b.calm < CALM_MAX) {
+      const comfort: Row = {
+        label: 'Comfort',
+        enabled: b.canComfort(),
+        hint: `Go to Anissa: her Calm +2 (SP ${b.comfortCost(me)}). At 0 Calm her light will not come.`,
+        run: () => this.act({ kind: 'comfort' }),
+      };
+      if (b.calm === 0) rows.unshift(comfort);
+      else rows.splice(3, 0, comfort);
+    }
+    if (b.canSurge()) {
+      const hint = b.dawnReady
+        ? "Dawn Surge: Anissa's light heals everyone a little, clears what ails them, and your next blow hits half again as hard."
+        : "Anissa's light: your next blow or spell hits half again as hard. Free.";
+      rows.unshift({ label: 'Surge', enabled: true, hint, run: () => this.act({ kind: 'surge' }) });
+    }
     return rows;
   }
 
@@ -1115,6 +1135,9 @@ export class BattleScene extends Phaser.Scene {
       if (e.masked) bar(Math.round(s.x - w / 2), top + 10, w, 1, 1, BATTLE_ART.hpMasked);
       else bar(Math.round(s.x - w / 2), top + 10, w, e.hp, e.maxHp, e.hp / e.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
       tags(Math.round(s.x - w / 2), top + 14, e);
+      // The Nightingale Key: every foe's next move, heard before it comes.
+      const next = b.foresight && !e.masked ? b.nextMove(e) : undefined;
+      if (next) text(s.x, top - 9, `next: ${next}`, '#c8d8f0', { fontSize: '6px', stroke: '#14101a', strokeThickness: 2 }).setOrigin(0.5, 0);
     }
 
     // Anissa's light grows with her Spark; ten pips over her head, the first five gold when a Surge is ready.
@@ -1124,8 +1147,11 @@ export class BattleScene extends Phaser.Scene {
       const sy = Math.round(this.anissa.y - this.anissa.displayHeight - 8);
       g.fillStyle(BATTLE_ART.panel, 0.8).fillRect(sx - 4, sy - 11, SPARK_MAX * 5 + 7, 18);
       for (let i = 0; i < SPARK_MAX; i++) g.fillStyle(i < b.spark ? BATTLE_ART.sparkBar : 0x3a3440, 1).fillRect(sx + i * 5, sy, 4, 4);
-      const label = b.surgeArmed ? 'Surging' : b.spark >= SURGE_COST ? 'Surge!' : 'Spark';
-      text(this.anissa.x, sy - 11, label, b.spark >= SURGE_COST ? UI.accentText : UI.dimText, { fontSize: '7px' }).setOrigin(0.5, 0);
+      const ready = b.spark >= b.surgeCost && b.calm > 0;
+      const label = b.surgeArmed ? 'Surging' : b.calm === 0 ? 'Quiet' : b.dawnReady ? 'Dawn!' : ready ? 'Surge!' : 'Spark';
+      text(this.anissa.x, sy - 11, label, ready ? UI.accentText : UI.dimText, { fontSize: '7px' }).setOrigin(0.5, 0);
+      // Her Calm: three small pips under the Spark (COMBAT 8).
+      for (let i = 0; i < CALM_MAX; i++) g.fillStyle(i < b.calm ? 0x9ad0f0 : 0x3a3440, 1).fillRect(this.anissa.x - (CALM_MAX * 6) / 2 + i * 6, sy + 5, 5, 2);
     }
 
     // The target cursor: a bobbing arrow over each fighter it covers.
@@ -1190,7 +1216,7 @@ export class BattleScene extends Phaser.Scene {
         g.fillStyle(0x2e2638, 1).fillRect(r.x, r.y, r.w, r.h - 1);
         g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 2);
       }
-      const surge = row.label === 'Surge';
+      const surge = row.label === 'Surge' || (row.label === 'Comfort' && b.calm === 0);
       text(r.x + 4, r.y + 2, row.label, !row.enabled ? UI.dimText : surge || on ? UI.accentText : UI.text);
     });
     const pages = Math.ceil(this.rows.length / VISIBLE_ROWS);

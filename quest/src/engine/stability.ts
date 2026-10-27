@@ -78,6 +78,8 @@ export function stabilityParts(flags: FlagReader, houses: StabilityHouses): Stab
     add(`yield.${y}`, S.yieldBroken, set(flags, `choice.${y}_${broken}`));
   }
   for (const b of ['grimvald', 'fox', 'dhanraj']) add(`spared.${b}`, S.bossSpared, set(flags, `choice.${b}_spared`));
+  // Al-5: Lady Rosalind persuaded over tea to sit for Aldermoor (Chapter 9's side quest).
+  add('rosalind_tea', S.rosalindTea, set(flags, 'side.tea.done'));
   return out;
 }
 

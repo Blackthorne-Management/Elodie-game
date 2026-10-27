@@ -274,7 +274,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
     shut: { lines: [nar('An iron strongbox among the jars, locked.')] },
     open: { lines: [nar('The Seth\'s strongbox, open and empty.')] },
   }),
-  simple('balance_lock', [nar('A brass balance lock on a door at the back of the store, three jar-weights beside it. It does not turn for you. Not yet.')]),
+  // The balance lock, the dark shrine and the shrine child: data/dialogue/jwaladeshQuests.ts (J-4, built Oct 27).
   simple('factor_launch', [nar('A launch with an Aldermoor violet pennant, tied at the store\'s steps. Its crew are ashore. A ledger-box in the stern, locked.')]),
   script('lane_jars', {
     start: { lines: [nar('Jars stacked against the sea wall, blocking the lane behind the carts. Nobody comes this way.')] },
@@ -359,12 +359,6 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
     nar('The contract board: "Escort a salt caravan. The Seth\'s enforcers took the last one." "Run the lamp relay: the runners\' hall."'),
     nar('And: "Clean the rooftop mirrors. Ask the engineer." Somebody has added: "She will not let you."'),
   ]),
-  simple('dark_shrine', [nar('A street shrine the size of a cupboard, its little lamp dark and its bowl dry.')]),
-  script('shrine_child_talk', {
-    start: { lines: [], next: [{ if: { flag: 'story.dhanraj_beaten' }, to: 'after' }, { to: 'dark' }] },
-    dark: { lines: [say('shrine_child', 'It went out. It never went out before.')] },
-    after: { lines: [say('shrine_child', 'The runners came past with oil. They said mine is next. I am waiting.')] },
-  }),
   simple('jw_milk_talk', [say('jw_milk', 'Namaste! Spiced milk, flatbread, lentil stew. No oil in the stew. Nobody can tell.', { translation: 'Hello!' })]),
   simple('jw_beads_talk', [say('jw_beads', 'Namaste. Brass lamp charms. The lamp is empty, but the charm still works.', { translation: 'Hello.' })]),
   simple('jw_swordsmith_talk', [say('jw_swordsmith', 'Dhanyavaad for asking. Talwars, scale, and whatever Kirinoura sends us.', { translation: 'Thank you' })]),

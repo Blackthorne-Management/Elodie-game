@@ -122,6 +122,25 @@ export interface GameContent {
    * pillars into the register; the Journal's Stability). Unknown names are left as written.
    */
   formatText?: (text: string, flags: FlagReader) => string;
+  /**
+   * Answers a `set` the moment a conversation applies it (DialogueRunner's onApply): the secret items' puzzles, driven by
+   * request flags (engine/secrets.ts), so the next line of the same conversation shows what changed.
+   */
+  react?: (flags: FlagStore) => void;
+  /**
+   * A step that has landed on a map (before its triggers): what it sounds like and anything it changed (Chapter 7, the
+   * nightingale floor: every board sings; engine/secrets.ts). Nothing for an ordinary step.
+   */
+  onStep?: (step: { mapId: string; era: 'present' | 'echo'; pos: { x: number; y: number } }, flags: FlagStore) => StepAnswer | undefined;
+}
+
+/** What a step changed (GameContent.onStep): a note to sound at the tile, and a line to toast. */
+export interface StepAnswer {
+  /** A pitch (1 low to 5 high), or 0 for a board that does not sing; drawn as a ripple of its own shape. */
+  note?: number;
+  toast?: string;
+  /** Flags changed: redraw the map's objects. */
+  sync?: boolean;
 }
 
 export function cardFlag(card: CardDef): string {

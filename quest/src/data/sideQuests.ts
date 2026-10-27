@@ -7,6 +7,7 @@ import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CONCOURSE, HALL, ROOMS } from './claim.ts';
 import { CAMP, CAVE, CONUCO, MOUNTAIN } from './war.ts';
 import { PLINTH, STONES, Z4 } from './seventhStone.ts';
+import { LATE_SIDE_QUESTS } from './sideQuestsLate.ts';
 
 const f = (flag: string): Condition => ({ flag });
 const INFLUENCE_ZETWAL = { pillar: 'influence', city: 'zetwal', amount: 1 } as const;
@@ -1171,7 +1172,7 @@ export const CLAIM_SIDE_QUESTS: readonly SideQuestDef[] = [
 ];
 
 /** Every side quest, Chapters 1 to 12. */
-export const SIDE_QUESTS: readonly SideQuestDef[] = [...BUILT_SIDE_QUESTS, ...WAR_SIDE_QUESTS, ...CLAIM_SIDE_QUESTS];
+export const SIDE_QUESTS: readonly SideQuestDef[] = [...BUILT_SIDE_QUESTS, ...LATE_SIDE_QUESTS, ...WAR_SIDE_QUESTS, ...CLAIM_SIDE_QUESTS];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */
 export const CHAPTER5_QUESTS_DONE: Condition = { all: [f('side.seats.stage1'), f('debate.seat_voices.settled'), f('side.deserters.done')] };

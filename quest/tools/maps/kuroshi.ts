@@ -10,7 +10,7 @@
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
 import { rotorLookCondition } from '../../src/engine/rotor.ts';
-import { CODE, FILEHOUSE, HALL, HALL_OPEN, LIBRARY, MARSH, MAZE, PIER, QUARTER, SCREENS, STACK_SHELVES } from '../../src/data/kuroshi.ts';
+import { CODE, FILEHOUSE, FLOOR_MAKER, HALL, HALL_OPEN, LIBRARY, MARSH, MAZE, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE, SCREENS, STACK_SHELVES } from '../../src/data/kuroshi.ts';
 
 const PAVE = 'あ';
 const KWALL = 'い';
@@ -50,6 +50,9 @@ function salkhi(name: string, x: number, y: number, facing: string): ObjSpec {
   return npc(name, x, y, facing, { if: 'story.kuroshi_arrived, !act7.complete' });
 }
 
+/** K-1 Definitely Not a Spy: a place still to be shown, while the quest is open (built Oct 27). */
+const K1_PLACE = (place: 'pier' | 'screen' | 'shoes'): string => `side.not_a_spy.accepted, !side.not_a_spy.${place}, !act7.complete`;
+
 /**
  * The Lantern Pier (outdoor): the landing, the Crown observer's launch tied beside it (until the Fox is beaten), the
  * harbour-master's hut, a tea stall, the puddle and the lantern pile (Haru's first sighting), the stair up to the
@@ -82,6 +85,8 @@ export function kuroshiPier(): MapSource {
     obj('pier_tea', PIER.teaStall.x, PIER.teaStall.y, { era: 'present', dialogue: 'pier_tea' }),
     npc('harbour_master', PIER.harbourMaster.x, PIER.harbourMaster.y, 'down'),
     salkhi('salkhi_pier', PIER.salkhi.x, PIER.salkhi.y, 'left'),
+    // K-1 Definitely Not a Spy (built Oct 27): Haru shows Yari how he hid behind the lantern pile (again until shown).
+    trigger('spy_pier', 12, PIER.sightRow, { dialogue: 'spy_pier', if: K1_PLACE('pier') }, 4, 1),
   ];
   return { id: 'kuroshi-pier', present: g, echo: g.clone(), objects };
 }
@@ -101,6 +106,7 @@ export function kuroshiQuarter(): MapSource {
   g.rect(19, 4, 2, 2, BRIDGE).rect(34, 4, 2, 2, BRIDGE).rect(26, 11, 2, 3, BRIDGE).rect(12, 20, 2, 2, BRIDGE).rect(32, 20, 2, 2, BRIDGE);
   // Lady Sayo's House (shut), the Hall's facade either side of its gate, the torii before the maze.
   g.rect(2, 1, 8, 1, KROOF).rect(2, 2, 8, 2, LWALL);
+  g.set(SAYO_DOOR.x, SAYO_DOOR.y, 'D');
   g.rect(14, 1, 4, 1, SCREENW).rect(22, 1, 4, 1, SCREENW);
   put(g, TORII, [[33, 1], [36, 1]]);
   // The Lantern Library and the tea house (its sliding screen on the front wall).
@@ -136,7 +142,11 @@ export function kuroshiQuarter(): MapSource {
     salkhi('salkhi_quarter', QUARTER.salkhi.x, QUARTER.salkhi.y, 'down'),
     obj('kq_board', QUARTER.board.x, QUARTER.board.y, { kind: 'sign', solid: true, era: 'present', dialogue: 'kq_board' }),
     obj('teahouse_screen', QUARTER.screen.x, QUARTER.screen.y, { solid: true, era: 'present', dialogue: 'teahouse_screen' }),
-    obj('sayo_house_door', QUARTER.sayoHouse.x, QUARTER.sayoHouse.y, { solid: true, era: 'present', dialogue: 'sayo_house_door' }),
+    // K-4 The Letter in the Floor (built Oct 27): Lady Sayo's door on the house's east side, opened by the old floor-maker
+    // at dawn; K-1's tea house strip (Haru in the gap by the screen again; again until shown).
+    { layer: 'doors', name: 'quarter_sayo', x: SAYO_DOOR.x, y: SAYO_DOOR.y, props: { target: 'sayo_out', map: 'kuroshi-sayo-house', exit: 'right', if: 'side.letter_floor.accepted', closed: 'sayo_house_shut' } },
+    npc('floor_maker', FLOOR_MAKER.x, FLOOR_MAKER.y, 'left', { if: 'story.quarter_dawn, !act7.complete' }),
+    trigger('spy_screen', 13, QUARTER.screenRow, { dialogue: 'spy_screen', if: K1_PLACE('screen') }, 7, 1),
   ];
   return { id: 'kuroshi-quarter', present: g, echo: g.clone(), objects };
 }
@@ -229,6 +239,8 @@ export function kuroshiHall(): MapSource {
     obj('kite_codes', 28, 5, { solid: true, era: 'present', dialogue: 'kite_codes' }),
     obj('kur_hall_order', HALL.order.x, HALL.order.y, { kind: 'notice', solid: true, era: 'present', dialogue: 'shelf.kur_hall_order' }),
     obj('kur_hall_records', 1, 14, { era: 'present', dialogue: 'shelf.kur_hall_records' }, 4, 1),
+    // K-1 (built Oct 27): the screen where his shoes showed under the hem (again until shown).
+    trigger('spy_shoes', 15, HALL.shoes.y, { dialogue: 'spy_shoes', if: K1_PLACE('shoes') }, 6, 1),
   ];
   return { id: 'kuroshi-hall', present: g, echo: g.clone(), objects, interior: true };
 }
@@ -407,4 +419,42 @@ export function kuroshiMarsh(): MapSource {
   return { id: 'kuroshi-marsh', present: g, echo: g.clone(), objects };
 }
 
-export const KUROSHI_SOURCES: readonly (() => MapSource)[] = [kuroshiPier, kuroshiQuarter, kuroshiLibrary, kuroshiHall, kuroshiFilehouse, kuroshiFogmaze, kuroshiMarsh];
+/**
+ * Lady Sayo's House (K-4, S-KUR, built Oct 27; interior, 20 x 14): the entry with its Echo zone, a screen wall, and the
+ * listening room: tatami round a floor of pale boards five by five, and beyond it a lacquer box on a low table. Every
+ * board sings (data/secrets.ts); fifty years ago Sayo writes at her desk and her man in grey waits by the entry. The floor
+ * itself is the memory's anchor object (the nail), and a present object reads it.
+ */
+export function kuroshiSayoHouse(): MapSource {
+  const { w: W, h: H } = SAYO_HOUSE;
+  const g = new Grid(W, H, LWALL);
+  g.rect(1, 1, W - 2, H - 2, LFLOOR);
+  g.rect(1, 1, W - 2, 1, KSHELF);
+  g.rect(3, 2, 14, 8, TATAMI);
+  const fl = SAYO_HOUSE.floor;
+  g.rect(fl.x, fl.y, 5, 5, LFLOOR);
+  g.set(SAYO_HOUSE.box.x, SAYO_HOUSE.box.y, WTABLE);
+  g.set(SAYO_HOUSE.desk.x, SAYO_HOUSE.desk.y, DESK);
+  g.rect(1, 10, 6, 1, SCREENW).rect(13, 10, 6, 1, SCREENW);
+  g.set(SAYO_HOUSE.door.x, SAYO_HOUSE.door.y, 'D');
+  const z = SAYO_HOUSE.zone;
+  const floorArea = [fl.x, fl.y, 5, 5] as const;
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'sayo_out', x: SAYO_HOUSE.door.x, y: SAYO_HOUSE.door.y, props: { target: 'quarter_sayo', map: 'kuroshi-quarter', exit: 'up' } },
+    { layer: 'spawns', name: 'sayo_house', x: SAYO_HOUSE.spawn.x, y: SAYO_HOUSE.spawn.y, props: { facing: 'up', era: 'present' } },
+    // The first time in (Haru with the party): the floor sings under him.
+    trigger('sayo_house_arrive', SAYO_HOUSE.spawn.x, SAYO_HOUSE.spawn.y, { dialogue: 'sayo_house_arrive', flag: 'story.sayo_house_seen', once: true, onEnter: true, if: 'party.haru' }),
+    obj('sayo_box', SAYO_HOUSE.box.x, SAYO_HOUSE.box.y, { solid: true, era: 'present', dialogue: 'sayo_box' }),
+    obj('sayo_floor_nailed', floorArea[0], floorArea[1], { walkable: true, era: 'present', if: NIGHTINGALE.anchor, dialogue: 'sayo_floor_nailed' }, floorArea[2], floorArea[3]),
+    // Fifty years ago: Sayo at her desk, her man in grey, the floor (the anchor: the nail).
+    obj('sayo_desk_echo', SAYO_HOUSE.desk.x, SAYO_HOUSE.desk.y, { solid: true, era: 'echo', dialogue: 'sayo_desk_echo' }),
+    obj('sayo_floor_echo', floorArea[0], floorArea[1], { walkable: true, era: 'echo', dialogue: 'sayo_nail' }, floorArea[2], floorArea[3]),
+    { layer: 'anchors', name: 'floor_nail_anchor', x: fl.x + 3, y: fl.y + 2, props: { object: 'sayo_floor_echo', flag: NIGHTINGALE.anchor } },
+    { layer: 'echo_zones', name: 'sayo_echo', x: z.x, y: z.y, w: z.w, h: z.h, props: { if: 'item.sun_locket, side.letter_floor.accepted', onEcho: 'sayo_house_echo', onReturn: 'sayo_house_echo_return' } },
+    npc('sayo_house', SAYO_HOUSE.sayo.x, SAYO_HOUSE.sayo.y, 'right', { era: 'echo' }),
+    npc('sayo_informant', SAYO_HOUSE.informant.x, SAYO_HOUSE.informant.y + 1, 'left', { era: 'echo' }),
+  ];
+  return { id: 'kuroshi-sayo-house', present: g, echo: g.clone(), objects, interior: true };
+}
+
+export const KUROSHI_SOURCES: readonly (() => MapSource)[] = [kuroshiPier, kuroshiQuarter, kuroshiLibrary, kuroshiHall, kuroshiFilehouse, kuroshiFogmaze, kuroshiMarsh, kuroshiSayoHouse];

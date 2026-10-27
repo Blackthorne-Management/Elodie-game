@@ -70,7 +70,26 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   pier_tea: { name: 'Tea stall' },
   kq_board: { name: 'Contract board' },
   teahouse_screen: { name: 'A tea house screen' },
-  sayo_house_door: { name: "Lady Sayo's House" },
+  // K-4 The Letter in the Floor (Oct 27): the house's door is a real door now (its label is in DOORS).
+  sayo_box: { name: 'A lacquer box' },
+  sayo_floor_nailed: { name: 'The singing floor' },
+  sayo_floor_echo: { name: 'The singing floor' },
+  sayo_desk_echo: { name: "Sayo's desk" },
+  // J-4 Oil for the Little Lamps (Oct 27).
+  echo_jar_0: { name: 'The ten-measure jar' },
+  echo_jar_1: { name: 'The seven-measure jar' },
+  echo_jar_2: { name: 'The three-measure jar' },
+  echo_reservoir: { name: "The lamp-maker's reservoir" },
+  lit_shrine: { name: "The child's shrine" },
+  // Al-4 and Al-5 (Oct 27).
+  tower_face: { name: 'The tower clock' },
+  agatha_vault: { name: "Dame Agatha's vault" },
+  tower_sill_now: { name: 'The sill' },
+  tower_winder: { name: 'The winding key' },
+  tower_face_echo: { name: 'The tower clock' },
+  tower_sill: { name: 'The sill' },
+  thomas_portrait: { name: 'A portrait' },
+  rosalind_tea_table: { name: 'The tea table' },
   kayla_desk: { name: "Kayla's desk" },
   clerk_desk_echo: { name: "The clerk's desk" },
   stacks_seal: { name: 'The sealed stacks' },
@@ -678,6 +697,11 @@ export const DOORS: Readonly<Record<string, string>> = {
   'aldermoor-close/close_postern': "The postern into the keep",
   'aldermoor-cathedral/cathedral_west': 'Out to the Market Cross',
   'aldermoor-cathedral/cathedral_vestry': 'The vestry: out to the close',
+  // Al-4 and Al-5 (Oct 27).
+  'aldermoor-keep/keep_clock': 'The clock tower',
+  'aldermoor-clocktower/tower_out': 'Down to the great hall',
+  'aldermoor-cross/cross_townhouse': "Lady Rosalind's house",
+  'aldermoor-townhouse/townhouse_out': 'Out to the Market Cross',
   // Agnipur (Chapter 8).
   'jwaladesh-harbor/harbor_bazaar': 'Up: the Lamp Bazaar',
   'jwaladesh-bazaar/bazaar_harbor': 'Down: the Harbor Chain',
@@ -706,6 +730,9 @@ export const DOORS: Readonly<Record<string, string>> = {
   'kuroshi-marsh/marsh_maze': 'South: the fog maze',
   'kuroshi-marsh/marsh_quarter': 'West: the marsh road home',
   'kuroshi-marsh/marsh_tower': 'The signal tower: the back door',
+  // K-4 (Oct 27).
+  'kuroshi-quarter/quarter_sayo': "Lady Sayo's House",
+  'kuroshi-sayo-house/sayo_out': 'Out to the quarter',
   // Eightgate (Chapter 5).
   'seat-gateyard/yard_concourse': 'West: the inner arch',
   'seat-gateyard/yard_fields': 'South: the road to the Crossroads Fields',

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 20,
+  "nextobjectid": 21,
   "layers": [
     {
       "id": 1,
@@ -635,6 +635,29 @@
               "value": "clue.buyers_mark, !ally.kuroshi"
             }
           ]
+        },
+        {
+          "id": 13,
+          "name": "spy_shoes",
+          "type": "trigger",
+          "x": 240,
+          "y": 128,
+          "width": 96,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "spy_shoes"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.not_a_spy.accepted, !side.not_a_spy.shoes, !act7.complete"
+            }
+          ]
         }
       ]
     },
@@ -649,7 +672,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 14,
           "name": "hall",
           "type": "spawn",
           "x": 272,
@@ -706,7 +729,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 14,
+          "id": 15,
           "name": "kaede_table",
           "type": "puzzle_object",
           "x": 272,
@@ -729,7 +752,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 16,
           "name": "haru_shoes",
           "type": "puzzle_object",
           "x": 336,
@@ -762,7 +785,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 17,
           "name": "observer_bowl",
           "type": "puzzle_object",
           "x": 96,
@@ -800,7 +823,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 18,
           "name": "kite_codes",
           "type": "puzzle_object",
           "x": 448,
@@ -828,7 +851,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "kur_hall_order",
           "type": "puzzle_object",
           "x": 528,
@@ -861,7 +884,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 20,
           "name": "kur_hall_records",
           "type": "puzzle_object",
           "x": 16,

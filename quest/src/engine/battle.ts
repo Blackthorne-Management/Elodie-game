@@ -69,6 +69,9 @@ import {
   STATUS,
   STATUS_IMMUNE,
   BURNING_BOSS_SHARE,
+  CALM_MAX,
+  COMFORT_CALM,
+  COMFORT_SP,
   SWAP_IN_DELAY,
   SURGE_COST,
   VOLLEY,
@@ -97,6 +100,7 @@ import {
   removeItem,
   stats,
   xpForLevel,
+  type BattleBoons,
   type ItemSpecial,
   type MemberDef,
   type PassiveEffect,
@@ -183,6 +187,15 @@ export interface SkillDef {
    * named and Marked, and the paper ones stop stepping in front of him for the rest of the fight (EnemyDef.disguise).
    */
   reveal?: boolean;
+  /**
+   * Stop the Clock (the Patient Hour, Chapter 9; SECRET-ITEMS.md 7): the initiative bar freezes, and every party fighter
+   * standing acts once more before any foe.
+   */
+  stopClock?: boolean;
+  /**
+   * Upgrades earned by a flag, not a level (Edmund's Tea Break after Al-1 Terribly Sorry): applied over the rank reached.
+   */
+  boosts?: readonly { flag: string; healShare?: number; power?: number; text?: string }[];
   /** How it is learned (omitted: known from the start). */
   learn?: { level?: number; lore?: { books: readonly string[]; count: number; where: string } };
   ranks?: readonly SkillRank[];
@@ -230,6 +243,12 @@ export interface EnemyMove {
    * away, and its `statuses` land on Gianna (Seize).
    */
   seize?: number;
+  /**
+   * A whisper aimed at Anissa (COMBAT 8, Calm; built Oct 27): Gianna steps in front, and Anissa's Calm falls by this much
+   * (never below the Unbroken Wick's floor). At 0 she goes quiet and Surge waits for Comfort. Its `statuses` land on
+   * Gianna, as with Seize (a move can do both).
+   */
+  calm?: number;
   /** This much more power for every party fighter Bound (Reinado de Cenizas). */
   powerPerBound?: number;
   /** Used once per battle. */
@@ -587,6 +606,8 @@ export type BattleEvent =
   | { kind: 'revive'; who: string; hp: number }
   | { kind: 'guard'; who: string }
   | { kind: 'spark'; value: number }
+  /** Anissa's Calm now (0 to CALM_MAX). */
+  | { kind: 'calm'; value: number }
   | { kind: 'surge' }
   | { kind: 'down'; who: string }
   /** At 0 HP in a fight that binds: cords, not a fall. */
@@ -609,6 +630,8 @@ export type Action =
   /** Trade places with a party member who is waiting (takes the turn). */
   | { kind: 'swap'; with: string }
   | { kind: 'surge' }
+  /** Gianna's word to Anissa (COMBAT 8): Calm comes back. */
+  | { kind: 'comfort' }
   /** A Bound fighter's only action. */
   | { kind: 'breakFree' };
 
@@ -627,6 +650,8 @@ export interface BattleOptions {
   volleys?: Volleys;
   /** HP shares the party opens with, by member (a Challenge after a Challenge: woundsFor; Chapter 12). */
   wounds?: Readonly<Record<string, number>>;
+  /** What the secret items carried bring (engine/rpg.ts battleBoons): the Unbroken Wick, the Nightingale Key. */
+  boons?: BattleBoons;
 }
 
 /** What a gold skill costs this fighter (0 for SP skills). */
@@ -676,6 +701,14 @@ export class Battle {
   spark = 0;
   /** A Surge is waiting for Gianna's next blow or spell. */
   surgeArmed = false;
+  /** Anissa's Calm (COMBAT 8): at 0 she goes quiet and Surge waits for Comfort. */
+  calm = CALM_MAX;
+  /** What a Surge costs (the Unbroken Wick makes it cheaper). */
+  readonly surgeCost: number;
+  /** The secret items' battle effects (BattleOptions.boons). */
+  readonly boons: BattleBoons;
+  /** Stop the Clock was used this action: the party goes again before any foe (applied as the action ends). */
+  private clockStopped = false;
   grudge: number;
   outcome: 'won' | 'lost' | null = null;
   /** Gold spent on skills this battle (settleBattle takes it from the save). */
@@ -724,6 +757,8 @@ export class Battle {
     this.enemyHp = diff.enemyHp;
     this.reserve = opts.reserve ?? {};
     this.volleys = opts.volleys ?? { count: 0, names: [] };
+    this.boons = opts.boons ?? {};
+    this.surgeCost = this.boons.surgeCost ?? SURGE_COST;
     this.items = items.map((i) => ({ ...i }));
     const seen = new Map<string, number>();
     // A duel: only the members it names fight (BattleDef.fighters).
@@ -999,7 +1034,38 @@ export class Battle {
 
   /** The current party member's commands that can be used now. */
   canSurge(): boolean {
-    return !!this.actor?.anissaBond && this.spark >= SURGE_COST && !this.surgeArmed;
+    return !!this.actor?.anissaBond && this.spark >= this.surgeCost && !this.surgeArmed && this.calm > 0;
+  }
+
+  /** Whether a Surge made now would be a Dawn Surge (the Unbroken Wick: at `dawnAt` Spark or more). */
+  get dawnReady(): boolean {
+    return this.boons.dawnAt !== undefined && this.spark >= this.boons.dawnAt;
+  }
+
+  /** What Comfort costs the fighter bonded to Anissa (COMFORT_SP, with her discount). */
+  comfortCost(c: Combatant): number {
+    return skillCost({ sp: COMFORT_SP } as SkillDef, c);
+  }
+
+  /** Comfort: Gianna's word to Anissa, while her Calm is not full (Hush takes words, as it takes skills). */
+  canComfort(): boolean {
+    const me = this.actor;
+    if (!me?.anissaBond || me.bound || this.calm >= CALM_MAX) return false;
+    if (me.statuses.some((st) => STATUS[st.id].noSkills)) return false;
+    return me.sp >= this.comfortCost(me);
+  }
+
+  /** Whether each foe's next move is shown (the Nightingale Key). */
+  get foresight(): boolean {
+    return !!this.boons.foresight;
+  }
+
+  /** The move a foe means to use on its next turn (Kagemimi; the Nightingale Key shows it every round). */
+  nextMove(c: Combatant): string | undefined {
+    if (c.side !== 'enemy' || c.down) return undefined;
+    const turn = c.phaseTurns + 1;
+    const ready = (m: EnemyMove) => !!m.every && turn % m.every === 0 && !(m.once && this.usedMoves.has(`${c.key}:${m.name}`));
+    return (c.moves.find(ready) ?? c.moves[0])?.name;
   }
 
   /** A party member acts; then the battle runs on to the next party turn (enemies act in between). */
@@ -1021,16 +1087,27 @@ export class Battle {
     }
     if (action.kind === 'surge') {
       if (!this.canSurge()) return [];
-      this.spark -= SURGE_COST;
+      const dawn = this.dawnReady;
+      this.spark -= dawn ? this.boons.dawnAt! : this.surgeCost;
       this.surgeArmed = true;
       this.surgedOnce = true;
       this.surgedInPhase = true;
-      return [{ kind: 'surge' }, { kind: 'spark', value: this.spark }, { kind: 'text', text: `Anissa's light gathers around ${me.name}.` }, ...this.phaseCheck()];
+      const events: BattleEvent[] = [{ kind: 'surge' }, { kind: 'spark', value: this.spark }];
+      if (dawn) events.push({ kind: 'text', text: 'Dawn Surge! The wick burns white, and Anissa\'s light fills the field.' }, ...this.dawn());
+      else events.push({ kind: 'text', text: `Anissa's light gathers around ${me.name}.` });
+      return [...events, ...this.phaseCheck()];
     }
     const events: BattleEvent[] = [];
     let weight: number = ACTION_WEIGHT.attack;
     const fellsBefore = me.fells;
-    if (action.kind === 'attack') {
+    if (action.kind === 'comfort') {
+      if (!this.canComfort()) return [];
+      me.sp -= this.comfortCost(me);
+      this.calm = Math.min(CALM_MAX, this.calm + COMFORT_CALM);
+      weight = ACTION_WEIGHT.skill;
+      events.push({ kind: 'use', who: me.key, name: 'Comfort', targets: [] });
+      events.push({ kind: 'text', text: `${me.name} kneels and takes Anissa's hands. "I'm here." Anissa breathes.` }, { kind: 'calm', value: this.calm });
+    } else if (action.kind === 'attack') {
       const aimed = this.find(action.target);
       if (!aimed || aimed.down || aimed.side !== 'enemy') return [];
       const t = this.shield(aimed, events);
@@ -1087,7 +1164,7 @@ export class Battle {
       const before = this.spark;
       this.spark = Math.min(SPARK_MAX, this.spark + (action.kind === 'guard' ? SPARK_ON_GUARD : SPARK_ON_ACT));
       if (this.spark !== before) events.push({ kind: 'spark', value: this.spark });
-      if (this.spark >= SURGE_COST) events.push(...this.tip('spark', this.def.tips?.spark));
+      if (this.spark >= this.surgeCost && this.calm > 0) events.push(...this.tip('spark', this.def.tips?.spark));
     }
     // Rakt Ki Pyaas (Vikram; PassiveEffect `turnOnFell`): a foe felled by this action, and his next turn comes at once.
     if (me.fells > fellsBefore && action.kind !== 'swap' && me.passives.some((p) => p.kind === 'turnOnFell') && this.enemies.some((e) => !e.down)) {
@@ -1095,6 +1172,7 @@ export class Battle {
       events.push({ kind: 'text', text: `${me.name} does not stop to breathe: he goes again.` });
     }
     me.next += turnDelay(spdOf(me), weight);
+    if (this.clockStopped) events.push(...this.stopTheClock(me));
     events.push(...this.endTurn(me));
     events.push(...this.phaseCheck());
     // The floor held: the boss ends it before anyone else moves.
@@ -1226,9 +1304,10 @@ export class Battle {
     if (move.name === this.def.finale?.finisher && c.enemyId === this.def.finale.boss) this.finisherAt = c.turns;
     // Support: a ward on an ally foe (when that ally is still in the fight).
     const ally = move.ally ? this.enemies.find((e) => e.enemyId === move.ally && !e.down) : undefined;
-    // Seize: Anissa cannot be hit, so Gianna steps in (when she is standing).
-    const gianna = move.seize !== undefined ? targets.find((t) => t.anissaBond) : undefined;
-    if ((move.ally && !ally) || (move.seize !== undefined && !gianna)) move = c.moves[0] ?? { name: 'Attack', power: 100 };
+    // Seize and a whisper at Anissa (Calm): she cannot be hit, so Gianna steps in (when she is standing).
+    const atAnissa = move.seize !== undefined || move.calm !== undefined;
+    const gianna = atAnissa ? targets.find((t) => t.anissaBond) : undefined;
+    if ((move.ally && !ally) || (atAnissa && !gianna)) move = c.moves[0] ?? { name: 'Attack', power: 100 };
     // Hire Blades: a blade walks in, paid by the boss (while fewer than HIRE_CAP hired ones stand).
     if (move.hire) {
       const blade = this.reserve[move.hire];
@@ -1257,13 +1336,16 @@ export class Battle {
     } else if (ally) {
       events.push({ kind: 'use', who: c.key, name: move.name, targets: [ally.key] });
       for (const st of move.statuses ?? []) events.push(...this.giveStatus(ally, st, move.turns));
-    } else if (gianna && move.seize !== undefined) {
+    } else if (gianna && (move.seize !== undefined || move.calm !== undefined)) {
       events.push({ kind: 'use', who: c.key, name: move.name, targets: [gianna.key] });
-      events.push({ kind: 'text', text: `${c.name} reaches for Anissa. ${gianna.name} steps between them.` });
-      const torn = Math.min(this.spark, move.seize);
-      this.spark -= torn;
-      events.push({ kind: 'spark', value: this.spark });
-      if (torn > 0) events.push({ kind: 'text', text: `${torn} Spark is torn away.` });
+      events.push({ kind: 'text', text: `${c.name} ${move.seize !== undefined ? 'reaches' : 'whispers'} for Anissa. ${gianna.name} steps between them.` });
+      if (move.seize !== undefined) {
+        const torn = Math.min(this.spark, move.seize);
+        this.spark -= torn;
+        events.push({ kind: 'spark', value: this.spark });
+        if (torn > 0) events.push({ kind: 'text', text: `${torn} Spark is torn away.` });
+      }
+      if (move.calm !== undefined) events.push(...this.shake(move.calm));
       if (move.power > 0) events.push(...this.strike(c, gianna, move));
       for (const st of move.statuses ?? []) if (!gianna.down) events.push(...this.giveStatus(gianna, st, move.turns));
     } else if (move.area) {
@@ -1550,7 +1632,55 @@ export class Battle {
     }
     if (surge) this.surgeArmed = false;
     if (skill.reveal) for (const t of targets) if (t.side === 'enemy') events.push(...this.revealFrom(me, t));
+    if (skill.stopClock) {
+      this.clockStopped = true;
+      events.push({ kind: 'text', text: `${me.name} presses the watch's crown. The hands stop. Everything stops, but you.` });
+    }
     return events;
+  }
+
+  /** A whisper at Anissa: her Calm falls (never below the Unbroken Wick's floor); at 0 she goes quiet. */
+  private shake(by: number): BattleEvent[] {
+    const floor = this.boons.calmFloor ?? 0;
+    const before = this.calm;
+    this.calm = Math.max(Math.min(floor, before), before - by);
+    const events: BattleEvent[] = [{ kind: 'calm', value: this.calm }];
+    if (this.calm < before && this.calm === 0) events.push({ kind: 'text', text: 'Anissa goes very quiet behind Gianna. Her light will not come until she is comforted.' });
+    else if (this.calm < before) events.push({ kind: 'text', text: 'Anissa flinches. Her light wavers.' });
+    else if (floor > 0) events.push({ kind: 'text', text: 'The Unbroken Wick burns steady in Anissa\'s hands. She does not flinch.' });
+    return events;
+  }
+
+  /** A Dawn Surge (the Unbroken Wick): every fighter standing heals a share of their HP, and every bad status goes. */
+  private dawn(): BattleEvent[] {
+    const events: BattleEvent[] = [];
+    const share = this.boons.dawnHeal ?? 0;
+    for (const f of this.fighters.filter((x) => !x.down)) {
+      const hp = Math.min(f.maxHp - f.hp, Math.round(f.maxHp * share));
+      if (hp > 0) {
+        f.hp += hp;
+        events.push({ kind: 'heal', to: f.key, hp, sp: 0, source: 'Dawn Surge' });
+      }
+      for (const st of f.statuses.filter((x) => STATUS[x.id].bad)) events.push({ kind: 'status', to: f.key, status: st.id, on: false });
+      f.statuses = f.statuses.filter((x) => !STATUS[x.id].bad);
+    }
+    return events;
+  }
+
+  /**
+   * Stop the Clock (the Patient Hour): every party fighter standing, the user last, has a turn before the first foe's.
+   */
+  private stopTheClock(me: Combatant): BattleEvent[] {
+    this.clockStopped = false;
+    const foes = this.enemies.filter((e) => !e.down && e.active);
+    if (foes.length === 0) return [];
+    const first = Math.min(...foes.map((e) => e.next));
+    const party = [...this.fighters.filter((f) => !f.down && f !== me), ...(me.down ? [] : [me])];
+    party.forEach((f, i) => {
+      f.next = Math.min(f.next, first - (party.length - i));
+    });
+    if (!me.down) me.next = first - 1;
+    return [{ kind: 'text', text: 'The clock waits. The party moves first.' }];
   }
 
   /** Give (or renew) a status. */

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 30,
+  "nextobjectid": 32,
   "layers": [
     {
       "id": 1,
@@ -569,6 +569,62 @@
               "value": "salkhi_heath"
             }
           ]
+        },
+        {
+          "id": 11,
+          "name": "letter_bandit",
+          "type": "npc",
+          "x": 480,
+          "y": 160,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.sorry.accepted, !story.recital_begun|story.hushed_beaten, !act9.complete, !side.sorry.bandit"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "letter_bandit"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "letter_goose",
+          "type": "npc",
+          "x": 192,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.sorry.accepted, !story.recital_begun|story.hushed_beaten, !act9.complete, !side.sorry.goose"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "letter_goose"
+            }
+          ]
         }
       ]
     },
@@ -583,7 +639,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 11,
+          "id": 13,
           "name": "heath_cross",
           "type": "door",
           "x": 720,
@@ -623,7 +679,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 12,
+          "id": 14,
           "name": "heath_arrive",
           "type": "trigger",
           "x": 80,
@@ -661,7 +717,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 15,
           "name": "moor_gate",
           "type": "trigger",
           "x": 592,
@@ -684,7 +740,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 16,
           "name": "bog_chapel",
           "type": "trigger",
           "x": 432,
@@ -707,7 +763,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 17,
           "name": "price_dawn",
           "type": "trigger",
           "x": 80,
@@ -745,7 +801,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 18,
           "name": "price_again",
           "type": "trigger",
           "x": 96,
@@ -768,7 +824,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 19,
           "name": "ald_stair_end",
           "type": "trigger",
           "x": 64,
@@ -803,7 +859,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 18,
+          "id": 20,
           "name": "mere_stair",
           "type": "spawn",
           "x": 80,
@@ -860,7 +916,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 19,
+          "id": 21,
           "name": "al_trader_ship",
           "type": "puzzle_object",
           "x": 16,
@@ -893,7 +949,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 22,
           "name": "notice_post",
           "type": "puzzle_object",
           "x": 128,
@@ -926,7 +982,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 23,
           "name": "heath_milestone",
           "type": "puzzle_object",
           "x": 384,
@@ -959,7 +1015,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 24,
           "name": "barn_thumb",
           "type": "puzzle_object",
           "x": 304,
@@ -992,7 +1048,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 25,
           "name": "hand_press",
           "type": "puzzle_object",
           "x": 272,
@@ -1025,7 +1081,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 26,
           "name": "drying_sheets",
           "type": "puzzle_object",
           "x": 336,
@@ -1058,7 +1114,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 27,
           "name": "chapel_lantern",
           "type": "puzzle_object",
           "x": 432,
@@ -1108,7 +1164,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 26,
+          "id": 28,
           "name": "heath_nw",
           "type": "encounter_zone",
           "x": 80,
@@ -1131,7 +1187,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 29,
           "name": "heath_ne",
           "type": "encounter_zone",
           "x": 384,
@@ -1154,7 +1210,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 30,
           "name": "heath_sw",
           "type": "encounter_zone",
           "x": 112,
@@ -1177,7 +1233,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 31,
           "name": "heath_se",
           "type": "encounter_zone",
           "x": 512,

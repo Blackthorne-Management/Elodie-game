@@ -3,6 +3,7 @@
 // and the scenes (data/dialogue/jwaladesh.ts) read, in one place so the staging and the maps never disagree.
 
 import type { Condition } from '../engine/conditions.ts';
+import type { MeasuresDef } from '../engine/secrets.ts';
 
 type P = { readonly x: number; readonly y: number };
 const at = (x: number, y: number): P => ({ x, y });
@@ -171,6 +172,44 @@ export const COURT = {
   carter: at(3, 24),
   foxKneel: at(17, 22),
   craneStep: at(19, 4),
+} as const;
+
+// ---- Built Oct 27 (the owner, Oct 27: the side quests once after the release): J-1 and J-4 -------------------------------
+
+/**
+ * J-4 Oil for the Little Lamps (S-JWA): the oil store's floor fifty years ago (the Echo zone, x, y, w, h), the lamp-maker
+ * at his jars, the three jars (10, 7 and 3 measures) and the reservoir that takes one pour and seals. Now the store's
+ * back door is the balance lock (HARBOR.balanceLock); the shrine child's dark shrine is on the spice row (BAZAAR.shrine).
+ */
+export const OIL_STORE = {
+  zone: { x: 26, y: 7, w: 3, h: 1 },
+  lampMaker: at(27, 5),
+  jars: [at(29, 5), at(30, 5), at(31, 5)],
+  reservoir: at(25, 5),
+  /** Where the roll call is answered: the store's doorway. */
+  door: at(27, 8),
+} as const;
+
+/** The measures (SECRET-ITEMS.md 4): pour 10, 7 and 3 until the 7 holds five, then the 7 into the reservoir. */
+export const WICK_MEASURES: MeasuresDef = { id: 'wick', caps: [10, 7, 3], start: [10, 0, 0], target: 5, anchor: 'anchor.reservoir_sealed' };
+/** The eight pours that leave five in the 7 jar (jar indices), then the 7 into the reservoir. */
+export const WICK_POURS: readonly (readonly [number, number | 'r'])[] = [
+  [0, 1],
+  [1, 2],
+  [2, 0],
+  [1, 2],
+  [2, 0],
+  [1, 2],
+  [0, 1],
+  [1, 2],
+  [1, 'r'],
+];
+
+/** J-1 Win Every Argument: the three who out-argued Vikram while he was out of breath, at dawn. */
+export const ARGUERS = {
+  spice: at(26, 17),
+  dyer: at(6, 24),
+  wrestler: at(27, 3),
 } as const;
 
 export const FLATS = {

@@ -397,6 +397,9 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "The floor sings. The message is a song." / "The song has a quiet step in it. This floor has no quiet
   board yet." / "Plan the path here first, then nail the board where the rest falls, in the memory."
 - **Difficulty:** 9.
+- **Built (Oct 27; `SECRET-ITEMS.md` 8's Built note):** the floor's tiles in Lady Sayo's House; every step sounds and
+  ripples (`GameContent.onStep`); the last nine steps are kept and open the box when they are the tune. Hints (Claude's call): the quest's steps and the lines in the room carry the first two; Anissa's timed hints follow the story's objectives only, so the third (the answer) is not given for a side quest's puzzle, as for every side quest built before.
+  Cheat file `kuroshi_floor`.
 
 ## Agnipur (Jwaladesh)
 
@@ -438,6 +441,8 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "The weight is a number. Someone in the memory says it." / "Five came home. Can you make exactly five with
   a 10, a 7 and a 3?" / "10 to 7, 7 to 3, 3 to 10, 7 to 3, 3 to 10, 7 to 3, 10 to 7, 7 to 3. The 7 holds five."
 - **Difficulty:** 5.
+- **Built (Oct 27; `SECRET-ITEMS.md` 4's Built note):** the pours are a conversation with the lamp-maker in the oil
+  store's memory (`measures.do`, engine/secrets.ts). Hints (Claude's call): the quest's steps and the lines in the room carry the first two; Anissa's timed hints follow the story's objectives only, so the third (the answer) is not given for a side quest's puzzle, as for every side quest built before. Cheat file `jwaladesh_wick`.
 
 ## Kingsmere (Aldermoor)
 
@@ -482,3 +487,6 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   spring lets the clock run on for you." / "Twelve turns of twelve, rewind, five more of twelve, then wedge the quill
   on the next tick."
 - **Difficulty:** 8.
+- **Built (Oct 27; `SECRET-ITEMS.md` 7's Built note):** turn-based seconds at the tower's works (`clock.do`,
+  engine/secrets.ts); the watchman's "always eleven ten when I come up" is the reset's clue. Hints (Claude's call): the quest's steps and the lines in the room carry the first two; Anissa's timed hints follow the story's objectives only, so the third (the answer) is not given for a side quest's puzzle, as for every side quest built before. Cheat file
+  `aldermoor_clock`.

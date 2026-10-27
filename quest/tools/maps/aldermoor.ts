@@ -10,7 +10,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
-import { ARCHIVE_DONE_TEXT, ARCHIVE_NOT_DONE_TEXT, CATHEDRAL, CLOSE, CROSS, EVE_TEXT, HEATH, KEEP, ROLLS } from '../../src/data/aldermoor.ts';
+import { ARCHIVE_DONE_TEXT, ARCHIVE_NOT_DONE_TEXT, CATHEDRAL, CLOCKMAKER_DAWN, CLOCK_TOWER, CLOSE, CROSS, EVE_TEXT, HEATH, KEEP, LETTERS, LETTERS_OUT_TEXT, ROLLS, TOWNHOUSE, TOWNHOUSE_DOOR } from '../../src/data/aldermoor.ts';
 
 const FLAG = 'א';
 const WALL = 'ב';
@@ -39,6 +39,10 @@ const TRIAL = 'story.assize_opened, !story.hushed_beaten';
 const DAY = '!story.recital_begun';
 /** The keep by night (the Sealbearers' lamps): the postern open, the archive not yet entered. */
 const NIGHT = 'story.postern_open, !story.keep_archive_entered';
+/** Al-1 Terribly Sorry (built Oct 27): one of the five Edmund has hit, standing where they take his letter, until they have it. */
+function hit(who: keyof typeof LETTERS, facing: string): ObjSpec {
+  return npc(`letter_${who}`, LETTERS[who].x, LETTERS[who].y, facing, { if: `${LETTERS_OUT_TEXT}, !side.sorry.${who}` });
+}
 
 function put(g: Grid, ch: string, at: readonly (readonly [number, number])[]): void {
   for (const [x, y] of at) g.set(x, y, ch);
@@ -114,6 +118,8 @@ export function aldermoorHeath(): MapSource {
     npc('moor_sealbearer', HEATH.gateSealbearer.x, HEATH.gateSealbearer.y, 'down'),
     ...HEATH.escorts.map((p, i) => npc(`escort_${'ab'[i]}`, p.x, p.y, i === 0 ? 'down' : 'up', { npc: 'escort_constable', if: 'story.escort_met, !story.hushed_beaten' })),
         salkhi('salkhi_heath', HEATH.salkhi.x, HEATH.salkhi.y, 'right'),
+    hit('bandit', 'down'),
+    hit('goose', 'down'),
     // The heather and the bog off the road (the road, the landing, the barn's yard, the causeway and the chapel are safe).
     { layer: 'encounters', name: 'heath_nw', x: 5, y: 1, w: 10, h: 10, props: { table: 'heath', if: 'story.aldermoor_arrived, !story.hushed_beaten' } },
     { layer: 'encounters', name: 'heath_ne', x: 24, y: 1, w: 17, h: 10, props: { table: 'heath', if: 'story.aldermoor_arrived, !story.hushed_beaten' } },
@@ -143,6 +149,7 @@ export function aldermoorCross(): MapSource {
   g.set(CROSS.keep.x, CROSS.keep.y, 'D');
   g.set(CROSS.closeGate.x, CROSS.closeGate.y, 'D');
   g.set(CROSS.rolls.x, CROSS.rolls.y, 'D');
+  g.set(TOWNHOUSE_DOOR.x, TOWNHOUSE_DOOR.y, 'D');
   // The stalls behind the vendors on the west side.
   put(g, STALL, [[CROSS.pieSeller.x - 1, CROSS.pieSeller.y], [CROSS.jeweller.x - 1, CROSS.jeweller.y], [CROSS.outfitter.x - 1, CROSS.outfitter.y]]);
   const e = g.clone();
@@ -172,6 +179,12 @@ export function aldermoorCross(): MapSource {
     npc('debate_exile', CROSS.exile.x, CROSS.exile.y, 'left'),
     ...CROSS.constables.map((p, i) => npc(`cross_constable_${'ab'[i]}`, p.x, p.y, 'down', { npc: 'cross_constable' })),
     salkhi('salkhi_cross', CROSS.salkhi.x, CROSS.salkhi.y, 'left'),
+    // The side quests built Oct 27: Lady Rosalind's house (Al-5, open at the last dawn), two of Edmund's five (Al-1), and the
+    // clockmaker by the keep's gate at the last dawn (Al-4).
+    { layer: 'doors', name: 'cross_townhouse', x: TOWNHOUSE_DOOR.x, y: TOWNHOUSE_DOOR.y, props: { target: 'townhouse_out', map: 'aldermoor-townhouse', exit: 'down', if: 'story.hushed_beaten', closed: 'townhouse_shut' } },
+    hit('sergeant', 'down'),
+    hit('constable', 'down'),
+    npc('clockmaker_dawn', CLOCKMAKER_DAWN.x, CLOCKMAKER_DAWN.y, 'down', { if: 'story.hushed_beaten, !act9.complete' }),
   ];
   return { id: 'aldermoor-cross', present: g, echo: e, objects };
 }
@@ -217,6 +230,7 @@ export function aldermoorKeep(): MapSource {
   // The archive's door, the postern and the passage to the yard: floor under their objects.
   g.set(KEEP.archiveDoor.x, KEEP.archiveDoor.y, ARCH);
   g.set(KEEP.postern.x, KEEP.postern.y, 'D');
+  g.set(KEEP.clockDoor.x, KEEP.clockDoor.y, 'D');
   g.rect(KEEP.passage.x, KEEP.passage.y, 2, 1, HALL);
   g.set(KEEP.courtDoor.x, KEEP.courtDoor.y, HALL);
   // The courtroom: the bench, the dock's rail, the gallery's pews.
@@ -278,7 +292,9 @@ export function aldermoorKeep(): MapSource {
     // The archive's iron door (sealed by day, by night Edmund breaks the family's seal), the postern, the courtroom doors.
     obj('archive_door', KEEP.archiveDoor.x, KEEP.archiveDoor.y, { kind: 'archive_door', solid: true, era: 'present', if: '!story.keep_archive_entered', dialogue: 'archive_door' }),
     obj('court_doors', KEEP.courtDoor.x, KEEP.courtDoor.y, { kind: 'court_doors', solid: true, era: 'present', if: '!story.caught', dialogue: 'court_doors' }),
-    obj('clock_door', KEEP.clockDoor.x, KEEP.clockDoor.y, { kind: 'door_closed', solid: true, era: 'present', dialogue: 'clock_door' }),
+    // The clock tower (Al-4, built Oct 27): its door opens once the clockmaker has asked.
+    { layer: 'doors', name: 'keep_clock', x: KEEP.clockDoor.x, y: KEEP.clockDoor.y, props: { target: 'tower_out', map: 'aldermoor-clocktower', exit: 'down', if: 'side.patient_hour.accepted', closed: 'clock_door' } },
+    hit('footman', 'down'),
     obj('almoner_office', KEEP.officeDoor.x, KEEP.officeDoor.y, { kind: 'door_closed', solid: true, era: 'present', dialogue: 'almoner_office' }),
     obj('post_office', KEEP.postOffice.x, KEEP.postOffice.y, { kind: 'door_closed', solid: true, era: 'present', dialogue: 'post_office' }),
     obj('ald_keep_books', 12, 10, { kind: 'al_shelf', solid: true, dialogue: 'shelf.ald_keep_books', era: 'present' }, 2, 1),
@@ -372,5 +388,57 @@ export function aldermoorCathedral(): MapSource {
   return { id: 'aldermoor-cathedral', present: g, echo: g.clone(), objects, interior: true };
 }
 
-export const ALDERMOOR_SOURCES: readonly (() => MapSource)[] = [aldermoorHeath, aldermoorCross, aldermoorRolls, aldermoorKeep, aldermoorClose, aldermoorCathedral];
+/**
+ * The clock tower (Al-4, S-ALM, built Oct 27; its own small map behind the keep's clock door, as the close is): the stair
+ * up from the hall, the great clock's face on the north wall with Agatha's little iron vault beside it, the winding key
+ * below the face, the sill where Thomas left a spare quill fifty years ago, and the Echo zone on the boards.
+ */
+export function aldermoorClocktower(): MapSource {
+  const { w: W, h: H } = CLOCK_TOWER;
+  const g = new Grid(W, H, WALL);
+  g.rect(1, 1, W - 2, H - 2, HALL);
+  const f = CLOCK_TOWER.face;
+  g.rect(f.x, f.y, 2, 1, SHELF);
+  g.set(CLOCK_TOWER.vault.x, CLOCK_TOWER.vault.y, SHELF);
+  g.set(CLOCK_TOWER.winder.x, CLOCK_TOWER.winder.y, SHELF);
+  g.set(CLOCK_TOWER.sill.x, CLOCK_TOWER.sill.y, SHELF);
+  g.set(CLOCK_TOWER.door.x, CLOCK_TOWER.door.y, 'D');
+  const z = CLOCK_TOWER.zone;
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'tower_out', x: CLOCK_TOWER.door.x, y: CLOCK_TOWER.door.y, props: { target: 'keep_clock', map: 'aldermoor-keep', exit: 'up' } },
+    { layer: 'spawns', name: 'clocktower', x: CLOCK_TOWER.spawn.x, y: CLOCK_TOWER.spawn.y, props: { facing: 'up', era: 'present' } },
+    obj('tower_face', f.x, f.y, { solid: true, era: 'present', dialogue: 'tower_face' }, 2, 1),
+    obj('agatha_vault', CLOCK_TOWER.vault.x, CLOCK_TOWER.vault.y, { solid: true, era: 'present', dialogue: 'tower_face' }),
+    obj('tower_sill_now', CLOCK_TOWER.sill.x, CLOCK_TOWER.sill.y, { solid: true, era: 'present', dialogue: 'tower_sill_now' }),
+    // Fifty years ago: the works and the key, and Thomas's spare quill on the sill.
+    obj('tower_winder', CLOCK_TOWER.winder.x, CLOCK_TOWER.winder.y, { solid: true, era: 'echo', dialogue: 'tower_winder' }),
+    obj('tower_face_echo', f.x, f.y, { solid: true, era: 'echo', dialogue: 'tower_winder' }, 2, 1),
+    obj('tower_sill', CLOCK_TOWER.sill.x, CLOCK_TOWER.sill.y, { solid: true, era: 'echo', dialogue: 'tower_sill' }),
+    { layer: 'echo_zones', name: 'tower_echo', x: z.x, y: z.y, w: z.w, h: z.h, props: { if: 'item.sun_locket, side.patient_hour.accepted', onEcho: 'tower_echo', onReturn: 'tower_echo_return' } },
+  ];
+  return { id: 'aldermoor-clocktower', present: g, echo: g.clone(), objects, interior: true };
+}
+
+/**
+ * Rosalind's Townhouse (Al-5, built Oct 27; interior, 18 x 12): a narrow grey house on the square's north side; the
+ * parlour with Lady Rosalind at her tea table, Thomas Stillwater's portrait over the hearth, the door to the square.
+ */
+export function aldermoorTownhouse(): MapSource {
+  const { w: W, h: H } = TOWNHOUSE;
+  const g = new Grid(W, H, WALL);
+  g.rect(1, 1, W - 2, H - 2, CARPET);
+  g.rect(1, 1, W - 2, 1, SHELF);
+  g.rect(TOWNHOUSE.table.x, TOWNHOUSE.table.y, 2, 1, STALL);
+  g.set(TOWNHOUSE.door.x, TOWNHOUSE.door.y, 'D');
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'townhouse_out', x: TOWNHOUSE.door.x, y: TOWNHOUSE.door.y, props: { target: 'cross_townhouse', map: 'aldermoor-cross', exit: 'up' } },
+    { layer: 'spawns', name: 'townhouse', x: TOWNHOUSE.spawn.x, y: TOWNHOUSE.spawn.y, props: { facing: 'up', era: 'present' } },
+    obj('thomas_portrait', TOWNHOUSE.portrait.x, TOWNHOUSE.portrait.y, { solid: true, era: 'present', dialogue: 'thomas_portrait' }),
+    obj('rosalind_tea_table', TOWNHOUSE.table.x, TOWNHOUSE.table.y, { solid: true, era: 'present', dialogue: 'rosalind_tea_table' }, 2, 1),
+    npc('rosalind_home', TOWNHOUSE.rosalind.x, TOWNHOUSE.rosalind.y, 'down', { if: 'story.hushed_beaten, !act9.complete' }),
+  ];
+  return { id: 'aldermoor-townhouse', present: g, echo: g.clone(), objects, interior: true };
+}
+
+export const ALDERMOOR_SOURCES: readonly (() => MapSource)[] = [aldermoorHeath, aldermoorCross, aldermoorRolls, aldermoorKeep, aldermoorClose, aldermoorCathedral, aldermoorClocktower, aldermoorTownhouse];
 

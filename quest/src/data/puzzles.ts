@@ -383,6 +383,63 @@ export const PUZZLES: readonly PuzzleDef[] = [
     flags: { ...KIRINOURA_NIGHT, 'clue.lantern_code': true, 'story.maze_walked': true, 'story.marsh_reached': true, 'side.lanterns.accepted': true },
     goal: { flag: 'story.boats_home' },
   },
+  // K-4's secret (S-KUR, built Oct 27): the informant's tune on Sayo's floor fifty years ago, one board nailed there where
+  // the rest must fall now, and the tune walked on the relaid floor. Without the nail no board is silent; a wrong nail
+  // leaves the rest where no walk can reach it.
+  {
+    id: 'kuroshi_floor',
+    title: 'The singing floor: the tune in the memory, the nail, the walk now (secret item; PUZZLES.md S-KUR)',
+    map: 'kuroshi-sayo-house',
+    spawn: 'sayo_house',
+    flags: {
+      ...KIRINOURA_NIGHT,
+      'clue.lantern_code': true,
+      'story.fox_beaten': true,
+      'story.quarter_dawn': true,
+      'clue.buyers_mark': true,
+      'ally.kuroshi': true,
+      'side.letter_floor.accepted': true,
+      'story.sayo_house_seen': true,
+    },
+    goal: { flag: 'story.sayo_box_open' },
+  },
+  // J-4's secret (S-JWA, built Oct 27): the roll call in the memory (five came home), then the pours: 10 into 7, 7 into 3,
+  // 3 into 10, three times round, until the 7 holds five; the 7 into the reservoir, which seals (the anchor).
+  {
+    id: 'jwaladesh_wick',
+    title: 'The little lamps\' measure: five, poured exactly between jars of 10, 7 and 3 (secret item; PUZZLES.md S-JWA)',
+    map: 'jwaladesh-harbor',
+    spawn: 'oil_store',
+    flags: {
+      ...AGNIPUR_NIGHT,
+      'story.tower_open': true,
+      'anchor.chain_lamp': true,
+      'anchor.tower_mirror': true,
+      'story.beam_at_temple': true,
+      'story.flame_seen': true,
+      'party.vikram': true,
+      'story.dhanraj_beaten': true,
+      'side.little_lamps.accepted': true,
+    },
+    goal: { flag: 'anchor.reservoir_sealed' },
+  },
+  // Al-4's secret (S-ALM, built Oct 27): the night Thomas wrote, the clock at 11:10 and the watchman climbing in ninety
+  // seconds; 215 minutes by the key's gears (twelve of twelve, the rewind, five of twelve), the key out, one tick, and the
+  // spare quill from the sill in the escapement (the anchor). Waiting alone is caught; a quill on the wrong tick jams.
+  {
+    id: 'aldermoor_clock',
+    title: 'The tower clock: 11:10 to a quarter to three, by the gears, before the watchman (secret item; PUZZLES.md S-ALM)',
+    map: 'aldermoor-clocktower',
+    spawn: 'clocktower',
+    flags: {
+      ...KINGSMERE_ASSIZE,
+      'story.record_read': true,
+      'story.hushed_beaten': true,
+      'encounter.aldermoor_story.hushed.won': true,
+      'side.patient_hour.accepted': true,
+    },
+    goal: { flag: 'anchor.clock_stopped' },
+  },
   {
     id: 'jwaladesh_chain',
     title: 'Arjun\'s night: the chain lamp lit and the tower mirror bolted, in the memory (SIG-JWA part 1)',

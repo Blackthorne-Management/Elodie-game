@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 36,
+  "nextobjectid": 40,
   "layers": [
     {
       "id": 1,
@@ -599,6 +599,90 @@
         },
         {
           "id": 12,
+          "name": "arguer_spice",
+          "type": "npc",
+          "x": 416,
+          "y": 272,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "party.vikram, story.dhanraj_beaten, !act8.complete"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "arguer_spice"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "arguer_dyer",
+          "type": "npc",
+          "x": 96,
+          "y": 384,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "party.vikram, story.dhanraj_beaten, !act8.complete"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "arguer_dyer"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "arguer_wrestler",
+          "type": "npc",
+          "x": 432,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "party.vikram, story.dhanraj_beaten, !act8.complete"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "arguer_wrestler"
+            }
+          ]
+        },
+        {
+          "id": 15,
           "name": "echo_runner",
           "type": "npc",
           "x": 208,
@@ -638,7 +722,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 16,
           "name": "bazaar_harbor",
           "type": "door",
           "x": 336,
@@ -676,7 +760,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 17,
           "name": "bazaar_court",
           "type": "door",
           "x": 336,
@@ -714,7 +798,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 18,
           "name": "bazaar_library",
           "type": "door",
           "x": 128,
@@ -752,7 +836,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 19,
           "name": "bazaar_flats",
           "type": "door",
           "x": 688,
@@ -790,7 +874,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 20,
           "name": "bazaar_roofs",
           "type": "door",
           "x": 224,
@@ -840,7 +924,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 18,
+          "id": 21,
           "name": "bazaar_arrive",
           "type": "trigger",
           "x": 336,
@@ -878,7 +962,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 22,
           "name": "aiyana_meet",
           "type": "trigger",
           "x": 160,
@@ -901,7 +985,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 23,
           "name": "gust_1",
           "type": "trigger",
           "x": 320,
@@ -924,7 +1008,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 24,
           "name": "gust_2",
           "type": "trigger",
           "x": 320,
@@ -959,7 +1043,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 25,
           "name": "bazaar",
           "type": "spawn",
           "x": 336,
@@ -982,7 +1066,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 26,
           "name": "stair_head",
           "type": "spawn",
           "x": 336,
@@ -1017,7 +1101,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 24,
+          "id": 27,
           "name": "hearth_echo",
           "type": "echo_zone",
           "x": 208,
@@ -1063,7 +1147,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 25,
+          "id": 28,
           "name": "jw_board",
           "type": "puzzle_object",
           "x": 304,
@@ -1096,7 +1180,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 29,
           "name": "price_board",
           "type": "puzzle_object",
           "x": 416,
@@ -1129,7 +1213,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 30,
           "name": "dark_shrine",
           "type": "puzzle_object",
           "x": 624,
@@ -1150,6 +1234,11 @@
               "value": "present"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!side.little_lamps.done"
+            },
+            {
               "name": "kind",
               "type": "string",
               "value": "shrine_dark"
@@ -1162,7 +1251,45 @@
           ]
         },
         {
-          "id": 28,
+          "id": 31,
+          "name": "lit_shrine",
+          "type": "puzzle_object",
+          "x": 624,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "lit_shrine"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.little_lamps.done"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "lamp_lit"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 32,
           "name": "dyer_mirror",
           "type": "puzzle_object",
           "x": 160,
@@ -1195,7 +1322,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 33,
           "name": "down_mirror_1",
           "type": "puzzle_object",
           "x": 144,
@@ -1228,7 +1355,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 34,
           "name": "down_mirror_2",
           "type": "puzzle_object",
           "x": 512,
@@ -1261,7 +1388,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 35,
           "name": "down_mirror_3",
           "type": "puzzle_object",
           "x": 576,
@@ -1294,7 +1421,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 36,
           "name": "runners_hearth",
           "type": "puzzle_object",
           "x": 192,
@@ -1327,7 +1454,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 37,
           "name": "hall_bracket",
           "type": "puzzle_object",
           "x": 192,
@@ -1365,7 +1492,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 38,
           "name": "hall_bracket_lit",
           "type": "puzzle_object",
           "x": 192,
@@ -1403,7 +1530,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 39,
           "name": "exchange_tower",
           "type": "puzzle_object",
           "x": 384,

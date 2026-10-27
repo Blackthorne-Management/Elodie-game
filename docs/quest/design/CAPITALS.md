@@ -616,7 +616,11 @@ hub like Ordvik's quay), the Lantern Quarter hub (42 x 30), the Lantern Library 
 a paper partition), the Hall of Screens (36 x 26, the seat paragraph's size), the file house (22 x 16; Claude's call:
 its own room behind the Hall's signal room, so the screens, Sayo's map and the Fox have the floor to themselves), the
 fog maze (30 x 30; on the city map a placed building north of the quarter, no position of its own) and the Fog Marsh
-(46 x 28). Lady Sayo's House (K-4) is not built (after the release). Fog and dusk are map moods, not weather.*
+(46 x 28). Fog and dusk are map moods, not weather. **Built Oct 27 (the owner's request of Oct 27, the side quests once
+after the release):** Lady Sayo's House (20 x 14, `kuroshiSayoHouse`): the entry with its Echo zone, a screen wall, the
+listening room's 5 x 5 singing floor and the lacquer box beyond it; its door is on the house's east side on the quarter
+(Claude's call: the old closed door on the south face stood over the canal and could not be reached), opened by the
+old floor-maker at dawn. K-1 and K-4 are built (`SIDE-QUESTS.md`).*
 
 **Chapter:** 7 (one of the three roads). **Ruler:** the spymaster council (proposal: led by **Kaede Suzumori**, Haru's
 mother). Wants **Influence** (price 10): recognition and legal protection for their informants. **Feel:** a fogbound
@@ -767,8 +771,10 @@ Jackals on the Salt Road.
 the mole, Dhanraj's oil store), the Lamp Bazaar hub (44 x 30, the temple steps, the dyers' roof, the spice row, the
 Exchange's tower), the rooftops (30 x 18, an interior up Aiyana's ladder: three mirrors and the fourth bracket), the
 library (22 x 14), the Court of the Flame (36 x 28, the colonnade, the altar, the envoys' pavilion, the duel yard, the
-back gate) and the salt flats (46 x 28, the salt road, the carter, the jackals' den). J-1, J-4 (S-JWA, the Unbroken
-Wick) and J-5 are not built (after the release); the contract board's mirror job is not offered. Night and dawn are
+back gate) and the salt flats (46 x 28, the salt road, the carter, the jackals' den). J-5 is not built; the contract
+board's mirror job is not offered. **Built Oct 27:** J-1 (the three in the bazaar at dawn) and J-4 (S-JWA, the Unbroken
+Wick: the oil store's floor as an Echo zone fifty years ago, the lamp-maker's jars, the balance lock on its back door,
+the child's shrine lit), on the existing harbor and bazaar maps. Night and dawn are
 map moods and conditions (`NIGHT`, `DAWN` in `quest/src/data/jwaladesh.ts`).*
 
 ---
@@ -852,8 +858,11 @@ Tea With Lady Rosalind.
 notice post, the printing barn, the bog chapel, the Moor Gate), the Market Cross hub (42 x 30, St. Agatha's west door,
 the close's gate, the keep's gatehouse, the Rolls House, the pie shop and the tea shop), the Rolls House (22 x 14), the
 Regent's keep (40 x 30: the archive, the great hall, the courtroom, the yard, the cells), the close (18 x 7, its own
-map: the bell post, the vestry door, the postern) and St. Agatha's (26 x 18, the great organ, the oath-stone). Al-1,
-Al-4 (S-ALM) and Al-5 are not built (after the release). The rain, the eve, the keep by night and the last dawn are
+map: the bell post, the vestry door, the postern) and St. Agatha's (26 x 18, the great organ, the oath-stone).
+**Built Oct 27:** Al-1 (the five Edmund has hit, on the square, the heath and in the hall), Al-4 (S-ALM, the Patient
+Hour) with the clock tower (12 x 10, `aldermoorClocktower`: its own small map behind the hall's clock door, Claude's call
+as for the close; off the city map, since its only door is inside the keep) and Al-5 with Rosalind's Townhouse
+(18 x 12, `aldermoorTownhouse`; its door on the square's north side, open at the last dawn). The rain, the eve, the keep by night and the last dawn are
 map moods on conditions (`RAIN`, `EVE`, `KEEP_NIGHT`, `LAST_DAWN` in `quest/src/data/aldermoor.ts`).*
 
 ---

@@ -97,7 +97,9 @@ the price). Waiting on the owner: the proposal names (Kaede is used as the outli
 keeper of files, the Crown's observer and the broker are built by role until approved); art for Haru, Kayla, Kaede,
 the Paper Fox and Sayo (`docs/quest/ART-PROMPTS.md` 16); the Japanese words (`quest/src/data/lang/japanese.json`, all
 unverified) for the Nov 18 check. Noted: Chapter 7's story steps pay 44 XP; the route ends at 19, the line without
-side quests at 17. Not built yet: K-1, K-4 (the Nightingale Key), K-5 (the voyage on to Jwaladesh is built with Chapter 8).
+side quests at 17. Built Oct 27 (optional, owner request of Oct 27): K-1 Definitely Not a Spy and K-4 The Letter in
+the Floor, with Lady Sayo's House (20 x 14) and the Nightingale Key. Not built yet: K-5 (the voyage on to Jwaladesh is
+built with Chapter 8).
 
 **Quest, Chapter 8 (Oct 22):** The Dying Flame is built on branch `chapter8` (Agnipur's six maps, the voyage from
 Kirinoura, Aiyana on the dyers' roof, the Court at noon and Vikram's duel, the day's three required things (The Lamp
@@ -108,8 +110,9 @@ chamberlain, the Crown's oil factor, the chief runner, the carter; Meera, Aiyana
 them); a read of Aiyana's lines (`docs/quest/design/FAMILY.md`, Chapter 8); art for Vikram, Aiyana, Meera, Arjun and
 Seth Dhanraj (`docs/quest/ART-PROMPTS.md` 17); the Hindi words (`quest/src/data/lang/hindi.json`, all unverified) for
 the Nov 18 check. Noted: Chapter 8's steps pay 60 XP; the route ends at 21, the line without side quests at 19;
-Jwaladesh's price can be as low as 4 of 8, so Agnivansh can be the betrayer. Not built yet: J-1, J-4 (the Unbroken
-Wick), J-5 (the voyage on to Aldermoor is built with Chapter 9).
+Jwaladesh's price can be as low as 4 of 8, so Agnivansh can be the betrayer. Built Oct 27 (optional): J-1 Win
+Every Argument and J-4 Oil for the Little Lamps, with the Unbroken Wick. Not built yet: J-5 (the voyage on to Aldermoor
+is built with Chapter 9).
 
 **Quest, Chapter 9 (Oct 22):** The Regent's Keep is built on branch `chapter9` (Kingsmere's six maps, the voyage from
 Agnipur and the Mere Stair in the rain, Sebastian's bill, the press-gang and Edmund joining, the Regent's refusal, the
@@ -125,7 +128,11 @@ art for Edmund, Jordyn, Sebastian, the Almoner and Lady Rosalind (`docs/quest/AR
 steps pay 70 XP; the route ends at 24, the line without side quests at 22; the dissidents' Fear can be short (5 or 6
 of 8). Chapter 9 settles two of the Dec 1 questions as Claude's calls, still the owner's to overrule: the Aldermoor
 ledger (coded accounts on the Ash Road; Haru needs the key) and Patricio in Aldermoor (under a flag of truce, in
-the archive while the war council sits). Not built yet: Al-1, Al-4 (the Clock That Waits), Al-5, Calm and Comfort.
+the archive while the war council sits). Built Oct 27 (optional): Al-1 Terribly Sorry, Al-4 The Clock That Waits
+(the clock tower and the Patient Hour), Al-5 Tea With Lady Rosalind (Rosalind's Townhouse, 18 x 12), and Calm and
+Comfort (the Hushers and the Hushed whisper at Anissa; Gianna's Comfort). Waiting on the owner: a read of the seven
+quests' lines (reviewer prompt `docs/quest/reviews/reviewer-prompts/2026-10-27-review-side-quests-7-9.md`); names by
+role (the old floor-maker, the lamp-maker, the three in the bazaar, the highwayman, the footman).
 
 **Quest, Chapter 10 (Oct 22):** The Muster is built on branch `chapter10` (from `chapter9`; the ten Zetwal maps on
 conditions and the new mill cellar: the long pier and Joaquin handing Free Brasador to Azzy, the seven camps with each

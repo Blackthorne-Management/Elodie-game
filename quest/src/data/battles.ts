@@ -172,6 +172,8 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
     {
       id: 'tea_break', name: 'Tea Break', sp: 10, kind: 'heal', power: 0, healShare: 0.15, target: 'allAllies',
       text: '"Terribly sorry, one moment." Every ally gets back 15% of their HP.',
+      // Al-1 Terribly Sorry (SIDE-QUESTS.md: the Tea Break upgrade, +5%).
+      boosts: [{ flag: 'side.sorry.done', healShare: 0.2, text: '"Terribly sorry, one moment. I\'ve written." Every ally gets back 20% of their HP.' }],
     },
   ],
   vikram: [
@@ -268,6 +270,11 @@ export const GEAR_SKILLS: Readonly<Record<string, SkillDef>> = {
   say_their_names: {
     id: 'say_their_names', name: 'Say Their Names', sp: 16, kind: 'revive', power: 30, target: 'allAllies', once: true,
     text: 'Once per battle: every fallen ally rises with 30% HP, and Anissa gains Spark.',
+  },
+  // The Patient Hour (SECRET-ITEMS.md 7, built Oct 27): the party goes again before any foe, once a battle.
+  stop_the_clock: {
+    id: 'stop_the_clock', name: 'Stop the Clock', sp: 0, kind: 'status', power: 0, target: 'self', once: true, stopClock: true,
+    text: 'Once per battle: the hands stop, and every fighter in the party acts once more before any foe.',
   },
 };
 
@@ -695,7 +702,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     moves: [
       { name: 'Whisper', power: 90, magic: true },
       { name: 'Hush', power: 60, magic: true, statuses: ['hushed'], every: 3, tell: 'The Husher lifts a finger to the veil. The fog goes quiet...' },
-      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you, at the back of the line...' },
+      { name: 'Seize', power: 0, seize: 3, calm: 1, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you, at the back of the line...' },
     ],
   },
   // The Fox's paper decoys: the same mask, the same name ("Paper Fox?" with a letter), a hidden HP bar, and three of
@@ -951,7 +958,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     moves: [
       { name: 'Whisper', power: 90, magic: true },
       { name: 'Hush', power: 60, magic: true, statuses: ['hushed'], every: 3, tell: 'The Husher lifts a finger to the veil. The heath goes quiet...' },
-      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you. At her.' },
+      { name: 'Seize', power: 0, seize: 3, calm: 1, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you. At her.' },
     ],
   },
   // The veils in the court: they kneel to her, and they stand in front of her (the second review's 3.1: protects).
@@ -972,7 +979,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // The Hushed (COMBAT 13.3; the outline section 5 with its second review's 3.1): the Regent's almoner, the head the
   // cells kneel to, level 24, a caster boss: HP x7 and MAG x1.25 (magScale; a caster boss's spells never scaled before).
   // Hush takes the party's skills and moves two turns at a time (Attack, Guard and Item only); Hush the Light is a
-  // whisper at Anissa, and Gianna steps in (seize: Calm and Comfort are after the release, the review's cut). At 0 HP she
+  // whisper at Anissa, and Gianna steps in (since Oct 27 it takes her Calm, -2: COMBAT 8, Calm and Comfort). At 0 HP she
   // goes down on one knee and the watch takes her: nobody dies.
   the_hushed: {
     id: 'the_hushed',
@@ -989,6 +996,23 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Whisper', power: 100, magic: true },
       { name: 'Hush', power: 120, magic: true, area: true, statuses: ['hushed'], chance: 0.5, every: 3, tell: 'The grey veil tilts. The court goes quiet, all at once... Guard!' },
     ],
+  },
+  // J-1 Win Every Argument (built Oct 27): the three who out-argued Vikram, sparring with him in turn. A bout, not a
+  // fight: each steps back at 0 HP, laughing.
+  spar_spice: {
+    id: 'spar_spice', name: 'Spice-seller', look: 'jw_vendor', level: 19, role: 'skirmisher', hpScale: 1.5,
+    withdraws: { line: 'Enough! My pepper needs me.' },
+    moves: [{ name: 'Pestle', power: 90 }, { name: 'Pepper in the Eyes', power: 60, statuses: ['weakened'], every: 3, tell: 'She opens a twist of red pepper...' }],
+  },
+  spar_dyer: {
+    id: 'spar_dyer', name: 'Dyer', look: 'dyer', level: 19, role: 'skirmisher', hpScale: 1.5,
+    withdraws: { line: 'Enough. You have blue on your sleeve now. It will not come out.' },
+    moves: [{ name: 'Wet Cloth', power: 90 }, { name: 'Indigo Slap', power: 130, every: 3, tell: 'The dyer swings a sodden length of blue cloth round and round...' }],
+  },
+  spar_wrestler: {
+    id: 'spar_wrestler', name: 'Old wrestler', look: 'jw_wrestler', level: 19, role: 'brute', hpScale: 1.2,
+    withdraws: { line: 'Ha! Enough. You breathed on that one. I heard it.' },
+    moves: [{ name: 'Clinch', power: 90 }, { name: 'Hip Throw', power: 140, every: 3, tell: 'The old wrestler settles low, and his hands open...' }],
   },
   marine_sergeant: {
     id: 'marine_sergeant',
@@ -1042,7 +1066,7 @@ const FOX_SECRETS: readonly EnemyMove[] = [
 /** The Hushed when she turns from the dock to the bench behind it (phase 2, 60%): a whisper at Anissa; Gianna steps in. */
 const HUSH_THE_LIGHT: readonly EnemyMove[] = [
   { name: 'Veil', power: 130, magic: true },
-  { name: 'Hush the Light', power: 0, seize: 3, statuses: ['marked'], every: 2, tell: 'She is not looking at the dock. She is looking at the little one.' },
+  { name: 'Hush the Light', power: 0, calm: 2, statuses: ['marked'], every: 2, tell: 'She is not looking at the dock. She is looking at the little one.' },
 ];
 
 /** The Hushed unmasked (phase 3, 25%): her bare voice, and the Quiet Crown at everyone. */
@@ -1213,6 +1237,25 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       lowHp: 'Heal, Gigi.',
     },
   },
+  // Chapter 8, J-1 (built Oct 27): Vikram alone against each of the three who out-argued him. Optional; paid little.
+  ...Object.fromEntries(
+    (['spice', 'dyer', 'wrestler'] as const).map((who) => [
+      `argue_${who}`,
+      {
+        id: `argue_${who}`,
+        title: 'A rematch',
+        backdrop: 'duel_court',
+        enemies: [`spar_${who}`],
+        table: 'jwaladesh_side',
+        group: `argue_${who}`,
+        rewards: { xp: 10, gold: 0 },
+        fighters: ['vikram'],
+        endsWithBoss: true,
+        sideQuest: 'argue',
+        tips: { start: 'Breathe, Vikram. In on the cut, out on the word.', tell: 'Watch their hands, Vikram!' },
+      } satisfies BattleDef,
+    ]),
+  ),
   // Chapter 8, J-3: three Oil Enforcers on the salt road (the carter's jars). Paid flat (data).
   salt_road_enforcers: {
     id: 'salt_road_enforcers',

@@ -23,6 +23,7 @@ import { decodeSave, encodeSave } from '../src/engine/save.ts';
 import { Sim } from '../src/engine/sim.ts';
 import { applySave, newGame, toSaveData } from '../src/engine/state.ts';
 import { loadMaps, newGameSim } from '../tools/sim-setup.ts';
+import { secretFlagsWritten } from '../src/data/secrets.ts';
 
 /** Talk to `id`, picking the choices whose text starts with each of `picks` in turn; returns every line shown. */
 function talk(flags: FlagStore, id: string, picks: string[] = []): string[] {
@@ -62,6 +63,8 @@ describe('side quests: Pòdlimyè, Chapter 1', () => {
     const setters = new Set(Object.values(validationContext().dialogueSets ?? {}).flat());
     // A debate sets its outcome flags itself (engine/debate.ts), not a static dialogue.
     for (const d of DEBATES) for (const o of ['listened', 'joined', 'settled', 'won', 'mediated', 'provoked'] as const) setters.add(debateFlag(d.id, o));
+    // The secret items' machines write their state from code (data/secrets.ts: the singing floor opens itself).
+    for (const f of secretFlagsWritten()) setters.add(f);
     const flagsOf = (c: Condition): string[] => ('flag' in c ? [c.flag] : 'any' in c ? c.any.flatMap(flagsOf) : []);
     for (const q of SIDE_QUESTS) {
       for (const s of q.steps) {

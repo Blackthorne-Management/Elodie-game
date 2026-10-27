@@ -29,6 +29,7 @@ import kuroshiHall from '../../maps/kuroshi-hall.tmj?raw';
 import kuroshiFilehouse from '../../maps/kuroshi-filehouse.tmj?raw';
 import kuroshiFogmaze from '../../maps/kuroshi-fogmaze.tmj?raw';
 import kuroshiMarsh from '../../maps/kuroshi-marsh.tmj?raw';
+import kuroshiSayoHouse from '../../maps/kuroshi-sayo-house.tmj?raw';
 import jwaladeshHarbor from '../../maps/jwaladesh-harbor.tmj?raw';
 import jwaladeshBazaar from '../../maps/jwaladesh-bazaar.tmj?raw';
 import jwaladeshRooftops from '../../maps/jwaladesh-rooftops.tmj?raw';
@@ -41,6 +42,8 @@ import aldermoorRolls from '../../maps/aldermoor-rolls.tmj?raw';
 import aldermoorKeep from '../../maps/aldermoor-keep.tmj?raw';
 import aldermoorClose from '../../maps/aldermoor-close.tmj?raw';
 import aldermoorCathedral from '../../maps/aldermoor-cathedral.tmj?raw';
+import aldermoorClocktower from '../../maps/aldermoor-clocktower.tmj?raw';
+import aldermoorTownhouse from '../../maps/aldermoor-townhouse.tmj?raw';
 import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
 import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
 import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
@@ -135,6 +138,7 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'kuroshi-filehouse': kuroshiFilehouse,
   'kuroshi-fogmaze': kuroshiFogmaze,
   'kuroshi-marsh': kuroshiMarsh,
+  'kuroshi-sayo-house': kuroshiSayoHouse,
   'jwaladesh-harbor': jwaladeshHarbor,
   'jwaladesh-bazaar': jwaladeshBazaar,
   'jwaladesh-rooftops': jwaladeshRooftops,
@@ -147,6 +151,8 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'aldermoor-keep': aldermoorKeep,
   'aldermoor-close': aldermoorClose,
   'aldermoor-cathedral': aldermoorCathedral,
+  'aldermoor-clocktower': aldermoorClocktower,
+  'aldermoor-townhouse': aldermoorTownhouse,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

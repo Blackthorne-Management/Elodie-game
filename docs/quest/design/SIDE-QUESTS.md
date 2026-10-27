@@ -525,6 +525,13 @@ built (owner decision).
 - **Steps:** spot Haru three times as he tails the party (a reflection in a puddle, a moving screen, a pair of shoes
   under a stall). Each time he says "definitely not a spy".
 - **Reward:** 200 gold, 220 XP, +1 Influence (Kuroshi); Haru joins a scene earlier with a better opinion of Gianna.
+- **Built (Oct 27; optional; Claude's calls):** the three sightings stay the story's (the Chapter 7 outline: they are how
+  Haru is met), so the quest is the hutia's notice done by Yari, after: at dawn, after the Fox, she stops at the tea
+  house screen ("Show me how. All three places. Then I will believe you are not a spy."). At the pier's puddle, the
+  screen and the Hall's corridor Haru walks to his place and does it again; each time he says "definitely not a spy"
+  (the design's three; Chapter 7's own scenes still say it once). After the last, he walks up to Gianna: he let her
+  find him because she looked at the people, not the Crown's boat (the better opinion). 200 gold, 40 XP, +1 Influence
+  (Kuroshi). Closes when the trader sails (`act7.complete`).
 
 ### K-2 The Spy Ledger
 - **Giver:** the file house archivist. **Accept:** ask about the Ash Wars.
@@ -558,6 +565,10 @@ built (owner decision).
 - **Giver:** the old floor-maker. **Accept:** with Haru in the party.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 8, `PUZZLES.md` (S-KUR). The Nightingale Key; 300 gold, 320 XP, +2
   Influence (Kuroshi).
+- **Built (Oct 27; optional; Claude's calls):** the floor-maker is the old man the Kirinoura book *The Nightingale
+  Floor* names (the apprentice who held the nails, a key-maker now), by Sayo's door at dawn; Haru must be with the party
+  (always so at dawn). Lady Sayo's House (20 x 14). 300 gold, 60 XP, +2 Influence (Kuroshi); Sayo's letter to the
+  Marshal (no Rael). Closes when the trader sails. Puzzle `quest/puzzles/kuroshi_floor`.
 
 ### K-5 Ashes of the Temple
 - **Giver:** a Suzumori elder who still regrets the burned Agnivansh temple (guide 5.4). **Accept:** talk to her.
@@ -575,6 +586,11 @@ built (owner decision).
   sparring battle (no deaths; road tier) or a debate (Gianna speaks for him).
 - **Reward:** 300 gold, 240 XP, +1 Fear or +1 Influence (Jwaladesh); Vikram learns to breathe between sentences
   (a joke line only).
+- **Built (Oct 27; optional; Claude's calls):** at dawn after Seth Dhanraj (Vikram joined the night before: "Argue
+  later"): a spice-seller on the spice row, a dyer by the dyers' lane and an old wrestler on the temple steps. Each is
+  won back by a sparring bout (Vikram alone, the foe steps back at 0 HP; 10 XP each) or by Gianna's answer (three
+  choices, one lands; a wrong one can be tried again). The pillar follows the majority: two or more bouts +1 Fear, else
+  +1 Influence (Jwaladesh). 300 gold, 30 XP. Closes when the trader sails.
 
 ### J-2 The Lamp Relay
 - **Giver:** the temple's runners. **Accept:** at the temple steps.
@@ -603,6 +619,10 @@ built (owner decision).
 - **Giver:** a child keeping a street shrine. **Accept:** after Seth Dhanraj falls.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 4, `PUZZLES.md` (S-JWA). The Unbroken Wick; 280 XP, +2 Influence
   (Jwaladesh).
+- **Built (Oct 27; optional; Claude's calls):** the shrine child on the spice row asks at dawn; the "shrine's door"
+  is the balance lock already on the oil store's back door (the Chapter 8 map placed it there: the lamp-maker's back
+  room, where every street shrine's reservoir waited). 60 XP, +2 Influence (Jwaladesh). Closes when the trader sails.
+  Puzzle `quest/puzzles/jwaladesh_wick`.
 
 ### J-5 Jackals on the Salt Road
 - **Giver:** the contract board. **Accept:** take the job.
@@ -616,6 +636,12 @@ built (owner decision).
 - **Steps:** deliver Edmund's handwritten apologies to five people he has hit (a press-gang sergeant, a constable, a
   bandit, a goose, the Regent's footman). Each reply is funnier than the last. No fight.
 - **Reward:** 400 gold, 300 XP, +1 Influence (Aldermoor). Unlocks Edmund's *Tea Break* upgrade (+5%).
+- **Built (Oct 27; optional; Claude's calls):** offered by Lady Rosalind in the hall by day once the Regent has refused
+  ("My son writes to everyone he hits. He has never once written to me."; Edmund: "Five, Mother."). The press-gang's
+  sergeant (the press-gang's officer) and a constable on the square, a highwayman and the goose on the heath, the
+  Regent's footman in the hall: Edmund walks up to each and hands the letter, each answers and walks off. Done by day
+  or at the last dawn (never the night or the court). Tea Break heals 20% after (`SkillDef.boosts`). 400 gold, 40 XP,
+  +1 Influence (Aldermoor). The sixth letter, to his mother, is read at Al-5's tea. Closes when the trader sails.
 
 ### Al-2 The Crown Chronicle
 - **Giver:** the keep archive (during the infiltration). **Accept:** find the Ash Wars shelf.
@@ -651,9 +677,22 @@ built (owner decision).
 - **Giver:** a dissident clockmaker. **Accept:** after the courtroom.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 7, `PUZZLES.md` (S-ALM). The Patient Hour; 400 gold, 400 XP, +2
   Influence (Aldermoor).
+- **Built (Oct 27; optional; Claude's calls):** "after the courtroom" is the last dawn (the keep is open again; the
+  clockmaker who says "I'd give a year to know the hour" on the Mere Stair waits by the keep's gate). The clock tower
+  is its own small map behind the hall's clock door. 400 gold, 60 XP, +2 Influence (Aldermoor). Closes when the trader
+  sails. Puzzle `quest/puzzles/aldermoor_clock`.
 
 ### Al-5 Tea With Lady Rosalind
 - **Giver:** Lady Rosalind Stillwater (proposal: Edmund's mother, at court). **Accept:** Edmund in the party.
 - **Steps:** a polite conversation over tea where every cup is a debate round; win with **Reason** (Thomas
   Stillwater's record) to make her quietly withdraw from the Regent's council.
 - **Reward:** 340 XP, +2 Influence (Aldermoor), +1 Accord Stability; Rosalind attends the Hearing.
+- **Built (Oct 27; optional; Claude's calls):** the story already has Rosalind withdraw from the Regent's council at
+  the Assize ("Sat."), so the tea is at the last dawn in her townhouse (18 x 12), and she asks to be persuaded she was
+  right, and that Aldermoor should sit at Eightgate. Three cups, three answers each (Scripture, Reason, Compassion);
+  the Reason answer (her father Thomas's record) wins a cup, and two cups win her: she will sit for Aldermoor at the
+  Hearing (she does in Chapter 12 either way) and the Accord gains +1 Stability (`STABILITY.rosalindTea`). A lost pot
+  can be poured again. 40 XP, +2 Influence (Aldermoor). If Al-1 is done, Edmund gives her the sixth letter. Closes when
+  the trader sails.
+
+**The seven built Oct 27, together:** XP is small (Claude's call, the levels pass's rule: the line without side quests is unchanged, and a player who does all seven ends each chapter at most one level over its target; `tests/sideQuestsLate.test.ts`).

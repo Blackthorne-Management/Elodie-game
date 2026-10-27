@@ -10,7 +10,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
-import { BAZAAR, COURT, DAY_DONE_TEXT, FLATS, HARBOR, LIBRARY, MIRROR_SOLUTION, ROOFTOPS, facingText } from '../../src/data/jwaladesh.ts';
+import { ARGUERS, BAZAAR, COURT, DAY_DONE_TEXT, FLATS, HARBOR, LIBRARY, MIRROR_SOLUTION, OIL_STORE, ROOFTOPS, facingText } from '../../src/data/jwaladesh.ts';
 
 const STONE = 'क';
 const WALL = 'ख';
@@ -144,6 +144,13 @@ export function jwaladeshHarbor(): MapSource {
     { layer: 'anchors', name: 'tower_mirror_anchor', x: HARBOR.bracket.x, y: HARBOR.bracket.y, props: { object: 'arjun_bracket', flag: 'anchor.tower_mirror' } },
     { layer: 'echo_zones', name: 'lamp_echo', x: z.x, y: z.y, w: z.w, h: z.h, props: { if: 'item.sun_locket, story.tower_open', onEcho: 'arjun_echo', onReturn: 'arjun_echo_return' } },
     npc('arjun', HARBOR.arjun.x, HARBOR.arjun.y, 'left', { era: 'echo' }),
+    // J-4 Oil for the Little Lamps (built Oct 27): the oil store fifty years ago, the night Arjun's riders came home. The
+    // lamp-maker at his jars (10, 7 and 3) and his reservoir; what is sealed goes in the cradle on the back door's lock.
+    { layer: 'echo_zones', name: 'store_echo', x: OIL_STORE.zone.x, y: OIL_STORE.zone.y, w: OIL_STORE.zone.w, h: OIL_STORE.zone.h, props: { if: 'item.sun_locket, side.little_lamps.accepted', onEcho: 'store_echo', onReturn: 'store_echo_return' } },
+    { layer: 'spawns', name: 'oil_store', x: OIL_STORE.door.x, y: OIL_STORE.door.y, props: { facing: 'up', era: 'present' } },
+    npc('echo_lamp_maker', OIL_STORE.lampMaker.x, OIL_STORE.lampMaker.y, 'down', { era: 'echo' }),
+    ...OIL_STORE.jars.map((p, i) => obj(`echo_jar_${i}`, p.x, p.y, { kind: 'jar_stack', solid: true, era: 'echo', dialogue: `echo_jar_${i}` })),
+    obj('echo_reservoir', OIL_STORE.reservoir.x, OIL_STORE.reservoir.y, { solid: true, era: 'echo', if: '!measures.wick.sealed', dialogue: 'echo_reservoir' }),
   ];
   return { id: 'jwaladesh-harbor', present: g, echo: e, objects };
 }
@@ -215,7 +222,11 @@ export function jwaladeshBazaar(): MapSource {
     salkhi('salkhi_bazaar', BAZAAR.salkhi.x, BAZAAR.salkhi.y, 'left'),
     obj('jw_board', BAZAAR.board.x, BAZAAR.board.y, { kind: 'sign', solid: true, era: 'present', dialogue: 'jw_board' }),
     obj('price_board', BAZAAR.priceBoard.x, BAZAAR.priceBoard.y, { kind: 'price_board', solid: true, era: 'present', dialogue: 'price_board' }),
-    obj('dark_shrine', BAZAAR.shrine.x, BAZAAR.shrine.y, { kind: 'shrine_dark', solid: true, era: 'present', dialogue: 'dark_shrine' }),
+    obj('dark_shrine', BAZAAR.shrine.x, BAZAAR.shrine.y, { kind: 'shrine_dark', solid: true, era: 'present', if: '!side.little_lamps.done', dialogue: 'dark_shrine' }),
+    // J-4 (built Oct 27): the child's shrine, lit from the sealed reservoir.
+    obj('lit_shrine', BAZAAR.shrine.x, BAZAAR.shrine.y, { kind: 'lamp_lit', solid: true, era: 'present', if: 'side.little_lamps.done', dialogue: 'lit_shrine' }),
+    // J-1 Win Every Argument (built Oct 27): the three who out-argued Vikram, about the bazaar at dawn.
+    ...(['spice', 'dyer', 'wrestler'] as const).map((who) => npc(`arguer_${who}`, ARGUERS[who].x, ARGUERS[who].y, 'down', { if: 'party.vikram, story.dhanraj_beaten, !act8.complete' })),
     obj('dyer_mirror', BAZAAR.dyerMirror.x, BAZAAR.dyerMirror.y, { kind: 'mirror_down', solid: true, era: 'present', dialogue: 'dyer_mirror' }),
     ...BAZAAR.downMirrors.map((p, i) => obj(`down_mirror_${i + 1}`, p.x, p.y, { kind: 'mirror_down', solid: true, era: 'present', dialogue: 'down_mirror' })),
     obj('runners_hearth', BAZAAR.hearth.x, BAZAAR.hearth.y, { kind: 'hearth', solid: true, era: 'both', dialogue: 'runners_hearth' }),

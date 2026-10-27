@@ -62,7 +62,8 @@ import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
 import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
 import { RPG } from '../data/rpg.ts';
-import { addSharedXp, cityOf, level, partyMembers, pillarFlag } from '../engine/rpg.ts';
+import { addSharedXp, cityOf, itemCount, level, partyMembers, pillarFlag } from '../engine/rpg.ts';
+import { PITCH_RIPPLES, quietCrownLook } from '../data/secrets.ts';
 import { settleDebates } from '../engine/debate.ts';
 import { musterJournal } from '../engine/ally.ts';
 import { DEBATES } from '../data/debates.ts';
@@ -220,6 +221,8 @@ export class FieldScene extends Phaser.Scene {
   private layers: Record<string, Phaser.Tilemaps.TilemapLayer> = {};
   private player!: Phaser.GameObjects.Image;
   private npcSprites = new Map<number, Phaser.GameObjects.Image>();
+  /** The Nightingale Key's silver sigils over the Quiet Crown's people (redrawn every frame). */
+  private sigils: Phaser.GameObjects.Graphics | null = null;
   /** Where each drawn NPC stood at the last sync (to see who moved). */
   private npcPlaced = new Map<number, NpcPlacement>();
   /** People walking to their new place (engine/walkers.ts), by the placement they walk to. */
@@ -340,6 +343,7 @@ export class FieldScene extends Phaser.Scene {
     this.leaving = false;
     this.layers = {};
     this.npcSprites = new Map();
+    this.sigils = null;
     this.npcPlaced = new Map();
     this.walkers = new Map();
     this.goers = [];
@@ -510,6 +514,7 @@ export class FieldScene extends Phaser.Scene {
     const input = this.rt.input;
     input.update();
     this.tickWalkers(delta);
+    this.tickSigils();
     this.tickGoers(delta);
     this.tickCrowd(delta);
     this.tickGuide(delta);
@@ -772,6 +777,11 @@ export class FieldScene extends Phaser.Scene {
           this.rt.input.clearPresses();
           break;
         }
+        case 'note':
+          // The singing floor (Chapter 7): the board's chirp, and a ripple of its own shape and colour.
+          audio.sfx(`board_${Math.max(0, Math.min(5, e.pitch))}` as 'board_0');
+          this.ripple(e.at, e.pitch);
+          break;
         case 'encounter':
           // An ambush: a red flash before the foes speak, then the battle.
           this.cameras.main.flash(250, 180, 40, 40);
@@ -1332,6 +1342,46 @@ export class FieldScene extends Phaser.Scene {
         g.sprite.destroy();
         this.goers.splice(i, 1);
       }
+    }
+  }
+
+  /** A ripple on a singing board: a shape per pitch (circle to star), or a grey ring for a nailed board. */
+  private ripple(at: Pos, pitch: number): void {
+    const r = PITCH_RIPPLES[Math.max(0, Math.min(5, pitch))]!;
+    const g = this.add.graphics().setDepth(9);
+    g.lineStyle(1, r.colour, 1);
+    const s = 5;
+    if (r.shape === 'circle' || r.shape === 'none') g.strokeCircle(0, 0, s);
+    else if (r.shape === 'square') g.strokeRect(-s, -s, s * 2, s * 2);
+    else if (r.shape === 'triangle') g.strokeTriangle(0, -s, s, s, -s, s);
+    else if (r.shape === 'diamond') g.strokePoints([{ x: 0, y: -s }, { x: s, y: 0 }, { x: 0, y: s }, { x: -s, y: 0 }], true);
+    else {
+      const pts = Array.from({ length: 10 }, (_, i) => {
+        const a = -Math.PI / 2 + (i * Math.PI) / 5;
+        const d = i % 2 ? s / 2 : s;
+        return { x: Math.cos(a) * d, y: Math.sin(a) * d };
+      });
+      g.strokePoints(pts, true);
+    }
+    g.setPosition(at.x * TILE_SIZE + TILE_SIZE / 2, at.y * TILE_SIZE + TILE_SIZE / 2);
+    this.tweens.add({ targets: g, scale: 2.2, alpha: 0, duration: 700, onComplete: () => g.destroy() });
+  }
+
+  /** The Nightingale Key: a faint silver diamond over each of the Quiet Crown's people on the map. */
+  private tickSigils(): void {
+    if (itemCount(this.logic.state.flags, 'nightingale_key') <= 0) {
+      this.sigils?.clear();
+      return;
+    }
+    this.sigils ??= this.add.graphics().setDepth(5000);
+    const g = this.sigils.clear();
+    for (const [id, sprite] of this.npcSprites) {
+      const n = this.npcPlaced.get(id);
+      const look = n ? this.logic.content.npcs[n.npc]?.look : undefined;
+      if (!look || !quietCrownLook(look)) continue;
+      const x = sprite.x;
+      const y = sprite.y - sprite.displayHeight - 4;
+      g.fillStyle(0xd8e0f0, 0.7).fillPoints([{ x, y: y - 3 }, { x: x + 2, y }, { x, y: y + 3 }, { x: x - 2, y }], true);
     }
   }
 
@@ -2479,6 +2529,9 @@ export class FieldScene extends Phaser.Scene {
       cam.shake(320, 0.01);
     } else if (fx === 'volley') audio.sfx('volley');
     else if (fx === 'conch') audio.sfx('conch');
+    // The secret items (Oct 27): the informant's message walked on the singing floor, and oil poured between jars.
+    else if (fx === 'nightingale') audio.sfx('nightingale');
+    else if (fx === 'pour') audio.sfx('pour');
     else if (fx === 'hall_bell') {
       audio.sfx('hall_bell');
       cam.shake(200, 0.003);

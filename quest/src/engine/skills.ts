@@ -81,14 +81,24 @@ function spellsFlag(memberId: string): string {
   return `spells.${memberId}`;
 }
 
+/** A skill with the upgrades its flags have earned (SkillDef.boosts: Edmund's Tea Break after Al-1). */
+export function boosted(skill: SkillDef, flags: FlagReader): SkillDef {
+  let s = skill;
+  for (const b of skill.boosts ?? []) {
+    if (!flags.get(b.flag)) continue;
+    s = { ...s, healShare: b.healShare ?? s.healShare, power: b.power ?? s.power, text: b.text ?? s.text };
+  }
+  return s;
+}
+
 /** A member's SP skills learned so far, at their ranks. */
 export function knownSkills(flags: FlagReader, book: SkillBook, m: MemberDef, level: number): SkillDef[] {
-  return (book.skills[m.id] ?? []).filter((s) => learned(s, level, flags)).map((s) => atRank(s, level));
+  return (book.skills[m.id] ?? []).filter((s) => learned(s, level, flags)).map((s) => boosted(atRank(s, level), flags));
 }
 
 /** A member's weapon moves learned so far, at their ranks. */
 export function knownMoves(flags: FlagReader, book: SkillBook, m: MemberDef, level: number): SkillDef[] {
-  return (book.moves[m.id] ?? []).filter((s) => learned(s, level, flags)).map((s) => atRank(s, level));
+  return (book.moves[m.id] ?? []).filter((s) => learned(s, level, flags)).map((s) => boosted(atRank(s, level), flags));
 }
 
 /**

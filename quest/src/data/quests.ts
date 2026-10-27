@@ -1207,7 +1207,7 @@ export const ACT6: QuestDef = {
   ],
 };
 
-const KUR_MAPS = ['kuroshi-pier', 'kuroshi-quarter', 'kuroshi-library', 'kuroshi-hall', 'kuroshi-filehouse', 'kuroshi-fogmaze', 'kuroshi-marsh'];
+const KUR_MAPS = ['kuroshi-pier', 'kuroshi-quarter', 'kuroshi-library', 'kuroshi-hall', 'kuroshi-filehouse', 'kuroshi-fogmaze', 'kuroshi-marsh', 'kuroshi-sayo-house'];
 const fh = (i: number): Goal => ({ map: 'kuroshi-filehouse', at: { ...FILEHOUSE.screens[i]! } });
 const fhZone = { map: 'kuroshi-filehouse', at: { x: FILEHOUSE.zone.x, y: FILEHOUSE.zone.y + 1 } };
 const mazeZone = { map: 'kuroshi-fogmaze', at: { x: MAZE.zone.x + 1, y: MAZE.zone.y } };
@@ -1519,7 +1519,7 @@ export const ACT8: QuestDef = {
   ],
 };
 
-const ALD_MAPS = ['aldermoor-heath', 'aldermoor-cross', 'aldermoor-rolls', 'aldermoor-keep', 'aldermoor-close', 'aldermoor-cathedral'];
+const ALD_MAPS = ['aldermoor-heath', 'aldermoor-cross', 'aldermoor-rolls', 'aldermoor-keep', 'aldermoor-close', 'aldermoor-cathedral', 'aldermoor-clocktower', 'aldermoor-townhouse'];
 const keepAt = (x: number, y: number): Goal => ({ map: 'aldermoor-keep', at: { x, y } });
 /** The archive's filing floor (the Echo zone of the first revisiting): stand there and press Echo. */
 const filingFloor = keepAt(KEEP.zone.x + 5, KEEP.zone.y);

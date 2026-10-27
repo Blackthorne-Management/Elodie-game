@@ -3,6 +3,7 @@
 // maps and the scenes (data/dialogue/aldermoor.ts) read, in one place so the staging and the maps never disagree.
 
 import type { Condition } from '../engine/conditions.ts';
+import type { ClockDef } from '../engine/secrets.ts';
 
 type P = { readonly x: number; readonly y: number };
 const at = (x: number, y: number): P => ({ x, y });
@@ -217,3 +218,64 @@ export const CATHEDRAL = {
   verger: at(21, 6),
   sceneRow: 14,
 } as const;
+
+// ---- Built Oct 27 (the owner, Oct 27: the side quests once after the release): Al-1, Al-4 and Al-5 ----------------------
+
+/** Al-1 Terribly Sorry: the five Edmund has hit, where each takes his letter (by day, or at the last dawn). */
+export const LETTERS = {
+  sergeant: at(8, 25),
+  constable: at(36, 8),
+  bandit: at(30, 10),
+  goose: at(12, 15),
+  footman: at(33, 9),
+} as const;
+/** Where the five stand while their letter waits: by day, or at the last dawn (never the night, the court or the cells). */
+export const LETTERS_OUT_TEXT = 'side.sorry.accepted, !story.recital_begun|story.hushed_beaten, !act9.complete';
+
+/**
+ * The clock tower (Al-4, S-ALM; its own small map behind the keep's clock door, Claude's call as for the close): the stair
+ * up from the hall, the great clock's face on the north wall with Agatha's vault behind it, the winding key and the
+ * escapement beside it, the sill where Thomas left a spare quill fifty years ago, and the Echo zone on the boards.
+ */
+export const CLOCK_TOWER = {
+  w: 12,
+  h: 10,
+  door: at(6, 9),
+  spawn: at(6, 8),
+  face: at(5, 1),
+  winder: at(5, 2),
+  vault: at(7, 1),
+  sill: at(9, 3),
+  zone: { x: 5, y: 5, w: 3, h: 1 },
+} as const;
+/** The clockmaker at the last dawn, on the square by the keep's gate. */
+export const CLOCKMAKER_DAWN = at(23, 7);
+
+/**
+ * The tower clock (SECRET-ITEMS.md 7; engine/secrets.ts). It reads 11:10 when the memory opens and must be stopped on 2:45
+ * (215 minutes on); the gears move it 5, 7 or 12 a turn; twelve turns to a spring, ten seconds to rewind; the watchman
+ * climbs after ninety. 12 x 12, rewind, 5 x 12 (214), pull the key, one tick, the quill: 28 seconds.
+ */
+export const TOWER_CLOCK: ClockDef = {
+  id: 'tower',
+  start: 11 * 60 + 10,
+  target: 2 * 60 + 45,
+  gears: [5, 7, 12],
+  spring: 12,
+  rewindSecs: 10,
+  watchmanAt: 90,
+  anchor: 'anchor.clock_stopped',
+};
+
+/** Rosalind's Townhouse (Al-5; 18 x 12): her door on the square's north side, her tea table, Thomas's portrait. */
+export const TOWNHOUSE = {
+  w: 18,
+  h: 12,
+  door: at(9, 11),
+  spawn: at(9, 10),
+  rosalind: at(9, 4),
+  table: at(10, 4),
+  portrait: at(9, 1),
+  maid: at(14, 6),
+} as const;
+export const TOWNHOUSE_DOOR = at(24, 5);
