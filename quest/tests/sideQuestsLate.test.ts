@@ -34,6 +34,16 @@ function simAt(mark: string): Sim {
   throw new Error(`No mark @${mark}`);
 }
 
+/** The flags that close every late quest: each chapter's own end, and Chapter 3's noon, trial and sailing. */
+const CLOSING_FLAGS = {
+  'story.noon': true,
+  'story.trial_fought': true,
+  'story.aldoria_arrived': true,
+  'act7.complete': true,
+  'act8.complete': true,
+  'act9.complete': true,
+} as const;
+
 describe('the late side quests are optional', () => {
   it('the route never accepts one of them', () => {
     const flags = simAt('chapter9-end').logic.state.flags;
@@ -47,7 +57,8 @@ describe('the late side quests are optional', () => {
   });
 
   it('each closes when its chapter\'s ship sails, and the Journal says what became of it', () => {
-    const flags = new FlagStore({ 'act7.complete': true, 'act8.complete': true, 'act9.complete': true });
+    // Chapter 3's close at noon, at the trial and when the trader sails for Al-Doria; the rest as their chapters end.
+    const flags = new FlagStore({ ...CLOSING_FLAGS });
     for (const q of LATE_SIDE_QUESTS) flags.set(q.accepted && 'flag' in q.accepted ? q.accepted.flag : `side.${q.id}.accepted`, true);
     for (const q of LATE_SIDE_QUESTS) expect(sideQuestStatus(flags, q), q.id).toBe('closed');
     expect(closedNotes(LATE_SIDE_QUESTS, flags)).toHaveLength(LATE_SIDE_QUESTS.length);
@@ -58,7 +69,14 @@ describe('what they pay keeps the level curve (the levels pass)', () => {
   const report = levelCurve();
   // What a player who does every one of them gains by each chapter's end: the quests' XP, and J-1's three bouts.
   const bouts = ['spice', 'dyer', 'wrestler'].reduce((n, w) => n + BATTLES[`argue_${w}`]!.rewards.xp, 0);
+  const xpOf = (id: string) => SIDE_QUESTS.find((q) => q.id === id)!.reward.xp ?? 0;
   const extra: Record<number, number> = {
+    // Chapter 1's secret (Z-4, data/sideQuests.ts) counts too: a player who does everything does it.
+    1: xpOf('seventh_stone'),
+    // Chapter 3: the feast (and its blades, the Fear route's fight) and the old lord's errand; Ar-5 is at the camp,
+    // after the chapter's end, so it counts from Chapter 4.
+    3: LATE_XP.feast + BATTLES.feast_blades!.rewards.xp + LATE_XP.oldErrand,
+    4: LATE_XP.arrows,
     7: LATE_XP.notASpy + LATE_XP.letterFloor,
     8: LATE_XP.argue + LATE_XP.littleLamps + bouts,
     9: LATE_XP.sorry + LATE_XP.patientHour + LATE_XP.tea,

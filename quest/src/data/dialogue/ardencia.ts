@@ -13,6 +13,7 @@
 
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
+import { ERRAND_BENNY_BRANCHES, ERRAND_BENNY_NODES } from './ardenciaQuests.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -406,7 +407,8 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
   // Old Benny and Nancy (owner, Oct 21: Benny meets the Locket again; Nancy is seen). Benny is wry; he knows more
   // than he says, and says the half that is safe.
   script('benny_old_talk', {
-    start: { lines: [], next: [{ if: { flag: 'side.treasurer.done' }, to: 'again' }, { if: { flag: 'side.treasurer.benny_open' }, to: 'meet' }, { to: 'closed' }] },
+    // Ar-4 The Old Lord's Errand (secret, built Oct 27): his errand after the meeting, until the trial.
+    start: { lines: [], next: [...ERRAND_BENNY_BRANCHES, { if: { flag: 'side.treasurer.done' }, to: 'again' }, { if: { flag: 'side.treasurer.benny_open' }, to: 'meet' }, { to: 'closed' }] },
     closed: { lines: [nar('The old lord is asleep in his chair.')] },
     meet: {
       lines: [
@@ -425,6 +427,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
     again: { speaker: 'benny_old', lines: [{ text: 'Noon tomorrow. Stand in the ring as if it were yours, envoy. It annoys my son.' }] },
+    ...ERRAND_BENNY_NODES,
   }),
   simple('nancy_talk', [
     { if: { notFlag: 'side.treasurer.benny_open' }, speaker: '', text: 'A lady in wine-red sits by the old lord, mending.' },
@@ -1040,9 +1043,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
       set: { 'story.benny_joined': true, 'ally.free_brasador': true, 'act3.complete': true },
     }),
   ]),
-  simple('free_soldier_a_talk', [say('free_brasador', 'We follow the captain. Where he goes, we go. Where are we going?')]),
-  simple('free_soldier_b_talk', [say('free_brasador', 'My mother is still in the Lower Town. She will understand. She always understands. That is the worst part.')]),
-  simple('free_soldier_c_talk', [say('free_brasador', 'Free Brasador. The sergeant made it up on the road. It sounds better than "deserters".')]),
+  // The soldiers' own lines (and Ar-5 The Arrows Missed, built Oct 27) are in data/dialogue/ardenciaQuests.ts.
   simple('camp_quartermaster_talk', [say('free_brasador', 'We took what we could carry from the armory. The captain says the envoy pays fair. Have a look.')]),
   // ---- Chapter 4, beat 0: the strand at first light (docs/quest/reviews/2026-10-20-chapter4-outline.md and its review
   // 3.10). The trader's ready check; the sergeant (placed again: he is no map NPC) pledges the strand to Azzy; Yari's

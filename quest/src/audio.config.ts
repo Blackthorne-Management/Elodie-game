@@ -97,6 +97,7 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'ardencia-forge': 'cinder_flats',
   'ardencia-tunnel': 'cinder_flats',
   'ardencia-camp': 'farewell',
+  'ardencia-chapel': 'throne_archive',
   'aldoria-quay': 'aldoria',
   'aldoria-bazaar': 'aldoria',
   'aldoria-majlis': 'majlis',

@@ -170,6 +170,12 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   amanda: s('amanda', 'Amanda'),
   benny_old: s('benny_old', 'Benny'),
   nancy: s('nancy', 'Nancy'),
+  // Built Oct 27 (Ar-3, Ar-4): Elder Ferrán, a hired blade at his door, Rael's guard in the cloister, Benny's honor guard.
+  ferran: s('ferran', 'Elder Ferrán', 'ard_elder'),
+  feast_steward: s('feast_steward', 'Steward', 'hall_steward'),
+  hired_blade: s('hired_blade', 'Hired blade', 'road_bandit'),
+  chapel_guard: s('chapel_guard', "Rael's guard", 'brasador_halberdier'),
+  benny_honor_guard: s('benny_honor_guard', "Benny's honor guard", 'echo_soldier'),
   trader_captain: s('trader_captain', 'Trader captain', 'ferryman'),
   camp_trader: s('camp_trader', 'Trader captain', 'ferryman'),
   road_mother: s('road_mother', 'Mother on the road', 'ard_villager_f'),

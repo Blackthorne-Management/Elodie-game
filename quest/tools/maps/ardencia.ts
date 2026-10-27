@@ -12,6 +12,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { CAMP, CHAPEL, ERRAND, FEAST, FEAST_FLAGS, WATCHES, watchGuard } from '../../src/data/ardencia.ts';
 
 const CINDER = 'γ';
 const BLACK_SAND = 'α';
@@ -166,6 +167,9 @@ export function ardenciaTown(): MapSource {
     npc('town_gossip', 9, 14, 'right'),
     npc('town_veteran', 22, 19, 'up'),
     npc('town_child', 12, 17, 'down'),
+    // Ar-3 The Elders' Feast (built Oct 27): the contract board on the plaza, and Elder Ferrán's grey door (his strongroom).
+    obj('feast_board', FEAST.board.x, FEAST.board.y, { kind: 'sign', solid: true, era: 'present', dialogue: 'feast_board' }),
+    obj('ferran_door', FEAST.ferranDoor.x, FEAST.ferranDoor.y, { solid: true, era: 'present', dialogue: 'ferran_door' }),
   ];
   return { id: 'ardencia-town', present: g, echo: g.clone(), objects };
 }
@@ -191,6 +195,8 @@ export function ardenciaAlcazar(): MapSource {
   // Benny's quiet rooms (south-west), and the sitting room (south-east).
   g.rect(1, 13, 9, 7, RED_STONE).rect(2, 14, 6, 4, 'u').rect(10, 16, 1, 1, RED_STONE).set(1, 14, 'v');
   g.rect(23, 13, 9, 7, RED_STONE).rect(22, 16, 1, 1, RED_STONE).rect(25, 14, 3, 1, 'ό');
+  // Ar-4 (built Oct 27): the chapel stair in the sitting room's east wall, and Benny's own stair behind his chair.
+  g.rect(32, 16, 1, 2, 'D').rect(0, 16, 1, 2, 'D');
 
   // Fifty years ago, the records room was Benny's office: a desk, maps, a chest of papers.
   const e = g.clone();
@@ -199,6 +205,13 @@ export function ardenciaAlcazar(): MapSource {
   const objects: ObjSpec[] = [
     { layer: 'doors', name: 'alcazar_out', x: 16, y: H - 1, props: { target: 'town_alcazar', map: 'ardencia-town', exit: 'up' } },
     { layer: 'spawns', name: 'hall', x: 16, y: 19, props: { facing: 'up', era: 'present' } },
+    // Ar-4 The Old Lord's Errand (secret, built Oct 27): down to the chapel cloister while the errand is open; Benny's own
+    // stair opens from the crypt's side once the promise is in hand.
+    { layer: 'doors', name: 'alcazar_chapel', x: 32, y: 16, h: 2, props: { target: 'chapel_in', map: 'ardencia-chapel', exit: 'left', if: `${ERRAND.accepted}, !${ERRAND.done}, !story.trial_fought`, closed: 'chapel_stair_shut' } },
+    { layer: 'doors', name: 'quiet_stair', x: 0, y: 16, h: 2, props: { target: 'crypt_stair', map: 'ardencia-chapel', exit: 'right', if: ERRAND.promise, closed: 'quiet_stair_shut' } },
+    // Ar-3 The Elders' Feast (built Oct 27): standing guard at the elders' hall's door; the salt-tax book in the records room.
+    trigger('feast_guard', FEAST.hallDoor.x, FEAST.hallDoor.y, { dialogue: 'feast_guard', if: `${FEAST_FLAGS.accepted}, !${FEAST_FLAGS.heard}` }, 1, 2),
+    obj('salt_tax_book', FEAST.taxBook.x, FEAST.taxBook.y, { solid: true, era: 'present', dialogue: 'salt_tax_book' }),
     // The audience (again until it is done: review 3.6).
     trigger('audience', 11, 18, { dialogue: 'audience', if: 'story.azzy_met, !story.trial_set' }, 11, 1),
     npc('zelia_hall', 15, 5, 'down', { npc: 'zelia', if: '!side.treasurer.zelia' }),
@@ -441,8 +454,63 @@ export function ardenciaCamp(): MapSource {
     npc('free_soldier_c', 12, 5, 'left'),
     npc('camp_quartermaster', 17, 5, 'down'),
     npc('camp_trader', 8, 10, 'up'),
+    // Ar-5 The Arrows Missed (built Oct 27): two more of Azzy's company, a crossbowman and a musketeer off the wall.
+    npc('free_soldier_d', CAMP.soldierD.x, CAMP.soldierD.y, 'right'),
+    npc('free_soldier_e', CAMP.soldierE.x, CAMP.soldierE.y, 'left'),
   ];
   return { id: 'ardencia-camp', present: g, echo: g.clone(), objects };
+}
+
+/**
+ * The chapel cloister under the Alcázar (Ar-4 The Old Lord's Errand, S-ARD; built Oct 27; data/ardencia.ts CHAPEL): the
+ * stair in from the sitting room onto the south walk, the east and north walks round a dry garth with its well, the
+ * crypt off the north walk (bolted from inside now; open fifty years ago, its bolt loose: the anchor), Benny's own stair
+ * up from the crypt to his quiet rooms. Every walk is an Echo zone. Rael's guards stand in three alcoves now and Benny's
+ * honor guard in two others then; each looks across the walk (the lamplight or the torchlight on the flags shows where).
+ */
+export function ardenciaChapel(): MapSource {
+  const { w: W, h: H } = CHAPEL;
+  const g = new Grid(W, H, RED_WALL);
+  for (const walk of [CHAPEL.south, CHAPEL.east, CHAPEL.north]) g.rect(walk.x, walk.y, walk.w, walk.h, RED_STONE);
+  // The garth: dry cinder and stones inside a low wall, the old well in its middle.
+  g.rect(1, 6, 18, 6, 'ϊ').set(CHAPEL.well.x, CHAPEL.well.y, 'O');
+  // The crypt, its doorway (the bolt's housing and the gap), Benny's stair in its west wall, and the stair in.
+  g.rect(CHAPEL.crypt.x, CHAPEL.crypt.y, CHAPEL.crypt.w, CHAPEL.crypt.h, RED_STONE);
+  g.set(CHAPEL.bolt.x, CHAPEL.bolt.y, RED_STONE).set(CHAPEL.doorway.x, CHAPEL.doorway.y, RED_STONE);
+  g.rect(CHAPEL.stair.x, CHAPEL.stair.y, 1, 2, 'D');
+  g.rect(CHAPEL.door.x, CHAPEL.door.y, 1, 2, 'D');
+  // The guards' alcoves.
+  for (const w of WATCHES) g.set(w.at.x, w.at.y, RED_STONE);
+  const zone = { if: `item.sun_locket, ${ERRAND.accepted}`, onEcho: 'cloister_echo', onReturn: 'cloister_return' };
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'chapel_in', x: CHAPEL.door.x, y: CHAPEL.door.y, h: 2, props: { target: 'alcazar_chapel', map: 'ardencia-alcazar', exit: 'right' } },
+    { layer: 'doors', name: 'crypt_stair', x: CHAPEL.stair.x, y: CHAPEL.stair.y, h: 2, props: { target: 'quiet_stair', map: 'ardencia-alcazar', exit: 'right', if: ERRAND.promise, closed: 'crypt_stair_shut' } },
+    { layer: 'spawns', name: 'cloister_gate', x: CHAPEL.gate.x, y: CHAPEL.gate.y, props: { facing: 'right', era: 'present' } },
+    // The first time down: the cloister, and Anissa's first word.
+    trigger('cloister_arrive', CHAPEL.gate.x, CHAPEL.gate.y, { dialogue: 'cloister_arrive', flag: 'side.old_errand.cloister', once: true, onEnter: true, if: ERRAND.accepted }),
+    ...(['south', 'east', 'north'] as const).map((k): ObjSpec => {
+      const walk = CHAPEL[k];
+      return { layer: 'echo_zones', name: `cloister_${k}`, x: walk.x, y: walk.y, w: walk.w, h: walk.h, props: zone };
+    }),
+    // The watches: the guard in his alcove, the light on the strip he sees, and being seen there (in his era only).
+    ...WATCHES.flatMap((w): ObjSpec[] => [
+      npc(watchGuard(w), w.at.x, w.at.y, w.facing, { era: w.era }),
+      obj(`watch_${w.id}`, w.strip.x, w.strip.y, { kind: w.era === 'present' ? 'sight_now' : 'sight_then', walkable: true, era: w.era }, w.strip.w, w.strip.h),
+      trigger(`seen_${w.id}`, w.strip.x, w.strip.y, { dialogue: `seen_${w.id}`, era: w.era, if: `${ERRAND.accepted}, !${ERRAND.promise}` }, w.strip.w, w.strip.h),
+    ]),
+    // The crypt door: bolted from inside now; fifty years ago its bolt slides loose in the housing (the anchor), and once
+    // Patricio's nail is in it the door has stood a hand open for fifty years.
+    obj('crypt_door_bolted', CHAPEL.bolt.x, CHAPEL.bolt.y, { kind: 'crypt_door_bolted', solid: true, era: 'present', if: `!${ERRAND.anchor}`, dialogue: 'crypt_door_bolted' }, 2, 1),
+    obj('crypt_door_jammed', CHAPEL.bolt.x, CHAPEL.bolt.y, { kind: 'crypt_door_jammed', solid: true, era: 'present', if: ERRAND.anchor, dialogue: 'crypt_door_jammed' }),
+    obj('crypt_bolt', CHAPEL.bolt.x, CHAPEL.bolt.y, { kind: 'crypt_bolt', solid: true, era: 'echo', dialogue: 'crypt_bolt' }),
+    { layer: 'anchors', name: 'crypt_bolt_anchor', x: CHAPEL.bolt.x, y: CHAPEL.bolt.y, props: { object: 'crypt_bolt', flag: ERRAND.anchor } },
+    // The niche: the iron box now; fifty years ago young Benny kneels by it with his letter.
+    obj('promise_niche', CHAPEL.niche.x, CHAPEL.niche.y, { kind: 'promise_niche', solid: true, era: 'present', dialogue: 'promise_niche' }),
+    obj('promise_niche_echo', CHAPEL.niche.x, CHAPEL.niche.y, { kind: 'promise_niche', solid: true, era: 'echo', dialogue: 'promise_niche_echo' }),
+    npc('benny_crypt', CHAPEL.bennyYoung.x, CHAPEL.bennyYoung.y, 'up', { era: 'echo' }),
+    obj('cloister_well', CHAPEL.well.x, CHAPEL.well.y, { era: 'both', dialogue: 'cloister_well' }),
+  ];
+  return { id: 'ardencia-chapel', present: g, echo: g.clone(), objects, interior: true };
 }
 
 export const ARDENCIA_SOURCES: readonly (() => MapSource)[] = [
@@ -454,4 +522,5 @@ export const ARDENCIA_SOURCES: readonly (() => MapSource)[] = [
   ardenciaForge,
   ardenciaTunnel,
   ardenciaCamp,
+  ardenciaChapel,
 ];

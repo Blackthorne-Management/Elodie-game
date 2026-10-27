@@ -52,6 +52,7 @@ import ardenciaLibrary from '../../maps/ardencia-library.tmj?raw';
 import ardenciaForge from '../../maps/ardencia-forge.tmj?raw';
 import ardenciaTunnel from '../../maps/ardencia-tunnel.tmj?raw';
 import ardenciaCamp from '../../maps/ardencia-camp.tmj?raw';
+import ardenciaChapel from '../../maps/ardencia-chapel.tmj?raw';
 import xaraguaVillage from '../../maps/xaragua-village.tmj?raw';
 import xaraguaPlaza from '../../maps/xaragua-plaza.tmj?raw';
 import xaraguaBeach from '../../maps/xaragua-beach.tmj?raw';
@@ -111,6 +112,7 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'ardencia-forge': ardenciaForge,
   'ardencia-tunnel': ardenciaTunnel,
   'ardencia-camp': ardenciaCamp,
+  'ardencia-chapel': ardenciaChapel,
   'aldoria-quay': aldoriaQuay,
   'aldoria-bazaar': aldoriaBazaar,
   'aldoria-majlis': aldoriaMajlis,

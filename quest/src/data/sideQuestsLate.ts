@@ -13,13 +13,114 @@ import type { RpgContent } from '../engine/rpg.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CLOCKMAKER_DAWN, CLOCK_TOWER, KEEP, LETTERS, TOWER_CLOCK, TOWNHOUSE_DOOR } from './aldermoor.ts';
 import { ARGUERS, BAZAAR, HARBOR, OIL_STORE } from './jwaladesh.ts';
+import { CAMP, CHAPEL, ERRAND, FEAST, FEAST_FLAGS, TRIAL_MORNING } from './ardencia.ts';
 import { FLOOR_MAKER, HALL, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
 const f = (flag: string): Condition => ({ flag });
 const all = (...c: Condition[]): Condition => ({ all: c });
 
 /** XP each pays (Claude's call; tests/sideQuestsLate.test.ts checks the curve with all of them done). */
-export const LATE_XP = { notASpy: 40, letterFloor: 60, argue: 30, littleLamps: 60, sorry: 40, patientHour: 60, tea: 40 } as const;
+export const LATE_XP = {
+  // Chapters 3 to 6 (built Oct 27, second batch): Chapter 6 ends 74 XP short of level 18 on the route, and Z-4 already takes
+  // 30 of it, so everything from Chapter 3 to Chapter 6 together (fights included) stays under 44 (Claude's call).
+  feast: 5,
+  oldErrand: 5,
+  arrows: 2,
+  notASpy: 40,
+  letterFloor: 60,
+  argue: 30,
+  littleLamps: 60,
+  sorry: 40,
+  patientHour: 60,
+  tea: 40,
+} as const;
+
+// ---- Chapter 3 (Cenizal) -------------------------------------------------------------------------------------------
+
+const ALCAZAR = 'ardencia-alcazar';
+const soldier = (x: number, y: number) => ({ map: 'ardencia-camp', at: { x, y: y + 1 } });
+
+const CENIZAL: readonly SideQuestDef[] = [
+  // Ar-3: the contract board, the elders' feast, Elder Ferrán's salt tax (his blades, or the hall's book and three questions).
+  {
+    id: 'feast',
+    title: 'The Elders\' Feast',
+    giver: 'The contract board',
+    place: 'The Upper Town\'s plaza',
+    level: 10,
+    summary: 'The elders want discreet guards at their feast, the morning of the trial. A guard who hears nothing is paid well.',
+    accepted: f(FEAST_FLAGS.accepted),
+    available: TRIAL_MORNING,
+    start: [{ map: 'ardencia-town', at: { x: FEAST.board.x, y: FEAST.board.y + 1 } }],
+    nudge: 'There is a new notice on the contract board, Gigi. The elders are having a feast.',
+    steps: [
+      { text: 'Stand guard at the elders\' feast, inside the elders\' hall door in the Alcázar.', done: f(FEAST_FLAGS.heard), goals: [{ map: ALCAZAR, at: { x: FEAST.hallDoor.x, y: FEAST.hallDoor.y } }] },
+      {
+        text: 'Twelve in the hundred, nine years: under Elder Ferrán\'s stair on the plaza, or in the hall\'s salt-tax book in the records room.',
+        done: { any: [f(FEAST_FLAGS.tally), f(FEAST_FLAGS.book)] },
+        goals: [{ map: ALCAZAR, at: { x: FEAST.taxBook.x, y: FEAST.taxBook.y + 1 } }],
+      },
+      { text: 'Elder Ferrán, at the elders\' table.', done: f(FEAST_FLAGS.done), goals: [{ map: ALCAZAR, at: { x: FEAST.ferran.x, y: FEAST.ferran.y + 1 } }] },
+    ],
+    done: f(FEAST_FLAGS.done),
+    closed: f('story.noon'),
+    closedText: 'Closed: noon came. Elder Ferrán went up to the gallery to watch the law work.',
+    reward: { gold: 300, xp: LATE_XP.feast },
+  },
+  // Ar-4 (S-ARD): old Benny's promise in the crypt under the chapel, the cloister crossed in two eras, La Promesa de Benny.
+  {
+    id: 'old_errand',
+    title: 'The Old Lord\'s Errand',
+    giver: 'Old Lord Benny',
+    place: 'The quiet rooms, in the Alcázar',
+    level: 11,
+    secret: true,
+    summary: 'Old Benny wrote a promise before his son was born and left it in an iron box in the crypt under the chapel. Nobody has read it.',
+    accepted: f(ERRAND.accepted),
+    available: all(f('side.treasurer.done'), { notFlag: 'story.trial_fought' }),
+    start: [{ map: ALCAZAR, at: { x: 4, y: 15 } }],
+    steps: [
+      { text: 'Old Benny, in the quiet rooms.', done: f(ERRAND.accepted), goals: [{ map: ALCAZAR, at: { x: 4, y: 15 } }] },
+      {
+        text: 'The crypt off the cloister\'s north walk is bolted from inside. Rael\'s guards keep the walks now; Benny\'s kept them then, elsewhere.',
+        done: f(ERRAND.anchor),
+        goals: [{ map: 'ardencia-chapel', at: { x: CHAPEL.doorway.x, y: CHAPEL.doorway.y + 1 } }],
+        echoGoals: [{ map: 'ardencia-chapel', at: { x: CHAPEL.bennyYoung.x, y: CHAPEL.bennyYoung.y - 1 } }],
+      },
+      { text: 'The iron box in the crypt.', done: f(ERRAND.promise), goals: [{ map: 'ardencia-chapel', at: { x: CHAPEL.niche.x - 1, y: CHAPEL.niche.y } }] },
+      { text: 'Up Benny\'s own stair, to the old lord.', done: f(ERRAND.done), goals: [{ map: ALCAZAR, at: { x: 4, y: 15 } }] },
+    ],
+    done: f(ERRAND.done),
+    closed: f('story.trial_fought'),
+    closedText: 'Closed: the trial, and the forge. The promise is still in its iron box under the chapel.',
+    reward: { gold: 250, xp: LATE_XP.oldErrand, pillar: { pillar: 'influence', city: 'ardencia', amount: 2 } },
+  },
+  // Ar-5: five of Azzy's company at the strand camp; three saw every shot land wide; Azzy will not hear it.
+  {
+    id: 'arrows',
+    title: 'The Arrows Missed',
+    giver: 'A Free Brasador soldier',
+    place: 'The strand camp',
+    level: 11,
+    summary: 'Every shot from the wall landed wide, and those were the best shots in Ardencia. Azzy says they missed. His company is not so sure.',
+    accepted: f('side.arrows.accepted'),
+    available: all(f('act3.complete'), { notFlag: 'story.aldoria_arrived' }),
+    start: [soldier(9, 5)],
+    nudge: 'The soldier by the fire keeps looking up at the wall, Gigi.',
+    parallel: true,
+    steps: [
+      { text: 'The soldier by the fire.', done: f('side.arrows.a'), goals: [soldier(9, 5)] },
+      { text: 'The soldier by the coffee.', done: f('side.arrows.b'), goals: [soldier(11, 7)] },
+      { text: 'The soldier by the tents.', done: f('side.arrows.c'), goals: [soldier(12, 5)] },
+      { text: 'The crossbowman from the gatehouse.', done: f('side.arrows.d'), goals: [soldier(CAMP.soldierD.x, CAMP.soldierD.y)] },
+      { text: 'The musketeer from the wall.', done: f('side.arrows.e'), goals: [soldier(CAMP.soldierE.x, CAMP.soldierE.y)] },
+    ],
+    done: f('side.arrows.done'),
+    closed: f('story.aldoria_arrived'),
+    closedText: 'Closed: the trader sailed. Free Brasador still argues about the wall.',
+    reward: { xp: LATE_XP.arrows, pillar: { pillar: 'fear', city: 'ardencia', amount: 2 } },
+  },
+];
 
 // ---- Chapter 7 (Kirinoura) ------------------------------------------------------------------------------------------
 
@@ -239,10 +340,13 @@ const KINGSMERE: readonly SideQuestDef[] = [
 ];
 
 /** Every side quest built Oct 27, in chapter order. */
-export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...KUROSHI, ...AGNIPUR, ...KINGSMERE];
+export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...CENIZAL, ...KUROSHI, ...AGNIPUR, ...KINGSMERE];
 
 /** Pillars that follow a quest's answers (data/rpg.ts pillarRules): J-1's Fear by the blade, or Influence by the word. */
 export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [
+  // Ar-3: +2 Fear by the blades, or +2 Influence by the book (Ardencia).
+  { pillar: 'fear', city: 'ardencia', flags: [FEAST_FLAGS.fear], each: 2 },
+  { pillar: 'influence', city: 'ardencia', flags: [FEAST_FLAGS.influence], each: 2 },
   { pillar: 'fear', city: 'jwaladesh', flags: ['side.argue.fear'], each: 1 },
   { pillar: 'influence', city: 'jwaladesh', flags: ['side.argue.influence'], each: 1 },
 ];

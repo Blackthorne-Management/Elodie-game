@@ -1,0 +1,6 @@
+{
+  "straight down the walks in the present (the guard by the well sees, and back to the stair)": ["right*19","up*8","left*14","up*2","right*2","up","confirm","skip"],
+  "all the way in the memory (the honor guard under the arch sees)": ["right*3","echo","skip","right*16","up*8","left*14","up*3","right","confirm","skip"],
+  "the right swaps to the crypt, Benny heard, the bolt never jammed (the door stays bolted now)": ["right*3","echo","skip","right*5","echo","skip","right*5","echo","skip","right*5","up*2","echo","skip","up*5","left*4","echo","skip","left*7","up*3","right","confirm","skip","down*2","echo","skip","up*2","right*2","up","confirm","skip"],
+  "a swap missed before the third guard (seen there, back to the stair)": ["right*3","echo","skip","right*5","echo","skip","right*10","up*2","echo","skip","up*5","left*4","echo","skip","left*7","up*3","right","confirm","skip","left","down","confirm","skip","right","down*2","echo","skip","up*2","right*2","up","confirm","skip"]
+}

@@ -529,6 +529,15 @@ export const TILESET = {
     { gid: 433, name: 'name_stone_sun', base: 0xa8a8b0, accent: 0xf2d04b, pattern: 'dots' },
     { gid: 434, name: 'solange_plinth', base: 0xd8d0c0, accent: 0x6e6a78, pattern: 'border' },
     { gid: 435, name: 'stone_chisel', base: 0xc8c8d0, accent: 0x6b4426, pattern: 'stripes' },
+    // Ar-4 The Old Lord's Errand (Chapter 3, Oct 27; data/ardencia.ts): the lamplight a guard of now throws across the
+    // walk, the torchlight of one fifty years ago, Benny's crypt door bolted from inside, its loose bolt in the memory,
+    // the door jammed open by Patricio's nail, and the iron box in the niche.
+    { gid: 436, name: 'sight_now', base: 0x8a4a3a, accent: 0xf2d04b, pattern: 'dots' },
+    { gid: 437, name: 'sight_then', base: 0x7a6248, accent: 0xf2a050, pattern: 'dots' },
+    { gid: 438, name: 'crypt_door_bolted', base: 0x3a2a24, accent: 0x8a8a8a, pattern: 'cross' },
+    { gid: 439, name: 'crypt_bolt', base: 0x4a3a30, accent: 0xc8c8d0, pattern: 'stripes' },
+    { gid: 440, name: 'crypt_door_jammed', base: 0x2a1a14, accent: 0xc8c8d0, pattern: 'border' },
+    { gid: 441, name: 'promise_niche', base: 0x6e5a4a, accent: 0x8a8a8a, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 

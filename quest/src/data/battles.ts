@@ -534,6 +534,19 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
       { name: 'Sand Toss', power: 70, statuses: ['weakened'], chance: 0.5, every: 3, tell: 'The raider scoops up a fistful of sand...' },
     ],
   },
+  // Ar-3 The Elders' Feast (Chapter 3, built Oct 27): the blades Elder Ferrán pays to sit on his strongroom. Bought men.
+  feast_blade: {
+    id: 'feast_blade',
+    name: 'Hired blade',
+    look: 'road_bandit',
+    level: 10,
+    role: 'skirmisher',
+    bribable: true,
+    moves: [
+      { name: 'Long knife', power: 110 },
+      { name: 'Cheap shot', power: 140, every: 3, tell: 'The blade feints high and drops his shoulder...' },
+    ],
+  },
   // Guildmaster Qasim (review 3.1): level 12, a brute at 4 times HP and 1.4 ATK, the threat in what he buys. Phase 1
   // he hires a blade every third turn (HIRE_CAP on the field at once); at 40% he forecloses: Seize Assets once (every
   // fighter Weakened, telegraphed), then the Golden Wall (damage taken halved, its turns, a Surge shatters it). At 0
@@ -1426,6 +1439,20 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       tell: 'Smoke! Guard!',
       lowHp: 'Heal, Gigi.',
     },
+  },
+  // Chapter 3, Ar-3 (built Oct 27): Elder Ferrán's two hired blades at his strongroom door. Optional; paid little (the
+  // level curve: tests/sideQuestsLate.test.ts).
+  feast_blades: {
+    id: 'feast_blades',
+    title: 'Elder Ferrán\'s door',
+    backdrop: 'duel_court',
+    enemies: ['feast_blade', 'feast_blade'],
+    level: 10,
+    table: 'ardencia_side',
+    group: 'blades',
+    rewards: { xp: 4, gold: 60 },
+    sideQuest: 'feast',
+    tips: { start: 'Two of them, Gigi. They are paid to be here. We are not.', tell: 'He is going to cheat. Guard!', lowHp: 'Heal, Gigi.' },
   },
   // Chapter 7, K-3: the lantern moths at the lit posts. Paid flat (data).
   marsh_moths: {

@@ -1,0 +1,1199 @@
+{
+  "compressionlevel": -1,
+  "width": 24,
+  "height": 16,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 31,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,8,135,135,135,135,135,135,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,8,135,135,135,135,135,135,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,136,136,136,135,135,136,136,136,136,136,135,136,136,136,136,136,136,136,136,136,
+136,136,136,136,136,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+136,136,136,136,136,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,30,131,131,131,131,131,131,131,131,135,135,135,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,135,131,131,131,131,131,131,131,131,131,135,131,131,131,135,135,136,136,136,
+8,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+8,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+136,136,136,136,136,136,136,136,136,136,135,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,0,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,0,62,62,62,62,62,62,62,62,62,0,62,62,62,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,8,135,135,135,135,135,135,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,8,135,135,135,135,135,135,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,136,136,136,135,135,136,136,136,136,136,135,136,136,136,136,136,136,136,136,136,
+136,136,136,136,136,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+136,136,136,136,136,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,131,131,131,131,131,30,131,131,131,131,131,131,131,131,135,135,135,136,136,
+136,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,131,135,135,136,136,136,
+136,131,131,131,131,135,131,131,131,131,131,131,131,131,131,135,131,131,131,135,135,136,136,136,
+8,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+8,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,135,136,136,136,
+136,136,136,136,136,136,136,136,136,136,135,136,136,136,136,136,136,136,136,136,136,136,136,136,
+136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136,136
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,0,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,0,0,0,0,0,
+0,62,62,62,62,0,62,62,62,62,62,62,62,62,62,0,62,62,62,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,0,0,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,0,16,16,16,0,0,16,16,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,0,0,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,16,16,16,
+16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,0,16,16,16,0,0,16,16,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
+16,16,16,16,16,16,16,16,16,16,0,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "chapel_guard_well",
+          "type": "npc",
+          "x": 80,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "chapel_guard_well"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "honor_guard_arch",
+          "type": "npc",
+          "x": 160,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "honor_guard_arch"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "chapel_guard_third",
+          "type": "npc",
+          "x": 240,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "chapel_guard_third"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "honor_guard_east",
+          "type": "npc",
+          "x": 336,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "honor_guard_east"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "chapel_guard_north",
+          "type": "npc",
+          "x": 224,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "chapel_guard_north"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "benny_crypt",
+          "type": "npc",
+          "x": 144,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "benny_crypt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 7,
+          "name": "chapel_in",
+          "type": "door",
+          "x": 0,
+          "y": 192,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "ardencia-alcazar"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "alcazar_chapel"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "crypt_stair",
+          "type": "door",
+          "x": 64,
+          "y": 16,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "closed",
+              "type": "string",
+              "value": "crypt_stair_shut"
+            },
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.benny_promise"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "ardencia-alcazar"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "quiet_stair"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 9,
+          "name": "cloister_arrive",
+          "type": "trigger",
+          "x": 16,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cloister_arrive"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "side.old_errand.cloister"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.old_errand.accepted"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "seen_well",
+          "type": "trigger",
+          "x": 80,
+          "y": 192,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "seen_well"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.old_errand.accepted, !item.benny_promise"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "seen_arch",
+          "type": "trigger",
+          "x": 160,
+          "y": 192,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "seen_arch"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.old_errand.accepted, !item.benny_promise"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "seen_third",
+          "type": "trigger",
+          "x": 240,
+          "y": 192,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "seen_third"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.old_errand.accepted, !item.benny_promise"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "seen_east",
+          "type": "trigger",
+          "x": 304,
+          "y": 144,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "seen_east"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.old_errand.accepted, !item.benny_promise"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "seen_north",
+          "type": "trigger",
+          "x": 224,
+          "y": 64,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "seen_north"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.old_errand.accepted, !item.benny_promise"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 15,
+          "name": "cloister_gate",
+          "type": "spawn",
+          "x": 16,
+          "y": 192,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 16,
+          "name": "cloister_south",
+          "type": "echo_zone",
+          "x": 16,
+          "y": 192,
+          "width": 320,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.old_errand.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "cloister_echo"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "cloister_return"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "cloister_east",
+          "type": "echo_zone",
+          "x": 304,
+          "y": 64,
+          "width": 32,
+          "height": 128,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.old_errand.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "cloister_echo"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "cloister_return"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "cloister_north",
+          "type": "echo_zone",
+          "x": 80,
+          "y": 64,
+          "width": 224,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.old_errand.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "cloister_echo"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "cloister_return"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 19,
+          "name": "crypt_bolt_anchor",
+          "type": "anchor",
+          "x": 112,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.crypt_bolt"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "crypt_bolt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 20,
+          "name": "watch_well",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 192,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sight_now"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "watch_arch",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 192,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sight_then"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "watch_third",
+          "type": "puzzle_object",
+          "x": 240,
+          "y": 192,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sight_now"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "watch_east",
+          "type": "puzzle_object",
+          "x": 304,
+          "y": 144,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sight_then"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "watch_north",
+          "type": "puzzle_object",
+          "x": 224,
+          "y": 64,
+          "width": 16,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sight_now"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "crypt_door_bolted",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 48,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "crypt_door_bolted"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.crypt_bolt"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "crypt_door_bolted"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "crypt_door_jammed",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "crypt_door_jammed"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.crypt_bolt"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "crypt_door_jammed"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "crypt_bolt",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "crypt_bolt"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "crypt_bolt"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "promise_niche",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "promise_niche"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "promise_niche"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "promise_niche_echo",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "promise_niche_echo"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "promise_niche"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "cloister_well",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cloister_well"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "both"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 896,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 441,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

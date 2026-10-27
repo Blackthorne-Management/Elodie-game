@@ -188,6 +188,35 @@ describe('the Patient Hour (SECRET-ITEMS.md 7)', () => {
   });
 });
 
+describe('La Promesa de Benny, the letter (SECRET-ITEMS.md 5, Ar-4)', () => {
+  /** A foe who hits far harder than Gianna's HP, every turn. */
+  const BRUTE: EnemyDef = { id: 'brute', name: 'Brute', look: 'road_bandit', level: 20, role: 'brute', hpScale: 30, moves: [{ name: 'Smash', power: 900 }] };
+  const fight = (boons: { lastStand?: boolean }) => {
+    const b = new Battle(def, [gianna({ stats: { hp: 60, sp: 80, atk: 20, def: 1, mag: 40, spd: 1 } })], [BRUTE], [], { seed: 3, boons });
+    const events: BattleEvent[] = [...b.start()];
+    for (let i = 0; i < 40 && !b.outcome; i++) if (b.actor?.key === 'gianna') events.push(...b.act({ kind: 'guard' }));
+    return { b, events };
+  };
+
+  it('carried, it is the battle\'s boons', () => {
+    expect(battleBoons(new FlagStore({ 'item.benny_promise': true }), RPG).lastStand).toBe(true);
+    expect(battleBoons(new FlagStore({}), RPG).lastStand).toBeUndefined();
+  });
+
+  it('once a battle, the first blow that would fell a fighter leaves her standing at 1 HP; the next one fells her', () => {
+    const held = fight({ lastStand: true });
+    expect(held.events.some((e) => e.kind === 'text' && e.text === 'Benny\'s promise holds. Gianna stands.')).toBe(true);
+    // The blow that held took her to exactly 1 HP.
+    const at = held.events.findIndex((e) => e.kind === 'text' && e.text.startsWith('Benny\'s promise'));
+    const blow = held.events[at - 1]!;
+    expect(blow.kind === 'damage' && blow.to === 'gianna' && blow.amount === 59).toBe(true);
+    expect(held.b.lastStandUsed).toBe(true);
+    expect(held.b.outcome).toBe('lost');
+    const without = fight({});
+    expect(without.events.some((e) => e.kind === 'text' && e.text.startsWith('Benny\'s promise'))).toBe(false);
+  });
+});
+
 describe('Edmund\'s Tea Break after Al-1 Terribly Sorry', () => {
   it('heals 20% instead of 15% once his letters are delivered', () => {
     const edmund = RPG.members.find((m) => m.id === 'edmund')!;

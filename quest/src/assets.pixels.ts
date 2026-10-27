@@ -2879,6 +2879,27 @@ const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
+  // La Promesa de Benny (Oct 27): old Benny's letter, folded small, tied with an iron-grey cord, a red Brasador seal.
+  benny_promise: {
+    rows: [
+      '................',
+      '................',
+      '..kkkkkkkkkkkk..',
+      '..kwwwwwwwwwhk..',
+      '..kwhhhhhhhwhk..',
+      '..kwwwwwwwwwhk..',
+      '..kiiiikkiiiik..',
+      '..kwwwkRRkwwhk..',
+      '..kwwwkRrRkwhk..',
+      '..kwwwwkRkwwhk..',
+      '..kiiiiikiiiik..',
+      '..kwhhhhhhhwhk..',
+      '..kwwwwwwwwwhk..',
+      '..kkkkkkkkkkkk..',
+      '................',
+      '................',
+    ],
+  },
   // The Nightingale Key (Oct 27): a brass key whose bow is a small bird, wing up.
   nightingale_key: {
     rows: [

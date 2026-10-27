@@ -51,7 +51,21 @@ export const SECRET_ITEM_LIST: readonly ItemDef[] = [
     showcase: 'legendary',
     abilities: [{ name: 'Stop the Clock', text: 'Once per battle, the hands stop: every fighter in the party acts once more before any foe.' }],
   },
+  // Ar-4 The Old Lord's Errand (Chapter 3, built Oct 27; owner decision 2: Rael wears the charm, so the quest gives old
+  // Benny's written promise): a key item whose Last Stand holds while it is carried (Claude's call: the design's passive,
+  // Benny's Word, for the whole party once a battle, since the letter is nobody's to wear).
+  {
+    id: 'benny_promise',
+    name: 'La Promesa de Benny',
+    kind: 'key',
+    price: 0,
+    text: 'Old Benny\'s written promise, from the iron box in his crypt: a Brasador oath kept where no one could see. He gave it back to Gianna to keep.',
+    showcase: 'legendary',
+    boons: { lastStand: true },
+    abilities: [{ name: 'Benny\'s Word', text: 'Once a battle, the first fighter a blow would fell or Bind stands at 1 HP instead.' }],
+  },
   // What the quests carry.
+  { id: 'ferran_tally', name: 'Elder Ferrán\'s tally', kind: 'key', price: 0, text: 'Twelve in every hundred of the salt tax, for nine years, in Elder Ferrán\'s own hand. From his strongroom.' },
   { id: 'sorry_letters', name: "Edmund's letters", kind: 'key', price: 0, text: 'Five apologies in Edmund\'s good hand, each sealed in grey wax, each addressed to someone he has hit. One is to a goose.' },
   { id: 'sealed_reservoir', name: 'The sealed reservoir', kind: 'key', price: 0, text: 'A clay lamp reservoir, sealed fifty years ago with five measures of oil inside. A white wick is tucked in its neck.' },
   { id: 'sayo_letter', name: 'Lady Sayo\'s letter', kind: 'key', price: 0, text: 'Sayo Suzumori\'s last message to Marshal Patricio, from the lacquer box under her singing floor.' },

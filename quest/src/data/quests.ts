@@ -2240,6 +2240,19 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     title: 'The treasurer is alive',
     text: '"I am alive. I am held where the ash falls. Tell her I am alive." In the treasurer\'s own hand, dated this year. Where the ash falls: unknown.',
   },
+  // Ar-3 and Ar-5 (built Oct 27).
+  {
+    id: 'salt_tax',
+    when: 'clue.salt_tax',
+    title: 'Twelve in the hundred',
+    text: 'The hall\'s salt-tax book: the gate\'s count and the hall\'s total differ by twelve in every hundred, nine years running. Initialled F.',
+  },
+  {
+    id: 'arrows_missed',
+    when: 'clue.arrows_missed',
+    title: 'The arrows missed',
+    text: 'Three of Azzy\'s company saw every bolt and ball from the wall land wide: the best shots in Ardencia. Azzy: "Then they missed."',
+  },
   {
     id: 'bread_night',
     when: 'clue.bread_night',

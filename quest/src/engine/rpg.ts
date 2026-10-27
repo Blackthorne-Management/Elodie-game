@@ -136,6 +136,8 @@ export interface BattleBoons {
   dawnHeal?: number;
   calmFloor?: number;
   foresight?: boolean;
+  /** Benny's Word (La Promesa de Benny, the letter): once a battle, the first fighter who would fall stands at 1 HP. */
+  lastStand?: boolean;
 }
 
 export type ShowcaseTier = 'story' | 'legendary' | 'reward';
@@ -477,6 +479,7 @@ export function battleBoons(flags: FlagReader, rpg: RpgContent): BattleBoons {
     if (b.dawnHeal !== undefined) out.dawnHeal = Math.max(out.dawnHeal ?? 0, b.dawnHeal);
     if (b.calmFloor !== undefined) out.calmFloor = Math.max(out.calmFloor ?? 0, b.calmFloor);
     if (b.foresight) out.foresight = true;
+    if (b.lastStand) out.lastStand = true;
   }
   return out;
 }

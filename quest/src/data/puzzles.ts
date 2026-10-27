@@ -234,6 +234,29 @@ export const PUZZLES: readonly PuzzleDef[] = [
     // Out through the far wall, with Azzy: the tunnel's wall shuts behind the party.
     goal: { flag: 'story.tunnel_entered' },
   },
+  // Ar-4's secret (S-ARD, built Oct 27): the cloister in two eras. Into the memory before the well, out before the arch,
+  // in before the third guard, out on the east walk, in before the north arch; young Benny at the crypt, the bolt jammed
+  // (the anchor); out to the present at the crypt door, and the promise from the iron box.
+  {
+    id: 'ardencia_cloister',
+    title: 'The Old Lord\'s Errand: the cloister in two eras, the crypt bolt (secret item; PUZZLES.md S-ARD)',
+    map: 'ardencia-chapel',
+    spawn: 'cloister_gate',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'story.yari_asked': true,
+      'story.ardencia_arrived': true,
+      'story.azzy_met': true,
+      'story.trial_set': true,
+      'side.treasurer.zelia': true,
+      'side.treasurer.benny_open': true,
+      'side.treasurer.done': true,
+      'side.old_errand.accepted': true,
+      'side.old_errand.cloister': true,
+    },
+    goal: { flag: 'item.benny_promise' },
+  },
   {
     id: 'aldoria_vault',
     title: 'The guild vault: the balance door and the sun lock (signature puzzle: the ledger; PUZZLES.md SIG-ALD)',

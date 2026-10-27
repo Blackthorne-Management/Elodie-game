@@ -734,6 +734,8 @@ export class Battle {
   surgedInPhase = false;
   /** The boss's floor has held (its text shown), and the finale is owed before anyone else moves. */
   floorHeld = false;
+  /** Benny's Word (BattleBoons.lastStand) has held this battle: it holds once. */
+  lastStandUsed = false;
   private finalePending = false;
   /** The boss's own turn count when he used his finisher. */
   private finisherAt: number | null = null;
@@ -1469,6 +1471,15 @@ export class Battle {
         events.push({ kind: 'text', text: b.floor.text });
         if (this.def.finale) this.finalePending = true;
       }
+      return events;
+    }
+    // Benny's Word (La Promesa de Benny, the letter; SECRET-ITEMS.md 5): once a battle, the first fighter a blow would
+    // fell or Bind stands at 1 HP instead.
+    if (b.side === 'party' && this.boons.lastStand && !this.lastStandUsed && b.hp > 1 && amount >= b.hp) {
+      this.lastStandUsed = true;
+      amount = b.hp - 1;
+      b.hp = 1;
+      events.push({ kind: 'damage', from: a.key, to: b.key, amount, ...info }, { kind: 'text', text: `Benny's promise holds. ${b.name} stands.` });
       return events;
     }
     b.hp = Math.max(0, b.hp - amount);

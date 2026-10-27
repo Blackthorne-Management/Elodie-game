@@ -208,7 +208,8 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   zelia: n('zelia', 'zelia', 'Zelia, steward of the Alcázar'),
   rivera: n('rivera', 'rivera', 'Captain Rivera'),
   treasurer_daughter: n('treasurer_daughter', 'treasurer_daughter', "The treasurer's daughter"),
-  ard_elder_a: n('ard_elder_a', 'ard_elder', 'Elder', 'ard_elder_talk'),
+  // Elder Ferrán (Ar-3 The Elders' Feast, Oct 27): his own conversation, the shared line until the feast.
+  ard_elder_a: n('ard_elder_a', 'ard_elder', 'Elder', 'ferran_talk'),
   ard_elder_b: n('ard_elder_b', 'ard_elder_f', 'Elder', 'ard_elder_talk'),
   ard_elder_c: n('ard_elder_c', 'ard_elder', 'Elder', 'ard_elder_talk'),
   hall_witness: n('hall_witness', 'oath_knight', 'Witness oath-knight'),
@@ -236,6 +237,16 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   free_soldier_c: n('free_soldier_c', 'free_brasador', 'Free Brasador soldier'),
   camp_quartermaster: { ...n('camp_quartermaster', 'free_brasador', 'Quartermaster'), shop: 'ardencia_camp' },
   camp_trader: n('camp_trader', 'ferryman', 'Trader captain'),
+  // Built Oct 27: Ar-4's cloister (Rael's guards now, Benny's honor guard and young Benny fifty years ago) and Ar-5's
+  // two more of Azzy's company at the camp.
+  chapel_guard_well: n('chapel_guard_well', 'brasador_halberdier', "Rael's guard", 'chapel_guard_talk'),
+  chapel_guard_third: n('chapel_guard_third', 'brasador_halberdier', "Rael's guard", 'chapel_guard_talk'),
+  chapel_guard_north: n('chapel_guard_north', 'brasador_halberdier', "Rael's guard", 'chapel_guard_talk'),
+  honor_guard_arch: n('honor_guard_arch', 'echo_soldier', "Benny's honor guard", 'honor_guard_echo_talk'),
+  honor_guard_east: n('honor_guard_east', 'echo_soldier', "Benny's honor guard", 'honor_guard_echo_talk'),
+  benny_crypt: n('benny_crypt', 'benny_young', 'Lord Benny'),
+  free_soldier_d: n('free_soldier_d', 'free_brasador', 'Free Brasador crossbowman'),
+  free_soldier_e: n('free_soldier_e', 'free_brasador', 'Free Brasador musketeer'),
 
   // Chapter 4, Al-Doria (Oct 21). Named: Samira, Layla, Qasim, Yusuf (the design); Coralie (FAMILY.md, the owner).
   // Everyone else by role (the CAPITALS rule). Greetings are flagged for the fluent-reader pass (data/lang).

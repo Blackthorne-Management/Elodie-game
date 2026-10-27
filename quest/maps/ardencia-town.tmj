@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 24,
+  "nextobjectid": 26,
   "layers": [
     {
       "id": 1,
@@ -978,6 +978,67 @@
               "value": "present"
             }
           ]
+        },
+        {
+          "id": 24,
+          "name": "feast_board",
+          "type": "puzzle_object",
+          "x": 352,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "feast_board"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "sign"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "ferran_door",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "ferran_door"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     }
@@ -988,10 +1049,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 880,
+      "imageheight": 896,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 435,
+      "tilecount": 441,
       "columns": 8,
       "margin": 0,
       "spacing": 0
