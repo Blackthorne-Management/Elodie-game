@@ -979,7 +979,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   // The Hushed (COMBAT 13.3; the outline section 5 with its second review's 3.1): the Regent's almoner, the head the
   // cells kneel to, level 24, a caster boss: HP x7 and MAG x1.25 (magScale; a caster boss's spells never scaled before).
   // Hush takes the party's skills and moves two turns at a time (Attack, Guard and Item only); Hush the Light is a
-  // whisper at Anissa, and Gianna steps in (seize: Calm and Comfort are after the release, the review's cut). At 0 HP she
+  // whisper at Anissa, and Gianna steps in (since Oct 27 it takes her Calm, -2: COMBAT 8, Calm and Comfort). At 0 HP she
   // goes down on one knee and the watch takes her: nobody dies.
   the_hushed: {
     id: 'the_hushed',
