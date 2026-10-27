@@ -97,16 +97,18 @@ export function storyGoal(quest: QuestDef | null, flags: FlagReader, sideQuests:
     // The story step that hands the errands out, first (Samira on the Majlis steps).
     const own = goalNow(objective.goals, objective.echoGoals, flags, era, mapId);
     if (own) return own;
-    const stops = [...sideGoals(sideQuests, flags, era, mapId), ...mysteryGoals(sideQuests, flags)].map((s) => s.goal);
+    // A secret quest is optional: the arrow never leads to it for a story step.
+    const open = sideQuests.filter((q) => !q.secret);
+    const stops = [...sideGoals(open, flags, era, mapId), ...mysteryGoals(open, flags)].map((s) => s.goal);
     // In the Echo, the memory's own step first (it is where the player stands).
     return (era === 'echo' ? stops.find((g) => g.echo) : undefined) ?? stops.find((g) => g.map === mapId) ?? stops[0] ?? null;
   }
   return goalNow(objective.goals, objective.echoGoals, flags, era, mapId);
 }
 
-/** Side quests not started yet that the player could start now (`available`): mystery quests. */
+/** Side quests not started yet that the player could start now (`available`): mystery quests. A secret one never is. */
 export function mysteryQuests(quests: readonly SideQuestDef[], flags: FlagReader): SideQuestDef[] {
-  return quests.filter((q) => sideQuestStatus(flags, q) === 'unknown' && !questClosed(q, flags) && (!q.available || evaluate(q.available, flags)));
+  return quests.filter((q) => !q.secret && sideQuestStatus(flags, q) === 'unknown' && !questClosed(q, flags) && (!q.available || evaluate(q.available, flags)));
 }
 
 /** Where each mystery quest starts (its giver). */

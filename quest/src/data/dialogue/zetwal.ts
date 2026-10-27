@@ -7,6 +7,18 @@
 
 import type { Condition } from '../../engine/conditions.ts';
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
+import type { StageCue } from '../../engine/stage.ts';
+import {
+  ECHO_STONECUTTER,
+  EAST_WAY,
+  MOURNER_LISTENS,
+  ORDINALS,
+  PLINTH_STEP,
+  READER_SPOTS,
+  READING_ORDER,
+  WEST_WAY,
+  Z4,
+} from '../seventhStone.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -65,6 +77,276 @@ const Y = 'yari';
 export const OLD_SAVE_FLAGS: readonly string[] = [
   // The Hall clerk sent Gianna to the engraver in the Iron Market for the seal (he brings it to the Hall now).
   'story.papers_asked',
+];
+
+// ---- Z-4 The Seventh Stone (secret side quest, Chapter 1; SIDE-QUESTS.md Z-4, SECRET-ITEMS.md 1, PUZZLES.md S-ZET) ----
+// The mourner on the Temple island gives it after the lamp. The first Reading of the Names plays in the temple's memory;
+// Patricio carves a sun into the blank seventh stone with the chisel the stonecutter left (the anchor); in the present
+// the stones touched in the reading's order, ending on the seventh, open the drawer under Solange's plinth. No fighting.
+// Anissa's hints (PUZZLES.md S-ZET) come at the plinth and after wrong stones (side quests have no hint timer: the
+// answer waits for five wrong stones, as SECRET-ITEMS.md has the third hint wait).
+
+const MOURNER = 'mourner';
+/** The memory's people at the first reading (looks and speakers by the same ids). */
+const SOLANGE = 'echo_solange';
+const SCOUT = 'echo_caona_scout';
+const CUTTER = 'echo_stonecutter';
+
+/** The temple's memory plays the first reading while the quest is open and the seventh stone is still blank. */
+const Z4_READING: Condition = { all: [{ flag: Z4.accepted }, { notFlag: Z4.anchor }, { notFlag: Z4.done }] };
+
+const Z4_HINTS = [
+  'The stones sound like voices, Gigi. Like someone saying names.',
+  'Grandfather was here at the very first reading, Gigi. The grove remembers it. Watch who goes where, in order.',
+  'Carve the last stone in the memory, then touch them in the order they spoke: 3, 1, 5, 2, 6, 4, then the seventh.',
+];
+
+/** Each stone's voice (its chime is `stone_<n>` in audio.config.ts). */
+const STONE_NOTES: readonly string[] = ['', 'high and bright', 'clear and ringing', 'low and warm', 'soft, like a hum', 'bright and rising', 'deep and slow', 'clear and new'];
+
+const MOURNER_Z4: Record<string, DialogueNode> = {
+  z4_offer: {
+    speaker: MOURNER,
+    lines: [
+      { text: 'I said his name, and everyone heard it. Thank you.' },
+      { text: 'Touch a name stone and it sings, did you know? Six of them do. The seventh is blank, and it has never made a sound.' },
+      { text: 'Mother Solange cut a riddle into the plinth for it. Fifty years, and nobody has ever answered it.' },
+    ],
+    choices: [
+      { text: "I'll try to answer it.", next: 'z4_accept' },
+      { text: 'Some other night.', next: 'z4_later' },
+    ],
+  },
+  z4_later: { speaker: MOURNER, lines: [{ text: 'It has waited fifty years. It can wait for you.' }] },
+  z4_accept: {
+    speaker: MOURNER,
+    set: { [Z4.accepted]: true },
+    lines: [
+      { text: 'Then listen to them first. They are counted sunwise from the plinth\'s right hand. My husband\'s is the third.' },
+      nar('(The Seventh Stone is in the Quests page of the menu.)'),
+    ],
+  },
+  z4_remind: {
+    speaker: MOURNER,
+    lines: [
+      { if: { notFlag: Z4.anchor }, text: 'Six voices and a silence. The seventh is still blank.' },
+      { if: { flag: Z4.anchor }, text: 'There is a sun on the seventh stone. I have sat by it every year, and I never saw a sun.' },
+    ],
+  },
+  z4_sung: { speaker: MOURNER, lines: [{ text: 'Seven voices. I sat here an hour tonight and listened to all of them.' }] },
+};
+
+/** One reader comes in, walks up to a stone and says a name over it; the stone chimes. */
+function reader(n: number, look: string, from: { x: number; y: number }, name: string, extra: StageCue[] = []): DialogueLine {
+  const spot = READER_SPOTS[n]!;
+  return {
+    speaker: look,
+    text: name,
+    fx: `stone_${n}`,
+    stage: [...extra, { do: 'enter', actor: `reader_${n}`, look, from, to: spot.at, facing: spot.facing }, { do: 'look', actor: `reader_${n}` }],
+  };
+}
+const leaves = (n: number, to: { x: number; y: number }): StageCue => ({ do: 'exit', actor: `reader_${n}`, to, async: true });
+
+const READING_Z4: Record<string, DialogueNode> = {
+  z4_reading: {
+    lines: [
+      nar('Lanterns hang from the scaffolding. Mother Solange stands by the new plinth with a list, and seven new stones wait.', {
+        stage: [
+          { do: 'place', actor: 'stonecutter', look: CUTTER, at: ECHO_STONECUTTER, facing: 'down' },
+          { do: 'look', actor: `npc:${SOLANGE}` },
+        ],
+      }),
+      say(SOLANGE, 'The first reading of the names. Come up one at a time, and say the name you carried here.'),
+      reader(3, 'echo_elder_f', WEST_WAY, 'Marie-Lourdes Cadet. She cooked for the whole camp, and never once sat down to eat.'),
+      reader(1, 'echo_drummer', EAST_WAY, 'Jean-Fils Beauvais. He drummed us through the cane at night, so we could find each other.', [leaves(3, WEST_WAY)]),
+      reader(5, 'echo_elder_m', WEST_WAY, 'Rosalie Jeune, my sister. A scout. She always went ahead.', [leaves(1, EAST_WAY)]),
+      // Two readers come up together and cross on the way (the design's muddle): the one from the west speaks first.
+      reader(2, 'echo_soldier', WEST_WAY, 'Dieudonné Lafortune. He carried the flag up the bridge road and did not come down.', [
+        leaves(5, WEST_WAY),
+        { do: 'enter', actor: 'reader_6', look: 'echo_cook', from: EAST_WAY, to: READER_SPOTS[6]!.at, facing: READER_SPOTS[6]!.facing, async: true },
+      ]),
+      { speaker: 'echo_cook', text: 'Odilon Philogène, the boatman. He kept the powder dry in the boats.', fx: 'stone_6', stage: [{ do: 'look', actor: 'reader_6' }] },
+      reader(4, 'echo_aide', WEST_WAY, 'Fanfan Michel. She carried the Marshal\'s letters and never lost one.', [leaves(2, WEST_WAY), leaves(6, EAST_WAY)]),
+      nar('A young scout of Caona\'s company lays her hand on the last stone, the blank one, and says her brother\'s name.', {
+        stage: [
+          leaves(4, WEST_WAY),
+          { do: 'walk', actor: `npc:${SCOUT}`, to: READER_SPOTS[7]!.at, facing: READER_SPOTS[7]!.facing },
+          { do: 'look', actor: `npc:${SCOUT}` },
+        ],
+      }),
+      nar('The stone stays silent. There is nothing cut into it to answer her.'),
+      say(CUTTER, 'That is not a Zetwal name, child. I cut Zetwal names.', { stage: [{ do: 'look', actor: 'stonecutter' }, { do: 'face', actor: 'stonecutter', facing: 'right' }] }),
+      say(SCOUT, 'He fell on the bridge road, with yours.', { stage: [{ do: 'face', actor: `npc:${SCOUT}`, facing: 'up' }] }),
+      nar('The stonecutter lays his chisel on the plinth, and walks off into the scaffolding.', {
+        stage: [
+          { do: 'walk', actor: 'stonecutter', to: PLINTH_STEP, facing: 'up' },
+          { do: 'wait', ms: 500 },
+          { do: 'exit', actor: 'stonecutter', to: WEST_WAY },
+        ],
+      }),
+      say(SOLANGE, 'Then the seventh stays blank, until this temple has someone braver than its stonecutter.', { stage: [{ do: 'look', actor: `npc:${SOLANGE}` }] }),
+      say(SOLANGE, 'Say them as they were first said, and the last shall answer. I will have that cut into the plinth.'),
+      nar('Mother Solange writes the scout\'s brother at the foot of her list, in her own hand.', { set: { [Z4.watched]: true } }),
+      nar('(The stonecutter\'s chisel lies on the plinth.)', { stage: [{ do: 'look', actor: 'player' }] }),
+    ],
+  },
+};
+
+function stoneScript(n: number): DialogueScript {
+  const step = READING_ORDER.indexOf(n);
+  const ord = ORDINALS[n]!;
+  const caneDue: Condition = { all: [{ flag: 'side.cane_name.accepted' }, { notFlag: 'side.cane_name.stones' }] };
+  const knock = nar(`The ${ord} stone gives a dull knock, and all seven fall silent.`, { fx: 'stone_hush' });
+  /** A wrong stone: the order starts again; the third and the fifth bring Anissa's next hint. */
+  const hush = (misses: number): DialogueNode => ({
+    set: { [Z4.seq]: 0, [Z4.misses]: misses },
+    lines: [knock, ...(misses === 3 ? [say(A, Z4_HINTS[1]!)] : []), ...(misses === 5 ? [say(A, Z4_HINTS[2]!)] : [])],
+  });
+  const nodes: Record<string, DialogueNode> = {
+    start: {
+      lines: [],
+      next: [
+        // A Name in the Cane's first step still reads the stones (the cutter's grandmother is on none of them).
+        { if: caneDue, to: 'cane' },
+        ...(n === 7 ? [{ if: { notFlag: Z4.anchor } as Condition, to: 'dead' }] : []),
+        // (Unset counts as 0: the first stone of the order needs no earlier touch.)
+        { if: step === 0 ? { flag: Z4.seq, lte: 0 } : { flag: Z4.seq, eq: step }, to: 'chime' },
+        { if: { flag: Z4.misses, gte: 5 }, to: 'knock' },
+        { if: { flag: Z4.misses, eq: 4 }, to: 'hush_5' },
+        { if: { flag: Z4.misses, eq: 3 }, to: 'hush_4' },
+        { if: { flag: Z4.misses, eq: 2 }, to: 'hush_3' },
+        { if: { flag: Z4.misses, eq: 1 }, to: 'hush_2' },
+        { to: 'hush_1' },
+      ],
+    },
+    cane: { set: { 'side.cane_name.stones': true }, lines: STONES_READ },
+    dead: { lines: [nar('The seventh stone. Smooth and blank, and silent under Gianna\'s hand.')] },
+    chime: {
+      set: { [Z4.seq]: step + 1 },
+      lines: [nar(n === 7 ? `The ${ord} stone, with its weathered sun. It sings: ${STONE_NOTES[n]}.` : `The ${ord} stone. It sings: ${STONE_NOTES[n]}.`, { fx: `stone_${n}` })],
+      next: step === READING_ORDER.length - 1 ? 'answer' : undefined,
+    },
+    hush_1: hush(1),
+    hush_2: hush(2),
+    hush_3: hush(3),
+    hush_4: hush(4),
+    hush_5: hush(5),
+    knock: { set: { [Z4.seq]: 0 }, lines: [knock] },
+  };
+  if (step === READING_ORDER.length - 1) {
+    nodes.answer = {
+      set: { [Z4.answered]: true },
+      lines: [
+        nar('Then all seven sing at once, one long chord over the lamp court.', { fx: 'stones_chord' }),
+        say(MOURNER, 'Seven. I have come here every year since he died, and I never once heard seven.', {
+          stage: [
+            { do: 'look', actor: `npc:${MOURNER}` },
+            { do: 'walk', actor: `npc:${MOURNER}`, to: MOURNER_LISTENS, facing: 'up' },
+          ],
+        }),
+        nar('Under the plinth, stone grinds on stone. A drawer has slid open in its foot.', { fx: 'shake', stage: [{ do: 'look', actor: 'player' }] }),
+        say(A, 'Gigi. The plinth opened.'),
+      ],
+    };
+  }
+  return script(`name_stone_${n}`, nodes);
+}
+
+const SEVENTH_STONE_DIALOGUE: readonly DialogueScript[] = [
+  ...[1, 2, 3, 4, 5, 6, 7].map(stoneScript),
+  // Solange's plinth in the present: her riddle; Anissa's first hint while the seventh is blank; the drawer and the Quill.
+  script('solange_plinth', {
+    start: {
+      lines: [],
+      next: [
+        { if: { flag: Z4.done }, to: 'empty' },
+        { if: { flag: Z4.answered }, to: 'drawer' },
+        { if: { all: [{ flag: Z4.accepted }, { notFlag: Z4.anchor }] }, to: 'hint' },
+        { to: 'riddle' },
+      ],
+    },
+    riddle: { lines: [nar('A plinth in the ring of name stones. Cut into it: "Say them as they were first said, and the last shall answer." M.S.')] },
+    hint: {
+      lines: [
+        nar('A plinth in the ring of name stones. Cut into it: "Say them as they were first said, and the last shall answer." M.S.'),
+        say(A, Z4_HINTS[0]!),
+      ],
+    },
+    drawer: {
+      set: { [Z4.done]: true },
+      lines: [
+        nar('In the drawer under the plinth, wrapped in oilcloth: a quill with its nib worn to a slant, and a folded list.'),
+        nar('Mother Solange\'s first list of names. The last line, in her own hand, is a Yaguana name: the scout\'s brother.'),
+        say(G, 'She wrote him down anyway. Fifty years under a plinth, and nobody ever read it.'),
+        nar('(Gianna received Solange\'s Quill. Her list goes with it.)', { set: { 'item.solange_quill': 1 } }),
+        say(A, 'Grandfather was at the first reading, wasn\'t he? He carved the sun.'),
+        say(G, 'He did. For whoever kept this temple after him.'),
+      ],
+    },
+    empty: { lines: [nar('Solange\'s plinth, its drawer empty now. The riddle is answered: all seven stones sing.')] },
+  }),
+  // The memory: the plinth with the stonecutter's chisel on it.
+  script('plinth_echo', {
+    start: {
+      lines: [],
+      next: [
+        { if: { all: [{ flag: Z4.accepted }, { notFlag: Z4.anchor }, { notFlag: Z4.chisel }] }, to: 'chisel' },
+        { if: { flag: Z4.chisel }, to: 'held' },
+        { to: 'plain' },
+      ],
+    },
+    plain: { lines: [nar('A new plinth, the stone still pale. Nothing is cut into it yet.')] },
+    chisel: {
+      set: { [Z4.chisel]: true },
+      lines: [nar('The stonecutter\'s chisel and mallet, left on the plinth. Patricio picks them up.')],
+    },
+    held: { lines: [nar('A new plinth, the stone still pale. The stonecutter\'s chisel is in Patricio\'s hand.')] },
+  }),
+  // The memory: the blank seventh stone. Carved (the anchor), it keeps a sun for fifty years.
+  script('seventh_stone_echo', {
+    start: {
+      lines: [],
+      next: [{ if: { flag: Z4.anchor }, to: 'carved' }, { if: { flag: Z4.chisel }, to: 'blank_chisel' }, { to: 'blank' }],
+    },
+    blank: { lines: [nar('The seventh stone, new and blank. Nothing to cut it with.')] },
+    blank_chisel: {
+      lines: [nar('The seventh stone, new and blank.')],
+      choices: [
+        { text: 'Carve a sun into it.', next: 'carve' },
+        { text: 'Not yet.' },
+      ],
+    },
+    carve: {
+      lines: [
+        nar('No name: Patricio does not know the brother\'s name, and it is not his to cut. He cuts a sun, the sun of Kay Soley.'),
+        say(P, 'For whoever keeps this temple after me.', { set: { [Z4.anchor]: true } }),
+        nar('The scout bows to the Marshal, and then to the stone.', { stage: [{ do: 'face', actor: `npc:${SCOUT}`, facing: 'player' }] }),
+      ],
+    },
+    carved: { lines: [nar('The seventh stone, with a fresh sun cut into it. The chips are still on the grass.')] },
+  }),
+  script('temple_echo_return', {
+    start: { lines: [], next: [{ if: { all: [{ flag: Z4.anchor }, { notFlag: 'story.seventh_sun_seen' }] }, to: 'sun' }] },
+    sun: {
+      set: { 'story.seventh_sun_seen': true },
+      lines: [
+        nar('Up in the ring of name stones, the seventh has a sun cut into it now, worn soft by fifty years of rain.'),
+        say(A, 'Gigi, that sun was not there before. The seventh stone was blank.'),
+      ],
+    },
+  }),
+  // The memory's people at the first reading, between scenes.
+  script('echo_solange_talk', {
+    start: { lines: [], next: [{ if: { flag: Z4.anchor }, to: 'after' }, { to: 'before' }] },
+    before: { speaker: SOLANGE, lines: [{ text: 'Six names said and one refused, Marshal. I will not read the list again until the seventh is cut.' }] },
+    after: { speaker: SOLANGE, lines: [{ text: 'A sun. Then the seventh is kept, even if no one here can say the name. I can write it.' }] },
+  }),
+  script('echo_caona_scout_talk', {
+    start: { lines: [], next: [{ if: { flag: Z4.anchor }, to: 'after' }, { to: 'before' }] },
+    before: { speaker: SCOUT, lines: [{ text: 'Caona sent me to say his name here. I said it. The stone did not hear me.' }] },
+    after: { speaker: SCOUT, lines: [{ text: 'The stone has a sun now. When it sings, it will be him.' }] },
+  }),
 ];
 
 export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
@@ -1142,6 +1424,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
 
+  // After the lamp she gives Z-4 The Seventh Stone (secret: nothing points to her; the quest's lines are below).
   script('mourner_talk', {
     start: { lines: [], next: [{ if: { flag: 'story.anissa_woke' }, to: 'after' }, { to: 'before' }] },
     before: {
@@ -1149,9 +1432,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [{ text: "My husband's name is on the third stone. I come every year. This year I wasn't sure anyone would hear it." }],
     },
     after: {
-      speaker: 'mourner',
-      lines: [{ text: 'I said his name, and everyone heard it. Thank you.' }],
+      lines: [],
+      next: [
+        { if: { flag: Z4.done }, to: 'z4_sung' },
+        { if: { flag: Z4.accepted }, to: 'z4_remind' },
+        { to: 'z4_offer' },
+      ],
     },
+    ...MOURNER_Z4,
   }),
 
   script('fisher_island_talk', {
@@ -1177,16 +1465,23 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     search: { set: { 'side.cane_name.stones': true }, lines: STONES_READ },
   }),
 
-  once('temple_echo_enter', 'story.temple_echo_seen', [
-    nar('Scaffolding and sawdust. The temple is half built, and the lamp is brand new.'),
-    say(AF, "I've got the door, Gigi."),
-  ]),
+  // The temple fifty years ago, the night before the signing. With Z-4 open, the first Reading of the Names plays here
+  // each visit until the seventh stone is carved (the order is shown once a visit: SECRET-ITEMS.md 1).
+  script('temple_echo_enter', {
+    start: { lines: [], next: [{ if: { notFlag: 'story.temple_echo_seen' }, to: 'scene' }, { if: Z4_READING, to: 'z4_reading' }] },
+    scene: {
+      set: { 'story.temple_echo_seen': true },
+      lines: [nar('Scaffolding and sawdust. The temple is half built, and the lamp is brand new.'), say(AF, "I've got the door, Gigi.")],
+      next: [{ if: Z4_READING, to: 'z4_reading' }],
+    },
+    ...READING_Z4,
+  }),
   simple('lamp_echo', [nar('The Gaze lamp, new and bright with polish. Someone is still fussing with the wick.')]),
   simple('echo_lampwright_talk', [
     say('echo_lampwright', 'The Marshal wants it lit for the signing. As if the goddess keeps to a schedule.'),
     say('echo_lampwright', "She'll light when she's ready. Lamps are like that. So are people."),
   ]),
-  simple('echo_builder_talk', [say('echo_builder', "Mind the scaffolding, Marshal. We'll have her roofed by the first reading of the names. Or the second.")]),
+  simple('echo_builder_talk', [say('echo_builder', "Mind the scaffolding, Marshal. We meant to have her roofed for the first reading of the names. That's tonight.")]),
 
   // ---- Yari -------------------------------------------------------------------------------------
   script('yari_talk', {
@@ -2241,4 +2536,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [nar("Mother Solange's list. The newest line is in Gianna's hand: Rose-Aimée, cane cutter, the Cane Road.")],
     },
   }),
+  // ---- Z-4 The Seventh Stone (secret; data/seventhStone.ts) -----------------------------------
+  ...SEVENTH_STONE_DIALOGUE,
 ];
+

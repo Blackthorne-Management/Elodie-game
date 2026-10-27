@@ -10,7 +10,7 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Oct 27** (the remaining print files).
+and ticks items off here as they land. Last updated **Oct 27** (the remaining print files; Z-4 The Seventh Stone).
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -54,6 +54,18 @@ the herald. Townsfolk, soldiers and creatures stay as drawn placeholders.
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1
 and 2, **Sun Nov 22**. The animated intro is **in the game (Oct 16)**: it opens a new game, a saved game opens on its title,
 and "Watch the intro" is in the System menu. Music and sound effects are **in the game (Oct 16)**. Your next quest asks: art drop 1 (the character sets) by **Fri Oct 24**.
+
+**Quest, Chapter 1's secret (built Oct 27):** Z-4 *The Seventh Stone* and Solange's Quill (`SIDE-QUESTS.md` Z-4,
+`SECRET-ITEMS.md` 1, puzzle `zetwal_stones`): after the lamp the mourner on the Temple island tells of the blank seventh
+name stone; the temple's memory plays the first Reading of the Names (six readers walk up to six stones, Caona's scout
+says her brother's name over the seventh, the stonecutter refuses and leaves his chisel); Patricio carves a sun into it
+(the anchor); in the present the stones touched in the reading's order (3, 1, 5, 2, 6, 4, 7) open the drawer under
+Solange's plinth: the Quill (legendary showcase), 80 gold, 30 XP, +1 Influence. Secret (never a mystery quest, no
+nudge, never on the arrow), optional (the route and Yari's sailing never need it), no fighting; open until the fleet
+sails in Chapter 10. The name stones moved into a ring of seven round the plinth, west of the temple. Ported to the
+demo (`elodie-game-demo`, Chapter 1 identical). Waiting on the owner: a read of the reading's names and the scout's
+lines (the brother's name is never written out, for the cultural reviewer), and the hints rule (Claude's call: the
+second hint after three wrong stones, the answer after five, instead of an 8-minute timer).
 
 **Quest, Chapter 3 (Oct 21):** The Trial of Blades is built on branch `chapter3` (Cenizal's eight maps, the trial as a
 scripted loss with La Promesa de Benny, the forge Echo, Benny's tunnel, the camp; Rael's family in their settled roles).
@@ -134,7 +146,7 @@ board's dispatch (the Hall's chief courier gives the Speaker's dispatch, the aco
 Influence in Zetwal), the second look at the two books (*The Sun Accord (copy)* after Patricio's answer, *Ash Wars: A
 Temple Record* after the four accounts: a line of Gianna's after the last page, or "(again)" on a book already read), and
 the Quill bonus at the name stones (with Solange's Quill, Yari walks to the seventh stone and hears the scout's
-brother's name from Solange's list, +2 Influence in Xaraguá; it waits on Z-4, which gives the Quill after the release);
+brother's name from Solange's list, +2 Influence in Xaraguá; Z-4 gives the Quill in Chapter 1 since Oct 27, so it plays);
 `tests/dispatches.test.ts` and `tests/books.test.ts` hold them.
 
 **Quest, Chapter 11 (Oct 22):** The War of the Harbor is built on branch `chapter11` (from `chapter10`; the war's

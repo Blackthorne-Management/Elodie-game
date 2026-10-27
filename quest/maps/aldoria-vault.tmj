@@ -1319,10 +1319,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 864,
+      "imageheight": 880,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 431,
+      "tilecount": 435,
       "columns": 8,
       "margin": 0,
       "spacing": 0

@@ -51,7 +51,7 @@ the memory, and Anissa's third hint already names the weights.*
 | M-KUR-1 | The cipher shelf mark | Kirinoura | 7 | minor (K-2) | Cipher | 3 |
 | M-KUR-2 | The marsh lanterns | Kirinoura | 7 | minor (K-3) | Fire / light | 3 |
 | M-JWA-1 | The lamp relay | Agnipur | 8 | minor (J-2) | timing | 3 |
-| S-ZET | The Seventh Stone | Pòdlimyè | 1 | secret | sequence memory | 2 |
+| S-ZET | The Seventh Stone | Pòdlimyè | 1 | secret (built Oct 27) | sequence memory | 2 |
 | S-ALD | The Uncashed Note | Bab al-Dhahab | 3 | secret | trade chain | 3 |
 | S-XAR | Where the Canoes Sleep | Yucayeque | 2 | secret | tides | 4 |
 | S-JWA | Oil for the Little Lamps | Agnipur | 8 | secret | measures | 5 |
@@ -114,6 +114,11 @@ the memory, and Anissa's third hint already names the weights.*
   first reading. Watch who goes where, in order. Someone was sent away." / "Carve the last stone in the memory, then
   touch them in the order they spoke: 3, 1, 5, 2, 6, 4, then the seventh."
 - **Difficulty:** 2.
+- **Built (Oct 27):** puzzle `zetwal_stones` (`quest/puzzles/zetwal_stones/`, four cheats: the order with the seventh
+  never carved, the seventh touched without the chisel, the stones in number order, the plinth before the stones).
+  The hints as written, the second shortened to "Grandfather was here at the very first reading, Gigi. The grove
+  remembers it. Watch who goes where, in order."; they come at the plinth and after three and five wrong stones
+  (`SECRET-ITEMS.md` 1, Claude's call).
 
 ## Yucayeque (Xaraguá)
 

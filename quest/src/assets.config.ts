@@ -523,6 +523,12 @@ export const TILESET = {
     { gid: 429, name: 'witness_bench', base: 0x8f8578, accent: 0x6b4426, pattern: 'stripes' },
     { gid: 430, name: 'gate_open', base: 0x3a3028, accent: 0x17a5a5, pattern: 'border' },
     { gid: 431, name: 'petition_chair', base: 0x6b4426, accent: 0xe8d8b0, pattern: 'cross' },
+    // Z-4 The Seventh Stone (Chapter 1, Oct 27; data/seventhStone.ts): the seventh name stone blank, then with the
+    // sun Patricio carved, Mother Solange's plinth, and the stonecutter's chisel and mallet left on it in the memory.
+    { gid: 432, name: 'name_stone_blank', base: 0xa8a8b0, accent: 0xa8a8b0, pattern: 'flat' },
+    { gid: 433, name: 'name_stone_sun', base: 0xa8a8b0, accent: 0xf2d04b, pattern: 'dots' },
+    { gid: 434, name: 'solange_plinth', base: 0xd8d0c0, accent: 0x6e6a78, pattern: 'border' },
+    { gid: 435, name: 'stone_chisel', base: 0xc8c8d0, accent: 0x6b4426, pattern: 'stripes' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -744,6 +750,13 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   echo_builder: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x8a7a68, trim: C.B!, legs: C.b!, headgear: 'brimmed', headgearColor: C.N! },
   echo_drummer: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x6a5230, trim: C.y!, legs: C.b!, headgear: 'cap', headgearColor: C.R!, accessories: ['drum'] },
   echo_cane_worker: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0x9a8a70, trim: C.o!, legs: C.b!, headgear: 'wrap', headgearColor: 0xc85a6a },
+  // The first Reading of the Names (Z-4 The Seventh Stone, Oct 27): Mother Solange with her list, two elders, the
+  // stonecutter, and a young scout of Caona's company (Yaguana: a headband and a bow).
+  echo_solange: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bun', outfit: C.w!, trim: C.y!, robe: true, accessories: ['satchel'] },
+  echo_elder_f: { skin: C.S!, hair: WHITE_HAIR, hairStyle: 'long', outfit: 0x8a6a50, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: 0x6a5a8a },
+  echo_elder_m: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0x6a5a48, trim: C.y!, legs: C.b!, beard: WHITE_HAIR, accessories: ['cane'] },
+  echo_stonecutter: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x8a8a8a, trim: C.N!, legs: C.b!, build: 'tall', beard: HAIR_BLACK, accessories: ['apron'] },
+  echo_caona_scout: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: 0x6a7a40, trim: C.R!, legs: C.T!, headgear: 'headband', headgearColor: 0x8a3a2a, accessories: ['bow'] },
 
   // Test village (Phase 1).
   villager: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x6a8a3a, trim: C.w!, legs: C.B! },

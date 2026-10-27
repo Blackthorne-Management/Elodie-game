@@ -9,10 +9,8 @@ import type { EncounterTable } from '../engine/content.ts';
  */
 export const LATER_STORY_FLAGS: readonly string[] = [
   // Chapter 12, the Claim: the Throne Hall's rope comes down (tools/maps/seat.ts). Built now (Oct 22): the list is kept for
-  // flags a map reads before a chapter that sets them exists.
-  // Solange's Quill: Z-4 The Seventh Stone gives it (after the release); Chapter 10's name stones read it now (the Quill's
-  // bonus, data/dialogue/zetwalMuster.ts QUILL_STONE).
-  'item.solange_quill',
+  // flags a map reads before a chapter that sets them exists. (Solange's Quill, read by Chapter 10's name stones, was
+  // here until Z-4 The Seventh Stone gave it in Chapter 1, Oct 27: data/dialogue/zetwal.ts `solange_plinth`.)
 ];
 
 export const ENCOUNTERS: Readonly<Record<string, EncounterTable>> = {

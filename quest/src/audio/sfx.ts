@@ -95,6 +95,17 @@ function arpeggio(root: number, steps: readonly number[], step: number, wave: Wa
   }));
 }
 
+/** A name stone's chime (Z-4): a soft sine bell with a fifth above it and a long tail. */
+function stoneChime(hz: number, at = 0, gain = 0.3): Note[] {
+  return [
+    { at, dur: 1.1, wave: 'sine', from: hz, gain, attack: 0.005, release: 0.95 },
+    { at, dur: 0.8, wave: 'sine', from: hz * 1.5, gain: gain * 0.3, attack: 0.005, release: 0.7 },
+    { at, dur: 0.6, wave: 'triangle', from: hz * 2, gain: gain * 0.12, attack: 0.005, release: 0.5, vibrato: [3, 5] },
+  ];
+}
+/** The seven stones' notes, by stone number: in the first reading's order (3, 1, 5, 2, 6, 4, 7) they rise to a close. */
+const STONE_HZ: readonly number[] = [0, 784, 659, 392, 587, 523, 440, 1047];
+
 const RECIPES: Record<SfxId, () => Note[]> = {
   cursor: () => [{ at: 0, dur: 0.035, wave: 'square', from: 1320, gain: 0.25, duty: 0.25 }],
   confirm: () => [
@@ -198,6 +209,19 @@ const RECIPES: Record<SfxId, () => Note[]> = {
     { at: 0, dur: 1.7, wave: 'sine', from: 294, gain: 0.2, attack: 0.005, release: 1.6 },
     { at: 0, dur: 1.4, wave: 'triangle', from: 441, gain: 0.08, attack: 0.005, release: 1.3, vibrato: [2, 3] },
   ],
+  // Z-4: the seven name stones, a wrong stone's knock, and all seven at once.
+  stone_1: () => stoneChime(STONE_HZ[1]!),
+  stone_2: () => stoneChime(STONE_HZ[2]!),
+  stone_3: () => stoneChime(STONE_HZ[3]!),
+  stone_4: () => stoneChime(STONE_HZ[4]!),
+  stone_5: () => stoneChime(STONE_HZ[5]!),
+  stone_6: () => stoneChime(STONE_HZ[6]!),
+  stone_7: () => stoneChime(STONE_HZ[7]!),
+  stone_hush: () => [
+    { at: 0, dur: 0.14, wave: 'triangle', from: 110, to: 70, gain: 0.55 },
+    { at: 0, dur: 0.05, wave: 'noise', from: 0, gain: 0.18 },
+  ],
+  stones_chord: () => [3, 1, 5, 2, 6, 4, 7].flatMap((n, i) => stoneChime(STONE_HZ[n]!, i * 0.06, 0.14)),
   // The goddess's soft bell, with a long tail (a recorded one replaces it: GAME_OVER_BELL_FILE).
   bell: () => [
     { at: 0, dur: 1.9, wave: 'sine', from: 784, gain: 0.32, attack: 0.005, release: 1.7 },

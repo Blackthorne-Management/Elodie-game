@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 29,
+  "nextobjectid": 45,
   "layers": [
     {
       "id": 1,
@@ -61,9 +61,9 @@
 0,5,5,5,5,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,
 0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,
 0,5,0,0,0,0,0,0,0,0,0,0,0,0,39,39,0,0,0,0,0,0,0,0,5,0,0,0,5,0,
-0,5,0,5,0,0,53,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,53,53,0,0,0,0,5,0,
-0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,
-0,5,0,5,0,0,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,53,0,0,0,0,5,0,
+0,5,0,5,0,53,53,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,
+0,5,0,0,0,53,0,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,
+0,5,0,5,0,53,0,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,
 0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,
 0,5,0,0,0,0,0,0,0,0,0,0,29,0,0,0,0,0,29,0,0,0,0,0,0,0,0,0,5,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,5,0,
@@ -127,9 +127,9 @@
 0,5,5,5,5,5,5,5,5,54,54,54,54,54,54,54,54,54,54,54,54,5,5,5,5,5,5,5,5,0,
 0,5,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,5,0,
 0,5,0,0,0,0,0,0,0,54,0,0,0,0,39,39,0,0,0,0,54,0,0,0,5,0,0,0,5,0,
-0,5,0,5,0,0,53,53,0,54,0,0,0,0,0,0,0,0,0,0,54,0,53,53,0,0,0,0,5,0,
-0,5,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,5,0,
-0,5,0,5,0,0,53,0,0,54,0,0,0,0,0,0,0,0,0,0,54,0,0,53,0,0,0,0,5,0,
+0,5,0,5,0,53,53,53,0,54,0,0,0,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,5,0,
+0,5,0,0,0,53,0,53,0,54,0,0,0,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,5,0,
+0,5,0,5,0,53,0,53,0,54,0,0,0,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,5,0,
 0,5,0,0,0,0,0,0,0,54,54,54,54,54,0,0,54,54,54,54,54,0,0,0,0,0,0,0,5,0,
 0,5,0,0,0,0,0,0,0,0,0,0,29,0,0,0,0,0,29,0,0,0,0,0,0,0,0,0,5,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,5,0,
@@ -193,9 +193,9 @@
 16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
 16,16,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
 16,16,0,0,0,0,0,0,0,16,0,0,0,0,16,16,0,0,0,0,16,0,0,0,16,0,0,0,16,16,
-16,16,0,16,0,0,16,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,16,16,0,0,0,0,16,16,
-16,16,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
-16,16,0,16,0,0,16,0,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,0,0,0,16,16,
+16,16,0,16,0,16,16,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
+16,16,0,0,0,16,0,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
+16,16,0,16,0,16,0,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
 16,16,0,0,0,0,0,0,0,16,16,16,16,16,0,0,16,16,16,16,16,0,0,0,0,0,0,0,16,16,
 16,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,16,16,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,16,
@@ -226,9 +226,9 @@
 16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
 16,16,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
 16,16,0,0,0,0,0,0,0,16,0,0,0,0,16,16,0,0,0,0,16,0,0,0,16,0,0,0,16,16,
-16,16,0,16,0,0,16,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,16,16,0,0,0,0,16,16,
-16,16,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
-16,16,0,16,0,0,16,0,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,0,0,0,16,16,
+16,16,0,16,0,16,16,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
+16,16,0,0,0,16,0,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
+16,16,0,16,0,16,0,16,0,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,16,
 16,16,0,0,0,0,0,0,0,16,16,16,16,16,0,0,16,16,16,16,16,0,0,0,0,0,0,0,16,16,
 16,16,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,16,16,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,16,
@@ -460,6 +460,72 @@
         },
         {
           "id": 9,
+          "name": "echo_solange",
+          "type": "npc",
+          "x": 48,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_solange"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "echo_caona_scout",
+          "type": "npc",
+          "x": 144,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_caona_scout"
+            }
+          ]
+        },
+        {
+          "id": 11,
           "name": "patricia_lamp",
           "type": "npc",
           "x": 208,
@@ -487,7 +553,7 @@
           ]
         },
         {
-          "id": 10,
+          "id": 12,
           "name": "rahel_lamp",
           "type": "npc",
           "x": 192,
@@ -515,7 +581,7 @@
           ]
         },
         {
-          "id": 11,
+          "id": 13,
           "name": "debate_retainer",
           "type": "npc",
           "x": 272,
@@ -543,7 +609,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 14,
           "name": "debate_steward",
           "type": "npc",
           "x": 288,
@@ -583,7 +649,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 15,
           "name": "temple_bridge",
           "type": "door",
           "x": 16,
@@ -611,7 +677,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 16,
           "name": "temple_archive",
           "type": "door",
           "x": 160,
@@ -651,7 +717,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 15,
+          "id": 17,
           "name": "yari_lands",
           "type": "trigger",
           "x": 224,
@@ -684,7 +750,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 18,
           "name": "temple_arrive",
           "type": "trigger",
           "x": 32,
@@ -729,7 +795,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 17,
+          "id": 19,
           "name": "temple_start",
           "type": "spawn",
           "x": 48,
@@ -764,7 +830,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 18,
+          "id": 20,
           "name": "temple_grove",
           "type": "echo_zone",
           "x": 80,
@@ -783,6 +849,11 @@
               "name": "onEcho",
               "type": "string",
               "value": "temple_echo_enter"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "temple_echo_return"
             }
           ]
         }
@@ -797,7 +868,31 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 21,
+          "name": "seventh_stone",
+          "type": "anchor",
+          "x": 112,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.seventh_stone"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "seventh_stone_echo"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 14,
@@ -810,7 +905,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 19,
+          "id": 22,
           "name": "yari_canoe",
           "type": "puzzle_object",
           "x": 256,
@@ -838,7 +933,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 23,
           "name": "gaze_lamp",
           "type": "puzzle_object",
           "x": 224,
@@ -866,7 +961,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 24,
           "name": "gaze_lamp_lit",
           "type": "puzzle_object",
           "x": 224,
@@ -894,7 +989,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 25,
           "name": "island_lantern_west",
           "type": "puzzle_object",
           "x": 192,
@@ -922,7 +1017,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 26,
           "name": "island_lantern_east",
           "type": "puzzle_object",
           "x": 288,
@@ -950,7 +1045,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 27,
           "name": "lamp_echo",
           "type": "puzzle_object",
           "x": 224,
@@ -978,7 +1073,371 @@
           ]
         },
         {
-          "id": 25,
+          "id": 28,
+          "name": "name_stone_1",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "name_stone_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !side.seventh_stone.done"
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "name_stone_2",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "name_stone_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !side.seventh_stone.done"
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "name_stone_3",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "name_stone_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !side.seventh_stone.done"
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "name_stone_4",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "name_stone_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !side.seventh_stone.done"
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "name_stone_5",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "name_stone_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !side.seventh_stone.done"
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "name": "name_stone_6",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "name_stone_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !side.seventh_stone.done"
+            }
+          ]
+        },
+        {
+          "id": 34,
+          "name": "name_stone_7",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "name_stone_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !side.seventh_stone.done"
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "name": "solange_plinth",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "solange_plinth"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "solange_plinth"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 36,
+          "name": "seventh_stone_blank",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.seventh_stone"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "name_stone_blank"
+            }
+          ]
+        },
+        {
+          "id": 37,
+          "name": "seventh_stone_sun",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.seventh_stone"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "name_stone_sun"
+            }
+          ]
+        },
+        {
+          "id": 38,
+          "name": "plinth_echo",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "plinth_echo"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "solange_plinth"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 39,
+          "name": "plinth_chisel",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted, !anchor.seventh_stone, !echo.chisel_taken"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "stone_chisel"
+            }
+          ]
+        },
+        {
+          "id": 40,
+          "name": "seventh_stone_echo",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "seventh_stone_echo"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.seventh_stone.accepted"
+            }
+          ]
+        },
+        {
+          "id": 41,
           "name": "name_stones",
           "type": "puzzle_object",
           "x": 96,
@@ -1001,7 +1460,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 42,
           "name": "crane_on_step",
           "type": "puzzle_object",
           "x": 224,
@@ -1029,7 +1488,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 43,
           "name": "lamp_on_step",
           "type": "puzzle_object",
           "x": 240,
@@ -1069,7 +1528,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 28,
+          "id": 44,
           "name": "temple_pilgrims",
           "type": "crowd_zone",
           "x": 48,
@@ -1105,10 +1564,10 @@
       "name": "placeholder",
       "image": "placeholder-tiles.png",
       "imagewidth": 128,
-      "imageheight": 864,
+      "imageheight": 880,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 431,
+      "tilecount": 435,
       "columns": 8,
       "margin": 0,
       "spacing": 0

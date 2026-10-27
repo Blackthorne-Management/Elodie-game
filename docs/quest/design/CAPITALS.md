@@ -79,7 +79,7 @@ the Throne at the start). **Feel:** sun, lanterns, a thousand names said aloud; 
 | Solèy Heights | `zetwal-heights` | 30 x 20 (built Oct 15) | Up the lane west of Accord Square: old houses, terraced gardens, the well, the lookout over the city. Exploration for now; more on the return. |
 | Limyè house | `zetwal-house` | 20 x 12 (built) | Home; Patricio's study with the map table Echo Zone and the window seat. |
 | Hall of the Accord (capital building) | `zetwal-hall` | 40 x 30 (built Oct 15) | The seat of the state on Accord Square. See "Seat of government" below. |
-| Temple Island | `zetwal-temple` | 30 x 20 (built) | The Temple of Elodie, the Gaze lamp, the Name Stones, the dock. |
+| Temple Island | `zetwal-temple` | 30 x 20 (built) | The Temple of Elodie, the Gaze lamp, the seven Name Stones round Mother Solange's plinth (west of the temple; Oct 27, Z-4), the dock. |
 | Temple Archive (library) | `zetwal-archive` | 22 x 14 (built) | On the island; three shelves of three books. |
 | The Cane Road (wild) | `zetwal-road` | 44 x 26 (built) | Cane fields past the east gate, the burned sugar mill, the mangroves. |
 | Harbor bakery (proposal) | `zetwal-bakery` | 12 x 8 | Interior for Z-5, the rebel safehouse. |
@@ -139,8 +139,8 @@ sails. Zetwal has no board object: the courier names the job, as the town guard 
 **Signature puzzle:** SIG-ZET, the Chain Bridge (built). Tutorial: M-ZET-1, the night orders (built).
 
 **Echo scenes:** the war room (built); the plaza camp with the cook, scout, drummer and soldier (built); the bridgehead
-at night (built); the temple under scaffolding with the lampwright and builder (built); proposal: the first Reading of
-the Names (S-ZET), the grain store (Z-5), the powder store (Z-6), and in Chapter 10 the plaza on the morning of the
+at night (built); the temple under scaffolding with the lampwright and builder (built); the first Reading of
+the Names (S-ZET, built Oct 27: in the temple's memory while Z-4 is open); the grain store (Z-5), the powder store (Z-6), and in Chapter 10 the plaza on the morning of the
 signing.
 
 **Companion:** Gianna and Anissa (home). **Yari** arrives by canoe at the island dock and joins (built).

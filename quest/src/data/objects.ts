@@ -457,6 +457,15 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   gaze_lamp_lit: { name: 'Gaze Lamp (lit)' },
   lamp_echo: { name: 'Gaze Lamp (being built)' },
   name_stones: { name: 'Name stones' },
+  // Z-4 The Seventh Stone (secret, Chapter 1): the stones touched one by one, Solange's plinth, the seventh's sun, and
+  // in the memory the plinth with the stonecutter's chisel and the blank seventh stone.
+  ...Object.fromEntries([1, 2, 3, 4, 5, 6, 7].map((n) => [`name_stone_${n}`, { name: 'A name stone' }])),
+  solange_plinth: { name: "Solange's plinth" },
+  seventh_stone_blank: { name: 'The seventh stone' },
+  seventh_stone_sun: { name: 'The seventh stone', inspect: 'The seventh name stone. No name on it: only a sun, worn soft by fifty years of rain.' },
+  plinth_echo: { name: 'A new plinth' },
+  plinth_chisel: { name: "The stonecutter's chisel" },
+  seventh_stone_echo: { name: 'The seventh stone' },
 
   // Test village (Phase 1).
   marker_echo: { name: 'Old marker' },

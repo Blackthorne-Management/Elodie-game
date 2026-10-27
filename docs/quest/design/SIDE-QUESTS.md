@@ -49,7 +49,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | Z-1 | Soup of the Free | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
 | Z-2 | Tides of the Southern Reach | Pòdlimyè | Ch. 1 | 1 to 3 | no | no |
 | Z-3 | The Lonely Cutter | Pòdlimyè | Ch. 1 | 1 to 3 | no | no |
-| Z-4 | The Seventh Stone (secret) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
+| Z-4 | The Seventh Stone (secret; built Oct 27, optional) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
 | Z-5 | Bread With No Debt (safehouse) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
 | Z-6 | Muskets in the Cane | Pòdlimyè | Ch. 10 | 22 to 25 | yes | yes |
 | X-1 | Cut Nets | Yucayeque | Ch. 2 | 3 to 6 | yes | no |
@@ -183,6 +183,11 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
 - **Giver:** the mourner on the Temple Island (built NPC). **Accept:** talk to her after `story.anissa_woke`.
 - **Steps, puzzle and reward:** see `SECRET-ITEMS.md` 1 and `PUZZLES.md` (S-ZET). Solange's Quill and the skill *Say
   Their Names*; 80 gold, 40 XP, +1 Influence (Zetwal). **No fighting.**
+- **Built (Oct 27; secret and optional; details and Claude's calls in `SECRET-ITEMS.md` 1):** the mourner (after the
+  lamp: "Six of them do. The seventh is blank"), the first reading in the temple's memory, the sun carved on the
+  seventh stone, the stones in the reading's order, the drawer under Solange's plinth. Solange's Quill (its skill *Say
+  Their Names* while worn), 80 gold, 30 XP (Claude's call: Chapter 1's curve), +1 Influence (Zetwal). Never a mystery
+  quest and never on the arrow (a `secret` quest); closes when the fleet sails in Chapter 10. Ported to the demo.
 
 ### Z-5 Bread With No Debt (rebel safehouse)
 - **Giver:** the town guard (built NPC: "Nobody gives bread for nothing") and the guard captain's pencil note in the

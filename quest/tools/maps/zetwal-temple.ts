@@ -4,6 +4,10 @@
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
 import { DAY_TEXT, TEMPLE } from '../../src/data/muster.ts';
+import { ECHO_SCOUT, ECHO_SOLANGE, PLINTH, STONES, Z4 } from '../../src/data/seventhStone.ts';
+
+/** Z-4 The Seventh Stone (data/seventhStone.ts): the stones touch one by one while the quest is open. */
+const Z4_OPEN = `${Z4.accepted}, !${Z4.done}`;
 
 export function zetwalTemple(): MapSource {
   const g = new Grid(30, 20, '.');
@@ -12,7 +16,9 @@ export function zetwalTemple(): MapSource {
   g.set(1, 9, 'D');
   // The temple and the Gaze lamp.
   g.rect(9, 1, 12, 7, 'Q').rect(10, 2, 10, 5, 'q').rect(14, 7, 2, 1, 'q').rect(14, 3, 2, 1, 'l');
-  for (const [x, y] of [[6, 4], [7, 4], [22, 4], [23, 4], [6, 6], [23, 6]] as const) g.set(x, y, 'g');
+  // The seven name stones round Mother Solange's plinth in the lamp court, west of the temple (Z-4, Oct 27: the ring
+  // the design asks for; the east side's three stones moved here).
+  for (const p of Object.values(STONES)) g.set(p.x, p.y, 'g');
   // Paths, sand and the dock.
   g.rect(2, 9, 13, 1, ',').rect(14, 8, 2, 8, ',');
   g.rect(9, 15, 12, 3, 'n');
@@ -50,7 +56,7 @@ export function zetwalTemple(): MapSource {
 
     // Pilgrims stranded on the island since the rope bridge fell (temple_arrive), until the lamp is lit.
     { layer: 'crowds', name: 'temple_pilgrims', x: 3, y: 8, w: 11, h: 3, props: { count: '7', looks: 'pilgrim,festival_c,festival_e,festival_h,festival_a', if: '!story.lamp_lit, !story.anissa_woke' } },
-    { layer: 'echo_zones', name: 'temple_grove', x: 5, y: 12, w: 3, h: 2, props: { if: 'item.sun_locket', onEcho: 'temple_echo_enter' } },
+    { layer: 'echo_zones', name: 'temple_grove', x: 5, y: 12, w: 3, h: 2, props: { if: 'item.sun_locket', onEcho: 'temple_echo_enter', onReturn: 'temple_echo_return' } },
 
     obj('gaze_lamp', 14, 3, { dialogue: 'gaze_lamp', era: 'present', kind: 'gaze_lamp' }, 2, 1),
     obj('gaze_lamp_lit', 14, 3, { kind: 'gaze_lamp_lit', era: 'present', if: 'story.lamp_lit|story.anissa_woke' }, 2, 1),
@@ -58,6 +64,19 @@ export function zetwalTemple(): MapSource {
     obj('island_lantern_west', 12, 8, { kind: 'lantern_glow', era: 'present', if: 'story.lamp_lit|story.anissa_woke' }),
     obj('island_lantern_east', 18, 8, { kind: 'lantern_glow', era: 'present', if: 'story.lamp_lit|story.anissa_woke' }),
     obj('lamp_echo', 14, 3, { dialogue: 'lamp_echo', era: 'echo', kind: 'gaze_lamp' }, 2, 1),
+    // Z-4 The Seventh Stone (secret, Chapter 1): while it is open, each stone is touched on its own (these come before
+    // the name stones, so they answer first); the plinth in the ring, the seventh's sun once it is carved, and in the
+    // memory the plinth with the stonecutter's chisel on it, the blank seventh stone (the anchor), Solange and the scout.
+    ...Object.entries(STONES).map(([n, p]) => obj(`name_stone_${n}`, p.x, p.y, { dialogue: `name_stone_${n}`, era: 'present', if: Z4_OPEN })),
+    obj('solange_plinth', PLINTH.x, PLINTH.y, { dialogue: 'solange_plinth', kind: 'solange_plinth', solid: true, era: 'present' }),
+    obj('seventh_stone_blank', STONES[7]!.x, STONES[7]!.y, { kind: 'name_stone_blank', if: `!${Z4.anchor}` }),
+    obj('seventh_stone_sun', STONES[7]!.x, STONES[7]!.y, { kind: 'name_stone_sun', if: Z4.anchor }),
+    obj('plinth_echo', PLINTH.x, PLINTH.y, { dialogue: 'plinth_echo', kind: 'solange_plinth', solid: true, era: 'echo' }),
+    obj('plinth_chisel', PLINTH.x, PLINTH.y, { kind: 'stone_chisel', era: 'echo', if: `${Z4.accepted}, !${Z4.anchor}, !${Z4.chisel}` }),
+    obj('seventh_stone_echo', STONES[7]!.x, STONES[7]!.y, { dialogue: 'seventh_stone_echo', era: 'echo', if: Z4.accepted }),
+    { layer: 'anchors', name: 'seventh_stone', x: STONES[7]!.x, y: STONES[7]!.y, props: { object: 'seventh_stone_echo', flag: Z4.anchor } },
+    npc('echo_solange', ECHO_SOLANGE.x, ECHO_SOLANGE.y, 'right', { era: 'echo', if: Z4.accepted }),
+    npc('echo_caona_scout', ECHO_SCOUT.x, ECHO_SCOUT.y, 'left', { era: 'echo', if: Z4.accepted }),
     obj('name_stones', 6, 4, { dialogue: 'name_stones', era: 'present' }, 2, 1),
     // The Muster (Chapter 10): Patricia at the Gaze lamp, where Anissa woke, with Rahel beside her (the review's 3.3:
     // old Patricio is not at the blessing); the second feud by the lamp, the Suzumori retainer and the Agnivansh steward;

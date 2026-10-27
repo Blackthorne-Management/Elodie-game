@@ -72,7 +72,7 @@ import { mysteryGoals, sideGoals, sideNudges, storyGoal, waypoint, type Waypoint
 import { questArrows, setQuestArrows } from '../ui/questArrows.ts';
 import { planTap } from '../engine/tap.ts';
 import { audio } from '../audio/player.ts';
-import { BATTLE_MUSIC, CARD_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, VOLUME_STEPS } from '../audio.config.ts';
+import { BATTLE_MUSIC, CARD_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, SFX_IDS, VOLUME_STEPS, type SfxId } from '../audio.config.ts';
 import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.ts';
 import { echoPrompt } from '../engine/world.ts';
 import { isTouchDevice } from '../input/touch.ts';
@@ -2490,6 +2490,8 @@ export class FieldScene extends Phaser.Scene {
       cam.fadeOut(250, 0, 0, 0);
       cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => cam.fadeIn(450, 0, 0, 0));
     }
+    // Any other sound by its id (Z-4: the name stones' notes, their knock and their chord).
+    else if ((SFX_IDS as readonly string[]).includes(fx)) audio.sfx(fx as SfxId);
   }
 
   private updateDialogue(wasTyping = false): void {

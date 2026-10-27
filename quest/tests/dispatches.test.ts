@@ -152,7 +152,7 @@ describe('the Quill\'s Chapter 10 bonus at the name stones (SECRET-ITEMS.md 1)',
     expect(localPillar(f, RPG, 'influence', 'xaragua')).toBe(before + 2);
   });
 
-  it('without the Quill (Z-4 comes after the release), or outside the Muster, the stones are as built', () => {
+  it('without the Quill (Z-4 The Seventh Stone not done in Chapter 1), or outside the Muster, the stones are as built', () => {
     const built = play('name_stones', new FlagStore());
     expect(play('name_stones', flagsOf(MUSTER))).toEqual(built);
     expect(play('name_stones', flagsOf({ 'item.solange_quill': true }))).toEqual(built);

@@ -65,7 +65,35 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   brother's name from Solange's list, and Yari turns to her: "A Yaguana name, on Zetwal's list, for fifty years. And
   nobody at home ever knew it was kept." / "They will say it in Yucayeque. Out loud." +2 Influence in Xaraguá
   (`muster.quill_stone`), once. The name itself is never written out (a real Taíno name wants the cultural reviewer).
-  Z-4 is after the release, so until it lands nobody holds the Quill and the stones stay as built.
+  Z-4 gives the Quill in Chapter 1 (built Oct 27, below), so the scene plays for a player who found it.
+- **Built (Oct 27; Z-4 in `quest/src/data/sideQuests.ts`, places in `quest/src/data/seventhStone.ts`, lines in
+  `quest/src/data/dialogue/zetwal.ts`, puzzle `quest/puzzles/zetwal_stones/`, tests `quest/tests/seventhStone.test.ts`;
+  Claude's calls marked):**
+  - **The ring.** The seven name stones stand in a ring round Solange's plinth west of the temple (the built island had
+    six stones, three each side; the east three moved here). Counted sunwise from the plinth's right hand (the mourner
+    says so; "my husband's is the third"); the seventh is the one by the path, where the Muster scene puts Yari.
+    Claude's call: "the oldest stone has a blank seventh face" reads as seven stones, the seventh blank.
+  - **The memory.** The temple's memory (the night before the signing; the builder now says the first reading is
+    "tonight") plays the first reading as each visit begins, until the seventh is carved: six readers come up one at a
+    time, from the landing and from the temple path, and say a name over a stone (each chimes); two come up together
+    and cross on the way; Caona's scout says her brother's name over the blank stone (never written out); the
+    stonecutter refuses ("That is not a Zetwal name, child. I cut Zetwal names."), lays his chisel on the plinth and
+    leaves; Solange says the riddle and writes the brother at the foot of her list. Patricio takes the chisel from the
+    plinth and carves a sun (no name: it is not his to cut): "For whoever keeps this temple after me." The scout bows.
+  - **The present.** While the quest is open each stone answers on its own: the right next stone sings its note, a
+    wrong one knocks and the order starts again; the seventh is silent until carved. Seven in order: all seven sing,
+    the mourner comes out to listen, and the drawer under the plinth opens: the Quill and Solange's first list.
+  - **The journal ring (Claude's call: not built).** The order is shown once a visit by the scene itself; the ring of
+    seven dots would need a Journal drawing of its own. The reading can be watched again on every visit.
+  - **Hints (Claude's call).** Side quests have no hint timer, so Anissa's three hints come in place: the first when
+    Gianna reads the plinth, the second after three wrong stones, the answer after five (in the spirit of the 8
+    minutes: never at once).
+  - **Reward (Claude's call):** 80 gold, **30 XP** (not 40: Chapter 1's route ends on 425 XP and 459 is level 5; 30
+    keeps a player who does everything at 4, like the other Chapter 1 quests' 30/25/30/20), +1 Influence (Zetwal). The
+    Quill is given by the plinth's conversation (the showcase pops over it as the Sun Locket's does), once.
+  - **Secret and optional.** Never a mystery quest (no entry, dot or nudge before the mourner tells of it), never on the
+    arrow of a story step that follows the side quests, never needed (Yari sails without it). No fighting. Open until
+    the fleet sails in Chapter 10 (so the Muster bonus can still be earned); closed after.
 - **Why it fits:** saying the names of the dead aloud is Zetwal's small rebellion (the built book *Why We Say Their
   Names*). The seventh stone answers the blank seventh line on the Marshal's stone: Zetwal's first act of making room
   for Xaraguá.

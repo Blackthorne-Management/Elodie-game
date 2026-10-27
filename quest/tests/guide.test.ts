@@ -145,6 +145,12 @@ describe('side quests not started yet are mystery quests', () => {
   it('each has a giver to point at, a nudge from Anissa and a time it becomes available', () => {
     for (const q of SIDE_QUESTS) {
       expect(q.start?.length, q.id).toBeGreaterThan(0);
+      // A secret quest (SECRET-ITEMS.md) is found, never pointed to: no nudge, and never a mystery quest.
+      if (q.secret) {
+        expect(q.nudge, q.id).toBeUndefined();
+        expect(mysteryQuests([q], new FlagStore()), q.id).toEqual([]);
+        continue;
+      }
       expect(q.nudge, q.id).toBeTruthy();
       expect(q.nudge!.length, q.id).toBeLessThanOrEqual(128);
       expect(q.available, q.id).toBeDefined();

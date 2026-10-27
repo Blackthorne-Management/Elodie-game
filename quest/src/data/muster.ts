@@ -192,7 +192,7 @@ export const TEMPLE = {
   brassLamp: at(15, 4),
   /** The temple's door (the party comes in here). */
   door: at(14, 7),
-  /** Beside the seventh name stone (the stones are at (6, 4), two tiles wide): where Yari reads it (the Quill's bonus). */
+  /** Beside the seventh name stone (at (7, 4): data/seventhStone.ts; the name stones object is at (6, 4), two tiles wide): where Yari reads it (the Quill's bonus). */
   seventhStone: at(8, 4),
 } as const;
 export const HOUSE = { door: at(5, 10), table: at(3, 4), anicette: at(5, 4), rahelSeat: at(2, 5), accounts: at(4, 4) } as const;

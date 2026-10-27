@@ -251,6 +251,17 @@ export const SFX_IDS = [
   'conch',
   // Chapter 12: the Hall's bell above the heralds' stair, heard once (an off-screen event at the Iron Throne's verdict).
   'hall_bell',
+  // Z-4 The Seventh Stone (Chapter 1): each name stone's own note when touched, the dull knock of a wrong one, and the
+  // seven together when the seventh answers. A dialogue line plays one by its id as its `fx`.
+  'stone_1',
+  'stone_2',
+  'stone_3',
+  'stone_4',
+  'stone_5',
+  'stone_6',
+  'stone_7',
+  'stone_hush',
+  'stones_chord',
 ] as const;
 
 export type SfxId = (typeof SFX_IDS)[number];

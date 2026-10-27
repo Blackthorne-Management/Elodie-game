@@ -34,6 +34,9 @@
 //        SHOT_DIR=/some/dir npm run smoke   (where screenshots go; default: the OS temp dir)
 //        SMOKE_FROM=chapter2-end npm run smoke   (only the scripted route, from that marker: the simulator plays
 //                                                  up to it, and the browser loads its save there)
+//        SMOKE_TO=yucayeque npm run smoke        (everything as usual, but the scripted route stops at that marker:
+//                                                  @yucayeque is Chapter 1's end, after the voyage; with SMOKE_FROM too,
+//                                                  the route between the two markers)
 
 import { execSync, spawn, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -101,6 +104,9 @@ const VILLAGE = `${URL_BASE}?intro=0&install=0&map=test-village`;
 const SHOT_DIR = process.env.SHOT_DIR ?? tmpdir();
 // SMOKE_FROM=<marker> (e.g. chapter2-end): only the scripted route, from that marker of routes/zetwal-act1.json on.
 const FROM = process.env.SMOKE_FROM ?? '';
+// SMOKE_TO=<marker> (e.g. yucayeque, Chapter 1's end): the scripted route stops at that marker (the checks that need
+// the whole quest played are left out).
+const TO = process.env.SMOKE_TO ?? '';
 
 function check(cond, message) {
   if (!cond) throw new Error(`Smoke check failed: ${message}`);
@@ -1417,6 +1423,12 @@ async function playAct(browser, errors) {
     route = route.slice(from);
     console.log(`  (starting at @${FROM}, ${route.length} route items left)`);
   }
+  if (TO) {
+    const end = route.findIndex((item) => item.kind === 'mark' && item.name === TO);
+    if (end < 0) throw new Error(`SMOKE_TO: no marker "@${TO}" in the route (or it comes before @${FROM})`);
+    route = route.slice(0, end + 1);
+    console.log(`  (stopping at @${TO}, ${route.length} route items to play)`);
+  }
   /** Whether this run plays Chapter 11's card in the browser (so the voyage to Eightgate after it is watched). */
   const before11 = sim.logic.state.flags.get('act11.complete') !== true;
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
@@ -1633,7 +1645,12 @@ async function playAct(browser, errors) {
   if (war.flags['end.done'] === true) {
     check(credited && war.mapId === 'seat-hall' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true && war.flags['act12.complete'] === true, 'after the credits the game opens on the save in the Throne Hall, the quest complete, the party (Edmund last) behind Gianna');
   }
-  if (FROM) {
+  if (FROM || TO) {
+    if (TO) {
+      const t = await snap(page);
+      if (t.flags['act1.complete'] === true) check(voyaged || !!FROM, 'Chapter 1 ends with the voyage to Xaraguá, not a jump');
+      check(true, `played the route to @${TO} in the browser, matching the simulator after every key (${keys} keys, ${Math.round((Date.now() - started) / 1000)} s)`);
+    }
     await ctx.close();
     if (assize) await assizeRestart(browser, errors, assize, shots);
     return shots;
@@ -2105,6 +2122,7 @@ async function main() {
     const actShots = await playAct(browser, errors);
 
     check(errors.length === 0, `no page errors${errors.length ? `:\n${errors.join('\n')}` : ''}`);
+    if (TO) console.log(`(SMOKE_TO=${TO}: the scripted route stopped at @${TO}; run without it for the whole quest.)`);
     console.log(`Screenshots: ${['quest-desktop.png', 'quest-phone.png', 'quest3-stick-phone.png', 'quest-phone-portrait.png', ...fitShots, ...introShots, ...debateShots, ...gameOverShots, ...actShots].map((f) => join(SHOT_DIR, f)).join(', ')}`);
     console.log('Smoke test passed.');
   } finally {

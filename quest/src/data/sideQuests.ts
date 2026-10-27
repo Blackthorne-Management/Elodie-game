@@ -6,6 +6,7 @@ import type { Condition } from '../engine/conditions.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CONCOURSE, HALL, ROOMS } from './claim.ts';
 import { CAMP, CAVE, CONUCO, MOUNTAIN } from './war.ts';
+import { PLINTH, STONES, Z4 } from './seventhStone.ts';
 
 const f = (flag: string): Condition => ({ flag });
 const INFLUENCE_ZETWAL = { pillar: 'influence', city: 'zetwal', amount: 1 } as const;
@@ -130,6 +131,51 @@ const BUILT_SIDE_QUESTS: readonly SideQuestDef[] = [
     ],
     done: { any: [f('debate.zetwal_corner.joined'), f('debate.zetwal_corner.mediated')] },
     reward: { xp: 20 },
+  },
+  // Z-4 The Seventh Stone (secret; SIDE-QUESTS.md Z-4, SECRET-ITEMS.md 1, PUZZLES.md S-ZET; built Oct 27): the mourner
+  // on the Temple island, after the lamp. Never pointed to before it is found, never needed (Yari sails without it), no
+  // fighting. The first reading in the temple's memory, the seventh stone carved (the anchor), the stones touched in
+  // the reading's order, and Solange's Quill in the drawer under her plinth (the conversation gives it: the showcase
+  // pops as the Sun Locket's does). Open until the fleet sails in Chapter 10, so a player who left it can finish it at
+  // the Muster (the Quill's bonus at the stones waits there).
+  {
+    id: 'seventh_stone',
+    title: 'The Seventh Stone',
+    giver: 'Mourner',
+    place: 'The Temple island',
+    level: 3,
+    secret: true,
+    summary:
+      'Seven name stones ring Mother Solange\'s plinth by the temple. Six sing when touched; the seventh is blank and has never made a sound. The plinth says: "Say them as they were first said, and the last shall answer."',
+    accepted: f(Z4.accepted),
+    start: [{ map: 'zetwal-temple', at: { x: 19, y: 3 } }],
+    steps: [
+      {
+        text: 'The names were first read fifty years ago. Find where the island remembers it: the shimmer in the grove below the stones.',
+        done: f(Z4.watched),
+        goals: [{ map: 'zetwal-temple', at: { x: 6, y: 12 } }],
+      },
+      {
+        text: "In the memory, carve the blank seventh stone with the stonecutter's chisel.",
+        done: f(Z4.anchor),
+        goals: [{ map: 'zetwal-temple', at: { x: 6, y: 12 } }],
+        echoGoals: [
+          { if: { notFlag: Z4.chisel }, map: 'zetwal-temple', at: PLINTH },
+          { map: 'zetwal-temple', at: STONES[7]! },
+        ],
+      },
+      {
+        text: 'Touch the stones in the order the names were first said, ending on the seventh.',
+        done: f(Z4.answered),
+        goals: [{ map: 'zetwal-temple', at: PLINTH }],
+        echoGoals: [{ map: 'zetwal-temple', at: { x: 6, y: 12 } }],
+      },
+      { text: "Look in the drawer under Solange's plinth.", done: f(Z4.done), goals: [{ map: 'zetwal-temple', at: PLINTH }] },
+    ],
+    done: f(Z4.done),
+    closed: f('story.fleet_sailed'),
+    closedText: 'Closed: the fleet sailed for Xaraguá, and the seventh stone stays silent.',
+    reward: { gold: 80, xp: 30, pillar: INFLUENCE_ZETWAL },
   },
   // ---- Chapter 2, Yucayeque (side quests build, Oct 20; docs/quest/reviews/2026-10-19-chapter2-side-quests-outline.md
   // and its owner decisions). Every one lives in the free city and must be done before the lamp-oil seller lends the

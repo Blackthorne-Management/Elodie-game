@@ -103,6 +103,9 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   echo_builder: n('echo_builder', 'echo_builder', 'Builder'),
   echo_lampwright: n('echo_lampwright', 'echo_builder', 'Lampwright'),
   echo_cane_worker: n('echo_cane_worker', 'echo_cane_worker', 'Cane worker'),
+  // The first Reading of the Names on the Temple island (Z-4 The Seventh Stone): Mother Solange and Caona's scout.
+  echo_solange: n('echo_solange', 'echo_solange', 'Mother Solange'),
+  echo_caona_scout: n('echo_caona_scout', 'echo_caona_scout', "Caona's scout"),
   // Xaraguá fifty years ago (the cave and the areíto of the first oath).
   echo_spring_keeper: n('echo_spring_keeper', 'echo_yaguana', 'Spring keeper'),
   echo_areito_drummer: n('echo_areito_drummer', 'echo_yaguana_drummer', 'Drummer'),

@@ -1478,7 +1478,7 @@ const OVERLAYS: readonly MusterOverlay[] = [
   one('patricio_home_talk', PO, 'The council sits at noon, envoy.'),
   one('anicette_home_talk', AN, 'Eat first. Then seat them.'),
   one('temple_porter_talk', 'temple_porter', 'An old lady asked me how many steps up to the lamp. I said fourteen. She said fifteen. She was right.'),
-  one('mourner_talk', 'mourner', 'They read the names here a year ago. My brother\'s was the third. I came to tell him the fleet is sailing.'),
+  one('mourner_talk', 'mourner', 'They read the names here a year ago. My husband\'s was the third. I came to tell him the fleet is sailing.'),
   one('fisher_island_talk', 'fisher_island', 'No fish today. Every fish in the strait has heard about the Muster.'),
   one('archivist_talk', 'archivist', 'Volume Two is back on the Tales shelf, Gianna. If you are reading all four accounts, it is the fourth.'),
   one('hall_guard_talk', 'hall_guard', 'The council sits today. Mind the page; he runs.'),

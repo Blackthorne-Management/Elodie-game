@@ -51,6 +51,12 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   echo_guard: s('echo_guard', 'Guard'),
   echo_builder: s('echo_builder', 'Builder'),
   echo_lampwright: s('echo_lampwright', 'Lampwright'),
+  // The first Reading of the Names (Z-4 The Seventh Stone): Solange, the readers, the stonecutter and Caona's scout.
+  echo_solange: s('echo_solange', 'Mother Solange'),
+  echo_elder_f: s('echo_elder_f', 'Elder'),
+  echo_elder_m: s('echo_elder_m', 'Elder'),
+  echo_stonecutter: s('echo_stonecutter', 'Stonecutter'),
+  echo_caona_scout: s('echo_caona_scout', "Caona's scout"),
   echo_spring_keeper: s('echo_spring_keeper', 'Spring keeper'),
   echo_areito_drummer: s('echo_areito_drummer', 'Drummer'),
   echo_areito_singer: s('echo_areito_singer', 'Singer'),

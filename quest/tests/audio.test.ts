@@ -58,10 +58,13 @@ describe('sounds and voices', () => {
       expect(s.length, id).toBeGreaterThan(100);
       expect(s.length / 22050, id).toBeLessThan(2);
       let peak = 0;
+      let finite = true;
       for (const v of s) {
-        expect(Number.isFinite(v)).toBe(true);
+        // One check per sound, not per sample (the per-sample expect ran past the time limit once the stones came).
+        finite &&= Number.isFinite(v);
         peak = Math.max(peak, Math.abs(v));
       }
+      expect(finite, id).toBe(true);
       expect(peak, id).toBeGreaterThan(0.05);
       expect(peak, id).toBeLessThanOrEqual(0.95 + 1e-6);
     }

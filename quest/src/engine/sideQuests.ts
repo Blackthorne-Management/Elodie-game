@@ -41,6 +41,12 @@ export interface SideQuestDef {
    * and Anissa's `nudge` among her hints.
    */
   available?: Condition;
+  /**
+   * A secret quest (SECRET-ITEMS.md: the secret items' quests, found and not pointed to): never a mystery quest (no
+   * entry, dot or nudge before it is accepted), and never on the gold arrow's way when a story step follows the side
+   * quests (it is optional). Once accepted it is in the log and on the minimap like any other.
+   */
+  secret?: boolean;
   start?: readonly Goal[];
   nudge?: string;
   /**
