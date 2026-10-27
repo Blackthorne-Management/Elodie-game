@@ -11,6 +11,7 @@ import { LATE_XP } from '../src/data/sideQuestsLate.ts';
 import { CHAPEL, ERRAND, FEAST_FLAGS, WATCHES } from '../src/data/ardencia.ts';
 import { SAKK_FLAGS, SAFFRON_FLAGS, INVOICE_FLAGS } from '../src/data/aldoria.ts';
 import { RIBBON } from '../src/data/seatArchive.ts';
+import { BAKERY, BAKERY_TOWN_DOOR, Z5 } from '../src/data/bakery.ts';
 import { SECRET_ITEMS } from '../src/config.ts';
 import { buyPrice, gold, sellPrice } from '../src/engine/rpg.ts';
 import { localPillar, sharedXp } from '../src/engine/rpg.ts';
@@ -575,5 +576,80 @@ describe('Se-4 The Unknotted Ribbon (secret: the Seventh Ribbon)', () => {
     expect(flags.isSet(RIBBON.accepted)).toBe(false);
     expect(flags.isSet(RIBBON.struck)).toBe(false);
     expect(sideQuestStatus(flags, quest('ribbon'))).toBe('unknown');
+  });
+});
+
+// ---- Chapter 1 ----------------------------------------------------------------------------------------------------
+
+describe('Z-5 Bread With No Debt (Pòdlimyè, the harbor bakery)', () => {
+  /** Chapter 1's own errands done (the route's mark), the captain's tract read, back over the bridge to the plaza. */
+  function errandsDone(): Sim {
+    const sim = calm(simAt('side-quests-done'));
+    sim.logic.state.flags.set(Z5.tract, true);
+    sim.run(['goto 2,9', 'left']);
+    expect(sim.logic.map.id).toBe('zetwal-town');
+    return sim;
+  }
+
+  it('the guard, the hooded ones\' bread, the bakery\'s, the thumbprint, the grain store\'s memory, the baker; then her shop', () => {
+    const sim = errandsDone();
+    const flags = sim.logic.state.flags;
+    settleRewards(flags, RPG, SIDE_QUESTS);
+    expect(mysteryQuests(SIDE_QUESTS, flags).map((q) => q.id)).toContain('no_debt');
+    sim.run(['goto 21,10', 'right', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sideQuestStatus(flags, quest('no_debt'))).toBe('active');
+    // The Quiet Crown's table: a name and a small promise.
+    sim.run(['goto 23,8', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(Z5.table)).toBe(true);
+    // The bakery's back door, the baker, the sacks.
+    sim.run([`goto ${BAKERY_TOWN_DOOR.x},${BAKERY_TOWN_DOOR.y + 1}`, 'up']);
+    expect(sim.logic.map.id).toBe('zetwal-bakery');
+    sim.run([`goto ${BAKERY.baker.x},${BAKERY.baker.y + 1}`, 'up', 'confirm', 'skip']);
+    expect(flags.isSet(Z5.bakery)).toBe(true);
+    sim.run(['goto 7,2', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(Z5.thumbprint)).toBe(true);
+    // The grain store fifty years ago; the order heard; back to now.
+    sim.run(['goto 7,3', 'echo', 'skip']);
+    expect(sim.logic.era).toBe('echo');
+    expect(flags.isSet(Z5.order)).toBe(true);
+    sim.run(['echo', 'skip']);
+    expect(sim.logic.era).toBe('present');
+    // The baker hears whose order she keeps.
+    sim.run([`goto ${BAKERY.baker.x},${BAKERY.baker.y + 1}`, 'up', 'confirm', 'skip']);
+    expect(flags.isSet(Z5.done)).toBe(true);
+    const influence = localPillar(flags, RPG, 'influence', 'zetwal');
+    const purse = gold(flags, RPG);
+    expect(paid(flags, 'no_debt')).toBe(0);
+    expect(gold(flags, RPG) - purse).toBe(30);
+    expect(localPillar(flags, RPG, 'influence', 'zetwal') - influence).toBe(1);
+    // From now on she sells bread at cost.
+    expect(RPG.shops.zetwal_bakery!.stock).toEqual(['harbor_bread']);
+    expect(buyPrice(RPG.items.harbor_bread!)).toBeLessThan(RPG.items.kasav!.price);
+    sim.run(['up', 'confirm']);
+    expect(sim.log.join(' ')).not.toContain('error');
+  });
+
+  it('not offered before Chapter 1\'s errands are done (never on the gold arrow\'s way); closed when Yari sails', () => {
+    const sim = calm(simAt('side-quests'));
+    const flags = sim.logic.state.flags;
+    flags.set(Z5.tract, true);
+    expect(mysteryQuests(SIDE_QUESTS, flags).map((q) => q.id)).not.toContain('no_debt');
+    const end = simAt('end-card').logic.state.flags;
+    expect(sideQuestStatus(end, quest('no_debt'))).toBe('unknown');
+    end.set(Z5.accepted, true);
+    expect(sideQuestStatus(end, quest('no_debt'))).toBe('closed');
+  });
+
+  it('the store room\'s memory is open only once the guard has asked, and has no anchor', () => {
+    expect(maps['zetwal-bakery']!.anchors).toEqual([]);
+    const sim = errandsDone();
+    sim.run([`goto ${BAKERY_TOWN_DOOR.x},${BAKERY_TOWN_DOOR.y + 1}`, 'up']);
+    // Before the guard asks, the baker only gives bread, and the store room is only a store room.
+    sim.run([`goto ${BAKERY.baker.x},${BAKERY.baker.y + 1}`, 'up', 'confirm', 'skip']);
+    expect(sim.logic.state.flags.isSet(Z5.bakery)).toBe(false);
+    sim.run(['goto 7,3', 'echo']);
+    expect(sim.logic.era).toBe('present');
   });
 });

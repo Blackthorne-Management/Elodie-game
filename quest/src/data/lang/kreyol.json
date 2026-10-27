@@ -5,6 +5,8 @@
     { "word": "Bonjou", "language": "Kreyol", "translation": "Hello / Good day", "verified": false },
     { "word": "Kijan ou ye?", "language": "Kreyol", "translation": "How are you?", "verified": false },
     { "word": "Mèsi", "language": "Kreyol", "translation": "Thank you", "verified": false },
-    { "word": "Limyè", "language": "Kreyol", "translation": "Light (the family surname)", "verified": false }
+    { "word": "Limyè", "language": "Kreyol", "translation": "Light (the family surname)", "verified": false },
+    { "word": "Pran, pran", "language": "Kreyol", "translation": "Take, take (the harbor baker, Z-5)", "verified": false },
+    { "word": "Pa gen dèt", "language": "Kreyol", "translation": "No debt (the harbor baker, Z-5)", "verified": false }
   ]
 }

@@ -7,6 +7,7 @@ import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CONCOURSE, HALL, ROOMS } from './claim.ts';
 import { CAMP, CAVE, CONUCO, MOUNTAIN } from './war.ts';
 import { PLINTH, STONES, Z4 } from './seventhStone.ts';
+import { BAKERY, BAKERY_TOWN_DOOR, NO_DEBT_OPEN, Z5 } from './bakery.ts';
 import { LATE_SIDE_QUESTS } from './sideQuestsLate.ts';
 
 const f = (flag: string): Condition => ({ flag });
@@ -177,6 +178,41 @@ const BUILT_SIDE_QUESTS: readonly SideQuestDef[] = [
     closed: f('story.fleet_sailed'),
     closedText: 'Closed: the fleet sailed for Xaraguá, and the seventh stone stays silent.',
     reward: { gold: 80, xp: 30, pillar: INFLUENCE_ZETWAL },
+  },
+  // Z-5 Bread With No Debt (the rebel safehouse; SIDE-QUESTS.md Z-5; built Oct 27): the guard captain's pencil note, the
+  // town guard, two places that give bread, the harbor bakery's flour with its grey thumbprint, the store room's memory.
+  // Optional, no fighting. Opens once Chapter 1's own errands are done (so the gold arrow never leads to it) and closes
+  // when Yari sails (Claude's call). The baker sells bread at cost from then on (her shop, zetwal_bakery).
+  {
+    id: 'no_debt',
+    title: 'Bread With No Debt',
+    giver: 'Town guard',
+    place: 'Festival Plaza',
+    level: 3,
+    summary: 'The guard captain wrote under a seized Quiet Crown tract: "Bread that asks nothing back. Debts paid by strangers. Ask who holds the debt now."',
+    accepted: f(Z5.accepted),
+    available: NO_DEBT_OPEN,
+    start: [{ map: 'zetwal-town', at: { x: 21, y: 10 } }],
+    nudge: 'The town guard on the plaza had a note about free bread, Gigi. The captain\'s, in pencil. He might tell us more.',
+    parallel: true,
+    steps: [
+      { text: 'Ask the hooded ones by the stage for their bread.', done: f(Z5.table), goals: [{ map: 'zetwal-town', at: { x: 23, y: 8 } }] },
+      { text: 'The bakery\'s back door, on the harbor lane behind the south row.', done: f(Z5.bakery), goals: [{ map: 'zetwal-town', at: { x: BAKERY_TOWN_DOOR.x, y: BAKERY_TOWN_DOOR.y + 1 } }, { map: 'zetwal-bakery', at: { x: BAKERY.baker.x, y: BAKERY.baker.y + 1 } }] },
+      { text: 'Who pays for the flour? The sacks in the back room.', done: f(Z5.thumbprint), goals: [{ map: 'zetwal-bakery', at: { x: BAKERY.sacks.x + 1, y: BAKERY.sacks.y + 1 } }] },
+      {
+        text: 'The back room remembers something. Use the Locket over its floor.',
+        done: f(Z5.order),
+        goals: [{ map: 'zetwal-bakery', at: { x: BAKERY.zone.x + 1, y: BAKERY.zone.y } }],
+        echoGoals: [{ map: 'zetwal-bakery', at: { x: BAKERY.zone.x + 1, y: BAKERY.zone.y } }],
+      },
+      { text: 'Tell the baker whose order she keeps.', done: f(Z5.done), goals: [{ map: 'zetwal-bakery', at: { x: BAKERY.baker.x, y: BAKERY.baker.y + 1 } }] },
+    ],
+    done: f(Z5.done),
+    closed: f('act1.complete'),
+    closedText: 'Closed: Yari sailed. The bakery\'s back door still gives bread, and asks nothing.',
+    // No XP (Claude's call): Chapter 1 ends 34 XP short of level 5 on the route and Z-4 takes 30 of it; the design's 30 XP
+    // would end the chapter a level over for a player who does both. Its gold, pillar and the baker's shop are kept.
+    reward: { gold: 30, pillar: INFLUENCE_ZETWAL },
   },
   // ---- Chapter 2, Yucayeque (side quests build, Oct 20; docs/quest/reviews/2026-10-19-chapter2-side-quests-outline.md
   // and its owner decisions). Every one lives in the free city and must be done before the lamp-oil seller lends the

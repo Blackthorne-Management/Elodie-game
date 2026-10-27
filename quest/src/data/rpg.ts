@@ -147,6 +147,9 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'guava', name: 'Guava', kind: 'consumable', price: 10, heals: 15, text: 'Pink inside, sweet and a little sour. Restores 15 HP.' },
   { id: 'fish_stew', name: 'Fish stew', kind: 'consumable', price: 25, heals: 20, healTurns: 3, text: 'Snapper and peppers in a gourd bowl. Restores 20 HP, a little at a time.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
+  // Z-5 Bread With No Debt (Oct 27): the harbor baker's bread, sold at what the flour cost (Claude's call: "at cost" is
+  // the price itself, a third of a loaf's worth elsewhere; the shop has no other stock).
+  { id: 'harbor_bread', name: 'Harbor bread', kind: 'consumable', price: 6, heals: 30, text: 'A round loaf from the harbor bakery\'s back door, at what the flour cost. "Pran, pran. Pa gen dèt." Restores 30 HP.' },
   // The beach market's second stock, once the harbor is Yucayeque's (Chapter 11; Claude's call, Oct 27).
   { id: 'snapper_casabe', name: 'Snapper on casabe', kind: 'consumable', price: 55, heals: 80, text: 'Grilled snapper laid on a round of casabe, the first catch out of a free harbor. Restores 80 HP.' },
   { id: 'soursop_juice', name: 'Soursop juice', kind: 'consumable', price: 40, restores: 20, text: 'Soursop pressed with lime in a gourd, cold from the spring. Restores 20 SP.' },
@@ -612,6 +615,8 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   },
   zetwal_charms: { id: 'zetwal_charms', name: 'Charm stand', city: 'zetwal', stock: ['sun_charm', 'sea_glass_charm'] },
   zetwal_market: { id: 'zetwal_market', name: 'Market stand', city: 'zetwal', stock: ['soup_pot', 'akasan', 'mango'] },
+  // Z-5: the harbor bakery's back door, after the quest (CAPITALS.md: "Pran, pran. Pa gen dèt."): bread at cost.
+  zetwal_bakery: { greeting: 'Pran, pran. Pa gen dèt.', id: 'zetwal_bakery', name: 'Harbor bakery', city: 'zetwal', stock: ['harbor_bread'] },
   // The Iron Market (Oct 15).
   zetwal_produce: { id: 'zetwal_produce', name: 'Produce row', city: 'zetwal', stock: ['mango', 'kasav', 'kann'] },
   zetwal_spices: { id: 'zetwal_spices', name: 'Spice row', city: 'zetwal', stock: ['pikliz', 'akasan'] },

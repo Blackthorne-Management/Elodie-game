@@ -39,7 +39,7 @@ const doorsOf = (logic: GameLogic) => logic.map.doors;
 describe('the opening', () => {
   it('closes every way out of the plaza until Mother has left, and Anissa says to see her first', () => {
     const logic = plaza();
-    expect(doorsOf(logic)).toHaveLength(6);
+    expect(doorsOf(logic)).toHaveLength(7); // with the harbor bakery's back door (Z-5)
     for (const door of doorsOf(logic)) {
       const r = bump(logic, door);
       expect(r.through, door.id).toBe(false);

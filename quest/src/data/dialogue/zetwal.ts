@@ -19,6 +19,7 @@ import {
   WEST_WAY,
   Z4,
 } from '../seventhStone.ts';
+import { NO_DEBT_GUARD_BRANCHES, NO_DEBT_GUARD_NODES, NO_DEBT_RECRUITER_BRANCHES, NO_DEBT_RECRUITER_NODES } from './zetwalQuests.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -602,7 +603,10 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   }),
 
   script('recruiter_a_talk', {
-    start: {
+    // Z-5 Bread With No Debt: their bread costs a name and a small promise (data/dialogue/zetwalQuests.ts).
+    start: { lines: [], next: [...NO_DEBT_RECRUITER_BRANCHES, { to: 'pitch' }] },
+    ...NO_DEBT_RECRUITER_NODES,
+    pitch: {
       speaker: 'recruiter_a',
       lines: [
         { text: "So much noise today. Drums, names, shouting. Doesn't it tire you?" },
@@ -645,8 +649,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
   script('town_guard_talk', {
     start: {
       lines: [],
-      next: [{ if: { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.guard' }] }, to: 'soup' }, { to: 'talk' }],
+      next: [
+        { if: { all: [{ flag: 'side.soup.accepted' }, { notFlag: 'side.soup.guard' }] }, to: 'soup' },
+        // Z-5 Bread With No Debt (data/dialogue/zetwalQuests.ts).
+        ...NO_DEBT_GUARD_BRANCHES,
+        { to: 'talk' },
+      ],
     },
+    ...NO_DEBT_GUARD_NODES,
     talk: {
       speaker: 'town_guard',
       lines: [

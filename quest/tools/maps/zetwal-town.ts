@@ -3,6 +3,7 @@
 // years ago, the night before the Sun Accord was signed: a revolutionary camp of tents and barricades.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
+import { BAKERY_TOWN_DOOR } from '../../src/data/bakery.ts';
 import { BEFORE_NIGHT_TEXT, DAY_TEXT, DUSK_TEXT, MUSTER_HOUSES, NIGHT_TEXT, PLAZA } from '../../src/data/muster.ts';
 
 const OPENS_HOME = { if: 'story.elodie_left', closed: 'plaza_door_closed' };
@@ -35,6 +36,8 @@ export function zetwalTown(): MapSource {
   g.rect(22, 2, 4, 2, '^').rect(22, 4, 4, 1, '#');
   g.rect(2, 16, 6, 2, '^').rect(2, 18, 6, 2, '#');
   g.rect(12, 18, 5, 2, '^').rect(12, 20, 5, 2, '#');
+  // The harbor bakery's back door (Z-5), facing the harbor lane.
+  g.set(BAKERY_TOWN_DOOR.x, BAKERY_TOWN_DOOR.y, 'D');
 
   // The plaza: paving, the stage, lanterns, fountain, the Marshal's Stone, stalls.
   g.rect(10, 5, 16, 11, ':');
@@ -148,6 +151,8 @@ export function zetwalTown(): MapSource {
     { layer: 'doors', name: 'town_square', x: 18, y: 0, props: { target: 'square_plaza', map: 'zetwal-square', exit: 'down', ...OPENS_CITY } },
     { layer: 'doors', name: 'town_gate', x: 39, y: 19, props: { target: 'road_gate', map: 'zetwal-road', exit: 'left', ...OPENS_CITY } },
     { layer: 'doors', name: 'town_temple', x: 38, y: 9, props: { target: 'temple_bridge', map: 'zetwal-temple', exit: 'left', ...OPENS_CITY } },
+    // Z-5 (Oct 27): the bakery's back door, on the harbor lane behind the plaza's south row.
+    { layer: 'doors', name: 'town_bakery', x: BAKERY_TOWN_DOOR.x, y: BAKERY_TOWN_DOOR.y, props: { target: 'bakery_out', map: 'zetwal-bakery', exit: 'down', ...OPENS_CITY } },
 
     { layer: 'spawns', name: 'start', x: 8, y: 10, props: { facing: 'right', era: 'present' } },
     { layer: 'spawns', name: 'bridgehead', x: 25, y: 10, props: { facing: 'right', era: 'present' } },

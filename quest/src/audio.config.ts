@@ -69,6 +69,7 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'zetwal-harbor': 'city',
   'zetwal-square': 'city',
   'zetwal-mill': 'city',
+  'zetwal-bakery': 'city',
   'zetwal-heights': 'city',
   'zetwal-house': 'home',
   'zetwal-temple': 'temple',

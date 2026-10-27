@@ -2190,6 +2190,14 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     title: 'The gap in the blockade',
     text: 'Anaco: three ships across the harbor mouth and a chain between the two nearest. But at the lowest tide the sea cave on the Canoe Beach opens to the sea, where the canoes slept in his grandmother\'s time.',
   },
+  // Z-5 Bread With No Debt (Chapter 1, Oct 27): the first door the print is on. Unnumbered (Claude's call): the notes
+  // after it were written counting from Yucayeque's oil ("again", "a third time"), and still read true after this one.
+  {
+    id: 'flour_thumbprint',
+    when: 'side.no_debt.thumbprint',
+    title: 'A grey thumbprint in the flour',
+    text: 'The harbor bakery gives bread at its back door and keeps no debt book. Its flour comes from nobody the baker will name, and every sack has a small grey thumbprint, in ash, on the seam.',
+  },
   // Chapter 2's side quests (Oct 20).
   {
     id: 'ash_thumbprint',

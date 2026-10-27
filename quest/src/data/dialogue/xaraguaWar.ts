@@ -1166,7 +1166,13 @@ const TRUTH: DialogueScript = script('harbor_truth', {
       nar('Gianna sets the Sun Locket on the page. He sets the signet beside it. Both halves glow, as they did in the hall.', { fx: 'token' }),
       say(H, 'Oil at the cave. Bread in the Lower Town. Water in Bab al-Dhahab. Grain under the plateau. Paper and lanterns in the marsh.'),
       say(H, 'A bakery in Pòdlimyè with no debt book. Oil for a wick in Agnipur. A list that warned them first. Powder for this harbor.'),
+      // Z-5 Bread With No Debt opens the bakery's door in Chapter 1 (built Oct 27): then all nine were opened.
       say(R, 'Eight you opened. The bakery is at your mother\'s end of the plaza; you walked past it at the festival.', {
+        if: not('side.no_debt.done'),
+        set: { 'clue.ash_road_read': true, 'belief.rael_traitor': false, 'belief.rael_truth': true },
+      }),
+      say(R, 'Nine you opened. The bakery was the first, on festival day. You did not know it was mine.', {
+        if: has('side.no_debt.done'),
         set: { 'clue.ash_road_read': true, 'belief.rael_traitor': false, 'belief.rael_truth': true },
       }),
     ],

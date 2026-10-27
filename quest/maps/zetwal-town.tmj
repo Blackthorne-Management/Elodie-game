@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 120,
+  "nextobjectid": 121,
   "layers": [
     {
       "id": 1,
@@ -45,7 +45,7 @@
 1,1,6,6,6,6,6,6,3,1,1,1,7,7,7,7,7,1,1,1,3,11,11,11,11,11,11,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,6,6,93,6,6,6,3,1,1,1,7,7,7,7,7,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
 1,1,1,1,1,1,1,1,3,1,1,1,6,6,6,6,6,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,6,
-1,1,1,1,1,1,1,1,3,1,1,1,6,6,93,6,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,6,
+1,1,1,1,1,1,1,1,3,1,1,1,6,6,94,95,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,6,
 1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,6,
 12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,1,1,1,1,1,1,1,1,1,6,
 4,4,4,4,4,4,41,41,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
@@ -250,7 +250,7 @@
 16,0,16,16,16,16,16,16,0,0,0,0,16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,0,
 16,0,16,16,16,16,16,16,0,0,0,0,16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 16,0,0,0,0,0,0,0,0,0,0,0,16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,
-16,0,0,0,0,0,0,0,0,0,16,0,16,16,16,16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,16,0,16,16,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,16,0,0,0,0,0,0,0,16,0,0,0,0,0,16,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
 16,16,16,16,16,16,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
@@ -2479,6 +2479,44 @@
               "value": "temple_bridge"
             }
           ]
+        },
+        {
+          "id": 77,
+          "name": "town_bakery",
+          "type": "door",
+          "x": 224,
+          "y": 336,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "closed",
+              "type": "string",
+              "value": "plaza_door_closed"
+            },
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.warroom_echo"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "zetwal-bakery"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "bakery_out"
+            }
+          ]
         }
       ]
     },
@@ -2493,7 +2531,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 77,
+          "id": 78,
           "name": "intro",
           "type": "trigger",
           "x": 128,
@@ -2526,7 +2564,7 @@
           ]
         },
         {
-          "id": 78,
+          "id": 79,
           "name": "bridge_cross",
           "type": "trigger",
           "x": 496,
@@ -2559,7 +2597,7 @@
           ]
         },
         {
-          "id": 79,
+          "id": 80,
           "name": "bridge_look",
           "type": "trigger",
           "x": 416,
@@ -2592,7 +2630,7 @@
           ]
         },
         {
-          "id": 80,
+          "id": 81,
           "name": "muster_camp",
           "type": "trigger",
           "x": 160,
@@ -2625,7 +2663,7 @@
           ]
         },
         {
-          "id": 81,
+          "id": 82,
           "name": "muster_watch",
           "type": "trigger",
           "x": 160,
@@ -2658,7 +2696,7 @@
           ]
         },
         {
-          "id": 82,
+          "id": 83,
           "name": "muster_night",
           "type": "trigger",
           "x": 160,
@@ -2703,7 +2741,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 83,
+          "id": 84,
           "name": "start",
           "type": "spawn",
           "x": 128,
@@ -2726,7 +2764,7 @@
           ]
         },
         {
-          "id": 84,
+          "id": 85,
           "name": "bridgehead",
           "type": "spawn",
           "x": 400,
@@ -2761,7 +2799,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 85,
+          "id": 86,
           "name": "plaza_stone",
           "type": "echo_zone",
           "x": 176,
@@ -2784,7 +2822,7 @@
           ]
         },
         {
-          "id": 86,
+          "id": 87,
           "name": "bridgehead",
           "type": "echo_zone",
           "x": 432,
@@ -2824,7 +2862,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 87,
+          "id": 88,
           "name": "chain_bridge_pin",
           "type": "anchor",
           "x": 464,
@@ -2859,7 +2897,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 88,
+          "id": 89,
           "name": "plaza_lantern_nw",
           "type": "puzzle_object",
           "x": 224,
@@ -2887,7 +2925,7 @@
           ]
         },
         {
-          "id": 89,
+          "id": 90,
           "name": "plaza_lantern_ne",
           "type": "puzzle_object",
           "x": 336,
@@ -2915,7 +2953,7 @@
           ]
         },
         {
-          "id": 90,
+          "id": 91,
           "name": "plaza_lantern_sw",
           "type": "puzzle_object",
           "x": 160,
@@ -2943,7 +2981,7 @@
           ]
         },
         {
-          "id": 91,
+          "id": 92,
           "name": "plaza_lantern_se",
           "type": "puzzle_object",
           "x": 400,
@@ -2971,7 +3009,7 @@
           ]
         },
         {
-          "id": 92,
+          "id": 93,
           "name": "rope_bridge",
           "type": "puzzle_object",
           "x": 480,
@@ -2994,7 +3032,7 @@
           ]
         },
         {
-          "id": 93,
+          "id": 94,
           "name": "plaque",
           "type": "puzzle_object",
           "x": 432,
@@ -3017,7 +3055,7 @@
           ]
         },
         {
-          "id": 94,
+          "id": 95,
           "name": "winch_rusted",
           "type": "puzzle_object",
           "x": 448,
@@ -3040,7 +3078,7 @@
           ]
         },
         {
-          "id": 95,
+          "id": 96,
           "name": "pawl_rusted",
           "type": "puzzle_object",
           "x": 464,
@@ -3063,7 +3101,7 @@
           ]
         },
         {
-          "id": 96,
+          "id": 97,
           "name": "pawl_pinned",
           "type": "puzzle_object",
           "x": 464,
@@ -3091,7 +3129,7 @@
           ]
         },
         {
-          "id": 97,
+          "id": 98,
           "name": "winch",
           "type": "puzzle_object",
           "x": 448,
@@ -3114,7 +3152,7 @@
           ]
         },
         {
-          "id": 98,
+          "id": 99,
           "name": "pawl",
           "type": "puzzle_object",
           "x": 464,
@@ -3137,7 +3175,7 @@
           ]
         },
         {
-          "id": 99,
+          "id": 100,
           "name": "chain_bridge_echo",
           "type": "puzzle_object",
           "x": 480,
@@ -3170,7 +3208,7 @@
           ]
         },
         {
-          "id": 100,
+          "id": 101,
           "name": "chain_bridge",
           "type": "puzzle_object",
           "x": 480,
@@ -3203,7 +3241,7 @@
           ]
         },
         {
-          "id": 101,
+          "id": 102,
           "name": "chain_bridge_raised",
           "type": "puzzle_object",
           "x": 544,
@@ -3231,7 +3269,7 @@
           ]
         },
         {
-          "id": 102,
+          "id": 103,
           "name": "chain_bridge_raised_echo",
           "type": "puzzle_object",
           "x": 544,
@@ -3259,7 +3297,7 @@
           ]
         },
         {
-          "id": 103,
+          "id": 104,
           "name": "plaza_fountain",
           "type": "puzzle_object",
           "x": 272,
@@ -3282,7 +3320,7 @@
           ]
         },
         {
-          "id": 104,
+          "id": 105,
           "name": "monument",
           "type": "puzzle_object",
           "x": 192,
@@ -3305,7 +3343,7 @@
           ]
         },
         {
-          "id": 105,
+          "id": 106,
           "name": "stone_pile",
           "type": "puzzle_object",
           "x": 192,
@@ -3328,7 +3366,7 @@
           ]
         },
         {
-          "id": 106,
+          "id": 107,
           "name": "signing_stage",
           "type": "puzzle_object",
           "x": 272,
@@ -3351,7 +3389,7 @@
           ]
         },
         {
-          "id": 107,
+          "id": 108,
           "name": "suzumori_pole",
           "type": "puzzle_object",
           "x": 176,
@@ -3384,7 +3422,7 @@
           ]
         },
         {
-          "id": 108,
+          "id": 109,
           "name": "agnivansh_lamp",
           "type": "puzzle_object",
           "x": 400,
@@ -3417,7 +3455,7 @@
           ]
         },
         {
-          "id": 109,
+          "id": 110,
           "name": "dorini_table",
           "type": "puzzle_object",
           "x": 96,
@@ -3450,7 +3488,7 @@
           ]
         },
         {
-          "id": 110,
+          "id": 111,
           "name": "fb_banner",
           "type": "puzzle_object",
           "x": 240,
@@ -3483,7 +3521,7 @@
           ]
         },
         {
-          "id": 111,
+          "id": 112,
           "name": "ironvow_banner",
           "type": "puzzle_object",
           "x": 528,
@@ -3516,7 +3554,7 @@
           ]
         },
         {
-          "id": 112,
+          "id": 113,
           "name": "violet_banner",
           "type": "puzzle_object",
           "x": 416,
@@ -3561,7 +3599,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 113,
+          "id": 114,
           "name": "plaza_festival",
           "type": "crowd_zone",
           "x": 176,
@@ -3589,7 +3627,7 @@
           ]
         },
         {
-          "id": 114,
+          "id": 115,
           "name": "plaza_evening",
           "type": "crowd_zone",
           "x": 176,
@@ -3617,7 +3655,7 @@
           ]
         },
         {
-          "id": 115,
+          "id": 116,
           "name": "camp_free_brasador",
           "type": "crowd_zone",
           "x": 224,
@@ -3645,7 +3683,7 @@
           ]
         },
         {
-          "id": 116,
+          "id": 117,
           "name": "camp_dorini",
           "type": "crowd_zone",
           "x": 32,
@@ -3673,7 +3711,7 @@
           ]
         },
         {
-          "id": 117,
+          "id": 118,
           "name": "camp_ironvow",
           "type": "crowd_zone",
           "x": 448,
@@ -3701,7 +3739,7 @@
           ]
         },
         {
-          "id": 118,
+          "id": 119,
           "name": "camp_suzumori",
           "type": "crowd_zone",
           "x": 144,
@@ -3729,7 +3767,7 @@
           ]
         },
         {
-          "id": 119,
+          "id": 120,
           "name": "camp_agnivansh",
           "type": "crowd_zone",
           "x": 384,
@@ -3768,7 +3806,7 @@
       "imageheight": 896,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 442,
+      "tilecount": 445,
       "columns": 8,
       "margin": 0,
       "spacing": 0

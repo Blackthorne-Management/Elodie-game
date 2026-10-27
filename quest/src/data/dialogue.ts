@@ -20,6 +20,7 @@ import { SKARRAGOL_DIALOGUE } from './dialogue/skarragol.ts';
 import { SKARRAGOL_QUEST_DIALOGUE } from './dialogue/skarragolQuests.ts';
 import { XARAGUA_QUEST_DIALOGUE } from './dialogue/xaraguaQuests.ts';
 import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
+import { ZETWAL_QUEST_DIALOGUE } from './dialogue/zetwalQuests.ts';
 import { MUSTER_DIALOGUE, MUSTER_OVERLAYS, overlay } from './dialogue/zetwalMuster.ts';
 import { WAR_DIALOGUE, WAR_OVERLAYS } from './dialogue/xaraguaWar.ts';
 import { CLAIM_DIALOGUE, CLAIM_OVERLAYS } from './dialogue/seatClaim.ts';
@@ -161,6 +162,7 @@ const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
 const BASE: Record<string, DialogueScript> = {
   ...TEST_VILLAGE,
   ...Object.fromEntries(ZETWAL_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(ZETWAL_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(XARAGUA_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(ARDENCIA_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(ARDENCIA_QUEST_DIALOGUE.map((d) => [d.id, d])),

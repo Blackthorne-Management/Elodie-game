@@ -540,6 +540,11 @@ export const TILESET = {
     { gid: 441, name: 'promise_niche', base: 0x6e5a4a, accent: 0x8a8a8a, pattern: 'border' },
     // A-2 The Missing Saffron (Chapter 4, Oct 27; data/aldoria.ts): camel tracks in the dunes, a thread of saffron in them.
     { gid: 442, name: 'camel_tracks', base: 0xd8b878, accent: 0xb85a2a, pattern: 'dots' },
+    // Z-5 Bread With No Debt (Chapter 1, Oct 27; data/bakery.ts): the flour sacks with a grey thumbprint on each seam,
+    // the grain store's sacks fifty years ago, and the harbor bakery's bread oven.
+    { gid: 443, name: 'grain_sacks', base: 0xe8dcc0, accent: 0x6e6a78, pattern: 'dots' },
+    { gid: 444, name: 'grain_sacks_old', base: 0xc8a46b, accent: 0x9c7446, pattern: 'blob' },
+    { gid: 445, name: 'bakery_oven', base: 0x8a4a2a, accent: 0xe0782a, pattern: 'border' },
   ] satisfies PlaceholderTile[],
 } as const;
 
@@ -1037,6 +1042,9 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   zetwal_levy: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x2a5a8a, trim: C.y!, legs: C.K!, headgear: 'cap', headgearColor: 0x2a5a8a, accessories: ['staff'] },
   ti_jak: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0xa89c86, trim: C.o!, legs: C.B!, build: 'small', accessories: ['staff'] },
   powder_master: { skin: C.T!, hair: C.G!, hairStyle: 'bald', outfit: 0x6a5230, trim: C.R!, legs: C.b!, beard: C.G!, accessories: ['apron'] },
+  // Z-5 (Chapter 1, Oct 27): the harbor baker, floured to the elbow; the Revolution's quartermaster in the grain store.
+  baker: { skin: C.s!, hair: HAIR_DARK, hairStyle: 'bun', outfit: 0xe8dcc0, trim: C.U!, legs: C.B!, headgear: 'wrap', headgearColor: C.U!, accessories: ['apron'] },
+  echo_quartermaster: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: 0x6a5230, trim: C.y!, legs: C.b!, headgear: 'cap', headgearColor: 0x5a4428, accessories: ['satchel'] },
   crew_chief: { skin: C.T!, hair: C.B!, hairStyle: 'bald', outfit: 0x3a3440, trim: 0xb8403a, legs: C.B!, beard: C.B!, headgear: 'cap', headgearColor: 0xb8403a, accessories: ['satchel'] },
   // The War of the Harbor (Chapter 11, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 20):
   // Captain-General Hale, the Regent's Champion, in a violet coat with a boarding axe; the Crown's marines and musketeers

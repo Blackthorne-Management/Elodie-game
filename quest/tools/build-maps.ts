@@ -25,9 +25,10 @@ import { zetwalSquare } from './maps/zetwal-square.ts';
 import { zetwalTemple } from './maps/zetwal-temple.ts';
 import { zetwalTown } from './maps/zetwal-town.ts';
 import { zetwalMill } from './maps/zetwal-mill.ts';
+import { zetwalBakery } from './maps/zetwal-bakery.ts';
 import { MAPS_DIR } from './validate-maps.ts';
 
-export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights, zetwalSquare, zetwalMill, ...XARAGUA_SOURCES, ...ARDENCIA_SOURCES, ...ALDORIA_SOURCES, ...SEAT_SOURCES, ...SKARRAGOL_SOURCES, ...KUROSHI_SOURCES, ...JWALADESH_SOURCES, ...ALDERMOOR_SOURCES];
+export const SOURCES: readonly (() => MapSource)[] = [zetwalTown, zetwalHouse, zetwalTemple, zetwalArchive, zetwalHall, zetwalRoad, zetwalMarket, zetwalHarbor, zetwalHeights, zetwalSquare, zetwalMill, zetwalBakery, ...XARAGUA_SOURCES, ...ARDENCIA_SOURCES, ...ALDORIA_SOURCES, ...SEAT_SOURCES, ...SKARRAGOL_SOURCES, ...KUROSHI_SOURCES, ...JWALADESH_SOURCES, ...ALDERMOOR_SOURCES];
 
 /** The generated files, as `[path, text]`. */
 export function buildMaps(dir: string = MAPS_DIR): [string, string][] {

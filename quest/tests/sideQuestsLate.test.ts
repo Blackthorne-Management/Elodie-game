@@ -74,8 +74,8 @@ describe('what they pay keeps the level curve (the levels pass)', () => {
   const bouts = ['spice', 'dyer', 'wrestler'].reduce((n, w) => n + BATTLES[`argue_${w}`]!.rewards.xp, 0);
   const xpOf = (id: string) => SIDE_QUESTS.find((q) => q.id === id)!.reward.xp ?? 0;
   const extra: Record<number, number> = {
-    // Chapter 1's secret (Z-4, data/sideQuests.ts) counts too: a player who does everything does it.
-    1: xpOf('seventh_stone'),
+    // Chapter 1's secret (Z-4) and the bakery (Z-5, data/sideQuests.ts) count too: a player who does everything does them.
+    1: xpOf('seventh_stone') + xpOf('no_debt'),
     // Chapter 3: the feast (and its blades, the Fear route's fight) and the old lord's errand; Ar-5 is at the camp,
     // after the chapter's end, so it counts from Chapter 4.
     3: LATE_XP.feast + BATTLES.feast_blades!.rewards.xp + LATE_XP.oldErrand,

@@ -65,7 +65,7 @@ describe('open paths between outdoor areas (owner request, Oct 16)', () => {
   it('a way from one outdoor area to another is open ground; only buildings have doors', () => {
     const sources = SOURCES.map((make) => make());
     const interiors = new Set(sources.filter((s) => s.interior).map((s) => s.id));
-    expect([...interiors].sort()).toEqual(['aldermoor-cathedral', 'aldermoor-clocktower', 'aldermoor-keep', 'aldermoor-rolls', 'aldermoor-townhouse', 'aldoria-ledgers', 'aldoria-majlis', 'aldoria-vault', 'ardencia-alcazar', 'ardencia-chapel', 'ardencia-forge', 'ardencia-library', 'ardencia-tunnel', 'jwaladesh-court', 'jwaladesh-library', 'jwaladesh-rooftops', 'kuroshi-filehouse', 'kuroshi-hall', 'kuroshi-library', 'kuroshi-sayo-house', 'seat-archive', 'seat-hall', 'seat-rooms', 'seat-workshop', 'skarragol-moot', 'skarragol-saga', 'xaragua-caney', 'xaragua-cave', 'xaragua-cellar', 'xaragua-customs', 'xaragua-record', 'xaragua-seacave', 'xaragua-song', 'zetwal-archive', 'zetwal-hall', 'zetwal-house', 'zetwal-mill']);
+    expect([...interiors].sort()).toEqual(['aldermoor-cathedral', 'aldermoor-clocktower', 'aldermoor-keep', 'aldermoor-rolls', 'aldermoor-townhouse', 'aldoria-ledgers', 'aldoria-majlis', 'aldoria-vault', 'ardencia-alcazar', 'ardencia-chapel', 'ardencia-forge', 'ardencia-library', 'ardencia-tunnel', 'jwaladesh-court', 'jwaladesh-library', 'jwaladesh-rooftops', 'kuroshi-filehouse', 'kuroshi-hall', 'kuroshi-library', 'kuroshi-sayo-house', 'seat-archive', 'seat-hall', 'seat-rooms', 'seat-workshop', 'skarragol-moot', 'skarragol-saga', 'xaragua-caney', 'xaragua-cave', 'xaragua-cellar', 'xaragua-customs', 'xaragua-record', 'xaragua-seacave', 'xaragua-song', 'zetwal-archive', 'zetwal-bakery', 'zetwal-hall', 'zetwal-house', 'zetwal-mill']);
     // A cave's way in is its dark mouth (ĝ), the door of a cave.
     const DOOR_ART = ['D', '«', '»', '⌈', '⌊', 'ĝ'];
     let passages = 0;
@@ -88,8 +88,9 @@ describe('open paths between outdoor areas (owner request, Oct 16)', () => {
     // Chapter 12 adds two: Mother's rooms from the Envoys' Quarter, and the way back. The side quests of Oct 27 add two:
     // Lady Sayo's House from the Lantern Quarter, the clock tower from the keep's hall and Lady Rosalind's house from the
     // square, and their three ways back. The second batch of Oct 27 adds four: the chapel stair from the Alcázar's sitting
-    // room and Benny's stair from his quiet rooms (Ar-4), and their two ways back.
-    expect(doors).toBe(82);
+    // room and Benny's stair from his quiet rooms (Ar-4), and their two ways back; and two more: the harbor bakery's back
+    // door from the plaza (Z-5), and the way back.
+    expect(doors).toBe(84);
   });
 });
 

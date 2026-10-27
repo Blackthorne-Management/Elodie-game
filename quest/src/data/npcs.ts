@@ -552,6 +552,11 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   crew_chief_down: n('crew_chief_down', 'crew_chief', 'Crew chief (on the sand)', 'crew_after'),
   ti_jak: n('ti_jak', 'ti_jak', 'Ti Jak'),
   powder_master: n('powder_master', 'powder_master', 'Powder-master'),
+  // Z-5 Bread With No Debt (Chapter 1, Oct 27): the harbor baker (her shop once the quest is done: bread at cost), and
+  // the Revolution's quartermaster in the grain store's memory.
+  baker: n('baker', 'baker', 'Baker'),
+  baker_shop: { ...n('baker_shop', 'baker', 'Baker'), shop: 'zetwal_bakery' },
+  echo_quartermaster: n('echo_quartermaster', 'echo_quartermaster', 'Quartermaster'),
   benny_signing: n('benny_signing', 'benny_young', 'Benny'),
   caona_signing: n('caona_signing', 'caona', 'Caona'),
   echo_army_zetwal: n('echo_army_zetwal', 'echo_soldier', "Zetwal's company"),

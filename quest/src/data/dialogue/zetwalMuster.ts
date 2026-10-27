@@ -1474,6 +1474,9 @@ const OVERLAYS: readonly MusterOverlay[] = [
   one('ferryman_talk', 'ferryman', 'Every boat in the harbor is somebody\'s, today. Mine\'s the only one nobody wants.'),
   one('charm_seller_talk', 'charm_seller', 'Charms for sailors, charms for soldiers. The Ironvow buy the ugly ones. They say ugly charms work harder.'),
   one('grocer_talk', 'grocer', 'Seven armies, and every one of them hungry at the same hour.'),
+  // Z-5's harbor baker (Oct 27): her back door feeds the companies too, and still keeps no book.
+  one('baker_talk', 'baker', 'Bread for the companies, pitit. All seven of them. Nobody is writing it down.'),
+  one('baker_shop_talk', 'baker', 'Bread for the companies, and for you. What the flour cost. Still no book.'),
   one('debate_onlooker_talk', 'villager', 'The corner\'s quiet today. Everyone\'s gone to argue at the Muster instead.'),
   one('patricio_home_talk', PO, 'The council sits at noon, envoy.'),
   one('anicette_home_talk', AN, 'Eat first. Then seat them.'),
