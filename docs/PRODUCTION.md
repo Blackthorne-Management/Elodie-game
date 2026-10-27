@@ -10,7 +10,8 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Oct 27** (the remaining print files; Z-4 The Seventh Stone).
+and ticks items off here as they land. Last updated **Oct 27** (the remaining print files; Z-4 The Seventh Stone; the
+second batch of side quests, Chapters 1, 3 to 6 and 12).
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -66,6 +67,25 @@ sails in Chapter 10. The name stones moved into a ring of seven round the plinth
 demo (`elodie-game-demo`, Chapter 1 identical). Waiting on the owner: a read of the reading's names and the scout's
 lines (the brother's name is never written out, for the cultural reviewer), and the hints rule (Claude's call: the
 second hint after three wrong stones, the answer after five, instead of an 8-minute timer).
+
+**Quest, the second batch of side quests (built Oct 27, all optional; `SIDE-QUESTS.md`, `SECRET-ITEMS.md` 2, 5, 6 and
+9 have each one's built note and Claude's calls):** Chapter 3, Ar-3 *The Elders' Feast* (Elder Ferrán's salt tax: his
+blades or three questions across the table), Ar-4 *The Old Lord's Errand* (secret: the cloister crossed in two eras,
+the crypt bolt, **La Promesa de Benny** as old Benny's letter: once a battle the first fighter felled stands at 1 HP)
+and Ar-5 *The Arrows Missed*; Chapter 4, A-2 *The Missing Saffron*, A-4 *The Uncashed Note* (secret: the war-time
+bazaar's trade chain, box seven, **the Sakk of Yusuf**: 15% off, 60% back, Samira's 300-gold coupon once a chapter) and
+A-5 *Invoice for the Crown*; Chapter 6, S-1 *Salkhi Has Opinions*, S-2's first-snow race (a timing race) and S-4 *The
+Cairn of Nine Riders* (secret: the winter sky from the flat stone, the seventh cairn, **Sarnai's Bridle Bell** and Call
+the Herd); Se-4 *The Unknotted Ribbon* (secret, Chapter 5 to 12: the clerk's five questions in the sealing's memory,
+Hollis's hearing on the Journal's proofs, **the Seventh Ribbon**: the clause struck at the Claim, Stability +15, Concord
++10, the ribbon to Yari on the Hearing's morning); and Chapter 1's Z-5 *Bread With No Debt* (the harbor bakery
+safehouse, a new interior, the grain store's memory, the baker's bread at cost; ported to the demo). XP is small
+(Claude's call, the levels pass's rule: a player who does everything ends each chapter at most a level over), the
+design's gold and pillars kept. New maps: `ardencia-chapel` (24 x 16) and `zetwal-bakery` (12 x 8); new tiles 436 to
+445. The quest smoke plays Ar-4 in a second window from `@old-benny`. Waiting on the owner: the two Kreyol phrases for
+the phrasebook check ("Pran, pran", "Pa gen dèt"), a read of Se-4's five questions and Hollis's hearing (the lines are
+the design's, the third answer of each question is Claude's), and art for the new townsfolk of these quests (the
+harbor baker, the quartermaster and Elder Ferrán among them; drawn placeholders for now).
 
 **Quest, Chapter 3 (Oct 21):** The Trial of Blades is built on branch `chapter3` (Cenizal's eight maps, the trial as a
 scripted loss with La Promesa de Benny, the forge Echo, Benny's tunnel, the camp; Rael's family in their settled roles).

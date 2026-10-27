@@ -52,14 +52,14 @@ the memory, and Anissa's third hint already names the weights.*
 | M-KUR-2 | The marsh lanterns | Kirinoura | 7 | minor (K-3) | Fire / light | 3 |
 | M-JWA-1 | The lamp relay | Agnipur | 8 | minor (J-2) | timing | 3 |
 | S-ZET | The Seventh Stone | Pòdlimyè | 1 | secret (built Oct 27) | sequence memory | 2 |
-| S-ALD | The Uncashed Note | Bab al-Dhahab | 3 | secret | trade chain | 3 |
+| S-ALD | The Uncashed Note | Bab al-Dhahab | 4 | secret (built Oct 27) | trade chain | 3 |
 | S-XAR | Where the Canoes Sleep | Yucayeque | 2 | secret | tides | 4 |
 | S-JWA | Oil for the Little Lamps | Agnipur | 8 | secret | measures | 5 |
-| S-ARD | The Old Lord's Errand | Cenizal | 4+ | secret | two-era stealth | 6 |
-| S-SKA | The Cairn of Nine Riders | Ordvik | 6 | secret | star positions | 7 |
+| S-ARD | The Old Lord's Errand | Cenizal | 3 | secret (built Oct 27) | two-era stealth | 6 |
+| S-SKA | The Cairn of Nine Riders | Ordvik | 6 | secret (built Oct 27) | star positions | 7 |
 | S-ALM | The Clock That Waits | Kingsmere | 9 | secret | clockwork | 8 |
 | S-KUR | The Letter in the Floor | Kirinoura | 7 | secret | sound | 9 |
-| S-SEA | The Unknotted Ribbon | Eightgate | 5 to 12 | secret | conversation | 10 |
+| S-SEA | The Unknotted Ribbon | Eightgate | 5 to 12 | secret (built Oct 27) | conversation | 10 |
 
 ---
 
@@ -218,6 +218,9 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
 - **Hints:** "Grandfather had almost nothing to trade. But he knew what would matter later, because you do." / "Look at
   the price board now. What is worth a fortune today?" / "Coins, dates, salt, peppers, indigo. Deposit the indigo."
 - **Difficulty:** 3.
+- **Built (Oct 27):** the chain and the box as `SECRET-ITEMS.md` 2 says; no replayed puzzle file (the walk is in
+  `quest/tests/sideQuestsMid.test.ts`, the wrong deposit and its amendment included). Anissa's line after a wrong
+  deposit: "Grandfather put in the wrong thing, Gigi. The price board says what is dear now."
 
 ## Cenizal (Ardencia)
 
@@ -255,6 +258,9 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   eras. He might not exist in the other one." / "Swap at the well, under the arch, at the fountain, by the bell rope
   and at the crypt steps; jam the bolt in the memory."
 - **Difficulty:** 6.
+- **Built (Oct 27):** puzzle `ardencia_cloister` (`quest/puzzles/ardencia_cloister/`, four cheats: straight down the
+  walks now, the whole walk in the memory, the bolt never jammed, a swap missed before the third guard). Seen sends you back to the cloister gate, no fight
+  (Claude's call). Anissa's hints at the first, third and fifth time seen.
 
 ## Eightgate
 
@@ -288,6 +294,10 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   no out loud. The Dorini were paid." / "No one; he refused aloud; the Crown and paid allies; to you alone; leave it
   unknotted. Then show Caona's oath, Benny's note, Yusuf's ledger and Thomas's record."
 - **Difficulty:** 10.
+- **Built (Oct 27):** puzzle `seat_ribbon` (`quest/puzzles/seat_ribbon/`, four cheats: never in the memory, the trap
+  answers three times, the ledger shown for Benny's line, nothing shown for the first). The hints as written, the
+  first at the offer (Anissa), the second and third Patricio's own when the register shuts, and Anissa naming the four
+  proofs after a second failed hearing. The sun mark stands for one of the first three lines only (Claude's call).
 
 ## Ordvik (Skarragol)
 
@@ -333,6 +343,9 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   the Mare's eye, and wait for the third horn." / "At the third horn the eye is over the seventh cairn clockwise from
   the north path."
 - **Difficulty:** 7.
+- **Built (Oct 27):** puzzle `skarragol_cairn` (`quest/puzzles/skarragol_cairn/`, four cheats: the capstone never
+  buried, the Mare's eye at the second horn, the Ox's yoke at the third, waiting out the whole night). The sky turns by
+  steps (Claude's call: no real-time timer), a horn at steps 4, 8 and 12.
 
 ## Kirinoura (Kuroshi)
 

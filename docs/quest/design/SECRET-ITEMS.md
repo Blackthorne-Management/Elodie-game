@@ -123,6 +123,17 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   once per chapter Samira can cash a coupon for **300 gold**.
 - **Why it fits:** House Dorini built its power on ledgers, not armies. The puzzle rewards an appraiser's eye across
   fifty years, and Yusuf, keeper of the ledger, finally pays a debt on time.
+- **Built (Oct 27; A-4 in `quest/src/data/sideQuestsLate.ts`, places and flags in `quest/src/data/aldoria.ts`, lines in
+  `quest/src/data/dialogue/aldoriaQuests.ts`; Claude's calls):** the old moneychanger opens it when shown the Sun
+  Locket, on the night of the vault; the price board by his table; the Echo zone in front of it is the war-time bazaar,
+  where each stall trades only for what it lacks (coins, dates, salt, peppers, the indigo bolt; what Patricio carries is
+  an `echo.` flag, so the way back resets the chain); young Yusuf writes the sakk for any deposit and seals box seven
+  (the anchor). A wrong deposit pays the small sakk once (50 gold) and Anissa points at the board; Yusuf amends it in
+  the memory. The item is a key item whose terms hold in every shop while carried (`ItemDef.trade`: 15% off, 60% back
+  instead of half; `config.ts SECRET_ITEMS.sakk`); Samira cashes one coupon at a shop once a chapter while she is in the
+  party (300 gold, a toast before the shop opens). The reward is 200 gold, +1 Influence (Al-Doria) and 5 XP (the
+  design's +1 Wealth and 150 XP dropped for Chapter 4's curve). Not a replayed puzzle file: the chain is walked in
+  `quest/tests/sideQuestsMid.test.ts`.
 
 ## 3. Caona's Conch (Yucayeque, Xaraguá)
 
@@ -215,6 +226,17 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   Rael's *Grito de Guerra* fail against him.
 - **Why it fits:** Benny's honor was public; this promise was private. A Brasador oath kept where no one could see,
   carried by the grandson who chose to keep the goal and the oath.
+- **Built (Oct 27; Ar-4, `quest/src/data/ardencia.ts` and `quest/src/data/dialogue/ardenciaQuests.ts`, the new map
+  `ardencia-chapel`; Claude's calls):** old Benny offers it in his quiet rooms once Ar-2 is done, before the trial (not
+  "after Chapter 3": the party is not in Cenizal again); Zelia unlocks the chapel stair. The sight cones are strips of
+  floor each watch lights in its own era only (a lamp now, a torch then): stepping into the lit strip of the era you are
+  in sends you back to the cloister gate in both eras (no fight: Ar-4 has no battle, so being seen in the present costs
+  the walk, not a fight). Five swaps cross: in before the well, out before the arch, in before the third guard, out on
+  the east walk, in before the north arch. Young Benny at the crypt asks Patricio to keep the door from locking; the
+  nail jams the bolt (the anchor). The letter is a **key item**, not a worn charm (Rael wears the charm since owner
+  decision 2): *Benny's Word*, once a battle the first fighter a blow would fell or Bind stands at 1 HP
+  (`BattleBoons.lastStand`). Anissa's hints at the first, third and fifth time seen. 250 gold, +2 Influence (Ardencia),
+  5 XP. Puzzle `ardencia_cloister`.
 
 ## 6. Sarnai's Bridle Bell (Ordvik, Skarragol)
 
@@ -240,6 +262,14 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   30% chance to lose its next turn.
 - **Why it fits:** Skarragol's raiders strike before anyone can organize a response; the steppe's riders and the
   fjords' sailors both steer by stars. A real herd, not a spirit: the house's speed made visible.
+- **Built (Oct 27; S-4, `quest/src/data/skarragol.ts` and `quest/src/data/dialogue/skarragolQuests.ts`; Claude's
+  calls):** the old herder by the high stones offers it with Bayarmaa in the party (her sketch of the Mare in the
+  Journal); the sky turns by steps, not seconds: on the flat stone in the memory "Wait, and watch" moves the sky one
+  step (fifteen in all, a horn at steps 4, 8 and 12), and each sighting (the bright tenth, the yoke, the mast) draws its
+  line; only the Mare's eye at the third horn falls on the seventh cairn, clockwise from the north path. The bridle
+  buried there is the anchor; Salkhi drags the capstone. The bell is a legendary **relic** anyone can wear (Call the
+  Herd is its skill, off the wearer's ATK, power 220, a 30% chance per foe to lose its next turn, once a battle, no SP;
+  `config.ts SECRET_ITEMS.bell`). 350 gold, +2 Wealth (Skarragol), 5 XP. Puzzle `skarragol_cairn`.
 
 ## 7. The Patient Hour (Kingsmere, Aldermoor)
 
@@ -346,3 +376,19 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   Xaraguá's harbor is returned by law before the Hearing begins.
 - **Why it fits:** Eightgate is where the realm keeps its oaths and memory. The hardest puzzle in the game is not
   a lock but the truth, told carefully in two eras: the Unpaid Debt paid in the place it was hidden.
+- **Built (Oct 27; Se-4, `quest/src/data/seatArchive.ts` RIBBON and `quest/src/data/dialogue/seatQuests.ts`, the Claim
+  and the Hearing's morning in `seatClaim.ts`; Claude's calls):** Hollis offers it in the Archive after the Parley (the
+  terms refused), in Chapter 5 or Chapter 12 before the bell. In the sealing's memory the clerk walks to his register
+  and asks the five questions, three answers each (a trap among them); three wrong and he shuts it (the way back resets
+  it); five right and he seals the minute (the anchor). Back in the present Hollis lifts it out of the register at his
+  desk. The hearing: Hollis reads each line and Gianna shows the proof from what she carries (Caona's oath stone,
+  Benny's refusal, Yusuf's ledger, Thomas Stillwater's record); the fifth line the Archive proves itself (the ribbon
+  under the glass). The sun on the seventh Name Stone stands for one of the **first three** lines, once a hearing, never
+  for Thomas's (so the design's "finishable only after Chapter 9" holds). A wrong or missing proof ends the hearing;
+  in Chapter 5 Hollis says "Find what he wrote." Won, he unties the ribbon from the Accord: a key item. At the Claim
+  (after the petition is heard) he strikes the clause before every house: `claim.clause_struck`, Accord Stability +15
+  (`STABILITY.seventhRibbon`, now read from the strike, not the item) and Concord +10 (`MUSTER.concord`, paid after the
+  scene). On the Hearing's morning Hollis comes down the Hall's steps, Gianna puts the ribbon in Yari's hands and the
+  harbor is returned by law. 100 XP, +3 Influence (Seat). Hints: Anissa at the offer, Patricio's own when the register
+  shuts (the answers the second time), Anissa naming the four proofs after a second failed hearing. Puzzle
+  `seat_ribbon`.

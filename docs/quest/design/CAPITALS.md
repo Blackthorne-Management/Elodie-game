@@ -82,7 +82,7 @@ the Throne at the start). **Feel:** sun, lanterns, a thousand names said aloud; 
 | Temple Island | `zetwal-temple` | 30 x 20 (built) | The Temple of Elodie, the Gaze lamp, the seven Name Stones round Mother Solange's plinth (west of the temple; Oct 27, Z-4), the dock. |
 | Temple Archive (library) | `zetwal-archive` | 22 x 14 (built) | On the island; three shelves of three books. |
 | The Cane Road (wild) | `zetwal-road` | 44 x 26 (built) | Cane fields past the east gate, the burned sugar mill, the mangroves. |
-| Harbor bakery (proposal) | `zetwal-bakery` | 12 x 8 | Interior for Z-5, the rebel safehouse. |
+| Harbor bakery | `zetwal-bakery` | 12 x 8 (built Oct 27) | Z-5, the rebel safehouse: the back door on the harbor lane behind the plaza's south row (14, 21), the oven and counter, the store room with the thumbprinted flour; its Echo the Revolution's grain store. |
 | Sugar mill cellar (proposal) | `zetwal-mill` | 14 x 10 | Interior for Z-6 (Chapter 10), with an Echo Zone. |
 
 **Seat of government: the Hall of the Accord (built Oct 15).** At the head of the plaza, on Accord Square. Inside
@@ -126,7 +126,7 @@ and Lookout (22 to 25); Quiet Crown Zealot x2 (22 to 25). Proposal: add Mangrove
 | Market stand (grocer) | "Bonjou! Mango, soup, akasan." | Clay-pot soup (heals 40 over time), akasan (12 SP), ripe mango (15 HP); proposal: *Soup of the Free* after Z-1 |
 | Charm stand | "Bonjou, cherie! Kijan ou ye?" | Sun-stitched charm (heals a little each turn), sea-glass charm |
 | Harbor forge (smith) | "Bonjou!" | Cane machete, sunwood staff, ironwood bow, padded vest |
-| Baker (proposal, after Z-5) | "Pran, pran. Pa gen dèt." ("Take, take. No debt.") | Bread at cost; Chapter 10 also sells tier-24 gear brought in for the Muster |
+| Baker (built Oct 27, after Z-5) | "Pran, pran. Pa gen dèt." ("Take, take. No debt.") | Harbor bread at cost (6 gold, 30 HP). Not built: the Chapter 10 tier-24 stock (the Harbor forge has it; Claude's call) |
 | Papa Wout (Carriage Guild) | "Bonjou, pitit!" | Fares to unlocked capitals; sells a rumor with every ticket |
 
 **Contract board (jobs, proposal; Chapter 10):** clear the Cane Road for the army's carts; carry dispatches to the
@@ -140,20 +140,21 @@ sails. Zetwal has no board object: the courier names the job, as the town guard 
 
 **Echo scenes:** the war room (built); the plaza camp with the cook, scout, drummer and soldier (built); the bridgehead
 at night (built); the temple under scaffolding with the lampwright and builder (built); the first Reading of
-the Names (S-ZET, built Oct 27: in the temple's memory while Z-4 is open); the grain store (Z-5), the powder store (Z-6), and in Chapter 10 the plaza on the morning of the
+the Names (S-ZET, built Oct 27: in the temple's memory while Z-4 is open); the grain store (Z-5, built Oct 27: the
+quartermaster gives a woman grain "for anyone who asks"), the powder store (Z-6), and in Chapter 10 the plaza on the morning of the
 signing.
 
 **Companion:** Gianna and Anissa (home). **Yari** arrives by canoe at the island dock and joins (built).
 
 **NPCs:** Elodie, Anicette, old Patricio, the Gaze keeper, the soup vendor, two Quiet Crown recruiters, the town guard,
 the festival kid, the elder, the ferryman, the pilgrim, the acolyte, the temple porter, the mourner, the island fisher,
-the archivist, the Hall clerk, the cane cutter, the road watcher (all built); proposals: Papa Wout, the baker, Ti Jak
+the archivist, the Hall clerk, the cane cutter, the road watcher, the baker (Oct 27; all built); proposals: Papa Wout, Ti Jak
 (Z-3).
 
 **Debate corner** (guide 7.2): Gaze keeper vs. Quiet Crown recruiter on the plaza: *Is a goddess who only remembers any
 use?* (Both speakers are built NPCs; the debate itself arrives with the Phase 4 debate engine.)
 
-**Rebel safehouse:** the harbor bakery (Z-5). **Secret item:** Solange's Quill (Z-4, S-ZET).
+**Rebel safehouse:** the harbor bakery (Z-5, built Oct 27). **Secret item:** Solange's Quill (Z-4, S-ZET).
 
 **Side quests:** Z-1 Soup of the Free, Z-2 Tides of the Southern Reach, Z-3 The Lonely Cutter, Z-4 The Seventh Stone,
 Z-5 Bread With No Debt (all Chapter 1, no fighting); Z-6 Muskets in the Cane (Chapter 10).
@@ -300,7 +301,7 @@ Dorini**, Samira's mother). Wants **Influence** (price 10): the richest house wa
 | The House of Ledgers (library) | 24 x 14 | A domed reading room; ledgers chained to lecterns. |
 | The Merchant-Prince's Majlis (capital building) | 20 x 14 | The council chamber and audience hall. |
 | The Guild Vault | 24 x 18 | Under the guild hall; SIG-ALD; boss arena (Qasim). |
-| The Old Counting House | 16 x 12 | Yusuf's counting room in the Echo; box 7 (A-4). |
+| The Old Counting House | 16 x 12 | Yusuf's counting room in the Echo; box 7 (A-4). Built Oct 27 in the bazaar itself (Claude's call): the moneychanger's table and price board at the lanes' west end, the Echo zone before it the war-time bazaar, box seven behind Yusuf's table. |
 | The Desert Edge (wild) | 46 x 28 | The caravan road into the dunes; a ruined caravanserai. |
 
 **Seat of government (proposal, owner rule Oct 15): the Merchant-Prince's Majlis**, at the head of the souk square.
@@ -379,7 +380,7 @@ fire-cracked highlands, red stone and iron, a duel court. Spanish-inspired. Acce
 |---|---|---|
 | The Upper Town and duel court (hub) | 42 x 30 | Red-stone streets climbing to the keep; the duel court with the envoy's gallery. |
 | The Old Library (library) | 22 x 14 | La Biblioteca Vieja: vaulted, dusty, half the shelves on the Ash Wars. |
-| The Alcázar (capital building) | 30 x 22 | Rael's keep: the hall of audience, the elders' hall, Benny's quiet rooms, the cloister and crypt (Ar-4). |
+| The Alcázar (capital building) | 30 x 22 | Rael's keep: the hall of audience, the elders' hall, Benny's quiet rooms; the cloister and crypt are their own map since Oct 27 (`ardencia-chapel`, 24 x 16: Ar-4), up the chapel stair from the sitting room and down Benny's own stair to the quiet rooms. |
 | The Lower Town | 34 x 24 | The poor quarter; the soup line (Ar-1). |
 | The Forge Fortress and Benny's tunnel | 36 x 26 | SIG-ARD: the lava channels, the bellows lever, the tunnel to the sea road. |
 | The Cinder Flats (wild) | 46 x 28 | Black lava fields and hot springs below the walls. |
@@ -458,7 +459,7 @@ watched. English (formal). Palette: neutral stone with all eight accents on the 
 | Section | Size | Description |
 |---|---|---|
 | The Eight Gates Concourse (hub) | 44 x 32 | A ring road with a gate for each house; the debate corner at the centre fountain. |
-| The Throne Archive (library) | 26 x 18 | The realm's memory; the Accord under glass; the seven-drawer cabinet (SIG-SEA). |
+| The Throne Archive (library) | 26 x 18 | The realm's memory; the Accord under glass; the seven-drawer cabinet (SIG-SEA); the clerk's register in the sealing's memory and its minute on Hollis's desk (Se-4, built Oct 27). |
 | The Throne Hall (capital building) | 28 x 20 | The Throne tile at its centre (the board game's Throne); eight empty council chairs (Se-5). |
 | The Envoys' Quarter | 24 x 16 | Elodie's rooms (Se-1); the Crown's guarded wing. |
 | The Crossroads Fields (wild) | 46 x 28 | Where the roads meet outside the walls: camps, deserters, pilgrims. |
@@ -553,7 +554,7 @@ meet a steppe camp of great tents; horses everywhere. Fused Nordic / Mongolian-i
 | The Saga Tent (library) | 22 x 16 | A great felt tent of sagas, tally sticks and painted hides. |
 | The Moot Tent (capital building) | 22 x 16 | The council's tent; the empty pole where the sacred standard stood. |
 | The Frozen Fjord | 40 x 26 | SIG-SKA: floes in the present, ice in the Echo; the thief's camp across it. |
-| The Winter Plateau (wild) | 46 x 30 | High grass and stone; the nine cairns (S-4); the herders' folds (S-3). |
+| The Winter Plateau (wild) | 46 x 30 | High grass and stone; the nine cairns round the flat sighting stone (S-4, built Oct 27, the high stones east of the north path); the herders' folds (S-3). |
 
 **Seat of government (proposal, owner rule Oct 15): the Great Moot Tent**, in the middle of the gathering field.
 About 36 x 26 of joined tents: a long aisle of standard poles to the chieftain's seat and the empty pole; the

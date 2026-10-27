@@ -16,7 +16,9 @@
 //    the browser must show exactly the map, tile, facing, era, mode and dialogue line it predicts.
 //    At Chapter 7's petition (@kirinoura-petition) a second window plays a side quest built Oct 27 from the same save:
 //    K-4 The Letter in the Floor (the floor-maker, Lady Sayo's House, the tune in the memory, the nail, the singing floor
-//    walked, the lacquer box and the Nightingale Key's showcase), the simulator predicting every key.
+//    walked, the lacquer box and the Nightingale Key's showcase), the simulator predicting every key. At Chapter 3's
+//    @old-benny another plays the secret Ar-4 The Old Lord's Errand (the cloister crossed in two eras past the watches,
+//    the bolt, the iron box and La Promesa de Benny's showcase).
 //    At Chapter 9's Assize (@aldermoor-assize) a second window plays on from the same save and loses the Hushed on
 //    purpose: the party stays by the dock (the court sits on), and the dock's edge starts the fight again.
 //    The route includes a diagonal step (two keys at once). At the route's @markers it checks the
@@ -1467,6 +1469,80 @@ async function letterInTheFloor(browser, errors, at, shots) {
   await ctx.close();
 }
 
+/**
+ * A secret side quest of the second batch built Oct 27, in a window of its own from the same save at @old-benny: Ar-4 The
+ * Old Lord's Errand, old Benny's offer in his quiet rooms, the chapel stair, the cloister crossed in two eras past the
+ * watches (the puzzle's own solution: young Benny, the loose bolt, the iron box), up Benny's own stair and the promise
+ * read to him. The simulator predicts every key; La Promesa de Benny's legendary showcase pops up over the old lord's
+ * scene. The main window's route is untouched.
+ */
+async function oldLordsErrand(browser, errors, at, shots) {
+  console.log('Ar-4 The Old Lord\'s Errand (a secret side quest built Oct 27, from @old-benny):');
+  const fork = savedSim(at.code, undefined, at.dice);
+  settleRewards(fork.logic.state.flags, RPG, SIDE_QUESTS);
+  for (const it of pendingShowcases(fork.logic.state.flags, RPG)) markShown(fork.logic.state.flags, it.id);
+  const code = encodeSave(toSaveData(fork.logic.state, 1));
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  await page.goto(`${GAME}&seed=${at.dice}`);
+  await page.evaluate((c) => {
+    localStorage.clear();
+    localStorage.setItem('bloodlines-quest.save', c);
+  }, code);
+  await page.reload();
+  await waitReady(page);
+  const sim = savedSim(code, undefined, at.dice);
+  await waitMatch(page, expected(sim), 'Ar-4 (second window): the start');
+  const inputs = parseRoute([
+    'confirm', 'skip', 'goto 31,16', 'right', 'skip',
+    ...readJson('puzzles/ardencia_cloister/solution.json'),
+    'left*6', 'goto 4,15', 'left', 'confirm', 'skip',
+  ]);
+  const seen = new Set();
+  let promiseShown = false;
+  await page.keyboard.down('Shift');
+  for (const item of inputs) {
+    for (const cmd of sim.expand(item)) {
+      if (cmd === 'skip') {
+        sim.press('skip');
+        for (let i = 0; i < 200; i++) {
+          const pop = await snap(page);
+          if (pop.mode === 'showcase' && pop.showcase?.id === 'benny_promise' && !promiseShown) {
+            promiseShown = pop.showcase.banner === 'Legendary item';
+            await page.keyboard.up('Shift');
+            await page.waitForTimeout(700);
+            await shoot(page, 'benny-promise-showcase', shots);
+            await page.keyboard.down('Shift');
+          }
+          if (await handleShowcase(page, seen, shots)) continue;
+          const s = await finishTyping(page);
+          if (s.mode !== 'dialogue') break;
+          await page.keyboard.press('KeyZ');
+          await frames(page);
+        }
+      } else {
+        await handleShowcase(page, seen, shots);
+        if (sim.logic.mode === 'dialogue' && (cmd === 'confirm' || cmd === 'cancel' || cmd === 'up' || cmd === 'down')) await finishTyping(page);
+        sim.press(cmd);
+        if (cmd.includes('-') || STRAIGHT.has(cmd)) await pressDiagonal(page, cmd);
+        else await page.keyboard.press(KEYS[cmd]);
+        await frames(page);
+      }
+      await waitMatch(page, expected(sim), `${cmd} (Ar-4, second window: ${JSON.stringify(item)})`);
+    }
+    if (item.kind === 'press' && item.cmd === 'echo') await shoot(page, 'cloister-era', shots);
+  }
+  await page.keyboard.up('Shift');
+  for (let i = 0; i < 5 && (await handleShowcase(page, seen, shots)); i++) await frames(page);
+  const end = await snap(page);
+  check(end.mapId === 'ardencia-alcazar', `Ar-4: the party is back in the old lord's quiet rooms (${end.mapId})`);
+  check(end.flags['anchor.crypt_bolt'] === true, 'Ar-4: the bolt drawn in the memory jams the crypt door open in the browser');
+  check(end.flags['item.benny_promise'] === true && end.flags['side.old_errand.done'] === true, 'Ar-4: the iron box gives Benny\'s promise, and the quest is done');
+  check(promiseShown, 'Ar-4: La Promesa de Benny pops up as a legendary item');
+  await ctx.close();
+}
+
 async function playAct(browser, errors) {
   console.log('Chapters 1 to 12 and the Epilogue (scripted route, checked against the simulator after every key):');
   let route = parseRoute(readJson('routes/zetwal-act1.json'));
@@ -1544,6 +1620,8 @@ async function playAct(browser, errors) {
   let assize = null;
   /** Where the route stood at @kirinoura-petition, for K-4 (a side quest built Oct 27). */
   let petition = null;
+  /** Where the route stood at @old-benny, for Ar-4 (a secret side quest of the second batch, Oct 27). */
+  let errand = null;
   let keys = 0;
   const started = Date.now();
   for (const item of route) {
@@ -1557,6 +1635,7 @@ async function playAct(browser, errors) {
       // untouched; two games at once on one machine starve each other's frames).
       if (item.name === 'aldermoor-assize') assize = { code: encodeSave(toSaveData(sim.logic.state, 1)), dice: sim.logic.diceState, rest: route.slice(route.indexOf(item) + 1) };
       if (item.name === 'kirinoura-petition') petition = { code: encodeSave(toSaveData(sim.logic.state, 1)), dice: sim.logic.diceState };
+      if (item.name === 'old-benny') errand = { code: encodeSave(toSaveData(sim.logic.state, 1)), dice: sim.logic.diceState };
       // SMOKE_UNTIL=<marker>: stop the route there (the second windows still play), for a quick look at one stretch.
       if (process.env.SMOKE_UNTIL === item.name) break;
       if (item.name === 'chapter9-end') playedCard9 = true;
@@ -1737,6 +1816,7 @@ async function playAct(browser, errors) {
     await ctx.close();
     if (assize) await assizeRestart(browser, errors, assize, shots);
     if (petition) await letterInTheFloor(browser, errors, petition, shots);
+    if (errand) await oldLordsErrand(browser, errors, errand, shots);
     return shots;
   }
   const s = await snap(page);
@@ -1874,6 +1954,7 @@ async function playAct(browser, errors) {
   await ctx.close();
   if (assize) await assizeRestart(browser, errors, assize, shots);
   if (petition) await letterInTheFloor(browser, errors, petition, shots);
+  if (errand) await oldLordsErrand(browser, errors, errand, shots);
   return shots;
 }
 

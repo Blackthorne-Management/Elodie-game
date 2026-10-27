@@ -50,7 +50,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | Z-2 | Tides of the Southern Reach | Pòdlimyè | Ch. 1 | 1 to 3 | no | no |
 | Z-3 | The Lonely Cutter | Pòdlimyè | Ch. 1 | 1 to 3 | no | no |
 | Z-4 | The Seventh Stone (secret; built Oct 27, optional) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
-| Z-5 | Bread With No Debt (safehouse) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
+| Z-5 | Bread With No Debt (safehouse; built Oct 27, optional) | Pòdlimyè | Ch. 1 | 1 to 3 | no | yes |
 | Z-6 | Muskets in the Cane | Pòdlimyè | Ch. 10 | 22 to 25 | yes | yes |
 | X-1 | Cut Nets | Yucayeque | Ch. 2 | 3 to 6 | yes | no |
 | X-2 | Oil From a Stranger (safehouse) | Yucayeque | Ch. 2 | 4 to 7 | optional | no |
@@ -61,24 +61,24 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | X-7 | Harbors Lie (built Oct 22, required) | Yucayeque | Ch. 11 | 26 | no | no |
 | X-8 | Whose Harbor? (the elders' debate; built Oct 22, required) | Yucayeque | Ch. 11 | 26 | no | no |
 | A-1 | Appraise This | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | no |
-| A-2 | The Missing Saffron | Bab al-Dhahab | Ch. 4 | 11 to 14 | yes | no |
+| A-2 | The Missing Saffron (built Oct 27, optional) | Bab al-Dhahab | Ch. 4 | 11 to 14 | yes | no |
 | A-3 | Sweet Water (safehouse) | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | yes |
-| A-4 | The Uncashed Note (secret) | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | yes |
-| A-5 | Invoice for the Crown | Bab al-Dhahab | Ch. 4 | 12 to 14 | optional | no |
+| A-4 | The Uncashed Note (secret; built Oct 27, optional) | Bab al-Dhahab | Ch. 4 | 11 to 14 | no | yes |
+| A-5 | Invoice for the Crown (built Oct 27, optional) | Bab al-Dhahab | Ch. 4 | 12 to 14 | optional | no |
 | Ar-1 | Bread at Night (safehouse) | Cenizal | Ch. 3 | 8 to 11 | optional | no |
 | Ar-2 | The Treasurer's Daughter | Cenizal | Ch. 3 | 8 to 11 | no | yes |
-| Ar-3 | The Elders' Feast | Cenizal | Ch. 3 | 9 to 11 | yes | no |
-| Ar-4 | The Old Lord's Errand (secret) | Cenizal | after Ch. 3 | 11 to 13 | if seen | yes |
-| Ar-5 | The Arrows Missed | Free Brasador camp | end of Ch. 3 | 11 to 13 | no | no |
+| Ar-3 | The Elders' Feast (built Oct 27, optional) | Cenizal | Ch. 3 | 9 to 11 | yes | no |
+| Ar-4 | The Old Lord's Errand (secret; built Oct 27, optional) | Cenizal | Ch. 3 | 11 to 13 | if seen | yes |
+| Ar-5 | The Arrows Missed (built Oct 27, optional) | Free Brasador camp | end of Ch. 3 | 11 to 13 | no | no |
 | Se-1 | Volume One | Eightgate | Ch. 5 | 14 to 15 | no | no |
 | Se-2 | Four Voices (built Oct 22: the required debate) | Eightgate | Ch. 5 | 14 to 15 | no | no |
 | Se-3 | Deserters' Road (built Oct 22, required) | Eightgate | Ch. 5 | 14 to 16 | yes | no |
-| Se-4 | The Unknotted Ribbon (secret) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | yes |
+| Se-4 | The Unknotted Ribbon (secret; built Oct 27, optional) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | yes |
 | Se-5 | A Seat for Every House (stage 1 built Oct 22, required) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | no |
-| S-1 | Salkhi Has Opinions (after the release; its lines are Salkhi's in the story) | Ordvik | Ch. 6 | road tier | no | no |
-| S-2 | The Fleet for Sale (folded into the price scene, Oct 22; the race after the release) | Ordvik | Ch. 6 | road tier | no | no |
+| S-1 | Salkhi Has Opinions (built Oct 27, optional) | Ordvik | Ch. 6 | road tier | no | no |
+| S-2 | The Fleet for Sale (folded into the price scene, Oct 22; the race built Oct 27, optional) | Ordvik | Ch. 6 | road tier | no | no |
 | S-3 | The Winter Stores (safehouse; built Oct 22, required) | Ordvik | Ch. 6 | 16 | yes | yes |
-| S-4 | The Cairn of Nine Riders (secret; after the release, the cairns placed) | Ordvik | Ch. 6 | road tier | yes (plateau) | yes |
+| S-4 | The Cairn of Nine Riders (secret; built Oct 27, optional) | Ordvik | Ch. 6 | road tier | yes (plateau) | yes |
 | S-5 | Grandson of the Steppe (built Oct 22, required) | Ordvik | Ch. 6 | 16 | optional | no |
 | K-1 | Definitely Not a Spy | Kirinoura | Ch. 7 | road tier | no | no |
 | K-2 | The Spy Ledger | Kirinoura | Ch. 7 | road tier | if seen | yes |
@@ -201,6 +201,21 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
 - **Echo use:** the same room, same promise, fifty years apart (a social scene; no anchor).
 - **Reward:** 30 gold, 30 XP, +1 Influence (Zetwal), Journal note *The Ash Thumbprint (1 of 9)*. The baker sells bread
   at cost for the rest of the game.
+- **Built (Oct 27; optional, no fighting; `quest/src/data/bakery.ts`, `quest/src/data/dialogue/zetwalQuests.ts`, the new
+  interior `zetwal-bakery`, 12 x 8):** the town guard offers it once the captain's tract is read and Chapter 1's own
+  errands are done; the hooded recruiters by the stage want a name and a small promise (Gianna keeps her name); the
+  bakery's back door (behind the plaza's south row, on the harbor lane) gives a loaf and asks nothing ("Pran, pran. Pa
+  gen dèt."); the baker will not say who pays for the flour; a grey thumbprint in ash on every sack; in the store room's
+  memory a woman walks in at the back door, the quartermaster fills her basket ("Grain for anyone who asks. The
+  Marshal's order.") and she walks out with it; the baker: "Then we are keeping an old order." 30 gold, +1 Influence
+  (Zetwal), the Journal note *A grey thumbprint in the flour*, and the baker's shop from then on (harbor bread at cost,
+  6 gold for 30 HP; a line of hers at the Muster). Rael's ledger line in Chapter 11 says "Nine you opened" once it is
+  done. Ported to the demo.
+- **Claude's calls (Oct 27):** it opens only after Chapter 1's errands (the gold arrow follows the side quests until
+  then, and must never lead to an optional one) and closes when Yari sails. **No XP**: Chapter 1 ends 34 XP short of
+  level 5 on the route and Z-4 already takes 30 of it. The Journal note is **unnumbered**: the eight thumbprint notes
+  already built count from Yucayeque's oil ("again", "a third time"), so "1 of 9" would contradict them. "At cost" is
+  the loaf's own price, not a discount.
 
 ### Z-6 Muskets in the Cane (Chapter 10)
 - **Giver:** the cane cutter, on the return ("Bandits by day, smugglers by night", built). **Accept:** inspect the
@@ -366,6 +381,11 @@ built (owner decision).
 - **Steps:** 1) Track the lost caravan into the desert edge (wild section). 2) Caravan Raiders (levels 9 to 10) hold
   it. 3) Fight or Parley; Yield options.
 - **Reward:** 250 gold, 140 XP, 3 *Spiced tea*, +1 Wealth (Al-Doria).
+- **Built (Oct 27; `quest/src/data/aldoria.ts`, `quest/src/data/dialogue/aldoriaQuests.ts`):** the contract board on the
+  night of the vault; the spice merchant at the caravan gate; three sets of camel tracks in the dunes, each a step with
+  a line; two raiders with the camels and the merchant's nephew: fight them (`saffron_raiders`, 4 XP) or buy the
+  camels back for 100 gold; the nephew leads the camels home. 250 gold, 3 *Spiced tea*, +1 Wealth (Al-Doria), 5 XP.
+  All optional: the scripted route never takes them, nothing of theirs stands on its path, and each chapter's line without side quests is unchanged (`quest/tests/sideQuestsLate.test.ts`).
 
 ### A-3 Sweet Water (rebel safehouse)
 - **Giver:** children at a dry public fountain. **Accept:** talk to them.
@@ -379,6 +399,9 @@ built (owner decision).
 - **Giver:** the old moneychanger in the bazaar. **Accept:** show him the Sun Locket.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 2, `PUZZLES.md` (S-ALD). The Sakk of Yusuf; 200 gold, 150 XP, +1
   Wealth and +1 Influence (Al-Doria).
+- **Built (Oct 27; secret; details and Claude's calls in `SECRET-ITEMS.md` 2):** the old moneychanger and the
+  Sun Locket, the war-time bazaar in the memory (four stalls, the trade chain), Yusuf's box seven sealed (the anchor),
+  the Sakk of Yusuf. 200 gold, +1 Influence (Al-Doria), 5 XP.
 
 ### A-5 Invoice for the Crown
 - **Giver:** Samira (after she joins). **Accept:** automatic; she has "one last invoice to deliver".
@@ -386,6 +409,10 @@ built (owner decision).
   docks. 2) Parley (he pays) or fight his guards (Crown Marine x2, Crown Officer, level 10).
 - **Reward:** 300 gold, 120 XP, +1 Fear or +1 Influence (Al-Doria), Samira's first heartfelt line ("No one has ever
   helped me collect.").
+- **Built (Oct 27):** on the quay the night after Layla lets the party pass, Samira stops at the Crown factor's
+  gangway with her invoice; read him his own crates (he counts the coins into her hand: +1 Influence) or fight his
+  guards (`factor_guards`, 4 XP: +1 Fear). 300 gold, 2 XP, and her first heartfelt line ("No one has ever helped me
+  collect.").
 
 ## Cenizal (Ardencia)
 
@@ -419,6 +446,10 @@ built (owner decision).
   (break in, fight his hired blades, levels 12 to 13) or Influence route (read the hall's tax book, then the Concord
   debate with the elder).
 - **Reward:** 300 gold, 160 XP, +2 Fear or +2 Influence (Ardencia). The elder appears at the Hearing.
+- **Built (Oct 27; `quest/src/data/ardencia.ts`, `quest/src/data/dialogue/ardenciaQuests.ts`):** the contract board on
+  the morning of the trial (after the day's three); at the feast the elders boast; Elder Ferrán's salt tax: break into
+  his strongroom past his blades (`feast_blades`, 4 XP; his tally: +2 Fear) or read the hall's own tax book and put
+  three questions to him across the table (Reason, Reason, Compassion win; +2 Influence). 300 gold, 5 XP. All optional: the scripted route never takes them, nothing of theirs stands on its path, and each chapter's line without side quests is unchanged (`quest/tests/sideQuestsLate.test.ts`).
 
 ### Ar-4 The Old Lord's Errand (secret item)
 - **Changed by owner decision 2 (Oct 20):** Rael wears La Promesa de Benny in the Trial and gives it up in Chapter
@@ -426,6 +457,10 @@ built (owner decision).
 - **Giver:** old Benny in the keep (the guide's callback scene). **Accept:** after the Echo callback.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 5, `PUZZLES.md` (S-ARD). La Promesa de Benny; 250 gold, 180 XP, +2
   Influence (Ardencia).
+- **Built (Oct 27; secret; details and Claude's calls in `SECRET-ITEMS.md` 5):** old Benny offers it in his quiet rooms
+  after Ar-2, before the trial; Zelia unlocks the chapel stair; the new cloister map (`ardencia-chapel`, 24 x 16) crossed
+  in two eras past five watches; young Benny at the crypt, the bolt jammed with a nail (the anchor); the iron box; up
+  Benny's own stair. La Promesa de Benny (the letter), 250 gold, +2 Influence (Ardencia), 5 XP.
 
 ### Ar-5 The Arrows Missed
 - **As built (Oct 21):** its clue is one exchange at the camp ("Every shot wide, envoy." / "Then they missed."); the
@@ -434,6 +469,9 @@ built (owner decision).
 - **Steps:** 1) Talk to five soldiers. 2) Three of them say the arrows landed wide, "every one, and those were the
   best archers in Ardencia" (guide clue 5). 3) Azzy refuses to hear it ("Then they missed").
 - **Reward:** 150 XP, +2 Fear (Free Brasador: the guide's price is Fear 6). Journal clue.
+- **Built (Oct 27):** after the escape, at the strand camp, five of Azzy's company; three say every arrow landed wide;
+  Azzy walks down to the water ("Then they missed."). +2 Fear (Ardencia), 2 XP, the Journal note on the arrows. It
+  opens after the chapter's end, so its XP counts from Chapter 4.
 
 ## Eightgate
 
@@ -462,6 +500,11 @@ built (owner decision).
 - **Giver:** Keeper Hollis in the Throne Archive. **Accept:** after the Seventh Clause is read aloud (Chapter 5).
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 9, `PUZZLES.md` (S-SEA). Finishable only after Chapter 9. The
   Seventh Ribbon; 500 XP, +3 Influence (Seat).
+- **Built (Oct 27; secret; details and Claude's calls in `SECRET-ITEMS.md` 9):** Hollis offers it after the Parley; the
+  clerk's five questions in the sealing's memory (the minute sealed: the anchor); the hearing at Hollis's desk, a proof
+  from the Journal for each line (it can only be won in Chapter 12, before the bell); the clause struck at the Claim;
+  the ribbon to Yari on the Hearing's morning. 100 XP (Claude's call: not 500, the Regent is met at 29 on the route and
+  30 is the cap), +3 Influence (Seat).
 
 ### Se-5 A Seat for Every House
 - **Giver:** Keeper Hollis: the old Throne Hall has eight empty chairs. **Accept:** Chapter 5.
@@ -482,6 +525,11 @@ built (owner decision).
 - **Steps:** Salkhi refuses to cross the fair until three wrongs are put right: a foal separated from its mother, a
   saddle that pinches, and an insult from a rival horse (talk to the rival horse; Yari translates, badly). No fight.
 - **Reward:** 250 gold, 200 XP, +1 Wealth (Skarragol), and Salkhi stops sighing at Azzy.
+- **Built (Oct 27; `quest/src/data/skarragol.ts`, `quest/src/data/dialogue/skarragolQuests.ts`):** at dawn after Ordvik
+  allies, Salkhi's opinions at the fair: the foal at the folds walks back to its mother behind Bayarmaa; a felt pad from
+  the horse-trader (40 gold) and Bayarmaa refits the saddle; the bay in the trader's corral, stared down. 250 gold, +1
+  Wealth (Skarragol), and Salkhi stops sighing at Azzy. **No XP** (Claude's call: Chapter 6 ends 74 XP short of level 18
+  on the route). All optional: the scripted route never takes them, nothing of theirs stands on its path, and each chapter's line without side quests is unchanged (`quest/tests/sideQuestsLate.test.ts`).
 
 ### S-2 The Fleet for Sale
 - **Giver:** the council hall. **Accept:** after the council meeting.
@@ -489,6 +537,9 @@ built (owner decision).
   the party) or 300 gold, a horse-fair win (a timing race), and a promise of blockade compensation from the Throne
   (Influence 12 or Fear 10).
 - **Reward:** 300 XP, +3 Wealth (Skarragol): a large step toward its price (Wealth 10).
+- **The race (built Oct 27):** the first-snow race the price scene promised: the race judge at the course, a timing
+  race (Salkhi's stride tapped on the beat, `salkhi_race`; a slower stride on offer); won: 100 gold, +1 Wealth; lost: its
+  own scene, and it can be run again. No XP (Chapter 6's curve).
 
 ### S-3 The Winter Stores (rebel safehouse)
 - **Giver:** a herder at the folds. **Accept:** talk to her.
@@ -501,6 +552,10 @@ built (owner decision).
 - **Giver:** an old herder at the plateau path. **Accept:** with Bayarmaa in the party.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 6, `PUZZLES.md` (S-SKA). Sarnai's Bridle Bell; 350 gold, 300 XP, +2
   Wealth (Skarragol).
+- **Built (Oct 27; secret; details and Claude's calls in `SECRET-ITEMS.md` 6):** the old herder by the high stones with
+  Bayarmaa (her sketch of the Mare), the winter sky from the flat stone in the memory, the bright tenth at the third horn,
+  the bridle under the seventh cairn (the anchor), Salkhi drags the capstone. Sarnai's Bridle Bell, 350 gold, +2 Wealth
+  (Skarragol), 5 XP.
 
 ### S-5 Grandson of the Steppe
 - **Giver:** an envoy of Azzy's mother's people. **Accept:** automatic when Azzy is in the party.
