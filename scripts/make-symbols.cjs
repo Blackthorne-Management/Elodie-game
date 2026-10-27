@@ -51,6 +51,20 @@ const SYMBOLS = {
   hourglass: `<path d="M24 8 H76 V16 H24 Z M24 84 H76 V92 H24 Z"/>
     <path d="M30 16 C30 40 46 44 46 50 C46 56 30 60 30 84 H70 C70 60 54 56 54 50 C54 44 70 40 70 16 Z"/>
     <path d="M37 26 H63 C61 38 52 42 50 47 C48 42 39 38 37 26 Z M36 80 C38 68 46 64 50 58 C54 64 62 68 64 80 Z" fill="${INK}" stroke="none" opacity=".55"/>`,
+  // Token symbols for the printed reminder, Heart and resource tokens (scripts/print-tokens.cjs).
+  heart: `<path d="M50 88 C22 66 9 52 9 34 C9 20 20 11 32 11 C41 11 47 16 50 23 C53 16 59 11 68 11 C80 11 91 20 91 34 C91 52 78 66 50 88 Z"/>
+    <path d="M28 24 C22 26 19 31 19 37" fill="none" stroke="#fff4c9" stroke-width="4" stroke-linecap="round" opacity=".7"/>`,
+  specter: `<path d="M50 8 C29 8 20 25 20 44 L20 88 L30 80 L40 90 L50 80 L60 90 L70 80 L80 88 L80 44 C80 25 71 8 50 8 Z"/>
+    <ellipse cx="39" cy="42" rx="6" ry="9" fill="${INK}" stroke="none" opacity=".8"/><ellipse cx="61" cy="42" rx="6" ry="9" fill="${INK}" stroke="none" opacity=".8"/>
+    <path d="M42 62 C46 66 54 66 58 62" fill="none" stroke="${INK}" stroke-width="3" opacity=".6"/>`,
+  brand: `<rect x="44" y="4" width="12" height="36" rx="4"/><rect x="36" y="38" width="28" height="7" rx="3"/>
+    <path d="M50 45 V52"/><circle cx="50" cy="71" r="21"/>
+    <path d="M38 61 L50 81 L62 61 M41 71 H59" fill="none" stroke="${INK}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>`,
+  horn: `<path d="M12 70 C14 52 34 28 70 14 L80 12 L86 34 L78 38 C54 44 34 60 26 80 Z"/>
+    <path d="M70 14 L80 12 L86 34 L78 38 Z" fill="${INK}" stroke="none" opacity=".35"/>
+    <path d="M20 80 C14 82 9 78 12 70" /><path d="M36 46 L44 56 M48 36 L56 46" fill="none" stroke="${INK}" stroke-width="2.5" opacity=".5"/>`,
+  used: `<circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="31" fill="none" stroke="${INK}" stroke-width="2.5" opacity=".5"/>
+    <path d="M31 51 L45 65 L71 36" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`,
   cards: [-22, 0, 22].map(r => `<g transform="rotate(${r} 50 88)"><rect x="33" y="14" width="34" height="50" rx="5"/>
     <rect x="38" y="19" width="24" height="40" rx="3" fill="none" stroke="${INK}" stroke-width="1.8" opacity=".5"/></g>`).join(''),
 };

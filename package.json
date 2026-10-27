@@ -18,7 +18,14 @@
     "print:board": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-board.cjs",
     "build:server": "node scripts/build-server.mjs",
     "print:box": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-box.cjs",
-    "print:card-boxes": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-card-boxes.cjs"
+    "print:card-boxes": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-card-boxes.cjs",
+    "print:mats": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-mats.cjs",
+    "print:standees": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-standees.cjs",
+    "print:tokens": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-tokens.cjs",
+    "print:legacy": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-legacy.cjs",
+    "print:reference": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-reference.cjs",
+    "print:scorepad": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-scorepad.cjs",
+    "print:rulebook": "PRINT=1 vitest run tests/print.test.ts && node scripts/print-rulebook.cjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.3.0",

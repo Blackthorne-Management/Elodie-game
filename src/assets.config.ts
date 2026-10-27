@@ -63,6 +63,25 @@ export const UI_ART = {
 // board view (docs/art/MAP-AND-SEATS.md; keyed by scripts/chroma-key.py). Missing ones are simply not drawn.
 export const SEAT_ART: Partial<Record<HouseId, string>> = {};
 
+// The printed physical game (scripts/print-*.cjs read this through print/.data.json, written by tests/print.test.ts).
+// Paths are relative to the repo; `{house}` and `{gen}` are filled in, and any of .png .jpg .jpeg .webp is found.
+export const PRINT_ART = {
+  crest: 'art/crests/crest-{house}',
+  portrait: 'art/characters/portrait-{house}-{gen}',
+  // What the pawn standees show: 'crest' until the Gen I portraits are painted, then switch to 'portrait'
+  // (a house still without its portrait keeps the crest). The portrait is cropped head-and-shoulders by PORTRAIT_CROP.
+  standeeFace: 'crest' as 'crest' | 'portrait',
+  // Token and player-board symbols (scripts/make-symbols.cjs).
+  icons: {
+    influence: 'public/art/icons/cat-crown.svg', fear: 'public/art/icons/cat-swords.svg', wealth: 'public/art/icons/cat-coins.svg',
+    heart: 'public/art/icons/cat-heart.svg', grudge: 'public/art/icons/cat-skull.svg', shield: 'public/art/icons/cat-shield.svg',
+    brand: 'public/art/icons/cat-brand.svg', grito: 'public/art/icons/cat-horn.svg', specter: 'public/art/icons/cat-specter.svg',
+    used: 'public/art/icons/cat-used.svg', target: 'public/art/icons/cat-target.svg', throne: 'public/art/icons/cat-crown.svg',
+  },
+  map: 'art/board/board-dark-4k',
+  boardProof: 'print/board-24in.jpg',   // the approved board proof (npm run print:board), pictured in the rulebook
+};
+
 // How to play: an optional painted picture per slide (by slide id, e.g. 'move'). A slide without one shows its
 // built-in picture, made from the board, crests, cards and icons.
 export const HOWTO_ART: Record<string, string | undefined> = {};

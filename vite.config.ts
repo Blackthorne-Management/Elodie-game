@@ -43,5 +43,6 @@ export default defineConfig({
     }),
   ],
   // The quest (quest/) is a separate project with its own tests.
-  test: { exclude: [...configDefaults.exclude, 'quest/**'] },
+  // Agent worktrees (.claude/worktrees) hold other copies of the repo; their tests are not this checkout's.
+  test: { exclude: [...configDefaults.exclude, 'quest/**', '.claude/**'] },
 });
