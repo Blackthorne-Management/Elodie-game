@@ -295,7 +295,7 @@ describe('the bell, the chain and the Archive', () => {
     expect(echo4.area.x).toBe(DRAWER_X0 + 3);
     expect(thread.area.x).toBe(DRAWER_X0 + today);
     expect(thread.area.x).not.toBe(echo4.area.x);
-    expect(archive.anchors.map((a) => a.flag)).toEqual(['anchor.ribbon_thread']);
+    expect(archive.anchors.map((a) => a.flag)).toEqual(['anchor.ribbon_thread', 'anchor.minute_sealed']); // Se-4's minute too
   });
 
   it('a wrong drawer in the memory costs a re-watch: the thread goes back to the table and the clerk files the page again', () => {

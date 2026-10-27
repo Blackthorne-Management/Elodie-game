@@ -1,0 +1,6 @@
+{
+  "never in the memory: straight to the keeper (no minute to hear)": ["up*7", "right*6", "right", "confirm", "skip"],
+  "the trap answers (Caona stood for Xaraguá, three times): the register shuts, then the keeper": ["up*7", "echo", "skip", "right*4", "up*3", "left", "confirm", "skip", "down*3", "left", "echo", "skip", "right*3", "right", "confirm", "skip"],
+  "the minute sealed, then the ledger shown for Benny's line": ["up*7", "echo", "skip", "right*4", "up*3", "left", "confirm", "confirm*2", "down*2", "confirm", "confirm", "down", "confirm", "confirm", "confirm", "confirm", "down", "confirm", "confirm", "down*2", "confirm", "skip", "down*3", "left", "echo", "skip", "right*3", "right", "confirm", "confirm*4", "confirm", "confirm*4", "down*2", "confirm", "skip"],
+  "the minute sealed, then nothing shown for the first line (the clerk's word)": ["up*7", "echo", "skip", "right*4", "up*3", "left", "confirm", "confirm*2", "down*2", "confirm", "confirm", "down", "confirm", "confirm", "confirm", "confirm", "down", "confirm", "confirm", "down*2", "confirm", "skip", "down*3", "left", "echo", "skip", "right*3", "right", "confirm", "confirm*4", "down*4", "confirm", "skip"]
+}

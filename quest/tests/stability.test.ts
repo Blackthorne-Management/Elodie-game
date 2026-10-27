@@ -85,7 +85,7 @@ describe('the score\'s parts', () => {
     expect(stabilityParts(turned, H)).toContainEqual({ id: 'house.kuroshi', value: STABILITY.houseTurned });
     expect(stabilityParts(at({ concord: 0 }), H)).toContainEqual({ id: 'concord', value: -STABILITY.concordMax });
     expect(stabilityParts(at({ concord: 100 }), H)).toContainEqual({ id: 'concord', value: STABILITY.concordMax });
-    expect(stability(at(KEPT_ALL, TRUST, PARDON, { 'item.seventh_ribbon': true, 'claim.azzy_share': true }), H)).toBe(100);
+    expect(stability(at(KEPT_ALL, TRUST, PARDON, { 'claim.clause_struck': true, 'claim.azzy_share': true }), H)).toBe(100);
     expect(stability(at(STRIKE, { 'hearing.execution': true, 'claim.azzy_challenged': true, concord: 0, 'choice.thorne_broken': true }), H)).toBe(0);
     // A bare chair costs, and only a full row pays.
     const bare = at({ 'side.seats.done': true, 'seat.bare.al_doria': true });

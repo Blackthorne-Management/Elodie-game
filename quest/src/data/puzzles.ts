@@ -588,6 +588,36 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { all: [{ flag: 'anchor.chain_post' }, { flag: 'story.chain_dropped' }] },
   },
+  // Se-4's secret (S-SEA, built Oct 27): the clerk's five questions answered as it truly was (the minute sealed in his
+  // register: the anchor), then Keeper Hollis's hearing, each line shown its proof from the Journal in the minute's order.
+  // Chapter 12, before the bell (Thomas's record is Chapter 9's).
+  {
+    id: 'seat_ribbon',
+    title: 'The Unknotted Ribbon: the clerk\'s minute, then the keeper\'s hearing (secret item; PUZZLES.md S-SEA)',
+    map: 'seat-archive',
+    spawn: 'archive',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.yari': true,
+      'party.azzy': true,
+      'party.samira': true,
+      'story.yari_asked': true,
+      'story.archive_open': true,
+      'story.archive_entered': true,
+      'story.sealing_seen': true,
+      'anchor.ribbon_thread': true,
+      'story.hollis_agreed': true,
+      'story.terms_refused': true,
+      'clue.seventh_clause_read': true,
+      'clue.first_oath': true,
+      'item.benny_half_sheet': true,
+      'clue.harbor_price': true,
+      'anchor.thomas_record': true,
+      'side.ribbon.accepted': true,
+    },
+    goal: { flag: 'item.seventh_ribbon' },
+  },
   // The eighth chair (the Chapter 12 outline section 8 with its second review's 3.12; difficulty 2): forty-nine years ago the
   // chairs stood in a heap in the nave and the masons were bricking up a chamber door. The chamberlain's plan puts Xaraguá's
   // chair "by the wall it has no chamber in". Cut the oath into that one in the memory, and in the present Yari turns the

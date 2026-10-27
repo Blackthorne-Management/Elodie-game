@@ -290,6 +290,7 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   accord_glass: { name: 'The Accord, under glass' },
   sealing_table: { name: 'The sealing table' },
   clerk_register: { name: "The clerk's register" },
+  ribbon_minute: { name: 'The minute of the sealing' },
   drawer_four: { name: 'Drawer (a faded red thread)' },
   crown_wagon: { name: 'Crown wagon, on its side' },
   pilgrim_camp: { name: "Pilgrims' camp" },

@@ -416,7 +416,8 @@ export const MUSTER = {
   giftMax: 5,
   // (Chapter 12 pays its one-off bonus here too: Volume One back in Grandmother's hands completes the Overdue Books thread,
   // SIDE-QUESTS Se-1's +2 Concord; engine/ally.ts musterTick pays every entry once, in any chapter.)
-  concord: { 'clue.four_accounts': 3, 'side.lonely_cutter.done': 3, 'side.volume_one.done': 2 } as Readonly<Record<string, number>>,
+  // Se-4's Seventh Clause struck at the Claim (SECRET-ITEMS.md 9: +10 Concord), paid after that scene the same way.
+  concord: { 'clue.four_accounts': 3, 'side.lonely_cutter.done': 3, 'side.volume_one.done': 2, 'claim.clause_struck': 10 } as Readonly<Record<string, number>>,
 } as const;
 /** Chapter 11's volleys (COMBAT.md 11): one volley for every this many soldiers at sea. */
 export const ARMY_VOLLEY_PER = 10;

@@ -20,6 +20,7 @@ import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/di
 import type { StageCue } from '../../engine/stage.ts';
 import { BELL_PARTS, BELL_READY, BENCH_SPOTS, CONCOURSE, GATE_COMPANIES, HALL, ROOMS, TOKEN_CHAIRS, betrayed, chairSet, sits } from '../claim.ts';
 import { LAYLA } from './aldoria.ts';
+import { RIBBON } from '../seatArchive.ts';
 import type { MusterOverlay } from './zetwalMuster.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
@@ -751,6 +752,22 @@ function claimStands(): Record<string, DialogueNode> {
         say(HO, 'Clause Six of the Founding Compact. A clause not read is not agreed.'),
         say(HO, 'The seventh was read to a clerk alone. It was never agreed.'),
       ],
+      next: [{ if: has(RIBBON.item), to: 'ribbon' }, { to: 'patricio' }],
+    },
+    // Se-4 The Unknotted Ribbon (SECRET-ITEMS.md 9, built Oct 27): with the minute proved, the keeper strikes the clause.
+    ribbon: {
+      lines: [
+        act([{ do: 'look', actor: 'npc:hollis_claim' }, { do: 'walk', actor: 'npc:hollis_claim', to: at(HALL.foot.x + 1, HALL.foot.y), facing: 'up' }], '', 'Keeper Hollis comes up the nave to the dais with an old register open in his hands.'),
+        say(HO, 'The minute of the sealing, in the Throne\'s clerk\'s hand. Sealed fifty years ago. Proved in the Archive, line by line.'),
+        nar('Gianna takes the Seventh Ribbon out of the minute and holds it up, untied, for every chair to see.'),
+        say(HO, 'Throne law. A clause whose ribbon was never knotted, and whose minute shows no witness agreed, is struck.'),
+        act([{ do: 'face', actor: 'npc:hollis_claim', facing: 'up' }, { do: 'wait', ms: 900 }], '', 'He draws one line through the seventh page, in front of every house.', {
+          set: { [RIBBON.struck]: true },
+        }),
+        say(HO, 'The Seventh Clause is struck. The harbor of Xaraguá is in no one\'s keeping but Xaraguá\'s.'),
+        act([{ do: 'look', actor: 'yari' }, { do: 'face', actor: 'yari', facing: 'up' }], Y, 'Then it was never theirs to keep.'),
+        act([{ do: 'walk', actor: 'npc:hollis_claim', to: at(HALL.hollis.x, HALL.hollis.y), facing: 'left' }, { do: 'look', actor: 'player' }], '', 'Hollis goes back to the clerk\'s table, and writes it into the Hall\'s register.'),
+      ],
       next: 'patricio',
     },
     // Old Patricio at the chair his young self cut: the sealing only (owner decision, Oct 22; question 13 stays open).
@@ -935,6 +952,21 @@ const ARRIVALS: DialogueScript = script('hearing_arrivals', {
         'Yucayeque sent me. I sell lamp oil. I am told that makes me a witness.',
       ),
       say('camp_leader', 'And me, to see it done. The cacique said someone must stand on it. Someone did.'),
+      // Se-4: the ribbon to Yari, and the harbor returned by law before the Hearing begins (SECRET-ITEMS.md 9).
+      act(
+        [
+          { do: 'enter', actor: 'ho_c', look: 'hollis', from: at(23, 6), to: at(23, 8), facing: 'down', async: true },
+          { do: 'walk', actor: 'yari', to: at(23, 9), facing: 'up' },
+          { do: 'look', actor: 'ho_c' },
+        ],
+        '',
+        'Keeper Hollis comes down the Hall\'s steps with the register under his arm. Yari walks over to meet him.',
+        { if: has(RIBBON.struck) },
+      ),
+      { if: has(RIBBON.struck), speaker: '', text: 'Gianna puts the Seventh Ribbon into Yari\'s hands, untied.', set: { [RIBBON.item]: false } },
+      { if: has(RIBBON.struck), speaker: HO, text: 'Cacica. The harbor of Xaraguá and its waters, returned by law, before the Hearing begins. It is in the register.' },
+      { if: has(RIBBON.struck), speaker: Y, text: 'Not given back. Returned. I will tell them the difference at home.' },
+      act([{ do: 'exit', actor: 'ho_c', to: at(24, 6) }], '', 'Hollis goes back up the steps.', { if: has(RIBBON.struck) }),
     ],
     next: 'zetwal',
   },

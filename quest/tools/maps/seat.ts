@@ -554,8 +554,11 @@ export function seatArchive(): MapSource {
     { layer: 'anchors', name: 'ribbon_thread_anchor', x: DRAWER_X0 + 3, y: 1, props: { object: 'drawer_e4', flag: 'anchor.ribbon_thread' } },
     obj('accord_glass', 13, 7, { kind: 'glass_case', solid: true, era: 'present', dialogue: 'accord_glass' }, 2, 1),
     obj('sealing_table', 13, 7, { kind: 'table', solid: true, era: 'echo', dialogue: 'sealing_table' }, 2, 1),
-    // S-SEA's hook, placed and inert (after the release): the clerk's register on the side table.
+    // Se-4 (S-SEA, built Oct 27): the clerk's register on the side table; its minute, sealed, is the anchor, and the
+    // register lies on Hollis's desk today once it is.
     obj('clerk_register', 16, 7, { kind: 'paper', solid: true, era: 'echo', dialogue: 'clerk_register' }),
+    { layer: 'anchors', name: 'minute_anchor', x: 16, y: 7, props: { object: 'clerk_register', flag: 'anchor.minute_sealed' } },
+    obj('ribbon_minute', 21, 9, { kind: 'paper', solid: true, era: 'present', dialogue: 'ribbon_minute', if: 'anchor.minute_sealed' }),
     obj('archive_shelves', 20, 1, { dialogue: 'shelf.archive_shelves', era: 'present' }, 7, 1),
     {
       layer: 'echo_zones',

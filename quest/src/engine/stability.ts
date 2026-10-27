@@ -49,7 +49,8 @@ export function stabilityParts(flags: FlagReader, houses: StabilityHouses): Stab
   add('xaragua_freed', S.xaraguaFreed, set(flags, 'stability.xaragua_freed'));
   add('elders_agreed', S.eldersAgreed, set(flags, 'stability.elders_agreed'));
   add('xaragua_ally', S.xaraguaAlly, set(flags, 'ally.xaragua'));
-  add('seventh_ribbon', S.seventhRibbon, set(flags, 'item.seventh_ribbon'));
+  // Se-4: the clause struck at the Claim (the ribbon itself goes to Yari on the Hearing's morning).
+  add('seventh_ribbon', S.seventhRibbon, set(flags, 'claim.clause_struck'));
   // The Harbor Turn.
   add('harbor_trust', S.harborTrust, set(flags, 'stability.harbor_trust'));
   add('harbor_strike', S.harborStrike, set(flags, 'stability.harbor_strike'));

@@ -97,6 +97,21 @@ export const SECRET_ITEM_LIST: readonly ItemDef[] = [
     showcase: 'legendary',
     abilities: [{ name: 'Call the Herd', text: 'Once per battle, no SP: wild steppe horses stampede through every foe, and each may lose its next turn.' }],
   },
+  // Se-4 The Unknotted Ribbon (Eightgate, Chapters 5 to 12, built Oct 27): the story change. A key item; Keeper Hollis
+  // strikes the Seventh Clause with it at the Claim (data/dialogue/seatClaim.ts), Accord Stability counts it
+  // (STABILITY.seventhRibbon) and the Concord bonus is paid for the strike (MUSTER.concord).
+  {
+    id: 'seventh_ribbon',
+    name: 'The Seventh Ribbon',
+    kind: 'key',
+    price: 0,
+    text: 'The Accord\'s seventh ribbon, red silk, never knotted, folded into the clerk\'s minute of the sealing. Keeper Hollis untied it himself.',
+    showcase: 'legendary',
+    abilities: [
+      { name: 'The clause struck', text: 'At the Claim, Keeper Hollis strikes the Seventh Clause before every house: Accord Stability +15, Concord +10.' },
+      { name: 'Returned by law', text: 'On the Hearing\'s morning, Cacica Yari is given the ribbon, and Xaraguá\'s harbor is returned by law.' },
+    ],
+  },
   // What the quests carry.
   { id: 'ferran_tally', name: 'Elder Ferrán\'s tally', kind: 'key', price: 0, text: 'Twelve in every hundred of the salt tax, for nine years, in Elder Ferrán\'s own hand. From his strongroom.' },
   { id: 'sorry_letters', name: "Edmund's letters", kind: 'key', price: 0, text: 'Five apologies in Edmund\'s good hand, each sealed in grey wax, each addressed to someone he has hit. One is to a goose.' },

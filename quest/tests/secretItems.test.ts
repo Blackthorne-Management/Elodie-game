@@ -5,7 +5,10 @@
 // before any foe, once a battle). Edmund's Tea Break after Al-1 too.
 
 import { describe, expect, it } from 'vitest';
-import { CALM_MAX, SECRET_ITEMS, SURGE_COST } from '../src/config.ts';
+import { CALM_MAX, MUSTER, SECRET_ITEMS, STABILITY, SURGE_COST } from '../src/config.ts';
+import { STABILITY_HOUSES } from '../src/data/claim.ts';
+import { musterTick } from '../src/engine/ally.ts';
+import { stabilityParts } from '../src/engine/stability.ts';
 import { BATTLES, ENEMIES, MOVES, SKILLS, SKILL_BOOK } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { TOWER_CLOCK } from '../src/data/aldermoor.ts';
@@ -219,6 +222,25 @@ describe('Sarnai\'s Bridle Bell (SECRET-ITEMS.md 6, S-4)', () => {
     expect(hit).toBeGreaterThanOrEqual(60);
     expect(stunned).toBeGreaterThan(0);
     expect(stunned).toBeLessThan(hit);
+  });
+});
+
+describe('The Seventh Ribbon (SECRET-ITEMS.md 9, Se-4)', () => {
+  it('a key item; the clause struck at the Claim is worth STABILITY.seventhRibbon (+15) and pays +10 Concord once', () => {
+    const item = RPG.items['seventh_ribbon']!;
+    expect(item.kind).toBe('key');
+    expect(item.showcase).toBe('legendary');
+    expect(STABILITY.seventhRibbon).toBe(15);
+    expect(MUSTER.concord['claim.clause_struck']).toBe(10);
+    const part = (flags: FlagStore) => stabilityParts(flags, STABILITY_HOUSES).find((p) => p.id === 'seventh_ribbon')?.value;
+    expect(part(new FlagStore({ 'claim.clause_struck': true }))).toBe(15);
+    // Carried but never struck (the bell rang first, or the Claim never came) is worth nothing; given to Yari, it still counts.
+    expect(part(new FlagStore({ 'item.seventh_ribbon': true }))).toBeUndefined();
+    expect(part(new FlagStore({ 'claim.clause_struck': true, 'item.seventh_ribbon': false }))).toBe(15);
+    const flags = new FlagStore({ concord: 60, 'claim.clause_struck': true });
+    musterTick(flags, RPG);
+    musterTick(flags, RPG);
+    expect(flags.get('concord')).toBe(70);
   });
 });
 

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 32,
+  "nextobjectid": 34,
   "layers": [
     {
       "id": 1,
@@ -654,6 +654,29 @@
               "value": "drawer_e4"
             }
           ]
+        },
+        {
+          "id": 13,
+          "name": "minute_anchor",
+          "type": "anchor",
+          "x": 256,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.minute_sealed"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "clerk_register"
+            }
+          ]
         }
       ]
     },
@@ -668,7 +691,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 14,
           "name": "drawer_slot1",
           "type": "puzzle_object",
           "x": 160,
@@ -701,7 +724,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 15,
           "name": "drawer_e1",
           "type": "puzzle_object",
           "x": 160,
@@ -734,7 +757,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 16,
           "name": "drawer_slot2",
           "type": "puzzle_object",
           "x": 176,
@@ -767,7 +790,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 17,
           "name": "drawer_e2",
           "type": "puzzle_object",
           "x": 176,
@@ -800,7 +823,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 18,
           "name": "drawer_slot3",
           "type": "puzzle_object",
           "x": 192,
@@ -833,7 +856,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "drawer_e3",
           "type": "puzzle_object",
           "x": 192,
@@ -866,7 +889,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 20,
           "name": "drawer_slot4",
           "type": "puzzle_object",
           "x": 208,
@@ -899,7 +922,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 21,
           "name": "drawer_e4",
           "type": "puzzle_object",
           "x": 208,
@@ -932,7 +955,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 22,
           "name": "drawer_slot5",
           "type": "puzzle_object",
           "x": 224,
@@ -965,7 +988,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 23,
           "name": "drawer_e5",
           "type": "puzzle_object",
           "x": 224,
@@ -998,7 +1021,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 24,
           "name": "drawer_slot6",
           "type": "puzzle_object",
           "x": 240,
@@ -1036,7 +1059,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 25,
           "name": "drawer_four",
           "type": "puzzle_object",
           "x": 240,
@@ -1074,7 +1097,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 26,
           "name": "drawer_e6",
           "type": "puzzle_object",
           "x": 240,
@@ -1107,7 +1130,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 27,
           "name": "drawer_slot7",
           "type": "puzzle_object",
           "x": 256,
@@ -1140,7 +1163,7 @@
           ]
         },
         {
-          "id": 27,
+          "id": 28,
           "name": "drawer_e7",
           "type": "puzzle_object",
           "x": 256,
@@ -1173,7 +1196,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 29,
           "name": "accord_glass",
           "type": "puzzle_object",
           "x": 208,
@@ -1206,7 +1229,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 30,
           "name": "sealing_table",
           "type": "puzzle_object",
           "x": 208,
@@ -1239,7 +1262,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 31,
           "name": "clerk_register",
           "type": "puzzle_object",
           "x": 256,
@@ -1272,7 +1295,45 @@
           ]
         },
         {
-          "id": 31,
+          "id": 32,
+          "name": "ribbon_minute",
+          "type": "puzzle_object",
+          "x": 336,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "ribbon_minute"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.minute_sealed"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "paper"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 33,
           "name": "archive_shelves",
           "type": "puzzle_object",
           "x": 320,

@@ -15,6 +15,7 @@ import { CLOCKMAKER_DAWN, CLOCK_TOWER, KEEP, LETTERS, TOWER_CLOCK, TOWNHOUSE_DOO
 import { ARGUERS, BAZAAR, HARBOR, OIL_STORE } from './jwaladesh.ts';
 import { CAMP, CHAPEL, ERRAND, FEAST, FEAST_FLAGS, TRIAL_MORNING } from './ardencia.ts';
 import { INVOICE, INVOICE_FLAGS, SAFFRON, SAFFRON_FLAGS, SAKK, SAKK_FLAGS, VAULT_NIGHT } from './aldoria.ts';
+import { RIBBON } from './seatArchive.ts';
 import { CAIRN_ANSWER, CAIRN_FRONT, FAIR, OPINIONS, ORDVIK_DAWN, PLATEAU, RACE, SIGHTING } from './skarragol.ts';
 import { FLOOR_MAKER, HALL, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
@@ -35,6 +36,9 @@ export const LATE_XP = {
   salkhi: 0,
   race: 0,
   cairn: 5,
+  // Se-4 is won in Chapter 12 only (it needs Thomas's record): the Regent is met at 29 on the route and 30 is the cap,
+  // so it pays 100, not the design's 500 (Claude's call).
+  ribbon: 100,
   notASpy: 40,
   letterFloor: 60,
   argue: 30,
@@ -204,6 +208,41 @@ const BAB_AL_DHAHAB: readonly SideQuestDef[] = [
     closed: f('story.caravan_dawn'),
     closedText: 'Closed: the caravan left at first light. Samira says she will post it.',
     reward: { gold: 300, xp: LATE_XP.invoice },
+  },
+];
+
+// ---- Chapters 5 to 12 (Eightgate) ------------------------------------------------------------------------------------
+
+const ARCHIVE_MAP = 'seat-archive';
+const HOLLIS_AT = { map: ARCHIVE_MAP, at: { x: RIBBON.hollis.x - 1, y: RIBBON.hollis.y } };
+
+const EIGHTGATE: readonly SideQuestDef[] = [
+  // Se-4 (S-SEA): the minute asked for in the sealing's memory, proved line by line at the keeper's desk, the Seventh Ribbon.
+  {
+    id: 'ribbon',
+    title: 'The Unknotted Ribbon',
+    giver: 'Keeper Hollis',
+    place: 'The Throne Archive',
+    level: 15,
+    secret: true,
+    summary: 'By Throne law a clause whose ribbon was never knotted may be struck, if the minute of its sealing shows no witness agreed. Nobody wrote the minute.',
+    accepted: f(RIBBON.accepted),
+    available: all(f('story.terms_refused'), { notFlag: 'story.bell_claim' }),
+    start: [HOLLIS_AT],
+    steps: [
+      { text: 'Keeper Hollis, on his stool in the Throne Archive.', done: f(RIBBON.accepted), goals: [HOLLIS_AT] },
+      {
+        text: 'The clerk\'s register, at the sealing fifty years ago. Answer his questions as it truly was.',
+        done: f(RIBBON.anchor),
+        goals: [{ map: ARCHIVE_MAP, at: { x: 13, y: 10 } }],
+        echoGoals: [{ map: ARCHIVE_MAP, at: { x: RIBBON.register.x + 1, y: RIBBON.register.y } }],
+      },
+      { text: 'Keeper Hollis\'s hearing: proof for every line of the minute, from the Journal.', done: f(RIBBON.done), goals: [HOLLIS_AT] },
+    ],
+    done: f(RIBBON.done),
+    closed: f('story.bell_claim'),
+    closedText: 'Closed: the bell rang for the Claim. The seventh ribbon is still under the glass, unknotted.',
+    reward: { xp: LATE_XP.ribbon, pillar: { pillar: 'influence', city: 'seat', amount: 3 } },
   },
 ];
 
@@ -509,7 +548,7 @@ const KINGSMERE: readonly SideQuestDef[] = [
 ];
 
 /** Every side quest built Oct 27, in chapter order. */
-export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...CENIZAL, ...BAB_AL_DHAHAB, ...ORDVIK, ...KUROSHI, ...AGNIPUR, ...KINGSMERE];
+export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...CENIZAL, ...BAB_AL_DHAHAB, ...EIGHTGATE, ...ORDVIK, ...KUROSHI, ...AGNIPUR, ...KINGSMERE];
 
 /** Pillars that follow a quest's answers (data/rpg.ts pillarRules): J-1's Fear by the blade, or Influence by the word. */
 export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [

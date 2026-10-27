@@ -13,7 +13,8 @@
 
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
-import { DRAWER_NUMBERS, DRAWER_PLATES, DRAWER_X0 } from '../seatArchive.ts';
+import { DRAWER_NUMBERS, DRAWER_PLATES, DRAWER_X0, RIBBON } from '../seatArchive.ts';
+import { MINUTE_RETURN, RIBBON_BRANCHES, RIBBON_NODES } from './seatQuests.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -718,10 +719,20 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('echo_throne_clerk_talk', [say('throne_clerk', 'Six pages are read, Marshal. The seventh is the Throne\'s.')]),
   simple('echo_crown_envoy_talk', [say('crown_envoy_old', 'The tide, Marshal. The tide does not sign anything either.')]),
-  // S-SEA's hook (after the release): placed and inert.
-  simple('clerk_register', [nar('The clerk\'s register, open at today. A question waits half-written: "Who stood for Xaraguá?" Nobody has asked it.')]),
+  // The clerk's register (S-SEA, Se-4): data/dialogue/seatQuests.ts.
   script('sealing_return', {
-    start: { lines: [], next: [{ if: { flag: 'anchor.ribbon_thread' }, to: 'thread' }, { to: 'not_yet' }] },
+    start: {
+      lines: [],
+      next: [
+        // After the Parley the keeper is on his stool again (no pins); Se-4's minute, once, while he is in the Archive.
+        { if: { all: [{ flag: RIBBON.anchor }, { notFlag: RIBBON.minuteSeen }, { flag: 'story.terms_refused' }, { notFlag: 'story.bell_claim' }] }, to: 'minute' },
+        { if: { flag: 'story.hollis_agreed' }, to: 'later' },
+        { if: { flag: 'anchor.ribbon_thread' }, to: 'thread' },
+        { to: 'not_yet' },
+      ],
+    },
+    minute: MINUTE_RETURN,
+    later: { lines: [nar('The present. The Archive is quiet.')] },
     thread: {
       lines: [
         nar('The present. Keeper Hollis is on his stool with his arms out, being pinned.'),
@@ -738,7 +749,8 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     start: {
       lines: [],
       next: [
-        { if: { flag: 'story.terms_refused' }, to: 'after' },
+        // After the Parley: Se-4 The Unknotted Ribbon (data/dialogue/seatQuests.ts; it covers every visit after it).
+        ...RIBBON_BRANCHES,
         { if: { flag: 'anchor.ribbon_thread' }, to: 'law' },
         { to: 'six' },
       ],
@@ -809,7 +821,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
         ),
       ],
     },
-    after: { lines: [say(H, 'The door is open to archivists, child. Only to archivists. Read what you like.')] },
+    ...RIBBON_NODES,
   }),
 
   // ---- Beat 8 and 9: the Parley (read aloud; the Regent's terms) -------------------------------------------

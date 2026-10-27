@@ -9,6 +9,7 @@ import { ARDENCIA_DIALOGUE } from './dialogue/ardencia.ts';
 import { ARDENCIA_QUEST_DIALOGUE } from './dialogue/ardenciaQuests.ts';
 import { XARAGUA_DIALOGUE } from './dialogue/xaragua.ts';
 import { SEAT_DIALOGUE } from './dialogue/seat.ts';
+import { SEAT_QUEST_DIALOGUE } from './dialogue/seatQuests.ts';
 import { KUROSHI_DIALOGUE } from './dialogue/kuroshi.ts';
 import { KUROSHI_QUEST_DIALOGUE } from './dialogue/kuroshiQuests.ts';
 import { JWALADESH_DIALOGUE } from './dialogue/jwaladesh.ts';
@@ -167,6 +168,7 @@ const BASE: Record<string, DialogueScript> = {
   ...Object.fromEntries(ALDORIA_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(XARAGUA_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(SEAT_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(SEAT_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(SKARRAGOL_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(SKARRAGOL_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(KUROSHI_DIALOGUE.map((d) => [d.id, d])),

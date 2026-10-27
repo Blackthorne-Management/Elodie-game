@@ -2921,6 +2921,27 @@ const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
+  // The Seventh Ribbon (Oct 27): a loose red silk ribbon with a gold edge, untied, over a folded minute with a wax seal.
+  seventh_ribbon: {
+    rows: [
+      '................',
+      '.......kk.......',
+      '......kRRk......',
+      '......kRrk......',
+      '..kkkkkRRkkkkk..',
+      '..kwwwkRrkwwhk..',
+      '..kwhhkRRkhwhk..',
+      '..kwwwkrRkwwhk..',
+      '..kwhhhkRRkwhk..',
+      '..kwwwwkRrkwhk..',
+      '..kwhhhkyRRkhk..',
+      '..kwwwkRRkRRkk..',
+      '..kwwkRrkkkRRk..',
+      '..kkkkRkkkkkRRk.',
+      '.....kk.....kk..',
+      '................',
+    ],
+  },
   // Sarnai's Bridle Bell (Oct 27): a small bronze bell on a loop of leather brow-band.
   sarnai_bell: {
     rows: [

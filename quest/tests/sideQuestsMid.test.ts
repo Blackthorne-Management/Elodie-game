@@ -10,6 +10,7 @@ import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { LATE_XP } from '../src/data/sideQuestsLate.ts';
 import { CHAPEL, ERRAND, FEAST_FLAGS, WATCHES } from '../src/data/ardencia.ts';
 import { SAKK_FLAGS, SAFFRON_FLAGS, INVOICE_FLAGS } from '../src/data/aldoria.ts';
+import { RIBBON } from '../src/data/seatArchive.ts';
 import { SECRET_ITEMS } from '../src/config.ts';
 import { buyPrice, gold, sellPrice } from '../src/engine/rpg.ts';
 import { localPillar, sharedXp } from '../src/engine/rpg.ts';
@@ -456,5 +457,123 @@ describe('S-4 The Cairn of Nine Riders (secret: Sarnai\'s Bridle Bell)', () => {
   it('the route walks past Ordvik\'s three: none taken, and all close when the longship sails', () => {
     const flags = simAt('chapter6-end').logic.state.flags;
     for (const id of ['salkhi', 'race', 'cairn']) expect(sideQuestStatus(flags, quest(id)), id).toBe('unknown');
+  });
+});
+
+// ---- Chapters 5 to 12 (Eightgate) ----------------------------------------------------------------------------------
+
+/** Run the route on from where a sim stands (it stood at `from`) up to the mark `to`. */
+function runRoute(sim: Sim, from: string, to: string): Sim {
+  let on = false;
+  for (const item of route) {
+    if (item.kind === 'mark' && item.name === from) on = true;
+    else if (item.kind === 'mark' && item.name === to && on) return sim;
+    else if (on) sim.run([item]);
+  }
+  throw new Error(`No mark @${to} after @${from}`);
+}
+
+/** From the Concourse into the Archive, and to Keeper Hollis on his stool. */
+const TO_HOLLIS = ['goto 9,6', 'up', 'goto 19,10', 'right', 'confirm'];
+/** The clerk's five answers, as they were: the choice each one is (QUESTIONS in data/dialogue/seatQuests.ts). */
+const RIGHT = [2, 1, 0, 1, 2];
+
+/** Into the sealing's memory, to the register, and the five answers; back to now. */
+function minute(sim: Sim): void {
+  sim.run(['goto 13,10', 'echo', 'skip', 'goto 17,7', 'left', 'confirm']);
+  for (const k of RIGHT) choose(sim, k);
+  sim.run(['skip', 'goto 16,10', 'echo', 'skip']);
+}
+
+describe('Se-4 The Unknotted Ribbon (secret: the Seventh Ribbon)', () => {
+  it('after the Parley: Hollis\'s law, the clerk\'s questions (three wrong and he shuts it), the minute; the hearing fails in Chapter 5', () => {
+    const sim = calm(simAt('fitting'));
+    const flags = sim.logic.state.flags;
+    expect(mysteryQuests(SIDE_QUESTS, flags).map((q) => q.id)).not.toContain('ribbon');
+    sim.run(['goto 21,30', 'down']);
+    expect(sim.logic.map.id).toBe('seat-concourse');
+    sim.run(TO_HOLLIS);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sideQuestStatus(flags, quest('ribbon'))).toBe('active');
+    // The memory: three wrong answers to the first question and the register shuts; it stays shut in this memory.
+    sim.run(['goto 13,10', 'echo', 'skip', 'goto 17,7', 'left', 'confirm']);
+    for (let i = 0; i < 3; i++) choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.isSet('echo.register_shut')).toBe(true);
+    expect(flags.isSet(RIBBON.shut)).toBe(true);
+    sim.run(['confirm', 'skip']);
+    expect(flags.isSet(RIBBON.anchor)).toBe(false);
+    // Back to now wipes it; the next memory asks again, and five true answers seal the minute.
+    sim.run(['goto 16,10', 'echo', 'skip']);
+    expect(flags.isSet('echo.register_shut')).toBe(false);
+    minute(sim);
+    expect(flags.isSet(RIBBON.anchor)).toBe(true);
+    expect(flags.isSet(RIBBON.minuteSeen)).toBe(true);
+    // The hearing: the oath, the refusal, the ledger; nothing for the fourth line yet (Thomas's record is Chapter 9's).
+    sim.run(['goto 19,10', 'right', 'confirm']);
+    for (const k of [0, 1, 2]) choose(sim, k);
+    choose(sim, 3);
+    sim.run(['skip']);
+    expect(flags.isSet(RIBBON.done)).toBe(false);
+    expect(flags.isSet(RIBBON.failed)).toBe(true);
+    // The quest stays open across the roads; the route never takes it.
+    expect(sideQuestStatus(flags, quest('ribbon'))).toBe('active');
+  });
+
+  it('the sun on the seventh stone stands for one of the first three lines, once; never for Thomas\'s', () => {
+    const sim = calm(simAt('fitting'));
+    const flags = sim.logic.state.flags;
+    flags.set('anchor.seventh_stone', true);
+    flags.set(RIBBON.accepted, true);
+    flags.set(RIBBON.anchor, true);
+    flags.set(RIBBON.minuteSeen, true);
+    sim.run(['goto 21,30', 'down', ...TO_HOLLIS]);
+    // Line 1: oath, refusal, ledger, the sun, nothing. The sun.
+    choose(sim, 3);
+    expect(flags.isSet(RIBBON.sun)).toBe(true);
+    // Line 2: the sun is spent (oath, refusal, ledger, nothing).
+    choose(sim, 1);
+    choose(sim, 2);
+    // Line 4 offers no sun: oath, refusal, ledger, nothing.
+    for (let i = 0; i < 40 && sim.logic.view().kind !== 'choice'; i++) sim.run(['confirm']);
+    const view = sim.logic.view();
+    expect(view.kind === 'choice' && view.choices.length).toBe(4);
+  });
+
+  it('in Chapter 12, before the bell: the hearing won, the Seventh Ribbon; struck at the Claim; given to Yari on the Hearing\'s morning', () => {
+    const sim = calm(simAt('claim-night'));
+    const flags = sim.logic.state.flags;
+    settleRewards(flags, RPG, SIDE_QUESTS); // what the route's own quests pay (the field pays it as they finish)
+    expect(sideQuestStatus(flags, quest('ribbon'))).toBe('unknown');
+    sim.run(TO_HOLLIS);
+    choose(sim, 0);
+    sim.run(['skip']);
+    minute(sim);
+    sim.run(['goto 19,10', 'right', 'confirm']);
+    for (const k of [0, 1, 2, 3]) choose(sim, k);
+    sim.run(['skip']);
+    expect(flags.isSet(RIBBON.done)).toBe(true);
+    expect(flags.isSet(RIBBON.item)).toBe(true);
+    const influence = localPillar(flags, RPG, 'influence', 'seat');
+    expect(paid(flags, 'ribbon')).toBe(LATE_XP.ribbon);
+    expect(localPillar(flags, RPG, 'influence', 'seat') - influence).toBe(3);
+    // Back where the route left the party, and on through the bell, the Claim and the Hearing's morning.
+    sim.run(['goto 13,18', 'down']);
+    expect(sim.logic.map.id).toBe('seat-concourse');
+    const concord = flags.get('concord') as number;
+    runRoute(sim, 'claim-night', 'chapter12-end');
+    expect(flags.isSet(RIBBON.struck)).toBe(true);
+    expect(flags.get('concord')).toBe(concord + 10);
+    expect(sideQuestStatus(flags, quest('ribbon'))).toBe('done');
+    runRoute(sim, 'chapter12-end', 'hearing-verdict');
+    expect(flags.isSet(RIBBON.item)).toBe(false);
+  });
+
+  it('the route walks past it: never offered, never struck, and closed at the bell', () => {
+    const flags = simAt('chapter12-end').logic.state.flags;
+    expect(flags.isSet(RIBBON.accepted)).toBe(false);
+    expect(flags.isSet(RIBBON.struck)).toBe(false);
+    expect(sideQuestStatus(flags, quest('ribbon'))).toBe('unknown');
   });
 });

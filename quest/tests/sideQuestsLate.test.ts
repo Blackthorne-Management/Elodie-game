@@ -44,6 +44,7 @@ const CLOSING_FLAGS = {
   'act7.complete': true,
   'act8.complete': true,
   'act9.complete': true,
+  'story.bell_claim': true,
 } as const;
 
 describe('the late side quests are optional', () => {
@@ -85,6 +86,8 @@ describe('what they pay keeps the level curve (the levels pass)', () => {
     7: LATE_XP.notASpy + LATE_XP.letterFloor,
     8: LATE_XP.argue + LATE_XP.littleLamps + bouts,
     9: LATE_XP.sorry + LATE_XP.patientHour + LATE_XP.tea,
+    // Se-4 is won in Chapter 12 (before the bell): it needs Chapter 9's record.
+    12: LATE_XP.ribbon,
   };
   const carried = (chapter: number) => Object.entries(extra).reduce((n, [c, xp]) => n + (Number(c) <= chapter ? xp : 0), 0);
 
