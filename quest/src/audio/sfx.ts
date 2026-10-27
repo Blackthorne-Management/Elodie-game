@@ -204,7 +204,28 @@ const RECIPES: Record<SfxId, () => Note[]> = {
     { at: 0, dur: 1.6, wave: 'sine', from: 1568, gain: 0.12, attack: 0.005, release: 1.4 },
     { at: 0, dur: 1.2, wave: 'sine', from: 2352, gain: 0.06, attack: 0.005, release: 1.0, vibrato: [3, 5] },
   ],
+  // The singing floor (Chapter 7): each board a chirp at its pitch, sliding up like a bird; a nailed board only knocks.
+  board_0: () => [{ at: 0, dur: 0.08, wave: 'noise', from: 0, gain: 0.12, release: 0.05 }],
+  board_1: () => chirp(BOARD_HZ[1]!, 0),
+  board_2: () => chirp(BOARD_HZ[2]!, 0),
+  board_3: () => chirp(BOARD_HZ[3]!, 0),
+  board_4: () => chirp(BOARD_HZ[4]!, 0),
+  board_5: () => chirp(BOARD_HZ[5]!, 0),
+  // The informant's message: triangle, circle, diamond, square, (the silent board), star, triangle, circle, square.
+  nightingale: () => [3, 1, 4, 2, 0, 5, 3, 1, 2].flatMap((p, i) => (p ? chirp(BOARD_HZ[p]!, i * 0.2) : [])),
+  // Oil poured from one jar into another: a few soft glugs.
+  pour: () => [0, 0.12, 0.22, 0.34].map((at, i) => ({ at, dur: 0.09, wave: 'sine' as const, from: 260 - i * 20, to: 180 - i * 20, gain: 0.25, release: 0.05 })),
 };
+
+/** The floor's five pitches (a pentatonic run), by board pitch 1 to 5. */
+const BOARD_HZ = [0, 523, 587, 659, 784, 880] as const;
+
+function chirp(hz: number, at: number): Note[] {
+  return [
+    { at, dur: 0.16, wave: 'triangle', from: hz, to: hz * 1.12, gain: 0.32, attack: 0.004, release: 0.08 },
+    { at: at + 0.02, dur: 0.1, wave: 'sine', from: hz * 2, to: hz * 2.2, gain: 0.08, release: 0.06 },
+  ];
+}
 
 /** The samples of a sound effect at a sample rate (mono, -1 to 1). */
 export function renderSfx(id: SfxId, rate: number): Float32Array {

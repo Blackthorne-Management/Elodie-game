@@ -292,6 +292,24 @@ export const SPARK_ON_GUARD = 2;
 export const SPARK_MAX = 10;
 export const SURGE_COST = 5;
 export const SURGE_MULT = 1.5;
+/**
+ * Anissa's Calm (COMBAT 8; built Oct 27, Claude's calls): 0 to CALM_MAX, full when a fight opens. A whisper aimed at her
+ * (EnemyMove.calm: the Hushers' Seize, the Hushed's Hush the Light) takes it down while Gianna steps in front; at 0 she
+ * goes quiet and Surge waits for Comfort, Gianna's word to her sister (a command, not a spell: no slot; SP COMFORT_SP
+ * before her discount), which gives COMFORT_CALM back. No game over from this.
+ */
+export const CALM_MAX = 3;
+export const COMFORT_SP = 2;
+export const COMFORT_CALM = 2;
+/**
+ * The secret items' numbers (docs/quest/design/SECRET-ITEMS.md 4, 7 and 8; built Oct 27). The Unbroken Wick: Surge
+ * costs `surgeCost`; a Surge made at `dawnAt` Spark or more is a Dawn Surge (it spends that much, heals the fighters
+ * `dawnHeal` of their HP and clears every bad status); Anissa's Calm never drops below `calmFloor`. The Patient Hour's
+ * Stop the Clock is a gear skill (data/battles.ts GEAR_SKILLS); the Nightingale Key shows each foe's next move.
+ */
+export const SECRET_ITEMS = {
+  wick: { surgeCost: 4, dawnAt: 9, dawnHeal: 0.3, calmFloor: 1 },
+} as const;
 /** Anissa's Light (owner decision, Oct 15): every N of Gianna's turns, Anissa restores this share of her max SP. */
 export const ANISSA_SP_EVERY = 3;
 export const ANISSA_SP_SHARE = 0.2;

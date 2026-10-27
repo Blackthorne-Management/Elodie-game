@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 12,
+  "nextobjectid": 13,
   "layers": [
     {
       "id": 1,
@@ -398,6 +398,29 @@
               "value": "ally.kuroshi, !act7.complete"
             }
           ]
+        },
+        {
+          "id": 7,
+          "name": "spy_pier",
+          "type": "trigger",
+          "x": 192,
+          "y": 128,
+          "width": 64,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "spy_pier"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.not_a_spy.accepted, !side.not_a_spy.pier, !act7.complete"
+            }
+          ]
         }
       ]
     },
@@ -412,7 +435,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 7,
+          "id": 8,
           "name": "pier",
           "type": "spawn",
           "x": 208,
@@ -469,7 +492,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 8,
+          "id": 9,
           "name": "pier_puddle",
           "type": "puzzle_object",
           "x": 208,
@@ -497,7 +520,7 @@
           ]
         },
         {
-          "id": 9,
+          "id": 10,
           "name": "crown_launch",
           "type": "puzzle_object",
           "x": 144,
@@ -535,7 +558,7 @@
           ]
         },
         {
-          "id": 10,
+          "id": 11,
           "name": "pier_longship",
           "type": "puzzle_object",
           "x": 256,
@@ -558,7 +581,7 @@
           ]
         },
         {
-          "id": 11,
+          "id": 12,
           "name": "pier_tea",
           "type": "puzzle_object",
           "x": 336,

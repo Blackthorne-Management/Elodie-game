@@ -29,6 +29,7 @@ import kuroshiHall from '../../maps/kuroshi-hall.tmj?raw';
 import kuroshiFilehouse from '../../maps/kuroshi-filehouse.tmj?raw';
 import kuroshiFogmaze from '../../maps/kuroshi-fogmaze.tmj?raw';
 import kuroshiMarsh from '../../maps/kuroshi-marsh.tmj?raw';
+import kuroshiSayoHouse from '../../maps/kuroshi-sayo-house.tmj?raw';
 import jwaladeshHarbor from '../../maps/jwaladesh-harbor.tmj?raw';
 import jwaladeshBazaar from '../../maps/jwaladesh-bazaar.tmj?raw';
 import jwaladeshRooftops from '../../maps/jwaladesh-rooftops.tmj?raw';
@@ -135,6 +136,7 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'kuroshi-filehouse': kuroshiFilehouse,
   'kuroshi-fogmaze': kuroshiFogmaze,
   'kuroshi-marsh': kuroshiMarsh,
+  'kuroshi-sayo-house': kuroshiSayoHouse,
   'jwaladesh-harbor': jwaladeshHarbor,
   'jwaladesh-bazaar': jwaladeshBazaar,
   'jwaladesh-rooftops': jwaladeshRooftops,

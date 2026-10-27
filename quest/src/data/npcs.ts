@@ -655,6 +655,11 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   hollis_after: n('hollis_after', 'hollis', 'Keeper Hollis'),
   chamberlain_after: n('chamberlain_after', 'chamberlain', 'The Master of the Chairs'),
   benny_iron: n('benny_iron', 'benny_old', 'Benny'),
+  // The side quests built Oct 27 (K-1, K-4; J-1, J-4; Al-1, Al-4, Al-5): data/dialogue/kuroshiQuests.ts,
+  // jwaladeshQuests.ts and aldermoorQuests.ts.
+  floor_maker: n('floor_maker', 'floor_maker', 'Old floor-maker'),
+  sayo_house: n('sayo_house', 'echo_sayo', 'Lady Sayo Suzumori'),
+  sayo_informant: n('sayo_informant', 'echo_agent', "Sayo's man in grey"),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

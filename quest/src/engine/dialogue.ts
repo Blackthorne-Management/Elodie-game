@@ -87,11 +87,23 @@ export class DialogueRunner {
     return this.script.id;
   }
 
-  constructor(script: DialogueScript, speakers: Readonly<Record<string, Speaker>>, flags: FlagStore) {
+  /**
+   * Called after every `set` a line, node or choice applies (GameContent.react): a machine driven by flags (the secret
+   * items' puzzles, engine/secrets.ts) answers at once, so the next line can show what changed.
+   */
+  private readonly onApply?: (flags: FlagStore) => void;
+
+  constructor(script: DialogueScript, speakers: Readonly<Record<string, Speaker>>, flags: FlagStore, onApply?: (flags: FlagStore) => void) {
     this.script = script;
     this.speakers = speakers;
     this.flags = flags;
+    this.onApply = onApply;
     this.enter(script.start, 0);
+  }
+
+  private apply(set: FlagSnapshot): void {
+    this.flags.apply(set);
+    this.onApply?.(this.flags);
   }
 
   get done(): boolean {
@@ -141,7 +153,7 @@ export class DialogueRunner {
     if (v.kind !== 'choice') return;
     const choice = this.choices?.[index];
     if (!choice) throw new Error(`No choice ${index} in ${this.script.id}/${this.nodeId}`);
-    if (choice.set) this.flags.apply(choice.set);
+    if (choice.set) this.apply(choice.set);
     if (choice.next) this.enter(choice.next, 0);
     else this.nodeId = null;
   }
@@ -156,7 +168,7 @@ export class DialogueRunner {
     const node = this.script.nodes[nodeId];
     if (!node) throw new Error(`Dialogue ${this.script.id} has no node "${nodeId}"`);
     this.nodeId = nodeId;
-    if (node.set) this.flags.apply(node.set);
+    if (node.set) this.apply(node.set);
     this.lines = node.lines.filter((l) => evaluate(l.if, this.flags));
     this.lineIndex = 0;
     this.choices = null;
@@ -170,7 +182,7 @@ export class DialogueRunner {
 
   private showLine(): void {
     const line = this.lines[this.lineIndex];
-    if (line?.set) this.flags.apply(line.set);
+    if (line?.set) this.apply(line.set);
     if (this.lineIndex >= this.lines.length - 1) this.computeChoices();
   }
 

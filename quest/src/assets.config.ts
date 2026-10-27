@@ -991,6 +991,13 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
   gaze_exile: { skin: C.s!, hair: WHITE_HAIR, hairStyle: 'long', outfit: 0xc8a050, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: 0xd8b860, accessories: ['staff'] },
   rolls_keeper: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'bun', outfit: 0x2a2632, trim: 0x2e86c1, robe: true, accessories: ['satchel'] },
   verger: { skin: C.S!, hair: C.G!, hairStyle: 'bald', outfit: 0x2a2632, trim: 0xd8d0c0, robe: true, accessories: ['staff'] },
+  // The side quests built Oct 27 (drawn placeholders until art): Kirinoura's old floor-maker (now a key-maker, keys at his
+  // belt); Agnipur's lamp-maker fifty years ago (the memory's palette) and the retired wrestler on the plaza; the goose on
+  // Kingsmere's heath that Edmund once hit (a small white body, an orange beak).
+  floor_maker: { skin: KUROSHI_SKIN, hair: WHITE_HAIR, hairStyle: 'bald', outfit: 0x5a5468, trim: 0xb8a060, legs: 0x3a3644, beard: WHITE_HAIR, accessories: ['satchel', 'cane'] },
+  echo_lamp_maker: { skin: AGNI_SKIN, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x9a8a6a, trim: 0x6e5a44, legs: 0x5a4a3a, beard: 0x4a4a52, accessories: ['apron'] },
+  jw_wrestler: { skin: AGNI_SKIN_DEEP, hair: WHITE_HAIR, hairStyle: 'bald', outfit: 0xf4eee0, trim: AGNI_SAFFRON, legs: 0xf4eee0, beard: WHITE_HAIR, build: 'tall', accessories: ['sash'] },
+  goose: { skin: 0xf2f0e8, hair: 0xf2f0e8, hairStyle: 'short', outfit: 0xf2f0e8, trim: 0xe08a2a, legs: 0xe08a2a, build: 'small' },
   // Pòdlimyè at the Muster (Chapter 10, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 19).
   // Rahel: tall, straight, a black shawl and a Brasador brooch (the second review's 3.2: no steppe braid); Patricia: small,
   // white-haired, a cane she does not use; Joaquin without the sash; Jordyn's coat turned inside out; the Dorini admiral

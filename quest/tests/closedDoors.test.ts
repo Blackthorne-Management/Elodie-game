@@ -65,7 +65,7 @@ describe('open paths between outdoor areas (owner request, Oct 16)', () => {
   it('a way from one outdoor area to another is open ground; only buildings have doors', () => {
     const sources = SOURCES.map((make) => make());
     const interiors = new Set(sources.filter((s) => s.interior).map((s) => s.id));
-    expect([...interiors].sort()).toEqual(['aldermoor-cathedral', 'aldermoor-keep', 'aldermoor-rolls', 'aldoria-ledgers', 'aldoria-majlis', 'aldoria-vault', 'ardencia-alcazar', 'ardencia-forge', 'ardencia-library', 'ardencia-tunnel', 'jwaladesh-court', 'jwaladesh-library', 'jwaladesh-rooftops', 'kuroshi-filehouse', 'kuroshi-hall', 'kuroshi-library', 'seat-archive', 'seat-hall', 'seat-rooms', 'seat-workshop', 'skarragol-moot', 'skarragol-saga', 'xaragua-caney', 'xaragua-cave', 'xaragua-cellar', 'xaragua-customs', 'xaragua-record', 'xaragua-seacave', 'xaragua-song', 'zetwal-archive', 'zetwal-hall', 'zetwal-house', 'zetwal-mill']);
+    expect([...interiors].sort()).toEqual(['aldermoor-cathedral', 'aldermoor-keep', 'aldermoor-rolls', 'aldoria-ledgers', 'aldoria-majlis', 'aldoria-vault', 'ardencia-alcazar', 'ardencia-forge', 'ardencia-library', 'ardencia-tunnel', 'jwaladesh-court', 'jwaladesh-library', 'jwaladesh-rooftops', 'kuroshi-filehouse', 'kuroshi-hall', 'kuroshi-library', 'kuroshi-sayo-house', 'seat-archive', 'seat-hall', 'seat-rooms', 'seat-workshop', 'skarragol-moot', 'skarragol-saga', 'xaragua-caney', 'xaragua-cave', 'xaragua-cellar', 'xaragua-customs', 'xaragua-record', 'xaragua-seacave', 'xaragua-song', 'zetwal-archive', 'zetwal-hall', 'zetwal-house', 'zetwal-mill']);
     // A cave's way in is its dark mouth (ĝ), the door of a cave.
     const DOOR_ART = ['D', '«', '»', '⌈', '⌊', 'ĝ'];
     let passages = 0;
@@ -85,8 +85,9 @@ describe('open paths between outdoor areas (owner request, Oct 16)', () => {
     // Chapter 8 adds six: the Court, the library and the roofs' ladder from the bazaar, and their three ways back.
     // Chapter 9 adds ten: the keep, St. Agatha's and the Rolls House from the square, the vestry and the postern from
     // the close, and their five ways back. Chapter 10 adds two: the mill's cellar from the Cane Road, and the way back.
-    // Chapter 12 adds two: Mother's rooms from the Envoys' Quarter, and the way back.
-    expect(doors).toBe(72);
+    // Chapter 12 adds two: Mother's rooms from the Envoys' Quarter, and the way back. The side quests of Oct 27 add two:
+    // Lady Sayo's House from the Lantern Quarter, and the way back.
+    expect(doors).toBe(74);
   });
 });
 

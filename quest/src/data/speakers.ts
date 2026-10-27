@@ -399,4 +399,18 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   echo_chamberlain: s('echo_chamberlain', 'Master of the Chairs, that day'),
   mason: s('mason', 'Mason', 'echo_builder'),
   regent_clerk: s('regent_clerk', "The Crown's clerk"),
+  // The side quests built Oct 27.
+  floor_maker: s('floor_maker', 'Old floor-maker'),
+  informant: s('informant', "Sayo's man in grey", 'echo_agent'),
+  arguer_spice: s('arguer_spice', 'Spice-seller', 'jw_vendor'),
+  arguer_dyer: s('arguer_dyer', 'Dyer', 'dyer'),
+  arguer_wrestler: s('arguer_wrestler', 'Old wrestler', 'jw_wrestler'),
+  lamp_maker: s('lamp_maker', 'Lamp-maker', 'echo_lamp_maker'),
+  lamp_runner: s('lamp_runner', "Arjun's runner", 'echo_runner'),
+  letter_sergeant: s('letter_sergeant', 'Press-gang sergeant', 'crown_officer'),
+  letter_constable: s('letter_constable', 'Moor Constable', 'moor_constable'),
+  highwayman: s('highwayman', 'Highwayman', 'road_bandit'),
+  goose: s('goose', 'Goose'),
+  footman: s('footman', "The Regent's footman", 'hall_page'),
+  watchman: s('watchman', 'Night watchman', 'echo_old_sealbearer'),
 };

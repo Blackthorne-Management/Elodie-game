@@ -356,6 +356,26 @@ export const PUZZLES: readonly PuzzleDef[] = [
     flags: { ...KIRINOURA_NIGHT, 'clue.lantern_code': true, 'story.maze_walked': true, 'story.marsh_reached': true, 'side.lanterns.accepted': true },
     goal: { flag: 'story.boats_home' },
   },
+  // K-4's secret (S-KUR, built Oct 27): the informant's tune on Sayo's floor fifty years ago, one board nailed there where
+  // the rest must fall now, and the tune walked on the relaid floor. Without the nail no board is silent; a wrong nail
+  // leaves the rest where no walk can reach it.
+  {
+    id: 'kuroshi_floor',
+    title: 'The singing floor: the tune in the memory, the nail, the walk now (secret item; PUZZLES.md S-KUR)',
+    map: 'kuroshi-sayo-house',
+    spawn: 'sayo_house',
+    flags: {
+      ...KIRINOURA_NIGHT,
+      'clue.lantern_code': true,
+      'story.fox_beaten': true,
+      'story.quarter_dawn': true,
+      'clue.buyers_mark': true,
+      'ally.kuroshi': true,
+      'side.letter_floor.accepted': true,
+      'story.sayo_house_seen': true,
+    },
+    goal: { flag: 'story.sayo_box_open' },
+  },
   {
     id: 'jwaladesh_chain',
     title: 'Arjun\'s night: the chain lamp lit and the tower mirror bolted, in the memory (SIG-JWA part 1)',

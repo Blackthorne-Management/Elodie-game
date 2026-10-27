@@ -1207,7 +1207,7 @@ export const ACT6: QuestDef = {
   ],
 };
 
-const KUR_MAPS = ['kuroshi-pier', 'kuroshi-quarter', 'kuroshi-library', 'kuroshi-hall', 'kuroshi-filehouse', 'kuroshi-fogmaze', 'kuroshi-marsh'];
+const KUR_MAPS = ['kuroshi-pier', 'kuroshi-quarter', 'kuroshi-library', 'kuroshi-hall', 'kuroshi-filehouse', 'kuroshi-fogmaze', 'kuroshi-marsh', 'kuroshi-sayo-house'];
 const fh = (i: number): Goal => ({ map: 'kuroshi-filehouse', at: { ...FILEHOUSE.screens[i]! } });
 const fhZone = { map: 'kuroshi-filehouse', at: { x: FILEHOUSE.zone.x, y: FILEHOUSE.zone.y + 1 } };
 const mazeZone = { map: 'kuroshi-fogmaze', at: { x: MAZE.zone.x + 1, y: MAZE.zone.y } };

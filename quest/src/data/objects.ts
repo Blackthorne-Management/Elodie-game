@@ -70,7 +70,11 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   pier_tea: { name: 'Tea stall' },
   kq_board: { name: 'Contract board' },
   teahouse_screen: { name: 'A tea house screen' },
-  sayo_house_door: { name: "Lady Sayo's House" },
+  // K-4 The Letter in the Floor (Oct 27): the house's door is a real door now (its label is in DOORS).
+  sayo_box: { name: 'A lacquer box' },
+  sayo_floor_nailed: { name: 'The singing floor' },
+  sayo_floor_echo: { name: 'The singing floor' },
+  sayo_desk_echo: { name: "Sayo's desk" },
   kayla_desk: { name: "Kayla's desk" },
   clerk_desk_echo: { name: "The clerk's desk" },
   stacks_seal: { name: 'The sealed stacks' },
@@ -697,6 +701,9 @@ export const DOORS: Readonly<Record<string, string>> = {
   'kuroshi-marsh/marsh_maze': 'South: the fog maze',
   'kuroshi-marsh/marsh_quarter': 'West: the marsh road home',
   'kuroshi-marsh/marsh_tower': 'The signal tower: the back door',
+  // K-4 (Oct 27).
+  'kuroshi-quarter/quarter_sayo': "Lady Sayo's House",
+  'kuroshi-sayo-house/sayo_out': 'Out to the quarter',
   // Eightgate (Chapter 5).
   'seat-gateyard/yard_concourse': 'West: the inner arch',
   'seat-gateyard/yard_fields': 'South: the road to the Crossroads Fields',

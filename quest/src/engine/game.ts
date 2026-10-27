@@ -89,7 +89,9 @@ export type Effect =
   /** A sea voyage plays before the party lands (data/voyages.ts; flag `voyage.next` beside `travel.next`). */
   | { kind: 'voyage'; voyage: string }
   /** The game's last card closed (CardDef.credits): the end credits, then the title (Chapter 12). */
-  | { kind: 'credits' };
+  | { kind: 'credits' }
+  /** A step sounded (GameContent.onStep: the nightingale floor): a pitch at a tile, 0 for a silent board. */
+  | { kind: 'note'; pitch: number; at: Pos };
 
 export type StepAttempt =
   | { ok: true; to: Pos }
@@ -250,6 +252,13 @@ export class GameLogic {
       // The caller runs enterMap() once it has switched maps (after this autosave).
       return [{ kind: 'map' }, { kind: 'save' }];
     }
+    // A step that sounds (the nightingale floor, Chapter 7): its note, and what it opened.
+    const answer = this.content.onStep?.({ mapId: this.map.id, era: this.era, pos: { ...to } }, this.state.flags);
+    if (answer) {
+      if (answer.note !== undefined) seen.push({ kind: 'note', pitch: answer.note, at: { ...to } });
+      if (answer.sync) seen.push({ kind: 'sync' });
+      if (answer.toast) seen.push({ kind: 'toast', text: answer.toast });
+    }
     const trigger = activeTriggers(this.map, this.era, this.state.flags).find(
       (t) => !t.onEnter && rectContains(t.area, to) && this.canFire(t),
     );
@@ -387,7 +396,7 @@ export class GameLogic {
     };
     const explore = (path: readonly number[]): boolean => {
       const flags = new FlagStore(base as FlagSnapshot);
-      const runner = new DialogueRunner(script, this.content.speakers, flags);
+      const runner = new DialogueRunner(script, this.content.speakers, flags, this.content.react);
       let depth = 0;
       for (let i = 0; i < 500 && !runner.done; i++) {
         const view = runner.view();
@@ -477,7 +486,7 @@ export class GameLogic {
   }
 
   private startScript(script: DialogueScript, after: Effect[] = []): Effect[] {
-    this.runner = new DialogueRunner(script, this.content.speakers, this.state.flags);
+    this.runner = new DialogueRunner(script, this.content.speakers, this.state.flags, this.content.react);
     this.afterDialogue = after;
     if (this.runner.done) return this.finishDialogue();
     this.mode = 'dialogue';

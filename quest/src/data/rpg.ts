@@ -9,6 +9,8 @@ import type { CityDef, ItemDef, MemberDef, RealmPlace, RpgContent, ShopDef } fro
 import { BOOKS, loreFlag } from './books.ts';
 import { ACT1, ACT2, ACT3, ACT4, ACT5, ACT6, ACT7, ACT8, ACT9, ACT10, ACT11, ACT12, EPILOGUE } from './quests.ts';
 import { WEAPONS } from './weapons.ts';
+import { SECRET_ITEM_LIST } from './secretItems.ts';
+import { LATE_PILLAR_RULES } from './sideQuestsLate.ts';
 import { WAR_BATTLES } from './warBattles.ts';
 
 /** What the flank's fight pays (the turned route pays it through war.house_stood instead). */
@@ -419,6 +421,8 @@ const ITEM_LIST: ItemDef[] = [
     skill: 'warm_thread',
     text: 'A cloth charm stitched with a sun. In battle it heals a little each turn.', showcase: 'reward',
   },
+  // The secret items built Oct 27 (the Nightingale Key, the Unbroken Wick, the Patient Hour) and their quests' key items.
+  ...SECRET_ITEM_LIST,
 ];
 
 export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(ITEM_LIST.map((i) => [i.id, i]));
@@ -777,6 +781,7 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'kuroshi-library', name: 'The Lantern Library' },
       { map: 'kuroshi-hall', name: 'The Hall of Screens' },
       { map: 'kuroshi-filehouse', name: 'The file house' },
+      { map: 'kuroshi-sayo-house', name: "Lady Sayo's House" },
     ],
   },
   // Chapter 8 (built Oct 22; CAPITALS.md 8 with the outline's six maps): the Lamp Bazaar in the middle with the Court of
@@ -876,6 +881,8 @@ export const RPG: RpgContent = {
     // the contract board's count of the soldiers (+1 Influence).
     { pillar: 'influence', city: 'zetwal', flags: ['choice.crew_spared', 'muster.counted'], each: 1 },
     { pillar: 'fear', city: 'zetwal', flags: ['choice.crew_broken'], each: 2 },
+    // The side quests built Oct 27 whose pillar follows an answer (J-1's Fear or Influence).
+    ...LATE_PILLAR_RULES,
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,

@@ -23,6 +23,7 @@ import { flagsIn } from '../src/engine/conditions.ts';
 import { checkDialogue, flagsReadBy, flagsSetBy } from '../src/engine/dialogue.ts';
 import { loadMaps } from '../tools/sim-setup.ts';
 import { rotorFlag, rotorLookFlag, rotorMovedFlag } from '../src/engine/rotor.ts';
+import { secretFlagsWritten } from '../src/data/secrets.ts';
 
 const maps = loadMaps();
 
@@ -58,6 +59,8 @@ function flagsSet(): Set<string> {
       for (let d = 0; d < 4; d++) out.add(rotorLookFlag(r.id, i, d));
     });
   }
+  // The secret items' machines write their state from code (engine/secrets.ts: the jars, the clock, the singing floor).
+  for (const f of secretFlagsWritten()) out.add(f);
   return out;
 }
 

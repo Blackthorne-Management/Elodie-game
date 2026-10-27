@@ -172,6 +172,8 @@ export const SKILLS: Readonly<Record<string, readonly SkillDef[]>> = {
     {
       id: 'tea_break', name: 'Tea Break', sp: 10, kind: 'heal', power: 0, healShare: 0.15, target: 'allAllies',
       text: '"Terribly sorry, one moment." Every ally gets back 15% of their HP.',
+      // Al-1 Terribly Sorry (SIDE-QUESTS.md: the Tea Break upgrade, +5%).
+      boosts: [{ flag: 'side.sorry.done', healShare: 0.2, text: '"Terribly sorry, one moment. I\'ve written." Every ally gets back 20% of their HP.' }],
     },
   ],
   vikram: [
@@ -268,6 +270,11 @@ export const GEAR_SKILLS: Readonly<Record<string, SkillDef>> = {
   say_their_names: {
     id: 'say_their_names', name: 'Say Their Names', sp: 16, kind: 'revive', power: 30, target: 'allAllies', once: true,
     text: 'Once per battle: every fallen ally rises with 30% HP, and Anissa gains Spark.',
+  },
+  // The Patient Hour (SECRET-ITEMS.md 7, built Oct 27): the party goes again before any foe, once a battle.
+  stop_the_clock: {
+    id: 'stop_the_clock', name: 'Stop the Clock', sp: 0, kind: 'status', power: 0, target: 'self', once: true, stopClock: true,
+    text: 'Once per battle: the hands stop, and every fighter in the party acts once more before any foe.',
   },
 };
 
@@ -695,7 +702,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     moves: [
       { name: 'Whisper', power: 90, magic: true },
       { name: 'Hush', power: 60, magic: true, statuses: ['hushed'], every: 3, tell: 'The Husher lifts a finger to the veil. The fog goes quiet...' },
-      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you, at the back of the line...' },
+      { name: 'Seize', power: 0, seize: 3, calm: 1, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you, at the back of the line...' },
     ],
   },
   // The Fox's paper decoys: the same mask, the same name ("Paper Fox?" with a letter), a hidden HP bar, and three of
@@ -951,7 +958,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
     moves: [
       { name: 'Whisper', power: 90, magic: true },
       { name: 'Hush', power: 60, magic: true, statuses: ['hushed'], every: 3, tell: 'The Husher lifts a finger to the veil. The heath goes quiet...' },
-      { name: 'Seize', power: 0, seize: 3, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you. At her.' },
+      { name: 'Seize', power: 0, seize: 3, calm: 1, statuses: ['marked'], every: 4, tell: 'The Husher is looking past you. At her.' },
     ],
   },
   // The veils in the court: they kneel to her, and they stand in front of her (the second review's 3.1: protects).
@@ -1042,7 +1049,7 @@ const FOX_SECRETS: readonly EnemyMove[] = [
 /** The Hushed when she turns from the dock to the bench behind it (phase 2, 60%): a whisper at Anissa; Gianna steps in. */
 const HUSH_THE_LIGHT: readonly EnemyMove[] = [
   { name: 'Veil', power: 130, magic: true },
-  { name: 'Hush the Light', power: 0, seize: 3, statuses: ['marked'], every: 2, tell: 'She is not looking at the dock. She is looking at the little one.' },
+  { name: 'Hush the Light', power: 0, calm: 2, statuses: ['marked'], every: 2, tell: 'She is not looking at the dock. She is looking at the little one.' },
 ];
 
 /** The Hushed unmasked (phase 3, 25%): her bare voice, and the Quiet Crown at everyone. */

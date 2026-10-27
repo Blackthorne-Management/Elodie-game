@@ -482,12 +482,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     nar('The contract board: "Deliver sealed letters, unread." "Copy a file, bring your own brush." "Lost: a cat, in the fog."'),
     nar('Under the last, in fresh chalk: "The horse has seen it. The horse will not say."'),
   ]),
-  script('teahouse_screen', {
-    start: { lines: [], next: [{ if: { flag: 'party.haru' }, to: 'haru' }, { to: 'shut' }] },
-    shut: { lines: [nar('A tea house screen of white paper, shut. Somebody behind it is very carefully not breathing.')] },
-    haru: { lines: [nar('The tea house screen.'), say(H, 'My second-best place. The best one I will not tell you.')] },
-  }),
-  simple('sayo_house_door', [nar('Lady Sayo\'s House. Shut, its shutters pasted over with paper. A small brass nightingale hangs on the latch.')]),
+  // The tea house screen and Lady Sayo's door: data/dialogue/kuroshiQuests.ts (K-1 and K-4, built Oct 27).
   script('kq_fisher_woman_talk', {
     start: {
       lines: [],

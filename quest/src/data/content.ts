@@ -23,6 +23,7 @@ import { NPCS, NPC_IDS } from './npcs.ts';
 import { DOORS, OBJECTS } from './objects.ts';
 import { SPEAKERS } from './speakers.ts';
 import { SCREENS } from './kuroshi.ts';
+import { reactSecrets, stepSecrets } from './secrets.ts';
 
 export const CONTENT: GameContent = {
   npcs: NPCS,
@@ -43,6 +44,9 @@ export const CONTENT: GameContent = {
     // Chapter 12: once the Hearing's verdict is given, the Accord's Stability and the ending (engine/stability.ts).
     stabilityTick(flags, STABILITY_HOUSES);
   },
+  // The secret items' puzzles (data/secrets.ts): the jars, the tower clock, the singing floor.
+  react: reactSecrets,
+  onStep: stepSecrets,
   formatText,
 };
 
@@ -51,6 +55,11 @@ export const CONTENT: GameContent = {
  * count, and the Accord's Stability in the Journal after the verdict.
  */
 function formatText(text: string, flags: FlagReader): string {
+  // `{v:<flag>}`: a flag's value as it stands (the jars, the clock's face; data/secrets.ts).
+  text = text.replace(/\{v:([a-z0-9_.]+)\}/g, (whole: string, name: string) => {
+    const v = flags.get(name);
+    return typeof v === 'number' || (typeof v === 'string' && v) ? String(v) : whole;
+  });
   return text.replace(/\{(realm\.(influence|wealth|fear)|stability\.score)\}/g, (whole: string, name: string, pillar?: string) => {
     if (pillar) {
       const keys = 'snapshot' in flags && typeof flags.snapshot === 'function' ? Object.keys((flags as { snapshot: () => object }).snapshot()) : [];

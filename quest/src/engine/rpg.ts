@@ -118,6 +118,24 @@ export interface ItemDef {
   showcase?: ShowcaseTier;
   /** What the item can do, each line hidden ("???") until the story has explained it. */
   abilities?: readonly ItemAbility[];
+  /**
+   * What carrying it does in every fight (a key item held: the Unbroken Wick, the Nightingale Key; engine/battle.ts reads
+   * them through battleBoons).
+   */
+  boons?: BattleBoons;
+}
+
+/**
+ * Battle effects a carried item brings (docs/quest/design/SECRET-ITEMS.md; numbers in config.ts SECRET_ITEMS): Surge's
+ * cost, the Dawn Surge (made at `dawnAt` Spark or more: spends that much, heals the fighters `dawnHeal` of their HP and
+ * clears their bad statuses), the floor under Anissa's Calm, and `foresight` (each foe's next move shown).
+ */
+export interface BattleBoons {
+  surgeCost?: number;
+  dawnAt?: number;
+  dawnHeal?: number;
+  calmFloor?: number;
+  foresight?: boolean;
 }
 
 export type ShowcaseTier = 'story' | 'legendary' | 'reward';
@@ -446,6 +464,22 @@ export function knownPassives(flags: FlagReader, member: MemberDef): Passive[] {
 }
 
 // ---- The bag ----------------------------------------------------------------------------------
+
+/** The battle boons of every key item held, together (the lowest cost and threshold, the highest floor). */
+export function battleBoons(flags: FlagReader, rpg: RpgContent): BattleBoons {
+  const out: BattleBoons = {};
+  const low = (a: number | undefined, b: number | undefined) => (a === undefined ? b : b === undefined ? a : Math.min(a, b));
+  for (const item of Object.values(rpg.items)) {
+    const b = item.boons;
+    if (!b || itemCount(flags, item.id) <= 0) continue;
+    out.surgeCost = low(out.surgeCost, b.surgeCost);
+    out.dawnAt = low(out.dawnAt, b.dawnAt);
+    if (b.dawnHeal !== undefined) out.dawnHeal = Math.max(out.dawnHeal ?? 0, b.dawnHeal);
+    if (b.calmFloor !== undefined) out.calmFloor = Math.max(out.calmFloor ?? 0, b.calmFloor);
+    if (b.foresight) out.foresight = true;
+  }
+  return out;
+}
 
 export function itemCount(flags: FlagReader, id: string): number {
   const v = flags.get(`item.${id}`);
