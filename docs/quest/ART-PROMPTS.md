@@ -769,6 +769,203 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 
 ---
 
+## 21. Not yet prompted: the behique, Cresswell, Samira, Qasim, Layla, the herald (and pointers for Amanda, Nancy, Zelia)
+
+Added Oct 27 after a sweep of the game's looks: these characters appear in the game but had no prompts. The game draws
+placeholders from the looks `behique`, `cresswell`, `samira`, `qasim`, `layla`, `herald` until these arrive
+(`quest/src/assets.config.ts`). Make each like section 12: a reference sheet in a new chat (attach Gianna's sheet),
+then the portrait and the walking sprite sheet in the same chat (attach Gianna's sprite sheet). Ages and any details
+marked "Claude's call" were not in the design docs and are proposals for the owner to adjust. Each reference sheet keeps
+the OPTIONAL photo line as in section 2: delete it unless a real person is the likeness.
+
+**Amanda, Nancy and Zelia** (Ardencia; real family members) need no new prompts here: their full, photo-based
+prompts (reference sheet, portrait, sprite sheet) are already in `docs/quest/ART-PROMPTS-REAL-PEOPLE.md`, sections
+"Amanda", "Nancy" and "Zelia" (looks `amanda`, `nancy`, `zelia`). Use those, with the photo attached to the first message.
+
+Rules for all six (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
+sheets; a magenta background for portraits and sprites (bright green for the behique and the herald, whose plum and
+violet magenta would eat); no text, frames or extra people; respectful, fictional inspirations with no caricature.
+
+---
+
+**21a. The behique, healer of Xaraguá (Chapter 2)**
+
+The healer of Xaraguá (Taíno *behique*, healer and keeper of remedies), who tends Anaco in the caney and sends Gianna
+for the fever bark (Medicine for the Cacique). Game look `behique`. About 55 (Claude's call: the docs give no age or
+sex; the placeholder has long dark hair, a robe and a circlet, so she is a woman). Calm, exact, unhurried; she says what
+the cure needs and nothing more. Taíno-inspired, dressed with care and without costume clichés (no feather headdress,
+no war paint); the cultural reviewer checks her with the rest of Xaraguá (`docs/quest/design/CAPITALS.md`).
+Portrait expressions: **calm** (default), **grave** (the fever is worse than she lets the family hear).
+
+**1. Character reference sheet** (attach Gianna's sheet; a new chat)
+```
+Character design reference sheet for a fantasy adventure game character named the behique. The attached image shows the art style to match (it is a different character). [OPTIONAL: A second image is attached: a photo of the real person the behique is based on. Use it only as a likeness reference for her face (face shape, eyes, nose, smile, skin tone, hair), shown as a woman of about 55. Do not copy the photo's clothing, background or pose.]
+She is the healer of a green Caribbean island people, inspired by the Taíno of Hispaniola: about 55, of middle height, upright and unhurried, calm and exact. Warm medium-brown skin, a lined, thoughtful face with high cheekbones and steady dark eyes, long straight black hair with a few silver strands, worn loose down her back, held by a thin gold-copper circlet. Outfit: a long, plain cotton robe in deep plum with a woven band of cream and teal at the hem and cuffs, a light cream cotton mantle over her shoulders, a cord of small white shell beads at her neck, and a woven cotton pouch of herbs at her belt. Barefoot or simple woven sandals. In one hand a small carved wooden bowl with crushed leaves. Standing straight, the bowl held in front of her. Show her full body three times on one sheet: front view, side view and back view, same scale, evenly spaced, plus one small close-up of her face. Style: hand-painted fantasy storybook illustration matching the attached image, crisp clean outlines, bright warm saturated colours, well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
+```
+
+**2. Dialogue portrait** (same chat)
+```
+Same character as the reference sheet: the behique, about 55, with the same face as on the reference sheet. Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Warm medium-brown skin, long black hair with a few silver strands held by a thin gold-copper circlet, the deep plum robe with its cream and teal band, the cream mantle, the white shell bead cord. Expression: calm and attentive, a faint patient half-smile, a healer who has seen every fever. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat bright green (#00FF00) background filling the whole square. No text, no frame, no border, no other people.
+```
+Then, in the same chat, ask for one more expression:
+- *"Same portrait, same framing, expression: **grave**, brows drawn, lips pressed, eyes on someone off to the side, the fever worse than she will say."*
+
+**3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**)
+```
+Pixel art sprite sheet of the same character, the behique, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), draw her at the same height as Gianna. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Warm medium-brown skin, long black hair with silver strands and a thin gold-copper circlet, a deep plum robe reaching her ankles with a cream and teal hem, a cream mantle, a herb pouch at the belt. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat bright green (#00FF00) background. No text, no numbers, no grid lines, no labels.
+```
+
+---
+
+**21b. Envoy Cresswell, the Crown's envoy (Chapter 3, Ardencia)**
+
+The Crown's envoy to Ardencia, posted there a month; he watches the duel from the gallery and leaves last and
+slowest. Game look `cresswell` (a tall man, 28 x 36; the older stand-in is `crown_consul`). About 45 (Claude's call: no
+age in the docs). Polite, cool and observant; speaks to no one in particular and is heard by everyone. He belongs to the
+Lord Regent's Crown (`docs/quest/ART-PROMPTS.md` section 14 for the Aldermoor palette): dress him in dark ink-blue with
+white breeches and the Crown's sun-and-eight-rays seal, not in Aldermoor violet (that is the Regent's own house).
+Portrait expressions: **courteous** (default), **thoughtful** (the look at the younger sister).
+
+**1. Character reference sheet** (attach Gianna's sheet; a new chat)
+```
+Character design reference sheet for a fantasy adventure game character named Envoy Cresswell. The attached image shows the art style to match (it is a different character (a woman, a lord's daughter)). [OPTIONAL: A second image is attached: a photo of the real person Envoy Cresswell is based on. Use it only as a likeness reference for his face (face shape, eyes, nose, smile, skin tone, hair), shown as a man of about 45. Do not copy the photo's clothing, background or pose.]
+He is a tall, lean, upright man of about 45, a diplomat of the Crown, polite, cool and watchful. Fair-to-light warm skin, short neat dark-brown hair with a little grey at the temples, clean-shaven, a long thoughtful face, grey-blue eyes, a patient half-smile. Outfit: a long, close-fitting dark ink-blue coat with white trim and silver buttons, white breeches and polished black boots, a white silk sash across the chest, a small silver emblem of a sun with eight rays pinned to the sash, and a black bicorne hat with a dark-blue band. He holds a rolled letter in one hand and keeps the other behind his back. Standing tall and still. Show his full body three times on one sheet: front view, side view and back view, same scale, evenly spaced, plus one small close-up of his face. Style: hand-painted fantasy storybook illustration matching the attached image, crisp clean outlines, bright warm saturated colours, well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
+```
+
+**2. Dialogue portrait** (same chat)
+```
+Same character as the reference sheet: Envoy Cresswell, about 45, with the same face as on the reference sheet. Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Fair-to-light warm skin, short dark-brown hair greying at the temples, clean-shaven, the black bicorne with the dark-blue band, the ink-blue coat with white trim, the white sash with the small silver sun emblem. Expression: courteous and cool, a polite half-smile that gives nothing away. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat magenta (#FF00FF) background filling the whole square. No text, no frame, no border, no other people.
+```
+Then, in the same chat, ask for one more expression:
+- *"Same portrait, same framing, expression: **thoughtful**, head tilted a little, eyes narrowed, weighing someone he has just heard about."*
+
+**3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**)
+```
+Pixel art sprite sheet of the same character, Envoy Cresswell, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), but draw him about 15% taller and slimmer than her. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Fair-to-light warm skin, short dark-brown hair, a black bicorne hat, a long ink-blue coat with white trim, a white sash with a small silver emblem, white breeches, black boots, a rolled letter in one hand. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta (#FF00FF) background. No text, no numbers, no grid lines, no labels.
+```
+
+---
+
+**21c. Samira Dorini (Chapter 4, Al-Doria; joins the party)**
+
+Alchemist and daughter of Layla Dorini; keeps the last stall on the moneychangers' row, appraises everything,
+including feelings, and invoices them. Expelled from the guild for helping and joins the party. Game look `samira`.
+About 24 (Claude's call: the docs give no age; she is Layla's grown daughter and a Gen III Dorini). Sharp, dry, funny
+on the surface, and, as the quest goes on, kind underneath. Al-Doria is Mediterranean and Middle-Eastern-inspired
+(domes, ledgers, spice, accent green): dress her with respect and without costume clichés (no veil-and-harem tropes, no
+"genie" look); the cultural reviewer checks Al-Doria (`docs/quest/design/CAPITALS.md`). She is shown in a deep teal
+robe, not the family green, as the daughter who went her own way. Portrait expressions: **sly** (default, the
+appraising look), **earnest** (the rare unguarded one), **dismayed** (her mother says nothing to her).
+
+**1. Character reference sheet** (attach Gianna's sheet; a new chat)
+```
+Character design reference sheet for a fantasy adventure game character named Samira Dorini. The attached image shows the art style to match (it is a different character). [OPTIONAL: A second image is attached: a photo of the real person Samira Dorini is based on. Use it only as a likeness reference for her face (face shape, eyes, nose, smile, skin tone, hair), shown as a woman of about 24. Do not copy the photo's clothing, background or pose.]
+She is a young Middle-Eastern-inspired merchant and alchemist of about 24 from a rich trading house, quick, dry-humoured and sharp-eyed, a little shorter than the other young women in the party. Warm olive-brown skin, a lively face with big dark eyes and strong dark eyebrows, long, wavy black hair worn loose down her back under a gold-yellow head wrap tied at the temple. Outfit: a long, deep-teal tunic-robe with gold trim at the collar and cuffs, a gold-yellow sash at the waist with a small slip-book tucked into it, loose cream trousers under the robe, soft brown boots, a leather satchel on a strap across her chest, and a small brass appraising scale on a cord at her hip. Ink stains on her fingers. Standing with her weight on one hip, a small knowing smile. Show her full body three times on one sheet: front view, side view and back view, same scale, evenly spaced, plus one small close-up of her face. Style: hand-painted fantasy storybook illustration matching the attached image, crisp clean outlines, bright warm saturated colours, well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
+```
+
+**2. Dialogue portrait** (same chat)
+```
+Same character as the reference sheet: Samira Dorini, about 24, with the same face as on the reference sheet. Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Warm olive-brown skin, big dark eyes and strong eyebrows, long wavy black hair under the gold-yellow head wrap, the deep-teal robe with gold trim, the gold-yellow sash, the leather satchel strap. Expression: sly and amused, one eyebrow raised, a merchant who has just spotted the flaw in what you are selling. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat magenta (#FF00FF) background filling the whole square. No text, no frame, no border, no other people.
+```
+Then two more expressions, one at a time:
+- *"Same portrait, same framing, expression: **earnest**, the smirk gone, eyes open and a little shy, saying something true."*
+- *"... expression: **dismayed**, eyes wide and shining, lips pressed, trying not to show that she is hurt."*
+
+**3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**)
+```
+Pixel art sprite sheet of the same character, Samira Dorini, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), the same height as Gianna. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Warm olive-brown skin, long wavy black hair under a gold-yellow head wrap, a deep-teal tunic-robe with gold trim reaching her calves, a gold-yellow sash with a slip-book in it, cream trousers, brown boots, a leather satchel strap across her chest, a small brass scale at her hip. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta (#FF00FF) background. No text, no numbers, no grid lines, no labels.
+```
+
+---
+
+**21d. Guildmaster Qasim (Chapter 4, Al-Doria; the boss)**
+
+Guildmaster of the Al-Doria merchants, the war-profiteer who runs the vault and hires blades mid-fight; Layla's
+right hand at the divan. Game look `qasim` (a tall man, 28 x 36). About 52 (Claude's call: no age in the docs). Smooth,
+courteous, never raises his voice, and uses the law as a weapon; he walks with a cane. Dress him in the guild's colours
+(Dorini green and gold, white head wrap, blue trousers) with respect and without caricature: no cruel-merchant
+stereotype, no hooked features; his menace is in his manners and his ledger. Portrait expressions: **suave**
+(default), **cold** (when he strikes Samira from the guild), **defeated** (after the fight).
+
+**1. Character reference sheet** (attach Gianna's sheet; a new chat)
+```
+Character design reference sheet for a fantasy adventure game character named Guildmaster Qasim. The attached image shows the art style to match (it is a different character (a young woman)). [OPTIONAL: A second image is attached: a photo of the real person Guildmaster Qasim is based on. Use it only as a likeness reference for his face (face shape, eyes, nose, smile, skin tone, hair), shown as a man of about 52. Do not copy the photo's clothing, background or pose.]
+He is a tall, broad, heavy-set Middle-Eastern-inspired guildmaster and merchant of about 52, smooth, courteous and shrewd, walking with a cane. Warm olive-brown skin, close-cropped black hair, a full, neatly trimmed black beard, heavy-lidded dark eyes, a calm, polite face. Outfit: a long, rich Dorini-green coat with gold trim and gold buttons over a cream shirt, deep-blue trousers, polished brown boots, a gold-yellow sash at the waist, and a white head wrap wound neatly around his head. A black cane with a gold handle in his right hand, a ring of gold keys at his belt. Standing upright, both hands resting on the cane. Show his full body three times on one sheet: front view, side view and back view, same scale, evenly spaced, plus one small close-up of his face. Style: hand-painted fantasy storybook illustration matching the attached image, crisp clean outlines, bright warm saturated colours, well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
+```
+
+**2. Dialogue portrait** (same chat)
+```
+Same character as the reference sheet: Guildmaster Qasim, about 52, with the same face as on the reference sheet. Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Warm olive-brown skin, close-cropped black hair and a full trimmed black beard, the white head wrap, the Dorini-green coat with gold trim, the gold-yellow sash. Expression: suave and courteous, a small polite smile, hooded eyes, a man who is certain the contract is on his side. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat magenta (#FF00FF) background filling the whole square. No text, no frame, no border, no other people.
+```
+Then two more expressions, one at a time:
+- *"Same portrait, same framing, expression: **cold**, the smile gone, eyes hard and flat, a man giving an order he considers a formality."*
+- *"... expression: **defeated**, jaw slack, eyes lowered, the confidence gone out of him."*
+
+**3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**)
+```
+Pixel art sprite sheet of the same character, Guildmaster Qasim, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), but draw him about 15% taller and clearly broader than her. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Warm olive-brown skin, close-cropped black hair, a full black beard, a white head wrap, a long Dorini-green coat with gold trim, a gold-yellow sash, deep-blue trousers, brown boots, a black cane with a gold handle held in one hand and visible in every frame. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta (#FF00FF) background. No text, no numbers, no grid lines, no labels.
+```
+
+---
+
+**21e. Layla Dorini, the Merchant-Prince (Chapter 4, Al-Doria)**
+
+The Merchant-Prince of Al-Doria, head of House Dorini (Gen III) and Samira's mother; she refuses every request and
+quietly pays her daughter's debts. Game look `layla` (a tall woman, drawn with the tall men's 28 x 36 cell). About 55
+(Claude's call: no age in the docs). Composed, formal and unreadable; "The Dorini witnessed. The Dorini hold." Al-Doria
+is Mediterranean and Middle-Eastern-inspired: dress her with dignity and without costume clichés (no veil-and-harem
+tropes); the cultural reviewer checks Al-Doria. Portrait expressions: **imperious** (default), **softened** (the
+look she gives her daughter when no one else is watching).
+
+**1. Character reference sheet** (attach Gianna's sheet; a new chat)
+```
+Character design reference sheet for a fantasy adventure game character named Layla Dorini. The attached image shows the art style to match (it is a different character (a young woman)). [OPTIONAL: A second image is attached: a photo of the real person Layla Dorini is based on. Use it only as a likeness reference for her face (face shape, eyes, nose, smile, skin tone, hair), shown as a woman of about 55. Do not copy the photo's clothing, background or pose.]
+She is a tall, upright, Middle-Eastern-inspired stateswoman and merchant-prince of about 55, head of a great trading house, composed, formal and unreadable. Warm olive-brown skin, strong dark eyebrows, deep dark eyes, fine lines at the mouth, dark hair streaked with silver, pinned up in a neat bun and wrapped in a gold-yellow head wrap. Outfit: a long, rich Dorini-green robe with a gold-embroidered collar and wide gold-trimmed sleeves, a gold-yellow sash at the waist, and on the sash a small gold emblem of a balance scale (the house's seal), plus gold earrings and a heavy gold ring. Standing very straight, both hands folded in front of her, chin a little raised. Show her full body three times on one sheet: front view, side view and back view, same scale, evenly spaced, plus one small close-up of her face. Style: hand-painted fantasy storybook illustration matching the attached image, crisp clean outlines, bright warm saturated colours, well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
+```
+
+**2. Dialogue portrait** (same chat)
+```
+Same character as the reference sheet: Layla Dorini, about 55, with the same face as on the reference sheet. Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Warm olive-brown skin, dark hair streaked with silver in a bun under the gold-yellow head wrap, gold earrings, the Dorini-green robe with its gold collar, the small gold scale emblem. Expression: imperious and composed, a level stare, a ruler who has already decided. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat magenta (#FF00FF) background filling the whole square. No text, no frame, no border, no other people.
+```
+Then, in the same chat, ask for one more expression:
+- *"Same portrait, same framing, expression: **softened**, the eyes warmer and a little tired, a mother's look held for one second too long."*
+
+**3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**)
+```
+Pixel art sprite sheet of the same character, Layla Dorini, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), but draw her about 10% taller. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Warm olive-brown skin, dark hair with silver in a bun under a gold-yellow head wrap, a long Dorini-green robe with gold trim reaching her ankles, a gold-yellow sash with a small gold scale emblem. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta (#FF00FF) background. No text, no numbers, no grid lines, no labels.
+```
+
+---
+
+**21f. The herald (Chapter 12, the Throne's Concourse)**
+
+The Lord Regent's herald, who meets the party at the inner arch of the Concourse and calls "Gianna Elise Limyè" at
+the Hall (`quest/src/data/dialogue/seat.ts`). Game look `herald`. About 30 (Claude's call: no age in the docs). Dry,
+exact and entirely correct; he bows exactly as low as the papers require. Aldermoor violet and gold (see section 14
+for the Regent's own robes); the violet means his portrait and sprite use a bright green (#00FF00) background instead of
+magenta, which would eat the colour. Portrait expressions: **formal** (default), **impassive** (the walk back
+through the arch, not looking to see if they follow).
+
+**1. Character reference sheet** (attach Gianna's sheet; a new chat)
+```
+Character design reference sheet for a fantasy adventure game character named the herald. The attached image shows the art style to match (it is a different character (a young woman)). [OPTIONAL: A second image is attached: a photo of the real person the herald is based on. Use it only as a likeness reference for his face (face shape, eyes, nose, smile, skin tone, hair), shown as a man of about 30. Do not copy the photo's clothing, background or pose.]
+He is a young court herald of about 30, slim and upright, dry, exact and entirely correct. Warm medium-brown skin, short neat black hair, a clean-shaven, composed face, dark eyes that look slightly past whoever he addresses. Outfit: a long, close-fitting violet coat (Aldermoor violet) with gold trim at the collar, cuffs and hem, a gold-yellow sash across the chest, black breeches and tall black boots, and a violet cap with a gold band. In one hand a tall white staff of office with a small gold sun on top, held upright beside him. Standing very straight, chin level. Show his full body three times on one sheet: front view, side view and back view, same scale, evenly spaced, plus one small close-up of his face. Style: hand-painted fantasy storybook illustration matching the attached image, crisp clean outlines, bright warm saturated colours, well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
+```
+
+**2. Dialogue portrait** (same chat)
+```
+Same character as the reference sheet: the herald, about 30, with the same face as on the reference sheet. Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Warm medium-brown skin, short neat black hair, the violet cap with the gold band, the violet coat with gold trim, the gold-yellow sash, the top of the white staff with its gold sun beside his shoulder. Expression: formal and composed, the polite blank face of a man announcing someone else's name. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat bright green (#00FF00) background filling the whole square. No text, no frame, no border, no other people.
+```
+Then, in the same chat, ask for one more expression:
+- *"Same portrait, same framing, expression: **impassive**, completely blank, eyes fixed straight ahead, not a flicker of interest."*
+
+**3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**)
+```
+Pixel art sprite sheet of the same character, the herald, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), the same height as Gianna. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Warm medium-brown skin, short black hair, a violet cap with a gold band, a long violet coat with gold trim, a gold-yellow sash, black breeches and boots, a tall white staff with a small gold sun on top held in one hand and visible in every frame. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat bright green (#00FF00) background. No text, no numbers, no grid lines, no labels.
+```
+
+---
+
 ## File names (for the conversion)
 
 | Picture | Becomes |
@@ -785,3 +982,9 @@ sheets; magenta background for portraits and sprites; no text, frames or extra p
 | Battle stances | `quest/art/battle/<name>.png` (stance and down pose; the weapon is drawn in by the game) |
 | The boar | `quest/art/enemies/boar.png` (replaces the stand-in) |
 | Cacique Anaco | `characters/anaco.png` (28 x 36 cells, a tall man), `portraits/anaco.png` (+ `anaco_stern`, `anaco_tender`) |
+| The behique | `characters/behique.png` (24 x 32), `portraits/behique.png` (+ `behique_grave`); green background |
+| Envoy Cresswell | `characters/cresswell.png` (28 x 36 cells, a tall man), `portraits/cresswell.png` (+ `cresswell_thoughtful`) |
+| Samira Dorini | `characters/samira.png` (24 x 32), `portraits/samira.png` (+ `samira_earnest`, `samira_dismayed`) |
+| Guildmaster Qasim | `characters/qasim.png` (28 x 36 cells, a tall man), `portraits/qasim.png` (+ `qasim_cold`, `qasim_defeated`) |
+| Layla Dorini | `characters/layla.png` (28 x 36 cells, a tall woman), `portraits/layla.png` (+ `layla_softened`) |
+| The herald | `characters/herald.png` (24 x 32), `portraits/herald.png` (+ `herald_impassive`); green background |
