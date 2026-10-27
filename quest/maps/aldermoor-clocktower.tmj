@@ -1,0 +1,521 @@
+{
+  "compressionlevel": -1,
+  "width": 12,
+  "height": 10,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 10,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 10,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+334,334,334,334,334,334,334,334,334,334,334,334,
+334,340,340,340,340,343,343,343,340,340,340,334,
+334,340,340,340,340,343,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,343,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,334,334,334,334,334,94,95,334,334,334,334
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 10,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,352,352,352,0,0,0,0,
+0,0,0,0,0,352,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,352,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 10,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+334,334,334,334,334,334,334,334,334,334,334,334,
+334,340,340,340,340,343,343,343,340,340,340,334,
+334,340,340,340,340,343,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,343,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,340,340,340,340,340,340,340,340,340,340,334,
+334,334,334,334,334,334,94,95,334,334,334,334
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 10,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,352,352,352,0,0,0,0,
+0,0,0,0,0,352,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,352,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 10,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 10,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,16,16,16,0,0,0,16,
+16,0,0,0,0,16,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,16,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,0,0,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 10,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,
+16,0,0,0,0,16,16,16,0,0,0,16,
+16,0,0,0,0,16,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,16,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,0,0,0,0,0,0,0,0,0,0,16,
+16,16,16,16,16,16,0,0,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "tower_out",
+          "type": "door",
+          "x": 96,
+          "y": 144,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "aldermoor-keep"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "keep_clock"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 2,
+          "name": "clocktower",
+          "type": "spawn",
+          "x": 96,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 3,
+          "name": "tower_echo",
+          "type": "echo_zone",
+          "x": 80,
+          "y": 80,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.patient_hour.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "tower_echo"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "tower_echo_return"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": []
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 4,
+          "name": "tower_face",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 16,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "tower_face"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "agatha_vault",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "tower_face"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "tower_sill_now",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "tower_sill_now"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "tower_winder",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "tower_winder"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "tower_face_echo",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 16,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "tower_winder"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "tower_sill",
+          "type": "puzzle_object",
+          "x": 144,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "tower_sill"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 864,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 431,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

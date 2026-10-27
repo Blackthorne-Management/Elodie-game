@@ -11,7 +11,7 @@
 //   it takes `rewindSecs`, while the clock runs on a minute a second), and a watchman who climbs the stair after
 //   `watchmanAt` seconds. Waiting runs the clock a minute a second. Pull the key and wedge the quill in the escapement
 //   when the hands read the target: the anchor. The real-time puzzle of the design is turn-based here (Claude's call):
-//   every action counts its seconds. A dialogue asks with `clock.do` = "<id>:g<gear>|rewind|wait|pull|key|wedge|free|reset".
+//   every action counts its seconds. A dialogue asks with `clock.do` = "<id>:g<gear>|rewind|wait|pull|key|wedge|free|reset|look".
 //
 //   The singing floor (the Nightingale Key, Kirinoura): a square of boards, each a pitch (1 to 5), laid differently in the
 //   memory and now; a board nailed in the memory is silent now (`floor.<id>.nail` = "c,r", with the anchor flag). Every
@@ -153,7 +153,7 @@ export function clockDistance(def: ClockDef): number {
   return (((def.target - def.start) % 720) + 720) % 720;
 }
 
-export type ClockResult = 'turned' | 'spent' | 'rewound' | 'waited' | 'pulled' | 'keyed' | 'stopped' | 'jammed' | 'freed' | 'caught' | 'reset' | 'refused';
+export type ClockResult = 'look' | 'turned' | 'spent' | 'rewound' | 'waited' | 'pulled' | 'keyed' | 'stopped' | 'jammed' | 'freed' | 'caught' | 'reset' | 'refused';
 
 function writeClock(def: ClockDef, flags: FlagStore, s: ClockState): void {
   flags.set(cf(def.id, 'moved'), s.moved);
@@ -170,8 +170,13 @@ const fresh = (def: ClockDef): ClockState => ({ moved: 0, secs: 0, spring: def.s
 
 /** Answer one request at the clock (a turn, a rewind, a second's wait, the key, the quill). */
 export function windClock(def: ClockDef, flags: FlagStore, request: string): ClockResult {
-  if (flags.isSet(def.anchor)) return 'refused';
   const s = clockState(def, flags);
+  // A look writes what the lines show (the face, the seconds left), and changes nothing.
+  if (request === 'look') {
+    writeClock(def, flags, s);
+    return 'look';
+  }
+  if (flags.isSet(def.anchor)) return 'refused';
   flags.set(cf(def.id, 'caught'), false);
   let result: ClockResult;
   const gear = /^g(\d+)$/.exec(request);

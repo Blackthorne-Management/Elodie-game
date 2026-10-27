@@ -11,6 +11,7 @@
 import type { Condition } from '../engine/conditions.ts';
 import type { RpgContent } from '../engine/rpg.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
+import { CLOCKMAKER_DAWN, CLOCK_TOWER, KEEP, LETTERS, TOWER_CLOCK, TOWNHOUSE_DOOR } from './aldermoor.ts';
 import { ARGUERS, BAZAAR, HARBOR, OIL_STORE } from './jwaladesh.ts';
 import { FLOOR_MAKER, HALL, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
@@ -147,8 +148,98 @@ const AGNIPUR: readonly SideQuestDef[] = [
   },
 ];
 
+// ---- Chapter 9 (Kingsmere) ------------------------------------------------------------------------------------------
+
+const LAST_DAWN: Condition = all(f('story.hushed_beaten'), { notFlag: 'act9.complete' });
+const ON_THE_CROSS = new Set(['sergeant', 'constable']);
+const IN_THE_KEEP = new Set(['footman']);
+const letterGoal = (who: keyof typeof LETTERS) => ({
+  map: ON_THE_CROSS.has(who) ? 'aldermoor-cross' : IN_THE_KEEP.has(who) ? 'aldermoor-keep' : 'aldermoor-heath',
+  at: { x: LETTERS[who].x, y: LETTERS[who].y + 1 },
+});
+const TOWER_ZONE = { map: 'aldermoor-clocktower', at: { x: CLOCK_TOWER.zone.x + 1, y: CLOCK_TOWER.zone.y } };
+
+const KINGSMERE: readonly SideQuestDef[] = [
+  // Al-1: Edmund's five letters, by hand.
+  {
+    id: 'sorry',
+    title: 'Terribly Sorry',
+    giver: 'Edmund (and his mother)',
+    place: 'The Regent\'s hall',
+    level: 22,
+    summary: 'Edmund has written to everyone he has hit: a press-gang sergeant, a constable, a highwayman, a goose and the Regent\'s footman. His mother says a Stillwater apologises in person.',
+    accepted: f('side.sorry.accepted'),
+    available: all(f('party.edmund'), f('story.regent_refused'), { notFlag: 'story.recital_begun' }, { notFlag: 'act9.complete' }),
+    start: [{ map: 'aldermoor-keep', at: { x: KEEP.council[3]!.x - 1, y: KEEP.council[3]!.y } }],
+    nudge: 'Edmund\'s mother is on the Regent\'s council, Gigi. She said something about letters.',
+    parallel: true,
+    steps: [
+      { text: 'The press-gang\'s sergeant, on the square by the south road.', done: f('side.sorry.sergeant'), goals: [letterGoal('sergeant')] },
+      { text: 'The constable on the square\'s north-east corner.', done: f('side.sorry.constable'), goals: [letterGoal('constable')] },
+      { text: 'The highwayman in the heather, north of the heath road.', done: f('side.sorry.bandit'), goals: [letterGoal('bandit')] },
+      { text: 'The goose on the heath, by the mere.', done: f('side.sorry.goose'), goals: [letterGoal('goose')] },
+      { text: 'The Regent\'s footman in the great hall.', done: f('side.sorry.footman'), goals: [letterGoal('footman')] },
+    ],
+    done: f('side.sorry.done'),
+    closed: f('act9.complete'),
+    closedText: 'Closed: the trader sailed with letters still in Edmund\'s coat. He says he will post them.',
+    reward: { gold: 400, xp: LATE_XP.sorry, pillar: { pillar: 'influence', city: 'aldermoor', amount: 1 } },
+  },
+  // Al-4 (S-ALM): the clockmaker, the tower clock, Agatha's vault, the Patient Hour.
+  {
+    id: 'patient_hour',
+    title: 'The Clock That Waits',
+    giver: 'The clockmaker',
+    place: 'The Market Cross',
+    level: 24,
+    summary: 'The keep\'s tower clock stopped the night Thomas Stillwater wrote his record, and Dame Agatha keyed a vault behind its face to one hour.',
+    accepted: f('side.patient_hour.accepted'),
+    available: LAST_DAWN,
+    start: [{ map: 'aldermoor-cross', at: { x: CLOCKMAKER_DAWN.x, y: CLOCKMAKER_DAWN.y + 1 } }],
+    nudge: 'The clockmaker from the gallery is by the keep\'s gate, Gigi. Looking up at the tower.',
+    steps: [
+      { text: 'The clockmaker by the keep\'s gate.', done: f('side.patient_hour.accepted'), goals: [{ map: 'aldermoor-cross', at: { x: CLOCKMAKER_DAWN.x, y: CLOCKMAKER_DAWN.y + 1 } }] },
+      {
+        text: 'The tower door in the great hall\'s north wall. The tower remembers the night Thomas wrote.',
+        done: f('clue.tower_night'),
+        goals: [{ map: 'aldermoor-keep', at: { x: KEEP.clockDoor.x, y: KEEP.clockDoor.y + 1 } }, TOWER_ZONE],
+        echoGoals: [TOWER_ZONE],
+      },
+      {
+        text: 'Stop the clock on the hour Thomas wrote, before the watchman climbs. A key with gears, a spring, and a quill.',
+        done: f(TOWER_CLOCK.anchor),
+        goals: [TOWER_ZONE],
+        echoGoals: [{ map: 'aldermoor-clocktower', at: { x: CLOCK_TOWER.winder.x, y: CLOCK_TOWER.winder.y + 1 } }],
+      },
+      { text: 'Agatha\'s vault, beside the clock\'s face.', done: f('side.patient_hour.done'), goals: [{ map: 'aldermoor-clocktower', at: { x: CLOCK_TOWER.vault.x, y: CLOCK_TOWER.vault.y + 1 } }] },
+    ],
+    done: f('side.patient_hour.done'),
+    closed: f('act9.complete'),
+    closedText: 'Closed: the trader sailed. The tower clock still reads an hour nobody can see for rust.',
+    reward: { gold: 400, xp: LATE_XP.patientHour, pillar: { pillar: 'influence', city: 'aldermoor', amount: 2 } },
+  },
+  // Al-5: tea with Lady Rosalind at the last dawn; three cups, Thomas's record.
+  {
+    id: 'tea',
+    title: 'Tea With Lady Rosalind',
+    giver: 'Lady Rosalind Stillwater',
+    place: 'Lady Rosalind\'s house',
+    level: 24,
+    summary: 'Lady Rosalind withdrew from the Regent\'s council in front of the whole court. Over three cups of tea she wants to be persuaded she was right.',
+    accepted: f('side.tea.accepted'),
+    available: LAST_DAWN,
+    start: [{ map: 'aldermoor-cross', at: { x: TOWNHOUSE_DOOR.x, y: TOWNHOUSE_DOOR.y + 1 } }],
+    nudge: 'Edmund keeps looking at his mother\'s door on the square, Gigi.',
+    steps: [{ text: 'Three cups at Lady Rosalind\'s. Her father\'s record wins them.', done: f('side.tea.done'), goals: [{ map: 'aldermoor-cross', at: { x: TOWNHOUSE_DOOR.x, y: TOWNHOUSE_DOOR.y + 1 } }] }],
+    done: f('side.tea.done'),
+    closed: f('act9.complete'),
+    closedText: 'Closed: the trader sailed. Lady Rosalind is still reading her father\'s record.',
+    reward: { xp: LATE_XP.tea, pillar: { pillar: 'influence', city: 'aldermoor', amount: 2 } },
+  },
+];
+
 /** Every side quest built Oct 27, in chapter order. */
-export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...KUROSHI, ...AGNIPUR];
+export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...KUROSHI, ...AGNIPUR, ...KINGSMERE];
 
 /** Pillars that follow a quest's answers (data/rpg.ts pillarRules): J-1's Fear by the blade, or Influence by the word. */
 export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [

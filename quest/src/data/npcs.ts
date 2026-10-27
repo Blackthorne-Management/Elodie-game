@@ -664,6 +664,13 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   arguer_dyer: n('arguer_dyer', 'dyer', 'Dyer'),
   arguer_wrestler: n('arguer_wrestler', 'jw_wrestler', 'Old wrestler'),
   echo_lamp_maker: n('echo_lamp_maker', 'echo_lamp_maker', 'Lamp-maker', 'lamp_maker_talk'),
+  letter_sergeant: n('letter_sergeant', 'crown_officer', 'Press-gang sergeant'),
+  letter_constable: n('letter_constable', 'moor_constable', 'Moor Constable'),
+  letter_bandit: n('letter_bandit', 'road_bandit', 'Highwayman'),
+  letter_goose: n('letter_goose', 'goose', 'A goose'),
+  letter_footman: n('letter_footman', 'hall_page', "The Regent's footman"),
+  clockmaker_dawn: n('clockmaker_dawn', 'clockmaker', 'Clockmaker'),
+  rosalind_home: n('rosalind_home', 'rosalind', 'Lady Rosalind Stillwater'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

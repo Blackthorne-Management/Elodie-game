@@ -7,10 +7,14 @@ import { describe, expect, it } from 'vitest';
 import { BATTLES, ENEMIES, SKILL_BOOK } from '../src/data/battles.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { Battle, battleItems, battleParty } from '../src/engine/battle.ts';
+import { STABILITY_HOUSES } from '../src/data/claim.ts';
+import { stabilityParts } from '../src/engine/stability.ts';
 import { skillsAction } from '../tools/battle-sim.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { LATE_SIDE_QUESTS, LATE_XP } from '../src/data/sideQuestsLate.ts';
-import { localPillar, sharedXp } from '../src/engine/rpg.ts';
+import { levelForXp, localPillar, sharedXp } from '../src/engine/rpg.ts';
+import { LEVELS, LEVEL_CURVE } from '../src/config.ts';
+import { levelCurve } from '../tools/level-curve.ts';
 import { closedNotes, settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { Sim, parseRoute } from '../src/engine/sim.ts';
@@ -47,6 +51,31 @@ describe('the late side quests are optional', () => {
     for (const q of LATE_SIDE_QUESTS) flags.set(q.accepted && 'flag' in q.accepted ? q.accepted.flag : `side.${q.id}.accepted`, true);
     for (const q of LATE_SIDE_QUESTS) expect(sideQuestStatus(flags, q), q.id).toBe('closed');
     expect(closedNotes(LATE_SIDE_QUESTS, flags)).toHaveLength(LATE_SIDE_QUESTS.length);
+  });
+});
+
+describe('what they pay keeps the level curve (the levels pass)', () => {
+  const report = levelCurve();
+  // What a player who does every one of them gains by each chapter's end: the quests' XP, and J-1's three bouts.
+  const bouts = ['spice', 'dyer', 'wrestler'].reduce((n, w) => n + BATTLES[`argue_${w}`]!.rewards.xp, 0);
+  const extra: Record<number, number> = {
+    7: LATE_XP.notASpy + LATE_XP.letterFloor,
+    8: LATE_XP.argue + LATE_XP.littleLamps + bouts,
+    9: LATE_XP.sorry + LATE_XP.patientHour + LATE_XP.tea,
+  };
+  const carried = (chapter: number) => Object.entries(extra).reduce((n, [c, xp]) => n + (Number(c) <= chapter ? xp : 0), 0);
+
+  it('the route and the line without side quests are what they were (none of them is on the route)', () => {
+    expect(report.chapters.map((c) => c.level)).toEqual([4, 8, 11, 14, 15, 17, 19, 21, 24, 25, 28, 30]);
+    expect(report.chapters.map((c) => c.levelNoSide)).toEqual([3, 7, 10, 12, 13, 15, 17, 19, 22, 23, 26, 28]);
+  });
+
+  it('a player who does every one of them ends each chapter at most one level over its target, and never past the cap', () => {
+    for (const c of report.chapters) {
+      const level = levelForXp(RPG, c.xp + carried(c.chapter));
+      expect(level, `Chapter ${c.chapter}`).toBeLessThanOrEqual(c.target.to + LEVEL_CURVE.slackOver);
+      expect(level).toBeLessThanOrEqual(LEVELS.cap);
+    }
   });
 });
 
@@ -169,6 +198,119 @@ describe('J-4 Oil for the Little Lamps (the Unbroken Wick)', () => {
     const xp = sharedXp(flags, RPG);
     expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('little_lamps');
     expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.littleLamps);
+  });
+});
+
+/** Press A through a conversation's lines until it offers a choice, then pick the k-th. */
+function choose(sim: Sim, k: number): void {
+  for (let i = 0; i < 40 && sim.logic.mode === 'dialogue' && sim.logic.view().kind !== 'choice'; i++) sim.run(['confirm']);
+  expect(sim.logic.view().kind).toBe('choice');
+  sim.run([...(k > 0 ? [`down*${k}`] : []), 'confirm']);
+}
+
+describe('Al-1 Terribly Sorry (Kingsmere, by day)', () => {
+  it('Rosalind in the hall: "never once written to me"; five letters by hand, each reply and each walking off', () => {
+    const sim = simAt('aldermoor-day');
+    const flags = sim.logic.state.flags;
+    settleRewards(flags, RPG, SIDE_QUESTS);
+    const q = quest('sorry');
+    // Out of St. Agatha's, across the square, into the keep's hall.
+    sim.run(['goto 12,17', 'goto 20,5']);
+    expect(sim.logic.map.id).toBe('aldermoor-keep');
+    sim.run(['goto 26,12', 'right', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    expect(flags.isSet('item.sorry_letters')).toBe(true);
+    // The footman in the hall.
+    sim.run(['goto 33,10', 'up', 'confirm', 'skip']);
+    expect(flags.isSet('side.sorry.footman')).toBe(true);
+    expect(sim.logic.npcs().some((n) => n.npc === 'letter_footman')).toBe(false);
+    // The square: the sergeant and the constable.
+    sim.run(['goto 21,29']);
+    expect(sim.logic.map.id).toBe('aldermoor-cross');
+    sim.run(['goto 8,26', 'up', 'confirm', 'skip', 'goto 36,9', 'up', 'confirm', 'skip']);
+    for (const f of ['side.sorry.sergeant', 'side.sorry.constable']) expect(flags.isSet(f), f).toBe(true);
+    // The heath: the highwayman and the goose.
+    sim.run(['goto 20,29']);
+    expect(sim.logic.map.id).toBe('aldermoor-heath');
+    sim.run(['goto 30,11', 'up', 'confirm', 'skip', 'goto 12,16', 'up', 'confirm', 'skip']);
+    for (const f of ['side.sorry.bandit', 'side.sorry.goose', 'side.sorry.done']) expect(flags.isSet(f), f).toBe(true);
+    expect(flags.isSet('item.sorry_letters')).toBe(false);
+    const xp = sharedXp(flags, RPG);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('sorry');
+    expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.sorry);
+  });
+});
+
+/** Kingsmere at the last dawn: the price paid on the Mere Stair; up the heath road to the square. */
+function kingsmereDawn(): Sim {
+  const sim = simAt('aldermoor-dawn');
+  settleRewards(sim.logic.state.flags, RPG, SIDE_QUESTS);
+  expect(sim.logic.map.id).toBe('aldermoor-heath');
+  sim.run(['goto 45,13']);
+  expect(sim.logic.map.id).toBe('aldermoor-cross');
+  return sim;
+}
+
+describe('Al-4 The Clock That Waits (the Patient Hour)', () => {
+  it('the clockmaker by the keep\'s gate; the tower; 11:10 to a quarter to three before the watchman; Agatha\'s vault', () => {
+    const sim = kingsmereDawn();
+    const flags = sim.logic.state.flags;
+    const q = quest('patient_hour');
+    sim.run(['goto 23,8', 'up', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    sim.run(['goto 20,5']);
+    expect(sim.logic.map.id).toBe('aldermoor-keep');
+    sim.run(['goto 36,6']);
+    expect(sim.logic.map.id).toBe('aldermoor-clocktower');
+    sim.run(readJson<string[]>('puzzles/aldermoor_clock/solution.json'));
+    expect(flags.isSet('anchor.clock_stopped')).toBe(true);
+    expect(flags.get('clock.tower.face')).toBe('2:45');
+    sim.run(['down*2', 'echo', 'skip']);
+    expect(sim.logic.era).toBe('present');
+    sim.run(['right*2', 'up*3', 'confirm', 'skip']);
+    for (const f of ['item.patient_hour', 'side.patient_hour.done']) expect(flags.isSet(f), f).toBe(true);
+    const xp = sharedXp(flags, RPG);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('patient_hour');
+    expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.patientHour);
+  });
+});
+
+describe('Al-5 Tea With Lady Rosalind', () => {
+  it('three cups; the record wins two of them; she will sit for Aldermoor, and the Accord is a little steadier', () => {
+    const sim = kingsmereDawn();
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 24,5']);
+    expect(sim.logic.map.id).toBe('aldermoor-townhouse');
+    sim.run(['goto 9,5', 'up', 'confirm']);
+    // Cup one: Compassion (it only warms it).
+    choose(sim, 2);
+    // Cups two and three: the record.
+    choose(sim, 1);
+    choose(sim, 2);
+    sim.run(['skip']);
+    for (const f of ['side.tea.accepted', 'side.tea.done']) expect(flags.isSet(f), f).toBe(true);
+    expect(flags.isSet('side.tea.cup_0')).toBe(false);
+    const parts = stabilityParts(flags, STABILITY_HOUSES);
+    expect(parts.find((p) => p.id === 'rosalind_tea')?.value).toBe(1);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('tea');
+  });
+
+  it('lost (one cup or none), she sends the envoy away for another pot', () => {
+    const sim = kingsmereDawn();
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 24,5', 'goto 9,5', 'up', 'confirm']);
+    choose(sim, 0);
+    choose(sim, 0);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.isSet('side.tea.done')).toBe(false);
+    sim.run(['confirm']);
+    choose(sim, 0);
+    choose(sim, 1);
+    choose(sim, 1);
+    choose(sim, 2);
+    sim.run(['skip']);
+    expect(flags.isSet('side.tea.done')).toBe(true);
   });
 });
 

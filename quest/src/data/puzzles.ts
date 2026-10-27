@@ -396,6 +396,23 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { flag: 'anchor.reservoir_sealed' },
   },
+  // Al-4's secret (S-ALM, built Oct 27): the night Thomas wrote, the clock at 11:10 and the watchman climbing in ninety
+  // seconds; 215 minutes by the key's gears (twelve of twelve, the rewind, five of twelve), the key out, one tick, and the
+  // spare quill from the sill in the escapement (the anchor). Waiting alone is caught; a quill on the wrong tick jams.
+  {
+    id: 'aldermoor_clock',
+    title: 'The tower clock: 11:10 to a quarter to three, by the gears, before the watchman (secret item; PUZZLES.md S-ALM)',
+    map: 'aldermoor-clocktower',
+    spawn: 'clocktower',
+    flags: {
+      ...KINGSMERE_ASSIZE,
+      'story.record_read': true,
+      'story.hushed_beaten': true,
+      'encounter.aldermoor_story.hushed.won': true,
+      'side.patient_hour.accepted': true,
+    },
+    goal: { flag: 'anchor.clock_stopped' },
+  },
   {
     id: 'jwaladesh_chain',
     title: 'Arjun\'s night: the chain lamp lit and the tower mirror bolted, in the memory (SIG-JWA part 1)',

@@ -42,6 +42,8 @@ import aldermoorRolls from '../../maps/aldermoor-rolls.tmj?raw';
 import aldermoorKeep from '../../maps/aldermoor-keep.tmj?raw';
 import aldermoorClose from '../../maps/aldermoor-close.tmj?raw';
 import aldermoorCathedral from '../../maps/aldermoor-cathedral.tmj?raw';
+import aldermoorClocktower from '../../maps/aldermoor-clocktower.tmj?raw';
+import aldermoorTownhouse from '../../maps/aldermoor-townhouse.tmj?raw';
 import ardenciaFlats from '../../maps/ardencia-flats.tmj?raw';
 import ardenciaTown from '../../maps/ardencia-town.tmj?raw';
 import ardenciaAlcazar from '../../maps/ardencia-alcazar.tmj?raw';
@@ -149,6 +151,8 @@ export const MAP_SOURCES: Readonly<Record<string, string>> = {
   'aldermoor-keep': aldermoorKeep,
   'aldermoor-close': aldermoorClose,
   'aldermoor-cathedral': aldermoorCathedral,
+  'aldermoor-clocktower': aldermoorClocktower,
+  'aldermoor-townhouse': aldermoorTownhouse,
 };
 
 export function loadRawMaps(): Record<string, TiledMap> {

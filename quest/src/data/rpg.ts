@@ -814,6 +814,7 @@ export const CITIES: Readonly<Record<string, CityDef>> = {
       { map: 'aldermoor-keep', name: "The Regent's Keep" },
       { map: 'aldermoor-close', name: 'The close', at: { x: 30, y: -8 } },
       { map: 'aldermoor-cathedral', name: "St. Agatha's" },
+      { map: 'aldermoor-townhouse', name: "Lady Rosalind's house" },
     ],
   },
 };

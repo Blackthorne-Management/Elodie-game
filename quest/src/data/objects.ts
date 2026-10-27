@@ -81,6 +81,15 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   echo_jar_2: { name: 'The three-measure jar' },
   echo_reservoir: { name: "The lamp-maker's reservoir" },
   lit_shrine: { name: "The child's shrine" },
+  // Al-4 and Al-5 (Oct 27).
+  tower_face: { name: 'The tower clock' },
+  agatha_vault: { name: "Dame Agatha's vault" },
+  tower_sill_now: { name: 'The sill' },
+  tower_winder: { name: 'The winding key' },
+  tower_face_echo: { name: 'The tower clock' },
+  tower_sill: { name: 'The sill' },
+  thomas_portrait: { name: 'A portrait' },
+  rosalind_tea_table: { name: 'The tea table' },
   kayla_desk: { name: "Kayla's desk" },
   clerk_desk_echo: { name: "The clerk's desk" },
   stacks_seal: { name: 'The sealed stacks' },
@@ -679,6 +688,11 @@ export const DOORS: Readonly<Record<string, string>> = {
   'aldermoor-close/close_postern': "The postern into the keep",
   'aldermoor-cathedral/cathedral_west': 'Out to the Market Cross',
   'aldermoor-cathedral/cathedral_vestry': 'The vestry: out to the close',
+  // Al-4 and Al-5 (Oct 27).
+  'aldermoor-keep/keep_clock': 'The clock tower',
+  'aldermoor-clocktower/tower_out': 'Down to the great hall',
+  'aldermoor-cross/cross_townhouse': "Lady Rosalind's house",
+  'aldermoor-townhouse/townhouse_out': 'Out to the Market Cross',
   // Agnipur (Chapter 8).
   'jwaladesh-harbor/harbor_bazaar': 'Up: the Lamp Bazaar',
   'jwaladesh-bazaar/bazaar_harbor': 'Down: the Harbor Chain',

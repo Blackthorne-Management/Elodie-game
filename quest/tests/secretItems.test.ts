@@ -75,6 +75,13 @@ describe('Anissa\'s Calm and Gianna\'s Comfort (COMBAT 8)', () => {
     if (b.calm > 0 && b.actor?.anissaBond) expect(b.canSurge()).toBe(b.spark >= SURGE_COST);
   });
 
+  it('the Hushers\' Seize frightens her by one, and the Hushed\'s Hush the Light is the whisper (Calm -2), no longer a Seize', () => {
+    for (const id of ['husher', 'heath_husher']) expect(ENEMIES[id]!.moves.find((m) => m.name === 'Seize')?.calm, id).toBe(1);
+    const light = (BATTLES.assize_hushed!.phases ?? []).flatMap((p) => p.moves ?? []).find((m) => m.name === 'Hush the Light')!;
+    expect(light.calm).toBe(2);
+    expect(light.seize).toBeUndefined();
+  });
+
   it('nobody but the one bonded to Anissa can Comfort her', () => {
     const b = new Battle(def, [yari(), gianna()], [WHISPERER], [], { seed: 5 });
     b.start();

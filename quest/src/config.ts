@@ -469,6 +469,8 @@ export const STABILITY = {
   yieldBroken: -2,
   /** The earlier bosses spared (Grimvald, the Paper Fox, Dhanraj). */
   bossSpared: 1,
+  /** Al-5 Tea With Lady Rosalind (built Oct 27): she sits for Aldermoor at the Hearing, persuaded. */
+  rosalindTea: 1,
   /** A pardon reaches the Just Throne from this score. */
   just: 80,
   /** The Hollow card names at most this many of the costliest strains. */

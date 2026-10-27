@@ -226,7 +226,7 @@ export const LETTERS = {
   sergeant: at(8, 25),
   constable: at(36, 8),
   bandit: at(30, 10),
-  goose: at(12, 17),
+  goose: at(12, 15),
   footman: at(33, 9),
 } as const;
 /** Where the five stand while their letter waits: by day, or at the last dawn (never the night, the court or the cells). */

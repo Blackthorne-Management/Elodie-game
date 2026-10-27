@@ -147,6 +147,9 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'aldermoor-keep': 'majlis',
   'aldermoor-close': 'crossroads',
   'aldermoor-cathedral': 'throne_archive',
+  // Al-4's clock tower and Al-5's townhouse (Oct 27): the Echo's track, and home.
+  'aldermoor-clocktower': 'throne_archive',
+  'aldermoor-townhouse': 'home',
 };
 
 /**

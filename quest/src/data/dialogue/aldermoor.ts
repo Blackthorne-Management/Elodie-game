@@ -520,11 +520,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
   simple('magistrate_talk', [say(MG, 'The Crown\'s magistrate does not discuss matters before the Assize.')]),
   simple('keep_steward_talk', [say('keep_steward', 'The archive is sealed at the recital\'s bell, envoy, and opened at the Regent\'s word. I keep the keys. Not that one.')]),
   simple('witness_bishop_talk', [say('witness_bishop', 'In this keep the Witness is the law. A word given before it is kept, or it falls, and the one who gave it.')]),
-  script('rosalind_talk', {
-    start: { lines: [], next: [{ if: { flag: 'story.caught' }, to: 'court' }, { to: 'hall' }] },
-    hall: { lines: [say(RO, 'My son writes to everyone he hits. He has never once written to me.')] },
-    court: { lines: [say(RO, 'A Stillwater court reads what a Stillwater wrote. Lay it, envoy.')] },
-  }),
+  // Lady Rosalind's talk: data/dialogue/aldermoorQuests.ts (Al-1 is offered there, built Oct 27).
   simple('al_chamberlain_talk', [say('al_chamberlain', 'The Regent receives at his chair. Petitions to the clerk. Complaints to the Witness. Envoys to the gallery.')]),
   script('jordyn_talk', {
     start: {

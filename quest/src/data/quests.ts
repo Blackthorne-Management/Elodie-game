@@ -1519,7 +1519,7 @@ export const ACT8: QuestDef = {
   ],
 };
 
-const ALD_MAPS = ['aldermoor-heath', 'aldermoor-cross', 'aldermoor-rolls', 'aldermoor-keep', 'aldermoor-close', 'aldermoor-cathedral'];
+const ALD_MAPS = ['aldermoor-heath', 'aldermoor-cross', 'aldermoor-rolls', 'aldermoor-keep', 'aldermoor-close', 'aldermoor-cathedral', 'aldermoor-clocktower', 'aldermoor-townhouse'];
 const keepAt = (x: number, y: number): Goal => ({ map: 'aldermoor-keep', at: { x, y } });
 /** The archive's filing floor (the Echo zone of the first revisiting): stand there and press Echo. */
 const filingFloor = keepAt(KEEP.zone.x + 5, KEEP.zone.y);
