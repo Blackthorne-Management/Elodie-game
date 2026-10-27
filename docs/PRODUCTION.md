@@ -33,13 +33,15 @@ and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 12 a
 - [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
 
-**Quest art waiting on the owner (art drop 1, Fri Oct 24):** every prompt is in `docs/quest/ART-PROMPTS.md`: Elodie
-the goddess, Elodie Limyè, Patricio young and old, Anicette young and old, the Sun Locket and Solange's Quill, and
-(added Oct 15) the battle stances for Gianna, Yari and young Patricio (one empty-handed stance each; the game draws
-the weapons), Anissa's two battle poses, and the cane-field boar. Intro art (in
-`docs/quest/intro/art/`): complete Oct 16; later Benny, Caona, Rael. Caona and young Benny now appear in the game
-(the Echo of the first oath, Oct 17), drawn as placeholders until their art arrives; so do a marine lieutenant and a
-Crown captain (the Crown attack, Oct 17).
+**Quest art (updated Oct 27):** art drop 1 is in (Oct 16): Gianna, Yari, Azzy, Anissa, Elodie Limyè, Patricio young
+and old, Anicette young and old, Mother Solange, the Quiet Crown, the Sun Locket, Solange's Quill, the battle stances
+and the boar. Still missing from drop 1: Cacique Anaco (section 12) and the gaze emblem (1b). Art drop 2, the named
+characters of Chapters 1 to 12 still drawn as placeholders (prompts in `docs/quest/ART-PROMPTS.md` sections 11 to 20):
+Caona, young and old Benny, Thorne, the marine lieutenant, the Crown captain (Ch 1 and 2); Rael, Rivera, Jaime (Ch 3);
+the Regent, Hollis, Coralie (Ch 5); Bayarmaa, Grimvald, Hrafn (Ch 6); Haru, the Paper Fox (Ch 7); Vikram, Aiyana, Seth
+Dhanraj (Ch 8); Edmund, Jordyn, Sebastian, the Almoner veiled and unveiled, Rosalind (Ch 9); Rahel, Patricia, Joaquin,
+Ti Jak (Ch 10); Hale (Ch 11). No prompts yet for: the behique, Cresswell, Amanda, Nancy, Zelia, Samira, Qasim, Layla,
+the herald. Townsfolk, soldiers and creatures stay as drawn placeholders.
 
 **The quest** (dated schedule: `docs/quest/SCHEDULE.md`): Milestone 1, Pòdlimyè and Chapter 1 finished with
 the animated intro, **Sun Nov 1**; Milestone 2, battles and Xaraguá, **Sun Nov 15**; release of Chapters 1
