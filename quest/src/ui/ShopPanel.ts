@@ -7,7 +7,7 @@ import { UI } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { RPG } from '../data/rpg.ts';
 import type { FlagStore } from '../engine/flags.ts';
-import { STAT_KEYS, bagContents, bagUsed, buy, gold, itemCount, level, partyMembers, sell, sellPrice, type ItemDef, type ShopDef } from '../engine/rpg.ts';
+import { STAT_KEYS, bagContents, bagUsed, buy, buyPrice, gold, itemCount, level, partyMembers, sell, sellPrice, type ItemDef, type ShopDef } from '../engine/rpg.ts';
 import type { InputManager } from '../input/actions.ts';
 import { textStyle } from './text.ts';
 
@@ -104,7 +104,7 @@ export class ShopPanel {
   /** Ask before trading: "Buy X for N gold?" */
   private ask(it: ItemDef | undefined): void {
     if (!it) return;
-    const price = this.side === 'buy' ? it.price : sellPrice(it);
+    const price = this.side === 'buy' ? buyPrice(it, this.flags!, RPG) : sellPrice(it, this.flags!, RPG);
     this.pending = it;
     this.message = `${this.side === 'buy' ? 'Buy' : 'Sell'} ${it.name} for ${price} gold?`;
   }
@@ -134,7 +134,7 @@ export class ShopPanel {
     } else {
       const r = sell(flags, RPG, it.id);
       audio.sfx(r === 'ok' ? 'coins' : 'bump');
-      this.message = r === 'ok' ? `Sold for ${sellPrice(it)} gold.` : 'I cannot take that.';
+      this.message = r === 'ok' ? `Sold for ${sellPrice(it, flags, RPG)} gold.` : 'I cannot take that.';
       this.cursor = Math.min(this.cursor, Math.max(0, this.list().length - 1));
     }
   }
@@ -174,7 +174,7 @@ export class ShopPanel {
     // Gear above every fighter's level is marked "!" (it would give only part of its bonus).
     const best = Math.max(1, ...partyMembers(flags, RPG, 'present').filter((m) => !m.support).map((m) => level(flags, RPG, m.id)));
     this.labels = list.map((it) => {
-      const price = this.side === 'buy' ? it.price : sellPrice(it);
+      const price = this.side === 'buy' ? buyPrice(it, flags, RPG) : sellPrice(it, flags, RPG);
       const have = itemCount(flags, it.id);
       const lv = it.kind === 'gear' ? `  Lv${it.level ?? 1}${(it.level ?? 1) > best ? '!' : ''}` : '';
       return `${it.name.padEnd(20)}${String(price).padStart(4)}g${lv}${have ? `  (have ${have})` : ''}`;

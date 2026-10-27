@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 15,
+  "nextobjectid": 16,
   "layers": [
     {
       "id": 1,
@@ -519,6 +519,44 @@
               "value": "!story.quay_passed"
             }
           ]
+        },
+        {
+          "id": 10,
+          "name": "invoice_offer",
+          "type": "trigger",
+          "x": 240,
+          "y": 16,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "invoice_offer"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "side.invoice.offered"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.layla_pass, !side.invoice.accepted, !story.caravan_dawn"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     },
@@ -533,7 +571,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 10,
+          "id": 11,
           "name": "landing",
           "type": "spawn",
           "x": 112,
@@ -590,7 +628,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 11,
+          "id": 12,
           "name": "charter_crates",
           "type": "puzzle_object",
           "x": 304,
@@ -613,7 +651,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 13,
           "name": "crown_ship",
           "type": "puzzle_object",
           "x": 288,
@@ -636,7 +674,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 14,
           "name": "quay_trader_boat",
           "type": "puzzle_object",
           "x": 96,
@@ -671,7 +709,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 14,
+          "id": 15,
           "name": "quay_porters",
           "type": "crowd_zone",
           "x": 192,
@@ -705,7 +743,7 @@
       "imageheight": 896,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 441,
+      "tilecount": 442,
       "columns": 8,
       "margin": 0,
       "spacing": 0

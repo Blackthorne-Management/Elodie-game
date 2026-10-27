@@ -4,7 +4,8 @@
 // left in `<machine>.<id>.said` for the next line to read; the floor answers every step on its map (GameContent.onStep).
 
 import type { StepAnswer } from '../engine/content.ts';
-import type { FlagStore } from '../engine/flags.ts';
+import type { FlagReader, FlagStore } from '../engine/flags.ts';
+import { SECRET_ITEMS, STARTING_GOLD } from '../config.ts';
 import { CLOCK_DO, MEASURES_DO, heardFlag, jarFlag, measure, sealedFlag, stepFloor, windClock, type ClockDef, type FloorDef, type MeasuresDef } from '../engine/secrets.ts';
 import { TOWER_CLOCK } from './aldermoor.ts';
 import { WICK_MEASURES } from './jwaladesh.ts';
@@ -37,12 +38,37 @@ export function reactSecrets(flags: FlagStore): void {
   }
 }
 
+/** The chapter being played: the first whose `act<N>.complete` is not set. */
+export function chapterNow(flags: FlagReader): number {
+  let n = 1;
+  while (n <= 12 && flags.get(`act${n}.complete`) === true) n++;
+  return n;
+}
+
+/** Samira's coupon for a chapter (the Sakk of Yusuf): cashed once. */
+export const couponFlag = (chapter: number): string => `sakk.cashed.ch${chapter}`;
+
+/**
+ * Before a shop opens (GameContent.beforeShop): with the Sakk of Yusuf carried and Samira in the party, she cashes one
+ * of Yusuf's coupons there, once a chapter (SECRET-ITEMS.md 2).
+ */
+export function cashCoupon(flags: FlagStore): string | undefined {
+  if (flags.get('item.sakk_yusuf') !== true || !flags.isSet('party.samira')) return undefined;
+  const f = couponFlag(chapterNow(flags));
+  if (flags.isSet(f)) return undefined;
+  flags.set(f, true);
+  const purse = flags.get('gold');
+  flags.set('gold', (typeof purse === 'number' ? purse : STARTING_GOLD) + SECRET_ITEMS.sakk.coupon);
+  return `Samira cashes one of Yusuf's coupons: +${SECRET_ITEMS.sakk.coupon} gold.`;
+}
+
 /** Every flag the machines write from code (the content checks count them as set). */
 export function secretFlagsWritten(): string[] {
   const out: string[] = [];
   for (const m of MEASURES) out.push(...m.caps.map((_, i) => jarFlag(m.id, i)), sealedFlag(m.id), m.anchor, saidFlag('measures', m.id));
   for (const c of CLOCKS) out.push(...['moved', 'secs', 'spring', 'key_out', 'jammed', 'face', 'left', 'caught'].map((k) => `clock.${c.id}.${k}`), c.anchor, saidFlag('clock', c.id));
   for (const fl of FLOORS) out.push(fl.open, heardFlag(fl.id));
+  for (let c = 1; c <= 13; c++) out.push(couponFlag(c));
   return out;
 }
 

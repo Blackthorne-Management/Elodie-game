@@ -13,6 +13,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { INVOICE_FLAGS, SAFFRON, SAFFRON_FLAGS, SAKK, SAKK_FLAGS } from '../../src/data/aldoria.ts';
 
 const SAND = 'б';
 const SAND_WALL = 'Б';
@@ -97,6 +98,8 @@ export function aldoriaQuay(): MapSource {
     obj('crown_ship', 18, 16, { dialogue: 'crown_ship', era: 'present' }, 11, 1),
     obj('quay_trader_boat', 6, 17, { dialogue: 'quay_trader_boat', era: 'present' }, 2, 1),
     { layer: 'crowds', name: 'quay_porters', x: 12, y: 9, w: 9, h: 3, props: { count: '4', looks: 'porter,aldoria_trader' } },
+    // A-5 Invoice for the Crown (built Oct 27): down on the quay after the Merchant-Prince's word, Samira has one last invoice.
+    trigger('invoice_offer', 15, 1, { dialogue: 'invoice_offer', flag: 'side.invoice.offered', once: true, onEnter: true, if: `story.layla_pass, !${INVOICE_FLAGS.accepted}, !story.caravan_dawn` }),
   ];
   return { id: 'aldoria-quay', present: g, echo: g.clone(), objects };
 }
@@ -195,6 +198,17 @@ export function aldoriaBazaar(): MapSource {
     obj('majlis_banner', 19, 5, { dialogue: 'majlis_banner', era: 'present' }),
     { layer: 'crowds', name: 'bazaar_day', x: 3, y: 24, w: 38, h: 3, props: { count: '9', looks: 'aldoria_trader,aldoria_trader_f,porter,market_kid', if: DAY } },
     { layer: 'crowds', name: 'square_day', x: 24, y: 9, w: 6, h: 8, props: { count: '4', looks: 'aldoria_trader,aldoria_trader_f', if: DAY } },
+    // A-4 The Uncashed Note (secret, built Oct 27): the price board by the moneychangers' row, and the war-time bazaar in
+    // front of it: young Yusuf at his counting table, his new box seven (the anchor), four stalls each short of one thing.
+    obj('bazaar_prices', SAKK.board.x, SAKK.board.y, { kind: 'price_board', solid: true, era: 'present', dialogue: 'bazaar_prices' }),
+    { layer: 'echo_zones', name: 'counting_echo', x: SAKK.zone.x, y: SAKK.zone.y, w: SAKK.zone.w, h: SAKK.zone.h, props: { if: `item.sun_locket, ${SAKK_FLAGS.accepted}`, onEcho: 'counting_echo' } },
+    npc('yusuf_bazaar', SAKK.yusuf.x, SAKK.yusuf.y, 'down', { era: 'echo' }),
+    npc('war_dates', SAKK.dates.x, SAKK.dates.y, 'down', { era: 'echo' }),
+    npc('war_salt', SAKK.salt.x, SAKK.salt.y, 'down', { era: 'echo' }),
+    npc('war_peppers', SAKK.peppers.x, SAKK.peppers.y, 'down', { era: 'echo' }),
+    npc('war_indigo', SAKK.indigo.x, SAKK.indigo.y, 'down', { era: 'echo' }),
+    obj('yusuf_box', SAKK.box.x, SAKK.box.y, { kind: 'strongbox', solid: true, era: 'echo', dialogue: 'yusuf_box' }),
+    { layer: 'anchors', name: 'sakk_anchor', x: SAKK.box.x, y: SAKK.box.y, props: { object: 'yusuf_box', flag: SAKK_FLAGS.anchor } },
   ];
   return { id: 'aldoria-bazaar', present: g, echo: g.clone(), objects };
 }
@@ -332,7 +346,8 @@ export function aldoriaVault(): MapSource {
     obj('sun_lock_blank', 22, 7, { kind: 'sun_lock', solid: true, era: 'echo', dialogue: 'sun_lock_blank' }),
     { layer: 'anchors', name: 'sun_lock_anchor', x: 22, y: 7, props: { object: 'sun_lock_blank', flag: 'anchor.vault_sunlock' } },
     // The strongroom in the present: box 7 (A-4's hook, after the release), the sun lock, the witness's chest.
-    obj('box_seven', 15, 11, { dialogue: 'box_seven', era: 'present' }),
+    obj('box_seven', 15, 11, { dialogue: 'box_seven', era: 'present', if: `!${SAKK_FLAGS.anchor}` }),
+    obj('box_seven_full', 15, 11, { dialogue: 'box_seven', era: 'present', if: SAKK_FLAGS.anchor }),
     obj('vault_boxes', 16, 4, { dialogue: 'vault_boxes', era: 'present' }, 5, 1),
     obj('sun_lock', 22, 7, { kind: 'sun_lock', solid: true, era: 'present', if: '!anchor.vault_sunlock', dialogue: 'sun_lock' }),
     obj('sun_lock_open', 22, 7, { kind: 'sun_lock_cut', solid: true, era: 'present', if: 'anchor.vault_sunlock, !story.vault_inner', dialogue: 'sun_lock' }),
@@ -403,6 +418,14 @@ export function aldoriaDesert(): MapSource {
     npc('echo_engineer', 32, 6, 'left', { era: 'echo' }),
     // The cistern head the first time: the air shimmers over the old gate.
     trigger('cistern_arrive', 30, 6, { dialogue: 'cistern_arrive', flag: 'story.cistern_seen', once: true, if: 'side.sweet_water.carrier' }, 2, 1),
+    // A-2 The Missing Saffron (built Oct 27): the camel tracks off the road, and the raiders' camp in the far dunes.
+    ...SAFFRON.tracks.map((t, i) => obj(`saffron_tracks_${i + 1}`, t.x, t.y, { kind: 'camel_tracks', walkable: true, era: 'present', if: SAFFRON_FLAGS.asked })),
+    // Walking onto the tracks reads them (once).
+    ...SAFFRON.tracks.map((t, i) => trigger(`saffron_tracks_read_${i + 1}`, t.x, t.y, { dialogue: 'saffron_tracks', if: `${SAFFRON_FLAGS.asked}, !${SAFFRON_FLAGS.tracks}` })),
+    ...SAFFRON.raiders.map((r, i) => npc(`saffron_raider_${i + 1}`, r.x, r.y, i === 0 ? 'down' : 'left', { if: `${SAFFRON_FLAGS.tracks}, !${SAFFRON_FLAGS.freed}` })),
+    npc('saffron_nephew', SAFFRON.nephew.x, SAFFRON.nephew.y, 'left', { if: `${SAFFRON_FLAGS.tracks}, !${SAFFRON_FLAGS.freed}` }),
+    obj('saffron_camels', SAFFRON.camels.x, SAFFRON.camels.y, { kind: 'camel', solid: true, era: 'present', if: `${SAFFRON_FLAGS.tracks}, !${SAFFRON_FLAGS.freed}`, dialogue: 'saffron_camels' }, 2, 1),
+    npc('saffron_nephew_home', SAFFRON.merchant.x + 1, SAFFRON.merchant.y + 1, 'up', { npc: 'saffron_nephew', if: SAFFRON_FLAGS.freed }),
     { layer: 'encounters', name: 'dunes_north', x: 14, y: 6, w: 14, h: 5, props: { table: 'desert_edge', if: 'story.aldoria_arrived' } },
     { layer: 'encounters', name: 'dunes_south', x: 13, y: 15, w: 30, h: 10, props: { table: 'desert_edge', if: 'story.aldoria_arrived' } },
     { layer: 'encounters', name: 'dunes_east', x: 33, y: 6, w: 10, h: 9, props: { table: 'desert_edge', if: 'story.aldoria_arrived' } },

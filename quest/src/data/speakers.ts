@@ -238,6 +238,14 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   caravan_master: s('caravan_master', 'Caravan master', 'aldoria_trader'),
   caravan_guard: s('caravan_guard', 'Caravan guard', 'majlis_guard'),
   spice_merchant: s('spice_merchant', 'Spice merchant', 'spice_seller'),
+  // Built Oct 27 (A-2, A-4, A-5).
+  saffron_raider: s('saffron_raider', 'Caravan raider', 'caravan_raider'),
+  saffron_nephew: s('saffron_nephew', 'The nephew', 'aldoria_trader'),
+  war_dates: s('war_dates', 'Date seller', 'aldoria_trader'),
+  war_salt: s('war_salt', 'Salt trader', 'aldoria_trader_f'),
+  war_peppers: s('war_peppers', 'Camp cook', 'echo_cook'),
+  war_indigo: s('war_indigo', 'Zetwal dyer', 'cloth_merchant'),
+  factor_officer: s('factor_officer', 'Crown officer', 'crown_officer'),
   // Chapter 5, Eightgate (Oct 22).
   regent: s('regent', 'The Lord Regent'),
   hollis: s('hollis', 'Keeper Hollis'),

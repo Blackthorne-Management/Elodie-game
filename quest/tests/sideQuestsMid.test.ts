@@ -9,6 +9,9 @@ import { RPG } from '../src/data/rpg.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { LATE_XP } from '../src/data/sideQuestsLate.ts';
 import { CHAPEL, ERRAND, FEAST_FLAGS, WATCHES } from '../src/data/ardencia.ts';
+import { SAKK_FLAGS, SAFFRON_FLAGS, INVOICE_FLAGS } from '../src/data/aldoria.ts';
+import { SECRET_ITEMS } from '../src/config.ts';
+import { buyPrice, gold, sellPrice } from '../src/engine/rpg.ts';
 import { localPillar, sharedXp } from '../src/engine/rpg.ts';
 import { settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { mysteryQuests } from '../src/engine/guide.ts';
@@ -20,14 +23,21 @@ const maps = loadMaps();
 const route = parseRoute(readJson<string[]>('routes/zetwal-act1.json'));
 const quest = (id: string) => SIDE_QUESTS.find((q) => q.id === id)!;
 
-/** The game as the route leaves it at a marker. */
-function simAt(mark: string): Sim {
+/** The game as the route leaves it at a marker (its nth time: the route has two "@dusk"). */
+function simAt(mark: string, nth = 1): Sim {
   const sim = newGameSim(maps);
+  let seen = 0;
   for (const item of route) {
-    if (item.kind === 'mark' && item.name === mark) return sim;
+    if (item.kind === 'mark' && item.name === mark && ++seen === nth) return sim;
     sim.run([item]);
   }
   throw new Error(`No mark @${mark}`);
+}
+
+/** No ambushes on this walk (the wild sections roll their own; these tests walk the quests, not the dice). */
+function calm(sim: Sim): Sim {
+  (sim.logic as unknown as { encounterZoneAt: () => undefined }).encounterZoneAt = () => undefined;
+  return sim;
 }
 
 /** Press A through a conversation's lines until it offers a choice, then pick the k-th. */
@@ -195,5 +205,162 @@ describe('Ar-5 The Arrows Missed (the strand camp)', () => {
     expect(mysteryQuests([quest('arrows')], flags)).toEqual([]);
     expect(sideQuestStatus(flags, quest('arrows'))).toBe('unknown');
     void readFileSync;
+  });
+});
+
+// ---- Chapter 4 ----------------------------------------------------------------------------------------------------
+
+describe('A-2 The Missing Saffron (Bab al-Dhahab, the night of the vault)', () => {
+  it('the board at dusk, the merchant, the tracks, the raiders (the blade), the nephew home; +1 Wealth and the tea', () => {
+    const sim = calm(simAt('dusk', 2));
+    const flags = sim.logic.state.flags;
+    settleRewards(flags, RPG, SIDE_QUESTS);
+    expect(sim.logic.map.id).toBe('aldoria-bazaar');
+    expect(mysteryQuests([quest('saffron')], flags).map((q) => q.id)).toEqual(['saffron']);
+    sim.run(['goto 14,9', 'left', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sideQuestStatus(flags, quest('saffron'))).toBe('active');
+    sim.run(['goto 43,14']);
+    expect(sim.logic.map.id).toBe('aldoria-desert');
+    sim.run(['goto 3,8', 'left', 'confirm', 'skip']);
+    expect(flags.isSet(SAFFRON_FLAGS.asked)).toBe(true);
+    sim.run(['goto 22,15', 'skip']);
+    expect(flags.isSet(SAFFRON_FLAGS.tracks)).toBe(true);
+    sim.run(['goto 37,22', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sim.battles.at(-1)).toBe('saffron_raiders');
+    sim.run(['skip']);
+    for (const f of [SAFFRON_FLAGS.freed, SAFFRON_FLAGS.fought]) expect(flags.isSet(f), f).toBe(true);
+    sim.run(['goto 3,8', 'left', 'confirm', 'skip']);
+    expect(flags.isSet(SAFFRON_FLAGS.done)).toBe(true);
+    const wealth = localPillar(flags, RPG, 'wealth', 'al_doria');
+    expect(paid(flags, 'saffron')).toBe(LATE_XP.saffron);
+    expect(localPillar(flags, RPG, 'wealth', 'al_doria') - wealth).toBe(1);
+    expect(flags.get('item.spiced_tea')).toBe(3);
+  });
+
+  it('or the purse: a hundred gold and the raiders walk off east', () => {
+    const sim = calm(simAt('dusk', 2));
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 14,9', 'left', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip', 'goto 43,14', 'goto 3,8', 'left', 'confirm', 'skip', 'goto 22,15', 'skip']);
+    flags.set('gold', 500);
+    sim.run(['goto 37,22', 'up', 'confirm']);
+    choose(sim, 1);
+    sim.run(['skip']);
+    expect(flags.isSet(SAFFRON_FLAGS.freed)).toBe(true);
+    expect(flags.isSet(SAFFRON_FLAGS.fought)).toBe(false);
+    expect(gold(flags, RPG)).toBe(400);
+  });
+});
+
+/** After the Merchant-Prince's word, up the vault stair into the bazaar at night. */
+function afterLayla(): Sim {
+  const sim = simAt('layla');
+  settleRewards(sim.logic.state.flags, RPG, SIDE_QUESTS);
+  sim.run(['goto 4,0']);
+  expect(sim.logic.map.id).toBe('aldoria-bazaar');
+  return sim;
+}
+
+describe('A-4 The Uncashed Note (secret: the Sakk of Yusuf)', () => {
+  it('the old moneychanger; the war-time bazaar\'s trades; a wrong deposit pays fifty and is amended; indigo opens box seven', () => {
+    const sim = afterLayla();
+    const flags = sim.logic.state.flags;
+    expect(mysteryQuests(SIDE_QUESTS, flags).map((q) => q.id)).not.toContain('uncashed');
+    sim.run(['goto 4,23', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sideQuestStatus(flags, quest('uncashed'))).toBe('active');
+    // Into the war-time bazaar: the coins straight into box seven (a wrong deposit).
+    sim.run(['echo', 'skip', 'goto 5,22', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.get(SAKK_FLAGS.deposit)).toBe('coins');
+    sim.run(['goto 5,23', 'echo', 'skip']);
+    expect(sim.logic.era).toBe('present');
+    // Box seven now: a small sakk, fifty gold.
+    const purse = gold(flags, RPG);
+    sim.run(['goto 10,11', 'goto 15,10', 'down', 'confirm', 'skip']);
+    expect(flags.isSet(SAKK_FLAGS.small)).toBe(true);
+    expect(gold(flags, RPG) - purse).toBe(50);
+    expect(flags.isSet(SAKK_FLAGS.done)).toBe(false);
+    // Back to the row: amend, then the chain (coins, dates, salt, peppers, indigo) and the indigo deposited.
+    sim.run(['goto 4,0', 'goto 4,23', 'echo', 'skip', 'goto 5,22', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.isSet(SAKK_FLAGS.anchor)).toBe(false);
+    for (const [x, who] of [[2, 'dates'], [6, 'salt'], [8, 'peppers'], [10, 'indigo']] as const) {
+      sim.run([`goto ${x},23`, 'up', 'confirm']);
+      choose(sim, 0);
+      sim.run(['skip']);
+      expect(flags.get(SAKK_FLAGS.goods), who).toBe(who);
+    }
+    sim.run(['goto 5,22', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip', 'goto 5,23', 'echo', 'skip']);
+    expect(flags.get(SAKK_FLAGS.deposit)).toBe('indigo');
+    sim.run(['goto 10,11', 'goto 15,10', 'down', 'confirm', 'skip']);
+    for (const f of [SAKK_FLAGS.done, 'item.sakk_yusuf']) expect(flags.isSet(f), f).toBe(true);
+    expect(paid(flags, 'uncashed')).toBe(LATE_XP.uncashed);
+  });
+
+  it('carried: every shop 15% off and 60% for what is sold; Samira cashes one coupon a chapter at a shop', () => {
+    const tea = RPG.items.mint_tea!;
+    const none = new FlagStore({});
+    const held = new FlagStore({ 'item.sakk_yusuf': true });
+    expect(buyPrice(tea, none, RPG)).toBe(tea.price);
+    expect(buyPrice(tea, held, RPG)).toBe(Math.ceil(tea.price * (1 - SECRET_ITEMS.sakk.discount)));
+    expect(sellPrice(tea, none, RPG)).toBe(Math.floor(tea.price / 2));
+    expect(sellPrice(tea, held, RPG)).toBe(Math.floor(tea.price * SECRET_ITEMS.sakk.sellShare));
+    const sim = afterLayla();
+    const flags = sim.logic.state.flags;
+    flags.set('item.sakk_yusuf', true);
+    const purse = gold(flags, RPG);
+    sim.run(['goto 36,23', 'up', 'confirm', 'skip']);
+    expect(gold(flags, RPG) - purse).toBe(SECRET_ITEMS.sakk.coupon);
+    expect(sim.log.at(-1)).toContain('coupons');
+    sim.run(['confirm', 'skip']);
+    expect(gold(flags, RPG) - purse).toBe(SECRET_ITEMS.sakk.coupon);
+  });
+});
+
+describe('A-5 Invoice for the Crown (the quay, the night before the caravan)', () => {
+  it('Samira\'s last invoice on the quay; the factor pays for his own crates: +1 Influence, and her first heartfelt line', () => {
+    const sim = afterLayla();
+    const flags = sim.logic.state.flags;
+    expect(mysteryQuests([quest('invoice')], flags).map((q) => q.id)).toEqual(['invoice']);
+    sim.run(['goto 21,31', 'skip']);
+    expect(sim.logic.map.id).toBe('aldoria-quay');
+    expect(sideQuestStatus(flags, quest('invoice'))).toBe('active');
+    sim.run(['goto 23,13', 'down', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    for (const f of [INVOICE_FLAGS.done, INVOICE_FLAGS.influence]) expect(flags.isSet(f), f).toBe(true);
+    const influence = localPillar(flags, RPG, 'influence', 'al_doria');
+    expect(influence - localPillar(new FlagStore({ ...flags.snapshot(), [INVOICE_FLAGS.influence]: false }), RPG, 'influence', 'al_doria')).toBe(1);
+    expect(paid(flags, 'invoice')).toBe(LATE_XP.invoice);
+  });
+
+  it('or Samira collects: the guards from the ship, and +1 Fear', () => {
+    const sim = afterLayla();
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 21,31', 'skip', 'goto 23,13', 'down', 'confirm']);
+    choose(sim, 1);
+    sim.run(['skip']);
+    expect(sim.battles.at(-1)).toBe('factor_guards');
+    sim.run(['skip']);
+    for (const f of [INVOICE_FLAGS.done, INVOICE_FLAGS.fear]) expect(flags.isSet(f), f).toBe(true);
+  });
+
+  it('the route walks past all three: none is taken, and all close at first light', () => {
+    const flags = simAt('chapter4-end').logic.state.flags;
+    for (const id of ['saffron', 'uncashed', 'invoice']) {
+      expect(sideQuestStatus(flags, quest(id)), id).toBe('unknown');
+      expect(mysteryQuests([quest(id)], flags), id).toEqual([]);
+    }
   });
 });

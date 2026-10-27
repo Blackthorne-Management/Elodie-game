@@ -356,6 +356,14 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   records_shelf: { name: "The treasurers' ledgers" },
   line_record: { name: 'The line of Ardencia' },
   tapestry: { name: 'Tapestry of Don Alonso' },
+  // A-2 The Missing Saffron and A-4 The Uncashed Note (built Oct 27).
+  bazaar_prices: { name: 'The price board' },
+  yusuf_box: { name: 'Box seven (new)' },
+  box_seven_full: { name: 'Box 7' },
+  saffron_tracks_1: { name: 'Camel tracks', inspect: 'Camel tracks, south-east into the dunes. A thread of saffron in one of them.' },
+  saffron_tracks_2: { name: 'Camel tracks', inspect: 'Camel tracks, south-east into the dunes. A thread of saffron in one of them.' },
+  saffron_tracks_3: { name: 'Camel tracks', inspect: 'Camel tracks, south-east into the dunes. A thread of saffron in one of them.' },
+  saffron_camels: { name: 'Three camels' },
   // Ar-3 The Elders' Feast and Ar-4 The Old Lord's Errand (built Oct 27).
   feast_board: { name: 'Contract board' },
   ferran_door: { name: "Elder Ferrán's door" },

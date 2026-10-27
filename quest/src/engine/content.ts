@@ -132,6 +132,11 @@ export interface GameContent {
    * nightingale floor: every board sings; engine/secrets.ts). Nothing for an ordinary step.
    */
   onStep?: (step: { mapId: string; era: 'present' | 'echo'; pos: { x: number; y: number } }, flags: FlagStore) => StepAnswer | undefined;
+  /**
+   * Just before a shop opens: anything the party is owed there, as a line to toast (Chapter 4, the Sakk of Yusuf: Samira
+   * cashes one of Yusuf's coupons once a chapter). Nothing most of the time.
+   */
+  beforeShop?: (flags: FlagStore) => string | undefined;
 }
 
 /** What a step changed (GameContent.onStep): a note to sound at the tile, and a line to toast. */

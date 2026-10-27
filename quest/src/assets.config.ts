@@ -538,6 +538,8 @@ export const TILESET = {
     { gid: 439, name: 'crypt_bolt', base: 0x4a3a30, accent: 0xc8c8d0, pattern: 'stripes' },
     { gid: 440, name: 'crypt_door_jammed', base: 0x2a1a14, accent: 0xc8c8d0, pattern: 'border' },
     { gid: 441, name: 'promise_niche', base: 0x6e5a4a, accent: 0x8a8a8a, pattern: 'border' },
+    // A-2 The Missing Saffron (Chapter 4, Oct 27; data/aldoria.ts): camel tracks in the dunes, a thread of saffron in them.
+    { gid: 442, name: 'camel_tracks', base: 0xd8b878, accent: 0xb85a2a, pattern: 'dots' },
   ] satisfies PlaceholderTile[],
 } as const;
 

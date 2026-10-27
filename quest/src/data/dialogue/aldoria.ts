@@ -230,7 +230,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     { if: { notFlag: 'story.quay_passed' }, speaker: 'gate_clerk', text: 'Papers at the gate, envoy. Walk up to it.' },
     { if: { flag: 'story.quay_passed' }, speaker: 'gate_clerk', text: 'The bazaar is up the lane. The Majlis is at the head of the square.' },
   ]),
-  simple('crown_factor_talk', [say('crown_factor', 'His Majesty\'s trade factor. I buy what the guild sells. Today, a harbour\'s worth of cassava.')]),
+  // crown_factor_talk: data/dialogue/aldoriaQuests.ts (A-5 Invoice for the Crown, built Oct 27).
   simple('dorini_customs_talk', [say('dorini_customs', 'Stamp, sign, stamp. The Crown pays the duty. The guild counts it twice.')]),
 
   // ---- Beat 2: the Grand Bazaar, and Samira -------------------------------------------------------------
@@ -413,10 +413,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     { if: DUSK, speaker: '', text: 'Locked. Samira is waiting beside it.' },
   ]),
   simple('guild_doorman_talk', [say('doorman', 'Guild members only. Come back with a guild ring, or a guildmaster, or both.')]),
-  simple('old_moneychanger_talk', [
-    say('old_moneychanger', 'The sun. Hm.'),
-    say('old_moneychanger', 'Come back when you have time for an old man\'s story. Not today. Today you are busy.'),
-  ]),
+  // old_moneychanger_talk: data/dialogue/aldoriaQuests.ts (A-4 The Uncashed Note, built Oct 27).
   simple('moneychanger_talk', [say('moneychanger', 'Crown sols, Zetwal suns, Brasador iron. I change anything except my mind.')]),
   // A-1's three stalls (puzzle M-ALD-1): a wrong pick costs a line, and the player can look again.
   script('coin_stall', {
@@ -558,10 +555,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('bazaar_guard_talk', [say('majlis_guard', 'The Majlis is open to envoys. Speak when spoken to, and not before.')]),
   simple('majlis_banner', [nar('The banner of House Dorini: a gold balance on green.')]),
-  simple('contract_board', [
-    nar('The contract board: bales wanted, camels for hire, a reward for a lost ledger.'),
-    nar('Pinned over the rest: "WATER: one copper a cup, at the guild\'s tanks. By order of the guildmaster."'),
-  ]),
+  // contract_board: data/dialogue/aldoriaQuests.ts (A-2 The Missing Saffron, built Oct 27).
 
   // ---- Sweet Water (A-3, the rebel safehouse; puzzle M-ALD-2) --------------------------------------------
   script('fountain_children_talk', {
@@ -821,10 +815,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
   }),
-  simple('box_seven', [
-    nar('Box 7. Sealed with the Dorini seal and a strip of red wax: "for the bearer of the sun."'),
-    nar('It does not open. Not today.'),
-  ]),
+  // box_seven: data/dialogue/aldoriaQuests.ts (A-4 The Uncashed Note, built Oct 27).
   simple('vault_boxes', [nar('Iron boxes, numbered to twelve: the guild\'s bonds, contracts and debts. A merchant city\'s memory.')]),
 
   // ---- Beat 7 and 8: the witness's chest, Qasim, Samira joins ---------------------------------------------
@@ -998,5 +989,5 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     { if: { flag: 'story.layla_pass' }, speaker: 'caravan_master', text: 'First light. Bring water, bring patience, bring nothing that bites.' },
   ]),
   simple('caravan_guard_talk', [say('caravan_guard', 'Raiders past the gate, envoy. Stay on the road.')]),
-  simple('spice_merchant_talk', [say('spice_merchant', 'Saffron, from the ruined caravanserai road. When the road is open. It is not open.')]),
+  // spice_merchant_talk: data/dialogue/aldoriaQuests.ts (A-2 The Missing Saffron, built Oct 27).
 ];

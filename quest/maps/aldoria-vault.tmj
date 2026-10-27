@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 33,
+  "nextobjectid": 34,
   "layers": [
     {
       "id": 1,
@@ -1175,11 +1175,44 @@
               "name": "era",
               "type": "string",
               "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.sakk_sealed"
             }
           ]
         },
         {
           "id": 29,
+          "name": "box_seven_full",
+          "type": "puzzle_object",
+          "x": 240,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "box_seven"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.sakk_sealed"
+            }
+          ]
+        },
+        {
+          "id": 30,
           "name": "vault_boxes",
           "type": "puzzle_object",
           "x": 256,
@@ -1202,7 +1235,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 31,
           "name": "sun_lock",
           "type": "puzzle_object",
           "x": 352,
@@ -1240,7 +1273,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 32,
           "name": "sun_lock_open",
           "type": "puzzle_object",
           "x": 352,
@@ -1278,7 +1311,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 33,
           "name": "witness_chest",
           "type": "puzzle_object",
           "x": 384,
@@ -1322,7 +1355,7 @@
       "imageheight": 896,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 441,
+      "tilecount": 442,
       "columns": 8,
       "margin": 0,
       "spacing": 0

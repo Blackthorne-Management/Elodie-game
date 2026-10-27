@@ -163,6 +163,8 @@ const ITEM_LIST: ItemDef[] = [
     text: 'Lord Benny\'s refusal to sign a seventh page, fifty years old. The bankers of Al-Doria, it says, hold the signed copy.',
   },
   // Al-Doria (Chapter 4): the tea seller's stall, and the key items of the vault and the caravan gate.
+  // A-2 The Missing Saffron (Oct 27): the spice merchant's thanks.
+  { id: 'spiced_tea', name: 'Saffron tea', kind: 'consumable', price: 40, heals: 30, restores: 15, text: 'Tea with a thread of saffron from the caravan you brought home. Restores 30 HP and 15 SP.' },
   { id: 'mint_tea', name: 'Mint tea', kind: 'consumable', price: 35, restores: 20, text: 'Green tea with fresh mint, poured from a height so it foams. Restores 20 SP.' },
   // Ordvik's food tent and horse-trader (Chapter 6).
   { id: 'salted_jerky', name: 'Salted jerky', kind: 'consumable', price: 40, heals: 50, text: 'Dried mutton, salted hard for the winter road. Restores 50 HP.' },

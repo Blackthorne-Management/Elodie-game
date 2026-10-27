@@ -14,6 +14,7 @@ import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CLOCKMAKER_DAWN, CLOCK_TOWER, KEEP, LETTERS, TOWER_CLOCK, TOWNHOUSE_DOOR } from './aldermoor.ts';
 import { ARGUERS, BAZAAR, HARBOR, OIL_STORE } from './jwaladesh.ts';
 import { CAMP, CHAPEL, ERRAND, FEAST, FEAST_FLAGS, TRIAL_MORNING } from './ardencia.ts';
+import { INVOICE, INVOICE_FLAGS, SAFFRON, SAFFRON_FLAGS, SAKK, SAKK_FLAGS, VAULT_NIGHT } from './aldoria.ts';
 import { FLOOR_MAKER, HALL, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
 const f = (flag: string): Condition => ({ flag });
@@ -26,6 +27,9 @@ export const LATE_XP = {
   feast: 5,
   oldErrand: 5,
   arrows: 2,
+  saffron: 5,
+  uncashed: 5,
+  invoice: 2,
   notASpy: 40,
   letterFloor: 60,
   argue: 30,
@@ -119,6 +123,82 @@ const CENIZAL: readonly SideQuestDef[] = [
     closed: f('story.aldoria_arrived'),
     closedText: 'Closed: the trader sailed. Free Brasador still argues about the wall.',
     reward: { xp: LATE_XP.arrows, pillar: { pillar: 'fear', city: 'ardencia', amount: 2 } },
+  },
+];
+
+// ---- Chapter 4 (Bab al-Dhahab) --------------------------------------------------------------------------------------
+
+const DESERT = 'aldoria-desert';
+const GATE_YARD = { map: DESERT, at: { x: SAFFRON.merchant.x + 1, y: SAFFRON.merchant.y } };
+
+const BAB_AL_DHAHAB: readonly SideQuestDef[] = [
+  // A-2: the contract board at dusk, the spice merchant at the caravan gate, the tracks, the raiders in the far dunes.
+  {
+    id: 'saffron',
+    title: 'The Missing Saffron',
+    giver: 'The spice merchant',
+    place: 'The caravan gate',
+    level: 12,
+    summary: 'A saffron caravan was due at dusk by the old road: three camels and the spice merchant\'s nephew. It never came.',
+    accepted: f(SAFFRON_FLAGS.accepted),
+    available: VAULT_NIGHT,
+    start: [{ map: 'aldoria-bazaar', at: { x: 14, y: 9 } }],
+    nudge: 'There is a new notice on the contract board by the fountain, Gigi. Somebody is missing.',
+    steps: [
+      { text: 'The spice merchant, in the caravan gate\'s yard.', done: f(SAFFRON_FLAGS.asked), goals: [GATE_YARD] },
+      { text: 'Tracks where the caravan road leaves the walls.', done: f(SAFFRON_FLAGS.tracks), goals: [{ map: DESERT, at: SAFFRON.tracks[0]! }] },
+      { text: 'The raiders who hold the caravan, in the far dunes.', done: f(SAFFRON_FLAGS.freed), goals: [{ map: DESERT, at: SAFFRON.front }] },
+      { text: 'Back to the spice merchant.', done: f(SAFFRON_FLAGS.done), goals: [GATE_YARD] },
+    ],
+    done: f(SAFFRON_FLAGS.done),
+    closed: f('story.caravan_dawn'),
+    closedText: 'Closed: the Dorini caravan left at first light. The spice merchant is still at the gate, watching the old road.',
+    reward: { gold: 250, xp: LATE_XP.saffron, items: [{ id: 'spiced_tea', n: 3 }], pillar: { pillar: 'wealth', city: 'al_doria', amount: 1 } },
+  },
+  // A-4 (S-ALD): the old moneychanger's story, the war-time bazaar's trade chain, Yusuf's box seven, the Sakk of Yusuf.
+  {
+    id: 'uncashed',
+    title: 'The Uncashed Note',
+    giver: 'The old moneychanger',
+    place: 'The moneychangers\' row',
+    level: 13,
+    secret: true,
+    summary: 'In the war, Yusuf wrote a sakk for the Marshal of Zetwal, and nobody ever cashed it. Box seven pays what was deposited.',
+    accepted: f(SAKK_FLAGS.accepted),
+    available: all(f('story.samira_met'), { notFlag: 'story.caravan_dawn' }),
+    start: [{ map: 'aldoria-bazaar', at: { x: SAKK.moneychanger.x, y: SAKK.moneychanger.y + 1 } }],
+    steps: [
+      { text: 'The old moneychanger, on his row.', done: f(SAKK_FLAGS.accepted), goals: [{ map: 'aldoria-bazaar', at: { x: SAKK.moneychanger.x, y: SAKK.moneychanger.y + 1 } }] },
+      {
+        text: 'The row remembers the war. Patricio has a soldier\'s pay, and Yusuf writes a sakk for any deposit. The price board says what is dear now.',
+        done: f(SAKK_FLAGS.indigo),
+        goals: [{ map: 'aldoria-bazaar', at: { x: SAKK.zone.x + 1, y: SAKK.zone.y } }],
+        echoGoals: [{ map: 'aldoria-bazaar', at: { x: SAKK.box.x, y: SAKK.box.y + 1 } }],
+      },
+      { text: 'Box seven, in the guild vault\'s strongroom.', done: f(SAKK_FLAGS.done), goals: [{ map: 'aldoria-vault', at: { x: 15, y: 10 } }] },
+    ],
+    done: f(SAKK_FLAGS.done),
+    closed: f('story.caravan_dawn'),
+    closedText: 'Closed: the caravan left at first light. Box seven is still sealed, for the bearer of the sun.',
+    reward: { gold: 200, xp: LATE_XP.uncashed, pillar: { pillar: 'influence', city: 'al_doria', amount: 1 } },
+  },
+  // A-5: Samira's last invoice, to the Crown's factor on the quay, the night before the caravan.
+  {
+    id: 'invoice',
+    title: 'Invoice for the Crown',
+    giver: 'Samira',
+    place: 'The quay',
+    level: 13,
+    summary: 'Samira has one last invoice to deliver in Bab al-Dhahab: to the Crown, for war-profiteering consultation, never requested.',
+    accepted: f(INVOICE_FLAGS.accepted),
+    available: all(f('story.layla_pass'), { notFlag: 'story.caravan_dawn' }),
+    start: [{ map: 'aldoria-quay', at: { x: 15, y: 1 } }],
+    nudge: 'Samira keeps looking down the quay lane, Gigi. At the Crown\'s ship.',
+    steps: [{ text: 'The Crown\'s trade factor, at the merchantman\'s gangway.', done: f(INVOICE_FLAGS.done), goals: [{ map: 'aldoria-quay', at: INVOICE.front }] }],
+    done: f(INVOICE_FLAGS.done),
+    closed: f('story.caravan_dawn'),
+    closedText: 'Closed: the caravan left at first light. Samira says she will post it.',
+    reward: { gold: 300, xp: LATE_XP.invoice },
   },
 ];
 
@@ -340,13 +420,16 @@ const KINGSMERE: readonly SideQuestDef[] = [
 ];
 
 /** Every side quest built Oct 27, in chapter order. */
-export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...CENIZAL, ...KUROSHI, ...AGNIPUR, ...KINGSMERE];
+export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...CENIZAL, ...BAB_AL_DHAHAB, ...KUROSHI, ...AGNIPUR, ...KINGSMERE];
 
 /** Pillars that follow a quest's answers (data/rpg.ts pillarRules): J-1's Fear by the blade, or Influence by the word. */
 export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [
   // Ar-3: +2 Fear by the blades, or +2 Influence by the book (Ardencia).
   { pillar: 'fear', city: 'ardencia', flags: [FEAST_FLAGS.fear], each: 2 },
   { pillar: 'influence', city: 'ardencia', flags: [FEAST_FLAGS.influence], each: 2 },
+  // A-5: +1 Fear by the guards, or +1 Influence by the crates (Al-Doria).
+  { pillar: 'fear', city: 'al_doria', flags: [INVOICE_FLAGS.fear], each: 1 },
+  { pillar: 'influence', city: 'al_doria', flags: [INVOICE_FLAGS.influence], each: 1 },
   { pillar: 'fear', city: 'jwaladesh', flags: ['side.argue.fear'], each: 1 },
   { pillar: 'influence', city: 'jwaladesh', flags: ['side.argue.influence'], each: 1 },
 ];

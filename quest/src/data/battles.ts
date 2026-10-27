@@ -1454,6 +1454,32 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
     sideQuest: 'feast',
     tips: { start: 'Two of them, Gigi. They are paid to be here. We are not.', tell: 'He is going to cheat. Guard!', lowHp: 'Heal, Gigi.' },
   },
+  // Chapter 4, A-2 and A-5 (built Oct 27): the raiders holding the saffron caravan in the far dunes, and the Crown
+  // factor's guards on the quay. Optional; paid little (the level curve: tests/sideQuestsLate.test.ts).
+  saffron_raiders: {
+    id: 'saffron_raiders',
+    title: 'The saffron caravan',
+    backdrop: 'desert_edge',
+    enemies: ['caravan_raider', 'caravan_raider', 'caravan_raider'],
+    level: 11,
+    table: 'aldoria_side',
+    group: 'saffron',
+    rewards: { xp: 4, gold: 80 },
+    sideQuest: 'saffron',
+    tips: { start: 'Three of them, Gigi. The camels are behind them.', tell: 'Sand! Guard!', lowHp: 'Heal, Gigi.' },
+  },
+  factor_guards: {
+    id: 'factor_guards',
+    title: 'The Crown\'s gangway',
+    backdrop: 'yucayeque_pier',
+    enemies: ['crown_marine', 'crown_officer', 'crown_marine'],
+    level: 11,
+    table: 'aldoria_side',
+    group: 'factor',
+    rewards: { xp: 4, gold: 0 },
+    sideQuest: 'invoice',
+    tips: { start: 'They are guarding his money, Gigi. Samira says it is hers.', lowHp: 'Heal, Gigi.' },
+  },
   // Chapter 7, K-3: the lantern moths at the lit posts. Paid flat (data).
   marsh_moths: {
     id: 'marsh_moths',

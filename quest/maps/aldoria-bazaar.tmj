@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 43,
+  "nextobjectid": 52,
   "layers": [
     {
       "id": 1,
@@ -855,6 +855,146 @@
               "value": "bazaar_guard"
             }
           ]
+        },
+        {
+          "id": 22,
+          "name": "yusuf_bazaar",
+          "type": "npc",
+          "x": 64,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "yusuf_bazaar"
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "war_dates",
+          "type": "npc",
+          "x": 32,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_dates"
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "war_salt",
+          "type": "npc",
+          "x": 96,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_salt"
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "war_peppers",
+          "type": "npc",
+          "x": 128,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_peppers"
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "war_indigo",
+          "type": "npc",
+          "x": 160,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "war_indigo"
+            }
+          ]
         }
       ]
     },
@@ -869,7 +1009,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 27,
           "name": "bazaar_quay",
           "type": "door",
           "x": 336,
@@ -897,7 +1037,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 28,
           "name": "bazaar_desert",
           "type": "door",
           "x": 688,
@@ -925,7 +1065,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 29,
           "name": "bazaar_majlis",
           "type": "door",
           "x": 336,
@@ -953,7 +1093,7 @@
           ]
         },
         {
-          "id": 25,
+          "id": 30,
           "name": "bazaar_ledgers",
           "type": "door",
           "x": 80,
@@ -981,7 +1121,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 31,
           "name": "bazaar_vault",
           "type": "door",
           "x": 160,
@@ -1031,7 +1171,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 27,
+          "id": 32,
           "name": "samira_walkup",
           "type": "trigger",
           "x": 320,
@@ -1054,7 +1194,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 33,
           "name": "coralie_meet",
           "type": "trigger",
           "x": 208,
@@ -1077,7 +1217,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 34,
           "name": "fountain_runs",
           "type": "trigger",
           "x": 320,
@@ -1100,7 +1240,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 35,
           "name": "samira_steps",
           "type": "trigger",
           "x": 320,
@@ -1135,7 +1275,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 31,
+          "id": 36,
           "name": "square",
           "type": "spawn",
           "x": 352,
@@ -1168,7 +1308,31 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 37,
+          "name": "counting_echo",
+          "type": "echo_zone",
+          "x": 48,
+          "y": 368,
+          "width": 96,
+          "height": 32,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.uncashed.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "counting_echo"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 13,
@@ -1179,7 +1343,31 @@
       "opacity": 1,
       "visible": true,
       "draworder": "topdown",
-      "objects": []
+      "objects": [
+        {
+          "id": 38,
+          "name": "sakk_anchor",
+          "type": "anchor",
+          "x": 80,
+          "y": 336,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.sakk_sealed"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "yusuf_box"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": 14,
@@ -1192,7 +1380,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 32,
+          "id": 39,
           "name": "dry_fountain_al",
           "type": "puzzle_object",
           "x": 352,
@@ -1230,7 +1418,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 40,
           "name": "running_fountain",
           "type": "puzzle_object",
           "x": 352,
@@ -1268,7 +1456,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 41,
           "name": "carrier_door",
           "type": "puzzle_object",
           "x": 576,
@@ -1291,7 +1479,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 42,
           "name": "contract_board",
           "type": "puzzle_object",
           "x": 208,
@@ -1324,7 +1512,7 @@
           ]
         },
         {
-          "id": 36,
+          "id": 43,
           "name": "coin_stall",
           "type": "puzzle_object",
           "x": 240,
@@ -1347,7 +1535,7 @@
           ]
         },
         {
-          "id": 37,
+          "id": 44,
           "name": "carpet_stall",
           "type": "puzzle_object",
           "x": 288,
@@ -1370,7 +1558,7 @@
           ]
         },
         {
-          "id": 38,
+          "id": 45,
           "name": "weights_stall",
           "type": "puzzle_object",
           "x": 336,
@@ -1393,7 +1581,7 @@
           ]
         },
         {
-          "id": 39,
+          "id": 46,
           "name": "samira_scale",
           "type": "puzzle_object",
           "x": 176,
@@ -1416,7 +1604,7 @@
           ]
         },
         {
-          "id": 40,
+          "id": 47,
           "name": "majlis_banner",
           "type": "puzzle_object",
           "x": 304,
@@ -1437,6 +1625,72 @@
               "value": "present"
             }
           ]
+        },
+        {
+          "id": 48,
+          "name": "bazaar_prices",
+          "type": "puzzle_object",
+          "x": 16,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "bazaar_prices"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "price_board"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "name": "yusuf_box",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 336,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "yusuf_box"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "strongbox"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     },
@@ -1451,7 +1705,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 41,
+          "id": 50,
           "name": "bazaar_day",
           "type": "crowd_zone",
           "x": 48,
@@ -1479,7 +1733,7 @@
           ]
         },
         {
-          "id": 42,
+          "id": 51,
           "name": "square_day",
           "type": "crowd_zone",
           "x": 384,
@@ -1518,7 +1772,7 @@
       "imageheight": 896,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 441,
+      "tilecount": 442,
       "columns": 8,
       "margin": 0,
       "spacing": 0

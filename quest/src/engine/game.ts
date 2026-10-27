@@ -318,7 +318,8 @@ export class GameLogic {
       if (npc) {
         const def = this.content.npcs[npc.npc]!;
         // Every conversation ends with an autosave (a story talk, like meeting Governor Thorne, is never lost).
-        const after: Effect[] = def.shop ? [{ kind: 'shop', shop: def.shop }, { kind: 'save' }] : [{ kind: 'save' }];
+        const owed = def.shop ? this.content.beforeShop?.(this.state.flags) : undefined;
+        const after: Effect[] = def.shop ? [...(owed ? [{ kind: 'toast', text: owed } as Effect] : []), { kind: 'shop', shop: def.shop }, { kind: 'save' }] : [{ kind: 'save' }];
         return [{ kind: 'talk', npc }, ...this.startDialogue(def.dialogue, after)];
       }
       const here = objects.filter((o) => rectContains(o.area, tile));

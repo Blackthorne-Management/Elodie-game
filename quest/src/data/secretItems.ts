@@ -8,6 +8,7 @@ import { SECRET_ITEMS } from '../config.ts';
 import type { ItemDef } from '../engine/rpg.ts';
 
 const W = SECRET_ITEMS.wick;
+const K = SECRET_ITEMS.sakk;
 
 export const SECRET_ITEM_LIST: readonly ItemDef[] = [
   {
@@ -63,6 +64,22 @@ export const SECRET_ITEM_LIST: readonly ItemDef[] = [
     showcase: 'legendary',
     boons: { lastStand: true },
     abilities: [{ name: 'Benny\'s Word', text: 'Once a battle, the first fighter a blow would fell or Bind stands at 1 HP instead.' }],
+  },
+  // A-4 The Uncashed Note (Chapter 4, built Oct 27): Yusuf's sakk for one bolt of indigo, at the price of the day the war
+  // ends and every day after. A key item: its terms hold in every shop while it is carried (ItemDef.trade), and Samira
+  // cashes one of its coupons at a shop once a chapter (data/secrets.ts cashCoupon).
+  {
+    id: 'sakk_yusuf',
+    name: 'The Sakk of Yusuf',
+    kind: 'key',
+    price: 0,
+    text: 'A Dorini promise to pay, fifty years old, written by young Yusuf to "the bearer of the sun" for one bolt of Zetwal indigo. Every Dorini house honours it.',
+    showcase: 'legendary',
+    trade: { discount: K.discount, sellShare: K.sellShare },
+    abilities: [
+      { name: 'Paid on time', text: `Every shop sells at ${Math.round(K.discount * 100)}% off, and buys at ${Math.round(K.sellShare * 100)}% of the price instead of half.` },
+      { name: 'Samira\'s coupon', text: `Once a chapter, with Samira in the party, she cashes one of Yusuf's coupons at a shop: ${K.coupon} gold.` },
+    ],
   },
   // What the quests carry.
   { id: 'ferran_tally', name: 'Elder Ferrán\'s tally', kind: 'key', price: 0, text: 'Twelve in every hundred of the salt tax, for nine years, in Elder Ferrán\'s own hand. From his strongroom.' },

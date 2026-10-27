@@ -2900,6 +2900,27 @@ const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
+  // The Sakk of Yusuf (Oct 27): a rolled promise to pay, tied with green Dorini cord, a gold seal and an indigo thread.
+  sakk_yusuf: {
+    rows: [
+      '................',
+      '................',
+      '...kkkkkkkkkk...',
+      '..khwwwwwwwwhk..',
+      '..kwhhhhhhhhwk..',
+      '..kwwwwwwwwwwk..',
+      '..kLLLkyyyLLLk..',
+      '..kwwwkyYykwwk..',
+      '..kwwwwkykwwwk..',
+      '..kLLLLLkLLLLk..',
+      '..kwhhhhhhhUwk..',
+      '..kwwwwwwwwUwk..',
+      '..khwwwwwwwwhk..',
+      '...kkkkkkkkkk...',
+      '................',
+      '................',
+    ],
+  },
   // The Nightingale Key (Oct 27): a brass key whose bow is a small bird, wing up.
   nightingale_key: {
     rows: [

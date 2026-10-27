@@ -23,7 +23,7 @@ import { NPCS, NPC_IDS } from './npcs.ts';
 import { DOORS, OBJECTS } from './objects.ts';
 import { SPEAKERS } from './speakers.ts';
 import { SCREENS } from './kuroshi.ts';
-import { reactSecrets, stepSecrets } from './secrets.ts';
+import { cashCoupon, reactSecrets, stepSecrets } from './secrets.ts';
 
 export const CONTENT: GameContent = {
   npcs: NPCS,
@@ -47,6 +47,8 @@ export const CONTENT: GameContent = {
   // The secret items' puzzles (data/secrets.ts): the jars, the tower clock, the singing floor.
   react: reactSecrets,
   onStep: stepSecrets,
+  // The Sakk of Yusuf (Chapter 4): Samira's coupon, once a chapter, at a shop.
+  beforeShop: cashCoupon,
   formatText,
 };
 

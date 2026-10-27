@@ -123,6 +123,11 @@ export interface ItemDef {
    * them through battleBoons).
    */
   boons?: BattleBoons;
+  /**
+   * What carrying it does in every shop (a key item held: the Sakk of Yusuf, Chapter 4): this share off what a shop asks,
+   * and this share of an item's price paid for it instead of half.
+   */
+  trade?: { discount: number; sellShare: number };
 }
 
 /**
@@ -558,16 +563,40 @@ export function unequip(flags: FlagStore, rpg: RpgContent, member: MemberDef, sl
 
 export type TradeResult = 'ok' | 'no_gold' | 'bag_full' | 'not_for_sale' | 'cannot_sell';
 
-export function sellPrice(item: ItemDef): number {
-  return Math.floor(item.price / 2);
+/** The best shop terms of every key item carried (ItemDef.trade), or none. */
+export function tradeTerms(flags: FlagReader | undefined, rpg: RpgContent | undefined): { discount: number; sellShare: number } | null {
+  if (!flags || !rpg) return null;
+  let found = false;
+  let discount = 0;
+  let sellShare = 0.5;
+  for (const item of Object.values(rpg.items)) {
+    if (!item.trade || itemCount(flags, item.id) <= 0) continue;
+    found = true;
+    discount = Math.max(discount, item.trade.discount);
+    sellShare = Math.max(sellShare, item.trade.sellShare);
+  }
+  return found ? { discount, sellShare } : null;
+}
+
+/** What a shop asks for an item (less with the Sakk of Yusuf carried). */
+export function buyPrice(item: ItemDef, flags?: FlagReader, rpg?: RpgContent): number {
+  const terms = tradeTerms(flags, rpg);
+  return terms ? Math.max(1, Math.ceil(item.price * (1 - terms.discount))) : item.price;
+}
+
+/** What a shop pays for an item: half its price (more with the Sakk of Yusuf carried). */
+export function sellPrice(item: ItemDef, flags?: FlagReader, rpg?: RpgContent): number {
+  const terms = tradeTerms(flags, rpg);
+  return Math.floor(item.price * (terms ? terms.sellShare : 0.5));
 }
 
 export function buy(flags: FlagStore, rpg: RpgContent, shop: ShopDef, id: string): TradeResult {
   const item = rpg.items[id];
   if (!item || !shop.stock.includes(id)) return 'not_for_sale';
-  if (gold(flags, rpg) < item.price) return 'no_gold';
+  const price = buyPrice(item, flags, rpg);
+  if (gold(flags, rpg) < price) return 'no_gold';
   if (!addItem(flags, rpg, id)) return 'bag_full';
-  setGold(flags, rpg, -item.price);
+  setGold(flags, rpg, -price);
   return 'ok';
 }
 
@@ -576,7 +605,7 @@ export function sell(flags: FlagStore, rpg: RpgContent, id: string): TradeResult
   const item = rpg.items[id];
   if (!item || item.kind === 'key' || item.price <= 0) return 'cannot_sell';
   if (!removeItem(flags, id)) return 'cannot_sell';
-  setGold(flags, rpg, sellPrice(item));
+  setGold(flags, rpg, sellPrice(item, flags, rpg));
   return 'ok';
 }
 

@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 19,
+  "nextobjectid": 30,
   "layers": [
     {
       "id": 1,
@@ -397,6 +397,118 @@
               "value": "echo_engineer"
             }
           ]
+        },
+        {
+          "id": 5,
+          "name": "saffron_raider_1",
+          "type": "npc",
+          "x": 592,
+          "y": 336,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.tracks, !side.saffron.freed"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "saffron_raider_1"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "saffron_raider_2",
+          "type": "npc",
+          "x": 624,
+          "y": 320,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.tracks, !side.saffron.freed"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "saffron_raider_2"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "saffron_nephew",
+          "type": "npc",
+          "x": 640,
+          "y": 352,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.tracks, !side.saffron.freed"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "saffron_nephew"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "saffron_nephew_home",
+          "type": "npc",
+          "x": 48,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.freed"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "saffron_nephew"
+            }
+          ]
         }
       ]
     },
@@ -411,7 +523,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 5,
+          "id": 9,
           "name": "desert_bazaar",
           "type": "door",
           "x": 0,
@@ -451,7 +563,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 6,
+          "id": 10,
           "name": "caravan_dawn",
           "type": "trigger",
           "x": 32,
@@ -474,7 +586,7 @@
           ]
         },
         {
-          "id": 7,
+          "id": 11,
           "name": "cistern_arrive",
           "type": "trigger",
           "x": 480,
@@ -505,6 +617,75 @@
               "value": true
             }
           ]
+        },
+        {
+          "id": 12,
+          "name": "saffron_tracks_read_1",
+          "type": "trigger",
+          "x": 352,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "saffron_tracks"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.asked, !side.saffron.tracks"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "saffron_tracks_read_2",
+          "type": "trigger",
+          "x": 448,
+          "y": 288,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "saffron_tracks"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.asked, !side.saffron.tracks"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "saffron_tracks_read_3",
+          "type": "trigger",
+          "x": 512,
+          "y": 320,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "saffron_tracks"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.asked, !side.saffron.tracks"
+            }
+          ]
         }
       ]
     },
@@ -519,7 +700,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 8,
+          "id": 15,
           "name": "gate_yard",
           "type": "spawn",
           "x": 96,
@@ -554,7 +735,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 9,
+          "id": 16,
           "name": "cistern_echo",
           "type": "echo_zone",
           "x": 448,
@@ -594,7 +775,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 10,
+          "id": 17,
           "name": "cistern_pin_anchor",
           "type": "anchor",
           "x": 496,
@@ -629,7 +810,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 11,
+          "id": 18,
           "name": "old_gate_rusted",
           "type": "puzzle_object",
           "x": 496,
@@ -667,7 +848,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 19,
           "name": "old_gate_pinned",
           "type": "puzzle_object",
           "x": 496,
@@ -705,7 +886,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 20,
           "name": "city_line_running",
           "type": "puzzle_object",
           "x": 224,
@@ -738,7 +919,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 21,
           "name": "guild_sluice",
           "type": "puzzle_object",
           "x": 528,
@@ -761,7 +942,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 22,
           "name": "cistern_gate",
           "type": "puzzle_object",
           "x": 496,
@@ -792,6 +973,143 @@
               "value": true
             }
           ]
+        },
+        {
+          "id": 23,
+          "name": "saffron_tracks_1",
+          "type": "puzzle_object",
+          "x": 352,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.asked"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "camel_tracks"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "saffron_tracks_2",
+          "type": "puzzle_object",
+          "x": 448,
+          "y": 288,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.asked"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "camel_tracks"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "saffron_tracks_3",
+          "type": "puzzle_object",
+          "x": 512,
+          "y": 320,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.asked"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "camel_tracks"
+            },
+            {
+              "name": "walkable",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "saffron_camels",
+          "type": "puzzle_object",
+          "x": 656,
+          "y": 336,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "saffron_camels"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.saffron.tracks, !side.saffron.freed"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "camel"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
         }
       ]
     },
@@ -806,7 +1124,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 16,
+          "id": 27,
           "name": "dunes_north",
           "type": "encounter_zone",
           "x": 224,
@@ -829,7 +1147,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 28,
           "name": "dunes_south",
           "type": "encounter_zone",
           "x": 208,
@@ -852,7 +1170,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 29,
           "name": "dunes_east",
           "type": "encounter_zone",
           "x": 528,
@@ -886,7 +1204,7 @@
       "imageheight": 896,
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 441,
+      "tilecount": 442,
       "columns": 8,
       "margin": 0,
       "spacing": 0

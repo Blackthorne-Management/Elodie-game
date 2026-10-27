@@ -39,6 +39,7 @@ const CLOSING_FLAGS = {
   'story.noon': true,
   'story.trial_fought': true,
   'story.aldoria_arrived': true,
+  'story.caravan_dawn': true,
   'act7.complete': true,
   'act8.complete': true,
   'act9.complete': true,
@@ -76,7 +77,8 @@ describe('what they pay keeps the level curve (the levels pass)', () => {
     // Chapter 3: the feast (and its blades, the Fear route's fight) and the old lord's errand; Ar-5 is at the camp,
     // after the chapter's end, so it counts from Chapter 4.
     3: LATE_XP.feast + BATTLES.feast_blades!.rewards.xp + LATE_XP.oldErrand,
-    4: LATE_XP.arrows,
+    // Chapter 4: the saffron (and its raiders), the uncashed note, the invoice (and the factor's guards).
+    4: LATE_XP.arrows + LATE_XP.saffron + BATTLES.saffron_raiders!.rewards.xp + LATE_XP.uncashed + LATE_XP.invoice + BATTLES.factor_guards!.rewards.xp,
     7: LATE_XP.notASpy + LATE_XP.letterFloor,
     8: LATE_XP.argue + LATE_XP.littleLamps + bouts,
     9: LATE_XP.sorry + LATE_XP.patientHour + LATE_XP.tea,

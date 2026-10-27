@@ -294,6 +294,15 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   caravan_guard: n('caravan_guard', 'majlis_guard', 'Caravan guard'),
   spice_merchant: n('spice_merchant', 'spice_seller', 'Spice merchant'),
   echo_engineer: n('echo_engineer', 'echo_builder', 'Zetwal engineer'),
+  // Built Oct 27: A-2's raiders and the merchant's nephew; A-4's war-time bazaar (young Yusuf and four stalls).
+  saffron_raider_1: n('saffron_raider_1', 'caravan_raider', 'Caravan raider', 'saffron_raider_talk'),
+  saffron_raider_2: n('saffron_raider_2', 'caravan_raider', 'Caravan raider', 'saffron_raider_talk'),
+  saffron_nephew: n('saffron_nephew', 'aldoria_trader', "The spice merchant's nephew"),
+  yusuf_bazaar: n('yusuf_bazaar', 'echo_yusuf', 'Young Yusuf'),
+  war_dates: n('war_dates', 'aldoria_trader', 'Date seller'),
+  war_salt: n('war_salt', 'aldoria_trader_f', 'Salt trader'),
+  war_peppers: n('war_peppers', 'echo_cook', 'Brasador camp cook'),
+  war_indigo: n('war_indigo', 'cloth_merchant', 'Zetwal dyer'),
 
   // Chapter 5, Eightgate (Oct 22). Named: the Lord Regent, Elodie, Keeper Hollis, Coralie, young Thomas Stillwater
   // (the design). Everyone else by role (the CAPITALS rule). English, formal: no phrasebook entries here.
