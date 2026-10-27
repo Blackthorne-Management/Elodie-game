@@ -369,6 +369,10 @@ async function fullscreenToggle(browser, errors) {
   await home.goto(`${URL_BASE}?intro=0&map=test-village`);
   await waitReady(home);
   check((await home.locator('.install-screen').count()) === 0, 'the same iPhone, opened from the home screen, plays');
+  // Done with these two: three games booting at once in one context starve each other's frames (the gate's boot below
+  // timed out at 15 s on a 4-core machine, Oct 27).
+  await home.close();
+  await ip.close();
   // "Play here anyway" (owner decision, Oct 17): a browser that cannot install (a chat app's) still plays.
   await gate.locator('.install-anyway').tap();
   await waitReady(gate);
