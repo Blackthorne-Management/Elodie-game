@@ -139,3 +139,56 @@ export const HERD: readonly { id: string; a: P; b: P; c: P }[] = [
   { id: 'herd_5', a: at(22, 10), b: at(5, 11), c: at(29, 7) },
   { id: 'herd_6', a: at(24, 9), b: at(7, 11), c: at(31, 7) },
 ];
+
+// ---- Built Oct 27 (the owner, Oct 27: the side quests once after the release): S-1, S-2's race and S-4 ------------------
+
+/** The dawn after the price, until the longship sails: the fair is quiet, and Bayarmaa rides with the envoy. */
+export const ORDVIK_DAWN: Condition = { all: [{ flag: 'ally.skarragol' }, { notFlag: 'act6.complete' }] };
+
+/**
+ * S-1 Salkhi Has Opinions: the three wrongs. The foal outside the folds' rail and its mother inside (the plateau); the
+ * rival horse in the trader's corral (the fair); the horse-trader's tack for the saddle that pinches (the fair).
+ */
+export const OPINIONS = {
+  foalOut: at(29, 14),
+  foalIn: at(31, 15),
+  mother: at(31, 14),
+  rival: at(4, 24),
+  /** Where Salkhi stands to stare the rival down (outside the corral's rail). */
+  rivalRail: at(11, 24),
+} as const;
+
+/** S-2's race: the race judge by the corral, the start line, and the course once round the field. */
+export const RACE = {
+  judge: at(12, 23),
+  start: at(13, 26),
+  course: [at(28, 27), at(28, 18), at(13, 18), at(13, 26)],
+} as const;
+
+/**
+ * S-4 The Cairn of Nine Riders (SECRET-ITEMS.md 6, PUZZLES.md S-SKA): the nine cairns round the flat stone on the high
+ * ground, numbered clockwise from the north path; the riders' bridle goes under the seventh (where the Mare's eye stands
+ * at the third horn, seen from the stone). The Echo zone is the snow round the stone.
+ */
+export const CAIRNS: readonly P[] = [at(35, 2), at(37, 2), at(39, 3), at(40, 5), at(39, 7), at(37, 8), at(35, 8), at(33, 7), at(33, 3)];
+export const CAIRN_ANSWER = 7;
+export const SIGHTING = {
+  stone: PLATEAU.stone,
+  zone: { x: 34, y: 3, w: 5, h: 5 },
+  sarnai: at(33, 5),
+  rider: at(32, 6),
+} as const;
+/** Where each cairn is used from (the snow inside the ring, or beside it). */
+export const CAIRN_FRONT: readonly P[] = [at(35, 3), at(37, 3), at(38, 3), at(39, 5), at(38, 7), at(37, 7), at(35, 7), at(34, 7), at(34, 3)];
+/**
+ * The sky in the memory, a step at a time (the Echo's turning sky as a conversation: every wait turns it one step; a horn
+ * blows at 4, 8 and 12; the riders ride out after 14). Over which cairn each shape stands: the Mare (nine stars round a
+ * bright tenth, her eye), the Ox (seven stars in a yoke) and the Ship (five, a hull and a mast).
+ */
+export const SKY_STEPS = 15;
+export const HORNS: readonly number[] = [4, 8, 12];
+const ring = (n: number): number => ((((n - 1) % 9) + 9) % 9) + 1;
+export function skyAt(step: number): { mare: number; ox: number; ship: number; between: boolean } {
+  const q = Math.floor(step / 4);
+  return { mare: ring(4 + q), ox: ring(1 + 3 * q), ship: ring(9 - 2 * q), between: step % 4 !== 0 };
+}

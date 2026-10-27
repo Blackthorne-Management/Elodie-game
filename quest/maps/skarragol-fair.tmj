@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 25,
+  "nextobjectid": 26,
   "layers": [
     {
       "id": 1,
@@ -570,7 +570,7 @@
             {
               "name": "npc",
               "type": "string",
-              "value": "fair_horse"
+              "value": "fair_horse_rival"
             }
           ]
         },
@@ -670,6 +670,34 @@
               "value": "salkhi_fair"
             }
           ]
+        },
+        {
+          "id": 15,
+          "name": "race_judge",
+          "type": "npc",
+          "x": 192,
+          "y": 368,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "ally.skarragol, !act6.complete"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "race_judge"
+            }
+          ]
         }
       ]
     },
@@ -684,7 +712,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 15,
+          "id": 16,
           "name": "fair_plateau",
           "type": "door",
           "x": 720,
@@ -712,7 +740,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 17,
           "name": "fair_quay",
           "type": "door",
           "x": 160,
@@ -740,7 +768,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 18,
           "name": "fair_fjord",
           "type": "door",
           "x": 672,
@@ -778,7 +806,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "fair_moot",
           "type": "door",
           "x": 352,
@@ -806,7 +834,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 20,
           "name": "fair_saga",
           "type": "door",
           "x": 96,
@@ -846,7 +874,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 20,
+          "id": 21,
           "name": "fair_arrive",
           "type": "trigger",
           "x": 480,
@@ -881,7 +909,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 22,
           "name": "fjord_dawn",
           "type": "spawn",
           "x": 672,
@@ -938,7 +966,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 23,
           "name": "pole_fair",
           "type": "puzzle_object",
           "x": 384,
@@ -971,7 +999,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 24,
           "name": "fair_board",
           "type": "puzzle_object",
           "x": 448,
@@ -1004,7 +1032,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 25,
           "name": "white_tent",
           "type": "puzzle_object",
           "x": 544,

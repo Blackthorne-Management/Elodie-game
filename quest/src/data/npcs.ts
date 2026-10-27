@@ -376,6 +376,13 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   skald: n('skald', 'skald', 'The skald'),
   oyuun: n('oyuun', 'oyuun', 'Herder at the folds'),
   old_herder: n('old_herder', 'old_herder', 'Old herder'),
+  // Built Oct 27: S-1's foal and its mother, the bay in the corral; S-2's race judge; S-4's Sarnai at the high stones.
+  folds_foal: n('folds_foal', 'horse_dun', 'A dun foal'),
+  foal_mother: n('foal_mother', 'horse_dun', 'Its mother'),
+  fair_horse_rival: n('fair_horse_rival', 'horse_bay', 'A bay for sale'),
+  race_judge: n('race_judge', 'horn_master', 'Race judge'),
+  sarnai_cairn: n('sarnai_cairn', 'echo_sarnai', 'Sarnai Ironvow'),
+  cairn_rider: n('cairn_rider', 'echo_rider', "Sarnai's rider"),
   sarnai_rider: n('sarnai_rider', 'echo_rider', "Sarnai's rider"),
   lookout_west: n('lookout_west', 'lookout', 'Lookout'),
   lookout_east: n('lookout_east', 'lookout', 'Lookout'),

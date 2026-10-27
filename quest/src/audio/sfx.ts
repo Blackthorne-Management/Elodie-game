@@ -168,6 +168,11 @@ const RECIPES: Record<SfxId, () => Note[]> = {
   run: () => [0, 0.09, 0.18, 0.27].map((at) => ({ at, dur: 0.05, wave: 'noise' as const, from: 0, gain: 0.3 })),
   // Narration typing out (no speaker): a soft tick.
   tick: () => [{ at: 0, dur: 0.02, wave: 'triangle', from: 1800, gain: 0.12 }],
+  // A hoof on packed snow (the first-snow race's taps, Chapter 6).
+  hoof: () => [
+    { at: 0, dur: 0.12, wave: 'sine', from: 120, to: 60, gain: 0.6, release: 0.08 },
+    { at: 0, dur: 0.05, wave: 'noise', from: 0, gain: 0.35 },
+  ],
   // A hand on the skin of a drum (the rhythm lock's taps).
   drum: () => [
     { at: 0, dur: 0.18, wave: 'sine', from: 160, to: 70, gain: 0.7, release: 0.12 },

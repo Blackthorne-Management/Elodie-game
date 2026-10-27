@@ -366,6 +366,17 @@ export const PUZZLES: readonly PuzzleDef[] = [
     flags: { ...SKARRAGOL_DUSK, 'story.fjord_set_out': false, 'side.winter_stores.accepted': true, 'side.winter_stores.wolves': true, 'encounter.skarragol_story.wolves.won': true },
     goal: { flag: 'anchor.wolf_run' },
   },
+  // S-4's secret (S-SKA, built Oct 27): on the flat stone in the memory, wait out the sky to the third horn and sight the
+  // bright tenth (the Mare's eye, not the Ox's yoke or the Ship's mast); the line falls on the seventh cairn; the bridle
+  // buried there (the anchor); Salkhi drags the seventh capstone now.
+  {
+    id: 'skarragol_cairn',
+    title: 'The Cairn of Nine Riders: the Mare\'s eye at the third horn, the seventh cairn (secret item; PUZZLES.md S-SKA)',
+    map: 'skarragol-plateau',
+    spawn: 'high_stones',
+    flags: { ...SKARRAGOL_DUSK, 'story.fjord_set_out': false, 'side.cairn.accepted': true, 'clue.mare_sketch': true },
+    goal: { flag: 'item.sarnai_bell' },
+  },
   // Chapter 7 (Oct 22): Kirinoura's signature puzzle in two parts (PUZZLES.md SIG-KUR, with the second review's 3.1,
   // 3.7 and 3.8 fixes). The fog maze: Sayo's agents light the code in the memory at the gate; the six plazas are walked
   // in the present; a wrong way turns the party back to the plaza it left; walking it blind is turned back at the gap.

@@ -15,6 +15,7 @@ import { CLOCKMAKER_DAWN, CLOCK_TOWER, KEEP, LETTERS, TOWER_CLOCK, TOWNHOUSE_DOO
 import { ARGUERS, BAZAAR, HARBOR, OIL_STORE } from './jwaladesh.ts';
 import { CAMP, CHAPEL, ERRAND, FEAST, FEAST_FLAGS, TRIAL_MORNING } from './ardencia.ts';
 import { INVOICE, INVOICE_FLAGS, SAFFRON, SAFFRON_FLAGS, SAKK, SAKK_FLAGS, VAULT_NIGHT } from './aldoria.ts';
+import { CAIRN_ANSWER, CAIRN_FRONT, FAIR, OPINIONS, ORDVIK_DAWN, PLATEAU, RACE, SIGHTING } from './skarragol.ts';
 import { FLOOR_MAKER, HALL, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
 const f = (flag: string): Condition => ({ flag });
@@ -30,6 +31,10 @@ export const LATE_XP = {
   saffron: 5,
   uncashed: 5,
   invoice: 2,
+  // Chapter 6: the curve leaves almost nothing (S-1 and the race pay their pillar and gold only).
+  salkhi: 0,
+  race: 0,
+  cairn: 5,
   notASpy: 40,
   letterFloor: 60,
   argue: 30,
@@ -199,6 +204,90 @@ const BAB_AL_DHAHAB: readonly SideQuestDef[] = [
     closed: f('story.caravan_dawn'),
     closedText: 'Closed: the caravan left at first light. Samira says she will post it.',
     reward: { gold: 300, xp: LATE_XP.invoice },
+  },
+];
+
+// ---- Chapter 6 (Ordvik) ----------------------------------------------------------------------------------------------
+
+const FAIR_MAP = 'skarragol-fair';
+const PLATEAU_MAP = 'skarragol-plateau';
+const SALKHI_AT = { map: FAIR_MAP, at: { x: FAIR.salkhi.x, y: FAIR.salkhi.y + 1 } };
+
+const ORDVIK: readonly SideQuestDef[] = [
+  // S-1: Salkhi will not cross the fair until three wrongs are put right.
+  {
+    id: 'salkhi',
+    title: 'Salkhi Has Opinions',
+    giver: 'Salkhi',
+    place: 'The horse-fair',
+    level: 17,
+    summary: 'Before anyone puts her on a boat, Bayarmaa\'s grey mare wants three things in Ordvik put right. She has listed them.',
+    accepted: f('side.salkhi.accepted'),
+    available: all(ORDVIK_DAWN, f('party.bayarmaa')),
+    start: [SALKHI_AT],
+    nudge: 'Salkhi will not stop looking at Bayarmaa, Gigi. Or at us.',
+    parallel: true,
+    steps: [
+      { text: 'The foal on the wrong side of the rail at the herders\' folds.', done: f('side.salkhi.foal'), goals: [{ map: PLATEAU_MAP, at: { x: OPINIONS.foalOut.x - 1, y: OPINIONS.foalOut.y } }] },
+      { text: 'Felt for the saddle that pinches: the horse-trader.', done: f('side.salkhi.saddle'), goals: [{ map: FAIR_MAP, at: { x: FAIR.horseTrader.x, y: FAIR.horseTrader.y + 1 } }] },
+      { text: 'The bay in the trader\'s corral, and what it said about her mother.', done: f('side.salkhi.rival'), goals: [{ map: FAIR_MAP, at: { x: OPINIONS.rivalRail.x, y: OPINIONS.rivalRail.y + 1 } }] },
+      { text: 'Back to Salkhi.', done: f('side.salkhi.done'), goals: [SALKHI_AT] },
+    ],
+    done: f('side.salkhi.done'),
+    closed: f('act6.complete'),
+    closedText: 'Closed: the longship sailed. Salkhi was loaded last, with opinions.',
+    reward: { gold: 250, xp: LATE_XP.salkhi, pillar: { pillar: 'wealth', city: 'skarragol', amount: 1 } },
+  },
+  // S-2's race: the first snow, once round the field; the purse to the fleet's winter.
+  {
+    id: 'race',
+    title: 'The First-Snow Race',
+    giver: 'The race judge',
+    place: 'The horse-fair',
+    level: 17,
+    summary: 'The first snow has fallen on the fair, and the riders are at the line. By custom the purse goes to the fleet\'s winter.',
+    accepted: f('side.race.accepted'),
+    available: all(ORDVIK_DAWN, f('party.bayarmaa')),
+    start: [{ map: FAIR_MAP, at: { x: RACE.judge.x, y: RACE.judge.y + 1 } }],
+    nudge: 'The riders are lining up in the snow by the corral, Gigi. Bayarmaa is looking at them.',
+    steps: [{ text: 'Race Salkhi once round the field.', done: f('side.race.done'), goals: [{ map: FAIR_MAP, at: { x: RACE.judge.x, y: RACE.judge.y + 1 } }] }],
+    done: f('side.race.done'),
+    closed: f('act6.complete'),
+    closedText: 'Closed: the longship sailed before the race.',
+    reward: { gold: 100, xp: LATE_XP.race, pillar: { pillar: 'wealth', city: 'skarragol', amount: 1 } },
+  },
+  // S-4 (S-SKA): the old herder's riddle, the sky read from the flat stone, the bridle under the seventh cairn.
+  {
+    id: 'cairn',
+    title: 'The Cairn of Nine Riders',
+    giver: 'The old herder',
+    place: 'The high stones, on the plateau',
+    level: 17,
+    secret: true,
+    summary: 'Sarnai\'s riders hid her spare bridle "where the Mare\'s eye stood at the third horn", under one of nine cairns.',
+    accepted: f('side.cairn.accepted'),
+    available: all(f('party.bayarmaa'), { notFlag: 'act6.complete' }),
+    start: [{ map: PLATEAU_MAP, at: { x: PLATEAU.oldHerder.x + 1, y: PLATEAU.oldHerder.y } }],
+    steps: [
+      { text: 'The old herder by the high stones.', done: f('side.cairn.accepted'), goals: [{ map: PLATEAU_MAP, at: { x: PLATEAU.oldHerder.x + 1, y: PLATEAU.oldHerder.y } }] },
+      {
+        text: 'The stones remember the winter of Sarnai\'s raid. From the flat stone, find the Mare\'s eye at the third horn.',
+        done: f('clue.cairn_sighted'),
+        goals: [{ map: PLATEAU_MAP, at: { x: SIGHTING.stone.x, y: SIGHTING.stone.y + 1 } }],
+        echoGoals: [{ map: PLATEAU_MAP, at: { ...SIGHTING.stone } }],
+      },
+      {
+        text: 'Bury the bridle where the line falls.',
+        done: f('anchor.bridle_buried'),
+        goals: [{ map: PLATEAU_MAP, at: { x: SIGHTING.stone.x, y: SIGHTING.stone.y + 1 } }],
+        echoGoals: [{ map: PLATEAU_MAP, at: CAIRN_FRONT[CAIRN_ANSWER - 1]! }],
+      },
+      { text: 'Salkhi, and the seventh capstone.', done: f('side.cairn.done'), goals: [{ map: PLATEAU_MAP, at: CAIRN_FRONT[CAIRN_ANSWER - 1]! }] },
+    ],
+    done: f('side.cairn.done'),
+    closed: f('act6.complete'),
+    closedText: 'Closed: the longship sailed. The nine cairns keep their stones.',
+    reward: { gold: 350, xp: LATE_XP.cairn, pillar: { pillar: 'wealth', city: 'skarragol', amount: 2 } },
   },
 ];
 
@@ -420,7 +509,7 @@ const KINGSMERE: readonly SideQuestDef[] = [
 ];
 
 /** Every side quest built Oct 27, in chapter order. */
-export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...CENIZAL, ...BAB_AL_DHAHAB, ...KUROSHI, ...AGNIPUR, ...KINGSMERE];
+export const LATE_SIDE_QUESTS: readonly SideQuestDef[] = [...CENIZAL, ...BAB_AL_DHAHAB, ...ORDVIK, ...KUROSHI, ...AGNIPUR, ...KINGSMERE];
 
 /** Pillars that follow a quest's answers (data/rpg.ts pillarRules): J-1's Fear by the blade, or Influence by the word. */
 export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [

@@ -16,7 +16,23 @@ export function barText(bar: readonly Mark[]): string {
   return bar.join(', ');
 }
 
+/** The first-snow race (S-2's race, Chapter 6, built Oct 27): Salkhi's stride, two quick and one long, round the field. */
+export const SALKHI_STRIDE: readonly Mark[] = ['short', 'short', 'long', 'short', 'short', 'long', 'short', 'short', 'long', 'short', 'short', 'long'];
+
 export const RHYTHMS: Readonly<Record<string, RhythmDef>> = {
+  salkhi_race: {
+    id: 'salkhi_race',
+    title: 'The first-snow race',
+    noun: 'hoofbeat',
+    sound: 'hoof',
+    song: SALKHI_STRIDE,
+    bpm: 120,
+    slowBpm: 84,
+    toleranceMs: 200,
+    success: { 'side.race.won': true },
+    successDialogue: 'race_won',
+    failDialogue: 'race_lost',
+  },
   record_lock: {
     id: 'record_lock',
     song: AREITO_BARS.flat(),

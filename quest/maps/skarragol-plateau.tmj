@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 25,
+  "nextobjectid": 53,
   "layers": [
     {
       "id": 1,
@@ -453,6 +453,146 @@
               "value": "sarnai_rider"
             }
           ]
+        },
+        {
+          "id": 6,
+          "name": "sarnai_cairn",
+          "type": "npc",
+          "x": 528,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "sarnai_cairn"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "cairn_rider",
+          "type": "npc",
+          "x": 512,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "cairn_rider"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "foal_out",
+          "type": "npc",
+          "x": 464,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.salkhi.accepted, !side.salkhi.foal"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "folds_foal"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "foal_in",
+          "type": "npc",
+          "x": 496,
+          "y": 240,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.salkhi.foal, !act6.complete"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "folds_foal"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "foal_mother",
+          "type": "npc",
+          "x": 496,
+          "y": 224,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.salkhi.accepted, !act6.complete"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "foal_mother"
+            }
+          ]
         }
       ]
     },
@@ -467,7 +607,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 6,
+          "id": 11,
           "name": "plateau_fair",
           "type": "door",
           "x": 0,
@@ -507,7 +647,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 7,
+          "id": 12,
           "name": "plateau_arrive",
           "type": "trigger",
           "x": 128,
@@ -545,7 +685,7 @@
           ]
         },
         {
-          "id": 8,
+          "id": 13,
           "name": "store_wolves",
           "type": "trigger",
           "x": 528,
@@ -566,6 +706,34 @@
               "value": "side.winter_stores.accepted, !side.winter_stores.wolves"
             }
           ]
+        },
+        {
+          "id": 14,
+          "name": "sky_stone",
+          "type": "trigger",
+          "x": 576,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "sky_stone"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "side.cairn.accepted"
+            }
+          ]
         }
       ]
     },
@@ -580,7 +748,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 9,
+          "id": 15,
           "name": "seat_road",
           "type": "spawn",
           "x": 128,
@@ -603,7 +771,7 @@
           ]
         },
         {
-          "id": 10,
+          "id": 16,
           "name": "store",
           "type": "spawn",
           "x": 576,
@@ -624,6 +792,29 @@
               "value": "down"
             }
           ]
+        },
+        {
+          "id": 17,
+          "name": "high_stones",
+          "type": "spawn",
+          "x": 576,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            }
+          ]
         }
       ]
     },
@@ -638,7 +829,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 11,
+          "id": 18,
           "name": "store_echo",
           "type": "echo_zone",
           "x": 560,
@@ -664,6 +855,29 @@
               "value": "store_echo_return"
             }
           ]
+        },
+        {
+          "id": 19,
+          "name": "cairn_echo",
+          "type": "echo_zone",
+          "x": 544,
+          "y": 48,
+          "width": 80,
+          "height": 80,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.cairn.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "cairn_echo"
+            }
+          ]
         }
       ]
     },
@@ -678,7 +892,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 12,
+          "id": 20,
           "name": "wolf_run",
           "type": "anchor",
           "x": 656,
@@ -699,6 +913,29 @@
               "value": "slope_boulder"
             }
           ]
+        },
+        {
+          "id": 21,
+          "name": "bridle_anchor",
+          "type": "anchor",
+          "x": 560,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.bridle_buried"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "cairn_then_7"
+            }
+          ]
         }
       ]
     },
@@ -713,7 +950,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 13,
+          "id": 22,
           "name": "seat_road_back",
           "type": "puzzle_object",
           "x": 128,
@@ -741,7 +978,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 23,
           "name": "winter_store",
           "type": "puzzle_object",
           "x": 576,
@@ -774,7 +1011,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 24,
           "name": "winter_store_echo",
           "type": "puzzle_object",
           "x": 576,
@@ -807,7 +1044,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 25,
           "name": "slope_boulder",
           "type": "puzzle_object",
           "x": 656,
@@ -845,7 +1082,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 26,
           "name": "gully_boulder_echo",
           "type": "puzzle_object",
           "x": 640,
@@ -878,7 +1115,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 27,
           "name": "boulder_wall",
           "type": "puzzle_object",
           "x": 640,
@@ -916,7 +1153,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 28,
           "name": "gully_open",
           "type": "puzzle_object",
           "x": 672,
@@ -944,7 +1181,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 29,
           "name": "sighting_stone",
           "type": "puzzle_object",
           "x": 576,
@@ -970,9 +1207,456 @@
               "value": "sighting_stone"
             },
             {
-              "name": "solid",
+              "name": "walkable",
               "type": "bool",
               "value": true
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "cairn_1",
+          "type": "puzzle_object",
+          "x": 560,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "cairn_then_1",
+          "type": "puzzle_object",
+          "x": 560,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_1"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "cairn_2",
+          "type": "puzzle_object",
+          "x": 592,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "name": "cairn_then_2",
+          "type": "puzzle_object",
+          "x": 592,
+          "y": 32,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_2"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 34,
+          "name": "cairn_3",
+          "type": "puzzle_object",
+          "x": 624,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "name": "cairn_then_3",
+          "type": "puzzle_object",
+          "x": 624,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_3"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 36,
+          "name": "cairn_4",
+          "type": "puzzle_object",
+          "x": 640,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 37,
+          "name": "cairn_then_4",
+          "type": "puzzle_object",
+          "x": 640,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_4"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 38,
+          "name": "cairn_5",
+          "type": "puzzle_object",
+          "x": 624,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 39,
+          "name": "cairn_then_5",
+          "type": "puzzle_object",
+          "x": 624,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_5"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 40,
+          "name": "cairn_6",
+          "type": "puzzle_object",
+          "x": 592,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 41,
+          "name": "cairn_then_6",
+          "type": "puzzle_object",
+          "x": 592,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_6"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "name": "cairn_7",
+          "type": "puzzle_object",
+          "x": 560,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.bridle_buried"
+            }
+          ]
+        },
+        {
+          "id": 43,
+          "name": "cairn_7_marked",
+          "type": "puzzle_object",
+          "x": 560,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.bridle_buried"
+            }
+          ]
+        },
+        {
+          "id": 44,
+          "name": "cairn_then_7",
+          "type": "puzzle_object",
+          "x": 560,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_7"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 45,
+          "name": "cairn_8",
+          "type": "puzzle_object",
+          "x": 528,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 46,
+          "name": "cairn_then_8",
+          "type": "puzzle_object",
+          "x": 528,
+          "y": 112,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_8"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "name": "cairn_9",
+          "type": "puzzle_object",
+          "x": 528,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_now_9"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            }
+          ]
+        },
+        {
+          "id": 48,
+          "name": "cairn_then_9",
+          "type": "puzzle_object",
+          "x": 528,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "cairn_then_9"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
             }
           ]
         }
@@ -989,7 +1673,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 49,
           "name": "plateau_w",
           "type": "encounter_zone",
           "x": 16,
@@ -1012,7 +1696,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 50,
           "name": "plateau_n",
           "type": "encounter_zone",
           "x": 160,
@@ -1035,7 +1719,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 51,
           "name": "plateau_track",
           "type": "encounter_zone",
           "x": 160,
@@ -1058,7 +1742,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 52,
           "name": "plateau_s",
           "type": "encounter_zone",
           "x": 16,

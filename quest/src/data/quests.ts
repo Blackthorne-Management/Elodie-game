@@ -2240,6 +2240,13 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     title: 'The treasurer is alive',
     text: '"I am alive. I am held where the ash falls. Tell her I am alive." In the treasurer\'s own hand, dated this year. Where the ash falls: unknown.',
   },
+  // S-4 (built Oct 27).
+  {
+    id: 'mare_sketch',
+    when: 'clue.mare_sketch',
+    title: 'The Mare (Bayarmaa\'s sketch)',
+    text: 'Nine stars round a bright tenth: the tenth is her eye. "Where the Mare\'s eye stood at the third horn": the riders\' bridle.',
+  },
   // Ar-3 and Ar-5 (built Oct 27).
   {
     id: 'salt_tax',

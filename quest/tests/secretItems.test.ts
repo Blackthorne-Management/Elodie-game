@@ -12,7 +12,7 @@ import { TOWER_CLOCK } from '../src/data/aldermoor.ts';
 import { WICK_MEASURES, WICK_POURS } from '../src/data/jwaladesh.ts';
 import { INFORMANT_WALK, NIGHTINGALE } from '../src/data/kuroshi.ts';
 import { Battle, battleParty, type BattleEvent, type PartyEntry } from '../src/engine/battle.ts';
-import type { EnemyDef } from '../src/engine/battle.ts';
+import type { EnemyDef, SkillDef } from '../src/engine/battle.ts';
 import { FlagStore } from '../src/engine/flags.ts';
 import { battleBoons, equip } from '../src/engine/rpg.ts';
 import { clockDistance, clockFace, clockState, heardFlag, jars, measure, melodyWalks, sealedAmount, stepFloor, windClock } from '../src/engine/secrets.ts';
@@ -185,6 +185,40 @@ describe('the Patient Hour (SECRET-ITEMS.md 7)', () => {
     expect(new Set(before)).toEqual(new Set(['yari', 'gianna']));
     guardUntil(b, () => b.actor?.key === 'gianna');
     expect(b.canUse(b.actor!, b.actor!.skills.find((s) => s.id === 'stop_the_clock')!)).toBe(false);
+  });
+});
+
+describe('Sarnai\'s Bridle Bell (SECRET-ITEMS.md 6, S-4)', () => {
+  it('a legendary relic that brings Call the Herd to whoever wears it', () => {
+    const flags = new FlagStore({ 'item.sarnai_bell': 1, 'party.yari': true, 'story.yari_asked': true });
+    const yariDef = RPG.members.find((m) => m.id === 'yari')!;
+    expect(equip(flags, RPG, yariDef, 'sarnai_bell')).toBe('ok');
+    const party = battleParty(flags, RPG, SKILL_BOOK);
+    expect(party.find((p) => p.id === 'yari')!.skills.some((s) => s.id === 'call_the_herd')).toBe(true);
+  });
+
+  it('Call the Herd: no SP, every foe hit off ATK, each stunned by a chance (not always, not never); once a battle', () => {
+    const herd = SKILL_BOOK.gear.call_the_herd!;
+    expect(herd.sp).toBe(0);
+    expect(herd.target).toBe('allEnemies');
+    let stunned = 0;
+    let hit = 0;
+    for (let seed = 1; seed <= 30; seed++) {
+      const b = new Battle(def, [yari(), gianna()], [ENEMIES.boar!, ENEMIES.boar!, ENEMIES.boar!], [], { seed });
+      b.start();
+      for (let i = 0; i < 20 && b.actor?.key !== 'yari' && !b.outcome; i++) b.act({ kind: 'guard' });
+      if (b.actor?.key !== 'yari') continue;
+      const yariNow = b.actor!;
+      (yariNow.skills as unknown as SkillDef[]).push(herd);
+      const ev = b.act({ kind: 'skill', skill: 'call_the_herd' });
+      hit += ev.filter((e) => e.kind === 'damage' && e.from === 'yari').length;
+      stunned += ev.filter((e) => e.kind === 'status' && e.status === 'stunned' && e.on).length;
+      for (let i = 0; i < 20 && b.actor?.key !== 'yari' && !b.outcome; i++) b.act({ kind: 'guard' });
+      if (b.actor?.key === 'yari') expect(b.canUse(b.actor, herd)).toBe(false);
+    }
+    expect(hit).toBeGreaterThanOrEqual(60);
+    expect(stunned).toBeGreaterThan(0);
+    expect(stunned).toBeLessThan(hit);
   });
 });
 

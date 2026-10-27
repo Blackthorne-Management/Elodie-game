@@ -2921,6 +2921,27 @@ const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
+  // Sarnai's Bridle Bell (Oct 27): a small bronze bell on a loop of leather brow-band.
+  sarnai_bell: {
+    rows: [
+      '................',
+      '..kkkkkkkkkkkk..',
+      '..kBBBBBBBBBBk..',
+      '..kkkkkk.kkkkk..',
+      '.......kk.......',
+      '......kEEk......',
+      '.....kEoyEk.....',
+      '....kEoyyyEk....',
+      '....kEoyyyEk....',
+      '...kEoyyyyyEk...',
+      '...kEEEEEEEEk...',
+      '...kkkkkkkkkk...',
+      '.......kk.......',
+      '.......kk.......',
+      '................',
+      '................',
+    ],
+  },
   // The Nightingale Key (Oct 27): a brass key whose bow is a small bird, wing up.
   nightingale_key: {
     rows: [

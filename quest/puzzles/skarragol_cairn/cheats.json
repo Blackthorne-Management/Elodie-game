@@ -1,0 +1,6 @@
+{
+  "never in the memory: Salkhi drags the seventh capstone now (stones)": ["left", "down", "confirm", "skip"],
+  "the bright tenth sighted at the second horn (Sarnai: the third counts), then the seventh cairn": ["echo", "skip", "up*2", "confirm*11", "down", "confirm", "skip", "down*2", "left", "down", "confirm", "skip", "echo", "skip", "confirm", "skip"],
+  "the yoke sighted at the third horn (the Ox, not the Mare), then the seventh cairn": ["echo", "skip", "up*2", "confirm*16", "down*2", "confirm", "skip", "down*2", "left", "down", "confirm", "skip", "echo", "skip", "confirm", "skip"],
+  "waiting out the whole night on the stone (the riders ride out), then the seventh cairn": ["echo", "skip", "up*2", "skip", "down*2", "left", "down", "confirm", "skip", "echo", "skip", "confirm", "skip"]
+}

@@ -298,6 +298,7 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   skald: s('skald', 'Skald'),
   oyuun: s('oyuun', 'Herder'),
   old_herder: s('old_herder', 'Old herder'),
+  race_judge: s('race_judge', 'Race judge', 'horn_master'),
   lookout: s('lookout', 'Lookout'),
   sarnai: s('sarnai', 'Sarnai', 'echo_sarnai'),
   sarnai_rider: s('sarnai_rider', 'Rider', 'echo_rider'),

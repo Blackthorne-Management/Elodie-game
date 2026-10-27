@@ -364,3 +364,97 @@ describe('A-5 Invoice for the Crown (the quay, the night before the caravan)', (
     }
   });
 });
+
+// ---- Chapter 6 ----------------------------------------------------------------------------------------------------
+
+/** Ordvik at dawn after the price: out of the Moot onto the fair. */
+function ordvikDawn(): Sim {
+  const sim = calm(simAt('ordvik-horn'));
+  settleRewards(sim.logic.state.flags, RPG, SIDE_QUESTS);
+  expect(sim.logic.state.flags.isSet('ally.skarragol')).toBe(true);
+  sim.run(['goto 17,25']);
+  expect(sim.logic.map.id).toBe('skarragol-fair');
+  return sim;
+}
+
+describe('S-1 Salkhi Has Opinions (Ordvik, at dawn)', () => {
+  it('the foal at the folds, the felt for the saddle, the bay in the corral; then no more sighing at Azzy; +1 Wealth', () => {
+    const sim = ordvikDawn();
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 25,12', 'up', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, quest('salkhi'))).toBe('active');
+    // The foal, on the plateau.
+    sim.run(['goto 45,15']);
+    expect(sim.logic.map.id).toBe('skarragol-plateau');
+    sim.run(['goto 28,14', 'right', 'confirm', 'skip']);
+    expect(flags.isSet('side.salkhi.foal')).toBe(true);
+    sim.run(['goto 0,15']);
+    // The felt, from the horse-trader.
+    flags.set('gold', 500);
+    sim.run(['goto 20,21', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.isSet('side.salkhi.saddle')).toBe(true);
+    // The bay in the corral.
+    sim.run(['goto 5,24', 'left', 'confirm', 'skip']);
+    expect(flags.isSet('side.salkhi.rival')).toBe(true);
+    sim.run(['goto 25,12', 'up', 'confirm', 'skip']);
+    expect(flags.isSet('side.salkhi.done')).toBe(true);
+    const wealth = localPillar(flags, RPG, 'wealth', 'skarragol');
+    expect(paid(flags, 'salkhi')).toBe(LATE_XP.salkhi);
+    expect(localPillar(flags, RPG, 'wealth', 'skarragol') - wealth).toBe(1);
+  });
+});
+
+describe('S-2\'s race: the first snow (Ordvik, at dawn)', () => {
+  it('the judge by the corral; the stride tapped right; the grey mare by a nose; the purse to the fleet\'s winter', () => {
+    const sim = ordvikDawn();
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 12,24', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sim.rhythms.at(-1)).toBe('salkhi_race');
+    for (const f of ['side.race.won', 'side.race.done']) expect(flags.isSet(f), f).toBe(true);
+    const wealth = localPillar(flags, RPG, 'wealth', 'skarragol');
+    expect(paid(flags, 'race')).toBe(LATE_XP.race);
+    expect(localPillar(flags, RPG, 'wealth', 'skarragol') - wealth).toBe(1);
+  });
+
+  it('a lost race plays its own scene and can be run again', () => {
+    const sim = ordvikDawn();
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 12,24', 'up']);
+    // The browser reports a stride tapped wrong (the simulator always taps it right).
+    flags.set('side.race.accepted', true);
+    sim.logic.finishRhythm('salkhi_race', false);
+    expect(sim.logic.dialogueId).toBe('race_lost');
+    sim.run(['skip']);
+    expect(flags.isSet('side.race.done')).toBe(false);
+    sim.run(['up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.isSet('side.race.done')).toBe(true);
+  });
+});
+
+describe('S-4 The Cairn of Nine Riders (secret: Sarnai\'s Bridle Bell)', () => {
+  it('the old herder with Bayarmaa; the sky from the stone at the third horn; the seventh cairn; Salkhi and the capstone', () => {
+    const sim = ordvikDawn();
+    const flags = sim.logic.state.flags;
+    expect(mysteryQuests(SIDE_QUESTS, flags).map((q) => q.id)).not.toContain('cairn');
+    sim.run(['goto 45,15', 'goto 32,6', 'left', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, quest('cairn'))).toBe('active');
+    expect(flags.isSet('clue.mare_sketch')).toBe(true);
+    sim.run(['goto 36,7', 'up']);
+    sim.run(readJson<string[]>('puzzles/skarragol_cairn/solution.json'));
+    for (const f of ['clue.cairn_sighted', 'anchor.bridle_buried', 'side.cairn.done', 'item.sarnai_bell']) expect(flags.isSet(f), f).toBe(true);
+    const wealth = localPillar(flags, RPG, 'wealth', 'skarragol');
+    expect(paid(flags, 'cairn')).toBe(LATE_XP.cairn);
+    expect(localPillar(flags, RPG, 'wealth', 'skarragol') - wealth).toBe(2);
+  });
+
+  it('the route walks past Ordvik\'s three: none taken, and all close when the longship sails', () => {
+    const flags = simAt('chapter6-end').logic.state.flags;
+    for (const id of ['salkhi', 'race', 'cairn']) expect(sideQuestStatus(flags, quest(id)), id).toBe('unknown');
+  });
+});

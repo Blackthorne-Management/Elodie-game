@@ -75,7 +75,8 @@ export class RhythmPanel {
     this.ticksPlayed = 0;
     this.flashRed = 0;
     this.tapped = false;
-    this.title.setText(slow ? 'The drum song (slow)' : 'The drum song');
+    const title = def.title ?? 'The drum song';
+    this.title.setText(slow ? `${title} (slow)` : title);
     this.root.setVisible(true);
     this.draw();
   }
@@ -117,7 +118,7 @@ export class RhythmPanel {
   private record(t: number): void {
     const def = this.def!;
     this.taps.push(Math.round(t));
-    audio.sfx('drum');
+    audio.sfx(def.sound === 'hoof' ? 'hoof' : 'drum');
     // Light the mark this tap belongs to (the judge decides at the end; this is only the picture).
     let best = -1;
     for (let i = 0; i < this.due.length; i++) {
@@ -159,7 +160,7 @@ export class RhythmPanel {
     const left = Math.ceil(COUNT_IN_BEATS - this.elapsed / this.beatMs);
     this.status.setText(
       left > 0
-        ? `Ready... ${left}\nTap A (or the screen) as each drum reaches the line.`
+        ? `Ready... ${left}\nTap A (or the screen) as each ${def.noun ?? 'drum'} reaches the line.`
         : `${this.hit.size} of ${this.due.length}\nLong marks are two beats, short ones one. B to stop.`,
     );
   }

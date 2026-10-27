@@ -16,6 +16,7 @@ import { JWALADESH_QUEST_DIALOGUE } from './dialogue/jwaladeshQuests.ts';
 import { ALDERMOOR_DIALOGUE } from './dialogue/aldermoor.ts';
 import { ALDERMOOR_QUEST_DIALOGUE } from './dialogue/aldermoorQuests.ts';
 import { SKARRAGOL_DIALOGUE } from './dialogue/skarragol.ts';
+import { SKARRAGOL_QUEST_DIALOGUE } from './dialogue/skarragolQuests.ts';
 import { XARAGUA_QUEST_DIALOGUE } from './dialogue/xaraguaQuests.ts';
 import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
 import { MUSTER_DIALOGUE, MUSTER_OVERLAYS, overlay } from './dialogue/zetwalMuster.ts';
@@ -167,6 +168,7 @@ const BASE: Record<string, DialogueScript> = {
   ...Object.fromEntries(XARAGUA_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(SEAT_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(SKARRAGOL_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(SKARRAGOL_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(KUROSHI_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(KUROSHI_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(JWALADESH_DIALOGUE.map((d) => [d.id, d])),

@@ -182,6 +182,8 @@ export interface SkillDef {
   bribe?: boolean;
   /** Its statuses land on a boss only this often (0 to 1); on other foes always (Grito de Guerra: 0.5). */
   bossChance?: number;
+  /** Its statuses land on each target only this often (0 to 1), boss or not (Call the Herd: 0.3). */
+  statusChance?: number;
   /**
    * Kagemimi (Haru, Chapter 7): the target's next move is told, and a foe in disguise is found out: the real one is
    * named and Marked, and the paper ones stop stepping in front of him for the rest of the fight (EnemyDef.disguise).
@@ -1638,6 +1640,7 @@ export class Battle {
           events.push({ kind: 'text', text: `${t.name} shrugs it off.` });
           continue;
         }
+        if (skill.statusChance !== undefined && this.rng.next() >= skill.statusChance) continue;
         for (const st of skill.statuses) events.push(...this.giveStatus(t, st));
       }
     }

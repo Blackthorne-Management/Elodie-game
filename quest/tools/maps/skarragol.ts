@@ -10,7 +10,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
-import { FAIR, FJORD, FJORD_OPEN, HERD, MOOT, PLATEAU, QUAY } from '../../src/data/skarragol.ts';
+import { CAIRNS, CAIRN_ANSWER, FAIR, FJORD, FJORD_OPEN, HERD, MOOT, OPINIONS, PLATEAU, QUAY, RACE, SIGHTING } from '../../src/data/skarragol.ts';
 
 const GRASS = 'ა';
 const ROAD = 'ბ';
@@ -107,8 +107,30 @@ export function skarragolPlateau(): MapSource {
     { layer: 'echo_zones', name: 'store_echo', x: z.x, y: z.y, w: z.w, h: z.h, props: { if: 'item.sun_locket, side.winter_stores.wolves', onEcho: 'store_echo_enter', onReturn: 'store_echo_return' } },
     npc('cache_rider_a', 33, 23, 'right', { npc: 'sarnai_rider', era: 'echo' }),
     npc('cache_rider_b', 39, 24, 'left', { npc: 'sarnai_rider', era: 'echo' }),
-    // S-4 after the release: the flat stone in the ring of cairns.
-    obj('sighting_stone', PLATEAU.stone.x, PLATEAU.stone.y, { kind: 'sighting_stone', solid: true, era: 'both', dialogue: 'sighting_stone' }),
+    // S-4 The Cairn of Nine Riders (secret, built Oct 27): the flat stone (stood on: in the memory the sky is read from it),
+    // the snow round it the Echo zone, Sarnai and a rider fifty years ago, the nine cairns now and then (the seventh's the
+    // anchor: the riders' bridle buried under it).
+    obj('sighting_stone', PLATEAU.stone.x, PLATEAU.stone.y, { kind: 'sighting_stone', walkable: true, era: 'both', dialogue: 'sighting_stone' }),
+    trigger('sky_stone', PLATEAU.stone.x, PLATEAU.stone.y, { dialogue: 'sky_stone', era: 'echo', if: 'side.cairn.accepted' }),
+    { layer: 'spawns', name: 'high_stones', x: PLATEAU.stone.x, y: PLATEAU.stone.y + 2, props: { facing: 'up', era: 'present' } },
+    { layer: 'echo_zones', name: 'cairn_echo', x: SIGHTING.zone.x, y: SIGHTING.zone.y, w: SIGHTING.zone.w, h: SIGHTING.zone.h, props: { if: 'item.sun_locket, side.cairn.accepted', onEcho: 'cairn_echo' } },
+    npc('sarnai_cairn', SIGHTING.sarnai.x, SIGHTING.sarnai.y, 'right', { era: 'echo' }),
+    npc('cairn_rider', SIGHTING.rider.x, SIGHTING.rider.y, 'right', { era: 'echo' }),
+    ...CAIRNS.flatMap((c, i): ObjSpec[] => {
+      const n = i + 1;
+      const now = n === CAIRN_ANSWER
+        ? [
+            obj(`cairn_${n}`, c.x, c.y, { era: 'present', if: '!anchor.bridle_buried', dialogue: `cairn_now_${n}` }),
+            obj(`cairn_${n}_marked`, c.x, c.y, { era: 'present', if: 'anchor.bridle_buried', dialogue: `cairn_now_${n}` }),
+          ]
+        : [obj(`cairn_${n}`, c.x, c.y, { era: 'present', dialogue: `cairn_now_${n}` })];
+      return [...now, obj(`cairn_then_${n}`, c.x, c.y, { era: 'echo', dialogue: `cairn_then_${n}` })];
+    }),
+    { layer: 'anchors', name: 'bridle_anchor', x: CAIRNS[CAIRN_ANSWER - 1]!.x, y: CAIRNS[CAIRN_ANSWER - 1]!.y, props: { object: `cairn_then_${CAIRN_ANSWER}`, flag: 'anchor.bridle_buried' } },
+    // S-1 Salkhi Has Opinions (built Oct 27): the foal on the wrong side of the folds' rail, and its mother inside.
+    npc('foal_out', OPINIONS.foalOut.x, OPINIONS.foalOut.y, 'right', { npc: 'folds_foal', if: 'side.salkhi.accepted, !side.salkhi.foal' }),
+    npc('foal_in', OPINIONS.foalIn.x, OPINIONS.foalIn.y, 'up', { npc: 'folds_foal', if: 'side.salkhi.foal, !act6.complete' }),
+    npc('foal_mother', OPINIONS.mother.x, OPINIONS.mother.y, 'left', { if: 'side.salkhi.accepted, !act6.complete' }),
     { layer: 'encounters', name: 'plateau_w', x: 1, y: 1, w: 7, h: 14, props: { table: 'winter_plateau', if: 'story.skarragol_arrived' } },
     { layer: 'encounters', name: 'plateau_n', x: 10, y: 1, w: 18, h: 13, props: { table: 'winter_plateau', if: 'story.skarragol_arrived' } },
     { layer: 'encounters', name: 'plateau_track', x: 10, y: 14, w: 19, h: 3, props: { table: 'winter_plateau', if: 'story.skarragol_arrived' } },
@@ -166,11 +188,13 @@ export function skarragolFair(): MapSource {
     // The debate corner on the trading mats (data/debates.ts skarragol_oath): either one starts it.
     npc('debate_sky_rider', FAIR.skyRider.x, FAIR.skyRider.y, 'right'),
     npc('debate_witness_elder', FAIR.witness.x, FAIR.witness.y, 'left'),
-    npc('fair_horse_a', 4, 24, 'right', { npc: 'fair_horse' }),
+    npc('fair_horse_a', OPINIONS.rival.x, OPINIONS.rival.y, 'right', { npc: 'fair_horse_rival' }),
     npc('fair_horse_b', 7, 25, 'left', { npc: 'fair_horse' }),
     npc('fair_horse_c', 5, 27, 'up', { npc: 'fair_horse' }),
     npc('fair_trader', 33, 23, 'up'),
     salkhi('salkhi_fair', FAIR.salkhi.x, FAIR.salkhi.y, 'down', 'story.fair_seen, !act6.complete'),
+    // S-2's race (built Oct 27): the race judge by the corral at dawn, after the price.
+    npc('race_judge', RACE.judge.x, RACE.judge.y, 'down', { if: 'ally.skarragol, !act6.complete' }),
   ];
   return { id: 'skarragol-fair', present: g, echo: g.clone(), objects };
 }

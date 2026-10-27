@@ -242,6 +242,8 @@ export const SFX_IDS = [
   'run',
   'tick',
   'drum',
+  // The first-snow race (S-2, Chapter 6, Oct 27): a hoof on packed snow.
+  'hoof',
   // The Game Over screen: the low note as the party falls, and the goddess's soft bell.
   'fall',
   'bell',

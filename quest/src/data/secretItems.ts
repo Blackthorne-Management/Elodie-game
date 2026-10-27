@@ -81,6 +81,22 @@ export const SECRET_ITEM_LIST: readonly ItemDef[] = [
       { name: 'Samira\'s coupon', text: `Once a chapter, with Samira in the party, she cashes one of Yusuf's coupons at a shop: ${K.coupon} gold.` },
     ],
   },
+  // S-4 The Cairn of Nine Riders (Chapter 6, built Oct 27): a legendary relic like the Patient Hour, worn by anyone (it rings
+  // loudest on a rider: the herd answers ATK); Call the Herd is its once-a-battle skill.
+  {
+    id: 'sarnai_bell',
+    name: 'Sarnai\'s Bridle Bell',
+    kind: 'gear',
+    slot: 'relic',
+    rarity: 'legendary',
+    price: 0,
+    stats: { atk: 3, spd: 2 },
+    growth: { atk: 0.3, spd: 0.2 },
+    skill: 'call_the_herd',
+    text: 'A small bronze bell on a rider\'s bridle, from under the seventh cairn on the high stones. Sarnai\'s riders hid it fifty winters ago.',
+    showcase: 'legendary',
+    abilities: [{ name: 'Call the Herd', text: 'Once per battle, no SP: wild steppe horses stampede through every foe, and each may lose its next turn.' }],
+  },
   // What the quests carry.
   { id: 'ferran_tally', name: 'Elder Ferrán\'s tally', kind: 'key', price: 0, text: 'Twelve in every hundred of the salt tax, for nine years, in Elder Ferrán\'s own hand. From his strongroom.' },
   { id: 'sorry_letters', name: "Edmund's letters", kind: 'key', price: 0, text: 'Five apologies in Edmund\'s good hand, each sealed in grey wax, each addressed to someone he has hit. One is to a goose.' },

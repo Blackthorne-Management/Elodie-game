@@ -15,6 +15,10 @@ export interface RhythmDef {
   slowBpm: number;
   /** How far a tap may be from its beat and still count (ms). */
   toleranceMs: number;
+  /** What the panel calls it, and its marks (default: "The drum song", "drum"), and the tap's sound (default: the drum). */
+  title?: string;
+  noun?: string;
+  sound?: string;
   /** Flags set when it is played right, and the scenes that follow either way. */
   success: Readonly<Record<string, boolean>>;
   successDialogue: string;

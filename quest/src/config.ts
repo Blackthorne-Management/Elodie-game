@@ -311,6 +311,8 @@ export const SECRET_ITEMS = {
   wick: { surgeCost: 4, dawnAt: 9, dawnHeal: 0.3, calmFloor: 1 },
   /** The Sakk of Yusuf (A-4, Chapter 4): this much off in every shop, this share paid for what is sold, Samira's coupon. */
   sakk: { discount: 0.15, sellShare: 0.6, coupon: 300 },
+  /** Sarnai's Bridle Bell (S-4, Chapter 6): Call the Herd's power off ATK, and each foe's chance to lose its next turn. */
+  bell: { power: 220, stunChance: 0.3 },
 } as const;
 /** Anissa's Light (owner decision, Oct 15): every N of Gianna's turns, Anissa restores this share of her max SP. */
 export const ANISSA_SP_EVERY = 3;

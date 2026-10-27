@@ -5,6 +5,7 @@
 
 import { WAR_BATTLES, WAR_ENEMIES } from './warBattles.ts';
 import { CLAIM_BATTLES, CLAIM_ENEMIES } from './claimBattles.ts';
+import { SECRET_ITEMS } from '../config.ts';
 import { ANISSA_SP_EVERY, BATTLE_ACTIVE, BRIBE_GOLD_PER_LEVEL, ENCOUNTER_GOLD_PER_LEVEL, SPARK_ON_GUARD, SURGE_COST, TRIAL_TURNS_AFTER_FINISHER } from '../config.ts';
 import { ENCOUNTERS } from './encounters.ts';
 import { ambushXp, type BattleDef, type EnemyDef, type EnemyMove, type SkillDef } from '../engine/battle.ts';
@@ -272,6 +273,13 @@ export const GEAR_SKILLS: Readonly<Record<string, SkillDef>> = {
     text: 'Once per battle: every fallen ally rises with 30% HP, and Anissa gains Spark.',
   },
   // The Patient Hour (SECRET-ITEMS.md 7, built Oct 27): the party goes again before any foe, once a battle.
+  // Sarnai's Bridle Bell (S-4, Chapter 6, built Oct 27; SECRET-ITEMS.md 6): once a battle, no SP, the wild herd through
+  // every foe off the wearer's ATK, and each foe may lose its next turn.
+  call_the_herd: {
+    id: 'call_the_herd', name: 'Call the Herd', sp: 0, kind: 'damage', stat: 'atk', power: SECRET_ITEMS.bell.power, target: 'allEnemies',
+    statuses: ['stunned'], statusChance: SECRET_ITEMS.bell.stunChance, once: true,
+    text: 'Once per battle: the bell rings, and wild steppe horses stampede through every foe. Each may lose its next turn.',
+  },
   stop_the_clock: {
     id: 'stop_the_clock', name: 'Stop the Clock', sp: 0, kind: 'status', power: 0, target: 'self', once: true, stopClock: true,
     text: 'Once per battle: the hands stop, and every fighter in the party acts once more before any foe.',

@@ -13,6 +13,7 @@
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { FAIR, FJORD, HORN_DAY_DONE, MOOT, PLATEAU } from '../skarragol.ts';
+import { OPINION_BRANCHES, OPINION_NODES, SADDLE_BRANCHES, SADDLE_NODES } from './skarragolQuests.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -221,7 +222,12 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('ordvik_food_talk', [say('ordvik_food', 'Sain baina uu? Broth for the cold, jerky for the road.', { translation: 'Hello (are you well?)' })]),
   simple('ordvik_furrier_talk', [say('ordvik_furrier', 'Heill! Fur, felt and a good sabre. The plateau takes the soft ones first.', { translation: 'Hail!' })]),
-  simple('ordvik_horses_talk', [say('ordvik_horses', 'Bayarlalaa for looking. Tack, rings, and treats the grey mare will tell you about.', { translation: 'Thank you' })]),
+  // S-1 Salkhi Has Opinions (built Oct 27): the felt for her saddle, before the shop opens.
+  script('ordvik_horses_talk', {
+    start: { lines: [], next: [...SADDLE_BRANCHES, { to: 'plain' }] },
+    plain: { lines: [say('ordvik_horses', 'Bayarlalaa for looking. Tack, rings, and treats the grey mare will tell you about.', { translation: 'Thank you' })] },
+    ...SADDLE_NODES,
+  }),
   simple('plunder_store_talk', [say('plunder_store', 'Heill. Everything here was raided fair and square, envoy. Ask the raiding jarl.', { translation: 'Hail.' })]),
 
   // ---- Salkhi: a grey mare placed on the outdoor maps (never in a scene with Anissa's lines) ------------------------
@@ -229,17 +235,20 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     start: {
       lines: [],
       next: [
+        // S-1 Salkhi Has Opinions (built Oct 27): at dawn, after the price.
+        ...OPINION_BRANCHES,
         { if: { flag: 'story.standard_planted' }, to: 'after' },
         { if: { flag: 'story.standard_home' }, to: 'dawn' },
         { if: { flag: 'party.bayarmaa' }, to: 'joined' },
         { to: 'waiting' },
       ],
     },
+    ...OPINION_NODES,
     waiting: { lines: [say(SK, 'I am the only one at this fair who was not accused of anything. Note it down.')] },
     joined: {
       lines: [
         say(SK, 'She chose you. I would have asked more questions.'),
-        { if: { notFlag: 'choice.azzy_ordu' }, speaker: SK, text: '(The mare looks at Azzy and sighs, at length.)' },
+        { if: { all: [{ notFlag: 'choice.azzy_ordu' }, { notFlag: 'side.salkhi.done' }] }, speaker: SK, text: '(The mare looks at Azzy and sighs, at length.)' },
         { if: { flag: 'choice.azzy_ordu' }, speaker: SK, text: 'The grandson said no to two hundred horses. I respect that less than you would think.' },
       ],
     },
@@ -248,7 +257,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
   }),
   simple('salkhi_plateau_talk', [
     say(SK, 'That foal is on the wrong side of the rail from its mother, and nobody on this plateau can count.'),
-    { if: { notFlag: 'choice.azzy_ordu' }, speaker: SK, text: '(She looks at Azzy and sighs.)' },
+    { if: { all: [{ notFlag: 'choice.azzy_ordu' }, { notFlag: 'side.salkhi.done' }] }, speaker: SK, text: '(She looks at Azzy and sighs.)' },
   ]),
   simple('salkhi_shore_talk', [say(SK, 'I do not do ice. I did it once. Ask her grandmother. I will be here, being right.')]),
   simple('salkhi_quay_talk', [say(SK, 'A boat. Of course a boat. Load me last, so I can complain the whole length of the quay.')]),
@@ -657,10 +666,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     },
     after: { lines: [say('oyuun', 'The wolves go round now. The grain stays. Tell whoever leaves it: the herders say thank you.')] },
   }),
-  simple('old_herder_talk', [
-    say('old_herder', 'Nine riders went out on the ice with Sarnai and never came home. Nine cairns. The stone in the middle watches the sky.'),
-    say('old_herder', 'When the sky is right, come back and I will tell you how it is read.'),
-  ]),
+  // old_herder_talk: data/dialogue/skarragolQuests.ts (S-4 The Cairn of Nine Riders, built Oct 27).
   simple('sighting_stone', [nar('A flat stone in a ring of nine cairns, its face scored with lines like star paths. The snow has not settled on it.')]),
   script('store_wolves', {
     start: { lines: [], next: [{ if: { flag: 'encounter.skarragol_story.wolves.won' }, to: 'after' }, { to: 'come' }] },
