@@ -59,6 +59,13 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   Names*** (base SP 16, so 12 for Gianna): once per battle, every Bound or fallen ally rises with 30% HP, and Anissa
   gains +2 Calm and +3 Spark. Bonus: the Yaguana name on Zetwal's stones earns +2 Influence in Xaraguá when Yari sees
   it (Chapter 10, proposal).
+- **The bonus, built (Oct 27; Claude's call on the staging):** during the Muster (`story.muster_begun` until the fleet
+  sails), with the Quill (`item.solange_quill`), the name stones on the Temple island play a scene: Yari walks to the
+  seventh stone (the carved sun, no name: the stonecutter would not cut a Yaguana one), Gianna reads her the scout's
+  brother's name from Solange's list, and Yari turns to her: "A Yaguana name, on Zetwal's list, for fifty years. And
+  nobody at home ever knew it was kept." / "They will say it in Yucayeque. Out loud." +2 Influence in Xaraguá
+  (`muster.quill_stone`), once. The name itself is never written out (a real Taíno name wants the cultural reviewer).
+  Z-4 is after the release, so until it lands nobody holds the Quill and the stones stay as built.
 - **Why it fits:** saying the names of the dead aloud is Zetwal's small rebellion (the built book *Why We Say Their
   Names*). The seventh stone answers the blank seventh line on the Marshal's stone: Zetwal's first act of making room
   for Xaraguá.

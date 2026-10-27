@@ -145,6 +145,9 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'guava', name: 'Guava', kind: 'consumable', price: 10, heals: 15, text: 'Pink inside, sweet and a little sour. Restores 15 HP.' },
   { id: 'fish_stew', name: 'Fish stew', kind: 'consumable', price: 25, heals: 20, healTurns: 3, text: 'Snapper and peppers in a gourd bowl. Restores 20 HP, a little at a time.' },
   { id: 'mango', name: 'Ripe mango', kind: 'consumable', price: 10, heals: 15, text: 'From the plaza stalls. Restores 15 HP.' },
+  // The beach market's second stock, once the harbor is Yucayeque's (Chapter 11; Claude's call, Oct 27).
+  { id: 'snapper_casabe', name: 'Snapper on casabe', kind: 'consumable', price: 55, heals: 80, text: 'Grilled snapper laid on a round of casabe, the first catch out of a free harbor. Restores 80 HP.' },
+  { id: 'soursop_juice', name: 'Soursop juice', kind: 'consumable', price: 40, restores: 20, text: 'Soursop pressed with lime in a gourd, cold from the spring. Restores 20 SP.' },
 
   // Ardencia (Chapter 3): Cenizal's tavern, and the key item from the treasurer's daughter.
   { id: 'pan_de_ceniza', name: 'Pan de ceniza', kind: 'consumable', price: 25, heals: 35, text: 'Dark bread baked in the ash of the forges. Restores 35 HP.' },
@@ -368,6 +371,8 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'stillwater_greatcoat', level: 20, rarity: 'uncommon', name: 'Stillwater greatcoat', kind: 'gear', slot: 'armor', armor: 'heavy', price: 820, stats: { def: 14, hp: 24, spd: -1 }, text: 'A long grey greatcoat with a mail lining. It has been apologised in, many times.' },
   // Pòdlimyè at the Muster (Chapter 10): the Harbor forge's robe for an archivist at war (tier 24).
   { id: 'muster_robe', level: 24, rarity: 'uncommon', name: 'Indigo campaign robe', kind: 'gear', slot: 'armor', armor: 'robe', price: 900, stats: { def: 11, sp: 26, mag: 7 }, text: 'Zetwal indigo over a quilted lining, cut short for climbing gangways. Tati Coco would have something to say about the hem.' },
+  // Yucayeque's bow-maker once the harbor is taken (Chapter 11; Claude's call, Oct 27): cotton for the canoes (tier 24).
+  { id: 'harbor_cotton', level: 24, rarity: 'uncommon', name: 'Harbor cotton', kind: 'gear', slot: 'armor', armor: 'leather', price: 950, stats: { def: 16, hp: 26, spd: 3 }, text: 'Yaguana cotton quilted three times for the canoes, with a teal border. It dries before you reach the beach.' },
   { id: 'oilcloth_coat', level: 24, rarity: 'uncommon', name: 'Oilcloth coat', kind: 'gear', slot: 'armor', armor: 'leather', price: 1000, stats: { def: 17, hp: 28, spd: 1 }, text: 'Kingsmere\'s answer to the weather: waxed cloth over quilting. Nothing gets in, eventually.' },
   { id: 'iron_cuirass', level: 4, rarity: 'uncommon', name: 'Iron cuirass', kind: 'gear', slot: 'armor', armor: 'heavy', price: 300, stats: { def: 8, hp: 14, spd: -1 }, text: 'Plates over padding. Slows you down; stops what you cannot dodge.' },
 
@@ -403,6 +408,8 @@ const ITEM_LIST: ItemDef[] = [
   { id: 'law_seal_brooch', name: 'Law-seal brooch', kind: 'gear', slot: 'charm', level: 22, rarity: 'uncommon', price: 350, stats: { def: 3, hp: 8 }, text: 'A silver brooch with the Witness\'s seal. Kingsmere lawyers wear it to court. Thieves dislike it.' },
   { id: 'steel_ring', name: 'Plain steel ring', kind: 'gear', slot: 'charm', level: 22, rarity: 'uncommon', price: 320, stats: { atk: 3, def: 3 }, text: 'A plain steel ring, very well made. The jeweller says plain is the hardest thing to make.' },
   { id: 'charity_brooch', name: "The Crown's charity", kind: 'gear', slot: 'charm', level: 24, rarity: 'uncommon', price: 500, stats: { def: 4, mag: 4 }, text: 'The Almoner\'s brooch: the Crown\'s charities, a small closed hand in silver. Taken in the Assize.' },
+  // Yucayeque's carver once the harbor is taken (Chapter 11; Claude's call, Oct 27): his gun for the fleet's children.
+  { id: 'carved_cannon_charm', name: 'Carved cannon', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 480, stats: { atk: 3, spd: 3 }, text: 'A thumb-sized cannon in dark wood, on a cotton cord. It points out to sea, the carver says, and always will.' },
   { id: 'tassel_charm', name: 'Tassel of the standard', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { atk: 4, hp: 6 }, text: 'A horse-tail tassel cut from the Ironvow standard Hrafn sold. Bayarmaa tied it on herself.' },
   { id: 'paper_seal_charm', name: 'Paper seal', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { mag: 4, spd: 2 }, text: 'A Suzumori file seal, folded small. Haru says it is definitely not a spy\'s.' },
   { id: 'wick_ring', name: 'Wick-ring', kind: 'gear', slot: 'charm', level: 26, rarity: 'uncommon', price: 500, stats: { atk: 4, sp: 4 }, text: 'A brass ring from the steward\'s lamp, where the wick went. Vikram wears it on his thumb.' },
@@ -607,6 +614,13 @@ export const SHOPS: Readonly<Record<string, ShopDef>> = {
   xaragua_food: { greeting: 'Guatiao! What will it be?', id: 'xaragua_food', name: 'Cassava-bread stall', city: 'xaragua', stock: ['casabe', 'guava', 'fish_stew'] },
   xaragua_carver: { greeting: 'Guatiao! What will it be?', id: 'xaragua_carver', name: "Carver's mat", city: 'xaragua', stock: ['shell_beads', 'carved_charm'] },
   xaragua_bows: { greeting: 'Guatiao! What will it be?', id: 'xaragua_bows', name: "Bow-maker's stall", city: 'xaragua', stock: ['ironwood_bow', 'cotton_tunic'] },
+  // Once the harbor is Yucayeque's (Chapter 11, story.harbor_taken; Claude's call, Oct 27: a shop has no condition, so the
+  // market's three come back to the burned stalls as second placements selling these): the free harbor's first catch,
+  // the carver's cannon (tier 26) and the bow-maker's cotton (tier 24), with the old stock beside them. No tier-28 piece
+  // (the outline section 5: Hale's axe is the war's one; Eightgate's outfitter stocks the rest).
+  xaragua_food_free: { greeting: 'Guatiao! The harbor is ours. Eat!', id: 'xaragua_food_free', name: 'Cassava-bread stall', city: 'xaragua', stock: ['snapper_casabe', 'soursop_juice', 'casabe', 'fish_stew', 'guava'] },
+  xaragua_carver_free: { greeting: 'Guatiao. Mind the soot on the mat.', id: 'xaragua_carver_free', name: "Carver's mat", city: 'xaragua', stock: ['carved_cannon_charm', 'carved_charm', 'shell_beads'] },
+  xaragua_bows_free: { greeting: 'Guatiao! Cotton for the canoes.', id: 'xaragua_bows_free', name: "Bow-maker's stall", city: 'xaragua', stock: ['harbor_cotton', 'cotton_tunic', 'ironwood_bow'] },
   zetwal_cloth: { id: 'zetwal_cloth', name: 'Cloth row', city: 'zetwal', stock: ['woven_tunic', 'temple_robe'] },
   // Cenizal (Chapter 3): the smith, the ring-maker and the tavern in the Upper Town; the Free Brasador
   // quartermaster at the camp sells the smith's armour, for a party that could not buy it before noon (review 3.7).
@@ -876,6 +890,13 @@ export const RPG: RpgContent = {
     // the contract board's count of the soldiers (+1 Influence).
     { pillar: 'influence', city: 'zetwal', flags: ['choice.crew_spared', 'muster.counted'], each: 1 },
     { pillar: 'fear', city: 'zetwal', flags: ['choice.crew_broken'], each: 2 },
+    // The contract boards' dispatches (Chapters 10 to 12, Oct 27): the Speaker's dispatch to the Temple island, salt to the
+    // hill camp, the Compact's roll to the north gate (+1 Influence each where it is delivered); and the Quill's Chapter 10
+    // bonus (SECRET-ITEMS.md 1: Yari sees the Yaguana name kept on Zetwal's stones, +2 Influence in Xaraguá).
+    { pillar: 'influence', city: 'zetwal', flags: ['muster.dispatch_done'], each: 1 },
+    { pillar: 'influence', city: 'xaragua', flags: ['war.salt_done'], each: 1 },
+    { pillar: 'influence', city: 'xaragua', flags: ['muster.quill_stone'], each: 2 },
+    { pillar: 'influence', city: 'seat', flags: ['claim.dispatch_done'], each: 1 },
   ],
   startingGold: STARTING_GOLD,
   bagLimit: BAG_LIMIT,

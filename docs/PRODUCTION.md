@@ -10,7 +10,7 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 12 and the Epilogue).
+and ticks items off here as they land. Last updated **Oct 27** (the remaining print files).
 
 **Physical game (BoardGamesMaker)**
 - [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
@@ -23,8 +23,15 @@ and ticks items off here as they land. Last updated **Wed Oct 22** (Chapter 12 a
 - [ ] Card back.
 - [ ] 32 character portraits (none yet in `art/characters/`; prompts in `docs/art/CHARACTER-PROMPTS.md`).
 - [x] Box and card boxes: `print/box-12.5x12.5x2.pdf`, `print/card-box-action.pdf`, `print/card-box-tarot.pdf` (Oct 15).
-- [ ] Print files still to build: player boards, standees, tokens (Heart, Grudge, resource, reminder),
-  Legacy cards, score pad, rulebook PDF, reference cards.
+- [x] Print files built Oct 27 (all rebuildable, text from `src/data`): player boards (`npm run print:mats`),
+  standees (`print:standees`), tokens (`print:tokens`), Legacy cards (`print:legacy`), reference cards
+  (`print:reference`), score pad (`print:scorepad`), rulebook (`print:rulebook`, 16 pages). Proof sheets:
+  `print/preview-{mats,standees,tokens,legacy,reference,rulebook}.jpg`. Rebuild the rulebook, reference and Legacy
+  cards after the Oct 31 text freeze.
+- [ ] **Before order B (Mon Nov 3), confirm on BoardGamesMaker's product pages** (assumed sizes, flagged in "Print
+  file specs" below): player-board size and material, standee size and stand, 1" round tokens, rulebook US Letter,
+  Legacy cards at tarot size. Standees switch from crests to the Gen I portraits with one line in
+  `src/assets.config.ts` (`PRINT_ART.standeeFace`) once the portraits are in.
 - [ ] **Fri Oct 31:** rules and card text freeze. **Mon Nov 3:** approve proofs, order B (expedited).
 
 **Digital game**
@@ -122,7 +129,13 @@ answer fits). Noted: Chapter 10's steps pay 40 XP; the route ends at 25, the lin
 headless route the Dorini are the least paid and sail. **Fixed (Oct 22, on the Chapter 11 branch):** the bookshelf id
 `hall_records` was used twice (Zetwal's Hall and the Seat's), so the books `lore.zetwal_quiet_tract` and
 `lore.zetwal_harbor_tolls` could never be read in Pòdlimyè; Zetwal's shelf is now `hall_harbor_records`, and
-`tests/books.test.ts` checks every shelf id is unique. Not built yet: the Quill bonus at the stone, the board's dispatches, the second look at the two books.
+`tests/books.test.ts` checks every shelf id is unique. **Built Oct 27** (the three pieces listed as not built): the
+board's dispatch (the Hall's chief courier gives the Speaker's dispatch, the acolyte at the Gaze lamp takes it, +1
+Influence in Zetwal), the second look at the two books (*The Sun Accord (copy)* after Patricio's answer, *Ash Wars: A
+Temple Record* after the four accounts: a line of Gianna's after the last page, or "(again)" on a book already read), and
+the Quill bonus at the name stones (with Solange's Quill, Yari walks to the seventh stone and hears the scout's
+brother's name from Solange's list, +2 Influence in Xaraguá; it waits on Z-4, which gives the Quill after the release);
+`tests/dispatches.test.ts` and `tests/books.test.ts` hold them.
 
 **Quest, Chapter 11 (Oct 22):** The War of the Harbor is built on branch `chapter11` (from `chapter10`; the war's
 layers on nine Xaraguá maps, no new map: the landing in seven columns, the gun on the headland, the flank in four
@@ -136,8 +149,15 @@ the owner: a human read of every Rael, Benny, Nancy, Anaco, Yari, Azzy and Aniss
 passive now reads "He kept the oath, whatever it cost", matching Rael's private line); Hale's look (`docs/quest/ART-PROMPTS.md`
 20); the war's music track (`docs/quest/AUDIO-PROMPTS.md`, a slot plays the Mountain Path's until then). Noted: Chapter
 11's steps pay 58 XP; the route ends at 28, the line without side quests at 26; the gardens' road is a long walk (a
-step and a question on each side), not a door. Not built yet: the market's second stock once the harbor is taken,
-*The First Oath*'s second look, the board's dispatches, the voyage to Eightgate as a scene. The smoke test walks Chapter
+step and a question on each side), not a door. **Built Oct 27** (the four pieces listed as not built): the market's
+second stock once the harbor is taken (the baker, the carver and the bow-maker back at their burned stalls with a line
+each, then new stock: snapper on casabe and soursop juice, a carved cannon charm (tier 26), harbor cotton (tier 24),
+the old stock beside it, no tier-28 piece; Claude's call, `docs/quest/design/CAPITALS.md` 2); *The First Oath*'s second
+look (after the harbor is taken) and *The Charter (seized copy)*'s (after Thorne is taken); the board's dispatch (salt
+from the beach pans: the camp leader on the sand before the gun, the behique at the hill camp by day, +1 Influence in
+Xaraguá; Claude's call); the voyage to Eightgate as a scene (after the card, the fleet sails north up the strait to
+Ardencia's strand, `xaragua_ardencia` on Trust with Ardencia's sails leading, `xaragua_ardencia_strike` with the
+trader leading; then the Ash Road narration at the Ardencia Gate). The smoke test walks Chapter
 11 in a browser (Oct 22, after the merge onto Chapter 10): its fights won, the story flags, the Turn's route and the
 volleys left agree with the simulator's. **Fixed (Oct 22, a game bug the smoke found):** a fighter whose Attack opens
 their weapon moves had no working Attack while Hushed (Hale's Sealbearer hushed Rael and the fight stalled); Attack now
@@ -161,8 +181,14 @@ shares); looks for the Master of the Chairs, the treasurer's daughter and the co
 (a slot plays the Hall's until then). Still open: question 13 (what old Patricio knows; the build fits either answer).
 Noted: Chapter 12's steps pay 120 XP; the route ends on 30 (the cap), the line without side quests on 28; the Regent
 was tuned down from the outline's adds (the owner's HP x6, ATK x1.6, MAG x2.0 stand) and runs 40 actions at 30, 41.6
-at 28 with the roster four. Not built yet: the books' second looks, the voyage to Eightgate as a scene, the board's
-dispatches. The smoke test walks Chapter 12 and the Epilogue in a browser (Oct 22, after the merge; from
+at 28 with the roster four. **Built Oct 27** (the three pieces listed as not built): the books' second looks
+(*Petitions of Breach* after the original is found, *The Council of Eight* after the Claim stands; the outline's line for
+the second, "never used. Used.", contradicts the built book, which has the council sitting until the war, so it reads
+"Fifty years of dust on eight chairs. Not this morning.": Claude's call), the voyage to Eightgate as a scene (Chapter
+11's paragraph), the board's dispatch (the Concourse's contract board pins the Hall's roll of the eight houses for the
+company at the north gate; Tío Joaquin reads it at the Ardencia Gate, +1 Influence in Eightgate; offered only while Free
+Brasador stands there, until the Hearing is called; Claude's call). None of the dispatches or looks is on the arrow's
+gate. The smoke test walks Chapter 12 and the Epilogue in a browser (Oct 22, after the merge; from
 `chapter11-end`): the story flags agree with the simulator's, the Regent won, Accord Stability 95 before the verdict and
 100 after the pardon, the Just Throne, The End, the cast and the credits, the title, and the save marking the quest
 complete. No game bugs found; one test fix (a Challenge's `wounds.*` are the browser fight's HP, which the simulator does
@@ -192,18 +218,45 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 | 2 | **Game board** | 24" × 24" quad-fold, 7200 px | `print/board-24in.png` (`npm run print:board`) | Map ✔ (needs the 4096 file), seats or crests |
 | 3 | **Action deck** | 126 cards, 63 × 88 mm, one shared back | `print/cards/card-*.png` (`npm run print`) | Card art 1–126, card back |
 | 4 | **Character cards** (generation cards) | 32 tarot cards (8 houses × Gen I–IV), own back | `print/characters/*.png` (`npm run print`) | 32 portraits, crests |
-| 5 | **Player boards** | 8, one per house: spaces for Influence, Fear and Wealth tokens, Heart Tokens and Grudges, the turn summary | `print/mats/*.png` (to build) | Crests |
-| 6 | **Pawns** | 8 standees on plastic stands, the house's Gen I portrait (or crest) | `print/standees/*.png` (to build) | Portraits or crests |
-| 7 | **Heart Tokens** | 32 round chipboard tokens (3 per player + spares) | `print/tokens/*.png` (to build) | — |
-| 8 | **Grudge Tokens** | 40 round tokens, 5 per house, crest on the front, plain back (also used for the house lottery) | `print/tokens/*.png` (to build) | Crests |
-| 9 | **Resource tokens** | 180 round double-sided chipboard tokens, 60 each of Influence (crown), Fear (crossed swords) and Wealth (coins): **1** on the front, **×5** on the back | `print/tokens/*.png` (to build) | Icons ✔ |
+| 5 | **Player boards** | 8, one per house: spaces for Influence, Fear and Wealth tokens, Heart Tokens and Grudges, the turn summary | `print/mats/mat-<house>.png`, `print/mats/mats.pdf` (`npm run print:mats`) | Crests ✔ |
+| 6 | **Pawns** | 8 standees on plastic stands, the house's Gen I portrait (or crest) | `print/standees/standee-<house>-{front,back}.png`, `standees.pdf` (`npm run print:standees`; crests now) | Portraits or crests ✔ |
+| 7 | **Heart Tokens** | 32 round chipboard tokens (3 per player + spares) | `print/tokens/heart-*.png` (`npm run print:tokens`) | — |
+| 8 | **Grudge Tokens** | 40 round tokens, 5 per house, crest on the front, plain back (also used for the house lottery) | `print/tokens/grudge-<house>-front.png`, `grudge-back.png` | Crests ✔ |
+| 9 | **Resource tokens** | 180 round double-sided chipboard tokens, 60 each of Influence (crown), Fear (crossed swords) and Wealth (coins): **1** on the front, **×5** on the back | `print/tokens/resource-*.png` | Icons ✔ |
 | 9b | **Round marker** | 1 wooden cube or pawn for the board's round track | stock piece | — |
-| 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 Grito de Guerra markers, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/*.png` (to build) | — |
-| 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive, except Brasador's, which reads "+1 Fear on kill." (rules-decisions 87; `legacyPassive` in `src/data/houses.ts`). Yaguana's Ancestor's Voice draws one blind from the houses not at the table | `print/legacy/*.png` (to build) | Crests |
-| 10c | **Score pad** | 50-sheet pad, one column per player: kills and Reckonings (read by Sudden Death, Reinado de Cenizas and Elodie's Reckoning; the fallen-houses column was dropped in rules-decisions 87) | `print/scorepad.pdf` (to build) | — |
+| 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 Grito de Guerra markers, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/reminder-*.png`; counts and files in `print/tokens/tokens.json` | — |
+| 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive, except Brasador's, which reads "+1 Fear on kill." (rules-decisions 87; `legacyPassive` in `src/data/houses.ts`). Yaguana's Ancestor's Voice draws one blind from the houses not at the table | `print/legacy/legacy-<house>.png`, `legacy-cards.pdf` (`npm run print:legacy`) | Crests ✔ |
+| 10c | **Score pad** | 50-sheet pad, one column per player: kills and Reckonings (read by Sudden Death, Reinado de Cenizas and Elodie's Reckoning; the fallen-houses column was dropped in rules-decisions 87) | `print/scorepad.pdf` (`npm run print:scorepad`) | — |
 | 11 | **Dice** | 2 six-sided dice (stock, or custom-printed faces) | stock / `print/dice/*.png` | — |
-| 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`): the **core rules** (about 1,600 words, what a first game needs) first, then the **appendix** (rules-decisions 87) | `print/rulebook.pdf` (to build) | Board, card and portrait art for pictures |
-| 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards), printed from the **Reference Card** section of `src/data/rules.ts`: the turn, the ◎ Target card list and the lasting-card durations (these live on the card, not in the booklet; rules-decisions 87). | `print/characters/reference-*.png` (to build) | — |
+| 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`): the **core rules** (about 1,600 words, what a first game needs) first, then the **appendix** (rules-decisions 87) | `print/rulebook.pdf` (`npm run print:rulebook`): 16 pages (cover, contents, core rules, appendix with The Eight Houses and Every Card, back cover) | Board ✔, cards ✔ (portraits when painted) |
+| 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards), printed from the **Reference Card** section of `src/data/rules.ts`: the turn, the ◎ Target card list and the lasting-card durations (these live on the card, not in the booklet; rules-decisions 87). | `print/characters/reference-<house>.png`, `print/reference-cards.pdf` (`npm run print:reference`) | — |
+
+## Print file specs (built Oct 27)
+
+Every file is 300 dpi or more with BoardGamesMaker's 1/8" bleed and a further 1/8" safe margin, except the tarot
+cards, which match the character cards. Where the docs give no BoardGamesMaker template size, Claude picked the
+standard one (marked **assumed**); check each against the product page before ordering.
+
+| Component | Cut size | File size | Product (assumed where marked) |
+|---|---|---|---|
+| Player boards | 10" × 7" landscape | 3075 × 2175 px (10.25" × 7.25" at 300 dpi) | **Assumed** "Custom Size Game Board", non-folding. **Material open:** 8 boards on 2 mm chipboard stack 16 mm, which with the board, rulebook and score pad leaves too little of the box's 2" for the containers (the Action card box alone is 24 mm). Safer: the thinnest board BoardGamesMaker offers, or a card-stock sheet. |
+| Standees | 1" × 2" | 375 × 675 px per face, front and back | **Assumed** chipboard standee in the 23 × 19 × 12 mm plastic stand (one board square is about 23.4 mm). The bottom 1/2" sits in the stand. |
+| Tokens (all 279) | 1" (25.4 mm) circle | 375 × 375 px per face | **Assumed** "Custom Circle Game Tiles 1\" Micro Size". Every token has two faces (Grudge Tokens share one plain back, so the lottery stays blind). |
+| Legacy cards | Tarot 2.75" × 4.75" | 1050 × 1752 px (about 350 dpi) | Printed with the character cards (same deck, same back): Claude's call, see below. |
+| Reference cards | Tarot 2.75" × 4.75" | 1050 × 1752 px | With the character cards, one per house (the same text, the house's crest). |
+| Score pad | 8" × 5" landscape | 2475 × 1575 px, black only | "Custom Score Pad Large Size" (80 gsm, black print), 8 player columns. |
+| Rulebook | US Letter 8.5" × 11" | PDF pages 8.75" × 11.25", vector text | **Assumed** size; saddle-stitched, 16 pages (a multiple of 4; the script adds Notes pages when needed). |
+
+**Calls made (Claude's call, flagged for the owner):**
+- **Legacy cards at tarot size**, not "small": they ride in the tarot box, and Yaguana's blind draw needs the same
+  back as the cards it is drawn with. A separate mini-card deck would need its own back and product.
+- **House Yaguana's own Legacy card** prints Ancestor's Voice, which no one can ever hold (Yaguana is at the table
+  whenever it is used). It is printed because the spec says 8; leaving it out is an option.
+- **Heart Tokens and reminder tokens** show the same face on both sides; resource tokens read "1" and "×5" (the rule
+  guide says "1" and "5").
+- **Player boards** show a spot for each once-per-game power (for its Used token; Dorini has none) and the Specter
+  marker, and three Grudge spots (hold more beside the board).
+- **The rulebook** includes Every Card, as the rule guide's appendix does; the reference card section stays off it.
 
 ## Containers (what holds what)
 
@@ -256,5 +309,6 @@ the deck is complete either way.
 ## Reordering a copy
 1. Sign in to BoardGamesMaker, open **My Projects** (saved designs).
 2. Add the saved board project and the saved order-B projects to the cart; set the quantity.
-3. If any art or rule changed since, rebuild the files here first (`npm run print`, `npm run print:board`) and replace
+3. If any art or rule changed since, rebuild the files here first (`npm run print`, `npm run print:board` and the
+   other `print:*` scripts in `package.json`) and replace
    the images in the affected projects before ordering.

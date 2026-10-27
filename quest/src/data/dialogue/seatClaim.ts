@@ -1396,8 +1396,63 @@ const HEARING_PEOPLE: DialogueScript[] = [
 const CH12: Condition = has('act11.complete');
 const one = (id: string, speaker: string, text: string): MusterOverlay => ({ id, nodes: { m_start: { lines: [say(speaker, text)] } }, when: CH12 });
 
+// ---- The contract board's dispatch (the outline 7.4: "after the release the board gets the Seat's errands"; Claude's call,
+// Oct 27): over the Regent's notice the Hall has pinned a job, the Compact's roll of the eight houses for the company that
+// holds the north gate (Joaquin's "Nobody comes in behind you that the Compact doesn't name", now in writing). Optional, from
+// the arrival until the Hearing is called; only while Free Brasador stands at its gate. +1 Influence in Eightgate.
+
+const UNTIL_HEARING: Condition = all(CH12, not('story.hearing_called'));
+
+const BOARD: MusterOverlay = {
+  id: 'seat_contract_board',
+  nodes: {
+    m_start: {
+      lines: [],
+      next: [
+        { if: has('claim.dispatch_done'), to: 'm_done' },
+        { if: has('claim.dispatch_carried'), to: 'm_carrying' },
+        { if: has('army.free_brasador'), to: 'm_offer' },
+        { to: '__base' },
+      ],
+    },
+    m_offer: {
+      lines: [
+        nar('The contract board. Over the Regent\'s violet notice, a new paper in the Hall\'s own hand:'),
+        nar('"Wanted: a runner to carry the Compact\'s roll of the eight houses to the company at the north gate. By hand."'),
+      ],
+      choices: [
+        { text: 'Take the roll.', set: { 'claim.dispatch_carried': true }, next: 'm_taken' },
+        { text: 'Leave it.' },
+      ],
+    },
+    m_taken: { lines: [nar('(The contract board\'s job: the roll to Tío Joaquin, at the Ardencia Gate.)')] },
+    m_carrying: { lines: [nar('The roll is for the north gate. Tío Joaquin holds it with Free Brasador.')] },
+    m_done: { lines: [nar('The contract board. The Hall\'s paper is gone. The Regent\'s notice is still pinned over the rest.')] },
+  },
+  when: UNTIL_HEARING,
+};
+
+const ROLL_AT_GATE: MusterOverlay = {
+  id: 'gate_free_brasador_talk',
+  nodes: {
+    m_start: {
+      lines: [
+        act([{ do: 'face', actor: 'npc:gate_free_brasador_captain', facing: 'player' }], 'joaquin_muster', 'A paper from the Hall? For me?'),
+        nar('Tío Joaquin unrolls it at the gate and reads it slowly, one house at a time, his finger on each name.'),
+        say('joaquin_muster', 'Eight houses. Every one named. Nobody comes in behind you that this doesn\'t name. Now I have it in writing.', {
+          set: { 'claim.dispatch_done': true },
+        }),
+        nar('(The contract board\'s job: done. +1 Influence in Eightgate.)'),
+      ],
+    },
+  },
+  when: all(has('claim.dispatch_carried'), not('claim.dispatch_done')),
+};
+
 /** Chapter 12's lines over the built people of Eightgate (each plays while Chapter 12 is on). */
 export const CLAIM_OVERLAYS: readonly MusterOverlay[] = [
+  BOARD,
+  ROLL_AT_GATE,
   one('seat_market_talk', 'seat_market', 'Seven armies at the gates, and every one of them wants bread. Something from every capital, at Claim prices.'),
   one('seat_outfitter_talk', 'seat_outfitter', 'Madam. The Hall is cold at the bell, Claim or no Claim. I have nothing new; the old is warm.'),
   one('embassy_porter_talk', 'embassy_porter', 'Embassy of Al-Doria. The envoy is at the Hall. For once, so is everyone else.'),

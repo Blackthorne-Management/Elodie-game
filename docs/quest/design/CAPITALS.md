@@ -131,6 +131,10 @@ and Lookout (22 to 25); Quiet Crown Zealot x2 (22 to 25). Proposal: add Mangrove
 
 **Contract board (jobs, proposal; Chapter 10):** clear the Cane Road for the army's carts; carry dispatches to the
 Temple Island; count the soldiers at the Muster (pays Influence).
+*Built (Oct 27):* "carry dispatches to the Temple Island": the Hall's chief courier ("not one bird for the Temple island")
+gives the Speaker's dispatch, by hand; the acolyte at the Gaze lamp reads it ("The lamp to burn every night the fleet is
+at sea.") and the job pays +1 Influence in Zetwal (`muster.dispatch_done`). Optional, from the landing until the fleet
+sails. Zetwal has no board object: the courier names the job, as the town guard names the count.
 
 **Signature puzzle:** SIG-ZET, the Chain Bridge (built). Tutorial: M-ZET-1, the night orders (built).
 
@@ -251,9 +255,15 @@ the war table: Crown Marine, Musketeer and Officer groups (25 to 28).
 | Carver | "Guatiao." | Carved charm (resist spirit damage; the guide's "zemi charm": a sacred object to the Taíno, so the name and look need the cultural reviewer's yes), shell beads (SPD +2) |
 | Bow-maker | "Guatiao!" | Ironwood bow (tier 4), cotton tunic (tier 4), hamaca (Taíno: *hamaca*; a hammock to rest anywhere on the map once) |
 | Lamp-oil seller (X-2) | "Guatiao." | Lamp oil (a puzzle key item), torches |
+| The market's three once the harbor is taken (Chapter 11, `story.harbor_taken`; **Claude's call, Oct 27**) | "Guatiao! The harbor is ours. Eat!" / "Guatiao. Mind the soot on the mat." / "Guatiao! Cotton for the canoes." | The second stock, back at the burned stalls after a line each: snapper on casabe (heals 80) and soursop juice (20 SP) with the old food; a carved cannon charm (tier 26: ATK +3, SPD +3, the carver's "gun for the fleet's children; it points out to sea") with the old charms; harbor cotton (tier 24 leather) with the old bow and tunic. No tier-28 piece (Chapter 11 outline section 5: Hale's axe is the war's one; Eightgate's outfitter stocks the rest). Built as second placements (`casabe_baker_free`, `carver_free`, `bow_maker_free`): a shop has no condition. |
 
 **Contract board (jobs):** mend nets after the marines' visit; carry salt to the hill camp; count the Crown ships
 (Influence).
+*Built (Oct 27; Claude's call on who gives and who takes):* "carry salt to the hill camp" in Chapter 11: the camp
+leader on the Canoe Beach (before the gun is taken) has one sack saved from the beach pans before they burned; the
+behique at the hill camp, who has been cleaning wounds with sea water carried up in gourds, takes it by day (+1
+Influence in Xaraguá, `war.salt_done`), then asks Anissa for the lamp as built. "Count the Crown ships" is *Harbors
+Lie*; "mend nets" is after the release.
 
 **Signature puzzle:** SIG-XAR (flooded cave, Echo sluice, rhythm lock). **Minor:** M-XAR-1, M-XAR-2. **Secret:** S-XAR.
 
@@ -477,6 +487,12 @@ the houses' ambassadors, the Crown's legate, the archivist of the Throne.
 Seventh Clause* (read aloud in Chapter 5; proposal wording: "The harbor of Xaraguá and its waters are given into the
 keeping of the Crown of Aldermoor, at the Crown's pleasure, to be revisited."), *Petitions of Breach* (Xaraguá's,
 unheard), *The Council of Eight* (the old plan for a council of the states, never used).
+*Built (Oct 27):* the second looks of Chapters 10 to 12 (the outlines' 7.4) are a line of Gianna's after a book's last
+page once the story has moved on, or "(again)" on a book already read, for the line alone (`data/books.ts`
+`secondLook`): *The Sun Accord (copy)*, *Ash Wars: A Temple Record*, *The First Oath*, *The Charter (seized copy)*,
+*Petitions of Breach*, *The Council of Eight*. The built *Council of Eight* has the council sitting until the Ash Wars
+began, so the outline's "never used. Used." would contradict it; its look reads "Fifty years of dust on eight chairs.
+Not this morning." (Claude's call).
 
 **Wild section:** the Crossroads Fields, switched on by `story.seat_arrived`. Table `crossroads`: Crown Marine x2
 deserters (14 to 16); Road Bandit x3 (14 to 15); Quiet Crown Zealot and Husher (15 to 16). After the War of the Harbor
@@ -492,6 +508,11 @@ deserters (14 to 16); Road Bandit x3 (14 to 15); Quiet Crown Zealot and Husher (
 
 **Contract board:** escort pilgrims (Se-3); copy a damaged ledger for the Archive (Influence); deliver a petition of
 breach.
+*Built (Oct 27; Claude's call, for the Chapter 12 outline's "the Seat's errands"):* in Chapter 12, over the Regent's
+notice, the Hall pins "a runner to carry the Compact's roll of the eight houses to the company at the north gate";
+Tío Joaquin reads it at the Ardencia Gate ("Nobody comes in behind you that this doesn't name. Now I have it in
+writing.", his own line of the arrival kept) and the job pays +1 Influence in Eightgate (`claim.dispatch_done`). Offered
+only while Free Brasador holds its gate, from the arrival until the Hearing is called.
 
 **Signature puzzle:** SIG-SEA (reading the Accord in both eras). **Secret:** S-SEA.
 

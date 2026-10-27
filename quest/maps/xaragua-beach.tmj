@@ -936,7 +936,7 @@
             {
               "name": "npc",
               "type": "string",
-              "value": "casabe_baker"
+              "value": "casabe_baker_free"
             }
           ]
         },
@@ -964,7 +964,7 @@
             {
               "name": "npc",
               "type": "string",
-              "value": "carver"
+              "value": "carver_free"
             }
           ]
         },
@@ -992,7 +992,7 @@
             {
               "name": "npc",
               "type": "string",
-              "value": "bow_maker"
+              "value": "bow_maker_free"
             }
           ]
         }

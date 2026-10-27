@@ -2,7 +2,7 @@
 // box, choice lists that fit above it, and reading that marks a book read and returns to the list.
 
 import { describe, expect, it } from 'vitest';
-import { BOOKS, MAX_PAGE_CHARS, SHELVES, bookPages, loreFlag, shelfDialogueId, wordCount } from '../src/data/books.ts';
+import { BOOKS, MAX_PAGE_CHARS, SHELVES, bookPages, lookFlag, loreFlag, shelfDialogueId, wordCount } from '../src/data/books.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { DialogueRunner } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
@@ -67,5 +67,85 @@ describe('lore books', () => {
     expect(pages).toEqual(bookPages(book.text));
     expect(flags.isSet(loreFlag(book.id))).toBe(true);
     expect(view.kind === 'choice' && view.choices[0]!.text).toBe(`${book.title} (read)`);
+  });
+});
+
+// The second looks (the Chapter 10 to 12 outlines' 7.4, built Oct 27): a line of Gianna's after a book's last page once
+// the story has moved on, and "(again)" on a book already read, for the line alone.
+describe('the books\' second looks', () => {
+  const LOOKS: Record<string, string> = {
+    zetwal_sun_accord: 'story.patricio_told',
+    zetwal_ash_wars_temple: 'clue.four_accounts',
+    xaragua_first_oath: 'story.harbor_taken',
+    xaragua_charter: 'story.thorne_taken',
+    seat_petitions_breach: 'clue.petition_original',
+    seat_council_eight: 'story.claim_won',
+  };
+  const shelfOf = (id: string) => SHELVES.find((s) => s.books.includes(id))!;
+  const runner = (id: string, flags: FlagStore) => new DialogueRunner(CONTENT.dialogue[shelfDialogueId(shelfOf(id).id)]!, CONTENT.speakers, flags);
+  const titles = (r: DialogueRunner) => {
+    const v = r.view();
+    return v.kind === 'choice' ? v.choices.map((c) => c.text) : [];
+  };
+  const pick = (r: DialogueRunner, text: string) => {
+    const v = r.view();
+    if (v.kind !== 'choice') throw new Error('no list');
+    r.choose(v.choices.find((c) => c.text === text)!.index);
+  };
+  const readOn = (r: DialogueRunner) => {
+    const out: { speaker: string | undefined; text: string }[] = [];
+    for (let v = r.view(); v.kind === 'line'; v = r.view()) {
+      out.push({ speaker: v.speaker?.id, text: v.text });
+      r.advance();
+    }
+    return out;
+  };
+
+  it('the six the outlines name, each on a flag the story sets, short enough for the box and the list', () => {
+    const withLook = BOOKS.filter((b) => b.secondLook);
+    expect(Object.fromEntries(withLook.map((b) => [b.id, JSON.stringify(b.secondLook!.if)]))).toEqual(
+      Object.fromEntries(Object.entries(LOOKS).map(([id, f]) => [id, JSON.stringify({ flag: f })])),
+    );
+    for (const b of withLook) {
+      expect(b.secondLook!.text.length, b.id).toBeLessThanOrEqual(MAX_PAGE_CHARS);
+      expect(`${b.title} (again)`.length, b.id).toBeLessThanOrEqual(36);
+    }
+  });
+
+  it('unread, after the flag: the pages, then Gianna\'s line; read again later: the pages alone, the line said once', () => {
+    for (const [id, flag] of Object.entries(LOOKS)) {
+      const book = BOOKS.find((b) => b.id === id)!;
+      const flags = new FlagStore();
+      flags.set(flag, true);
+      const r = runner(id, flags);
+      pick(r, book.title);
+      const read = readOn(r);
+      expect(read.slice(0, -1).map((l) => l.text)).toEqual(bookPages(book.text));
+      expect(read.at(-1)).toEqual({ speaker: 'gianna', text: book.secondLook!.text });
+      expect(flags.isSet(loreFlag(id)) && flags.isSet(lookFlag(id))).toBe(true);
+      expect(titles(r)).toContain(`${book.title} (read)`);
+      expect(titles(r)).not.toContain(`${book.title} (again)`);
+    }
+  });
+
+  it('read before the flag: no line; after it, "(again)" gives the line alone and the list comes back with "(read)"', () => {
+    for (const [id, flag] of Object.entries(LOOKS)) {
+      const book = BOOKS.find((b) => b.id === id)!;
+      const flags = new FlagStore();
+      let r = runner(id, flags);
+      pick(r, book.title);
+      expect(readOn(r).map((l) => l.text)).toEqual(bookPages(book.text));
+      expect(titles(r)).toContain(`${book.title} (read)`);
+      const listed = titles(r).length;
+      flags.set(flag, true);
+      r = runner(id, flags);
+      expect(titles(r)).toContain(`${book.title} (again)`);
+      expect(titles(r)).not.toContain(`${book.title} (read)`);
+      expect(titles(r).length).toBe(listed);
+      pick(r, `${book.title} (again)`);
+      expect(readOn(r)).toEqual([{ speaker: 'gianna', text: book.secondLook!.text }]);
+      expect(titles(r)).toContain(`${book.title} (read)`);
+      expect(flags.isSet(lookFlag(id))).toBe(true);
+    }
   });
 });

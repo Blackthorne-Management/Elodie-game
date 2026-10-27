@@ -1417,6 +1417,8 @@ async function playAct(browser, errors) {
     route = route.slice(from);
     console.log(`  (starting at @${FROM}, ${route.length} route items left)`);
   }
+  /** Whether this run plays Chapter 11's card in the browser (so the voyage to Eightgate after it is watched). */
+  const before11 = sim.logic.state.flags.get('act11.complete') !== true;
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   watchErrors(page, errors);
@@ -1440,6 +1442,8 @@ async function playAct(browser, errors) {
   let voyagedHome9 = false;
   /** Chapter 10's card closes on the fleet sailing to war (Xaraguá's Canoe Beach, where Chapter 11 begins). */
   let voyagedWar = false;
+  /** Chapter 11's card closes on the fleet north up the strait (then the Ash Road to Eightgate's Ardencia Gate). */
+  let voyagedEightgate = false;
   /** The cards shown in the browser, in order (the Epilogue's last ones: the ending's, The End, the cast). */
   const cardsSeen = [];
   /** Whether the end credits have rolled (the route's last card closed). */
@@ -1565,6 +1569,7 @@ async function playAct(browser, errors) {
         if (landing === 'xaragua-village') voyaged = true;
         if (landing === 'zetwal-harbor' && sim.logic.state.flags.get('act9.complete') === true) voyagedHome9 = true;
         if (landing === 'xaragua-beach' && sim.logic.state.flags.get('act10.complete') === true) voyagedWar = true;
+        if (landing === 'seat-concourse' && sim.logic.state.flags.get('act11.complete') === true) voyagedEightgate = true;
       }
       // The game's last cards (the Epilogue): the ending's, The End and the cast, then the end credits (a screen of the
       // browser's own; the simulator stands in the field). A on the credits goes to the title; the save is the Hall after
@@ -1617,11 +1622,12 @@ async function playAct(browser, errors) {
   if (war.flags['act10.complete'] === true && war.flags['act11.complete'] !== true) {
     check(voyagedWar && war.mapId === 'xaragua-beach' && war.mode === 'field' && line.every((w) => !!w), 'after Chapter 10\'s card the fleet sails to war (the voyage plays) and the party, Edmund last, stands on Xaraguá\'s Canoe Beach');
   }
-  // Chapter 11's card closes at Eightgate's Ardencia Gate (where Chapter 12 begins; the voyage there is not a scene yet),
-  // the nine walking behind Gianna and Rael not among them.
+  // Chapter 11's card closes on the voyage north up the strait (Oct 27: a scene now), then Eightgate's Ardencia Gate (where
+  // Chapter 12 begins), the nine walking behind Gianna and Rael not among them.
   if (war.flags['act11.complete'] === true && war.flags['story.claim_arrived'] !== true) {
-    check(war.mapId === 'seat-concourse' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true, 'after Chapter 11\'s card the party, Edmund last, stands at Eightgate\'s Ardencia Gate');
+    check(voyagedEightgate && war.mapId === 'seat-concourse' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true, 'after Chapter 11\'s card the fleet sails north (the voyage plays) and the party, Edmund last, stands at Eightgate\'s Ardencia Gate');
   }
+  if (before11 && war.flags['story.claim_arrived'] === true) check(voyagedEightgate, 'Chapter 11\'s card closed on the voyage to Ardencia\'s strand, not a jump to Eightgate');
   // The quest's end: after the credits and the title the save opens in the Throne Hall that afternoon, the whole party
   // walking behind Gianna again (no longer seated), Rael not among them.
   if (war.flags['end.done'] === true) {

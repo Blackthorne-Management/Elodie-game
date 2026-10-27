@@ -124,6 +124,11 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   casabe_baker: { ...n('casabe_baker', 'casabe_baker', 'Cassava-bread baker'), shop: 'xaragua_food' },
   carver: { ...n('carver', 'carver', 'Carver'), shop: 'xaragua_carver' },
   bow_maker: { ...n('bow_maker', 'bow_maker', 'Bow-maker'), shop: 'xaragua_bows' },
+  // The market's three back at the burned stalls once the harbor is taken (Chapter 11): their Chapter 11 line, then the
+  // second stock (data/rpg.ts SHOPS *_free).
+  casabe_baker_free: { ...n('casabe_baker_free', 'casabe_baker', 'Cassava-bread baker', 'casabe_baker_talk'), shop: 'xaragua_food_free' },
+  carver_free: { ...n('carver_free', 'carver', 'Carver', 'carver_talk'), shop: 'xaragua_carver_free' },
+  bow_maker_free: { ...n('bow_maker_free', 'bow_maker', 'Bow-maker', 'bow_maker_talk'), shop: 'xaragua_bows_free' },
   lamp_oil_seller: n('lamp_oil_seller', 'lamp_oil_seller', 'Lamp-oil seller'),
   // Chapter 2's story (Oct 16): the cacique, the Governor, and the marines on the pier.
   anaco: n('anaco', 'anaco', 'Cacique Anaco'),

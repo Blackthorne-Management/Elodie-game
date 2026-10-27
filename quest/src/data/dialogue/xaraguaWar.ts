@@ -522,7 +522,30 @@ const CAMP_LEADER: DialogueScript = script('camp_leader_war_talk', {
   dusk: { lines: [say(CL, 'Down the mountain, envoy. The tide does not wait for anyone.')] },
 });
 
-const BEACH_LEADER: DialogueScript = simple('camp_leader_beach_talk', [say(CL, 'The gun first, envoy. Then up the hill.')]);
+// The contract board's dispatch (CAPITALS.md 2's "carry salt to the hill camp"; Claude's call, Oct 27): the camp leader on
+// the sand has a sack from the beach pans for the behique at the hill camp, where the wounded are cleaned with sea water
+// carried up in gourds. Optional: taken before the gun (he goes up the gardens' road after it), given at the camp by day.
+const BEACH_LEADER: DialogueScript = script('camp_leader_beach_talk', {
+  start: { lines: [], next: [{ if: has('war.salt_carried'), to: 'carrying' }, { to: 'ask' }] },
+  ask: {
+    lines: [
+      say(CL, 'The gun first, envoy. Then up the hill.'),
+      say(CL, 'And the hill camp has no salt. The Crown took the pans. The behique cleans wounds with sea water carried up in gourds.'),
+      say(CL, 'One sack from the pans, saved before they burned. The contract board says "carry salt to the hill camp". Nobody has.'),
+    ],
+    choices: [
+      { text: 'I\'ll carry it up.', set: { 'war.salt_carried': true }, next: 'given' },
+      { text: 'The gun first.' },
+    ],
+  },
+  given: {
+    lines: [
+      act([{ do: 'face', actor: 'npc:camp_leader_beach', facing: 'player' }], CL, 'For the behique, at the camp. Keep it dry.'),
+      nar('(The contract board\'s job, "carry salt to the hill camp": the behique, at the hill camp, by day.)'),
+    ],
+  },
+  carrying: { lines: [say(CL, 'The gun first, envoy. Then up the hill. The salt is for the behique.')] },
+});
 const BEACH_BOY: DialogueScript = simple('fisher_boy_beach_talk', [say(FB, 'I counted your ships! Six. And a gap.')]);
 
 /** The head runner on the rock: the gate (the outline section 6), worded from the flags; then the conch. */
@@ -558,7 +581,16 @@ const ELDER_UNDECIDED: DialogueScript = script('elder_undecided_war_talk', {
 
 /** The healer asks Anissa, not Gianna, to hold the lamp (the outline beat 4; earnest, nobody else in the node). */
 const HEALER: DialogueScript = script('healer_war_talk', {
-  start: { lines: [], next: [{ if: has('story.lamp_promised'), to: 'again' }, { to: 'ask' }] },
+  start: { lines: [], next: [{ if: all(has('war.salt_carried'), not('war.salt_done')), to: 'salt' }, { to: 'lamp' }] },
+  salt: {
+    lines: [
+      act([{ do: 'face', actor: 'npc:healer_war', facing: 'player' }], 'behique', 'Salt? From the pans? Put it down by the gourds, envoy. Gently.'),
+      say('behique', 'Boiled water and salt. Now it is a hospital that can clean a wound.', { set: { 'war.salt_done': true } }),
+      nar('(The contract board\'s job, "carry salt to the hill camp": done. +1 Influence in Xaraguá.)'),
+    ],
+    next: 'lamp',
+  },
+  lamp: { lines: [], next: [{ if: has('story.lamp_promised'), to: 'again' }, { to: 'ask' }] },
   ask: {
     lines: [
       act([{ do: 'face', actor: 'follower', facing: 'player' }], 'behique', 'Little one. When the wounded come, I\'ll need a lamp held at the hamacas. You held it at the cave mouth. I remember.'),
@@ -1273,7 +1305,9 @@ const CANEY_SCENE: DialogueScript = script('war_caney', {
         R,
         'I will be at Eightgate. Not beside you. The Throne has a Hearing for men like me, or it will have one.',
       ),
-      act([{ do: 'exit', actor: 'rael_c', to: at(CANEY.doors.x, CANEY.doors.y + 2) }], '', 'He goes out, and does not wait to be answered.'),
+      act([{ do: 'exit', actor: 'rael_c', to: at(CANEY.doors.x, CANEY.doors.y + 2) }], '', 'He goes out, and does not wait to be answered.', {
+        set: { 'voyage.next': 'xaragua_ardencia' },
+      }),
     ],
     next: 'end',
   },
@@ -1283,6 +1317,7 @@ const CANEY_SCENE: DialogueScript = script('war_caney', {
         [{ do: 'enter', actor: 'benny_c', look: 'benny_old', from: at(CANEY.doors.x, CANEY.doors.y + 2), to: at(CANEY.doors.x + 1, CANEY.doors.y + 1), facing: 'up' }, { do: 'look', actor: 'benny_c' }],
         BO,
         'He went north. He left me. He said you would need a witness more than he needed a father.',
+        { set: { 'voyage.next': 'xaragua_ardencia_strike' } },
       ),
     ],
     next: 'end',

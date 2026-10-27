@@ -826,10 +826,10 @@ function warBeach(): ObjSpec[] {
     // The hill road to the gardens, round behind the village (a long walk, not a door: hill_road_north asks).
     trigger('hill_road_beach', b.northDoor.x, b.northDoor.y + 1, { dialogue: 'hill_road_north', if: 'story.war_begun' }, 2, 1),
     { layer: 'spawns', name: 'hill_road_in', x: b.northDoor.x, y: b.northDoor.y + 3, props: { facing: 'down', era: 'present' } },
-    // The harbor is Yucayeque's: the market's three come back to the burned stalls.
-    npc('casabe_baker_free', 13, 3, 'down', { npc: 'casabe_baker', if: 'story.harbor_taken' }),
-    npc('carver_free', 16, 3, 'down', { npc: 'carver', if: 'story.harbor_taken' }),
-    npc('bow_maker_free', 19, 3, 'down', { npc: 'bow_maker', if: 'story.harbor_taken' }),
+    // The harbor is Yucayeque's: the market's three come back to the burned stalls, with their second stock.
+    npc('casabe_baker_free', 13, 3, 'down', { if: 'story.harbor_taken' }),
+    npc('carver_free', 16, 3, 'down', { if: 'story.harbor_taken' }),
+    npc('bow_maker_free', 19, 3, 'down', { if: 'story.harbor_taken' }),
   ];
 }
 

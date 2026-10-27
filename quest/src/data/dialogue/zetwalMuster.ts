@@ -45,6 +45,7 @@ function at(x: number, y: number): { x: number; y: number } {
 }
 
 const G = 'gianna';
+const Y = 'yari';
 const A = 'anissa';
 const AF = 'anissa_far';
 const Z = 'azzy';
@@ -1336,7 +1337,85 @@ const CHANCELLOR: MusterOverlay = {
   },
 };
 
+// ---- The contract board's dispatch, and the Quill at the name stones (docs/PRODUCTION.md's "not built yet", Oct 27) ------
+//
+// The outline 7.4: "carry dispatches to the Temple island" (CAPITALS.md 1's Chapter 10 job). The Hall's chief courier has
+// birds for every capital but none for the island across the bridge; the party carries the Speaker's dispatch by hand to
+// the acolyte at the lamp (+1 Influence in Zetwal, like the count). Optional, never on the gate, open until the fleet sails.
+
+/** The Muster, until the fleet sails (the dispatch and the Quill's look are this chapter's only). */
+const MUSTER_UNTIL_SAIL: Condition = all(MUSTER_ON, not('act10.complete'));
+
+const COURIER: MusterOverlay = {
+  id: 'chief_courier_talk',
+  nodes: {
+    m_start: { lines: [], next: [{ if: has('muster.dispatch_done'), to: 'm_done' }, { if: has('muster.dispatch_carried'), to: 'm_carrying' }, { to: 'm_offer' }] },
+    m_offer: {
+      lines: [
+        say('chief_courier', 'Pigeons to every capital: the Muster sits. And not one bird for the Temple island. It is across a bridge. Birds are proud.'),
+        say('chief_courier', 'The contract board has it pinned, envoy: the Speaker\'s dispatch to the lamp, by hand. Will you carry it?'),
+      ],
+      choices: [
+        { text: 'I\'ll carry it.', set: { 'muster.dispatch_carried': true }, next: 'm_given' },
+        { text: 'Not now.' },
+      ],
+    },
+    m_given: {
+      lines: [
+        act([{ do: 'face', actor: 'npc:chief_courier', facing: 'player' }], 'chief_courier', 'The Speaker\'s seal. For the acolyte at the lamp, and nobody else.'),
+        nar('(The contract board\'s job, "carry dispatches to the Temple island": the acolyte at the Gaze lamp, over the Chain Bridge.)'),
+      ],
+    },
+    m_carrying: { lines: [say('chief_courier', 'The acolyte at the lamp, envoy. Over the bridge. The birds are watching.')] },
+    m_done: { lines: [say('chief_courier', 'Half the birds came back with the same answer: "We know. We\'re in your harbor."')] },
+  },
+  when: MUSTER_UNTIL_SAIL,
+};
+
+const ACOLYTE: MusterOverlay = {
+  id: 'acolyte_talk',
+  nodes: {
+    m_start: { lines: [], next: [{ if: all(has('muster.dispatch_carried'), not('muster.dispatch_done')), to: 'm_dispatch' }, { to: 'm_line' }] },
+    m_dispatch: {
+      lines: [
+        act([{ do: 'face', actor: 'npc:acolyte', facing: 'player' }], 'acolyte', 'From the council? By hand, over the bridge?'),
+        nar('The acolyte breaks the Speaker\'s seal and reads it at the lamp, moving her lips.'),
+        say('acolyte', '"The lamp to burn every night the fleet is at sea." It burns every night. I will tell the keeper they asked.', {
+          set: { 'muster.dispatch_done': true },
+        }),
+        nar('(The contract board\'s job, "carry dispatches to the Temple island": done. +1 Influence in Zetwal.)'),
+      ],
+    },
+    m_line: { lines: [say('acolyte', 'The grey ones and the saffron ones came to the lamp by opposite doors. It is the first time our two doors mattered.')] },
+  },
+  when: MUSTER_UNTIL_SAIL,
+};
+
+// SECRET-ITEMS.md 1's Chapter 10 bonus (Claude's call on the staging, Oct 27): with Solange's Quill (Z-4, which brings
+// her original list), Yari walks to the seventh name stone, the one the young Patricio carved a sun into when the
+// stonecutter would not cut a Yaguana name; Gianna reads her the name from Solange's list. +2 Influence in Xaraguá.
+const QUILL_STONE: MusterOverlay = {
+  id: 'name_stones',
+  nodes: {
+    m_start: { lines: [], next: [{ if: all(has('item.solange_quill'), not('muster.quill_stone')), to: 'm_quill' }, { to: '__base' }] },
+    m_quill: {
+      lines: [
+        nar('Seven name stones round the lamp court. On the seventh, under fifty years of weather, a carved sun.'),
+        act([{ do: 'walk', actor: 'yari', to: at(TEMPLE.seventhStone.x, TEMPLE.seventhStone.y), facing: 'left' }, { do: 'look', actor: 'yari' }], Y, 'That one has no name on it. Only the sun.'),
+        say(G, 'Solange wrote the name down. Her list, from under the plinth: the seventh name, in her hand. The scout\'s brother.'),
+        act([{ do: 'face', actor: 'yari', facing: 'player' }], Y, 'A Yaguana name, on Zetwal\'s list, for fifty years. And nobody at home ever knew it was kept.'),
+        say(Y, 'They will say it in Yucayeque. Out loud. I will tell them where it is.', { set: { 'muster.quill_stone': true } }),
+        nar('(Yari saw the Yaguana name kept with Zetwal\'s dead. +2 Influence in Xaraguá.)'),
+      ],
+    },
+  },
+  when: MUSTER_UNTIL_SAIL,
+};
+
 const OVERLAYS: readonly MusterOverlay[] = [
+  COURIER,
+  ACOLYTE,
+  QUILL_STONE,
   { id: 'council_speaker_talk', nodes: COUNCIL },
   CUTTER,
   ANICETTE,
@@ -1398,7 +1477,6 @@ const OVERLAYS: readonly MusterOverlay[] = [
   one('debate_onlooker_talk', 'villager', 'The corner\'s quiet today. Everyone\'s gone to argue at the Muster instead.'),
   one('patricio_home_talk', PO, 'The council sits at noon, envoy.'),
   one('anicette_home_talk', AN, 'Eat first. Then seat them.'),
-  one('acolyte_talk', 'acolyte', 'The grey ones and the saffron ones came to the lamp by opposite doors. It is the first time our two doors mattered.'),
   one('temple_porter_talk', 'temple_porter', 'An old lady asked me how many steps up to the lamp. I said fourteen. She said fifteen. She was right.'),
   one('mourner_talk', 'mourner', 'They read the names here a year ago. My brother\'s was the third. I came to tell him the fleet is sailing.'),
   one('fisher_island_talk', 'fisher_island', 'No fish today. Every fish in the strait has heard about the Muster.'),
@@ -1411,7 +1489,6 @@ const OVERLAYS: readonly MusterOverlay[] = [
   one('throne_usher_talk', 'throne_usher', 'The chair is kept, envoy. Her shawl is still over its arm. Nobody has moved it.'),
   one('foreign_envoy_talk', 'foreign_envoy', 'In my country we would call this many soldiers in one plaza a coup. Here it is a festival.'),
   one('seal_keeper_talk', 'seal_keeper', 'The council\'s seal is ready for a vote. It has been ready since dawn. So have I.'),
-  one('chief_courier_talk', 'chief_courier', 'Pigeons to every capital: the Muster sits. Half came back with the same answer: "We know. We\'re in your harbor."'),
   one('treasurer_talk', 'treasurer', 'The Dorini sent an invoice. The Chancellor said to file it under "after the war".'),
   one('scribe_talk', 'scribe', 'Seven houses. Seven languages of minutes. My hand hurts.'),
   one('scribe_2_talk', 'scribe', 'I am copying the Chancellor\'s condition in a fair hand. She said it once. Once is enough.'),

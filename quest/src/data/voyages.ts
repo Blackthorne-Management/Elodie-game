@@ -184,4 +184,40 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
     ],
     music: 'farewell',
   },
+  // Chapter 11's end into Chapter 12 (the Chapter 12 outline's beat 0 and section 12, Claude's call): the fleet out of
+  // Yucayeque's free harbor by day, north up the strait to Ardencia's strand, where Free Brasador was born; the Ash Road
+  // south to the Ardencia Gate is the arrival's narration (seatClaim.ts claim_arrive). Two voyages on one path, for the
+  // outline's two sets of captions: on Trust Ardencia's black and crimson sails lead; on Strike the trader does.
+  xaragua_ardencia: {
+    id: 'xaragua_ardencia',
+    harbor: 'Yucayeque, by day, the harbor free',
+    paddle: 'A canoe takes the envoy\'s household out over the dropped chain to the trader.',
+    aboard: 'Black and crimson sails go up ahead of the trader. North.',
+    shore: 'xaragua',
+    start: { x: 46, y: 32 },
+    via: [{ x: 47, y: 14 }],
+    end: { x: 62, y: 14 },
+    captions: [
+      { at: 0, text: 'Out of a free harbor, north up the strait...' },
+      { at: 0.35, text: 'Ardencia\'s sails lead the strait; the trader behind, and seven navies behind her.' },
+      { at: 0.8, text: '...to Ardencia\'s strand, and the Ash Road south.' },
+    ],
+    music: 'farewell',
+  },
+  xaragua_ardencia_strike: {
+    id: 'xaragua_ardencia_strike',
+    harbor: 'Yucayeque, by day, the harbor free',
+    paddle: 'A canoe takes the envoy\'s household out over the dropped chain to the trader.',
+    aboard: 'The trader\'s gold sails go up. North, with Azzy at the rail, not talking.',
+    shore: 'xaragua',
+    start: { x: 46, y: 32 },
+    via: [{ x: 47, y: 14 }],
+    end: { x: 62, y: 14 },
+    captions: [
+      { at: 0, text: 'Out of a free harbor, north up the strait...' },
+      { at: 0.35, text: 'The trader leads. Nobody\'s sails are black.' },
+      { at: 0.8, text: '...to Ardencia\'s strand, and the Ash Road south.' },
+    ],
+    music: 'farewell',
+  },
 };

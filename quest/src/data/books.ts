@@ -6,7 +6,7 @@
 // are only hinted at.
 
 import type { Condition } from '../engine/conditions.ts';
-import type { DialogueChoice, DialogueScript, Speaker } from '../engine/dialogue.ts';
+import type { DialogueChoice, DialogueNode, DialogueScript, Speaker } from '../engine/dialogue.ts';
 import type { ObjectInfo } from '../engine/content.ts';
 
 export type BookCategory = 'history' | 'law' | 'religion' | 'trade' | 'war' | 'gossip' | 'folklore' | 'genealogy';
@@ -19,6 +19,11 @@ export interface Book {
   text: string;
   /** On its shelf only once this holds (a book returned by a side quest). */
   available?: Condition;
+  /**
+   * A second look (the Chapter 10 to 12 outlines' 7.4): once `if` holds, Gianna says one line after the book's last page,
+   * and a book already read is offered again as "(again)" for that line alone (remembered as `look.<book id>`).
+   */
+  secondLook?: { if: Condition; text: string };
 }
 
 export interface Shelf {
@@ -65,6 +70,7 @@ export const BOOKS: readonly Book[] = [
       'At the ford of Cendre, the Crown chronicle counts four hundred prisoners put to the sword. Our healers counted forty dead, all fallen in the fighting, and three hundred prisoners sent home. ' +
       'The chronicle was written in Aldermoor. Our record was written at the ford. ' +
       'The keeper of that year added one line in the margin: "Someone wants him feared. I do not know if it is the Crown, or him."',
+    secondLook: { if: { flag: 'clue.four_accounts' }, text: 'Forty. The number the Crown\'s clerk could not write.' },
   },
   {
     id: 'zetwal_gaze_primer',
@@ -173,6 +179,7 @@ export const BOOKS: readonly Book[] = [
       'Five: trade through Zetwal pays no tribute to Aldermoor. Six: the Throne at Elodie\'s Seat shall hear any house that claims a breach. ' +
       'The clerk who copied it left a note under the last line. The signed original is bound with seven silk ribbons, one for each clause. ' +
       'He could only find six clauses to copy.',
+    secondLook: { if: { flag: 'story.patricio_told' }, text: 'Six clauses. The seventh page was read to a clerk in the next room.' },
   },
   {
     id: 'zetwal_crown_chronicle',
@@ -254,6 +261,7 @@ export const BOOKS: readonly Book[] = [
       'Caona spoke first, so her words are the ones the singers keep: "The harbor stays with the people who fish it." ' +
       'The others answered for their own lands, and the drums kept the count so no one could add a word later. ' +
       'The keepers say the oath was carved into the petroglyph cave the same night, where the water rises. No one has read it since.',
+    secondLook: { if: { flag: 'story.harbor_taken' }, text: 'Read aloud in the caney tonight, by the cacique, in the present tense.' },
   },
   {
     id: 'xaragua_roots_tides',
@@ -299,6 +307,7 @@ export const BOOKS: readonly Book[] = [
       'Lawfully provided by what, the keepers asked. The paper answers only: "under the seventh clause of the Accord, as signed." ' +
       'No one in Yucayeque remembers a seventh clause. The singers have searched every verse of the oath. It is not there. ' +
       'The marine wants his satchel back.',
+    secondLook: { if: { flag: 'story.thorne_taken' }, text: 'Thorne\'s own copy is under his desk. It is the same paper.' },
   },
   {
     id: 'xaragua_hutia',
@@ -594,6 +603,7 @@ export const BOOKS: readonly Book[] = [
       'One, from the cacique\'s house of Yucayeque in Xaraguá, is marked "received" and nothing else. ' +
       'Its date is forty-nine years ago. The space for the chambers\' answers is blank. ' +
       'Someone has drawn a small circle round the blank, in ink that is not old.',
+    secondLook: { if: { flag: 'clue.petition_original' }, text: 'Xaraguá\'s is no longer in this book. It is on a chair.' },
   },
   {
     id: 'seat_council_eight',
@@ -606,6 +616,7 @@ export const BOOKS: readonly Book[] = [
       'At a Parley the envoys stand behind them. At a Claim they may sit. ' +
       'The Master of the Chairs keeps them dusted, and keeps the tokens the houses give when they agree to sit. ' +
       'He has not been given one in fifty years. He dusts them anyway.',
+    secondLook: { if: { flag: 'story.claim_won' }, text: 'Fifty years of dust on eight chairs. Not this morning.' },
   },
   {
     id: 'seat_seventh_clause',
@@ -1393,6 +1404,14 @@ export function shelfDialogueId(shelfId: string): string {
   return `shelf.${shelfId}`;
 }
 
+/** Remembers that a book's second look was seen. */
+export function lookFlag(bookId: string): string {
+  return `look.${bookId}`;
+}
+
+/** Who speaks a book's second look. */
+export const SECOND_LOOK_SPEAKER = 'gianna';
+
 export function bookSpeakerId(bookId: string): string {
   return `book.${bookId}`;
 }
@@ -1426,14 +1445,19 @@ export function shelfScript(shelf: Shelf): DialogueScript {
     if (!book) throw new Error(`Shelf ${shelf.id}: unknown book ${id}`);
     const flag = loreFlag(id);
     const here = (c: Condition): Condition => (book.available ? { all: [book.available, c] } : c);
+    const look = book.secondLook;
+    const lines: DialogueNode['lines'] = bookPages(book.text).map((text) => ({ text }));
     choices.push({ text: book.title, if: here({ notFlag: flag }), next: id });
-    choices.push({ text: `${book.title} (read)`, if: here({ flag }), next: id });
-    nodes[id] = {
-      speaker: bookSpeakerId(id),
-      set: { [flag]: true },
-      lines: bookPages(book.text).map((text) => ({ text })),
-      next: 'list',
-    };
+    if (look) {
+      // Read before, and the second look not yet seen: the title is offered "(again)" for the look alone.
+      const again: Condition = { all: [{ flag }, look.if, { notFlag: lookFlag(id) }] };
+      choices.push({ text: `${book.title} (again)`, if: here(again), next: `${id}.again` });
+      choices.push({ text: `${book.title} (read)`, if: here({ all: [{ flag }, { not: again }] }), next: id });
+      const line = { speaker: SECOND_LOOK_SPEAKER, text: look.text, set: { [lookFlag(id)]: true } };
+      lines.push({ ...line, if: look.if });
+      nodes[`${id}.again`] = { lines: [line], next: 'list' };
+    } else choices.push({ text: `${book.title} (read)`, if: here({ flag }), next: id });
+    nodes[id] = { speaker: bookSpeakerId(id), set: { [flag]: true }, lines, next: 'list' };
   }
   choices.push({ text: 'Leave' });
   nodes.list = { lines: [{ text: 'Which book?' }], choices };
