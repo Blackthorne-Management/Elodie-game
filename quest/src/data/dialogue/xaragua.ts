@@ -10,8 +10,8 @@ import type { StageCue } from '../../engine/stage.ts';
 import { AREITO_BARS, barText } from '../rhythms.ts';
 import { MEDICINE_OFFER } from './xaraguaQuests.ts';
 
-function say(speaker: string, text: string, translation?: string): DialogueLine {
-  return translation ? { speaker, text, translation } : { speaker, text };
+function say(speaker: string, text: string, translation?: string, mood?: string): DialogueLine {
+  return translation || mood ? { speaker, text, ...(translation ? { translation } : {}), ...(mood ? { mood } : {}) } : { speaker, text };
 }
 
 function nar(text: string): DialogueLine {
@@ -27,8 +27,8 @@ function script(id: string, nodes: Record<string, DialogueNode>): DialogueScript
 }
 
 /** A line with stage directions (engine/stage.ts): the cues are acted out on the map, then the line shows. */
-function act(stage: StageCue[], speaker: string, text: string, set?: DialogueLine['set'], translation?: string): DialogueLine {
-  return { speaker, text, stage, ...(set ? { set } : {}), ...(translation ? { translation } : {}) };
+function act(stage: StageCue[], speaker: string, text: string, set?: DialogueLine['set'], translation?: string, mood?: string): DialogueLine {
+  return { speaker, text, stage, ...(set ? { set } : {}), ...(translation ? { translation } : {}), ...(mood ? { mood } : {}) };
 }
 
 /** A tile on the map the scene plays on. */
@@ -161,8 +161,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say('anaco', 'Limyè. Patricio\'s blood. Your grandfather swore an oath on our stones, child. Did he tell you?'),
         say(G, 'He told me about Caona and her scouts. Not about an oath.'),
         say('anaco', 'He would not. He was always modest about the wrong things.'),
-        say('anaco', 'Tonight Thorne\'s man reads the Charter to the elders. They will count his ships instead of our promises.'),
-        say('anaco', 'I wrote to the Throne. No answer came. If they vote yes, the harbor is the Crown\'s by morning.'),
+        say('anaco', 'Tonight Thorne\'s man reads the Charter to the elders. They will count his ships instead of our promises.', undefined, 'stern'),
+        say('anaco', 'I wrote to the Throne. No answer came. If they vote yes, the harbor is the Crown\'s by morning.', undefined, 'stern'),
         say(Y, 'Then I will be there.'),
         say('anaco', 'Be there. Be quiet, if you can. You cannot. Go.'),
       ],
@@ -376,7 +376,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         { do: 'face', actor: 'guard_b', facing: 'right' },
       ],
       'anaco',
-      'Here. You want the harbor, captain? You will have to carry the old man who sits on it.',
+      'Here. You want the harbor, captain? You will have to carry the old man who sits on it.', undefined, undefined, 'stern',
     ),
     act(
       [
@@ -387,7 +387,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'Gladly. Take him.',
     ),
     act([{ do: 'look', actor: 'player' }, { do: 'walk', actor: 'yari', to: at(10, 5), facing: 'right', run: true }], Y, 'Father!'),
-    act([{ do: 'face', actor: 'anaco', facing: 'left' }], 'anaco', 'Yari. No. Look at me. You are no use to me in chains. Take the Limyè girls and go. The cave. You know the one.'),
+    act([{ do: 'face', actor: 'anaco', facing: 'left' }], 'anaco', 'Yari. No. Look at me. You are no use to me in chains. Take the Limyè girls and go. The cave. You know the one.', undefined, undefined, 'tender'),
     say('anaco', 'Envoy\'s daughter. They cannot touch you, by their own Accord. Remember that, and use it.'),
     say(G, 'We\'ll find you. I promise.'),
     // Led away: down the hall between the two marines, the captain behind, out of the doors.
@@ -521,7 +521,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     act(
       [{ do: 'face', actor: 'healer', facing: 'player' }],
       'behique',
-      'Envoy. Wherever they keep him, his fever comes with the tide. He needs fever bark.',
+      'Envoy. Wherever they keep him, his fever comes with the tide. He needs fever bark.', undefined, undefined, 'grave',
     ),
     {
       speaker: 'behique',
@@ -618,7 +618,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         // Medicine for the Cacique (Oct 20): the grove bark was brewed in the caney, and went with it.
         { speaker: 'behique', text: 'The grove bark went with the caney. The pond tree\'s will hold him till I can brew more.', if: { flag: 'side.medicine.done' } },
-        say('behique', 'The cacique\'s fever comes with the tide. Wherever they keep him, he needs his medicine.'),
+        say('behique', 'The cacique\'s fever comes with the tide. Wherever they keep him, he needs his medicine.', undefined, 'grave'),
         say('behique', 'Fever bark: the tall tree by the spring pond in the gardens, east of the water. Thin strips, from the sunny side.'),
         say('behique', 'Crush it into his water. You can walk to him. I cannot.'),
       ],
@@ -793,8 +793,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say('anaco', 'Nothing gets out that way. But at the lowest tide, the sea cave on the Canoe Beach opens to the open sea.'),
         say('anaco', 'My grandmother\'s people hid their canoes in there when the Crown first came. The Crown never found them.'),
         say(G, 'Then Yari goes out through the sea cave.'),
-        say('anaco', 'Yari goes. Not me. I would sink the canoe, and the Governor would come looking. Tell her that, so she does not argue.'),
-        say('anaco', 'She will argue anyway. Go.'),
+        say('anaco', 'Yari goes. Not me. I would sink the canoe, and the Governor would come looking. Tell her that, so she does not argue.', undefined, 'tender'),
+        say('anaco', 'She will argue anyway. Go.', undefined, 'tender'),
       ],
     },
     after: { lines: [say('anaco', 'The sea cave. Lowest tide. And tell her I said not to argue.')] },
@@ -991,7 +991,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     joined: { lines: [say(C, 'My scouts are ready. Tell me which road and I will tell you who is waiting on it.')] },
   }),
   simple('benny_talk', [
-    say('benny', 'Patricio. Every page of every treaty, I read twice. Remind me of that, if I ever forget.'),
+    say('benny', 'Patricio. Every page of every treaty, I read twice. Remind me of that, if I ever forget.', undefined, 'wry'),
   ]),
   simple('echo_areito_drummer_talk', [say('echo_areito_drummer', `${BAR1}. ${BAR2}. ${BAR3}. Again and again until sunrise.`)]),
   simple('echo_areito_singer_talk', [say('echo_areito_singer', 'We sing the oath tonight so our grandchildren can sing it back to the Crown.')]),

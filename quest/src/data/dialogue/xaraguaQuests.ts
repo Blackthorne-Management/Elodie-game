@@ -11,8 +11,8 @@ import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/di
 import type { StageCue } from '../../engine/stage.ts';
 import { CHAPTER2_QUESTS_DONE } from '../sideQuests.ts';
 
-function say(speaker: string, text: string, translation?: string): DialogueLine {
-  return translation ? { speaker, text, translation } : { speaker, text };
+function say(speaker: string, text: string, translation?: string, mood?: string): DialogueLine {
+  return translation || mood ? { speaker, text, ...(translation ? { translation } : {}), ...(mood ? { mood } : {}) } : { speaker, text };
 }
 
 function nar(text: string): DialogueLine {
@@ -485,10 +485,10 @@ const OIL_DIALOGUE: DialogueScript[] = [
 export const MEDICINE_OFFER: Record<string, DialogueNode> = {
   med_offer: {
     lines: [
-      say('behique', 'The bark of the pond tree holds his fever back. It does not cure it.'),
+      say('behique', 'The bark of the pond tree holds his fever back. It does not cure it.', undefined, 'grave'),
       say('behique', 'The old cure was the bark of a grove above the cave, where Caona\'s scouts used to camp.'),
       say('behique', 'The Crown\'s road crews cut it down before you were born.'),
-      say('behique', 'If a single tree of it is left up at the hill camp, I could make him well. I cannot leave him to look.'),
+      say('behique', 'If a single tree of it is left up at the hill camp, I could make him well. I cannot leave him to look.', undefined, 'grave'),
     ],
     choices: [
       { text: "I'll look for it.", next: 'med_accept' },
@@ -502,7 +502,7 @@ export const MEDICINE_OFFER: Record<string, DialogueNode> = {
       nar('(Medicine for the Cacique is in the Quests page of the menu.)'),
     ],
   },
-  med_later: { lines: [say('behique', 'I will be here. So will his fever.')] },
+  med_later: { lines: [say('behique', 'I will be here. So will his fever.', undefined, 'grave')] },
 };
 
 const MEDICINE_DIALOGUE: DialogueScript[] = [
@@ -517,7 +517,7 @@ const MEDICINE_DIALOGUE: DialogueScript[] = [
         { to: 'plain' },
       ],
     },
-    plain: { lines: [say('behique', 'The cacique sleeps. His fever comes and goes like the tide. Speak softly near his room.')] },
+    plain: { lines: [say('behique', 'The cacique sleeps. His fever comes and goes like the tide. Speak softly near his room.', undefined, 'grave')] },
     again: { lines: [say('behique', 'You came back, envoy. About the bark.')], next: 'med_offer' },
     ...MEDICINE_OFFER,
     remind: { lines: [say('behique', 'The hill camp, up the Mountain Path. Where the scouts camped. Where the road crews cut, look for stumps.')] },

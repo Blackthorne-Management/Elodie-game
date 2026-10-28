@@ -565,3 +565,29 @@ the other expressions are `portraits/<look>_<expression>.png`. Some of these loo
 | Sebastian | `characters/sebastian.png` (28 x 36 cells) | `portraits/sebastian.png` | `sebastian_listening`, `sebastian_tender` |
 | Captain Azriel Rivera | `characters/rivera.png` (28 x 36 cells) | `portraits/rivera.png` | `rivera_grim` |
 | Jaime | `characters/jaime.png` | `portraits/jaime.png` | `jaime_casting` |
+
+---
+
+## Where each expression shows (lines tagged, Oct 28)
+
+A dialogue line can carry a `mood`; the box then shows `portraits/<portrait>_<mood>.png` if the file exists, else the plain portrait. The lines below are tagged (counted as the lines a player can meet, so a line reused in two scripts counts twice). Draw the top of each list first: they light up the most scenes. An expression at 0 has no scene that clearly fits yet.
+
+| Expression | Lines | Expression | Lines |
+|---|---|---|---|
+| `patricio_old_sad` | 17 | `rael_unreadable` | 6 |
+| `rael_lamplight` | 16 | `rahel_warm` | 6 |
+| `elodie_guarded` | 12 | `herald_impassive` | 6 |
+| `patricio_old_stern` | 11 | `patricio_troubled` | 6 |
+| `samira_earnest` | 10 | `coralie_fierce` | 6 |
+| `jordyn_mothers_jaw` | 10 | `amanda_fierce` | 6 |
+| `behique_grave` | 9 | `rael_stern` | 5 |
+| `patricia_blessing` | 9 | `elodie_worried` | 5 |
+| `anicette_sly` | 9 | `nancy_firm` | 5 |
+| `aiyana_dry` | 9 | `kayla_listening` | 5 |
+| `coralie_tender` | 8 | `benny_wry` | 5 |
+| `benny_old_wry` | 7 | `amanda_conspiratorial` | 4 |
+| `qasim_cold` | 7 | `anaco_stern`, `anaco_tender` | 4 each |
+| `benny_old_tender` | 4 | `sebastian_tender` | 4 |
+| `sebastian_listening`, `nancy_tender` | 3 each | `rahel_closed` | 3 |
+| `samira_dismayed`, `cresswell_thoughtful`, `jordyn_resigning`, `zelia_protective`, `zelia_softened`, `benny_old_counting` | 2 each | `layla_softened`, `joaquin_torn`, `rivera_grim`, `patricia_listening`, `benny_recognising` | 1 each |
+| `patricio_neutral`, `anicette_neutral`, `qasim_defeated`, `jaime_casting` | 0 | | |

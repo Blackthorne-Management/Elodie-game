@@ -141,11 +141,11 @@ const ARRIVE: DialogueScript = script('claim_arrive', {
         '',
         'In the gate\'s arch, a woman in Zetwal\'s blue, the Crown\'s clerk three steps behind her with his pen.',
       ),
-      say(E, 'Envoy of Zetwal. The Lord Regent is informed of every arrival.'),
-      say(E, 'He was informed of this one four days ago, from a ship.'),
+      say(E, 'Envoy of Zetwal. The Lord Regent is informed of every arrival.', { mood: 'guarded' }),
+      say(E, 'He was informed of this one four days ago, from a ship.', { mood: 'guarded' }),
       say(G, 'Mother.'),
-      act([{ do: 'wait', ms: 600 }], E, 'Not here. He has heard. I have not. My rooms, when you have seen the city.'),
-      act([{ do: 'face', actor: 'npc:elodie_arch', facing: 'right' }], E, 'The envoy\'s household will report to the envoy\'s rooms.'),
+      act([{ do: 'wait', ms: 600 }], E, 'Not here. He has heard. I have not. My rooms, when you have seen the city.', { mood: 'guarded' }),
+      act([{ do: 'face', actor: 'npc:elodie_arch', facing: 'right' }], E, 'The envoy\'s household will report to the envoy\'s rooms.', { mood: 'guarded' }),
       act([{ do: 'look', actor: 'npc:arch_clerk' }], '', 'The clerk writes it down. A second time.'),
     ],
     next: 'anissa',
@@ -181,7 +181,7 @@ const ARRIVE: DialogueScript = script('claim_arrive', {
 });
 
 const GATE_XARAGUA_OPEN: DialogueScript = simple('gate_xaragua_open', [nar('Xaraguá\'s gate, open. The bricks are stacked by the wall, and the teal stone is clean where they were.')]);
-const ELODIE_ARCH: DialogueScript = simple('elodie_arch_talk', [say(E, 'My rooms, envoy. In the Quarter.')]);
+const ELODIE_ARCH: DialogueScript = simple('elodie_arch_talk', [say(E, 'My rooms, envoy. In the Quarter.', { mood: 'guarded' })]);
 const ARCH_CLERK: DialogueScript = simple('arch_clerk_talk', [nar('The Crown\'s clerk writes. He does not look up.')]);
 
 // ---- Beat 1: Mother's rooms (seat-rooms) ----------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ const ROOMS_SCENE: DialogueScript = script('rooms_scene', {
       say(E, 'You stayed close.'),
       say(A, 'I did.'),
       { if: has('choice.farewell_why'), speaker: E, text: 'Gianna. You asked me why I had to go. This is why. It took a year.' },
-      { if: has('choice.farewell_fine'), speaker: E, text: 'Gianna. You told me you would be fine. You were not. And you were.' },
+      { if: has('choice.farewell_fine'), speaker: E, text: 'Gianna. You told me you would be fine. You were not. And you were.', mood: 'worried' },
     ],
     next: 'azzy',
   },
@@ -322,7 +322,7 @@ function handOver(): DialogueLine[] {
         ],
         c.carrier === 'yari' ? Y : c.house === 'al_doria' ? S : c.carrier === 'bayarmaa' ? BY : c.carrier === 'haru' ? H : V,
         c.line,
-        { if: when },
+        { if: when, ...(c.mood ? { mood: c.mood } : {}) },
       ),
       { if: when, speaker: '', text: `The Master of the Chairs takes ${c.name}'s token and puts it in his coat.`, stage: [{ do: 'walk', actor: carrier, to: at(CONCOURSE.handOver.x - 2, CONCOURSE.handOver.y + 1), facing: 'up' }] },
     );
@@ -778,8 +778,8 @@ function claimStands(): Record<string, DialogueNode> {
           '',
           'Grandfather walks to the eighth chair on his cane, and puts his hand on the line cut into its back.',
         ),
-        say(PO, 'I sealed six pages under protest. Nobody read me the seventh.'),
-        say(PO, 'I remembered the wrong thing.'),
+        say(PO, 'I sealed six pages under protest. Nobody read me the seventh.', { mood: 'sad' }),
+        say(PO, 'I remembered the wrong thing.', { mood: 'sad' }),
       ],
       next: 'reckoning',
     },
@@ -904,7 +904,7 @@ const AZZY_CHALLENGE: DialogueScript = script('azzy_challenge_talk', {
   done: { lines: [say(Z, 'I\'ll hold you to it.')] },
 });
 
-const HALL_CLAIM_CLOSED: DialogueScript = simple('hall_claim_closed', [say('herald', 'The Challenge stands, envoy. Nobody leaves the Hall while it does.')]);
+const HALL_CLAIM_CLOSED: DialogueScript = simple('hall_claim_closed', [say('herald', 'The Challenge stands, envoy. Nobody leaves the Hall while it does.', { mood: 'impassive' })]);
 
 /** The people in the Hall at the bell and the Claim (one line each). */
 const CLAIM_PEOPLE: DialogueScript[] = [
@@ -982,7 +982,7 @@ const ARRIVALS: DialogueScript = script('hearing_arrivals', {
         'There you are. Your grandfather walked. I took the ship, like a sensible woman.',
       ),
       { if: has('item.volume_one'), speaker: '', text: 'Gianna puts Volume One into Grandmother\'s hands.' },
-      { if: has('item.volume_one'), speaker: AN, text: 'Twenty years overdue. I will not charge her. I will tell her so, in front of people.' },
+      { if: has('item.volume_one'), speaker: AN, text: 'Twenty years overdue. I will not charge her. I will tell her so, in front of people.', mood: 'sly' },
       { if: has('item.volume_one'), speaker: '', text: '(Volume One is back on Grandmother\'s shelf, or will be.)', set: { 'side.volume_one.done': true, 'item.volume_one': false } },
     ],
     next: 'sebastian',
@@ -1050,7 +1050,7 @@ function witness(who: readonly { npc: string; home: P }[], said: DialogueLine[],
   const up: StageCue[] = who.map((w, i) => ({ do: 'walk', actor: `npc:${w.npc}`, to: at(spot.x - i, spot.y), facing: 'left', async: i < who.length - 1 }));
   const back: StageCue[] = who.map((w) => ({ do: 'walk', actor: `npc:${w.npc}`, to: at(w.home.x, w.home.y), facing: 'up', async: true }));
   return [
-    act([...up, { do: 'look', actor: `npc:${who[0]!.npc}` }], said[0]!.speaker ?? '', said[0]!.text, extra),
+    act([...up, { do: 'look', actor: `npc:${who[0]!.npc}` }], said[0]!.speaker ?? '', said[0]!.text, said[0]!.mood ? { ...extra, mood: said[0]!.mood } : extra),
     ...said.slice(1).map((l) => ({ ...l, ...extra })),
     act([...back, { do: 'look', actor: 'npc:rael_hearing' }], R, answer, extra),
   ];
@@ -1093,7 +1093,7 @@ const HEARING: DialogueScript = script('hearing', {
     lines: [
       ...witness(
         [{ npc: 'amanda_hearing', home: B_AMANDA }],
-        [say(AM, 'I baked for twenty years on his money. I knew whose. I said "the pot".'), say(AM, 'Write that he paid for the flour and I paid for the nights.')],
+        [say(AM, 'I baked for twenty years on his money. I knew whose. I said "the pot".', { mood: 'fierce' }), say(AM, 'Write that he paid for the flour and I paid for the nights.', { mood: 'fierce' })],
         'Write it. She paid more.',
       ),
     ],
@@ -1141,9 +1141,9 @@ const HEARING: DialogueScript = script('hearing', {
   confession: {
     lines: [
       act([{ do: 'look', actor: 'npc:chamberlain_hearing' }], CH, 'Is there anything the accused would say unasked?'),
-      act([{ do: 'face', actor: 'npc:rael_hearing', facing: 'right' }, { do: 'look', actor: 'npc:rael_hearing' }], R, 'I founded the Quiet Crown. Long ago, as a way for frightened people to be useful. None of you knew.'),
-      say(R, 'That was the design, and the design let the Regent\'s almoner turn your cells against a child.'),
-      say(R, 'I dissolve its chain of command here, in front of you, which is the only place it could be dissolved.'),
+      act([{ do: 'face', actor: 'npc:rael_hearing', facing: 'right' }, { do: 'look', actor: 'npc:rael_hearing' }], R, 'I founded the Quiet Crown. Long ago, as a way for frightened people to be useful. None of you knew.', { mood: 'lamplight' }),
+      say(R, 'That was the design, and the design let the Regent\'s almoner turn your cells against a child.', { mood: 'lamplight' }),
+      say(R, 'I dissolve its chain of command here, in front of you, which is the only place it could be dissolved.', { mood: 'lamplight' }),
       say(R, 'What you are now is what you do.'),
       act([{ do: 'look', actor: 'npc:follower_gallery' }], QF, 'Then we will listen to ourselves.', { if: has('debate.seat_claim.mediated') }),
       act([{ do: 'look', actor: 'npc:follower_gallery' }], QF, 'You made us. Say what we are now.', { if: not('debate.seat_claim.mediated') }),
@@ -1383,7 +1383,7 @@ const HEARING_PEOPLE: DialogueScript[] = [
   simple('hollis_hearing_talk', [say(HO, 'The Hall keeps the record. I am the Hall\'s, today.')]),
   simple('treasurer_hearing_talk', [say(TR, 'Eleven years. I will say it once, in there. Once is enough.')]),
   simple('daughter_hearing_talk', [say(TD, 'Alive. I keep saying it. It does not wear out.')]),
-  simple('amanda_hearing_talk', [say(AM, 'I will say it to his face. That is the only way I know how to say anything.')]),
+  simple('amanda_hearing_talk', [say(AM, 'I will say it to his face. That is the only way I know how to say anything.', { mood: 'fierce' })]),
   simple('lamp_oil_hearing_talk', [say(LO, 'The price in his own hand. That is all I came for.')]),
   simple('printer_hearing_talk', [say(PR, 'Every word, for the press.')]),
   simple('benny_hearing_talk', [say(BO, 'A witness goes where the Hearing is.')]),
@@ -1394,7 +1394,7 @@ const HEARING_PEOPLE: DialogueScript[] = [
   simple('rahel_gallery_talk', [say(RA, 'I came to see it. I am seeing it.')]),
   simple('patricia_gallery_talk', [say(PA, 'Eight chairs. I counted.')]),
   simple('patricio_gallery_talk', [nar('Grandfather sits in the gallery on his cane, and watches Rael. He says nothing.')]),
-  simple('sebastian_gallery_talk', [say(SB, 'I play in this Hall on feast days. Today I am listening.')]),
+  simple('sebastian_gallery_talk', [say(SB, 'I play in this Hall on feast days. Today I am listening.', { mood: 'listening' })]),
   simple('zelia_gallery_talk', [say(ZE, 'The keep has the elders\' ledgers. I brought them.')]),
   simple('gallery_pilgrim_talk', [say('pilgrim', 'We walked from Zetwal to see the Throne. Today it is being used.')]),
   simple('camp_leader_gallery_talk', [say('camp_leader', 'Someone stood on it. I came to see what she does next.')]),
@@ -1414,7 +1414,7 @@ const HEARING_PEOPLE: DialogueScript[] = [
   simple('benny_iron_talk', [nar('Old Benny is at the doors. He is not counting anything.')]),
   simple('yari_hall_talk', [say(Y, 'The eighth chair. I can sit in it. I am getting used to that.')]),
   simple('azzy_hall_talk', [say(Z, 'I\'ll hold you to it.')]),
-  simple('samira_hall_talk', [say(S, 'I am standing with the party. The guild can sit without me.')]),
+  simple('samira_hall_talk', [say(S, 'I am standing with the party. The guild can sit without me.', { mood: 'earnest' })]),
   simple('bayarmaa_hall_talk', [say(BY, 'Skarragol\'s chair. The braid is on it.')]),
   simple('haru_hall_talk', [say(H, 'I am listening. Somebody in this Hall should be.')]),
   simple('vikram_hall_talk', [say(V, 'I am standing still. On purpose. In a Hall. Do not tell Aiyana.')]),
@@ -1426,7 +1426,7 @@ const HEARING_PEOPLE: DialogueScript[] = [
 // ---- The Concourse's people in Chapter 12 (overlays on the built Chapter 5 conversations) ------------------------------------
 
 const CH12: Condition = has('act11.complete');
-const one = (id: string, speaker: string, text: string): MusterOverlay => ({ id, nodes: { m_start: { lines: [say(speaker, text)] } }, when: CH12 });
+const one = (id: string, speaker: string, text: string, mood?: string): MusterOverlay => ({ id, nodes: { m_start: { lines: [say(speaker, text, mood ? { mood } : {})] } }, when: CH12 });
 
 // ---- The contract board's dispatch (the outline 7.4: "after the release the board gets the Seat's errands"; Claude's call,
 // Oct 27): over the Regent's notice the Hall has pinned a job, the Compact's roll of the eight houses for the company that
@@ -1489,7 +1489,7 @@ export const CLAIM_OVERLAYS: readonly MusterOverlay[] = [
   one('seat_outfitter_talk', 'seat_outfitter', 'Madam. The Hall is cold at the bell, Claim or no Claim. I have nothing new; the old is warm.'),
   one('embassy_porter_talk', 'embassy_porter', 'Embassy of Al-Doria. The envoy is at the Hall. For once, so is everyone else.'),
   one('seat_gate_clerk_talk', 'seat_gate_clerk', 'Gate of Gold. Everyone in, nothing out, until the Claim is heard. By nobody\'s order. It is just how it is.'),
-  one('hall_herald_talk', 'herald', 'The Hall of the Throne. Today it speaks when the claimant speaks.'),
+  one('hall_herald_talk', 'herald', 'The Hall of the Throne. Today it speaks when the claimant speaks.', 'impassive'),
   one('pilgrim_thanks_talk', 'pilgrim_bandaged', 'We came back for the Claim. The escort insisted.'),
   one('pilgrim_escort_talk', 'pilgrim_bandaged', 'We came back for the Claim. The escort insisted.'),
   one('deserter_escort_talk', 'deserter', 'A post is a post. This one is at a Claim.'),

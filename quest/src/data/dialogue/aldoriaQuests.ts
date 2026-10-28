@@ -455,7 +455,7 @@ function paidUp(how: string): DialogueLine[] {
   return [
     act([{ do: 'face', actor: 'npc:crown_factor', facing: 'left' }], '', 'The factor counts the coins into Samira\'s palm, one at a time. She makes him start again when he loses count.'),
     nar('She writes "paid" across the invoice, and hands him the receipt.', { set: { [how]: true, [I.done]: true } }),
-    say(S, '...No one has ever helped me collect.'),
+    say(S, '...No one has ever helped me collect.', { mood: 'earnest' }),
     nar('She folds her copy very small, and keeps it.'),
   ];
 }

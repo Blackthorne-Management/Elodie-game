@@ -561,7 +561,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           'The postern in the keep\'s wall opens from inside, and shuts again behind a tall woman in violet.',
         ),
         nar('She stands in the rain with her hands behind her back, as she stood in the hall.'),
-        act([{ do: 'walk', actor: 'azzy', to: at(CLOSE.offerStrip - 2, CLOSE.gate.y), facing: 'left' }], JO, 'Azriel. You\'ve got Mother\'s jaw. Don\'t lead with it.'),
+        act([{ do: 'walk', actor: 'azzy', to: at(CLOSE.offerStrip - 2, CLOSE.gate.y), facing: 'left' }], JO, 'Azriel. You\'ve got Mother\'s jaw. Don\'t lead with it.', { mood: 'mothers_jaw' }),
         say(JO, 'I know who you are. All three of you. Mother writes: Kayla writes to Mother, and Mother writes to everyone.'),
         say(JO, 'I don\'t defect for family. I defect for law, and I have not decided.'),
         say(G, 'Then why are you in the rain?'),
@@ -624,10 +624,10 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
     anissa: {
       lines: [
         act([{ do: 'face', actor: 'npc:sebastian', facing: 'down' }, { do: 'wait', ms: 700 }], '', 'Then he sees Anissa, and goes down on one knee on the cold flags.'),
-        say(SB, 'And this is Anissa. Who hums. Your mother wrote that you hum.'),
-        say(SB, 'It is the only thing about either of you she has ever written to me that was not the weather.'),
+        say(SB, 'And this is Anissa. Who hums. Your mother wrote that you hum.', { mood: 'tender' }),
+        say(SB, 'It is the only thing about either of you she has ever written to me that was not the weather.', { mood: 'tender' }),
         say(A, 'I don\'t hum.'),
-        say(SB, 'Then I will listen for it anyway. I\'m your uncle Sebastian.', { set: { 'story.sebastian_met': true } }),
+        say(SB, 'Then I will listen for it anyway. I\'m your uncle Sebastian.', { mood: 'listening', set: { 'story.sebastian_met': true } }),
       ],
       next: 'help',
     },
@@ -638,7 +638,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         say(G, 'Tomorrow night. The loud piece. That\'s the hour we need.'),
         say(SB, 'Then I shall play the Toccata at that hour and not a bar sooner, and the slow movement after it.'),
         say(SB, 'If the Regent stands up before the end, I shall start it again from the top. He won\'t. He asked for it.'),
-        say(SB, 'Nobody in this city will hear a door open while I am playing. Nobody will hear a cannon.'),
+        say(SB, 'Nobody in this city will hear a door open while I am playing. Nobody will hear a cannon.', { mood: 'listening' }),
         say(SB, 'Your mother has written to me about the weather for twenty years. I have come to believe the weather in Zetwal is interesting.'),
       ],
     },
@@ -931,11 +931,11 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           '',
           'The watch comes in from the yard at a run. Jordyn puts herself between the almswomen and the party.',
         ),
-        say(JO, 'Captain of the watch. The envoy\'s household is under arrest for the Crown\'s archive.'),
-        act([{ do: 'wait', ms: 700 }], JO, 'Under arrest, Almoner. Not under you.'),
+        say(JO, 'Captain of the watch. The envoy\'s household is under arrest for the Crown\'s archive.', { mood: 'mothers_jaw' }),
+        act([{ do: 'wait', ms: 700 }], JO, 'Under arrest, Almoner. Not under you.', { mood: 'mothers_jaw' }),
         say(AL, 'The Regent\'s almoner does not answer to the watch.'),
         say(JO, 'No. But the Assize does, and they\'ll stand before it in the morning.'),
-        say(JO, 'Envoys are tried. They are not disappeared on the heath. Not on my watch, which this is.'),
+        say(JO, 'Envoys are tried. They are not disappeared on the heath. Not on my watch, which this is.', { mood: 'mothers_jaw' }),
         act([{ do: 'wait', ms: 1200 }], AL, 'The Assize, then. The Regent will enjoy that.', { set: { 'story.caught': true } }),
         act(
           [
@@ -958,8 +958,8 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         }),
         say(JO, 'Into the court\'s evidence.'),
         say(ED, 'I\'m terribly sorry, Captain.'),
-        say(JO, 'Shut up, Mr. Stillwater.'),
-        act([{ do: 'look', actor: 'azzy' }], JO, 'Mother\'s jaw. I said.'),
+        say(JO, 'Shut up, Mr. Stillwater.', { mood: 'mothers_jaw' }),
+        act([{ do: 'look', actor: 'azzy' }], JO, 'Mother\'s jaw. I said.', { mood: 'mothers_jaw' }),
         nar('The watch walks them down the undercroft stair.', { fx: 'fade', set: { 'travel.next': 'aldermoor-keep/cells' } }),
       ],
     },
@@ -976,7 +976,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         ),
         say(SB, 'The Regent gave me leave. He said, "I am not a monster, Mr. Jean-Philippe. I am a court."'),
         say(SB, 'I believe him about the second thing.'),
-        say(SB, 'Whatever you took, it was worth the cathedral. I\'ll be in the gallery.'),
+        say(SB, 'Whatever you took, it was worth the cathedral. I\'ll be in the gallery.', { mood: 'tender' }),
         act([{ do: 'exit', actor: 'sebastian_cell', to: at(38, 26) }], '', 'He passes the blanket through the bars, and goes back up the stair.'),
       ],
       next: 'blanket',
@@ -1289,7 +1289,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
     jordyn: {
       lines: [
         act([{ do: 'walk', actor: 'npc:jordyn', to: at(KEEP.table.x + 1, KEEP.table.y + 1), facing: 'up' }, { do: 'wait', ms: 700 }], '', 'Jordyn unpins her captain\'s knot and lays it on the clerk\'s table.'),
-        say(JO, 'Captain of the watch, resigning. The watch is dismissed.'),
+        say(JO, 'Captain of the watch, resigning. The watch is dismissed.', { mood: 'resigning' }),
         act(
           [
             ...[at(10, 21), at(11, 21), at(12, 21), at(10, 22), at(11, 22), at(12, 22)].map(
@@ -1301,7 +1301,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           'Six of the watch step out of their line, and stand behind her.',
         ),
         act([{ do: 'look', actor: 'npc:al_regent' }], RG, 'You will hang, Captain.'),
-        say(JO, 'Then try me. I\'ll stand in that dock. It is the only honest place in this building.'),
+        say(JO, 'Then try me. I\'ll stand in that dock. It is the only honest place in this building.', { mood: 'resigning' }),
         act([{ do: 'wait', ms: 1200 }], RG, 'Not today. The court has been interrupted enough.', { set: { 'story.jordyn_defected': true } }),
       ],
       next: 'tide',
@@ -1408,7 +1408,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
     },
     sebastian_anissa: {
       lines: [
-        say(SB, 'I am told you held a door for an hour. I have never held anything that long but a note.'),
+        say(SB, 'I am told you held a door for an hour. I have never held anything that long but a note.', { mood: 'tender' }),
         say(A, 'I counted.'),
         nar('He gives her the recital\'s bill from his coat. She keeps it.', { set: { 'item.recital_bill': true } }),
         act([{ do: 'exit', actor: 'sebastian_d', to: at(26, HEATH.roadRows[1]) }], '', 'He goes back up the road to the city, to practise for Eightgate.'),

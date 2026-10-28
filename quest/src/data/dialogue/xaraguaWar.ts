@@ -865,7 +865,7 @@ const CELLAR: DialogueScript = script('war_cellar', {
   },
 });
 
-const ANACO_CELLAR: DialogueScript = simple('anaco_cellar_talk', [say(AN, 'My daughter is on the stairs. I hear her.')]);
+const ANACO_CELLAR: DialogueScript = simple('anaco_cellar_talk', [say(AN, 'My daughter is on the stairs. I hear her.', { mood: 'tender' })]);
 
 // ---- Stage three: Caona's stand and the chain post (the Echo battle and M-XAR-3) --------------------------------------------
 
@@ -894,7 +894,7 @@ const PIER_ECHO_ENTER: DialogueScript = script('pier_echo_enter', {
       nar('The same pier fifty years ago, by day, under the old sails. The Crown\'s longboats are coming in.'),
       say(AF, 'I\'m holding the door, Gigi. Hold the pier.'),
       act([{ do: 'look', actor: 'npc:echo_caona_pier' }], CA, 'Marshal. Hold the pier with me. Your companies form on the shore behind us, or they form in the water.'),
-      act([{ do: 'look', actor: 'npc:echo_benny_pier' }], BN, 'Forming. Mostly.', { set: { 'battle.next': 'caona_stand', 'battle.after': 'caona_after' } }),
+      act([{ do: 'look', actor: 'npc:echo_benny_pier' }], BN, 'Forming. Mostly.', { mood: 'wry', set: { 'battle.next': 'caona_stand', 'battle.after': 'caona_after' } }),
     ],
   },
   after: { lines: [], next: [{ if: not('anchor.chain_post'), to: 'pin' }, { to: 'done' }] },
@@ -965,7 +965,7 @@ const PIER_ECHO_RETURN: DialogueScript = script('pier_echo_return', {
 });
 
 const ECHO_CAONA: DialogueScript = simple('echo_caona_pier_talk', [say(CA, 'Hold the pier, Marshal.')]);
-const ECHO_BENNY: DialogueScript = simple('echo_benny_pier_talk', [say(BN, 'My company forms where you tell it to. I said mostly.')]);
+const ECHO_BENNY: DialogueScript = simple('echo_benny_pier_talk', [say(BN, 'My company forms where you tell it to. I said mostly.', { mood: 'wry' })]);
 
 // ---- Beat 8: the Harbor Turn (the second review's 3.1: the threat legible, the signet's lie, then the choice) ------------------
 
@@ -988,7 +988,7 @@ const TURN: DialogueScript = script('harbor_turn', {
         'A longboat puts in at the pier\'s end. Up the boards, with his vanguard behind him, comes Rael.',
       ),
       act([{ do: 'walk', actor: 'azzy', to: at(VILLAGE.turnStep.x + 1, VILLAGE.turnStep.y), facing: 'down' }, { do: 'face', actor: 'follower', facing: 'down' }], '', 'Azzy steps out of the line, to Gianna\'s side, and faces down the pier.'),
-      act([{ do: 'look', actor: 'rael_t' }], R, 'Envoy. Ardencia stands with the Crown. Stand aside, and nobody on this pier is hurt.', { fx: 'signet' }),
+      act([{ do: 'look', actor: 'rael_t' }], R, 'Envoy. Ardencia stands with the Crown. Stand aside, and nobody on this pier is hurt.', { mood: 'unreadable', fx: 'signet' }),
     ],
     next: 'ring',
   },
@@ -1005,21 +1005,21 @@ const TURN: DialogueScript = script('harbor_turn', {
   },
   strike: {
     lines: [
-      say(R, '...So. Your mother said you would.'),
+      say(R, '...So. Your mother said you would.', { mood: 'unreadable' }),
       act(
         [
           { do: 'walk', actor: 'rivera_t', to: at(VILLAGE.pierEnd.x + 1, VILLAGE.pierEnd.y), facing: 'up', async: true },
           { do: 'walk', actor: 'jaime_t', to: at(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y + 1), facing: 'up' },
         ],
         R,
-        'Rivera. Jaime. Bind them. I will not raise a hand to her.',
+        'Rivera. Jaime. Bind them. I will not raise a hand to her.', { mood: 'stern' },
       ),
       say(SG, 'Not on the pier, envoy. Not with you in the line. The companies won\'t fire.', { set: { 'battle.next': 'pier_rael', 'battle.after': 'rael_strike_after' } }),
     ],
   },
   trust: {
     lines: [
-      act([{ do: 'face', actor: 'rael_t', facing: 'down' }], R, 'Rivera. Jaime. The Patience. Bind what you can. Sink nothing with people in it.'),
+      act([{ do: 'face', actor: 'rael_t', facing: 'down' }], R, 'Rivera. Jaime. The Patience. Bind what you can. Sink nothing with people in it.', { mood: 'stern' }),
       act(
         [
           { do: 'exit', actor: 'rivera_t', to: at(VILLAGE.longboat.x, VILLAGE.longboat.y), async: true },
@@ -1040,7 +1040,7 @@ const TURN: DialogueScript = script('harbor_turn', {
         HL,
         'The Lord Regent\'s compliments. He will not come up the pier himself. He sends me.',
       ),
-      act([{ do: 'face', actor: 'rael_t', facing: 'down' }], R, 'Then I will stand here.'),
+      act([{ do: 'face', actor: 'rael_t', facing: 'down' }], R, 'Then I will stand here.', { mood: 'stern' }),
     ],
     next: 'hale_whistle',
   },
@@ -1108,12 +1108,12 @@ const TRUTH: DialogueScript = script('harbor_truth', {
   start: {
     lines: [
       nar('The pier by lamplight. Rael stands with his hands behind his back. On his hand, the signet is a plain ring.'),
-      { if: STRIKE, speaker: R, text: 'I would have told you on the pier if you had let me. You did not. That is my doing too; I taught you not to.' },
-      say(R, 'Your mother and I married twenty-five years ago, in the year I was given the name you know me by.'),
-      say(R, 'A man with that name has enemies who hunt children. Two daughters of two houses are a claim to a Throne.'),
-      say(R, 'So you were Limyè, and I was the man who sold Xaraguá.'),
+      { if: STRIKE, speaker: R, text: 'I would have told you on the pier if you had let me. You did not. That is my doing too; I taught you not to.', mood: 'lamplight' },
+      say(R, 'Your mother and I married twenty-five years ago, in the year I was given the name you know me by.', { mood: 'lamplight' }),
+      say(R, 'A man with that name has enemies who hunt children. Two daughters of two houses are a claim to a Throne.', { mood: 'lamplight' }),
+      say(R, 'So you were Limyè, and I was the man who sold Xaraguá.', { mood: 'lamplight' }),
       say(G, 'Mother said one true thing at Eightgate.'),
-      say(R, 'She said it to me too. She was right.'),
+      say(R, 'She said it to me too. She was right.', { mood: 'lamplight' }),
     ],
     next: 'ring',
   },
@@ -1126,13 +1126,13 @@ const TRUTH: DialogueScript = script('harbor_truth', {
   },
   crown: {
     lines: [
-      say(R, 'The Throne believes it bought me with the harbor\'s gold and a chair for my blood. I let it.'),
-      say(R, 'A man the Crown has bought is shown its ledgers.'),
+      say(R, 'The Throne believes it bought me with the harbor\'s gold and a chair for my blood. I let it.', { mood: 'lamplight' }),
+      say(R, 'A man the Crown has bought is shown its ledgers.', { mood: 'lamplight' }),
       say(R, 'Ask the lamp-oil seller who she has never met. Ask your Titi Amanda who pays for the flour. Nine doors, Gianna.'),
-      say(R, 'The Quiet Crown. I founded it, long ago, as a way for frightened people to be useful. Its cells do not know me.'),
-      say(R, 'They were bent anyway. Against your sister. By the Regent\'s almoner. My design did that.'),
-      say(R, 'That is mine to answer for, and I will answer for it where it can be written down.'),
-      say(R, 'My father kept his oath and it cost him everything. I wanted to know what would happen if someone kept the goal instead.'),
+      say(R, 'The Quiet Crown. I founded it, long ago, as a way for frightened people to be useful. Its cells do not know me.', { mood: 'lamplight' }),
+      say(R, 'They were bent anyway. Against your sister. By the Regent\'s almoner. My design did that.', { mood: 'lamplight' }),
+      say(R, 'That is mine to answer for, and I will answer for it where it can be written down.', { mood: 'lamplight' }),
+      say(R, 'My father kept his oath and it cost him everything. I wanted to know what would happen if someone kept the goal instead.', { mood: 'lamplight' }),
     ],
     choices: [
       { text: 'You tested us.', set: { 'choice.truth_answer': 'tested' }, next: 'tested' },
@@ -1142,12 +1142,12 @@ const TRUTH: DialogueScript = script('harbor_truth', {
   tested: {
     lines: [
       say(G, 'You tested us.'),
-      say(R, 'Yes. Your mother told me I should never have. She was right. I needed to know you would stand in front of her. You did.'),
+      say(R, 'Yes. Your mother told me I should never have. She was right. I needed to know you would stand in front of her. You did.', { mood: 'lamplight' }),
     ],
     next: 'azzy',
   },
   lied: {
-    lines: [say(G, 'You lied to us for twenty years.'), say(R, 'Yes. That one is not staged. Nothing I say tonight makes it smaller.')],
+    lines: [say(G, 'You lied to us for twenty years.'), say(R, 'Yes. That one is not staged. Nothing I say tonight makes it smaller.', { mood: 'lamplight' })],
     next: 'azzy',
   },
   azzy: {
@@ -1192,13 +1192,13 @@ const TRUTH: DialogueScript = script('harbor_truth', {
       say(R, 'I brought my father where I meant to stand. He asked to come. He always asks.'),
       act([{ do: 'walk', actor: 'benny_p', to: at(VILLAGE.pierEnd.x + 1, VILLAGE.turnStep.y + 2), facing: 'left' }, { do: 'wait', ms: 900 }], '', 'Benny stops beside his son, and says nothing to him. Then he goes on, to Gianna.'),
       { if: TRUST, speaker: BO, text: 'The Locket. I said I made the other half for a lord who did not deserve one yet. I did not say which lord.' },
-      { if: STRIKE, speaker: BO, text: 'He told me you might. He said to come anyway. Somebody has to carry the ones he bound.' },
+      { if: STRIKE, speaker: BO, text: 'He told me you might. He said to come anyway. Somebody has to carry the ones he bound.', mood: 'tender' },
     ],
     next: 'nancy',
   },
   nancy: {
     lines: [
-      act([{ do: 'walk', actor: 'nancy_p', to: at(VILLAGE.turnStep.x, VILLAGE.turnStep.y + 2), facing: 'up' }], NA, 'Child. There are hurt people on this island and a lamp to hold. Show me where.'),
+      act([{ do: 'walk', actor: 'nancy_p', to: at(VILLAGE.turnStep.x, VILLAGE.turnStep.y + 2), facing: 'up' }], NA, 'Child. There are hurt people on this island and a lamp to hold. Show me where.', { mood: 'firm' }),
       say(A, 'The Song House. I\'ll hold it.'),
       act(
         [
@@ -1230,7 +1230,7 @@ const SONG_SCENE: DialogueScript = script('war_song', {
       act(
         [{ do: 'enter', actor: 'benny_s', look: 'benny_old', from: at(SONG.door.x, SONG.door.y), to: at(SONG.benny.x, SONG.benny.y), facing: 'up' }, { do: 'look', actor: 'benny_s' }],
         BO,
-        'Forty. I count. It is what I do at the end of a thing.',
+        'Forty. I count. It is what I do at the end of a thing.', { mood: 'counting' },
       ),
       say(BO, 'My son. He was always his own. He never explained himself to me either.'),
     ],
@@ -1272,14 +1272,14 @@ const SONG_SCENE: DialogueScript = script('war_song', {
         ],
         NA,
         'Gianna. Zelia will want to hear that you ate something. I\'ll tell her you did.',
-        { set: { 'story.wounded_sheltered': true } },
+        { mood: 'tender', set: { 'story.wounded_sheltered': true } },
       ),
     ],
   },
 });
 
-const BENNY_SONG: DialogueScript = simple('benny_war_talk', [say(BO, 'Forty-one. One of them walked in on his own. I count him twice.')]);
-const NANCY_SONG: DialogueScript = simple('nancy_war_talk', [say(NA, 'Clean water, Gianna, and somebody to sit with each of them. The rest is noise.')]);
+const BENNY_SONG: DialogueScript = simple('benny_war_talk', [say(BO, 'Forty-one. One of them walked in on his own. I count him twice.', { mood: 'counting' })]);
+const NANCY_SONG: DialogueScript = simple('nancy_war_talk', [say(NA, 'Clean water, Gianna, and somebody to sit with each of them. The rest is noise.', { mood: 'firm' })]);
 
 // ---- Beat 10: the Regent's retreat (the caney at night; the card) ---------------------------------------------------------
 
@@ -1287,7 +1287,7 @@ const CANEY_SCENE: DialogueScript = script('war_caney', {
   start: {
     lines: [
       nar('The caney at night. The Crown\'s banner is gone from the doors. Anaco is in his duho, the elders in their circle.', { fx: 'fade' }),
-      act([{ do: 'look', actor: 'npc:anaco_free' }], AN, 'The harbor stays with the people who fish it.'),
+      act([{ do: 'look', actor: 'npc:anaco_free' }], AN, 'The harbor stays with the people who fish it.', { mood: 'stern' }),
       say(AN, 'The Regent has gone home to his Throne. Someone must go and stand on it.'),
       { if: has('debate.xaragua_harbor.mediated'), speaker: AN, text: 'The elders agreed before I was out of my irons. That has never happened.' },
       { if: not('debate.xaragua_harbor.mediated'), speaker: AN, text: 'The elders agreed after. That is more usual.' },
@@ -1323,7 +1323,7 @@ const CANEY_SCENE: DialogueScript = script('war_caney', {
         [{ do: 'enter', actor: 'benny_c', look: 'benny_old', from: at(CANEY.doors.x, CANEY.doors.y + 2), to: at(CANEY.doors.x + 1, CANEY.doors.y + 1), facing: 'up' }, { do: 'look', actor: 'benny_c' }],
         BO,
         'He went north. He left me. He said you would need a witness more than he needed a father.',
-        { set: { 'voyage.next': 'xaragua_ardencia_strike' } },
+        { mood: 'tender', set: { 'voyage.next': 'xaragua_ardencia_strike' } },
       ),
     ],
     next: 'end',

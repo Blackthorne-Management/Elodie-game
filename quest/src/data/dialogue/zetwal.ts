@@ -389,7 +389,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'elodie',
       lines: [
         { text: 'There you are.' },
-        { text: 'A few weeks. Maybe longer. The Regent likes to keep envoys waiting.' },
+        { text: 'A few weeks. Maybe longer. The Regent likes to keep envoys waiting.', mood: 'worried' },
       ],
       // Remembered (Oct 19): Grandmother and the dock bring it up again.
       choices: [
@@ -404,7 +404,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
     fine: {
       speaker: 'elodie',
-      lines: [{ text: 'I know you will. That is not the same as me not worrying.' }],
+      lines: [{ text: 'I know you will. That is not the same as me not worrying.', mood: 'worried' }],
       next: 'goodbye',
     },
     goodbye: {
@@ -412,9 +412,9 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         { text: 'Your grandmother has something for you. She has been waiting until you were ready. I think you are.' },
         { text: "Go and see her at home, in your grandfather's study." },
-        { text: 'Anissa. Stay close to your sister.' },
+        { text: 'Anissa. Stay close to your sister.', mood: 'worried' },
         say(A, '...I will.'),
-        { text: 'The Gaze sees you both. So do I.' },
+        { text: 'The Gaze sees you both. So do I.', mood: 'worried' },
         // Staged (owner rule, Oct 17): she walks out through the gate to her carriage.
         nar("Mother's carriage rolls out through the east gate, toward the Throne.", {
           fx: 'fade',
@@ -990,14 +990,14 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'There you are. Did your mother get away?' },
         // What Gianna said to Mother at the gate (elodie_talk), remembered.
         { if: { all: [{ notFlag: 'choice.farewell_why' }, { notFlag: 'choice.farewell_fine' }] }, speaker: G, text: 'Her carriage just left.' },
-        { if: { all: [{ notFlag: 'choice.farewell_why' }, { notFlag: 'choice.farewell_fine' }] }, text: "Good. Then she can't scold me for this." },
+        { if: { all: [{ notFlag: 'choice.farewell_why' }, { notFlag: 'choice.farewell_fine' }] }, text: "Good. Then she can't scold me for this.", mood: 'sly' },
         { if: { flag: 'choice.farewell_why' }, speaker: G, text: 'Her carriage just left. She said the Crown is talking about Xaraguá again.' },
         { if: { flag: 'choice.farewell_why' }, text: 'Is it. Then she told you more than she told me. You are old enough to be told things.' },
-        { if: { flag: 'choice.farewell_why' }, text: 'So here is one more. And now she cannot scold me for it.' },
+        { if: { flag: 'choice.farewell_why' }, text: 'So here is one more. And now she cannot scold me for it.', mood: 'sly' },
         { if: { flag: 'choice.farewell_fine' }, speaker: G, text: "Her carriage just left. I told her we'd be fine." },
         { if: { flag: 'choice.farewell_fine' }, text: 'And did she believe you?' },
         { if: { flag: 'choice.farewell_fine' }, speaker: G, text: 'No.' },
-        { if: { flag: 'choice.farewell_fine' }, text: 'Neither do I. That is why you get this.' },
+        { if: { flag: 'choice.farewell_fine' }, text: 'Neither do I. That is why you get this.', mood: 'sly' },
         nar('Grandmother opens a drawer in the map table and takes out a small gold locket shaped like the sun.', {
           stage: [
             { do: 'face', actor: 'npc:anicette', facing: 'right' },
@@ -1069,7 +1069,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     },
     question: {
       speaker: 'anicette',
-      lines: [{ text: 'You read it. Good. Then tell me: at the ford of Cendre, how many dead did our healers count?' }],
+      lines: [{ text: 'You read it. Good. Then tell me: at the ford of Cendre, how many dead did our healers count?', mood: 'sly' }],
       choices: [
         { text: 'Four hundred.', next: 'wrong' },
         { text: 'Forty.', next: 'right' },
@@ -1084,9 +1084,9 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       set: { 'side.overdue.vol2': true },
       lines: [
         { text: 'Forty. And three hundred sent home. Remember that, the next time someone sings about Rael the Ruthless.' },
-        { text: 'Here. Three years overdue. I wrote in the margins, so the archive gets back more than it lent.' },
+        { text: 'Here. Three years overdue. I wrote in the margins, so the archive gets back more than it lent.', mood: 'sly' },
         say(G, 'Grandmother! You wrote in a library book?'),
-        { text: 'Somebody had to correct it, little archivist.' },
+        { text: 'Somebody had to correct it, little archivist.', mood: 'sly' },
         nar('(Gianna got back "Ash Wars Gossip, Volume Two".)'),
       ],
     },
@@ -1266,7 +1266,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     say('patricio_old', 'Because there was no seventh clause when we swore. I would remember. I signed under Caona\'s name.'),
     say('patricio_old', 'The whole city is uneasy. Crown ships sighted off the south reef. People ask me if we are next.'),
     say('patricio_old', 'Gianna. Benny\'s son rules Ardencia now. Lord Rael. They call him ruthless. Benny swore that oath with us.'),
-    say('patricio_old', 'Go to Ardencia. Ask him to stand with Xaraguá, as his father did. Take Yari. Take your papers.'),
+    say('patricio_old', 'Go to Ardencia. Ask him to stand with Xaraguá, as his father did. Take Yari. Take your papers.', { mood: 'stern' }),
     say(G, 'And if he says no?'),
     { speaker: 'patricio_old', text: 'Then ask him why his father said yes.', set: { 'story.ardencia_asked': true, 'act2.complete': true } },
   ]),
@@ -1293,7 +1293,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'patricio_old',
       set: { 'story.met_patricio': true },
       lines: [
-        { text: 'Gianna? Anissa? But the bridge... they told me it fell at dawn.' },
+        { text: 'Gianna? Anissa? But the bridge... they told me it fell at dawn.', mood: 'sad' },
         say(G, 'The rope bridge fell. We came over the Chain Bridge.'),
         { text: 'The Chain Bridge.' },
         { text: 'I raised that bridge the night before the signing. And I lowered it again before morning. I never knew why.' },
@@ -1302,8 +1302,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         { text: 'So Anicette gave it to you. Then I suppose I do know why.' },
         say(G, 'Grandfather, I was... you. For a little while.'),
         { text: 'Hm. I hope I was polite to you.' },
-        { text: 'Fifty years I have read the names at this lamp. Tonight it will not take a flame. Not from me, not from anyone.' },
-        { text: 'Without the lamp the names are not read, and people go home with their grief still in their mouths.' },
+        { text: 'Fifty years I have read the names at this lamp. Tonight it will not take a flame. Not from me, not from anyone.', mood: 'sad' },
+        { text: 'Without the lamp the names are not read, and people go home with their grief still in their mouths.', mood: 'sad' },
         { text: 'Will you try, archivist? You were always better with fire than I was.' },
       ],
     },
@@ -1314,7 +1314,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     after: {
       speaker: 'patricio_old',
       lines: [
-        { text: 'In fifty years I never saw it burn like that.' },
+        { text: 'In fifty years I never saw it burn like that.', mood: 'sad' },
         { text: 'The lookouts say a canoe has come in from Xaraguá. Go and see who it is.' },
       ],
     },
@@ -1323,7 +1323,7 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       speaker: 'patricio_old',
       lines: [
         { text: 'Xaraguá. So that is where the lights were seen from.' },
-        { text: 'Finish what you owe this city, Gianna. Then go.' },
+        { text: 'Finish what you owe this city, Gianna. Then go.', mood: 'stern' },
       ],
     },
     // Grandmother says "Ask them, not the Crown" at the dock now (decision C, Oct 19).
@@ -1368,8 +1368,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         say(G, "Look at me. You didn't break anything. You lit it."),
         say(A, '...Are you scared of me?'),
         say(G, 'Never. Not for one second.'),
-        say('patricio_old', 'Anicette always said you carried something, little one. I thought it was only a grandmother talking.'),
-        say('patricio_old', 'Now. Read with me, all of you. Say their names.'),
+        say('patricio_old', 'Anicette always said you carried something, little one. I thought it was only a grandmother talking.', { mood: 'sad' }),
+        say('patricio_old', 'Now. Read with me, all of you. Say their names.', { mood: 'stern' }),
         // The pilgrims come in from the path to read the names with him; the night passes.
         nar('The names are read until the moon is high. Nobody leaves early.', {
           fx: 'fade',

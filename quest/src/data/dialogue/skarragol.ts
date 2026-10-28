@@ -580,7 +580,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         act([{ do: 'look', actor: 'samira' }], '', 'Samira takes out her slip-book and writes at the council\'s table.'),
         say(S, 'Dorini salt at the pre-blockade price, for two years. I am not giving it away. I am underpricing it.', { set: { 'story.samira_letter': true } }),
-        say(S, 'There is a difference, and it is my mother\'s.'),
+        say(S, 'There is a difference, and it is my mother\'s.', { mood: 'earnest' }),
         act([{ do: 'look', actor: 'npc:trading_jarl' }], JR, 'Three hundred toward the fleet\'s winter, envoy, and I will stand for it in the Moot. Less, if less is what you have.'),
       ],
       choices: [

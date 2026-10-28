@@ -189,8 +189,8 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
       '',
       'A herald in Aldermoor violet comes through the arch, and bows exactly as low as the papers require.',
     ),
-    say('herald', "Gianna Elise Limyè. The Lord Regent receives Zetwal's envoy's party at the Hall, under the truce of the Parley."),
-    say('herald', 'Now, if it please you. It pleases him.'),
+    say('herald', "Gianna Elise Limyè. The Lord Regent receives Zetwal's envoy's party at the Hall, under the truce of the Parley.", { mood: 'impassive' }),
+    say('herald', 'Now, if it please you. It pleases him.', { mood: 'impassive' }),
     act([{ do: 'exit', actor: 'herald', to: at(0, 10) }, { do: 'look', actor: 'player' }], '', 'He turns and walks back through the arch without looking to see if they follow.', {
       set: { 'story.herald_met': true },
     }),
@@ -234,7 +234,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     act([{ do: 'look', actor: 'player' }], S, 'Twelve thousand dinar in that roof. Not one lamp lit.', { set: { 'story.concourse_seen': true } }),
     say(G, 'The herald is waiting on the steps.'),
   ]),
-  simple('herald_talk', [say('herald', 'The Lord Regent is within. After you, envoy\'s household.')]),
+  simple('herald_talk', [say('herald', 'The Lord Regent is within. After you, envoy\'s household.', { mood: 'impassive' })]),
   simple('seat_halberdier_talk', [say('halberdier', 'Ardencia\'s gate, envoy. We salute the Lord\'s son. He does not have to salute back.')]),
   simple('gate_xaragua', [nar('Xaraguá\'s gate, bricked up in teal stone. The mortar is newer than the bricks.')]),
   simple('gate_ardencia', [nar('Ardencia\'s gate: red iron, a Brasador banner. The road north to the black cliffs.')]),
@@ -281,11 +281,11 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
       '',
       'Elodie, in the envoy\'s gold, walks to them and stops at a courtier\'s distance. Not a mother\'s.',
     ),
-    say(E, 'The Regent is generous. Zetwal thanks him.'),
+    say(E, 'The Regent is generous. Zetwal thanks him.', { mood: 'guarded' }),
     say(G, 'Mother. In Ardencia, Lord Rael—'),
-    say(E, "The envoy's household will report to the envoy's rooms."),
+    say(E, "The envoy's household will report to the envoy's rooms.", { mood: 'guarded' }),
     nar('The clerk\'s pen scratches. While it does, she looks at the Locket, not at her daughter, and speaks low.'),
-    say(E, ELODIE_LINES.locket, { set: { 'clue.elodie_locket_line': true } }),
+    say(E, ELODIE_LINES.locket, { mood: 'guarded', set: { 'clue.elodie_locket_line': true } }),
     say(E, 'Your aunt is in the city. She is dressing the court for the Parley, and has asked for you both since the caravan was sighted.'),
     say(E, 'The Envoys\' Quarter, south of the fountain. The door with every colour on it. Go.'),
     act(
@@ -433,7 +433,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
   simple('legate_aide_talk', [say('legate_aide', 'Terribly sorry, envoy. The legate is not receiving. I am, a little.')]),
   script('elodie_hall_talk', {
     start: { lines: [], next: [{ if: PETITION('zetwal'), to: 'petition' }, { to: 'idle' }] },
-    idle: { lines: [say(E, 'The envoy is occupied with the Parley.'), nar('The clerk writes that down too.')] },
+    idle: { lines: [say(E, 'The envoy is occupied with the Parley.', { mood: 'guarded' }), nar('The clerk writes that down too.')] },
     petition: {
       lines: [
         say(Y, "Xaraguá's Petition of Breach, envoy. For Zetwal's chamber."),
@@ -500,7 +500,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     before: { lines: [say(R, 'The Parley sits at the bell, envoy\'s household.')] },
     after: { lines: [say(R, 'The roads are open. They always were. I will be here.')] },
   }),
-  simple('hall_herald_talk', [say('herald', 'The Hall of the Throne. Speak when the Lord Regent speaks to you.')]),
+  simple('hall_herald_talk', [say('herald', 'The Hall of the Throne. Speak when the Lord Regent speaks to you.', { mood: 'impassive' })]),
 
   // ---- Beat 4: Tati Coco (the Quarter, then her workshop) ------------------------------------------------
   simple('coco_welcome', [
@@ -515,7 +515,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     nar('She walks straight through Yari and Azzy to the sisters, and takes both their faces in her hands.'),
     say(CO, "Gold. I said gold when you were four, and I was right. And indigo. Don't argue. I dress queens; I don't ask them."),
     nar('Anissa says nothing and leans into it. Coco holds on a moment longer for her than for Gianna.'),
-    say(CO, 'There you are.'),
+    say(CO, 'There you are.', { mood: 'tender' }),
     say(CO, COCO.askedHer),
     say(G, COCO.notYet),
     say(CO, COCO.notInThatHall),
@@ -571,7 +571,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
   simple('seamstresses', [
     nar('Night in Coco\'s workshop. Everyone sleeps but Coco.', { fx: 'fade' }),
     nar('Then the bell, over the whole city.'),
-    act([{ do: 'place', actor: 'coralie', look: 'coralie', at: at(12, 7), facing: 'down' }], CO, 'Up. Veils. Aprons. Pins in your mouths, and nothing else in them.'),
+    act([{ do: 'place', actor: 'coralie', look: 'coralie', at: at(12, 7), facing: 'down' }], CO, 'Up. Veils. Aprons. Pins in your mouths, and nothing else in them.', { mood: 'fierce' }),
     act([{ do: 'sync' }], '', 'She pins a white veil over each sister\'s hair and ties an apron at each waist.', {
       set: { 'story.disguised': true },
     }),
@@ -585,7 +585,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
   simple('archive_chain', [
     act([{ do: 'look', actor: 'npc:coralie_seat' }, { do: 'walk', actor: 'npc:coralie_seat', to: at(9, 7), facing: 'up' }], 'sealbearer', 'Two yesterday. Two today. Names.'),
     say(CO, 'Count them, then. Two.'),
-    say(CO, 'Shall I tell the Lord Regent his keeper sat the Parley in his nightshirt, because your door counts to two but not three?'),
+    say(CO, 'Shall I tell the Lord Regent his keeper sat the Parley in his nightshirt, because your door counts to two but not three?', { mood: 'fierce' }),
     say(CO, 'Chain.'),
     act([{ do: 'look', actor: 'npc:sealbearer' }, { do: 'walk', actor: 'npc:sealbearer', to: at(8, 6), facing: 'right' }, { do: 'sync' }], '', 'He lifts the chain.', {
       set: { 'story.archive_open': true },
@@ -644,7 +644,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
         act([{ do: 'look', actor: 'npc:benny_echo' }, { do: 'exit', actor: 'npc:benny_echo', to: at(13, 18) }], '', 'He walks out down the room, and the door shuts behind him.', {
           set: { 'echo.benny_left': true },
         }),
-        act([{ do: 'look', actor: 'player' }], P, '(Caona is not here. Where is Caona?)'),
+        act([{ do: 'look', actor: 'player' }], P, '(Caona is not here. Where is Caona?)', { mood: 'troubled' }),
         say('throne_clerk', "Xaraguá's scout was not sent for. Xaraguá is not a signatory."),
         act([{ do: 'look', actor: 'npc:echo_crown_envoy' }], 'crown_envoy_old', 'The ships sail at the tide, Marshal, with the peace or without it. Six pages are read. Seal the binding.'),
       ],
@@ -655,8 +655,8 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     },
     seal: {
       lines: [
-        { if: { flag: 'choice.patricio_protest', eq: 'time' }, speaker: P, text: 'Under protest of time.' },
-        { if: { flag: 'choice.patricio_protest', eq: 'unread' }, speaker: P, text: 'Write that I did not read it.' },
+        { if: { flag: 'choice.patricio_protest', eq: 'time' }, speaker: P, text: 'Under protest of time.', mood: 'troubled' },
+        { if: { flag: 'choice.patricio_protest', eq: 'unread' }, speaker: P, text: 'Write that I did not read it.', mood: 'troubled' },
         nar('Patricio presses the alliance\'s seal into the binding\'s wax. The binding holds six pages.'),
         act(
           [
@@ -713,7 +713,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
   }),
   ...[1, 2, 3, 4, 5, 6, 7].map((n) => echoDrawer(n)),
   simple('echo_thomas_talk', [
-    say(P, 'Was Xaraguá asked?'),
+    say(P, 'Was Xaraguá asked?', { mood: 'troubled' }),
     say('thomas', 'I am writing that they were not. Someone will read it one day.'),
     nar('He does not look up.'),
   ]),
@@ -869,7 +869,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
         say(H, 'I am asking whether one does.'),
         nar('Silence. The clerk\'s pen stops.'),
         act([{ do: 'look', actor: 'npc:elodie_hall' }, { do: 'walk', actor: 'npc:elodie_hall', to: at(4, 11), facing: 'right' }], '', 'Elodie steps forward from Zetwal\'s door. One step: the step she did not take yesterday.'),
-        say(E, 'Zetwal demands the reading.'),
+        say(E, 'Zetwal demands the reading.', { mood: 'guarded' }),
         act([{ do: 'look', actor: 'npc:regent' }], '', 'The Regent looks at her for a long moment.'),
         say(R, 'Read it. The Charter has stood on it for fifty years. It will stand on it tomorrow.'),
         act([{ do: 'look', actor: 'hollis' }], '', 'Hollis breaks the Throne\'s wax. A dry crack, loud as a branch in the quiet.', { fx: 'shake' }),
@@ -919,8 +919,8 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
           '',
           'The envoys withdraw. Three of them look at Gianna on the way out: Ironvow, Suzumori, Agnivansh.',
         ),
-        act([{ do: 'look', actor: 'npc:elodie_hall' }], E, "Zetwal's envoy records that her household declined the Regent's terms.", { set: { 'story.terms_refused': true } }),
-        say(E, "The envoy has a fitting at her sister's, and is expected at the Parley's close."),
+        act([{ do: 'look', actor: 'npc:elodie_hall' }], E, "Zetwal's envoy records that her household declined the Regent's terms.", { mood: 'guarded', set: { 'story.terms_refused': true } }),
+        say(E, "The envoy has a fitting at her sister's, and is expected at the Parley's close.", { mood: 'guarded' }),
         act(
           [
             { do: 'exit', actor: 'npc:elodie_hall', to: at(21, 30), async: true },
@@ -962,7 +962,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
         { do: 'look', actor: 'player' },
       ],
       CO,
-      'Behind the curtain, all of you who are her daughters. The rest of you, hold pins.',
+      'Behind the curtain, all of you who are her daughters. The rest of you, hold pins.', { mood: 'fierce' },
     ),
   ]),
   simple('fitting', [
@@ -995,9 +995,9 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     nar('She takes her hand from Anissa\'s head. The curtain opens. The clerk is at the door.'),
     act([{ do: 'walk', actor: 'elodie', to: at(10, 6), facing: 'down' }], E, 'Coralie. Thank you. The hem is perfect.'),
     act([{ do: 'exit', actor: 'elodie', to: at(10, 10) }, { do: 'look', actor: 'coralie' }], '', 'She goes, the envoy again, the clerk a step behind her.'),
-    say(CO, 'She\'ll be at that Parley till the Crown lets her go, and it won\'t. I\'m here till the robes are done, and they\'re never done.'),
-    say(CO, 'Come back through this door whenever the road brings you past. And bring me every colour you find.'),
-    act([{ do: 'look', actor: 'player' }], CO, 'Now. I will walk you to the Iron Gate. Somebody in this family should wave.', { set: { 'story.fitting_done': true } }),
+    say(CO, 'She\'ll be at that Parley till the Crown lets her go, and it won\'t. I\'m here till the robes are done, and they\'re never done.', { mood: 'tender' }),
+    say(CO, 'Come back through this door whenever the road brings you past. And bring me every colour you find.', { mood: 'tender' }),
+    act([{ do: 'look', actor: 'player' }], CO, 'Now. I will walk you to the Iron Gate. Somebody in this family should wave.', { mood: 'tender', set: { 'story.fitting_done': true } }),
   ]),
 
   // ---- Beat 11: the Iron Gate --------------------------------------------------------------------------
