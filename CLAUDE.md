@@ -34,6 +34,8 @@ Phase 2 (started, at the owner's request): online play. Host a game (players and
 ## One build: keep the board game in view
 The board game (physical and digital) and the quest are one build. At every milestone, whatever the task, remind the
 owner of the open items in `docs/PRODUCTION.md` ("Open items"), most urgent deadline first, and keep that list current.
+**Paused (owner, Oct 28):** the owner is focused only on the single-player story (the quest) for now. Don't work on
+the board game or bring up its open items in replies until the owner raises it again; keep `docs/PRODUCTION.md` as is.
 
 ## Working with the owner
 - Keep building (owner rule, Oct 20): ask the owner only about decisions that drastically change the story's flow;
