@@ -6,7 +6,7 @@
 // The payload is a JSON array (short, order-fixed fields); the checksum is FNV-1a over the payload
 // text, so a mistyped or truncated code is rejected instead of loading a broken game.
 
-import { SAVE_CODE_PREFIX, SAVE_VERSION, TEXT_SPEED_ORDER, type TextSpeed } from '../config.ts';
+import { DEFAULT_TEXT_SPEED, SAVE_CODE_PREFIX, SAVE_VERSION, TEXT_SPEED_ORDER, type TextSpeed } from '../config.ts';
 import type { FlagSnapshot } from './flags.ts';
 import { DIRS, ERAS, type Dir, type Era, type FlagValue } from './types.ts';
 
@@ -29,7 +29,11 @@ export interface SaveData {
   savedAt: number;
 }
 
-export type DecodeResult = { ok: true; data: SaveData } | { ok: false; error: string };
+/**
+ * A decoded save. `defaulted` names the fields an older or damaged code did not carry readably (the facing, the
+ * era, the settings, the time, or some flags): they took their defaults instead of losing the game.
+ */
+export type DecodeResult = { ok: true; data: SaveData; defaulted?: string[] } | { ok: false; error: string };
 
 /** Minimal storage surface (window.localStorage fits it; tests pass a Map-backed fake). */
 export interface StorageLike {
@@ -106,21 +110,25 @@ export function decodeSave(code: string): DecodeResult {
   } catch {
     return fail('That save code is damaged (unreadable).');
   }
-  // Version 1 had 9 fields; version 2 adds the hints setting.
-  const fields = version === 1 ? 9 : 10;
-  if (!Array.isArray(arr) || arr.length !== fields) return fail('That save code is damaged (wrong shape).');
-  const [v, mapId, x, y, facingIdx, eraIdx, flags, speedIdx, savedAt, hintsBit = 1] = arr as unknown[];
+  // Version 1 had 9 fields; version 2 adds the hints setting. What makes the game (the place and the flags) must
+  // be readable; the rest (facing, era, settings, time) falls back to its default rather than lose the game
+  // (Claude's call, Oct 28: an old or damaged save loads with defaults).
+  if (!Array.isArray(arr) || arr.length < 7) return fail('That save code is damaged (wrong shape).');
+  const [v, mapId, x, y, facingIdx, eraIdx, flags, speedIdx, savedAt, hintsBit] = arr as unknown[];
   if (v !== version) return fail('That save code is damaged (version mismatch).');
   if (typeof mapId !== 'string' || mapId.length === 0) return fail('That save code is damaged (map).');
   if (!isInt(x) || !isInt(y) || x < 0 || y < 0) return fail('That save code is damaged (position).');
-  if (!isInt(facingIdx) || !DIRS[facingIdx]) return fail('That save code is damaged (facing).');
-  if (!isInt(eraIdx) || !ERAS[eraIdx]) return fail('That save code is damaged (era).');
   if (typeof flags !== 'object' || flags === null || Array.isArray(flags)) return fail('That save code is damaged (flags).');
+  const defaulted: string[] = [];
+  const facing = isInt(facingIdx) && DIRS[facingIdx] ? DIRS[facingIdx] : (defaulted.push('facing'), 'down' as Dir);
+  const era = isInt(eraIdx) && ERAS[eraIdx] ? ERAS[eraIdx] : (defaulted.push('era'), 'present' as Era);
   const flagEntries = Object.entries(flags as Record<string, unknown>);
-  if (!flagEntries.every(([, fv]) => isFlagValue(fv))) return fail('That save code is damaged (flag values).');
-  if (!isInt(speedIdx) || !TEXT_SPEED_ORDER[speedIdx]) return fail('That save code is damaged (settings).');
-  if (!isInt(savedAt)) return fail('That save code is damaged (time).');
-  if (hintsBit !== 0 && hintsBit !== 1) return fail('That save code is damaged (settings).');
+  const goodFlags = flagEntries.filter(([, fv]) => isFlagValue(fv));
+  if (goodFlags.length < flagEntries.length) defaulted.push('flags');
+  const textSpeed = isInt(speedIdx) && TEXT_SPEED_ORDER[speedIdx] ? TEXT_SPEED_ORDER[speedIdx] : (defaulted.push('text speed'), DEFAULT_TEXT_SPEED);
+  const time = isInt(savedAt) ? savedAt : (defaulted.push('time'), 0);
+  // Version 1 never had the hints bit (hints on); a later code with a bad one gets the default too.
+  const hints = version === 1 || hintsBit === 1 ? true : hintsBit === 0 ? false : (defaulted.push('hints'), true);
 
   return {
     ok: true,
@@ -129,12 +137,13 @@ export function decodeSave(code: string): DecodeResult {
       mapId,
       x,
       y,
-      facing: DIRS[facingIdx]!,
-      era: ERAS[eraIdx]!,
-      flags: Object.fromEntries(flagEntries) as FlagSnapshot,
-      settings: { textSpeed: TEXT_SPEED_ORDER[speedIdx]!, hints: hintsBit === 1 },
-      savedAt,
+      facing,
+      era,
+      flags: Object.fromEntries(goodFlags) as FlagSnapshot,
+      settings: { textSpeed, hints },
+      savedAt: time,
     },
+    ...(defaulted.length > 0 ? { defaulted } : {}),
   };
 }
 
@@ -166,5 +175,24 @@ export function deleteSave(storage: StorageLike | undefined, key: string): void 
     storage?.removeItem(key);
   } catch {
     // Storage blocked: nothing to delete.
+  }
+}
+
+/** Where an unreadable stored save is kept (the save's key with this suffix). */
+export const UNREADABLE_SUFFIX = '.unreadable';
+
+/**
+ * Keep the stored save's text under `<key>.unreadable` before a new game's autosave writes over it, so nothing the
+ * player had is destroyed (it can be sent for help, or read by a later version). Returns the text kept, or null.
+ */
+export function keepUnreadable(storage: StorageLike | undefined, key: string): string | null {
+  if (!storage) return null;
+  try {
+    const code = storage.getItem(key);
+    if (code === null) return null;
+    storage.setItem(key + UNREADABLE_SUFFIX, code);
+    return code;
+  } catch {
+    return null;
   }
 }

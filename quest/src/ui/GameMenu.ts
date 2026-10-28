@@ -55,6 +55,7 @@ import {
   type MemberDef,
   type Slot,
 } from '../engine/rpg.ts';
+import { levelBandWord, rarityName, rarityPips } from '../engine/accessibility.ts';
 import { cityLayout, cityPosition } from '../engine/cityMap.ts';
 import { canReplay } from '../engine/showcase.ts';
 import type { GameMap, TiledMap } from '../engine/tiledMap.ts';
@@ -120,7 +121,7 @@ const SLOT_NAMES: Record<Slot, string> = { weapon: 'Weapon', armor: 'Armor', cha
 
 type Stage = 'top' | 'who' | 'slot' | 'pick' | 'skills' | 'read';
 
-/** Colours for a level against the party's: grey, white, orange, red. */
+/** Colours for a level against the party's: grey, white, orange, red (always with the band's word: engine/accessibility.ts). */
 const BAND_COLOURS = { trivial: '#8e8e9c', even: '#f4ecd8', hard: '#f0a040', deadly: '#e05050' } as const;
 
 type QuestEntry = { kind: 'main' } | { kind: 'side'; q: SideQuestDef } | { kind: 'mystery'; q: SideQuestDef };
@@ -585,7 +586,7 @@ export class GameMenu {
       if (it.heals) bits.push(`+${it.heals} HP`);
       if (it.restores) bits.push(`+${it.restores} SP`);
       for (const k of STAT_KEYS) if (it.stats?.[k]) bits.push(`${STAT_NAMES[k]} +${it.stats[k]}`);
-      if (it.slot) bits.push(`${SLOT_NAMES[it.slot]} Lv ${it.level ?? 1}`);
+      if (it.slot) bits.push(`${rarityName(rarityOf(it))} ${SLOT_NAMES[it.slot].toLowerCase()} Lv ${it.level ?? 1}`);
       if (it.price) bits.push(`worth ${Math.floor(it.price / 2)} gold`);
       this.text(X, TOP + 62, bits.join('  '), UI.text, VIEW_WIDTH - X - 8);
     }
@@ -604,6 +605,15 @@ export class GameMenu {
     if (!it) return;
     const key = textureKeyForItem(itemArtKey(it.art ?? it.id, it.kind));
     if (this.scene.textures.exists(key)) this.content.add(this.scene.add.image(x + size / 2, y + size / 2, key).setDisplaySize(size - 6, size - 6));
+    // The rarity as pips in the top corner too (uncommon one, legendary four), so the colour is never the only cue.
+    const pips = rarityPips(rarityOf(it));
+    if (pips > 0) {
+      const pg = this.scene.add.graphics();
+      this.content.add(pg);
+      pg.fillStyle(0x14101a, 0.9).fillRect(x + 1, y + 1, pips * 3 + 1, 4);
+      pg.fillStyle(0xf4ecd8, 1);
+      for (let i = 0; i < pips; i++) pg.fillRect(x + 2 + i * 3, y + 2, 2, 2);
+    }
     if (lv !== undefined) {
       const t = this.text(0, 0, String(lv), r.text);
       t.setPosition(x + size - Math.ceil(t.width) - 1, y + size - 9);
@@ -1007,7 +1017,7 @@ export class GameMenu {
     const lines: PanelLine[] = [
       { text: q.title, color: UI.accentText },
       { text: `${q.giver}, ${place}`, color: UI.dimText },
-      { text: `Level ${q.level}`, color: BAND_COLOURS[band] },
+      { text: `Level ${q.level} (${levelBandWord(band)})`, color: BAND_COLOURS[band] },
       { text: q.summary, gap: 4 },
     ];
     for (const s of visibleSteps(ctx.flags, q)) lines.push({ text: `${s.done ? '[x]' : '[ ]'} ${s.text}`, color: s.done ? UI.doneText : UI.text });
@@ -1085,7 +1095,7 @@ export class GameMenu {
     const ctx = this.ctx!;
     const foes = this.foes();
     const yours = partyLevel(ctx.flags, RPG, ctx.era);
-    this.text(6, TOP + 2, `Your party: level ${yours}.  Grey easy, white even, orange hard, red deadly.`, UI.dimText, VIEW_WIDTH - 12);
+    this.text(6, TOP + 2, `Your party: level ${yours}. Each foe: easy (grey), even (white), hard (orange) or deadly (red).`, UI.dimText, VIEW_WIDTH - 12);
     this.labels = foes.map((f) => f.name);
     if (foes.length === 0) {
       this.text(6, TOP + 26, 'No foes met yet. (Chapter 1 is peaceful.)', UI.dimText);
@@ -1094,12 +1104,14 @@ export class GameMenu {
     const first = Math.max(0, Math.min(this.cursor - 8, foes.length - 9));
     foes.slice(first, first + 9).forEach((f, i) => {
       const on = first + i === this.cursor;
-      const colour = BAND_COLOURS[levelBand(RPG, yours, f.level)];
+      const band = levelBand(RPG, yours, f.level);
+      const colour = BAND_COLOURS[band];
       this.text(6, TOP + 26 + i * ROW_H, `${on ? '>' : ' '} Lv ${String(f.level).padStart(2)}  ${f.name}`, on ? UI.accentText : colour);
       this.hit(4, TOP + 25 + i * ROW_H, VIEW_WIDTH - 8, ROW_H, () => {
         this.cursor = first + i;
       });
-      this.text(VIEW_WIDTH - 90, TOP + 26 + i * ROW_H, f.won ? 'beaten' : 'escaped', UI.dimText);
+      // The band in words too, so the colour is never the only cue.
+      this.text(VIEW_WIDTH - 90, TOP + 26 + i * ROW_H, `${levelBandWord(band)}, ${f.won ? 'beaten' : 'escaped'}`, UI.dimText);
     });
   }
 }

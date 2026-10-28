@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SAVE_VERSION } from '../src/config.ts';
-import { checksum, decodeSave, deleteSave, encodeSave, readSave, writeSave, type SaveData, type StorageLike } from '../src/engine/save.ts';
+import { checksum, decodeSave, deleteSave, encodeSave, keepUnreadable, readSave, UNREADABLE_SUFFIX, writeSave, type SaveData, type StorageLike } from '../src/engine/save.ts';
 
 const data: SaveData = {
   version: SAVE_VERSION,
@@ -13,6 +13,12 @@ const data: SaveData = {
   settings: { textSpeed: 'fast', hints: false },
   savedAt: 1_760_000_000_000,
 };
+
+/** A save code with a good checksum around any payload. */
+function coded(fields: unknown[], version = 2): string {
+  const body = Buffer.from(JSON.stringify(fields)).toString('base64url');
+  return `BQ${version}.${body}.${checksum(body)}`;
+}
 
 function memoryStorage(): StorageLike & { map: Map<string, string> } {
   const map = new Map<string, string>();
@@ -59,13 +65,39 @@ describe('save codes', () => {
     if (!r.ok) expect(r.error).toMatch(/newer version/);
   });
 
-  it('rejects a well-checksummed payload with the wrong shape', () => {
-    const body = Buffer.from(JSON.stringify([1, 'm', -1, 0, 0, 0, {}, 0, 0])).toString('base64url');
-    expect(decodeSave(`BQ1.${body}.${checksum(body)}`)).toMatchObject({ ok: false });
-    const body2 = Buffer.from(JSON.stringify([1, 'm', 1, 1, 9, 0, {}, 0, 0])).toString('base64url');
-    expect(decodeSave(`BQ1.${body2}.${checksum(body2)}`)).toMatchObject({ ok: false });
-    const body3 = Buffer.from(JSON.stringify([1, 'm', 1, 1, 0, 0, { a: [1] }, 0, 0])).toString('base64url');
-    expect(decodeSave(`BQ1.${body3}.${checksum(body3)}`)).toMatchObject({ ok: false });
+  it('rejects a well-checksummed payload without a readable place or flags', () => {
+    expect(decodeSave(coded([1, 'm', -1, 0, 0, 0, {}, 0, 0], 1))).toMatchObject({ ok: false });
+    expect(decodeSave(coded([1, '', 1, 1, 0, 0, {}, 0, 0], 1))).toMatchObject({ ok: false });
+    expect(decodeSave(coded([1, 'm', 1, 1, 0, 0, [], 0, 0], 1))).toMatchObject({ ok: false });
+    expect(decodeSave(coded([1, 'm', 1, 1, 0, 0], 1))).toMatchObject({ ok: false });
+    expect(decodeSave(coded({ map: 'm' } as unknown as unknown[], 1))).toMatchObject({ ok: false });
+    expect(decodeSave(coded([2, 'm', 1, 1, 0, 0, {}, 0, 0, 1], 1))).toMatchObject({ ok: false });
+  });
+
+  it('loads the rest of an old or damaged code with defaults, and names what was defaulted (Oct 28)', () => {
+    // A bad facing, a bad era, bad flag values, a text speed from a longer list, a fractional time, a bad hints bit.
+    const r = decodeSave(coded([2, 'm', 1, 1, 9, 7, { a: [1], b: true, c: null, d: 'x' }, 12, 1.5, 7]));
+    expect(r).toEqual({
+      ok: true,
+      data: {
+        version: SAVE_VERSION,
+        mapId: 'm',
+        x: 1,
+        y: 1,
+        facing: 'down',
+        era: 'present',
+        flags: { b: true, d: 'x' },
+        settings: { textSpeed: 'normal', hints: true },
+        savedAt: 0,
+      },
+      defaulted: ['facing', 'era', 'flags', 'text speed', 'time', 'hints'],
+    });
+    // A version 2 code cut short after the flags.
+    expect(decodeSave(coded([2, 'm', 1, 1, 0, 1, { a: true }]))).toMatchObject({
+      ok: true,
+      data: { facing: 'up', era: 'echo', flags: { a: true }, settings: { textSpeed: 'normal', hints: true } },
+      defaulted: ['text speed', 'time', 'hints'],
+    });
   });
 
   it('still reads version 1 codes (before the hints setting), with hints on', () => {
@@ -89,8 +121,8 @@ describe('save codes', () => {
   it('stores the hints setting and the Echo era', () => {
     const echo: SaveData = { ...data, era: 'echo', settings: { textSpeed: 'slow', hints: true } };
     expect(decodeSave(encodeSave(echo))).toEqual({ ok: true, data: echo });
-    const bad = Buffer.from(JSON.stringify([2, 'm', 1, 1, 0, 0, {}, 0, 0, 7])).toString('base64url');
-    expect(decodeSave(`BQ2.${bad}.${checksum(bad)}`)).toMatchObject({ ok: false });
+    // A bad hints bit takes the default (on) rather than lose the game.
+    expect(decodeSave(coded([2, 'm', 1, 1, 0, 0, {}, 0, 0, 7]))).toMatchObject({ ok: true, data: { settings: { hints: true } }, defaulted: ['hints'] });
   });
 
   it('checksum is stable FNV-1a', () => {
@@ -132,5 +164,32 @@ describe('save storage', () => {
     const s = memoryStorage();
     s.setItem('k', 'BQ1.garbage.00000000');
     expect(readSave(s, 'k')).toMatchObject({ ok: false });
+  });
+
+  it('reports bad JSON, bad base64 and empty text as damaged, never throwing', () => {
+    const s = memoryStorage();
+    const notJson = Buffer.from('not json').toString('base64url');
+    for (const junk of ['', '{"a":1}', 'BQ2.!!!!.00000000', `BQ2.${notJson}.${checksum(notJson)}`, 'BQ2..', 'BQx.a.b']) {
+      s.setItem('k', junk);
+      expect(() => readSave(s, 'k')).not.toThrow();
+      expect(readSave(s, 'k'), junk).toMatchObject({ ok: false });
+    }
+  });
+
+  it('keeps an unreadable save under its own key, and survives storage that throws', () => {
+    const s = memoryStorage();
+    expect(keepUnreadable(s, 'k')).toBeNull();
+    s.setItem('k', 'junk');
+    expect(keepUnreadable(s, 'k')).toBe('junk');
+    expect(s.map.get('k' + UNREADABLE_SUFFIX)).toBe('junk');
+    expect(keepUnreadable(undefined, 'k')).toBeNull();
+    const throwing: StorageLike = {
+      getItem: () => {
+        throw new Error('blocked');
+      },
+      setItem: () => undefined,
+      removeItem: () => undefined,
+    };
+    expect(keepUnreadable(throwing, 'k')).toBeNull();
   });
 });

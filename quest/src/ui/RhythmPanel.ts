@@ -1,13 +1,15 @@
 // The rhythm lock on screen (PUZZLES.md SIG-XAR part 3; engine/rhythm.ts decides). The drum song's marks
 // scroll from the right toward a line on the left: a long mark is two beats wide, a short one one. Tap A
 // (or anywhere on the screen) as each mark reaches the line. Four count-in ticks come first. Hits glow
-// gold, stray taps flash red. B gives up (nothing happens; the stones wait). At the end, the taps are judged
-// and the scene reports the result to the logic (GameLogic.finishRhythm).
+// gold with a ring, missed ones go grey and hollow, stray taps flash the line red and wide (shape as well as
+// colour; never more than three flashes a second). B gives up (nothing happens; the stones wait). At the end,
+// the taps are judged and the scene reports the result to the logic (GameLogic.finishRhythm).
 
 import Phaser from 'phaser';
 import { audio } from '../audio/player.ts';
 import { UI } from '../assets.config.ts';
 import { VIEW_WIDTH } from '../config.ts';
+import { FLASH_MIN_GAP_MS } from '../engine/accessibility.ts';
 import { COUNT_IN_BEATS, judge, msPerBeat, onsets, songLengthMs, type RhythmDef } from '../engine/rhythm.ts';
 import type { InputManager } from '../input/actions.ts';
 import { textStyle } from './text.ts';
@@ -46,6 +48,8 @@ export class RhythmPanel {
   private lengthMs = 0;
   private ticksPlayed = 0;
   private flashRed = 0;
+  /** When the last stray-tap flash started (song time), so flashes never come faster than three a second. */
+  private lastFlash = -Infinity;
   private tapped = false;
 
   constructor(scene: Phaser.Scene) {
@@ -74,6 +78,7 @@ export class RhythmPanel {
     this.hit = new Set();
     this.ticksPlayed = 0;
     this.flashRed = 0;
+    this.lastFlash = -Infinity;
     this.tapped = false;
     const title = def.title ?? 'The drum song';
     this.title.setText(slow ? `${title} (slow)` : title);
@@ -126,7 +131,10 @@ export class RhythmPanel {
       if (best < 0 || Math.abs(t - this.due[i]!) < Math.abs(t - this.due[best]!)) best = i;
     }
     if (best >= 0) this.hit.add(best);
-    else this.flashRed = 250;
+    else if (t - this.lastFlash >= FLASH_MIN_GAP_MS) {
+      this.flashRed = 250;
+      this.lastFlash = t;
+    }
   }
 
   private draw(): void {
@@ -136,7 +144,9 @@ export class RhythmPanel {
     g.clear();
     // The lane and the line where the marks are tapped.
     g.fillStyle(0x2a2430, 1).fillRect(8, LANE_Y, VIEW_WIDTH - 16, LANE_H);
-    g.fillStyle(this.flashRed > 0 ? 0xb8403a : 0xf2d04b, 1).fillRect(HIT_X - 1, LANE_Y - 6, 2, LANE_H + 12);
+    // A stray tap: the line goes red and twice as wide for a moment.
+    const stray = this.flashRed > 0;
+    g.fillStyle(stray ? 0xb8403a : 0xf2d04b, 1).fillRect(HIT_X - (stray ? 2 : 1), LANE_Y - 6, stray ? 4 : 2, LANE_H + 12);
     const pxPerMs = BEAT_PX / this.beatMs;
     // Count-in dots.
     for (let b = 0; b < COUNT_IN_BEATS; b++) {
@@ -155,7 +165,16 @@ export class RhythmPanel {
       const x0 = Math.max(8, start);
       const x1 = Math.min(VIEW_WIDTH - 8, start + w);
       if (x1 > x0) g.fillStyle(color, 0.55).fillRect(x0, LANE_Y + 6, x1 - x0, LANE_H - 12);
-      if (start >= 8) g.fillStyle(color, 1).fillCircle(start, LANE_Y + LANE_H / 2, 6);
+      if (start < 8) return;
+      const cy = LANE_Y + LANE_H / 2;
+      if (passed) {
+        // Missed: a hollow grey ring.
+        g.lineStyle(2, color, 1).strokeCircle(start, cy, 5);
+        return;
+      }
+      g.fillStyle(color, 1).fillCircle(start, cy, 6);
+      // Hit: a white ring round the gold head.
+      if (done) g.lineStyle(1, 0xffffff, 1).strokeCircle(start, cy, 8);
     });
     const left = Math.ceil(COUNT_IN_BEATS - this.elapsed / this.beatMs);
     this.status.setText(

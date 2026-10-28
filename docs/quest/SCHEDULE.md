@@ -45,7 +45,7 @@ The board game comes first where they clash: its dates are fixed by the printer.
 
 | Deadline | You | Claude | Done when |
 |---|---|---|---|
-| Wed Nov 18 | Phrasebook check (Kreyol, Taino words) with a fluent speaker | Accessibility pass (text size, colour-blind safe level colours), saves, performance on older phones | Checks pass |
+| Wed Nov 18 | Phrasebook check (Kreyol, Taino words) with a fluent speaker | Accessibility pass (text size, colour-blind safe level colours), saves, performance on older phones (done early, Oct 28: guide Section 9.1) | Checks pass |
 | Fri Nov 20 | Final playthrough | Fix list closed | No open bugs |
 | **Sun Nov 22** | **Release: Chapters 1 and 2** | Tag the release; the board game and the quest ship together | Live |
 

@@ -92,3 +92,33 @@ export function openImportDialog(onImport: (code: string) => string | null, onCl
   closeOnEscape(overlay, close);
   textarea.focus();
 }
+
+/**
+ * A message about the stored save at start-up (an old save loaded with defaults, or one that could not be read),
+ * with the old save's code to copy when there is one (Claude's call, Oct 28).
+ */
+export function openNoticeDialog(title: string, message: string, code: string | null, onClose: () => void = () => undefined): void {
+  const { overlay, textarea, error, actions } = build(title, message);
+  overlay.classList.add('notice');
+  const close = () => {
+    overlay.remove();
+    onClose();
+  };
+  if (code) {
+    textarea.value = code;
+    textarea.readOnly = true;
+    actions.append(
+      button('Copy', () => {
+        textarea.select();
+        navigator.clipboard?.writeText(code).then(
+          () => (error.textContent = 'Copied.'),
+          () => (error.textContent = 'Select the code and copy it by hand.'),
+        );
+      }),
+    );
+  } else textarea.hidden = true;
+  const ok = button('OK', close, true);
+  actions.append(ok);
+  closeOnEscape(overlay, close);
+  ok.focus();
+}

@@ -68,7 +68,7 @@ export class FlagStore {
   load(snapshot: FlagSnapshot): void {
     const old = [...this.values.keys()];
     this.values.clear();
-    for (const name of old) if (!(name in snapshot)) this.emit(name, undefined);
+    for (const name of old) if (!Object.prototype.hasOwnProperty.call(snapshot, name)) this.emit(name, undefined);
     for (const [name, value] of Object.entries(snapshot)) {
       this.values.set(name, value);
       this.emit(name, value);

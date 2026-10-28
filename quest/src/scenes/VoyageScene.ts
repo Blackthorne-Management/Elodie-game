@@ -16,6 +16,7 @@ import { along, seaRoute, thinRoute, type VoyageDef } from '../engine/voyage.ts'
 import type { Pos } from '../engine/types.ts';
 import { getRuntime } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
+import { screenFlash } from './cameraFx.ts';
 
 const HARBOR_MS = 5200;
 const SAIL_MS = 9500;
@@ -172,7 +173,7 @@ export class VoyageScene extends Phaser.Scene {
     this.wake = this.add.graphics();
     this.marker = this.add.image(0, 0, textureKeyForObject('zetwal_ship')).setOrigin(0.5, 0.8).setScale(0.22);
     this.caption.setDepth(10);
-    this.cameras.main.flash(300, 255, 242, 160);
+    screenFlash(this, 300, 255, 242, 160);
   }
 
   /** The board's traced shapes when the painting cannot load. */

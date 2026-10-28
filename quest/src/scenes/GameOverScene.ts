@@ -28,6 +28,7 @@ import {
 import { getRuntime } from '../runtime.ts';
 import { artFile } from './artFiles.ts';
 import { drawGameOverArt, reducedPoseAlpha, type ArtSegment } from './gameOverArt.ts';
+import { reduceMotion } from '../ui/reduceMotion.ts';
 
 export interface GameOverData {
   /** Game Overs on this save, this one included (1: the first meeting). */
@@ -60,15 +61,6 @@ function setCurrent(scene: GameOverScene | null): void {
 /** The Game Over screen, for the field's test hook (null when it is not up). */
 export function gameOverSnapshot(): GameOverSnapshot | null {
   return current?.snapshot() ?? null;
-}
-
-/** The device asks for less motion. */
-function prefersReducedMotion(): boolean {
-  try {
-    return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-  } catch {
-    return false;
-  }
 }
 
 type Segment = 'fall' | 'loop' | 'rise';
@@ -115,7 +107,7 @@ export class GameOverScene extends Phaser.Scene {
     this.count = Math.max(1, data?.count ?? 1);
     this.lines = goddessLines(this.count, GODDESS_WORDS);
     this.view = { phase: 'fall', line: 0, lines: this.lines.length, typing: false };
-    this.reduced = prefersReducedMotion();
+    this.reduced = reduceMotion();
     this.cps = TEXT_SPEEDS[getRuntime().logic.state.settings.textSpeed] ?? TEXT_SPEEDS.normal;
     this.shownChars = 0;
     this.bellRung = false;
