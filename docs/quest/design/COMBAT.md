@@ -850,6 +850,64 @@ aspirational buys whose half bonus is shown honestly.)
 | Memories | Echo Battles (Section 11) |
 | Bestiary | First defeat of each type adds a page (guide 6.7) |
 
+**Balancing XP and gold (Oct 28; the schedule's polish item; Claude's calls).** `npm run economy` (`tools/economy.ts`,
+asserted in `tests/economy.test.ts`) replays the scripted route and sets four players side by side at each chapter's end:
+the **main route** (level-curve's route line, the level the chapter's fights are tuned for), the line **without side
+quests**, the **completionist** (the main route plus every side quest it skips, secret ones too, with their own fights,
+the stealth fail-safe fights at the herd camp, the stacks and the quay, and the gold a story choice gives away: the
+Crown's purse and the Seth's strongbox kept) and the **thorough reader** (the completionist who also reads every book
+left on a shelf and mediates every debate the route only wins or hears). The rules (`ECONOMY` in config):
+
+1. *Claude's call, the levels pass's rule made exact:* the completionist ends each chapter at most **one level** over
+   the main route (and over the target, `LEVEL_CURVE.slackOver`), never past the cap; the thorough reader at most
+   **two** (reading every shelf is exploration, like level-curve's wanderer). A new optional quest must be placed in
+   `OFF_ROUTE_QUESTS` (the chapter it can first be finished in, checked against when it opens and closes on the route),
+   a fight the route never fights classed in `UNFOUGHT`, a shop given its chapter in `CHAPTER_SHOPS`, or the test fails.
+2. *Claude's call, what "the gear the fights expect" means:* the fights of Chapters 1 to 9 are tuned on the route's own
+   gear (it never buys), and the late fights are checked in tier-24 armour, with tier-24 blades for warriors
+   (`muster.test.ts`, `war.test.ts`, `claim.test.ts`). So a chapter's **kit**, for the four who fight: through Chapter 9,
+   **one armour piece a capital** at the chapter's tier (no more than a tier, 4 levels, under its start and no higher
+   than its target; the tier above is on sale too, at half bonus, and that is aspirational), for whichever of the four
+   wears the oldest; at the Muster (`fullKitFrom` 10), the **tier-24 set** for all four. What a piece replaces is sold
+   back for half. The main route, buying each kit as it comes, never runs out of gold.
+3. *Claude's call:* while the shops still sell a new tier (to the Muster), the completionist, buying the same kits, can
+   never buy at once all the gear on sale so far at the chapter's tiers (a tier under its start to a tier over its
+   target). After the Muster the last tier is on sale and the purse is for Samira's Daftar, Bribe and the Muster's gifts.
+
+Measured (`npm run economy`; purses after buying each kit; stock: the gear at the chapter's tiers on sale so far):
+
+| Ch | Target | Main route (XP) | No side quests | Completionist (XP) | Thorough | Main income / purse | Completionist income / purse | Kit (net) | Stock |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 1-3 | 4 (425) | 3 | 4 (455) | 5 | 102 / 142 | 212 / 252 | 110 | 1,780 |
+| 2 | 3-8 | 8 (1,384) | 7 | 9 (1,414) | 10 | 704 / 584 | 814 / 694 | 160 | 3,570 |
+| 3 | 8-11 | 11 (2,249) | 10 | 11 (2,295) | 12 | 994 / 544 | 1,714 / 1,264 | 330 | 5,070 |
+| 4 | 11-14 | 14 (3,284) | 12 | 14 (3,350) | 15 | 1,414 / 219 | 2,964 / 1,769 | 745 | 10,960 |
+| 5 | 14-15 | 15 (3,699) | 13 | 15 (3,765) | 16 | 1,694 / 499 | 3,244 / 2,049 | 0 | 9,660 |
+| 6 | 15-17 | 17 (4,579) | 15 | 18 (4,690) | 19 | 2,464 / 679 | 5,164 / 3,379 | 590 | 12,810 |
+| 7 | 17-19 | 19 (5,493) | 17 | 20 (5,734) | 21 | 3,314 / 1,084 | 6,664 / 4,434 | 445 | 8,540 |
+| 8 | 19-21 | 21 (6,448) | 19 | 22 (6,839) | 23 | 4,314 / 1,564 | 8,464 / 5,714 | 520 | 10,780 |
+| 9 | 21-24 | 24 (8,028) | 22 | 25 (8,559) | 26 | 5,264 / 1,924 | 10,214 / 6,874 | 590 | 8,270 |
+| 10 | 24-25 | 25 (8,533) | 23 | 26 (9,064) | 27 | 6,074 / 94 | 11,024 / 5,044 | 2,640 | 9,170 |
+| 11 | 25-28 | 28 (10,260) | 26 | 29 (10,791) | 30 | 8,718 / 2,738 | 13,668 / 7,688 | 0 | 6,830 |
+| 12 | 28-30 | 30 (11,455) | 28 | 30 (12,086) | 30 | 9,518 / 3,538 | 14,468 / 8,488 | 0 | 6,160 |
+
+Kits: Yari's padded vest (1), cotton tunic (2), Gianna's ember robe (3), Azzy's gilded mail (4), nothing new at
+Chapter 5's tier, Samira's felt robe (6), Yari's braided cloak (7) and lacquered armour (8), Azzy's scale armour (9);
+at the Muster, muster robes for Gianna and Samira, Yari's oilcloth coat and Azzy's Kingsmere blade (3,690, 2,640 after
+selling what they replace).
+
+**What changed (Claude's call, Oct 28):** one number. *Z-6 Muskets in the Cane* pays **600 gold**, the design's own
+reward (`SIDE-QUESTS.md` Z-6; it was built at 400): at 400 the main route ended Chapter 10 **106 gold short** of the
+Muster's tier-24 kit, the only chapter that failed. Now it ends it 94 over (the tightest chapter; the test pins it
+under 200 so a later change that frees gold there is seen). No XP changed: every chapter already held the rule
+(Chapter 1 included, so nothing to port to the demo). Prices unchanged.
+
+**Noted, not changed:** the gold after the Muster piles up (Chapter 11's war pays 2,644 on the route, the most of any
+chapter, and nothing new is on sale after it); it feeds Samira's gold skills and nothing else, so it was left. Al-Doria's
+armour (tier 12) costs more than Ordvik's tier 16 (gilded mail 820 against the fur mantle's 720); it reads as the
+merchant city's prices, not a mistake, so it stands. A player who reads every shelf is at most two over (Chapters 2, 6
+to 11 at exactly two: Chapters 1 and 2 leave 28 books on the route's shelves).
+
 ## 17. Config keys (all in `quest/src/config.ts`)
 
 `LEVELS` (cap, xpBase, xpExponent, bands, gearUnderlevelShare), `XP_PER_OBJECTIVE_BY_CHAPTER` and `AMBUSH_XP`

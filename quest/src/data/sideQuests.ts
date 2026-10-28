@@ -1032,7 +1032,10 @@ const BUILT_SIDE_QUESTS: readonly SideQuestDef[] = [
     done: f('side.muskets.done'),
     closed: f('act10.complete'),
     closedText: 'Closed: the fleet sailed with the muskets still in the cane.',
-    reward: { gold: 400, xp: 10 },
+    // 600 gold, the design's (SIDE-QUESTS.md Z-6; it was built at 400): the Muster's forge sells the tier-24 armour and
+    // blades the late fights are checked in, and the main route could not pay for them (Claude's call, Oct 28;
+    // tools/economy.ts).
+    reward: { gold: 600, xp: 10 },
   },
   // Z-3, The Lonely Cutter (rewritten around an absence: the veiled woman fell in Kingsmere): Ti Jak at the mill's cold hearth,
   // his mother's name, Anissa's sentence to a stranger, and the walk home.
