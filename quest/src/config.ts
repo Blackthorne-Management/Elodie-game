@@ -91,6 +91,15 @@ export const XP_PER_BOOK = 10;
  * route may land and still count as on target.
  */
 export const LEVEL_CURVE = { skipSideQuestsMaxUnder: 2, slackUnder: 1, slackOver: 1 } as const;
+/**
+ * The economy check (tools/economy.ts, COMBAT.md 16; Claude's calls, Oct 28). completionistMaxOver: a player who does
+ * every side quest (secret ones too, with their fights and the stealth fail-safe fights) ends each chapter at most this
+ * many levels over the main route; thoroughMaxOver: one who also reads every book and mediates every debate, at most
+ * this many. The kit the main route must afford: one armour piece a capital at the chapter's tier (a gear tier is
+ * tierWidth levels: GEAR_TIERS), then from fullKitFrom (the Muster) the tier-24 armour and weapons the late fights are
+ * checked in, for the four who fight.
+ */
+export const ECONOMY = { completionistMaxOver: 1, thoroughMaxOver: 2, tierWidth: 4, fullKitFrom: 10 } as const;
 
 /** The minimap (src/ui/SideMap.ts): how many tiles it shows across and down (CSS sizes it per layout). */
 export const SIDE_MAP = { tilesW: 32, tilesH: 24 } as const;

@@ -233,7 +233,8 @@ the Echo open after `item.sun_locket`. All can be finished in the Last Evening (
   cutters). Spared (+1 Influence) or broken (+2 Fear). The carter's ledger (`item.smugglers_ledger`: muskets "for the
   Muster's friends" under a closed hand, a house sigil in the margin) is the exposed route's second piece with Kayla's
   list. Then the powder cellar (M-ZET-2). Reward 400 gold and 10 XP (the chapter's XP is in its steps). Closes when
-  the fleet sails.
+  the fleet sails. **Claude's call (Oct 28, the XP and gold balance, `COMBAT.md` 16):** the gold is the design's 600
+  again: at 400 the main route ended Chapter 10 106 gold short of the Muster's tier-24 kit (`tests/economy.test.ts`).
 - **The three feuds (Chapter 10, required as the Speaker's gate):** merchants (the Dorini clerk against Hrafn), temple
   (the Suzumori retainer against the Agnivansh steward), crown (the printer against the Free Brasador sergeant); each a
   debate, mediated or joined. A mediation pays +2 to its Influence house's price; a house whose feud was argued and not
