@@ -126,7 +126,7 @@ function balancePan(): DialogueScript {
     lines: [
       nar('The pan sinks level, and holds. Somewhere in the wall a counterweight drops.', { fx: 'shake' }),
       nar('The balance door swings in on its beam. Beyond it, the strongroom.', { set: { 'story.vault_outer': true } }),
-      say(S, 'Twenty-five. Fifty years, and nobody in my family could read that page.'),
+      say(S, 'Twenty-five. Fifty years, and nobody in my family could read that page.', { mood: 'earnest' }),
     ],
   };
   return script('balance_pan', nodes);
@@ -358,7 +358,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
           speaker: 'coralie',
           text: 'Eightgate. Someone has to dress the Regent\'s guests for this Parley, and they cannot dress themselves.',
         },
-        { if: { all: [{ flag: 'story.coralie_met' }, { notFlag: 'story.coralie_left' }] }, speaker: 'coralie', text: 'Gigi. Anissa. I will see you there. Eat something.' },
+        { if: { all: [{ flag: 'story.coralie_met' }, { notFlag: 'story.coralie_left' }] }, speaker: 'coralie', text: 'Gigi. Anissa. I will see you there. Eat something.', mood: 'tender' },
         act(
           [{ do: 'exit', actor: 'npc:coralie', to: at(21, 30) }, { do: 'look', actor: 'player' }],
           '',
@@ -401,7 +401,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
         { if: { notFlag: 'story.vault_echo' }, speaker: S, text: 'The page says a price. I have never been able to read it. Nobody alive has.' },
         { if: { all: [{ flag: 'story.vault_echo' }, { notFlag: 'story.vault_outer' }] }, speaker: S, text: 'You know the price? Then hang it on the pan. I will look away from the weights.' },
         { if: { all: [{ flag: 'story.vault_outer' }, { notFlag: 'story.vault_inner' }] }, speaker: S, text: "The niche at the far end. No Dorini has ever opened it. That was the point." },
-        { if: { flag: 'story.vault_inner' }, speaker: S, text: 'Open it. I want to see what my family has been holding for fifty years.' },
+        { if: { flag: 'story.vault_inner' }, speaker: S, text: 'Open it. I want to see what my family has been holding for fifty years.', mood: 'earnest' },
       ],
     },
   }),
@@ -470,7 +470,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     right: {
       lines: [
         nar('On the back of the red carpet the knots are loose and few, glued where they should be tied.'),
-        { if: { all: [{ flag: 'story.coralie_met' }, { notFlag: 'story.coralie_left' }] }, speaker: 'coralie', text: 'Eighty to the inch. Glue! I would not put it under a dog.' },
+        { if: { all: [{ flag: 'story.coralie_met' }, { notFlag: 'story.coralie_left' }] }, speaker: 'coralie', text: 'Eighty to the inch. Glue! I would not put it under a dog.', mood: 'fierce' },
         say('carpet_seller', '...Not so loud. Please.', { set: { 'side.appraise.carpet': true } }),
       ],
     },
@@ -514,7 +514,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       '',
       'In the cloth row, a tall woman in pink silk holds a bolt of indigo up to the light and argues with it.',
     ),
-    say('coralie', 'Twelve to the bolt! For Zetwal indigo! At home it grows in the ditches!'),
+    say('coralie', 'Twelve to the bolt! For Zetwal indigo! At home it grows in the ditches!', { mood: 'fierce' }),
     act(
       [
         { do: 'face', actor: 'coralie', facing: 'player' },
@@ -524,19 +524,19 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       '',
       'She turns. She sees the Locket before she sees the girls.',
     ),
-    say('coralie', "...That is Papa's sun."),
-    say('coralie', 'Mes chéries! Gigi! Anissa!', { translation: 'My darlings!' }),
+    say('coralie', "...That is Papa's sun.", { mood: 'tender' }),
+    say('coralie', 'Mes chéries! Gigi! Anissa!', { mood: 'tender', translation: 'My darlings!' }),
     say(A, 'Tati Coco!'),
     nar('She hugs them both at once, indigo and all.'),
     say(G, 'Tati Coco. What are you doing in Al-Doria?'),
     say('coralie', 'Buying blue for a queen who wants to be blue. The blockade has made our indigo dearer than gold.'),
-    act([{ do: 'face', actor: 'coralie', facing: 'down' }], 'coralie', "Mama's eyes. Both of you."),
+    act([{ do: 'face', actor: 'coralie', facing: 'down' }], 'coralie', "Mama's eyes. Both of you.", { mood: 'tender' }),
     say(G, 'Tati. Did you know? About Mother. And Lord Rael.'),
     nar('Coralie stops smiling. Only for a moment.'),
     // Claude's call (review 5.1; FAMILY.md): she deflects with love. Chapter 5's confrontation is Elodie's.
     say('coralie', "That is your mother's to tell, chérie. Not mine."),
     say('coralie', "She'll be at Eightgate. Make her tell you."),
-    say('coralie', 'Now. Show me what you are buying. Nobody in this family gets cheated while I am in the row.'),
+    say('coralie', 'Now. Show me what you are buying. Nobody in this family gets cheated while I am in the row.', { mood: 'fierce' }),
     act([{ do: 'walk', actor: 'coralie', to: at(28, 22), facing: 'down' }, { do: 'look', actor: 'player' }], '', 'She goes back to her indigo, still arguing with it.', {
       set: { 'story.coralie_met': true },
     }),
@@ -692,7 +692,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     act([{ do: 'look', actor: 'npc:layla' }], '', 'On the divan, the Merchant-Prince. At her right hand, a broad man with gold rings stands.'),
     say(G, 'Merchant-Prince. Fifty years ago the Dorini witnessed the Sun Accord. I ask to see the witnessed copy.'),
     say(LAYLA.speaker, LAYLA.refuse),
-    act([{ do: 'look', actor: 'npc:qasim' }], 'qasim', 'And the guild has contracts in Crown ports worth more than a fifty-year-old page. The vault stays shut.'),
+    act([{ do: 'look', actor: 'npc:qasim' }], 'qasim', 'And the guild has contracts in Crown ports worth more than a fifty-year-old page. The vault stays shut.', { mood: 'cold' }),
     act([{ do: 'look', actor: 'npc:layla' }], '', 'The Merchant-Prince says nothing to that. She looks at Azzy.'),
     say(LAYLA.speaker, LAYLA.toAzzy),
     say(LAYLA.speaker, LAYLA.toYari),
@@ -715,7 +715,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     heard: { speaker: LAYLA.speaker, lines: [{ text: LAYLA.heard }] },
     after: { speaker: LAYLA.speaker, lines: [{ text: LAYLA.divanAfter }] },
   }),
-  simple('qasim_talk', [say('qasim', 'The vault stays shut, envoy. Go and buy something; the bazaar is very good.')]),
+  simple('qasim_talk', [say('qasim', 'The vault stays shut, envoy. Go and buy something; the bazaar is very good.', { mood: 'cold' })]),
   simple('chief_scribe_talk', [say('chief_scribe', 'The House of Ledgers, envoy. North-west of the square. I said nothing.')]),
   simple('council_elder_talk', [say('councillor', 'The council advises. The Merchant-Prince decides. The guildmaster pays. That is the order of things.')]),
   simple('majlis_treasurer_talk', [say('majlis_treasurer', 'The Crown pays on time now. It never used to. I do not know what it is buying.')]),
@@ -811,7 +811,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         nar('The plate is cut in the shape of a sun. The Locket\'s sun.', { fx: 'token' }),
         nar('Gianna holds the Locket to it. Something inside the wall turns over.', { set: { 'story.vault_inner': true } }),
-        say(S, 'Fifty years. A Zetwal key in a Dorini lock.'),
+        say(S, 'Fifty years. A Zetwal key in a Dorini lock.', { mood: 'earnest' }),
       ],
     },
   }),
@@ -849,9 +849,9 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
           "Boots on the stair. Guildmaster Qasim comes down with the guild's blades in green, and stops at the balance door.",
           { set: { 'story.qasim_came': true } },
         ),
-        say('qasim', "The guild's vault. The guild's page. And Zetwal's envoy with her hand in it."),
-        act([{ do: 'face', actor: 'qasim', facing: 'right' }, { do: 'look', actor: 'npc:samira' }], 'qasim', 'Samira Dorini. You opened this door.'),
-        say('qasim', 'You are struck from the guild, tonight, by its master.'),
+        say('qasim', "The guild's vault. The guild's page. And Zetwal's envoy with her hand in it.", { mood: 'cold' }),
+        act([{ do: 'face', actor: 'qasim', facing: 'right' }, { do: 'look', actor: 'npc:samira' }], 'qasim', 'Samira Dorini. You opened this door.', { mood: 'cold' }),
+        say('qasim', 'You are struck from the guild, tonight, by its master.', { mood: 'cold' }),
         nar('Samira takes the slip-book out of her sash, writes, and tears out the page.'),
         act([{ do: 'walk', actor: 'npc:samira', to: at(20, 7), facing: 'left' }], S, "Then I'll bill the guild."),
         act([{ do: 'walk', actor: 'npc:samira', to: at(22, 8), facing: 'left' }, { do: 'look', actor: 'player' }], '', 'She steps into the line, beside Yari.', {
@@ -859,7 +859,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
         }),
         nar('(Samira joins the party.)'),
         say(A, 'Gigi, Samira can Bribe a blade. The ones he hires were paid already.'),
-        say('qasim', 'Blades.', { set: { 'battle.next': 'qasim_vault', 'battle.after': 'layla_descends' } }),
+        say('qasim', 'Blades.', { mood: 'cold', set: { 'battle.next': 'qasim_vault', 'battle.after': 'layla_descends' } }),
       ],
     },
   }),
@@ -873,7 +873,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       ],
       'qasim',
       'Again, envoy? The guild pays by the hour.',
-      { set: { 'battle.next': 'qasim_vault', 'battle.after': 'layla_descends' } },
+      { mood: 'cold', set: { 'battle.next': 'qasim_vault', 'battle.after': 'layla_descends' } },
     ),
   ]),
 
@@ -915,7 +915,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     say(LAYLA.speaker, LAYLA.holds),
     say(LAYLA.speaker, LAYLA.throne),
     say(LAYLA.speaker, LAYLA.caravan),
-    say(LAYLA.speaker, LAYLA.firstLight),
+    say(LAYLA.speaker, LAYLA.firstLight, { mood: 'softened' }),
     act([{ do: 'walk', actor: 'scribe', to: at(19, 7), facing: 'right' }], '', 'The chief scribe puts a caravan pass in Gianna\'s hand, under the Merchant-Prince\'s seal.', {
       set: { 'item.dorini_pass': true },
     }),
@@ -930,9 +930,9 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       'She goes back up the stair without turning.',
       { set: { 'story.layla_pass': true } },
     ),
-    say(S, LAYLA.notHerName),
+    say(S, LAYLA.notHerName, { mood: 'dismayed' }),
     say(G, 'No.'),
-    say(S, LAYLA.scribe),
+    say(S, LAYLA.scribe, { mood: 'dismayed' }),
     say(S, 'First light, at the caravan gate. Up the stair and east through the bazaar. We can sleep in the gate yard.', { set: { 'story.vault_left': true } }),
   ]),
 
@@ -952,7 +952,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     ),
     act([{ do: 'exit', actor: 'scribe', to: at(0, 13) }, { do: 'look', actor: 'samira' }], S, LAYLA.purse),
     nar('She turns the purse over once more.'),
-    say(S, LAYLA.pays),
+    say(S, LAYLA.pays, { mood: 'earnest' }),
     // The coin (Rael clue 4): Samira reads it right; Gianna reads it wrong (belief.rael_traitor).
     act([{ do: 'place', actor: 'yari', look: 'yari', at: at(4, 13), facing: 'right' }], Y, 'Samira. Appraise this.'),
     nar('Yari holds out the coin from the strand. Samira weighs it on the little scale she wears on a cord.'),

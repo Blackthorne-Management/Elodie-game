@@ -297,10 +297,10 @@ export const ERRAND_BENNY_BRANCHES: readonly DialogueBranch[] = [
 export const ERRAND_BENNY_NODES: Readonly<Record<string, DialogueNode>> = {
   errand: {
     lines: [
-      act([{ do: 'face', actor: 'npc:benny_old', facing: 'player' }], 'benny_old', 'Envoy. One errand, before you go and lose to my son. An old fool cannot run it himself.'),
+      act([{ do: 'face', actor: 'npc:benny_old', facing: 'player' }], 'benny_old', 'Envoy. One errand, before you go and lose to my son. An old fool cannot run it himself.', { mood: 'wry' }),
       say('benny_old', 'Under the chapel there is a crypt. In the crypt, an iron box. In the box, a promise I wrote before my son was born.'),
       say('benny_old', 'Nobody has read it. I would like it read, by somebody young, while I can still hear it.'),
-      act([{ do: 'walk', actor: 'npc:nancy', to: at(4, 16), facing: 'left' }], 'nancy', 'Benny. The crypt is the Lord\'s. His guards keep that cloister day and night.'),
+      act([{ do: 'walk', actor: 'npc:nancy', to: at(4, 16), facing: 'left' }], 'nancy', 'Benny. The crypt is the Lord\'s. His guards keep that cloister day and night.', { mood: 'firm' }),
       say('benny_old', 'Then she must be quieter than his guards. Fifty years ago my own honor guard kept it. Not in the same places.'),
       say('benny_old', 'The night I marched to the sea, I went down to the crypt last of all. Ask your sun about that night.'),
       act(
@@ -328,12 +328,12 @@ export const ERRAND_BENNY_NODES: Readonly<Record<string, DialogueNode>> = {
       nar('"whoever sits in my chair. B., Lord of Ardencia."'),
       say(G, 'Your son sits in your chair now. He told the Crown\'s envoy that Ardencia stands with the Crown.'),
       say('benny_old', 'Then the promise is mine to be ashamed of. I wrote it, and I put it in a box, and I let the box keep it.'),
-      act([{ do: 'walk', actor: 'npc:nancy', to: at(4, 16), facing: 'left' }], 'nancy', 'Benny.'),
-      say('benny_old', 'Keep it, envoy. A promise keeps better with the young. I only kept it dry.', { set: { [E.done]: true } }),
+      act([{ do: 'walk', actor: 'npc:nancy', to: at(4, 16), facing: 'left' }], 'nancy', 'Benny.', { mood: 'firm' }),
+      say('benny_old', 'Keep it, envoy. A promise keeps better with the young. I only kept it dry.', { mood: 'tender', set: { [E.done]: true } }),
       say(A, 'He is holding Nancy\'s hand, Gigi.'),
     ],
   },
-  errand_after: { lines: [say('benny_old', 'Keep it dry, envoy. That is most of keeping a promise.')] },
+  errand_after: { lines: [say('benny_old', 'Keep it dry, envoy. That is most of keeping a promise.', { mood: 'wry' })] },
 };
 
 /** Being seen: a guard of now sends the envoy up the stair; one of then sends the Marshal back to the gate (the memory lets go). */

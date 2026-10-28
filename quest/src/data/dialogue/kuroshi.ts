@@ -308,7 +308,7 @@ const KAYLA_MEET: DialogueLine[] = [
     '',
     'She comes round the desk and puts a hand on his cheek, once.',
   ),
-  act([{ do: 'face', actor: 'npc:kayla', facing: 'player' }], K, 'You are Elodie\'s. Azriel wrote me from the road: three lines, which for him is a book.'),
+  act([{ do: 'face', actor: 'npc:kayla', facing: 'player' }], K, 'You are Elodie\'s. Azriel wrote me from the road: three lines, which for him is a book.', { mood: 'listening' }),
   say(K, 'You have the Locket. Then you have been to Cenizal, and you know whose daughters you are.'),
   say(K, 'And I will not talk about him in a library. Everything here is written down.', { set: { 'story.kayla_met': true } }),
 ];
@@ -574,13 +574,13 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     files: {
       lines: [
         nar('Dawn. Kayla is at her desk as if she never left it. Gianna puts the lacquer box down in front of her.'),
-        act([{ do: 'walk', actor: 'follower', to: at(LIBRARY.desk.x + 2, LIBRARY.desk.y + 1), facing: 'up' }], K, 'Two files. I will read them as they are written, not as you would like them.'),
+        act([{ do: 'walk', actor: 'follower', to: at(LIBRARY.desk.x + 2, LIBRARY.desk.y + 1), facing: 'up' }], K, 'Two files. I will read them as they are written, not as you would like them.', { mood: 'listening' }),
         nar('The first is a Crown buying-list, in Throne sols. Four lines, four prices.'),
         nar('Every name has been cut out of the paper with a knife. Beside one of the prices, a stamped mark: a closed hand.'),
         say(K, 'Four lines, four prices. The names were cut before it reached the Fox. Somebody knew the list would be sold.'),
         say(K, 'A closed hand. It is not a Crown seal, and it is not a house\'s.', { set: { 'clue.buyers_mark': true } }),
         say(G, 'So the Crown is buying one of the houses.'),
-        say(K, 'Has bought, or will. The list does not say which. I do not guess.'),
+        say(K, 'Has bought, or will. The list does not say which. I do not guess.', { mood: 'listening' }),
         nar('The second file: gold out of Ardencia\'s treasury, large sums, every season for twenty years, to places in a cipher.'),
         say(K, 'Ardencia\'s counting-house hand. Kirinoura has copied enough of it to know it.'),
         say(K, 'The key is not one this city has ever held. I cannot tell you where the gold went.', { set: { 'clue.ardencia_outflows': true } }),
@@ -588,7 +588,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
         say(K, 'I did not say that. I said I do not know.'),
         say(K, 'He writes to me twice a year. He never says anything. That is how I know he is still himself.'),
         act([{ do: 'look', actor: 'follower' }], '', 'Without looking, Kayla pushes a finished paper crane across the desk to Anissa.'),
-        say(K, 'I fold when I listen. It keeps my hands from writing things down. You can have that one.', { set: { 'item.kayla_crane': true } }),
+        say(K, 'I fold when I listen. It keeps my hands from writing things down. You can have that one.', { mood: 'listening', set: { 'item.kayla_crane': true } }),
         say(A, 'Thank you.'),
         act([{ do: 'walk', actor: 'azzy', to: at(LIBRARY.desk.x - 1, LIBRARY.desk.y + 1), facing: 'up' }], Z, 'Titi. Come to the Muster.'),
         say(K, 'I am a clerk.'),

@@ -70,6 +70,8 @@ export interface TokenChair {
   /** The companion who hands it over (a stage actor of the party). */
   carrier: string;
   line: string;
+  /** The carrier's expression for the line (PORTRAIT_MOODS). */
+  mood?: string;
   /** The answer this house gives the petition at the Claim (from behind its chair). */
   answer: string;
   /** Who answers for the house (a speaker id). */
@@ -77,7 +79,7 @@ export interface TokenChair {
 }
 export const TOKEN_CHAIRS: readonly TokenChair[] = [
   { house: 'xaragua', name: 'Xaraguá', item: 'token_xaragua', carrier: 'yari', line: 'Mine to carry. Mine to set down, after all.', answer: 'Xaraguá: breach. We were never asked to sign it.', speaker: 'yari' },
-  { house: 'al_doria', name: 'Al-Doria', item: 'token_dorini', carrier: 'samira', line: 'Mama paid on time. Of course she did.', answer: LAYLA.claimAnswer, speaker: LAYLA.speaker },
+  { house: 'al_doria', name: 'Al-Doria', item: 'token_dorini', carrier: 'samira', line: 'Mama paid on time. Of course she did.', mood: 'earnest', answer: LAYLA.claimAnswer, speaker: LAYLA.speaker },
   { house: 'skarragol', name: 'Skarragol', item: 'token_ironvow', carrier: 'bayarmaa', line: 'Grandmother\'s standard has a chair.', answer: 'Skarragol: breach. The Ironvow keep their word, and this was not one.', speaker: 'bayarmaa' },
   { house: 'kuroshi', name: 'Kuroshi', item: 'token_suzumori', carrier: 'haru', line: 'Mother folded this. She folds when she is deciding something.', answer: 'Kuroshi: breach. We counted the pages. There were six.', speaker: 'haru' },
   { house: 'jwaladesh', name: 'Jwaladesh', item: 'token_agnivansh', carrier: 'vikram', line: '...It\'s still lit. Aiyana filled it.', answer: 'Jwaladesh: breach. Under the flame.', speaker: 'vikram' },

@@ -268,7 +268,7 @@ const REGISTER: DialogueScript = script('clerk_register', {
   seal: {
     lines: [
       say(CL, 'Five answers. That is the minute of the sealing.'),
-      say(P, 'Then seal it, clerk. In your own book, under your own wax.'),
+      say(P, 'Then seal it, clerk. In your own book, under your own wax.', { mood: 'troubled' }),
       act([{ do: 'face', actor: CLERK, facing: 'down' }, { do: 'wait', ms: 700 }], '', 'The clerk presses the Throne\'s wax onto the page, and shuts the register on it.', {
         set: { [RIBBON.anchor]: true },
       }),
@@ -280,7 +280,7 @@ const REGISTER: DialogueScript = script('clerk_register', {
       say(CL, 'Three lines scored through. The tide, Marshal. The minute can wait.'),
       act([{ do: 'face', actor: CLERK, facing: 'down' }], '', 'He shuts the register.', { set: { 'echo.register_shut': true } }),
       act([{ do: 'walk', actor: CLERK, to: at(RIBBON.clerkHome.x, RIBBON.clerkHome.y), facing: 'down' }, { do: 'look', actor: 'player' }], '', 'He goes back to the binding.'),
-      { if: not(RIBBON.shut), speaker: P, text: RIBBON_HINTS[1]! },
+      { if: not(RIBBON.shut), speaker: P, text: RIBBON_HINTS[1]!, mood: 'troubled' },
       { if: f(RIBBON.shut), speaker: P, text: RIBBON_HINTS[2]! },
       nar('(He will not open it again in this memory. Come back to now, and try again.)', { set: { [RIBBON.shut]: true } }),
     ],
