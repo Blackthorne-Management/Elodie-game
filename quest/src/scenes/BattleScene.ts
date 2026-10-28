@@ -25,6 +25,7 @@ import {
   textureKeyForBattle,
   battleStanceName,
   ENEMY_FILE_SCALE,
+  ENEMY_STANCES,
   ART_FILES,
   UI,
   characterFrame,
@@ -952,11 +953,16 @@ export class BattleScene extends Phaser.Scene {
     const painted = this.textures.exists(fileKey(ART_FILES.enemy(e.look)));
     // A person with no enemy drawing (the Crown's marines) stands in as their walking sprite, facing the party.
     const drawn = this.textures.exists(textureKeyForEnemy(e.look));
+    // One of the party's people as a foe (Rael at the Trial): their painted stance, mirrored to face the party.
+    const stance = !drawn && ENEMY_STANCES[e.look] ? textureKeyForBattle(ENEMY_STANCES[e.look]!) : '';
+    const standing = !!stance && this.textures.exists(stance);
     const img = (drawn
       ? this.add.image(slot.x, slot.y, textureKeyForEnemy(e.look))
-      : this.add.image(slot.x, slot.y, textureKeyForCharacter(e.look), characterFrame('left', 0)))
+      : standing
+        ? this.add.image(slot.x, slot.y, stance, '0').setFlipX(true)
+        : this.add.image(slot.x, slot.y, textureKeyForCharacter(e.look), characterFrame('left', 0)))
       .setOrigin(0.5, 1)
-      .setScale(painted ? ENEMY_FILE_SCALE : drawn ? BATTLE_ART.enemyScale : BATTLE_ART.partyScale)
+      .setScale(painted ? ENEMY_FILE_SCALE : drawn ? BATTLE_ART.enemyScale : standing ? BATTLE_STANCE.scale : BATTLE_ART.partyScale)
       .setDepth(slot.y);
     this.sprites.get(e.key)?.destroy();
     this.sprites.set(e.key, img);

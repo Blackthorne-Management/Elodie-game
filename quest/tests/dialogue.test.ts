@@ -148,3 +148,15 @@ describe('dialogue content', () => {
     expect(again.view()).toMatchObject({ text: 'Back again? Remember: hold B to run.' });
   });
 });
+
+describe('expressions', () => {
+  it("a line's mood reaches the view (and a line without one has none)", () => {
+    const s: DialogueScript = { id: 'm', start: 'a', nodes: { a: { speaker: 'a', lines: [{ text: 'Stern.', mood: 'stern' }, { text: 'Plain.' }] } } };
+    const r = new DialogueRunner(s, speakers, new FlagStore());
+    const first = r.view();
+    expect(first.kind === 'line' && first.mood).toBe('stern');
+    r.advance();
+    const second = r.view();
+    expect(second.kind === 'line' && 'mood' in second).toBe(false);
+  });
+});

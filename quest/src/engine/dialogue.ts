@@ -24,6 +24,11 @@ export interface DialogueLine {
   translation?: string;
   /** Overrides the node's speaker for this line. */
   speaker?: string;
+  /**
+   * The speaker's expression for this line (assets.config.ts PORTRAIT_MOODS, e.g. 'stern' shows portraits/rael_stern.png);
+   * the plain portrait stands in until that picture exists.
+   */
+  mood?: string;
   /** A screen effect the field plays when the line appears (e.g. 'flash', 'shake', 'fade'). */
   fx?: string;
   /** Stage directions acted out on the map before the line appears (engine/stage.ts). */
@@ -67,8 +72,8 @@ export interface ChoiceView {
 }
 
 export type DialogueView =
-  | { kind: 'line'; speaker: Speaker | null; text: string; translation?: string; fx?: string; stage?: readonly StageCue[] }
-  | { kind: 'choice'; speaker: Speaker | null; text: string; translation?: string; fx?: string; stage?: readonly StageCue[]; choices: ChoiceView[] }
+  | { kind: 'line'; speaker: Speaker | null; text: string; translation?: string; fx?: string; stage?: readonly StageCue[]; mood?: string }
+  | { kind: 'choice'; speaker: Speaker | null; text: string; translation?: string; fx?: string; stage?: readonly StageCue[]; mood?: string; choices: ChoiceView[] }
   | { kind: 'end' };
 
 const MAX_NODE_HOPS = 64;
@@ -119,6 +124,7 @@ export class DialogueRunner {
     const translation = line?.translation;
     const fx = line?.fx;
     const stage = line?.stage;
+    const mood = line?.mood;
     const isLast = this.lineIndex >= this.lines.length - 1;
     if (isLast && this.choices && this.choices.length > 0) {
       return {
@@ -128,10 +134,11 @@ export class DialogueRunner {
         translation,
         fx,
         stage,
+        ...(mood ? { mood } : {}),
         choices: this.choices.map((c, index) => ({ text: c.text, index })),
       };
     }
-    return { kind: 'line', speaker, text, translation, fx, stage };
+    return { kind: 'line', speaker, text, translation, fx, stage, ...(mood ? { mood } : {}) };
   }
 
   /** Move past the current line. Does nothing while a choice is waiting. */
@@ -215,10 +222,14 @@ export function typewriterChars(elapsedMs: number, charsPerSecond: number, lengt
   return Math.min(length, Math.floor((elapsedMs / 1000) * charsPerSecond));
 }
 
-/** Checks dialogue content: start nodes, next targets and speakers exist. Returns readable errors. */
+/**
+ * Checks dialogue content: start nodes, next targets and speakers exist, and (given `moods`, each portrait's
+ * expressions) every line's mood is one its speaker's portrait has. Returns readable errors.
+ */
 export function checkDialogue(
   scripts: Readonly<Record<string, DialogueScript>>,
   speakers: Readonly<Record<string, Speaker>>,
+  moods?: Readonly<Record<string, readonly string[]>>,
 ): string[] {
   const errors: string[] = [];
   for (const [key, script] of Object.entries(scripts)) {
@@ -229,6 +240,11 @@ export function checkDialogue(
       const at = `${where}/${nodeId}`;
       const speakerIds = [node.speaker, ...node.lines.map((l) => l.speaker)].filter((s): s is string => !!s);
       for (const s of speakerIds) if (!speakers[s]) errors.push(`${at}: unknown speaker "${s}"`);
+      for (const l of moods ? node.lines : []) {
+        if (!l.mood) continue;
+        const portrait = speakers[l.speaker ?? node.speaker ?? '']?.portrait;
+        if (!portrait || !moods![portrait]?.includes(l.mood)) errors.push(`${at}: no "${l.mood}" expression for ${portrait ?? 'a speaker without a portrait'}`);
+      }
       const targets: string[] = [];
       if (typeof node.next === 'string') targets.push(node.next);
       else if (node.next) targets.push(...node.next.map((b) => b.to));

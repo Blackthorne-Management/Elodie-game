@@ -10,7 +10,7 @@ import { stabilityFlagsWritten } from '../src/engine/stability.ts';
 import { STABILITY_HOUSES } from '../src/data/claim.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 import { VOLLEY_BATTLES } from '../src/data/warBattles.ts';
-import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, TILESET, TILE_ART } from '../src/assets.config.ts';
+import { NPC_SPRITES, OBJECT_ART, PALETTE, PORTRAITS, PORTRAIT_MOODS, TILESET, TILE_ART } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { LATER_STORY_FLAGS } from '../src/data/encounters.ts';
 import { OLD_SAVE_FLAGS } from '../src/data/dialogue/zetwal.ts';
@@ -83,7 +83,15 @@ function flagsRead(): Map<string, string> {
 
 describe('dialogue content', () => {
   it('passes the dialogue checker', () => {
-    expect(checkDialogue(CONTENT.dialogue, CONTENT.speakers)).toEqual([]);
+    expect(checkDialogue(CONTENT.dialogue, CONTENT.speakers, PORTRAIT_MOODS)).toEqual([]);
+  });
+
+  it('every expression belongs to a portrait (PORTRAIT_MOODS), and the checker catches a mood the portrait lacks', () => {
+    for (const key of Object.keys(PORTRAIT_MOODS)) expect(PORTRAITS[key], key).toBeDefined();
+    const bad = { t: { id: 't', start: 'a', nodes: { a: { speaker: 'rael', lines: [{ text: 'Hm.', mood: 'giddy' }] } } } };
+    expect(checkDialogue(bad, CONTENT.speakers, PORTRAIT_MOODS)).toEqual(['dialogue t/a: no "giddy" expression for rael']);
+    const good = { t: { id: 't', start: 'a', nodes: { a: { speaker: 'rael', lines: [{ text: 'Hm.', mood: 'stern' }] } } } };
+    expect(checkDialogue(good, CONTENT.speakers, PORTRAIT_MOODS)).toEqual([]);
   });
 
   it('every NPC has a dialogue and a look; every speaker has a portrait', () => {

@@ -81,6 +81,8 @@ Pixel art sprite sheet of the same character, Lord Rael, for a top-down 16-bit f
 
 **Files:** `characters/rael.png` (28 x 36 cells), `portraits/rael.png`, `portraits/rael_stern.png`, `portraits/rael_unreadable.png`, `portraits/rael_lamplight.png`.
 
+**Battle stance with his sword** (prompts given in chat, Oct 27): two poses side by side (ready, then down on one knee), saved as `battle/rael-steel_saber.png`. The game uses it both when Rael fights beside the party (Chapter 11) and, mirrored to face the party, when he is the foe at the Trial of Blades (Chapter 3; `ENEMY_STANCES` in `quest/src/assets.config.ts`). Until it arrives, his walking sprite stands in.
+
 ---
 
 ## Old Benny

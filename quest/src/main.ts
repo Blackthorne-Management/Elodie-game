@@ -12,6 +12,7 @@
 
 import Phaser from 'phaser';
 import { HINT_FIRST_MS, HINT_REPEAT_MS, MAX_ZOOM, MIN_INTEGER_ZOOM, RENDER_SCALE_MAX, START_MAP_ID, START_SPAWN, VIEW_HEIGHT, VIEW_WIDTH } from './config.ts';
+import { PORTRAIT_MOODS } from './assets.config.ts';
 import { CONTENT, validationContext } from './data/content.ts';
 import { loadRawMaps } from './data/maps.ts';
 import { checkDialogue } from './engine/dialogue.ts';
@@ -72,7 +73,7 @@ if (gate !== 'play') {
 }
 
 const rawMaps = loadRawMaps();
-const problems = [...validateMaps(rawMaps, validationContext()), ...checkDialogue(CONTENT.dialogue, CONTENT.speakers)];
+const problems = [...validateMaps(rawMaps, validationContext()), ...checkDialogue(CONTENT.dialogue, CONTENT.speakers, PORTRAIT_MOODS)];
 if (problems.length > 0) fail(`Content problems:\n${problems.join('\n')}`);
 
 const maps: Record<string, GameMap> = Object.fromEntries(

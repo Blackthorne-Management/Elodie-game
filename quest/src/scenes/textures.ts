@@ -28,6 +28,8 @@ import {
   textureKeyForItem,
   textureKeyForObject,
   textureKeyForPortrait,
+  textureKeyForPortraitMood,
+  PORTRAIT_MOODS,
   textureKeyForShimmer,
   type PlaceholderPortrait,
   type PlaceholderTile,
@@ -73,6 +75,15 @@ function portraitArt(key: string, def: PlaceholderPortrait): string {
   return (def.look && NPC_SPRITES[def.look]?.art) ?? key;
 }
 
+/** Every expression a portrait may show (PORTRAIT_MOODS): its file and texture. */
+function moodFiles(): { path: string; key: string; portrait: string }[] {
+  return Object.entries(PORTRAIT_MOODS).flatMap(([portrait, moods]) => {
+    const def = PORTRAITS[portrait];
+    if (!def) return [];
+    return moods.map((mood) => ({ path: ART_FILES.portrait(`${portraitArt(portrait, def)}_${mood}`), key: textureKeyForPortraitMood(portrait, mood), portrait }));
+  });
+}
+
 function fileImage(scene: Phaser.Scene, path: string): HTMLImageElement | HTMLCanvasElement | null {
   const key = fileKey(path);
   if (!scene.textures.exists(key)) return null;
@@ -88,6 +99,7 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
   const paths = [
     ...Object.entries(NPC_SPRITES).map(([look, def]) => ART_FILES.character(def.art ?? look)),
     ...Object.entries(PORTRAITS).map(([key, def]) => ART_FILES.portrait(portraitArt(key, def))),
+    ...moodFiles().map((m) => m.path),
     ...TILESET.tiles.map((t) => ART_FILES.tile(t.name)),
     ...Object.keys(OBJECT_ART).map(ART_FILES.object),
     ...Object.keys(ITEM_ART).map(ART_FILES.item),
@@ -317,6 +329,19 @@ function makeCharacters(scene: Phaser.Scene): void {
   }
 }
 
+/** Expressions from art files only: without the file, the plain portrait stands in (DialogueBox). */
+function makePortraitMoods(scene: Phaser.Scene): void {
+  const s = PORTRAIT_SIZE;
+  for (const { path, key, portrait } of moodFiles()) {
+    const look = PORTRAITS[portrait]!.look;
+    const file = recolored(scene, path, look ? NPC_SPRITES[look]?.skinTone : undefined);
+    if (!file) continue;
+    const { tex, ctx } = canvasTexture(scene, key, s, s);
+    ctx.drawImage(file, 0, 0, file.width, file.height, 0, 0, s, s);
+    tex.refresh();
+  }
+}
+
 function makePortraits(scene: Phaser.Scene): void {
   const s = PORTRAIT_SIZE;
   for (const [key, def] of Object.entries(PORTRAITS)) {
@@ -363,4 +388,5 @@ export function makeAllTextures(scene: Phaser.Scene): void {
   makeMarkers(scene);
   makeCharacters(scene);
   makePortraits(scene);
+  makePortraitMoods(scene);
 }

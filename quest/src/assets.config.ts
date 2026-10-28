@@ -822,6 +822,8 @@ export const NPC_SPRITES: Record<string, PlaceholderCharacter> = {
     headgear: 'headband', headgearColor: C.R!, accessories: ['bow', 'sash'],
   },
   benny_young: {
+    // The young Benny's files are characters/ and portraits/benny_young.png (the speaker's key is benny).
+    art: 'benny_young',
     skin: C.s!, hair: HAIR_DARK, hairStyle: 'cropped', outfit: C.r!, trim: C.o!, legs: C.K!, build: 'tall',
     accessories: ['epaulettes', 'emblem'],
   },
@@ -1439,6 +1441,45 @@ export function textureKeyForPortrait(portrait: string): string {
   return `portrait-${portrait}`;
 }
 
+/**
+ * Expressions (art prompts: ART-PROMPTS.md "File names" and ART-PROMPTS-REAL-PEOPLE.md): a dialogue line's `mood`
+ * shows portraits/<portrait>_<mood>.png when that file exists, else the plain portrait. Keyed by PORTRAITS key.
+ */
+export const PORTRAIT_MOODS: Readonly<Record<string, readonly string[]>> = {
+  elodie: ['guarded', 'worried'],
+  patricio: ['neutral', 'troubled'],
+  patricio_old: ['sad', 'stern'],
+  anicette: ['neutral', 'sly'],
+  anaco: ['stern', 'tender'],
+  behique: ['grave'],
+  cresswell: ['thoughtful'],
+  samira: ['earnest', 'dismayed'],
+  qasim: ['cold', 'defeated'],
+  layla: ['softened'],
+  herald: ['impassive'],
+  rael: ['stern', 'unreadable', 'lamplight'],
+  benny_old: ['wry', 'tender', 'counting'],
+  benny: ['wry', 'recognising'],
+  nancy: ['tender', 'firm'],
+  zelia: ['protective', 'softened'],
+  amanda: ['conspiratorial', 'fierce'],
+  joaquin: ['torn', 'handing_over'],
+  rahel: ['warm', 'closed'],
+  patricia: ['blessing', 'listening'],
+  jordyn: ['mothers_jaw', 'resigning'],
+  kayla: ['listening'],
+  aiyana: ['dry'],
+  coralie: ['fierce', 'tender'],
+  sebastian: ['listening', 'tender'],
+  rivera: ['grim'],
+  jaime: ['casting'],
+};
+
+/** The texture of a portrait's expression (its file is portraits/<the portrait's file name>_<mood>.png). */
+export function textureKeyForPortraitMood(portrait: string, mood: string): string {
+  return `portrait-${portrait}~${mood}`;
+}
+
 /** Large object drawings (OBJECT_ART), one texture each. */
 export function textureKeyForObject(kind: string): string {
   return `object-${kind}`;
@@ -1513,6 +1554,14 @@ export const BATTLE_STANCE = { looks: ['gianna', 'yari', 'patricio_young', 'anis
 export function battleStanceName(look: string, weaponItem?: string): string {
   return weaponItem ? `${look}-${weaponItem}` : look;
 }
+
+/**
+ * A foe who is also one of the party's people (Rael at the Trial of Blades) stands in their painted battle stance
+ * when the file exists (battle/<look>-<item id>.png), mirrored to face the party; else their walking sprite.
+ */
+export const ENEMY_STANCES: Readonly<Record<string, string>> = {
+  rael: battleStanceName('rael', 'steel_saber'),
+};
 
 /** A painted enemy file is drawn at twice the game's pixel density, like the stances. */
 export const ENEMY_FILE_SCALE = 0.5;

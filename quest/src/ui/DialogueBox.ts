@@ -2,7 +2,7 @@
 // a choice list. It draws what a DialogueRunner view says; it never decides content.
 
 import Phaser from 'phaser';
-import { PORTRAIT_SIZE, UI, textureKeyForPortrait } from '../assets.config.ts';
+import { PORTRAIT_SIZE, UI, textureKeyForPortrait, textureKeyForPortraitMood } from '../assets.config.ts';
 import { TEXT_SPEEDS, VIEW_HEIGHT, VIEW_WIDTH, type TextSpeed } from '../config.ts';
 import { typewriterChars, type DialogueView } from '../engine/dialogue.ts';
 import { dialogueExtraPx, textStyle } from './text.ts';
@@ -123,7 +123,10 @@ export class DialogueBox {
 
     const speaker = view.speaker;
     const hasPortrait = !!speaker?.portrait && this.scene.textures.exists(textureKeyForPortrait(speaker.portrait));
-    if (hasPortrait) this.portrait.setTexture(textureKeyForPortrait(speaker!.portrait!)).setDisplaySize(PORTRAIT_SIZE, PORTRAIT_SIZE);
+    // The line's expression when its picture exists, else the plain portrait.
+    const mood = hasPortrait && view.mood ? textureKeyForPortraitMood(speaker!.portrait!, view.mood) : '';
+    const face = mood && this.scene.textures.exists(mood) ? mood : textureKeyForPortrait(speaker?.portrait ?? '');
+    if (hasPortrait) this.portrait.setTexture(face).setDisplaySize(PORTRAIT_SIZE, PORTRAIT_SIZE);
     this.portrait.setVisible(hasPortrait);
     const textX = BOX_X + PAD + (hasPortrait ? PORTRAIT_SIZE + PAD : 0);
     const textW = BOX_X + BOX_W - PAD - textX;

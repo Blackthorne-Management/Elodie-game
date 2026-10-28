@@ -78,3 +78,15 @@ describe('placeholder characters', () => {
     expect(cells(p).filter((c) => c !== undefined).every((c) => Object.values(PALETTE).includes(c!))).toBe(true);
   });
 });
+
+describe('foes in a painted stance', () => {
+  it('every ENEMY_STANCES look is a foe who also walks the map, named <look>-<item>', async () => {
+    const { ENEMY_STANCES } = await import('../src/assets.config.ts');
+    const { ENEMIES } = await import('../src/data/battles.ts');
+    for (const [look, stance] of Object.entries(ENEMY_STANCES)) {
+      expect(Object.values(ENEMIES).some((e) => e.look === look), look).toBe(true);
+      expect(NPC_SPRITES[look], look).toBeDefined();
+      expect(stance.startsWith(`${look}-`), stance).toBe(true);
+    }
+  });
+});

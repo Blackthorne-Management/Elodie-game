@@ -655,6 +655,8 @@ Implementation: a `lang/*.json` glossary with `{ word, language, translation, ve
 
 **Dialogue:** a simple conditional format (flags, pillar thresholds, price paid, Concord). Support portraits, speaker names, choices and a translation line.
 
+**Expressions (built Oct 28, Claude's call):** a dialogue line may carry `mood: '<name>'`; the box then shows `portraits/<portrait file>_<name>.png` when that file exists, else the plain portrait, so lines can be tagged before the art arrives. The expressions each portrait may use are listed in `PORTRAIT_MOODS` (`quest/src/assets.config.ts`, taken from the art prompts' file lists); the content check refuses a mood its speaker's portrait does not list. A foe who is one of the party's people (Rael at the Trial) stands in his painted stance, mirrored, when `battle/<look>-<item>.png` exists (`ENEMY_STANCES`).
+
 **Flags and save:** one global flag store. Saves in `localStorage` through a single `save.ts` module, with Export and Import save code. Autosave on map change and after battles.
 
 **Input:** keyboard, Gamepad API (standard mapping), touch overlay. Single abstraction with actions: `move`, `confirm`, `cancel`, `echo`, `menu`, `run`.
