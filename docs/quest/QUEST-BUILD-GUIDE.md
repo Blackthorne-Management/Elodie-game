@@ -678,6 +678,82 @@ Implementation: a `lang/*.json` glossary with `{ word, language, translation, ve
 
 **Accessibility:** text speed, hold-to-run, colorblind-safe pillar icons using different **shapes**, large touch targets, Story difficulty, optional hint-off.
 
+### 9.1 Accessibility, saves and older phones (the Nov 18 polish item, done Oct 28)
+
+All of this is **Claude's call (Oct 28)**. The rules live in `quest/src/engine/accessibility.ts` (tested in
+`tests/accessibility.test.ts`).
+
+**Colour is never the only cue.** Every place where colour alone carried meaning was given a second cue; the art
+style and the colours themselves stay.
+
+| Where | Before | Now |
+|---|---|---|
+| Level colours (Quests page, Foes page) | grey, white, orange, red only (orange and red look alike to most colour-blind players) | the band's word with the colour: "Level 12 (hard)"; the Foes list says "deadly, beaten" |
+| Quest arrow and stop marker | story gold, side quest silver (close in brightness) | the story's is solid, a side quest's is hollow |
+| Battle statuses | good gold, bad violet | a small triangle before each tag, up for a help, down for a harm |
+| Item rarity (Equip, Bag) | box and name colour only | pips in the box's corner (uncommon 1 to legendary 4), and the Bag names it ("Rare weapon Lv 9") |
+| Rhythm lock | hit gold, missed grey, stray tap turns the line red | a hit gets a white ring, a miss turns into a hollow ring, a stray tap also makes the line twice as wide |
+| Minimap and city map doors (`ui/tileColours.ts`) | gold, which vanishes on sandstone, pale paths and limestone (about a fifth of the tiles beside doors) | gold where it stands out by brightness, dark wood where the tiles round it are light (WCAG contrast under 1.6) |
+| Kirinoura marsh lanterns (Chapter 7) | the red post's placeholder tile differed from the white one only by colour | the red post's tile carries a cross (the white one keeps its round lamp) |
+
+Already fine and left as they are: HP bars (their length and the number), the stat changes (+ and -), the Spark and
+Calm pips (a count), quest steps ([x]), the minimap's story stop (a plus) against side quests (a dot), the talk
+"!" against the use sparkle (different shapes), the realm map's mist (darkness), the Seventh Stone's stones (places,
+names and notes, never colour). Lanterns and wax named in dialogue always say their colour in words.
+
+**Reduce motion** (System menu, "Reduce motion: On/Off"). A setting of this device (localStorage `bq.reduceMotion`,
+like Text size and Quest arrows), so saves and save codes are unchanged. Until the player chooses, it follows the
+device's own setting (`prefers-reduced-motion`). On: no screen shake (bumps, cannon, the chain, the bell), no
+full-screen flash (the Echo swap, an ambush, the Surge, the voyage; the two the story needs seen, the Sun Locket
+and Rael's signet glowing in Chapter 3, become a soft wash of their colour that rises and fades once), no shiver of a
+fighter on a hit (the number, the sound and the white blink still show it), camera glides in a scene a third as long
+(60 ms instead of 180 ms), the realm map's marker still, and the Game Over plays its gentle version (plain fades, no
+falling threads, no flash; before, it followed only the device setting). Every shake and flash goes through `scenes/cameraFx.ts`.
+
+**Flashing.** Whatever asks for it, no full-screen flash starts within 334 ms of the last (at most three a second,
+WCAG 2.3.1), and the rhythm lock's stray-tap flash has the same limit. Checked: every repeating effect blinks well
+under three times a second (the menu map's "you are here" 1.2 a second, the minimap 1.1, the "more" arrow 1.25, the
+glow on what the Echo changed 1.1, the item showcase's sparkles under 0.8). Not checked frame by frame: the intro and Game Over films.
+
+**Saves** (`engine/save.ts`, `engine/state.ts`, tests in `tests/save.test.ts` and `tests/state.test.ts`). An old or
+damaged save never crashes the game:
+- What makes the game (the map, the position, the flags) must read; everything else (facing, era, text speed, hints,
+  time, a flag of the wrong type) takes its default and the player is told which ("Some of your save (text speed)
+  came from an older version and was reset").
+- A save on a spot that has become a wall (a map changed between versions) loads at the map's nearest open spawn, and
+  says so; the same for an imported save code.
+- A save that cannot be read at all (bad JSON, a bad checksum, a newer version, a map this version does not have)
+  starts a new game with a clear message, and the old text is kept on the device (`bloodlines-quest.save.unreadable`)
+  and shown with a Copy button, so the next autosave never destroys it.
+- Storage that throws (a private tab, a full disk) reads as no save; saving says "Could not save", as before.
+
+**Performance on older phones.** Measured with `npm run build` in `quest/`:
+
+| | Before | After |
+|---|---|---|
+| The game's script | 5,893.55 kB (1,050.14 kB gzipped) | 4,989.55 kB (1,027.35 kB gzipped) |
+| The maps in it | 2.69 MB, as Tiled writes them | 1.78 MB (written without spaces at build time; the same JSON) |
+| The chapter starts (`?chapter=` on the dev server) | 260 kB on the website too | dev server only |
+| The content check at every start (every map and conversation) | about 0.3 s on a desktop, several times that on an older phone | dev server only (or `?validate=1`); the tests run it on every change |
+
+The largest files: the music (13 tracks of about 1.2 MB, 16 MB in all, each fetched only when it first plays), the
+intro film (7.3 MB WebM or 6.2 MB MP4, one of the two, streamed), the art (no picture over 13 kB), the font (two
+files of 17 kB).
+
+Not done (each needs more than a contained change):
+1. **Load maps by city.** The maps are a third of the script; loading a city's maps on arrival needs the map change,
+   the menu's city map and the minimap to wait for them.
+2. **Split the chapters' content** (dialogue, quests, books, about 1.5 MB) into one file per chapter; the logic
+   reads all content at once today.
+3. **Stream the music.** A decoded track takes 25 to 30 MB of memory (two while one fades into the next); playing
+   it through an audio element would take far less, at the cost of the seamless loop.
+4. **A smaller Phaser** (about 1.2 MB of the script): a custom build without the parts the quest never uses.
+5. **Render scale on low-memory phones:** cap the drawing at 3x (not 4x) where the browser reports 2 GB or less.
+6. **Anissa's hint timer** works out the objective and the side-quest nudges every frame (0.02 to 0.04 ms on a
+   desktop); remembering them until a flag changes would save a little more.
+7. **Browsers before 2022** (iOS 15 and older): the build targets current browsers; supporting older ones means a
+   legacy build, larger for everyone.
+
 ---
 
 ## 10. ART AND AUDIO PLAN

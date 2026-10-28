@@ -41,7 +41,7 @@ import { cameraBounds, cameraScroll } from '../engine/scaling.ts';
 import { dirButtons } from '../input/actions.ts';
 import { currentObjective, journalEntries, journalNotes, questForJournal, questForMap, type QuestDef } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
-import { applySave, newGame, saveFits, toSaveData } from '../engine/state.ts';
+import { applySave, newGame, placeSave, toSaveData } from '../engine/state.ts';
 import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlacement, type TiledMap } from '../engine/tiledMap.ts';
 import { getRuntime, saveGame, type Runtime } from '../runtime.ts';
 import { DialogueBox } from '../ui/DialogueBox.ts';
@@ -71,6 +71,9 @@ import { closedNotes, rewardText, settleRewards } from '../engine/sideQuests.ts'
 import { SIDE_QUESTS } from '../data/sideQuests.ts';
 import { mysteryGoals, sideGoals, sideNudges, storyGoal, waypoint, type Waypoint } from '../engine/guide.ts';
 import { questArrows, setQuestArrows } from '../ui/questArrows.ts';
+import { reduceMotion, setReduceMotion } from '../ui/reduceMotion.ts';
+import { cameraGlideStep } from '../engine/accessibility.ts';
+import { screenFlash, screenShake, storyFlash } from './cameraFx.ts';
 import { planTap } from '../engine/tap.ts';
 import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, CARD_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, SFX_IDS, VOLUME_STEPS, type SfxId } from '../audio.config.ts';
@@ -718,7 +721,7 @@ export class FieldScene extends Phaser.Scene {
           break;
         case 'refused':
           this.toast.show(e.text);
-          this.cameras.main.shake(120, 0.004);
+          screenShake(this, 120, 0.004);
           audio.sfx('bump');
           break;
         case 'era':
@@ -784,7 +787,7 @@ export class FieldScene extends Phaser.Scene {
           break;
         case 'encounter':
           // An ambush: a red flash before the foes speak, then the battle.
-          this.cameras.main.flash(250, 180, 40, 40);
+          screenFlash(this, 250, 180, 40, 40);
           break;
         case 'voyage':
           voyage = e.voyage;
@@ -1306,7 +1309,7 @@ export class FieldScene extends Phaser.Scene {
 
   private swapVisuals(_era: Era): void {
     const f = ECHO_FILTER.flash;
-    this.cameras.main.flash(f.duration, f.r, f.g, f.b);
+    screenFlash(this, f.duration, f.r, f.g, f.b);
     this.applyEra();
     this.updateFollowerLook();
     this.syncCrowd(); // the crowd is not part of the memory
@@ -1516,7 +1519,7 @@ export class FieldScene extends Phaser.Scene {
   // ---- Quest arrows (engine/guide.ts) -------------------------------------------------------
 
   /**
-   * Where to go from this map now: the story's next stop (gold), and a side quest's (silver: the nearest on
+   * Where to go from this map now: the story's next stop (gold, solid), and a side quest's (silver, hollow: the nearest on
    * this map, else through a door; accepted or not started yet), plus every side quest's for the minimap.
    */
   private refreshGuide(): void {
@@ -1579,6 +1582,8 @@ export class FieldScene extends Phaser.Scene {
         p.mark = this.add.graphics().setDepth(kind === 'story' ? 3201 : 3200);
         p.mark.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(-5, -5, 5, -5, 0, 2);
         p.mark.fillStyle(fill, 1).fillTriangle(-3.5, -4, 3.5, -4, 0, 0.5);
+        // A side quest's is hollow, the story's solid: the shape tells them apart, not only gold and silver.
+        if (kind === 'side') p.mark.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(-1.6, -3.2, 1.6, -3.2, 0, -1.1);
       }
       const bob = Math.round(Math.sin(this.guideT / 220 + (kind === 'side' ? 1.5 : 0)) * 2);
       // Above the "!" or sparkle when the stop already has one.
@@ -1593,6 +1598,7 @@ export class FieldScene extends Phaser.Scene {
       p.arrow.fillStyle(QUEST_ARROW.outline, 0.55).fillCircle(0, 0, 8);
       p.arrow.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(8, 0, -4, -6, -4, 6);
       p.arrow.fillStyle(fill, 1).fillTriangle(6, 0, -2.5, -4.2, -2.5, 4.2);
+      if (kind === 'side') p.arrow.fillStyle(QUEST_ARROW.outline, 1).fillTriangle(3.2, 0, -1.1, -2, -1.1, 2);
     }
     // From the middle of the screen towards the stop, to where that line meets the screen's inner edge.
     const cx = view.x + VIEW_WIDTH / 2;
@@ -2451,7 +2457,7 @@ export class FieldScene extends Phaser.Scene {
       // Glide towards the target rather than jump (a cut feels like a teleport).
       const cam = this.cameras.main;
       const want = cameraScroll({ x: target.x, y: target.y - TILE_SIZE / 2 }, this.camBounds, VIEW_WIDTH, VIEW_HEIGHT);
-      const k = Math.min(1, delta / 180);
+      const k = cameraGlideStep(delta, reduceMotion());
       if (this.stageActors.size > 0 || Math.abs(cam.scrollX - want.x) > 0.5 || Math.abs(cam.scrollY - want.y) > 0.5) {
         cam.setScroll(Math.round(cam.scrollX + (want.x - cam.scrollX) * k), Math.round(cam.scrollY + (want.y - cam.scrollY) * k));
       }
@@ -2512,21 +2518,22 @@ export class FieldScene extends Phaser.Scene {
 
   private playFx(fx: string): void {
     const cam = this.cameras.main;
-    if (fx === 'flash') cam.flash(600, 255, 244, 214);
-    else if (fx === 'shake') cam.shake(260, 0.008);
+    if (fx === 'flash') screenFlash(this, 600, 255, 244, 214);
+    else if (fx === 'shake') screenShake(this, 260, 0.008);
     // Chapter 3: the Sun Locket and Rael's signet glowing together (a long warm gold), and the signet alone at his
     // lie (a short, fainter gold the player sees and Gianna, looking at the sand, does not).
-    else if (fx === 'token') cam.flash(1400, 255, 214, 110);
-    else if (fx === 'signet') cam.flash(500, 214, 170, 70);
+    // Story clues: with Reduce motion they still show, as a soft wash (scenes/cameraFx.ts storyFlash).
+    else if (fx === 'token') storyFlash(this, 1400, 255, 214, 110);
+    else if (fx === 'signet') storyFlash(this, 500, 214, 170, 70);
     // Chapter 10: the Marshal's whistle, and the harbor chain's capstan heard from the Hall (a sound and a small shake).
     else if (fx === 'whistle') audio.sfx('whistle');
     else if (fx === 'ratchet') {
       audio.sfx('ratchet');
-      cam.shake(400, 0.004);
+      screenShake(this, 400, 0.004);
     } else if (fx === 'cannon') {
       // Chapter 11: a gun in view's edge or off it (the owner's rule: a sound and a shake for an off-screen event).
       audio.sfx('cannon');
-      cam.shake(320, 0.01);
+      screenShake(this, 320, 0.01);
     } else if (fx === 'volley') audio.sfx('volley');
     else if (fx === 'conch') audio.sfx('conch');
     // The secret items (Oct 27): the informant's message walked on the singing floor, and oil poured between jars.
@@ -2534,11 +2541,11 @@ export class FieldScene extends Phaser.Scene {
     else if (fx === 'pour') audio.sfx('pour');
     else if (fx === 'hall_bell') {
       audio.sfx('hall_bell');
-      cam.shake(200, 0.003);
+      screenShake(this, 200, 0.003);
     }
     else if (fx === 'chain') {
       audio.sfx('chain');
-      cam.shake(700, 0.006);
+      screenShake(this, 700, 0.006);
     } else if (fx === 'fade') {
       cam.fadeOut(250, 0, 0, 0);
       cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => cam.fadeIn(450, 0, 0, 0));
@@ -2585,6 +2592,7 @@ export class FieldScene extends Phaser.Scene {
       { id: 'sound', label: `Sound: ${volumeLabel(audio.volume.sound)}` },
       { id: 'hints', label: `Anissa's hints: ${s.hints ? 'On' : 'Off'}` },
       { id: 'arrows', label: `Quest arrows: ${questArrows() ? 'On' : 'Off'}` },
+      { id: 'motion', label: `Reduce motion: ${reduceMotion() ? 'On' : 'Off'}` },
       ...(isStandalone() ? [] : [{ id: 'fullscreen', label: isFullscreen() ? 'Exit full screen' : 'Full screen' }]),
       { id: 'export', label: 'Export save code' },
       { id: 'import', label: 'Import save code' },
@@ -2685,6 +2693,11 @@ export class FieldScene extends Phaser.Scene {
         this.menu.refresh();
         break;
       }
+      case 'motion':
+        // No screen shake or full-screen flashes, shorter camera glides (engine/accessibility.ts); per device.
+        setReduceMotion(!reduceMotion());
+        this.menu.refresh();
+        break;
       case 'hints': {
         const s = this.logic.state.settings;
         s.hints = !s.hints;
@@ -2730,19 +2743,24 @@ export class FieldScene extends Phaser.Scene {
 
   private openImport(): void {
     let imported = false;
+    let toast = 'Save code loaded';
     openImportDialog(
       (code) => {
         const result = decodeSave(code);
         if (!result.ok) return result.error;
-        if (!saveFits(result.data, this.rt.maps)) return 'That save code points at a place this version does not have.';
-        applySave(this.logic.state, result.data);
+        // An older code whose spot has changed lands at the map's nearest way in (engine/state.ts placeSave).
+        const placed = placeSave(result.data, this.rt.maps);
+        if (!placed) return 'That save code points at a place this version does not have.';
+        applySave(this.logic.state, placed.data);
         this.logic.reset();
         saveGame(this.rt);
         imported = true;
+        if (placed.moved) toast = 'Save code loaded (at the nearest way in)';
+        else if (result.defaulted?.length) toast = 'Save code loaded (some settings reset)';
         return null;
       },
       () => {
-        if (imported) this.scene.restart({ toast: 'Save code loaded' });
+        if (imported) this.scene.restart({ toast });
         else this.returnFromModal();
       },
     );

@@ -317,6 +317,8 @@ body.standalone .fs-button { display: none; }
   padding: 16px;
   background: rgba(0, 0, 0, 0.7);
 }
+/* The start-up note about the save (ui/saveCodeDialog.ts openNoticeDialog) shows over the intro. */
+.code-dialog.notice { z-index: 50; }
 .code-panel {
   width: min(480px, 100%);
   background: var(--panel);
@@ -407,7 +409,8 @@ body.standalone .fs-button { display: none; }
   animation: realm-blink 0.9s ease-in-out infinite alternate;
 }
 @keyframes realm-blink { from { opacity: 1; } to { opacity: 0.2; } }
-@media (prefers-reduced-motion: reduce) { .realm-here { animation: none; } }
+/* Reduce motion (System menu; it follows the device's own setting until chosen): ui/reduceMotion.ts. */
+body.reduce-motion .realm-here { animation: none; }
 
 /* The animated intro and title (scenes/IntroScene.ts): the video over everything, letterboxed. */
 .intro {

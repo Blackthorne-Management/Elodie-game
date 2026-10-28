@@ -329,7 +329,7 @@ export const TILESET = {
     { gid: 252, name: 'lantern_pile', base: 0xe8d8a0, accent: 0xd86a2a, pattern: 'blob' },
     { gid: 253, name: 'post_dark', base: 0x3a3644, accent: 0x5a5468, pattern: 'border' },
     { gid: 254, name: 'post_white', base: 0xfafaf0, accent: 0xf2d04b, pattern: 'blob' },
-    { gid: 255, name: 'post_red', base: 0xd8584a, accent: 0xf2d04b, pattern: 'blob' },
+    { gid: 255, name: 'post_red', base: 0xd8584a, accent: 0xf2d04b, pattern: 'cross' },
     { gid: 256, name: 'screen_n', base: 0xece6d6, accent: 0x7d3c98, pattern: 'stripes' },
     { gid: 257, name: 'screen_e', base: 0xece6d6, accent: 0x5a5468, pattern: 'border' },
     { gid: 258, name: 'screen_s', base: 0xd8d2c2, accent: 0x7d3c98, pattern: 'cross' },

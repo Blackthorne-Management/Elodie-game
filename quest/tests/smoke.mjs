@@ -907,6 +907,45 @@ async function introFlow(browser, errors) {
   return ['quest-intro.png', 'quest-title.png'];
 }
 
+/**
+ * A damaged stored save (Claude's call, Oct 28): the game still starts, says so, keeps the old text, and an old
+ * save whose later fields are missing loads with defaults.
+ */
+async function damagedSaveFlow(browser, errors) {
+  console.log('Damaged and old saves:');
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  watchErrors(page, errors);
+  await page.goto(VILLAGE);
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('bloodlines-quest.save', 'BQ2.this-is-not-a-save.00000000');
+  });
+  await page.reload();
+  await page.waitForSelector('.code-dialog.notice', { timeout: 15000 });
+  const text = await page.textContent('.code-dialog.notice');
+  check(/could not be read/.test(text ?? ''), 'a damaged save shows a clear message instead of crashing');
+  check((await page.evaluate(() => localStorage.getItem('bloodlines-quest.save.unreadable'))) === 'BQ2.this-is-not-a-save.00000000', 'and the old save is kept on the device');
+  await page.click('.code-dialog.notice button.primary');
+  await waitReady(page);
+  check(!(await page.isVisible('.code-dialog')), 'OK closes it and the new game runs');
+  // An old code (version 1, before the hints setting) on the test village: it loads with hints on.
+  await page.evaluate(() => {
+    const body = btoa(JSON.stringify([1, 'test-village', 3, 4, 1, 0, { a: true }, 2, 5])).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    let h = 0x811c9dc5;
+    for (let i = 0; i < body.length; i++) {
+      h ^= body.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    localStorage.setItem('bloodlines-quest.save', `BQ1.${body}.${h.toString(16).padStart(8, '0')}`);
+  });
+  await page.reload();
+  await waitReady(page);
+  const s = await snap(page);
+  check(s.mapId === 'test-village' && s.x === 3 && s.y === 4 && !(await page.isVisible('.code-dialog')), 'a version 1 save still loads where it was');
+  await ctx.close();
+}
+
 /** The debate corner: walk up, Join, win two rounds of three, and the reward is paid. */
 async function debateFlow(browser, errors) {
   console.log('Debate corner:');
@@ -1933,6 +1972,20 @@ async function playAct(browser, errors) {
   check(true, 'and back on');
   await page.keyboard.press('x');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  // Reduce motion (Claude's call, Oct 28): System > Reduce motion turns it on and off, remembered on this device.
+  await menuSelect(page, 'Reduce motion');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.items?.includes('Reduce motion: On'), null, { timeout: 2000 });
+  check(
+    (await page.evaluate(() => localStorage.getItem('bq.reduceMotion'))) === 'on' && (await page.evaluate(() => document.body.classList.contains('reduce-motion'))),
+    'System > Reduce motion turns it on, remembered on this device',
+  );
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
+  await menuSelect(page, 'Reduce motion');
+  await page.waitForFunction(() => window.__quest.snapshot().menu?.items?.includes('Reduce motion: Off'), null, { timeout: 2000 });
+  check(true, 'and off again');
+  await page.keyboard.press('x');
+  await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 2000 });
   await menuSelect(page, 'Credits');
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'journal', null, { timeout: 2000 });
   check((await snap(page)).journal[0] === 'CREDITS', 'the menu has a Credits screen');
@@ -2287,6 +2340,7 @@ async function main() {
 
     await hintsAndJournal(browser, errors);
     const introShots = await introFlow(browser, errors);
+    await damagedSaveFlow(browser, errors);
     const debateShots = await debateFlow(browser, errors);
     const gameOverShots = await gameOverFlow(browser, errors);
     const actShots = await playAct(browser, errors);

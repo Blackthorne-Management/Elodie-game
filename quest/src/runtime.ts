@@ -4,8 +4,8 @@
 import { SAVE_STORAGE_KEY } from './config.ts';
 import type { GameLogic } from './engine/game.ts';
 import type { HintTracker } from './engine/hints.ts';
-import { readSave, writeSave, type StorageLike } from './engine/save.ts';
-import { applySave, saveFits, toSaveData } from './engine/state.ts';
+import { writeSave, type StorageLike } from './engine/save.ts';
+import { applySave, loadStoredSave, toSaveData } from './engine/state.ts';
 import type { GameMap, TiledMap } from './engine/tiledMap.ts';
 import type { IntroOpening } from './engine/intro.ts';
 import type { InputManager } from './input/actions.ts';
@@ -51,12 +51,15 @@ export function saveGame(r: Runtime = getRuntime()): boolean {
   return writeSave(r.storage, SAVE_STORAGE_KEY, toSaveData(r.logic.state, Date.now()));
 }
 
-/** Load the stored save into the state. Returns 'none', 'loaded' or 'invalid'. */
-export function loadStoredGame(r: Runtime): 'none' | 'loaded' | 'invalid' {
-  const result = readSave(r.storage, SAVE_STORAGE_KEY);
-  if (!result) return 'none';
-  if (!result.ok || !saveFits(result.data, r.maps)) return 'invalid';
+/**
+ * Load the stored save into the state: 'none', 'loaded' or 'invalid' (a new game), with what to tell the player
+ * (null: nothing) and, for an unreadable save, its text kept on the device (engine/state.ts loadStoredSave).
+ */
+export function loadStoredGame(r: Runtime): { status: 'none' | 'loaded' | 'invalid'; notice: string | null; kept: string | null } {
+  const result = loadStoredSave(r.storage, SAVE_STORAGE_KEY, r.maps);
+  if (result.status === 'none') return { status: 'none', notice: null, kept: null };
+  if (result.status === 'invalid') return { status: 'invalid', notice: result.notice, kept: result.kept };
   applySave(r.logic.state, result.data);
   r.logic.reset();
-  return 'loaded';
+  return { status: 'loaded', notice: result.notice, kept: null };
 }

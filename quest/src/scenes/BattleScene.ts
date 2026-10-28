@@ -64,6 +64,8 @@ import { getRuntime, saveGame } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
 import { playFx, type FxKind, type Point } from './battleFx.ts';
 import { fileKey } from './textures.ts';
+import { screenFlash } from './cameraFx.ts';
+import { reduceMotion } from '../ui/reduceMotion.ts';
 
 type Menu = 'commands' | 'moves' | 'skills' | 'items' | 'swap' | 'target';
 
@@ -465,7 +467,7 @@ export class BattleScene extends Phaser.Scene {
           }
         }
         if (g) this.time.delayedCall(200, () => playFx(this, 'surge', this.centre(g.key)));
-        this.cameras.main.flash(250, 255, 242, 160);
+        screenFlash(this, 250, 255, 242, 160);
         audio.sfx('surge');
         return 500;
       }
@@ -1053,7 +1055,8 @@ export class BattleScene extends Phaser.Scene {
   /** The only movement a fighter makes: a quick shiver in place. */
   private shiver(key: string, px: number): void {
     const s = this.sprites.get(key);
-    if (!s) return;
+    // Reduce motion: no shiver (the number, the sound and the white blink still show the hit).
+    if (!s || reduceMotion()) return;
     const x = s.x;
     this.tweens.add({ targets: s, x: x + px, duration: 35, yoyo: true, repeat: 3, onComplete: () => s.setX(x) });
   }
@@ -1087,8 +1090,13 @@ export class BattleScene extends Phaser.Scene {
       let tx = x;
       for (const st of c.statuses) {
         const info = STATUS_TAGS[st.id];
-        const t = text(tx, y, info.tag, info.good ? '#f2d04b' : '#d8a0f0', { fontSize: '6px' });
-        tx += Math.ceil(t.width) + 3;
+        const color = info.good ? '#f2d04b' : '#d8a0f0';
+        // A small triangle before the tag, up for a help and down for a harm, so the colour is never the only cue.
+        g.fillStyle(parseInt(color.slice(1), 16), 1);
+        if (info.good) g.fillTriangle(tx, y + 6, tx + 4, y + 6, tx + 2, y + 2);
+        else g.fillTriangle(tx, y + 2, tx + 4, y + 2, tx + 2, y + 6);
+        const t = text(tx + 5, y, info.tag, color, { fontSize: '6px' });
+        tx += 5 + Math.ceil(t.width) + 3;
       }
     };
 
