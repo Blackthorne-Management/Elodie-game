@@ -1263,7 +1263,7 @@ const VERDICT: DialogueScript = script('chamberlain_hearing_talk', {
       act(
         [
           { do: 'enter', actor: 'seal_x1', look: 'sealbearer', from: at(HALL.stair.x, HALL.stair.y), to: at(HALL.rael.x - 1, HALL.rael.y), facing: 'right', async: true },
-          { do: 'enter', actor: 'seal_x2', look: 'sealbearer', from: at(HALL.stair.x, HALL.stair.y), to: at(HALL.rael.x + 1, HALL.rael.y), facing: 'left' },
+          { do: 'enter', actor: 'seal_x2', look: 'sealbearer_b', from: at(HALL.stair.x, HALL.stair.y), to: at(HALL.rael.x + 1, HALL.rael.y), facing: 'left' },
           { do: 'exit', actor: 'npc:rael_hearing', to: at(HALL.stair.x, HALL.stair.y), async: true },
           { do: 'exit', actor: 'seal_x1', to: at(HALL.stair.x, HALL.stair.y), async: true },
           { do: 'exit', actor: 'seal_x2', to: at(HALL.stair.x, HALL.stair.y), async: true },

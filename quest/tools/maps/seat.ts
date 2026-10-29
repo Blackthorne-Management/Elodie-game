@@ -190,7 +190,7 @@ export function seatConcourse(): MapSource {
     // The pilgrims Se-3 saved, with their deserter escort, at the Iron Gate after the fitting (a callback).
     npc('escort_pilgrim', 42, 28, 'right', { npc: 'pilgrim_escort', if: 'side.deserters.spared, story.fitting_done' }),
     npc('escort_deserter', 43, 29, 'right', { npc: 'deserter_escort', if: 'side.deserters.spared, story.fitting_done' }),
-    { layer: 'crowds', name: 'concourse_day', x: 30, y: 20, w: 12, h: 8, props: { count: '5', looks: 'pilgrim,aldoria_trader,clerk,porter', if: SEAT_DAY } },
+    { layer: 'crowds', name: 'concourse_day', x: 30, y: 20, w: 12, h: 8, props: { count: '5', looks: 'pilgrim,aldoria_trader,clerk,porter,seat_folk_a,seat_folk_b,seat_folk_c', if: SEAT_DAY } },
     ...concourseClaim(),
   ];
   return { id: 'seat-concourse', present: g, echo: g.clone(), objects };

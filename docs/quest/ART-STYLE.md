@@ -135,6 +135,37 @@ Haitian-inspired, Yari is Taíno-inspired, the Rodriguez line Spanish-inspired.
   dark hair that is near-black rather than brown. Files: `characters/quiet_crown_m.png`,
   `characters/quiet_crown_f.png`, `portraits/quiet_crown_m.png`, `portraits/quiet_crown_f.png`.
 
+### Townsfolk: skin tones by land, and no twins in a crowd (owner direction, Oct 29)
+
+The owner: "The people in each land (most of them) should have skin tones matching their land heritage. There should be
+immigrants everywhere, but most should be the same colour. The Crown should be a mixed bunch, as well as the secret
+society (the Quiet Crown). They come from everywhere." And of the Chapter 1 festival: "too many duplicate people".
+
+- **Most of a land's townsfolk share its heritage's tones** (`LAND_SKIN` and the named `SKIN` tones in
+  `quest/src/assets.config.ts`): Zetwal (Haitian) Black, deep to mid brown; Xaraguá (Taíno) copper browns; Ardencia
+  (Spanish) olive and tan; Al-Doria (Arab and North African, Mediterranean) bronze to sand; Kuroshi (Japanese) fawn,
+  honey and ivory; Jwaladesh (Indian) teak to cardamom browns; Aldermoor (English) peach, rose, ruddy and pale;
+  Skarragol (Norse and the Mongol steppe) fair northerners and saddle and steppe-tan riders.
+- **Every land has a few immigrants** (about one in ten, never more than a quarter): a Taíno poet and an Al-Dorian
+  cloth merchant in Pòdlimyè, Zetwal salt and lamp-oil traders in Yucayeque, a Black porter in the Gate of Gold, a
+  Jwaladeshi armourer in Kirinoura, a Zetwal bead seller in Agnipur, and so on. Immigrants are traders, workers,
+  scholars and neighbours, never cast as the criminals of a place (Claude's call).
+- **Eightgate is the realm's crossroads**: no one tone, everyone.
+- **The Crown and the Quiet Crown come from everywhere**: their people spread over the light, tan, brown and deep
+  bands with none more than half; a group on one map (marines on a pier, sealbearers on the steps) wears several tones.
+  The Quiet Crown keeps one sheet per sex recoloured per member (above).
+- **Soldiers, envoys and traders met abroad keep their home land's tones** (`HERITAGE.home`): the Ironvow riders at the
+  Muster are Skarragol's people.
+- **A shared look gets a variant per land** (`VARIANTS` in `assets.config.ts`: the base look's clothes and shape with
+  its own skin and colours), so Al-Doria's clerk is not Pòdlimyè's clerk recoloured everywhere.
+- **Named people keep their looks**: the family drawn from real people, the characters with owner-approved art and the
+  other named cast (`HERITAGE.own`) are not recoloured by this rule.
+- **No twins in a crowd**: every crowd zone has at least as many looks as people; the festival plaza has twenty-four
+  different people (hair, headgear, build, age, clothes, what they carry, not only colours); `engine/crowd.ts`
+  `crowdLooks` never puts two people who look the same within five tiles of each other (counting the map's people),
+  and a stroller never steps near their twin.
+- `quest/tests/heritage.test.ts` checks all of it, land by land.
+
 ## 6. Prompts for a pixel-art generator
 
 The full Gemini prompts for art drop 1 (the goddess, Elodie, Patricio young and old, Anicette young and old, the

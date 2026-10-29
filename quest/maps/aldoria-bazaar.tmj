@@ -1728,7 +1728,7 @@
             {
               "name": "looks",
               "type": "string",
-              "value": "aldoria_trader,aldoria_trader_f,porter,market_kid"
+              "value": "aldoria_trader,aldoria_trader_f,ald_porter_b,ald_child,ald_shopper_a,ald_shopper_b,ald_shopper_c,ald_shopper_d,ald_shopper_e,porter"
             }
           ]
         },
@@ -1756,7 +1756,7 @@
             {
               "name": "looks",
               "type": "string",
-              "value": "aldoria_trader,aldoria_trader_f"
+              "value": "aldoria_trader_f,ald_shopper_f,ald_shopper_g,ald_shopper_h"
             }
           ]
         }

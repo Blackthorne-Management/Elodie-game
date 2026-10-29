@@ -97,7 +97,7 @@ export function aldoriaQuay(): MapSource {
     obj('charter_crates', 19, 12, { dialogue: 'charter_crates', era: 'present' }, 2, 1),
     obj('crown_ship', 18, 16, { dialogue: 'crown_ship', era: 'present' }, 11, 1),
     obj('quay_trader_boat', 6, 17, { dialogue: 'quay_trader_boat', era: 'present' }, 2, 1),
-    { layer: 'crowds', name: 'quay_porters', x: 12, y: 9, w: 9, h: 3, props: { count: '4', looks: 'porter,aldoria_trader' } },
+    { layer: 'crowds', name: 'quay_porters', x: 12, y: 9, w: 9, h: 3, props: { count: '4', looks: 'ald_porter,ald_porter_b,aldoria_trader,porter' } },
     // A-5 Invoice for the Crown (built Oct 27): down on the quay after the Merchant-Prince's word, Samira has one last invoice.
     trigger('invoice_offer', 15, 1, { dialogue: 'invoice_offer', flag: 'side.invoice.offered', once: true, onEnter: true, if: `story.layla_pass, !${INVOICE_FLAGS.accepted}, !story.caravan_dawn` }),
   ];
@@ -196,8 +196,8 @@ export function aldoriaBazaar(): MapSource {
     obj('weights_stall', 21, 21, { dialogue: 'weights_stall', era: 'present' }),
     obj('samira_scale', 11, 21, { dialogue: 'samira_scale', era: 'present' }),
     obj('majlis_banner', 19, 5, { dialogue: 'majlis_banner', era: 'present' }),
-    { layer: 'crowds', name: 'bazaar_day', x: 3, y: 24, w: 38, h: 3, props: { count: '9', looks: 'aldoria_trader,aldoria_trader_f,porter,market_kid', if: DAY } },
-    { layer: 'crowds', name: 'square_day', x: 24, y: 9, w: 6, h: 8, props: { count: '4', looks: 'aldoria_trader,aldoria_trader_f', if: DAY } },
+    { layer: 'crowds', name: 'bazaar_day', x: 3, y: 24, w: 38, h: 3, props: { count: '9', looks: 'aldoria_trader,aldoria_trader_f,ald_porter_b,ald_child,ald_shopper_a,ald_shopper_b,ald_shopper_c,ald_shopper_d,ald_shopper_e,porter', if: DAY } },
+    { layer: 'crowds', name: 'square_day', x: 24, y: 9, w: 6, h: 8, props: { count: '4', looks: 'aldoria_trader_f,ald_shopper_f,ald_shopper_g,ald_shopper_h', if: DAY } },
     // A-4 The Uncashed Note (secret, built Oct 27): the price board by the moneychangers' row, and the war-time bazaar in
     // front of it: young Yusuf at his counting table, his new box seven (the anchor), four stalls each short of one thing.
     obj('bazaar_prices', SAKK.board.x, SAKK.board.y, { kind: 'price_board', solid: true, era: 'present', dialogue: 'bazaar_prices' }),

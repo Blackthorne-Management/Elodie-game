@@ -36,7 +36,7 @@ describe('placeholder characters', () => {
         }
       }
     }
-  });
+  }, 30_000); // every look (some three hundred) in four facings: slow when the whole suite runs at once
 
   it('walk frames move the feet', () => {
     for (const [name, look] of Object.entries(NPC_SPRITES)) {

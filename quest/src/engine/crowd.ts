@@ -40,3 +40,39 @@ export function crowdStep(zone: CrowdZone, at: Pos, open: (p: Pos) => boolean, t
   );
   return choices.length > 0 ? rng.pick(choices) : null;
 }
+
+/**
+ * How far apart two people who look the same must stand (owner, Oct 29: "too many duplicate people"): more than this
+ * many tiles across or down, so twins are never side by side.
+ */
+export const CROWD_APART = 5;
+
+/** Whether two tiles are within `apart` of each other (across, down or diagonally). */
+export function nearEnough(a: Pos, b: Pos, apart = CROWD_APART): boolean {
+  return Math.abs(a.x - b.x) <= apart && Math.abs(a.y - b.y) <= apart;
+}
+
+/**
+ * Who stands at each spot: a look for each, so that nobody looks like anyone near them (`others` are the people
+ * already there: the map's people and the other crowds), and every look is worn once before any is worn twice.
+ * When the zone has too few looks for that, the least-worn look that is not nearby, or failing that the least worn.
+ */
+export function crowdLooks(spots: readonly Pos[], looks: readonly string[], rng: Rng, others: readonly { at: Pos; look: string }[] = []): string[] {
+  const worn = new Map<string, number>();
+  const placed = [...others];
+  return spots.map((at) => {
+    const close = new Set(placed.filter((o) => nearEnough(o.at, at)).map((o) => o.look));
+    const apart = looks.filter((l) => !close.has(l));
+    const pool = apart.length > 0 ? apart : looks;
+    const least = Math.min(...pool.map((l) => worn.get(l) ?? 0));
+    const look = rng.pick(pool.filter((l) => (worn.get(l) ?? 0) === least));
+    worn.set(look, (worn.get(look) ?? 0) + 1);
+    placed.push({ at, look });
+    return look;
+  });
+}
+
+/** Whether `self` stepping onto `p` would come near another of `people` who looks the same. */
+export function twinNear<T extends { at: Pos; look: string }>(people: readonly T[], self: T, p: Pos): boolean {
+  return people.some((o) => o !== self && o.look === self.look && nearEnough(o.at, p));
+}
