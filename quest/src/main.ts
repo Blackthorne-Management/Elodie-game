@@ -7,6 +7,7 @@
 //   ?touch=1         force the touch overlay
 //   ?intro=0         skip the animated intro and title (the smoke test's main route)
 //   ?install=0|1     never / always show the phone install screen (engine/install.ts)
+//   ?at=attack       dev server only: the scripted route played to that marker (?at=list prints every marker)
 //   ?chapter=2 (to 12, or epilogue) dev server only: a new game at the start of that chapter, with the party, bag,
 //                    gear and story the scripted route leaves at the end of the one before (src/data/starts/chapters.json)
 
@@ -148,6 +149,18 @@ if (import.meta.env.DEV && askedChapter) {
     runtime.logic.reset(state);
     runtime.intro = null;
   } else console.warn(`[quest] no start for chapter ${askedChapter}`);
+}
+
+// The owner's finer shortcut (Oct 29): `?at=attack` plays the scripted route headlessly to that marker (any `@name` in
+// routes/zetwal-act1.json; `?at=list` prints them) and starts there. Dev server only, like `?chapter=`.
+const askedAt = params.get('at');
+if (import.meta.env.DEV && askedAt) {
+  const { playTo, routeMarkers } = await import('./devJump.ts');
+  const logic = askedAt === 'list' ? null : playTo(maps, askedAt, { map: START_MAP_ID, spawn: START_SPAWN });
+  if (logic) {
+    runtime.logic = logic;
+    runtime.intro = null;
+  } else console.warn(`[quest] ?at= takes one of: ${routeMarkers().join(', ')}`);
 }
 
 const vp = visibleViewport();

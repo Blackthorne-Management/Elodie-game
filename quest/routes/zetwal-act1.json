@@ -373,6 +373,7 @@
   "goto 7,9",
   "goto 14,4",
   "goto 9,6",
+  "@proof",
   "skip",
   "@attack",
   "skip",
