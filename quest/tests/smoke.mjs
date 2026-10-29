@@ -1836,7 +1836,8 @@ async function playAct(browser, errors) {
   // whole party walking behind Gianna.
   const war = await snap(page);
   const line = [war.follower, war.yari, war.azzy, war.samira, war.bayarmaa, war.haru, war.vikram, war.edmund];
-  if (war.flags['act10.complete'] === true && war.flags['act11.complete'] !== true) {
+  // (SMOKE_TO=chapter10-end stops the route on the card, before the voyage: nothing to check there.)
+  if (war.flags['act10.complete'] === true && war.flags['act11.complete'] !== true && !(TO && !voyagedWar)) {
     check(voyagedWar && war.mapId === 'xaragua-beach' && war.mode === 'field' && line.every((w) => !!w), 'after Chapter 10\'s card the fleet sails to war (the voyage plays) and the party, Edmund last, stands on Xaraguá\'s Canoe Beach');
   }
   // Chapter 11's card closes on the voyage north up the strait (Oct 27: a scene now), then Eightgate's Ardencia Gate (where
