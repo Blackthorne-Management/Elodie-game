@@ -312,6 +312,20 @@ export function partyMembers(flags: FlagReader, rpg: RpgContent, era: 'present' 
   return rpg.members.filter((m) => m.era === era && (!m.joins || evaluate(m.joins, flags)));
 }
 
+/**
+ * Who walks the map behind Gianna (owner, Oct 29: "it looks crazy to have the entire party moving around together"):
+ * Anissa and Azzy whenever they are with her, and one companion more, the rest of the party implied. The companion
+ * is whoever joined last (the chapter's newcomer, who knows the place), and Yari again from Chapter 10 on, the war
+ * for her home and the Claim (Claude's call, Oct 29). `order`: the companions in the order they join.
+ */
+export function walkingCompanion(flags: FlagReader, rpg: RpgContent, order: readonly string[]): string | null {
+  const here = new Set(partyMembers(flags, rpg, 'present').map((m) => m.id));
+  const present = order.filter((id) => here.has(id));
+  if (present.length === 0) return null;
+  if (flags.get('act9.complete') === true && here.has('yari')) return 'yari';
+  return present[present.length - 1]!;
+}
+
 /** Where a member stands in battle: their own row, else warriors in front and everyone else behind. */
 export function memberRow(m: MemberDef): 'front' | 'back' {
   return m.row ?? (m.class === 'warrior' ? 'front' : 'back');

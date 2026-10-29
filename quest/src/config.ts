@@ -543,3 +543,9 @@ export const GAME_OVER = {
   /** Her first line changes from "I have caught you {n} times" to "{n} times..." at this count. */
   manyFrom: 10,
 } as const;
+
+/**
+ * The companions who can walk the map behind Gianna, Anissa and Azzy, in the order they join; only one walks at a time
+ * (owner, Oct 29; engine/rpg.ts walkingCompanion). The rest of the party is with them, implied.
+ */
+export const WALKING_COMPANIONS: readonly string[] = ['yari', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund'];

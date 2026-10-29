@@ -71,7 +71,22 @@ const { newGameSim, readJson, savedSim } = await import('../tools/sim-setup.ts')
 const { toSaveData } = await import('../src/engine/state.ts');
 const { markShown, pendingShowcases } = await import('../src/engine/showcase.ts');
 const { RPG } = await import('../src/data/rpg.ts');
-const { partyMembers } = await import('../src/engine/rpg.ts');
+const { partyMembers, walkingCompanion } = await import('../src/engine/rpg.ts');
+const { WALKING_COMPANIONS } = await import('../src/config.ts');
+
+/**
+ * Who walks the map behind Gianna (owner, Oct 29): Anissa and Azzy when with her, and one companion; true when the
+ * snapshot shows exactly those walkers.
+ */
+function walkersRight(s) {
+  const flags = new FlagStore(s.flags);
+  const party = partyMembers(flags, RPG, 'present').map((m) => m.id);
+  const companion = walkingCompanion(flags, RPG, WALKING_COMPANIONS);
+  const shown = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru, vikram: s.vikram, edmund: s.edmund };
+  const want = (id) => (id === 'anissa' || id === 'azzy' ? party.includes(id) : id === companion);
+  const wrong = Object.keys(shown).filter((id) => !!shown[id] !== want(id));
+  return { ok: wrong.length === 0, wrong, companion };
+}
 const { FlagStore } = await import('../src/engine/flags.ts');
 const { ACT1 } = await import('../src/data/quests.ts');
 const { ENEMIES, battleDef } = await import('../src/data/battles.ts');
@@ -683,10 +698,9 @@ async function chapterEndChecks(page, sim, name) {
   const wrong = end.not.filter((f) => s.flags[f]);
   check(missing.length === 0 && wrong.length === 0, `${end.what}${missing.length ? ` (missing ${missing.join(', ')})` : ''}${wrong.length ? ` (should not be set: ${wrong.join(', ')})` : ''}`);
   check(JSON.stringify(party) === JSON.stringify(end.party), `the party at ${title}'s end is ${end.party.join(', ')} (${party.join(', ')})`);
-  // Who walks with the party: everyone in it beyond Gianna has a sprite in the line behind her.
-  const walkers = { anissa: s.follower, yari: s.yari, azzy: s.azzy, samira: s.samira, bayarmaa: s.bayarmaa, haru: s.haru, vikram: s.vikram, edmund: s.edmund };
-  const notWalking = end.party.filter((id) => id !== 'gianna' && id in walkers && !walkers[id]);
-  check(notWalking.length === 0, `the whole party walks behind Gianna at ${title}'s end (no sprite for ${notWalking.join(', ')})`);
+  // Who walks with the party (owner, Oct 29): Anissa, Azzy and one companion behind Gianna, the rest implied.
+  const walk = walkersRight(s);
+  check(walk.ok, `Anissa, Azzy and one companion (${walk.companion ?? 'none'}) walk behind Gianna at ${title}'s end${walk.ok ? '' : ` (wrong: ${walk.wrong.join(', ')})`}`);
   // The story agrees with the simulator's: every story, choice, clue, anchor, fight, party and alliance flag (and from
   // Chapter 12 the Claim's, the chairs', the Hearing's, the score and the ending; not a Challenge's `wounds.*`, the HP
   // the browser's fight left, which the simulator's fights, won outright, do not write).
@@ -1686,7 +1700,7 @@ async function playAct(browser, errors) {
       // begins (checked here, before Chapter 10 plays on).
       if (item.name === 'muster-landing' && playedCard9) {
         const home = await snap(page);
-        check(voyagedHome9 && home.mapId === 'zetwal-harbor' && !!home.edmund, 'after Chapter 9\'s card the trader sails home (the voyage plays) and the party, Edmund last, stands on Zetwal\'s harbour');
+        check(voyagedHome9 && home.mapId === 'zetwal-harbor' && walkersRight(home).ok, 'after Chapter 9\'s card the trader sails home (the voyage plays) and the party, Yari walking with them again, stands on Zetwal\'s harbour');
       }
       continue;
     }
@@ -1835,21 +1849,20 @@ async function playAct(browser, errors) {
   // Chapter 10 ends on the sea: the fleet sails to war, onto Xaraguá's Canoe Beach (where Chapter 11 begins), the
   // whole party walking behind Gianna.
   const war = await snap(page);
-  const line = [war.follower, war.yari, war.azzy, war.samira, war.bayarmaa, war.haru, war.vikram, war.edmund];
   // (SMOKE_TO=chapter10-end stops the route on the card, before the voyage: nothing to check there.)
   if (war.flags['act10.complete'] === true && war.flags['act11.complete'] !== true && !(TO && !voyagedWar)) {
-    check(voyagedWar && war.mapId === 'xaragua-beach' && war.mode === 'field' && line.every((w) => !!w), 'after Chapter 10\'s card the fleet sails to war (the voyage plays) and the party, Edmund last, stands on Xaraguá\'s Canoe Beach');
+    check(voyagedWar && war.mapId === 'xaragua-beach' && war.mode === 'field' && walkersRight(war).ok, 'after Chapter 10\'s card the fleet sails to war (the voyage plays) and the party stands on Xaraguá\'s Canoe Beach');
   }
   // Chapter 11's card closes on the voyage north up the strait (Oct 27: a scene now), then Eightgate's Ardencia Gate (where
   // Chapter 12 begins), the nine walking behind Gianna and Rael not among them.
   if (war.flags['act11.complete'] === true && war.flags['story.claim_arrived'] !== true) {
-    check(voyagedEightgate && war.mapId === 'seat-concourse' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true, 'after Chapter 11\'s card the fleet sails north (the voyage plays) and the party, Edmund last, stands at Eightgate\'s Ardencia Gate');
+    check(voyagedEightgate && war.mapId === 'seat-concourse' && war.mode === 'field' && walkersRight(war).ok && war.flags['party.rael'] !== true, 'after Chapter 11\'s card the fleet sails north (the voyage plays) and the party stands at Eightgate\'s Ardencia Gate');
   }
   if (before11 && war.flags['story.claim_arrived'] === true) check(voyagedEightgate, 'Chapter 11\'s card closed on the voyage to Ardencia\'s strand, not a jump to Eightgate');
   // The quest's end: after the credits and the title the save opens in the Throne Hall that afternoon, the whole party
   // walking behind Gianna again (no longer seated), Rael not among them.
   if (war.flags['end.done'] === true) {
-    check(credited && war.mapId === 'seat-hall' && war.mode === 'field' && line.every((w) => !!w) && war.flags['party.rael'] !== true && war.flags['act12.complete'] === true, 'after the credits the game opens on the save in the Throne Hall, the quest complete, the party (Edmund last) behind Gianna');
+    check(credited && war.mapId === 'seat-hall' && war.mode === 'field' && walkersRight(war).ok && war.flags['party.rael'] !== true && war.flags['act12.complete'] === true, 'after the credits the game opens on the save in the Throne Hall, the quest complete, the party behind Gianna');
   }
   if (FROM || TO) {
     if (TO) {

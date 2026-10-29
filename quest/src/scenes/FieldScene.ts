@@ -28,7 +28,7 @@ import {
   textureKeyForShimmer,
   ECHO_SHIMMER,
 } from '../assets.config.ts';
-import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX } from '../config.ts';
+import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX, WALKING_COMPANIONS } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { CHAPTERS, JOURNAL_NOTES } from '../data/quests.ts';
 import { cardLines } from '../engine/content.ts';
@@ -62,7 +62,7 @@ import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
 import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
 import { RPG } from '../data/rpg.ts';
-import { addSharedXp, cityOf, itemCount, level, partyMembers, pillarFlag } from '../engine/rpg.ts';
+import { addSharedXp, cityOf, itemCount, level, partyMembers, pillarFlag, walkingCompanion } from '../engine/rpg.ts';
 import { PITCH_RIPPLES, quietCrownLook } from '../data/secrets.ts';
 import { settleDebates } from '../engine/debate.ts';
 import { musterJournal } from '../engine/ally.ts';
@@ -1709,8 +1709,16 @@ export class FieldScene extends Phaser.Scene {
     this.updateFollowerLook();
   }
 
+  /**
+   * Whether this companion walks the map now: only one of Yari and the later members does, with Anissa and Azzy
+   * (owner, Oct 29; engine/rpg.ts walkingCompanion). The others are with the party, implied.
+   */
+  private walks(id: string): boolean {
+    return walkingCompanion(this.logic.state.flags, RPG, WALKING_COMPANIONS) === id;
+  }
+
   private yariWithUs(): boolean {
-    return partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'yari');
+    return this.walks('yari');
   }
 
   /**
@@ -1773,7 +1781,7 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private samiraWithUs(): boolean {
-    return partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'samira');
+    return this.walks('samira');
   }
 
   /** Samira walks last in the line (behind Azzy, or whoever is last) once she has joined, from where a scene left her. */
@@ -1801,7 +1809,7 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private bayarmaaWithUs(): boolean {
-    return partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'bayarmaa');
+    return this.walks('bayarmaa');
   }
 
   /** Bayarmaa walks last in the line (behind Samira, or whoever is last) once she has joined, from where a scene left her. */
@@ -1830,7 +1838,7 @@ export class FieldScene extends Phaser.Scene {
 
   /** Haru walks last in the line (behind Bayarmaa, or whoever is last) once he has joined, from where a scene left him. */
   private placeHaru(stood?: Pos): void {
-    if (!partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'haru')) {
+    if (!this.walks('haru')) {
       this.haru?.sprite.destroy();
       this.haru = null;
       return;
@@ -1854,7 +1862,7 @@ export class FieldScene extends Phaser.Scene {
 
   /** Vikram walks last in the line (behind Haru, or whoever is last) once he has joined, from where a scene left him. */
   private placeVikram(stood?: Pos): void {
-    if (!partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'vikram')) {
+    if (!this.walks('vikram')) {
       this.vikram?.sprite.destroy();
       this.vikram = null;
       return;
@@ -1878,7 +1886,7 @@ export class FieldScene extends Phaser.Scene {
 
   /** Edmund walks last in the line (behind Vikram, or whoever is last) once he has joined, from where a scene left him. */
   private placeEdmund(stood?: Pos): void {
-    if (!partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === 'edmund')) {
+    if (!this.walks('edmund')) {
       this.edmund?.sprite.destroy();
       this.edmund = null;
       return;
@@ -2352,6 +2360,15 @@ export class FieldScene extends Phaser.Scene {
       const a: StageActor = { sprite: f.sprite, look: 'bayarmaa', at: { ...f.pos }, facing: f.facing, mover: new Mover(), tiles: [], run: false, leaving: false, borrowed: 'bayarmaa' };
       this.stageActors.set(id, a);
       return a;
+    }
+    if (WALKING_COMPANIONS.includes(id) && !this.walks(id) && partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === id)) {
+      // A companion with the party but not walking the map (owner, Oct 29): a scene that moves them brings them on
+      // from beside Gianna, as if they had been just behind her; they go again when the scene ends.
+      const p = this.logic.state.player;
+      const spot =
+        [opposite(spriteFacing(p.facing)), ...DIRS].map((d) => stepFrom(p.pos, d)).find((t) => this.logic.isOpen(t, 'present') && !this.logic.npcs('present').some((n) => samePos(n.pos, t))) ??
+        p.pos;
+      return this.stageActor(id, id, spot, p.facing);
     }
     if (id === STAGE_FOLLOWER && this.follower) {
       const f = this.follower;

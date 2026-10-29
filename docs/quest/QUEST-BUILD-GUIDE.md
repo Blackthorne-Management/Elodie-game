@@ -655,6 +655,8 @@ Implementation: a `lang/*.json` glossary with `{ word, language, translation, ve
 
 **Dialogue:** a simple conditional format (flags, pillar thresholds, price paid, Concord). Support portraits, speaker names, choices and a translation line.
 
+**Who walks the map (owner direction, Oct 29):** only Gianna, Anissa, Azzy and one companion walk the map; the rest of the party is with them, implied. The companion is the newest member (the chapter's newcomer, who knows the place: Yari, then Samira, Bayarmaa, Haru, Vikram, Edmund), and Yari again from Chapter 10 on, the war for her home and the Claim (Claude's call). A scene that moves a member who isn't walking brings them on from beside Gianna and they go again when it ends. Code: `walkingCompanion` (`quest/src/engine/rpg.ts`), `WALKING_COMPANIONS` (`quest/src/config.ts`), `walks` and `borrowActor` in `FieldScene.ts`.
+
 **Expressions (built Oct 28, Claude's call):** a dialogue line may carry `mood: '<name>'`; the box then shows `portraits/<portrait file>_<name>.png` when that file exists, else the plain portrait, so lines can be tagged before the art arrives. The expressions each portrait may use are listed in `PORTRAIT_MOODS` (`quest/src/assets.config.ts`, taken from the art prompts' file lists); the content check refuses a mood its speaker's portrait does not list. A foe who is one of the party's people (Rael at the Trial) stands in his painted stance, mirrored, when `battle/<look>-<item>.png` exists (`ENEMY_STANCES`).
 
 **Flags and save:** one global flag store. Saves in `localStorage` through a single `save.ts` module, with Export and Import save code. Autosave on map change and after battles.
