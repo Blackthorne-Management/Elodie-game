@@ -1551,7 +1551,7 @@
             {
               "name": "looks",
               "type": "string",
-              "value": "pilgrim,festival_c,festival_e,festival_h,festival_a"
+              "value": "pilgrim,temple_pilgrim_a,temple_pilgrim_b,temple_pilgrim_c,temple_pilgrim_d,temple_pilgrim_e,temple_pilgrim_f,temple_pilgrim_g,temple_pilgrim_h"
             }
           ]
         }

@@ -727,7 +727,7 @@
             {
               "name": "looks",
               "type": "string",
-              "value": "porter,aldoria_trader"
+              "value": "ald_porter,ald_porter_b,aldoria_trader,porter"
             }
           ]
         }

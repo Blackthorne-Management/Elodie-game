@@ -3,6 +3,9 @@
 // years ago, the night before the Sun Accord was signed: a revolutionary camp of tents and barricades.
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
+
+/** The festival's crowd: festival_a to festival_x (assets.config.ts), all different. */
+export const FESTIVAL_FOLK = 'abcdefghijklmnopqrstuvwx'.split('').map((c) => `festival_${c}`).join(',');
 import { BAKERY_TOWN_DOOR } from '../../src/data/bakery.ts';
 import { BEFORE_NIGHT_TEXT, DAY_TEXT, DUSK_TEXT, MUSTER_HOUSES, NIGHT_TEXT, PLAZA } from '../../src/data/muster.ts';
 
@@ -168,8 +171,10 @@ export function zetwalTown(): MapSource {
     obj('plaza_lantern_ne', 21, 4, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
     obj('plaza_lantern_sw', 10, 15, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
     obj('plaza_lantern_se', 25, 15, { kind: 'lantern_glow', era: 'present', if: 'story.anissa_woke' }),
-    { layer: 'crowds', name: 'plaza_festival', x: 11, y: 6, w: 14, h: 9, props: { count: '18', looks: 'festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h', if: '!story.anissa_woke' } },
-    { layer: 'crowds', name: 'plaza_evening', x: 11, y: 6, w: 14, h: 9, props: { count: '6', looks: 'festival_a,festival_b,festival_c,festival_d,festival_e,festival_f,festival_g,festival_h', if: 'story.anissa_woke, !story.muster_begun' } },
+    // Twenty-four different people (owner, Oct 29: "too many duplicate people"); engine/crowd.ts crowdLooks never
+    // puts two who look the same near each other.
+    { layer: 'crowds', name: 'plaza_festival', x: 11, y: 6, w: 14, h: 9, props: { count: '18', looks: FESTIVAL_FOLK, if: '!story.anissa_woke' } },
+    { layer: 'crowds', name: 'plaza_evening', x: 11, y: 6, w: 14, h: 9, props: { count: '6', looks: FESTIVAL_FOLK, if: 'story.anissa_woke, !story.muster_begun' } },
     { layer: 'echo_zones', name: 'plaza_stone', x: 11, y: 9, w: 3, h: 2, props: { if: 'item.sun_locket', onEcho: 'plaza_echo_enter' } },
     {
       layer: 'echo_zones',
@@ -248,10 +253,10 @@ function musterPlaza(): ObjSpec[] {
     // Old Patricio at the Marshal's stone from the blessing until the vote (the outline's beat 5, the review's 3.3).
     npc('patricio_stone', p.patricioStone.x, p.patricioStone.y, 'right', { npc: 'patricio_muster', if: `story.blessing, ${day}` }),
     // The camps (pictures that stroll inside their camp), until the lines are drawn up.
-    { layer: 'crowds', name: 'camp_free_brasador', x: 14, y: 12, w: 6, h: 2, props: { count: '4', looks: 'free_brasador', if: day } },
-    { layer: 'crowds', name: 'camp_dorini', x: 2, y: 11, w: 5, h: 2, props: { count: '3', looks: 'dorini_marine', if: day } },
-    { layer: 'crowds', name: 'camp_ironvow', x: 28, y: 21, w: 6, h: 2, props: { count: '3', looks: 'horn_rider', if: day } },
-    { layer: 'crowds', name: 'camp_suzumori', x: 9, y: 5, w: 4, h: 1, props: { count: '2', looks: 'gate_guard_kq', if: day } },
+    { layer: 'crowds', name: 'camp_free_brasador', x: 14, y: 12, w: 6, h: 2, props: { count: '4', looks: 'free_brasador,free_brasador_b,free_brasador_c,free_brasador_d', if: day } },
+    { layer: 'crowds', name: 'camp_dorini', x: 2, y: 11, w: 5, h: 2, props: { count: '3', looks: 'dorini_marine,dorini_marine_b,dorini_marine_c', if: day } },
+    { layer: 'crowds', name: 'camp_ironvow', x: 28, y: 21, w: 6, h: 2, props: { count: '3', looks: 'horn_rider,horn_rider_b,horn_rider_c', if: day } },
+    { layer: 'crowds', name: 'camp_suzumori', x: 9, y: 5, w: 4, h: 1, props: { count: '2', looks: 'gate_guard_kq,gate_guard_kq_b,gate_guard_kq_c', if: day } },
     { layer: 'crowds', name: 'camp_agnivansh', x: 24, y: 5, w: 2, h: 1, props: { count: '1', looks: 'flame_keeper', if: day } },
     // Dusk: the companies in lines across the paving, old Patricio at the stage's foot with the whistle.
     npc('patricio_dusk', p.stageFoot.x, p.stageFoot.y, 'down', { npc: 'patricio_muster', if: DUSK_TEXT }),

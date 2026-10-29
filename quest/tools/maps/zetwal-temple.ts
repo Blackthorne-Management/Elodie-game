@@ -55,7 +55,7 @@ export function zetwalTemple(): MapSource {
     trigger('temple_arrive', 2, 9, { dialogue: 'temple_arrive', flag: 'story.temple_arrived', once: true, onEnter: true }),
 
     // Pilgrims stranded on the island since the rope bridge fell (temple_arrive), until the lamp is lit.
-    { layer: 'crowds', name: 'temple_pilgrims', x: 3, y: 8, w: 11, h: 3, props: { count: '7', looks: 'pilgrim,festival_c,festival_e,festival_h,festival_a', if: '!story.lamp_lit, !story.anissa_woke' } },
+    { layer: 'crowds', name: 'temple_pilgrims', x: 3, y: 8, w: 11, h: 3, props: { count: '7', looks: 'pilgrim,temple_pilgrim_a,temple_pilgrim_b,temple_pilgrim_c,temple_pilgrim_d,temple_pilgrim_e,temple_pilgrim_f,temple_pilgrim_g,temple_pilgrim_h', if: '!story.lamp_lit, !story.anissa_woke' } },
     { layer: 'echo_zones', name: 'temple_grove', x: 5, y: 12, w: 3, h: 2, props: { if: 'item.sun_locket', onEcho: 'temple_echo_enter', onReturn: 'temple_echo_return' } },
 
     obj('gaze_lamp', 14, 3, { dialogue: 'gaze_lamp', era: 'present', kind: 'gaze_lamp' }, 2, 1),

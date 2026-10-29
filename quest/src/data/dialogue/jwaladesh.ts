@@ -500,8 +500,8 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
         act(
           [
             { do: 'enter', actor: 'road_enforcer_a', look: 'oil_enforcer', from: at(30, 13), to: at(38, 13), facing: 'right', async: true },
-            { do: 'enter', actor: 'road_enforcer_b', look: 'oil_enforcer', from: at(30, 14), to: at(38, 14), facing: 'right', async: true },
-            { do: 'enter', actor: 'road_enforcer_c', look: 'oil_enforcer', from: at(29, 13), to: at(37, 13), facing: 'right' },
+            { do: 'enter', actor: 'road_enforcer_b', look: 'oil_enforcer_b', from: at(30, 14), to: at(38, 14), facing: 'right', async: true },
+            { do: 'enter', actor: 'road_enforcer_c', look: 'oil_enforcer_c', from: at(29, 13), to: at(37, 13), facing: 'right' },
             { do: 'look', actor: 'road_enforcer_a' },
           ],
           '',
@@ -720,7 +720,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
     act(
       [
         { do: 'enter', actor: 'watch_a', look: 'oil_enforcer', from: at(HARBOR.watchX, HARBOR.watchRows[1]), to: at(HARBOR.watchX + 1, 8), facing: 'left', async: true },
-        { do: 'enter', actor: 'watch_b', look: 'oil_enforcer', from: at(HARBOR.watchX + 1, HARBOR.watchRows[0]), to: at(HARBOR.watchX + 1, 6), facing: 'left' },
+        { do: 'enter', actor: 'watch_b', look: 'oil_enforcer_c', from: at(HARBOR.watchX + 1, HARBOR.watchRows[0]), to: at(HARBOR.watchX + 1, 6), facing: 'left' },
         { do: 'look', actor: 'watch_a' },
       ],
       EN,
@@ -933,7 +933,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
           [
             { do: 'place', actor: 'dhanraj', look: 'seth_dhanraj', at: at(HARBOR.storeDoors.x, 6), facing: 'down' },
             { do: 'place', actor: 'guard_a', look: 'oil_enforcer', at: at(HARBOR.storeDoors.x - 2, 6), facing: 'down' },
-            { do: 'place', actor: 'guard_b', look: 'oil_enforcer', at: at(HARBOR.storeDoors.x + 3, 6), facing: 'down' },
+            { do: 'place', actor: 'guard_b', look: 'oil_enforcer_b', at: at(HARBOR.storeDoors.x + 3, 6), facing: 'down' },
             { do: 'look', actor: 'dhanraj' },
           ],
           '',

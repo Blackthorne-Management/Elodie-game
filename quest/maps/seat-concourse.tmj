@@ -2252,7 +2252,7 @@
             {
               "name": "looks",
               "type": "string",
-              "value": "pilgrim,aldoria_trader,clerk,porter"
+              "value": "pilgrim,aldoria_trader,clerk,porter,seat_folk_a,seat_folk_b,seat_folk_c"
             }
           ]
         }

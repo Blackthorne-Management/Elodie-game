@@ -81,7 +81,7 @@ import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.
 import { echoPrompt } from '../engine/world.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { npcMoves, walkRoute } from '../engine/walkers.ts';
-import { crowdSpots, crowdStep } from '../engine/crowd.ts';
+import { crowdLooks, crowdSpots, crowdStep, twinNear } from '../engine/crowd.ts';
 import { Rng } from '../engine/rng.ts';
 import { STAGE_FOLLOWER, STAGE_NPC, STAGE_PLAYER, type StageCue } from '../engine/stage.ts';
 import { TextPanel, type PanelLine } from '../ui/TextPanel.ts';
@@ -1643,8 +1643,18 @@ export class FieldScene extends Phaser.Scene {
     for (const zone of zones) {
       if (this.crowd.some((c) => c.zone === zone.id) || zone.looks.length === 0) continue;
       const open = (p: Pos) => this.logic.isOpen(p, 'present') && !this.crowdTaken(p) && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p)));
-      for (const at of crowdSpots(zone, open, this.crowdRng)) {
-        const look = this.crowdRng.pick(zone.looks);
+      const spots = crowdSpots(zone, open, this.crowdRng);
+      // Nobody stands near someone who looks the same (owner, Oct 29): the map's people and the crowd so far count too.
+      const others = [
+        ...this.logic.npcs().flatMap((n) => {
+          const look = this.logic.content.npcs[n.npc]?.look;
+          return look ? [{ at: n.pos, look }] : [];
+        }),
+        ...this.crowd.map((c) => ({ at: c.at, look: c.look })),
+      ];
+      const looks = crowdLooks(spots, zone.looks, this.crowdRng, others);
+      for (const [i, at] of spots.entries()) {
+        const look = looks[i]!;
         const facing = this.crowdRng.pick(['down', 'left', 'right', 'up'] as const);
         const w = tileToWorld(at);
         const sprite = this.add.image(w.x, w.y, textureKeyForCharacter(look)).setOrigin(0.5, 1).setDepth(10 + w.y);
@@ -1669,7 +1679,7 @@ export class FieldScene extends Phaser.Scene {
         const zone = zones.get(c.zone);
         if (c.waitMs <= 0 && zone && this.mode === 'field') {
           c.waitMs = this.crowdRng.int(1500, 5000);
-          const next = crowdStep(zone, c.at, (p) => this.logic.isOpen(p, 'present') && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p))), (p) => this.crowdTaken(p), this.crowdRng);
+          const next = crowdStep(zone, c.at, (p) => this.logic.isOpen(p, 'present') && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p))), (p) => this.crowdTaken(p) || twinNear(this.crowd, c, p), this.crowdRng);
           if (next) {
             c.facing = facingToward(c.at, next);
             c.mover.start(c.at, next);

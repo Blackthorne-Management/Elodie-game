@@ -175,7 +175,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         act(
           [
             { do: 'enter', actor: 'escort_1', look: 'moor_constable', from: at(14, HEATH.roadRows[0]), to: at(HEATH.notice.x + 1, HEATH.roadRows[0] - 1), facing: 'left', async: true },
-            { do: 'enter', actor: 'escort_2', look: 'moor_constable', from: at(14, HEATH.roadRows[1]), to: at(HEATH.notice.x + 1, HEATH.roadRows[1] + 1), facing: 'left' },
+            { do: 'enter', actor: 'escort_2', look: 'moor_constable_b', from: at(14, HEATH.roadRows[1]), to: at(HEATH.notice.x + 1, HEATH.roadRows[1] + 1), facing: 'left' },
             { do: 'look', actor: 'escort_1' },
           ],
           '',
@@ -267,7 +267,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
       [
         { do: 'enter', actor: 'almoner_walk', look: 'almoner', from: at(CROSS.keep.x, CROSS.keep.y + 1), to: at(CROSS.closeGate.x + 1, CROSS.closeGate.y + 2), facing: 'left', async: true },
         { do: 'enter', actor: 'alms_walk_1', look: 'almswoman', from: at(CROSS.keep.x + 1, CROSS.keep.y + 1), to: at(CROSS.closeGate.x + 3, CROSS.closeGate.y + 2), facing: 'left', async: true },
-        { do: 'enter', actor: 'alms_walk_2', look: 'almswoman', from: at(CROSS.keep.x, CROSS.keep.y + 2), to: at(CROSS.closeGate.x + 3, CROSS.closeGate.y + 3), facing: 'left' },
+        { do: 'enter', actor: 'alms_walk_2', look: 'almswoman_b', from: at(CROSS.keep.x, CROSS.keep.y + 2), to: at(CROSS.closeGate.x + 3, CROSS.closeGate.y + 3), facing: 'left' },
         { do: 'look', actor: 'almoner_walk' },
       ],
       '',
@@ -296,7 +296,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
             { do: 'place', actor: 'pie_mother_pg', look: 'pie_mother', at: at(CROSS.pieDoor.x + 1, CROSS.pieDoor.y + 1), facing: 'right' },
             { do: 'place', actor: 'sergeant', look: 'crown_officer', at: at(CROSS.pieDoor.x + 2, CROSS.pieDoor.y), facing: 'left' },
             { do: 'place', actor: 'pg_constable_1', look: 'moor_constable', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y - 1), facing: 'left' },
-            { do: 'place', actor: 'pg_constable_2', look: 'moor_constable', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y + 1), facing: 'left' },
+            { do: 'place', actor: 'pg_constable_2', look: 'moor_constable_b', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y + 1), facing: 'left' },
             { do: 'look', actor: 'sergeant' },
           ],
           'sergeant',
@@ -330,7 +330,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           [
             { do: 'place', actor: 'sergeant', look: 'crown_officer', at: at(CROSS.pieDoor.x + 2, CROSS.pieDoor.y), facing: 'right' },
             { do: 'place', actor: 'pg_constable_1', look: 'moor_constable', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y - 1), facing: 'right' },
-            { do: 'place', actor: 'pg_constable_2', look: 'moor_constable', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y + 1), facing: 'right' },
+            { do: 'place', actor: 'pg_constable_2', look: 'moor_constable_b', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y + 1), facing: 'right' },
             { do: 'look', actor: 'sergeant' },
           ],
           'sergeant',
@@ -695,7 +695,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         { do: 'place', actor: 'r_magistrate', look: 'magistrate_al', at: at(7, 10), facing: 'up' },
         { do: 'place', actor: 'r_boy', look: 'pie_boy', at: at(16, 12), facing: 'up' },
         { do: 'place', actor: 'r_mother', look: 'pie_mother', at: at(17, 12), facing: 'up' },
-        { do: 'place', actor: 'r_constable', look: 'moor_constable', at: at(18, 12), facing: 'up' },
+        { do: 'place', actor: 'r_constable', look: 'moor_constable_c', at: at(18, 12), facing: 'up' },
         { do: 'place', actor: 'r_sebastian', look: 'sebastian', at: at(CATHEDRAL.sebastian.x, CATHEDRAL.sebastian.y), facing: 'up' },
         { do: 'look', actor: 'r_sebastian' },
       ],
@@ -890,9 +890,9 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           [
             { do: 'place', actor: 'almoner_c', look: 'almoner', at: at(16, 12), facing: 'left' },
             { do: 'place', actor: 'alms_c1', look: 'almswoman', at: at(17, 11), facing: 'left' },
-            { do: 'place', actor: 'alms_c2', look: 'almswoman', at: at(17, 13), facing: 'left' },
+            { do: 'place', actor: 'alms_c2', look: 'almswoman_b', at: at(17, 13), facing: 'left' },
             { do: 'place', actor: 'alms_c3', look: 'almswoman', at: at(18, 12), facing: 'left' },
-            { do: 'place', actor: 'alms_c4', look: 'almswoman', at: at(18, 10), facing: 'left' },
+            { do: 'place', actor: 'alms_c4', look: 'almswoman_b', at: at(18, 10), facing: 'left' },
             { do: 'look', actor: 'almoner_c' },
           ],
           AL,
@@ -925,7 +925,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           [
             { do: 'enter', actor: 'jordyn_c', look: 'jordyn', from: at(KEEP.passage.x, KEEP.passage.y - 1), to: at(12, 9), facing: 'right', run: true, async: true },
             { do: 'enter', actor: 'watch_c1', look: 'regent_watch', from: at(KEEP.passage.x + 1, KEEP.passage.y - 1), to: at(13, 12), facing: 'right', run: true, async: true },
-            { do: 'enter', actor: 'watch_c2', look: 'regent_watch', from: at(KEEP.passage.x, KEEP.passage.y - 1), to: at(12, 11), facing: 'right', run: true },
+            { do: 'enter', actor: 'watch_c2', look: 'regent_watch_b', from: at(KEEP.passage.x, KEEP.passage.y - 1), to: at(12, 11), facing: 'right', run: true },
             { do: 'look', actor: 'jordyn_c' },
           ],
           '',
@@ -1177,7 +1177,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         act(
           [
             { do: 'enter', actor: 'alms_g1', look: 'almswoman', from: at(14, 27), to: at(11, 22), facing: 'left', async: true },
-            { do: 'enter', actor: 'alms_g2', look: 'almswoman', from: at(14, 26), to: at(10, 21), facing: 'left' },
+            { do: 'enter', actor: 'alms_g2', look: 'almswoman_b', from: at(14, 26), to: at(10, 21), facing: 'left' },
             { do: 'look', actor: 'almoner_rev' },
           ],
           '',

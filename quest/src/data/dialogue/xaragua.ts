@@ -115,7 +115,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         { do: 'place', actor: 'yari', look: 'yari', at: at(22, 25), facing: 'up' },
         { do: 'place', actor: 'sergeant', look: 'marine_sergeant', at: at(21, 23), facing: 'down' },
         { do: 'place', actor: 'marine_a', look: 'crown_marine', at: at(22, 22), facing: 'down' },
-        { do: 'place', actor: 'marine_b', look: 'crown_marine', at: at(21, 21), facing: 'down' },
+        { do: 'place', actor: 'marine_b', look: 'crown_marine_b', at: at(21, 21), facing: 'down' },
       ],
       'marine_sergeant',
       'Fall back! Back to the customs house!',
@@ -352,10 +352,10 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       [
         { do: 'enter', actor: 'guard_a', look: 'crown_marine', from: at(17, 24), to: at(13, 5), facing: 'left', run: true, async: true },
         { do: 'enter', actor: 'guard_b', look: 'crown_musketeer', from: at(18, 24), to: at(13, 7), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_c', look: 'crown_musketeer', from: at(17, 24), to: at(11, 5), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_d', look: 'crown_musketeer', from: at(18, 24), to: at(11, 7), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_e', look: 'crown_marine', from: at(17, 24), to: at(12, 4), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_f', look: 'crown_musketeer', from: at(18, 24), to: at(12, 8), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_c', look: 'crown_musketeer_b', from: at(17, 24), to: at(11, 5), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_d', look: 'crown_musketeer_c', from: at(18, 24), to: at(11, 7), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_e', look: 'crown_marine_c', from: at(17, 24), to: at(12, 4), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_f', look: 'crown_musketeer_d', from: at(18, 24), to: at(12, 8), facing: 'left', run: true, async: true },
         { do: 'look', actor: 'captain' },
         { do: 'enter', actor: 'captain', look: 'crown_captain', from: at(17, 23), to: at(12, 6), facing: 'left' },
       ],
@@ -416,8 +416,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     act(
       [
         { do: 'place', actor: 'yari', look: 'yari', at: at(8, 6), facing: 'right' },
-        { do: 'enter', actor: 'drummer', look: 'crown_marine', from: at(14, 5), to: at(13, 11), run: true, async: true },
-        { do: 'enter', actor: 'bannerman', look: 'crown_musketeer', from: at(15, 5), to: at(16, 11), run: true },
+        { do: 'enter', actor: 'drummer', look: 'crown_marine_d', from: at(14, 5), to: at(13, 11), run: true, async: true },
+        { do: 'enter', actor: 'bannerman', look: 'crown_musketeer_c', from: at(15, 5), to: at(16, 11), run: true },
         { do: 'face', actor: 'drummer', facing: 'down' },
         { do: 'face', actor: 'bannerman', facing: 'down' },
       ],
@@ -435,7 +435,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     act(
       [
         { do: 'enter', actor: 'marine_a', look: 'crown_marine', from: at(0, 15), to: at(20, 5), facing: 'up', run: true, async: true },
-        { do: 'enter', actor: 'marine_b', look: 'crown_musketeer', from: at(0, 16), to: at(22, 5), facing: 'up', run: true, async: true },
+        { do: 'enter', actor: 'marine_b', look: 'crown_musketeer_b', from: at(0, 16), to: at(22, 5), facing: 'up', run: true, async: true },
         { do: 'look', actor: 'npc:patrol_sergeant' },
         { do: 'walk', actor: 'npc:patrol_sergeant', to: at(21, 4), facing: 'up', run: true },
         { do: 'look', actor: 'player' },
@@ -468,7 +468,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         { do: 'place', actor: 'yari', look: 'yari', at: at(22, 1), facing: 'down' },
         { do: 'place', actor: 'sergeant', look: 'marine_sergeant', at: at(21, 4), facing: 'up' },
         { do: 'place', actor: 'marine_a', look: 'crown_marine', at: at(20, 5), facing: 'up' },
-        { do: 'place', actor: 'marine_b', look: 'crown_musketeer', at: at(22, 5), facing: 'up' },
+        { do: 'place', actor: 'marine_b', look: 'crown_musketeer_b', at: at(22, 5), facing: 'up' },
       ],
       'marine_sergeant',
       'Not again! Fall back! Fall back to the customs house!',

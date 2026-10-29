@@ -336,7 +336,7 @@ export const ENEMIES: Readonly<Record<string, EnemyDef>> = {
   breastplate_musketeer: {
     id: 'breastplate_musketeer',
     name: 'Musketeer in a Breastplate',
-    look: 'crown_musketeer',
+    look: 'crown_musketeer_c',
     level: 5,
     role: 'caster',
     moves: [
