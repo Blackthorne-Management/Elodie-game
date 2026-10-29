@@ -518,6 +518,13 @@ export const ENCOUNTER_GOLD_PER_LEVEL = 4;
 // ---- Game Over (docs/quest/intro/GAME-OVER-STORYBOARD.md; engine/gameOver.ts; scenes/GameOverScene.ts) ----
 
 /**
+ * Whose turn it is in a battle (owner report, Oct 29; engine/battleMenu.ts): the acting fighter's gold outline and the
+ * light at their feet breathe once per `pulseMs` between `alphaMin` and `alphaMax`, and the fighter bobs a pixel every
+ * `bobMs`. With Reduce motion the light holds at `alphaSteady` and nobody bobs.
+ */
+export const ACTING_MARK = { pulseMs: 1200, bobMs: 400, alphaMin: 0.3, alphaMax: 0.7, alphaSteady: 0.6 } as const;
+
+/**
  * The goddess's second chance. Times in seconds unless named Ms. The fall, loop and rise are the animator's
  * three films (assets.config.ts GAME_OVER_ART); the placeholder drawn in code keeps the same clock.
  */

@@ -24,6 +24,27 @@ the numbers it reads from `rpg.levels`.
 - **Win:** every enemy down, spared, bribed, parleyed or fled. **Lose:** every fighter down (or Bound): Game Over with
   the goddess (section 12).
 
+### 1.1 Whose turn it is, and going back (owner report, Oct 29; Claude's call (Oct 29); built)
+
+The owner played the battles and found two problems: the only cue for who was acting was the `>` in the strip, and
+B did nothing while choosing a target. Claude's call (Oct 29) on both, built in `quest/src/engine/battleMenu.ts`
+(rules, unit tested in `tests/battleMenu.test.ts`) and drawn by `quest/src/scenes/BattleScene.ts`:
+
+- **The acting fighter is marked on the field.** While the player chooses, the fighter whose turn it is gets a
+  one-pixel gold outline (four gold copies of their picture, a pixel out each way, behind them) and stands in a small
+  oval of gold light at their feet, in whole pixels. Both breathe in four steps once every 1.2 s and the fighter bobs
+  one pixel every 0.4 s (`config.ts` `ACTING_MARK`). With **Reduce motion** on, the outline and the light are steady
+  and nobody bobs. In the strip, their row is lit and framed in gold, with their name in gold. Only a party fighter is
+  marked: never a foe, and never Anissa (she is support, not a fighter). The mark goes while the turn plays out.
+  Why these: an outline and a light read at a glance on every backdrop without covering the painted fighters, and
+  both are the pixel-art idiom (no soft blur glow).
+- **B steps back one level everywhere.** Every step into a menu leaves its place on a trail: target -> the menu it came
+  from (Skill, Item, the weapon moves; the commands for a plain Attack) -> the commands, each time to the row that was
+  chosen. Choosing an action clears the trail. B is the cancel button: keyboard X, Backspace and (new) B, since the
+  screen says "B: back"; gamepad B; the on-screen B. In a fight Escape (and the menu button) goes back too: the battle
+  has no game menu, and Escape is the key a keyboard player reaches for. The tutorial pages and the victory screen
+  take the same buttons as before plus Escape. A tap on the strip still goes back from the target cursor.
+
 ## 2. Stats
 
 | Stat | Does | Notes |

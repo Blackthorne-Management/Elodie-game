@@ -38,12 +38,13 @@ Controls:
 |---------|---------------------------------|--------------------------|--------------------------------|
 | move    | arrows / WASD (two = diagonal)  | left stick / D-pad       | analog stick (left third)      |
 | confirm | Z / Enter / Space               | A                        | A                              |
-| cancel  | X / Backspace                   | B                        | B                              |
+| cancel  | X / Backspace / B (in a battle, Escape too) | B            | B                              |
 | run     | hold Shift (or X)               | hold B (or R)            | push the stick all the way, or hold B |
 | echo    | E                               | X                        | Echo                           |
 | menu    | Escape / M                      | Start                    | Menu                           |
 
-The touch overlay appears on touch devices (force it with `?touch=1`).
+The touch overlay appears on touch devices (force it with `?touch=1`). In a battle, cancel steps back one level:
+target -> the menu it came from -> commands.
 
 **Moving in eight directions.** Movement is still tile by tile, but a step can be diagonal. A diagonal
 step needs the target tile and both straight tiles it passes between to be open (no cutting a wall's
