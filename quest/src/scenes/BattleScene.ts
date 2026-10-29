@@ -67,8 +67,9 @@ import { playFx, type FxKind, type Point } from './battleFx.ts';
 import { fileKey } from './textures.ts';
 import { screenFlash } from './cameraFx.ts';
 import { reduceMotion } from '../ui/reduceMotion.ts';
+import { MenuTrail, actingFighter, actingLightRows, actingMark, battleBackPressed, type BattleMenu } from '../engine/battleMenu.ts';
 
-type Menu = 'commands' | 'moves' | 'skills' | 'items' | 'swap' | 'target';
+type Menu = BattleMenu;
 
 interface Row {
   label: string;
@@ -84,7 +85,6 @@ interface Aim {
   side: 'enemy' | 'ally';
   /** Every living fighter on that side (Arrow Rain, Limyè pou Tout) or random foes (Volley). */
   all: boolean;
-  back: Menu;
   action: (target: string | undefined) => Action;
 }
 
@@ -97,6 +97,12 @@ export interface BattleSnapshot {
   cursor: number;
   /** The fighters the target cursor is on. */
   targets: string[];
+  /** The fighter marked as acting (the light at their feet and their row lit in the strip), or null. */
+  acting: string | null;
+  /** The light under the acting fighter as drawn: where (game pixels) and whether it is on screen. */
+  mark: { x: number; y: number; visible: boolean } | null;
+  /** How many steps B would walk back (0 at the commands). */
+  depth: number;
   enemyHp: number;
   hp: number;
   sp: number;
@@ -176,6 +182,13 @@ export class BattleScene extends Phaser.Scene {
   private rows: Row[] = [];
   private aim: Aim | null = null;
   private aimIndex = 0;
+  /** The places left behind on the way into a sub-menu and the target cursor (B walks back along it). */
+  private trail = new MenuTrail();
+  /** The light under the acting fighter's feet, and the fighter it is bobbing (with where they stand). */
+  private markGfx: Phaser.GameObjects.Graphics | null = null;
+  private bobbed: { key: string; base: number } | null = null;
+  /** A one-pixel gold outline round the acting fighter: four gold copies of their picture, a pixel out each way. */
+  private outline: Phaser.GameObjects.Image[] = [];
   private queue: BattleEvent[] = [];
   private busy = false;
   private message = '';
@@ -208,6 +221,10 @@ export class BattleScene extends Phaser.Scene {
     this.menu = 'commands';
     this.cursor = 0;
     this.aim = null;
+    this.trail = new MenuTrail();
+    this.markGfx = null;
+    this.bobbed = null;
+    this.outline = [];
     this.queue = [];
     this.busy = false;
     this.done = false;
@@ -230,6 +247,7 @@ export class BattleScene extends Phaser.Scene {
     this.drawBackdrop(def?.backdrop ?? 'cane_road');
     audio.playMusic(BATTLE_MUSIC);
     this.ui = this.add.container(0, 0).setDepth(400);
+    this.markGfx = this.add.graphics();
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => this.onTap(p));
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       if (current === this) setCurrent(null);
@@ -314,6 +332,8 @@ export class BattleScene extends Phaser.Scene {
     this.menu = 'commands';
     this.cursor = 0;
     this.aim = null;
+    this.trail.clear();
+    this.settleMark();
     this.sticky = '';
     this.play(this.battle.act(action));
   }
@@ -590,6 +610,7 @@ export class BattleScene extends Phaser.Scene {
   /** Test hook: the whole party falls at once (the smoke test's Game Over on purpose). */
   loseNow(): boolean {
     if (this.fallen || !this.battle) return false;
+    this.settleMark();
     for (const p of this.battle.party) {
       p.hp = 0;
       p.down = true;
@@ -643,10 +664,10 @@ export class BattleScene extends Phaser.Scene {
               label: `${s.source ? '*' : ''}${s.name} ${cost}`,
               enabled: b.canUse(me, s),
               hint: `${s.text} (${price})${from}`,
-              run: () => this.aimAt(s.name, s.target, 'skills', (target) => ({ kind: 'skill', skill: s.id, target })),
+              run: () => this.aimAt(s.name, s.target, (target) => ({ kind: 'skill', skill: s.id, target })),
             };
           }),
-        { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
+        { label: 'Back', enabled: true, run: () => this.back() },
       ];
     }
     if (this.menu === 'moves') {
@@ -658,10 +679,10 @@ export class BattleScene extends Phaser.Scene {
             label: `${s.source ? '*' : ''}${s.name}${wait > 0 ? ` (${wait})` : ''}`,
             enabled: b.canUse(me, s),
             hint: wait > 0 ? `${s.name} is ready again in ${wait} turn${wait > 1 ? 's' : ''}.` : `${s.text}${from}`,
-            run: () => this.aimAt(s.name, s.target, 'moves', (target) => ({ kind: 'skill', skill: s.id, target })),
+            run: () => this.aimAt(s.name, s.target, (target) => ({ kind: 'skill', skill: s.id, target })),
           };
         }),
-        { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
+        { label: 'Back', enabled: true, run: () => this.back() },
       ];
     }
     if (this.menu === 'items') {
@@ -672,9 +693,9 @@ export class BattleScene extends Phaser.Scene {
             label: `${i.name} x${i.count}`,
             enabled: true,
             hint: RPG.items[i.id]?.text,
-            run: () => this.aimAt(i.name, 'ally', 'items', (target) => ({ kind: 'item', item: i.id, target: target ?? me.key })),
+            run: () => this.aimAt(i.name, 'ally', (target) => ({ kind: 'item', item: i.id, target: target ?? me.key })),
           })),
-        { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
+        { label: 'Back', enabled: true, run: () => this.back() },
       ];
     }
     if (this.menu === 'swap') {
@@ -685,7 +706,7 @@ export class BattleScene extends Phaser.Scene {
           hint: c.down ? `${c.name} is down.` : `${c.name} takes ${me.name}'s place. HP ${c.hp}/${c.maxHp}, SP ${c.sp}/${c.maxSp}.`,
           run: () => this.act({ kind: 'swap', with: c.key }),
         })),
-        { label: 'Back', enabled: true, run: () => this.openMenu('commands') },
+        { label: 'Back', enabled: true, run: () => this.back() },
       ];
     }
     const waiting = b.bench.filter((c) => !c.down);
@@ -698,16 +719,16 @@ export class BattleScene extends Phaser.Scene {
         label: 'Attack',
         enabled: b.enemies.some((e) => !e.down),
         hint: hasMoves ? 'Your weapon moves. Some need a few turns to ready again.' : me.bash < 100 ? 'A bash with your staff. It will not do much.' : 'Strike one foe with your weapon.',
-        run: () => (hasMoves ? this.openMenu('moves') : this.aimAt('Attack', 'enemy', 'commands', (target) => ({ kind: 'attack', target: target! }))),
+        run: () => (hasMoves ? this.enter('moves') : this.aimAt('Attack', 'enemy', (target) => ({ kind: 'attack', target: target! }))),
       },
-      { label: 'Skill', enabled: spSkills > 0, hint: spSkills ? 'Spells and skills that cost SP.' : `${me.name} has no SP skills yet.`, run: () => this.openMenu('skills') },
+      { label: 'Skill', enabled: spSkills > 0, hint: spSkills ? 'Spells and skills that cost SP.' : `${me.name} has no SP skills yet.`, run: () => this.enter('skills') },
       { label: 'Guard', enabled: true, hint: 'Take half damage until your next turn.', run: () => this.act({ kind: 'guard' }) },
-      { label: 'Item', enabled: b.items.some((i) => i.count > 0), hint: 'Food and drink from your bag.', run: () => this.openMenu('items') },
+      { label: 'Item', enabled: b.items.some((i) => i.count > 0), hint: 'Food and drink from your bag.', run: () => this.enter('items') },
       {
         label: 'Swap',
         enabled: waiting.length > 0,
         hint: waiting.length ? 'Trade places with someone waiting (takes the turn).' : 'Up to four fight at once. No one is waiting to swap in yet.',
-        run: () => this.openMenu('swap'),
+        run: () => this.enter('swap'),
       },
     ];
     // Comfort (COMBAT 8): while Anissa's Calm is not full, Gianna can go to her (first when she has gone quiet).
@@ -731,12 +752,13 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Pick a target for a command (or confirm a whole side); the user's own skills go at once. */
-  private aimAt(name: string, target: TargetKind, back: Menu, action: Aim['action']): void {
+  private aimAt(name: string, target: TargetKind, action: Aim['action']): void {
     if (target === 'self') {
       this.act(action(undefined));
       return;
     }
-    this.aim = { name, side: targetsAllies(target) ? 'ally' : 'enemy', all: !needsTarget(target), back, action };
+    this.trail.enter({ menu: this.menu, cursor: this.cursor });
+    this.aim = { name, side: targetsAllies(target) ? 'ally' : 'enemy', all: !needsTarget(target), action };
     const pool = this.aimPool();
     // Heals start on the most hurt ally; attacks on the first standing foe.
     this.aimIndex = this.aim.side === 'ally' ? pool.indexOf([...pool].sort((x, y) => x.hp / x.maxHp - y.hp / y.maxHp)[0]!) : 0;
@@ -763,25 +785,41 @@ export class BattleScene extends Phaser.Scene {
     this.act(this.aim.action(this.aim.all ? undefined : t?.key));
   }
 
-  private openMenu(menu: Menu): void {
+  /** Open a command's sub-menu (Skill, Item, Swap, the weapon moves), leaving the commands on the trail. */
+  private enter(menu: Menu): void {
+    this.trail.enter({ menu: this.menu, cursor: this.cursor });
     this.menu = menu;
     this.cursor = 0;
     this.aim = null;
     this.redraw();
   }
 
+  /** B: one step back (target -> the menu it came from -> commands), to the row that was chosen. */
+  private back(): void {
+    const to = this.trail.back() ?? (this.menu !== 'commands' ? { menu: 'commands' as const, cursor: 0 } : null);
+    if (!to) return;
+    audio.sfx('cancel');
+    this.menu = to.menu;
+    this.cursor = to.cursor;
+    this.aim = null;
+    this.redraw();
+  }
+
   update(): void {
+    this.tickMark();
     this.holdWeapons();
     const input = getRuntime().input;
     input.update();
     if (this.fallen) return;
+    // B goes back: the cancel button (X, Backspace, gamepad B, the touch B) and, here, Escape (the battle has no game menu).
+    const back = battleBackPressed((b) => input.pressed(b));
     if (this.tutorial.length > 0) {
       if (input.pressed('confirm')) this.turnTutorial();
-      else if (input.pressed('cancel')) this.turnTutorial(true);
+      else if (back) this.turnTutorial(true);
       return;
     }
     if (this.done) {
-      if (!this.busy && (input.pressed('confirm') || input.pressed('cancel'))) this.finish();
+      if (!this.busy && (input.pressed('confirm') || back)) this.finish();
       return;
     }
     if (this.busy) return;
@@ -791,7 +829,7 @@ export class BattleScene extends Phaser.Scene {
         if (input.pressed('up') || input.pressed('left')) this.moveAim(-1);
         if (input.pressed('down') || input.pressed('right')) this.moveAim(1);
       }
-      if (input.pressed('cancel')) this.openMenu(this.aim.back);
+      if (back) this.back();
       else if (input.pressed('confirm')) this.confirmAim();
       return;
     }
@@ -801,7 +839,7 @@ export class BattleScene extends Phaser.Scene {
     if (input.pressed('down')) this.moveCursor(1);
     if (input.pressed('left')) this.moveCursor(-3);
     if (input.pressed('right')) this.moveCursor(3);
-    if (input.pressed('cancel') && this.menu !== 'commands') this.openMenu('commands');
+    if (back) this.back();
     else if (input.pressed('confirm')) {
       const row = this.rows[this.cursor];
       if (row?.enabled) row.run();
@@ -842,7 +880,7 @@ export class BattleScene extends Phaser.Scene {
       if (hit >= 0) {
         this.aimIndex = hit;
         this.confirmAim();
-      } else if (y >= BATTLE_ART.stripY) this.openMenu(this.aim.back);
+      } else if (y >= BATTLE_ART.stripY) this.back();
       return;
     }
     const i = this.rows.findIndex((_, r) => this.rowHit(r, x, y));
@@ -1058,6 +1096,75 @@ export class BattleScene extends Phaser.Scene {
     this.tweens.add({ targets: t, y: t.y - 14, alpha: 0, delay: 250, duration: BATTLE_ART.popMs, onComplete: () => t.destroy() });
   }
 
+  /** The fighter whose turn it is (engine/battleMenu.ts actingFighter), while the player chooses; none under a tutorial page. */
+  private actingKey(): string | null {
+    if (!this.battle || this.tutorial.length > 0) return null;
+    return actingFighter({ actor: this.battle.actor, busy: this.busy, done: this.done, fallen: this.fallen });
+  }
+
+  /**
+   * Whose turn it is, on the field (owner report, Oct 29): a pool of gold light at the acting fighter's feet that
+   * pulses, and the fighter bobbing a pixel; with Reduce motion the light is steady and the fighter still. Every frame.
+   */
+  private tickMark(): void {
+    const g = this.markGfx;
+    if (!g) return;
+    const key = this.actingKey();
+    const s = key ? this.sprites.get(key) : undefined;
+    if (this.bobbed && this.bobbed.key !== key) this.settleMark();
+    g.clear();
+    if (!key || !s || !s.active) return;
+    this.bobbed ??= { key, base: s.y };
+    const { alpha, bob } = actingMark(this.time.now, reduceMotion());
+    s.setY(this.bobbed.base + bob);
+    const x = Math.round(s.x);
+    const y = Math.round(this.bobbed.base);
+    g.setDepth(s.depth - 0.6);
+    // An oval of pixels at their feet: a pale core inside a gold rim.
+    for (const [dy, half] of actingLightRows(s.displayWidth)) {
+      g.fillStyle(BATTLE_ART.cursor, alpha * 0.8).fillRect(x - half, y + dy, half * 2, 1);
+      const core = Math.max(0, half - 4);
+      if (core > 0) g.fillStyle(BATTLE_ART.sparkBar, alpha).fillRect(x - core, y + dy, core * 2, 1);
+    }
+    // The outline: a gold copy of the picture a pixel out on each side, behind them, breathing with the light.
+    if (this.outline[0]?.texture.key !== s.texture.key || !this.outline[0]?.active) {
+      this.clearOutline();
+      this.outline = [
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1],
+      ].map(([dx, dy]) => {
+        const o = this.add.image(0, 0, s.texture.key, s.frame.name).setOrigin(s.originX, s.originY).setScale(s.scaleX, s.scaleY).setFlipX(s.flipX).setTintFill(BATTLE_ART.cursor);
+        o.setData('dx', dx).setData('dy', dy);
+        return o;
+      });
+    }
+    for (const o of this.outline) {
+      o.setFrame(s.frame.name)
+        .setPosition(s.x + (o.getData('dx') as number), s.y + (o.getData('dy') as number))
+        .setDepth(s.depth - 0.55)
+        .setAlpha(Math.min(1, alpha + 0.3) * s.alpha)
+        .setVisible(s.visible);
+    }
+  }
+
+  private clearOutline(): void {
+    for (const o of this.outline) o.destroy();
+    this.outline = [];
+  }
+
+  /** Put a bobbing fighter back where they stand (before anything moves them, and when the turn passes). */
+  private settleMark(): void {
+    if (this.bobbed) {
+      const s = this.sprites.get(this.bobbed.key);
+      if (s?.active) s.setY(this.bobbed.base);
+    }
+    this.bobbed = null;
+    this.markGfx?.clear();
+    this.clearOutline();
+  }
+
   /** The only movement a fighter makes: a quick shiver in place. */
   private shiver(key: string, px: number): void {
     const s = this.sprites.get(key);
@@ -1191,9 +1298,11 @@ export class BattleScene extends Phaser.Scene {
     const rowH = Math.min(14, Math.floor((VIEW_HEIGHT - Y - 4) / Math.max(1, n)));
     shown.forEach((p, i) => {
       const y = Y + 3 + i * rowH;
-      const on = b.actor === p && !this.busy && !this.done;
+      // The acting fighter's row is lit and framed in gold, like the light at their feet.
+      const on = this.actingKey() === p.key;
       const aimed = this.menu === 'target' && this.aimed().includes(p);
       if (on || aimed) g.fillStyle(on ? 0x2e2638 : 0x3a3020, 1).fillRect(2, y - 1, 174, rowH);
+      if (on) g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(2.5, y - 0.5, 173, rowH - 1);
       text(6, y, `${on ? '>' : ' '}${p.name}`, on ? UI.accentText : p.down ? UI.dimText : UI.text);
       if (p.bound) {
         text(54, y, 'BOUND', UI.accentText);
@@ -1272,6 +1381,9 @@ export class BattleScene extends Phaser.Scene {
       rows: this.rows.map((r) => r.label),
       cursor: this.cursor,
       targets: this.menu === 'target' ? this.aimed().map((c) => c.key) : [],
+      acting: this.actingKey(),
+      mark: this.bobbed ? { x: Math.round(this.sprites.get(this.bobbed.key)?.x ?? 0), y: Math.round(this.bobbed.base), visible: !!this.markGfx?.visible && !!this.markGfx.commandBuffer.length } : null,
+      depth: this.trail.depth,
       enemyHp: b.enemies.reduce((n, e) => n + e.hp, 0),
       hp: me?.hp ?? 0,
       sp: me?.sp ?? 0,

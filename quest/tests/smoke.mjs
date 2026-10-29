@@ -1027,7 +1027,14 @@ async function fightBoar(page, shots) {
   check(['How to fight', 'Attack and Skill', 'Guard and Item'].every((t) => titles.includes(t)), 'they cover turns, targets, Skill, Guard and Item');
   await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return b && !b.busy; }, null, { timeout: 15000 });
   await shoot(page, 'battle-start', shots);
+  // Whose turn it is shows on the field (owner report, Oct 29): a gold outline and a light at the fighter's feet.
+  const first = (await snap(page)).battle;
+  check(first.acting === first.actor && first.acting !== 'anissa' && first.mark?.visible === true, `the fighter whose turn it is is marked on the field (${JSON.stringify({ actor: first.actor, acting: first.acting, mark: first.mark })})`);
+  await page.screenshot({ path: join(SHOT_DIR, 'quest-battle-acting.png') });
   let targeted = false;
+  // B from the target cursor goes back to the menu it came from (owner report, Oct 29): X once, Escape once.
+  const backKeys = ['KeyX', 'Escape'];
+  const wentBack = [];
   let spoils = false;
   const later = [];
   const at = await snap(page);
@@ -1059,6 +1066,15 @@ async function fightBoar(page, shots) {
     if (bt.menu === 'target') {
       if (!targeted) await shoot(page, 'battle-target', shots);
       targeted = true;
+      const key = backKeys.shift();
+      if (key) {
+        await page.keyboard.press(key);
+        await page.waitForTimeout(120);
+        const back = (await snap(page)).battle;
+        wentBack.push(`${key}: target -> ${back.menu}`);
+        check(back.menu !== 'target' && back.depth === bt.depth - 1 && back.acting === bt.actor, `${key} on the target cursor goes back one step, to the ${back.menu} (${bt.depth} -> ${back.depth})`);
+        continue;
+      }
       await page.keyboard.press('KeyZ');
       await page.waitForTimeout(120);
       continue;
@@ -1074,6 +1090,7 @@ async function fightBoar(page, shots) {
   await page.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 5000 });
   const afterBattle = await snap(page);
   check(targeted, 'the battle asks for a target before an attack or spell');
+  check(wentBack.length === 2, `B (X and Escape) went back from the target cursor (${wentBack.join(', ')})`);
   check(spoils, 'after the win, a tutorial page shows how to wear the spoils');
   check(["Anissa's Light", 'Weapon moves'].every((t) => later.includes(t)), `lessons come up during the fight when they matter (${later.join(', ')})`);
   check(['Rows and Swap', 'Gear and spells'].every((t) => later.includes(t)), 'rows and gear are taught after the win');

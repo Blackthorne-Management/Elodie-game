@@ -1,9 +1,10 @@
-// Keyboard source. Arrows or WASD move; Z / Enter / Space confirm; X / Backspace cancel;
-// E echo; Q ask Anissa; Escape / M menu; Shift or X (held) run.
+// Keyboard source. Arrows or WASD move; Z / Enter / Space confirm; X / Backspace / B cancel (B because the screen
+// says "B: back"; Oct 29); E echo; Q ask Anissa; Escape / M menu (in a battle, Escape goes back too); Shift or X
+// (held) run.
 
 import type { Button, InputSource } from './actions.ts';
 
-const KEYMAP: Record<string, Button[]> = {
+export const KEYMAP: Readonly<Record<string, Button[]>> = {
   ArrowUp: ['up'],
   ArrowDown: ['down'],
   ArrowLeft: ['left'],
@@ -17,6 +18,7 @@ const KEYMAP: Record<string, Button[]> = {
   Space: ['confirm'],
   KeyX: ['cancel', 'run'],
   Backspace: ['cancel'],
+  KeyB: ['cancel'],
   KeyE: ['echo'],
   KeyQ: ['ask'],
   Escape: ['menu'],
