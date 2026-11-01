@@ -88,10 +88,19 @@ const THREE_ACCOUNTS: Condition = all(
 const LANDING: DialogueScript = script('muster_landing', {
   start: {
     lines: [
-      nar('Pòdlimyè\'s long pier, in the morning. The Old Harbor is full of hulls that are not Zetwal\'s.', { fx: 'fade', stage: [{ do: 'sync' }] }),
-      nar('A grey longship with a horse-tail standard. Two boats with paper lanterns.'),
-      nar('A ship with a brass lamp at its masthead. A Dorini merchantman with a green pennant.'),
-      say(ED, 'It\'s warm. I said it would be warm. I\'ve packed tea for a colder country; I\'m terribly sorry.'),
+      // The camera crosses the harbor to each hull as it is named (review Nov 1, Chapter 10 finding 11), low enough that
+      // the hulls at the piers stand above the dialogue box.
+      nar('Pòdlimyè\'s long pier, in the morning. The Old Harbor is full of hulls that are not Zetwal\'s.', {
+        fx: 'fade',
+        stage: [{ do: 'sync' }, { do: 'mark', actor: 'harbor', at: at(20, 17) }, { do: 'look', actor: 'harbor' }, { do: 'wait', ms: 700 }],
+      }),
+      nar('A grey longship with a horse-tail standard. Two boats with paper lanterns.', {
+        stage: [{ do: 'mark', actor: 'west_piers', at: at(10, 17) }, { do: 'look', actor: 'west_piers' }, { do: 'wait', ms: 700 }],
+      }),
+      nar('A ship with a brass lamp at its masthead. A Dorini merchantman with a green pennant.', {
+        stage: [{ do: 'mark', actor: 'east_piers', at: at(23, 17) }, { do: 'look', actor: 'east_piers' }, { do: 'wait', ms: 700 }],
+      }),
+      act([{ do: 'look', actor: 'player' }], ED, 'It\'s warm. I said it would be warm. I\'ve packed tea for a colder country; I\'m terribly sorry.'),
       say(S, 'Nine of us and a horse. I have never arrived anywhere so expensively.'),
       say(V, 'A harbor... without a chain. I had forgotten they existed.'),
       act([{ do: 'look', actor: 'bayarmaa' }], BY, 'Grass.'),

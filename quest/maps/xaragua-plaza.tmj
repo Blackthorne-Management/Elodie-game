@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 21,
+  "nextobjectid": 25,
   "layers": [
     {
       "id": 1,
@@ -893,6 +893,118 @@
         },
         {
           "id": 20,
+          "name": "plaza_fire_1",
+          "type": "puzzle_object",
+          "x": 48,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_taken, !story.refuge"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "thatch_fire"
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "plaza_fire_2",
+          "type": "puzzle_object",
+          "x": 400,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_taken, !story.refuge"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "thatch_fire"
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "plaza_fire_3",
+          "type": "puzzle_object",
+          "x": 160,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_taken, !story.refuge"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "thatch_fire"
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "plaza_fire_4",
+          "type": "puzzle_object",
+          "x": 304,
+          "y": 48,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.anaco_taken, !story.refuge"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "thatch_fire"
+            }
+          ]
+        },
+        {
+          "id": 24,
           "name": "batey_stones",
           "type": "puzzle_object",
           "x": 352,

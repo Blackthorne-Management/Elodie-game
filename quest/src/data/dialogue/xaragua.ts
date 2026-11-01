@@ -72,7 +72,16 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     // Gianna asked Yari to tell her everything on the way (Chapter 1, the island dock): remembered (Oct 19).
     { speaker: Y, text: 'And them. There were two ships when I left. Now there are three.', if: { notFlag: 'choice.yari_everything' } },
     { speaker: Y, text: 'And them. I told you about the two ships. Count them.', if: { flag: 'choice.yari_everything' } },
-    act([{ do: 'place', actor: 'yari', look: 'yari', at: at(22, 25), facing: 'up' }], A, 'Gigi. Look, on the pier.'),
+    // Nobody on the tile in front of or behind anyone (review Nov 1, finding 8): the pier is two tiles wide, so the
+    // party and the marines stand in the two lanes with a free row between people in the same lane.
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 26), facing: 'up' },
+        { do: 'walk', actor: 'follower', to: at(21, 27), facing: 'up' },
+      ],
+      A,
+      'Gigi. Look, on the pier.',
+    ),
     // Staged (owner rule, Oct 17): the fisher is up at the sergeant's scale, and gets shoved back.
     act(
       [
@@ -112,9 +121,10 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('pier_after', [
     act(
       [
-        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 25), facing: 'up' },
+        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 26), facing: 'up' },
+        { do: 'walk', actor: 'follower', to: at(21, 27), facing: 'up' },
         { do: 'place', actor: 'sergeant', look: 'marine_sergeant', at: at(21, 23), facing: 'down' },
-        { do: 'place', actor: 'marine_a', look: 'crown_marine', at: at(22, 22), facing: 'down' },
+        { do: 'place', actor: 'marine_a', look: 'crown_marine', at: at(22, 21), facing: 'down' },
         { do: 'place', actor: 'marine_b', look: 'crown_marine_b', at: at(21, 21), facing: 'down' },
       ],
       'marine_sergeant',
@@ -132,7 +142,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     ),
     act([{ do: 'wait', ms: 1200 }], Y, 'Tell him slowly. He reads every form twice.'),
     act(
-      [{ do: 'walk', actor: 'npc:canoe_fisher', to: at(21, 24), facing: 'down' }],
+      [{ do: 'walk', actor: 'npc:canoe_fisher', to: at(22, 24), facing: 'down' }],
       'canoe_fisher',
       'Guatiao, Yari. And your friends. That is the first time anyone has made them put anything back.',
       undefined,
@@ -271,7 +281,14 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   // The elders hear the oath stone's words. Thorne's watcher saw where the party went, and the guns fire.
   // Staged (owner rule, Oct 17): the marines march in from the doors, up the hall, to Gianna's face.
   simple('xaragua_proof', [
-    act([{ do: 'place', actor: 'yari', look: 'yari', at: at(9, 5), facing: 'left' }], '', 'The elders are still in the circle, talking low by a single lamp. They look up as you come in.'),
+    act(
+      [
+        { do: 'place', actor: 'yari', look: 'yari', at: at(9, 4), facing: 'left' },
+        { do: 'walk', actor: 'follower', to: at(8, 4), facing: 'left' },
+      ],
+      '',
+      'The elders are still in the circle, talking low by a single lamp. They look up as you come in.',
+    ),
     say(Y, 'Elders. The record house is open. We read the oath stone.'),
     say('elder_charter', 'The record house? Nobody has opened that door since Caona\'s time.'),
     say(Y, '"The harbor stays with the people who fish it. We fight for each other, and no paper of any crown will part us."'),
@@ -293,8 +310,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     // Through the doors, up the hall together, and right up to Gianna.
     act(
       [
-        { do: 'enter', actor: 'marine', look: 'crown_marine', from: at(17, 24), to: at(12, 5), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'musketeer', look: 'crown_musketeer', from: at(18, 24), to: at(12, 7), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'marine', look: 'crown_marine', from: at(17, 24), to: at(12, 4), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'musketeer', look: 'crown_musketeer', from: at(18, 24), to: at(12, 8), facing: 'left', run: true, async: true },
         { do: 'look', actor: 'lieutenant' },
         { do: 'enter', actor: 'lieutenant', look: 'marine_lieutenant', from: at(17, 23), to: at(11, 6), facing: 'left', run: true },
         { do: 'face', actor: 'player', facing: 'right' },
@@ -324,11 +341,12 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('caney_after', [
     act(
       [
-        { do: 'place', actor: 'yari', look: 'yari', at: at(9, 5), facing: 'right' },
+        { do: 'place', actor: 'yari', look: 'yari', at: at(9, 4), facing: 'right' },
+        { do: 'walk', actor: 'follower', to: at(8, 4), facing: 'right' },
         { do: 'face', actor: 'player', facing: 'right' },
         { do: 'place', actor: 'lieutenant', look: 'marine_lieutenant', at: at(11, 6), facing: 'left' },
-        { do: 'place', actor: 'marine', look: 'crown_marine', at: at(12, 5), facing: 'left' },
-        { do: 'place', actor: 'musketeer', look: 'crown_musketeer', at: at(12, 7), facing: 'left' },
+        { do: 'place', actor: 'marine', look: 'crown_marine', at: at(12, 4), facing: 'left' },
+        { do: 'place', actor: 'musketeer', look: 'crown_musketeer', at: at(12, 8), facing: 'left' },
         // The elders, behind the children in the council circle.
         { do: 'place', actor: 'elder_charter', look: 'elder_charter', at: at(3, 6), facing: 'right' },
         { do: 'place', actor: 'elder_resist', look: 'elder_resist', at: at(5, 5), facing: 'right' },
@@ -350,12 +368,12 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     // The captain and six men: through the doors and up the hall, into a firing line at the circle's opening.
     act(
       [
-        { do: 'enter', actor: 'guard_a', look: 'crown_marine', from: at(17, 24), to: at(13, 5), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_b', look: 'crown_musketeer', from: at(18, 24), to: at(13, 7), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_c', look: 'crown_musketeer_b', from: at(17, 24), to: at(11, 5), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_d', look: 'crown_musketeer_c', from: at(18, 24), to: at(11, 7), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_e', look: 'crown_marine_c', from: at(17, 24), to: at(12, 4), facing: 'left', run: true, async: true },
-        { do: 'enter', actor: 'guard_f', look: 'crown_musketeer_d', from: at(18, 24), to: at(12, 8), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_a', look: 'crown_marine', from: at(17, 24), to: at(15, 4), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_b', look: 'crown_musketeer', from: at(18, 24), to: at(15, 8), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_c', look: 'crown_musketeer_b', from: at(17, 24), to: at(12, 4), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_d', look: 'crown_musketeer_c', from: at(18, 24), to: at(12, 8), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_e', look: 'crown_marine_c', from: at(17, 24), to: at(13, 2), facing: 'left', run: true, async: true },
+        { do: 'enter', actor: 'guard_f', look: 'crown_musketeer_d', from: at(18, 24), to: at(13, 10), facing: 'left', run: true, async: true },
         { do: 'look', actor: 'captain' },
         { do: 'enter', actor: 'captain', look: 'crown_captain', from: at(17, 23), to: at(12, 6), facing: 'left' },
       ],
@@ -370,7 +388,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       [
         { do: 'place', actor: 'anaco', look: 'anaco', at: at(31, 5), facing: 'left' },
         { do: 'look', actor: 'anaco' },
-        { do: 'walk', actor: 'anaco', to: at(14, 6), facing: 'left' },
+        { do: 'walk', actor: 'anaco', to: at(13, 6), facing: 'left' },
         { do: 'face', actor: 'captain', facing: 'right' },
         { do: 'face', actor: 'guard_a', facing: 'right' },
         { do: 'face', actor: 'guard_b', facing: 'right' },
@@ -380,13 +398,13 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     ),
     act(
       [
-        { do: 'walk', actor: 'guard_a', to: at(14, 5), facing: 'down', async: true },
-        { do: 'walk', actor: 'guard_b', to: at(14, 7), facing: 'up' },
+        { do: 'walk', actor: 'guard_a', to: at(13, 4), facing: 'down', async: true },
+        { do: 'walk', actor: 'guard_b', to: at(13, 8), facing: 'up' },
       ],
       'crown_captain',
       'Gladly. Take him.',
     ),
-    act([{ do: 'look', actor: 'player' }, { do: 'walk', actor: 'yari', to: at(10, 5), facing: 'right', run: true }], Y, 'Father!'),
+    act([{ do: 'look', actor: 'player' }, { do: 'walk', actor: 'yari', to: at(10, 6), facing: 'right', run: true }], Y, 'Father!'),
     act([{ do: 'face', actor: 'anaco', facing: 'left' }], 'anaco', 'Yari. No. Look at me. You are no use to me in chains. Take the Limyè girls and go. The cave. You know the one.', undefined, undefined, 'tender'),
     say('anaco', 'Envoy\'s daughter. They cannot touch you, by their own Accord. Remember that, and use it.'),
     say(G, 'We\'ll find you. I promise.'),
@@ -413,17 +431,22 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     { speaker: Y, text: 'He said the cave. Out the back, Gianna. Now.', set: { 'story.anaco_taken': true, 'travel.next': 'xaragua-plaza/caney_back' } },
   ]),
   simple('attack_plaza', [
-    act(
-      [
-        { do: 'place', actor: 'yari', look: 'yari', at: at(8, 6), facing: 'right' },
-        { do: 'enter', actor: 'drummer', look: 'crown_marine_d', from: at(14, 5), to: at(13, 11), run: true, async: true },
-        { do: 'enter', actor: 'bannerman', look: 'crown_musketeer_c', from: at(15, 5), to: at(16, 11), run: true },
-        { do: 'face', actor: 'drummer', facing: 'down' },
-        { do: 'face', actor: 'bannerman', facing: 'down' },
-      ],
-      '',
-      'Night. The stalls\' thatch is burning. Crown drums beat on the dance ground, and red banners go up by the steps.',
-    ),
+    {
+      ...act(
+        [
+          { do: 'place', actor: 'yari', look: 'yari', at: at(8, 6), facing: 'right' },
+          { do: 'enter', actor: 'drummer', look: 'crown_marine_d', from: at(14, 5), to: at(13, 11), run: true, async: true },
+          { do: 'enter', actor: 'bannerman', look: 'crown_musketeer_c', from: at(15, 5), to: at(16, 11), run: true },
+          { do: 'face', actor: 'drummer', facing: 'down' },
+          { do: 'face', actor: 'bannerman', facing: 'down' },
+        ],
+        '',
+        // Shown (review Nov 1, finding 3): a real night (assets.config.ts MAP_MOODS) and fire and smoke on the roofs
+        // (tools/maps/xaragua.ts plaza_fire_*), with the drums heard.
+        'Night. The thatch roofs are burning. Crown drums beat on the dance ground, and red banners go up by the steps.',
+      ),
+      fx: 'drum',
+    },
     say(Y, 'On the batey. They are standing on the batey.'),
     say(A, 'Gigi, I\'m scared.'),
     say(G, 'Hold my hand. Down to the village, then west to the gardens and the cave. Quietly.'),

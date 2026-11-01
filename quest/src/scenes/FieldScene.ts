@@ -15,6 +15,7 @@ import {
   CHARACTER_LABEL_GAP,
   ECHO_DITHER_TEXTURE,
   ECHO_FILTER,
+  MAP_FOG,
   MAP_MOODS,
   ECHO_PLAYER_LOOK,
   MARKER_TEXTURES,
@@ -247,6 +248,10 @@ export class FieldScene extends Phaser.Scene {
   private stageThen: (() => void) | null = null;
   /** Whom the camera follows during a scene (an actor's name), or null for the player. */
   private stageCamera: string | null = null;
+  /** Lights a scene put on someone (Anissa's light at the lamp): gone when the scene ends. */
+  private stageLights: Phaser.GameObjects.GameObject[] = [];
+  /** The map's fog (assets.config.ts MAP_FOG): clear round the party, thick to the screen's edge. */
+  private fog: Phaser.GameObjects.Image | null = null;
   private objectSprites = new Map<string, Phaser.GameObjects.GameObject[]>();
   private markerSprites = new Map<string, Phaser.GameObjects.Image>();
   private label!: Phaser.GameObjects.Container;
@@ -376,6 +381,8 @@ export class FieldScene extends Phaser.Scene {
     this.labelKey = '';
     this.pendingGlow = [];
     this.glowing = new Set();
+    this.fog = null;
+    this.stageLights = [];
     this.lastGlowed = [];
     this.follower = null;
     this.yari = null;
@@ -548,6 +555,7 @@ export class FieldScene extends Phaser.Scene {
       this.cardArt = null;
     }
     this.tickStage(delta);
+    this.updateFog();
     this.updateEchoPrompt();
     this.syncMusic();
     this.uiSounds();
@@ -1501,16 +1509,20 @@ export class FieldScene extends Phaser.Scene {
         // One large drawing, standing on the bottom edge of the object's area, sorted with the actors.
         const x = (o.area.x + o.area.width / 2) * TILE_SIZE;
         const bottom = (o.area.y + o.area.height) * TILE_SIZE;
-        const image = this.add.image(x, bottom, textureKeyForObject(o.kind)).setOrigin(0.5, 1).setDepth(o.walkable ? 1.5 : 10 + bottom - 1);
+        // A fire burns through the night's wash (it lights itself): drawn over it.
+        const image = this.add.image(x, bottom, textureKeyForObject(o.kind)).setOrigin(0.5, 1).setDepth(art.bright ? 3991 : o.walkable ? 1.5 : 10 + bottom - 1);
+        if (art.scale) image.setScale(art.scale);
         const parts: Phaser.GameObjects.GameObject[] = [image];
         if (art.glow) {
           const light = this.add
-            .circle(x, bottom - art.rows.length + art.glow.radius / 2, art.glow.radius, art.glow.color, 0.25)
+            .circle(x, bottom - art.rows.length + art.glow.radius / 2, art.glow.radius, art.glow.color, art.bright ? 0.14 : 0.25)
             .setDepth(image.depth + 0.1)
             .setBlendMode(Phaser.BlendModes.ADD);
-          this.tweens.add({ targets: light, alpha: 0.45, scale: 1.12, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+          this.tweens.add({ targets: light, alpha: art.bright ? 0.3 : 0.45, scale: 1.12, duration: art.bright ? 260 : 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
           parts.push(light);
         }
+        if (art.bright) this.tweens.add({ targets: image, alpha: 0.82, duration: 180, yoyo: true, repeat: -1 });
+        if (art.smoke) parts.push(this.smokeOver(x, bottom - art.rows.length));
         this.objectSprites.set(o.id, parts);
         continue;
       }
@@ -1550,6 +1562,27 @@ export class FieldScene extends Phaser.Scene {
     this.settled = false;
     this.syncCrowd();
     this.refreshGuide();
+  }
+
+  /** Smoke rising from a fire (a burning roof): grey puffs that drift up and thin out. */
+  private smokeOver(x: number, y: number): Phaser.GameObjects.GameObject {
+    if (!this.textures.exists('smoke-puff')) {
+      const g = this.make.graphics({ x: 0, y: 0 }, false);
+      g.fillStyle(0xffffff, 1).fillCircle(4, 4, 4);
+      g.generateTexture('smoke-puff', 8, 8);
+      g.destroy();
+    }
+    return this.add
+      .particles(x, y, 'smoke-puff', {
+        speedY: { min: -16, max: -8 },
+        speedX: { min: -3, max: 6 },
+        lifespan: 2400,
+        scale: { start: 0.9, end: 3 },
+        alpha: { start: 0.6, end: 0 },
+        tint: 0x9a9aa4,
+        frequency: reduceMotion() ? 700 : 280,
+      })
+      .setDepth(3992);
   }
 
   // ---- Quest arrows (engine/guide.ts) -------------------------------------------------------
@@ -2567,6 +2600,10 @@ export class FieldScene extends Phaser.Scene {
           }
         }
         return;
+      case 'mark':
+        // An unseen spot for the camera: a stage actor nobody sees.
+        this.stageActor(c.actor, 'villager', c.at, 'down').sprite.setVisible(false);
+        return;
       case 'look':
         this.stageCamera = c.actor === STAGE_PLAYER ? null : c.actor;
         return;
@@ -2814,6 +2851,8 @@ export class FieldScene extends Phaser.Scene {
     }
     this.stageActors.clear();
     this.broughtOn.clear();
+    for (const l of this.stageLights) l.destroy();
+    this.stageLights = [];
     this.stageQueue = [];
     this.stageBlocking = null;
     this.stageWaitMs = 0;
@@ -2874,6 +2913,7 @@ export class FieldScene extends Phaser.Scene {
     // lie (a short, fainter gold the player sees and Gianna, looking at the sand, does not).
     // Story clues: with Reduce motion they still show, as a soft wash (scenes/cameraFx.ts storyFlash).
     else if (fx === 'token') storyFlash(this, 1400, 255, 214, 110);
+    else if (fx === 'anissa_light') this.anissaLight();
     else if (fx === 'signet') storyFlash(this, 500, 214, 170, 70);
     // Chapter 10: the Marshal's whistle, and the harbor chain's capstan heard from the Hall (a sound and a small shake).
     else if (fx === 'whistle') audio.sfx('whistle');
@@ -2902,6 +2942,71 @@ export class FieldScene extends Phaser.Scene {
     }
     // Any other sound by its id (Z-4: the name stones' notes, their knock and their chord).
     else if ((SFX_IDS as readonly string[]).includes(fx)) audio.sfx(fx as SfxId);
+  }
+
+  /**
+   * Light pours out of Anissa (Chapter 1, the lamp; review Nov 1, finding 9): a pale gold wash, a pulsing halo on her
+   * and a beam from her to the Gaze lamp, held until the scene ends.
+   */
+  private anissaLight(): void {
+    storyFlash(this, 900, 255, 244, 200);
+    const a = this.stageActors.get(STAGE_FOLLOWER)?.sprite ?? this.follower?.sprite;
+    if (!a) return;
+    const x = a.x;
+    const y = a.y - 12;
+    // The halo behind her, so she stays seen inside her own light.
+    const halo = this.add.circle(x, y, 15, ANISSA_GLOW.tint, 0.45).setDepth(a.depth - 0.2).setBlendMode(Phaser.BlendModes.ADD);
+    this.tweens.add({ targets: halo, scale: 1.3, alpha: 0.2, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    a.setTint(ANISSA_GLOW.tint);
+    const parts: Phaser.GameObjects.GameObject[] = [halo];
+    const lamp = this.logic.objects().find((o) => o.kind === 'gaze_lamp');
+    if (lamp) {
+      const lx = (lamp.area.x + lamp.area.width / 2) * TILE_SIZE;
+      const ly = lamp.area.y * TILE_SIZE + 2;
+      const beam = this.add.graphics().setDepth(a.depth - 0.1).setBlendMode(Phaser.BlendModes.ADD);
+      beam.lineStyle(3, ANISSA_GLOW.tint, 0.7).lineBetween(x, y, lx, ly);
+      beam.lineStyle(1, 0xffffff, 0.8).lineBetween(x, y, lx, ly);
+      this.tweens.add({ targets: beam, alpha: 0.35, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      parts.push(beam);
+    }
+    // Her tint goes when the light does (the follower's look is reset by updateFollowerLook after the scene).
+    const untint = this.add.zone(0, 0, 0, 0);
+    untint.once(Phaser.GameObjects.Events.DESTROY, () => {
+      if (a.scene && this.logic.era !== 'echo') a.clearTint();
+    });
+    parts.push(untint);
+    this.stageLights.push(...parts);
+  }
+
+  /** The map's fog, centred on Gianna (assets.config.ts MAP_FOG): made once per map, moved every frame. */
+  private updateFog(): void {
+    const fog = this.logic.era === 'present' ? MAP_FOG.find((f) => f.maps.includes(this.map.id) && evaluate(f.if, this.logic.state.flags)) : undefined;
+    if (!fog) {
+      this.fog?.setVisible(false);
+      return;
+    }
+    if (!this.fog) {
+      const key = `fog-${fog.color.toString(16)}-${fog.clear}-${fog.thick}`;
+      if (!this.textures.exists(key)) {
+        const w = VIEW_WIDTH * 2;
+        const h = VIEW_HEIGHT * 2;
+        const tex = this.textures.createCanvas(key, w, h);
+        const ctx = tex?.getContext();
+        if (tex && ctx) {
+          const c = (al: number) => `rgba(${(fog.color >> 16) & 255},${(fog.color >> 8) & 255},${fog.color & 255},${al})`;
+          const grad = ctx.createRadialGradient(w / 2, h / 2, fog.clear * TILE_SIZE, w / 2, h / 2, fog.thick * TILE_SIZE);
+          grad.addColorStop(0, c(0));
+          grad.addColorStop(0.5, c(fog.alpha * 0.6));
+          grad.addColorStop(1, c(fog.alpha));
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+          tex.refresh();
+        }
+      }
+      this.fog = this.add.image(0, 0, key).setDepth(3989);
+    }
+    const p = this.mover.point(this.logic.state.player.pos);
+    this.fog.setVisible(true).setPosition(Math.round(p.x), Math.round(p.y - TILE_SIZE / 2));
   }
 
   private updateDialogue(wasTyping = false): void {

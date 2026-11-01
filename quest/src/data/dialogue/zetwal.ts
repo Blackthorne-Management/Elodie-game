@@ -1354,18 +1354,29 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
         nar('You cup your hands and call a small flame, the way you were taught in the archive.'),
         nar('It is a good flame: small, steady, and it wastes nothing.'),
         nar("At the lamp's lip it gutters out, as if the lamp is waiting for something else."),
-        say(A, 'Gigi...'),
+        // Beside Gianna, not behind her (review Nov 1, finding 9: the scene is about her).
+        say(A, 'Gigi...', { stage: [{ do: 'walk', actor: 'follower', to: { x: 16, y: 4 }, facing: 'up' }] }),
         say(A, "It's calling me. Like someone saying my name from very far away."),
         say(G, 'Anissa? Stay back. Let me...'),
         say(A, "I can't stop it. I'm sorry, I can't..."),
-        nar('Light pours out of Anissa. Not fire: light, the color of morning through water.', { fx: 'flash', set: { 'story.lamp_lit': true } }),
+        // Shown (review Nov 1, finding 9): a halo on her, a beam to the lamp, a pale gold wash (FieldScene anissaLight).
+        nar('Light pours out of Anissa. Not fire: light, the color of morning through water.', {
+          fx: 'anissa_light',
+          set: { 'story.lamp_lit': true },
+          stage: [{ do: 'face', actor: 'player', facing: 'right' }],
+        }),
         // Staged (demo review, Oct 17): the lamp and the island's lanterns catch in front of everyone.
         nar('The lamp catches. Then every lantern on the island. Then, across the water, every lantern in Zetwal.', {
           fx: 'flash',
           stage: [{ do: 'sync' }],
         }),
         say(A, "I'm sorry. I didn't mean to. I didn't mean anything."),
-        say(G, "Look at me. You didn't break anything. You lit it."),
+        say(G, "Look at me. You didn't break anything. You lit it.", {
+          stage: [
+            { do: 'face', actor: 'player', facing: 'right' },
+            { do: 'face', actor: 'follower', facing: 'left' },
+          ],
+        }),
         say(A, '...Are you scared of me?'),
         say(G, 'Never. Not for one second.'),
         say('patricio_old', 'Anicette always said you carried something, little one. I thought it was only a grandmother talking.', { mood: 'sad' }),
@@ -2483,15 +2494,40 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
     start: { lines: [], next: [{ if: { flag: 'story.boar_seen' }, to: 'again' }, { to: 'first' }] },
     first: {
       lines: [
-        nar('The cane rustles. Something heavy is moving through it, fast.'),
+        // Shown (review Nov 1, finding 2): the cane shakes, the boar charges out of it onto the road ahead of the party
+        // and stops two paces from Gianna; the fight starts from there.
+        nar('The cane rustles. Something heavy is moving through it, fast.', {
+          fx: 'shake',
+          stage: [
+            { do: 'face', actor: 'player', facing: 'up' },
+            { do: 'mark', actor: 'rustle', at: { x: 13, y: 8 } },
+            { do: 'look', actor: 'rustle' },
+            { do: 'wait', ms: 500 },
+          ],
+        }),
         say(A, 'Gigi...'),
-        nar('A boar bursts onto the road, bristles up, tusks low, and plants itself between you and the gate.'),
-        say(G, 'Stay behind me, Nissa.'),
+        nar('A boar bursts onto the road, bristles up, tusks low, and plants itself in the road ahead of you.', {
+          stage: [
+            { do: 'look', actor: 'boar' },
+            { do: 'enter', actor: 'boar', look: 'cane_boar', from: { x: 13, y: 7 }, to: { x: 12, y: 12 }, facing: 'left', run: true },
+            { do: 'face', actor: 'player', facing: 'right' },
+            { do: 'look', actor: 'player' },
+          ],
+        }),
+        say(G, 'Stay behind me, Nissa.', { stage: [{ do: 'walk', actor: 'follower', to: { x: 8, y: 13 }, facing: 'right' }] }),
         say(A, '...I will.', { set: { 'story.boar_seen': true, 'battle.next': 'intro_boar' } }),
       ],
     },
     again: {
-      lines: [nar('The boar is back, snorting, blocking the road.'), say(G, 'Again, then. Stay behind me.', { set: { 'battle.next': 'intro_boar' } })],
+      lines: [
+        nar('The boar is back, snorting, blocking the road.', {
+          stage: [
+            { do: 'enter', actor: 'boar', look: 'cane_boar', from: { x: 13, y: 7 }, to: { x: 12, y: 12 }, facing: 'left', run: true },
+            { do: 'face', actor: 'player', facing: 'right' },
+          ],
+        }),
+        say(G, 'Again, then. Stay behind me.', { set: { 'battle.next': 'intro_boar' } }),
+      ],
     },
   }),
 

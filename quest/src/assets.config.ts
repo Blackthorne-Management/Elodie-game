@@ -571,10 +571,11 @@ export interface PlaceholderCharacter {
   /** A long dress or robe down to the ankles. */
   robe?: boolean;
   /**
-   * small: a child or Anissa; tall: Elodie. horse and wolf (Chapter 6): four legs, drawn by scenes/pixels.ts
-   * drawBeast: `outfit` the coat, `hair` the mane, `trim` the tack (none on a wolf), `skin` the muzzle.
+   * small: a child or Anissa; tall: Elodie. horse and wolf (Chapter 6), boar (Chapter 1's Cane Road): four legs, drawn
+   * by scenes/pixels.ts drawBeast: `outfit` the coat, `hair` the mane (a boar's bristles), `trim` the tack (none on a
+   * wolf; a boar's tusks), `skin` the muzzle.
    */
-  build?: 'normal' | 'small' | 'tall' | 'horse' | 'wolf';
+  build?: 'normal' | 'small' | 'tall' | 'horse' | 'wolf' | 'boar';
   headgear?: Headgear;
   headgearColor?: number;
   beard?: number;
@@ -868,7 +869,8 @@ const BASE_LOOKS: Record<string, PlaceholderCharacter> = {
   fisher: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: C.c!, trim: C.N!, legs: C.B!, headgear: 'brimmed', headgearColor: C.N! },
   // Xaraguá (Chapter 2, Oct 16): Yucayeque's people in cotton, annatto red and Yaguana teal; the
   // Crown's marines and clerks in red and navy. Placeholders until art drop 2 (Nov 7).
-  canoe_fisher: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'long', outfit: COTTON, trim: TEAL, legs: C.T!, headgear: 'headband', headgearColor: C.R! },
+  // An old man ("Out of my way, old man": review Nov 1, finding 10): white hair, a white beard, a net-mender's sash.
+  canoe_fisher: { skin: C.T!, hair: WHITE_HAIR, hairStyle: 'short', outfit: COTTON, trim: TEAL, legs: C.T!, headgear: 'headband', headgearColor: C.R!, beard: WHITE_HAIR, accessories: ['sash'] },
   weaver: { skin: SKIN.chestnut, hair: HAIR_BLACK, hairStyle: 'braid', outfit: TEAL, trim: C.w!, robe: true },
   fisher_boy: { skin: C.T!, hair: HAIR_BLACK, hairStyle: 'short', outfit: COTTON, trim: C.R!, legs: C.T!, build: 'small' },
   crown_marine: { skin: SKIN.peach, hair: C.B!, hairStyle: 'cropped', outfit: C.R!, trim: C.w!, legs: C.w!, headgear: 'cap', headgearColor: C.u!, accessories: ['sash'] },
@@ -940,7 +942,8 @@ const BASE_LOOKS: Record<string, PlaceholderCharacter> = {
   oath_knight: { skin: SKIN.olive, hair: C.B!, hairStyle: 'short', outfit: C.G!, trim: C.R!, legs: C.K!, beard: C.B!, accessories: ['sash'] },
   baker_widow: { skin: C.S!, hair: C.G!, hairStyle: 'bun', outfit: BRASADOR_BLACK, trim: C.w!, robe: true, headgear: 'wrap', headgearColor: C.k!, accessories: ['apron'] },
   echo_clerk: { skin: SKIN.tan, hair: HAIR_BLACK, hairStyle: 'short', outfit: 0x8a7a50, trim: C.N!, legs: C.B!, accessories: ['satchel'] },
-  echo_forgemaster: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x6a5a40, trim: C.e!, legs: C.B!, beard: HAIR_BLACK, accessories: ['apron'] },
+  // Clean-shaven (review Nov 1, finding 18: a black beard over the whole face read as a mask under the sepia).
+  echo_forgemaster: { skin: C.S!, hair: HAIR_BLACK, hairStyle: 'bald', outfit: 0x6a5a40, trim: C.e!, legs: C.B!, accessories: ['apron'] },
   ard_smith: { skin: SKIN.olive, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: BRASADOR_BLACK, trim: C.e!, legs: C.K!, beard: C.B!, accessories: ['apron'] },
   ard_librarian: { skin: SKIN.almond, hair: C.G!, hairStyle: 'short', outfit: C.r!, trim: C.N!, robe: true, accessories: ['satchel'] },
   ard_villager: { skin: SKIN.tan, hair: HAIR_DARK, hairStyle: 'short', outfit: 0x7a5a48, trim: C.R!, legs: C.K! },
@@ -984,8 +987,10 @@ const BASE_LOOKS: Record<string, PlaceholderCharacter> = {
   echo_crown_envoy: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: C.r!, trim: C.y!, legs: C.w!, headgear: 'bicorne', headgearColor: C.k!, accessories: ['sash', 'epaulettes'] },
   echo_thomas: { skin: C.s!, hair: C.N!, hairStyle: 'short', outfit: SEAT_GREY_VIOLET, trim: C.w!, legs: C.K!, build: 'small', accessories: ['satchel'] },
   // Coco's seamstresses (beat 6): a white hood and an apron over grey, for Gianna and Anissa (DISGUISE below).
-  gianna_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: 0x8e8e9c, trim: C.w!, robe: true, headgear: 'hood', headgearColor: C.w!, accessories: ['apron', 'locket'] },
-  anissa_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'puffs', outfit: 0x8e8e9c, trim: C.w!, robe: true, build: 'small', headgear: 'hood', headgearColor: C.w!, accessories: ['apron'] },
+  // The seamstresses' veils show the face (review Nov 1, Chapter 5 finding 9): Gianna in her blue under the apron, with
+  // her gold trim and the Locket; Anissa smaller, in her pink.
+  gianna_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'curly', outfit: C.U!, trim: C.y!, robe: true, headgear: 'cowl', headgearColor: C.w!, accessories: ['apron', 'locket'] },
+  anissa_seamstress: { skin: C.S!, hair: HAIR_DARK, hairStyle: 'puffs', outfit: C.P!, trim: C.w!, robe: true, build: 'small', headgear: 'cowl', headgearColor: C.w!, accessories: ['apron'] },
   // Ordvik and the Winter Plateau (Chapter 6, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md
   // 15). The Ironvow in grey felt and fur, slate-blue at the collar (#5d6d7e); the Crown's hostage-envoy and surveyor in
   // Aldermoor violet; the eastern clans' envoy in white felt with a silver mare. Horses and wolves on four legs.
@@ -1018,6 +1023,8 @@ const BASE_LOOKS: Record<string, PlaceholderCharacter> = {
   horse_black: { skin: 0x3a3440, hair: 0x1e1a22, hairStyle: 'short', outfit: 0x2a2632, trim: C.R!, build: 'horse' },
   horse_chestnut: { skin: 0x6a3a22, hair: 0x6a3a22, hairStyle: 'short', outfit: 0xa85a2a, trim: C.N!, build: 'horse' },
   echo_horse: { skin: 0x6a5a48, hair: 0x3a3028, hairStyle: 'short', outfit: 0x9a8a6a, trim: C.N!, build: 'horse' },
+  // The boar out of the cane on the Cane Road (Chapter 1's first fight; review Nov 1, finding 2): it charges onto the map.
+  cane_boar: { skin: 0x8a5a4a, hair: 0x2a1a14, hairStyle: 'short', outfit: 0x5a3a28, trim: 0xf4ecd8, build: 'boar' },
   steppe_wolf: { skin: 0x3a3440, hair: 0x6e6a78, hairStyle: 'short', outfit: 0x9a9aa2, trim: 0x9a9aa2, build: 'wolf' },
   // Kirinoura (Chapter 7, Oct 22; drawn placeholders until art, prompts in docs/quest/ART-PROMPTS.md 16). The Suzumori
   // in grey and violet (#7d3c98), clerks in grey with ink on the cuff, the Crown's observer in Aldermoor violet, the
@@ -1158,6 +1165,9 @@ const BASE_LOOKS: Record<string, PlaceholderCharacter> = {
  */
 const VARIANTS: Readonly<Record<string, readonly [base: string, changes: Partial<PlaceholderCharacter>]>> = {
   // Ardencia's own people where they wore Pòdlimyè's looks.
+  // The Zetwal trader captain (Chapters 2, 3 and 10), not a twin of the ferry hand on the same pier (review Nov 1,
+  // Chapter 10 finding 10): a green coat, a dark hat and a beard.
+  zetwal_trader: ['ferryman', { skin: SKIN.cocoa, outfit: 0x2f5a4a, trim: C.y!, headgearColor: C.b!, beard: HAIR_BLACK }],
   ard_courier: ['courier_rider', { skin: SKIN.olive, outfit: BRASADOR_BLACK, headgearColor: C.R! }],
   ard_porter: ['porter', { skin: SKIN.tan, outfit: 0x8a6a50, build: 'normal' }],
   ard_ring_maker: ['charm_seller', { skin: SKIN.almond, outfit: C.R!, trim: C.y!, headgearColor: BRASADOR_BLACK }],
@@ -1168,8 +1178,10 @@ const VARIANTS: Readonly<Record<string, readonly [base: string, changes: Partial
   free_brasador_c: ['free_brasador', { skin: SKIN.almond, beard: HAIR_BLACK }],
   free_brasador_d: ['free_brasador', { skin: SKIN.mahogany }],
   // Al-Doria's own people where they wore Pòdlimyè's looks, and more of the bazaar's crowd.
-  ald_moneychanger_old: ['elder', { skin: SKIN.sand, outfit: 0xd8c08a, trim: DORINI_GREEN, headgear: 'wrap', headgearColor: C.w! }],
-  ald_coin_seller: ['cloth_merchant', { skin: SKIN.amber, outfit: 0xb86a3a, headgear: 'wrap', headgearColor: C.y! }],
+  // Not twins of the traders in the crowd (review Nov 1, finding 15): a navy robe and a red wrap; the younger one in violet.
+  ald_moneychanger_old: ['elder', { skin: SKIN.sand, outfit: C.u!, trim: C.y!, headgear: 'wrap', headgearColor: C.R!, beard: WHITE_HAIR }],
+  ald_moneychanger: ['aldoria_trader', { skin: SKIN.bronze, outfit: C.p!, trim: C.y!, headgearColor: 0x1f6a6a }],
+  ald_coin_seller: ['cloth_merchant', { skin: SKIN.amber, outfit: 0xb86a3a, headgear: 'wrap', headgearColor: C.m! }],
   ald_indigo_seller: ['cloth_merchant', { skin: SKIN.date, outfit: C.u!, trim: C.w! }],
   ald_carpet_seller: ['produce_seller', { skin: SKIN.bronze, outfit: C.m!, trim: C.y!, headgearColor: C.w! }],
   ald_weights_seller: ['engraver', { skin: SKIN.sand, outfit: 0x5a6a40, headgear: 'wrap', headgearColor: C.w! }],
@@ -1190,7 +1202,7 @@ const VARIANTS: Readonly<Record<string, readonly [base: string, changes: Partial
   ald_clerk: ['clerk', { skin: SKIN.bronze, outfit: 0xe8dcc0, trim: DORINI_GREEN }],
   ald_echo_clerk: ['echo_clerk', { skin: SKIN.date }],
   ald_merchant: ['aldoria_trader', { skin: SKIN.sand, outfit: 0x5a7a9a, beard: HAIR_BLACK }],
-  ald_shopper_a: ['aldoria_trader_f', { skin: SKIN.bronze, outfit: C.R!, headgearColor: C.y! }],
+  ald_shopper_a: ['aldoria_trader_f', { skin: SKIN.bronze, outfit: C.R!, headgearColor: C.o! }],
   ald_shopper_b: ['aldoria_trader', { skin: SKIN.date, outfit: C.w!, trim: C.y!, beard: HAIR_BLACK }],
   ald_shopper_c: ['water_carrier', { skin: SKIN.amber, hair: HAIR_BLACK, outfit: 0x6a4a8a, accessories: ['satchel'] }],
   ald_shopper_d: ['aldoria_trader', { skin: SKIN.sand, hair: WHITE_HAIR, beard: WHITE_HAIR, accessories: ['cane'] }],
@@ -1263,7 +1275,7 @@ export const HERITAGE = {
     'meera', 'seth_dhanraj', 'echo_arjun', 'rahel', 'patricia', 'ti_jak', 'hale', 'thorne', 'anaco', 'echo_solange', 'echo_thomas',
     'gianna_seamstress', 'anissa_seamstress',
     'horse_grey', 'horse_bay', 'horse_dun', 'horse_black', 'horse_chestnut', 'echo_horse', 'steppe_wolf', 'bog_hound',
-    'ember_jackal', 'goose', 'lantern_moth',
+    'ember_jackal', 'goose', 'lantern_moth', 'cane_boar',
   ],
   crown: [
     'crown_consul', 'crown_liaison', 'crown_captain', 'crown_clerk', 'marine_sergeant', 'marine_lieutenant',
@@ -1412,6 +1424,14 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
     color: 0x3a3028,
     alpha: 0.16,
   },
+  // The night of the attack itself (review Nov 1, finding 3): from Anaco taken until the refuge's morning, real night
+  // (the burning roofs on the plaza are drawn over it: assets.pixels.ts thatch_fire).
+  {
+    maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain'],
+    if: { all: [{ flag: 'story.anaco_taken' }, { notFlag: 'story.refuge' }] },
+    color: 0x080a24,
+    alpha: 0.58,
+  },
   {
     maps: ['xaragua-village', 'xaragua-beach', 'xaragua-conuco', 'xaragua-plaza', 'xaragua-mountain'],
     if: { flag: 'story.crown_attack' },
@@ -1497,6 +1517,14 @@ export const MAP_MOODS: readonly { maps: readonly string[]; if: Condition; color
   { maps: MUSTER_OUTDOORS, if: MUSTER_NIGHT, color: 0x101830, alpha: 0.45 },
   { maps: MUSTER_OUTDOORS, if: MUSTER_DUSK, color: 0xf2a050, alpha: 0.18 },
   { maps: MUSTER_OUTDOORS, if: MUSTER_DAWN, color: 0xd8a070, alpha: 0.12 },
+];
+
+/**
+ * Fog round the party (review Nov 1, the Chapter 7 fog maze): clear for `clear` tiles round Gianna, thickening to
+ * `alpha` of `color` at `thick` tiles, so the lanes are found by walking them, not read off the screen. Present only.
+ */
+export const MAP_FOG: readonly { maps: readonly string[]; if: Condition; color: number; alpha: number; clear: number; thick: number }[] = [
+  { maps: ['kuroshi-fogmaze'], if: { all: [] }, color: 0xd8dae0, alpha: 0.94, clear: 3, thick: 7 },
 ];
 
 /**

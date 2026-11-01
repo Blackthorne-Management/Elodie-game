@@ -156,6 +156,7 @@ export function characterPix(look: PlaceholderCharacter, facing: Dir, step: 0 | 
 }
 
 function drawCharacter(look: PlaceholderCharacter, view: View, step: 0 | 1 | 2): Pix {
+  if (look.build === 'boar') return drawBoar(look, view, step);
   if (look.build === 'horse' || look.build === 'wolf') return drawBeast(look, view, step);
   const p = new Pix(CHARACTER_WIDTH, CHARACTER_HEIGHT);
   const b = BUILDS[look.build ?? 'normal'];
@@ -309,6 +310,60 @@ function drawBeast(look: PlaceholderCharacter, view: View, step: 0 | 1 | 2): Pix
     if (!wolf) p.rect(hx + 2, top + 1, 2, 9, mane).rect(bx + 2, by - 1, bw - 4, 2, look.trim);
     p.rect(11, by + 2, 2, wolf ? 4 : 8, mane);
     p.bevel(new Set([coat, mane]));
+  }
+  return p.outline(OUTLINE);
+}
+
+/**
+ * A boar (Chapter 1's Cane Road): low and heavy, a bristled ridge along the back, a long snout and two pale tusks, by
+ * the same rules as the horse and the wolf. `outfit` the coat, `hair` the bristles, `skin` the snout, `trim` the tusks.
+ */
+function drawBoar(look: PlaceholderCharacter, view: View, step: 0 | 1 | 2): Pix {
+  const p = new Pix(CHARACTER_WIDTH, CHARACTER_HEIGHT);
+  const bob = step === 0 ? 0 : 1;
+  const coat = look.outfit;
+  const ridge = look.hair;
+  const hoof = PALETTE.k!;
+  const far = (c: number) => mix(c, SHADOW, 0.3);
+  const F = 30;
+  if (view === 'right') {
+    const by = 18 + bob;
+    const legTop = by + 7;
+    ([[5, false], [8, true], [14, false], [17, true]] as const).forEach(([x, near], i) => {
+      const lift = step !== 0 && i % 2 === (step === 1 ? 0 : 1) ? 1 : 0;
+      p.rect(x, legTop, 2, F - legTop - lift, near ? coat : far(coat)).rect(x, F - lift, 2, 1, hoof);
+    });
+    // Body, the head low in front, the snout, the ridge of bristles, the little tail.
+    p.rect(3, by, 15, 8, coat).rect(2, by + 1, 1, 6, coat);
+    p.rect(16, by + 1, 5, 6, coat).rect(20, by + 3, 3, 3, look.skin);
+    p.rect(4, by - 2, 12, 2, ridge).rect(14, by - 1, 4, 2, ridge).set(6, by - 3, ridge).set(10, by - 3, ridge);
+    p.rect(1, by + 1, 1, 2, ridge);
+    p.bevel(new Set([coat, ridge]));
+    p.set(19, by + 2, PALETTE.R!);
+    p.set(21, by + 6, look.trim).set(21, by + 2, look.trim).set(22, by + 2, look.trim);
+    return p.outline(OUTLINE);
+  }
+  // End on: a broad body, two legs; in front the snout and the tusks, behind the bristled back and the tail.
+  const by = 19 + bob;
+  const bw = 12;
+  const bx = (CHARACTER_WIDTH - bw) / 2;
+  const legTop = by + 7;
+  ([[bx + 1, step === 1], [bx + bw - 3, step === 2]] as const).forEach(([x, up]) => {
+    const lift = up ? 1 : 0;
+    p.rect(x, legTop, 2, F - legTop - lift, coat).rect(x, F - lift, 2, 1, hoof);
+  });
+  p.rect(bx, by, bw, 8, coat);
+  p.rect(bx + 2, by - 2, bw - 4, 2, ridge).set(bx + 4, by - 3, ridge).set(bx + bw - 5, by - 3, ridge);
+  if (view === 'down') {
+    const hx = (CHARACTER_WIDTH - 8) / 2;
+    p.rect(hx, by + 1, 8, 6, coat).rect(hx + 2, by + 4, 4, 3, look.skin);
+    p.bevel(new Set([coat, ridge]));
+    p.set(hx + 1, by + 2, PALETTE.R!).set(hx + 6, by + 2, PALETTE.R!);
+    p.set(hx + 3, by + 5, PALETTE.k!).set(hx + 4, by + 5, PALETTE.k!);
+    p.rect(hx + 1, by + 5, 1, 2, look.trim).rect(hx + 6, by + 5, 1, 2, look.trim);
+  } else {
+    p.rect(11, by + 2, 2, 3, ridge);
+    p.bevel(new Set([coat, ridge]));
   }
   return p.outline(OUTLINE);
 }
