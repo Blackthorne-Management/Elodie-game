@@ -459,6 +459,8 @@ export const OBJECTS: Readonly<Record<string, ObjectInfo>> = {
   ...Object.fromEntries(
     Array.from({ length: 9 }, (_, i) => [`burned_stall_${i + 1}`, { name: 'Burned stall', inspect: 'Charred posts and ash. The market burned the night the Crown came.' }]),
   ),
+  // The night of the attack (review Nov 1, finding 3): the plaza's roofs on fire.
+  ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => [`plaza_fire_${i + 1}`, { name: 'Burning thatch' }])),
   record_baskets: { name: 'Record baskets' },
   mountain_sign: { name: 'Signpost' },
   ash_thumbprint: { name: 'Ash-marked post' },

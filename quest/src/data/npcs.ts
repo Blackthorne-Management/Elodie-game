@@ -191,7 +191,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   anicette_home: n('anicette_home', 'anicette', 'Grandmother Anicette'),
   // Chapter 3, Ardencia (Oct 21). Rael's family by the owner's settled roles (docs/quest/design/FAMILY.md): Zelia the
   // steward, Amanda the Lower Town's cook, old Benny and Nancy in the quiet rooms, Joaquin on the wall (staged only).
-  trader_captain: n('trader_captain', 'ferryman', 'Trader captain'),
+  trader_captain: n('trader_captain', 'zetwal_trader', 'Trader captain'),
   gate_halberdier: n('gate_halberdier', 'brasador_halberdier', 'Brasador halberdier'),
   gate_halberdier_2: n('gate_halberdier_2', 'brasador_halberdier', 'Brasador halberdier'),
   azzy_court: n('azzy_court', 'azzy', 'Azzy'),
@@ -258,7 +258,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   samira: n('samira', 'samira', 'Samira Dorini'),
   guild_doorman: n('guild_doorman', 'majlis_guard', 'Guild doorman'),
   old_moneychanger: n('old_moneychanger', 'ald_moneychanger_old', 'Old moneychanger'),
-  moneychanger: n('moneychanger', 'aldoria_trader', 'Moneychanger'),
+  moneychanger: n('moneychanger', 'ald_moneychanger', 'Moneychanger'),
   coin_seller: n('coin_seller', 'ald_coin_seller', 'Coin seller'),
   carpet_seller: n('carpet_seller', 'ald_carpet_seller', 'Carpet seller'),
   weights_seller: n('weights_seller', 'ald_weights_seller', 'Weights seller'),
@@ -519,7 +519,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   dorini_admiral: n('dorini_admiral', 'dorini_admiral', 'The Dorini admiral'),
   heights_rider: n('heights_rider', 'horn_rider_b', 'Ironvow rider'),
   smith_muster: { ...n('smith_muster', 'smith', 'Smith'), shop: 'zetwal_forge_muster' },
-  trader_muster: n('trader_muster', 'ferryman', 'Trader captain'),
+  trader_muster: n('trader_muster', 'zetwal_trader', 'Trader captain'),
   // The feuds (data/debates.ts): either one of a pair starts the debate.
   debate_dorini_clerk: n('debate_dorini_clerk', 'dorini_scribe', "The admiral's clerk (debating)", 'debate:zetwal_feud_merchants'),
   debate_hrafn: n('debate_hrafn', 'hrafn', 'Hrafn (debating)', 'debate:zetwal_feud_merchants'),

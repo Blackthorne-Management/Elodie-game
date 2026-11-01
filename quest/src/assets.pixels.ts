@@ -1843,6 +1843,12 @@ export const TILE_ART: Readonly<Record<string, PixelArt>> = {
 export interface ObjectArt extends PixelArt {
   /** A soft pulsing light around the drawing (a lit lamp). */
   glow?: { color: number; radius: number };
+  /** A fire: drawn over the night's wash (it lights itself), flickering. */
+  bright?: boolean;
+  /** Smoke rising from it. */
+  smoke?: boolean;
+  /** Drawn at this scale (the houses' hulls at the Muster's piers, a ship's drawing on a 3-tile berth). */
+  scale?: number;
 }
 
 /**
@@ -1892,6 +1898,15 @@ export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
   crown_ship: crownShip(),
   // The Zetwal merchant ship Yari's canoe meets off the coast (the voyage, Oct 17): golden sails, the sun's band.
   zetwal_ship: crownShip({ sail: 'Y', band: 'o', flag: 'y' }),
+  // The houses' hulls at the Muster (Chapter 10; review Nov 1, finding 11: they were three coloured squares), drawn as
+  // ships at three quarters size on their 3-tile berths, each in its house's colours as the narration names them: the
+  // Ironvow's grey longship with a white horse-tail standard, the Suzumori's with paper-lantern yellow, the Agnivansh's
+  // with the brass lamp's orange and gold, the Dorini merchantman's green pennant, and Zetwal's own gold.
+  muster_ship_ironvow: { ...crownShip({ sail: 'g', band: 'K', flag: 'w' }), scale: 0.75 },
+  muster_ship_suzumori: { ...crownShip({ sail: 'w', band: 'p', flag: 'Y' }), scale: 0.75 },
+  muster_ship_agnivansh: { ...crownShip({ sail: 'o', band: 'y', flag: 'y' }), scale: 0.75 },
+  muster_ship_dorini: { ...crownShip({ sail: 'w', band: 'L', flag: 'L' }), scale: 0.75 },
+  muster_ship_zetwal: { ...crownShip({ sail: 'Y', band: 'o', flag: 'y' }), scale: 0.75 },
   // The Gaze lamp in the Temple of Elodie: a bronze post with a wide dish on a stone plinth. Unlit
   // until Anissa's light wakes it.
   gaze_lamp: {
@@ -1972,6 +1987,28 @@ export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
       '..kgGgggGgggGgggGgggGgggGgggGk..',
       '..KKKKKKKKKKKKKKKKKKKKKKKKKKKK..',
       '...kkkkkkkkkkkkkkkkkkkkkkkkkk...',
+    ],
+  },
+  // Thatch burning on a roof (Chapter 2, the night of the attack; review Nov 1, finding 3): flames and smoke.
+  thatch_fire: {
+    glow: { color: 0xe0782a, radius: 14 },
+    bright: true,
+    smoke: true,
+    rows: [
+      '.......W........',
+      '......kyk.......',
+      '...k..kYk...k...',
+      '..kyk.kYyk.kyk..',
+      '..kYyk.kyYkkYk..',
+      '.kyYYkkyYYyyYyk.',
+      '.kyYWYyoyWYyYok.',
+      'koyYWWYooyWWYyok',
+      'koyYWWYyoyWWYook',
+      'kooyYYyooyYYyook',
+      'kRooyyoRRooyyoRk',
+      'kRRoooRRRRoooRRk',
+      '.kRRRRRkkRRRRRk.',
+      '..kkkkk..kkkkk..',
     ],
   },
   // The light of a lantern lit by Anissa's light (demo review, Oct 17): only the glow; the lantern is the tile.

@@ -183,7 +183,8 @@ export function xaraguaVillage(): MapSource {
     // Chapter 2 opens: the marines on the pier (they flee once beaten; the fight's aftermath plays at once).
     trigger('xaragua_arrival', 21, 25, { dialogue: 'xaragua_arrival', flag: 'story.xaragua_arrived', once: true, onEnter: true }),
     npc('marine_sergeant', 21, 23, 'down', { if: '!encounter.xaragua_story.pier.won' }),
-    npc('pier_marine_a', 22, 22, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
+    // A free row between him and the fisher in front of him (review Nov 1, finding 8).
+    npc('pier_marine_a', 22, 21, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
     npc('pier_marine_b', 21, 21, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
     obj('xaragua_customs_sign', 32, 12, { dialogue: 'xaragua_customs_sign', era: 'present' }),
     obj('pier_sign', 24, 19, { dialogue: 'pier_sign', era: 'present' }),
@@ -239,6 +240,11 @@ export function xaraguaPlaza(): MapSource {
     npc('occ_marine_plaza', 18, 12, 'left', { if: OCCUPIED_TEXT }),
     crownBanner('crown_banner_batey_west', 12, 6),
     crownBanner('crown_banner_batey_east', 17, 6),
+    // The night of the attack: out the back of the caney into a burning plaza (review Nov 1, finding 3: the roofs burn on
+    // the map, flames and smoke, from Anaco taken until the refuge's morning).
+    ...([[3, 9], [25, 9], [10, 3], [19, 3]] as const).map(([x, y], i) =>
+      obj(`plaza_fire_${i + 1}`, x, y, { kind: 'thatch_fire', era: 'present', if: 'story.anaco_taken, !story.refuge' }),
+    ),
     // The night of the attack: out the back of the caney into a burning plaza.
     { layer: 'spawns', name: 'caney_back', x: 7, y: 6, props: { facing: 'down', era: 'present' } },
     trigger('attack_plaza', 7, 6, { dialogue: 'attack_plaza', flag: 'story.attack_plaza_seen', once: true, onEnter: true, if: 'story.anaco_taken' }),

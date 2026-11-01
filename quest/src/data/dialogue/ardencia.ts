@@ -629,6 +629,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
             { do: 'look', actor: 'rael' },
             { do: 'enter', actor: 'rael', look: 'rael', from: at(31, 4), to: at(35, 9), facing: 'left' },
             { do: 'walk', actor: 'follower', to: at(31, 9), facing: 'right' },
+            { do: 'place', actor: 'yari', look: 'yari', at: at(30, 10), facing: 'right' },
             { do: 'look', actor: 'player' },
           ],
           '',
@@ -657,7 +658,8 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         ...COURT,
         { do: 'place', actor: 'azzy', look: 'azzy', at: at(30, 12), facing: 'right' },
         { do: 'place', actor: 'rael', look: 'rael', at: at(35, 9), facing: 'left' },
-        { do: 'walk', actor: 'follower', to: at(32, 10), facing: 'up' },
+        { do: 'walk', actor: 'follower', to: at(31, 9), facing: 'right' },
+        { do: 'place', actor: 'yari', look: 'yari', at: at(30, 10), facing: 'right' },
       ],
       '',
       'Sand in her mouth. Cords at her wrists, and at Yari\'s. Anissa, untouched, crouches at her sister\'s side.',
@@ -720,7 +722,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
     act([{ do: 'face', actor: 'rael', facing: 'right' }], R, 'Captain. The forge fortress. Bind nothing more; they are guests.'),
     act(
       [
-        { do: 'walk', actor: 'rivera', to: at(31, 9), facing: 'right' },
+        { do: 'walk', actor: 'rivera', to: at(31, 11), facing: 'right' },
         { do: 'wait', ms: 400 },
         { do: 'look', actor: 'azzy' },
         { do: 'face', actor: 'azzy', facing: 'left' },
@@ -737,8 +739,8 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
   simple('forge_arrive', [
     act(
       [
-        { do: 'place', actor: 'guard_a', look: 'brasador_halberdier', at: at(23, 8), facing: 'right' },
-        { do: 'place', actor: 'guard_b', look: 'brasador_halberdier', at: at(23, 10), facing: 'right' },
+        { do: 'place', actor: 'guard_a', look: 'brasador_halberdier', at: at(23, 7), facing: 'right' },
+        { do: 'place', actor: 'guard_b', look: 'brasador_halberdier', at: at(23, 11), facing: 'right' },
         { do: 'place', actor: 'rivera', look: 'rivera', at: at(22, 9), facing: 'right' },
       ],
       '',

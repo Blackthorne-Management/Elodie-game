@@ -39,6 +39,11 @@ export type StageCue =
   | { do: 'face'; actor: string; facing: Dir8 | 'player' }
   /** The camera follows an actor (or the player again); it may name someone about to come on stage. */
   | { do: 'look'; actor: string }
+  /**
+   * An unseen spot the camera can be pointed at with `look` (the ships across a harbor, a far hill), named like an
+   * actor: nobody walks there and nothing is drawn.
+   */
+  | { do: 'mark'; actor: string; at: Pos }
   /** A pause. */
   | { do: 'wait'; ms: number }
   /** The map's people and objects take up the story as it stands now (a boat appears, someone is gone). */
@@ -64,6 +69,10 @@ export function stageProblems(script: DialogueScript, looks: ReadonlySet<string>
       if (c.do === 'enter') out.push(`${script.id}: ${c.actor} is already on the map (walk, not enter)`);
       continue;
     }
+    if (c.do === 'mark') {
+      on.add(c.actor);
+      continue;
+    }
     if (c.do === 'place' || c.do === 'enter') {
       if (!c.look || !looks.has(c.look)) out.push(`${script.id}: ${c.actor} has unknown look "${c.look ?? ''}"`);
       on.add(c.actor);
@@ -71,7 +80,7 @@ export function stageProblems(script: DialogueScript, looks: ReadonlySet<string>
     }
     if (c.actor === STAGE_PLAYER && (c.do === 'face' || c.do === 'look')) continue;
     if (c.do === 'look') {
-      if (!isBorrowed(c.actor) && !STAGE_PARTY.has(c.actor) && !cues.some((x) => (x.do === 'place' || x.do === 'enter') && x.actor === c.actor)) out.push(`${script.id}: the camera follows ${c.actor}, who never comes on stage`);
+      if (!isBorrowed(c.actor) && !STAGE_PARTY.has(c.actor) && !cues.some((x) => (x.do === 'place' || x.do === 'enter' || x.do === 'mark') && x.actor === c.actor)) out.push(`${script.id}: the camera follows ${c.actor}, who never comes on stage`);
       continue;
     }
     if (!on.has(c.actor) && !STAGE_PARTY.has(c.actor)) out.push(`${script.id}: ${c.do} for ${c.actor}, who is not on stage`);

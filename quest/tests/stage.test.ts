@@ -123,3 +123,55 @@ describe('Chapter 1 is acted out on the map', () => {
     expect(cues).toContainEqual({ do: 'face', actor: 'yari', facing: 'player' });
   });
 });
+
+// Review Nov 1, finding 8: people stacked in staged scenes. Sprites are two tiles tall, so two people in one column on
+// neighbouring rows hide each other; a staged group keeps a free row between people in a file, and nobody shares a tile.
+describe('staged groups stand apart', () => {
+  type Spot = { x: number; y: number };
+  /**
+   * Who stands in one column on neighbouring rows (or one tile) once each line's cues have played, from the scene's first
+   * staged line (before it, the party stands where it walked in: the followers' own placement).
+   */
+  function crowding(id: string, start: Record<string, Spot>): string[] {
+    const at = new Map<string, Spot>(Object.entries(start));
+    const out: string[] = [];
+    let staged = false;
+    for (const n of Object.values(script(id).nodes)) {
+      for (const l of n.lines) {
+        staged ||= (l.stage ?? []).length > 0;
+        if (!staged) continue;
+        for (const c of l.stage ?? []) {
+          if (c.do === 'place') at.set(c.actor, c.at);
+          else if (c.do === 'enter' || c.do === 'walk') at.set(c.actor, c.to);
+          else if (c.do === 'exit') at.delete(c.actor);
+        }
+        const people = [...at.entries()];
+        for (let i = 0; i < people.length; i++) {
+          for (let j = i + 1; j < people.length; j++) {
+            const [a, p] = people[i]!;
+            const [b, q] = people[j]!;
+            if (p.x === q.x && Math.abs(p.y - q.y) <= 1) out.push(`${id} "${l.text.slice(0, 30)}": ${a} ${p.x},${p.y} and ${b} ${q.x},${q.y}`);
+          }
+        }
+      }
+    }
+    return [...new Set(out)];
+  }
+
+  it('the pier, the caney, the forge, the reveal and the boar keep a free row between people in a file', () => {
+    const pier = { player: { x: 21, y: 25 }, follower: { x: 21, y: 26 }, pier_marine_a: { x: 22, y: 21 }, pier_marine_b: { x: 21, y: 21 } };
+    expect(crowding('xaragua_arrival', { ...pier, 'npc:marine_sergeant': { x: 21, y: 23 } })).toEqual([]);
+    expect(crowding('pier_after', { player: { x: 21, y: 25 }, follower: { x: 21, y: 26 } })).toEqual([]);
+    expect(crowding('xaragua_proof', { player: { x: 9, y: 6 }, follower: { x: 10, y: 6 } })).toEqual([]);
+    expect(crowding('caney_after', { player: { x: 9, y: 6 }, follower: { x: 10, y: 6 } })).toEqual([]);
+    expect(crowding('forge_arrive', { player: { x: 26, y: 9 } })).toEqual([]);
+    expect(crowding('boar_ambush', { player: { x: 9, y: 12 }, follower: { x: 8, y: 12 } })).toEqual([]);
+    expect(crowding('rael_after', { player: { x: 32, y: 9 } })).toEqual([]);
+  });
+
+  it('the boar charges out of the cane onto the map before the fight, and the harbor camera crosses to the ships', () => {
+    expect(stageCues(script('boar_ambush'))).toContainEqual(expect.objectContaining({ do: 'enter', actor: 'boar', look: 'cane_boar' }));
+    const harbor = stageCues(script('muster_landing'));
+    for (const spot of ['harbor', 'west_piers', 'east_piers']) expect(harbor).toContainEqual({ do: 'look', actor: spot });
+  });
+});
