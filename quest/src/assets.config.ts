@@ -1797,6 +1797,18 @@ export const ENEMY_STANCES: Readonly<Record<string, string>> = {
 /** A painted enemy file is drawn at twice the game's pixel density, like the stances. */
 export const ENEMY_FILE_SCALE = 0.5;
 
+/**
+ * What a foe standing in as its walking sprite carries in battle (Nov 1 playtests: the Crown Musketeer looked exactly
+ * like the marine): a WEAPON_ART drawing by look, held at its grip in the front hand (facing left; game pixels from the
+ * feet at scale 1, scaled with the sprite).
+ */
+export const ENEMY_WEAPONS: Readonly<Record<string, { weapon: string; hand: { dx: number; dy: number } }>> = Object.fromEntries(
+  ['crown_musketeer', 'crown_musketeer_b', 'crown_musketeer_c', 'crown_musketeer_d', 'old_crown_musketeer'].map((look) => [
+    look,
+    { weapon: 'crown_musket', hand: { dx: -6, dy: -12 } },
+  ]),
+);
+
 export function textureKeyForBattle(look: string): string {
   return `battle-${look}`;
 }
@@ -1852,12 +1864,30 @@ export const BATTLE_ART = {
     { x: 92, y: 94 },
     { x: 60, y: 124 },
   ],
+  /**
+   * The foes' places (Nov 1 playtests, Claude's call): a zigzag 32 px apart, back and front by turns, so every foe's
+   * name plate fits over its head between its neighbours; two more far back for those who walk in mid-fight (up to six).
+   */
   enemySlots: [
-    { x: 212, y: 108 },
-    { x: 228, y: 130 },
-    { x: 262, y: 98 },
-    { x: 278, y: 122 },
+    { x: 200, y: 104 },
+    { x: 232, y: 130 },
+    { x: 264, y: 104 },
+    { x: 296, y: 130 },
+    { x: 216, y: 78 },
+    { x: 280, y: 78 },
   ],
+  /**
+   * A walking sprite standing in for battle art (the Crown's troops, a member with no painted stance) is drawn this
+   * much larger, so it stands near the painted stances' height; the foes' leader (the fight's boss) larger still.
+   * 1.25 and 1.5 keep whole screen pixels at render scale 4 (desktop, most phones); nearest-neighbour, never blurred.
+   */
+  standInScale: 1.25,
+  leaderScale: 1.5,
+  /** The foes' name plates: the short name's size, and the plate's HP bar (game pixels). */
+  plateFontPx: 7,
+  plateBarH: 3,
+  /** Plates stay between the message band (one line) and the strip. */
+  plateTop: 29,
   /** Anissa stands behind everyone (she is never a target). */
   anissa: { x: 24, y: 108 },
   /** The horizon of the painted scene (above eye level: the view is from a little above). */
@@ -1919,6 +1949,7 @@ const ARDENCIA_BACKDROPS = {
     ground: 0x2a2430,
     groundDark: 0x1a1420,
     groundLight: 0x4a4452,
+    inside: 'cave',
   },
 } as const;
 
@@ -1953,6 +1984,7 @@ const ALDORIA_BACKDROPS = {
     ground: 0x6e6152,
     groundDark: 0x4a4038,
     groundLight: 0x8a7a68,
+    inside: 'hall',
   },
 } as const;
 
@@ -2009,6 +2041,7 @@ const KUROSHI_BACKDROPS = {
     ground: 0x5a3a32,
     groundDark: 0x3a2422,
     groundLight: 0x7a5a4a,
+    inside: 'hall',
   },
 } as const;
 
@@ -2043,6 +2076,7 @@ const JWALADESH_BACKDROPS = {
     ground: 0x8a7a62,
     groundDark: 0x6a5a46,
     groundLight: 0xa89a82,
+    inside: 'hall',
   },
 } as const;
 
@@ -2092,6 +2126,7 @@ const KINGSMERE_BACKDROPS = {
     ground: 0x8a8c90,
     groundDark: 0x6e7074,
     groundLight: 0xa8aab0,
+    inside: 'hall',
   },
   // The Throne Hall at the bell (Chapter 12, the Claim): grey-brown stone, the violet of the Sealbearers, the sun tile's gold.
   throne_hall: {
@@ -2108,6 +2143,7 @@ const KINGSMERE_BACKDROPS = {
     ground: 0x9a9084,
     groundDark: 0x7a7064,
     groundLight: 0xd8b04a,
+    inside: 'hall',
   },
   bog_chapel: {
     sky: [0x2a2a34, 0x34343e, 0x3e3e48, 0x484852, 0x52525c, 0x5c5c66],
@@ -2189,6 +2225,14 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
   ground: number;
   groundDark: number;
   groundLight: number;
+  /**
+   * Indoors (Nov 1 playtests: the caney and the sea cave were fought under an open sunset), drawn in place of the sky,
+   * clouds, hills and trees: 'hall' (the sky's bands as the back wall, with pillars and a beam), 'caney' (a Taino
+   * round house: thatch overhead, posts, woven walls, the door open on the burning night), 'cave' (rock, hanging
+   * stone; `mouth`: an arch open on the night sea, the water lapping inside). Omitted: outdoors.
+   */
+  inside?: 'hall' | 'caney' | 'cave';
+  mouth?: boolean;
 }>> = {
   // The Cane Road outside Zetwal: a blue morning, far hills, the cane, and the packed-earth road.
   cane_road: {
@@ -2269,6 +2313,58 @@ export const BATTLE_BACKDROPS: Readonly<Record<string, {
     ground: 0xe0d0a8,
     groundDark: 0xc0ac80,
     groundLight: 0xf0e4c4,
+  },
+  // Inside the caney on the night of the attack (Chapter 2): dark thatch and cane walls, posts, firelight at the door.
+  caney_night: {
+    sky: [0x1a1218, 0x22161a, 0x2e1e1c, 0x3a2620, 0x4a3024, 0x5a3a28],
+    cloud: 0xe0782a,
+    cloudShade: 0x7a2a26,
+    mountainFar: 0x0c1024,
+    mountainNear: 0x3a2a44,
+    trees: 0x6b4426,
+    treesDark: 0x3e2614,
+    field: 0x4a3024,
+    cane: 0x9c7446,
+    caneDark: 0x6b4426,
+    ground: 0x7a5a3a,
+    groundDark: 0x5a3e26,
+    groundLight: 0x8e6a46,
+    inside: 'caney',
+  },
+  // The sea cave at Xaragua's sea mouth (Chapter 2's boss, Thorne): black rock, the night sea through the arch.
+  sea_cave: {
+    sky: [0x0c0e16, 0x12141e, 0x181c28, 0x1e2430, 0x262c38, 0x2e3440],
+    cloud: 0x3a4250,
+    cloudShade: 0x1a1e28,
+    mountainFar: 0x14182a,
+    mountainNear: 0x22284a,
+    trees: 0x3a4250,
+    treesDark: 0x1a1e28,
+    field: 0x1a4a5a,
+    cane: 0x5aa8b8,
+    caneDark: 0x2a6a7a,
+    ground: 0x4a4e58,
+    groundDark: 0x32363e,
+    groundLight: 0x62666e,
+    inside: 'cave',
+    mouth: true,
+  },
+  // The customs house (Chapter 11, Thorne at his desk): whitewashed walls under dark beams, the Crown's red, the tile floor.
+  customs_house: {
+    sky: [0x8a8478, 0x9a9486, 0xaaa494, 0xb8b2a2, 0xc4beae, 0xd0cab8],
+    cloud: 0xb8403a,
+    cloudShade: 0x7a2a26,
+    mountainFar: 0x5a4a3a,
+    mountainNear: 0x3e2e22,
+    trees: 0x6b4426,
+    treesDark: 0x3e2614,
+    field: 0x6b4426,
+    cane: 0xc8a46b,
+    caneDark: 0x6b4426,
+    ground: 0xa8603a,
+    groundDark: 0x7a4428,
+    groundLight: 0xc0784a,
+    inside: 'hall',
   },
   ...ARDENCIA_BACKDROPS,
   ...ALDORIA_BACKDROPS,

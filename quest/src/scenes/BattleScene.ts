@@ -26,6 +26,7 @@ import {
   battleStanceName,
   ENEMY_FILE_SCALE,
   ENEMY_STANCES,
+  ENEMY_WEAPONS,
   ART_FILES,
   UI,
   characterFrame,
@@ -62,12 +63,14 @@ import {
   type TargetKind,
 } from '../engine/battle.ts';
 import { getRuntime, saveGame } from '../runtime.ts';
-import { renderScale, textStyle } from '../ui/text.ts';
+import { fontPx, renderScale, textStyle } from '../ui/text.ts';
 import { playFx, type FxKind, type Point } from './battleFx.ts';
 import { fileKey } from './textures.ts';
 import { screenFlash } from './cameraFx.ts';
 import { reduceMotion } from '../ui/reduceMotion.ts';
 import { MenuTrail, actingFighter, actingLightRows, actingMark, battleBackPressed, type BattleMenu } from '../engine/battleMenu.ts';
+import { battleTipFlag, costTag, dueTip, placePlates, queueFit, shortName, waitTag, type BattleTipId, type PlateRequest, type Rect } from '../engine/battleLayout.ts';
+import { BATTLE_TIPS, TIP_TAUGHT_BY } from '../data/battleTips.ts';
 
 type Menu = BattleMenu;
 
@@ -76,6 +79,9 @@ interface Row {
   enabled: boolean;
   /** Shown in the band while the cursor is on it. */
   hint?: string;
+  /** A small word at the row's right end: a price ("3 SP", "40 g"), a wait ("ready in 2"), a count or HP. */
+  tag?: string;
+  tagColor?: string;
   run: () => void;
 }
 
@@ -151,6 +157,13 @@ const STATUS_NAMES: Readonly<Record<StatusId, string>> = {
 
 const VISIBLE_ROWS = 6;
 
+/** One painted scene's colours (assets.config.ts BATTLE_BACKDROPS). */
+type Backdrop = (typeof BATTLE_BACKDROPS)[string];
+
+type TextFn = (x: number, y: number, s: string, color?: string, extra?: Phaser.Types.GameObjects.Text.TextStyle) => Phaser.GameObjects.Text;
+type BarFn = (x: number, y: number, w: number, value: number, max: number, color: number) => void;
+type TagFn = (x: number, y: number, c: Combatant) => void;
+
 let current: BattleScene | null = null;
 
 function setCurrent(scene: BattleScene | null): void {
@@ -210,6 +223,11 @@ export class BattleScene extends Phaser.Scene {
   private afterTutorial: BattleEvent[] = [];
   /** The party has fallen: input waits for the Game Over screen. */
   private fallen = false;
+  /** Where each foe stands (its slot, untouched by shivers), the visible share of its picture, and the leader. */
+  private home = new Map<string, { x: number; y: number; wr: number; hr: number }>();
+  private leaderKey: string | null = null;
+  /** Each foe's name plate as last drawn (null: no room, a bar at its feet instead); damage numbers float above it. */
+  private plates = new Map<string, Rect | null>();
 
   constructor() {
     super('battle');
@@ -237,6 +255,9 @@ export class BattleScene extends Phaser.Scene {
     this.tutorialTotal = 0;
     this.fallen = false;
     this.afterTutorial = [];
+    this.home = new Map();
+    this.leaderKey = null;
+    this.plates = new Map();
   }
 
   create(): void {
@@ -312,6 +333,24 @@ export class BattleScene extends Phaser.Scene {
     this.redraw();
   }
 
+  /**
+   * A first-time tip (data/battleTips.ts), as the player is about to choose: Spark, Surge, MARK or Swap, the first turn
+   * each is on screen, once per save. Not in a fight with its own tutorial (the boar teaches them its way).
+   */
+  private offerTip(): boolean {
+    const b = this.battle;
+    if (this.done || this.fallen || b.def.tutorial || b.actor?.side !== 'party') return false;
+    const flags = getRuntime().logic.state.flags;
+    const marked = b.combatants.some((c) => !c.down && c.statuses.some((st) => st.id === 'marked'));
+    const id = dueTip({ anissa: !!this.anissa, surge: b.canSurge(), marked, swap: b.bench.some((c) => !c.down) }, (t: BattleTipId) =>
+      flags.isSet(battleTipFlag(t)) || (TIP_TAUGHT_BY[t] ?? []).some((f) => flags.isSet(f)),
+    );
+    if (!id) return false;
+    flags.set(battleTipFlag(id), true);
+    this.openTutorial([BATTLE_TIPS[id]]);
+    return true;
+  }
+
   /** A or a tap turns the page; B skips the rest. */
   private turnTutorial(skip = false): void {
     if (skip) this.tutorial = [];
@@ -349,6 +388,7 @@ export class BattleScene extends Phaser.Scene {
     if (!e) {
       this.busy = false;
       if (!this.done) this.message = '';
+      if (this.offerTip()) return;
       this.redraw();
       return;
     }
@@ -657,11 +697,14 @@ export class BattleScene extends Phaser.Scene {
           .map((s) => {
             // Daftar is paid in gold (COMBAT 9.6), the rest in SP.
             const coins = goldCost(s, me);
-            const cost = coins ? `${coins}g` : String(skillCost(s, me));
-            const price = coins ? `${coins} gold of ${b.purse}` : `${cost} SP`;
+            const sp = skillCost(s, me);
+            const price = coins ? `${coins} gold of ${b.purse}` : `${sp} SP`;
             const from = s.source ? ` From the ${s.source}.` : '';
             return {
-              label: `${s.source ? '*' : ''}${s.name} ${cost}`,
+              // The price says what it is ("3 SP", "40 g"): a bare number meant SP here and turns under Attack.
+              label: `${s.source ? '*' : ''}${s.name}`,
+              tag: costTag(sp, coins),
+              tagColor: coins ? UI.accentText : BATTLE_ART.spText,
               enabled: b.canUse(me, s),
               hint: `${s.text} (${price})${from}`,
               run: () => this.aimAt(s.name, s.target, (target) => ({ kind: 'skill', skill: s.id, target })),
@@ -676,7 +719,9 @@ export class BattleScene extends Phaser.Scene {
           const wait = me.cooldowns[s.id] ?? 0;
           const from = s.source ? ` From the ${s.source}.` : '';
           return {
-            label: `${s.source ? '*' : ''}${s.name}${wait > 0 ? ` (${wait})` : ''}`,
+            label: `${s.source ? '*' : ''}${s.name}`,
+            tag: waitTag(wait),
+            tagColor: UI.dimText,
             enabled: b.canUse(me, s),
             hint: wait > 0 ? `${s.name} is ready again in ${wait} turn${wait > 1 ? 's' : ''}.` : `${s.text}${from}`,
             run: () => this.aimAt(s.name, s.target, (target) => ({ kind: 'skill', skill: s.id, target })),
@@ -690,7 +735,9 @@ export class BattleScene extends Phaser.Scene {
         ...b.items
           .filter((i) => i.count > 0)
           .map((i) => ({
-            label: `${i.name} x${i.count}`,
+            label: i.name,
+            tag: `x${i.count}`,
+            tagColor: UI.dimText,
             enabled: true,
             hint: RPG.items[i.id]?.text,
             run: () => this.aimAt(i.name, 'ally', (target) => ({ kind: 'item', item: i.id, target: target ?? me.key })),
@@ -701,7 +748,9 @@ export class BattleScene extends Phaser.Scene {
     if (this.menu === 'swap') {
       return [
         ...b.bench.map((c) => ({
-          label: `${c.name} ${c.hp}`,
+          label: c.name,
+          tag: `${c.hp} HP`,
+          tagColor: c.down ? UI.dimText : UI.text,
           enabled: !c.down,
           hint: c.down ? `${c.name} is down.` : `${c.name} takes ${me.name}'s place. HP ${c.hp}/${c.maxHp}, SP ${c.sp}/${c.maxSp}.`,
           run: () => this.act({ kind: 'swap', with: c.key }),
@@ -876,7 +925,9 @@ export class BattleScene extends Phaser.Scene {
     if (this.menu === 'target' && this.aim) {
       // Tap a fighter to choose it (a whole-side skill: tap any of them); tap the strip to go back.
       const pool = this.aimPool();
-      const hit = pool.findIndex((c) => this.sprites.get(c.key)?.getBounds().contains(x, y));
+      let hit = pool.findIndex((c) => this.sprites.get(c.key)?.getBounds().contains(x, y));
+      // A foe's name in the target list (the strip's right half) chooses it too.
+      if (hit < 0 && this.aim.side === 'enemy') hit = pool.findIndex((_, i) => i < VISIBLE_ROWS && this.rectHit(this.rowRect(i), x, y));
       if (hit >= 0) {
         this.aimIndex = hit;
         this.confirmAim();
@@ -900,7 +951,10 @@ export class BattleScene extends Phaser.Scene {
 
   private rowHit(i: number, x: number, y: number): boolean {
     if (Math.floor(i / VISIBLE_ROWS) !== Math.floor(this.cursor / VISIBLE_ROWS)) return false;
-    const r = this.rowRect(i);
+    return this.rectHit(this.rowRect(i), x, y);
+  }
+
+  private rectHit(r: { x: number; y: number; w: number; h: number }, x: number, y: number): boolean {
     return x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h;
   }
 
@@ -919,6 +973,34 @@ export class BattleScene extends Phaser.Scene {
       const next = p.sky[i + 1];
       if (next !== undefined) for (let x = (i % 2) * 2; x < W; x += 4) g.fillStyle(next, 1).fillRect(x, (i + 1) * band - 1, 2, 1);
     });
+    // Indoors: walls, posts and roof, or rock, instead of the open sky (drawInside); the floor below as outdoors.
+    if (p.inside) this.drawInside(g, p);
+    else this.drawOutside(g, p);
+    if (p.inside === 'cave') {
+      this.drawRockFloor(g, p);
+      return;
+    }
+    // The road: packed earth in rows of cobbles, wider toward the viewer.
+    const roadTop = horizon + 16;
+    const bottom = BATTLE_ART.stripY;
+    g.fillStyle(p.ground, 1).fillRect(0, roadTop, W, bottom - roadTop);
+    g.fillStyle(p.groundDark, 1).fillRect(0, roadTop, W, 2);
+    let rowH = 3;
+    for (let y = roadTop + 3, r = 0; y < bottom; y += rowH, r++) {
+      g.fillStyle(p.groundDark, 0.55).fillRect(0, y + rowH - 1, W, 1);
+      const brick = 10 + rowH * 2;
+      for (let x = (r % 2) * (brick / 2); x < W; x += brick) {
+        g.fillStyle(p.groundDark, 0.55).fillRect(Math.round(x), y, 1, rowH - 1);
+        g.fillStyle(p.groundLight, 0.5).fillRect(Math.round(x) + 1, y, Math.min(brick - 2, 6), 1);
+      }
+      rowH = Math.min(9, rowH + 1);
+    }
+  }
+
+  /** Outdoors: clouds, far and near hills, the tree line and the field before the road. */
+  private drawOutside(g: Phaser.GameObjects.Graphics, p: Backdrop): void {
+    const W = VIEW_WIDTH;
+    const horizon = BATTLE_ART.horizon;
     // Clouds: clusters of rounded blocks, shaded underneath.
     const cloud = (cx: number, cy: number, w: number) => {
       for (let i = 0; i < 5; i++) {
@@ -955,25 +1037,127 @@ export class BattleScene extends Phaser.Scene {
       g.fillStyle(p.cane, 1).fillRect(x, top, 1, Math.round(h * 0.6));
       g.fillStyle(p.cane, 1).fillRect(x + ((x >> 1) % 2 ? 1 : -1), top + 2 + (x % 5), 1, 2);
     }
-    // The road: packed earth in rows of cobbles, wider toward the viewer.
-    const roadTop = horizon + 16;
-    const bottom = BATTLE_ART.stripY;
-    g.fillStyle(p.ground, 1).fillRect(0, roadTop, W, bottom - roadTop);
-    g.fillStyle(p.groundDark, 1).fillRect(0, roadTop, W, 2);
-    let rowH = 3;
-    for (let y = roadTop + 3, r = 0; y < bottom; y += rowH, r++) {
-      g.fillStyle(p.groundDark, 0.55).fillRect(0, y + rowH - 1, W, 1);
-      const brick = 10 + rowH * 2;
-      for (let x = (r % 2) * (brick / 2); x < W; x += brick) {
-        g.fillStyle(p.groundDark, 0.55).fillRect(Math.round(x), y, 1, rowH - 1);
-        g.fillStyle(p.groundLight, 0.5).fillRect(Math.round(x) + 1, y, Math.min(brick - 2, 6), 1);
+  }
+
+  /**
+   * Indoors (Nov 1 playtests: the caney and the sea cave were fought under an open sky), over the sky's bands, which
+   * are the back wall's (or the rock's) shading. Down to the floor's edge (horizon + 16); all drawn in code, in pixels.
+   */
+  private drawInside(g: Phaser.GameObjects.Graphics, p: Backdrop): void {
+    const W = VIEW_WIDTH;
+    const floor = BATTLE_ART.horizon + 16;
+    const wallBase = p.sky[p.sky.length - 1]!;
+    g.fillStyle(wallBase, 1).fillRect(0, BATTLE_ART.horizon, W, floor - BATTLE_ART.horizon);
+    if (p.inside === 'hall') {
+      // Lamps between the pillars (the cloud colour), a dark beam overhead, pillars, and goods along the wainscot.
+      for (let x = 0; x < W; x += 64) {
+        g.fillStyle(p.cloud, 0.18).fillCircle(x + 64, 24, 9);
+        g.fillStyle(p.cloud, 0.9).fillRect(x + 62, 22, 4, 5);
+        g.fillStyle(p.cloudShade, 1).fillRect(x + 62, 27, 4, 1);
       }
-      rowH = Math.min(9, rowH + 1);
+      g.fillStyle(p.field, 1).fillRect(0, floor - 12, W, 12);
+      g.fillStyle(p.caneDark, 1).fillRect(0, floor - 12, W, 1);
+      for (let x = 6; x < W; x += 13) {
+        const h = 5 + ((x * 7) % 3);
+        g.fillStyle(p.caneDark, 1).fillRect(x, floor - 2 - h, 7, h);
+        g.fillStyle(p.cane, 1).fillRect(x + 1, floor - 1 - h, 5, h - 2);
+      }
+      for (let x = 30; x < W; x += 64) {
+        g.fillStyle(p.treesDark, 1).fillRect(x, 0, 9, floor);
+        g.fillStyle(p.trees, 1).fillRect(x + 1, 0, 2, floor);
+        g.fillStyle(p.treesDark, 1).fillRect(x - 2, floor - 4, 13, 4);
+      }
+      g.fillStyle(p.treesDark, 1).fillRect(0, 0, W, 6);
+      g.fillStyle(p.trees, 1).fillRect(0, 5, W, 1);
+      return;
+    }
+    if (p.inside === 'caney') {
+      // Woven cane walls (light and dark staves, bound every few rows), the door open on the night with fire beyond,
+      // the posts, and the thatch roof sloping up to the middle.
+      for (let x = 0; x < W; x += 3) {
+        g.fillStyle(x % 6 ? p.cane : p.caneDark, 1).fillRect(x, 16, 2, floor - 16);
+        g.fillStyle(p.caneDark, 0.6).fillRect(x + 2, 16, 1, floor - 16);
+      }
+      for (let y = 22; y < floor; y += 8) g.fillStyle(p.treesDark, 0.8).fillRect(0, y, W, 1);
+      const door = { x: 146, y: 22, w: 30 };
+      for (let y = door.y; y < floor; y++) {
+        const t = (y - door.y) / (floor - door.y);
+        g.fillStyle(t < 0.6 ? p.mountainFar : p.mountainNear, 1).fillRect(door.x, y, door.w, 1);
+      }
+      g.fillStyle(p.cloud, 0.55).fillRect(door.x, floor - 9, door.w, 9);
+      for (let i = 0; i < 7; i++) g.fillStyle(i % 2 ? p.cloud : p.cloudShade, 1).fillRect(door.x + 3 + i * 4, floor - 6 - ((i * 5) % 7), 2, 3);
+      g.fillStyle(p.cloud, 0.12).fillEllipse(door.x + door.w / 2, floor + 8, 70, 18);
+      g.fillStyle(p.treesDark, 1).fillRect(door.x - 3, door.y - 2, 3, floor - door.y + 2).fillRect(door.x + door.w, door.y - 2, 3, floor - door.y + 2).fillRect(door.x - 3, door.y - 3, door.w + 6, 3);
+      for (const x of [34, 104, 214, 284]) {
+        g.fillStyle(p.treesDark, 1).fillRect(x, 4, 7, floor - 4);
+        g.fillStyle(p.trees, 1).fillRect(x + 1, 4, 2, floor - 4);
+      }
+      for (let x = 0; x < W; x += 2) {
+        const sag = Math.round(6 * Math.cos(((x - W / 2) / W) * Math.PI));
+        const h = 16 - sag + ((x * 7) % 3);
+        g.fillStyle(p.treesDark, 1).fillRect(x, 0, 2, h);
+        g.fillStyle(p.trees, 1).fillRect(x, h - 4 - ((x >> 1) % 3), 1, 3);
+      }
+      return;
+    }
+    // A cave: blotches of lighter and darker rock on the wall's shading, the sea through an arch (the mouth) or a glow
+    // far down the tunnel, and stone hanging from the roof.
+    for (let i = 0; i < 40; i++) {
+      const x = (i * 83) % W;
+      const y = (i * 37) % floor;
+      g.fillStyle(i % 2 ? p.cloud : p.cloudShade, 0.35).fillCircle(x, y, 3 + (i % 4));
+    }
+    if (p.mouth) {
+      const cx = 250;
+      for (let y = 6; y < floor; y++) {
+        const half = Math.round(46 * Math.sqrt(Math.max(0, 1 - ((floor - y) / (floor - 6)) ** 2)));
+        const t = (y - 6) / (floor - 6);
+        g.fillStyle(t < 0.5 ? p.mountainFar : p.mountainNear, 1).fillRect(cx - half, y, half * 2, 1);
+        g.fillStyle(p.treesDark, 1).fillRect(cx - half - 2, y, 2, 1).fillRect(cx + half, y, 2, 1);
+      }
+      for (let i = 0; i < 9; i++) g.fillStyle(0xf4ecd8, i % 3 ? 0.6 : 1).fillRect(cx - 30 + ((i * 23) % 60), 12 + ((i * 11) % 22), 1, 1);
+      g.fillStyle(p.field, 1).fillRect(cx - 46, floor - 10, 92, 10);
+      for (let x = cx - 44; x < cx + 44; x += 6) g.fillStyle(p.cane, 1).fillRect(x + ((x >> 2) % 3), floor - 8 + ((x >> 1) % 4), 3, 1);
+    } else {
+      g.fillStyle(p.cane, 0.25).fillEllipse(W / 2, floor - 4, 70, 20);
+      g.fillStyle(p.cane, 0.5).fillEllipse(W / 2, floor - 3, 26, 8);
+    }
+    for (let i = 0; i < 26; i++) {
+      const x = (i * 53 + 7) % W;
+      const len = 6 + ((i * 7) % 15);
+      g.fillStyle(p.trees, 1).fillTriangle(x - 4, 0, x + 4, 0, x, len);
+      g.fillStyle(p.cloud, 1).fillTriangle(x - 2, 0, x, 0, x, len - 2);
+    }
+  }
+
+  /** A cave's floor: uneven rock with cracks and pebbles, and pools where the sea comes in. */
+  private drawRockFloor(g: Phaser.GameObjects.Graphics, p: Backdrop): void {
+    const W = VIEW_WIDTH;
+    const top = BATTLE_ART.horizon + 16;
+    const bottom = BATTLE_ART.stripY;
+    g.fillStyle(p.ground, 1).fillRect(0, top, W, bottom - top);
+    for (let x = 0; x < W; x += 2) g.fillStyle(p.groundDark, 1).fillRect(x, top, 2, 2 + ((x * 7) % 3));
+    for (let i = 0; i < 70; i++) {
+      const x = (i * 97) % W;
+      const y = top + 4 + ((i * 41) % (bottom - top - 6));
+      const w = 3 + (i % 5) * 2;
+      g.fillStyle(i % 3 ? p.groundDark : p.groundLight, 0.7).fillRect(x, y, w, 1);
+    }
+    if (p.mouth) {
+      for (const [x, y, w] of [
+        [262, 70, 44],
+        [300, 92, 30],
+        [178, 66, 22],
+      ] as const) {
+        g.fillStyle(p.field, 1).fillEllipse(x, y, w, w / 5);
+        g.fillStyle(p.cane, 0.8).fillRect(x - w / 4, y - 1, w / 3, 1);
+      }
     }
   }
 
   private placeFighters(): void {
     const b = this.battle;
+    this.leaderKey = this.findLeader();
     b.enemies.forEach((e) => this.addEnemySprite(e, false));
     for (const p of b.fighters) this.addPartySprite(p.key);
     this.arrange();
@@ -987,6 +1171,22 @@ export class BattleScene extends Phaser.Scene {
     this.anissa = this.fighterImage(ANISSA_GLOW.look).setPosition(x, y).setDepth(y);
   }
 
+  /**
+   * The foes' leader, drawn larger with a gold name (Nov 1 playtests: Thorne was lost behind his marines): the boss of a
+   * finale, else a foe that is a boss, else in a boss fight the foe with the most HP. Never a foe in disguise (the
+   * Paper Fox must not stand out from his decoys).
+   */
+  private findLeader(): string | null {
+    const b = this.battle;
+    const foes = b.enemies.filter((e) => !e.masked);
+    const named = foes.find((e) => e.enemyId === b.def.finale?.boss) ?? foes.find((e) => e.boss);
+    if (named) return named.key;
+    if (!b.def.boss && !b.def.endsWithBoss) return null;
+    const top = Math.max(...foes.map((e) => e.maxHp));
+    const most = foes.filter((e) => e.maxHp === top);
+    return most.length === 1 ? most[0]!.key : null;
+  }
+
   /** A foe's picture in its slot (one who walks in mid-fight comes in from the right edge). */
   private addEnemySprite(e: Combatant, walkIn: boolean): void {
     const slot = BATTLE_ART.enemySlots[e.slot % BATTLE_ART.enemySlots.length]!;
@@ -996,16 +1196,30 @@ export class BattleScene extends Phaser.Scene {
     // One of the party's people as a foe (Rael at the Trial): their painted stance, mirrored to face the party.
     const stance = !drawn && ENEMY_STANCES[e.look] ? textureKeyForBattle(ENEMY_STANCES[e.look]!) : '';
     const standing = !!stance && this.textures.exists(stance);
+    const walker = !drawn && !standing;
+    // A walking sprite is drawn larger to stand near the painted stances' height; the leader larger still.
+    const grow = walker ? (e.key === this.leaderKey ? BATTLE_ART.leaderScale : BATTLE_ART.standInScale) : 1;
     const img = (drawn
       ? this.add.image(slot.x, slot.y, textureKeyForEnemy(e.look))
       : standing
         ? this.add.image(slot.x, slot.y, stance, '0').setFlipX(true)
         : this.add.image(slot.x, slot.y, textureKeyForCharacter(e.look), characterFrame('left', 0)))
       .setOrigin(0.5, 1)
-      .setScale(painted ? ENEMY_FILE_SCALE : drawn ? BATTLE_ART.enemyScale : standing ? BATTLE_STANCE.scale : BATTLE_ART.partyScale)
+      .setScale(painted ? ENEMY_FILE_SCALE : drawn ? BATTLE_ART.enemyScale : standing ? BATTLE_STANCE.scale : BATTLE_ART.partyScale * grow)
       .setDepth(slot.y);
     this.sprites.get(e.key)?.destroy();
     this.sprites.set(e.key, img);
+    // The share of the picture the body fills (a walking sprite's frame has air round it; a stance, its weapon).
+    this.home.set(e.key, { x: slot.x, y: slot.y, wr: walker ? 0.66 : standing ? 0.6 : 0.88, hr: walker ? 0.92 : 0.9 });
+    // What a stand-in carries (the musketeer's musket), in the front hand, scaled with it.
+    const gear = walker ? ENEMY_WEAPONS[e.look] : undefined;
+    if (gear && this.textures.exists(textureKeyForWeapon(gear.weapon))) {
+      const art = WEAPON_ART[gear.weapon]!;
+      const w = this.add.image(0, 0, textureKeyForWeapon(gear.weapon));
+      w.setOrigin(art.grip.x / w.width, art.grip.y / w.height).setScale(BATTLE_ART.partyScale * grow);
+      this.weapons.get(e.key)?.img.destroy();
+      this.weapons.set(e.key, { img: w, hand: { dx: Math.round(gear.hand.dx * grow), dy: Math.round(gear.hand.dy * grow) } });
+    }
     if (walkIn) {
       img.setX(VIEW_WIDTH + 16);
       this.tweens.add({ targets: img, x: slot.x, duration: 700 });
@@ -1022,10 +1236,13 @@ export class BattleScene extends Phaser.Scene {
     // The equipped weapon, held at its grip in the front hand.
     const art = c.weaponItem ? WEAPON_ART[c.weaponItem] : undefined;
     if (!holding && c.weaponItem && art && this.textures.exists(textureKeyForWeapon(c.weaponItem))) {
+      // A walking sprite standing in is drawn larger (BATTLE_ART.standInScale): its hand and weapon grow with it.
+      const grow = this.hasStance(img) ? 1 : BATTLE_ART.standInScale;
       const w = this.add.image(0, 0, textureKeyForWeapon(c.weaponItem));
-      w.setOrigin(art.grip.x / w.width, art.grip.y / w.height).setScale(BATTLE_ART.partyScale);
+      w.setOrigin(art.grip.x / w.width, art.grip.y / w.height).setScale(BATTLE_ART.partyScale * grow);
       this.weapons.get(key)?.img.destroy();
-      this.weapons.set(key, { img: w, hand: BATTLE_HANDS.byLook[c.look] ?? (c.weapon ? BATTLE_HANDS.byWeapon[c.weapon] : undefined) ?? BATTLE_HANDS.default });
+      const hand = BATTLE_HANDS.byLook[c.look] ?? (c.weapon ? BATTLE_HANDS.byWeapon[c.weapon] : undefined) ?? BATTLE_HANDS.default;
+      this.weapons.set(key, { img: w, hand: grow === 1 ? hand : { ...hand, dx: Math.round(hand.dx * grow), dy: Math.round(hand.dy * grow) } });
     }
     return img;
   }
@@ -1034,7 +1251,10 @@ export class BattleScene extends Phaser.Scene {
   private fighterImage(look: string): Phaser.GameObjects.Image {
     const stance = textureKeyForBattle(look);
     if (this.textures.exists(stance)) return this.add.image(0, 0, stance, '0').setOrigin(0.5, 1).setScale(BATTLE_STANCE.scale);
-    return this.add.image(0, 0, textureKeyForCharacter(look), characterFrame('right', 0)).setOrigin(0.5, 1).setScale(BATTLE_ART.partyScale);
+    return this.add
+      .image(0, 0, textureKeyForCharacter(look), characterFrame('right', 0))
+      .setOrigin(0.5, 1)
+      .setScale(BATTLE_ART.partyScale * BATTLE_ART.standInScale);
   }
 
   private hasStance(img: Phaser.GameObjects.Image): boolean {
@@ -1092,7 +1312,11 @@ export class BattleScene extends Phaser.Scene {
   private pop(key: string, text: string, color: string): void {
     const s = this.sprites.get(key);
     if (!s || !text) return;
-    const t = this.add.text(s.x, s.y - s.displayHeight - 2, text, textStyle(color, { fontStyle: 'bold', stroke: '#14101a', strokeThickness: 2 })).setOrigin(0.5, 1).setDepth(350);
+    // Over the foe's name plate when it has one (never on the name), else over the head.
+    const plate = this.plates.get(key);
+    const top = Math.min(s.y - s.displayHeight * (this.home.get(key)?.hr ?? 1), plate ? plate.y : Infinity);
+    // Over the depth of the name plates (the UI layer), so the number is never under a name.
+    const t = this.add.text(s.x, Math.max(10, top - 1), text, textStyle(color, { fontStyle: 'bold', stroke: '#14101a', strokeThickness: 2 })).setOrigin(0.5, 1).setDepth(450);
     this.tweens.add({ targets: t, y: t.y - 14, alpha: 0, delay: 250, duration: BATTLE_ART.popMs, onComplete: () => t.destroy() });
   }
 
@@ -1217,12 +1441,8 @@ export class BattleScene extends Phaser.Scene {
     g.fillStyle(BATTLE_ART.band, 0.55).fillRect(0, 0, VIEW_WIDTH, 12);
     const title = text(5, 1, b.def.title, UI.accentText);
     // The Grudge stays in view for the whole try (shown, so the help is honest).
-    if (b.grudge > 0) text(9 + Math.ceil(title.width), 1, `Grudge +${Math.round(b.grudge * 100)}%`, '#f2b8d0');
-    if (!this.done) {
-      const order = b.upcoming(6).map((c) => c.name.split(' ').pop()!.slice(0, 8));
-      const t = text(0, 1, `Next: ${order.join(' > ')}`, UI.dimText);
-      t.setX(VIEW_WIDTH - 5 - Math.ceil(t.width));
-    }
+    const grudge = b.grudge > 0 ? text(9 + Math.ceil(title.width), 1, `Grudge +${Math.round(b.grudge * 100)}%`, '#f2b8d0') : null;
+    if (!this.done) this.drawQueue(g, text, Math.ceil((grudge ?? title).x + (grudge ?? title).width) + 8);
 
     this.rows = this.done || this.busy || this.menu === 'target' ? [] : this.commandRows();
     if (this.rows.length > 0) this.cursor = Math.min(this.cursor, this.rows.length - 1);
@@ -1233,7 +1453,8 @@ export class BattleScene extends Phaser.Scene {
     if (!this.busy && !this.done) {
       const row = this.rows[this.cursor];
       if (this.menu === 'target' && this.aim) {
-        const who = this.aim.all ? (this.aim.side === 'enemy' ? 'every foe' : 'the whole party') : (this.aimed()[0]?.name ?? '');
+        const one = this.aimed()[0];
+        const who = this.aim.all ? (this.aim.side === 'enemy' ? 'every foe' : 'the whole party') : one ? (one.side === 'enemy' ? `${one.name}, Lv ${one.level}` : one.name) : '';
         band = `${this.aim.name}: ${who}?  (A to confirm, B to go back)`;
       } else if (this.menu === 'commands' && this.sticky) band = this.sticky;
       else if (this.menu !== 'commands' && row?.hint) band = row.hint;
@@ -1245,21 +1466,8 @@ export class BattleScene extends Phaser.Scene {
       this.ui.bringToTop(t);
     }
 
-    // Foes: name, level and HP over each, statuses under the bar.
-    for (const e of b.enemies) {
-      const s = this.sprites.get(e.key);
-      if (!s || e.down) continue;
-      const top = s.y - s.displayHeight - 14;
-      const label = text(s.x, top, `${e.name}  Lv ${e.level}`, UI.text, { stroke: '#14101a', strokeThickness: 2 }).setOrigin(0.5, 0);
-      const w = Math.max(40, Math.min(70, Math.ceil(label.width)));
-      // A foe in disguise (the Paper Fox's decoys) shows no HP until Kagemimi finds them out.
-      if (e.masked) bar(Math.round(s.x - w / 2), top + 10, w, 1, 1, BATTLE_ART.hpMasked);
-      else bar(Math.round(s.x - w / 2), top + 10, w, e.hp, e.maxHp, e.hp / e.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
-      tags(Math.round(s.x - w / 2), top + 14, e);
-      // The Nightingale Key: every foe's next move, heard before it comes.
-      const next = b.foresight && !e.masked ? b.nextMove(e) : undefined;
-      if (next) text(s.x, top - 9, `next: ${next}`, '#c8d8f0', { fontSize: '6px', stroke: '#14101a', strokeThickness: 2 }).setOrigin(0.5, 0);
-    }
+    // Foes: a name plate each (short name, HP bar, statuses), laid out so no two overlap and none covers a fighter.
+    this.drawPlates(g, text, bar, tags);
 
     // Anissa's light grows with her Spark; ten pips over her head, the first five gold when a Surge is ready.
     if (this.anissa) {
@@ -1275,16 +1483,28 @@ export class BattleScene extends Phaser.Scene {
       for (let i = 0; i < CALM_MAX; i++) g.fillStyle(i < b.calm ? 0x9ad0f0 : 0x3a3440, 1).fillRect(this.anissa.x - (CALM_MAX * 6) / 2 + i * 6, sy + 5, 5, 2);
     }
 
-    // The target cursor: a bobbing arrow over each fighter it covers.
+    // The target cursor: a bobbing arrow over each fighter it covers (over a foe's plate, which is framed in gold).
     if (this.menu === 'target' && !this.busy) {
       for (const c of this.aimed()) {
         const s = this.sprites.get(c.key);
         if (!s) continue;
-        const ax = Math.round(s.x);
-        const ay = Math.round(s.y - s.displayHeight - (c.side === 'enemy' ? 22 : 6) - this.cursorBob * 2);
+        const plate = c.side === 'enemy' ? this.plates.get(c.key) : undefined;
+        if (plate) g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(plate.x - 1.5, plate.y - 0.5, plate.w + 3, plate.h + 1);
+        const headTop = s.y - s.displayHeight * (this.home.get(c.key)?.hr ?? 1);
+        const top = plate ? Math.min(plate.y, headTop) : headTop;
+        const ax = Math.round(plate && plate.y < headTop ? plate.x + plate.w / 2 : s.x);
+        const ay = Math.round(top - 2 - this.cursorBob * 2);
         g.fillStyle(BATTLE_ART.cursor, 1);
-        g.fillTriangle(ax - 5, ay - 6, ax + 5, ay - 6, ax, ay);
-        g.lineStyle(1, 0x14101a, 1).strokeTriangle(ax - 5, ay - 6, ax + 5, ay - 6, ax, ay);
+        if (ay - 6 >= BATTLE_ART.plateTop - 4 || !plate) {
+          g.fillTriangle(ax - 5, ay - 6, ax + 5, ay - 6, ax, ay);
+          g.lineStyle(1, 0x14101a, 1).strokeTriangle(ax - 5, ay - 6, ax + 5, ay - 6, ax, ay);
+        } else {
+          // No room above (a plate at the top): the arrow points at the plate from its left.
+          const lx = Math.round(plate.x - 3 - this.cursorBob * 2);
+          const ly = Math.round(plate.y + plate.h / 2);
+          g.fillTriangle(lx - 6, ly - 5, lx - 6, ly + 5, lx, ly);
+          g.lineStyle(1, 0x14101a, 1).strokeTriangle(lx - 6, ly - 5, lx - 6, ly + 5, lx, ly);
+        }
       }
     }
 
@@ -1308,12 +1528,15 @@ export class BattleScene extends Phaser.Scene {
         text(54, y, 'BOUND', UI.accentText);
         return;
       }
+      // Each bar is named (Nov 1 playtests: two unlabelled bars and numbers read as nothing).
       const low = p.hp / p.maxHp < 0.35;
-      bar(54, y + 4, 38, p.hp, p.maxHp, low ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
-      text(95, y, `${p.hp}`, low ? '#e88a7a' : UI.text);
-      bar(118, y + 4, 24, p.sp, p.maxSp, BATTLE_ART.spBar);
+      text(52, y + 1, 'HP', UI.dimText, { fontSize: '6px' });
+      bar(61, y + 4, 30, p.hp, p.maxHp, low ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
+      text(94, y, `${p.hp}`, low ? '#e88a7a' : UI.text);
+      text(113, y + 1, 'SP', BATTLE_ART.spText, { fontSize: '6px' });
+      bar(122, y + 4, 20, p.sp, p.maxSp, BATTLE_ART.spBar);
       text(145, y, `${p.sp}`, BATTLE_ART.spText);
-      tags(160, y + 1, p);
+      tags(162, y + 1, p);
     });
 
     if (this.tutorial.length > 0) {
@@ -1325,6 +1548,23 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (this.menu === 'target') {
+      if (this.aim?.side === 'enemy') {
+        // The foes by name, the chosen one lit (tap one to choose it): every foe is named here even when its plate had no room.
+        const chosen = this.aimed();
+        this.aimPool().forEach((c, i) => {
+          if (i >= VISIBLE_ROWS) return;
+          const r = this.rowRect(i);
+          const on = chosen.includes(c);
+          if (on) {
+            g.fillStyle(0x2e2638, 1).fillRect(r.x, r.y, r.w, r.h - 1);
+            g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 2);
+          }
+          const name = text(r.x + 4, r.y + 3, shortName(c.name), on ? UI.accentText : UI.text, { fontSize: '7px' });
+          const lv = text(r.x + r.w - 3, r.y + 4, `Lv ${c.level}`, UI.dimText, { fontSize: '6px' }).setOrigin(1, 0);
+          if (name.x + name.width > lv.x - lv.width - 2) lv.setVisible(false);
+        });
+        return;
+      }
       text(184, Y + 4, this.aim?.name ?? '', UI.accentText);
       text(184, Y + 18, this.aim?.all ? 'A: use on all' : 'Arrows: choose', UI.dimText);
       text(184, Y + 31, 'B: back', UI.dimText);
@@ -1340,16 +1580,120 @@ export class BattleScene extends Phaser.Scene {
         g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 2);
       }
       const surge = row.label === 'Surge' || (row.label === 'Comfort' && b.calm === 0);
-      text(r.x + 4, r.y + 2, row.label, !row.enabled ? UI.dimText : surge || on ? UI.accentText : UI.text);
+      const label = text(r.x + 4, r.y + 2, row.label, !row.enabled ? UI.dimText : surge || on ? UI.accentText : UI.text);
+      if (row.tag) {
+        // The price or wait at the right end, small; a long name steps down a size to make room.
+        const tag = text(r.x + r.w - 3, r.y + 4, row.tag, row.enabled ? (row.tagColor ?? UI.dimText) : UI.dimText, { fontSize: '6px' }).setOrigin(1, 0);
+        const room = r.w - 4 - 3 - Math.ceil(tag.width) - 3;
+        for (const px of [7, 6]) {
+          if (label.width <= room) break;
+          label.setFontSize(`${px}px`).setY(r.y + 2 + (8 - px) / 2);
+        }
+      }
     });
     const pages = Math.ceil(this.rows.length / VISIBLE_ROWS);
     if (pages > 1) text(VIEW_WIDTH - 4, VIEW_HEIGHT - 9, `${page + 1}/${pages}`, UI.dimText, { fontSize: '6px' }).setOrigin(1, 0);
   }
 
+  /**
+   * Who acts next, top right (Nov 1 playtests: names were cut to "Musketee", and a lone "B > A" read as button
+   * prompts): short whole names in small chips, the party's blue and the foes' red, as many as fit after the title.
+   */
+  private drawQueue(g: Phaser.GameObjects.Graphics, text: TextFn, left: number): void {
+    const order = this.battle.upcoming(6);
+    const label = text(0, 2, 'Next', UI.dimText, { fontSize: '7px' });
+    const chips = order.map((c) => text(0, 2, shortName(c.name), c.side === 'enemy' ? '#f4c4b4' : UI.text, { fontSize: '7px' }));
+    const widths = chips.map((t) => Math.ceil(t.width) + 4);
+    const room = VIEW_WIDTH - 4 - left - Math.ceil(label.width) - 3;
+    const n = queueFit(widths, room, 2);
+    const used = widths.slice(0, n).reduce((a, w) => a + w, 0) + Math.max(0, n - 1) * 2;
+    let x = VIEW_WIDTH - 4 - used;
+    label.setX(x - 3 - Math.ceil(label.width)).setVisible(n > 0);
+    chips.forEach((t, i) => {
+      if (i >= n) {
+        t.setVisible(false);
+        return;
+      }
+      const enemy = order[i]!.side === 'enemy';
+      g.fillStyle(enemy ? 0x4a1e24 : 0x243452, 1).fillRect(x, 1, widths[i]!, 10);
+      t.setX(x + 2);
+      x += widths[i]! + 2;
+    });
+  }
+
+  /**
+   * The foes' name plates (Nov 1 playtests: names lay across other foes and damage landed on them): the short name (gold
+   * for the leader), the HP bar and the statuses, just over the head; engine/battleLayout.ts placePlates moves a plate
+   * aside, under the feet or a little higher so none overlaps another or covers a fighter, and leaves out one with no
+   * room (that foe keeps a thin bar at its feet; the target list names it).
+   */
+  private drawPlates(g: Phaser.GameObjects.Graphics, text: TextFn, bar: BarFn, tags: TagFn): void {
+    const b = this.battle;
+    const px = Math.max(BATTLE_ART.plateFontPx, fontPx() - 1);
+    const style = { fontSize: `${px}px`, stroke: '#14101a', strokeThickness: 2 };
+    const foes = b.enemies.filter((e) => !e.down && this.sprites.has(e.key));
+    const order = [...foes].sort((x, y) => Number(y.key === this.leaderKey) - Number(x.key === this.leaderKey) || x.slot - y.slot);
+    const parts = new Map<string, { name: Phaser.GameObjects.Text; next: Phaser.GameObjects.Text | null; nameH: number; tagsH: number }>();
+    const requests: PlateRequest[] = order.map((e) => {
+      const name = text(0, 0, shortName(e.name), e.key === this.leaderKey ? UI.accentText : UI.text, style);
+      // The Nightingale Key: every foe's next move, heard before it comes (a line over the name).
+      const move = b.foresight && !e.masked ? b.nextMove(e) : undefined;
+      const next = move ? text(0, 0, `next: ${move}`, '#c8d8f0', { fontSize: '6px', stroke: '#14101a', strokeThickness: 2 }) : null;
+      const nameH = Math.ceil(name.height) - 1;
+      const tagsH = e.statuses.length > 0 ? 8 : 0;
+      parts.set(e.key, { name, next, nameH, tagsH });
+      const w = Math.max(24, Math.ceil(name.width), next ? Math.ceil(next.width) : 0, tagsH ? this.tagsWidth(e) : 0);
+      return { key: e.key, body: this.bodyRect(e.key), w, h: (next ? 8 : 0) + nameH + BATTLE_ART.plateBarH + tagsH };
+    });
+    const obstacles = b.fighters.filter((p) => this.sprites.has(p.key)).map((p) => this.bodyRect(p.key));
+    if (this.anissa) obstacles.push({ x: this.anissa.x - 30, y: this.anissa.y - this.anissa.displayHeight - 20, w: 60, h: this.anissa.displayHeight + 20 });
+    const area = { x: 2, y: BATTLE_ART.plateTop, w: VIEW_WIDTH - 4, h: BATTLE_ART.stripY - 1 - BATTLE_ART.plateTop };
+    this.plates = placePlates(requests, obstacles, area);
+    for (const e of foes) {
+      const part = parts.get(e.key)!;
+      const plate = this.plates.get(e.key) ?? null;
+      const color = e.masked ? BATTLE_ART.hpMasked : e.hp / e.maxHp < 0.35 ? BATTLE_ART.hpLow : BATTLE_ART.hpBar;
+      if (!plate) {
+        // No room for the plate: a thin HP bar at the feet.
+        part.name.setVisible(false);
+        part.next?.setVisible(false);
+        const body = this.bodyRect(e.key);
+        g.fillStyle(0x000000, 0.65).fillRect(body.x, body.y + body.h + 1, body.w, 2);
+        g.fillStyle(color, 1).fillRect(body.x, body.y + body.h + 1, Math.round((body.w * (e.masked ? 1 : e.hp)) / Math.max(1, e.masked ? 1 : e.maxHp)), 2);
+        continue;
+      }
+      let y = plate.y;
+      if (part.next) {
+        part.next.setPosition(Math.round(plate.x + plate.w / 2 - part.next.width / 2), y - 1);
+        y += 8;
+      }
+      part.name.setPosition(Math.round(plate.x + plate.w / 2 - part.name.width / 2), y - 1);
+      y += part.nameH;
+      // A foe in disguise (the Paper Fox's decoys) shows no HP until Kagemimi finds them out.
+      if (e.masked) bar(plate.x, y, plate.w, 1, 1, BATTLE_ART.hpMasked);
+      else bar(plate.x, y, plate.w, e.hp, e.maxHp, color);
+      if (part.tagsH) tags(plate.x, y + BATTLE_ART.plateBarH, e);
+    }
+  }
+
+  /** The width the status tags take (as drawn by redraw's tags: a triangle, the tag, a gap). */
+  private tagsWidth(c: Combatant): number {
+    return c.statuses.reduce((w, st) => w + 5 + STATUS_TAGS[st.id].tag.length * 4 + 3, 0);
+  }
+
+  /** The part of a fighter's picture the body fills, where it stands (a foe: its slot, untouched by a shiver). */
+  private bodyRect(key: string): Rect {
+    const s = this.sprites.get(key)!;
+    const home = this.home.get(key);
+    const x = home?.x ?? s.x;
+    const y = home?.y ?? (this.bobbed?.key === key ? this.bobbed.base : s.y);
+    const w = Math.round(s.displayWidth * (home?.wr ?? 0.6));
+    const h = Math.round(s.displayHeight * (home?.hr ?? 0.92));
+    return { x: Math.round(x - w / 2), y: Math.round(y - h), w, h };
+  }
+
   /** The tutorial page: a panel over the fight with its title, text and page count. */
-  private drawTutorial(
-    text: (x: number, y: number, s: string, color?: string, extra?: Phaser.Types.GameObjects.Text.TextStyle) => Phaser.GameObjects.Text,
-  ): void {
+  private drawTutorial(text: TextFn): void {
     const page = this.tutorial[0]!;
     // Its own layer, over every name and bar already drawn.
     const g = this.add.graphics();

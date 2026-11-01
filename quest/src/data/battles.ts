@@ -1623,7 +1623,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
   caney_breach: {
     id: 'caney_breach',
     title: 'The Caney',
-    backdrop: 'yucayeque_night',
+    backdrop: 'caney_night',
     enemies: ['crown_marine', 'crown_musketeer', 'marine_lieutenant'],
     level: 5, // 6 until the levels pass (Oct 22): the party comes a level lower (6), and the fight stays as it was
     table: 'xaragua_story',
@@ -1657,7 +1657,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
   thorne_blockade: {
     id: 'thorne_blockade',
     title: 'Governor Thorne',
-    backdrop: 'yucayeque_night',
+    backdrop: 'sea_cave',
     enemies: ['thorne', 'crown_marine', 'crown_musketeer'],
     level: 7, // 8 until the levels pass (Oct 22): the party meets him at 7
     table: 'xaragua_story',
@@ -1697,7 +1697,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
         },
         {
           title: 'Attack and Skill',
-          text: "Attack strikes with your weapon; a staff barely hurts. Skill opens spells that cost SP (the blue bar). Gianna's Sunthread is a ray of light, far stronger than her staff.",
+          text: "Attack strikes with your weapon; a staff barely hurts. Skill opens spells that cost SP (the blue bar; '3 SP' beside a spell is its price). Gianna's Sunthread is a ray of light, far stronger than her staff.",
         },
         {
           title: 'Guard and Item',
@@ -1708,7 +1708,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
         moves: [
           {
             title: 'Weapon moves',
-            text: 'Fighters with weapons (Yari\'s bow, later blades) get moves under Attack. Strong moves need time to ready again: the number beside one is the turns left.',
+            text: 'Fighters with weapons (Yari\'s bow, later blades) get moves under Attack. Strong moves need time to ready again: "ready in 2" means two more turns.',
           },
         ],
         light: [
