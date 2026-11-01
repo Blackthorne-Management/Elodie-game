@@ -45,6 +45,41 @@ B did nothing while choosing a target. Claude's call (Oct 29) on both, built in 
   has no game menu, and Escape is the key a keyboard player reaches for. The tutorial pages and the victory screen
   take the same buttons as before plus Escape. A tap on the strip still goes back from the target cursor.
 
+### 1.2 Reading the battle screen (Nov 1 playtests; Claude's call (Nov 1); built)
+
+Both Nov 1 playtests found the battle text colliding. What changed (`engine/battleLayout.ts`, `scenes/BattleScene.ts`,
+`data/battleTips.ts`, `assets.config.ts` BATTLE_ART / ENEMY_WEAPONS / BATTLE_BACKDROPS; tests in `tests/battleLayout.test.ts`):
+
+- **Foe places and name plates.** Six foe places in a zigzag 32 px apart (back, front, back, front; two more far back for
+  foes who walk in mid-fight). Each foe has a plate: its *short name* (gold for the fight's leader) over its HP bar and
+  status tags, just over its head. A plate that would cover another plate, another foe or a party fighter moves aside,
+  under the feet or a little higher; one that fits nowhere is left out (a thin HP bar stays at the foe's feet). Plates
+  are placed in a fixed order (leader first, then by place), so they never jump when the cursor moves. Damage numbers
+  float above the plate, over everything, never on a name.
+- **Short names** everywhere space is tight: the last word of the name ("Governor Thorne" -> Thorne, "Crown Marine B" ->
+  Marine B; "Musketeer in a Breastplate" -> Musketeer). A duplicate keeps its letter after a word, so no lone "B" or
+  "A" ever reads as a button. The full name and level show in the band while aiming ("Quick Shot: Crown Marine A, Lv 28?").
+- **Choosing a target:** the aimed foe's plate is framed in gold under the arrow, and the strip's right half lists every
+  foe by short name and level with the aimed one lit (tap a name to choose it). Aiming at allies is unchanged.
+- **Turn order:** "Next" and small chips, blue for the party and red for foes, as many whole names as fit after the
+  title (never a name cut short).
+- **HP and SP** are named on every row of the party strip. A spell's price reads "3 SP" (gold skills "40 g"); a weapon
+  move that is not ready reads "ready in 2"; items "x2"; Swap shows "84 HP". The boar's tutorial pages say so too.
+- **Scale and look.** A walking sprite standing in for battle art is drawn 1.25x (the leader, e.g. Thorne, 1.5x), so the
+  Crown's troops stand near the painted stances' height; 1.25 and 1.5 keep whole screen pixels at render scale 4
+  (desktop, most phones), never blurred. The leader is the finale's boss, else a foe flagged boss, else in a boss fight
+  the foe with the most HP; never a foe in disguise (the Paper Fox stays hidden among his decoys). Crown musketeers carry
+  a drawn musket with a fixed bayonet (WEAPON_ART crown_musket), so they no longer look like the marines.
+- **Indoor scenes.** A backdrop can be drawn indoors (`inside`): `caney` (thatch, posts, woven walls, the door open on the
+  burning night) for the caney breach; `cave` with a `mouth` on the night sea for Thorne's sea cave (and `cave` for
+  Benny's lava tube); `hall` (pillars, beam, lamps, goods along the wall) for the guild vault, the file house, the oil
+  store, the Assize court, the Throne Hall and a new customs house for Chapter 11's Thorne. Chosen per battle
+  (BattleDef.backdrop), as before.
+- **First-time tips** (one page each, once per save, the first turn the thing is on screen; not in the boar fight, which
+  has its own pages): Anissa's Spark, Surge (skipped if the boar's Spark lesson was seen), status tags with MARK, and
+  Swap. Flags `tutorial.tip.<id>`.
+- Kept: the acting fighter's light and outline and B stepping back one level (1.1).
+
 ## 2. Stats
 
 | Stat | Does | Notes |

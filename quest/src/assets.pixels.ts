@@ -3847,6 +3847,36 @@ export const WEAPON_ART: Readonly<Record<string, BattleWeaponArt>> = {
       '..................',
     ],
   },
+  // A Crown musket, bayonet fixed (Nov 1 playtests: the musketeer must not look like the marine).
+  // Not an item: the musketeers carry it in battle (assets.config.ts ENEMY_WEAPONS), levelled at the party: the bayonet
+  // up and forward (they face left), the stock behind.
+  crown_musket: {
+    grip: { x: 12, y: 12 },
+    rows: [
+      '.k....................',
+      'kWk...................',
+      '.kWk..................',
+      '..kWk.................',
+      '...kWkk...............',
+      '....kiik..............',
+      '.....kIik.............',
+      '......kIik............',
+      '.......kIik...........',
+      '........kIik..........',
+      '.........kIik.........',
+      '..........kyyk........',
+      '...........kNnk.......',
+      '............kNnk......',
+      '.............kNnkk....',
+      '..............kNBbk...',
+      '...............kNBbk..',
+      '................kNBbk.',
+      '.................kNBbk',
+      '..................kkk.',
+      '......................',
+      '......................',
+    ],
+  },
 };
 
 /**

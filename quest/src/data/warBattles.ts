@@ -399,7 +399,7 @@ export const WAR_BATTLES: Readonly<Record<string, BattleDef>> = {
   customs_thorne: {
     id: 'customs_thorne',
     title: 'Governor Thorne',
-    backdrop: 'yucayeque_night',
+    backdrop: 'customs_house',
     enemies: ['customs_marine', 'thorne_war', 'customs_breastplate'],
     table: WAR,
     group: 'thorne',
