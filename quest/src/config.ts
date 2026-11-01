@@ -556,3 +556,9 @@ export const GAME_OVER = {
  * (owner, Oct 29; engine/rpg.ts walkingCompanion). The rest of the party is with them, implied.
  */
 export const WALKING_COMPANIONS: readonly string[] = ['yari', 'samira', 'bayarmaa', 'haru', 'vikram', 'edmund'];
+
+/**
+ * How long Gianna stands still before the walking party settles beside her (ms; playtests, Nov 1: followers stopped in
+ * a column behind her and were hidden). Short enough to look deliberate, long enough not to shuffle between taps.
+ */
+export const PARTY_SETTLE_MS = 220;

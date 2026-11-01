@@ -28,15 +28,16 @@ import {
   textureKeyForShimmer,
   ECHO_SHIMMER,
 } from '../assets.config.ts';
-import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX, WALKING_COMPANIONS } from '../config.ts';
+import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX, WALKING_COMPANIONS, PARTY_SETTLE_MS } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { CHAPTERS, JOURNAL_NOTES } from '../data/quests.ts';
 import { cardLines } from '../engine/content.ts';
 import { evaluate } from '../engine/conditions.ts';
 import type { Effect, GameLogic, Target } from '../engine/game.ts';
-import { DIRS, type Dir8, type Era, type Pos } from '../engine/types.ts';
+import { DIRS, DIRS8, type Dir8, type Era, type Pos } from '../engine/types.ts';
 import { combine, facingToward, opposite, samePos, spriteFacing, stepFrom } from '../engine/grid.ts';
-import { Mover, restDistance, speedPx, stepLength, tileFoot, walkFrame } from '../engine/motion.ts';
+import { Mover, restDistance, speedPx, stepLength, stepMs, tileFoot, walkFrame } from '../engine/motion.ts';
+import { dialogueCameraY, entryTile, mustBringOn, settleSpots } from '../engine/partyPlacement.ts';
 import { cameraBounds, cameraScroll } from '../engine/scaling.ts';
 import { dirButtons } from '../input/actions.ts';
 import { currentObjective, journalEntries, journalNotes, questForJournal, questForMap, type QuestDef } from '../engine/quests.ts';
@@ -58,7 +59,7 @@ import { gameOverSnapshot, type GameOverSnapshot } from './GameOverScene.ts';
 import { BATTLE_AFTER_FLAG, FIGHT_RETURN_FLAG } from '../engine/game.ts';
 import type { FxKind } from './battleFx.ts';
 import type { BattleResult } from '../engine/battle.ts';
-import { renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
+import { dialogueExtraPx, renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
 import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
 import { RPG } from '../data/rpg.ts';
@@ -103,6 +104,8 @@ interface Follower {
   /** Pixels walked (her own walk cycle) and how far through the player's current step she was. */
   distance: number;
   lastT: number;
+  /** Settling beside Gianna when the party stops (engine/partyPlacement.ts): how far through the short walk, of how long. */
+  settle?: { t: number; ms: number };
 }
 
 /** The tiles from `a` to `b` in a straight line (not including `a`), for a boat gliding over water. */
@@ -276,6 +279,17 @@ export class FieldScene extends Phaser.Scene {
   private vikram: Follower | null = null;
   /** Edmund, last in the line, once he has joined (Chapter 9, the press-gang: party.edmund). */
   private edmund: Follower | null = null;
+  /** The tiles Gianna and the line are stepping to this step (nobody follows onto another's). */
+  private stepClaims: Pos[] | null = null;
+  /** Whether the party has settled beside Gianna since it last moved, and how long she has stood still. */
+  private settled = false;
+  private idleMs = 0;
+  /** Companions brought on to speak (playtest Nov 1), and where each walked in from (they walk back off there). */
+  private broughtOn = new Map<string, Pos>();
+  /** The camera eases back to Gianna after a conversation moved it (the dialogue box's band). */
+  private camEase = false;
+  /** Tiles a prop's drawing stands over (the fountain's spray): nobody stops there, or they stand inside it. */
+  private propShade = new Set<string>();
   /**
    * The quest pointers (engine/guide.ts): the story's next stop in gold, a side quest's in silver (owner, Oct 18).
    * Each has an arrow for the screen's edge and a marker for over the stop.
@@ -371,6 +385,11 @@ export class FieldScene extends Phaser.Scene {
     this.haru = null;
     this.vikram = null;
     this.edmund = null;
+    this.settled = false;
+    this.idleMs = 0;
+    this.broughtOn = new Map();
+    this.camEase = false;
+    this.propShade = new Set();
     this.crowd = [];
     this.cardArt = null;
     this.pointers = { story: { way: null, arrow: null, mark: null }, side: { way: null, arrow: null, mark: null } };
@@ -489,6 +508,8 @@ export class FieldScene extends Phaser.Scene {
     this.applyEra();
     this.syncActors();
     this.placeFollower();
+    // On a new map the party stands beside her, on open tiles in view (playtest Nov 1: never in a wall or off screen).
+    this.settleParty(true);
 
     this.rt.input.clearPresses();
     window.__quest = {
@@ -520,6 +541,7 @@ export class FieldScene extends Phaser.Scene {
     this.tickSigils();
     this.tickGoers(delta);
     this.tickCrowd(delta);
+    this.tickSettle(delta);
     this.tickGuide(delta);
     if (this.cardArt && this.mode !== 'card') {
       this.cardArt.destroy();
@@ -854,7 +876,13 @@ export class FieldScene extends Phaser.Scene {
       return;
     }
     const dir = input.move();
-    if (!dir) return;
+    if (!dir) {
+      // Standing still: the party settles beside her after a moment (not between steps of a walk).
+      this.idleMs += delta;
+      if (!this.settled && this.idleMs >= PARTY_SETTLE_MS) this.settleParty(false);
+      this.easeCamera(delta);
+      return;
+    }
     const from = { ...this.logic.state.player.pos };
     const to = this.stepToward(dir);
     if (to) this.mover.start(from, to);
@@ -1055,7 +1083,7 @@ export class FieldScene extends Phaser.Scene {
       return null;
     }
     this.label.setVisible(false);
-    this.startFollowerStep(this.logic.state.player.pos);
+    this.startFollowerStep(this.logic.state.player.pos, attempt.to);
     return attempt.to;
   }
 
@@ -1491,6 +1519,13 @@ export class FieldScene extends Phaser.Scene {
       );
       this.objectSprites.set(o.id, sprites);
     }
+    // The rows a tall drawing rises over above its own tiles (the fountain's spray): someone standing there is inside it.
+    this.propShade = new Set();
+    for (const o of objects) {
+      if (o.walkable || !o.kind || !OBJECT_ART[o.kind]) continue;
+      const top = Math.floor(this.objectTop(o) / TILE_SIZE);
+      for (let y = top; y < o.area.y; y++) for (let x = o.area.x; x < o.area.x + o.area.width; x++) this.propShade.add(`${x},${y}`);
+    }
     this.syncMarkers();
     this.labelKey = '';
     this.placeFollower();
@@ -1512,6 +1547,7 @@ export class FieldScene extends Phaser.Scene {
     this.placeVikram(vikramOnStage && vikramOnStage.borrowed === undefined ? vikramOnStage.at : undefined);
     const edmundOnStage = this.stageActors.get('edmund');
     this.placeEdmund(edmundOnStage && edmundOnStage.borrowed === undefined ? edmundOnStage.at : undefined);
+    this.settled = false;
     this.syncCrowd();
     this.refreshGuide();
   }
@@ -1631,6 +1667,25 @@ export class FieldScene extends Phaser.Scene {
     return this.crowd.some((c) => samePos(c.at, p) || (c.mover.glide !== null && samePos(c.mover.glide.to, p)));
   }
 
+  /** Where Gianna and the walking party stand, or are stepping to. */
+  private partyTiles(): Pos[] {
+    const out = [this.logic.state.player.pos];
+    const g = this.mover.glide;
+    if (g) out.push(g.to, g.from);
+    for (const f of this.partyLine()) out.push(f.f.pos);
+    for (const a of this.stageActors.values()) if (a.sprite.visible) out.push(a.at);
+    return out;
+  }
+
+  /**
+   * Where a stroller may not step (playtest Nov 1: the crowd walked into the party and the fountain): anyone's tile,
+   * the tiles next to the party, and the rows a prop's drawing stands over.
+   */
+  private crowdKeepOff(p: Pos): boolean {
+    if (this.crowdTaken(p) || this.propShade.has(`${p.x},${p.y}`)) return true;
+    return this.partyTiles().some((t) => Math.abs(t.x - p.x) <= 1 && Math.abs(t.y - p.y) <= 1);
+  }
+
   /** Bring on the crowds the story has now, and send off the ones it has not (the festival ends). */
   private syncCrowd(): void {
     const zones = this.logic.crowds();
@@ -1642,7 +1697,7 @@ export class FieldScene extends Phaser.Scene {
     });
     for (const zone of zones) {
       if (this.crowd.some((c) => c.zone === zone.id) || zone.looks.length === 0) continue;
-      const open = (p: Pos) => this.logic.isOpen(p, 'present') && !this.crowdTaken(p) && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p)));
+      const open = (p: Pos) => this.logic.isOpen(p, 'present') && !this.crowdKeepOff(p) && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p)));
       const spots = crowdSpots(zone, open, this.crowdRng);
       // Nobody stands near someone who looks the same (owner, Oct 29): the map's people and the crowd so far count too.
       const others = [
@@ -1676,10 +1731,12 @@ export class FieldScene extends Phaser.Scene {
         });
       } else {
         c.waitMs -= delta;
+        // Someone the party comes up against steps aside soon, rather than standing in them.
+        if (this.partyTiles().some((t) => Math.abs(t.x - c.at.x) <= 1 && Math.abs(t.y - c.at.y) <= 1)) c.waitMs = Math.min(c.waitMs, 150);
         const zone = zones.get(c.zone);
         if (c.waitMs <= 0 && zone && this.mode === 'field') {
           c.waitMs = this.crowdRng.int(1500, 5000);
-          const next = crowdStep(zone, c.at, (p) => this.logic.isOpen(p, 'present') && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p))), (p) => this.crowdTaken(p) || twinNear(this.crowd, c, p), this.crowdRng);
+          const next = crowdStep(zone, c.at, (p) => this.logic.isOpen(p, 'present') && !this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p))), (p) => this.crowdKeepOff(p) || twinNear(this.crowd, c, p), this.crowdRng);
           if (next) {
             c.facing = facingToward(c.at, next);
             c.mover.start(c.at, next);
@@ -1918,6 +1975,133 @@ export class FieldScene extends Phaser.Scene {
     this.updateFollowerLook();
   }
 
+  // ---- Where the party stands when it stops (engine/partyPlacement.ts; playtests, Nov 1) -----------------------
+
+  /** The walking party in line order (Anissa first), leaving out anyone a scene has borrowed. */
+  private partyLine(): { f: Follower; look: string }[] {
+    const line: [Follower | null, string][] = [
+      [this.follower, this.anissaLook()],
+      [this.yari, 'yari'],
+      [this.azzy, 'azzy'],
+      [this.samira, 'samira'],
+      [this.bayarmaa, 'bayarmaa'],
+      [this.haru, 'haru'],
+      [this.vikram, 'vikram'],
+      [this.edmund, 'edmund'],
+    ];
+    const borrowed = new Set([...this.stageActors.values()].map((a) => a.sprite));
+    return line.filter((x): x is [Follower, string] => x[0] !== null && !borrowed.has(x[0].sprite)).map(([f, look]) => ({ f, look }));
+  }
+
+  /** Whether one of the party may stop on a tile: open, no door, nobody there, not inside a prop's drawing. */
+  private standOpen(p: Pos): boolean {
+    if (!this.logic.isOpen(p, 'present')) return false;
+    if (this.propShade.has(`${p.x},${p.y}`)) return false;
+    if (this.map.doors.some((d) => d.tiles.some((t) => samePos(t, p)))) return false;
+    if (this.logic.npcs('present').some((n) => samePos(n.pos, p))) return false;
+    if ([...this.stageActors.values()].some((a) => a.sprite.visible && samePos(a.at, p))) return false;
+    if (this.crowd.some((c) => samePos(c.at, p) || (c.mover.glide !== null && samePos(c.mover.glide.to, p)))) return false;
+    return true;
+  }
+
+  /** Whether someone standing on a tile is wholly on the screen, head and all (the dialogue box moves the camera instead). */
+  private tileVisible(p: Pos): boolean {
+    const cam = this.cameras.main;
+    const left = p.x * TILE_SIZE - cam.scrollX;
+    const foot = (p.y + 1) * TILE_SIZE - cam.scrollY;
+    return left >= 0 && left + TILE_SIZE <= VIEW_WIDTH && foot - CHARACTER_HEIGHT >= 0 && foot <= VIEW_HEIGHT;
+  }
+
+  /** Where the dialogue box's name tab begins, on the screen (ui/DialogueBox.ts: 58 px plus the text size's extra, 2 px off the bottom, a 13 px tab). */
+  private dialogueBoxTop(): number {
+    return VIEW_HEIGHT - 58 - dialogueExtraPx() - 2 - 13;
+  }
+
+  /**
+   * The party stopped (or a scene began): the followers step beside Gianna, or diagonally behind her, so nobody stands
+   * hidden in a column behind someone (playtests, Nov 1). `instant` puts them there (a new map, back from an Echo).
+   * Someone a scene left far off on an open tile in view stays there; they follow on when Gianna walks.
+   */
+  private settleParty(instant: boolean): void {
+    this.settled = true;
+    this.idleMs = 0;
+    if (this.logic.era !== 'present') return;
+    const p = this.logic.state.player;
+    const line = this.partyLine();
+    const near = (f: Follower) => Math.max(Math.abs(f.pos.x - p.pos.x), Math.abs(f.pos.y - p.pos.y)) <= 4;
+    const moving = line.filter(({ f }) => near(f) || !this.standOpen(f.pos) || !this.tileVisible(f.pos));
+    if (moving.length === 0) return;
+    const staying = line.filter((x) => !moving.includes(x)).map(({ f }) => f.pos);
+    const others = [
+      ...this.logic.npcs('present').map((n) => n.pos),
+      ...[...this.stageActors.values()].filter((a) => a.sprite.visible).map((a) => a.at),
+    ];
+    const spots = settleSpots({
+      player: p.pos,
+      facing: spriteFacing(p.facing),
+      followers: moving.map(({ f }) => f.pos),
+      open: (t) => this.standOpen(t) && !staying.some((s) => samePos(s, t)),
+      passable: (t) => this.logic.isOpen(t, 'present'),
+      width: this.map.width,
+      height: this.map.height,
+      visible: (t) => this.tileVisible(t),
+      others,
+      placed: staying,
+    });
+    for (const [i, { f, look }] of moving.entries()) {
+      const to = spots[i]!;
+      // Mid-settle already: start again from the tile she is nearer.
+      if (f.settle && f.settle.t < 0.5) f.pos = { ...f.from };
+      f.settle = undefined;
+      const far = Math.max(Math.abs(f.pos.x - to.x), Math.abs(f.pos.y - to.y));
+      if (instant || far > 3 || !this.standOpen(f.pos) || !this.tileVisible(f.pos)) {
+        f.pos = { ...to };
+        f.from = { ...to };
+        f.facing = p.facing;
+        f.lastT = 1;
+        const w = tileToWorld(to);
+        f.sprite.setPosition(w.x, w.y).setDepth(10 + w.y - 1);
+        setLook(f.sprite, look, f.facing);
+        continue;
+      }
+      if (samePos(f.pos, to)) {
+        f.from = { ...to };
+        continue;
+      }
+      f.from = { ...f.pos };
+      f.pos = { ...to };
+      f.facing = facingToward(f.from, to);
+      f.lastT = 0;
+      f.settle = { t: 0, ms: stepMs(f.from, to, speedPx(false)) };
+    }
+  }
+
+  /** Walk the settling followers a frame; at the end they face the way Gianna does. */
+  private tickSettle(delta: number): void {
+    for (const { f, look } of this.partyLine()) {
+      const st = f.settle;
+      if (!st) continue;
+      st.t = Math.min(1, st.t + delta / Math.max(1, st.ms));
+      this.moveOneFollower(f, st.t, look);
+      if (st.t >= 1) {
+        f.settle = undefined;
+        f.from = { ...f.pos };
+        f.facing = this.logic.state.player.facing;
+        setLook(f.sprite, look, f.facing);
+      }
+    }
+  }
+
+  /** A follower a scene borrows finishes settling first (the scene moves them from where they stand). */
+  private finishSettle(f: Follower | null): void {
+    if (!f?.settle) return;
+    f.settle = undefined;
+    f.from = { ...f.pos };
+    f.lastT = 1;
+    const w = tileToWorld(f.pos);
+    f.sprite.setPosition(w.x, w.y).setDepth(10 + w.y - 1);
+  }
+
   /**
    * Back from the memory on another floe than the one Anissa held the door on (Chapter 6, the fjord: five swaps across
    * the water): the party comes back beside Gianna rather than walking over the water to her.
@@ -1926,13 +2110,16 @@ export class FieldScene extends Phaser.Scene {
     if (this.logic.era !== 'present') return;
     const at = this.logic.state.player.pos;
     const line = [this.follower, this.yari, this.azzy, this.samira, this.bayarmaa, this.haru, this.vikram, this.edmund].filter((f): f is Follower => !!f);
-    if (!line.some((f) => Math.abs(f.pos.x - at.x) + Math.abs(f.pos.y - at.y) > 2)) return;
-    for (const f of line) {
-      f.pos = { ...at };
-      f.from = { ...at };
-      const w = tileToWorld(at);
-      f.sprite.setPosition(w.x, w.y);
+    if (line.some((f) => Math.abs(f.pos.x - at.x) + Math.abs(f.pos.y - at.y) > 2)) {
+      for (const f of line) {
+        f.pos = { ...at };
+        f.from = { ...at };
+        const w = tileToWorld(at);
+        f.sprite.setPosition(w.x, w.y);
+      }
     }
+    // Then beside her, as when the party stops.
+    this.settleParty(true);
   }
 
   /** In the present she walks behind Gianna; in the Echo she stays put, glowing, holding the door. */
@@ -1959,8 +2146,28 @@ export class FieldScene extends Phaser.Scene {
     }
   }
 
-  private startFollowerStep(playerFrom: Pos): void {
+  private startFollowerStep(playerFrom: Pos, playerTo: Pos): void {
+    // The party walks on: it settles again when it next stops.
+    this.settled = false;
+    this.idleMs = 0;
+    this.camEase = false;
     if (this.logic.era === 'echo') return;
+    // Settled beside her, the one ahead may have stood where she now steps: nobody follows onto her tile (or onto a
+    // tile another of the party is stepping to); they wait a step instead.
+    this.stepClaims = [playerTo];
+    this.followerSteps(playerFrom);
+    this.stepClaims = null;
+    // Someone she walked straight into steps aside to the tile beside her old one.
+    for (const { f, look } of this.partyLine()) {
+      if (!samePos(f.pos, playerTo)) continue;
+      const taken = [playerTo, ...this.partyLine().map((x) => x.f.pos)];
+      const aside = DIRS8.map((d) => stepFrom(playerFrom, d)).find((t) => !taken.some((x) => samePos(x, t)) && this.standOpen(t)) ?? playerFrom;
+      this.stepFollower(f, aside, look);
+    }
+  }
+
+  /** The line's steps: each follower steps where the one ahead of them was. */
+  private followerSteps(playerFrom: Pos): void {
     // Anissa steps where Gianna was; Yari steps where Anissa was (or where Gianna was, without her).
     const anissaWas = this.follower ? { ...this.follower.pos } : null;
     const anissaMoved = this.follower ? this.stepFollower(this.follower, playerFrom, this.anissaLook()) : false;
@@ -2023,6 +2230,16 @@ export class FieldScene extends Phaser.Scene {
 
   /** One follower's step towards `to` (where the one ahead was). Whether they moved. */
   private stepFollower(f: Follower, to: Pos, look: string): boolean {
+    if (this.stepClaims) {
+      if (this.stepClaims.some((c) => samePos(c, to))) to = f.pos;
+      else this.stepClaims.push(to);
+    }
+    // Still settling beside Gianna: the step starts from the tile she is nearer.
+    if (f.settle) {
+      if (f.settle.t < 0.5) f.pos = { ...f.from };
+      f.settle = undefined;
+      f.lastT = 1;
+    }
     // Count the end of her last step (her walk cycle carries on across tiles).
     f.distance += Math.max(0, 1 - f.lastT) * stepLength(f.from, f.pos);
     f.lastT = 0;
@@ -2039,14 +2256,18 @@ export class FieldScene extends Phaser.Scene {
   /** Anissa walks her step in time with Gianna's (`t` is how far through it Gianna is). */
   private moveFollower(t: number): void {
     if (this.logic.era === 'echo') return;
-    if (this.follower) this.moveOneFollower(this.follower, t, this.anissaLook());
-    if (this.yari) this.moveOneFollower(this.yari, t, 'yari');
-    if (this.azzy) this.moveOneFollower(this.azzy, t, 'azzy');
-    if (this.samira) this.moveOneFollower(this.samira, t, 'samira');
-    if (this.bayarmaa) this.moveOneFollower(this.bayarmaa, t, 'bayarmaa');
-    if (this.haru) this.moveOneFollower(this.haru, t, 'haru');
-    if (this.vikram) this.moveOneFollower(this.vikram, t, 'vikram');
-    if (this.edmund) this.moveOneFollower(this.edmund, t, 'edmund');
+    // (Someone still settling beside Gianna walks on in tickSettle.)
+    const go = (f: Follower | null, look: string) => {
+      if (f && !f.settle) this.moveOneFollower(f, t, look);
+    };
+    go(this.follower, this.anissaLook());
+    go(this.yari, 'yari');
+    go(this.azzy, 'azzy');
+    go(this.samira, 'samira');
+    go(this.bayarmaa, 'bayarmaa');
+    go(this.haru, 'haru');
+    go(this.vikram, 'vikram');
+    go(this.edmund, 'edmund');
   }
 
   private moveOneFollower(f: Follower, t: number, look: string): void {
@@ -2192,6 +2413,8 @@ export class FieldScene extends Phaser.Scene {
 
   private enterDialogueMode(): void {
     this.mode = 'dialogue';
+    // The party steps beside Gianna as the scene begins, so everyone in it can be seen.
+    this.settleParty(false);
     this.label.setVisible(false);
     this.labelKey = '';
     this.lastFx = undefined;
@@ -2220,11 +2443,59 @@ export class FieldScene extends Phaser.Scene {
       this.lastFx = view.fx;
       this.dialogue.show(view, this.logic.state.settings.textSpeed);
     };
-    if (view.stage && view.stage.length > 0) {
+    // A companion who speaks (or whom the narration names) and is not on the map walks on first (playtest Nov 1).
+    const stage = [...this.bringOnCues(view), ...(view.stage ?? [])];
+    if (stage.length > 0) {
       // Act the scene out first (the box steps aside), then the line.
       this.dialogue.hide();
-      this.perform(view.stage, show);
+      this.perform(stage, show);
     } else show();
+  }
+
+  /**
+   * Shown, not told (owner, Oct 17), with only one companion walking (owner, Oct 29): the companions a line needs on the
+   * map who are not there walk in beside Gianna from just behind the party, and walk off again when the scene ends.
+   */
+  private bringOnCues(view: { speaker: { id: string } | null; text: string; stage?: readonly StageCue[] }): StageCue[] {
+    if (this.logic.era !== 'present') return [];
+    const flags = this.logic.state.flags;
+    const members = partyMembers(flags, RPG, 'present').map((m) => m.id);
+    const onMap = new Set([...WALKING_COMPANIONS.filter((id) => this.walks(id)), ...this.stageActors.keys()]);
+    const names = Object.fromEntries(WALKING_COMPANIONS.map((id) => [id, this.logic.content.speakers[id]?.name ?? id]));
+    const staged = (view.stage?.length ?? 0) > 0 || this.stageActors.size > 0;
+    const ids = mustBringOn({ speaker: view.speaker?.id ?? null, text: view.text, staged }, { companions: WALKING_COMPANIONS, members, onMap, names });
+    const cues: StageCue[] = [];
+    const taken: Pos[] = [];
+    for (const id of ids) {
+      const { spot, from } = this.besideGianna(taken);
+      taken.push(spot);
+      this.broughtOn.set(id, from);
+      const p = this.logic.state.player;
+      cues.push({ do: 'enter', actor: id, look: id, from, to: spot, facing: p.facing });
+    }
+    return cues;
+  }
+
+  /** A free tile beside Gianna for someone joining the scene (as the party settles), and where they walk in from. */
+  private besideGianna(taken: readonly Pos[] = []): { spot: Pos; from: Pos } {
+    const p = this.logic.state.player;
+    const party = [...this.partyLine().map(({ f }) => f.pos), ...[...this.stageActors.values()].filter((a) => a.sprite.visible).map((a) => a.at), ...taken];
+    const open = (t: Pos) => this.standOpen(t) && !party.some((x) => samePos(x, t));
+    const [spot] = settleSpots({
+      player: p.pos,
+      facing: spriteFacing(p.facing),
+      followers: [p.pos],
+      open,
+      passable: (t) => this.logic.isOpen(t, 'present'),
+      reach: 6,
+      width: this.map.width,
+      height: this.map.height,
+      visible: (t) => this.tileVisible(t),
+      others: this.logic.npcs('present').map((n) => n.pos),
+      placed: party,
+    });
+    const at = spot && !samePos(spot, p.pos) ? spot : p.pos;
+    return { spot: at, from: entryTile(at, spriteFacing(p.facing), (t) => this.logic.isOpen(t, 'present') && !samePos(t, p.pos)) };
   }
 
   // ---- Stage directions (engine/stage.ts) ----------------------------------------------------
@@ -2322,6 +2593,7 @@ export class FieldScene extends Phaser.Scene {
   private borrowActor(id: string): StageActor | undefined {
     const on = this.stageActors.get(id);
     if (on) return on;
+    for (const { f } of this.partyLine()) this.finishSettle(f);
     if (id === 'yari' && this.yari) {
       // Yari walking with the party: a scene that names her moves her own sprite (never a second Yari).
       const f = this.yari;
@@ -2374,11 +2646,9 @@ export class FieldScene extends Phaser.Scene {
     if (WALKING_COMPANIONS.includes(id) && !this.walks(id) && partyMembers(this.logic.state.flags, RPG, 'present').some((m) => m.id === id)) {
       // A companion with the party but not walking the map (owner, Oct 29): a scene that moves them brings them on
       // from beside Gianna, as if they had been just behind her; they go again when the scene ends.
-      const p = this.logic.state.player;
-      const spot =
-        [opposite(spriteFacing(p.facing)), ...DIRS].map((d) => stepFrom(p.pos, d)).find((t) => this.logic.isOpen(t, 'present') && !this.logic.npcs('present').some((n) => samePos(n.pos, t))) ??
-        p.pos;
-      return this.stageActor(id, id, spot, p.facing);
+      const { spot, from } = this.besideGianna();
+      this.broughtOn.set(id, from);
+      return this.stageActor(id, id, spot, this.logic.state.player.facing);
     }
     if (id === STAGE_FOLLOWER && this.follower) {
       const f = this.follower;
@@ -2484,6 +2754,9 @@ export class FieldScene extends Phaser.Scene {
       // Glide towards the target rather than jump (a cut feels like a teleport).
       const cam = this.cameras.main;
       const want = cameraScroll({ x: target.x, y: target.y - TILE_SIZE / 2 }, this.camBounds, VIEW_WIDTH, VIEW_HEIGHT);
+      // Nobody in the scene stands under the dialogue box (playtest Nov 1): the camera moves down, past the map's
+      // bottom edge if need be.
+      want.y = dialogueCameraY(want.y, this.dialogueFeet(want), this.dialogueBoxTop(), CHARACTER_HEIGHT);
       const k = cameraGlideStep(delta, reduceMotion());
       if (this.stageActors.size > 0 || Math.abs(cam.scrollX - want.x) > 0.5 || Math.abs(cam.scrollY - want.y) > 0.5) {
         cam.setScroll(Math.round(cam.scrollX + (want.x - cam.scrollX) * k), Math.round(cam.scrollY + (want.y - cam.scrollY) * k));
@@ -2494,6 +2767,12 @@ export class FieldScene extends Phaser.Scene {
   /** The scene is over: everyone on stage leaves the picture, and the camera goes back to Gianna. */
   private clearStage(): void {
     for (const [id, a] of this.stageActors) {
+      // A companion brought on for the scene walks back off the way they came, fading (playtest Nov 1).
+      const entry = this.broughtOn.get(id);
+      if (entry && a.borrowed === undefined) {
+        this.walkOff(a, entry);
+        continue;
+      }
       if (id === 'yari' && a.borrowed === undefined && a.sprite.visible) this.yariStaged = { ...a.at };
       if (id === 'azzy' && a.borrowed === undefined && a.sprite.visible) this.azzyStaged = { ...a.at };
       if (id === 'samira' && a.borrowed === undefined && a.sprite.visible) this.samiraStaged = { ...a.at };
@@ -2534,13 +2813,57 @@ export class FieldScene extends Phaser.Scene {
       }
     }
     this.stageActors.clear();
+    this.broughtOn.clear();
     this.stageQueue = [];
     this.stageBlocking = null;
     this.stageWaitMs = 0;
     this.stageThen = null;
     this.stageCamera = null;
+    // The party settles again where the scene left them, and the camera eases back to Gianna.
+    this.settled = false;
+    this.idleMs = 0;
     setLook(this.player, this.playerLook(), this.logic.state.player.facing);
-    this.placeCamera(this.mover.point(this.logic.state.player.pos));
+    this.camEase = true;
+    this.easeCamera(0);
+  }
+
+  /** Someone brought on for a scene walks back to where they came in, fading as they go, and is gone. */
+  private walkOff(a: StageActor, to: Pos): void {
+    if (!a.sprite.visible) {
+      a.sprite.destroy();
+      return;
+    }
+    const tiles = walkRoute(this.logic, a.at, to) ?? [];
+    const ms = tiles.length * stepMs({ x: 0, y: 0 }, { x: 1, y: 0 }, speedPx(false));
+    const sprite = a.sprite;
+    this.tweens.add({ targets: sprite, alpha: 0, delay: Math.max(0, ms - 350), duration: 350, onComplete: () => sprite.destroy() });
+    if (tiles.length > 0) this.goers.push({ sprite, mover: a.mover, at: a.at, tiles, look: a.look, facing: a.facing });
+  }
+
+  /** After a conversation moved the camera, it glides back to Gianna (a cut would jump); `delta` 0 snaps when near. */
+  private easeCamera(delta: number): void {
+    if (!this.camEase) return;
+    const at = this.mover.point(this.logic.state.player.pos);
+    const want = cameraScroll({ x: at.x, y: at.y - TILE_SIZE / 2 }, this.camBounds, VIEW_WIDTH, VIEW_HEIGHT);
+    const cam = this.cameras.main;
+    if (Math.abs(cam.scrollX - want.x) <= 1 && Math.abs(cam.scrollY - want.y) <= 1) {
+      cam.setScroll(Math.round(want.x), Math.round(want.y));
+      this.camEase = false;
+      return;
+    }
+    const k = cameraGlideStep(delta, reduceMotion());
+    cam.setScroll(Math.round(cam.scrollX + (want.x - cam.scrollX) * k), Math.round(cam.scrollY + (want.y - cam.scrollY) * k));
+  }
+
+  /** Where the feet of everyone the conversation is about stand (world y), for keeping them above the dialogue box. */
+  private dialogueFeet(view: { x: number; y: number }): number[] {
+    const sprites: Phaser.GameObjects.Image[] = [this.player, ...this.partyLine().map(({ f }) => f.sprite)];
+    for (const a of this.stageActors.values()) sprites.push(a.sprite);
+    const talking = this.talkingTo ? this.npcSprites.get(this.talkingTo.objectId) : undefined;
+    if (talking) sprites.push(talking);
+    return sprites
+      .filter((s) => s.scene && s.visible && s.alpha > 0.2 && s.x >= view.x && s.x <= view.x + VIEW_WIDTH && s.y >= view.y + CHARACTER_HEIGHT / 2 && s.y <= view.y + VIEW_HEIGHT + CHARACTER_HEIGHT)
+      .map((s) => s.y);
   }
 
   private playFx(fx: string): void {
