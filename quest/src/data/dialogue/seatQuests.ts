@@ -84,8 +84,8 @@ const KEPT: Record<number, DialogueLine[]> = {
   ],
   2: [say(G, '"I will not put my name to this page. B. Rodriguez." In his own hand, under the Dorini copy\'s ribbons.')],
   3: [
-    say(G, 'Yusuf Dorini wrote the price in the margin the day it was sealed. "The price of the harbour. Twenty-five."'),
-    say(G, 'Preference in the Crown\'s ports, for a harbour that was not theirs to sell. He wrote it so it would be a debt.'),
+    say(G, 'Yusuf Dorini wrote the price in the margin the day it was sealed. "The price of the harbor. Twenty-five."'),
+    say(G, 'Preference in the Crown\'s ports, for a harbor that was not theirs to sell. He wrote it so it would be a debt.'),
   ],
   4: [say(G, 'The boy in the gallery was Thomas Stillwater. He wrote what happened, not what the Crown said. It is in his record.')],
 };

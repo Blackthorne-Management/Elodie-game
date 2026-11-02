@@ -368,10 +368,13 @@ export class GameLogic {
       if (this.hasNews(def.dialogue)) out.push({ kind: 'talk', id: `npc:${n.objectId}`, pos: { ...n.pos } });
     }
     const taken = new Set<string>();
+    // A quiet map (GameContent.quietMarkers) marks only what a use would still change, not what is merely unseen.
+    const quiet = this.content.quietMarkers?.(this.map.id, this.state.flags) ?? false;
     for (const o of this.objects()) {
       const inspect = this.content.objects?.[o.id]?.inspect;
       if (!o.dialogue && !inspect) continue;
-      const fresh = !this.state.flags.isSet(seenFlag(this.map.id, o.id)) || (!!o.dialogue && this.hasNews(o.dialogue));
+      const news = () => !!o.dialogue && this.hasNews(o.dialogue);
+      const fresh = quiet ? news() : !this.state.flags.isSet(seenFlag(this.map.id, o.id)) || news();
       const pos = { x: o.area.x + (o.area.width - 1) / 2, y: o.area.y };
       const key = `${pos.x},${pos.y}`;
       if (!fresh || taken.has(key)) continue;

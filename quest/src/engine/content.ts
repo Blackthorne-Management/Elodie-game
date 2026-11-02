@@ -137,6 +137,11 @@ export interface GameContent {
    * cashes one of Yusuf's coupons once a chapter). Nothing most of the time.
    */
   beforeShop?: (flags: FlagStore) => string | undefined;
+  /**
+   * Where the map's "not used yet" sparkles stay off (a crowded scene, such as the Hearing in the Throne Hall): only people
+   * with something new and things whose use would still change something keep their marker there (engine/game.ts markers).
+   */
+  quietMarkers?: (mapId: string, flags: FlagReader) => boolean;
 }
 
 /** What a step changed (GameContent.onStep): a note to sound at the tile, and a line to toast. */

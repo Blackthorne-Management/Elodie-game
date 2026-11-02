@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import { PORTRAIT_SIZE, UI, textureKeyForPortrait, textureKeyForPortraitMood } from '../assets.config.ts';
 import { TEXT_SPEEDS, VIEW_HEIGHT, VIEW_WIDTH, type TextSpeed } from '../config.ts';
 import { typewriterChars, type DialogueView } from '../engine/dialogue.ts';
+import { fillButtons } from '../input/buttonNames.ts';
 import { dialogueExtraPx, textStyle } from './text.ts';
 
 // Tall enough for a PORTRAIT_SIZE portrait with padding.
@@ -110,7 +111,14 @@ export class DialogueBox {
     return this.root.visible && x >= BOX_X && x < BOX_X + BOX_W && y >= boxY() - 13 && y < boxY() + boxH();
   }
 
-  show(view: DialogueView, speed: TextSpeed): void {
+  show(shown: DialogueView, speed: TextSpeed): void {
+    // Button names in a line ("{A} to talk") as the player's device names them (input/buttonNames.ts).
+    const view: DialogueView =
+      shown.kind === 'end'
+        ? shown
+        : shown.kind === 'choice'
+          ? { ...shown, text: fillButtons(shown.text), choices: shown.choices.map((c) => ({ ...c, text: fillButtons(c.text) })) }
+          : { ...shown, text: fillButtons(shown.text) };
     this.view = view;
     this.cps = TEXT_SPEEDS[speed];
     this.elapsed = 0;

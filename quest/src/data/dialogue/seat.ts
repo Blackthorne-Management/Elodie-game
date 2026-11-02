@@ -12,7 +12,9 @@
 // `echo.*` the sealing's own (wiped on the way back), `anchor.ribbon_thread` what the sealing carries back.
 
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
+import type { Condition } from '../../engine/conditions.ts';
 import type { StageCue } from '../../engine/stage.ts';
+import { sits } from '../claim.ts';
 import { DRAWER_NUMBERS, DRAWER_PLATES, DRAWER_X0, RIBBON } from '../seatArchive.ts';
 import { MINUTE_RETURN, RIBBON_BRANCHES, RIBBON_NODES } from './seatQuests.ts';
 
@@ -42,6 +44,17 @@ function simple(id: string, lines: DialogueLine[], set?: DialogueNode['set']): D
 function at(x: number, y: number): { x: number; y: number } {
   return { x, y };
 }
+
+/** The council chairs with a house behind them (Xaraguá's, the eighth, has its own line), and the house's name. */
+const CHAIR_HOUSES = {
+  zetwal: 'Zetwal',
+  ardencia: 'Ardencia',
+  al_doria: 'Al-Doria',
+  aldermoor: 'Aldermoor',
+  skarragol: 'Skarragol',
+  kuroshi: 'Kuroshi',
+  jwaladesh: 'Jwaladesh',
+} as const;
 
 const G = 'gianna';
 const A = 'anissa';
@@ -487,9 +500,24 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
   simple('chamber_skarragol', [nar('Skarragol\'s chamber: grey felt over the door, and a horse-tail pole with nothing on it.')]),
   simple('chamber_kuroshi', [nar('Kuroshi\'s chamber: a lacquered screen. Someone behind it is writing.')]),
   simple('chamber_jwaladesh', [nar('Jwaladesh\'s chamber: a brass lamp over the door, not lit.')]),
-  ...(['zetwal', 'ardencia', 'al_doria', 'aldermoor', 'skarragol', 'kuroshi', 'jwaladesh'] as const).map((house) =>
-    simple(`chair_${house}`, [nar('A council chair, empty. At a Parley the envoys stand; the chairs fill only at a Claim.')]),
-  ),
+  // A chair's line follows the story (the Nov 1 playtest's 12: the Chapter 5 line was still read at the Hearing): empty at
+  // the Parley; from the bell its house sits (or, bought at the Muster, it stays bare); the Hearing; after the verdict.
+  ...(Object.entries(CHAIR_HOUSES) as [keyof typeof CHAIR_HOUSES, string][]).map(([house, name]) => {
+    const seated = sits(house);
+    const bell: Condition = { flag: 'story.bell_claim' };
+    const kept = (c: Condition): Condition => ({ all: seated ? [c, seated] : [c] });
+    return simple(`chair_${house}`, [
+      nar('A council chair, empty. At a Parley the envoys stand; the chairs fill only at a Claim.', { if: { not: bell } }),
+      nar(`${name}'s chair. The Claim filled it at the bell, and ${name}'s people stand behind it.`, {
+        if: kept({ all: [bell, { not: { flag: 'story.hearing_called' } }] }),
+      }),
+      nar(`${name}'s chair, filled for the Hearing. ${name} waits on the Throne's word like everyone else.`, {
+        if: kept({ all: [{ flag: 'story.hearing_called' }, { not: { flag: 'hearing.verdict' } }] }),
+      }),
+      nar(`${name}'s chair. The Hearing is over; the chair stays where the Claim set it.`, { if: kept({ flag: 'hearing.verdict' }) }),
+      ...(seated ? [nar(`${name}'s chair, bare. ${name} sailed to the Crown at the Muster.`, { if: { all: [bell, { not: seated }] } })] : []),
+    ]);
+  }),
   simple('chair_xaragua', [nar('Xaraguá\'s chair: the eighth, with no chamber behind it but a wall.')]),
   simple('throne_tile', [nar('The Throne: a tile of carved stone on the dais, the sun and its eight rays. Nobody has stood on it in fifty years.')]),
   simple('throne_rope', [nar('A violet rope on brass posts. The Throne is behind it.')]),

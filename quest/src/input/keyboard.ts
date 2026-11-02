@@ -28,6 +28,7 @@ export const KEYMAP: Readonly<Record<string, Button[]>> = {
 };
 
 export class KeyboardSource implements InputSource {
+  readonly device = 'keyboard' as const;
   private down = new Set<string>();
   private presses: Button[] = [];
 

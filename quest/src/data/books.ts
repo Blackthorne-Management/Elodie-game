@@ -568,9 +568,9 @@ export const BOOKS: readonly Book[] = [
     category: 'law',
     text:
       'Agreement between His Majesty\'s trade factor and the Dorini guild council, in the Merchant-Prince\'s Majlis. ' +
-      'In return for the guild\'s good offices in the ports, the Crown grants the guild preference in its harbours. ' +
+      'In return for the guild\'s good offices in the ports, the Crown grants the guild preference in its harbors. ' +
       'Preference means the first purchase of any cargo landed, at a price the Crown names, before any other buyer may bid. ' +
-      'Schedule of harbours: Pòdlimyè, Cenizal, and, by the seventh clause of the Sun Accord as signed, Yucayeque in Xaraguá. ' +
+      'Schedule of harbors: Pòdlimyè, Cenizal, and, by the seventh clause of the Sun Accord as signed, Yucayeque in Xaraguá. ' +
       'Signed for the guild by Guildmaster Qasim. Witnessed by the chief scribe. ' +
       'The space for the Merchant-Prince\'s seal is empty. A note in the margin, in a different hand: "Not by me."',
   },
@@ -849,7 +849,7 @@ export const BOOKS: readonly Book[] = [
     title: 'Genzō\'s Ear',
     category: 'history',
     text:
-      'Suzumori Genzō was a harbour clerk who could not stop listening. ' +
+      'Suzumori Genzō was a harbor clerk who could not stop listening. ' +
       'He kept a book of what sailors said in the tea houses. ' +
       'Which ship carried what, which captain owed whom, which Crown officer drank. ' +
       'He never repeated a word of it. ' +
@@ -1050,7 +1050,7 @@ export const BOOKS: readonly Book[] = [
     available: { flag: 'clue.fox_receipts' },
     text:
       'Eleven years of receipts from a broker of Kirinoura, kept in a lacquer box under the file house floor. ' +
-      'Each is for copies of files from the sealed house: troop counts, harbour charts, informants\' names. ' +
+      'Each is for copies of files from the sealed house: troop counts, harbor charts, informants\' names. ' +
       'Each is paid in Throne sols. ' +
       'Each is countersigned in Aldermoor violet by the Throne\'s observer. ' +
       'The keeper of files is paid on every one, in a smaller hand at the foot. ' +

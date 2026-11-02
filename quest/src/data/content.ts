@@ -50,6 +50,9 @@ export const CONTENT: GameContent = {
   // The Sakk of Yusuf (Chapter 4): Samira's coupon, once a chapter, at a shop.
   beforeShop: cashCoupon,
   formatText,
+  // The Hearing (the Epilogue) fills the Throne Hall: only what still has something to say keeps its marker there, not
+  // every chair and door seen or not (the Nov 1 playtest's 12; Claude's call, Nov 1).
+  quietMarkers: (mapId, flags) => mapId === 'seat-hall' && !!flags.get('story.hearing_called'),
 };
 
 /**

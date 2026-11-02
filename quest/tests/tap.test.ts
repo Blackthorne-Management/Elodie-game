@@ -61,6 +61,13 @@ describe('tap to move', () => {
     expect(stepFrom(end, plan.face!)).toEqual({ x: 5, y: 1 });
   });
 
+  it('a tap on the open tile just above a person (their head and "!") is a tap on them', () => {
+    const g = logic();
+    const plan = planTap(g, { x: 5, y: 0 })!;
+    expect(plan.face).not.toBeNull();
+    expect(stepFrom(walk(g, plan.path), plan.face!)).toEqual({ x: 5, y: 1 });
+  });
+
   it('walks up to a thing to use and faces it; already beside it, just faces it', () => {
     const g = logic();
     const plan = planTap(g, { x: 1, y: 4 })!;

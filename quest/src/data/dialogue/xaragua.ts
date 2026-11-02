@@ -67,7 +67,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   // The ferry lands: marines are shaking down the fishers at the end of the pier. They start the fight
   // (owner report, Oct 17: the reason to fight must be clear), and the aftermath plays at once (battle.after).
   simple('xaragua_arrival', [
-    nar('The ferry coach bumps against the pier at dawn. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
+    nar('The ship\'s boat bumps against the pier at dawn. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
     say(Y, 'Yucayeque. Home.'),
     // Gianna asked Yari to tell her everything on the way (Chapter 1, the island dock): remembered (Oct 19).
     { speaker: Y, text: 'And them. There were two ships when I left. Now there are three.', if: { notFlag: 'choice.yari_everything' } },
@@ -894,7 +894,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         nar('The standing stones. Each is carved with a drum, its top worn smooth by hands that tapped it.'),
         say(A, `The whole song, Gigi: ${BAR1}; ${BAR2}; ${BAR3}.`),
-        nar('Tap A (or the screen) at the start of each mark. A long mark lasts two beats, a short one one.'),
+        nar('Press {A} (or tap the screen) at the start of each mark. A long mark lasts two beats, a short one one.'),
       ],
       choices: [
         { text: 'Tap the drum song.', set: { 'rhythm.next': 'record_lock' } },

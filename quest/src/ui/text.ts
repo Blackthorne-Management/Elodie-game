@@ -20,10 +20,21 @@ let size: TextSize = readSize();
 function readSize(): TextSize {
   try {
     const v = localStorage.getItem(STORAGE_KEY);
-    return v === 'large' ? 'large' : 'normal';
+    if (v === 'large' || v === 'normal') return v;
   } catch {
-    return 'normal';
+    // No storage: the default below.
   }
+  return smallScreen() ? 'large' : 'normal';
+}
+
+/**
+ * A phone (a touch screen whose short side is under 500 px) starts on Large text until the player picks a size in
+ * System (the Nov 1 playtests: phone text was 7 px tall; Claude's call, Nov 1).
+ */
+function smallScreen(): boolean {
+  if (typeof window === 'undefined') return false;
+  const touch = 'ontouchstart' in window || (navigator.maxTouchPoints ?? 0) > 0;
+  return touch && Math.min(window.screen?.width ?? Infinity, window.screen?.height ?? Infinity) < 500;
 }
 
 /** How many screen pixels each game pixel is drawn with (set once at boot). */

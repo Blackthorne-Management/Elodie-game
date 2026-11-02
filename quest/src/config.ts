@@ -133,13 +133,13 @@ export const TOUCH_BUTTON_STACK_PX = 72;
 
 /**
  * Where the controls and the minimap go (engine/scaling.ts screenLayout). On a touch screen held
- * sideways the D-pad takes the left bar and A, B, Echo, Menu and the minimap the right bar; each bar
- * is at least TOUCH_SIDE_PX wide (the picture shrinks a little when the screen's own bars are
- * narrower). Held upright, the controls take a bottom bar of at least TOUCH_STACK_PX and the minimap
- * the top bar. Without touch, the minimap goes in a side bar at least MAP_BAR_PX wide, else on the
- * picture's top-left corner.
+ * sideways the picture keeps the largest zoom that fits (the Nov 1 playtests); the D-pad takes the left bar and A, B,
+ * Echo, Menu and the minimap the right bar when those bars are at least TOUCH_SIDE_MIN_PX wide (overlapping the
+ * picture's edge a little where the bar is narrower than the controls), else the controls sit on the picture's corners.
+ * Held upright, the controls take a bottom bar of at least TOUCH_STACK_PX and the minimap the top bar. Without touch,
+ * the minimap goes in a side bar at least MAP_BAR_PX wide, else on the picture's top-left corner.
  */
-export const TOUCH_SIDE_PX = 150;
+export const TOUCH_SIDE_MIN_PX = 90;
 export const TOUCH_STACK_PX = 196;
 export const MAP_BAR_PX = 140;
 

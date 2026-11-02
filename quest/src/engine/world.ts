@@ -7,6 +7,7 @@ import type { FlagReader } from './flags.ts';
 import { inBounds, isWalkable, onDoor, otherEra, samePos } from './grid.ts';
 import { rectContains, type EchoZone, type GameMap, type NpcPlacement, type PuzzleObject, type Trigger } from './tiledMap.ts';
 import type { Era, EraScope, Pos } from './types.ts';
+import { echoHint, type Device } from '../input/buttonNames.ts';
 
 /** Flags in this namespace belong to the memory: they are wiped when the player returns to the present. */
 export const ECHO_FLAG_PREFIX = 'echo.';
@@ -77,7 +78,7 @@ export function checkSwap(map: GameMap, era: Era, pos: Pos, flags: FlagReader): 
  * press, named as the player's controls name it. Nothing where it would not work (no zone, locked, or
  * no room in the other era).
  */
-export function echoPrompt(check: SwapCheck, controls: 'keys' | 'touch'): string | null {
+export function echoPrompt(check: SwapCheck, device: Device): string | null {
   if (!check.ok) return null;
-  return controls === 'touch' ? 'Press Echo to Echo' : 'Press E to Echo';
+  return echoHint(device);
 }

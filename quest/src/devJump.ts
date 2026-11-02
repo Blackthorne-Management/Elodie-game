@@ -9,7 +9,12 @@ import { RPG } from './data/rpg.ts';
 import { battleItems, settleBattle, type Battle } from './engine/battle.ts';
 import { GameLogic } from './engine/game.ts';
 import { recordLoss } from './engine/gameOver.ts';
+import { DEBATES } from './data/debates.ts';
+import { SIDE_QUESTS } from './data/sideQuests.ts';
+import { settleDebates } from './engine/debate.ts';
+import { addSharedXp, pillarFlag } from './engine/rpg.ts';
 import { markShown, pendingShowcases } from './engine/showcase.ts';
+import { settleRewards } from './engine/sideQuests.ts';
 import { Sim, parseRoute } from './engine/sim.ts';
 import { newGame } from './engine/state.ts';
 import type { GameMap } from './engine/tiledMap.ts';
@@ -40,7 +45,20 @@ export function playTo(maps: Record<string, GameMap>, marker: string, start: { m
   };
   if (sim.logic.enterMap().some((e) => e.kind === 'dialogue')) sim.cursor = 0;
   sim.run(items.slice(0, end));
-  // A player reaching this point has seen every item popup on the way.
+  // A player reaching this point was paid for every debate and side quest on the way (the field pays them as they finish,
+  // with a toast each: settled here silently, so the jump does not replay them all on arrival; the Nov 1 playtests' 21),
+  // and has seen every item popup on the way (the Chapter 1 reward card among them).
+  const flags = sim.logic.state.flags;
+  settleRewards(flags, RPG, SIDE_QUESTS);
+  settleDebates(
+    flags,
+    DEBATES,
+    (p, city, n) => {
+      const v = flags.get(pillarFlag(p, city));
+      flags.set(pillarFlag(p, city), (typeof v === 'number' ? v : 0) + n);
+    },
+    (n) => addSharedXp(flags, n),
+  );
   for (const shown of pendingShowcases(sim.logic.state.flags, RPG)) markShown(sim.logic.state.flags, shown.id);
   return sim.logic;
 }

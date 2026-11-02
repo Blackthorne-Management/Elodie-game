@@ -227,10 +227,11 @@ describe('route text', () => {
 describe('the Echo prompt (owner request, Oct 16)', () => {
   it('names the key for keyboards and the button for touch, only where an Echo works', () => {
     const ok = { ok: true, to: 'echo', zone: {} } as unknown as Parameters<typeof echoPrompt>[0];
-    expect(echoPrompt(ok, 'keys')).toBe('Press E to Echo');
-    expect(echoPrompt(ok, 'touch')).toBe('Press Echo to Echo');
+    expect(echoPrompt(ok, 'keyboard')).toBe('Press E to Echo');
+    expect(echoPrompt(ok, 'gamepad')).toBe('Press X to Echo');
+    expect(echoPrompt(ok, 'touch')).toBe('Tap Echo');
     for (const reason of ['no_zone', 'locked', 'blocked'] as const) {
-      expect(echoPrompt({ ok: false, reason }, 'keys')).toBeNull();
+      expect(echoPrompt({ ok: false, reason }, 'keyboard')).toBeNull();
       expect(echoPrompt({ ok: false, reason }, 'touch')).toBeNull();
     }
   });

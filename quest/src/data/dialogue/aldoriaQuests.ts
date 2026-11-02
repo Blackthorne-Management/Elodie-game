@@ -385,7 +385,7 @@ const INVOICE_DIALOGUE: DialogueScript[] = [
   }),
   script('crown_factor_talk', {
     start: { lines: [], next: [{ if: f(I.done), to: 'after' }, { if: f(I.accepted), to: 'invoice' }, { to: 'plain' }] },
-    plain: { lines: [say('crown_factor', 'His Majesty\'s trade factor. I buy what the guild sells. Today, a harbour\'s worth of cassava.')] },
+    plain: { lines: [say('crown_factor', 'His Majesty\'s trade factor. I buy what the guild sells. Today, a harbor\'s worth of cassava.')] },
     invoice: {
       lines: [
         act(
@@ -408,7 +408,7 @@ const INVOICE_DIALOGUE: DialogueScript[] = [
     },
     crates: {
       lines: [
-        say(G, 'Cassava for a harbour you blockade, under the Charter\'s seal. The Majlis would like to read about that. So would Eightgate.'),
+        say(G, 'Cassava for a harbor you blockade, under the Charter\'s seal. The Majlis would like to read about that. So would Eightgate.'),
         say('crown_factor', '...How much?'),
         say(S, 'It is on the paper. It has always been on the paper.'),
         ...paidUp(I.influence),

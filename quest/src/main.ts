@@ -27,6 +27,7 @@ import { loadFonts, renderScale, setRenderScale } from './ui/text.ts';
 import { newGame } from './engine/state.ts';
 import { parseMap, type GameMap } from './engine/tiledMap.ts';
 import { InputManager, type InputSource } from './input/actions.ts';
+import { setDevice } from './input/buttonNames.ts';
 import { GamepadSource } from './input/gamepad.ts';
 import { KeyboardSource } from './input/keyboard.ts';
 import { TouchSource, isTouchDevice } from './input/touch.ts';
@@ -39,6 +40,7 @@ import { IntroScene } from './scenes/IntroScene.ts';
 import { VoyageScene } from './scenes/VoyageScene.ts';
 import { isStandalone, mountFullscreenButton } from './ui/fullscreen.ts';
 import { mountInstallScreen } from './ui/installScreen.ts';
+import { mountRotateCard } from './ui/rotateCard.ts';
 import { openNoticeDialog } from './ui/saveCodeDialog.ts';
 import { applyReduceMotionClass } from './ui/reduceMotion.ts';
 import { fitToScreen, preventBrowserZoom, visibleViewport } from './ui/screen.ts';
@@ -109,6 +111,8 @@ preventBrowserZoom();
 applyReduceMotionClass();
 
 const sources: InputSource[] = [new KeyboardSource(), new GamepadSource()];
+// The prompts name the buttons of the device used last; a touch screen starts on its own buttons (input/buttonNames.ts).
+setDevice(isTouchDevice() ? 'touch' : 'keyboard');
 if (isTouchDevice()) {
   document.body.classList.add('touch');
   sources.push(new TouchSource(document.body));
@@ -194,3 +198,4 @@ const game = new Phaser.Game({
 
 game.events.once(Phaser.Core.Events.READY, () => fitToScreen((zoom) => game.scale.setZoom(zoom / S), isTouchDevice()));
 mountFullscreenButton();
+if (isTouchDevice()) mountRotateCard();
