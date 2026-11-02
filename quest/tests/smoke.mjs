@@ -1029,10 +1029,9 @@ async function fightBoar(page, shots) {
   check(['How to fight', 'Attack and Skill', 'Guard and Item'].every((t) => titles.includes(t)), 'they cover turns, targets, Skill, Guard and Item');
   await page.waitForFunction(() => { const b = window.__quest.snapshot().battle; return b && !b.busy; }, null, { timeout: 15000 });
   await shoot(page, 'battle-start', shots);
-  // Whose turn it is shows on the field (owner report, Oct 29): a gold outline and a light at the fighter's feet.
-  const first = (await snap(page)).battle;
-  check(first.acting === first.actor && first.acting !== 'anissa' && first.mark?.visible === true, `the fighter whose turn it is is marked on the field (${JSON.stringify({ actor: first.actor, acting: first.acting, mark: first.mark })})`);
-  await page.screenshot({ path: join(SHOT_DIR, 'quest-battle-acting.png') });
+  // Whose turn it is shows on the field (owner report, Oct 29): checked on the first turn that waits for a command
+  // (a lesson page can come first: Yari's weapon moves, when she acts first).
+  let markChecked = false;
   let targeted = false;
   // B from the target cursor goes back to the menu it came from (owner report, Oct 29): X once, Escape once.
   const backKeys = ['KeyX', 'Escape'];
@@ -1059,6 +1058,12 @@ async function fightBoar(page, shots) {
       await page.keyboard.press('KeyZ');
       await page.waitForTimeout(120);
       continue;
+    }
+    if (!markChecked) {
+      markChecked = true;
+      const first = bt;
+      check(first.acting === first.actor && first.acting !== 'anissa' && first.mark?.visible === true, `the fighter whose turn it is is marked on the field (${JSON.stringify({ actor: first.actor, acting: first.acting, mark: first.mark })})`);
+      await page.screenshot({ path: join(SHOT_DIR, 'quest-battle-acting.png') });
     }
     if (bt.done) {
       await shoot(page, 'battle-won', shots);
