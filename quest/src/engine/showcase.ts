@@ -41,6 +41,8 @@ export interface ShowcaseView {
   /** Bonuses while worn, as "DEF +1" etc. (gear only). */
   stats: string[];
   abilities: AbilityView[];
+  /** The gear slot it is worn in ("charm"), for the card's "how to wear it" line; none for other items. */
+  slot?: string;
 }
 
 export const TIER_BANNERS: Readonly<Record<ShowcaseTier, string>> = {
@@ -69,6 +71,7 @@ export function showcaseView(flags: FlagReader, item: ItemDef): ShowcaseView {
     text: item.text,
     stats: STAT_KEYS.filter((k) => item.stats?.[k]).map((k) => `${STAT_LABELS[k]} +${item.stats![k]}`),
     abilities: abilityViews(flags, item),
+    ...(item.slot ? { slot: item.slot } : {}),
   };
 }
 

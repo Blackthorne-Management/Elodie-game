@@ -6,6 +6,7 @@
 import Phaser from 'phaser';
 import { INTRO_SEEN_KEY, introLoopSeek, introPhaseAt, introPress, introStartTime, type IntroOpening, type IntroPhase, type IntroPress } from '../engine/intro.ts';
 import { audio } from '../audio/player.ts';
+import { buttonName, currentDevice } from '../input/buttonNames.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { getRuntime } from '../runtime.ts';
 
@@ -119,6 +120,8 @@ export class IntroScene extends Phaser.Scene {
 
   private setPhase(phase: IntroPhase): void {
     if (phase === 'title') this.markSeen();
+    const keys = this.layer?.querySelector<HTMLElement>('.intro-keys');
+    if (keys) keys.textContent = currentDevice() === 'touch' ? '(tap anywhere)' : currentDevice() === 'keyboard' ? `(${buttonName('confirm')} on a keyboard)` : '';
     if (this.phase === phase) return;
     this.phase = phase;
     if (this.prompt) this.prompt.hidden = phase !== 'start';
@@ -160,9 +163,14 @@ export class IntroScene extends Phaser.Scene {
 
     const prompt = document.createElement('div');
     prompt.className = 'intro-prompt';
-    prompt.textContent = isTouchDevice() ? 'Tap to start' : 'Press A (Z or Enter) to start';
+    prompt.textContent = isTouchDevice() ? 'Tap to start' : `Press ${buttonName('confirm')} to start`;
     prompt.hidden = true;
     layer.appendChild(prompt);
+
+    // The film's title says "Press A" (a gamepad's name): under it, what that is on this device (the Nov 1 playtests).
+    const keys = document.createElement('div');
+    keys.className = 'intro-keys';
+    layer.appendChild(keys);
 
     const skip = document.createElement('button');
     skip.className = 'intro-skip';

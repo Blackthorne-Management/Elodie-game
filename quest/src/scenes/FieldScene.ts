@@ -41,6 +41,7 @@ import { Mover, restDistance, speedPx, stepLength, stepMs, tileFoot, walkFrame }
 import { dialogueCameraY, entryTile, mustBringOn, settleSpots } from '../engine/partyPlacement.ts';
 import { cameraBounds, cameraScroll } from '../engine/scaling.ts';
 import { dirButtons } from '../input/actions.ts';
+import { currentDevice, setDevice } from '../input/buttonNames.ts';
 import { currentObjective, journalEntries, journalNotes, questForJournal, questForMap, type QuestDef } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
 import { applySave, newGame, placeSave, toSaveData } from '../engine/state.ts';
@@ -81,7 +82,6 @@ import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, CARD_MUSIC, DIALOGUE_MUSIC, ECHO_MUSIC, MUSIC_BY_MAP, MUSIC_OVERRIDES, SFX_IDS, VOLUME_STEPS, type SfxId } from '../audio.config.ts';
 import { blipDue, musicFor, nextVolume, volumeLabel } from '../engine/audioPlan.ts';
 import { echoPrompt } from '../engine/world.ts';
-import { isTouchDevice } from '../input/touch.ts';
 import { npcMoves, walkRoute } from '../engine/walkers.ts';
 import { crowdLooks, crowdSpots, crowdStep, twinNear } from '../engine/crowd.ts';
 import { Rng } from '../engine/rng.ts';
@@ -563,6 +563,8 @@ export class FieldScene extends Phaser.Scene {
     // Anissa's hint, menus, shops and dialogue.
     const onPicture = document.body.dataset.layout === 'overlay';
     this.minimap?.setVisible(!onPicture || (this.mode === 'field' && !this.hint.visible));
+    // Rewards and level-ups wait while a scene, a card or a menu is up (ui/Toast.ts setHeld).
+    this.toast.setHeld(this.mode !== 'field');
     // A newly received important item interrupts the field or a conversation (engine/showcase.ts).
     if (this.mode === 'field' || this.mode === 'dialogue') this.showPendingItem();
     switch (this.mode) {
@@ -645,6 +647,8 @@ export class FieldScene extends Phaser.Scene {
   }
 
   private afterBattle(result: BattleResult | null, then?: string): void {
+    // A scene may follow the fight at once: its level-ups wait until the field says otherwise (update).
+    this.toast.setHeld(true);
     this.mode = 'field';
     this.rt.input.clearPresses();
     if (result) {
@@ -704,7 +708,8 @@ export class FieldScene extends Phaser.Scene {
 
   /** Show the first important item received and not yet presented, if any. */
   private showPendingItem(): void {
-    const item = pendingShowcases(this.logic.state.flags, RPG)[0];
+    // A quest reward's card waits for the scene to end; a story item handed over in a conversation shows at once.
+    const item = pendingShowcases(this.logic.state.flags, RPG).find((i) => this.mode === 'field' || (i.showcase ?? 'story') !== 'reward');
     if (!item) return;
     markShown(this.logic.state.flags, item.id);
     this.openShowcase(item.id);
@@ -980,6 +985,8 @@ export class FieldScene extends Phaser.Scene {
   /** A tap or click on the picture: walk there, or up to the person or thing tapped and use it. */
   private onTap(pointer: Phaser.Input.Pointer): void {
     if (this.leaving) return;
+    // A finger on the picture: the prompts name the touch buttons from now on (input/buttonNames.ts).
+    if (pointer.wasTouch) setDevice('touch');
     // Screens over the field take taps in game pixels (the 320 x 180 layout, not the camera's world);
     // the canvas is drawn at the render scale.
     const k = renderScale();
@@ -1172,7 +1179,7 @@ export class FieldScene extends Phaser.Scene {
 
   /** Show which key makes the Echo while the player stands where one works (only in the field). */
   private updateEchoPrompt(): void {
-    const text = this.mode === 'field' ? echoPrompt(this.logic.swapCheck(), isTouchDevice() ? 'touch' : 'keys') : null;
+    const text = this.mode === 'field' ? echoPrompt(this.logic.swapCheck(), currentDevice()) : null;
     if (!text) {
       if (this.echoText.visible) this.echoText.setVisible(false);
       return;
@@ -2399,7 +2406,7 @@ export class FieldScene extends Phaser.Scene {
       lines.push({ text: `${c.title} by ${c.author} (${c.licence})`, color: UI.text, gap: 4 });
       lines.push({ text: `${c.use}. ${c.url}`, color: UI.dimText });
     }
-    lines.push({ text: atTheEnd ? '(A to the title)' : '(B to close)', color: UI.dimText, gap: 4 });
+    lines.push({ text: atTheEnd ? '({A} for the title)' : '({B} to close)', color: UI.dimText, gap: 4 });
     this.menu.close();
     this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
     this.mode = atTheEnd ? 'credits' : 'journal';
@@ -2418,7 +2425,7 @@ export class FieldScene extends Phaser.Scene {
     const lines: PanelLine[] = [
       { text: card.title, color: UI.cardTitle, center: true },
       ...cardLines(card, this.logic.state.flags).map((t, i) => ({ text: t, center: true, gap: i === 0 ? 10 : 2 })),
-      { text: '(A to continue)', color: UI.dimText, center: true, gap: 16 },
+      { text: '({Continue})', color: UI.dimText, center: true, gap: 16 },
     ];
     const art = CARD_ART[card.id];
     // Over a picture, the text sits on a veil so it still reads; without one, on black as before.
@@ -3053,7 +3060,7 @@ export class FieldScene extends Phaser.Scene {
       { id: 'import', label: 'Import save code' },
       { id: 'intro', label: 'Watch the intro' },
       { id: 'credits', label: 'Credits' },
-      { id: 'new', label: this.confirmNewGame ? 'New game? Press A again' : 'New game' },
+      { id: 'new', label: this.confirmNewGame ? 'New game? Press {A} again' : 'New game' },
       { id: 'close', label: 'Close' },
     );
     return items;

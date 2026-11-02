@@ -52,7 +52,7 @@ const C = 'caona';
 /**
  * Layla Dorini, the Merchant-Prince and Samira's mother: every line that depends on who she is, in one place (the
  * outline's owner question 1 is being asked now; the build goes ahead on the recommendation, (a)). If the owner
- * chooses (b), a Merchant-Prince from another guild family with Layla the harbour banker who pays Samira's debts,
+ * chooses (b), a Merchant-Prince from another guild family with Layla the harbor banker who pays Samira's debts,
  * these lines and the speaker below change, and nothing else does.
  */
 export const LAYLA = {
@@ -61,7 +61,7 @@ export const LAYLA = {
   samiraWarns: 'And the Merchant-Prince will refuse you. My mother refuses everyone.',
   refuse: 'The Dorini witnessed. The Dorini hold. A witness who hands over what she holds is no witness at all.',
   toAzzy: "Brasador's son, running from his father. Al-Doria does not take sides in family matters.",
-  toYari: 'You are the Yaguana girl. We buy from whoever holds a harbour. That is what a harbour is for.',
+  toYari: 'You are the Yaguana girl. We buy from whoever holds a harbor. That is what a harbor is for.',
   heard: 'The Majlis has heard the envoy.',
   /** In the vault, after Qasim (she speaks only to Qasim's crime and to Gianna; to her daughter, nothing). */
   judgesQasim: "The guildmaster hired blades inside the guild's own vault. The council will hear it at dawn.",
@@ -161,7 +161,7 @@ const LEFT: DialogueLine[] = [
 export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
   // ---- Beat 1: the quay of the Gate of Gold ------------------------------------------------------------
   simple('quay_arrive', [
-    nar('Domes, white and green, over a harbour wall. Gulls, bells, and a hundred people shouting prices.'),
+    nar('Domes, white and green, over a harbor wall. Gulls, bells, and a hundred people shouting prices.'),
     say(A, 'We passed our reef, Gigi. I saw it from the boat.'),
     say(G, 'Yes.'),
     say(Z, 'Bab al-Dhahab. The Gate of Gold. Keep a hand on your purse; everyone else will.'),
@@ -180,7 +180,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       'Yari leaves the line and walks to the crates by the warehouse. She runs her thumb over a stamp.',
     ),
     say(Y, 'Cassava. Salt fish. Our marks, under their seal.'),
-    say(Y, "That is my father's harbour, sold by the crate."),
+    say(Y, "That is my father's harbor, sold by the crate."),
     act(
       [
         { do: 'look', actor: 'npc:price_crier' },
@@ -194,7 +194,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('price_crier_talk', [say('price_crier', 'Prices on the board at noon, envoy. Indigo up, dates down. Everything else, ask the Crown.')]),
   simple('quay_porter_talk', [say('porter', 'Crown crates in, Dorini coin out. I carry, I do not read the seals.')]),
-  simple('charter_crates', [nar("Crates stamped with the Charter's seal. Under it, older and smaller, the Yaguana harbour mark.")]),
+  simple('charter_crates', [nar("Crates stamped with the Charter's seal. Under it, older and smaller, the Yaguana harbor mark.")]),
   simple('crown_ship', [nar('A Crown merchantman, riding high now it is half unloaded. Its gangway runs down to the quay.')]),
   simple('quay_trader_boat', [nar('The Zetwal trader at the end of its pier. The captain is already arguing about a berth fee.')]),
   // The quay gate: the clerk reads the papers; the Crown's factor, at his gangway, has watched the whole time.
@@ -741,7 +741,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
   script('ledger_page', {
     start: {
       lines: [
-        nar('A ledger page, chained to its lectern: "The price of the harbour," in the guild\'s letter-numbers.'),
+        nar('A ledger page, chained to its lectern: "The price of the harbor," in the guild\'s letter-numbers.'),
         nar('The figure itself has run. Damp, a long time ago.'),
         { if: { flag: 'lore.aldoria_letter_numbers' }, speaker: G, text: 'Kaf, ha... the ink has run. Yusuf would have written it plain somewhere.' },
         { if: { flag: 'story.vault_echo' }, speaker: G, text: 'Twenty-five. He said it out loud.' },
@@ -764,11 +764,11 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
         act([{ do: 'look', actor: 'npc:echo_yusuf' }], 'yusuf', 'Marshal. We will witness. We will hold a copy.'),
         say('yusuf', 'For our seal the Crown has promised us preference in its ports. I am writing down what it costs.'),
         nar('He does not rise. He writes as he speaks: three strokes of the pen.'),
-        say('yusuf', 'The price of the harbour. Twenty-five.'),
-        say(P, 'Whose harbour?'),
+        say('yusuf', 'The price of the harbor. Twenty-five.'),
+        say(P, 'Whose harbor?'),
         say('yusuf', 'The one that is not ours to sell. That is why I am writing it down, Marshal.'),
         say('yusuf', 'A debt unwritten is a debt unpaid. A debt written is at least a debt.'),
-        act([{ do: 'look', actor: 'npc:caona_echo' }, { do: 'face', actor: 'npc:caona_echo', facing: 'right' }], C, 'They are selling my harbour in a room with no windows.'),
+        act([{ do: 'look', actor: 'npc:caona_echo' }, { do: 'face', actor: 'npc:caona_echo', facing: 'right' }], C, 'They are selling my harbor in a room with no windows.'),
         act([{ do: 'look', actor: 'npc:benny_echo' }], B, 'My name goes on no page I have not read.'),
         act([{ do: 'look', actor: 'player' }], 'yusuf', 'Then write that down too, my lord. I will keep it with the copy.', {
           set: { 'story.vault_echo': true, 'clue.harbor_price': true },

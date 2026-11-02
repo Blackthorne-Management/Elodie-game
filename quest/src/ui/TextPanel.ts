@@ -4,6 +4,7 @@
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { fillButtons } from '../input/buttonNames.ts';
 import { textStyle } from './text.ts';
 
 export interface PanelLine {
@@ -39,7 +40,9 @@ export class TextPanel {
     return this.root.visible;
   }
 
-  open(lines: PanelLine[], style: { fill: number; alpha: number; border: boolean; top?: number }): void {
+  open(given: PanelLine[], style: { fill: number; alpha: number; border: boolean; top?: number }): void {
+    // Button names ("{A} to continue") as the player's device names them (input/buttonNames.ts).
+    const lines = given.map((l) => ({ ...l, text: fillButtons(l.text) }));
     this.lines = lines;
     this.scroll = 0;
     for (const t of this.texts) t.destroy();

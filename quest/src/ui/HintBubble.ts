@@ -3,6 +3,7 @@
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { HINT_SHOW_MS, VIEW_WIDTH } from '../config.ts';
+import { fillButtons } from '../input/buttonNames.ts';
 import { textStyle } from './text.ts';
 
 const W = VIEW_WIDTH - 8;
@@ -30,7 +31,8 @@ export class HintBubble {
     return this.root.visible;
   }
 
-  show(speaker: string, hint: string): void {
+  show(speaker: string, said: string): void {
+    const hint = fillButtons(said);
     this.lastHint = hint;
     this.name.setText(speaker);
     this.text.setText(hint);

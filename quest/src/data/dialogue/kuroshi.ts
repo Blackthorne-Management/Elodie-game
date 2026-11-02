@@ -163,7 +163,7 @@ function sayoNodes(): Record<string, DialogueNode> {
       lines: [
         nar('Fifty years ago, the file house is a war room. The wall map hangs whole, pinned with paper slips.', { fx: 'fade' }),
         act([{ do: 'look', actor: 'npc:sayo' }, { do: 'face', actor: 'npc:sayo', facing: 'player' }], SY, 'Zetwal\'s Marshal. Stand by the map, and do not touch the screens. They turn.'),
-        ...agent('agent_a', 'Crown marines, two companies, to the harbour chain by the new moon.', 'Sayo pins the slip to the harbour on the map.'),
+        ...agent('agent_a', 'Crown marines, two companies, to the harbor chain by the new moon.', 'Sayo pins the slip to the harbor on the map.'),
         ...agent('agent_b', 'The Crown\'s supply ships lie at Kingsmere until the wind.', 'A pin at Kingsmere.'),
         ...agent('agent_c', 'The Brasador march goes by the ash road, not the coast.', 'A pin on the ash road. Sayo looks at it a long time.'),
         nar('Caona took the ash road slip south herself. Benny is on that road.'),
@@ -761,7 +761,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('retainer_war_talk', [
     { if: { notFlag: 'ally.kuroshi' }, speaker: RW, text: 'Ships we have. Spies we have. What we lack is a council that will say which side it is on.' },
-    { if: { flag: 'ally.kuroshi' }, speaker: RW, text: 'Now it has said. Good. I have informants on every ship in the harbour, envoy.' },
+    { if: { flag: 'ally.kuroshi' }, speaker: RW, text: 'Now it has said. Good. I have informants on every ship in the harbor, envoy.' },
   ]),
   simple('signal_master_talk', [say(SM, 'Lantern codes on the wall, kite codes on the roof. Neither is the one you want, envoy.')]),
   simple('crown_observer_talk', [say(CO, 'Envoy. I am a customer of the city\'s tea, nothing more. The Throne respects its neutrality.')]),
@@ -775,7 +775,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
   simple('kaede_table', [nar('Lady Kaede\'s writing table: a brush, an ink stone, and a sheet with one character written on it many times.')]),
   simple('haru_shoes', [nar('Two shoes under the hem of a screen. Grey cloth, good soles. They do not move.')]),
   simple('observer_bowl', [nar('The Crown observer\'s tea bowl, half full, still on the table. Nobody has cleared it.')]),
-  simple('kite_codes', [nar('Lantern and kite codes painted on the wall: harbour, weather, ships. None of them is Sayo\'s.')]),
+  simple('kite_codes', [nar('Lantern and kite codes painted on the wall: harbor, weather, ships. None of them is Sayo\'s.')]),
   script('filehouse_sealed', {
     start: { lines: [], next: [{ if: { flag: 'story.haru_met' }, to: 'haru' }, { to: 'sealed' }] },
     sealed: { lines: [say('keeper_files', 'The file house is sealed by the Neutrality Order, envoy. Nobody enters.')] },

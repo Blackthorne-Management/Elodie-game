@@ -255,14 +255,18 @@ describe('fitZoom and fitRect', () => {
 });
 
 describe('screen layout: where the controls and the minimap go', () => {
-  const bars = { side: 150, stack: 176, mapBar: 140 };
-  it('a sideways phone gives the controls both side bars, shrinking the picture only as needed', () => {
+  const bars = { sideMin: 90, stack: 176, mapBar: 140 };
+  it('a sideways phone keeps the largest picture that fits; the controls take the side bars when they are wide enough', () => {
     const l = screenLayout(844, 390, 320, 180, 8, 2, true, bars);
     expect(l.mode).toBe('side');
-    expect(l.rect.left).toBeGreaterThanOrEqual(150);
-    expect(l.rect.left + l.rect.width).toBeLessThanOrEqual(844 - 150);
+    expect(l.rect).toEqual(fitRect(844, 390, 320, 180, 8, 2));
+    expect(l.rect.zoom).toBe(2);
     const wide = screenLayout(2400, 1000, 320, 180, 8, 2, true, bars);
     expect(wide.rect).toEqual(fitRect(2400, 1000, 320, 180, 8, 2));
+    // Bars too narrow for the controls (667 x 375): the picture stays 2x, the controls go on its corners.
+    const se = screenLayout(667, 375, 320, 180, 8, 2, true, bars);
+    expect(se.rect.zoom).toBe(2);
+    expect(se.mode).toBe('overlay');
   });
 
   it('an upright phone puts the controls in the bottom bar and the map in the top bar', () => {

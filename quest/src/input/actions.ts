@@ -4,12 +4,15 @@
 
 import { combine, components, isDiagonal } from '../engine/grid.ts';
 import type { Dir, Dir8 } from '../engine/types.ts';
+import { setDevice, type Device } from './buttonNames.ts';
 
 export type Button = Dir | 'confirm' | 'cancel' | 'echo' | 'menu' | 'run' | 'ask';
 export const BUTTONS: readonly Button[] = ['up', 'down', 'left', 'right', 'confirm', 'cancel', 'echo', 'menu', 'run', 'ask'];
 const DIR_BUTTONS: readonly Dir[] = ['up', 'down', 'left', 'right'];
 
 export interface InputSource {
+  /** Which device this is: a press from it makes the prompts name its buttons (input/buttonNames.ts). */
+  readonly device?: Device;
   /** Read device state (gamepads are polled; event-driven sources can skip this). */
   poll?(): void;
   isHeld(button: Button): boolean;
@@ -37,7 +40,11 @@ export class InputManager {
     this.tappedDirs = [];
     for (const s of this.sources) s.poll?.();
     const incoming = [...this.carry];
-    for (const s of this.sources) incoming.push(...s.drainPresses());
+    for (const s of this.sources) {
+      const presses = s.drainPresses();
+      if (presses.length > 0 && s.device) setDevice(s.device);
+      incoming.push(...presses);
+    }
     this.carry = [];
     for (const b of incoming) {
       if (this.pressedNow.has(b)) this.carry.push(b);

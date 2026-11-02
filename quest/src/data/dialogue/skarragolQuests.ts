@@ -195,7 +195,7 @@ const RACE_DIALOGUE: DialogueScript[] = [
         act([{ do: 'face', actor: 'npc:race_judge', facing: 'player' }], 'race_judge', 'The first-snow race, envoy: once round the field. By custom the purse goes to the fleet\'s winter.'),
         say(BY, 'Salkhi will race. Salkhi will complain. Salkhi will win.'),
         act([{ do: 'look', actor: 'npc:salkhi_fair' }], SK, 'Salkhi will win.'),
-        nar('(Tap A, or the screen, on every hoofbeat as it reaches the line.)'),
+        nar('(Press {A}, or tap the screen, on every hoofbeat as it reaches the line.)'),
       ],
       choices: [
         { text: 'Race.', set: { [RACE_FLAGS.accepted]: true, 'rhythm.next': 'salkhi_race' } },

@@ -362,8 +362,8 @@ export const ZETWAL_DIALOGUE: readonly DialogueScript[] = [
       say(A, 'Is Grandfather reading again this year?'),
       say(G, 'He always does. He went over to the island before dawn to get ready.'),
       say(A, "...Okay. I'll stay close."),
-      nar('(Arrows, WASD or the D-pad to walk, diagonals too, or tap where to go. Tap people and things to talk. Hold Shift or B to run.)'),
-      nar('(Z or A to talk. Esc or Menu opens the menu: your party, your bag, the maps and your Journal.)'),
+      nar('(Walk with {Move}, diagonals too, or tap where to go. Tap people and things to talk. Hold {Run} to run.)'),
+      nar('({A} to talk. {Menu} opens the menu: your party, your bag, the maps and your Journal.)'),
       nar('(Stuck? Q or the Ask button asks Anissa what to do next.)'),
     ],
     // Anissa joins, and Gianna sets out with a little food in her satchel.

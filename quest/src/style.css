@@ -122,7 +122,9 @@ html, body {
 
 .touch-buttons {
   position: absolute;
-  right: calc((var(--right-bar) - var(--btn) * 2.3) / 2);
+  /* Centred in the right bar; a bar narrower than the buttons (sideways, the picture keeps its full size) keeps them
+     on the screen, over the picture's edge. */
+  right: max(calc(6px + env(safe-area-inset-right, 0px)), calc((var(--right-bar) - var(--btn) * 2.3) / 2));
   bottom: calc(var(--edge) + env(safe-area-inset-bottom, 0px));
   width: calc(var(--btn) * 2.3);
   height: calc(var(--btn) * 2);
@@ -145,7 +147,7 @@ html, body {
 /* Echo and Menu: in the right bar between the minimap and A/B. */
 .touch-top {
   position: absolute;
-  right: calc((var(--right-bar) - 128px) / 2);
+  right: max(calc(6px + env(safe-area-inset-right, 0px)), calc((var(--right-bar) - 128px) / 2));
   bottom: calc(var(--edge) + var(--btn) * 2 + 14px + env(safe-area-inset-bottom, 0px));
   display: flex;
   gap: 8px;
@@ -205,7 +207,8 @@ body[data-layout='overlay'] .touch-top { right: calc(var(--edge) + 52px + env(sa
 }
 .side-map-label {
   margin-top: 4px;
-  font: 600 11px/1.25 system-ui, sans-serif;
+  /* Readable at a glance (the Nov 1 playtests measured the place name at about 8 px). */
+  font: 700 13px/1.25 'Atkinson Hyperlegible', system-ui, sans-serif;
   color: var(--ink);
   text-align: center;
   text-shadow: 0 1px 0 #000;
@@ -222,7 +225,16 @@ body[data-layout='overlay'] .side-map {
   left: calc(var(--vv-left, 0px) + var(--game-left, 0px) + 6px);
   top: calc(var(--vv-top, 0px) + var(--game-top, 0px) + 6px);
 }
-body[data-layout='overlay'] .side-map-label { text-align: left; font-size: 10px; }
+/* On the picture the name may run wider than the map, on one line, on a dark strip so it reads over any tile. */
+body[data-layout='overlay'] .side-map-label {
+  width: max-content;
+  max-width: min(360px, 60vw);
+  padding: 2px 6px;
+  text-align: left;
+  font-size: clamp(14px, 1.3vw, 18px);
+  background: rgba(20, 16, 26, 0.8);
+  border-radius: 4px;
+}
 
 /* Sideways, the full-screen button moves to the top of the left bar (the minimap has the right bar). */
 body[data-layout='side'] .fs-button {
@@ -291,20 +303,62 @@ body.standalone .fs-button { display: none; }
   body.touch .rotate-hint {
     display: block;
     position: fixed;
-    /* A small line under the picture (it was a big one at the top). */
+    /* A line under the picture, after the one-time card (ui/rotateCard.ts); readable, not grey small print. */
     top: calc(var(--vv-top, 0px) + var(--game-top, 0px) + var(--game-height, 0px) + 6px);
     left: 16px;
     right: 16px;
     text-align: center;
-    font-size: 11px;
-    color: var(--line);
-    opacity: 0.75;
+    font: 600 14px/1.3 'Atkinson Hyperlegible', system-ui, sans-serif;
+    color: var(--gold);
   }
 }
-/* On a short phone the controls need the room: no tip. */
+/* On a short phone the controls need the room: no line (the card still shows once). */
 @media (orientation: portrait) and (max-height: 700px) {
   body.touch .rotate-hint { display: none; }
 }
+
+/* "Turn your phone sideways", once, full screen (ui/rotateCard.ts). */
+.rotate-card {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px 16px;
+  background: rgba(20, 16, 26, 0.96);
+  color: var(--ink);
+  text-align: center;
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  touch-action: manipulation;
+}
+.rotate-title { margin: 0; font-size: 26px; font-weight: 700; color: var(--gold); }
+.rotate-body { margin: 0; max-width: 340px; font-size: 18px; line-height: 1.4; }
+.rotate-keep {
+  min-height: 48px;
+  padding: 0 20px;
+  font: 600 17px 'Atkinson Hyperlegible', system-ui, sans-serif;
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+}
+/* A phone outline that turns on its side, and back. */
+.rotate-phone {
+  width: 64px;
+  height: 108px;
+  border: 4px solid var(--line);
+  border-radius: 12px;
+  animation: rotate-phone 2.4s ease-in-out infinite;
+}
+@keyframes rotate-phone {
+  0%, 20% { transform: rotate(0deg); }
+  45%, 75% { transform: rotate(-90deg); }
+  100% { transform: rotate(0deg); }
+}
+.reduce-motion .rotate-phone { animation: none; transform: rotate(-90deg); }
 
 /* Save code dialogs. */
 .code-dialog {
@@ -442,6 +496,19 @@ body.reduce-motion .realm-here { animation: none; }
   pointer-events: none;
 }
 .intro-prompt[hidden], .intro-skip[hidden] { display: none; }
+/* Under the film's "Press A": the key on this device (src/scenes/IntroScene.ts), only on the title. */
+.intro-keys {
+  display: none;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 7%;
+  text-align: center;
+  color: #a89c86;
+  font: 600 16px 'Atkinson Hyperlegible', system-ui, sans-serif;
+  pointer-events: none;
+}
+.intro[data-phase='title'] .intro-keys { display: block; }
 .intro-skip {
   position: absolute;
   right: 16px;

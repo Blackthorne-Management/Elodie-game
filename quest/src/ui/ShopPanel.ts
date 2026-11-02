@@ -9,6 +9,7 @@ import { RPG } from '../data/rpg.ts';
 import type { FlagStore } from '../engine/flags.ts';
 import { STAT_KEYS, bagContents, bagUsed, buy, buyPrice, gold, itemCount, level, partyMembers, sell, sellPrice, type ItemDef, type ShopDef } from '../engine/rpg.ts';
 import type { InputManager } from '../input/actions.ts';
+import { fillButtons } from '../input/buttonNames.ts';
 import { textStyle } from './text.ts';
 
 const DEPTH = 6100;
@@ -213,6 +214,6 @@ export class ShopPanel {
       if (it.restores) bits.push(`+${it.restores} SP`);
       this.text(6, VIEW_HEIGHT - 34, `${it.text}${bits.length ? `  (${bits.join(', ')})` : ''}`, UI.dimText, VIEW_WIDTH - 12);
     }
-    this.text(6, VIEW_HEIGHT - 12, this.pending ? 'A: yes   B: no' : 'Tap or A: choose   B: leave   Lv!: above your level', UI.dimText);
+    this.text(6, VIEW_HEIGHT - 12, fillButtons(this.pending ? '{A}: yes   {B}: no' : '{Act}: choose   {B}: leave   Lv!: above your level'), UI.dimText);
   }
 }

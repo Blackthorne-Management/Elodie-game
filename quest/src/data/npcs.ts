@@ -402,7 +402,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
 
   // Chapter 7, Kirinoura (Oct 22). Named from the design: Haru, Kayla, Kaede, Sayo. Everyone else by role until the
   // owner approves names (the outline's proposals Ashdown, Omura and Mibu stay proposals; section 11).
-  harbour_master: n('harbour_master', 'harbour_master', 'Harbour-master'),
+  harbour_master: n('harbour_master', 'harbour_master', 'Harbor-master'),
   salkhi_pier: n('salkhi_pier', 'horse_grey', 'Salkhi'),
   salkhi_quarter: n('salkhi_quarter', 'horse_grey', 'Salkhi'),
   salkhi_marsh: n('salkhi_marsh', 'horse_grey', 'Salkhi'),
@@ -436,7 +436,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   store_enforcer_a: n('store_enforcer_a', 'oil_enforcer', 'Oil Enforcer'),
   store_enforcer_b: n('store_enforcer_b', 'oil_enforcer_b', 'Oil Enforcer'),
   tower_enforcer: n('tower_enforcer', 'oil_enforcer_c', 'Oil Enforcer'),
-  jw_harbour_master: n('jw_harbour_master', 'jw_harbour_master', 'Harbour-master'),
+  jw_harbour_master: n('jw_harbour_master', 'jw_harbour_master', 'Harbor-master'),
   salkhi_harbor: n('salkhi_harbor', 'horse_grey', 'Salkhi'),
   salkhi_bazaar: n('salkhi_bazaar', 'horse_grey', 'Salkhi'),
   arjun: n('arjun', 'echo_arjun', 'Arjun of the Agnivansh'),

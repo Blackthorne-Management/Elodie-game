@@ -20,6 +20,7 @@ const BUTTON_MAP: [number, Button][] = [
 ];
 
 export class GamepadSource implements InputSource {
+  readonly device = 'gamepad' as const;
   private held = new Set<Button>();
   private presses: Button[] = [];
 

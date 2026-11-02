@@ -280,14 +280,16 @@ async function phoneFit(browser, errors) {
     const small = m.controls.filter((b) => Math.min(b.w, b.h) < 44);
     check(small.length === 0, `every touch control is at least 44 px (${m.controls.map((b) => Math.round(Math.min(b.w, b.h))).join(', ')})`);
     check(m.fs, 'the full-screen button is there');
-    // Every control and the minimap sit in the black bars, never over the picture.
-    const off = (b) => b.x + b.w <= c.x + 0.5 || b.x >= c.x + c.w - 0.5 || b.y + b.h <= c.y + 0.5 || b.y >= c.y + c.h - 0.5;
-    const over = m.controls.filter((b) => !off(b));
-    check(over.length === 0, `no control covers the picture${over.length ? `: ${over.map((b) => b.name).join(', ')}` : ''}`);
+    // Sideways the picture keeps the largest zoom that fits (the Nov 1 playtests: 844x390 is 2x, not 1.7x); the
+    // translucent controls sit in the side bars when those are at least 90 px wide (overlapping the picture's edge a
+    // little), else on its corners. Either way they keep to the outer quarter of the picture on their side.
+    const fitZoomNow = Math.min(m.vw / 320, m.vh / 180);
+    const wantZoom = fitZoomNow >= 2 ? Math.floor(fitZoomNow) : fitZoomNow;
+    check(Math.abs(c.w / 320 - wantZoom) < 0.01, `the picture takes the largest zoom that fits (${(c.w / 320).toFixed(3)}x)`);
     const dpad = m.controls[0];
     const a = m.controls.find((b) => b.name === 'A');
-    check(dpad.x + dpad.w <= c.x + 0.5 && a.x >= c.x + c.w - 0.5, 'the D-pad is in the left bar, A in the right bar');
-    check(m.map && off(m.map) && m.map.x >= c.x + c.w - 0.5 && inside(m.map), 'the minimap is in the right bar');
+    check(dpad.x + dpad.w <= c.x + c.w / 4 && a.x >= c.x + (c.w * 3) / 4, 'the D-pad keeps to the left edge, A to the right edge');
+    if (c.x >= 90) check(m.map && m.map.x >= c.x + c.w - 0.5 && inside(m.map), 'the minimap is in the right bar');
     // Quick double taps on the D-pad must not zoom the page.
     for (let i = 0; i < 4; i++) await page.locator('.touch-dpad').tap({ position: { x: dpad.w / 2, y: 8 } });
     const scale = await page.evaluate(() => window.visualViewport?.scale ?? 1);

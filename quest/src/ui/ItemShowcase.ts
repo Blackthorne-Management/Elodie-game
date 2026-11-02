@@ -9,6 +9,7 @@ import { SHOWCASE, UI, textureKeyForItem } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import type { ShowcaseView } from '../engine/showcase.ts';
 import type { InputManager } from '../input/actions.ts';
+import { continueHint, fillButtons } from '../input/buttonNames.ts';
 import { textStyle } from './text.ts';
 
 const DEPTH = 6600;
@@ -166,7 +167,7 @@ export class ItemShowcase {
       const t = this.text(14, y, `${a.name}: ${a.text}`, a.known ? UI.text : UI.dimText, VIEW_WIDTH - 28, 'left');
       y += t.height + 2;
     }
-    this.text(VIEW_WIDTH - 6, VIEW_HEIGHT - 11, '(A or tap)', UI.dimText, 80, 'left').setOrigin(1, 0);
+    this.text(VIEW_WIDTH - 6, VIEW_HEIGHT - 11, `(${continueHint()})`, UI.dimText, 120, 'left').setOrigin(1, 0);
     const words = [...this.texts];
     for (const w of words) (w as Phaser.GameObjects.Text).setAlpha(0);
 
@@ -214,7 +215,9 @@ export class ItemShowcase {
     y += this.text(TX, y, view.name, UI.accentText, W - 50, 'left').height + 3;
     y += this.text(TX, y, view.text, UI.dimText, W - 50, 'left').height + 3;
     if (view.stats.length > 0) y += this.text(TX, y, view.stats.join('  '), UI.text, W - 50, 'left').height + 3;
-    y += this.text(CX, y + 2, '(A or tap to continue)', UI.dimText).height + 8;
+    // Rewards go to the bag, not onto anyone (the Nov 1 playtests: the charm sat unworn): say how to wear it.
+    if (view.slot) y += this.text(TX, y, fillButtons(`To wear it: press {Menu}, choose Equip, then the ${view.slot} slot.`), UI.accentText, W - 50, 'left').height + 3;
+    y += this.text(CX, y + 2, `(${continueHint()})`, UI.dimText).height + 8;
     box.fillStyle(UI.boxFill, 1).fillRect(X, Y, W, y - Y);
     box.lineStyle(1, UI.boxBorder, 1).strokeRect(X + 0.5, Y + 0.5, W - 1, y - Y - 1);
     const full = item.scale;

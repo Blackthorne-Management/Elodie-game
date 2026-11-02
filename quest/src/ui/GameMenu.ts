@@ -64,6 +64,7 @@ import type { InputManager } from '../input/actions.ts';
 import type { MenuItem } from './MenuPanel.ts';
 import type { PanelLine } from './TextPanel.ts';
 import { RealmOverlay } from './RealmOverlay.ts';
+import { fillButtons } from '../input/buttonNames.ts';
 import { charPx, textStyle } from './text.ts';
 import { tileColours } from './tileColours.ts';
 
@@ -428,7 +429,8 @@ export class GameMenu {
   // ---- Drawing ---------------------------------------------------------------------------------
 
   private text(x: number, y: number, s: string, color: string = UI.text, wrap?: number): Phaser.GameObjects.Text {
-    const t = this.scene.add.text(x, y, s, textStyle(color));
+    // Button names ("{A}: back") as the player's device names them (input/buttonNames.ts).
+    const t = this.scene.add.text(x, y, fillButtons(s), textStyle(color));
     if (wrap) t.setWordWrapWidth(wrap, true);
     this.content.add(t);
     return t;
@@ -465,15 +467,25 @@ export class GameMenu {
       this.hit(VIEW_WIDTH - 46, VIEW_HEIGHT - 16, 46, 16, () => this.back());
     }
 
-    // The purse and the pillars: here (this city) and across the realm.
+    // The purse and the pillars in plain words (the Nov 1 playtests: "Influence 0/74 (Yucayeque/realm)" was jargon):
+    // the first line what the party carries, the second the realm's totals and, where it fits, this city's own.
     const keys = Object.keys(ctx.flags.snapshot());
     const here = cityOf(RPG, ctx.mapId)?.city;
-    const pill = (p: (typeof PILLARS)[number]) => {
-      const local = here ? localPillar(ctx.flags, RPG, p, here.id) : 0;
-      return `${PILLAR_NAMES[p]} ${local}/${globalPillar(ctx.flags, RPG, p, keys)}`;
-    };
-    this.text(6, 18, `Gold ${gold(ctx.flags, RPG)}   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}   Armies ${armies(ctx.flags, keys)}   Concord ${concord(ctx.flags)}`, UI.accentText);
-    this.text(6, 27, `${PILLARS.map(pill).join('  ')}   (${here ? here.name : 'here'}/realm)`, UI.text);
+    const army = armies(ctx.flags, keys);
+    this.text(
+      6,
+      18,
+      `Gold ${gold(ctx.flags, RPG)}   Bag ${bagUsed(ctx.flags, RPG)} of ${RPG.bagLimit}${army > 0 ? `   Armies ${army}` : ''}   Concord ${concord(ctx.flags)} of 100`,
+      UI.accentText,
+    );
+    const all = PILLARS.map((p) => `${PILLAR_NAMES[p]} ${globalPillar(ctx.flags, RPG, p, keys)}`).join(', ');
+    const pillars = this.text(6, 27, `All lands: ${all}`, UI.text);
+    if (here) {
+      const local = PILLARS.map((p) => localPillar(ctx.flags, RPG, p, here.id)).join(', ');
+      pillars.setText(`All lands: ${all}. ${here.name}: ${local}`);
+      if (pillars.width > VIEW_WIDTH - 12) pillars.setText(`All lands: ${all}. Here: ${local}`);
+      if (pillars.width > VIEW_WIDTH - 12) pillars.setText(`All lands: ${all}`);
+    }
     g.lineStyle(1, UI.boxBorder, 0.5).lineBetween(4, 36.5, VIEW_WIDTH - 4, 36.5);
 
     switch (this.currentTab) {
@@ -525,6 +537,23 @@ export class GameMenu {
     }
   }
 
+  /**
+   * A portrait list longer than the screen (up to 9 members) shows that it scrolls (the Nov 1 playtests): an arrow at the
+   * top when members are above, at the bottom when members are below, each tappable.
+   */
+  private portraitArrows(x: number, top: number, count: number): void {
+    if (count <= PORTRAIT_ROWS) return;
+    if (top > 0) {
+      this.text(x, TOP + 2, '▲', UI.accentText);
+      this.hit(x - 4, TOP, 16, 14, () => this.move(top - 1 - this.cursor));
+    }
+    if (top + PORTRAIT_ROWS < count) {
+      const y = TOP + 2 + (PORTRAIT_ROWS - 1) * 28 + 13;
+      this.text(x, y, '▼', UI.accentText);
+      this.hit(x - 4, y - 2, 16, 14, () => this.move(top + PORTRAIT_ROWS - this.cursor));
+    }
+  }
+
   private drawStatus(g: Phaser.GameObjects.Graphics): void {
     const ctx = this.ctx!;
     const party = this.party();
@@ -542,6 +571,7 @@ export class GameMenu {
         this.cursor = i;
       });
     });
+    this.portraitArrows(92, top, party.length);
     this.labels = party.map((m) => m.name);
     const m = party[this.cursor];
     if (!m) return;
@@ -594,7 +624,7 @@ export class GameMenu {
       this.text(X, TOP + 84, 'Who wears it?', UI.accentText);
       this.drawList(this.wearers(this.item).map((m) => m.name), this.subCursor, X, TOP + 96, 5, true, (i) => this.tapSub(i));
     }
-    this.text(6, VIEW_HEIGHT - 12, `A: use, equip or view   B: back   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}`, UI.dimText);
+    this.text(6, VIEW_HEIGHT - 12, `{A}: use, equip or view   {B}: back   Bag ${bagUsed(ctx.flags, RPG)}/${RPG.bagLimit}`, UI.dimText);
   }
 
   /** An item's picture in a box coloured by its rarity (or an empty slot), with its level in the corner. */
@@ -646,6 +676,7 @@ export class GameMenu {
         this.subCursor = 0;
       });
     });
+    if (this.stage === 'top') this.portraitArrows(57, top, fighters.length);
     const m = this.stage === 'top' ? fighters[this.cursor] : this.member;
     if (!m) return;
     this.member = m;
@@ -858,7 +889,7 @@ export class GameMenu {
   private drawMap(g: Phaser.GameObjects.Graphics): void {
     const ctx = this.ctx!;
     const found = cityOf(RPG, ctx.mapId);
-    this.text(6, VIEW_HEIGHT - 12, `A or tap: ${this.mapView === 'city' ? 'the realm' : 'the city'}`, UI.dimText);
+    this.text(6, VIEW_HEIGHT - 12, `{Act}: ${this.mapView === 'city' ? 'the realm' : 'the city'}`, UI.dimText);
     this.hit(0, TOP, VIEW_WIDTH - 50, VIEW_HEIGHT - TOP, () => {
       this.mapView = this.mapView === 'city' ? 'realm' : 'city';
     });
@@ -1071,7 +1102,7 @@ export class GameMenu {
       if (this.stage !== 'read') this.stage = 'read';
       else this.move(3);
     });
-    const hint = this.stage === 'read' ? 'Up/Down or tap: scroll' : 'A or tap: read';
+    const hint = this.stage === 'read' ? 'Up/Down or tap: scroll' : '{Act}: read';
     this.text(6, VIEW_HEIGHT - 12, hint, UI.dimText);
   }
 

@@ -272,7 +272,7 @@ export const DEBATES: readonly DebateDef[] = [
     ],
     listen: [
       say('contract_priest', 'A promise written is a promise watched. A bad bargain kept is still a kept promise. That is what makes this market work.'),
-      say('gaze_merchant', 'The Crown bought Yucayeque\'s harbour from the guild. Nobody in Yucayeque sold it. Is that bargain sacred too?'),
+      say('gaze_merchant', 'The Crown bought Yucayeque\'s harbor from the guild. Nobody in Yucayeque sold it. Is that bargain sacred too?'),
       say('contract_priest', 'If it was signed, it is watched. "Sacred" and "just" are different words, my friend.'),
       say('gaze_merchant', 'Then your Witness watches a theft and calls it a contract.'),
       say(A, 'Gigi, Yari has gone very quiet.'),
@@ -290,8 +290,8 @@ export const DEBATES: readonly DebateDef[] = [
       {
         claim: 'Then is the Crown\'s charter on Xaraguá sacred? It was signed. It is watched.',
         answers: {
-          scripture: { short: 'Elodie lent the harbours', text: 'The temple says the goddess lent the realm to all of us. Nobody was given a harbour to sell.', strength: 1 },
-          reason: { short: 'Then read it aloud', text: 'Then let the Witness watch it read aloud, every clause, in Yucayeque. See who signed for the harbour.', strength: 2 },
+          scripture: { short: 'Elodie lent the harbors', text: 'The temple says the goddess lent the realm to all of us. Nobody was given a harbor to sell.', strength: 1 },
+          reason: { short: 'Then read it aloud', text: 'Then let the Witness watch it read aloud, every clause, in Yucayeque. See who signed for the harbor.', strength: 2 },
           compassion: { short: 'Yari is standing here', text: 'The girl beside me is from Yucayeque. Tell her the bargain is sacred.', strength: 0 },
         },
       },
@@ -324,7 +324,7 @@ export const DEBATES: readonly DebateDef[] = [
       say('gaze_merchant', 'Let them. It will be the first honest one.'),
     ],
     provoke: [
-      say(G, 'Your Witness watched the Crown buy a harbour from people who did not own it, and said nothing!'),
+      say(G, 'Your Witness watched the Crown buy a harbor from people who did not own it, and said nothing!'),
       nar('The square goes quiet. Two Majlis guards turn to look.'),
       say('contract_priest', 'Not here, envoy. Not in front of the guards.'),
     ],

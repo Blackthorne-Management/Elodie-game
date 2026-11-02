@@ -24,6 +24,8 @@ export class Toast {
   /** Messages waiting their turn; `kept` ones (rewards, level-ups) are never cut short. */
   private waiting: { message: string; kept: boolean }[] = [];
   private keeping = false;
+  /** While a scene plays, rewards and level-ups wait for it to end (setHeld). */
+  private held = false;
 
   /** Show a message now, unless a reward is showing or waiting: then it follows them. */
   show(message: string): void {
@@ -35,9 +37,51 @@ export class Toast {
     this.add(message, true);
   }
 
+  /**
+   * Hold rewards and level-ups back while a scene plays (the Nov 1 playtest: "Yari reached level 6!" over Anaco being
+   * taken); they are kept, in order, and shown once it ends. Plain notes ("Autosaved") still show.
+   */
+  setHeld(on: boolean): void {
+    if (this.held === on) return;
+    this.held = on;
+    // Released: what waited shows now, over a plain note ("Autosaved") but never over another reward.
+    if (!on && (!this.text.visible || (!this.keeping && this.waiting.some((w) => this.ready(w))))) this.next();
+  }
+
+  /** Messages still to show (tests and the snapshot). */
+  get pending(): readonly string[] {
+    return this.waiting.map((w) => w.message);
+  }
+
+  /** Forget everything waiting and hide the toast (the dev jump starts clean). */
+  clear(): void {
+    this.waiting = [];
+    this.keeping = false;
+    this.timer?.remove();
+    this.timer = null;
+    this.text.setVisible(false);
+  }
+
+  private ready(w: { kept: boolean }): boolean {
+    return !(this.held && w.kept);
+  }
+
   private add(message: string, kept: boolean): void {
-    if (this.text.visible && (this.keeping || this.waiting.length > 0)) this.waiting.push({ message, kept });
-    else this.display(message, kept);
+    const item = { message, kept };
+    const busy = this.text.visible && (this.keeping || this.waiting.some((w) => this.ready(w)));
+    if (!busy && this.ready(item)) this.display(message, kept);
+    else this.waiting.push(item);
+  }
+
+  private next(): void {
+    const i = this.waiting.findIndex((w) => this.ready(w));
+    if (i < 0) {
+      this.keeping = false;
+      this.text.setVisible(false);
+      return;
+    }
+    const [w] = this.waiting.splice(i, 1);
+    this.display(w!.message, w!.kept);
   }
 
   private display(message: string, kept: boolean): void {
@@ -45,13 +89,6 @@ export class Toast {
     this.keeping = kept;
     this.text.setText(message).setVisible(true).setAlpha(1);
     this.timer?.remove();
-    this.timer = this.scene.time.delayedCall(TOAST_MS, () => {
-      const next = this.waiting.shift();
-      if (next) this.display(next.message, next.kept);
-      else {
-        this.keeping = false;
-        this.text.setVisible(false);
-      }
-    });
+    this.timer = this.scene.time.delayedCall(TOAST_MS, () => this.next());
   }
 }

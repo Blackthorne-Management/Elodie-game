@@ -23,7 +23,13 @@ function targetTiles(logic: GameLogic, tile: Pos): Pos[] | null {
   const obj = logic
     .objects()
     .find((o) => rectContains(o.area, tile) && !o.walkable && (o.dialogue || logic.content.objects?.[o.id]?.inspect));
-  if (!obj) return null;
+  if (!obj) {
+    // A person is drawn a tile taller than the tile they stand on (and their "!" floats above that): a tap on the
+    // open tile just above someone is a tap on them (the Nov 1 playtest's 12: the Master of the Chairs at the Hearing).
+    const below = { x: tile.x, y: tile.y + 1 };
+    const tall = logic.npcs().find((n) => samePos(n.pos, below));
+    return tall ? [tall.pos] : null;
+  }
   const out: Pos[] = [];
   for (let y = obj.area.y; y < obj.area.y + obj.area.height; y++) {
     for (let x = obj.area.x; x < obj.area.x + obj.area.width; x++) out.push({ x, y });

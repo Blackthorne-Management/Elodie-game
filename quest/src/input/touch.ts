@@ -34,6 +34,7 @@ export function padDirection(dx: number, dy: number, radius: number, deadzone = 
 }
 
 export class TouchSource implements InputSource {
+  readonly device = 'touch' as const;
   /** Buttons held by A, B, Echo and Menu. */
   private buttonsHeld = new Set<Button>();
   /** Directions held by the D-pad. */

@@ -422,7 +422,7 @@ The real harms are **few and non-lethal**, and he is **not redeemed in the momen
 
 **Levels and the quest log (Oct 14):** each character has a level (cap 30) from XP: the party shares XP from main-quest steps (25 each) and lore books (10 each) and from side-quest rewards; each member adds what they earn alone (battles, later). Foes show their level coloured against the party's: grey easy, white even, orange hard, red deadly (the menu's Foes page). Gear has a level: worn below it, it gives half its bonus and shows "too heavy". The menu's **Quests** page lists the main quest and the side quests (accepted in conversation, followed step by step, rewarded once). Numbers: `quest/src/config.ts` (LEVELS); rules: `engine/rpg.ts`, `engine/sideQuests.ts`. Schedule: `docs/quest/SCHEDULE.md`.
 
-**Controls (owner decision, Oct 14):** keyboard (arrows or WASD, eight directions), gamepad, and on touch screens a **D-pad** (press between two arms for a diagonal) with A, B, Echo and Menu. On phones the controls sit in the **black bars** beside the picture (sideways: D-pad left, buttons right; upright: all in the bottom bar), never over it; the picture shrinks a little when the bars are too narrow. **Tap or click** a spot to walk there (shortest path, eight directions, no corner cutting, never through a door or a trigger on the way), or a person or thing to walk up and talk to it or use it. The minimap lives in a bar too (or the picture's corner when there is none).
+**Controls (owner decision, Oct 14):** keyboard (arrows or WASD, eight directions), gamepad, and on touch screens a **D-pad** (press between two arms for a diagonal) with A, B, Echo and Menu. On phones the controls sit in the **black bars** beside the picture (sideways: D-pad left, buttons right; upright: all in the bottom bar). Since Nov 1 (Claude's call after the playtests, 9.1) a sideways picture keeps its largest zoom and the translucent controls may overlap its edge, or sit on its corners when the bars are under 90 px; before, the picture shrank to keep them off it. **Tap or click** a spot to walk there (shortest path, eight directions, no corner cutting, never through a door or a trigger on the way), or a person or thing to walk up and talk to it or use it. The minimap lives in a bar too (or the picture's corner when there is none).
 
 **The menu (Oct 14):** full page, with tabs Status (party, stats, gear), Items (the bag, 24 items; key items and worn gear are free), Equip, Map (the city's sections, visited or not, and the realm), Journal and System. A **minimap** shows the area around you with the city and section name. Vendors open a buy-and-sell shop after their greeting (sell price: half).
 
@@ -759,6 +759,53 @@ Not done (each needs more than a contained change):
    desktop); remembering them until a flag changes would save a little more.
 7. **Browsers before 2022** (iOS 15 and older): the build targets current browsers; supporting older ones means a
    legacy build, larger for everyone.
+
+#### Prompts, phone size, menu and toasts after the Nov 1 playtests (Claude's call, Nov 1)
+
+From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) and `2026-11-01-playtest-ch5-12.md` (3,
+4, 12, 14, 15). All of it is **Claude's call (Nov 1)**.
+
+- **Buttons named per device.** One helper, `quest/src/input/buttonNames.ts`, names every prompt's buttons for the
+  device used last (the input manager sets it on every press; a finger on the picture sets touch; a touch screen starts
+  on touch, anything else on the keyboard). Keyboard: Enter (confirm), X (back), E (Echo), Esc (menu), Q (Ask), Shift
+  (run). Gamepad: A, B, X, Start, Y, B. Touch: the on-screen A, B, Echo, Menu, Ask, and "Tap" where a tap anywhere does
+  it. Text in `src/data` writes `{A}`, `{B}`, `{Echo}`, `{Menu}`, `{Ask}`, `{Run}`, `{Move}`, `{Act}` and `{Continue}`;
+  the dialogue box, Anissa's hint, the text panels (cards, Journal, credits) and the menu fill them. Cards and popups
+  end "(Enter to continue)" / "(A to continue)" / "(Tap to continue)"; the Echo prompt is "Press E to Echo", "Press X
+  to Echo" or "Tap Echo" (not "Press Echo to Echo"). The film's title says "Press A" in the picture: under it, a small
+  "(Enter on a keyboard)" or "(tap anywhere)". The battle screen's own lines (its tutorial page and "A to confirm, B to
+  go back") still say A and B; they move to the helper with the battle-screen work.
+- **Phones held sideways use the largest picture that fits.** The 150 px control bars no longer shrink the picture
+  (844 x 390 is 2x again, not 1.7x). The controls stay in the side bars when those are at least 90 px wide
+  (`TOUCH_SIDE_MIN_PX`), overlapping the picture's edge a little (they are translucent); narrower, they go on the
+  picture's corners as on other odd shapes. The 320 x 180 layout is unchanged.
+- **Upright phones** get a one-time full-screen card, "Turn your phone sideways", with a turning phone and "Keep
+  playing upright" (`src/ui/rotateCard.ts`); it never shows again once the phone has been held sideways or the card
+  closed. The line under the picture is now gold 14 px text. A phone (a touch screen whose short side is under 500 px)
+  starts on Large text until a size is chosen in System.
+- **The menu's top lines in plain words:** "Gold 314   Bag 10 of 24   Armies 165   Concord 56 of 100" (Armies only
+  once there are any), then "All lands: Influence 74, Wealth 14, Fear 2. Yucayeque: 0, 0, 0" (the city's own part
+  drops to "Here:" or away when it does not fit). A party list longer than five shows a gold up or down arrow where
+  members are hidden (tap it to scroll). The minimap's place name is 13 to 18 px, on one line on a dark strip when it
+  sits on the picture.
+- **Rewards say how to wear them:** a reward card for gear adds "To wear it: press Esc, choose Equip, then the charm
+  slot" (named for the device). Rewards are not put on anyone by themselves (the player chooses who wears what).
+- **Rewards wait for the scene.** Level-ups, quest rewards and debate payments ("kept" toasts) wait, in order, while a
+  conversation, a staged scene, a card or a menu is up, and show once the field is back (`Toast.setHeld`); a quest
+  reward's card waits too, while a story item handed over in a conversation still shows at once. Plain notes
+  ("Autosaved") are not held.
+- **The dev jump (`?at=`) starts clean:** the side quests and debates finished on the way are paid silently at the
+  jump (as the field would have paid them), and their popups are marked seen, so no old toasts or the Chapter 1 reward
+  card replay on arrival.
+- **The end:** after "The cast" the credits panel opens and A/Enter goes to the title, as designed (the playtest's
+  "back in the Hall" was the jump's old reward card). The Hall after the end is quiet (next point).
+- **The Hearing's Hall is quiet:** from the Hearing on, the Throne Hall marks only what still has something to say
+  (`GameContent.quietMarkers`), not every chair and door never examined (15 markers became 2). A tap on the tile just
+  above a person (their head and "!") is a tap on them, so the Master of the Chairs' "!" can be tapped. The council
+  chairs' line follows the story: empty at the Parley, filled at the bell (bare for a house that sailed to the Crown),
+  at the Hearing, after the verdict.
+- **Spelling:** "harbor" everywhere the player reads (the game's spelling 771 to 57); ids such as `harbour_master`
+  stay. "The ferry coach bumps against the pier" is now "The ship's boat bumps against the pier".
 
 ---
 

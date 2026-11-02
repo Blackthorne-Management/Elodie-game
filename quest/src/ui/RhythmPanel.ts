@@ -12,6 +12,7 @@ import { VIEW_WIDTH } from '../config.ts';
 import { FLASH_MIN_GAP_MS } from '../engine/accessibility.ts';
 import { COUNT_IN_BEATS, judge, msPerBeat, onsets, songLengthMs, type RhythmDef } from '../engine/rhythm.ts';
 import type { InputManager } from '../input/actions.ts';
+import { fillButtons } from '../input/buttonNames.ts';
 import { textStyle } from './text.ts';
 
 const DEPTH = 6150;
@@ -179,8 +180,8 @@ export class RhythmPanel {
     const left = Math.ceil(COUNT_IN_BEATS - this.elapsed / this.beatMs);
     this.status.setText(
       left > 0
-        ? `Ready... ${left}\nTap A (or the screen) as each ${def.noun ?? 'drum'} reaches the line.`
-        : `${this.hit.size} of ${this.due.length}\nLong marks are two beats, short ones one. B to stop.`,
+        ? fillButtons(`Ready... ${left}\nPress {A} (or tap the screen) as each ${def.noun ?? 'drum'} reaches the line.`)
+        : fillButtons(`${this.hit.size} of ${this.due.length}\nLong marks are two beats, short ones one. {B} to stop.`),
     );
   }
 }

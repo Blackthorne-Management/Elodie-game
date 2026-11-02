@@ -145,7 +145,7 @@ export const ACT1: QuestDef = {
       hints: [
         'Will you try the lamp, Gigi? Grandfather asked you.',
         'Stand in front of the lamp and try to light it.',
-        'Face the lamp in the middle of the temple and press A.',
+        'Face the lamp in the middle of the temple and press {A}.',
       ],
     },
     {
@@ -811,7 +811,7 @@ export const ACT4: QuestDef = {
     },
     {
       id: 'price',
-      title: 'The price of the harbour',
+      title: 'The price of the harbor',
       detail: 'The balance door wants a weight, and the ledger page that names it is smudged past reading. The air shimmers.',
       done: { flag: 'story.vault_echo' },
       // The shimmering floor; in the memory, young Yusuf at his desk (the Echo rule, review 1, finding 2).
@@ -822,7 +822,7 @@ export const ACT4: QuestDef = {
     {
       id: 'balance',
       title: 'The balance door',
-      detail: 'Yusuf wrote the price of the harbour: twenty-five. Hang the brass weights that make it on the pan.',
+      detail: 'Yusuf wrote the price of the harbor: twenty-five. Hang the brass weights that make it on the pan.',
       done: { flag: 'story.vault_outer' },
       // Claude's call (Oct 22): the price is the puzzle (read in the memory); once Yusuf has said it, the arrow walks
       // the hooks still wrong for twenty-five (16, 8, 1 on; 4, 2 off), then the pan.
@@ -2327,7 +2327,7 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     id: 'harbor_price',
     when: 'clue.harbor_price',
     title: 'Twenty-five',
-    text: 'Young Yusuf, keeper of the ledger: "The price of the harbour. Twenty-five." A debt unwritten is a debt unpaid; a debt written is at least a debt.',
+    text: 'Young Yusuf, keeper of the ledger: "The price of the harbor. Twenty-five." A debt unwritten is a debt unpaid; a debt written is at least a debt.',
   },
   {
     id: 'changed_sunlock',
