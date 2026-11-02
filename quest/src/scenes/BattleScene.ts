@@ -10,6 +10,7 @@
 // its Grudge; a fight meant to be lost goes on with its scene instead. Keys, gamepad, the touch buttons and
 // taps all work.
 
+import { fillButtons } from '../input/buttonNames.ts';
 import { volleysFor } from '../engine/war.ts';
 import { COMPANIES } from '../data/war.ts';
 import { audio } from '../audio/player.ts';
@@ -1455,7 +1456,7 @@ export class BattleScene extends Phaser.Scene {
       if (this.menu === 'target' && this.aim) {
         const one = this.aimed()[0];
         const who = this.aim.all ? (this.aim.side === 'enemy' ? 'every foe' : 'the whole party') : one ? (one.side === 'enemy' ? `${one.name}, Lv ${one.level}` : one.name) : '';
-        band = `${this.aim.name}: ${who}?  (A to confirm, B to go back)`;
+        band = fillButtons(`${this.aim.name}: ${who}?  ({A} to confirm, {B} to go back)`);
       } else if (this.menu === 'commands' && this.sticky) band = this.sticky;
       else if (this.menu !== 'commands' && row?.hint) band = row.hint;
       else if (me?.side === 'party') band = `${me.name}'s turn.`;
@@ -1567,7 +1568,7 @@ export class BattleScene extends Phaser.Scene {
       }
       text(184, Y + 4, this.aim?.name ?? '', UI.accentText);
       text(184, Y + 18, this.aim?.all ? 'A: use on all' : 'Arrows: choose', UI.dimText);
-      text(184, Y + 31, 'B: back', UI.dimText);
+      text(184, Y + 31, fillButtons('{B}: back'), UI.dimText);
       return;
     }
     const page = Math.floor(this.cursor / VISIBLE_ROWS);
@@ -1703,8 +1704,8 @@ export class BattleScene extends Phaser.Scene {
     const x = 20;
     g.fillStyle(0x000000, 0.45).fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
     const title = text(x + 8, 0, page.title, UI.accentText);
-    const body = text(x + 8, 0, page.text, UI.text, { wordWrap: { width: w - 16, useAdvancedWrap: true }, lineSpacing: 2 });
-    const foot = text(x + w - 8, 0, `${this.tutorial.length > 1 ? 'A: next   B: skip' : 'A: done'}   ${n}/${this.tutorialTotal}`, UI.dimText, { fontSize: '7px' });
+    const body = text(x + 8, 0, fillButtons(page.text), UI.text, { wordWrap: { width: w - 16, useAdvancedWrap: true }, lineSpacing: 2 });
+    const foot = text(x + w - 8, 0, `${fillButtons(this.tutorial.length > 1 ? '{A}: next   {B}: skip' : '{A}: done')}   ${n}/${this.tutorialTotal}`, UI.dimText, { fontSize: '7px' });
     const h = 8 + 12 + Math.ceil(body.height) + 6 + 10 + 6;
     const y = Math.max(16, Math.round((BATTLE_ART.stripY - h) / 2) + 6);
     g.fillStyle(BATTLE_ART.panel, 0.96).fillRect(x, y, w, h);

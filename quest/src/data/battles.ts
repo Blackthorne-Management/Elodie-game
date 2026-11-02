@@ -1693,7 +1693,7 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       start: [
         {
           title: 'How to fight',
-          text: 'Fights go in turns; who acts next is shown top right. On your turn, choose a command (bottom right), then a target: an arrow shows who. Tap them, or use the arrows and A; B goes back.',
+          text: 'Fights go in turns; who acts next is shown top right. On your turn, choose a command (bottom right), then a target: an arrow shows who. Tap them, or use {Move} and {A}; {B} goes back.',
         },
         {
           title: 'Attack and Skill',
