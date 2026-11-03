@@ -1840,7 +1840,7 @@ async function playAct(browser, errors) {
         const order = ['The End', 'The cast'].map((t) => cardsSeen.indexOf(t));
         check(order[0] >= 0 && order[1] > order[0] && cardsSeen.filter((t) => t === 'The cast').length === 4, `after the ending's card, "The End" and the cast's four cards (${cardsSeen.join(' / ')})`);
         const credits = (await snap(page)).journal;
-        check(credits?.[0] === 'CREDITS' && credits.at(-1) === '(A to the title)', `and the end credits roll (${credits?.length} lines, "${credits?.at(-1)}")`);
+        check(credits?.[0] === 'CREDITS' && credits.at(-1) === '(Enter for the title)', `and the end credits roll (${credits?.length} lines, "${credits?.at(-1)}")`);
         await shoot(page, 'end-credits', shots);
         await page.keyboard.up('Shift');
         await page.keyboard.press('KeyZ');
