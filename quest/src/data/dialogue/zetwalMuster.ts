@@ -216,6 +216,10 @@ const CAMP: DialogueScript = script('muster_camp', {
       say(ADM, 'Her price is Influence. Ten. Kirinoura\'s files say you paid it in books. We shall see.'),
       say(S, 'He runs my mother\'s convoys. He is the only man she pays on time.'),
       act([{ do: 'place', actor: 'hrafn_c', look: 'hrafn', at: at(30, 20), facing: 'left' }, { do: 'look', actor: 'hrafn_c' }], 'hrafn', 'A fleet that cannot raid is firewood. A fleet that sails for Zetwal is at least a fleet.'),
+      // S-2's promise (Chapter 6, Claude's call, Nov 4): the chief who took the envoy's word on the blockade's cost holds her to it.
+      act([{ do: 'walk', actor: 'hrafn_c', to: at(20, 14), facing: 'left' }, { do: 'face', actor: 'hrafn_c', facing: 'player' }], 'hrafn', 'Envoy. Three winters of fish and no salt. In the Moot you said the Throne pays.', { if: { flag: 'side.fleet.hrafn' } }),
+      say(G, 'It does. The blockade\'s cost is the first thing I put to the chairs at the Claim, to the last plank.', { if: { flag: 'side.fleet.hrafn' } }),
+      say('hrafn', 'Then my three hulls row hard. The song can wait.', { if: { flag: 'side.fleet.hrafn' } }),
       act([{ do: 'exit', actor: 'hrafn_c', to: at(PLAZA.westLane.x, PLAZA.westLane.y), async: true }], '', 'Hrafn walks off down the west lane, toward the Iron Market, already shouting about a convoy.'),
       act([{ do: 'place', actor: 'retainer_c', look: 'retainer_neutral', at: at(12, 7), facing: 'down' }, { do: 'look', actor: 'retainer_c' }], 'muster_retainer', 'Kirinoura is neutral. Kirinoura\'s boats are not. It is a distinction we are proud of.'),
       act([{ do: 'place', actor: 'steward_c', look: 'agnivansh_steward', at: at(24, 7), facing: 'down' }, { do: 'look', actor: 'steward_c' }], 'agnivansh_steward', 'The oil is the temple\'s again. We brought enough for one war.'),

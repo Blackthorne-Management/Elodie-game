@@ -565,6 +565,8 @@ built (owner decision).
   the horn (the Crown's purse 3, the jarl 3, Samira's salt letter 1, the winter stores 1). S-2 opens only after the horn,
   so it never replaces the horn's choices; it feeds the Muster's share, like the race (+1), Salkhi (+1) and the cairn (+2).
 
+- **The promise kept (Nov 4; Claude's call):** at the Muster Hrafn walks up to Gianna on the plaza and holds her to the Throne paying the blockade; she says it is the first thing she will put to the chairs at the Claim, and after the Claim is won the Master of the Chairs reads it first on the register (`dialogue/zetwalMuster.ts` captains, `dialogue/seatClaim.ts` chamberlain_claim_talk; only with `side.fleet.hrafn`; `tests/fleetPromise.test.ts`).
+
 ### S-3 The Winter Stores (rebel safehouse)
 - **Giver:** a herder at the folds. **Accept:** talk to her.
 - **Steps:** 1) Someone leaves grain at the folds every winter. 2) Wolves raid the store (Steppe Wolf pack, road

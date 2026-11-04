@@ -647,7 +647,14 @@ const CHAMBERLAIN_CLAIM: DialogueScript = script('chamberlain_claim_talk', {
     ],
   },
   tile: { lines: [say(CH, 'The tile, envoy. The Hall is counted.')] },
-  after: { lines: [say(CH, 'The chairs are filled. I have dusted them for fifty years. It was worth it.')] },
+  after: {
+    lines: [
+      say(CH, 'The chairs are filled. I have dusted them for fifty years. It was worth it.'),
+      // S-2's promise kept (Claude's call, Nov 4): Gianna told Hrafn at the Muster it would be the first thing she put to the chairs.
+      say(CH, 'And first on the register after the Claim, as the claimant asked:', { if: has('side.fleet.hrafn') }),
+      say(CH, 'Ordvik\'s three winters of blockade, owed by the Throne. To the last plank.', { if: has('side.fleet.hrafn') }),
+    ],
+  },
 });
 
 // ---- Beat 4: the Claim (the tile, the Regent's Challenge, then Azzy's choice; the rulebook's order: rules-decisions [42]) -------
