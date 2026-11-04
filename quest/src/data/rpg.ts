@@ -290,6 +290,14 @@ const ITEM_LIST: ItemDef[] = [
     price: 0,
     text: 'A paper crane folded from the margin of the turned Neutrality Order, the Suzumori seal pressed into its wing. "For the chamberlain\'s chair. Suzumori sits."',
   },
+  // K-5 Ashes of the Temple (built Nov 4): the Suzumori elder's letter to Agnipur, with the Crown paper it was signed on.
+  {
+    id: 'elder_letter',
+    name: 'The elder\'s letter',
+    kind: 'key',
+    price: 0,
+    text: 'A letter of apology to Meera of Agnipur, in the Suzumori elder\'s hand, folded round the Crown paper that burned the temple. A nick in the wax.',
+  },
   // Chapter 8, Agnipur: the runners' relay lamp (carried, J-2), Dhanraj's ledger of advances, Agnivansh's token for the
   // chamberlain's chair, and Titi Aiyana's mirror (Anissa's, after the roofs).
   {

@@ -61,6 +61,11 @@ export interface DebateDef {
   provoke: readonly DialogueLine[];
   /** Once won or mediated, the two move on to this. */
   after: readonly DialogueLine[];
+  /**
+   * A head start earned elsewhere (a side quest's flag): while `if` holds, joining plays `lines` and starts with the
+   * first `rounds` rounds counted as won (K-5's letter at the Muster's temple feud; Claude's call, Nov 4).
+   */
+  headStart?: { if: Condition; rounds: number; lines: readonly DialogueLine[] };
 }
 
 export type DebateOutcome = 'won' | 'mediated' | 'provoked';
@@ -106,9 +111,11 @@ export function debateScript(def: DebateDef, flags: FlagReader, ctx: DebateConte
 
   const canReason = def.reasonNeeds.some((f) => isSet(flags, f));
   const canMediate = ctx.influence >= ctx.mediateNeeds;
+  const last = def.rounds.length;
+  const head = def.headStart && evaluate(def.headStart.if, flags) ? Math.min(def.headStart.rounds, last) : 0;
   const menu: DialogueChoice[] = [
     { text: 'Listen', next: 'listen' },
-    { text: 'Join the debate', next: 'r0_0' },
+    { text: 'Join the debate', next: head > 0 ? 'head' : 'r0_0' },
     canMediate
       ? { text: 'Mediate', next: 'mediate' }
       : { text: `Mediate (needs Influence ${ctx.mediateNeeds} here)`, next: 'cannot_mediate' },
@@ -122,8 +129,11 @@ export function debateScript(def: DebateDef, flags: FlagReader, ctx: DebateConte
   nodes.mediate = { lines: [...def.mediate], set: { [debateFlag(def.id, 'mediated')]: true, [debateFlag(def.id, 'settled')]: true } };
   nodes.provoke = { lines: [...def.provoke], set: { [debateFlag(def.id, 'provoked')]: true } };
 
+  if (head > 0) {
+    nodes.head = { lines: [...def.headStart!.lines], next: head < last ? `r${head}_${head}` : head >= DEBATE_ROUNDS_TO_WIN ? 'won' : 'lost' };
+  }
+
   // Rounds: node r<i>_<wins so far>; an answer goes to a<i>_<appeal>_<wins>, then on to the next round.
-  const last = def.rounds.length;
   for (let i = 0; i < last; i++) {
     const round = def.rounds[i]!;
     for (let wins = 0; wins <= i; wins++) {

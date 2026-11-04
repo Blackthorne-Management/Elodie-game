@@ -84,7 +84,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | K-2 | The Spy Ledger | Kirinoura | Ch. 7 | road tier | if seen | yes |
 | K-3 | Lanterns for the Lost (safehouse) | Kirinoura | Ch. 7 | road tier | yes | no |
 | K-4 | The Letter in the Floor (secret) | Kirinoura | Ch. 7 | road tier | no | yes |
-| K-5 | Ashes of the Temple | Kirinoura | Ch. 7 | road tier | no | yes |
+| K-5 | Ashes of the Temple (built Nov 4, optional) | Kirinoura | Ch. 7 (delivered Ch. 8) | road tier | no | yes |
 | J-1 | Win Every Argument | Agnipur | Ch. 8 | road tier | sparring | no |
 | J-2 | The Lamp Relay | Agnipur | Ch. 8 | road tier | no | yes |
 | J-3 | The Anonymous Oil (safehouse) | Agnipur | Ch. 8 | road tier | optional | no |
@@ -633,6 +633,25 @@ built (owner decision).
   apology, with the seal, to Agnipur.
 - **Reward:** 250 XP, +1 Influence in Kuroshi and in Jwaladesh; the Suzumori and Agnivansh feud mediation at the
   Muster starts one step easier.
+- **Built (Nov 4; optional; Claude's calls):** the elder is the one already standing by *The Burned Temple*'s shelf in
+  the Lantern Library; she gives it at dawn, after the Fox, with Haru in the party (her file box: the Crown paper she
+  signed the burning on, "hide Brasador arms", its red wax still on it). The timeline: both temple books put the burning
+  in the Ash Wars, twenty-five years ago, and the Echo is fifty, so the Echo shows the same forger's *first* lie: at
+  Kayla's desk (the library's existing Echo zone, no new map) one of Sayo's agents walks in with a Crown dispatch taken off
+  a courier on the pier ("the Keepers of Agnipur sell Kirinoura's ship lists to the Crown"); the clerk files it unbelieved
+  ("false. File it under the crane. Burn nothing."), and Patricio sees the nick in the crown's band, left of the middle
+  point: a man's own seal, not the Throne's (`clue.forger_seal`). Back with the elder, her wax has the same nick ("The
+  same hand. Twenty-five years apart."); she writes the letter on the box's lid (`item.elder_letter`, the paper folded
+  inside). The forger is not named (no tie to the closed hand or the purchasing office: the main mysteries stay as they
+  are). Delivered to Meera in the Court of Flame at dawn, once the price is made (her son Vikram walks up; she lays the
+  letter on the altar step where the crane was refused): `side.ashes.done`. 40 XP (paid in Chapter 8, with J-1 and J-4;
+  the curve test: a player who does everything ends Chapter 8 at level 22 and Chapter 9 at 25, at most one over), +1
+  Influence (Jwaladesh) as the reward and +1 Influence (Kuroshi) by a pillar rule on the delivery's flag (a reward has one
+  pillar). The Muster's head start: the temple feud's debate takes a data-driven `headStart` (engine/debate.ts): joining
+  plays the steward's three lines about the letter and starts at round 2 with round 1 counted as won, so one strong answer
+  in two wins it (Mediate was left alone: it needs 5 Influence in Zetwal, which the route has 1 of, so lowering it would
+  change nothing for most players). Closes when the trader sails from Kirinoura with the quest accepted and no letter
+  written, or from Agnipur undelivered; never offered after Kirinoura if never asked.
 
 ## Agnipur (Jwaladesh)
 

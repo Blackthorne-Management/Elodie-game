@@ -7,12 +7,17 @@
 // The owner's rules: shown, not told (Haru walks to each place and does it again; the informant walks the floor; the
 // floor-maker lifts the latch); Anissa never jokes and is never touched; no Rael. Haru says "definitely not a spy" in
 // K-1 at each place (the design's three times); Chapter 7's own scenes (data/dialogue/kuroshi.ts) still say it once.
+//
+// Built Nov 4: K-5 Ashes of the Temple (SIDE-QUESTS.md K-5): the Suzumori elder in the Lantern Library at dawn, her
+// Crown paper; Kayla's desk fifty years ago (the library's Echo, data/dialogue/kuroshi.ts clerk_echo plays ASHES_ECHO),
+// where Sayo's clerk files the forger's first lie and Patricio sees the nick in his seal; the elder's letter. Meera reads
+// it in Chapter 8 (data/dialogue/jwaladeshQuests.ts).
 
 import type { Condition } from '../../engine/conditions.ts';
 import type { DialogueChoice, DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { nailFlag } from '../../engine/secrets.ts';
-import { FLOOR_MAKER, HALL, INFORMANT_WALK, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from '../kuroshi.ts';
+import { ASHES, FLOOR_MAKER, HALL, INFORMANT_WALK, LIBRARY, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from '../kuroshi.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 const say = (speaker: string, text: string, extra: Extra = {}): DialogueLine => ({ speaker, text, ...extra });
@@ -33,6 +38,9 @@ const P = 'patricio';
 const SY = 'sayo';
 const FM = 'floor_maker';
 const IN = 'informant';
+const EL = 'suzumori_elder';
+const SC = 'sayo_clerk';
+const AG = 'sayo_agent';
 
 // ---- K-1 Definitely Not a Spy -------------------------------------------------------------------------------------
 
@@ -295,10 +303,110 @@ const FLOOR_DIALOGUE: DialogueScript[] = [
   }),
 ];
 
+// ---- K-5 Ashes of the Temple (built Nov 4) -------------------------------------------------------------------------
+
+/** The library's memory plays the forger's first lie while K-5 waits for it (data/dialogue/kuroshi.ts clerk_echo). */
+export const ASHES_ECHO_WANTED: Condition = { all: [f(ASHES.accepted), { notFlag: ASHES.seal }] };
+const ELDER = 'npc:suzumori_elder';
+const AGENT_DOOR = at(LIBRARY.door.x, LIBRARY.door.y - 1);
+
+/**
+ * Kayla's desk fifty years ago: one of Sayo's agents brings in a Crown dispatch taken off a courier on the pier, a lie
+ * about Agnipur meant for Kirinoura's council; the clerk files it unbelieved, and Patricio sees the nick in the seal.
+ */
+export const ASHES_ECHO: DialogueNode = {
+  lines: [
+    nar('Kayla\'s desk, fifty years ago. Sayo\'s clerk is filing. The door opens on fog.', { fx: 'fade' }),
+    act(
+      [{ do: 'enter', actor: 'ashes_agent', look: 'echo_agent', from: AGENT_DOOR, to: at(LIBRARY.desk.x + 2, LIBRARY.desk.y + 1), facing: 'up' }],
+      '',
+      'One of Sayo\'s agents comes in out of the fog, wet to the knees, and lays a sealed dispatch on the desk.',
+    ),
+    say(AG, 'Off a Crown courier on the pier. He thinks he dropped it in the canal.'),
+    act([{ do: 'look', actor: 'npc:sayo_clerk' }], '', 'The clerk breaks nothing. She lifts the dispatch to the lamp, wax and all.'),
+    say(SC, '"The Keepers of Agnipur sell Kirinoura\'s ship lists to the Crown." For the council\'s eyes.'),
+    say(SC, 'Lady Sayo had a man in Agnipur\'s temple last month. They sell lamp oil. Nothing else.'),
+    say(P, '(The crown on the wax has a nick in its band, left of the middle point.)'),
+    say(P, '(The Throne\'s own seal has no nick. Somebody cut his own crown, and copied it badly.)', { set: { [ASHES.seal]: true } }),
+    say(SC, 'Lady Sayo says: false. File it under the crane. Burn nothing.'),
+    act([{ do: 'exit', actor: 'ashes_agent', to: AGENT_DOOR }], AG, 'And the courier?'),
+    say(SC, 'Let him think it was read and believed. The Crown will try again.'),
+  ],
+};
+
+const ASHES_DIALOGUE: DialogueScript[] = [
+  // The elder in the Lantern Library: by the Burned Temple's shelf most mornings (the Kirinoura book says so).
+  script('suzumori_elder_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: f(ASHES.done), to: 'after' },
+        { if: f(ASHES.letter), to: 'written' },
+        { if: { all: [f(ASHES.accepted), f(ASHES.seal)] }, to: 'seal' },
+        { if: f(ASHES.accepted), to: 'remind' },
+        { if: { all: [f('story.quarter_dawn'), f('party.haru'), { notFlag: 'act7.complete' }] }, to: 'offer' },
+        { to: 'plain' },
+      ],
+    },
+    plain: {
+      lines: [
+        say(EL, 'The Burned Temple is on that shelf. I signed the order that burned it, on a Crown paper that lied.'),
+        say(EL, 'Agnipur has not forgiven it. Nor have I. I write them a letter every year, and never send it.'),
+      ],
+    },
+    offer: {
+      lines: [
+        act([{ do: 'face', actor: ELDER, facing: 'player' }], EL, 'Young lord. Envoy. You came here for the stacks. I come for one book.'),
+        say(EL, 'The Burned Temple. Agnipur\'s, in the Ash Wars. I signed the order for Kirinoura.'),
+        act(
+          [
+            { do: 'walk', actor: ELDER, to: ASHES.shelf, facing: 'up' },
+            { do: 'wait', ms: 700 },
+            { do: 'walk', actor: ELDER, to: LIBRARY.elder },
+            { do: 'face', actor: ELDER, facing: 'player' },
+          ],
+          '',
+          'She takes a thin file box down from the shelf, and opens it on her palm.',
+        ),
+        nar('A Crown paper, the red wax still on it: "The fire priests of Agnipur hide Brasador arms in their temple."'),
+        say(EL, 'Our ships went that night. The temple burned. There were bowls in the ashes. Nothing else.'),
+        say(EL, 'The paper was false. The Crown never said who wrote it. I never asked loudly enough.'),
+        act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'Grandmother kept a file on every Crown paper that came to Kirinoura.'),
+        say(EL, 'Lady Sayo\'s files are fifty years old, young lord. This paper is twenty-five.'),
+        say(A, 'Kayla\'s desk is older than the paper, Gigi. The Locket.'),
+        say(G, 'Then we look at it fifty years ago.', { set: { [ASHES.accepted]: true } }),
+        say(EL, 'Find me whose hand this is, envoy, and I will send this year\'s letter.'),
+        nar('(Ashes of the Temple is in the Quests page of the menu.)'),
+      ],
+    },
+    remind: { lines: [say(EL, 'Kayla\'s desk was Lady Sayo\'s clerk\'s. If the Crown lied to us before, her clerk filed it.')] },
+    seal: {
+      lines: [
+        say(G, 'Fifty years ago Sayo\'s people took a Crown paper off a courier. A lie about Agnipur, for your council.'),
+        say(G, 'The crown on its wax had a nick in the band, left of the middle point.'),
+        act(
+          [{ do: 'look', actor: ELDER }, { do: 'face', actor: ELDER, facing: 'right' }, { do: 'wait', ms: 900 }],
+          '',
+          'The elder holds her paper up to the high window. In the red wax, left of the middle point: the nick.',
+        ),
+        act([{ do: 'face', actor: ELDER, facing: 'player' }], EL, 'The same hand. Twenty-five years apart.'),
+        say(EL, 'Sayo filed his first lie and burned nothing. We burned a temple on his second.'),
+        say(H, 'Not the Throne\'s seal, then. One man\'s, who cut his own crown.'),
+        act([{ do: 'look', actor: ELDER }, { do: 'wait', ms: 900 }], '', 'She writes on the file box\'s lid, quickly, as if she had written it before. She has, every year.'),
+        say(EL, 'For Meera of Agnipur. With the paper, and its wax. They should have the lie as well as the sorry.', { set: { [ASHES.letter]: true } }),
+        say(G, 'By my own hand, at their Court.'),
+        say(A, 'She\'s lighter, Gigi.'),
+      ],
+    },
+    written: { lines: [say(EL, 'Twenty-five letters. One posted. Go, envoy, before I take it back.')] },
+    after: { lines: [say(EL, 'Agnipur read it. That is more than I earned.')] },
+  }),
+];
+
 function simple(id: string, lines: DialogueLine[]): DialogueScript {
   return script(id, { start: { lines } });
 }
 
-export const KUROSHI_QUEST_DIALOGUE: readonly DialogueScript[] = [...SPY_DIALOGUE, ...FLOOR_DIALOGUE];
+export const KUROSHI_QUEST_DIALOGUE: readonly DialogueScript[] = [...SPY_DIALOGUE, ...FLOOR_DIALOGUE, ...ASHES_DIALOGUE];
 /** For the maps: where the old floor-maker stands, and the house's door on the quarter. */
 export const FLOOR_PLACES = { floorMaker: FLOOR_MAKER, door: SAYO_DOOR } as const;

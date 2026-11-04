@@ -80,6 +80,8 @@ export const OFF_ROUTE_QUESTS: Readonly<Record<string, number>> = {
   letter_floor: 7,
   argue: 8,
   little_lamps: 8,
+  // K-5 (built Nov 4) opens in Chapter 7 and is finished in Chapter 8, when the letter is delivered.
+  ashes: 8,
   sorry: 9,
   patient_hour: 9,
   tea: 9,

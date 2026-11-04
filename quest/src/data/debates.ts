@@ -7,6 +7,7 @@ import type { DebateDef } from '../engine/debate.ts';
 import type { DialogueLine } from '../engine/dialogue.ts';
 import { loreFlag } from './books.ts';
 import type { StageCue } from '../engine/stage.ts';
+import { ASHES } from './kuroshi.ts';
 import { TEMPLE } from './muster.ts';
 import { CAMP } from './war.ts';
 
@@ -890,6 +891,18 @@ export const DEBATES: readonly DebateDef[] = [
       say('agnivansh_steward', 'One night on our altar.'),
       say('muster_retainer', 'One night on theirs.'),
     ],
+    // K-5 Ashes of the Temple done (the elder's letter read in Agnipur's Court): the first claim is already answered, so
+    // joining starts at round 2 with one round won (Claude's call, Nov 4).
+    headStart: {
+      if: { flag: ASHES.done },
+      rounds: 1,
+      lines: [
+        say('agnivansh_steward', 'Envoy. Meera read the elder\'s letter in the Court, in front of the flame.'),
+        say('agnivansh_steward', 'The paper was not the Crown\'s word. It was one man\'s, with his own seal. The Keepers know it now.'),
+        say('muster_retainer', 'Then the hands that burned it were lied to. They can still carry stones.'),
+        nar('(The elder\'s letter has answered the first claim. Round 1 of 3 is won.)'),
+      ],
+    },
   },
   {
     id: 'zetwal_feud_crown',

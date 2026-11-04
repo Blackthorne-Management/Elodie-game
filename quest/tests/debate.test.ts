@@ -7,6 +7,7 @@ import { CONCORD_START, DEBATE_MEDIATE_INFLUENCE } from '../src/config.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { loreFlag } from '../src/data/books.ts';
 import { DEBATES } from '../src/data/debates.ts';
+import { ASHES } from '../src/data/kuroshi.ts';
 import { concord, debateFlag, debateScript, settleDebates, type DebateDef } from '../src/engine/debate.ts';
 import { DialogueRunner, checkDialogue } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
@@ -130,5 +131,22 @@ describe('the debate corner', () => {
       }
       for (const r of def.rounds) expect(Object.values(r.answers).filter((a) => a.strength === 2)).toHaveLength(1);
     }
+  });
+
+  it('a head start (K-5 at the temple feud) plays its lines and starts the rounds with the first one won', () => {
+    const feud = DEBATES.find((d) => d.id === 'zetwal_feud_temple')!;
+    expect(feud.headStart?.rounds).toBe(1);
+    const flags = new FlagStore({ 'story.council_condition': true, [ASHES.done]: true });
+    const seen = visit(flags, ['Join', 'Compassion', 'Scripture'], 0, feud);
+    expect(seen).toContain('Round 2 of 3.');
+    expect(seen).not.toContain('Round 1 of 3.');
+    expect(flags.isSet(debateFlag(feud.id, 'won'))).toBe(true);
+    // Without it, a weak first answer and the same two after are one strong in three: lost.
+    const plain = new FlagStore({ 'story.council_condition': true });
+    expect(visit(plain, ['Join', 'Compassion', 'Compassion', 'Scripture'], 0, feud)).toContain('Round 1 of 3.');
+    expect(plain.isSet(debateFlag(feud.id, 'won'))).toBe(false);
+    // Every state's script passes the dialogue checks.
+    const script = debateScript(feud, flags, { influence: 0, mediateNeeds: DEBATE_MEDIATE_INFLUENCE });
+    expect(checkDialogue({ [script.id]: script }, CONTENT.speakers)).toEqual([]);
   });
 });

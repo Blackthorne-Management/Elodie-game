@@ -15,6 +15,7 @@ import { parseConditionText } from '../../engine/conditions.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { rotorLookCondition } from '../../engine/rotor.ts';
 import { CODE, FILEHOUSE, HALL, LIBRARY, MARSH, MARSH_CODE, MAZE, PIER, QUARTER, SCREENS, STACK_SHELVES, type Turn } from '../kuroshi.ts';
+import { ASHES_ECHO, ASHES_ECHO_WANTED } from './kuroshiQuests.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -603,7 +604,9 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
   simple('clerk_desk_echo', [nar('The clerk\'s desk, fifty years ago: a brush, an ink stone, and a list of shelf marks nobody is to say aloud.')]),
   simple('sayo_clerk_talk', [say('sayo_clerk', 'Crane, pine, first row. ...I said nothing. You heard nothing.')]),
   script('clerk_echo', {
-    start: { lines: [], next: [{ if: { flag: 'clue.shelf_mark' }, to: 'again' }, { to: 'first' }] },
+    // K-5 (built Nov 4, optional, at dawn): the forger's first lie, while the elder's quest waits for it.
+    start: { lines: [], next: [{ if: ASHES_ECHO_WANTED, to: 'ashes' }, { if: { flag: 'clue.shelf_mark' }, to: 'again' }, { to: 'first' }] },
+    ashes: ASHES_ECHO,
     again: { lines: [nar('Kayla\'s desk, fifty years ago. Sayo\'s clerk is filing, and saying nothing aloud.')] },
     first: {
       lines: [
@@ -625,10 +628,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
   simple('kq_librarian_talk', [say('kq_librarian', 'Yōkoso. Nine books on the shelves; the stacks are sealed. Read quietly.', { translation: 'Welcome' })]),
-  simple('suzumori_elder_talk', [
-    say('suzumori_elder', 'The Burned Temple is on that shelf. I signed the order that burned it, on a Crown paper that lied.'),
-    say('suzumori_elder', 'Agnipur has not forgiven it. Nor have I. I write them a letter every year, and never send it.'),
-  ]),
+  // The Suzumori elder: data/dialogue/kuroshiQuests.ts (K-5 Ashes of the Temple, built Nov 4).
   script('stacks_seal', {
     start: { lines: [], next: [{ if: { flag: 'side.spy_ledger.accepted' }, to: 'window' }, { to: 'sealed' }] },
     sealed: { lines: [nar('The stacks\' door, sealed with paper and the Hall\'s chop. By the Neutrality Order, nobody opens it.')] },

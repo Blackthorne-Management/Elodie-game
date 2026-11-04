@@ -266,3 +266,20 @@ export const INFORMANT_WALK: readonly { c: number; r: number }[] = [
 ];
 /** The pitches as the ripples draw them (the puzzle works with the sound off). */
 export const PITCH_SHAPES = ['silence', 'a circle', 'a square', 'a triangle', 'a diamond', 'a star'] as const;
+
+// ---- Built Nov 4: K-5 Ashes of the Temple ---------------------------------------------------------------------------
+
+/**
+ * K-5 Ashes of the Temple (optional; Chapter 7 to Chapter 8): the Suzumori elder in the Lantern Library (LIBRARY.elder)
+ * shows the Crown paper she signed the burning on; at Kayla's desk fifty years ago (the library's Echo zone) Sayo's
+ * clerk files the forger's first lie, and Patricio sees the nick in his seal; the elder writes her letter; Meera reads it
+ * in Agnipur's Court at dawn. Done, it gives the Muster's temple feud a head start (data/debates.ts headStart).
+ */
+export const ASHES = {
+  accepted: 'side.ashes.accepted',
+  seal: 'clue.forger_seal',
+  letter: 'item.elder_letter',
+  done: 'side.ashes.done',
+  /** Where the elder takes her file box down (the shelf above her), and goes back to. */
+  shelf: at(13, 2),
+} as const;

@@ -17,7 +17,9 @@ import { LEVELS, LEVEL_CURVE } from '../src/config.ts';
 import { levelCurve } from '../tools/level-curve.ts';
 import { closedNotes, settleRewards, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { FlagStore } from '../src/engine/flags.ts';
+import { evaluate } from '../src/engine/conditions.ts';
 import { Sim, parseRoute } from '../src/engine/sim.ts';
+import { ASHES } from '../src/data/kuroshi.ts';
 import { loadMaps, newGameSim, readJson } from '../tools/sim-setup.ts';
 
 const maps = loadMaps();
@@ -84,7 +86,8 @@ describe('what they pay keeps the level curve (the levels pass)', () => {
     // Chapter 6: Salkhi's opinions, the race, the cairn (no fights of their own).
     6: LATE_XP.salkhi + LATE_XP.race + LATE_XP.cairn,
     7: LATE_XP.notASpy + LATE_XP.letterFloor,
-    8: LATE_XP.argue + LATE_XP.littleLamps + bouts,
+    // K-5 (built Nov 4) is accepted in Chapter 7 and paid in Chapter 8, when the letter is delivered.
+    8: LATE_XP.argue + LATE_XP.littleLamps + bouts + LATE_XP.ashes,
     9: LATE_XP.sorry + LATE_XP.patientHour + LATE_XP.tea,
     // Se-4 is won in Chapter 12 (before the bell): it needs Chapter 9's record.
     12: LATE_XP.ribbon,
@@ -366,5 +369,126 @@ describe('K-4 The Letter in the Floor (Lady Sayo\'s House, the Nightingale Key)'
     const xp = sharedXp(flags, RPG);
     expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('letter_floor');
     expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.letterFloor);
+  });
+});
+
+describe('K-5 Ashes of the Temple (the Suzumori elder, Kayla\'s desk fifty years ago, Meera\'s Court)', () => {
+  /** Kirinoura at dawn, out of the Hall and into the Lantern Library. */
+  function library(): Sim {
+    const sim = simAt('kirinoura-petition');
+    settleRewards(sim.logic.state.flags, RPG, SIDE_QUESTS);
+    sim.run(['goto 17,25', 'goto 5,10']);
+    expect(sim.logic.map.id).toBe('kuroshi-library');
+    return sim;
+  }
+
+  it('the elder shows her Crown paper; the memory at Kayla\'s desk shows the forger\'s seal; she writes her letter', () => {
+    const sim = library();
+    const flags = sim.logic.state.flags;
+    const q = quest('ashes');
+    expect(sideQuestStatus(flags, q)).toBe('unknown');
+    sim.run(['goto 13,4', 'up', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    // Asked again before the memory, she only points at the desk.
+    sim.run(['confirm', 'skip']);
+    expect(flags.isSet(ASHES.letter)).toBe(false);
+    // Kayla's desk, fifty years ago: the agent brings the dispatch in, Patricio sees the nick.
+    sim.run(['goto 9,8', 'echo', 'skip']);
+    expect(sim.logic.era).toBe('echo');
+    expect(flags.isSet(ASHES.seal)).toBe(true);
+    sim.run(['echo']);
+    expect(sim.logic.era).toBe('present');
+    // Back to the elder: the same nick in her wax, and the letter.
+    sim.run(['goto 13,4', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(ASHES.letter)).toBe(true);
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    // Nothing is paid in Kirinoura: the quest is done in Agnipur.
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).not.toContain('ashes');
+    // The trader sails with the letter in hand: still open; without it, closed.
+    expect(sideQuestStatus(new FlagStore({ ...flags.snapshot(), 'act7.complete': true }), q)).toBe('active');
+    expect(sideQuestStatus(new FlagStore({ ...flags.snapshot(), 'act7.complete': true, [ASHES.letter]: false }), q)).toBe('closed');
+  });
+
+  it('the library\'s memory is K-2\'s again once the seal is seen, and never K-5\'s before it is asked for', () => {
+    const sim = library();
+    const flags = sim.logic.state.flags;
+    sim.run(['goto 9,8', 'echo', 'skip']);
+    expect(flags.isSet(ASHES.seal)).toBe(false);
+  });
+
+  it('Meera reads the letter at dawn; +40 XP, +1 Influence in Jwaladesh and in Kuroshi, paid once', () => {
+    const sim = agnipurDawn();
+    const flags = sim.logic.state.flags;
+    // The letter as Chapter 7 leaves it (the test above).
+    for (const fl of [ASHES.accepted, ASHES.seal, ASHES.letter]) flags.set(fl, true);
+    const q = quest('ashes');
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    sim.run(['goto 21,0']);
+    expect(sim.logic.map.id).toBe('jwaladesh-court');
+    const kuroshi = localPillar(flags, RPG, 'influence', 'kuroshi');
+    const jwaladesh = localPillar(flags, RPG, 'influence', 'jwaladesh');
+    sim.run(['goto 16,6', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(ASHES.done)).toBe(true);
+    expect(flags.isSet(ASHES.letter)).toBe(false);
+    expect(sideQuestStatus(flags, q)).toBe('done');
+    expect(localPillar(flags, RPG, 'influence', 'kuroshi') - kuroshi).toBe(1);
+    const xp = sharedXp(flags, RPG);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('ashes');
+    expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.ashes);
+    expect(localPillar(flags, RPG, 'influence', 'jwaladesh') - jwaladesh).toBe(1);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).not.toContain('ashes');
+    // Meera after: her usual line.
+    sim.run(['confirm', 'skip']);
+    expect(flags.isSet(ASHES.done)).toBe(true);
+  });
+
+  it('closes when the trader sails from Agnipur undelivered; never offered after Kirinoura if never asked', () => {
+    const q = quest('ashes');
+    expect(sideQuestStatus(new FlagStore({ [ASHES.accepted]: true, [ASHES.letter]: true, 'act7.complete': true, 'act8.complete': true }), q)).toBe('closed');
+    const never = new FlagStore({ 'story.quarter_dawn': true, 'party.haru': true, 'act7.complete': true });
+    expect(sideQuestStatus(never, q)).toBe('unknown');
+    expect(evaluate(q.available!, never)).toBe(false);
+  });
+
+  /** Walk up to the temple feud at the Muster and join it; every line up to the first round's choice. */
+  function joinFeud(done: boolean): { sim: Sim; seen: string[] } {
+    const sim = simAt('muster-blessing');
+    if (done) sim.logic.state.flags.set(ASHES.done, true);
+    sim.run(['goto 16,4', 'right', 'confirm']);
+    choose(sim, 1);
+    const seen: string[] = [];
+    for (let i = 0; i < 20 && sim.logic.mode === 'dialogue'; i++) {
+      const v = sim.logic.view();
+      if (v.kind === 'end') break;
+      seen.push(v.text);
+      if (v.kind === 'choice') break;
+      sim.run(['confirm']);
+    }
+    return { sim, seen };
+  }
+
+  it('at the Muster, done, the temple feud starts at round 2 with round 1 won: one strong answer wins it', () => {
+    const { sim, seen } = joinFeud(true);
+    expect(seen).toContain('Round 2 of 3.');
+    expect(seen).not.toContain('Round 1 of 3.');
+    expect(seen.join(' ')).toContain('elder\'s letter');
+    const pick = (start: string) => {
+      const v = sim.logic.view();
+      if (v.kind !== 'choice') throw new Error('no choice');
+      const k = v.choices.findIndex((ch) => ch.text.startsWith(start));
+      expect(k, start).toBeGreaterThanOrEqual(0);
+      sim.run([...(k > 0 ? [`down*${k}`] : []), 'confirm']);
+      for (let i = 0; i < 20 && sim.logic.mode === 'dialogue' && sim.logic.view().kind !== 'choice'; i++) sim.run(['confirm']);
+    };
+    // Round 2: Compassion lands (2); round 3: Scripture only splits the crowd (1). One round won here, one by the letter.
+    pick('Compassion');
+    pick('Scripture');
+    sim.run(['skip']);
+    expect(sim.logic.state.flags.isSet('debate.zetwal_feud_temple.won')).toBe(true);
+  });
+
+  it('without it, the feud starts at round 1 as before', () => {
+    const { seen } = joinFeud(false);
+    expect(seen).toContain('Round 1 of 3.');
   });
 });

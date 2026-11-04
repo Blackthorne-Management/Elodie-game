@@ -14,6 +14,7 @@ import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/di
 import type { Condition } from '../../engine/conditions.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { ANCHORS, BAZAAR, COURT, HARBOR, MIRRORS_RIGHT, ROOFTOPS, mirrorFlag } from '../jwaladesh.ts';
+import { ASHES_DELIVERY, ASHES_DELIVERY_WANTED } from './jwaladeshQuests.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -653,6 +654,8 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
     start: {
       lines: [],
       next: [
+        // K-5 (built Nov 4, optional): the Suzumori elder's letter, read at dawn.
+        { if: ASHES_DELIVERY_WANTED, to: 'ashes' },
         { if: { flag: 'ally.jwaladesh' }, to: 'after' },
         { if: { flag: 'story.flame_seen' }, to: 'night' },
         { if: { flag: 'story.court_heard' }, to: 'day' },
@@ -663,6 +666,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
     day: { lines: [say(ME, 'The Court has one word, envoy. I have said it.')] },
     night: { lines: [say(ME, 'The city has seen it. I cannot unsay what the city has seen.')] },
     after: { lines: [say(ME, 'He is right about one thing a day, envoy. Find the one.')] },
+    ashes: ASHES_DELIVERY,
   }),
   script('senior_keeper_talk', {
     start: { lines: [], next: [{ if: { flag: 'story.dhanraj_beaten' }, to: 'after' }, { to: 'well' }] },

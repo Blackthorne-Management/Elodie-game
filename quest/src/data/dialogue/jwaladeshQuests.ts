@@ -6,12 +6,16 @@
 //
 // The owner's rules: shown, not told (Vikram walks up to each of them; the lamp-maker walks the reservoir to the lock; the
 // child walks to her shrine and lights it); Anissa never jokes and is never touched; no Rael. The jokes are Vikram's.
+//
+// Built Nov 4: K-5 Ashes of the Temple's last step (SIDE-QUESTS.md K-5): the Suzumori elder's letter, carried from
+// Kirinoura, read by Meera in the Court at dawn (data/dialogue/jwaladesh.ts meera_talk plays ASHES_DELIVERY).
 
 import type { Condition } from '../../engine/conditions.ts';
 import type { DialogueChoice, DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { MEASURES_DO, jarFlag, sealedFlag } from '../../engine/secrets.ts';
-import { ARGUERS, BAZAAR, HARBOR, OIL_STORE, WICK_MEASURES } from '../jwaladesh.ts';
+import { ARGUERS, BAZAAR, COURT, HARBOR, OIL_STORE, WICK_MEASURES } from '../jwaladesh.ts';
+import { ASHES } from '../kuroshi.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 const say = (speaker: string, text: string, extra: Extra = {}): DialogueLine => ({ speaker, text, ...extra });
@@ -351,6 +355,38 @@ const LITTLE_LAMPS: DialogueScript[] = [
   ),
   simple('echo_reservoir', [nar('The lamp-maker\'s clay reservoir, wax ready at its neck. It takes one pour, and then it seals.')]),
 ];
+
+// ---- K-5 Ashes of the Temple: the letter delivered (built Nov 4) ---------------------------------------------------
+
+/** Meera reads the elder's letter at dawn, once the price is made (the Court's own scene first), until the trader sails. */
+export const ASHES_DELIVERY_WANTED: Condition = { all: [f(ASHES.letter), f('ally.jwaladesh'), not('act8.complete')] };
+const MEERA = 'npc:meera';
+
+export const ASHES_DELIVERY: DialogueNode = {
+  lines: [
+    say(G, 'Meera. From the Suzumori elder who signed the order. Her letter, and the Crown paper she signed it on.'),
+    act([{ do: 'look', actor: MEERA }, { do: 'wait', ms: 900 }], '', 'Meera reads the letter through, slowly. Then she holds the Crown paper up to the wick-window.'),
+    say('meera', 'A nick in the crown\'s band. That is not the Throne\'s seal.'),
+    say(G, 'One man\'s. Sayo\'s people caught his first lie fifty years ago. Kirinoura believed his second.'),
+    act([{ do: 'walk', actor: 'vikram', to: at(COURT.meera.x + 1, COURT.meera.y + 1), facing: 'up' }], V, 'Mother. She has written to us every year?'),
+    say('meera', 'Every year, she says. This is the one she posted.'),
+    act(
+      [
+        { do: 'walk', actor: MEERA, to: at(COURT.craneStep.x, COURT.craneStep.y + 1), facing: 'up' },
+        { do: 'wait', ms: 800 },
+        { do: 'walk', actor: MEERA, to: COURT.meera },
+        { do: 'face', actor: MEERA, facing: 'player' },
+      ],
+      '',
+      'She lays the letter on the altar\'s lowest step, where the crane was refused, and the paper beside it, wax up.',
+    ),
+    say('meera', 'Tell her it was read in the Court, in front of the flame. That is not forgiveness.'),
+    say('meera', 'When the Suzumori ask to carry stones for our temple, the Keepers will see this paper first.', {
+      set: { [ASHES.done]: true, [ASHES.letter]: false },
+    }),
+    say(A, 'Not forgiveness yet, Gigi. But she left it on the step.'),
+  ],
+};
 
 export const JWALADESH_QUEST_DIALOGUE: readonly DialogueScript[] = [...ARGUER_LIST.flatMap(arguerScripts), ...LITTLE_LAMPS];
 export const ARGUER_IDS = ARGUER_LIST.map((a) => a.id);

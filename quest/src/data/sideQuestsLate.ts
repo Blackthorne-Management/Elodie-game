@@ -7,17 +7,20 @@
 // What they pay (Claude's call, the levels pass's rule): small XP, so a player who does every one of them ends each
 // chapter at most one level over its target (the played line's slack), and the line without side quests is unchanged.
 // The design's gold and pillars are kept.
+//
+// Built Nov 4, the same way: K-5 Ashes of the Temple (Chapter 7's Suzumori elder, her letter carried to Agnipur in
+// Chapter 8; SIDE-QUESTS.md K-5 with its "Built" note).
 
 import type { Condition } from '../engine/conditions.ts';
 import type { RpgContent } from '../engine/rpg.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CLOCKMAKER_DAWN, CLOCK_TOWER, KEEP, LETTERS, TOWER_CLOCK, TOWNHOUSE_DOOR } from './aldermoor.ts';
-import { ARGUERS, BAZAAR, HARBOR, OIL_STORE } from './jwaladesh.ts';
+import { ARGUERS, BAZAAR, COURT, HARBOR, OIL_STORE } from './jwaladesh.ts';
 import { CAMP, CHAPEL, ERRAND, FEAST, FEAST_FLAGS, TRIAL_MORNING } from './ardencia.ts';
 import { INVOICE, INVOICE_FLAGS, SAFFRON, SAFFRON_FLAGS, SAKK, SAKK_FLAGS, VAULT_NIGHT } from './aldoria.ts';
 import { RIBBON } from './seatArchive.ts';
 import { CAIRN_ANSWER, CAIRN_FRONT, FAIR, OPINIONS, ORDVIK_DAWN, PLATEAU, RACE, SIGHTING } from './skarragol.ts';
-import { FLOOR_MAKER, HALL, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
+import { ASHES, FLOOR_MAKER, HALL, LIBRARY, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
 const f = (flag: string): Condition => ({ flag });
 const all = (...c: Condition[]): Condition => ({ all: c });
@@ -43,6 +46,8 @@ export const LATE_XP = {
   letterFloor: 60,
   argue: 30,
   littleLamps: 60,
+  // K-5 is finished in Chapter 8 (the letter delivered), so it counts there, with J-1 and J-4 (built Nov 4).
+  ashes: 40,
   sorry: 40,
   patientHour: 60,
   tea: 40,
@@ -334,6 +339,8 @@ const ORDVIK: readonly SideQuestDef[] = [
 
 const KUROSHI_DAWN: Condition = all(f('story.quarter_dawn'), f('party.haru'));
 
+const ELDER_AT = { map: 'kuroshi-library', at: { x: LIBRARY.elder.x, y: LIBRARY.elder.y + 1 } };
+
 const KUROSHI: readonly SideQuestDef[] = [
   // K-1: Yari makes Haru show how he followed them, at the three places he was seen.
   {
@@ -390,6 +397,37 @@ const KUROSHI: readonly SideQuestDef[] = [
     closed: f('act7.complete'),
     closedText: 'Closed: the trader sailed. The box is still shut under the far wall, and the floor still sings.',
     reward: { gold: 300, xp: LATE_XP.letterFloor, pillar: { pillar: 'influence', city: 'kuroshi', amount: 2 } },
+  },
+  // K-5 (built Nov 4): the Suzumori elder's Crown paper, the forger's seal at Kayla's desk fifty years ago, her letter to
+  // Meera in Agnipur. The only Chapter 7 quest that is finished in Chapter 8: it closes when the trader sails from
+  // Kirinoura without the letter written, or from Agnipur without it delivered.
+  {
+    id: 'ashes',
+    title: 'Ashes of the Temple',
+    giver: 'The Suzumori elder',
+    place: 'The Lantern Library',
+    level: 19,
+    summary: 'The elder who signed the order that burned Agnipur\'s temple writes them a letter every year, and never sends it. The Crown paper she signed on was false. Somebody wrote it.',
+    accepted: f(ASHES.accepted),
+    available: all(KUROSHI_DAWN, { notFlag: 'act7.complete' }),
+    start: [ELDER_AT],
+    nudge: 'The old woman in the library is standing by the same book again, Gigi.',
+    steps: [
+      { text: 'The Suzumori elder in the Lantern Library.', done: f(ASHES.accepted), goals: [ELDER_AT] },
+      {
+        text: 'Her Crown paper is twenty-five years old; Kayla\'s desk is fifty. In the memory, see what Sayo\'s clerk filed.',
+        done: f(ASHES.seal),
+        goals: [{ map: 'kuroshi-library', at: { x: LIBRARY.zone.x + 1, y: LIBRARY.zone.y } }],
+        echoGoals: [{ map: 'kuroshi-library', at: { x: LIBRARY.zone.x + 1, y: LIBRARY.zone.y } }],
+      },
+      { text: 'Tell the elder what Patricio saw in the wax.', done: { any: [f(ASHES.letter), f(ASHES.done)] }, goals: [ELDER_AT] },
+      { text: 'Her letter and the Crown paper, to Meera in Agnipur\'s Court of Flame.', done: f(ASHES.done), goals: [{ map: 'jwaladesh-court', at: { x: COURT.meera.x, y: COURT.meera.y + 1 } }] },
+    ],
+    done: f(ASHES.done),
+    closed: { any: [all(f('act7.complete'), f(ASHES.accepted), { notFlag: ASHES.letter }), f('act8.complete')] },
+    closedText: 'Closed: the trader sailed. The elder will write Agnipur another letter next year.',
+    // +1 Influence in Jwaladesh here; the Kuroshi one follows the delivery (LATE_PILLAR_RULES).
+    reward: { xp: LATE_XP.ashes, pillar: { pillar: 'influence', city: 'jwaladesh', amount: 1 } },
   },
 ];
 
@@ -558,6 +596,8 @@ export const LATE_PILLAR_RULES: RpgContent['pillarRules'] = [
   // A-5: +1 Fear by the guards, or +1 Influence by the crates (Al-Doria).
   { pillar: 'fear', city: 'al_doria', flags: [INVOICE_FLAGS.fear], each: 1 },
   { pillar: 'influence', city: 'al_doria', flags: [INVOICE_FLAGS.influence], each: 1 },
+  // K-5: the letter read in Agnipur's Court is heard of in Kirinoura too (+1 Influence, Kuroshi; the reward pays Jwaladesh's).
+  { pillar: 'influence', city: 'kuroshi', flags: [ASHES.done], each: 1 },
   { pillar: 'fear', city: 'jwaladesh', flags: ['side.argue.fear'], each: 1 },
   { pillar: 'influence', city: 'jwaladesh', flags: ['side.argue.influence'], each: 1 },
 ];
