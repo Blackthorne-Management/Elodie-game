@@ -8,11 +8,13 @@
 import Phaser from 'phaser';
 import { audio } from '../audio/player.ts';
 import type { MusicId } from '../audio.config.ts';
-import { REALM_ART, textureKeyForObject } from '../assets.config.ts';
-import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { characterFrame, REALM_ART, textureKeyForCharacter, textureKeyForObject } from '../assets.config.ts';
+import { VIEW_HEIGHT, VIEW_WIDTH, WALKING_COMPANIONS } from '../config.ts';
+import { RPG } from '../data/rpg.ts';
+import { partyMembers, walkingCompanion } from '../engine/rpg.ts';
 import { REALM_MAP } from '../data/realmMap.ts';
 import { VOYAGES } from '../data/voyages.ts';
-import { along, seaRoute, thinRoute, type VoyageDef } from '../engine/voyage.ts';
+import { along, boatCrew, seaRoute, thinRoute, type VoyageDef } from '../engine/voyage.ts';
 import type { Pos } from '../engine/types.ts';
 import { getRuntime } from '../runtime.ts';
 import { renderScale, textStyle } from '../ui/text.ts';
@@ -45,10 +47,17 @@ export class VoyageScene extends Phaser.Scene {
   private layer!: Phaser.GameObjects.Container;
   private canoe!: Phaser.GameObjects.Container;
   private ship!: Phaser.GameObjects.Image;
+  private fleet: Phaser.GameObjects.Image[] = [];
+  private fleetMarkers: Phaser.GameObjects.Image[] = [];
+  /** Where the ship waits offshore, and where the boat stops beside it (not over its hull; review Nov 1, finding 20). */
+  private shipX = 262;
+  private boatStop = 200;
   private route: Pos[] = [];
   private wake!: Phaser.GameObjects.Graphics;
   private marker!: Phaser.GameObjects.Image;
   private mapBox = { x: 0, y: 0, size: 0 };
+  /** A test hook's frozen moment (screenshots of each part): the clock stands still at it. */
+  private held: number | null = null;
 
   constructor() {
     super('voyage');
@@ -83,7 +92,10 @@ export class VoyageScene extends Phaser.Scene {
       .setDepth(10);
     this.input.on('pointerdown', () => this.finish());
     this.cameras.main.fadeIn(400);
-    window.__voyage = { state: () => ({ phase: this.phase, elapsed: Math.round(this.elapsed) }) };
+    window.__voyage = {
+      state: () => ({ phase: this.phase, elapsed: Math.round(this.elapsed) }),
+      hold: (ms) => (this.held = ms),
+    };
   }
 
   update(_time: number, delta: number): void {
@@ -94,7 +106,8 @@ export class VoyageScene extends Phaser.Scene {
       this.finish();
       return;
     }
-    this.elapsed += delta;
+    if (this.held !== null) this.elapsed = this.held;
+    else this.elapsed += delta;
     if (this.phase === 'harbor') this.tickHarbor();
     else if (this.phase === 'map') this.tickMap();
   }
@@ -117,43 +130,103 @@ export class VoyageScene extends Phaser.Scene {
     g.fillStyle(night ? 0x6a5e48 : shore.sand, 1).fillRect(0, 34, 46, VIEW_HEIGHT - 34);
     g.fillStyle(night ? 0x24402a : shore.land, 1).fillRect(0, 34, 30, VIEW_HEIGHT - 34);
     const roof = shore.roof;
-    for (const [x, y] of [[4, 44], [14, 70], [6, 104], [16, 134]] as const) {
-      g.fillStyle(night ? 0x5a4a30 : roof, 1).fillRect(x, y, 10, 6);
-      g.fillStyle(night ? 0x4a4038 : 0x9a8a78, 1).fillRect(x + 1, y + 6, 8, 5);
+    // Houses up the slope (review Nov 1, finding 20: the shore was a flat strip): a pitched roof, a wall, a door and a
+    // lit or shuttered window; palms on the warm shores, dark firs on the cold ones.
+    const wall = night ? 0x4a4038 : 0xe8dcc0;
+    for (const [x, y] of [[3, 42], [15, 58], [4, 76], [16, 92], [5, 112], [15, 130], [4, 148]] as const) {
+      g.fillStyle(night ? 0x5a4a30 : roof, 1).fillTriangle(x - 1, y + 5, x + 6, y, x + 13, y + 5);
+      g.fillStyle(wall, 1).fillRect(x, y + 5, 12, 7);
+      g.fillStyle(0x3e2614, 1).fillRect(x + 2, y + 8, 3, 4);
+      g.fillStyle(night ? 0xf2d04b : 0x2a3a78, 1).fillRect(x + 8, y + 7, 2, 2);
     }
+    const warm = voyage.shore === 'zetwal' || voyage.shore === 'xaragua' || voyage.shore === 'jwaladesh';
+    for (const [x, y] of [[34, 50], [38, 80], [33, 122], [39, 150]] as const) {
+      if (warm) {
+        g.fillStyle(0x6b4426, 1).fillRect(x, y - 12, 2, 12);
+        g.fillStyle(night ? 0x24402a : 0x2a5e2f, 1).fillTriangle(x + 1, y - 13, x - 6, y - 9, x - 4, y - 11);
+        g.fillTriangle(x + 1, y - 13, x + 8, y - 9, x + 6, y - 11);
+        g.fillTriangle(x + 1, y - 13, x - 3, y - 6, x - 1, y - 12);
+        g.fillTriangle(x + 1, y - 13, x + 5, y - 6, x + 3, y - 12);
+      } else {
+        g.fillStyle(night ? 0x14241a : 0x1f3a2a, 1).fillTriangle(x - 4, y, x + 1, y - 12, x + 6, y);
+      }
+    }
+    // The surf along the strand, and the pier on its posts.
+    for (let y = 38; y < VIEW_HEIGHT; y += 6) g.fillStyle(0xf4ecd8, night ? 0.3 : 0.6).fillRect(46 + ((y * 7) % 3), y, 2, 3);
     g.fillStyle(0x9c7446, 1).fillRect(46, 96, 30, 4);
+    for (let x = 48; x < 76; x += 7) g.fillStyle(0x3e2614, 1).fillRect(x, 100, 2, 5);
     // Sparkles on the water.
     for (let i = 0; i < 40; i++) g.fillStyle(0xb2d2ee, 0.5).fillRect(50 + ((i * 53) % 260), 40 + ((i * 37) % 130), 3, 1);
     this.layer.add(g);
     this.add.text(4, 2, voyage.harbor, textStyle(night ? '#fff2a0' : '#14101a', { fontStyle: 'bold' })).setDepth(10);
 
-    // The Zetwal ship waiting offshore.
-    this.ship = this.add.image(262, 104, textureKeyForObject('zetwal_ship')).setOrigin(0.5, 1).setScale(0.9);
-    // Yari's canoe: a dugout with Yari, Gianna and Anissa (her glow), the hutia at the bow.
+    // The fleet behind, smaller and further out (the war voyages), then the party's own ship.
+    const pier = voyage.boarding === 'pier';
+    this.fleet = (voyage.fleet ?? []).map((kind, i) =>
+      this.add
+        .image(this.fleetX(i, pier), 58 + (i % 2) * 10, textureKeyForObject(kind))
+        .setOrigin(0.5, 1)
+        .setScale(0.42 + (i % 2) * 0.08)
+        .setAlpha(night ? 0.7 : 0.9),
+    );
+    this.shipX = pier ? 112 : 262;
+    this.ship = this.add.image(this.shipX, 104, textureKeyForObject(voyage.ship ?? 'zetwal_ship')).setOrigin(0.5, 1).setScale(0.9);
+    // The rowing boat with the people walking the map in it (review Nov 1: it held three faceless dots for a party of
+    // four), Anissa's glow on her; it stops beside the ship, left of the hull.
+    const crew = pier ? [] : boatCrew(this.walking());
+    const width = Math.max(30, crew.length * 10 + 10);
     const hull = this.add.graphics();
-    hull.fillStyle(0x1a1420, 1).fillRoundedRect(-17, -3, 34, 8, 4);
-    hull.fillStyle(0x6b4426, 1).fillRoundedRect(-16, -2, 32, 6, 3);
-    const people = this.add.graphics();
-    for (const [x, c] of [[-9, 0x2a1a14], [-1, 0x2b2433], [7, 0x2a1a14]] as const) {
-      people.fillStyle(c, 1).fillCircle(x, -5, 3);
-      people.fillStyle(0x3b4fa8, 1).fillRect(x - 2, -3, 4, 3);
-    }
-    const glow = this.add.circle(7, -5, 6, 0xfff2a0, 0.35);
-    this.canoe = this.add.container(70, 100, [glow, hull, people]);
+    hull.fillStyle(0x1a1420, 1).fillRoundedRect(-width / 2 - 1, -3, width + 2, 8, 4);
+    hull.fillStyle(0x6b4426, 1).fillRoundedRect(-width / 2, -2, width, 6, 3);
+    const parts: Phaser.GameObjects.GameObject[] = [];
+    crew.forEach((id, i) => {
+      const x = -width / 2 + 9 + i * 10;
+      if (id === 'anissa') parts.push(this.add.circle(x, -7, 7, 0xfff2a0, 0.35));
+      const key = textureKeyForCharacter(id);
+      const sprite = this.textures.exists(key)
+        ? this.add.image(x, 1, key, characterFrame('right')).setOrigin(0.5, 1).setScale(0.5)
+        : this.add.circle(x, -5, 3, 0x2a1a14);
+      parts.push(sprite);
+    });
+    this.canoe = this.add.container(70, 100, [...parts, hull]);
+    // The boat's people sit in it: the hull is drawn over their legs.
+    this.canoe.bringToTop(hull);
+    this.canoe.setVisible(!pier);
+    const shipHalf = (this.ship.width * this.ship.scaleX) / 2;
+    this.boatStop = this.shipX - shipHalf - width / 2 - 2;
     this.tweens.add({ targets: this.canoe, y: 101, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+  }
+
+  /**
+   * Where each fleet ship waits on the harbor picture, in a line out to sea, alternately nearer and further: between
+   * the pier and the waiting ship, or (when the party's ship casts off from the pier) out beyond it.
+   */
+  private fleetX(i: number, pier: boolean): number {
+    return (pier ? 168 : 104) + i * 30;
+  }
+
+  /** Who walks the map now: Anissa and Azzy when they are with Gianna, and the one companion. */
+  private walking(): { anissa: boolean; azzy: boolean; companion: string | null } {
+    const flags = getRuntime().logic.state.flags;
+    const here = new Set(partyMembers(flags, RPG, 'present').map((m) => m.id));
+    return { anissa: here.has('anissa'), azzy: here.has('azzy'), companion: walkingCompanion(flags, RPG, WALKING_COMPANIONS) };
   }
 
   private tickHarbor(): void {
     const t = this.elapsed / HARBOR_MS;
-    // Out to the ship in the first 60%, aboard, then the ship sails off east.
-    const reach = Math.min(1, t / 0.6);
-    this.canoe.x = 70 + (226 - 70) * Phaser.Math.Easing.Sine.InOut(reach);
     const voyage = VOYAGES[this.voyageId]!;
+    // Out to the ship in the first 60%, aboard, then the ship sails off east (with the fleet). From a pier, the ship
+    // itself pulls away from the pier and out.
+    const reach = Math.min(1, t / 0.6);
+    if (voyage.boarding === 'pier') this.ship.x = this.shipX + 130 * Phaser.Math.Easing.Sine.InOut(reach);
+    else this.canoe.x = 70 + (this.boatStop - 70) * Phaser.Math.Easing.Sine.InOut(reach);
     if (t < 0.6) this.caption.setText(voyage.paddle);
     else {
       this.canoe.setAlpha(Math.max(0, 1 - (t - 0.6) * 6));
       this.caption.setText(voyage.aboard);
-      this.ship.x = 262 + (t - 0.7 > 0 ? (t - 0.7) * 260 : 0);
+      const off = t - 0.7 > 0 ? (t - 0.7) * 260 : 0;
+      this.ship.x = (voyage.boarding === 'pier' ? this.shipX + 130 : this.shipX) + off;
+      this.fleet.forEach((f, i) => (f.x = this.fleetX(i, voyage.boarding === 'pier') + off * 0.8));
     }
     if (this.elapsed >= HARBOR_MS) this.startMap();
   }
@@ -171,7 +244,10 @@ export class VoyageScene extends Phaser.Scene {
     else this.drawTracedRealm();
     this.add.rectangle(VIEW_WIDTH / 2, VIEW_HEIGHT / 2, VIEW_WIDTH, VIEW_HEIGHT, 0x0b1a2a, 0.25);
     this.wake = this.add.graphics();
-    this.marker = this.add.image(0, 0, textureKeyForObject('zetwal_ship')).setOrigin(0.5, 0.8).setScale(0.22);
+    const voyage = VOYAGES[this.voyageId]!;
+    // The fleet trails the party's ship along the route, smaller.
+    this.fleetMarkers = (voyage.fleet ?? []).map((kind) => this.add.image(0, 0, textureKeyForObject(kind)).setOrigin(0.5, 0.8).setScale(0.15));
+    this.marker = this.add.image(0, 0, textureKeyForObject(voyage.ship ?? 'zetwal_ship')).setOrigin(0.5, 0.8).setScale(0.22);
     this.caption.setDepth(10);
     screenFlash(this, 300, 255, 242, 160);
   }
@@ -206,6 +282,14 @@ export class VoyageScene extends Phaser.Scene {
     const here = this.toScreen(along(this.route, eased));
     const ahead = this.toScreen(along(this.route, Math.min(1, eased + 0.01)));
     this.marker.setPosition(here.x, here.y).setFlipX(ahead.x < here.x);
+    this.fleetMarkers.forEach((m, i) => {
+      const s = Math.max(0, eased - 0.025 * (i + 1));
+      const p = this.toScreen(along(this.route, s));
+      const q = this.toScreen(along(this.route, Math.min(1, s + 0.01)));
+      // Abreast in pairs, a little to either side of the wake.
+      const side = (i % 2 === 0 ? 1 : -1) * 3;
+      m.setPosition(p.x + side, p.y + side).setFlipX(q.x < p.x);
+    });
     const caption = [...voyage.captions].reverse().find((c) => eased >= c.at);
     this.caption.setText(caption?.text ?? '');
     if (this.elapsed >= SAIL_MS + 700) this.finish();
@@ -225,6 +309,6 @@ export class VoyageScene extends Phaser.Scene {
 declare global {
   interface Window {
     /** Test hook for the smoke test: the voyage's phase. */
-    __voyage?: { state: () => { phase: VoyagePhase; elapsed: number } };
+    __voyage?: { state: () => { phase: VoyagePhase; elapsed: number }; hold: (ms: number) => void };
   }
 }

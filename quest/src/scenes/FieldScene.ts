@@ -529,6 +529,7 @@ export class FieldScene extends Phaser.Scene {
       battleFx: (kind, at) => battleFx(kind, at),
       loseBattle: () => battleLoseNow(),
       rematch: () => this.rematch(),
+      playVoyage: (id) => this.scene.start('voyage', { voyage: id }),
     };
     this.events.off('battle-done');
     this.events.on('battle-done', (r: BattleResult | null, then?: string) => this.afterBattle(r, then));
@@ -3311,6 +3312,8 @@ declare global {
       loseBattle: () => boolean;
       /** After an accidental Game Over on the scripted route: fight the last fight again from here. */
       rematch: () => boolean;
+      /** Play a voyage's picture by id (display only: the party does not move), for screenshots of each one. */
+      playVoyage: (id: string) => void;
     };
   }
 }

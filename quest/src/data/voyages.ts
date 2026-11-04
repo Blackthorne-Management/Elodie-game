@@ -106,6 +106,8 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
       { at: 0.8, text: '...into the mist, where the lanterns are.' },
     ],
     music: 'farewell',
+    ship: 'voyage_longship',
+    boarding: 'pier',
   },
   // Chapter 7's end into Chapter 8 (the outline beat 0, with its review's 3.8: Agnipur's dot is inland, so the trader
   // lands at the head of its bay): west out of the mist off Kirinoura, across the bay, to Agnipur's harbor chain.
@@ -124,6 +126,7 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
       { at: 0.85, text: '...to the salt flats, where the sky is on fire.' },
     ],
     music: 'farewell',
+    ship: 'voyage_lantern_trader',
   },
   // Chapter 8's end into Chapter 9 (the outline beat 0): out of Agnipur's bay, round the south-west and north along the
   // white coast to the Mere Stair below Kingsmere (the trader will not tie up under a Crown gun).
@@ -183,6 +186,8 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
       { at: 0.7, text: '...and down the strait, to the harbor the seventh clause took.' },
     ],
     music: 'farewell',
+    boarding: 'pier',
+    fleet: ['voyage_longship', 'muster_ship_suzumori', 'muster_ship_agnivansh', 'muster_ship_dorini', 'muster_ship_zetwal'],
   },
   // Chapter 11's end into Chapter 12 (the Chapter 12 outline's beat 0 and section 12, Claude's call): the fleet out of
   // Yucayeque's free harbor by day, north up the strait to Ardencia's strand, where Free Brasador was born; the Ash Road
@@ -203,6 +208,7 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
       { at: 0.8, text: '...to Ardencia\'s strand, and the Ash Road south.' },
     ],
     music: 'farewell',
+    fleet: ['voyage_ardencia_ship', 'voyage_ardencia_ship', 'voyage_longship', 'muster_ship_suzumori', 'muster_ship_agnivansh'],
   },
   xaragua_ardencia_strike: {
     id: 'xaragua_ardencia_strike',
@@ -219,5 +225,6 @@ export const VOYAGES: Readonly<Record<string, VoyageDef>> = {
       { at: 0.8, text: '...to Ardencia\'s strand, and the Ash Road south.' },
     ],
     music: 'farewell',
+    fleet: ['voyage_longship', 'muster_ship_suzumori', 'muster_ship_agnivansh', 'muster_ship_dorini'],
   },
 };

@@ -1894,7 +1894,106 @@ function crownShip(colors: { sail: string; band: string; flag: string } = { sail
   return { rows: px.map((r) => r.join('')) };
 }
 
+/**
+ * A northern longship (the voyage out of Ordvik, Chapter 6's end; review Nov 1, finding 16: it was the merchantman):
+ * one mast with a square striped sail, a long low hull that sweeps up into a horse-head prow and a curled stern, round
+ * shields along the rail and a bank of oars in the water. Same 80x48 frame as crownShip, so either sits on a berth.
+ */
+function longship(colors: { sail: string; stripe: string; flag: string } = { sail: 'g', stripe: 'w', flag: 'w' }): ObjectArt {
+  const W = 80;
+  const H = 48;
+  const px = Array.from({ length: H }, () => Array.from({ length: W }, () => '.'));
+  const put = (x: number, y: number, c: string) => {
+    if (x >= 0 && y >= 0 && x < W && y < H) px[y]![x] = c;
+  };
+  // The mast and its horse-tail standard.
+  for (let y = 2; y < 33; y++) {
+    put(40, y, 'k');
+    put(41, y, 'b');
+  }
+  for (let i = 0; i < 6; i++) put(42 + i, 3 + (i % 2), colors.flag);
+  // The square sail, wider than tall, in vertical stripes.
+  for (let y = 7; y <= 27; y++) {
+    for (let x = 24; x <= 57; x++) {
+      const edge = y === 7 || y === 27 || x === 24 || x === 57;
+      put(x, y, edge ? 'k' : Math.floor((x - 25) / 4) % 2 === 0 ? colors.sail : colors.stripe);
+    }
+  }
+  // The hull: long and low, rising at both ends.
+  for (let y = 32; y <= 39; y++) {
+    const inset = Math.max(0, y - 35) * 2;
+    for (let x = 6 + inset; x <= 73 - inset; x++) {
+      const edge = x === 6 + inset || x === 73 - inset || y === 32 || y === 39;
+      put(x, y, edge ? 'k' : y === 33 ? 'N' : y <= 35 ? 'n' : 'B');
+    }
+  }
+  // The prow: a neck curving up to a horse's head (east), and the stern's curl (west).
+  for (let i = 0; i < 9; i++) {
+    put(74 + Math.floor(i / 3), 32 - i, 'k');
+    put(73 + Math.floor(i / 3), 32 - i, 'n');
+  }
+  for (const [x, y] of [[76, 22], [77, 22], [78, 23], [77, 21], [75, 21]] as const) put(x, y, 'k');
+  for (let i = 0; i < 7; i++) {
+    put(5 - Math.floor(i / 3), 32 - i, 'k');
+    put(6 - Math.floor(i / 3), 32 - i, 'n');
+  }
+  put(2, 25, 'k');
+  put(3, 24, 'k');
+  // Round shields along the rail, alternating colours.
+  for (let x = 10, i = 0; x <= 68; x += 6, i++) {
+    const c = i % 2 === 0 ? colors.sail : 'R';
+    for (const [dx, dy] of [[0, 0], [1, 0], [-1, 1], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2]] as const) put(x + dx, 29 + dy, c);
+    put(x, 30, 'y');
+  }
+  // The oars, slanting down into the water, and the splash.
+  for (let x = 12; x <= 66; x += 6) {
+    for (let i = 0; i < 6; i++) put(x - Math.floor(i / 2), 38 + i, 'N');
+    put(x - 3, 44, 'C');
+  }
+  return { rows: px.map((r) => r.join('')) };
+}
+
+/** A ship with paper lanterns strung from bow to masthead to stern (the voyage out of Kirinoura, Chapter 7's end). */
+function lanternShip(base: ObjectArt): ObjectArt {
+  const px = base.rows.map((r) => r.split(''));
+  const put = (x: number, y: number, c: string) => {
+    if (y >= 0 && y < px.length && x >= 0 && x < px[y]!.length) px[y]![x] = c;
+  };
+  // The strings, from the bowsprit to each masthead and down to the stern.
+  const line = (x0: number, y0: number, x1: number, y1: number) => {
+    const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+    for (let i = 0; i <= n; i++) {
+      const x = Math.round(x0 + ((x1 - x0) * i) / n);
+      const y = Math.round(y0 + ((y1 - y0) * i) / n);
+      if (px[y]?.[x] === '.') put(x, y, 'K');
+    }
+  };
+  line(4, 28, 30, 4);
+  line(31, 4, 52, 4);
+  line(53, 4, 78, 24);
+  // Lanterns hang from the strings: a gold body with a red cap and a pale core.
+  for (const [x, y] of [[9, 24], [16, 18], [23, 11], [38, 5], [45, 5], [60, 10], [67, 15], [74, 21]] as const) {
+    put(x, y + 1, 'R');
+    put(x + 1, y + 1, 'R');
+    put(x, y + 2, 'o');
+    put(x + 1, y + 2, 'Y');
+    put(x, y + 3, 'o');
+    put(x + 1, y + 3, 'o');
+  }
+  // And a row along the rail.
+  for (let x = 8; x < 74; x += 8) {
+    put(x, 27, 'Y');
+    put(x, 28, 'o');
+  }
+  return { ...base, rows: px.map((r) => r.join('')) };
+}
+
 export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
+  // The voyages' own ships (review Nov 1, ch5-12 finding 16): the Ironvow longship out of Ordvik, the trader hung with
+  // Kirinoura's paper lanterns, and the fleet's longship behind the war voyage.
+  voyage_longship: longship({ sail: 'g', stripe: 'w', flag: 'w' }),
+  voyage_lantern_trader: lanternShip(crownShip({ sail: 'Y', band: 'o', flag: 'y' })),
+  voyage_ardencia_ship: crownShip({ sail: 'K', band: 'R', flag: 'R' }),
   crown_ship: crownShip(),
   // The Zetwal merchant ship Yari's canoe meets off the coast (the voyage, Oct 17): golden sails, the sun's band.
   zetwal_ship: crownShip({ sail: 'Y', band: 'o', flag: 'y' }),
