@@ -263,6 +263,7 @@ export class BattleScene extends Phaser.Scene {
 
   create(): void {
     setCurrent(this);
+    this.pops = new Set();
     const cam = this.cameras.main;
     cam.setOrigin(0, 0).setZoom(renderScale());
     const def = battleDef(this.battleId);
@@ -1310,6 +1311,9 @@ export class BattleScene extends Phaser.Scene {
     this.message = text;
   }
 
+  /** The damage and heal numbers in the air now. */
+  private pops = new Set<Phaser.GameObjects.Text>();
+
   private pop(key: string, text: string, color: string): void {
     const s = this.sprites.get(key);
     if (!s || !text) return;
@@ -1318,7 +1322,20 @@ export class BattleScene extends Phaser.Scene {
     const top = Math.min(s.y - s.displayHeight * (this.home.get(key)?.hr ?? 1), plate ? plate.y : Infinity);
     // Over the depth of the name plates (the UI layer), so the number is never under a name.
     const t = this.add.text(s.x, Math.max(10, top - 1), text, textStyle(color, { fontStyle: 'bold', stroke: '#14101a', strokeThickness: 2 })).setOrigin(0.5, 1).setDepth(450);
-    this.tweens.add({ targets: t, y: t.y - 14, alpha: 0, delay: 250, duration: BATTLE_ART.popMs, onComplete: () => t.destroy() });
+    // Never over a tip or tutorial page (Nov 4: a "13" landed in the middle of the Spark tip's text).
+    t.setVisible(this.tutorial.length === 0);
+    this.pops.add(t);
+    this.tweens.add({
+      targets: t,
+      y: t.y - 14,
+      alpha: 0,
+      delay: 250,
+      duration: BATTLE_ART.popMs,
+      onComplete: () => {
+        this.pops.delete(t);
+        t.destroy();
+      },
+    });
   }
 
   /** The fighter whose turn it is (engine/battleMenu.ts actingFighter), while the player chooses; none under a tutorial page. */
@@ -1412,6 +1429,7 @@ export class BattleScene extends Phaser.Scene {
   /** The top bar, the message band, names and bars, Anissa's Spark, the strip and the menu. */
   private redraw(): void {
     this.ui.removeAll(true);
+    for (const t of this.pops) t.setVisible(this.tutorial.length === 0);
     const b = this.battle;
     const g = this.add.graphics();
     this.ui.add(g);
