@@ -8,6 +8,11 @@ the point falls. `?chapter=N` still starts a chapter from its beginning.
 
 Use a private window: the jump starts a new game, and the game autosaves over the window's saved game.
 
+**Testing one scene (Nov 4):** after a jump, `&set=` sets flags and `&go=` moves the party, for example
+`?at=jwaladesh-price&set=side.jackals.accepted&go=jwaladesh-saltflats/38,13` (the salt caravan, its master just above
+you: press Up, then Enter). `set` takes names separated by commas (`name` is true, `name=2` a number, `name=false`);
+`go` takes a map and a spawn (`kuroshi-library/library`) or a tile (`kuroshi-library/13,4`). Dev server only.
+
 Generated from the markers in `quest/routes/zetwal-act1.json`, in story order; the place is the map you start on.
 
 

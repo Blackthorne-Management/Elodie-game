@@ -167,6 +167,29 @@ if (import.meta.env.DEV && askedAt) {
   } else console.warn(`[quest] ?at= takes one of: ${routeMarkers().join(', ')}`);
 }
 
+// Two more dev-only shortcuts for testing one scene (Nov 4), after `?chapter=` or `?at=`: `?set=a.b,c.d=2,e.f=false`
+// sets flags (a bare name is true; numbers and true/false are read as such), and `?go=map/spawn` (or `map/x,y`) puts
+// the party there.
+if (import.meta.env.DEV && (params.get('set') || params.get('go'))) {
+  const flags = runtime.logic.state.flags;
+  for (const part of (params.get('set') ?? '').split(',').filter(Boolean)) {
+    const [name, raw] = part.split('=');
+    const value = raw === undefined || raw === 'true' ? true : raw === 'false' ? false : Number.isFinite(Number(raw)) ? Number(raw) : raw;
+    if (name) flags.set(name, value);
+  }
+  const [goMap, goSpawn] = (params.get('go') ?? '').split('/');
+  const map = goMap ? maps[goMap] : undefined;
+  if (goMap && !map) console.warn(`[quest] ?go= has no map ${goMap}`);
+  if (map) {
+    const fresh = newGame(map, goSpawn ?? '');
+    // `?go=map/x,y` stands the party on a tile instead of a spawn.
+    const tile = /^(\d+),(\d+)$/.exec(goSpawn ?? '');
+    if (tile) fresh.player.pos = { x: Number(tile[1]), y: Number(tile[2]) };
+    runtime.logic.state.player = fresh.player;
+    runtime.logic.reset(runtime.logic.state);
+  }
+}
+
 const vp = visibleViewport();
 const startZoom = fitZoom(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM);
 // Draw the game at the screen's sharpness (the zoom times the device's pixel ratio, in whole steps,

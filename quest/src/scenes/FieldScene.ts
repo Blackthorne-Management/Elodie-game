@@ -1262,8 +1262,8 @@ export class FieldScene extends Phaser.Scene {
     this.speakerTagBg.clear().fillStyle(UI.labelFill, UI.labelAlpha).fillRect(-w / 2, -h, w, h);
     this.speakerTagBg.lineStyle(1, UI.boxBorder, 0.8).strokeRect(-w / 2 + 0.5, -h + 0.5, w - 1, h - 1);
     this.speakerTagSprite = sprite;
-    this.placeSpeakerTag();
     this.speakerTag.setVisible(true);
+    this.placeSpeakerTag();
     // The facing label would sit in the same place: one name at a time.
     this.label.setVisible(false);
   }
@@ -1281,6 +1281,10 @@ export class FieldScene extends Phaser.Scene {
     const w = Math.ceil(this.speakerTagText.width) + 6;
     const h = Math.ceil(this.speakerTagText.height) + 2;
     const top = sprite.y - sprite.displayHeight - CHARACTER_LABEL_GAP;
+    // A speaker who has walked out of view has no tag (it would hang at the screen's edge over nobody).
+    const inView = sprite.visible && sprite.scene && sprite.x >= cam.scrollX && sprite.x <= cam.scrollX + VIEW_WIDTH && sprite.y > cam.scrollY && top < cam.scrollY + VIEW_HEIGHT;
+    this.speakerTag.setVisible(!!inView);
+    if (!inView) return;
     const x = Phaser.Math.Clamp(sprite.x, cam.scrollX + w / 2 + 1, cam.scrollX + VIEW_WIDTH - w / 2 - 1);
     const y = Math.max(top, cam.scrollY + h + 1);
     this.speakerTag.setPosition(Math.round(x), Math.round(y));
