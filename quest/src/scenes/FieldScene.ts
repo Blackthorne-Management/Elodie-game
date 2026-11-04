@@ -255,6 +255,11 @@ export class FieldScene extends Phaser.Scene {
   private objectSprites = new Map<string, Phaser.GameObjects.GameObject[]>();
   private markerSprites = new Map<string, Phaser.GameObjects.Image>();
   private label!: Phaser.GameObjects.Container;
+  /** The name over whoever speaks the line on screen (the Nov 1 playtest's 17: who is who in a crowded room). */
+  private speakerTag!: Phaser.GameObjects.Container;
+  private speakerTagBg!: Phaser.GameObjects.Graphics;
+  private speakerTagText!: Phaser.GameObjects.Text;
+  private speakerTagSprite: Phaser.GameObjects.Image | null = null;
   private labelText!: Phaser.GameObjects.Text;
   /** "Press E to Echo" while standing where an Echo works. */
   private echoText!: Phaser.GameObjects.Text;
@@ -495,6 +500,10 @@ export class FieldScene extends Phaser.Scene {
       .setDepth(6900)
       .setVisible(false);
     this.label = this.add.container(0, 0, [this.labelBg, this.labelText]).setDepth(3500).setVisible(false);
+    this.speakerTagBg = this.add.graphics();
+    this.speakerTagText = this.add.text(0, 0, '', textStyle(UI.labelText)).setOrigin(0.5, 1);
+    this.speakerTag = this.add.container(0, 0, [this.speakerTagBg, this.speakerTagText]).setDepth(3501).setVisible(false);
+    this.speakerTagSprite = null;
 
     this.dialogue = new DialogueBox(this);
     // Wordless voices: a blip at the speaker's pitch every other letter (a soft tick for narration).
@@ -551,6 +560,7 @@ export class FieldScene extends Phaser.Scene {
     this.tickCrowd(delta);
     this.tickSettle(delta);
     this.tickGuide(delta);
+    this.placeSpeakerTag();
     if (this.cardArt && this.mode !== 'card') {
       this.cardArt.destroy();
       this.cardArt = null;
@@ -1210,6 +1220,59 @@ export class FieldScene extends Phaser.Scene {
     this.labelBg.lineStyle(1, UI.boxBorder, 0.8).strokeRect(-w / 2 + 0.5, -h + 0.5, w - 1, h - 1);
     this.labelText.setPosition(0, 0);
     this.label.setPosition(Math.round(x), Math.round(y)).setVisible(true);
+  }
+
+  /**
+   * Who speaks, on the map: the sprite of the line's speaker (an actor on stage, a companion walking, a person on the
+   * map), or none for Gianna (her portrait says it) and for a voice not in view. Claude's call, Nov 4.
+   */
+  private speakerSprite(id: string): Phaser.GameObjects.Image | null {
+    if (id === 'gianna' || id === 'player') return null;
+    // An actor on stage by name, or by look (a scene's own name for a walk-on, such as the Hearing's `lo_c`).
+    const staged = this.stageActors.get(id) ?? this.stageActors.get(`npc:${id}`) ?? [...this.stageActors.values()].find((a) => a.look === id);
+    if (staged) return staged.sprite;
+    const walking = this.partyLine().find(({ look }) => look === id || (id === 'anissa' && look === this.anissaLook()));
+    if (walking) return walking.f.sprite;
+    // A person on the map: by their id, else by their look (the court's `al_regent` speaks as `regent`).
+    const npcs = this.logic.npcs();
+    const person = npcs.find((n) => n.npc === id) ?? npcs.find((n) => this.logic.content.npcs[n.npc]?.look === id);
+    return person ? (this.npcSprites.get(person.objectId) ?? null) : null;
+  }
+
+  private showSpeakerTag(id: string | null, name: string): void {
+    const sprite = id && name ? this.speakerSprite(id) : null;
+    if (!sprite || !sprite.visible || sprite.alpha < 0.2) {
+      this.hideSpeakerTag();
+      return;
+    }
+    this.speakerTagText.setText(name);
+    const w = Math.ceil(this.speakerTagText.width) + 6;
+    const h = Math.ceil(this.speakerTagText.height) + 2;
+    this.speakerTagBg.clear().fillStyle(UI.labelFill, UI.labelAlpha).fillRect(-w / 2, -h, w, h);
+    this.speakerTagBg.lineStyle(1, UI.boxBorder, 0.8).strokeRect(-w / 2 + 0.5, -h + 0.5, w - 1, h - 1);
+    this.speakerTagSprite = sprite;
+    this.placeSpeakerTag();
+    this.speakerTag.setVisible(true);
+    // The facing label would sit in the same place: one name at a time.
+    this.label.setVisible(false);
+  }
+
+  private hideSpeakerTag(): void {
+    this.speakerTagSprite = null;
+    this.speakerTag?.setVisible(false);
+  }
+
+  /** Over the speaker's head, kept on screen (the camera eases while a line is up). */
+  private placeSpeakerTag(): void {
+    const sprite = this.speakerTagSprite;
+    if (!sprite) return;
+    const cam = this.cameras.main;
+    const w = Math.ceil(this.speakerTagText.width) + 6;
+    const h = Math.ceil(this.speakerTagText.height) + 2;
+    const top = sprite.y - sprite.displayHeight - CHARACTER_LABEL_GAP;
+    const x = Phaser.Math.Clamp(sprite.x, cam.scrollX + w / 2 + 1, cam.scrollX + VIEW_WIDTH - w / 2 - 1);
+    const y = Math.max(top, cam.scrollY + h + 1);
+    this.speakerTag.setPosition(Math.round(x), Math.round(y));
   }
 
   /** How tall an NPC's frames are (a grown-up's art sheet, such as Azzy's, can be taller than the standard cell). */
@@ -2464,6 +2527,7 @@ export class FieldScene extends Phaser.Scene {
 
   private leaveDialogueMode(): void {
     this.dialogue.hide();
+    this.hideSpeakerTag();
     this.clearStage();
     this.mode = this.logic.mode === 'card' ? 'card' : 'field';
     this.rt.input.clearPresses();
@@ -2483,12 +2547,14 @@ export class FieldScene extends Phaser.Scene {
       if (view.fx && view.fx !== this.lastFx) this.playFx(view.fx);
       this.lastFx = view.fx;
       this.dialogue.show(view, this.logic.state.settings.textSpeed);
+      this.showSpeakerTag(view.speaker?.id ?? null, view.speaker?.name ?? '');
     };
     // A companion who speaks (or whom the narration names) and is not on the map walks on first (playtest Nov 1).
     const stage = [...this.bringOnCues(view), ...(view.stage ?? [])];
     if (stage.length > 0) {
       // Act the scene out first (the box steps aside), then the line.
       this.dialogue.hide();
+      this.hideSpeakerTag();
       this.perform(stage, show);
     } else show();
   }

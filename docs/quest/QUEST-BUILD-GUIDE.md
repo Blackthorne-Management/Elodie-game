@@ -810,6 +810,9 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   Now a set shows one sparkle, on its first object, until any of the set is used, then none
   (`GameContent.controlSet`, `data/content.ts` CONTROL_SETS, `tests/controlMarkers.test.ts`). Its name label still
   shows on approach. Everything else keeps the usual rule (unseen, or something new to say).
+- **Who speaks, on the map (Claude's call, Nov 4; the playtest's 17):** while a line is up, the speaker's name sits
+  over their head (an actor on stage, by name or look; a companion walking; a person on the map, by id or look), kept
+  on screen. Not over Gianna (her portrait says it), and not for a voice out of view. The facing label hides meanwhile.
 - **Voyages (Nov 4; the playtests' 20 and 16):** each voyage names its ship, how the party boards and its fleet
   (`data/voyages.ts`): the Ironvow longship out of Ordvik, the lantern trader out of Kirinoura, the Muster's fleet to the
   war and to Eightgate (Ardencia's sails only on the Trust road). The boat carries whoever walks the map, beside the
