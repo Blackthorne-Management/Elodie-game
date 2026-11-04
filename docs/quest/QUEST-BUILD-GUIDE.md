@@ -804,6 +804,16 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   above a person (their head and "!") is a tap on them, so the Master of the Chairs' "!" can be tapped. The council
   chairs' line follows the story: empty at the Parley, filled at the bell (bare for a house that sailed to the Crown),
   at the Hearing, after the verdict.
+- **Puzzle controls sparkle once (Claude's call, Nov 4; the playtest's 16):** a control worked again and again (the
+  vault's weights, the forge gates, the roof mirrors, the file-house screens, the marsh posts, the keep's cabinets, the
+  tower winder) changes a flag on every use, so it counted as "news" for good and the vault showed about ten sparkles.
+  Now a set shows one sparkle, on its first object, until any of the set is used, then none
+  (`GameContent.controlSet`, `data/content.ts` CONTROL_SETS, `tests/controlMarkers.test.ts`). Its name label still
+  shows on approach. Everything else keeps the usual rule (unseen, or something new to say).
+- **Voyages (Nov 4; the playtests' 20 and 16):** each voyage names its ship, how the party boards and its fleet
+  (`data/voyages.ts`): the Ironvow longship out of Ordvik, the lantern trader out of Kirinoura, the Muster's fleet to the
+  war and to Eightgate (Ardencia's sails only on the Trust road). The boat carries whoever walks the map, beside the
+  ship; the shores have houses, trees, surf and the pier's posts; sea routes keep off the map's border.
 - **Spelling:** "harbor" everywhere the player reads (the game's spelling 771 to 57); ids such as `harbour_master`
   stay. "The ferry coach bumps against the pier" is now "The ship's boat bumps against the pier".
 

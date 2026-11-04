@@ -370,9 +370,22 @@ export class GameLogic {
     const taken = new Set<string>();
     // A quiet map (GameContent.quietMarkers) marks only what a use would still change, not what is merely unseen.
     const quiet = this.content.quietMarkers?.(this.map.id, this.state.flags) ?? false;
+    // Puzzle controls (GameContent.controlSet): a set is used once any of its objects on this map has been used.
+    const setOf = (o: { dialogue?: string }) => (o.dialogue ? this.content.controlSet?.(o.dialogue) : undefined);
+    const usedSets = new Set<string>();
+    for (const o of this.map.objects) {
+      const set = setOf(o);
+      if (set && this.state.flags.isSet(seenFlag(this.map.id, o.id))) usedSets.add(set);
+    }
+    const markedSets = new Set<string>();
     for (const o of this.objects()) {
       const inspect = this.content.objects?.[o.id]?.inspect;
       if (!o.dialogue && !inspect) continue;
+      const set = setOf(o);
+      if (set) {
+        if (quiet || usedSets.has(set) || markedSets.has(set)) continue;
+        markedSets.add(set);
+      }
       const news = () => !!o.dialogue && this.hasNews(o.dialogue);
       const fresh = quiet ? news() : !this.state.flags.isSet(seenFlag(this.map.id, o.id)) || news();
       const pos = { x: o.area.x + (o.area.width - 1) / 2, y: o.area.y };

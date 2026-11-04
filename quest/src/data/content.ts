@@ -53,7 +53,22 @@ export const CONTENT: GameContent = {
   // The Hearing (the Epilogue) fills the Throne Hall: only what still has something to say keeps its marker there, not
   // every chair and door seen or not (the Nov 1 playtest's 12; Claude's call, Nov 1).
   quietMarkers: (mapId, flags) => mapId === 'seat-hall' && !!flags.get('story.hearing_called'),
+  // Puzzle controls worked again and again (a weight hung and taken off, a mirror turned, a screen pushed): each use
+  // changes a flag, so without this every one sparkled for good (the Nov 1 playtest's 16: about ten in the guild vault).
+  // A set shows one sparkle until any of it is first used, then none (Claude's call, Nov 4).
+  controlSet: (dialogueId) => CONTROL_SETS.find(([re]) => re.test(dialogueId))?.[1],
 };
+
+/** The puzzle controls' sets, by their dialogue: a pattern and the set's name. */
+const CONTROL_SETS: readonly (readonly [RegExp, string])[] = [
+  [/^vault_weight_\d+$/, 'vault_weights'],
+  [/^forge_gate_[abc]$/, 'forge_gates'],
+  [/^roof_mirror_\d+$/, 'roof_mirrors'],
+  [/^screen_push_\d+$/, 'file_screens'],
+  [/^marsh_post_\d+$/, 'marsh_posts'],
+  [/^cabinet_\d+$/, 'keep_cabinets'],
+  [/^tower_winder$/, 'tower_winder'],
+];
 
 /**
  * The names a line may read from the save as it is shown (Chapter 12): the realm's three pillars at the Master of the Chairs'

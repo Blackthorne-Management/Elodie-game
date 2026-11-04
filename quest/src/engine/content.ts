@@ -142,6 +142,11 @@ export interface GameContent {
    * with something new and things whose use would still change something keep their marker there (engine/game.ts markers).
    */
   quietMarkers?: (mapId: string, flags: FlagReader) => boolean;
+  /**
+   * The set a puzzle control belongs to, by its dialogue (a weight, a mirror, a screen: worked again and again, so every
+   * use is "news"). A set's sparkle shows on its first object on the map until any of the set is used, then on none.
+   */
+  controlSet?: (dialogueId: string) => string | undefined;
 }
 
 /** What a step changed (GameContent.onStep): a note to sound at the tile, and a line to toast. */
