@@ -7,7 +7,7 @@ import type { ValidationContext } from '../engine/mapValidation.ts';
 import { OBJECT_ART, TILESET } from '../assets.config.ts';
 import { CARDS } from './cards.ts';
 import { DEBATE_MEDIATE_INFLUENCE } from '../config.ts';
-import { globalPillar, localPillar, type Pillar } from '../engine/rpg.ts';
+import { globalPillar, localPillar, readStanding, type Pillar } from '../engine/rpg.ts';
 import { stabilityTick } from '../engine/stability.ts';
 import type { FlagReader } from '../engine/flags.ts';
 import { STABILITY_HOUSES } from './claim.ts';
@@ -45,7 +45,11 @@ export const CONTENT: GameContent = {
     stabilityTick(flags, STABILITY_HOUSES);
   },
   // The secret items' puzzles (data/secrets.ts): the jars, the tower clock, the singing floor.
-  react: reactSecrets,
+  // A chief weighing the envoy's word reads a city's regard the same way (engine/rpg.ts readStanding; S-2, Nov 4).
+  react: (flags) => {
+    reactSecrets(flags);
+    readStanding(flags, RPG);
+  },
   onStep: stepSecrets,
   // The Sakk of Yusuf (Chapter 4): Samira's coupon, once a chapter, at a shop.
   beforeShop: cashCoupon,

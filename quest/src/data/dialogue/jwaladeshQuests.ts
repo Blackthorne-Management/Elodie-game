@@ -9,12 +9,17 @@
 //
 // Built Nov 4: K-5 Ashes of the Temple's last step (SIDE-QUESTS.md K-5): the Suzumori elder's letter, carried from
 // Kirinoura, read by Meera in the Court at dawn (data/dialogue/jwaladesh.ts meera_talk plays ASHES_DELIVERY).
+//
+// Built Nov 4: J-5 Jackals on the Salt Road (SIDE-QUESTS.md J-5): the contract board at dawn, the salt caravan at the
+// road's end, escorted to the salt gate. The master and her mules walk ahead from stop to stop (data/jwaladesh.ts
+// CARAVAN); the jackals come out of their den at them, the Seth's unpaid enforcers out of the Crown oil-cart's shade, and
+// both run off again after the fight; at the gate she pays, and the caravan walks into the city.
 
 import type { Condition } from '../../engine/conditions.ts';
 import type { DialogueChoice, DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { MEASURES_DO, jarFlag, sealedFlag } from '../../engine/secrets.ts';
-import { ARGUERS, BAZAAR, COURT, HARBOR, OIL_STORE, WICK_MEASURES } from '../jwaladesh.ts';
+import { ARGUERS, BAZAAR, CARAVAN, COURT, FLATS, HARBOR, OIL_STORE, WICK_MEASURES } from '../jwaladesh.ts';
 import { ASHES } from '../kuroshi.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
@@ -388,5 +393,191 @@ export const ASHES_DELIVERY: DialogueNode = {
   ],
 };
 
-export const JWALADESH_QUEST_DIALOGUE: readonly DialogueScript[] = [...ARGUER_LIST.flatMap(arguerScripts), ...LITTLE_LAMPS];
+// ---- J-5 Jackals on the Salt Road (built Nov 4) ----------------------------------------------------------------------
+
+const CM = 'salt_master';
+const EN = 'enforcer';
+const MASTER = 'npc:salt_master';
+const MULE_A = 'npc:salt_mule_a';
+const MULE_B = 'npc:salt_mule_b';
+const AGNIPUR_DAWN: Condition = { all: [f('story.dhanraj_beaten'), not('act8.complete')] };
+const BOARD = nar('The contract board: "Escort a salt caravan. The Seth\'s enforcers took the last one." "Run the lamp relay: the runners\' hall."');
+
+/** The caravan walks on to stop `n` (data/jwaladesh.ts CARAVAN.stops), the master first; then the map takes it up there. */
+function moveOn(n: number): StageCue[] {
+  const [m, a, b] = CARAVAN.stops[n]!;
+  return [
+    { do: 'look', actor: MASTER },
+    { do: 'exit', actor: MASTER, to: m, async: true },
+    { do: 'exit', actor: MULE_A, to: a, async: true },
+    { do: 'exit', actor: MULE_B, to: b },
+    { do: 'wait', ms: 300 },
+    { do: 'sync' },
+  ];
+}
+
+const JACKALS_DIALOGUE: DialogueScript[] = [
+  // The contract board in the bazaar: the caravan's notice, at dawn.
+  script('jw_board', {
+    start: {
+      lines: [],
+      next: [
+        { if: f(CARAVAN.done), to: 'done' },
+        { if: f(CARAVAN.accepted), to: 'taken' },
+        { if: AGNIPUR_DAWN, to: 'offer' },
+        { to: 'plain' },
+      ],
+    },
+    plain: {
+      lines: [BOARD, nar('And: "Clean the rooftop mirrors. Ask the engineer." Somebody has added: "She will not let you."')],
+    },
+    offer: {
+      lines: [
+        BOARD,
+        nar('Pinned over it, new this morning: "SALT CARAVAN, the road\'s end to the salt gate. Jackals, and tolls. 450. Ask the master."'),
+        say(V, 'Tolls. The Seth is sitting on a jar with his ledger shut. Who is taking tolls?'),
+        say(G, 'His men. Nobody told them to stop.'),
+      ],
+      choices: [{ text: 'Take the job.', set: { [CARAVAN.accepted]: true }, next: 'yes' }, { text: 'Not now.' }],
+    },
+    yes: {
+      lines: [
+        say(G, 'The road\'s end, by the shrine. Out through the salt gate.'),
+        nar('(Jackals on the Salt Road is in the Quests page of the menu.)'),
+      ],
+    },
+    taken: { lines: [nar('The caravan notice, with a line through it: the job is taken. The salt gate is east.')] },
+    done: { lines: [nar('A new notice: "Salt in, every sack. Tolls out. With thanks to the envoy." Somebody has drawn a jackal, tail down.')] },
+  }),
+  // The caravan master, at each stop on the road.
+  script('salt_master_talk', {
+    start: {
+      lines: [],
+      next: [
+        { if: f(CARAVAN.toll), to: 'gate' },
+        { if: f(CARAVAN.jackals), to: 'oil_cart' },
+        { if: f(CARAVAN.setOut), to: 'den' },
+        { to: 'set_out' },
+      ],
+    },
+    set_out: {
+      lines: [
+        act([{ do: 'face', actor: MASTER, facing: 'player' }], CM, 'The board said a guard. It did not say the Zetwal envoy. I will take the envoy.'),
+        say(CM, 'Two mules, salt for the whole spice row. The last caravan lost its mules to the jackals and its salt to the Seth\'s men.'),
+        say(V, 'The Seth\'s men have no Seth this morning.'),
+        say(CM, 'Then they have no wages either. They will want the toll for themselves.'),
+        act(moveOn(1), CM, 'Walk behind us, envoy. The mules do not like being passed.', { set: { [CARAVAN.setOut]: true } }),
+        say(A, 'They are going, Gigi. We walk behind.'),
+      ],
+    },
+    den: { lines: [say(CM, 'Behind us, envoy. Their den is up there in the crust, and they can smell salt.')] },
+    oil_cart: { lines: [say(CM, 'The oil-cart is the Crown\'s. The men who sleep in its shade are not.')] },
+    gate: {
+      lines: [
+        act([{ do: 'face', actor: MASTER, facing: 'player' }], CM, 'Every sack and both mules, envoy. Four hundred and fifty, as the board said.'),
+        say(CM, 'The salt guild will hear who walked the road with us. They always hear who did not.'),
+        act(
+          [
+            { do: 'look', actor: MASTER },
+            { do: 'exit', actor: MASTER, to: at(FLATS.gate.x, FLATS.gate.y), async: true },
+            { do: 'exit', actor: MULE_A, to: at(FLATS.gate.x, FLATS.gate.y + 1), async: true },
+            { do: 'exit', actor: MULE_B, to: at(FLATS.gate.x, FLATS.gate.y - 1) },
+          ],
+          '',
+          'The caravan goes in through the salt gate, the master first, the mules complaining.',
+          { set: { [CARAVAN.done]: true } },
+        ),
+        say(A, 'All the salt got home, Gigi.'),
+      ],
+    },
+  }),
+  simple('salt_mule_talk', [nar('A salt mule, two sacks a side. It looks at the envoy the way it looks at a jackal.')]),
+  // Behind the caravan, under the den: the jackals come for the mules.
+  script('caravan_jackals', {
+    start: {
+      lines: [
+        act(
+          [
+            { do: 'look', actor: 'jackal_a' },
+            { do: 'enter', actor: 'jackal_a', look: 'ember_jackal', from: at(FLATS.den.x, FLATS.den.y + 2), to: at(31, 11), facing: 'down', run: true, async: true },
+            { do: 'enter', actor: 'jackal_b', look: 'ember_jackal', from: at(FLATS.den.x + 1, FLATS.den.y + 2), to: at(32, 11), facing: 'down', run: true, async: true },
+            { do: 'enter', actor: 'jackal_c', look: 'ember_jackal', from: at(FLATS.den.x + 2, FLATS.den.y + 2), to: at(33, 11), facing: 'down', run: true },
+          ],
+          '',
+          'Out of the den in the crust: three jackals, their coats throwing sparks. They run straight at the mules.',
+          { fx: 'shake' },
+        ),
+        act([{ do: 'face', actor: MASTER, facing: 'up' }], CM, 'Not the mules! Not again!'),
+        act([{ do: 'walk', actor: 'vikram', to: at(CARAVAN.jackalLine, 12), facing: 'left' }], V, 'Behind me, caravan.', {
+          set: { 'battle.next': 'caravan_jackals', 'battle.after': 'caravan_jackals_after' },
+        }),
+      ],
+    },
+  }),
+  script('caravan_jackals_after', {
+    start: {
+      lines: [
+        act(
+          [
+            { do: 'place', actor: 'jackal_a', look: 'ember_jackal', at: at(31, 10), facing: 'up' },
+            { do: 'place', actor: 'jackal_b', look: 'ember_jackal', at: at(32, 10), facing: 'up' },
+            { do: 'place', actor: 'jackal_c', look: 'ember_jackal', at: at(33, 10), facing: 'up' },
+            { do: 'exit', actor: 'jackal_a', to: at(FLATS.den.x, FLATS.den.y + 2), run: true, async: true },
+            { do: 'exit', actor: 'jackal_b', to: at(FLATS.den.x + 1, FLATS.den.y + 2), run: true, async: true },
+            { do: 'exit', actor: 'jackal_c', to: at(FLATS.den.x + 2, FLATS.den.y + 2), run: true },
+          ],
+          '',
+          'The jackals run for their den across the pans, the sparks going out behind them.',
+        ),
+        act([{ do: 'face', actor: MASTER, facing: 'player' }], CM, 'Both mules. Both mules, and every sack.'),
+        act(moveOn(2), CM, 'On, past the Crown\'s oil-cart. Behind us, envoy.', { set: { [CARAVAN.jackals]: true } }),
+      ],
+    },
+  }),
+  // Behind the caravan, past the oil-cart: the Seth's enforcers, and the toll they keep now.
+  script('caravan_toll', {
+    start: {
+      lines: [
+        act(
+          [
+            { do: 'look', actor: 'toll_a' },
+            { do: 'enter', actor: 'toll_a', look: 'oil_enforcer', from: at(FLATS.oilCart.x, FLATS.oilCart.y - 1), to: at(13, 12), facing: 'right', async: true },
+            { do: 'enter', actor: 'toll_b', look: 'oil_enforcer_b', from: at(FLATS.oilCart.x + 1, FLATS.oilCart.y - 1), to: at(13, 13), facing: 'right', async: true },
+            { do: 'enter', actor: 'toll_c', look: 'road_bandit', from: at(FLATS.oilCart.x - 1, FLATS.oilCart.y - 1), to: at(13, 14), facing: 'right' },
+          ],
+          '',
+          'Out of the shade of the Crown\'s oil-cart: two Oil Enforcers, and a man in a bandit\'s scarf. They stand across the road.',
+        ),
+        say(EN, 'The Seth\'s road. The Seth\'s salt. The Seth\'s toll: one sack in three.'),
+        say(V, 'The Seth is sitting on a jar in his own store, with his ledger shut.'),
+        say(EN, 'Then the toll is ours.'),
+        act([{ do: 'walk', actor: 'vikram', to: at(14, 13), facing: 'left' }], G, 'Not one sack.', {
+          set: { 'battle.next': 'caravan_toll', 'battle.after': 'caravan_toll_after' },
+        }),
+      ],
+    },
+  }),
+  script('caravan_toll_after', {
+    start: {
+      lines: [
+        act(
+          [
+            { do: 'place', actor: 'toll_a', look: 'oil_enforcer', at: at(13, 12), facing: 'right' },
+            { do: 'place', actor: 'toll_b', look: 'oil_enforcer_b', at: at(13, 13), facing: 'right' },
+            { do: 'place', actor: 'toll_c', look: 'road_bandit', at: at(13, 14), facing: 'right' },
+            { do: 'exit', actor: 'toll_a', to: at(12, FLATS.h - 2), async: true },
+            { do: 'exit', actor: 'toll_b', to: at(13, FLATS.h - 2), async: true },
+            { do: 'exit', actor: 'toll_c', to: at(11, FLATS.h - 2), run: true },
+          ],
+          '',
+          'They leave their cudgels on the road and walk off south across the pans, toward the coast. The bandit runs.',
+        ),
+        act([{ do: 'face', actor: MASTER, facing: 'player' }], CM, 'Tolls, from men with no master. The city will be glad of a Seth who sits on a jar.'),
+        act(moveOn(3), CM, 'The gate. Come on, before the sun is up properly.', { set: { [CARAVAN.toll]: true } }),
+      ],
+    },
+  }),
+];
+
+export const JWALADESH_QUEST_DIALOGUE: readonly DialogueScript[] = [...ARGUER_LIST.flatMap(arguerScripts), ...LITTLE_LAMPS, ...JACKALS_DIALOGUE];
 export const ARGUER_IDS = ARGUER_LIST.map((a) => a.id);

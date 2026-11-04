@@ -284,6 +284,24 @@ export function localPillar(flags: FlagReader, rpg: RpgContent, pillar: Pillar, 
   return total;
 }
 
+/**
+ * A conversation asks how a city regards the party (Chapter 6, S-2: a chief takes the envoy's word on Ordvik's
+ * regard): it sets `standing.read` to the city, answered at once (GameContent.react), and the city's three pillars
+ * are left in `standing.<pillar>.<city>` for the branches that follow to compare (`gte`).
+ */
+export const STANDING_READ = 'standing.read';
+export function standingFlag(pillar: Pillar, city: string): string {
+  return `standing.${pillar}.${city}`;
+}
+
+/** Answer a `standing.read` request (and clear it). */
+export function readStanding(flags: FlagStore, rpg: RpgContent): void {
+  const city = flags.get(STANDING_READ);
+  if (typeof city !== 'string' || !city) return;
+  flags.clear(STANDING_READ);
+  for (const p of PILLARS) flags.set(standingFlag(p, city), localPillar(flags, rpg, p, city));
+}
+
 /** A pillar across the realm: every city's local value added up. */
 export function globalPillar(flags: FlagReader, rpg: RpgContent, pillar: Pillar, snapshotKeys: readonly string[]): number {
   const cities = new Set([...Object.keys(rpg.cities), ...rpg.pillarRules.map((r) => r.city)]);

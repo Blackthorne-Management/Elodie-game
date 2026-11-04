@@ -76,7 +76,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | Se-4 | The Unknotted Ribbon (secret; built Oct 27, optional) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | yes |
 | Se-5 | A Seat for Every House (stage 1 built Oct 22, required) | Eightgate | Ch. 5 (ends Ch. 12) | 14 to 30 | no | no |
 | S-1 | Salkhi Has Opinions (built Oct 27, optional) | Ordvik | Ch. 6 | road tier | no | no |
-| S-2 | The Fleet for Sale (folded into the price scene, Oct 22; the race built Oct 27, optional) | Ordvik | Ch. 6 | road tier | no | no |
+| S-2 | The Fleet for Sale (folded into the price scene, Oct 22; the race built Oct 27; the chiefs built Nov 4, optional) | Ordvik | Ch. 6 | road tier | no | no |
 | S-3 | The Winter Stores (safehouse; built Oct 22, required) | Ordvik | Ch. 6 | 16 | yes | yes |
 | S-4 | The Cairn of Nine Riders (secret; built Oct 27, optional) | Ordvik | Ch. 6 | road tier | yes (plateau) | yes |
 | S-5 | Grandson of the Steppe (built Oct 22, required) | Ordvik | Ch. 6 | 16 | optional | no |
@@ -89,7 +89,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | J-2 | The Lamp Relay | Agnipur | Ch. 8 | road tier | no | yes |
 | J-3 | The Anonymous Oil (safehouse) | Agnipur | Ch. 8 | road tier | optional | no |
 | J-4 | Oil for the Little Lamps (secret) | Agnipur | Ch. 8 | road tier | no | yes |
-| J-5 | Jackals on the Salt Road | Agnipur | Ch. 8 | road tier | yes | no |
+| J-5 | Jackals on the Salt Road (built Nov 4, optional) | Agnipur | Ch. 8 | road tier | yes | no |
 | Al-1 | Terribly Sorry | Kingsmere | Ch. 9 | 21 to 24 | no | no |
 | Al-2 | The Crown Chronicle | Kingsmere | Ch. 9 | 21 to 24 | if seen | yes |
 | Al-3 | The Purge List (safehouse) | Kingsmere | Ch. 9 | 21 to 24 | yes | no |
@@ -541,6 +541,29 @@ built (owner decision).
 - **The race (built Oct 27):** the first-snow race the price scene promised: the race judge at the course, a timing
   race (Salkhi's stride tapped on the beat, `salkhi_race`; a slower stride on offer); won: 100 gold, +1 Wealth; lost: its
   own scene, and it can be run again. No XP (Chapter 6's curve).
+- **Built (Nov 4; Claude's calls):** at dawn after the price (`ally.skarragol`), until the longship sails; the route
+  never takes it. The lawspeaker in the Moot ("the council hall") gives it: the fleet is Zetwal's at the Muster, but on
+  the water it is the chiefs', and three say the Crown would have paid better. In any order:
+  - **Jarl Ingrid of the outer fjord** (new, on the quay where the Crown surveyor stood): four hulls; trade she can sell.
+    With Samira in the party, Samira walks up and writes her a letter against a hull (Ironvow stockfish to Bab
+    al-Dhahab on Ironvow keels, no Crown factor between; a second letter, not the price scene's salt letter); otherwise
+    300 gold. The horn's own 300 to the trading jarl stays the price scene's.
+  - **Khulan of the herds** (new, inside the race's field): wants the grey mare to win. The race is the Oct 27 race as
+    built; Khulan reads its `side.race.won` (won before or after the quest is taken), and nods from the field when it
+    is run while she waits.
+  - **Hrafn** (in the Moot already): the Throne's promise to pay the blockade's cost, on Gianna's word. He takes the word
+    on Ordvik's regard, read in Skarragol (the chiefs see Ordvik's pillars, not the realm's): **Influence 12** (kept: the
+    route has 16 at dawn, eleven sagas read and three choices; a player who reads none has 4 or 5, and the Saga Tent is
+    the way in, which Bayarmaa says) **or Fear 3** (scaled from the design's 10, which no player can reach: Ordvik offers
+    3 Fear at most, the bout in white won and Grimvald broken; so Fear 3 is every Fear choice Ordvik offered). He walks
+    to the Crown's corded chest and lays his hand on it. The regard is read with a generic request (`standing.read`,
+    engine/rpg.ts readStanding), answered as the line is shown.
+  - Back to the lawspeaker, who cuts the three into the Moot's newest hide ("Three chiefs, nine hulls, one word").
+  Reward +3 Wealth (Skarragol), 0 XP (`LATE_XP.fleet`: Chapter 6's curve has no room, and it carries to Chapter 9). The
+  price: Ironvow's Wealth 10 is not paid at the horn; `ally.skarragol` is set there whatever is paid, and the Muster reads
+  Skarragol's Wealth (engine/ally.ts allyShare; "What you have not paid, the Muster will ask for"). The route pays 8 at
+  the horn (the Crown's purse 3, the jarl 3, Samira's salt letter 1, the winter stores 1). S-2 opens only after the horn,
+  so it never replaces the horn's choices; it feeds the Muster's share, like the race (+1), Salkhi (+1) and the cairn (+2).
 
 ### S-3 The Winter Stores (rebel safehouse)
 - **Giver:** a herder at the folds. **Accept:** talk to her.
@@ -703,6 +726,17 @@ built (owner decision).
 - **Giver:** the contract board. **Accept:** take the job.
 - **Steps:** escort a salt caravan across the salt flats (wild section; Ember Jackal packs and Oil Enforcers).
 - **Reward:** 450 gold, 280 XP, +1 Wealth (Jwaladesh).
+- **Built (Nov 4; Claude's calls):** at dawn (after the Seth is beaten), until the trader sails; the route never takes
+  it. The contract board in the bazaar posts it ("SALT CARAVAN, the road's end to the salt gate. Jackals, and tolls.
+  450."): the Seth's enforcers have no Seth and no wages, so they take the toll for themselves. The caravan (a salt
+  caravan master, new, and two salt mules) waits at the salt road's end by the shrine and is escorted west to the salt
+  gate (into the city). At each stop the master and her mules walk on ahead and wait; the party walking behind crosses a
+  line (the flats' whole height, so walking round the road does not miss it) and the ambush comes, a real fight each:
+  three Ember Jackals run out of their den at the mules (`caravan_jackals`, level 20) and run back to it after; two Oil
+  Enforcers and a road bandit step out of the Crown oil-cart's shade across the road (`caravan_toll`, level 21) and walk
+  off south after. At the gate the master pays and the caravan walks in. Reward 450 gold, +1 Wealth (Jwaladesh), 5 XP
+  (`LATE_XP.jackals`), and 4 XP and 40 or 60 gold a fight: a player who does every side quest ends Chapter 9 at 8612
+  XP, 11 under level 26. Spoken by Gianna, Anissa, Vikram, the master and an enforcer.
 
 ## Kingsmere (Aldermoor)
 

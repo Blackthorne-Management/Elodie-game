@@ -573,7 +573,7 @@ async function markChecks(page, sim, name) {
   const label = sim.logic.targetAhead()?.name ?? null;
   check(s.label === label, `@${name}: the name label shows ${label === null ? 'nothing' : `"${label}"`}`);
   const markers = sim.logic.markers().map((m) => m.id).sort();
-  check(JSON.stringify(s.markers) === JSON.stringify(markers), `@${name}: markers over ${markers.join(', ') || 'nothing'}`);
+  check(JSON.stringify(s.markers) === JSON.stringify(markers), `@${name}: markers over ${markers.join(', ') || 'nothing'}${JSON.stringify(s.markers) === JSON.stringify(markers) ? '' : ` (the browser shows ${s.markers.join(', ') || 'nothing'})`}`);
   if (name === 'diagonal') check(s.x === 10 && s.y === 8 && s.facing === 'up-right', 'two keys at once take diagonal steps (to 10,8)');
   if (name === 'bridge-after') {
     // `glowed`, not `glowing`: the glow lasts 3.6 s, and reading the return lines can take longer on a busy machine.

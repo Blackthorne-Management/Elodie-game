@@ -192,3 +192,34 @@ export function skyAt(step: number): { mare: number; ox: number; ship: number; b
   const q = Math.floor(step / 4);
   return { mare: ring(4 + q), ox: ring(1 + 3 * q), ship: ring(9 - 2 * q), between: step % 4 !== 0 };
 }
+
+// ---- Built Nov 4: S-2 The Fleet for Sale ------------------------------------------------------------------------------
+
+/**
+ * S-2 The Fleet for Sale (optional; at dawn, after the price): the fleet is Zetwal's when the realm musters, but three
+ * chiefs say the Crown would have paid better. The lawspeaker in the Moot gives it; Jarl Ingrid of the outer fjord on
+ * the quay wants trade (Samira's letter, or gold); Khulan of the herds at the race rail wants the first-snow race won
+ * (the race's own `side.race.won`); Hrafn in the Moot wants the Throne's promise for the blockade, on a word Ordvik
+ * trusts (its regard read with `standing.read`: Influence or Fear in Skarragol). Paid +3 Wealth (Skarragol), toward the
+ * Muster's price (config.ts ALLY_PRICES: Wealth 10).
+ */
+export const FLEET = {
+  accepted: 'side.fleet.accepted',
+  ingrid: 'side.fleet.ingrid',
+  khulan: 'side.fleet.khulan',
+  hrafn: 'side.fleet.hrafn',
+  done: 'side.fleet.done',
+  /** Where Jarl Ingrid stands on the quay (the Crown surveyor's spot, his chain gone), and Khulan inside the race's field. */
+  ingridAt: at(6, 8),
+  khulanAt: at(16, 23),
+  /** Ingrid's price without Samira's letter. */
+  gold: 300,
+  /**
+   * Hrafn takes the envoy's word on Ordvik's regard (Claude's call, Nov 4): the design's "Influence 12 or Fear 10",
+   * read in Skarragol (what the chiefs can see). Influence 12 stands (the route has 16 at dawn: eleven sagas read and
+   * three choices; a player who reads few has 4 or 5). Fear 10 cannot be reached (Ordvik offers 3 at most: the bout in
+   * white won, Grimvald broken), so it is scaled to 3: every Fear choice Ordvik offered.
+   */
+  influence: 12,
+  fear: 3,
+} as const;

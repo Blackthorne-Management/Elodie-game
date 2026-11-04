@@ -356,10 +356,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
   }),
   simple('price_board', [nar('A brass price-board, freshly chalked: "Oil: 40 the measure." Under it, scratched into the brass by somebody: "Was 4."')]),
   simple('exchange_tower', [nar('The Oil Exchange: new brick, taller than anything round it. It stands right in the line from the harbor to the temple.')]),
-  simple('jw_board', [
-    nar('The contract board: "Escort a salt caravan. The Seth\'s enforcers took the last one." "Run the lamp relay: the runners\' hall."'),
-    nar('And: "Clean the rooftop mirrors. Ask the engineer." Somebody has added: "She will not let you."'),
-  ]),
+  // jw_board, the contract board: data/dialogue/jwaladeshQuests.ts (J-5 Jackals on the Salt Road, built Nov 4).
   simple('jw_milk_talk', [say('jw_milk', 'Namaste! Spiced milk, flatbread, lentil stew. No oil in the stew. Nobody can tell.', { translation: 'Hello!' })]),
   simple('jw_beads_talk', [say('jw_beads', 'Namaste. Brass lamp charms. The lamp is empty, but the charm still works.', { translation: 'Hello.' })]),
   simple('jw_swordsmith_talk', [say('jw_swordsmith', 'Dhanyavaad for asking. Talwars, scale, and whatever Kirinoura sends us.', { translation: 'Thank you' })]),

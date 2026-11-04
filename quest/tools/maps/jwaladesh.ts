@@ -10,7 +10,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
-import { ARGUERS, BAZAAR, COURT, DAY_DONE_TEXT, FLATS, HARBOR, LIBRARY, MIRROR_SOLUTION, OIL_STORE, ROOFTOPS, facingText } from '../../src/data/jwaladesh.ts';
+import { ARGUERS, BAZAAR, CARAVAN, COURT, DAY_DONE_TEXT, FLATS, HARBOR, LIBRARY, MIRROR_SOLUTION, OIL_STORE, ROOFTOPS, facingText } from '../../src/data/jwaladesh.ts';
 
 const STONE = 'क';
 const WALL = 'ख';
@@ -384,8 +384,27 @@ export function jwaladeshSaltflats(): MapSource {
     obj('jackal_den', FLATS.den.x, FLATS.den.y, { kind: 'jackal_den', solid: true, era: 'present', dialogue: 'jackal_den' }, 2, 2),
     { layer: 'encounters', name: 'pans_north', x: 1, y: 1, w: 40, h: 10, props: { table: 'salt_flats', if: 'story.jwaladesh_arrived' } },
     { layer: 'encounters', name: 'pans_south', x: 1, y: 17, w: 40, h: 10, props: { table: 'salt_flats', if: 'story.jwaladesh_arrived' } },
+    // J-5 Jackals on the Salt Road (built Nov 4): the caravan at each stop, and the two ambushes behind it.
+    ...caravanStops(),
+    trigger('caravan_jackals', CARAVAN.jackalLine, 0, { dialogue: 'caravan_jackals', if: `${CARAVAN.setOut}, !${CARAVAN.jackals}, !act8.complete` }, 1, FLATS.h),
+    trigger('caravan_toll', CARAVAN.tollLine, 0, { dialogue: 'caravan_toll', if: `${CARAVAN.jackals}, !${CARAVAN.toll}, !act8.complete` }, 1, FLATS.h),
   ];
   return { id: 'jwaladesh-saltflats', present: g, echo: g.clone(), objects };
+}
+
+/** J-5's caravan (the master and two mules) at each of its four stops, shown while it waits there. */
+function caravanStops(): ObjSpec[] {
+  const when = [
+    `${CARAVAN.accepted}, !${CARAVAN.setOut}`,
+    `${CARAVAN.setOut}, !${CARAVAN.jackals}`,
+    `${CARAVAN.jackals}, !${CARAVAN.toll}`,
+    `${CARAVAN.toll}, !${CARAVAN.done}`,
+  ];
+  return CARAVAN.stops.flatMap(([m, a, b], i) => [
+    npc(`salt_master_${i}`, m.x, m.y, 'left', { npc: 'salt_master', if: `${when[i]}, !act8.complete` }),
+    npc(`salt_mule_a_${i}`, a.x, a.y, 'left', { npc: 'salt_mule_a', if: `${when[i]}, !act8.complete` }),
+    npc(`salt_mule_b_${i}`, b.x, b.y, 'left', { npc: 'salt_mule_b', if: `${when[i]}, !act8.complete` }),
+  ]);
 }
 
 export const JWALADESH_SOURCES: readonly (() => MapSource)[] = [jwaladeshHarbor, jwaladeshBazaar, jwaladeshRooftops, jwaladeshLibrary, jwaladeshCourt, jwaladeshSaltflats];

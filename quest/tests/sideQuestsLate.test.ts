@@ -20,6 +20,10 @@ import { FlagStore } from '../src/engine/flags.ts';
 import { evaluate } from '../src/engine/conditions.ts';
 import { Sim, parseRoute } from '../src/engine/sim.ts';
 import { ASHES } from '../src/data/kuroshi.ts';
+import { CARAVAN } from '../src/data/jwaladesh.ts';
+import { FLEET } from '../src/data/skarragol.ts';
+import { RACE_FLAGS } from '../src/data/dialogue/skarragolQuests.ts';
+import { gold, standingFlag } from '../src/engine/rpg.ts';
 import { loadMaps, newGameSim, readJson } from '../tools/sim-setup.ts';
 
 const maps = loadMaps();
@@ -83,11 +87,12 @@ describe('what they pay keeps the level curve (the levels pass)', () => {
     3: LATE_XP.feast + BATTLES.feast_blades!.rewards.xp + LATE_XP.oldErrand,
     // Chapter 4: the saffron (and its raiders), the uncashed note, the invoice (and the factor's guards).
     4: LATE_XP.arrows + LATE_XP.saffron + BATTLES.saffron_raiders!.rewards.xp + LATE_XP.uncashed + LATE_XP.invoice + BATTLES.factor_guards!.rewards.xp,
-    // Chapter 6: Salkhi's opinions, the race, the cairn (no fights of their own).
-    6: LATE_XP.salkhi + LATE_XP.race + LATE_XP.cairn,
+    // Chapter 6: Salkhi's opinions, the race, the cairn and S-2's chiefs (built Nov 4; no fights of their own).
+    6: LATE_XP.salkhi + LATE_XP.race + LATE_XP.cairn + LATE_XP.fleet,
     7: LATE_XP.notASpy + LATE_XP.letterFloor,
     // K-5 (built Nov 4) is accepted in Chapter 7 and paid in Chapter 8, when the letter is delivered.
-    8: LATE_XP.argue + LATE_XP.littleLamps + bouts + LATE_XP.ashes,
+    // J-5 (built Nov 4) and its two fights on the salt road.
+    8: LATE_XP.argue + LATE_XP.littleLamps + bouts + LATE_XP.ashes + LATE_XP.jackals + BATTLES.caravan_jackals!.rewards.xp + BATTLES.caravan_toll!.rewards.xp,
     9: LATE_XP.sorry + LATE_XP.patientHour + LATE_XP.tea,
     // Se-4 is won in Chapter 12 (before the bell): it needs Chapter 9's record.
     12: LATE_XP.ribbon,
@@ -490,5 +495,177 @@ describe('K-5 Ashes of the Temple (the Suzumori elder, Kayla\'s desk fifty years
   it('without it, the feud starts at round 1 as before', () => {
     const { seen } = joinFeud(false);
     expect(seen).toContain('Round 1 of 3.');
+  });
+});
+
+describe('S-2 The Fleet for Sale (Ordvik at dawn: three chiefs, the race, the Throne\'s promise)', () => {
+  /** Ordvik at dawn, the price made: the party in the Moot, by the chieftain's seat. */
+  function moot(): Sim {
+    const sim = simAt('ordvik-horn');
+    settleRewards(sim.logic.state.flags, RPG, SIDE_QUESTS);
+    expect(sim.logic.map.id).toBe('skarragol-moot');
+    expect(sim.logic.state.flags.isSet('ally.skarragol')).toBe(true);
+    return sim;
+  }
+  const accept = (sim: Sim) => {
+    sim.run(['goto 14,4', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+  };
+  const hrafn = (sim: Sim) => sim.run(['goto 20,5', 'right', 'confirm', 'skip']);
+
+  it('the lawspeaker offers it only after the price; Hrafn takes the envoy\'s word on Ordvik\'s regard', () => {
+    const sim = moot();
+    const flags = sim.logic.state.flags;
+    const q = quest('fleet');
+    expect(sideQuestStatus(flags, q)).toBe('unknown');
+    expect(evaluate(q.available!, new FlagStore({ 'party.bayarmaa': true, 'story.standard_planted': true }))).toBe(false);
+    // Hrafn before it is asked: his usual line.
+    hrafn(sim);
+    expect(flags.isSet(FLEET.hrafn)).toBe(false);
+    accept(sim);
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    // The route's envoy has read Ordvik's sagas: Influence 16 in Skarragol, over the 12 he wants.
+    hrafn(sim);
+    expect(flags.get(standingFlag('influence', 'skarragol'))).toBeGreaterThanOrEqual(FLEET.influence);
+    expect(flags.isSet(FLEET.hrafn)).toBe(true);
+    expect(flags.isSet('standing.read')).toBe(false);
+  });
+
+  it('an envoy Ordvik does not know is refused until she is known, or feared', () => {
+    const sim = moot();
+    const flags = sim.logic.state.flags;
+    accept(sim);
+    // No sagas read: Influence 5 in Skarragol (the choices only), Fear 0.
+    for (const k of Object.keys(flags.snapshot())) if (k.startsWith('lore.skarragol_')) flags.set(k, false);
+    hrafn(sim);
+    expect(flags.get(standingFlag('influence', 'skarragol'))).toBeLessThan(FLEET.influence);
+    expect(flags.isSet(FLEET.hrafn)).toBe(false);
+    // Every Fear choice Ordvik offers (the bout in white won, Grimvald broken): Fear 3.
+    flags.set('side.grandson.bout_won', true);
+    flags.set('choice.grimvald_broken', true);
+    hrafn(sim);
+    expect(flags.get(standingFlag('fear', 'skarragol'))).toBe(FLEET.fear);
+    expect(flags.isSet(FLEET.hrafn)).toBe(true);
+  });
+
+  it('Ingrid on the quay, Samira\'s letter; Khulan after the race; the hides; +3 Wealth (Skarragol) once, no XP', () => {
+    const sim = moot();
+    const flags = sim.logic.state.flags;
+    const q = quest('fleet');
+    accept(sim);
+    hrafn(sim);
+    // Out to the quay: Jarl Ingrid by her hulls, and Samira's letter (the first answer with Samira in the party).
+    sim.run(['goto 17,25', 'goto 10,0']);
+    expect(sim.logic.map.id).toBe('skarragol-quay');
+    const purse = gold(flags, RPG);
+    sim.run(['goto 6,9', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.isSet(FLEET.ingrid)).toBe(true);
+    expect(gold(flags, RPG)).toBe(purse);
+    // Back to the fair: Khulan wants the race won first.
+    sim.run(['goto 10,13']);
+    expect(sim.logic.map.id).toBe('skarragol-fair');
+    sim.run(['goto 16,24', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(FLEET.khulan)).toBe(false);
+    // The race (built Oct 27), as it is: the judge by the corral, the stride tapped right.
+    sim.run(['goto 12,24', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sim.rhythms.at(-1)).toBe('salkhi_race');
+    expect(flags.isSet(RACE_FLAGS.won)).toBe(true);
+    sim.run(['goto 16,24', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(FLEET.khulan)).toBe(true);
+    // Back to the Moot: the lawspeaker cuts the three into the hides.
+    sim.run(['goto 22,9']);
+    expect(sim.logic.map.id).toBe('skarragol-moot');
+    const wealth = localPillar(flags, RPG, 'wealth', 'skarragol');
+    const xp = sharedXp(flags, RPG);
+    sim.run(['goto 14,4', 'up', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, q)).toBe('done');
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toEqual(expect.arrayContaining(['fleet', 'race']));
+    expect(localPillar(flags, RPG, 'wealth', 'skarragol') - wealth).toBe(3 + 1); // S-2's three, the race's one
+    expect(sharedXp(flags, RPG) - xp).toBe(LATE_XP.fleet);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).not.toContain('fleet');
+  });
+
+  it('without Samira, Ingrid takes 300 gold; it closes when the longship sails', () => {
+    const sim = moot();
+    const flags = sim.logic.state.flags;
+    accept(sim);
+    flags.set('party.samira', false);
+    sim.run(['goto 17,25', 'goto 10,0']);
+    const purse = gold(flags, RPG);
+    sim.run(['goto 6,9', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(flags.isSet(FLEET.ingrid)).toBe(true);
+    expect(purse - gold(flags, RPG)).toBe(FLEET.gold);
+    const q = quest('fleet');
+    expect(sideQuestStatus(new FlagStore({ ...flags.snapshot(), 'act6.complete': true }), q)).toBe('closed');
+  });
+});
+
+describe('J-5 Jackals on the Salt Road (Agnipur at dawn: the salt caravan, the den, the toll)', () => {
+  it('the board at dawn; the caravan walks ahead stop by stop; two real fights; the master pays at the gate, once', () => {
+    const sim = agnipurDawn();
+    const flags = sim.logic.state.flags;
+    const q = quest('jackals');
+    expect(sideQuestStatus(flags, q)).toBe('unknown');
+    sim.run(['goto 19,14', 'up', 'confirm']);
+    choose(sim, 0);
+    sim.run(['skip']);
+    expect(sideQuestStatus(flags, q)).toBe('active');
+    // Out through the salt gate to the road's end: the master sets out, and walks on ahead.
+    sim.run(['goto 43,14']);
+    expect(sim.logic.map.id).toBe('jwaladesh-saltflats');
+    const npcsAt = () => sim.logic.map.npcs.filter((n) => evaluate(n.if, flags) && n.npc.startsWith('salt_')).map((n) => `${n.npc}@${n.pos.x},${n.pos.y}`);
+    expect(npcsAt()).toEqual(['salt_master@38,12', 'salt_mule_a@39,12', 'salt_mule_b@40,12']);
+    sim.run(['goto 38,13', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(CARAVAN.setOut)).toBe(true);
+    expect(npcsAt()).toEqual(['salt_master@31,12', 'salt_mule_a@32,12', 'salt_mule_b@33,12']);
+    // Behind them, under the den: the jackals.
+    const before = { gold: gold(flags, RPG), xp: sharedXp(flags, RPG), wealth: localPillar(flags, RPG, 'wealth', 'jwaladesh') };
+    sim.run(['goto 34,13', 'skip']);
+    expect(sim.battles.at(-1)).toBe('caravan_jackals');
+    expect(flags.isSet(CARAVAN.jackals)).toBe(true);
+    expect(npcsAt()).toEqual(['salt_master@15,12', 'salt_mule_a@16,12', 'salt_mule_b@17,12']);
+    // Past the Crown's oil-cart: the Seth's unpaid enforcers.
+    sim.run(['goto 18,13', 'skip']);
+    expect(sim.battles.at(-1)).toBe('caravan_toll');
+    expect(flags.isSet(CARAVAN.toll)).toBe(true);
+    expect(npcsAt()).toEqual(['salt_master@4,12', 'salt_mule_a@5,12', 'salt_mule_b@6,12']);
+    // At the salt gate the master pays, and the caravan walks into the city.
+    sim.run(['goto 4,13', 'up', 'confirm', 'skip']);
+    expect(sideQuestStatus(flags, q)).toBe('done');
+    expect(npcsAt()).toEqual([]);
+    const fights = BATTLES.caravan_jackals!.rewards;
+    const toll = BATTLES.caravan_toll!.rewards;
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).toContain('jackals');
+    expect(gold(flags, RPG) - before.gold).toBe(450 + fights.gold + toll.gold);
+    expect(sharedXp(flags, RPG) - before.xp).toBe(LATE_XP.jackals + fights.xp + toll.xp);
+    expect(localPillar(flags, RPG, 'wealth', 'jwaladesh') - before.wealth).toBe(1);
+    expect(settleRewards(flags, RPG, SIDE_QUESTS).map((x) => x.id)).not.toContain('jackals');
+    // The board after.
+    sim.run(['goto 0,13']);
+    expect(sim.logic.map.id).toBe('jwaladesh-bazaar');
+  });
+
+  it('a party that walks round the road still meets each ambush (the line runs the flats\' whole height)', () => {
+    const maps2 = loadMaps();
+    const flats = maps2['jwaladesh-saltflats']!;
+    for (const id of ['caravan_jackals', 'caravan_toll']) {
+      const t = flats.triggers.find((x) => x.dialogue === id)!;
+      expect(t.area.height, id).toBe(flats.height);
+      expect(t.area.y, id).toBe(0);
+    }
+  });
+
+  it('is offered only at dawn, and closes when the trader sails', () => {
+    const q = quest('jackals');
+    expect(evaluate(q.available!, new FlagStore({ 'story.court_heard': true }))).toBe(false);
+    expect(evaluate(q.available!, new FlagStore({ 'story.dhanraj_beaten': true }))).toBe(true);
+    expect(sideQuestStatus(new FlagStore({ [CARAVAN.accepted]: true, [CARAVAN.setOut]: true, 'act8.complete': true }), q)).toBe('closed');
   });
 });

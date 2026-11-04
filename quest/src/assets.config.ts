@@ -1225,6 +1225,9 @@ const VARIANTS: Readonly<Record<string, readonly [base: string, changes: Partial
   skar_lookout_b: ['lookout', { skin: SKIN.fair, hair: 0xb8a878, outfit: 0x6e6a78, headgearColor: 0x6e6a78 }],
   horn_rider_b: ['horn_rider', { skin: SKIN.fair, hair: 0xb8a878 }],
   horn_rider_c: ['horn_rider', { skin: SKIN.saddle, hair: HAIR_BLACK }],
+  // S-2's chiefs (Nov 4): Jarl Ingrid of the outer fjord, Khulan of the herds.
+  whaling_jarl: ['trading_jarl', { skin: SKIN.fair, hair: WHITE_HAIR, hairStyle: 'bun', outfit: 0x4a5a6a, accessories: ['emblem'] }],
+  herd_chief: ['steppe_vendor', { skin: SKIN.steppe, outfit: 0x6e5a44, trim: IRONVOW_SLATE, headgear: 'cap', headgearColor: 0x8a7a68, accessories: ['sash'] }],
   // Kuroshi.
   kq_paper_maker: ['kq_vendor', { skin: SKIN.ivory, outfit: 0xe8e2d4, trim: SUZUMORI_VIOLET }],
   gate_guard_kq_b: ['gate_guard_kq', { skin: SKIN.ivory }],
@@ -1232,6 +1235,8 @@ const VARIANTS: Readonly<Record<string, readonly [base: string, changes: Partial
   // Jwaladesh: a bead seller from Zetwal, the spice seller, and the oil-factor's hired men.
   jw_bead_seller: ['jw_vendor', { skin: SKIN.espresso, outfit: 0x3a5ab8, trim: AGNI_BRASS }],
   jw_spice_seller: ['jw_vendor', { skin: SKIN.cardamom, outfit: 0xb8403a }],
+  // J-5's salt caravan master (Nov 4).
+  salt_master: ['carter', { skin: SKIN.teak, hairStyle: 'braid', outfit: 0xe8dcc0, trim: AGNI_SAFFRON, headgearColor: AGNI_SAFFRON }],
   oil_enforcer_b: ['oil_enforcer', { skin: SKIN.ruddy, beard: C.B! }],
   oil_enforcer_c: ['oil_enforcer', { skin: SKIN.umber }],
   // Aldermoor.

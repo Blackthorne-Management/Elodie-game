@@ -9,17 +9,19 @@
 // The design's gold and pillars are kept.
 //
 // Built Nov 4, the same way: K-5 Ashes of the Temple (Chapter 7's Suzumori elder, her letter carried to Agnipur in
-// Chapter 8; SIDE-QUESTS.md K-5 with its "Built" note).
+// Chapter 8; SIDE-QUESTS.md K-5 with its "Built" note); S-2 The Fleet for Sale (the three chiefs, at Ordvik's dawn; the
+// race above is its horse-fair win) and J-5 Jackals on the Salt Road (the salt caravan, at Agnipur's dawn), with their
+// "Built" notes.
 
 import type { Condition } from '../engine/conditions.ts';
 import type { RpgContent } from '../engine/rpg.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CLOCKMAKER_DAWN, CLOCK_TOWER, KEEP, LETTERS, TOWER_CLOCK, TOWNHOUSE_DOOR } from './aldermoor.ts';
-import { ARGUERS, BAZAAR, COURT, HARBOR, OIL_STORE } from './jwaladesh.ts';
+import { ARGUERS, BAZAAR, CARAVAN, COURT, HARBOR, OIL_STORE } from './jwaladesh.ts';
 import { CAMP, CHAPEL, ERRAND, FEAST, FEAST_FLAGS, TRIAL_MORNING } from './ardencia.ts';
 import { INVOICE, INVOICE_FLAGS, SAFFRON, SAFFRON_FLAGS, SAKK, SAKK_FLAGS, VAULT_NIGHT } from './aldoria.ts';
 import { RIBBON } from './seatArchive.ts';
-import { CAIRN_ANSWER, CAIRN_FRONT, FAIR, OPINIONS, ORDVIK_DAWN, PLATEAU, RACE, SIGHTING } from './skarragol.ts';
+import { CAIRN_ANSWER, CAIRN_FRONT, FAIR, FLEET, MOOT, OPINIONS, ORDVIK_DAWN, PLATEAU, RACE, SIGHTING } from './skarragol.ts';
 import { ASHES, FLOOR_MAKER, HALL, LIBRARY, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE } from './kuroshi.ts';
 
 const f = (flag: string): Condition => ({ flag });
@@ -39,6 +41,8 @@ export const LATE_XP = {
   salkhi: 0,
   race: 0,
   cairn: 5,
+  // S-2 (built Nov 4): its +3 Wealth toward the Muster's price is the reward; no XP (the curve, and it carries to Chapter 9).
+  fleet: 0,
   // Se-4 is won in Chapter 12 only (it needs Thomas's record): the Regent is met at 29 on the route and 30 is the cap,
   // so it pays 100, not the design's 500 (Claude's call).
   ribbon: 100,
@@ -48,6 +52,8 @@ export const LATE_XP = {
   littleLamps: 60,
   // K-5 is finished in Chapter 8 (the letter delivered), so it counts there, with J-1 and J-4 (built Nov 4).
   ashes: 40,
+  // J-5 (built Nov 4): 5, and 4 for each of its two fights; Chapter 9 ends 24 XP under level 26 with everything else done.
+  jackals: 5,
   sorry: 40,
   patientHour: 60,
   tea: 40,
@@ -256,6 +262,7 @@ const EIGHTGATE: readonly SideQuestDef[] = [
 const FAIR_MAP = 'skarragol-fair';
 const PLATEAU_MAP = 'skarragol-plateau';
 const SALKHI_AT = { map: FAIR_MAP, at: { x: FAIR.salkhi.x, y: FAIR.salkhi.y + 1 } };
+const LAWSPEAKER_AT = { map: 'skarragol-moot', at: { x: MOOT.lawspeaker.x, y: MOOT.lawspeaker.y + 1 } };
 
 const ORDVIK: readonly SideQuestDef[] = [
   // S-1: Salkhi will not cross the fair until three wrongs are put right.
@@ -332,6 +339,34 @@ const ORDVIK: readonly SideQuestDef[] = [
     closed: f('act6.complete'),
     closedText: 'Closed: the longship sailed. The nine cairns keep their stones.',
     reward: { gold: 350, xp: LATE_XP.cairn, pillar: { pillar: 'wealth', city: 'skarragol', amount: 2 } },
+  },
+  // S-2 (built Nov 4): the three chiefs who say the Crown would have paid better; the race above is Khulan's proof.
+  {
+    id: 'fleet',
+    title: 'The Fleet for Sale',
+    giver: 'The lawspeaker',
+    place: 'The Great Moot Tent',
+    level: 17,
+    summary: 'The fleet is Zetwal\'s when the realm musters, but three chiefs say the Crown would have paid better. Each wants proof the alliance pays more.',
+    accepted: f(FLEET.accepted),
+    available: all(ORDVIK_DAWN, f('party.bayarmaa')),
+    start: [LAWSPEAKER_AT],
+    nudge: 'The lawspeaker keeps looking at Hrafn, Gigi. And at us.',
+    parallel: true,
+    steps: [
+      { text: 'Jarl Ingrid of the outer fjord, on the quay: a trade letter from Samira, or 300 gold.', done: f(FLEET.ingrid), goals: [{ map: 'skarragol-quay', at: { x: FLEET.ingridAt.x, y: FLEET.ingridAt.y + 1 } }] },
+      { text: 'Khulan of the herds, in the race\'s field: the first-snow race won.', done: f(FLEET.khulan), goals: [{ map: FAIR_MAP, at: { x: FLEET.khulanAt.x, y: FLEET.khulanAt.y + 1 } }] },
+      {
+        text: `Hrafn, in the Moot: the Throne's promise for the blockade, on a word Ordvik trusts (Influence ${FLEET.influence} there, or Fear ${FLEET.fear}).`,
+        done: f(FLEET.hrafn),
+        goals: [{ map: 'skarragol-moot', at: { x: MOOT.hrafn.x - 1, y: MOOT.hrafn.y } }],
+      },
+      { text: 'Back to the lawspeaker.', done: f(FLEET.done), goals: [LAWSPEAKER_AT] },
+    ],
+    done: f(FLEET.done),
+    closed: f('act6.complete'),
+    closedText: 'Closed: the longship sailed. The three chiefs row slowly, as they said they would.',
+    reward: { xp: LATE_XP.fleet, pillar: { pillar: 'wealth', city: 'skarragol', amount: 3 } },
   },
 ];
 
@@ -434,6 +469,12 @@ const KUROSHI: readonly SideQuestDef[] = [
 // ---- Chapter 8 (Agnipur) -------------------------------------------------------------------------------------------
 
 const AGNIPUR_DAWN: Condition = all(f('story.dhanraj_beaten'), { notFlag: 'act8.complete' });
+/** Behind J-5's caravan at a stop (the road, a step east of the last mule; the last stop: below the master). */
+const caravanAt = (n: number) => {
+  const stop = CARAVAN.stops[n]!;
+  const p = n === 0 || n === 3 ? { x: stop[0].x, y: stop[0].y + 1 } : { x: stop[2].x + 1, y: stop[2].y + 1 };
+  return { map: 'jwaladesh-saltflats', at: p };
+};
 const arguer = (who: keyof typeof ARGUERS) => ({ map: 'jwaladesh-bazaar', at: { x: ARGUERS[who].x, y: ARGUERS[who].y + 1 } });
 
 const AGNIPUR: readonly SideQuestDef[] = [
@@ -492,6 +533,29 @@ const AGNIPUR: readonly SideQuestDef[] = [
     closed: f('act8.complete'),
     closedText: 'Closed: the trader sailed. The runners will fill her lamp. It will go out again.',
     reward: { xp: LATE_XP.littleLamps, pillar: { pillar: 'influence', city: 'jwaladesh', amount: 2 } },
+  },
+  // J-5 (built Nov 4): the contract board's salt caravan, from the road's end to the salt gate.
+  {
+    id: 'jackals',
+    title: 'Jackals on the Salt Road',
+    giver: 'The contract board',
+    place: 'The Lamp Bazaar',
+    level: 21,
+    summary: 'A salt caravan waits at the salt road\'s end. The last one lost its mules to the jackals and its salt to the Seth\'s men, who still take tolls without a Seth.',
+    accepted: f(CARAVAN.accepted),
+    available: AGNIPUR_DAWN,
+    start: [{ map: 'jwaladesh-bazaar', at: { x: BAZAAR.board.x, y: BAZAAR.board.y + 1 } }],
+    nudge: 'There is a new notice on the contract board, Gigi. A salt caravan.',
+    steps: [
+      { text: 'The caravan master, at the salt road\'s end by the shrine.', done: f(CARAVAN.setOut), goals: [caravanAt(0)] },
+      { text: 'Walk behind the caravan, past the jackals\' den.', done: f(CARAVAN.jackals), goals: [caravanAt(1)] },
+      { text: 'Walk behind the caravan, past the Crown\'s oil-cart.', done: f(CARAVAN.toll), goals: [caravanAt(2)] },
+      { text: 'The caravan master, at the salt gate.', done: f(CARAVAN.done), goals: [caravanAt(3)] },
+    ],
+    done: f(CARAVAN.done),
+    closed: f('act8.complete'),
+    closedText: 'Closed: the trader sailed. The caravan is still waiting at the road\'s end for somebody to walk with it.',
+    reward: { gold: 450, xp: LATE_XP.jackals, pillar: { pillar: 'wealth', city: 'jwaladesh', amount: 1 } },
   },
 ];
 

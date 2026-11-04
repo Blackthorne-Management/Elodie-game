@@ -7,6 +7,7 @@ import type { StepAnswer } from '../engine/content.ts';
 import type { FlagReader, FlagStore } from '../engine/flags.ts';
 import { SECRET_ITEMS, STARTING_GOLD } from '../config.ts';
 import { CLOCK_DO, MEASURES_DO, heardFlag, jarFlag, measure, sealedFlag, stepFloor, windClock, type ClockDef, type FloorDef, type MeasuresDef } from '../engine/secrets.ts';
+import { PILLARS, standingFlag } from '../engine/rpg.ts';
 import { TOWER_CLOCK } from './aldermoor.ts';
 import { WICK_MEASURES } from './jwaladesh.ts';
 import { NIGHTINGALE } from './kuroshi.ts';
@@ -14,6 +15,8 @@ import { NIGHTINGALE } from './kuroshi.ts';
 export const MEASURES: readonly MeasuresDef[] = [WICK_MEASURES];
 export const CLOCKS: readonly ClockDef[] = [TOWER_CLOCK];
 export const FLOORS: readonly FloorDef[] = [NIGHTINGALE];
+/** The cities whose regard a conversation reads (`standing.read`, GameContent.react). */
+export const STANDING_CITIES: readonly string[] = ['skarragol'];
 
 /** What the last request at a machine came to (`measures.<id>.said`, `clock.<id>.said`), for the lines that follow. */
 export const saidFlag = (machine: 'measures' | 'clock', id: string): string => `${machine}.${id}.said`;
@@ -69,6 +72,8 @@ export function secretFlagsWritten(): string[] {
   for (const c of CLOCKS) out.push(...['moved', 'secs', 'spring', 'key_out', 'jammed', 'face', 'left', 'caught'].map((k) => `clock.${c.id}.${k}`), c.anchor, saidFlag('clock', c.id));
   for (const fl of FLOORS) out.push(fl.open, heardFlag(fl.id));
   for (let c = 1; c <= 13; c++) out.push(couponFlag(c));
+  // A city's regard, read for a conversation (engine/rpg.ts readStanding): Ordvik's, for S-2's third chief (Nov 4).
+  for (const city of STANDING_CITIES) for (const p of PILLARS) out.push(standingFlag(p, city));
   return out;
 }
 

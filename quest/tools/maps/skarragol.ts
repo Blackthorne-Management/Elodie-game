@@ -10,7 +10,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
-import { CAIRNS, CAIRN_ANSWER, FAIR, FJORD, FJORD_OPEN, HERD, MOOT, OPINIONS, PLATEAU, QUAY, RACE, SIGHTING } from '../../src/data/skarragol.ts';
+import { CAIRNS, CAIRN_ANSWER, FAIR, FJORD, FJORD_OPEN, FLEET, HERD, MOOT, OPINIONS, PLATEAU, QUAY, RACE, SIGHTING } from '../../src/data/skarragol.ts';
 
 const GRASS = 'ა';
 const ROAD = 'ბ';
@@ -195,6 +195,8 @@ export function skarragolFair(): MapSource {
     salkhi('salkhi_fair', FAIR.salkhi.x, FAIR.salkhi.y, 'down', 'story.fair_seen, !act6.complete'),
     // S-2's race (built Oct 27): the race judge by the corral at dawn, after the price.
     npc('race_judge', RACE.judge.x, RACE.judge.y, 'down', { if: 'ally.skarragol, !act6.complete' }),
+    // S-2 The Fleet for Sale (built Nov 4): Khulan of the herds, inside the race's field at dawn.
+    npc('herd_chief', FLEET.khulanAt.x, FLEET.khulanAt.y, 'down', { if: 'ally.skarragol, !act6.complete' }),
   ];
   return { id: 'skarragol-fair', present: g, echo: g.clone(), objects };
 }
@@ -290,6 +292,8 @@ export function skarragolQuay(): MapSource {
     obj('quay_hulls', 2, 6, { dialogue: 'quay_hulls', era: 'present' }, 17, 1),
     npc('quay_surveyor', QUAY.surveyor.x, QUAY.surveyor.y, 'up', { npc: 'crown_surveyor', if: '!story.standard_planted' }),
     npc('quay_jarl', QUAY.jarl.x, QUAY.jarl.y, 'down', { npc: 'trading_jarl_quay', if: 'ally.skarragol' }),
+    // S-2 The Fleet for Sale (built Nov 4): Jarl Ingrid of the outer fjord, by her hulls at dawn (the surveyor's spot).
+    npc('whaling_jarl', FLEET.ingridAt.x, FLEET.ingridAt.y, 'down', { if: 'ally.skarragol, !act6.complete' }),
     salkhi('salkhi_quay', QUAY.salkhi.x, QUAY.salkhi.y, 'up', 'ally.skarragol'),
   ];
   return { id: 'skarragol-quay', present: g, echo: g.clone(), objects };

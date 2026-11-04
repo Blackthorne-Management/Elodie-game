@@ -224,3 +224,29 @@ export const FLATS = {
   oilCart: at(20, 20),
   den: at(30, 4),
 } as const;
+
+// ---- Built Nov 4: J-5 Jackals on the Salt Road ----------------------------------------------------------------------
+
+/**
+ * J-5 Jackals on the Salt Road (optional; at dawn, until the trader sails): the contract board's salt caravan, its
+ * master and two mules at the road's end by the shrine, escorted to the salt gate. The caravan walks ahead from stop to
+ * stop (west-most first: the master, then the mules); the party walking behind it crosses a line, and the ambush comes:
+ * the jackals out of their den, then the Seth's unpaid enforcers from the Crown's oil-cart. Real fights.
+ */
+export const CARAVAN = {
+  accepted: 'side.jackals.accepted',
+  setOut: 'side.jackals.set_out',
+  jackals: 'side.jackals.jackals',
+  toll: 'side.jackals.toll',
+  done: 'side.jackals.done',
+  /** The master and her two mules at each stop: the road's end, below the den, past the oil-cart, at the salt gate. */
+  stops: [
+    [at(38, 12), at(39, 12), at(40, 12)],
+    [at(31, 12), at(32, 12), at(33, 12)],
+    [at(15, 12), at(16, 12), at(17, 12)],
+    [at(4, 12), at(5, 12), at(6, 12)],
+  ],
+  /** The columns the party crosses behind the caravan, where each ambush comes. */
+  jackalLine: 34,
+  tollLine: 18,
+} as const;

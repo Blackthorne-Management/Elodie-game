@@ -17,7 +17,10 @@ import {
   itemCount,
   localPillar,
   partyMembers,
+  readStanding,
   removeItem,
+  STANDING_READ,
+  standingFlag,
   sell,
   sellPrice,
   level,
@@ -80,6 +83,18 @@ describe('gold and the pillars', () => {
     expect(localPillar(f, rpg, 'influence', 'far')).toBe(3);
     expect(globalPillar(f, rpg, 'influence', Object.keys(f.snapshot()))).toBe(6);
     expect(globalPillar(f, rpg, 'fear', Object.keys(f.snapshot()))).toBe(1);
+  });
+
+  it('a conversation reads a city\'s regard on request (standing.read), and the request is cleared', () => {
+    const f = new FlagStore({ 'lore.a': true, 'lore.b': true, 'pillar.influence.z': 2, 'pillar.fear.z': 1 });
+    readStanding(f, rpg);
+    expect(f.get(standingFlag('influence', 'z'))).toBeUndefined();
+    f.set(STANDING_READ, 'z');
+    readStanding(f, rpg);
+    expect(f.get(standingFlag('influence', 'z'))).toBe(4);
+    expect(f.get(standingFlag('fear', 'z'))).toBe(1);
+    expect(f.get(standingFlag('wealth', 'z'))).toBe(0);
+    expect(f.isSet(STANDING_READ)).toBe(false);
   });
 
   it('military might is every pledged army', () => {

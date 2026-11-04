@@ -381,6 +381,9 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   foal_mother: n('foal_mother', 'horse_dun', 'Its mother'),
   fair_horse_rival: n('fair_horse_rival', 'horse_bay', 'A bay for sale'),
   race_judge: n('race_judge', 'horn_master', 'Race judge'),
+  // Built Nov 4: S-2's chiefs, Jarl Ingrid on the quay and Khulan of the herds at the race (Hrafn is the Moot's own).
+  whaling_jarl: n('whaling_jarl', 'whaling_jarl', 'Jarl Ingrid of the outer fjord'),
+  herd_chief: n('herd_chief', 'herd_chief', 'Khulan of the herds'),
   sarnai_cairn: n('sarnai_cairn', 'echo_sarnai', 'Sarnai Ironvow'),
   cairn_rider: n('cairn_rider', 'echo_rider', "Sarnai's rider"),
   sarnai_rider: n('sarnai_rider', 'echo_rider', "Sarnai's rider"),
@@ -460,6 +463,10 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   dhanraj_kneeling: n('dhanraj_kneeling', 'seth_dhanraj', 'Seth Dhanraj (kneeling)'),
   carter: n('carter', 'carter', 'Carter'),
   carter_gate: n('carter_gate', 'carter', 'Carter'),
+  // Built Nov 4: J-5's salt caravan, its master and her two mules, at each stop on the salt road.
+  salt_master: n('salt_master', 'salt_master', 'Salt caravan master'),
+  salt_mule_a: n('salt_mule_a', 'horse_dun', 'Salt mule', 'salt_mule_talk'),
+  salt_mule_b: n('salt_mule_b', 'horse_chestnut', 'Salt mule', 'salt_mule_talk'),
   // Chapter 9, Kingsmere (Oct 22). Named from the design and FAMILY.md: Edmund, Jordyn, Sebastian, Rosalind, Thomas, the
   // Regent; the Almoner by her role (the outline's "Mrs. Sallow" stays a proposal); everyone else by role.
   printer: n('printer', 'printer', 'The printer'),

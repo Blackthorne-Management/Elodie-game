@@ -13,7 +13,7 @@
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { FAIR, FJORD, HORN_DAY_DONE, MOOT, PLATEAU } from '../skarragol.ts';
-import { OPINION_BRANCHES, OPINION_NODES, SADDLE_BRANCHES, SADDLE_NODES } from './skarragolQuests.ts';
+import { FLEET_HRAFN_BRANCHES, FLEET_HRAFN_NODES, FLEET_LAWSPEAKER_BRANCHES, FLEET_LAWSPEAKER_NODES, OPINION_BRANCHES, OPINION_NODES, SADDLE_BRANCHES, SADDLE_NODES } from './skarragolQuests.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -332,15 +332,28 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     day: { lines: [say(TV, 'Until the horn, envoy. The white coat, the folds, the traders. Then my daughter\'s ice.'), ...LEFT] },
     after: { lines: [say(TV, 'Ironvow sits, envoy. Tell Kaede Suzumori we spoke for you. She will want it in writing. She has it.')] },
   }),
-  simple('lawspeaker_talk', [
-    { if: { notFlag: 'story.standard_planted' }, speaker: LS, text: 'The law is on the hides in my tent, envoy. Read it. Everyone quotes it; nobody reads it.' },
-    { if: { notFlag: 'story.standard_planted' }, speaker: LS, text: 'The guard roster for that night is there too. Bayarmaa\'s name, and one struck out. Ask whose.' },
-    { if: { flag: 'story.standard_planted' }, speaker: LS, text: 'The standard stands. I have nothing to do until somebody breaks another law. It will not be long.' },
-  ]),
-  simple('hrafn_talk', [
-    { if: { notFlag: 'story.standard_planted' }, speaker: HR, text: 'Envoy. Ships that cannot raid are firewood, and firewood the Crown pays for is still firewood.' },
-    { if: { flag: 'story.standard_planted' }, speaker: HR, text: 'You won the vote. The blockade did not lose. Remember that when the Crown comes back with a better price.' },
-  ]),
+  // S-2 The Fleet for Sale (built Nov 4): the lawspeaker gives it at dawn, after the price; Hrafn is its third chief.
+  script('lawspeaker_talk', {
+    start: { lines: [], next: [...FLEET_LAWSPEAKER_BRANCHES, { to: 'plain' }] },
+    plain: {
+      lines: [
+        { if: { notFlag: 'story.standard_planted' }, speaker: LS, text: 'The law is on the hides in my tent, envoy. Read it. Everyone quotes it; nobody reads it.' },
+        { if: { notFlag: 'story.standard_planted' }, speaker: LS, text: 'The guard roster for that night is there too. Bayarmaa\'s name, and one struck out. Ask whose.' },
+        { if: { flag: 'story.standard_planted' }, speaker: LS, text: 'The standard stands. I have nothing to do until somebody breaks another law. It will not be long.' },
+      ],
+    },
+    ...FLEET_LAWSPEAKER_NODES,
+  }),
+  script('hrafn_talk', {
+    start: { lines: [], next: [...FLEET_HRAFN_BRANCHES, { to: 'plain' }] },
+    plain: {
+      lines: [
+        { if: { notFlag: 'story.standard_planted' }, speaker: HR, text: 'Envoy. Ships that cannot raid are firewood, and firewood the Crown pays for is still firewood.' },
+        { if: { flag: 'story.standard_planted' }, speaker: HR, text: 'You won the vote. The blockade did not lose. Remember that when the Crown comes back with a better price.' },
+      ],
+    },
+    ...FLEET_HRAFN_NODES,
+  }),
   simple('trading_jarl_talk', [say(JR, 'Eleven hulls, envoy. The Crown measured nine. I counted them all, and I want them all back on the water.')]),
   simple('trading_jarl_quay_talk', [say(JR, 'Nine measured. None sold. The longship at the end of the pier is yours, envoy.')]),
   simple('hostage_envoy_talk', [say(HE, 'I am the steppe\'s guest, envoy, and the Throne\'s clerk. I would not want you to say you were not shown the offer.')]),

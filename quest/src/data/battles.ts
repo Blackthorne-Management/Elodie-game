@@ -1295,6 +1295,32 @@ export const BATTLES: Readonly<Record<string, BattleDef>> = {
       lowHp: 'Heal, Gigi.',
     },
   },
+  // Chapter 8, J-5 (built Nov 4): the salt caravan's escort, the jackals out of their den and the Seth's unpaid enforcers
+  // at the Crown's oil-cart. Optional; paid little (the level curve: tests/sideQuestsLate.test.ts).
+  caravan_jackals: {
+    id: 'caravan_jackals',
+    title: 'The salt caravan',
+    backdrop: 'salt_flats',
+    enemies: ['ember_jackal', 'ember_jackal', 'ember_jackal'],
+    level: 20,
+    table: 'jwaladesh_side',
+    group: 'caravan_jackals',
+    rewards: { xp: 4, gold: 40 },
+    sideQuest: 'jackals',
+    tips: { start: 'They want the mules, Gigi. Water hurts them; fire does not.', spark: 'Surge, Gigi!', tell: 'Its coat is sparking! Guard!', lowHp: 'Heal, Gigi.' },
+  },
+  caravan_toll: {
+    id: 'caravan_toll',
+    title: 'The Seth\'s toll',
+    backdrop: 'salt_flats',
+    enemies: ['oil_enforcer', 'oil_enforcer', 'road_bandit'],
+    level: 21,
+    table: 'jwaladesh_side',
+    group: 'caravan_toll',
+    rewards: { xp: 4, gold: 60 },
+    sideQuest: 'jackals',
+    tips: { start: 'Nobody pays them now, Gigi. Samira says a purse works on enforcers.', spark: 'Surge, Gigi!', tell: 'A flask! Guard!', lowHp: 'Heal, Gigi.' },
+  },
   // Chapter 8: the night watch on the open quay (the sea-wall lane's fail-safe). Paid flat (data).
   quay_watch: {
     id: 'quay_watch',

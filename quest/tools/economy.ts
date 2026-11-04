@@ -76,12 +76,16 @@ export const OFF_ROUTE_QUESTS: Readonly<Record<string, number>> = {
   salkhi: 6,
   race: 6,
   cairn: 6,
+  // S-2 (built Nov 4) at Ordvik's dawn.
+  fleet: 6,
   not_a_spy: 7,
   letter_floor: 7,
   argue: 8,
   little_lamps: 8,
   // K-5 (built Nov 4) opens in Chapter 7 and is finished in Chapter 8, when the letter is delivered.
   ashes: 8,
+  // J-5 (built Nov 4) at Agnipur's dawn.
+  jackals: 8,
   sorry: 9,
   patient_hour: 9,
   tea: 9,

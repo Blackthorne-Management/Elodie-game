@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 9,
+  "nextobjectid": 10,
   "layers": [
     {
       "id": 1,
@@ -270,6 +270,34 @@
         },
         {
           "id": 3,
+          "name": "whaling_jarl",
+          "type": "npc",
+          "x": 96,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "ally.skarragol, !act6.complete"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "whaling_jarl"
+            }
+          ]
+        },
+        {
+          "id": 4,
           "name": "salkhi_quay",
           "type": "npc",
           "x": 256,
@@ -309,7 +337,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 4,
+          "id": 5,
           "name": "quay_fair",
           "type": "door",
           "x": 160,
@@ -349,7 +377,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 5,
+          "id": 6,
           "name": "quay_end",
           "type": "trigger",
           "x": 320,
@@ -384,7 +412,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 6,
+          "id": 7,
           "name": "quay",
           "type": "spawn",
           "x": 320,
@@ -441,7 +469,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 7,
+          "id": 8,
           "name": "longship_ready",
           "type": "puzzle_object",
           "x": 320,
@@ -474,7 +502,7 @@
           ]
         },
         {
-          "id": 8,
+          "id": 9,
           "name": "quay_hulls",
           "type": "puzzle_object",
           "x": 32,

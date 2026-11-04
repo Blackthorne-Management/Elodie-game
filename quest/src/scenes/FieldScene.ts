@@ -2540,6 +2540,9 @@ export class FieldScene extends Phaser.Scene {
     this.dialogue.hide();
     this.hideSpeakerTag();
     this.clearStage();
+    // What the conversation changed can give someone else something new to say (Nov 4: the horn opens the lawspeaker's
+    // S-2 offer, and her "!" only came at the next map sync): the markers follow at once.
+    this.syncMarkers();
     this.mode = this.logic.mode === 'card' ? 'card' : 'field';
     this.rt.input.clearPresses();
     if (this.talkingTo) {
