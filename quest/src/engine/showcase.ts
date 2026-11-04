@@ -7,7 +7,7 @@
 
 import { evaluate } from './conditions.ts';
 import type { FlagReader, FlagStore } from './flags.ts';
-import { STAT_KEYS, itemCount, type ItemDef, type RpgContent, type ShowcaseTier, type StatKey } from './rpg.ts';
+import { STAT_KEYS, canWear, equipped, itemCount, partyMembers, type ItemDef, type MemberDef, type RpgContent, type ShowcaseTier, type StatKey } from './rpg.ts';
 
 export const UNKNOWN_ABILITY = '???';
 
@@ -43,6 +43,18 @@ export interface ShowcaseView {
   abilities: AbilityView[];
   /** The gear slot it is worn in ("charm"), for the card's "how to wear it" line; none for other items. */
   slot?: string;
+  /** Who could wear it now in an empty slot: the card offers to put it on them (wearOffer). */
+  wearer?: { id: string; name: string };
+}
+
+/**
+ * Who a quest reward could go straight onto (the Nov 1 playtest's 17: the Sun-stitched charm sat in the bag, the Charm
+ * slot empty): the first member with the party now, in party order, who can wear it and has nothing in that slot.
+ * Nobody when everyone who could already wears something there (the menu's Equip is the place to swap).
+ */
+export function wearOffer(flags: FlagReader, rpg: RpgContent, item: ItemDef): MemberDef | null {
+  if (item.kind !== 'gear' || !item.slot || itemCount(flags, item.id) < 1) return null;
+  return partyMembers(flags, rpg, 'present').find((m) => canWear(rpg, item, m) && !equipped(flags, m, item.slot!)) ?? null;
 }
 
 export const TIER_BANNERS: Readonly<Record<ShowcaseTier, string>> = {
@@ -61,8 +73,9 @@ export function abilityViews(flags: FlagReader, item: ItemDef): AbilityView[] {
 }
 
 /** What the showcase shows for an item (any item: the menu can replay one without a tier as a key item). */
-export function showcaseView(flags: FlagReader, item: ItemDef): ShowcaseView {
+export function showcaseView(flags: FlagReader, item: ItemDef, rpg?: RpgContent): ShowcaseView {
   const tier = item.showcase ?? 'story';
+  const wearer = rpg && tier === 'reward' ? wearOffer(flags, rpg, item) : null;
   return {
     id: item.id,
     name: item.name,
@@ -72,6 +85,7 @@ export function showcaseView(flags: FlagReader, item: ItemDef): ShowcaseView {
     stats: STAT_KEYS.filter((k) => item.stats?.[k]).map((k) => `${STAT_LABELS[k]} +${item.stats![k]}`),
     abilities: abilityViews(flags, item),
     ...(item.slot ? { slot: item.slot } : {}),
+    ...(wearer ? { wearer: { id: wearer.id, name: wearer.name } } : {}),
   };
 }
 

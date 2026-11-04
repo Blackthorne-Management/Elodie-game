@@ -36,6 +36,9 @@ const MIRROR = 'հ';
 const CRATES = 'ձ';
 const GATE = 'ղ';
 const CITY_WALL = 'ճ';
+const PLANE = 'ջ';
+const BENCH = 'ռ';
+const FLOWERS = 'ս';
 
 /**
  * The Seat's evening (beat 5's end): the three required quests done, the veils not on yet (Chapter 4's dusk rule: a
@@ -140,6 +143,16 @@ export function seatConcourse(): MapSource {
   put(g, LAMP, [[19, 14], [27, 14], [19, 20], [27, 20]]);
   put(g, STALL, [[6, 26], [7, 26], [10, 26], [11, 26], [14, 26], [15, 26]]);
   put(g, BANNER, [[32, 0], [35, 0]]);
+  // Landmarks, so the walk across reads (the Nov 1 playtest's 18; Claude's call, Nov 4), kept off every way in from a
+  // gate, the forecourt, the market, the debate corner and the crowd's square: banners either side of each gate; an
+  // avenue of plane trees up the lane from the Envoys' Quarter with flower beds and benches facing the fountain; trees
+  // in the west and east gardens.
+  put(g, BANNER, [[13, 0], [16, 0], [43, 0], [46, 0], [0, 15], [0, 18], [7, H - 1], [10, H - 1], [30, H - 1], [33, H - 1], [W - 1, 25], [W - 1, 28]]);
+  put(g, PLANE, [[20, 23], [27, 23], [20, 26], [27, 26], [20, 29], [27, 29]]);
+  put(g, FLOWERS, [[21, 23], [26, 23], [21, 26], [26, 26], [21, 29], [26, 29]]);
+  put(g, BENCH, [[18, 22], [29, 22]]);
+  put(g, PLANE, [[3, 11], [8, 11], [13, 11], [3, 21], [13, 21], [36, 11], [40, 11], [44, 11], [44, 20], [38, 30], [42, 31]]);
+  put(g, FLOWERS, [[4, 11], [7, 11], [9, 11], [12, 11], [37, 11], [39, 11], [41, 11], [43, 11]]);
 
   const gate = (name: string, x: number, y: number, kind: string, w = 1, h = 1): ObjSpec => obj(name, x, y, { kind, solid: true, era: 'present', dialogue: name }, w, h);
   const objects: ObjSpec[] = [

@@ -6,7 +6,8 @@ import { CONTENT } from '../src/data/content.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { DialogueRunner } from '../src/engine/dialogue.ts';
 import { FlagStore } from '../src/engine/flags.ts';
-import { UNKNOWN_ABILITY, canReplay, markShown, pendingShowcases, showcaseView } from '../src/engine/showcase.ts';
+import { UNKNOWN_ABILITY, canReplay, markShown, pendingShowcases, showcaseView, wearOffer } from '../src/engine/showcase.ts';
+import { equip } from '../src/engine/rpg.ts';
 import { settleRewards } from '../src/engine/sideQuests.ts';
 import { SIDE_QUESTS } from '../src/data/sideQuests.ts';
 
@@ -88,5 +89,24 @@ describe('item showcase', () => {
     }
     expect(itemArtKey('no_such_item', 'gear')).toBe('gear');
     expect(itemArtKey('no_such_item', 'key')).toBe('key');
+  });
+
+  it('a reward card offers to wear the gear on the first member with that slot empty (playtest Nov 1, 17)', () => {
+    const flags = new FlagStore();
+    flags.set('item.sun_charm', 1);
+    const charm = RPG.items.sun_charm!;
+    const gianna = RPG.members.find((m) => m.id === 'gianna')!;
+    expect(wearOffer(flags, RPG, charm)?.id).toBe('gianna');
+    expect(showcaseView(flags, charm, RPG).wearer).toEqual({ id: 'gianna', name: 'Gianna' });
+    // Worn: the offer moves on, or goes when nobody else can take it.
+    expect(equip(flags, RPG, gianna, 'sun_charm')).toBe('ok');
+    flags.set('item.sun_charm', 1);
+    const next = wearOffer(flags, RPG, charm);
+    expect(next?.id).not.toBe('gianna');
+    // Not for an item that is not in the bag, nor for a key item.
+    flags.set('item.sun_charm', 0);
+    expect(wearOffer(flags, RPG, charm)).toBeNull();
+    flags.set('item.sun_locket', true);
+    expect(showcaseView(flags, RPG.items.sun_locket!, RPG).wearer).toBeUndefined();
   });
 });

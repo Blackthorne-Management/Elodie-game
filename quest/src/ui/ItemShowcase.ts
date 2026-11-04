@@ -58,21 +58,33 @@ export class ItemShowcase {
     this.root.setVisible(false);
   }
 
-  /** Returns true when the player closes it. */
+  /**
+   * Returns true when the player closes it. On a card that offers to wear the item, `wear` is set to whether A (wear
+   * it) or B (keep it in the bag) closed it.
+   */
   update(input: InputManager): boolean {
-    if (!input.pressed('confirm') && !input.pressed('cancel')) return false;
-    return this.press();
+    const yes = input.pressed('confirm');
+    const no = input.pressed('cancel');
+    if (!yes && !no) return false;
+    const closed = this.press();
+    if (closed) this.wear = !!this.view?.wearer && yes;
+    return closed;
   }
 
-  /** A tap anywhere: the same as A. */
+  /** A tap anywhere: the same as A, except that it never puts gear on (the card's A and B buttons do). */
   tap(): boolean {
-    return this.press();
+    const closed = this.press();
+    if (closed) this.wear = false;
+    return closed;
   }
 
-  snapshot(): { id: string; tier: string; banner: string; name: string; abilities: string[]; rising: boolean } | null {
+  /** Whether the card was closed with "wear it" (read once, when it closes). */
+  wear = false;
+
+  snapshot(): { id: string; tier: string; banner: string; name: string; abilities: string[]; rising: boolean; wearer: string | null } | null {
     const v = this.view;
     return v
-      ? { id: v.id, tier: v.tier, banner: v.banner, name: v.name, abilities: v.abilities.map((a) => `${a.name}: ${a.text}`), rising: this.rising }
+      ? { id: v.id, tier: v.tier, banner: v.banner, name: v.name, abilities: v.abilities.map((a) => `${a.name}: ${a.text}`), rising: this.rising, wearer: v.wearer?.id ?? null }
       : null;
   }
 
@@ -216,8 +228,14 @@ export class ItemShowcase {
     y += this.text(TX, y, view.text, UI.dimText, W - 50, 'left').height + 3;
     if (view.stats.length > 0) y += this.text(TX, y, view.stats.join('  '), UI.text, W - 50, 'left').height + 3;
     // Rewards go to the bag, not onto anyone (the Nov 1 playtests: the charm sat unworn): say how to wear it.
-    if (view.slot) y += this.text(TX, y, fillButtons(`To wear it: press {Menu}, choose Equip, then the ${view.slot} slot.`), UI.accentText, W - 50, 'left').height + 3;
-    y += this.text(CX, y + 2, `(${continueHint()})`, UI.dimText).height + 8;
+    // When someone could wear it at once (an empty slot), the card offers it (Claude's call, Nov 4).
+    if (view.wearer) {
+      y += this.text(TX, y, `Wear it now? ${view.wearer.name}'s ${view.slot} slot is empty.`, UI.accentText, W - 50, 'left').height + 3;
+      y += this.text(CX, y + 2, fillButtons(`({A}: wear it, {B}: keep it in the bag)`), UI.dimText).height + 8;
+    } else {
+      if (view.slot) y += this.text(TX, y, fillButtons(`To wear it: press {Menu}, choose Equip, then the ${view.slot} slot.`), UI.accentText, W - 50, 'left').height + 3;
+      y += this.text(CX, y + 2, `(${continueHint()})`, UI.dimText).height + 8;
+    }
     box.fillStyle(UI.boxFill, 1).fillRect(X, Y, W, y - Y);
     box.lineStyle(1, UI.boxBorder, 1).strokeRect(X + 0.5, Y + 0.5, W - 1, y - Y - 1);
     const full = item.scale;

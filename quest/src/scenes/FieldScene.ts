@@ -63,9 +63,9 @@ import type { FxKind } from './battleFx.ts';
 import type { BattleResult } from '../engine/battle.ts';
 import { dialogueExtraPx, renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
-import { markShown, pendingShowcases, showcaseView } from '../engine/showcase.ts';
+import { markShown, pendingShowcases, showcaseView, wearOffer } from '../engine/showcase.ts';
 import { RPG } from '../data/rpg.ts';
-import { addSharedXp, cityOf, itemCount, level, partyMembers, pillarFlag, walkingCompanion } from '../engine/rpg.ts';
+import { addSharedXp, cityOf, equip, itemCount, level, partyMembers, pillarFlag, walkingCompanion } from '../engine/rpg.ts';
 import { PITCH_RIPPLES, quietCrownLook } from '../data/secrets.ts';
 import { settleDebates } from '../engine/debate.ts';
 import { musterJournal } from '../engine/ally.ts';
@@ -327,6 +327,8 @@ export class FieldScene extends Phaser.Scene {
   private shopPanel!: ShopPanel;
   private rhythmPanel!: RhythmPanel;
   private showcase!: ItemShowcase;
+  /** The item on the showcase now (for its "Wear it now?" answer). */
+  private showcaseItem: string | null = null;
   /** The mode to go back to when the item showcase closes. */
   private showcaseReturn: UiMode = 'field';
   /** The rhythm lock being played. */
@@ -736,11 +738,20 @@ export class FieldScene extends Phaser.Scene {
     this.mode = 'showcase';
     this.dialogue.conceal(true);
     this.hint.hide();
-    this.showcase.open(showcaseView(this.logic.state.flags, item), itemArtKey(item.art ?? item.id, item.kind));
+    this.showcase.open(showcaseView(this.logic.state.flags, item, RPG), itemArtKey(item.art ?? item.id, item.kind));
+    this.showcaseItem = id;
     this.rt.input.clearPresses();
   }
 
   private closeShowcase(): void {
+    // "Wear it now?" answered yes: onto the member the card named (engine/showcase.ts wearOffer).
+    const item = this.showcaseItem ? RPG.items[this.showcaseItem] : undefined;
+    if (this.showcase.wear && item) {
+      const member = wearOffer(this.logic.state.flags, RPG, item);
+      if (member && equip(this.logic.state.flags, RPG, member, item.id) === 'ok') this.toast.show(`${member.name} wears the ${item.name}.`);
+    }
+    this.showcase.wear = false;
+    this.showcaseItem = null;
     this.showcase.close();
     this.dialogue.conceal(false);
     this.mode = this.showcaseReturn;

@@ -235,6 +235,11 @@ export const LEGEND: Readonly<Record<string, Cell>> = {
   ղ: { ground: 'seat_wall', deco: 'seat_gate', solid: true },
   // The city's own walls (not a building: no grey door is added to them).
   ճ: { ground: 'seat_wall', solid: true },
+  // The Concourse's landmarks (the Nov 1 playtest's 18: a huge plain floor): plane trees in stone planters, benches,
+  // flower beds.
+  ջ: { ground: 'seat_stone', deco: 'tree', solid: true },
+  ռ: { ground: 'seat_stone', deco: 'bench', solid: true },
+  ս: { ground: 'flowers', solid: false },
   // Ordvik and the Winter Plateau (Chapter 6, Oct 22).
   ა: { ground: 'steppe_grass', solid: false },
   ბ: { ground: 'steppe_road', solid: false },

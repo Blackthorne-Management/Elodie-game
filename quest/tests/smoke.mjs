@@ -870,7 +870,9 @@ async function handleShowcase(page, seen, shots) {
       await page.keyboard.down('Shift');
     }
   }
-  await page.keyboard.press('KeyZ'); // finishes the rise (or closes it, if it had finished)
+  // A reward card that offers "Wear it now?" closes with X (keep it in the bag), as the simulator's party has it.
+  if (v.tier === 'reward' && v.wearer) check(true, `the ${v.name} card offers it to ${v.wearer}`);
+  await page.keyboard.press(v.tier === 'reward' ? 'KeyX' : 'KeyZ'); // finishes the rise (or closes it, if it had finished)
   await frames(page);
   if ((await snap(page)).mode === 'showcase') {
     const at = await page.evaluate(() => window.__quest.gameToScreen(160, 90));
