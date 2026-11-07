@@ -3,7 +3,7 @@
 
 import { afterEach, describe, expect, it } from 'vitest';
 import { InputManager, type Button, type InputSource } from '../src/input/actions.ts';
-import { BUTTON_NAMES, actWord, buttonName, continueHint, currentDevice, echoHint, fillButtons, setDevice, type Device } from '../src/input/buttonNames.ts';
+import { BUTTON_NAMES, actWord, buttonName, continueHint, currentDevice, echoHint, fillButtons, onDeviceChange, setDevice, type Device } from '../src/input/buttonNames.ts';
 import { KEYMAP } from '../src/input/keyboard.ts';
 
 afterEach(() => setDevice('keyboard'));
@@ -68,5 +68,33 @@ describe('button names per device', () => {
     input.update();
     expect(currentDevice()).toBe('keyboard');
     expect(fillButtons('{B}')).toBe('X');
+  });
+});
+
+describe('a switch of device reaches what is on the screen (review Nov 7, finding 12)', () => {
+  it('tells each listener once per change, never for the same device, and stops when asked', () => {
+    const heard: Device[] = [];
+    setDevice('touch');
+    const off = onDeviceChange((d) => heard.push(d));
+    setDevice('touch');
+    setDevice('keyboard');
+    setDevice('keyboard');
+    setDevice('gamepad');
+    off();
+    setDevice('touch');
+    expect(heard).toEqual(['keyboard', 'gamepad']);
+  });
+
+  it('a card opened on touch reads the keyboard once a key is pressed', () => {
+    setDevice('touch');
+    let line = fillButtons('({Continue})');
+    const off = onDeviceChange(() => (line = fillButtons('({Continue})')));
+    expect(line).toBe('(Tap to continue)');
+    const keys: Button[] = [];
+    const input = new InputManager([{ device: 'keyboard', isHeld: () => false, drainPresses: () => keys.splice(0) }]);
+    keys.push('right');
+    input.update();
+    expect(line).toBe('(Enter to continue)');
+    off();
   });
 });

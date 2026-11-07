@@ -6,7 +6,7 @@
 // through CSS variables, the canvas is centred in #game, and the rest is letterbox. It is redone on
 // every resize, rotation, visual viewport change and full-screen change.
 
-import { MAP_BAR_PX, MAX_ZOOM, MIN_INTEGER_ZOOM, TOUCH_SIDE_MIN_PX, TOUCH_STACK_PX, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
+import { MAP_BAR_PX, MAX_ZOOM, MIN_INTEGER_ZOOM, TOUCH_SIDE_MIN_PX, TOUCH_STACK_PX, TOUCH_STACK_TOP_PX, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { screenLayout, type ScreenRect } from '../engine/scaling.ts';
 
 export interface Viewport {
@@ -37,6 +37,7 @@ export function fitToScreen(setZoom: (zoom: number) => void, touch = false): () 
     const { rect, mode } = screenLayout(vp.width, vp.height, VIEW_WIDTH, VIEW_HEIGHT, MAX_ZOOM, MIN_INTEGER_ZOOM, touch, {
       sideMin: TOUCH_SIDE_MIN_PX,
       stack: TOUCH_STACK_PX,
+      stackTop: TOUCH_STACK_TOP_PX,
       mapBar: MAP_BAR_PX,
     });
     const key = `${vp.left},${vp.top},${vp.width},${vp.height}`;

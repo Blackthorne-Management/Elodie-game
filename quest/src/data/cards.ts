@@ -10,6 +10,12 @@ const ALMONER: readonly { if: Condition; text: string }[] = [
   { if: { flag: 'choice.hushed_broken' }, text: 'The Almoner lives in Kingsmere. The city knows her face.' },
 ];
 
+/**
+ * The Accord's Stability under each ending's title (review Nov 7: the score was only a Journal note; Claude's call, Nov 7:
+ * on the card, where the player is when it is decided). Filled from the save (data/content.ts formatText).
+ */
+const STABILITY_LINE = { if: { flag: 'stability.score' }, text: 'The Accord\'s Stability: {stability.score} of 100' } as const;
+
 /** Each token house's fate on the Just Throne: its chair sat, or bare. */
 const FATES: Readonly<Record<string, string>> = {
   al_doria: 'Al-Doria\'s guild is paid, and says so in writing.',
@@ -132,6 +138,7 @@ export const CARDS: readonly CardDef[] = [
   {
     id: 'end_just',
     when: 'end.just',
+    subtitle: STABILITY_LINE,
     title: 'The Just Throne',
     lines: [
       'The Council of Eight sits. She speaks for it while it lets her.',
@@ -155,6 +162,7 @@ export const CARDS: readonly CardDef[] = [
   {
     id: 'end_hollow',
     when: 'end.hollow',
+    subtitle: STABILITY_LINE,
     title: 'The Hollow Throne',
     lines: ['Gianna sits the Throne. The houses watch it, and wait.', 'Xaraguá\'s petition is heard. Its harbor is not yet returned.', 'The Lord Regent went home to Kingsmere. Nobody renewed him.'],
     more: [
@@ -175,6 +183,7 @@ export const CARDS: readonly CardDef[] = [
   {
     id: 'end_iron',
     when: 'end.iron',
+    subtitle: STABILITY_LINE,
     title: 'The Iron Throne',
     lines: [
       'Order is kept, by force.',

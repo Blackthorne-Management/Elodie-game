@@ -16,6 +16,7 @@ import { COMPANIES } from '../data/war.ts';
 import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, VICTORY_MUSIC } from '../audio.config.ts';
 import Phaser from 'phaser';
+import { padOverPicture } from '../input/touch.ts';
 import {
   ANISSA_GLOW,
   BATTLE_ART,
@@ -1426,6 +1427,13 @@ export class BattleScene extends Phaser.Scene {
     });
   }
 
+  /** How far the touch D-pad reaches over the strip's left end (game pixels, at most 24; 0 without one). */
+  private padInset(stripY: number): number {
+    const pad = padOverPicture(this.game.canvas, VIEW_WIDTH, VIEW_HEIGHT);
+    if (!pad || pad.right <= 2 || pad.bottom <= stripY || pad.top >= VIEW_HEIGHT || pad.left >= VIEW_WIDTH / 2) return 0;
+    return Math.min(24, Math.ceil(pad.right - 2));
+  }
+
   /** The top bar, the message band, names and bars, Anissa's Spark, the strip and the menu. */
   private redraw(): void {
     this.ui.removeAll(true);
@@ -1535,26 +1543,34 @@ export class BattleScene extends Phaser.Scene {
     const shown = b.fighters;
     const n = shown.length;
     const rowH = Math.min(14, Math.floor((VIEW_HEIGHT - Y - 4) / Math.max(1, n)));
+    // Clear of the touch D-pad where it reaches over the strip (review Nov 7, finding 5: it covered the names): the rows
+    // start after it, and the two bars give up the room (up to 24 px), so the numbers and tags keep their places.
+    const k = this.padInset(Y);
+    const hpW = 30 - Math.min(k, 12);
+    const spW = 20 - Math.max(0, Math.min(k - 12, 12));
+    const hpX = 61 + k;
+    const spLabelX = hpX + hpW + 22;
+    const spX = spLabelX + 9;
     shown.forEach((p, i) => {
       const y = Y + 3 + i * rowH;
       // The acting fighter's row is lit and framed in gold, like the light at their feet.
       const on = this.actingKey() === p.key;
       const aimed = this.menu === 'target' && this.aimed().includes(p);
-      if (on || aimed) g.fillStyle(on ? 0x2e2638 : 0x3a3020, 1).fillRect(2, y - 1, 174, rowH);
-      if (on) g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(2.5, y - 0.5, 173, rowH - 1);
-      text(6, y, `${on ? '>' : ' '}${p.name}`, on ? UI.accentText : p.down ? UI.dimText : UI.text);
+      if (on || aimed) g.fillStyle(on ? 0x2e2638 : 0x3a3020, 1).fillRect(2 + k, y - 1, 174 - k, rowH);
+      if (on) g.lineStyle(1, BATTLE_ART.cursor, 1).strokeRect(2.5 + k, y - 0.5, 173 - k, rowH - 1);
+      text(6 + k, y, `${on ? '>' : ' '}${p.name}`, on ? UI.accentText : p.down ? UI.dimText : UI.text);
       if (p.bound) {
-        text(54, y, 'BOUND', UI.accentText);
+        text(54 + k, y, 'BOUND', UI.accentText);
         return;
       }
       // Each bar is named (Nov 1 playtests: two unlabelled bars and numbers read as nothing).
       const low = p.hp / p.maxHp < 0.35;
-      text(52, y + 1, 'HP', UI.dimText, { fontSize: '6px' });
-      bar(61, y + 4, 30, p.hp, p.maxHp, low ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
-      text(94, y, `${p.hp}`, low ? '#e88a7a' : UI.text);
-      text(113, y + 1, 'SP', BATTLE_ART.spText, { fontSize: '6px' });
-      bar(122, y + 4, 20, p.sp, p.maxSp, BATTLE_ART.spBar);
-      text(145, y, `${p.sp}`, BATTLE_ART.spText);
+      text(52 + k, y + 1, 'HP', UI.dimText, { fontSize: '6px' });
+      bar(hpX, y + 4, hpW, p.hp, p.maxHp, low ? BATTLE_ART.hpLow : BATTLE_ART.hpBar);
+      text(hpX + hpW + 3, y, `${p.hp}`, low ? '#e88a7a' : UI.text);
+      text(spLabelX, y + 1, 'SP', BATTLE_ART.spText, { fontSize: '6px' });
+      bar(spX, y + 4, spW, p.sp, p.maxSp, BATTLE_ART.spBar);
+      text(spX + spW + 3, y, `${p.sp}`, BATTLE_ART.spText);
       tags(162, y + 1, p);
     });
 

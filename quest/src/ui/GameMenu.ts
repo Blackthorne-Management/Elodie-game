@@ -78,6 +78,8 @@ export interface MenuContext {
   mapId: string;
   era: Era;
   journal: () => PanelLine[];
+  /** The chapter the Journal is on ("Chapter 11: The War of the Harbor"), the main quest's name on the Quests page. */
+  chapterTitle?: () => string | undefined;
   system: () => MenuItem[];
   /** Every map (the city map is drawn from them), and a map's Tiled data (its tiles). */
   maps: Readonly<Record<string, GameMap>>;
@@ -103,6 +105,16 @@ function line(a: Pos, b: Pos): Pos[] {
   const out: Pos[] = [];
   for (let i = 0; i <= n; i++) out.push({ x: Math.round(a.x + ((b.x - a.x) * i) / n), y: Math.round(a.y + ((b.y - a.y) * i) / n) });
   return out;
+}
+
+/** Shorten a text to `width` game pixels, ending it with an ellipsis (it is measured, so any text size fits). */
+export function ellipsize(t: Phaser.GameObjects.Text, width: number): void {
+  if (t.width <= width) return;
+  let s = t.text;
+  while (s.length > 1 && t.width > width) {
+    s = s.slice(0, -1).trimEnd();
+    t.setText(`${s}…`);
+  }
 }
 
 const DEPTH = 6000;
@@ -518,18 +530,29 @@ export class GameMenu {
    * A list with a cursor (scrolled so the cursor shows); records the labels for the snapshot. Rows are
    * tappable: `onTap` (default: the main list's select-then-act); arrows scroll a list too long to show.
    */
-  private drawList(labels: string[], cursor: number, x: number, y: number, rows = ROWS, active = true, onTap?: (i: number) => MenuRequest[]): void {
+  private drawList(
+    labels: string[],
+    cursor: number,
+    x: number,
+    y: number,
+    rows = ROWS,
+    active = true,
+    onTap?: (i: number) => MenuRequest[],
+    fit?: { width: number; arrowX: number },
+  ): void {
     if (active) this.labels = labels;
     const first = Math.max(0, Math.min(cursor - rows + 1, labels.length - rows));
     const tap = onTap ?? ((i: number) => this.tapTop(i));
     labels.slice(first, first + rows).forEach((l, i) => {
       const on = first + i === cursor;
       const t = this.text(x, y + i * ROW_H, `${on && active ? '>' : ' '} ${l}`, on && active ? UI.accentText : UI.text);
+      // A column beside another (the Quests page): a label too wide for it ends in an ellipsis instead of running on.
+      if (fit) ellipsize(t, fit.width);
       this.hit(x - 2, y + i * ROW_H - 1, Math.max(60, Math.ceil(t.width) + 6), ROW_H, () => tap(first + i));
     });
     if (labels.length === 0) this.text(x, y, '  (nothing)', UI.dimText);
     if (labels.length > rows && active) {
-      const ax = x + Math.max(...labels.map((l) => l.length)) * charPx() + 14;
+      const ax = fit?.arrowX ?? x + Math.max(...labels.map((l) => l.length)) * charPx() + 14;
       this.text(ax, y, '▲', UI.accentText);
       this.text(ax, y + (rows - 1) * ROW_H, '▼', UI.accentText);
       this.hit(ax - 4, y - 2, 16, 16, () => this.move(-1));
@@ -1077,19 +1100,24 @@ export class GameMenu {
   }
 
   private drawQuests(): void {
+    const ctx = this.ctx!;
     const entries = this.questEntries();
-    const flags = this.ctx!.flags;
+    const flags = ctx.flags;
+    // The main quest by the chapter the Journal is on (review Nov 7, finding 4: it said "Chapter 1" in every chapter).
     const labels = entries.map((e) =>
-      e.kind === 'main' ? 'Main: Chapter 1' : e.kind === 'mystery' ? `??? ${questPlace(e.q, flags)}` : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : sideQuestStatus(flags, e.q) === 'closed' ? '[-] ' : ''}${e.q.title}`,
+      e.kind === 'main' ? (ctx.chapterTitle?.() ?? 'Main quest') : e.kind === 'mystery' ? `??? ${questPlace(e.q, flags)}` : `${sideQuestStatus(flags, e.q) === 'done' ? '[x] ' : sideQuestStatus(flags, e.q) === 'closed' ? '[-] ' : ''}${e.q.title}`,
     );
-    this.drawList(labels, this.cursor, 6, TOP + 2, ROWS, this.stage === 'top');
+    // Two columns that never meet (review Nov 7, finding 3: with phone-sized text the long titles ran under the journal):
+    // the list ends before a narrow margin, where its scroll arrows sit, and the entry is read on the right. Both
+    // columns stop a row above the page's foot, which holds the hint.
+    const X = 112;
+    const fit = Math.floor((VIEW_HEIGHT - ROW_H - (TOP + 2)) / ROW_H);
+    this.drawList(labels, this.cursor, 6, TOP + 2, fit, this.stage === 'top', undefined, { width: X - 6 - 13, arrowX: X - 11 });
     if (entries.length === 1) this.text(6, TOP + 2 + 2 * ROW_H, '  No side quests yet.', UI.dimText);
     const e = entries[this.cursor] ?? entries[0]!;
-    const lines = this.questLines(e).filter((l) => !l.text.startsWith('(B to close)'));
+    const lines = this.questLines(e);
     this.journalLines = lines.map((l) => l.text);
-    const X = 112;
     const rows = this.wrap(lines, Math.floor((VIEW_WIDTH - X - 6) / charPx()));
-    const fit = ROWS + 1;
     this.scroll = Math.min(this.scroll, Math.max(0, rows.length - fit));
     rows.slice(this.scroll, this.scroll + fit).forEach((r, i) => this.text(X, TOP + 2 + i * ROW_H, r.text, r.color ?? UI.text));
     // Tap the entry to read it; while reading, tap its top or bottom half to scroll.
@@ -1102,7 +1130,8 @@ export class GameMenu {
       if (this.stage !== 'read') this.stage = 'read';
       else this.move(3);
     });
-    const hint = this.stage === 'read' ? 'Up/Down or tap: scroll' : '{Act}: read';
+    const more = rows.length > this.scroll + fit;
+    const hint = this.stage === 'read' ? `Up/Down or tap: scroll${more ? '  (more below)' : ''}` : `{Act}: read${more ? '  (more to read)' : ''}`;
     this.text(6, VIEW_HEIGHT - 12, hint, UI.dimText);
   }
 

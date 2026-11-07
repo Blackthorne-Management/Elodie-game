@@ -40,6 +40,11 @@ export interface CardDef {
    * the realm on this save; each house's fate by what became of it).
    */
   more?: readonly { if: Condition; text: string }[];
+  /**
+   * One line under the title while its condition holds, filled from the save (Content.formatText): the endings show the
+   * Accord's Stability there (review Nov 7: it was only a Journal note nobody saw arrive).
+   */
+  subtitle?: { if: Condition; text: string };
   /** The game's last card: closing it opens the end credits, then the title (Chapter 12; engine/game.ts closeCard). */
   credits?: boolean;
 }
@@ -47,6 +52,11 @@ export interface CardDef {
 /** A card's lines as this save shows them (its own, then each `more` line whose condition holds). */
 export function cardLines(card: CardDef, flags: FlagReader): string[] {
   return [...card.lines, ...(card.more ?? []).filter((m) => evaluate(m.if, flags)).map((m) => m.text)];
+}
+
+/** The line under a card's title on this save, or null (unfilled: the caller fills its names). */
+export function cardSubtitle(card: CardDef, flags: FlagReader): string | null {
+  return card.subtitle && evaluate(card.subtitle.if, flags) ? card.subtitle.text : null;
 }
 
 /** Short system messages (toasts). */

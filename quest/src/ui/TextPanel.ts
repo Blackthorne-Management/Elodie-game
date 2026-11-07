@@ -5,7 +5,7 @@ import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { fillButtons } from '../input/buttonNames.ts';
-import { textStyle } from './text.ts';
+import { liveButtons, textStyle } from './text.ts';
 
 export interface PanelLine {
   text: string;
@@ -25,7 +25,6 @@ export class TextPanel {
   private readonly bg: Phaser.GameObjects.Graphics;
   private readonly body: Phaser.GameObjects.Container;
   private texts: Phaser.GameObjects.Text[] = [];
-  private lines: PanelLine[] = [];
   private scroll = 0;
   private contentHeight = 0;
 
@@ -43,23 +42,28 @@ export class TextPanel {
   open(given: PanelLine[], style: { fill: number; alpha: number; border: boolean; top?: number }): void {
     // Button names ("{A} to continue") as the player's device names them (input/buttonNames.ts).
     const lines = given.map((l) => ({ ...l, text: fillButtons(l.text) }));
-    this.lines = lines;
     this.scroll = 0;
     for (const t of this.texts) t.destroy();
     this.bg.clear().fillStyle(style.fill, style.alpha).fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
     if (style.border) this.bg.lineStyle(1, UI.boxBorder, 1).strokeRect(2.5, 2.5, VIEW_WIDTH - 5, VIEW_HEIGHT - 5);
     let y = style.top ?? PAD;
-    this.texts = lines.map((l) => {
+    this.texts = lines.map((l, i) => {
       y += l.gap ?? 0;
       const t = this.scene.add
         .text(l.center ? VIEW_WIDTH / 2 : PAD, y, l.text, textStyle(l.color ?? UI.text, { align: l.center ? 'center' : 'left' }))
         .setOrigin(l.center ? 0.5 : 0, 0)
         .setWordWrapWidth(VIEW_WIDTH - PAD * 2, true);
+      // A line naming buttons ("({Continue})") follows the device the player switches to while the panel is up.
+      liveButtons(t, given[i]!.text);
       y += Math.ceil(t.height) + 2;
       return t;
     });
     this.contentHeight = y;
     this.body.removeAll(false).add(this.texts).setY(0);
+    // A card set low (`top`) whose lines run past the bottom rises as far as it needs, up to the top margin, so its last
+    // line (the continue line) stays on the screen (the endings, with the Stability line under the title; Nov 7).
+    const over = this.contentHeight - (VIEW_HEIGHT - PAD);
+    if (style.top !== undefined && over > 0) this.scrollBy(Math.min(over, style.top - PAD));
     this.root.setVisible(true);
   }
 
@@ -74,6 +78,7 @@ export class TextPanel {
   }
 
   snapshot(): string[] | null {
-    return this.root.visible ? this.lines.map((l) => l.text) : null;
+    // As shown now (button names follow a device switch).
+    return this.root.visible ? this.texts.map((t) => t.text) : null;
   }
 }

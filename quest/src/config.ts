@@ -141,6 +141,12 @@ export const TOUCH_BUTTON_STACK_PX = 72;
  */
 export const TOUCH_SIDE_MIN_PX = 90;
 export const TOUCH_STACK_PX = 196;
+/**
+ * Held upright the picture comes first (review Nov 7, finding 6: it was a strip in the middle under a minimap larger than
+ * the game): at the top under this strip (the full-screen button), full width, with the small minimap, Ask, Echo and
+ * Menu just under it and the D-pad and A/B at the bottom (style.css, body[data-layout=stack]).
+ */
+export const TOUCH_STACK_TOP_PX = 60;
 export const MAP_BAR_PX = 140;
 
 /** Save storage. Bump SAVE_VERSION when the save shape changes. */

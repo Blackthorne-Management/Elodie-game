@@ -9,8 +9,7 @@ import { SHOWCASE, UI, textureKeyForItem } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import type { ShowcaseView } from '../engine/showcase.ts';
 import type { InputManager } from '../input/actions.ts';
-import { continueHint, fillButtons } from '../input/buttonNames.ts';
-import { textStyle } from './text.ts';
+import { liveButtons, textStyle } from './text.ts';
 
 const DEPTH = 6600;
 const CX = VIEW_WIDTH / 2;
@@ -179,7 +178,7 @@ export class ItemShowcase {
       const t = this.text(14, y, `${a.name}: ${a.text}`, a.known ? UI.text : UI.dimText, VIEW_WIDTH - 28, 'left');
       y += t.height + 2;
     }
-    this.text(VIEW_WIDTH - 6, VIEW_HEIGHT - 11, `(${continueHint()})`, UI.dimText, 120, 'left').setOrigin(1, 0);
+    liveButtons(this.text(VIEW_WIDTH - 6, VIEW_HEIGHT - 11, '', UI.dimText, 120, 'left'), '({Continue})').setOrigin(1, 0);
     const words = [...this.texts];
     for (const w of words) (w as Phaser.GameObjects.Text).setAlpha(0);
 
@@ -231,10 +230,10 @@ export class ItemShowcase {
     // When someone could wear it at once (an empty slot), the card offers it (Claude's call, Nov 4).
     if (view.wearer) {
       y += this.text(TX, y, `Wear it now? ${view.wearer.name}'s ${view.slot} slot is empty.`, UI.accentText, W - 50, 'left').height + 3;
-      y += this.text(CX, y + 2, fillButtons(`({A}: wear it, {B}: keep it in the bag)`), UI.dimText).height + 8;
+      y += liveButtons(this.text(CX, y + 2, '', UI.dimText), '({A}: wear it, {B}: keep it in the bag)').height + 8;
     } else {
-      if (view.slot) y += this.text(TX, y, fillButtons(`To wear it: press {Menu}, choose Equip, then the ${view.slot} slot.`), UI.accentText, W - 50, 'left').height + 3;
-      y += this.text(CX, y + 2, `(${continueHint()})`, UI.dimText).height + 8;
+      if (view.slot) y += liveButtons(this.text(TX, y, '', UI.accentText, W - 50, 'left'), `To wear it: press {Menu}, choose Equip, then the ${view.slot} slot.`).height + 3;
+      y += liveButtons(this.text(CX, y + 2, '', UI.dimText), '({Continue})').height + 8;
     }
     box.fillStyle(UI.boxFill, 1).fillRect(X, Y, W, y - Y);
     box.lineStyle(1, UI.boxBorder, 1).strokeRect(X + 0.5, Y + 0.5, W - 1, y - Y - 1);

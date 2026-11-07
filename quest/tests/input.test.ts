@@ -275,6 +275,21 @@ describe('screen layout: where the controls and the minimap go', () => {
     expect(l.rect.top).toBeGreaterThanOrEqual(176);
   });
 
+  it('upright with a top strip, the picture comes first: at the top, full width, the room for the controls below it (review Nov 7, finding 6)', () => {
+    const l = screenLayout(390, 844, 320, 180, 8, 2, true, { ...bars, stackTop: 60 });
+    expect(l.mode).toBe('stack');
+    expect(l.rect.top).toBe(60);
+    expect(l.rect.width).toBeGreaterThanOrEqual(389);
+    expect(l.rect.left).toBe(0);
+    expect(844 - l.rect.top - l.rect.height).toBeGreaterThanOrEqual(2 * bars.stack);
+    // A short phone still leaves the bottom for the D-pad and A/B.
+    const se = screenLayout(375, 667, 320, 180, 8, 2, true, { ...bars, stackTop: 60 });
+    expect(se.rect.top).toBe(60);
+    expect(se.rect.width).toBeLessThanOrEqual(375);
+    // A tablet held upright gets a whole-number zoom.
+    expect(screenLayout(768, 1024, 320, 180, 8, 2, true, { ...bars, stackTop: 60 }).rect.zoom).toBe(2);
+  });
+
   it('without touch the picture keeps its full size; the minimap uses a wide enough side bar', () => {
     expect(screenLayout(1920, 1080, 320, 180, 8, 2, false, bars).mode).toBe('overlay');
     const ultrawide = screenLayout(2560, 1080, 320, 180, 8, 2, false, bars);
