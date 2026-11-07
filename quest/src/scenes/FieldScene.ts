@@ -32,7 +32,7 @@ import {
 import { CHARACTER_HEIGHT, SAVE_STORAGE_KEY, TEXT_SPEED_ORDER, TILE_SIZE, VIEW_HEIGHT, VIEW_WIDTH, WALK_CYCLE_PX, WALKING_COMPANIONS, PARTY_SETTLE_MS } from '../config.ts';
 import { CREDITS, CREDITS_INTRO } from '../data/credits.ts';
 import { CHAPTERS, JOURNAL_NOTES } from '../data/quests.ts';
-import { cardLines } from '../engine/content.ts';
+import { cardLines, cardSubtitle } from '../engine/content.ts';
 import { evaluate } from '../engine/conditions.ts';
 import type { Effect, GameLogic, Target } from '../engine/game.ts';
 import { DIRS, DIRS8, type Dir8, type Era, type Pos } from '../engine/types.ts';
@@ -337,7 +337,18 @@ export class FieldScene extends Phaser.Scene {
   private toast!: Toast;
   private hint!: HintBubble;
   private panel!: TextPanel;
-  private mode: UiMode = 'field';
+  private uiMode: UiMode = 'field';
+  /**
+   * What the field is doing. The page's touch controls read it (<body data-play>, style.css): in a fight Ask, Echo and
+   * Menu do nothing and are hidden, and in a conversation Echo and Ask are (review Nov 7, finding 5).
+   */
+  private get mode(): UiMode {
+    return this.uiMode;
+  }
+  private set mode(next: UiMode) {
+    this.uiMode = next;
+    if (typeof document !== 'undefined') document.body.dataset.play = next;
+  }
   /** Gianna's smooth motion between tiles (engine/motion.ts). */
   private mover = new Mover();
   /** A direction tapped just before a step ended, taken as the next step. */
@@ -2508,9 +2519,13 @@ export class FieldScene extends Phaser.Scene {
     this.dialogue.hide();
     this.hint.hide();
     this.mode = 'card';
+    const flags = this.logic.state.flags;
+    const sub = cardSubtitle(card, flags);
+    const format = this.logic.content.formatText;
     const lines: PanelLine[] = [
       { text: card.title, color: UI.cardTitle, center: true },
-      ...cardLines(card, this.logic.state.flags).map((t, i) => ({ text: t, center: true, gap: i === 0 ? 10 : 2 })),
+      ...(sub ? [{ text: format ? format(sub, flags) : sub, color: UI.accentText, center: true, gap: 2 }] : []),
+      ...cardLines(card, flags).map((t, i) => ({ text: t, center: true, gap: i === 0 ? 10 : 2 })),
       { text: '({Continue})', color: UI.dimText, center: true, gap: 16 },
     ];
     const art = CARD_ART[card.id];
@@ -3170,6 +3185,7 @@ export class FieldScene extends Phaser.Scene {
       mapId: this.map.id,
       era: this.logic.era,
       journal: () => this.journalLines(),
+      chapterTitle: () => questForJournal(CHAPTERS, this.map.id, this.logic.state.flags)?.title,
       system: () => this.menuItems(),
       maps: this.logic.maps,
       rawMap: (id) => (this.cache.tilemap.get(tilemapKey(id)) as { data?: TiledMap } | undefined)?.data,

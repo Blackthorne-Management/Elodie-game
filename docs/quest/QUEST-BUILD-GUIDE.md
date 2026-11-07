@@ -825,6 +825,40 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   ship; the shores have houses, trees, surf and the pier's posts; sea routes keep off the map's border.
 - **Spelling:** "harbor" everywhere the player reads (the game's spelling 771 to 57); ids such as `harbour_master`
   stay. "The ferry coach bumps against the pier" is now "The ship's boat bumps against the pier".
+- **The Quests page's two columns (Claude's call, Nov 7; the Nov 7 review's 3 and 4):** the list stops before a narrow
+  margin and a title too long for it is measured and ends in an ellipsis (the whole title is on the right when it is
+  chosen); the list's scroll arrows sit in that margin, never on the "JOURNAL" heading; both columns stop a row above
+  the page's foot, where the hint says "(more to read)" when the entry runs on. The main quest is listed by the chapter
+  the Journal is on ("Chapter 11: The War of the Harbor"), with no "Main:" before it, so the chapter's name shows on a
+  phone's narrow column.
+- **Touch buttons that do nothing are hidden (Claude's call, Nov 7; the review's 5):** in a fight Ask, Echo and Menu; in
+  a conversation and on a card Echo and Ask (the field's mode is on `<body data-play>`). In a fight the party's rows
+  start after the D-pad where it reaches over the strip on a sideways phone (up to 24 game px, measured from the page);
+  the HP and SP bars give up the room, so the numbers and status tags stay where they were. B stays (it moves a
+  conversation on, as A does). Every button keeps its size (44 px and up).
+- **Upright phones (Claude's call, Nov 7; the review's 6):** the picture comes first, at the top under the full-screen
+  button's strip (`TOUCH_STACK_TOP_PX`), full width: at 390 px wide that is the largest it can be (1.22x), since the
+  picture's width is what limits it. Under it the "turn sideways" line, the minimap at about a quarter of its old size
+  on the left with its place name, Ask, Echo and Menu in a column on the right; the D-pad and A/B centred in what is
+  left at the bottom. The words cannot grow beyond 1.22x without a different picture size, so the rotate card keeps
+  its recommendation to turn the phone sideways, and its "Keep playing upright" stays as it was.
+- **Prompts follow a device switch (Claude's call, Nov 7; the review's 12):** `setDevice` tells listeners when the
+  device changes (`onDeviceChange`); any text set once with button names in it (`ui/text.ts` liveButtons: the cards and
+  the Journal's panel, the reward card, the item showcase, Anissa's hint) rewrites itself. Screens drawn every frame
+  (the menu, the battle, the shop) already did.
+- **The Accord's Stability on the ending card (Claude's call, Nov 7; the review's readouts):** one gold line under the
+  ending's title, "The Accord's Stability: 93 of 100" (`CardDef.subtitle`, filled from the save as the Journal's note
+  is). The Journal note stays. A card set low whose lines run past the bottom now rises to keep its continue line on the
+  screen.
+- **Settling against a wall (Claude's call, Nov 7; the review's 10):** when nothing beside or behind Gianna is open
+  where someone could stand without being in her column (her back to a wall, or the map's edge), the diagonals in front
+  of her cost no more than a tile beside her would; only the tile she would step onto stays in her way. On open ground
+  nothing changes. At the Concourse marker the party now stands on her two front diagonals and one below her, not two
+  rows above and below (`tests/partyPlacement.test.ts`).
+- **Voyage boats reach the hull (Nov 7; the review's 13):** the boat stops beside the ship's first visible column, not
+  its picture's empty margin (the lantern trader's picture is wide, so off Kirinoura the boat stopped in open water and
+  faded there). The Kingsmere voyages carry the four who walk the map (checked at `chapter8-end`, `chapter9-end` and
+  `aldermoor-dawn`: the companion, Gianna, Anissa in her glow, Azzy).
 
 ---
 

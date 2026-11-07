@@ -5,6 +5,9 @@
 
 import { describe, expect, it } from 'vitest';
 import { STABILITY } from '../src/config.ts';
+import { CARDS } from '../src/data/cards.ts';
+import { CONTENT } from '../src/data/content.ts';
+import { cardSubtitle } from '../src/engine/content.ts';
 import { STABILITY_HOUSES } from '../src/data/claim.ts';
 import { FlagStore, type FlagSnapshot } from '../src/engine/flags.ts';
 import { costliest, ending, stability, stabilityFlagsWritten, stabilityParts, stabilityTick } from '../src/engine/stability.ts';
@@ -120,5 +123,18 @@ describe('the verdict writes the score and the ending once (engine/stability.ts 
     const f = at({ 'hearing.pardon': true, concord: 75 });
     stabilityTick(f, H);
     expect(f.isSet('ending.hollow') && f.isSet('ending.cost.none')).toBe(true);
+  });
+});
+
+describe('the Stability is shown on the ending card (review Nov 7: it was only a Journal note)', () => {
+  it('each ending card carries the score under its title once it is counted, filled from the save', () => {
+    for (const id of ['end_just', 'end_hollow', 'end_iron']) {
+      const card = CARDS.find((c) => c.id === id)!;
+      const flags = new FlagStore();
+      expect(cardSubtitle(card, flags), id).toBeNull();
+      flags.set('stability.score', 93);
+      const line = cardSubtitle(card, flags)!;
+      expect(CONTENT.formatText!(line, flags)).toBe("The Accord's Stability: 93 of 100");
+    }
   });
 });

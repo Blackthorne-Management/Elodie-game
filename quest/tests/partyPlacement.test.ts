@@ -87,6 +87,60 @@ describe('the party settles beside Gianna when it stops', () => {
   });
 });
 
+describe('against a wall the party gathers in front of her, not in a queue (review Nov 7, finding 10)', () => {
+  /** How many of the spots are in Gianna's own column (above or below her: a queue when she faces left or right). */
+  const inColumn = (player: Pos, spots: readonly Pos[]) => spots.filter((s) => s.x === player.x).length;
+
+  it('her back to a wall, facing away from it: both diagonals in front of her are taken, at most one stands in her column', () => {
+    // A wall down column 11; Gianna at 10,10 faces left, away from it.
+    const open = field(20, 20, (p) => p.x >= 11);
+    const player = { x: 10, y: 10 };
+    const spots = settleSpots({ player, facing: 'left', followers: [{ x: 10, y: 11 }, { x: 10, y: 12 }, { x: 10, y: 13 }], open, width: 20, height: 20 });
+    for (const y of [9, 11]) expect(spots.some((s) => s.x === 9 && s.y === y), `9,${y}`).toBe(true);
+    expect(inColumn(player, spots)).toBeLessThanOrEqual(1);
+    for (const s of spots) expect(open(s)).toBe(true);
+    expectAllSeen(player, spots);
+  });
+
+  it('at the map edge, facing into the map: the same', () => {
+    const player = { x: 1, y: 10 };
+    const spots = settleSpots({ player, facing: 'right', followers: [{ x: 1, y: 11 }, { x: 1, y: 12 }, { x: 1, y: 13 }], open: field(20, 20), width: 20, height: 20 });
+    for (const y of [9, 11]) expect(spots.some((s) => s.x === 2 && s.y === y), `2,${y}`).toBe(true);
+    expect(inColumn(player, spots)).toBeLessThanOrEqual(1);
+    for (const s of spots) expect(s.x).toBeGreaterThan(0);
+    expectAllSeen(player, spots);
+  });
+
+  it('never on the tile she would step onto, and on open ground nothing changes: beside or behind her first', () => {
+    const player = { x: 1, y: 10 };
+    const spots = settleSpots({ player, facing: 'right', followers: [{ x: 1, y: 11 }, { x: 1, y: 12 }, { x: 1, y: 13 }], open: field(20, 20), width: 20, height: 20 });
+    expect(spots.some((s) => s.x === 2 && s.y === 10)).toBe(false);
+    for (const facing of ['left', 'right'] as Dir[]) {
+      const open = settleSpots({ player: { x: 10, y: 10 }, facing, followers: [{ x: 10, y: 11 }, { x: 10, y: 12 }], open: field(20, 20), width: 20, height: 20 });
+      const ahead = facing === 'left' ? -1 : 1;
+      for (const s of open) expect((s.x - 10) * ahead).toBeLessThanOrEqual(0);
+    }
+  });
+
+  it('the Concourse and the war village, where the review saw the queue: no more than one in her column, nobody hidden', () => {
+    const cases: { map: string; at: Pos; facing: Dir }[] = [
+      { map: 'seat-concourse', at: { x: 46, y: 16 }, facing: 'left' },
+      { map: 'xaragua-village', at: { x: 1, y: 15 }, facing: 'right' },
+    ];
+    for (const c of cases) {
+      const map = maps[c.map]!;
+      const flags = new FlagStore();
+      const doors = map.doors.flatMap((d) => d.tiles);
+      const open = (p: Pos) => isOpen(map, 'present', p, flags) && !doors.some((t) => t.x === p.x && t.y === p.y);
+      const followers = [1, 2, 3].map((k) => ({ x: c.at.x, y: c.at.y + k }));
+      const spots = settleSpots({ player: c.at, facing: c.facing, followers, open, width: map.width, height: map.height });
+      for (const s of spots) expect(open(s), `${c.map} ${JSON.stringify(s)}`).toBe(true);
+      expect(inColumn(c.at, spots), c.map).toBeLessThanOrEqual(1);
+      expectAllSeen(c.at, spots);
+    }
+  });
+});
+
 describe('a companion who speaks is on the map', () => {
   const party = { companions: WALKING_COMPANIONS, members: ['gianna', 'anissa', 'azzy', 'yari', 'samira', 'edmund'], onMap: new Set(['yari']) };
 

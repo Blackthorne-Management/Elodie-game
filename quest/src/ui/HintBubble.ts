@@ -3,8 +3,8 @@
 import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { HINT_SHOW_MS, VIEW_WIDTH } from '../config.ts';
-import { fillButtons } from '../input/buttonNames.ts';
-import { textStyle } from './text.ts';
+import { fillButtons, onDeviceChange } from '../input/buttonNames.ts';
+import { liveButtons, textStyle } from './text.ts';
 
 const W = VIEW_WIDTH - 8;
 
@@ -15,6 +15,7 @@ export class HintBubble {
   private readonly name: Phaser.GameObjects.Text;
   private readonly text: Phaser.GameObjects.Text;
   private timer: Phaser.Time.TimerEvent | null = null;
+  private off: (() => void) | null = null;
   lastHint = '';
 
   constructor(scene: Phaser.Scene) {
@@ -35,7 +36,9 @@ export class HintBubble {
     const hint = fillButtons(said);
     this.lastHint = hint;
     this.name.setText(speaker);
-    this.text.setText(hint);
+    this.off?.();
+    liveButtons(this.text, said);
+    this.off = onDeviceChange(() => (this.lastHint = fillButtons(said)));
     const h = Math.ceil(this.text.height) + 18;
     this.bg.clear();
     this.bg.fillStyle(UI.hintFill, UI.boxAlpha).fillRect(4, 3, W, h);

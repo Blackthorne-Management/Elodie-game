@@ -67,7 +67,8 @@ export interface ScreenLayout {
 /**
  * Fit the picture and decide where the controls and the minimap go. With touch, sideways screens keep
  * the largest picture and put the controls in the side bars when those are at least `sideMin` wide
- * (else on the picture's corners); upright screens reserve `stack` px top and bottom. Without touch the
+ * (else on the picture's corners); upright screens reserve `stack` px top and bottom (with `stackTop`, the picture sits
+ * at the top under that strip and the `2 * stack` px go below it). Without touch the
  * minimap uses a side bar when the natural one is at least `mapBar` wide.
  */
 export function screenLayout(
@@ -78,7 +79,7 @@ export function screenLayout(
   maxZoom: number,
   minInteger: number,
   touch: boolean,
-  bars: { sideMin: number; stack: number; mapBar: number },
+  bars: { sideMin: number; stack: number; mapBar: number; stackTop?: number },
 ): ScreenLayout {
   const natural = fitRect(viewportW, viewportH, gameW, gameH, maxZoom, minInteger);
   const centred = (r: ScreenRect): ScreenRect => ({
@@ -92,6 +93,12 @@ export function screenLayout(
     // to keep 150 px bars, though 2x fits). The translucent controls sit in the bars when they are at least
     // `sideMin` wide, overlapping the picture's edges a little; narrower, they go on the picture's corners.
     return { rect: natural, mode: natural.left >= bars.sideMin ? 'side' : 'overlay' };
+  }
+  // Upright with `stackTop` (review Nov 7, finding 6): the picture first, at the top under a strip of `stackTop` px (the
+  // full-screen button), as large as fits with `2 * stack` px left below it for the minimap and the controls.
+  if (bars.stackTop !== undefined) {
+    const r = fitRect(viewportW, Math.max(gameH, viewportH - 2 * bars.stack), gameW, gameH, maxZoom, minInteger);
+    return { rect: { ...r, left: Math.max(0, Math.floor((viewportW - r.width) / 2)), top: bars.stackTop }, mode: 'stack' };
   }
   if (natural.top >= bars.stack) return { rect: natural, mode: 'stack' };
   return { rect: centred(fitRect(viewportW, Math.max(gameH, viewportH - 2 * bars.stack), gameW, gameH, maxZoom, minInteger)), mode: 'stack' };

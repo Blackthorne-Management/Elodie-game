@@ -8,6 +8,7 @@ import type Phaser from 'phaser';
 import regularUrl from '@fontsource/atkinson-hyperlegible/files/atkinson-hyperlegible-latin-400-normal.woff2?url';
 import boldUrl from '@fontsource/atkinson-hyperlegible/files/atkinson-hyperlegible-latin-700-normal.woff2?url';
 import { TEXT_SIZES, UI } from '../assets.config.ts';
+import { fillButtons, onDeviceChange } from '../input/buttonNames.ts';
 
 export type TextSize = keyof typeof TEXT_SIZES;
 
@@ -92,4 +93,19 @@ export async function loadFonts(timeoutMs = 4000): Promise<void> {
     }),
   );
   await Promise.race([load, new Promise((r) => setTimeout(r, timeoutMs))]).catch(() => undefined);
+}
+
+/**
+ * Show `template` ("({Continue})", "{A}: wear it") in a text with the device's own button names, and keep them right
+ * while it is on the screen: a switch of device (a key pressed on a touch screen) rewrites it (review Nov 7, finding 12).
+ * Stops listening when the text is destroyed.
+ */
+export function liveButtons(t: Phaser.GameObjects.Text, template: string): Phaser.GameObjects.Text {
+  t.setText(fillButtons(template));
+  if (!/\{(A|B|Echo|Menu|Ask|Run|Move|Act|Continue)\}/.test(template)) return t;
+  const off = onDeviceChange(() => {
+    if (t.active) t.setText(fillButtons(template));
+  });
+  t.once('destroy', off);
+  return t;
 }

@@ -33,8 +33,22 @@ export function currentDevice(): Device {
   return current;
 }
 
+const listeners = new Set<(device: Device) => void>();
+
+/** The device used last; a change tells everyone listening (prompts already on the screen redraw their button names). */
 export function setDevice(device: Device): void {
+  if (device === current) return;
   current = device;
+  for (const fn of listeners) fn(device);
+}
+
+/**
+ * Hear when the player switches device (review Nov 7, finding 12: a card opened on touch still said "Tap to continue"
+ * after a key was pressed). Returns the way to stop listening.
+ */
+export function onDeviceChange(fn: (device: Device) => void): () => void {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
 }
 
 /** A button's name on a device ("Enter", "A", "Echo"). */

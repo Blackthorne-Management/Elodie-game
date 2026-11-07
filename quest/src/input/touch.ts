@@ -165,3 +165,19 @@ export class TouchSource implements InputSource {
     return out;
   }
 }
+
+/**
+ * Where the on-screen D-pad lies over the game picture, in the picture's own pixels (`viewW` x `viewH`), or null when no
+ * pad is on the screen. A screen can keep what must be read out from under it (the battle's party names; review Nov 7,
+ * finding 5).
+ */
+export function padOverPicture(canvas: HTMLCanvasElement, viewW: number, viewH: number): { left: number; top: number; right: number; bottom: number } | null {
+  const pad = document.querySelector('.touch-dpad');
+  if (!pad) return null;
+  const r = pad.getBoundingClientRect();
+  const c = canvas.getBoundingClientRect();
+  if (r.width === 0 || c.width === 0 || c.height === 0) return null;
+  const sx = viewW / c.width;
+  const sy = viewH / c.height;
+  return { left: (r.left - c.left) * sx, top: (r.top - c.top) * sy, right: (r.right - c.left) * sx, bottom: (r.bottom - c.top) * sy };
+}
