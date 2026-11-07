@@ -63,7 +63,7 @@ function nearby(from: Pos, open: (p: Pos) => boolean, reach: number): Map<string
 
 /**
  * Where each follower settles when the party stops: on open tiles Gianna can walk to in a few steps, beside her in her
- * row first, then diagonally behind her, then further out; never on her tile, never in a column with her or another
+ * row first, then diagonally behind her, then further out (against a wall, diagonally in front of her); never on her tile, never in a column with her or another
  * of the party (that hides one of them), not in front of her, not on the map's outer edge, on the screen, off the
  * map's people's columns where possible, and as near as can be to where each already stands (no shuffling).
  * With nowhere open at all, a follower stays where they are.
@@ -74,6 +74,18 @@ export function settleSpots(input: SettleInput): Pos[] {
   const ahead = VEC[facing];
   const tiles = [...nearby(player, input.passable ?? open, reach).values()].filter((t) => t.steps > 0 && open(t.at));
   const placed: Pos[] = [player, ...(input.placed ?? [])];
+  // Against a wall or the map's edge (review Nov 7, finding 10): when nothing beside or behind her is open where one could
+  // stand without hiding in her column, the party gathers on the diagonals in front of her instead of queueing two rows
+  // above and below. Only the tile she would step onto stays in her way.
+  const cornered = ![-1, 0, 1].some((f) =>
+    [-1, 0, 1].some((s) => {
+      if (f === 1) return false;
+      const at = { x: player.x + f * ahead.x + s * ahead.y, y: player.y + f * ahead.y + s * ahead.x };
+      if (at.x === player.x && at.y === player.y) return false;
+      return !hidesEachOther(player, at) && at.x > 0 && at.y > 0 && at.x < width - 1 && at.y < height - 1 && open(at);
+    }),
+  );
+  const halfFront = cornered ? 0 : 1.5;
   const out: Pos[] = [];
   for (const [i, now] of followers.entries()) {
     let best: { at: Pos; cost: number } | null = null;
@@ -86,7 +98,7 @@ export function settleSpots(input: SettleInput): Pos[] {
       const side = Math.abs(dx * ahead.y - dy * ahead.x);
       const far = Math.max(Math.abs(dx), Math.abs(dy));
       let cost = 2 * far + (t.steps - far);
-      if (forward > 0) cost += side === 0 ? 3 : 1.5; // in front of her: in her way, or half in it
+      if (forward > 0) cost += side === 0 ? 3 : halfFront; // in front of her: in her way, or half in it
       if (forward < 0) cost += 0.5; // a row back: beside her reads better
       if (side === 0 && ahead.y !== 0) cost += 2; // straight behind her in her column
       if (placed.some((p) => hidesEachOther(p, at))) cost += 50;

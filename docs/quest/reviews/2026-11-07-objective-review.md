@@ -79,11 +79,13 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   margin, not on the heading; stop the right column one row above the border. The Status tab's panel only touches the
   d-pad; the battle panel does not (`bat-flagship_hale-03-target-l.png`: the d-pad covers "Gianna" and the ">Yari"
   cursor), see finding 5.
+- Fixed (Nov 7): `GameMenu.drawQuests` keeps the list to its column: each title is measured and ends in an ellipsis at the column's width (the whole title is on the right when chosen), the scroll arrows sit in the margin between the columns, not on the heading, and both columns stop a row above the page's foot, where the hint adds "(more to read)" when the entry runs on. Checked at 844x390 (touch, Large text) and 1280x800 at `?at=war-song`.
 
 ### 4. "Main: Chapter 1" is the main quest's label in every chapter (all chapters; Medium)
 - **Where:** `src/ui/GameMenu.ts:1083`: `e.kind === 'main' ? 'Main: Chapter 1' : ...`. Seen at Chapter 11
   (`menu-quests-d.png`, top left: "> Main: Chapter 1" above "JOURNAL: Chapter 11: The War of the Harbor").
 - **Fix:** use the current chapter's number and title (the journal already has them).
+- Fixed (Nov 7): the main quest is listed by the chapter the Journal is on ("Chapter 11: The War of the Harbor", `MenuContext.chapterTitle`); the dead "(B to close)" filter is gone (finding 13).
 
 ### 5. Touch controls cover the battle panel and the dialogue box's corners (phones; Medium)
 - **Where:** 844x390 in every fight and every conversation. `bat-flagship_hale-03-target-l.png`,
@@ -95,6 +97,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
 - **Fix:** in battle, hide Ask, Echo and Menu (they do nothing there) and inset the party panel by the pad's width
   on the left (the panel's right half is empty on landscape); in conversations, drop the Echo and Ask buttons while
   the box is up. CLAUDE.md asks for 44 px targets, which these keep; the fix is where they sit, not their size.
+- Fixed (Nov 7): the field's mode is on `<body data-play>`; in a fight Ask, Echo and Menu are hidden, in a conversation and on a card Echo and Ask. The battle's party rows start after the D-pad where it reaches over the strip (measured from the page, up to 24 game px; the bars give up the room). B stays (it moves a conversation on). Checked at 844x390 in `flagship_hale` and the Kingsmere landing.
 
 ### 6. "Keep playing upright" keeps the Nov 1 portrait: a 390x219 strip under a bigger minimap (phones; Medium)
 - **Where:** 390x844, any scene. `port-02-line6-p.png`.
@@ -106,6 +109,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   behind a tap), and raise the zoom so the picture fills the width; it is one CSS layout, `body[data-layout=stack]`.
   If the owner's answer is "the game is sideways", say so on the card and drop the "Keep playing upright" button to
   a smaller "continue anyway" link, so a grandparent is not invited to the worse layout.
+- Fixed (Nov 7): upright, the picture comes first at the top, full width (1.22x at 390 px, the most the width allows), with the minimap at about a quarter of its size under it on the left, Ask, Echo and Menu in a column on the right, and the D-pad and A/B centred below. The words cannot be larger upright without another picture size, so the rotate card keeps recommending sideways (Claude's call, QUEST-BUILD-GUIDE 9.1).
 
 ### 7. The whistle sends the player to a Journal note that does not count the volleys (Ch11; Medium)
 - **Where:** every whistle before a fight, `dialogue/xaraguaWar.ts:109`: "(Volleys left: the fleet's Journal note
@@ -140,6 +144,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
 - **Fix:** lower the diagonal-front cost to 1 when the tiles beside her are closed, or treat "in front of her" as
   only the tile she would step onto. Also the Concourse at the marker is still an empty floor around the party; the
   new landmarks (the tree row) are a screen away. Put one gate or stall in view of the spawn.
+- Fixed (Nov 7) for the placement: with nothing open beside or behind her outside her column, the front diagonals cost no more than the side; only the tile she would step onto is in her way. At `?at=concourse` Anissa and Azzy stand on her front diagonals (45,15 and 45,17) and Samira below (46,18); at `?at=war-village` Anissa 2,14, Yari 2,16, Azzy 1,17. Tests in `tests/partyPlacement.test.ts`. The Concourse's landmarks were not moved (map work, not in this batch).
 
 ### 11. The pier at Yucayeque is still a file (Ch2; Low)
 - **Where:** `?at=yucayeque`. `yuc-07-d.png`: on the one-tile pier the sergeant, the fisher, Yari, Gianna and
@@ -156,6 +161,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   keyboard player there sees "Tap" on every card until the next one. Everything else I tried (the Echo prompt,
   battle prompts, the credits' last line) was right for the device in use.
 - **Fix:** redraw the continue line from `continueHint()` on device change (one event from `setDevice`).
+- Fixed (Nov 7): `setDevice` tells listeners on a change (`onDeviceChange`), and every text set once with button names (cards and text panels, the reward card, the item showcase, Anissa's hint; `ui/text.ts` liveButtons) rewrites itself. A card opened on touch reads "(Enter to continue)" after an arrow key.
 
 ### 13. Smaller things
 - The boar is a four-legged placeholder (`scenes/pixels.ts:321` `drawBoar`); it reads as a boar, barely. Fine
@@ -171,6 +177,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   said four.
 - `GameMenu.ts:1088` filters a line starting with "(B to close)" that nothing emits any more (dead code since the
   button names changed).
+- Fixed (Nov 7), the voyages and the dead filter: the boat now stops beside the ship's first visible column, not the picture's empty margin, so off Kirinoura it reaches the lantern trader before it fades. The Kingsmere voyages (`chapter8-end`, `chapter9-end`, `aldermoor-dawn`) carry the four who walk the map (the companion, Gianna, Anissa in her glow, Azzy); nothing to change there. The "(B to close)" filter is removed. Not touched: the boar, the troops' art, the vault's sparkles, the Hearing's crowd.
 
 ## The three new side quests
 
@@ -254,6 +261,7 @@ tag, `assize-00-start-d.png`; 18 (minimap name, Concourse) half: the name is rea
   when the Throne decided" (`data/quests.ts:2798`). It is correct and it is also invisible: nothing on screen says a
   note arrived, and by then the player is in the ending cards. Show it on the ending card itself (one line under the
   title), or as a toast after the cards.
+  - Fixed (Nov 7): the three ending cards show "The Accord's Stability: 93 of 100" under the title (`CardDef.subtitle`, filled from the save); the Journal note stays. A low card whose lines run past the bottom rises to keep its continue line on the screen.
 
 ## Placement and staging, tried on purpose
 

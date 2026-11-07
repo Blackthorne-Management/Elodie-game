@@ -38,6 +38,24 @@ const SHORES: Readonly<Record<VoyageDef['shore'], { sand: number; land: number; 
   aldermoor: { sand: 0x6a7480, land: 0x5a5a6a, roof: 0x4a5060 },
 };
 
+/** The first column of an image's frame with any visible pixel (0 when it cannot be read). */
+function opaqueLeft(img: Phaser.GameObjects.Image): number {
+  const f = img.frame;
+  const source = f.source.image as CanvasImageSource | undefined;
+  if (!source || f.cutWidth === 0 || f.cutHeight === 0) return 0;
+  const canvas = document.createElement('canvas');
+  canvas.width = f.cutWidth;
+  canvas.height = f.cutHeight;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return 0;
+  ctx.drawImage(source, f.cutX, f.cutY, f.cutWidth, f.cutHeight, 0, 0, f.cutWidth, f.cutHeight);
+  const { data } = ctx.getImageData(0, 0, f.cutWidth, f.cutHeight);
+  for (let x = 0; x < f.cutWidth; x++) {
+    for (let y = 0; y < f.cutHeight; y++) if (data[(y * f.cutWidth + x) * 4 + 3]! > 0) return x;
+  }
+  return 0;
+}
+
 export class VoyageScene extends Phaser.Scene {
   private voyageId = '';
   private phase: VoyagePhase = 'harbor';
@@ -192,8 +210,10 @@ export class VoyageScene extends Phaser.Scene {
     // The boat's people sit in it: the hull is drawn over their legs.
     this.canoe.bringToTop(hull);
     this.canoe.setVisible(!pier);
-    const shipHalf = (this.ship.width * this.ship.scaleX) / 2;
-    this.boatStop = this.shipX - shipHalf - width / 2 - 2;
+    // Beside the hull itself, not the picture's empty margin (review Nov 7, finding 13: off Kirinoura the boat stopped
+    // short in open water and faded there, before it reached the lantern trader).
+    const hullLeft = this.shipX + (opaqueLeft(this.ship) - this.ship.width / 2) * this.ship.scaleX;
+    this.boatStop = Math.max(90, hullLeft - width / 2 - 2);
     this.tweens.add({ targets: this.canoe, y: 101, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
   }
 
