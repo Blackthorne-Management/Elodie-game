@@ -365,8 +365,8 @@ const WATCH: DialogueScript = script('muster_watch', {
     lines: [
       act([{ do: 'walk', actor: 'azzy', to: at(15, 11), facing: 'down', run: true }], '', 'Azzy goes across the paving at a run, and stops a step short.'),
       act([{ do: 'face', actor: 'rahel_w', facing: 'up' }], RA, 'Azriel. Don\'t run at your grandmother. You\'ll knock her flat, and your Titi Jordyn will have to arrest the paving.', { mood: 'warm' }),
-      act([{ do: 'walk', actor: 'rahel_w', to: at(15, 12), facing: 'up' }, { do: 'wait', ms: 900 }, { do: 'walk', actor: 'rahel_w', to: at(15, 13), facing: 'up' }], '', 'She takes his face in both hands, and looks at it.'),
-      say(RA, 'Your father\'s jaw, a soldier\'s name, and from me you got nothing but the temper. Spend it on the Crown.', { mood: 'warm' }),
+      act([{ do: 'walk', actor: 'rahel_w', to: at(15, 12), facing: 'up' }, { do: 'wait', ms: 500 }], '', 'She takes his face in both hands, and looks at it.'),
+      act([{ do: 'walk', actor: 'rahel_w', to: at(15, 13), facing: 'up' }], RA, 'Your father\'s jaw, a soldier\'s name, and from me you got nothing but the temper. Spend it on the Crown.', { mood: 'warm' }),
       nar('Azzy, for once, has no answer.'),
     ],
     next: 'envoy',
@@ -721,13 +721,12 @@ function nightNodes(h: MusterHouse): Record<string, DialogueNode> {
           [
             { do: 'sync' },
             { do: 'walk', actor: cap, to: at(capAt.x, capAt.y - 1), facing: 'left' },
-            { do: 'wait', ms: 700 },
-            { do: 'walk', actor: cap, to: at(capAt.x, capAt.y), facing: 'left' },
           ],
           '',
           'The consul opens the box. The captain takes a purse out of it, and a folded paper from the consul\'s hand.',
         ),
-        say(h.captain, PURCHASE[k]!),
+        // Back to his satchel as he speaks (Nov 7: the line used to come after he had already walked back).
+        act([{ do: 'walk', actor: cap, to: at(capAt.x, capAt.y), facing: 'left' }], h.captain, PURCHASE[k]!),
         act([{ do: 'face', actor: cap, facing: 'player' }], h.captain, 'Envoy. You paid us less than you paid the others. You know you did; your Journal says so. The Throne paid the difference.'),
         nar('His satchel lies open on the quay. On its flap, pressed in ash: a closed hand. The mark beside one name on Kayla\'s list.'),
         say(h.captain, 'It will be quieter soon.'),

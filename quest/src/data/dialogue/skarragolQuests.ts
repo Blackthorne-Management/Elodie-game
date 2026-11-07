@@ -509,14 +509,20 @@ export const FLEET_LAWSPEAKER_NODES: Readonly<Record<string, DialogueNode>> = {
       act(
         [
           { do: 'walk', actor: LAWSPEAKER, to: at(MOOT.hides.x + 1, MOOT.hides.y + 1), facing: 'up' },
-          { do: 'wait', ms: 1000 },
-          { do: 'walk', actor: LAWSPEAKER, to: MOOT.lawspeaker },
-          { do: 'face', actor: LAWSPEAKER, facing: 'player' },
+          { do: 'wait', ms: 600 },
         ],
         '',
         'The lawspeaker goes into her tent, to the Moot\'s newest hide, and cuts three lines into it with her knife.',
       ),
-      say(LS, 'Three chiefs, nine hulls, one word. For Zetwal, at the Muster.', { set: { [FLEET.done]: true } }),
+      act(
+        [
+          { do: 'walk', actor: LAWSPEAKER, to: MOOT.lawspeaker },
+          { do: 'face', actor: LAWSPEAKER, facing: 'player' },
+        ],
+        LS,
+        'Three chiefs, nine hulls, one word. For Zetwal, at the Muster.',
+        { set: { [FLEET.done]: true } },
+      ),
       say(BY, 'My father will say he arranged it.'),
     ],
   },

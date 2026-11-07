@@ -378,14 +378,19 @@ export const ASHES_DELIVERY: DialogueNode = {
     act(
       [
         { do: 'walk', actor: MEERA, to: at(COURT.craneStep.x, COURT.craneStep.y + 1), facing: 'up' },
-        { do: 'wait', ms: 800 },
-        { do: 'walk', actor: MEERA, to: COURT.meera },
-        { do: 'face', actor: MEERA, facing: 'player' },
+        { do: 'wait', ms: 500 },
       ],
       '',
       'She lays the letter on the altar\'s lowest step, where the crane was refused, and the paper beside it, wax up.',
     ),
-    say('meera', 'Tell her it was read in the Court, in front of the flame. That is not forgiveness.'),
+    act(
+      [
+        { do: 'walk', actor: MEERA, to: COURT.meera },
+        { do: 'face', actor: MEERA, facing: 'player' },
+      ],
+      'meera',
+      'Tell her it was read in the Court, in front of the flame. That is not forgiveness.',
+    ),
     say('meera', 'When the Suzumori ask to carry stones for our temple, the Keepers will see this paper first.', {
       set: { [ASHES.done]: true, [ASHES.letter]: false },
     }),
