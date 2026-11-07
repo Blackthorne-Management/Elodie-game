@@ -29,3 +29,6 @@ print
 # Quest (separate project in quest/)
 quest/node_modules
 quest/dist
+
+# Claude Code agents' temporary working copies
+.claude/worktrees/
