@@ -968,7 +968,9 @@ const CREW_AFTER: DialogueScript = script('crew_after', {
   },
   ledger: {
     lines: [
-      act([{ do: 'exit', actor: 'npc:crew_chief_down', to: at(ROAD.gate.x + 2, ROAD.gate.y) }], '', 'In the top crate, under the muskets: a carter\'s ledger.', { set: { 'item.smugglers_ledger': true } }),
+      // Spared, he goes now; walked up the road, he has already gone (walked).
+      act([{ do: 'exit', actor: 'npc:crew_chief_down', to: at(ROAD.gate.x + 2, ROAD.gate.y) }], '', 'In the top crate, under the muskets: a carter\'s ledger.', { set: { 'item.smugglers_ledger': true }, if: { notFlag: 'choice.crew_broken' } }),
+      nar('In the top crate, under the muskets: a carter\'s ledger.', { set: { 'item.smugglers_ledger': true }, if: { flag: 'choice.crew_broken' } }),
       nar('Consignments of muskets "for the Muster\'s friends", night after night, each under a closed hand.'),
       nar('Beside the last, a sigil is drawn in the margin: a sigil you will know when you see it on a banner.'),
       say(H, 'The closed hand again. Kayla\'s list named the mark and cut the name out. This one drew it.'),

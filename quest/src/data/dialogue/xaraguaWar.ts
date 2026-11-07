@@ -678,7 +678,16 @@ const PICKET: DialogueScript = script('thumbprint_picket', {
   },
 });
 
-const PICKET_AFTER: DialogueScript = simple('picket_after', [nar('The picket runs for the village, and leaves its powder horns in the cassava.')], { 'side.ninth_thumbprint.picket': true });
+/** Shown, not told (Nov 7): the beaten picket runs east for the village gate on the map, not only in the narration. */
+const PICKET_RUN: StageCue[] = [
+  ...CONUCO.picket.map((p, i): StageCue => ({ do: 'place', actor: `picket_run_${i}`, look: 'crown_marine_c', at: { x: p.x, y: p.y }, facing: 'right' })),
+  ...CONUCO.picket.map((_, i): StageCue => ({ do: 'exit', actor: `picket_run_${i}`, to: { x: 31, y: 9 + (i % 2) }, run: true, async: i < CONUCO.picket.length - 1 })),
+];
+const PICKET_AFTER: DialogueScript = simple(
+  'picket_after',
+  [act(PICKET_RUN, '', 'The picket runs for the village, and leaves its powder horns in the cassava.')],
+  { 'side.ninth_thumbprint.picket': true },
+);
 
 const CANOE_FISHER: DialogueScript = script('war_canoe_fisher', {
   start: {
