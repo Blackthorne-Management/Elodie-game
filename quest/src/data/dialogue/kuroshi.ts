@@ -218,6 +218,9 @@ function screenScript(i: number): DialogueScript {
 }
 
 /** A marsh post (M-KUR-2): each turn of its lantern goes white, red, dark. The check, when all six are lit. */
+/** Where the lantern moths stop at the fork's posts (moth a, b, c), as they come in and as they scatter after the fight. */
+const MOTHS_AT = [MARSH.posts[1]!, MARSH.posts[0]!, MARSH.posts[2]!].map((p) => at(p.x, p.y + 1));
+
 function marshPostScript(n: number): DialogueScript {
   const white = `marsh.p${n}_white`;
   const red = `marsh.p${n}_red`;
@@ -257,9 +260,9 @@ function marshPostScript(n: number): DialogueScript {
       lines: [
         act(
           [
-            { do: 'enter', actor: 'moth_a', look: 'lantern_moth', from: at(MARSH.posts[1]!.x, MARSH.posts[1]!.y - 2), to: at(MARSH.posts[1]!.x, MARSH.posts[1]!.y + 1), async: true },
-            { do: 'enter', actor: 'moth_b', look: 'lantern_moth', from: at(MARSH.posts[0]!.x - 2, MARSH.posts[0]!.y), to: at(MARSH.posts[0]!.x, MARSH.posts[0]!.y + 1), async: true },
-            { do: 'enter', actor: 'moth_c', look: 'lantern_moth', from: at(MARSH.posts[2]!.x + 3, MARSH.posts[2]!.y), to: at(MARSH.posts[2]!.x, MARSH.posts[2]!.y + 1) },
+            { do: 'enter', actor: 'moth_a', look: 'lantern_moth', from: at(MARSH.posts[1]!.x, MARSH.posts[1]!.y - 2), to: MOTHS_AT[0]!, async: true },
+            { do: 'enter', actor: 'moth_b', look: 'lantern_moth', from: at(MARSH.posts[0]!.x - 2, MARSH.posts[0]!.y), to: MOTHS_AT[1]!, async: true },
+            { do: 'enter', actor: 'moth_c', look: 'lantern_moth', from: at(MARSH.posts[2]!.x + 3, MARSH.posts[2]!.y), to: MOTHS_AT[2]! },
             { do: 'look', actor: 'moth_a' },
           ],
           '',
@@ -672,8 +675,19 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     act([{ do: 'face', actor: 'npc:stacks_cutpurse', facing: 'player' }], 'cutpurse', 'Envoys! In the stacks! The broker said no envoys!', { fx: 'shake' }),
     say(BY, 'Seen. Then fast.', { set: { 'battle.next': 'stacks_cutpurses', 'battle.after': 'stacks_after' } }),
   ]),
+  // Shown, not told (review Nov 7, finding 2): the flag takes the map's three cutpurses away (sync), and in their places
+  // they drop their boxes and go out by the high window, one after another.
   simple('stacks_after', [
-    nar('The cutpurses drop their boxes and go out by the window, one after another, into the fog.', { set: { 'story.stacks_cleared': true } }),
+    act(
+      [
+        { do: 'sync' },
+        ...LIBRARY.cutpurses.map((c, i): StageCue => ({ do: 'place', actor: `stacks_cutpurse_${i}`, look: 'fog_cutpurse', at: c, facing: 'left' })),
+        ...LIBRARY.cutpurses.map((_, i): StageCue => ({ do: 'exit', actor: `stacks_cutpurse_${i}`, to: LIBRARY.window, run: true })),
+      ],
+      '',
+      'The cutpurses drop their boxes and go out by the window, one after another, into the fog.',
+      { set: { 'story.stacks_cleared': true } },
+    ),
     say(Y, 'Boxes for "the broker". Whoever that is.'),
   ]),
 
@@ -911,8 +925,16 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
   simple('fog_bank', [nar('A bank of fog lies on the water east of the yard, thick as wool. Something like a causeway runs into it.')]),
   simple('boat_home', [nar('A fishing boat, home, its lantern still lit.')]),
   ...MARSH.posts.map((_, i) => marshPostScript(i + 1)),
+  // Shown, not told (review Nov 7, finding 2): the moths that came in at the fork's posts scatter east into the fog bank.
   simple('moths_after', [
-    nar('The moths scatter into the fog, away from the light.'),
+    act(
+      [
+        ...MOTHS_AT.map((p, i): StageCue => ({ do: 'place', actor: `moth_${'abc'[i]}`, look: 'lantern_moth', at: p, facing: 'right' })),
+        ...MOTHS_AT.map((_, i): StageCue => ({ do: 'exit', actor: `moth_${'abc'[i]}`, to: at(MARSH.fog.x + i, MARSH.fog.y + [0, 1, -1][i]!), run: true, async: i < MOTHS_AT.length - 1 })),
+      ],
+      '',
+      'The moths scatter into the fog, away from the light.',
+    ),
     say(Y, 'Light the rest before they come back.'),
   ]),
 

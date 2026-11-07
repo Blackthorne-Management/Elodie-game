@@ -3272,7 +3272,7 @@
   },
   "10": {
     "map": "zetwal-harbor",
-    "spawn": "harbor_return",
+    "spawn": "muster_landing",
     "flags": {
       "act1.complete": true,
       "act2.complete": true,

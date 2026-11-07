@@ -41,6 +41,27 @@ function at(x: number, y: number): { x: number; y: number } {
   return { x, y };
 }
 
+/**
+ * The camp's lookouts (review Nov 7, finding 2; Claude's call, Nov 7): "To me!" brings two reavers at a run from the far
+ * tents to the sledges behind him, so the fight has the men it names; beaten, they ride back for the tents and the lookout
+ * runs after them, on the map. West: through the east gap and along the inner ring to the west gap; east: from the tents
+ * to the east gap. Wherever the lookout stands (at his gap, or shooing the herd), they stop clear of him and the party.
+ */
+const LOOKOUT_REAVERS = {
+  west: { from: [at(27, 3), at(28, 3)], at: [at(8, 7), at(10, 7)], to: [at(27, 3), at(28, 3)], lookoutTo: at(26, 3) },
+  east: { from: [at(26, 2), at(30, 2)], at: [at(26, 3), at(28, 3)], to: [at(29, 0), at(31, 0)], lookoutTo: at(30, 0) },
+} as const;
+
+/**
+ * The three wolves up the gully (S-3): where each comes in from and stops, wolf b beside wolf a, not under him (review
+ * Nov 7, finding 9's free-row rule), and after the fight back the way they came (finding 2: shown, not told).
+ */
+const WOLVES = [
+  { id: 'wolf_a', from: at(44, 22), at: at(39, 22) },
+  { id: 'wolf_b', from: at(44, 23), at: at(40, 23) },
+  { id: 'wolf_c', from: at(44, 22), at: at(38, 24) },
+] as const;
+
 const G = 'gianna';
 const A = 'anissa';
 const Y = 'yari';
@@ -488,16 +509,33 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
   }),
-  ...['lookout_west_talk', 'lookout_east_talk'].map((id) =>
-    simple(id, [
-      say('lookout', 'Hoy! Envoys on the shore! To me! To me!', { fx: 'shake' }),
-      say(BY, 'Should have stayed in the herd.', { set: { 'battle.next': 'camp_lookouts', 'battle.after': 'lookouts_after' } }),
-    ]),
-  ),
-  simple('lookouts_after', [
-    nar('The reavers ride for the far tents, and the lookout runs after them. The gaps in the ring are open.', { set: { 'story.lookouts_beaten': true } }),
-    say(BY, 'Sarnai would have whistled. Low, high, low.'),
-  ]),
+  ...(['west', 'east'] as const).flatMap((side) => {
+    const r = LOOKOUT_REAVERS[side];
+    return [
+      simple(`lookout_${side}_talk`, [
+        act(
+          r.from.map((from, i): StageCue => ({ do: 'enter', actor: `lookout_reaver_${i}`, look: 'steppe_reaver', from, to: r.at[i]!, facing: 'down', run: true, async: i < r.from.length - 1 })),
+          'lookout',
+          'Hoy! Envoys on the shore! To me! To me!',
+          { fx: 'shake' },
+        ),
+        say(BY, 'Should have stayed in the herd.', { set: { 'battle.next': 'camp_lookouts', 'battle.after': `lookouts_after_${side}` } }),
+      ]),
+      simple(`lookouts_after_${side}`, [
+        act(
+          [
+            ...r.at.map((p, i): StageCue => ({ do: 'place', actor: `lookout_reaver_${i}`, look: 'steppe_reaver', at: p, facing: 'down' })),
+            ...r.to.map((to, i): StageCue => ({ do: 'exit', actor: `lookout_reaver_${i}`, to, run: true, async: true })),
+            { do: 'exit', actor: `npc:lookout_${side}`, to: r.lookoutTo, run: true },
+          ],
+          '',
+          'The reavers ride for the far tents, and the lookout runs after them. The gaps in the ring are open.',
+          { set: { 'story.lookouts_beaten': true } },
+        ),
+        say(BY, 'Sarnai would have whistled. Low, high, low.'),
+      ]),
+    ];
+  }),
   simple('grimvald_horse_talk', [nar('A black horse, tethered, with a saddle too fine for a raider. The saddle-cloth is Crown violet.')]),
 
   // ---- Beat 7: Noyan Grimvald --------------------------------------------------------------------------
@@ -689,9 +727,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
         act(
           [
             { do: 'look', actor: 'wolf_a' },
-            { do: 'enter', actor: 'wolf_a', look: 'steppe_wolf', from: at(44, 22), to: at(39, 22), facing: 'left', run: true, async: true },
-            { do: 'enter', actor: 'wolf_b', look: 'steppe_wolf', from: at(44, 23), to: at(39, 23), facing: 'left', run: true, async: true },
-            { do: 'enter', actor: 'wolf_c', look: 'steppe_wolf', from: at(44, 22), to: at(38, 24), facing: 'left', run: true },
+            ...WOLVES.map((w, i): StageCue => ({ do: 'enter', actor: w.id, look: 'steppe_wolf', from: w.from, to: w.at, facing: 'left', run: true, async: i < WOLVES.length - 1 })),
           ],
           '',
           'Grey shapes come up the gully at a run: three wolves, heads low.',
@@ -889,7 +925,14 @@ function afterNodes(): Record<string, DialogueNode> {
 function wolvesGone(): DialogueNode {
   return {
     lines: [
-      nar('The wolves break and run back down the gully.'),
+      act(
+        [
+          ...WOLVES.map((w): StageCue => ({ do: 'place', actor: w.id, look: 'steppe_wolf', at: w.at, facing: 'left' })),
+          ...WOLVES.map((w, i): StageCue => ({ do: 'exit', actor: w.id, to: w.from, run: true, async: i < WOLVES.length - 1 })),
+        ],
+        '',
+        'The wolves break and run back down the gully.',
+      ),
       act(
         [{ do: 'look', actor: 'npc:oyuun' }, { do: 'walk', actor: 'npc:oyuun', to: at(PLATEAU.zone.x + 1, PLATEAU.zone.y - 1), facing: 'down' }],
         'oyuun',

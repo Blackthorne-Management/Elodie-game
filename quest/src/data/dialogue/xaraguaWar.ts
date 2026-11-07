@@ -16,6 +16,7 @@ import type { Condition } from '../../engine/conditions.ts';
 import type { DialogueChoice, DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { FlagSnapshot } from '../../engine/flags.ts';
 import type { StageCue } from '../../engine/stage.ts';
+import { VOLLEYS_LEFT_FLAG } from '../../engine/war.ts';
 import { VOLLEY } from '../../config.ts';
 import { BEACH, CAMP, CANEY, COMPANIES, CONUCO, FLANK_HOUSES, SONG, TIDE_PARTS, TIDE_READY, VILLAGE, type FlankHouse } from '../war.ts';
 import { overlay, type MusterOverlay } from './zetwalMuster.ts';
@@ -94,19 +95,23 @@ const SAND = 'Down the sand, every company is looking at her.';
 const STREET = 'Through the open door, the companies in the street are looking at her.';
 const PIER = 'Back along the pier and the shore, every company is looking at her.';
 
+/** The volleys the pool has left, as a line or a choice shows it (data/content.ts formatText reads `{v:<flag>}`). */
+const VOLLEYS_LEFT_TEXT = `{v:${VOLLEYS_LEFT_FLAG}}`;
+
 function whistle(prefix: string, battle: string, after: string, set: FlagSnapshot = {}, where: string = SAND): Record<string, DialogueNode> {
   const go = { 'battle.next': battle, 'battle.after': after, ...set };
   const choices: DialogueChoice[] = [];
   const words = ['', 'One volley.', 'Two volleys.', 'Three volleys.', 'Four volleys.'];
   for (let n: number = VOLLEY.cap; n >= 1; n--) {
-    choices.push({ text: words[n] ?? `${n} volleys.`, if: { flag: 'war.volleys_left', gte: n }, set: { [`war.volleys.${battle}`]: n }, next: `${prefix}_fire` });
+    // The count is in the choice itself (review Nov 7, finding 7): what is left now, before this fight takes its share.
+    const said = words[n] ?? `${n} volleys.`;
+    choices.push({ text: `${said.slice(0, -1)} (${VOLLEYS_LEFT_TEXT} left).`, if: { flag: 'war.volleys_left', gte: n }, set: { [`war.volleys.${battle}`]: n }, next: `${prefix}_fire` });
   }
-  choices.push({ text: 'Hold your fire.', set: { [`war.volleys.${battle}`]: 0 }, next: `${prefix}_hold` });
+  choices.push({ text: `Hold your fire (${VOLLEYS_LEFT_TEXT} left).`, set: { [`war.volleys.${battle}`]: 0 }, next: `${prefix}_hold` });
   return {
     [`${prefix}_whistle`]: {
       lines: [
         act([{ do: 'face', actor: 'player', facing: 'down' }], '', `Gianna lifts the Marshal's whistle. ${where}`, { fx: 'whistle' }),
-        nar('(Volleys left: the fleet\'s Journal note counts them. Three at most before a fight.)'),
       ],
       choices,
     },
@@ -986,10 +991,9 @@ const TURN: DialogueScript = script('harbor_turn', {
       say('crown_marine', 'Ardencia! The Lord of Ardencia, for the Crown!'),
       act(
         [
-          { do: 'enter', actor: 'rael_t', look: 'rael', from: at(VILLAGE.vanguard[2]!.x, VILLAGE.vanguard[2]!.y), to: at(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y), facing: 'up', async: true },
+          { do: 'enter', actor: 'rael_t', look: 'rael', from: VILLAGE.longboat, to: at(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y), facing: 'up', async: true },
           { do: 'place', actor: 'rivera_t', look: 'rivera', at: at(VILLAGE.vanguard[0]!.x, VILLAGE.vanguard[0]!.y), facing: 'up' },
           { do: 'place', actor: 'jaime_t', look: 'jaime', at: at(VILLAGE.vanguard[1]!.x, VILLAGE.vanguard[1]!.y), facing: 'up' },
-          { do: 'place', actor: 'halb_t', look: 'brasador_halberdier', at: at(VILLAGE.vanguard[2]!.x, VILLAGE.vanguard[2]!.y), facing: 'up' },
           { do: 'look', actor: 'rael_t' },
           { do: 'wait', ms: 900 },
         ],
@@ -1017,8 +1021,9 @@ const TURN: DialogueScript = script('harbor_turn', {
       say(R, '...So. Your mother said you would.', { mood: 'unreadable' }),
       act(
         [
+          // Up the boards on Rael's right, a free row between them (review Nov 7, finding 9's rule).
           { do: 'walk', actor: 'rivera_t', to: at(VILLAGE.pierEnd.x + 1, VILLAGE.pierEnd.y), facing: 'up', async: true },
-          { do: 'walk', actor: 'jaime_t', to: at(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y + 1), facing: 'up' },
+          { do: 'walk', actor: 'jaime_t', to: at(VILLAGE.pierEnd.x + 1, VILLAGE.pierEnd.y - 2), facing: 'up' },
         ],
         R,
         'Rivera. Jaime. Bind them. I will not raise a hand to her.', { mood: 'stern' },
@@ -1032,8 +1037,7 @@ const TURN: DialogueScript = script('harbor_turn', {
       act(
         [
           { do: 'exit', actor: 'rivera_t', to: at(VILLAGE.longboat.x, VILLAGE.longboat.y), async: true },
-          { do: 'exit', actor: 'jaime_t', to: at(VILLAGE.longboat.x, VILLAGE.longboat.y), async: true },
-          { do: 'exit', actor: 'halb_t', to: at(VILLAGE.longboat.x, VILLAGE.longboat.y) },
+          { do: 'exit', actor: 'jaime_t', to: at(VILLAGE.longboat.x, VILLAGE.longboat.y) },
         ],
         '',
         'They go back down into the longboat. On the headland the fleet\'s gun speaks, and the canoes come out from under the piles.',
@@ -1043,7 +1047,7 @@ const TURN: DialogueScript = script('harbor_turn', {
       act(
         [
           { do: 'walk', actor: 'rael_t', to: at(VILLAGE.pierEnd.x + 1, VILLAGE.pierEnd.y - 1), facing: 'down' },
-          { do: 'enter', actor: 'hale_t', look: 'hale', from: at(VILLAGE.vanguard[2]!.x, VILLAGE.vanguard[2]!.y), to: at(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y), facing: 'up' },
+          { do: 'enter', actor: 'hale_t', look: 'hale', from: VILLAGE.longboat, to: at(VILLAGE.pierEnd.x, VILLAGE.pierEnd.y), facing: 'up' },
           { do: 'look', actor: 'hale_t' },
         ],
         HL,
@@ -1191,8 +1195,9 @@ const TRUTH: DialogueScript = script('harbor_truth', {
     lines: [
       act(
         [
-          { do: 'enter', actor: 'benny_p', look: 'benny_old', from: at(VILLAGE.vanguard[2]!.x, VILLAGE.vanguard[2]!.y), to: at(VILLAGE.pierEnd.x + 1, VILLAGE.pierEnd.y), facing: 'up', async: true },
-          { do: 'enter', actor: 'nancy_p', look: 'nancy', from: at(VILLAGE.vanguard[1]!.x, VILLAGE.vanguard[1]!.y), to: at(VILLAGE.pierEnd.x + 1, VILLAGE.pierEnd.y + 1), facing: 'up' },
+          // Benny up beside his son; Nancy a step behind him at the boat's side, not in his column (review Nov 7, finding 9's rule).
+          { do: 'enter', actor: 'benny_p', look: 'benny_old', from: VILLAGE.longboat, to: at(VILLAGE.pierEnd.x + 1, VILLAGE.pierEnd.y), facing: 'up', async: true },
+          { do: 'enter', actor: 'nancy_p', look: 'nancy', from: at(VILLAGE.longboat.x, VILLAGE.longboat.y + 1), to: VILLAGE.longboat, facing: 'up-left' },
           { do: 'look', actor: 'benny_p' },
         ],
         '',

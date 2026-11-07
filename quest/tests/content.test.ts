@@ -128,7 +128,8 @@ describe('dialogue content', () => {
           const limit = l.translation ? 100 : 128;
           expect(l.text.length, `${d.id}: ${l.text}`).toBeLessThanOrEqual(limit);
         }
-        for (const c of node.choices ?? []) expect(c.text.length, `${d.id}: ${c.text}`).toBeLessThanOrEqual(36);
+        // A count read from the save (`{v:<flag>}`, data/content.ts formatText) is measured as shown, at three digits.
+        for (const c of node.choices ?? []) expect(c.text.replace(/\{v:[a-z0-9_.]+\}/g, '999').length, `${d.id}: ${c.text}`).toBeLessThanOrEqual(36);
       }
     }
   });

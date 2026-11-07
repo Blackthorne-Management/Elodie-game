@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 16,
-  "nextobjectid": 51,
+  "nextobjectid": 52,
   "layers": [
     {
       "id": 1,
@@ -949,7 +949,7 @@
           "name": "muster_landing",
           "type": "trigger",
           "x": 480,
-          "y": 208,
+          "y": 144,
           "width": 16,
           "height": 16,
           "rotation": 0,
@@ -1085,6 +1085,29 @@
               "value": "up"
             }
           ]
+        },
+        {
+          "id": 31,
+          "name": "muster_landing",
+          "type": "spawn",
+          "x": 480,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            }
+          ]
         }
       ]
     },
@@ -1121,7 +1144,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 31,
+          "id": 32,
           "name": "customs_sign",
           "type": "puzzle_object",
           "x": 384,
@@ -1144,7 +1167,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 33,
           "name": "muster_ship_ironvow_pier",
           "type": "puzzle_object",
           "x": 128,
@@ -1177,7 +1200,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 34,
           "name": "muster_ship_suzumori_pier",
           "type": "puzzle_object",
           "x": 192,
@@ -1210,7 +1233,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 35,
           "name": "muster_ship_agnivansh_pier",
           "type": "puzzle_object",
           "x": 304,
@@ -1243,7 +1266,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 36,
           "name": "muster_ship_dorini_pier",
           "type": "puzzle_object",
           "x": 432,
@@ -1276,7 +1299,7 @@
           ]
         },
         {
-          "id": 36,
+          "id": 37,
           "name": "muster_ship_zetwal_pier",
           "type": "puzzle_object",
           "x": 512,
@@ -1309,7 +1332,7 @@
           ]
         },
         {
-          "id": 37,
+          "id": 38,
           "name": "muster_ship_ironvow_dawn",
           "type": "puzzle_object",
           "x": 32,
@@ -1342,7 +1365,7 @@
           ]
         },
         {
-          "id": 38,
+          "id": 39,
           "name": "muster_ship_suzumori_dawn",
           "type": "puzzle_object",
           "x": 96,
@@ -1375,7 +1398,7 @@
           ]
         },
         {
-          "id": 39,
+          "id": 40,
           "name": "muster_ship_agnivansh_dawn",
           "type": "puzzle_object",
           "x": 160,
@@ -1408,7 +1431,7 @@
           ]
         },
         {
-          "id": 40,
+          "id": 41,
           "name": "muster_ship_dorini_dawn",
           "type": "puzzle_object",
           "x": 224,
@@ -1441,7 +1464,7 @@
           ]
         },
         {
-          "id": 41,
+          "id": 42,
           "name": "muster_ship_zetwal_dawn",
           "type": "puzzle_object",
           "x": 304,
@@ -1474,7 +1497,7 @@
           ]
         },
         {
-          "id": 42,
+          "id": 43,
           "name": "jordyn_coaster",
           "type": "puzzle_object",
           "x": 352,
@@ -1507,7 +1530,7 @@
           ]
         },
         {
-          "id": 43,
+          "id": 44,
           "name": "muster_chain",
           "type": "puzzle_object",
           "x": 0,
@@ -1535,7 +1558,7 @@
           ]
         },
         {
-          "id": 44,
+          "id": 45,
           "name": "muster_launch",
           "type": "puzzle_object",
           "x": 0,
@@ -1568,7 +1591,7 @@
           ]
         },
         {
-          "id": 45,
+          "id": 46,
           "name": "consul_strongbox",
           "type": "puzzle_object",
           "x": 32,
@@ -1601,7 +1624,7 @@
           ]
         },
         {
-          "id": 46,
+          "id": 47,
           "name": "strongbox_open",
           "type": "puzzle_object",
           "x": 32,
@@ -1634,7 +1657,7 @@
           ]
         },
         {
-          "id": 47,
+          "id": 48,
           "name": "closed_hand_satchel",
           "type": "puzzle_object",
           "x": 48,
@@ -1667,7 +1690,7 @@
           ]
         },
         {
-          "id": 48,
+          "id": 49,
           "name": "laid_evidence",
           "type": "puzzle_object",
           "x": 64,
@@ -1700,7 +1723,7 @@
           ]
         },
         {
-          "id": 49,
+          "id": 50,
           "name": "signal_fire_far",
           "type": "puzzle_object",
           "x": 496,
@@ -1740,7 +1763,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 50,
+          "id": 51,
           "name": "harbor_muster",
           "type": "crowd_zone",
           "x": 144,

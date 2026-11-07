@@ -8,6 +8,7 @@
 import type { DialogueLine, DialogueNode, DialogueScript } from '../../engine/dialogue.ts';
 import type { StageCue } from '../../engine/stage.ts';
 import { AREITO_BARS, barText } from '../rhythms.ts';
+import { PIER_ROOT } from '../war.ts';
 import { MEDICINE_OFFER } from './xaraguaQuests.ts';
 
 function say(speaker: string, text: string, translation?: string, mood?: string): DialogueLine {
@@ -67,25 +68,25 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   // The ferry lands: marines are shaking down the fishers at the end of the pier. They start the fight
   // (owner report, Oct 17: the reason to fight must be clear), and the aftermath plays at once (battle.after).
   simple('xaragua_arrival', [
-    nar('The ship\'s boat bumps against the pier at dawn. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
+    nar('Dawn: the ship\'s boat puts them on the pier. Green mountains, a bay the color of sea glass, and Crown warships at anchor.'),
     say(Y, 'Yucayeque. Home.'),
     // Gianna asked Yari to tell her everything on the way (Chapter 1, the island dock): remembered (Oct 19).
     { speaker: Y, text: 'And them. There were two ships when I left. Now there are three.', if: { notFlag: 'choice.yari_everything' } },
     { speaker: Y, text: 'And them. I told you about the two ships. Count them.', if: { flag: 'choice.yari_everything' } },
-    // Nobody on the tile in front of or behind anyone (review Nov 1, finding 8): the pier is two tiles wide, so the
-    // party and the marines stand in the two lanes with a free row between people in the same lane.
+    // Nobody on the tile in front of or behind anyone (review Nov 1, finding 8): at the pier's root on the sand (review
+    // Nov 7, finding 11), the three of them in a row, the sergeant's scale two rows up the sand with a free row between.
     act(
       [
-        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 26), facing: 'up' },
-        { do: 'walk', actor: 'follower', to: at(21, 27), facing: 'up' },
+        { do: 'place', actor: 'yari', look: 'yari', at: PIER_ROOT.yari, facing: 'up' },
+        { do: 'walk', actor: 'follower', to: PIER_ROOT.anissa, facing: 'up' },
       ],
       A,
-      'Gigi. Look, on the pier.',
+      'Gigi. Look, at the end of the pier.',
     ),
     // Staged (owner rule, Oct 17): the fisher is up at the sergeant's scale, and gets shoved back.
     act(
       [
-        { do: 'place', actor: 'npc:canoe_fisher', at: at(22, 23), facing: 'left' },
+        { do: 'place', actor: 'npc:canoe_fisher', at: PIER_ROOT.fisher, facing: 'left' },
         { do: 'face', actor: 'npc:marine_sergeant', facing: 'right' },
       ],
       'marine_sergeant',
@@ -94,8 +95,8 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say('canoe_fisher', 'Half? Yesterday it was a fifth! I have six children!'),
     act(
       [
-        { do: 'walk', actor: 'npc:canoe_fisher', to: at(22, 24), facing: 'up', run: true },
-        { do: 'face', actor: 'npc:canoe_fisher', facing: 'up' },
+        { do: 'walk', actor: 'npc:canoe_fisher', to: PIER_ROOT.shoved, facing: 'left', run: true },
+        { do: 'face', actor: 'npc:canoe_fisher', facing: 'left' },
       ],
       'marine_sergeant',
       'Then feed them less. Out of my way, old man.',
@@ -121,16 +122,16 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('pier_after', [
     act(
       [
-        { do: 'place', actor: 'yari', look: 'yari', at: at(22, 26), facing: 'up' },
-        { do: 'walk', actor: 'follower', to: at(21, 27), facing: 'up' },
-        { do: 'place', actor: 'sergeant', look: 'marine_sergeant', at: at(21, 23), facing: 'down' },
-        { do: 'place', actor: 'marine_a', look: 'crown_marine', at: at(22, 21), facing: 'down' },
-        { do: 'place', actor: 'marine_b', look: 'crown_marine_b', at: at(21, 21), facing: 'down' },
+        { do: 'place', actor: 'yari', look: 'yari', at: PIER_ROOT.yari, facing: 'up' },
+        { do: 'walk', actor: 'follower', to: PIER_ROOT.anissa, facing: 'up' },
+        { do: 'place', actor: 'sergeant', look: 'marine_sergeant', at: PIER_ROOT.sergeant, facing: 'down' },
+        { do: 'place', actor: 'marine_a', look: 'crown_marine', at: PIER_ROOT.marines[0], facing: 'down' },
+        { do: 'place', actor: 'marine_b', look: 'crown_marine_b', at: PIER_ROOT.marines[1], facing: 'down' },
       ],
       'marine_sergeant',
       'Fall back! Back to the customs house!',
     ),
-    // Up the pier and away along the shore to the customs house, the sergeant shouting over his shoulder.
+    // Up the sand and away along the shore to the customs house, the sergeant shouting over his shoulder.
     act(
       [
         { do: 'exit', actor: 'marine_b', to: at(29, 11), run: true, async: true },
@@ -142,7 +143,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     ),
     act([{ do: 'wait', ms: 1200 }], Y, 'Tell him slowly. He reads every form twice.'),
     act(
-      [{ do: 'walk', actor: 'npc:canoe_fisher', to: at(22, 24), facing: 'down' }],
+      [{ do: 'walk', actor: 'npc:canoe_fisher', to: PIER_ROOT.shoved, facing: 'down-left' }],
       'canoe_fisher',
       'Guatiao, Yari. And your friends. That is the first time anyone has made them put anything back.',
       undefined,

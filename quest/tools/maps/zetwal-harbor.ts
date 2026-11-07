@@ -80,6 +80,9 @@ function musterHarbor(): ObjSpec[] {
   const shipIf = (house?: string) => `story.muster_begun, !story.betrayal_seen${house ? `, !muster.gone.${house}` : ''}`;
   const houseOf = (ship: string) => MUSTER_HOUSES.find((m) => m.ship === ship)?.house;
   return [
+    // The Muster's landing (review Nov 7, finding 1): the trader lands them at the pier, and the scene finds them on the
+    // sand at its root, looking back at the harbor.
+    { layer: 'spawns', name: 'muster_landing', x: h.landing.x, y: h.landing.y, props: { facing: 'down', era: 'present' } },
     trigger('muster_landing', h.landing.x, h.landing.y, { dialogue: 'muster_landing', flag: 'story.muster_begun', once: true, onEnter: true, if: 'act9.complete' }),
     // Night: the quay's head (a line across the road and the quay west of the fish market), again until it is seen.
     trigger('night_quay', h.quayStrip.x, h.quayStrip.y, { dialogue: 'night_quay', if: NIGHT_TEXT }, h.quayStrip.w, h.quayStrip.h),

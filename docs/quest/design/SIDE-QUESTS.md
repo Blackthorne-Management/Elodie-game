@@ -554,8 +554,10 @@ built (owner decision).
   - **Hrafn** (in the Moot already): the Throne's promise to pay the blockade's cost, on Gianna's word. He takes the word
     on Ordvik's regard, read in Skarragol (the chiefs see Ordvik's pillars, not the realm's): **Influence 12** (kept: the
     route has 16 at dawn, eleven sagas read and three choices; a player who reads none has 4 or 5, and the Saga Tent is
-    the way in, which Bayarmaa says) **or Fear 3** (scaled from the design's 10, which no player can reach: Ordvik offers
-    3 Fear at most, the bout in white won and Grimvald broken; so Fear 3 is every Fear choice Ordvik offered). He walks
+    the way in, which Bayarmaa says) **or Fear 2** (scaled from the design's 10, which no player can reach: Ordvik offers
+    3 Fear at most, the bout in white won (+2) and Grimvald broken (+1). Fear 2, the two Fear choices Ordvik offers short
+    of breaking Grimvald; owner and reviewer, Nov 7: the bout alone, which is what Hrafn's line says, "the envoy does not
+    lose fights", so the fear road is a show of strength, not a reward for the chapter's cruel choice). He walks
     to the Crown's corded chest and lays his hand on it. The regard is read with a generic request (`standing.read`,
     engine/rpg.ts readStanding), answered as the line is shown.
   - Back to the lawspeaker, who cuts the three into the Moot's newest hide ("Three chiefs, nine hulls, one word").

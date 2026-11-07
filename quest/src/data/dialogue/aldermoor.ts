@@ -267,7 +267,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
       [
         { do: 'enter', actor: 'almoner_walk', look: 'almoner', from: at(CROSS.keep.x, CROSS.keep.y + 1), to: at(CROSS.closeGate.x + 1, CROSS.closeGate.y + 2), facing: 'left', async: true },
         { do: 'enter', actor: 'alms_walk_1', look: 'almswoman', from: at(CROSS.keep.x + 1, CROSS.keep.y + 1), to: at(CROSS.closeGate.x + 3, CROSS.closeGate.y + 2), facing: 'left', async: true },
-        { do: 'enter', actor: 'alms_walk_2', look: 'almswoman_b', from: at(CROSS.keep.x, CROSS.keep.y + 2), to: at(CROSS.closeGate.x + 3, CROSS.closeGate.y + 3), facing: 'left' },
+        { do: 'enter', actor: 'alms_walk_2', look: 'almswoman_b', from: at(CROSS.keep.x, CROSS.keep.y + 2), to: at(CROSS.closeGate.x + 4, CROSS.closeGate.y + 3), facing: 'left' },
         { do: 'look', actor: 'almoner_walk' },
       ],
       '',
@@ -293,7 +293,8 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         act(
           [
             { do: 'place', actor: 'pie_boy_pg', look: 'pie_boy', at: at(CROSS.pieDoor.x + 1, CROSS.pieDoor.y), facing: 'right' },
-            { do: 'place', actor: 'pie_mother_pg', look: 'pie_mother', at: at(CROSS.pieDoor.x + 1, CROSS.pieDoor.y + 1), facing: 'right' },
+            // In the doorway itself, beside her boy, not behind him (review Nov 7, finding 9's rule).
+            { do: 'place', actor: 'pie_mother_pg', look: 'pie_mother', at: at(CROSS.pieDoor.x, CROSS.pieDoor.y), facing: 'right' },
             { do: 'place', actor: 'sergeant', look: 'crown_officer', at: at(CROSS.pieDoor.x + 2, CROSS.pieDoor.y), facing: 'left' },
             { do: 'place', actor: 'pg_constable_1', look: 'moor_constable', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y - 1), facing: 'left' },
             { do: 'place', actor: 'pg_constable_2', look: 'moor_constable_b', at: at(CROSS.pieDoor.x + 3, CROSS.pieDoor.y + 1), facing: 'left' },
@@ -1292,7 +1293,8 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         say(JO, 'Captain of the watch, resigning. The watch is dismissed.', { mood: 'resigning' }),
         act(
           [
-            ...[at(10, 21), at(11, 21), at(12, 21), at(10, 22), at(11, 22), at(12, 22)].map(
+            // Two staggered ranks, nobody straight behind another (review Nov 7, finding 9's rule).
+            ...[at(10, 21), at(12, 21), at(14, 21), at(11, 22), at(13, 22), at(15, 22)].map(
               (p, i): StageCue => ({ do: 'enter', actor: `watch_r${i + 1}`, look: 'regent_watch', from: at(KEEP.courtDoor.x, KEEP.courtDoor.y + 1), to: p, facing: 'left', async: i < 5 }),
             ),
             { do: 'look', actor: 'watch_r1' },
@@ -1338,7 +1340,8 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         act(
           [
             { do: 'enter', actor: 'jordyn_d', look: 'jordyn', from: at(30, HEATH.roadRows[0]), to: at(16, HEATH.roadRows[0]), facing: 'left', async: true },
-            ...[at(17, 13), at(18, 13), at(19, 13), at(17, 14), at(18, 14), at(19, 14)].map(
+            // Two staggered ranks behind Jordyn, nobody straight behind another (review Nov 7, finding 9's rule).
+            ...[at(17, 13), at(19, 13), at(21, 13), at(18, 14), at(20, 14), at(22, 14)].map(
               (p, i): StageCue => ({ do: 'enter', actor: `watch_d${i + 1}`, look: 'watch_inside_out', from: at(31 + i, HEATH.roadRows[i % 2]), to: p, facing: 'left', async: i < 5 }),
             ),
             { do: 'look', actor: 'jordyn_d' },
@@ -1429,7 +1432,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         act([{ do: 'look', actor: 'npc:salkhi_heath' }], SK, 'Rain, and then no rain. I was promised grass in four countries. I am going home to a horse-fair that is not mine.'),
         act([{ do: 'look', actor: 'edmund' }], ED, 'I\'ve never been south. Is it warm? It is, isn\'t it. I\'ve packed tea.'),
         nar('The Zetwal trader: out of the mere\'s mouth, south down the grey coast, then east, by every shore that spoke for them.'),
-        say(G, 'Home.', { fx: 'fade', set: { 'act9.complete': true, 'travel.next': 'zetwal-harbor/harbor_return', 'voyage.next': 'aldermoor_zetwal' } }),
+        say(G, 'Home.', { fx: 'fade', set: { 'act9.complete': true, 'travel.next': 'zetwal-harbor/muster_landing', 'voyage.next': 'aldermoor_zetwal' } }),
       ],
     },
   }),

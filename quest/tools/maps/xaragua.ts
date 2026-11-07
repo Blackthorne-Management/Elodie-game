@@ -14,7 +14,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
-import { BEACH, CAMP, CANEY, CAVE, COMPANIES, CONUCO, FLANK_HOUSES, MOUNTAIN, OCCUPIED_TEXT, SONG, VILLAGE, WAR_DAY_TEXT, WAR_TABLE_TEXT, WAR_TEXT } from '../../src/data/war.ts';
+import { BEACH, CAMP, CANEY, CAVE, COMPANIES, CONUCO, FLANK_HOUSES, MOUNTAIN, OCCUPIED_TEXT, PIER_ROOT, SONG, VILLAGE, WAR_DAY_TEXT, WAR_TABLE_TEXT, WAR_TEXT } from '../../src/data/war.ts';
 
 const GRASS = 'ā';
 const TRAIL = 'ē';
@@ -178,14 +178,16 @@ export function xaraguaVillage(): MapSource {
     { layer: 'doors', name: 'village_beach', x: W - 1, y: 15, h: 2, props: { target: 'beach_village', map: 'xaragua-beach', exit: 'left' } },
     { layer: 'doors', name: 'village_conuco', x: 0, y: 15, h: 2, props: { target: 'conuco_village', map: 'xaragua-conuco', exit: 'right' } },
     { layer: 'doors', name: 'village_customs', x: 29, y: 11, props: { target: 'customs_out', map: 'xaragua-customs', exit: 'down' } },
-    // The ferry lands at the end of the pier (Chapter 1 ends with travel.next = xaragua-village/pier).
-    { layer: 'spawns', name: 'pier', x: 21, y: 25, props: { facing: 'up', era: 'present' } },
-    // Chapter 2 opens: the marines on the pier (they flee once beaten; the fight's aftermath plays at once).
-    trigger('xaragua_arrival', 21, 25, { dialogue: 'xaragua_arrival', flag: 'story.xaragua_arrived', once: true, onEnter: true }),
-    npc('marine_sergeant', 21, 23, 'down', { if: '!encounter.xaragua_story.pier.won' }),
-    // A free row between him and the fisher in front of him (review Nov 1, finding 8).
-    npc('pier_marine_a', 22, 21, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
-    npc('pier_marine_b', 21, 21, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
+    // The ferry's boat puts them on the pier, and they stand at its root on the sand (Chapter 1 ends with travel.next =
+    // xaragua-village/pier). Review Nov 7, finding 11 (Claude's call, Nov 7): a one-tile lane of the pier cannot hold a
+    // scene, so the sergeant's scale is on the sand at the pier's root, the fisher beside him and his marines behind.
+    { layer: 'spawns', name: 'pier', x: PIER_ROOT.gianna.x, y: PIER_ROOT.gianna.y, props: { facing: 'up', era: 'present' } },
+    // Chapter 2 opens: the marines at the pier's root (they flee once beaten; the fight's aftermath plays at once).
+    trigger('xaragua_arrival', PIER_ROOT.gianna.x, PIER_ROOT.gianna.y, { dialogue: 'xaragua_arrival', flag: 'story.xaragua_arrived', once: true, onEnter: true }),
+    npc('marine_sergeant', PIER_ROOT.sergeant.x, PIER_ROOT.sergeant.y, 'down', { if: '!encounter.xaragua_story.pier.won' }),
+    // Behind him, out to his sides, a free row from him and from the fisher (review Nov 1, finding 8).
+    npc('pier_marine_a', PIER_ROOT.marines[0]!.x, PIER_ROOT.marines[0]!.y, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
+    npc('pier_marine_b', PIER_ROOT.marines[1]!.x, PIER_ROOT.marines[1]!.y, 'down', { npc: 'pier_marine', if: '!encounter.xaragua_story.pier.won' }),
     obj('xaragua_customs_sign', 32, 12, { dialogue: 'xaragua_customs_sign', era: 'present' }),
     obj('pier_sign', 24, 19, { dialogue: 'pier_sign', era: 'present' }),
     // The Crown's ships at anchor (one drawing each, on the lagoon), in the present only.

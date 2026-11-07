@@ -1,14 +1,21 @@
 // Stage directions (owner rule, Oct 17: story moments are shown, not told): every staged scene names real looks
 // and only moves people who are on stage; and the Crown attack and Chapter 1's moments are acted out, not narrated.
 
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { NPC_SPRITES } from '../src/assets.config.ts';
 import { CONTENT } from '../src/data/content.ts';
 import { stageCues, stageProblems, type StageCue } from '../src/engine/stage.ts';
 import type { DialogueScript } from '../src/engine/dialogue.ts';
+import { hidesEachOther } from '../src/engine/partyPlacement.ts';
+import { HARBOR } from '../src/data/muster.ts';
+import { PIER_ROOT } from '../src/data/war.ts';
+import { STARTS_FILE } from '../tools/chapter-starts.ts';
+import { loadMaps } from '../tools/sim-setup.ts';
 
 const looks = new Set(Object.keys(NPC_SPRITES));
 const script = (id: string): DialogueScript => CONTENT.dialogue[id]!;
+const starts = JSON.parse(readFileSync(STARTS_FILE, 'utf8')) as Record<string, { map: string; spawn: string }>;
 
 describe('stage directions', () => {
   it('every staged scene uses looks that exist and moves only people on stage', () => {
@@ -159,9 +166,11 @@ describe('staged groups stand apart', () => {
   }
 
   it('the pier, the caney, the forge, the reveal and the boar keep a free row between people in a file', () => {
-    const pier = { player: { x: 21, y: 25 }, follower: { x: 21, y: 26 }, pier_marine_a: { x: 22, y: 21 }, pier_marine_b: { x: 21, y: 21 } };
-    expect(crowding('xaragua_arrival', { ...pier, 'npc:marine_sergeant': { x: 21, y: 23 } })).toEqual([]);
-    expect(crowding('pier_after', { player: { x: 21, y: 25 }, follower: { x: 21, y: 26 } })).toEqual([]);
+    // Review Nov 7, finding 11: the Yucayeque scene plays at the pier's root on the sand (data/war.ts PIER_ROOT).
+    const R = PIER_ROOT;
+    const pier = { player: R.gianna, follower: R.anissa, pier_marine_a: R.marines[0], pier_marine_b: R.marines[1] };
+    expect(crowding('xaragua_arrival', { ...pier, 'npc:marine_sergeant': R.sergeant })).toEqual([]);
+    expect(crowding('pier_after', { player: R.gianna, follower: R.anissa })).toEqual([]);
     expect(crowding('xaragua_proof', { player: { x: 9, y: 6 }, follower: { x: 10, y: 6 } })).toEqual([]);
     expect(crowding('caney_after', { player: { x: 9, y: 6 }, follower: { x: 10, y: 6 } })).toEqual([]);
     expect(crowding('forge_arrive', { player: { x: 26, y: 9 } })).toEqual([]);
@@ -169,9 +178,79 @@ describe('staged groups stand apart', () => {
     expect(crowding('rael_after', { player: { x: 32, y: 9 } })).toEqual([]);
   });
 
+  // Review Nov 7, finding 9: not a list of scenes but every one. Whoever a line brings on (place, enter, and a walk of
+  // someone it brought on) stands clear of the others it brings on: nobody one above the other in a column with no free
+  // row between (a line-up side by side is fine). People already on the map are the named scenes' check above.
+  it('every line that brings people on keeps a free row between those it brings on', () => {
+    const out: string[] = [];
+    for (const d of Object.values(CONTENT.dialogue)) {
+      for (const [node, n] of Object.entries(d.nodes)) {
+        for (const l of n.lines) {
+          const set = new Map<string, Spot>();
+          for (const c of l.stage ?? []) {
+            if (c.do === 'place') set.set(c.actor, c.at);
+            else if (c.do === 'enter') set.set(c.actor, c.to);
+            else if (c.do === 'walk' && set.has(c.actor)) set.set(c.actor, c.to);
+            else if (c.do === 'exit') set.delete(c.actor);
+          }
+          const people = [...set.entries()];
+          for (const [i, [a, p]] of people.entries()) {
+            for (const [b, q] of people.slice(i + 1)) {
+              if (hidesEachOther(p, q) || (p.x === q.x && p.y === q.y)) out.push(`${d.id}/${node} "${l.text.slice(0, 30)}": ${a} ${p.x},${p.y} and ${b} ${q.x},${q.y}`);
+            }
+          }
+        }
+      }
+    }
+    expect(out).toEqual([]);
+  });
+
+  // Review Nov 7, finding 1: the Muster lands on the sand, not on the two-tile pier where nine people stood in columns.
+  it('the Muster lands on the sand at the pier\'s root; the family stop a free row off; Anissa comes to Gianna\'s side', () => {
+    const harbor = loadMaps()['zetwal-harbor']!;
+    const spawn = harbor.spawns.find((sp) => sp.id === 'muster_landing')!;
+    expect(spawn.pos).toEqual(HARBOR.landing);
+    expect(harbor.triggers.find((t) => t.dialogue === 'muster_landing')?.area).toMatchObject({ x: HARBOR.landing.x, y: HARBOR.landing.y });
+    // The beach rows (9 and 10), off the pier (x 30 and 31 from row 11).
+    expect(HARBOR.landing.y).toBeLessThan(11);
+    const cues = stageCues(script('muster_landing'));
+    for (const c of cues) if (c.do === 'enter') expect(Math.abs(c.to.y - HARBOR.landing.y), c.actor).toBeGreaterThanOrEqual(2);
+    expect(cues).toContainEqual(expect.objectContaining({ do: 'walk', actor: 'follower', to: { x: HARBOR.landing.x - 1, y: HARBOR.landing.y } }));
+    expect(starts['10']).toMatchObject({ map: 'zetwal-harbor', spawn: 'muster_landing' });
+  });
+
   it('the boar charges out of the cane onto the map before the fight, and the harbor camera crosses to the ships', () => {
     expect(stageCues(script('boar_ambush'))).toContainEqual(expect.objectContaining({ do: 'enter', actor: 'boar', look: 'cane_boar' }));
     const harbor = stageCues(script('muster_landing'));
     for (const spot of ['harbor', 'west_piers', 'east_piers']) expect(harbor).toContainEqual({ do: 'look', actor: spot });
+  });
+});
+
+// Review Nov 7, finding 2: after a fight the foes are only pictures (gone when the fight starts) or NPCs a flag hides, so a
+// line saying they run, ride, go out, scatter or flee must be acted out (place them where they stood, then exit them).
+describe('the foes who leave after a fight are seen to go', () => {
+  it('every scene a fight plays after, whose narration sends someone off, has them exit on the map', () => {
+    const after = new Set<string>();
+    const read = (set: Readonly<Record<string, unknown>> | undefined) => {
+      const v = set?.['battle.after'];
+      if (typeof v === 'string') after.add(v);
+    };
+    for (const d of Object.values(CONTENT.dialogue)) {
+      for (const n of Object.values(d.nodes)) {
+        read(n.set);
+        for (const l of n.lines) read(l.set);
+        for (const c of n.choices ?? []) read(c.set);
+      }
+    }
+    expect(after.size).toBeGreaterThan(20);
+    const leaving = /\b(runs?|ran|rides?|rode|go(?:es)? out|went out|scatters?|scattered|flees?|fled|bolts?)\b/i;
+    const told: string[] = [];
+    for (const id of after) {
+      const d = script(id);
+      expect(d, id).toBeDefined();
+      const said = Object.values(d.nodes).flatMap((n) => n.lines.filter((l) => !(l.speaker ?? n.speaker) && leaving.test(l.text)));
+      if (said.length > 0 && !stageCues(d).some((c) => c.do === 'exit')) told.push(`${id}: ${said[0]!.text}`);
+    }
+    expect(told).toEqual([]);
   });
 });

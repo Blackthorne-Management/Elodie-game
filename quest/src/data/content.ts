@@ -11,6 +11,7 @@ import { globalPillar, localPillar, readStanding, type Pillar } from '../engine/
 import { stabilityTick } from '../engine/stability.ts';
 import type { FlagReader } from '../engine/flags.ts';
 import { STABILITY_HOUSES } from './claim.ts';
+import { COMPANIES } from './war.ts';
 import { musterTick } from '../engine/ally.ts';
 import { warTick } from '../engine/war.ts';
 import { DEBATE_DIALOGUES } from './debates.ts';
@@ -76,9 +77,31 @@ const CONTROL_SETS: readonly (readonly [RegExp, string])[] = [
 
 /**
  * The names a line may read from the save as it is shown (Chapter 12): the realm's three pillars at the Master of the Chairs'
- * count, and the Accord's Stability in the Journal after the verdict.
+ * count, and the Accord's Stability in the Journal after the verdict; the companies (Chapter 10) and the volleys left
+ * (Chapter 11, `{v:war.volleys_left}`) in the Journal and the whistle's choices.
  */
+/**
+ * `{companies}`: the companies the Muster counted for the fleet, from the army.<group> flags as they stand (the Journal's
+ * note once the companies are counted; the objective review, Nov 7): who sails and with how many, and who does not.
+ */
+function companiesText(flags: FlagReader): string {
+  const count = (army: string) => {
+    const v = flags.get(`army.${army}`);
+    return typeof v === 'number' ? v : 0;
+  };
+  const name = (n: string, first: boolean) => (first ? n : n.replace(/^The /, 'the '));
+  const sailing = COMPANIES.filter((c) => count(c.army) > 0);
+  const none = COMPANIES.filter((c) => flags.get(`army.${c.army}`) !== undefined && count(c.army) === 0);
+  const words = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+  const total = sailing.reduce((n, c) => n + count(c.army), 0);
+  const head = `${words[sailing.length] ?? sailing.length} ${sailing.length === 1 ? 'company' : 'companies'}, ${total} soldiers`;
+  const list = sailing.map((c, i) => `${name(c.name, i === 0)} ${count(c.army)}`).join(', ');
+  const tail = none.length > 0 ? ` None for ${none.map((c) => name(c.name, false)).join(' or ')}.` : '';
+  return `${head}${list ? `: ${list}` : ''}.${tail}`;
+}
+
 function formatText(text: string, flags: FlagReader): string {
+  text = text.replace(/\{companies\}/g, () => companiesText(flags));
   // `{v:<flag>}`: a flag's value as it stands (the jars, the clock's face; data/secrets.ts).
   text = text.replace(/\{v:([a-z0-9_.]+)\}/g, (whole: string, name: string) => {
     const v = flags.get(name);

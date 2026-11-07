@@ -48,6 +48,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   three deep and twenty wide; `settleSpots` will put nine people in a half circle there on its own. Give "Anissa
   takes her hand" a `walk` cue to Gianna's side. Then re-check `?at=muster-landing` at 844x390: everyone above the
   box, nobody hidden.
+- Fixed (Nov 7): the party is found on the sand at the long pier's root, facing the harbor: `HARBOR.landing` is `30,9` and a new spawn `muster_landing` (`tools/maps/zetwal-harbor.ts`) is where Chapter 9's last line sends the trader (`dialogue/aldermoor.ts`) and where `?chapter=10` starts (`tools/chapter-starts.ts`, `starts/chapters.json` regenerated); Chapter 2's homecoming keeps `harbor_return` on the pier. With `settleSpots` the walkers stand at `29,9` (Anissa), `31,9`, `32,9` and the five brought on at `28,9`, `27,9`, `33,9`, `29,7`, `31,7`: a half circle on the beach rows, nobody in a column. Grandmother and Grandfather come along the beach row and stop on the pier's head (`30,11`, `31,11`), a free row from Gianna and Yari; Grandfather steps up to Gianna for the whistle (`30,10`) and back onto the pier as she speaks; "Anissa takes her hand" walks Anissa to Gianna's left (`29,9`) and turns her to her. `tests/stage.test.ts` checks the spawn, the free row and the walk. Not re-checked in the browser at 844x390 (no smoke run in this pass).
 
 ### 2. Four fights still end with the foes vanishing while the narration says they run (Ch6, Ch7, Ch8; High for "shown, not told")
 - **Where:** the after-fight scenes the Nov 7 scan did not reach. Each is a `simple(...)` with a bare `nar(...)`
@@ -66,6 +67,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   (`dialogue/jwaladeshQuests.ts:522-575`). For the lookouts, also `enter` two reavers from the far tents on "To me!"
   before the fight, so there is someone to ride away. A content test would close this for good: every scene named
   by a `battle.after` whose narration contains run/ride/go out/scatter must carry an `exit` cue.
+- Fixed (Nov 7): the lookouts: "To me! To me!" now brings two reavers (`steppe_reaver`) at a run from the far tents to the sledges behind him (west: through the east gap to `8,7` and `10,7`; east: from the tents to `26,3` and `28,3`), each lookout with his own after-scene (`lookouts_after_west`/`_east`), where the reavers are placed there and ride back for the tents and the lookout (`npc:lookout_<side>`) runs after them. K-2: the flag takes the map's three cutpurses away (`sync`) and stand-ins at their tiles go out by the high window (`15,3`) one after another. The quay watch are placed where they stopped and run for the oil store's doors (`27,9`). The moths are placed at the fork's posts where they came in and scatter east into the fog bank. The new test (`tests/stage.test.ts`, "the foes who leave after a fight are seen to go") reads every `battle.after` in the data and fails any scene whose narration says run/ride/go out/scatter/flee/bolt without an `exit` cue; it found one more, S-3's `wolves_after` ("The wolves break and run back down the gully"), now acted out the same way (`dialogue/skarragol.ts` `WOLVES`).
 
 ### 3. On a sideways phone the Quests page's two columns run into each other (phones; Medium-High)
 - **Where:** menu, Quests tab, any chapter with long side-quest titles. `?at=war-song`, 844x390.
@@ -116,12 +118,14 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   One / Hold" with no idea whether three now means none later.
 - **Fix:** put the count in the choice line itself ("Three volleys (16 left)") with `{war.volleys_left}` in the
   text, and add the same to the "The fleet" note. Drop the parenthetical.
+- Fixed (Nov 7): each choice reads "Three volleys (16 left).", "Two volleys (16 left).", "One volley (16 left).", "Hold your fire (16 left)." through `{v:war.volleys_left}`; `GameLogic.view()` (`engine/game.ts`) now formats a choice's text with `formatText` as it does the line's. "The fleet" note says "One volley for every ten soldiers at sea: 16 left." The parenthetical is gone. `tests/readouts.test.ts`; the choice-length check measures the count as shown.
 
 ### 8. "Gianna gives old Benny the copy of his refusal" from across the Hall (Epilogue, pardon; Medium)
 - **Where:** `dialogue/seatClaim.ts:1222`: a bare line with no cue. Gianna stands at the Master of the Chairs
   (`25,7`) with Anissa; Benny is by the clerk's table on the far side of the nave. `hv0-after-L10-d.png`.
 - **Fix:** a `walk` cue for Gianna to Benny (and back on the next line), as the Nov 7 commit did for Hrafn at the
   chest; or let Benny walk to her, since his next line already walks him to the clerk's table.
+- Fixed (Nov 7): Benny walks up the nave to Gianna (`24,8`, beside her at the Master of the Chairs), she turns to him, and his next line walks him on to the clerk's table with it (`dialogue/seatClaim.ts` refusal).
 
 ### 9. New staged files still stack men without a free row (Ch8 J-5; Medium-Low)
 - **Where:** `dialogue/jwaladeshQuests.ts:549-551`: the toll's two enforcers and the bandit enter to `13,12`,
@@ -129,6 +133,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   The jackals, side by side at `31..33,11`, are fine.
 - **Fix:** `13,11`, `13,13`, `13,15` (or across the road). `tests/stage.test.ts` checks named scenes for free rows;
   make it check every `enter`/`place` set in every scene instead of a list.
+- Fixed (Nov 7): the toll men stand across the road at `13,11`, `13,13`, `13,15` (`TOLL_AT`), before the fight and after. `tests/stage.test.ts` now checks every line in every scene: whoever a line places or brings on (and walks, if it brought them on) keeps a free row from the others it brings on (`hidesEachOther`; side by side is fine). It found and fixed: the patrol at the bend (back pair out to the sides), the sergeant at the strand camp (beside Azzy, not above him), Qasim's blade (diagonal), the chief scribe (diagonal to Samira), the factor's marine, the second wolf, the race's chestnut (half a length back and outside), the third oil enforcer, Arjun's riders on the mole (staggered), the almswomen, the pie-shop mother (in her doorway beside her boy), the watch's two ranks at the Assize and at the price (staggered), the seven companies landing in file (rows 8, 10, 12), the Hearing's arrivals from Ardencia and Aldermoor (staggered), and Chapter 11's pier (Rivera behind Rael at his side, Jaime in the longboat, the halberdier not brought on: the two-tile pier has room for one person behind Rael out of his column; Benny beside his son and Nancy at the boat's side). The named test with the party's start positions stays.
 
 ### 10. When Gianna stops facing a wall, the party settles in a column behind her (Ch5, Ch11; Low)
 - **Where:** `?at=concourse` (Gianna `46,16` facing left against the right wall: Anissa `46,14`, Azzy `45,15`,
@@ -147,6 +152,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   marker they are at `22,25` and `22,27` beside the file and the pier itself is a column of three strangers.
 - **Fix:** as finding 1: a one-tile pier cannot hold a scene; move the sergeant's confrontation to the pier's root
   on the sand, where the fisher can stand beside him.
+- Fixed (Nov 7): the ferry's boat puts the party on the pier and the scene plays at its root on the sand (`data/war.ts PIER_ROOT`; the spawn `pier` and the arrival's trigger at `21,20`, the sergeant at `22,18`, his marines at `23,16` and `21,16`, maps through `tools/maps/xaragua.ts`): Anissa `20,20`, Gianna `21,20`, Yari `22,20` in a row (where `settleSpots` puts them), the fisher beside the sergeant at his scale (`23,18`) and shoved a step away (`24,18`). The first line reads "Dawn: the ship's boat puts them on the pier." The route, the chapter starts and every replay pass unchanged.
 
 ### 12. A card does not re-read the device when the player switches mid-card (all; Low)
 - **Where:** a touch device, chapter card up ("(Tap to continue)"); press a keyboard key; the card still says
@@ -207,6 +213,7 @@ chapter's cruel choice. Hrafn's own line on that path is "Ordvik says the envoy 
 about the bout, not about Grimvald. Fear 2 (the bout alone) matches the line and makes the fear road a show of
 strength rather than a reward for cruelty; the influence road at 12 (the route has 16, a reader of few sagas 4 or 5)
 is the right gate and stays as it is.
+- Done (Nov 7): Fear 2 (`FLEET.fear`, `data/skarragol.ts`; `SIDE-QUESTS.md` S-2; `tests/sideQuestsLate.test.ts` checks Fear 1 from breaking Grimvald alone is refused and the bout alone is enough).
 
 **Do they stand in the main route's way?** No: all three are offered after the chapter's turn (the horn, the Fox,
 the Seth), close when the trader sails, and the route never takes them. None adds a windfall: the level curve ends
@@ -246,6 +253,7 @@ tag, `assize-00-start-d.png`; 18 (minimap name, Concourse) half: the name is rea
   the menu header and `army.<house>` flags that the Stability score reads per house. A player cannot see which
   houses' companies sailed, which is what the ending turns on. One Journal note listing the companies ("Seven
   companies: Zetwal 60, Ironvow 30, ...") written at `story.muster_begun` would do it.
+- Fixed (Nov 7): a Journal note "The companies", shown once the Muster counts them (`muster.resolved`, when `army.<group>` is written), reads the flags as they stand through `{companies}` (`data/content.ts`): "Six companies, 220 soldiers: Zetwal's levy 60, Free Brasador 30, the Ironvow 50, ... None for the Dorini marines." (`tests/readouts.test.ts`).
 - **The Hearing's verdict:** works both ways. Pardon gives The Just Throne at Stability 93; Execution, through its
   "The Throne decides once" confirm, gives The Iron Throne at 68; the afternoon is staged in the Hall; the cards,
   The End, the cast and the credits follow, and the credits' Enter goes to the title. `hv0-01-choice-d.png`,

@@ -2713,6 +2713,13 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     title: 'Under the point',
     text: 'The Crown bought a captain at a free harbor, in the dark, with the muskets already in the cane. A closed hand on his satchel. "It will be quieter soon."',
   },
+  // The companies readout (the objective review, Nov 7): which houses' companies the Muster counted, and how many.
+  {
+    id: 'muster_companies',
+    when: 'muster.resolved',
+    title: 'The companies',
+    text: '{companies}',
+  },
   {
     id: 'muster_turned',
     when: 'muster.turned',
@@ -2736,7 +2743,8 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     id: 'war_fleet',
     when: 'story.landed',
     title: 'The fleet',
-    text: 'One volley for every ten soldiers at sea. Before each fight the whistle asks how many: three at most. A volley wounds; it never fells.',
+    // The count itself, as it stands (review Nov 7, finding 7): war.volleys_left, rewritten after every conversation.
+    text: 'One volley for every ten soldiers at sea: {v:war.volleys_left} left. Before each fight the whistle asks how many: three at most. A volley wounds; it never fells.',
   },
   {
     id: 'harbors_lie',

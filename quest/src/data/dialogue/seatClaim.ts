@@ -997,14 +997,15 @@ const ARRIVALS: DialogueScript = script('hearing_arrivals', {
   sebastian: { lines: [say(SB, 'I was somewhere being famous. It was here.')], next: 'ardencia' },
   ardencia: {
     lines: [
+      // Two staggered rows, nobody straight behind another (review Nov 7, finding 9's rule).
       act(
         [
-          { do: 'enter', actor: 'rv_c', look: 'rivera', from: at(CONCOURSE.ardenciaGate.x, CONCOURSE.ardenciaGate.y), to: at(28, 10), facing: 'left', async: true },
-          { do: 'enter', actor: 'tr_c', look: 'ard_treasurer', from: at(CONCOURSE.ardenciaGate.x, CONCOURSE.ardenciaGate.y + 1), to: at(27, 11), facing: 'left', async: true },
-          { do: 'enter', actor: 'td_c', look: 'treasurer_daughter', from: at(CONCOURSE.ardenciaGate.x + 1, CONCOURSE.ardenciaGate.y + 1), to: at(28, 11), facing: 'left', async: true },
-          { do: 'enter', actor: 'am_c', look: 'amanda', from: at(CONCOURSE.ardenciaGate.x + 1, CONCOURSE.ardenciaGate.y), to: at(26, 10), facing: 'left', async: true },
-          { do: 'enter', actor: 'na_c', look: 'nancy', from: at(CONCOURSE.ardenciaGate.x, CONCOURSE.ardenciaGate.y), to: at(29, 11), facing: 'left', async: true },
-          { do: 'enter', actor: 'ze_c', look: 'zelia', from: at(CONCOURSE.ardenciaGate.x + 1, CONCOURSE.ardenciaGate.y), to: at(29, 10), facing: 'left' },
+          { do: 'enter', actor: 'rv_c', look: 'rivera', from: at(CONCOURSE.ardenciaGate.x, CONCOURSE.ardenciaGate.y), to: at(29, 10), facing: 'left', async: true },
+          { do: 'enter', actor: 'tr_c', look: 'ard_treasurer', from: at(CONCOURSE.ardenciaGate.x, CONCOURSE.ardenciaGate.y + 1), to: at(28, 11), facing: 'left', async: true },
+          { do: 'enter', actor: 'td_c', look: 'treasurer_daughter', from: at(CONCOURSE.ardenciaGate.x + 1, CONCOURSE.ardenciaGate.y + 1), to: at(30, 11), facing: 'left', async: true },
+          { do: 'enter', actor: 'am_c', look: 'amanda', from: at(CONCOURSE.ardenciaGate.x + 1, CONCOURSE.ardenciaGate.y), to: at(27, 10), facing: 'left', async: true },
+          { do: 'enter', actor: 'na_c', look: 'nancy', from: at(CONCOURSE.ardenciaGate.x, CONCOURSE.ardenciaGate.y), to: at(32, 11), facing: 'left', async: true },
+          { do: 'enter', actor: 'ze_c', look: 'zelia', from: at(CONCOURSE.ardenciaGate.x + 1, CONCOURSE.ardenciaGate.y), to: at(31, 10), facing: 'left' },
           { do: 'look', actor: 'tr_c' },
         ],
         TD,
@@ -1020,7 +1021,7 @@ const ARRIVALS: DialogueScript = script('hearing_arrivals', {
       act(
         [
           { do: 'enter', actor: 'ra_c', look: 'rahel', from: at(CONCOURSE.aldermoorGate.x, CONCOURSE.aldermoorGate.y), to: at(19, 10), facing: 'right', async: true },
-          { do: 'enter', actor: 'pa_c', look: 'patricia', from: at(CONCOURSE.aldermoorGate.x, CONCOURSE.aldermoorGate.y + 1), to: at(19, 11), facing: 'right', async: true },
+          { do: 'enter', actor: 'pa_c', look: 'patricia', from: at(CONCOURSE.aldermoorGate.x, CONCOURSE.aldermoorGate.y + 1), to: at(18, 11), facing: 'right', async: true },
           { do: 'enter', actor: 'pr_c', look: 'printer', from: at(CONCOURSE.aldermoorGate.x, CONCOURSE.aldermoorGate.y), to: at(20, 11), facing: 'right' },
           { do: 'look', actor: 'ra_c' },
         ],
@@ -1219,7 +1220,19 @@ const VERDICT: DialogueScript = script('chamberlain_hearing_talk', {
   // Benny lays Benny's Refusal before his son (the decisions after the second review): the oath and the goal on one table.
   refusal: {
     lines: [
-      { if: has('item.bennys_refusal'), speaker: '', text: 'Gianna gives old Benny the copy of his refusal she has carried since Ardencia.' },
+      // Shown (review Nov 7, finding 8): he comes up the nave to her at the Master of the Chairs for it, and goes on to the
+      // clerk's table with it on the next line.
+      act(
+        [
+          { do: 'look', actor: 'npc:benny_hearing' },
+          { do: 'walk', actor: 'npc:benny_hearing', to: at(HALL.chamberlain.x - 2, HALL.chamberlain.y + 1), facing: 'up-right' },
+          { do: 'face', actor: 'player', facing: 'down-left' },
+          { do: 'look', actor: 'player' },
+        ],
+        '',
+        'Gianna gives old Benny the copy of his refusal she has carried since Ardencia.',
+        { if: has('item.bennys_refusal') },
+      ),
       { if: not('item.bennys_refusal'), speaker: '', text: 'Old Benny takes a folded page out of his coat: the refusal he wrote fifty years ago.' },
       act(
         [{ do: 'walk', actor: 'npc:benny_hearing', to: at(HALL.clerkTable.x - 1, HALL.clerkTable.y + 1), facing: 'up' }, { do: 'wait', ms: 800 }],

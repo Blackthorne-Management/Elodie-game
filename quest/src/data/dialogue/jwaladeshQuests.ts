@@ -30,6 +30,8 @@ const script = (id: string, nodes: Record<string, DialogueNode>): DialogueScript
 const simple = (id: string, lines: DialogueLine[]): DialogueScript => script(id, { start: { lines } });
 const at = (x: number, y: number) => ({ x, y });
 const f = (flag: string): Condition => ({ flag });
+/** J-5's toll men across the salt road, west of the toll line: a free row between each (review Nov 7, finding 9). */
+const TOLL_AT = [at(13, 11), at(13, 13), at(13, 15)] as const;
 const not = (flag: string): Condition => ({ notFlag: flag });
 
 const G = 'gianna';
@@ -540,15 +542,16 @@ const JACKALS_DIALOGUE: DialogueScript[] = [
     },
   }),
   // Behind the caravan, past the oil-cart: the Seth's enforcers, and the toll they keep now.
+  // Across the road with a free row between them (review Nov 7, finding 9: a file of three on neighbouring rows hid each other).
   script('caravan_toll', {
     start: {
       lines: [
         act(
           [
             { do: 'look', actor: 'toll_a' },
-            { do: 'enter', actor: 'toll_a', look: 'oil_enforcer', from: at(FLATS.oilCart.x, FLATS.oilCart.y - 1), to: at(13, 12), facing: 'right', async: true },
-            { do: 'enter', actor: 'toll_b', look: 'oil_enforcer_b', from: at(FLATS.oilCart.x + 1, FLATS.oilCart.y - 1), to: at(13, 13), facing: 'right', async: true },
-            { do: 'enter', actor: 'toll_c', look: 'road_bandit', from: at(FLATS.oilCart.x - 1, FLATS.oilCart.y - 1), to: at(13, 14), facing: 'right' },
+            { do: 'enter', actor: 'toll_a', look: 'oil_enforcer', from: at(FLATS.oilCart.x, FLATS.oilCart.y - 1), to: TOLL_AT[0]!, facing: 'right', async: true },
+            { do: 'enter', actor: 'toll_b', look: 'oil_enforcer_b', from: at(FLATS.oilCart.x + 1, FLATS.oilCart.y - 1), to: TOLL_AT[1]!, facing: 'right', async: true },
+            { do: 'enter', actor: 'toll_c', look: 'road_bandit', from: at(FLATS.oilCart.x - 1, FLATS.oilCart.y - 1), to: TOLL_AT[2]!, facing: 'right' },
           ],
           '',
           'Out of the shade of the Crown\'s oil-cart: two Oil Enforcers, and a man in a bandit\'s scarf. They stand across the road.',
@@ -567,9 +570,9 @@ const JACKALS_DIALOGUE: DialogueScript[] = [
       lines: [
         act(
           [
-            { do: 'place', actor: 'toll_a', look: 'oil_enforcer', at: at(13, 12), facing: 'right' },
-            { do: 'place', actor: 'toll_b', look: 'oil_enforcer_b', at: at(13, 13), facing: 'right' },
-            { do: 'place', actor: 'toll_c', look: 'road_bandit', at: at(13, 14), facing: 'right' },
+            { do: 'place', actor: 'toll_a', look: 'oil_enforcer', at: TOLL_AT[0]!, facing: 'right' },
+            { do: 'place', actor: 'toll_b', look: 'oil_enforcer_b', at: TOLL_AT[1]!, facing: 'right' },
+            { do: 'place', actor: 'toll_c', look: 'road_bandit', at: TOLL_AT[2]!, facing: 'right' },
             { do: 'exit', actor: 'toll_a', to: at(12, FLATS.h - 2), async: true },
             { do: 'exit', actor: 'toll_b', to: at(13, FLATS.h - 2), async: true },
             { do: 'exit', actor: 'toll_c', to: at(11, FLATS.h - 2), run: true },

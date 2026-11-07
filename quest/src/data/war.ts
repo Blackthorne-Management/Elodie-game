@@ -99,9 +99,12 @@ export const BEACH = {
     { kind: 'muster_ship_agnivansh', at: at(21, 18), army: 'jwaladesh' },
     { kind: 'muster_ship_dorini', at: at(26, 18), army: 'al_doria' },
   ],
-  /** The companies' columns on the sand (the second review's 3.11: seven columns, two tiles apart, one screen). */
+  /**
+   * The companies' columns on the sand (the second review's 3.11: seven columns, two tiles apart, one screen), each a file
+   * of three with a free row between its people, so nobody stands on the one in front (review Nov 7, finding 9's rule).
+   */
   columns: [5, 7, 9, 11, 13, 15, 17],
-  columnRows: [9, 10, 11],
+  columnRows: [8, 10, 12],
   /** Where the companies come up out of the boats (the water's edge). */
   shore: at(10, 14),
   /** One soldier per company placed along the sand between scenes (row 14). */
@@ -198,7 +201,11 @@ export const VILLAGE = {
   turnStep: { x: 21, y: 23, w: 2, h: 1 },
   /** Where Rael (or Hale) stands on the pier, three tiles from Gianna (the ferry's spawn is at (21, 25)). */
   pierEnd: at(21, 26),
-  vanguard: [at(22, 26), at(21, 27), at(22, 27)],
+  /**
+   * Rael's vanguard behind him: Rivera on the boards a step back at his side, Jaime still in the longboat (review Nov 7,
+   * finding 9's rule: the two-tile pier has room behind Rael for one person who is not in his column; Claude's call).
+   */
+  vanguard: [at(22, 27), at(23, 27)],
   longboat: at(23, 27),
   /** The Patience in the mouth, the chain from her bow along row 27 to the post (the second review's 3.6). */
   patience: at(10, 27),
@@ -212,6 +219,24 @@ export const VILLAGE = {
   echoBenny: at(20, 19),
   /** Where Benny and Nancy come up the pier, and the stretcher. */
   pierFoot: at(21, 19),
+} as const;
+
+/**
+ * Chapter 2's arrival on the same map (review Nov 7, finding 11; Claude's call, Nov 7): the ferry's boat puts the party on
+ * the pier, and the scene plays at the pier's root on the sand, not on one lane of the two-tile pier where five people
+ * stood in a file. Gianna (the spawn `pier`) with Anissa and Yari beside her; the sergeant's scale two rows up the sand
+ * (a free row between; not on the pier_head spawn above the boards), the fisher beside him, the two marines behind and
+ * out to his sides.
+ */
+export const PIER_ROOT = {
+  gianna: at(21, 20),
+  anissa: at(20, 20),
+  yari: at(22, 20),
+  sergeant: at(22, 18),
+  fisher: at(23, 18),
+  /** Where the fisher is shoved to, and where he stands to thank them. */
+  shoved: at(24, 18),
+  marines: [at(23, 16), at(21, 16)],
 } as const;
 
 // ---- The Song House (xaragua-song, 22 x 14): the shelter ------------------------------------------------------------
