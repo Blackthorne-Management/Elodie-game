@@ -184,7 +184,7 @@ body[data-play='card'] .touch-echo { display: none; }
    centred in what is left at the bottom. --under is the first free row under the picture (the hint line sits above it). */
 body[data-layout='stack'] #game { align-items: flex-start; box-sizing: border-box; padding-top: var(--game-top, 0px); }
 body[data-layout='stack'] .touch-overlay {
-  --under: calc(var(--game-top, 0px) + var(--game-height, 0px) + 34px);
+  --under: calc(var(--game-top, 0px) + var(--game-height, 0px) + 42px);
   --low: calc(var(--vv-height, 100vh) - var(--under) - 3 * 44px - 2 * 8px - 8px);
 }
 body[data-layout='stack'] .touch-overlay > * { --pad: var(--pad-stack); --btn: var(--btn-stack); }
@@ -232,7 +232,7 @@ body[data-layout='overlay'] .touch-top { right: calc(var(--edge) + 52px + env(sa
 body[data-layout='stack'] .side-map {
   --map-w: min(112px, 30vw);
   left: calc(var(--vv-left, 0px) + 12px + env(safe-area-inset-left, 0px));
-  top: calc(var(--vv-top, 0px) + var(--game-top, 0px) + var(--game-height, 0px) + 34px);
+  top: calc(var(--vv-top, 0px) + var(--game-top, 0px) + var(--game-height, 0px) + 42px);
 }
 body[data-layout='stack'] .side-map-label { text-align: left; }
 body[data-layout='overlay'] .side-map {
