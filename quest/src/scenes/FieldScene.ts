@@ -1240,7 +1240,13 @@ export class FieldScene extends Phaser.Scene {
   private speakerSprite(id: string): Phaser.GameObjects.Image | null {
     if (id === 'gianna' || id === 'player') return null;
     // An actor on stage by name, or by look (a scene's own name for a walk-on, such as the Hearing's `lo_c`).
-    const staged = this.stageActors.get(id) ?? this.stageActors.get(`npc:${id}`) ?? [...this.stageActors.values()].find((a) => a.look === id);
+    // Or by the speaker's portrait, when it names the actor's look (Sayo's agent speaks as `sayo_agent`, looks `echo_agent`).
+    const portrait = this.logic.content.speakers[id]?.portrait;
+    const staged =
+      this.stageActors.get(id) ??
+      this.stageActors.get(`npc:${id}`) ??
+      [...this.stageActors.values()].find((a) => a.look === id) ??
+      (portrait ? [...this.stageActors.values()].find((a) => a.look === portrait) : undefined);
     if (staged) return staged.sprite;
     const walking = this.partyLine().find(({ look }) => look === id || (id === 'anissa' && look === this.anissaLook()));
     if (walking) return walking.f.sprite;
