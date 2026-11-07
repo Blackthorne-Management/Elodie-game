@@ -530,12 +530,16 @@ export const FLEET_HRAFN_BRANCHES: readonly DialogueBranch[] = [
 ];
 
 /** Hrafn walks to the Crown's chest, corded for the road home, and lays his hand on it. */
+/** Hrafn walks to the Crown's chest; the line about his hand on it is read while he stands there (Nov 7: it came after
+ * he had walked back), and the next line brings him back. */
 const HRAFN_AT_CHEST: StageCue[] = [
   { do: 'look', actor: HRAFN },
   { do: 'walk', actor: HRAFN, to: at(MOOT.chest.x, MOOT.chest.y + 1), facing: 'up' },
-  { do: 'wait', ms: 900 },
+];
+const HRAFN_BACK: StageCue[] = [
   { do: 'walk', actor: HRAFN, to: MOOT.hrafn },
   { do: 'face', actor: HRAFN, facing: 'player' },
+  { do: 'look', actor: 'player' },
 ];
 
 const PROMISE: DialogueLine[] = [
@@ -557,16 +561,16 @@ export const FLEET_HRAFN_NODES: Readonly<Record<string, DialogueNode>> = {
   fleet_word: {
     lines: [
       ...PROMISE,
-      act(HRAFN_AT_CHEST, '', 'Hrafn walks to the Crown\'s chest in the guest tent, corded for the road home, and lays his hand flat on its lid.'),
-      say(HR, 'The skalds sing your name already, envoy. In Ordvik a sung name can promise.'),
+      act(HRAFN_AT_CHEST, '', 'At the Crown\'s chest in the guest tent, corded for the road home, Hrafn lays his hand flat on its lid.'),
+      act(HRAFN_BACK, HR, 'The skalds sing your name already, envoy. In Ordvik a sung name can promise.'),
       say(HR, 'My three hulls row for Zetwal. If the Throne does not pay, I will sing about you myself.', { set: { [FLEET.hrafn]: true } }),
     ],
   },
   fleet_fear: {
     lines: [
       ...PROMISE,
-      act(HRAFN_AT_CHEST, '', 'Hrafn walks to the Crown\'s chest in the guest tent, corded for the road home, and lays his hand flat on its lid.'),
-      say(HR, 'Ordvik says the envoy does not lose fights. I would rather have your promise than your quarrel.'),
+      act(HRAFN_AT_CHEST, '', 'At the Crown\'s chest in the guest tent, corded for the road home, Hrafn lays his hand flat on its lid.'),
+      act(HRAFN_BACK, HR, 'Ordvik says the envoy does not lose fights. I would rather have your promise than your quarrel.'),
       say(HR, 'My three hulls row for Zetwal.', { set: { [FLEET.hrafn]: true } }),
     ],
   },
