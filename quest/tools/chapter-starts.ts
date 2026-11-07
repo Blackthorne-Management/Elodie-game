@@ -36,8 +36,8 @@ const MARKS: Readonly<Record<string, { mark: string; map: string; spawn: string 
   '8': { mark: 'chapter7-end', map: 'jwaladesh-harbor', spawn: 'landing' },
   // Chapter 9 begins on the Mere Stair below Kingsmere, off the Zetwal trader (the landing plays).
   '9': { mark: 'chapter8-end', map: 'aldermoor-heath', spawn: 'mere_stair' },
-  // Chapter 10 begins on Pòdlimyè's long pier after the card (the landing plays).
-  '10': { mark: 'chapter9-end', map: 'zetwal-harbor', spawn: 'harbor_return' },
+  // Chapter 10 begins at the root of Pòdlimyè's long pier, on the sand, after the card (the landing plays).
+  '10': { mark: 'chapter9-end', map: 'zetwal-harbor', spawn: 'muster_landing' },
   // Chapter 11 begins on the Canoe Beach below Yucayeque at first light, off the fleet (Chapter 11's outline, beat 0).
   '11': { mark: 'chapter10-end', map: 'xaragua-beach', spawn: 'landing' },
   // Chapter 12 begins at Eightgate's Ardencia Gate, off the fleet, after Chapter 11's card (the Regent's retreat).

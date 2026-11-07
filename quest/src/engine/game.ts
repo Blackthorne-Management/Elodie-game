@@ -518,8 +518,12 @@ export class GameLogic {
   view(): DialogueView {
     const v = this.runner?.view() ?? { kind: 'end' };
     const format = this.content.formatText;
-    if (!format || v.kind === 'end' || !v.text.includes('{')) return v;
-    return { ...v, text: format(v.text, this.state.flags) };
+    if (!format || v.kind === 'end') return v;
+    // The line and each choice read the save as they are shown (a count the choice itself names: the volleys left).
+    const text = v.text.includes('{') ? format(v.text, this.state.flags) : v.text;
+    if (v.kind === 'line') return text === v.text ? v : { ...v, text };
+    if (text === v.text && !v.choices.some((c) => c.text.includes('{'))) return v;
+    return { ...v, text, choices: v.choices.map((c) => (c.text.includes('{') ? { ...c, text: format(c.text, this.state.flags) } : c)) };
   }
 
   /** Move past the current line (no effect while a choice waits). */

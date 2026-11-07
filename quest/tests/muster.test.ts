@@ -63,9 +63,9 @@ const feudLines: Line[] = FEUDS.flatMap((d) =>
 const all = [...lines, ...feudLines];
 
 describe('the chapter starts, and what Chapter 11 is handed', () => {
-  it('?chapter=10: the long pier, and the landing plays as the party arrives', () => {
+  it('?chapter=10: the sand at the long pier\'s root, and the landing plays as the party arrives', () => {
     const at = starts['10']!;
-    expect([at.map, at.spawn]).toEqual(['zetwal-harbor', 'harbor_return']);
+    expect([at.map, at.spawn]).toEqual(['zetwal-harbor', 'muster_landing']);
     const state = newGame(maps[at.map]!, at.spawn);
     state.flags.load(at.flags);
     expect(state.flags.isSet('story.muster_begun')).toBe(false);

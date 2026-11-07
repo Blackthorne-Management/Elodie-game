@@ -498,7 +498,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
         act(
           [
             { do: 'enter', actor: 'road_enforcer_a', look: 'oil_enforcer', from: at(30, 13), to: at(38, 13), facing: 'right', async: true },
-            { do: 'enter', actor: 'road_enforcer_b', look: 'oil_enforcer_b', from: at(30, 14), to: at(38, 14), facing: 'right', async: true },
+            { do: 'enter', actor: 'road_enforcer_b', look: 'oil_enforcer_b', from: at(30, 14), to: at(36, 14), facing: 'right', async: true },
             { do: 'enter', actor: 'road_enforcer_c', look: 'oil_enforcer_c', from: at(29, 13), to: at(37, 13), facing: 'right' },
             { do: 'look', actor: 'road_enforcer_a' },
           ],
@@ -730,7 +730,20 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
     ),
     say(BY, 'Then we are trespassing. Good.', { set: { 'battle.next': 'quay_watch', 'battle.after': 'quay_watch_after' } }),
   ]),
-  simple('quay_watch_after', [nar('The watch run for the store, lanterns swinging.'), say(H, 'The lane behind the carts was quieter. For next time.')]),
+  // Shown, not told (review Nov 7, finding 2): the beaten watch run east across the quay for the oil store's doors.
+  simple('quay_watch_after', [
+    act(
+      [
+        { do: 'place', actor: 'watch_a', look: 'oil_enforcer', at: at(HARBOR.watchX + 1, 8), facing: 'left' },
+        { do: 'place', actor: 'watch_b', look: 'oil_enforcer_c', at: at(HARBOR.watchX + 1, 6), facing: 'left' },
+        { do: 'exit', actor: 'watch_a', to: HARBOR.storeDoors, run: true, async: true },
+        { do: 'exit', actor: 'watch_b', to: HARBOR.storeDoors, run: true },
+      ],
+      '',
+      'The watch run for the store, lanterns swinging.',
+    ),
+    say(H, 'The lane behind the carts was quieter. For next time.'),
+  ]),
   script('arjun_echo', {
     start: {
       lines: [],
@@ -1096,7 +1109,8 @@ function chargeNodes(): Record<string, DialogueNode> {
         act(
           [
             ...placeRiders,
-            ...RIDERS.map((_, i): StageCue => ({ do: 'walk', actor: `rider_${i + 1}`, to: at(mole.x + (i % 2), mole.y + 1 + Math.floor(i / 2)), run: true, async: i < RIDERS.length - 1 })),
+            // Staggered down the two-tile mole, each a free row from the rider ahead in their file (review Nov 7, finding 9's rule).
+            ...RIDERS.map((_, i): StageCue => ({ do: 'walk', actor: `rider_${i + 1}`, to: at(mole.x + (i % 2), mole.y + i), run: true, async: i < RIDERS.length - 1 })),
             { do: 'look', actor: 'rider_1' },
           ],
           '',

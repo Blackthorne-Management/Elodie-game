@@ -226,12 +226,13 @@ const RACE_DIALOGUE: DialogueScript[] = [
         act(
           [
             { do: 'place', actor: 'rider_a', look: 'horse_bay', at: at(RACE.start.x + 1, RACE.start.y), facing: 'right' },
-            { do: 'place', actor: 'rider_b', look: 'horse_chestnut', at: at(RACE.start.x + 1, RACE.start.y + 1), facing: 'right' },
+            // The chestnut a half length back and outside the bay, not under it (review Nov 7, finding 9's rule).
+            { do: 'place', actor: 'rider_b', look: 'horse_chestnut', at: at(RACE.start.x + 2, RACE.start.y + 1), facing: 'right' },
             { do: 'walk', actor: 'npc:salkhi_fair', to: RACE.start, facing: 'right' },
             { do: 'look', actor: 'npc:salkhi_fair' },
             ...RACE.course.flatMap((p): StageCue[] => [
               { do: 'walk', actor: 'rider_a', to: at(p.x + 1, p.y), run: true, async: true },
-              { do: 'walk', actor: 'rider_b', to: at(p.x + 1, p.y + 1), run: true, async: true },
+              { do: 'walk', actor: 'rider_b', to: at(p.x + 2, p.y + 1), run: true, async: true },
               { do: 'walk', actor: 'npc:salkhi_fair', to: p, run: true },
             ]),
           ],

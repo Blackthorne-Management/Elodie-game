@@ -84,13 +84,16 @@ const THREE_ACCOUNTS: Condition = all(
 );
 
 // ---- Beat 0: the long pier --------------------------------------------------------------------------------------------
+// Review Nov 7, finding 1 (Claude's call, Nov 7): the party stands on the sand at the pier's root (HARBOR.landing), facing
+// the harbor, so the walkers and the companions brought on settle in a half circle on the beach rows; Grandmother and
+// Grandfather come along the beach and stop on the pier's head in front of them, a free row from Gianna and Yari.
 
 const LANDING: DialogueScript = script('muster_landing', {
   start: {
     lines: [
       // The camera crosses the harbor to each hull as it is named (review Nov 1, Chapter 10 finding 11), low enough that
       // the hulls at the piers stand above the dialogue box.
-      nar('Pòdlimyè\'s long pier, in the morning. The Old Harbor is full of hulls that are not Zetwal\'s.', {
+      nar('The foot of Pòdlimyè\'s long pier, in the morning. The Old Harbor is full of hulls that are not Zetwal\'s.', {
         fx: 'fade',
         stage: [{ do: 'sync' }, { do: 'mark', actor: 'harbor', at: at(20, 17) }, { do: 'look', actor: 'harbor' }, { do: 'wait', ms: 700 }],
       }),
@@ -116,8 +119,8 @@ const LANDING: DialogueScript = script('muster_landing', {
     lines: [
       act(
         [
-          { do: 'enter', actor: 'anicette_l', look: 'anicette', from: at(24, 9), to: at(30, 12), facing: 'down', run: true, async: true },
-          { do: 'enter', actor: 'patricio_l', look: 'patricio_old', from: at(23, 9), to: at(31, 12), facing: 'down' },
+          { do: 'enter', actor: 'anicette_l', look: 'anicette', from: at(24, 10), to: at(HARBOR.pierHead.x, HARBOR.pierHead.y), facing: 'up', run: true, async: true },
+          { do: 'enter', actor: 'patricio_l', look: 'patricio_old', from: at(23, 10), to: at(HARBOR.pierHead.x + 1, HARBOR.pierHead.y), facing: 'up' },
           { do: 'look', actor: 'anicette_l' },
         ],
         AN,
@@ -142,10 +145,11 @@ const LANDING: DialogueScript = script('muster_landing', {
   },
   whistle: {
     lines: [
-      act([{ do: 'walk', actor: 'patricio_l', to: at(31, 13), facing: 'left' }, { do: 'face', actor: 'player', facing: 'right' }], '', 'Gianna takes the brass whistle from its cord round her neck, and puts it in his hand.', {
+      // He comes up off the pier to her for the whistle, and steps back onto it as she speaks (the Nov 7 round trip).
+      act([{ do: 'walk', actor: 'patricio_l', to: at(HARBOR.landing.x, HARBOR.landing.y + 1), facing: 'up' }, { do: 'face', actor: 'player', facing: 'down' }], '', 'Gianna takes the brass whistle from its cord round her neck, and puts it in his hand.', {
         set: { 'item.marshal_whistle': false, 'story.whistle_lent': true },
       }),
-      say(G, 'Then it\'s yours again. For today.'),
+      act([{ do: 'walk', actor: 'patricio_l', to: at(HARBOR.pierHead.x + 1, HARBOR.pierHead.y), facing: 'up' }, { do: 'face', actor: 'player', facing: 'down' }], G, 'Then it\'s yours again. For today.'),
       act([{ do: 'wait', ms: 900 }], '', 'He closes his hand on it, and says nothing for a moment.'),
       say(PO, 'The council sits at noon. The Chancellor will not send a Zetwal ship to a war with a camp that is three camps.', { mood: 'stern' }),
       say(PO, 'Seat them, envoy. Then come to the Hall.', { mood: 'stern' }),
@@ -156,7 +160,12 @@ const LANDING: DialogueScript = script('muster_landing', {
     lines: [
       say(H, 'Your mother?'),
       say(PO, 'At Eightgate. The Regent\'s guest, as he calls it. She writes about the weather.'),
-      act([{ do: 'face', actor: 'follower', facing: 'player' }, { do: 'wait', ms: 700 }], '', 'Gianna says nothing. Anissa takes her hand.'),
+      // Shown (review Nov 7, finding 1): Anissa comes to her side, on the sand at her left, and turns to her.
+      act(
+        [{ do: 'walk', actor: 'follower', to: at(HARBOR.landing.x - 1, HARBOR.landing.y), facing: 'right' }, { do: 'face', actor: 'follower', facing: 'player' }, { do: 'wait', ms: 700 }],
+        '',
+        'Gianna says nothing. Anissa takes her hand.',
+      ),
     ],
     next: 'trader',
   },
@@ -165,7 +174,7 @@ const LANDING: DialogueScript = script('muster_landing', {
       act([{ do: 'look', actor: 'npc:trader_muster' }], 'trader_captain', 'I\'m not sailing again until there\'s a fleet to sail with. Four countries and a horse. I want to see how it ends.'),
       act(
         [
-          { do: 'exit', actor: 'anicette_l', to: at(24, 9), async: true },
+          { do: 'exit', actor: 'anicette_l', to: at(24, 10), async: true },
           { do: 'exit', actor: 'patricio_l', to: at(HARBOR.patricio.x, HARBOR.patricio.y) },
           { do: 'look', actor: 'player' },
         ],

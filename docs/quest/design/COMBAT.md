@@ -708,6 +708,10 @@ Durations count the affected fighter's own turns. Lengths are `STATUS_DURATION` 
   0.5, and **a volley never fells**. A won fight spends what it fired; a lost one gives them back. The Strike has none
   (the companies will not fire on the pier with the envoy in the line). The war's three stages are the headland
   battery, Thorne's customs house and Caona's stand in the pier's memory (the pier assault folded into it).
+- **The count on the screen (Claude's call, Nov 7; the objective review's finding 7):** each of the whistle's choices
+  says what the pool has left ("Three volleys (16 left)."), from `war.volleys_left` through `{v:war.volleys_left}`
+  (data/content.ts `formatText`, which now formats a choice's text as well as the line's), and the fleet's Journal note
+  says the same number; the line that sent the player to the Journal for it is gone.
 
 ## 12. Game Over: the goddess's second chance (owner decisions, Oct 19; built)
 

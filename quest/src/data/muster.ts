@@ -64,8 +64,12 @@ export const MUSTER_HOUSES: readonly MusterHouse[] = [
 
 // ---- The Old Harbor (zetwal-harbor, 36 x 18) ----------------------------------------------------------------------
 export const HARBOR = {
-  /** The long pier's landing (the built spawn harbor_return) and the pier's head. */
-  landing: at(30, 13),
+  /**
+   * The Muster's landing (the built spawn muster_landing): on the sand at the long pier's root, facing the harbor, where
+   * nine people and a horse can stand in a half circle (review Nov 7, finding 1: not on the two-tile pier, where they
+   * stood in two columns; Claude's call, Nov 7). Chapter 2's homecoming still lands on the pier (harbor_return, 30,13).
+   */
+  landing: at(30, 9),
   pierHead: at(30, 11),
   /** The tide's step at dawn (the pier, above the landing). */
   tide: { x: 30, y: 12, w: 2, h: 1 },

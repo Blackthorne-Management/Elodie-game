@@ -58,7 +58,7 @@ describe('the chapter starts', () => {
 
   it('?chapter=10: Zetwal\'s harbour after the voyage home, Edmund with them, the pact and the record in hand', () => {
     const at10 = starts['10']!;
-    expect([at10.map, at10.spawn]).toEqual(['zetwal-harbor', 'harbor_return']);
+    expect([at10.map, at10.spawn]).toEqual(['zetwal-harbor', 'muster_landing']);
     const flags = new FlagStore(at10.flags);
     for (const f of ['act9.complete', 'card.act9_end', 'party.edmund', 'ally.aldermoor_dissidents', 'clue.crown_pact', 'anchor.thomas_record', 'item.crown_pact', 'item.thomas_record']) {
       expect(flags.isSet(f), f).toBe(true);

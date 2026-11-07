@@ -984,8 +984,9 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
       [
         { do: 'place', actor: 'sergeant', look: 'brasador_halberdier', at: at(5, 17), facing: 'up' },
         { do: 'place', actor: 'soldier_a', look: 'brasador_halberdier', at: at(6, 17), facing: 'up' },
-        { do: 'place', actor: 'soldier_b', look: 'brasador_halberdier', at: at(5, 18), facing: 'up' },
-        { do: 'place', actor: 'soldier_c', look: 'brasador_halberdier', at: at(6, 18), facing: 'up' },
+        // The second pair a step back and out to the sides, not behind the first (review Nov 7, finding 9's rule).
+        { do: 'place', actor: 'soldier_b', look: 'brasador_halberdier', at: at(4, 18), facing: 'up' },
+        { do: 'place', actor: 'soldier_c', look: 'brasador_halberdier', at: at(7, 18), facing: 'up' },
       ],
       '',
       'At the bend, four halberdiers bar the road, blades down toward them.',
@@ -1070,7 +1071,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
             { do: 'place', actor: 'azzy', look: 'azzy', at: at(10, 9), facing: 'up' },
             { do: 'place', actor: 'sergeant', look: 'free_brasador', at: at(12, 6), facing: 'down' },
             { do: 'look', actor: 'sergeant' },
-            { do: 'walk', actor: 'sergeant', to: at(10, 8), facing: 'down' },
+            { do: 'walk', actor: 'sergeant', to: at(11, 8), facing: 'down-left' },
           ],
           'sergeant',
           'We hold the strand, captain. Come back with an army, or do not come back.',

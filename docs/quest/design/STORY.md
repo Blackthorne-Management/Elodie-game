@@ -641,6 +641,34 @@ Locket and the signet glow together; "Marshal." "Warden." Accord Stability (`eng
 else **Hollow**, whose card names what cost the realm most. The Just Throne ends with Anissa opening the Hall's doors:
 "I'll hold the door, Gigi." Then the *The End* card answers the intro's first line, the cast, the credits and the title.
 
+### Staging fixes from the objective review (Nov 7; Claude's calls, Nov 7)
+
+The review `reviews/2026-11-07-objective-review.md` found scenes the placement engine could not save and exits that
+were told, not shown (owner rule, Oct 17). What was decided while fixing them:
+- **Chapter 2, Yucayeque (finding 11):** the ferry's boat puts the party on the pier, and the scene plays at the pier's
+  root on the sand (`data/war.ts PIER_ROOT`, the spawn `pier`): Gianna with Anissa and Yari in a row, the sergeant's
+  scale two rows up the sand with the fisher beside him, his two marines behind and out to his sides.
+- **Chapter 10, the Muster's landing (finding 1):** the party is found on the sand at the long pier's root, facing the
+  harbor (`HARBOR.landing`, the spawn `muster_landing`; Chapter 2's homecoming keeps the pier); the companions settle in
+  a half circle on the beach rows; Grandmother and Grandfather come along the beach and stop on the pier's head, a free
+  row from the front line; Grandfather steps up to Gianna for the whistle and back; Anissa walks to Gianna's side to
+  take her hand.
+- **Chapter 6, the camp's lookouts (finding 2):** "To me!" brings two reavers at a run from the far tents to the
+  sledges behind the lookout; beaten, they ride back for the tents and he runs after them. The other fights the review
+  named (K-2's cutpurses out by the high window one after another, the moths into the fog bank, the night watch to the
+  oil store's doors, and S-3's wolves back down the gully, which the new test found) place the foes where they stood and
+  walk them off the way the line says. `tests/stage.test.ts` now checks every scene a fight plays after.
+- **The free-row rule everywhere (finding 9):** every line that brings people on keeps a free row between those it
+  brings on (`tests/stage.test.ts`), so ranks are staggered rather than two deep (the patrol at the bend, the watch at
+  the Assize and at the price, the companies landing in file on the Canoe Beach, Arjun's riders on the mole, the
+  Hearing's arrivals) and pairs stand side by side or diagonally. On Chapter 11's pier, the two-tile boards hold one
+  person behind Rael out of his column: Rivera; Jaime stays in the longboat and the halberdier is not brought on.
+- **The Epilogue's pardon (finding 8):** old Benny walks up the nave to Gianna at the Master of the Chairs for the copy
+  of his refusal, then on to the clerk's table with it.
+- **The companies readout:** once the Muster counts the companies (`muster.resolved`), one Journal note, "The
+  companies", lists who sails and with how many from the `army.<group>` flags as they stand, and names the house that
+  sends none.
+
 ---
 
 ## 4. Threads that run through every chapter

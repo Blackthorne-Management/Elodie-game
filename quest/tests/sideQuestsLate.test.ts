@@ -552,10 +552,16 @@ describe('S-2 The Fleet for Sale (Ordvik at dawn: three chiefs, the race, the Th
     hrafn(sim);
     expect(flags.get(standingFlag('influence', 'skarragol'))).toBeLessThan(FLEET.influence);
     expect(flags.isSet(FLEET.hrafn)).toBe(false);
-    // Every Fear choice Ordvik offers (the bout in white won, Grimvald broken): Fear 3.
-    flags.set('side.grandson.bout_won', true);
+    // Breaking Grimvald alone (+1) is not enough: Fear 1 (owner and reviewer, Nov 7).
     flags.set('choice.grimvald_broken', true);
     hrafn(sim);
+    expect(flags.get(standingFlag('fear', 'skarragol'))).toBe(1);
+    expect(flags.isSet(FLEET.hrafn)).toBe(false);
+    // The bout in white won (+2), Grimvald spared: Fear 2, what Hrafn's line says ("the envoy does not lose fights").
+    flags.set('choice.grimvald_broken', false);
+    flags.set('side.grandson.bout_won', true);
+    hrafn(sim);
+    expect(FLEET.fear).toBe(2);
     expect(flags.get(standingFlag('fear', 'skarragol'))).toBe(FLEET.fear);
     expect(flags.isSet(FLEET.hrafn)).toBe(true);
   });

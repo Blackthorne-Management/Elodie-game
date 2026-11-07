@@ -218,8 +218,9 @@ export const FLEET = {
    * Hrafn takes the envoy's word on Ordvik's regard (Claude's call, Nov 4): the design's "Influence 12 or Fear 10",
    * read in Skarragol (what the chiefs can see). Influence 12 stands (the route has 16 at dawn: eleven sagas read and
    * three choices; a player who reads few has 4 or 5). Fear 10 cannot be reached (Ordvik offers 3 at most: the bout in
-   * white won, Grimvald broken), so it is scaled to 3: every Fear choice Ordvik offered.
+   * white won +2, Grimvald broken +1), so it is scaled to 2 (owner and reviewer, Nov 7; was 3): the bout alone, what
+   * Hrafn's own line says ("the envoy does not lose fights"), not a reward for breaking Grimvald.
    */
   influence: 12,
-  fear: 3,
+  fear: 2,
 } as const;

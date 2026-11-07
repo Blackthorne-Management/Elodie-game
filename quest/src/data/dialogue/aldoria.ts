@@ -840,7 +840,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
           [
             { do: 'look', actor: 'qasim' },
             { do: 'enter', actor: 'qasim', look: 'qasim', from: at(4, 1), to: at(14, 7), facing: 'right', async: true },
-            { do: 'enter', actor: 'blade_a', look: 'caravan_raider', from: at(4, 1), to: at(14, 8), facing: 'right', async: true },
+            { do: 'enter', actor: 'blade_a', look: 'caravan_raider', from: at(4, 1), to: at(15, 8), facing: 'right', async: true },
             { do: 'enter', actor: 'blade_b', look: 'caravan_raider', from: at(4, 1), to: at(15, 6), facing: 'right' },
             { do: 'place', actor: 'blade_c', look: 'caravan_raider', at: at(4, 2), facing: 'down' },
             { do: 'walk', actor: 'follower', to: at(23, 8), facing: 'left' },
@@ -944,7 +944,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       [
         { do: 'place', actor: 'samira', look: 'samira', at: at(5, 12), facing: 'left' },
         { do: 'look', actor: 'scribe' },
-        { do: 'enter', actor: 'scribe', look: 'dorini_scribe', from: at(0, 13), to: at(5, 13), facing: 'up' },
+        { do: 'enter', actor: 'scribe', look: 'dorini_scribe', from: at(0, 13), to: at(6, 13), facing: 'up-left' },
         { do: 'wait', ms: 700 },
       ],
       '',

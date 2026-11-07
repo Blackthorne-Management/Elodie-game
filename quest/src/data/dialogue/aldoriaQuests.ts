@@ -420,7 +420,7 @@ const INVOICE_DIALOGUE: DialogueScript[] = [
           [
             { do: 'look', actor: 'officer' },
             { do: 'enter', actor: 'officer', look: 'crown_officer', from: INVOICE.gangway, to: at(INVOICE.front.x + 1, INVOICE.front.y), facing: 'left', async: true },
-            { do: 'enter', actor: 'marine_a', look: 'crown_marine', from: INVOICE.gangway, to: at(INVOICE.front.x + 1, INVOICE.front.y - 1), facing: 'left' },
+            { do: 'enter', actor: 'marine_a', look: 'crown_marine', from: INVOICE.gangway, to: at(INVOICE.front.x + 2, INVOICE.front.y - 1), facing: 'left' },
           ],
           'crown_factor',
           'Officer! These people are robbing the Crown!',
