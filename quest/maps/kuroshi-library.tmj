@@ -552,7 +552,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "item.sun_locket, side.spy_ledger.accepted"
+              "value": "item.sun_locket, side.spy_ledger.accepted|side.ashes.accepted"
             },
             {
               "name": "onEcho",

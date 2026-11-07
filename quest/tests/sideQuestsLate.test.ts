@@ -414,6 +414,17 @@ describe('K-5 Ashes of the Temple (the Suzumori elder, Kayla\'s desk fifty years
     expect(sideQuestStatus(new FlagStore({ ...flags.snapshot(), 'act7.complete': true, [ASHES.letter]: false }), q)).toBe('closed');
   });
 
+  it('the memory opens for K-5 alone, for a player who never took K-2 (Nov 7: the zone asked for K-2)', () => {
+    const sim = library();
+    const flags = sim.logic.state.flags;
+    flags.clear('side.spy_ledger.accepted');
+    sim.run(['goto 13,4', 'up', 'confirm', 'skip']);
+    expect(flags.isSet(ASHES.accepted)).toBe(true);
+    sim.run(['goto 9,8', 'echo', 'skip']);
+    expect(sim.logic.era).toBe('echo');
+    expect(flags.isSet(ASHES.seal)).toBe(true);
+  });
+
   it('the library\'s memory is K-2\'s again once the seal is seen, and never K-5\'s before it is asked for', () => {
     const sim = library();
     const flags = sim.logic.state.flags;

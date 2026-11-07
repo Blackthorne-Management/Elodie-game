@@ -1344,6 +1344,7 @@ export class FieldScene extends Phaser.Scene {
       this.tweens.add({ targets: sprite, y: sprite.y - 3, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.markerSprites.set(m.id, sprite);
     }
+    for (const sprite of this.markerSprites.values()) sprite.setVisible(this.mode !== 'dialogue');
   }
 
   /** Once back in the field after an Echo change, the changed objects glow for a few seconds. */
@@ -2535,6 +2536,9 @@ export class FieldScene extends Phaser.Scene {
     // The party steps beside Gianna as the scene begins, so everyone in it can be seen.
     this.settleParty(false);
     this.label.setVisible(false);
+    // No "!" or sparkles over a conversation (Nov 7: Jarl Ingrid's "!" sat on Samira's name while she spoke); the end of the
+    // conversation syncs them again (leaveDialogueMode).
+    for (const sprite of this.markerSprites.values()) sprite.setVisible(false);
     this.labelKey = '';
     this.lastFx = undefined;
     this.showDialogueView();
@@ -2546,8 +2550,8 @@ export class FieldScene extends Phaser.Scene {
     this.clearStage();
     // What the conversation changed can give someone else something new to say (Nov 4: the horn opens the lawspeaker's
     // S-2 offer, and her "!" only came at the next map sync): the markers follow at once.
-    this.syncMarkers();
     this.mode = this.logic.mode === 'card' ? 'card' : 'field';
+    this.syncMarkers();
     this.rt.input.clearPresses();
     if (this.talkingTo) {
       const n = this.talkingTo;

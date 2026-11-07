@@ -182,7 +182,8 @@ export function kuroshiLibrary(): MapSource {
     npc('sayo_clerk', LIBRARY.kayla.x, LIBRARY.kayla.y, 'down', { era: 'echo' }),
     npc('kq_librarian', LIBRARY.librarian.x, LIBRARY.librarian.y, 'right'),
     npc('suzumori_elder', LIBRARY.elder.x, LIBRARY.elder.y, 'up'),
-    { layer: 'echo_zones', name: 'desk_echo', x: z.x, y: z.y, w: z.w, h: z.h, props: { if: 'item.sun_locket, side.spy_ledger.accepted', onEcho: 'clerk_echo' } },
+    // K-2's memory, and K-5's (Ashes of the Temple, Nov 7: the zone opened only for K-2, so K-5 alone could not be finished).
+    { layer: 'echo_zones', name: 'desk_echo', x: z.x, y: z.y, w: z.w, h: z.h, props: { if: 'item.sun_locket, side.spy_ledger.accepted|side.ashes.accepted', onEcho: 'clerk_echo' } },
     // The sealed stacks: the seal on the door, the window a reader could climb, and the shelves.
     obj('stacks_seal', LIBRARY.seal.x, LIBRARY.seal.y, { kind: 'paper_seal', solid: true, era: 'present', dialogue: 'stacks_seal' }),
     obj('stacks_window', LIBRARY.window.x, LIBRARY.window.y, { kind: 'window', walkable: true, era: 'present', if: 'side.spy_ledger.accepted' }),

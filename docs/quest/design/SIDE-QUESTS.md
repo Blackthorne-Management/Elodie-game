@@ -678,6 +678,8 @@ built (owner decision).
   change nothing for most players). Closes when the trader sails from Kirinoura with the quest accepted and no letter
   written, or from Agnipur undelivered; never offered after Kirinoura if never asked.
 
+- **Fixed (Nov 7):** the library's Echo zone opened only once K-2 (the spy ledger) was accepted, so a player doing K-5 alone could not reach the memory; it now opens for either quest (`tools/maps/kuroshi.ts` desk_echo; test in `tests/sideQuestsLate.test.ts`). Found by playing it in the browser.
+
 ## Agnipur (Jwaladesh)
 
 ### J-1 Win Every Argument
