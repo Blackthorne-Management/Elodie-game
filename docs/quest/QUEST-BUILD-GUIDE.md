@@ -884,6 +884,13 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   (`story.vault_echo`); the strongroom's boxes and the sun lock once the door is open; the witness's chest once the sun
   lock has turned. The guide's marks never sit on a person: the on-screen chevron rises over anyone it would touch, and
   the edge arrow slides along its edge of the screen to the nearest place clear of everyone, still pointing at its stop.
+- **The Hearing's crowd keeps a free row (Claude's call, Nov 10; the Nov 7 review's 13):** the free-row rule the staged
+  scenes keep now holds for the people the Throne Hall's map places (`data/claim.ts`): the witnesses' bench stands in two
+  ranks of four on rows 12 and 14 (the back rank a step aside), the gallery in two ranks on rows 13 and 15, Jordyn
+  behind Rael with a free row (21,12, between Rivera and Jaime), Jaime a step back (22,13, clear of the second witness's
+  place at 22,11), and Hollis at the clerk's table's corner (25,11), a free row below Skarragol's place behind its
+  chair. `tests/stage.test.ts` plays the route to `@hearing-verdict` and `@the-end` and fails anyone in the Hall standing
+  one above another without a free row.
 
 ---
 
