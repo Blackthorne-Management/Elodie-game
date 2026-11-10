@@ -1179,12 +1179,15 @@ export class GameMenu {
       const on = first + i === this.cursor;
       const band = levelBand(RPG, yours, f.level);
       const colour = BAND_COLOURS[band];
-      this.text(6, TOP + 26 + i * ROW_H, `${on ? '>' : ' '} Lv ${String(f.level).padStart(2)}  ${f.name}`, on ? UI.accentText : colour);
+      // The band in words too, so the colour is never the only cue; right-aligned, and the name is cut short before it
+      // (Nov 10: with Large text a long name ran into it).
+      const word = this.text(0, TOP + 26 + i * ROW_H, `${levelBandWord(band)}, ${f.won ? 'beaten' : 'escaped'}`, UI.dimText);
+      word.setX(VIEW_WIDTH - 6 - word.width);
+      const name = this.text(6, TOP + 26 + i * ROW_H, `${on ? '>' : ' '} Lv ${String(f.level).padStart(2)}  ${f.name}`, on ? UI.accentText : colour);
+      ellipsize(name, word.x - 6 - 6);
       this.hit(4, TOP + 25 + i * ROW_H, VIEW_WIDTH - 8, ROW_H, () => {
         this.cursor = first + i;
       });
-      // The band in words too, so the colour is never the only cue.
-      this.text(VIEW_WIDTH - 90, TOP + 26 + i * ROW_H, `${levelBandWord(band)}, ${f.won ? 'beaten' : 'escaped'}`, UI.dimText);
     });
   }
 }
