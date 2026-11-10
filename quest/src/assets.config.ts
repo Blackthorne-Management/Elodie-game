@@ -1863,7 +1863,7 @@ export const BATTLE_HANDS: {
 } = {
   default: { dx: 4, dy: -9 },
   byWeapon: { staff: { dx: 8, dy: -9 }, bow: { dx: 10, dy: -12 }, blade: { dx: 4, dy: -9 } },
-  byLook: { gianna: { dx: -7, dy: -15 }, yari: { dx: 10, dy: -24 } },
+  byLook: { gianna: { dx: -7, dy: -15 }, yari: { dx: 10, dy: -24 }, haru: { dx: 16, dy: -25 } },
 };
 
 /** Enemy drawings (ENEMY_ART, or a file in art/enemies/), one texture each. */

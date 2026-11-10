@@ -31,7 +31,7 @@ Tick a box when the picture is made. A reference sheet is only a working picture
 |---|---|---|---|---|---|
 | Samira Dorini | `samira` | - | [x] Nov 10 | [x] earnest, dismayed | [x] Nov 10 |
 | Bayarmaa Ironvow | `bayarmaa` | - | [x] Nov 10 | [x] fierce, soft | [x] Nov 10 |
-| Haru Suzumori | `haru` | [ ] | [ ] | [ ] caught, set | [ ] |
+| Haru Suzumori | `haru` | - | [x] Nov 10 | [x] caught, set | [x] Nov 10 |
 | Vikram of the Agnivansh | `vikram` | [ ] | [ ] | [ ] out_of_breath, set | [ ] |
 | Edmund Stillwater | `edmund` | [ ] | [ ] | [ ] steady, gentle | [ ] |
 
@@ -42,7 +42,7 @@ Tick a box when the picture is made. A reference sheet is only a working picture
 | Azzy (blade-knight) | `battle/azzy.png` | [ ] |
 | Samira (alchemist) | `battle/samira.png` | [x] Nov 10 |
 | Bayarmaa (raider) | `battle/bayarmaa.png` | [ ] |
-| Haru (shadow agent) | `battle/haru.png` | [ ] |
+| Haru (shadow agent) | `battle/haru.png` | [x] Nov 10 |
 | Vikram (fire duelist) | `battle/vikram.png` | [ ] |
 | Edmund (guardian) | `battle/edmund.png` | [ ] |
 
