@@ -30,7 +30,7 @@ Tick a box when the picture is made. A reference sheet is only a working picture
 | Character | File name | Reference sheet | Portrait | Extra expressions | Walking sheet |
 |---|---|---|---|---|---|
 | Samira Dorini | `samira` | - | [x] Nov 10 | [x] earnest, dismayed | [x] Nov 10 |
-| Bayarmaa Ironvow | `bayarmaa` | [ ] | [ ] | [ ] fierce, soft | [ ] |
+| Bayarmaa Ironvow | `bayarmaa` | - | [x] Nov 10 | [x] fierce, soft | [x] Nov 10 |
 | Haru Suzumori | `haru` | [ ] | [ ] | [ ] caught, set | [ ] |
 | Vikram of the Agnivansh | `vikram` | [ ] | [ ] | [ ] out_of_breath, set | [ ] |
 | Edmund Stillwater | `edmund` | [ ] | [ ] | [ ] steady, gentle | [ ] |
