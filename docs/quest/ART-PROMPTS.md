@@ -1,3 +1,5 @@
+Every prompt still to use, filled in: ART-LEFT.md
+
 # Echoes of Zetwal: art prompts for art drop 1 (due Fri Oct 24)
 
 **Art drop 2 (Nov 10):** the order to work in, the six companions' battle stances and the enemies' prompts are in

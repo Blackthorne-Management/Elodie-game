@@ -1,3 +1,5 @@
+Every prompt still to use, filled in: ART-LEFT.md
+
 # Art drop 2: the shortest path to a finished look (Nov 10)
 
 The game is complete with stand-in art; every picture below replaces one stand-in the day it arrives, with no other
@@ -69,7 +71,7 @@ Pixel art battle sprite for a side-view 16-bit fantasy RPG battle screen in the 
 | `sealbearer` | a Regent's Sealbearer, a ceremonial guard | a grey-violet tabard over steel, a violet-plumed steel helmet, a white seal emblem on the chest, light skin | a tall halberd held upright in front, blade forward |
 | `lookout` | a young camp lookout | small and wiry, a dark green hood (face visible) and green tunic, dark trousers | a sling whirling in the front hand |
 | `thorne` | Governor Thorne, a colonial governor, the chapter's villain | **drawn larger: a 36 x 48 cell**. A tall, thin older man with white hair, a navy blue governor's coat heavy with gold braid and gold epaulettes, a red sash, white breeches and stockings, a black bicorne hat with a gold cockade, light tan skin, a cold look | standing straight, a silver-topped sword cane drawn and pointed forward |
-| `hale` | Captain-General Hale, the Crown's commander | **drawn larger: a 36 x 48 cell**. A tall broad older man with a grey beard and grey hair, a violet general's coat with gold trim and gold epaulettes, black trousers, a dark bicorne hat, deep brown skin | a heavy sabre held forward, a commander's baton in the other hand |
+| `hale` | Captain-General Hale, the Crown's commander | **drawn larger: a 36 x 48 cell**. A tall broad older man with a grey beard and grey hair, a violet general's coat with gold trim and gold epaulettes, black trousers, a dark bicorne hat, deep brown skin | a heavy boarding axe held forward in both hands, ready to swing (the axe he lays down at the Claim) |
 
 ---
 
