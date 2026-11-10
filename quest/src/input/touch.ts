@@ -7,8 +7,13 @@
 //
 // The D-pad gives eight directions: press an arm for a straight step, press between two arms for a
 // diagonal, and slide the thumb across it to turn without lifting. B (held) runs.
+//
+// On a short sideways screen the controls are compact (<body data-controls='compact'>, style.css): A and B at 44 px,
+// everything hugging the screen's edge. On a page, in a fight and on a card the D-pad there is a rail: its four arrows
+// one above another down the left edge (up, left, right, down), A over B down the right edge, so a page drawn between
+// them keeps clear (Claude's call, Nov 10).
 
-import { PAD_DEADZONE, TOUCH_BUTTON_PX, TOUCH_PAD_PX, TOUCH_PAD_STACK_PX, TOUCH_BUTTON_STACK_PX } from '../config.ts';
+import { PAD_DEADZONE, TOUCH_BUTTON_PX, TOUCH_COMPACT_BUTTON_PX, TOUCH_PAD_PX, TOUCH_PAD_STACK_PX, TOUCH_BUTTON_STACK_PX } from '../config.ts';
 import type { Rect } from '../engine/scaling.ts';
 import type { Dir8 } from '../engine/types.ts';
 import { dirButtons, stickDirection, type Button, type InputSource } from './actions.ts';
@@ -26,6 +31,16 @@ function el(tag: string, className: string, label?: string): HTMLElement {
     e.setAttribute('aria-label', label);
   }
   return e;
+}
+
+/** The rail's arrows from the top (style.css, the compact controls on a page). */
+export const RAIL_ORDER: readonly Dir8[] = ['up', 'left', 'right', 'down'];
+
+/** On the rail (`height` px tall, its arrows evenly spaced), the arrow a thumb `y` px from its top presses. */
+export function railDirection(y: number, height: number): Dir8 | null {
+  if (height <= 0) return null;
+  const i = Math.floor((y / height) * RAIL_ORDER.length);
+  return RAIL_ORDER[Math.max(0, Math.min(RAIL_ORDER.length - 1, i))]!;
 }
 
 /** The direction for a thumb at (dx, dy) from the pad's centre, or null in the dead middle. */
@@ -51,6 +66,7 @@ export class TouchSource implements InputSource {
     this.root.style.setProperty('--pad', `${TOUCH_PAD_PX}px`);
     this.root.style.setProperty('--btn-stack', `${TOUCH_BUTTON_STACK_PX}px`);
     this.root.style.setProperty('--pad-stack', `${TOUCH_PAD_STACK_PX}px`);
+    this.root.style.setProperty('--btn-compact', `${TOUCH_COMPACT_BUTTON_PX}px`);
 
     this.pad = el('div', 'touch-dpad');
     this.pad.setAttribute('aria-label', 'Direction pad');
@@ -129,7 +145,9 @@ export class TouchSource implements InputSource {
     this.guard(pad);
     const aim = (e: PointerEvent) => {
       const r = pad.getBoundingClientRect();
-      this.setPad(padDirection(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2), r.width / 2));
+      // The rail (compact controls on a page) is a column of arrows; the cross is aimed from its centre.
+      if (r.height > r.width * 1.5) this.setPad(railDirection(e.clientY - r.top, r.height));
+      else this.setPad(padDirection(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2), r.width / 2));
     };
     pad.addEventListener('pointerdown', (e) => {
       e.preventDefault();
@@ -167,8 +185,8 @@ export class TouchSource implements InputSource {
   }
 }
 
-/** Every touch control on the screen now (hidden ones are left out). */
-const CONTROLS = ['.touch-dpad', '.touch-ask', '.touch-btn', '.touch-small'];
+/** Every touch control on the screen now, and the full-screen button (hidden ones are left out). */
+const CONTROLS = ['.touch-dpad', '.touch-ask', '.touch-btn', '.touch-small', '.fs-button'];
 
 /**
  * The visible touch controls that lie over the game picture, as rectangles in the picture's own pixels (`viewW` x
@@ -176,7 +194,7 @@ const CONTROLS = ['.touch-dpad', '.touch-ask', '.touch-btn', '.touch-small'];
  * must be read out from under them (engine/scaling.ts controlReach; review Nov 7, finding 5, and Nov 10).
  */
 export function controlsOverPicture(canvas: HTMLCanvasElement, viewW: number, viewH: number): Rect[] {
-  if (typeof document === 'undefined') return [];
+  if (typeof document === 'undefined' || !document.querySelector('.touch-overlay')) return [];
   const c = canvas.getBoundingClientRect();
   if (c.width === 0 || c.height === 0) return [];
   const sx = viewW / c.width;

@@ -6,8 +6,18 @@
 // through CSS variables, the canvas is centred in #game, and the rest is letterbox. It is redone on
 // every resize, rotation, visual viewport change and full-screen change.
 
-import { MAP_BAR_PX, MAX_ZOOM, MIN_INTEGER_ZOOM, TOUCH_SIDE_MIN_PX, TOUCH_STACK_PX, TOUCH_STACK_TOP_PX, VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
-import { screenLayout, type ScreenRect } from '../engine/scaling.ts';
+import {
+  MAP_BAR_PX,
+  MAX_ZOOM,
+  MIN_INTEGER_ZOOM,
+  TOUCH_COMPACT_MAX_HEIGHT_PX,
+  TOUCH_SIDE_MIN_PX,
+  TOUCH_STACK_PX,
+  TOUCH_STACK_TOP_PX,
+  VIEW_HEIGHT,
+  VIEW_WIDTH,
+} from '../config.ts';
+import { compactControls, screenLayout, type ScreenRect } from '../engine/scaling.ts';
 
 export interface Viewport {
   left: number;
@@ -27,7 +37,8 @@ export function visibleViewport(): Viewport {
 /**
  * Keep the canvas fitted to the visible viewport. `setZoom` hands the zoom to Phaser. The picture's
  * place goes to CSS (--game-left/top/width/height) and the layout mode to <body data-layout> (side,
- * stack or overlay), so the touch controls and the minimap sit in the black bars around it.
+ * stack or overlay), so the touch controls and the minimap sit in the black bars around it; <body data-controls>
+ * says whether the controls are compact (a short sideways screen).
  */
 export function fitToScreen(setZoom: (zoom: number) => void, touch = false): () => ScreenRect {
   const rootStyle = document.documentElement.style;
@@ -52,6 +63,8 @@ export function fitToScreen(setZoom: (zoom: number) => void, touch = false): () 
       rootStyle.setProperty('--game-width', `${rect.width}px`);
       rootStyle.setProperty('--game-height', `${rect.height}px`);
       document.body.dataset.layout = mode;
+      // Short sideways screens: the compact controls, hugging the edges (style.css; Claude's call, Nov 10).
+      document.body.dataset.controls = compactControls(vp.width, vp.height, mode, touch, TOUCH_COMPACT_MAX_HEIGHT_PX) ? 'compact' : 'full';
       setZoom(rect.zoom);
     }
     // The page itself never scrolls (iOS can still nudge it when the bars move).

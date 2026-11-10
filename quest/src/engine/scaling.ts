@@ -83,17 +83,34 @@ export function controlReach(controls: readonly Rect[], viewW: number, y0 = 0, y
 /**
  * Where a full page (the menu, a shop) is drawn so the touch controls miss it: scaled down to fit between what reaches
  * in from the left and the right (with `margin` px to spare), never below `minScale` (then centred between them, and
- * the controls still touch its edges), and centred top to bottom. `{ x: 0, y: 0, scale: 1 }` with nothing in the way.
+ * the controls still touch its edges, and `clear` is false), and centred top to bottom. `{ x: 0, y: 0, scale: 1, clear:
+ * true }` with nothing in the way.
  */
-export function pageFit(controls: readonly Rect[], viewW: number, viewH: number, minScale: number, margin = 1): { x: number; y: number; scale: number } {
+export function pageFit(
+  controls: readonly Rect[],
+  viewW: number,
+  viewH: number,
+  minScale: number,
+  margin = 1,
+): { x: number; y: number; scale: number; clear: boolean } {
   const { left, right } = controlReach(controls, viewW);
-  if (left === 0 && right === 0) return { x: 0, y: 0, scale: 1 };
+  if (left === 0 && right === 0) return { x: 0, y: 0, scale: 1, clear: true };
   const room = viewW - (left > 0 ? left + margin : 0) - (right > 0 ? right + margin : 0);
   const scale = Math.max(minScale, Math.min(1, Math.floor((room / viewW) * 1000) / 1000));
   const w = viewW * scale;
   const from = left > 0 ? left + margin : 0;
   const x = w <= room ? from + (room - w) / 2 : Math.max(0, Math.min(viewW - w, from + (room - w) / 2));
-  return { x: Math.round(x * 100) / 100, y: Math.round(((viewH - viewH * scale) / 2) * 100) / 100, scale };
+  return { x: Math.round(x * 100) / 100, y: Math.round(((viewH - viewH * scale) / 2) * 100) / 100, scale, clear: w <= room + 0.01 };
+}
+
+/**
+ * Whether a touch screen gets the compact controls (Claude's call, Nov 10; the Nov 7 review's 5): sideways and either
+ * with no side bars for them (`overlay`, the picture edge to edge) or shorter than `maxHeight`. Upright and without
+ * touch, never.
+ */
+export function compactControls(viewportW: number, viewportH: number, mode: ScreenMode, touch: boolean, maxHeight: number): boolean {
+  if (!touch || viewportW < viewportH) return false;
+  return mode === 'overlay' || viewportH < maxHeight;
 }
 
 export type ScreenMode = 'side' | 'stack' | 'overlay';

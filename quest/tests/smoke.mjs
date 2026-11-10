@@ -6,7 +6,8 @@
 //    export and import a save code, the touch overlay on a phone-sized landscape viewport: the
 //    D-pad (right, then between up and right for a diagonal), tap to move and tap a person to talk.
 //    At several landscape phone sizes: the canvas, and every touch control, inside the visible
-//    viewport, no page scroll, no zoom on double taps; the full-screen toggle (desktop, iPhone help,
+//    viewport, no page scroll, no zoom on double taps, compact controls under 400 px tall and the menu page clear of
+//    every control; the full-screen toggle (desktop, iPhone help,
 //    hidden when opened from the home screen) and the manifest. Screenshots quest-fit-<w>x<h>.png.
 // 2. Anissa's hints (?hintms= shortens the wait), turning them off, and the Journal.
 // 3. Chapters 1 to 12 and the Epilogue, from a new game, by the scripted route routes/zetwal-act1.json (each chapter's
@@ -299,6 +300,26 @@ async function phoneFit(browser, errors) {
       await page.screenshot({ path: join(SHOT_DIR, name) });
       fitShots.push(name);
     }
+    // Under 400 px tall the controls are compact (A and B 44 px, hugging the edges); on a page the D-pad is a rail of
+    // arrows down the left edge and A over B down the right, and the page is drawn between them, touching none
+    // (Claude's call, Nov 10; the Nov 7 review's 5).
+    const compact = await page.evaluate(() => document.body.dataset.controls);
+    check(compact === (height < 400 ? 'compact' : 'full'), `the controls are ${compact} at ${width}x${height}`);
+    await page.waitForFunction(() => !window.__quest.snapshot().moving, null, { timeout: 3000 });
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => window.__quest.snapshot().mode === 'menu', null, { timeout: 3000 });
+    const under = await page.evaluate(() => {
+      const a = window.__quest.pageToScreen(0, 0);
+      const b = window.__quest.pageToScreen(320, 180);
+      return [...document.querySelectorAll('.touch-dpad, .touch-btn, .touch-small, .fs-button')]
+        .filter((e) => getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0)
+        .filter((e) => {
+          const q = e.getBoundingClientRect();
+          return q.left < b.x - 0.5 && q.right > a.x + 0.5 && q.top < b.y - 0.5 && q.bottom > a.y + 0.5;
+        })
+        .map((e) => e.getAttribute('aria-label') ?? e.className);
+    });
+    check(under.length === 0, `the menu page lies clear of every control${under.length ? ` (under: ${under.join(', ')})` : ''}`);
     await ctx.close();
   }
 }

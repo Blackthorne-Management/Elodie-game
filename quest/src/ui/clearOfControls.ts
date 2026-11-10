@@ -34,6 +34,12 @@ export class PageFit {
     this.y = f.y;
     this.scale = f.scale;
     root.setPosition(f.x, f.y).setScale(f.scale);
+    // The last resort (a screen too small even for the compact controls' rails): the controls the page could not miss
+    // fade until pressed, so the words under them still read (style.css, body[data-crowded]).
+    if (typeof document !== 'undefined') {
+      if (f.clear) delete document.body.dataset.crowded;
+      else document.body.dataset.crowded = '1';
+    }
   }
 
   /** A point in the page's own pixels on the screen (game pixels). */

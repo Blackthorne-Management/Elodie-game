@@ -177,15 +177,15 @@ body[data-play]:not([data-play='field']) .touch-ask,
 body[data-play]:not([data-play='field']) .touch-echo,
 body[data-play='battle'] .touch-top { display: none; }
 
-/* No side bars wide enough (a 667 x 375 phone draws the picture edge to edge): a page or the battle's strip cannot keep
-   its words readable and miss a 132 px D-pad as well. There the pages are drawn at their smallest (PAGE_MIN_SCALE,
-   ui/clearOfControls.ts), Menu steps aside (X and B close a page) and the D-pad and A/B fade until pressed, so the words
-   under them still read (Claude's call, Nov 10). The dialogue box always keeps clear (ui/DialogueBox.ts). */
+/* No side bars wide enough (a 667 x 375 phone draws the picture edge to edge): Menu steps aside on the pages (X and B
+   close a page). The compact controls below keep the pages and the fight's names clear; if a page still cannot miss them
+   (a screen smaller than 640 x 360), the controls it touches fade until pressed, so the words under them still read
+   (ui/clearOfControls.ts sets <body data-crowded>; Claude's call, Nov 10). The dialogue box always keeps clear. */
 body[data-layout='overlay'][data-play='menu'] .touch-top,
 body[data-layout='overlay'][data-play='shop'] .touch-top,
 body[data-layout='overlay'][data-play='journal'] .touch-top { display: none; }
-body[data-layout='overlay']:is([data-play='menu'], [data-play='shop'], [data-play='journal'], [data-play='credits'], [data-play='battle']) .touch-dpad:not(.active),
-body[data-layout='overlay']:is([data-play='menu'], [data-play='shop'], [data-play='journal'], [data-play='credits'], [data-play='battle']) .touch-btn:not(.down) { opacity: 0.4; }
+body[data-crowded]:is([data-play='menu'], [data-play='shop']) .touch-dpad:not(.active),
+body[data-crowded]:is([data-play='menu'], [data-play='shop']) .touch-btn:not(.down) { opacity: 0.4; }
 
 /* Upright (review Nov 7, finding 6): the picture first, at the top and full width (src/ui/screen.ts); under it the small
    minimap on the left and Ask, Echo and Menu in a column on the right; the D-pad and A/B, bigger (there is room),
@@ -205,6 +205,45 @@ body[data-layout='stack'] .touch-top { right: calc(var(--edge) + env(safe-area-i
 body[data-layout='overlay'] .touch-dpad { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); }
 body[data-layout='overlay'] .touch-buttons { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); }
 body[data-layout='overlay'] .touch-top { right: calc(var(--edge) + 52px + env(safe-area-inset-right, 0px)); bottom: auto; top: calc(8px + env(safe-area-inset-top, 0px)); }
+
+/* Compact controls on a short sideways screen (<body data-controls='compact'>, set by src/ui/screen.ts when the picture
+   runs edge to edge or the screen is under 400 px tall; Claude's call, Nov 10, the Nov 7 review's 5). A and B are 44 px
+   (the D-pad's arms already are) and every control hugs the screen's edge, so it covers as little of the picture as it
+   can. On the map and in a conversation the D-pad stays a cross in the bottom-left corner and A/B sit in the bottom-right
+   (the dialogue box narrows past them, ui/DialogueBox.ts). Everywhere else (a page, a fight, a card) the D-pad is a rail
+   of four arrows down the left edge and A over B down the right edge: a page drawn between the rails stays at least
+   PAGE_MIN_SCALE on a 640 x 360 picture, the fight's names and commands start past them, and the full-screen button and
+   Menu step aside where there are no side bars. */
+body[data-controls='compact'] .touch-overlay { --edge: 4px; }
+body[data-controls='compact'] .touch-overlay > * { --btn: var(--btn-compact); }
+body[data-controls='compact'] .touch-dpad { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); }
+body[data-controls='compact'] .touch-buttons { right: calc(var(--edge) + env(safe-area-inset-right, 0px)); }
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-dpad {
+  width: var(--btn);
+  height: calc(var(--btn) * 4 + 3 * 6px);
+}
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-hub { display: none; }
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-arm {
+  box-sizing: border-box;
+  left: 0;
+  right: auto;
+  bottom: auto;
+  width: 100%;
+  height: var(--btn);
+  border: 2px solid rgba(232, 216, 176, 0.75);
+  border-radius: 8px;
+}
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-arm-up { top: 0; }
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-arm-left { top: calc(var(--btn) + 6px); }
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-arm-right { top: calc(var(--btn) * 2 + 12px); }
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-arm-down { top: calc(var(--btn) * 3 + 18px); }
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-arm::after { margin: 0; }
+body[data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-buttons {
+  width: var(--btn);
+  height: calc(var(--btn) * 2 + 8px);
+}
+body[data-layout='overlay'][data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .touch-top,
+body[data-layout='overlay'][data-controls='compact'][data-play]:not([data-play='field'], [data-play='dialogue']) .fs-button { display: none; }
 
 /* The minimap (src/ui/SideMap.ts): the right bar's top when sideways, the top bar when upright, the
    picture's top-left corner when there are no bars. */

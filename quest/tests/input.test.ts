@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../src/config.ts';
 import { InputManager, dirButtons, stickDirection, type Button, type InputSource } from '../src/input/actions.ts';
-import { padDirection } from '../src/input/touch.ts';
-import { cameraBounds, cameraScroll, controlReach, fitRect, fitZoom, integerZoom, pageFit, screenLayout } from '../src/engine/scaling.ts';
+import { padDirection, railDirection } from '../src/input/touch.ts';
+import { cameraBounds, cameraScroll, compactControls, controlReach, fitRect, fitZoom, integerZoom, pageFit, screenLayout } from '../src/engine/scaling.ts';
 
 class FakeSource implements InputSource {
   held = new Set<Button>();
@@ -314,7 +314,7 @@ describe('keeping words clear of the touch controls (review Nov 7, finding 5; No
   });
 
   it('draws a page smaller, between them, and never below the least scale', () => {
-    expect(pageFit([], 320, 180, 0.84)).toEqual({ x: 0, y: 0, scale: 1 });
+    expect(pageFit([], 320, 180, 0.84)).toEqual({ x: 0, y: 0, scale: 1, clear: true });
     const f = pageFit(at844, 320, 180, 0.84);
     expect(f.scale).toBeGreaterThan(0.84);
     expect(f.scale).toBeLessThan(1);
@@ -324,6 +324,40 @@ describe('keeping words clear of the touch controls (review Nov 7, finding 5; No
     // A phone with no side bars: the controls reach 65 px in; the page stops at the least scale, centred between them.
     const tight = pageFit([{ x: 0, y: 111, w: 65, h: 69 }, { x: 256, y: 121, w: 64, h: 59 }], 320, 180, 0.84);
     expect(tight.scale).toBe(0.84);
+    expect(tight.clear).toBe(false);
     expect(tight.x + (320 * 0.84) / 2).toBeCloseTo((65 + 1 + 320 - 64 - 1) / 2, 1);
+    expect(f.clear).toBe(true);
+  });
+
+  it('the compact controls go on short sideways touch screens only (Claude\'s call, Nov 10)', () => {
+    expect(compactControls(667, 375, 'overlay', true, 400)).toBe(true);
+    expect(compactControls(640, 360, 'overlay', true, 400)).toBe(true);
+    expect(compactControls(844, 390, 'side', true, 400)).toBe(true);
+    expect(compactControls(932, 430, 'side', true, 400)).toBe(false);
+    expect(compactControls(390, 844, 'stack', true, 400)).toBe(false);
+    expect(compactControls(667, 375, 'overlay', false, 400)).toBe(false);
+  });
+
+  it('on a 640 x 360 picture a page fits between the compact rails at the least scale or better', () => {
+    // The rails: the D-pad's four arrows down the left edge (4..48 px), A over B down the right edge (592..636 px).
+    const rails = [
+      { x: 0, y: 81, w: 24, h: 97 },
+      { x: 296, y: 130, w: 24, h: 48 },
+    ];
+    const f = pageFit(rails, 320, 180, 0.84);
+    expect(f.clear).toBe(true);
+    expect(f.scale).toBeGreaterThanOrEqual(0.84);
+    expect(f.x).toBeGreaterThanOrEqual(25);
+    expect(f.x + 320 * f.scale).toBeLessThanOrEqual(296 - 1 + 0.01);
+  });
+
+  it('the rail of arrows: up, left, right, down from the top', () => {
+    expect(railDirection(10, 194)).toBe('up');
+    expect(railDirection(60, 194)).toBe('left');
+    expect(railDirection(110, 194)).toBe('right');
+    expect(railDirection(190, 194)).toBe('down');
+    expect(railDirection(-5, 194)).toBe('up');
+    expect(railDirection(400, 194)).toBe('down');
+    expect(railDirection(10, 0)).toBeNull();
   });
 });
