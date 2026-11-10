@@ -876,6 +876,14 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   lanterns with flower beds stand either side of the lane a few steps in (42-43,14 and 42-43,19; `tools/maps/seat.ts`).
   They keep off the lane, the tiles the party settles on, the forecourt, the market, the debate corner, the crowd's
   square and the route.
+- **A puzzle's later steps sparkle after the earlier one (Claude's call, Nov 10; the Nov 7 review's 13):** a new
+  content rule, `GameContent.markAfter` (data in `data/content.ts` LATER_STEPS: the map, a pattern on object ids, the
+  flag of the step they wait for). An object that is only reachable or useful after an earlier step of the same puzzle
+  keeps its sparkle until that step is done; puzzle sets and quiet maps work as before. The guild vault now shows only
+  the ledger page at its start; the pan, the balance door and one weight once the memory has said the price
+  (`story.vault_echo`); the strongroom's boxes and the sun lock once the door is open; the witness's chest once the sun
+  lock has turned. The guide's marks never sit on a person: the on-screen chevron rises over anyone it would touch, and
+  the edge arrow slides along its edge of the screen to the nearest place clear of everyone, still pointing at its stop.
 
 ---
 

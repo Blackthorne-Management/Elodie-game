@@ -62,7 +62,26 @@ export const CONTENT: GameContent = {
   // changes a flag, so without this every one sparkled for good (the Nov 1 playtest's 16: about ten in the guild vault).
   // A set shows one sparkle until any of it is first used, then none (Claude's call, Nov 4).
   controlSet: (dialogueId) => CONTROL_SETS.find(([re]) => re.test(dialogueId))?.[1],
+  // A puzzle's later steps keep their sparkle until the step before them is done, so a room shows first what the player
+  // needs first (the Nov 7 review's 13: six sparkles at the guild vault's door; Claude's call, Nov 10).
+  markAfter: (mapId, objectId) => {
+    const step = LATER_STEPS.find(([map, re]) => map === mapId && re.test(objectId));
+    return step ? { flag: step[2] } : undefined;
+  },
 };
+
+/**
+ * Puzzles' later steps: the map, its objects (a pattern on their ids) and the flag of the step they wait for. The guild
+ * vault (SIG-ALD): first the ledger page, whose price has run; the pan, its weights and the balance door once the memory
+ * has said the price (`story.vault_echo`: before it a weighing is a guess, and the pan says so); the strongroom's boxes
+ * and the sun lock once the door is open (`story.vault_outer`: they are behind it); the witness's chest once the sun
+ * lock has turned (`story.vault_inner`: it is behind that).
+ */
+const LATER_STEPS: readonly (readonly [string, RegExp, string])[] = [
+  ['aldoria-vault', /^(balance_pan|balance_door|weight_\d+(_hung)?)$/, 'story.vault_echo'],
+  ['aldoria-vault', /^(box_seven(_full)?|vault_boxes|sun_lock(_open)?)$/, 'story.vault_outer'],
+  ['aldoria-vault', /^witness_chest$/, 'story.vault_inner'],
+];
 
 /** The puzzle controls' sets, by their dialogue: a pattern and the set's name. */
 const CONTROL_SETS: readonly (readonly [RegExp, string])[] = [

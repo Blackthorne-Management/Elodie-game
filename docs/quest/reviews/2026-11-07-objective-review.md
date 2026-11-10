@@ -186,6 +186,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
 - `GameMenu.ts:1088` filters a line starting with "(B to close)" that nothing emits any more (dead code since the
   button names changed).
 - Fixed (Nov 7), the voyages and the dead filter: the boat now stops beside the ship's first visible column, not the picture's empty margin, so off Kirinoura it reaches the lantern trader before it fades. The Kingsmere voyages (`chapter8-end`, `chapter9-end`, `aldermoor-dawn`) carry the four who walk the map (the companion, Gianna, Anissa in her glow, Azzy); nothing to change there. The "(B to close)" filter is removed. Not touched: the boar, the troops' art, the vault's sparkles, the Hearing's crowd.
+- Fixed (Nov 10), the vault: a puzzle's later steps keep their sparkle until the step before them is done (`GameContent.markAfter`, data in `data/content.ts` LATER_STEPS). At `?at=vault-echo` only the ledger page sparkles; the pan, the door and one weight follow the memory (`story.vault_echo`), the strongroom's boxes and the sun lock the open door, the witness's chest the sun lock (`tests/controlMarkers.test.ts`). The guide's edge arrow slides along the screen's edge off anyone it would sit on (there it moved off Gianna's head), and the on-screen chevron rises over anyone it would touch (`FieldScene.tickPointer`). Checked at 640x360.
 
 ## The three new side quests
 

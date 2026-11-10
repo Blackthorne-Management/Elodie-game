@@ -8,8 +8,10 @@ import { loadMaps, newGameSim } from '../tools/sim-setup.ts';
 
 const maps = loadMaps();
 
+/** The vault once the memory has said the price (before it the weights do not sparkle: the review's 13, below). */
 function vault() {
   const sim = newGameSim(maps, 'aldoria-vault', 'stair');
+  sim.logic.state.flags.set('story.vault_echo', true);
   return sim.logic;
 }
 
@@ -29,5 +31,28 @@ describe('puzzle controls: one sparkle for the set, until it is first used', () 
     logic.state.flags.set(seenFlag('aldoria-vault', 'weight_4'), true);
     expect(weights(logic.markers().map((m) => m.id))).toHaveLength(0);
     expect(logic.hasNews('vault_weight_1')).toBe(true);
+  });
+});
+
+// The Nov 7 review's 13: six sparkles at the vault's door. A puzzle's later steps wait for the earlier one
+// (data/content.ts markAfter; Claude's call, Nov 10).
+describe("a puzzle's later steps sparkle once the step before them is done", () => {
+  const ids = (logic: ReturnType<typeof vault>) => logic.markers().map((m) => m.id).filter((id) => id.startsWith('obj:')).sort();
+
+  it('the vault at its start: only the ledger page, the first thing needed', () => {
+    const logic = newGameSim(maps, 'aldoria-vault', 'stair').logic;
+    expect(ids(logic)).toEqual(['obj:ledger_page']);
+  });
+
+  it('after the memory: the pan, the door and one weight; after the door: the strongroom; after the sun: the chest', () => {
+    const logic = newGameSim(maps, 'aldoria-vault', 'stair').logic;
+    const flags = logic.state.flags;
+    flags.set('story.vault_echo', true);
+    expect(ids(logic)).toEqual(['obj:balance_door', 'obj:balance_pan', 'obj:ledger_page', 'obj:weight_1']);
+    flags.set('story.vault_outer', true);
+    expect(ids(logic)).toEqual(expect.arrayContaining(['obj:box_seven', 'obj:sun_lock', 'obj:vault_boxes']));
+    expect(ids(logic)).not.toContain('obj:witness_chest');
+    flags.set('story.vault_inner', true);
+    expect(ids(logic)).toContain('obj:witness_chest');
   });
 });
