@@ -10,6 +10,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { QUIET_CELLS, cellPlacedText } from '../../src/data/quietCells.ts';
 import { ARCHIVE_DONE_TEXT, ARCHIVE_NOT_DONE_TEXT, CATHEDRAL, CLOCKMAKER_DAWN, CLOCK_TOWER, CLOSE, CROSS, EVE_TEXT, HEATH, KEEP, LETTERS, LETTERS_OUT_TEXT, ROLLS, TOWNHOUSE, TOWNHOUSE_DOOR } from '../../src/data/aldermoor.ts';
 
 const FLAG = 'א';
@@ -185,6 +186,8 @@ export function aldermoorCross(): MapSource {
     hit('sergeant', 'down'),
     hit('constable', 'down'),
     npc('clockmaker_dawn', CLOCKMAKER_DAWN.x, CLOCKMAKER_DAWN.y, 'down', { if: 'story.hushed_beaten, !act9.complete' }),
+    // The Nightingale Key's hidden conversation here (built Nov 10; data/quietCells.ts): a Quiet Crown cell member.
+    npc(QUIET_CELLS.kingsmere.npc, QUIET_CELLS.kingsmere.at.x, QUIET_CELLS.kingsmere.at.y, QUIET_CELLS.kingsmere.facing, { if: cellPlacedText(QUIET_CELLS.kingsmere) }),
   ];
   return { id: 'aldermoor-cross', present: g, echo: e, objects };
 }

@@ -719,6 +719,13 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   letter_footman: n('letter_footman', 'moor_footman', "The Regent's footman"),
   clockmaker_dawn: n('clockmaker_dawn', 'clockmaker', 'Clockmaker'),
   rosalind_home: n('rosalind_home', 'rosalind', 'Lady Rosalind Stillwater'),
+  // The Nightingale Key's hidden conversations (built Nov 10; data/quietCells.ts, data/dialogue/quietCells.ts): Quiet
+  // Crown cell members in five capitals (Pòdlimyè's is the hooded stranger above), their looks `qc_` for the Key's sigil.
+  cell_copyist: n('cell_copyist', 'qc_cell_copyist', 'Hall copyist'),
+  cell_sweeper: n('cell_sweeper', 'qc_cell_sweeper', 'Temple sweeper'),
+  cell_ropemaker: n('cell_ropemaker', 'qc_cell_ropemaker', 'Ropemaker'),
+  cell_baker: n('cell_baker', 'qc_cell_baker', 'Casabe baker'),
+  cell_porter: n('cell_porter', 'qc_cell_porter', 'Old chair porter'),
 };
 
 export const NPC_IDS: readonly string[] = Object.keys(NPCS);

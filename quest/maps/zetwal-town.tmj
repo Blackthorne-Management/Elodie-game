@@ -452,6 +452,11 @@
               "value": "left"
             },
             {
+              "name": "if",
+              "type": "string",
+              "value": "!cell.podlimye.left"
+            },
+            {
               "name": "npc",
               "type": "string",
               "value": "recruiter_b"

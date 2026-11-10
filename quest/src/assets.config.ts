@@ -1154,6 +1154,14 @@ const BASE_LOOKS: Record<string, PlaceholderCharacter> = {
   // Quiet Crown follower who took off the veil (a woman of the Concourse in plain grey, a bread basket), the Ardencian
   // treasurer held eleven years (a thin man in a good coat ten years old), and the Master of the Chairs forty-nine years ago.
   qc_follower: { skin: SKIN_TONES.medium, hair: HAIR_DARK, hairStyle: 'bun', outfit: 0x8e8e9c, trim: 0xd8d0c0, robe: true, accessories: ['satchel'] },
+  // The Nightingale Key's hidden conversations (built Nov 10; drawn placeholders until art): five ordinary people of their
+  // own capitals who sit in a Quiet Crown cell, each with the cell's small silver crown on the chest (the emblem). Their
+  // looks start with `qc_` so the Key's sigil finds them (data/secrets.ts); they count as their land's townsfolk.
+  qc_cell_copyist: { skin: SKIN.ivory, hair: HAIR_BLACK, hairStyle: 'bun', outfit: 0x6e6a78, trim: 0xc8c8d0, robe: true, accessories: ['satchel', 'emblem'] },
+  qc_cell_sweeper: { skin: SKIN.nutmeg, hair: WHITE_HAIR, hairStyle: 'short', outfit: 0xe8dcc0, trim: 0xc8c8d0, legs: 0x8a7a5a, beard: WHITE_HAIR, accessories: ['staff', 'emblem'] },
+  qc_cell_ropemaker: { skin: SKIN.ruddy, hair: C.N!, hairStyle: 'short', outfit: 0x5a5048, trim: 0xc8c8d0, legs: C.K!, headgear: 'cap', headgearColor: MOOR_GREY, accessories: ['emblem'] },
+  qc_cell_baker: { skin: SKIN.cinnamon, hair: HAIR_BLACK, hairStyle: 'braid', outfit: 0xd8c8a0, trim: 0xc8c8d0, robe: true, accessories: ['apron', 'emblem'] },
+  qc_cell_porter: { skin: SKIN.umber, hair: C.G!, hairStyle: 'bald', outfit: 0x5a5a62, trim: 0xc8c8d0, legs: C.K!, beard: C.G!, accessories: ['sash', 'emblem'] },
   ard_treasurer: { skin: SKIN.tan, hair: C.G!, hairStyle: 'short', outfit: 0x4a3a30, trim: 0x8a7a5a, legs: C.K!, build: 'tall', beard: C.G! },
   echo_chamberlain: { skin: SKIN.pale, hair: C.B!, hairStyle: 'short', outfit: C.k!, trim: C.y!, robe: true, accessories: ['staff', 'emblem'] },
 };

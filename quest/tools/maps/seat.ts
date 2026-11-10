@@ -11,6 +11,7 @@
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { DRAWER_NUMBERS, DRAWER_X0 } from '../../src/data/seatArchive.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { QUIET_CELLS, cellPlacedText } from '../../src/data/quietCells.ts';
 import { AFTER_TEXT, BENCH_SPOTS, CH12_TEXT, CLAIM_DAY_TEXT, CONCOURSE, EVE_TEXT, GALLERY_SPOTS, GATE_COMPANIES, HALL, HEARING_TEXT, NIGHT_TEXT, ROOMS, TOKEN_CHAIRS } from '../../src/data/claim.ts';
 
 /** Chapter 12 not begun: the Chapter 5 people who would be wrong in the Claim's city (the outline section 3). */
@@ -243,6 +244,8 @@ function concourseClaim(): ObjSpec[] {
     npc('steps_sealbearer_b', 20, 7, 'down', { if: `${CH12_TEXT}, !story.hearing_called` }),
     npc('steps_sealbearer_c', 27, 7, 'down', { if: `${CH12_TEXT}, !story.hearing_called` }),
     npc('chamberlain_night', C.chamberlain.x, C.chamberlain.y, 'down', { if: NIGHT_TEXT }),
+    // The Nightingale Key's hidden conversation here (built Nov 10; data/quietCells.ts): a Quiet Crown cell member.
+    npc(QUIET_CELLS.eightgate.npc, QUIET_CELLS.eightgate.at.x, QUIET_CELLS.eightgate.at.y, QUIET_CELLS.eightgate.facing, { if: cellPlacedText(QUIET_CELLS.eightgate) }),
     // Nine days later (the second review's 3.9): the Hearing's witnesses walk in at their gates.
     { layer: 'spawns', name: 'hearing_morning', x: C.hearingMorning.x, y: C.hearingMorning.y, props: { facing: 'up', era: 'present' } },
     trigger('hearing_arrivals', C.hearingMorning.x, C.hearingMorning.y, { dialogue: 'hearing_arrivals', flag: 'story.arrivals_seen', once: true, onEnter: true, if: 'story.hearing_called' }),

@@ -342,9 +342,45 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   wrong nail never locks the quest. Two nails make a walk now (the middle row's fourth board, or the row below it);
   `quest/puzzles/kuroshi_floor` uses the first and checks a far one fails. Sayo's letter is a farewell to the Marshal
   and names nobody. A key item, held. **Kagemimi for everyone** shows each foe's next move above it every round (the
-  same prediction Haru's Kagemimi makes); the silver sigil marks the Quiet Crown's people on every map. **Not built:**
-  the hidden conversation per capital (talking a cell member out for Concord): it needs a scene in each of nine
-  capitals, after the release.
+  same prediction Haru's Kagemimi makes); the silver sigil marks the Quiet Crown's people on every map.
+- **Built (Nov 10; Claude's calls):** the hidden conversation per capital, in the six capitals the party walks once
+  the Key is found (Kirinoura 7, Agnipur 8, Kingsmere 9, Pòdlimyè 10, Yucayeque 11, Eightgate 12; the first three
+  chapters' capitals come before the Key). One cell member each, standing in the chapter's calm hours and wearing
+  the cell's small silver crown (a `qc_cell_` look, so the sigil finds them; Pòdlimyè's is the hooded stranger on the
+  plaza since Chapter 1, who already said "You would be surprised who wears our hood"). Without the Key they are
+  ordinary people with an ordinary word. With it, they say why they joined and Gianna has three things to say: one
+  reaches them, the other two get "Not today" and change nothing (ask again, or never). On the right word Anissa
+  walks up and speaks to them, the crown comes off, and they walk off the map; **Concord +2** each, once
+  (`CELL_CONCORD`, paid like the Muster's one-off bonuses), and a Journal line ("Out of the quiet"). +2 because one
+  person out of one cell is smaller than a debate won (+5); all six give +12, two or three points of Stability out
+  of 100 at the ending: a nudge at the margin, never a swing. No XP (no fight, and the level curve stays as it is).
+  The six:
+  - **Kirinoura** (the Lantern Quarter's west bank, from dawn): the Hall's copyist. The Paper Fox sold her fair
+    copies to the Crown, and two fishers named in them never came home; she sat with people who write nothing down.
+    Reached by asking what her cell listens for: a small girl with a light in her. She sets the crown on the stones
+    and goes to copy for the Lantern Library, "true ones, and signed".
+  - **Agnipur** (the bazaar's head, at dawn): the old temple sweeper who watched the priests draw the curtain over
+    the low flame; the quiet ones say nothing, "and nothing cannot be a lie". Reached by "go and look at the flame"
+    (Vikram, when he is with them: he tore the curtain down himself). He gives Gianna the crown ("Melt it for a
+    lamp") and walks up to sweep the Court where he can see the flame.
+  - **Kingsmere** (the Market Cross, at dawn after the Hushed): the ropemaker who sat in the bog chapel two winters
+    so his daughter Hester, a typesetter at the printing barn, would be kept off the purge list. Reached by reading
+    the list with him (Al-3's list): her name, "quiet" beside it, never crossed out. The rain takes his crown down
+    the Cross and he walks out to the barn, ahead of the printer's warning.
+  - **Pòdlimyè** (the plaza during the Muster): the hooded stranger. Her father sat thirty years on the harbor
+    council and the shouting never helped; one voice seemed kinder. The almoner's unmasking does not move her (she
+    knows). Anissa does: "You called me a quiet little girl... I wasn't quiet. Nobody was listening." She puts back
+    her hood and veil and goes up to the Accord Square to hear the council argue.
+  - **Yucayeque** (the hill camp on the war's day, before the tide): the casabe baker whose fourteen-year-old brother
+    the marines took to row the Crown's launches; the quiet ones brought cassava and said quiet keeps him fed.
+    Reached by "come down with the canoes": the harbor is taken at the tide, every launch on it. The crown goes
+    into the coals under her griddle and she carries casabe down to the paddlers, to look in every boat.
+  - **Eightgate** (the Concourse, the night before the bell): the old chair porter, forty years of carrying chairs
+    to quarrels; his son died on the Iron Gate road; one hand on the Throne seemed better. Reached by "come and hear
+    every house" (and stay, which he never has). He gives the crown up and goes up the Hall's steps to the Master of
+    the Chairs.
+  No member knows Rael (STORY.md 6.3), so nobody names him. The scripted route never holds the Key or meets them
+  (`quest/tests/quietCells.test.ts`).
 
 ## 9. The Seventh Ribbon (Eightgate)
 

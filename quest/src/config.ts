@@ -427,6 +427,14 @@ export const ALLY_PRICES: Readonly<Record<string, AllyPrice>> = {
  * turnedShare; Zetwal's own levy is `levy` once the council has voted; a gift is giftGold gold for one point, up to
  * giftMax gifts at a camp; concord pays these one-off bonuses (Anicette's four accounts, the lonely cutter).
  */
+/**
+ * Concord for each person the party talks out of a Quiet Crown cell with the Nightingale Key (SECRET-ITEMS.md 8; Claude's
+ * call, Nov 10): one person leaving one cell is small, smaller than a debate won (+5), the size of Se-1's one-off (+2).
+ * All six give +12, which the ending reads as two or three points of Accord Stability out of 100 (the route's 56 Concord reads -4, 68 reads -1) (STABILITY.concordPer 5, the
+ * Concord part capped at 5): a nudge at the margin between the Hollow and the Just Throne, never a swing on its own.
+ */
+export const CELL_CONCORD = 2;
+
 export const MUSTER = {
   bookCap: 3,
   otherShare: 0.5,
@@ -441,7 +449,14 @@ export const MUSTER = {
   // (Chapter 12 pays its one-off bonus here too: Volume One back in Grandmother's hands completes the Overdue Books thread,
   // SIDE-QUESTS Se-1's +2 Concord; engine/ally.ts musterTick pays every entry once, in any chapter.)
   // Se-4's Seventh Clause struck at the Claim (SECRET-ITEMS.md 9: +10 Concord), paid after that scene the same way.
-  concord: { 'clue.four_accounts': 3, 'side.lonely_cutter.done': 3, 'side.volume_one.done': 2, 'claim.clause_struck': 10 } as Readonly<Record<string, number>>,
+  // The Nightingale Key's six hidden conversations (data/quietCells.ts): each person talked out of a Quiet Crown cell.
+  concord: {
+    'clue.four_accounts': 3,
+    'side.lonely_cutter.done': 3,
+    'side.volume_one.done': 2,
+    'claim.clause_struck': 10,
+    ...Object.fromEntries(['kirinoura', 'agnipur', 'kingsmere', 'podlimye', 'yucayeque', 'eightgate'].map((c) => [`cell.${c}.left`, CELL_CONCORD])),
+  } as Readonly<Record<string, number>>,
 } as const;
 /** Chapter 11's volleys (COMBAT.md 11): one volley for every this many soldiers at sea. */
 export const ARMY_VOLLEY_PER = 10;

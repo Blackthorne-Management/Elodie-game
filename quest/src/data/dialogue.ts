@@ -16,6 +16,7 @@ import { JWALADESH_DIALOGUE } from './dialogue/jwaladesh.ts';
 import { JWALADESH_QUEST_DIALOGUE } from './dialogue/jwaladeshQuests.ts';
 import { ALDERMOOR_DIALOGUE } from './dialogue/aldermoor.ts';
 import { ALDERMOOR_QUEST_DIALOGUE } from './dialogue/aldermoorQuests.ts';
+import { QUIET_CELL_DIALOGUE } from './dialogue/quietCells.ts';
 import { SKARRAGOL_DIALOGUE } from './dialogue/skarragol.ts';
 import { SKARRAGOL_QUEST_DIALOGUE } from './dialogue/skarragolQuests.ts';
 import { XARAGUA_QUEST_DIALOGUE } from './dialogue/xaraguaQuests.ts';
@@ -182,6 +183,7 @@ const BASE: Record<string, DialogueScript> = {
   ...Object.fromEntries(MUSTER_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(WAR_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(CLAIM_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(QUIET_CELL_DIALOGUE.map((d) => [d.id, d])),
   ...SHELF_DIALOGUE,
 };
 

@@ -440,4 +440,10 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   goose: s('goose', 'Goose'),
   footman: s('footman', "The Regent's footman", 'hall_page'),
   watchman: s('watchman', 'Night watchman', 'echo_old_sealbearer'),
+  // The Nightingale Key's hidden conversations (built Nov 10).
+  cell_copyist: s('cell_copyist', 'Hall copyist', 'qc_cell_copyist'),
+  cell_sweeper: s('cell_sweeper', 'Temple sweeper', 'qc_cell_sweeper'),
+  cell_ropemaker: s('cell_ropemaker', 'Ropemaker', 'qc_cell_ropemaker'),
+  cell_baker: s('cell_baker', 'Casabe baker', 'qc_cell_baker'),
+  cell_porter: s('cell_porter', 'Old chair porter', 'qc_cell_porter'),
 };

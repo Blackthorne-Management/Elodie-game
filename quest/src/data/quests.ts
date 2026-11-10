@@ -12,6 +12,7 @@ import { CATHEDRAL, CLOSE, CROSS, DAY_DONE as KINGSMERE_DAY_DONE, HEATH, KEEP, c
 import { HARBOR as MUSTER_HARBOR, HALL as MUSTER_HALL, HOUSE, PLAZA, SEATED, TEMPLE } from './muster.ts';
 import { BEACH, CAMP, CANEY, SONG, TIDE_READY, VILLAGE } from './war.ts';
 import { BELL_READY, CONCOURSE, HALL as THRONE_HALL, ROOMS } from './claim.ts';
+import { CELL_NOTES } from './quietCells.ts';
 import type { Goal } from '../engine/guide.ts';
 
 export const ACT1: QuestDef = {
@@ -2807,4 +2808,6 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     title: 'The Accord\'s Stability',
     text: '{stability.score} of 100, as the realm stood when the Throne decided.',
   },
+  // The Nightingale Key's hidden conversations (data/quietCells.ts): one line for each person who left a Quiet Crown cell.
+  ...CELL_NOTES,
 ];

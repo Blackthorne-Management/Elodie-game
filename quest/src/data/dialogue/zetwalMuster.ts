@@ -17,6 +17,7 @@ import type { DialogueChoice, DialogueLine, DialogueNode, DialogueScript } from 
 import type { StageCue } from '../../engine/stage.ts';
 import { MUSTER } from '../../config.ts';
 import { DUSK, HARBOR, HOUSE, MILL, MUSTER_HOUSES, PLAZA, ROAD, SEATED, SEATED_PARTS, TEMPLE, type MusterHouse } from '../muster.ts';
+import { CELL_TALKS, cellNodes, cellOpen } from './quietCells.ts';
 
 type Extra = Omit<DialogueLine, 'text' | 'speaker'>;
 
@@ -1468,7 +1469,10 @@ const OVERLAYS: readonly MusterOverlay[] = [
   {
     id: 'recruiter_b_talk',
     nodes: {
-      m_start: {
+      // With the Nightingale Key, her silver sigil opens Pòdlimyè's hidden conversation (data/dialogue/quietCells.ts).
+      m_start: { lines: [], next: [{ if: cellOpen('podlimye'), to: 'q_meet' }, { to: 'm_line' }] },
+      ...cellNodes(CELL_TALKS.podlimye),
+      m_line: {
         lines: [
           say('recruiter_b', 'The woman by the mill fell in a Stillwater court, they tell me. You wanted to know who wears our hood.'),
           say('recruiter_b', 'The quiet goes on, envoy\'s daughter. It always does.'),

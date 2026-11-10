@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 25,
+  "nextobjectid": 26,
   "layers": [
     {
       "id": 1,
@@ -573,6 +573,34 @@
               "value": "floor_maker"
             }
           ]
+        },
+        {
+          "id": 11,
+          "name": "cell_copyist",
+          "type": "npc",
+          "x": 128,
+          "y": 208,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.quarter_dawn, !act7.complete, !cell.kirinoura.left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "cell_copyist"
+            }
+          ]
         }
       ]
     },
@@ -587,7 +615,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 11,
+          "id": 12,
           "name": "quarter_pier",
           "type": "door",
           "x": 192,
@@ -615,7 +643,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 13,
           "name": "quarter_hall",
           "type": "door",
           "x": 304,
@@ -653,7 +681,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 14,
           "name": "quarter_library",
           "type": "door",
           "x": 80,
@@ -681,7 +709,7 @@
           ]
         },
         {
-          "id": 14,
+          "id": 15,
           "name": "quarter_maze",
           "type": "door",
           "x": 544,
@@ -719,7 +747,7 @@
           ]
         },
         {
-          "id": 15,
+          "id": 16,
           "name": "quarter_marsh",
           "type": "door",
           "x": 656,
@@ -757,7 +785,7 @@
           ]
         },
         {
-          "id": 16,
+          "id": 17,
           "name": "quarter_sayo",
           "type": "door",
           "x": 144,
@@ -807,7 +835,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 17,
+          "id": 18,
           "name": "quarter_arrive",
           "type": "trigger",
           "x": 208,
@@ -845,7 +873,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "screen_slides",
           "type": "trigger",
           "x": 16,
@@ -868,7 +896,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 20,
           "name": "hall_gate",
           "type": "trigger",
           "x": 240,
@@ -891,7 +919,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 21,
           "name": "lantern_call",
           "type": "trigger",
           "x": 240,
@@ -914,7 +942,7 @@
           ]
         },
         {
-          "id": 21,
+          "id": 22,
           "name": "spy_screen",
           "type": "trigger",
           "x": 208,
@@ -949,7 +977,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 23,
           "name": "quarter",
           "type": "spawn",
           "x": 208,
@@ -1006,7 +1034,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 23,
+          "id": 24,
           "name": "kq_board",
           "type": "puzzle_object",
           "x": 368,
@@ -1039,7 +1067,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 25,
           "name": "teahouse_screen",
           "type": "puzzle_object",
           "x": 256,

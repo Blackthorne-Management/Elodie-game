@@ -8,6 +8,7 @@ import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 export const FESTIVAL_FOLK = 'abcdefghijklmnopqrstuvwx'.split('').map((c) => `festival_${c}`).join(',');
 import { BAKERY_TOWN_DOOR } from '../../src/data/bakery.ts';
 import { BEFORE_NIGHT_TEXT, DAY_TEXT, DUSK_TEXT, MUSTER_HOUSES, NIGHT_TEXT, PLAZA } from '../../src/data/muster.ts';
+import { QUIET_CELLS, cellPlacedText } from '../../src/data/quietCells.ts';
 
 const OPENS_HOME = { if: 'story.elodie_left', closed: 'plaza_door_closed' };
 const OPENS_CITY = { if: 'story.warroom_echo', closed: 'plaza_door_closed' };
@@ -121,7 +122,8 @@ export function zetwalTown(): MapSource {
     npc('gaze_keeper', 13, 6, 'down'),
     npc('soup_vendor', 11, 12, 'right'),
     npc('recruiter_a', 23, 7, 'down'),
-    npc('recruiter_b', 24, 9, 'left'),
+    // With the Nightingale Key she can be talked out of her cell in Chapter 10, and walks off (data/quietCells.ts).
+    npc('recruiter_b', QUIET_CELLS.podlimye.at.x, QUIET_CELLS.podlimye.at.y, QUIET_CELLS.podlimye.facing, { if: cellPlacedText(QUIET_CELLS.podlimye) }),
     // The debate corner on the lawn below the plaza (data/debates.ts).
     npc('debate_keeper', 22, 17, 'right'),
     npc('debate_recruiter', 25, 17, 'left'),
