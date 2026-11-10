@@ -40,7 +40,7 @@ Tick a box when the picture is made. A reference sheet is only a working picture
 | Picture | Becomes | Done |
 |---|---|---|
 | Azzy (blade-knight) | `battle/azzy.png` | [ ] |
-| Samira (alchemist) | `battle/samira.png` | [ ] |
+| Samira (alchemist) | `battle/samira.png` | [x] Nov 10 |
 | Bayarmaa (raider) | `battle/bayarmaa.png` | [ ] |
 | Haru (shadow agent) | `battle/haru.png` | [ ] |
 | Vikram (fire duelist) | `battle/vikram.png` | [ ] |

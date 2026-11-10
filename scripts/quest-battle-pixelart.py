@@ -1,9 +1,15 @@
 """Turn an upscaled pixel-art JPG on magenta into native-resolution transparent PNG.
-usage: pixelart.py in.jpg out.png [target_height]"""
+usage: quest-battle-pixelart.py in.jpg out.png [target_height] [--period MIN,MAX]
+The art's pixel size is searched between MIN and MAX screen pixels (default 12,24: the 2000 px pictures of Nov 10);
+a smaller picture needs a smaller range (Samira's 1024 px battle sheet: 6,12)."""
 import sys
 import numpy as np
 from PIL import Image
 
+args = [a for a in sys.argv[1:] if not a.startswith('--period')]
+rng = next((a.split('=')[1] for a in sys.argv[1:] if a.startswith('--period=')), '12,24')
+PMIN, PMAX = (float(v) for v in rng.split(','))
+sys.argv = [sys.argv[0]] + args
 src, dst = sys.argv[1], sys.argv[2]
 im = np.asarray(Image.open(src).convert('RGB')).astype(int)
 r, g, b = im[..., 0], im[..., 1], im[..., 2]
@@ -18,7 +24,7 @@ def period(axis):
     d = np.abs(np.diff(gray, axis=axis)).sum(axis=1 - axis)
     d = d - d.mean()
     best, bp = -1e18, 0
-    for p in np.arange(12.0, 24.0, 0.05):
+    for p in np.arange(PMIN, PMAX, 0.05):
         idx = np.arange(len(d))
         score = np.abs((d * np.exp(2j * np.pi * idx / p)).sum())
         if score > best:
