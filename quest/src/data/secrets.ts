@@ -85,8 +85,9 @@ export function stepSecrets(step: { mapId: string; era: 'present' | 'echo'; pos:
 
 /**
  * The Nightingale Key on the maps (SECRET-ITEMS.md 8): the Quiet Crown's own people show a faint silver sigil, by their
- * look (the hooded recruiters, the hierarchs, the Hushers and the veils, the Almoner). The design's hidden conversation
- * per capital is not built (Claude's call, Oct 27; docs/quest/design/SECRET-ITEMS.md 8).
+ * look (the hooded recruiters, the hierarchs, the Hushers and the veils, the Almoner, and the cell members whose looks
+ * start `qc_cell_`). One of them in each capital from Chapter 7 on opens the design's hidden conversation (built Nov 10:
+ * data/quietCells.ts, data/dialogue/quietCells.ts; docs/quest/design/SECRET-ITEMS.md 8).
  */
 export const QUIET_CROWN_LOOKS: readonly string[] = ['quiet_crown_', 'qc_', 'husher', 'almswoman', 'almoner', 'quiet_speaker'];
 export const quietCrownLook = (look: string): boolean => QUIET_CROWN_LOOKS.some((p) => look.startsWith(p));

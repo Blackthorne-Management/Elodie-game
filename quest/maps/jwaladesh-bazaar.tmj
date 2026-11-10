@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 40,
+  "nextobjectid": 41,
   "layers": [
     {
       "id": 1,
@@ -683,6 +683,34 @@
         },
         {
           "id": 15,
+          "name": "cell_sweeper",
+          "type": "npc",
+          "x": 256,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "down"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.dhanraj_beaten, !act8.complete, !cell.agnipur.left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "cell_sweeper"
+            }
+          ]
+        },
+        {
+          "id": 16,
           "name": "echo_runner",
           "type": "npc",
           "x": 208,
@@ -722,7 +750,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 16,
+          "id": 17,
           "name": "bazaar_harbor",
           "type": "door",
           "x": 336,
@@ -760,7 +788,7 @@
           ]
         },
         {
-          "id": 17,
+          "id": 18,
           "name": "bazaar_court",
           "type": "door",
           "x": 336,
@@ -798,7 +826,7 @@
           ]
         },
         {
-          "id": 18,
+          "id": 19,
           "name": "bazaar_library",
           "type": "door",
           "x": 128,
@@ -836,7 +864,7 @@
           ]
         },
         {
-          "id": 19,
+          "id": 20,
           "name": "bazaar_flats",
           "type": "door",
           "x": 688,
@@ -874,7 +902,7 @@
           ]
         },
         {
-          "id": 20,
+          "id": 21,
           "name": "bazaar_roofs",
           "type": "door",
           "x": 224,
@@ -924,7 +952,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 22,
           "name": "bazaar_arrive",
           "type": "trigger",
           "x": 336,
@@ -962,7 +990,7 @@
           ]
         },
         {
-          "id": 22,
+          "id": 23,
           "name": "aiyana_meet",
           "type": "trigger",
           "x": 160,
@@ -985,7 +1013,7 @@
           ]
         },
         {
-          "id": 23,
+          "id": 24,
           "name": "gust_1",
           "type": "trigger",
           "x": 320,
@@ -1008,7 +1036,7 @@
           ]
         },
         {
-          "id": 24,
+          "id": 25,
           "name": "gust_2",
           "type": "trigger",
           "x": 320,
@@ -1043,7 +1071,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 25,
+          "id": 26,
           "name": "bazaar",
           "type": "spawn",
           "x": 336,
@@ -1066,7 +1094,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 27,
           "name": "stair_head",
           "type": "spawn",
           "x": 336,
@@ -1101,7 +1129,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 27,
+          "id": 28,
           "name": "hearth_echo",
           "type": "echo_zone",
           "x": 208,
@@ -1147,7 +1175,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 28,
+          "id": 29,
           "name": "jw_board",
           "type": "puzzle_object",
           "x": 304,
@@ -1180,7 +1208,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 30,
           "name": "price_board",
           "type": "puzzle_object",
           "x": 416,
@@ -1213,7 +1241,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 31,
           "name": "dark_shrine",
           "type": "puzzle_object",
           "x": 624,
@@ -1251,7 +1279,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 32,
           "name": "lit_shrine",
           "type": "puzzle_object",
           "x": 624,
@@ -1289,7 +1317,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 33,
           "name": "dyer_mirror",
           "type": "puzzle_object",
           "x": 160,
@@ -1322,7 +1350,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 34,
           "name": "down_mirror_1",
           "type": "puzzle_object",
           "x": 144,
@@ -1355,7 +1383,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 35,
           "name": "down_mirror_2",
           "type": "puzzle_object",
           "x": 512,
@@ -1388,7 +1416,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 36,
           "name": "down_mirror_3",
           "type": "puzzle_object",
           "x": 576,
@@ -1421,7 +1449,7 @@
           ]
         },
         {
-          "id": 36,
+          "id": 37,
           "name": "runners_hearth",
           "type": "puzzle_object",
           "x": 192,
@@ -1454,7 +1482,7 @@
           ]
         },
         {
-          "id": 37,
+          "id": 38,
           "name": "hall_bracket",
           "type": "puzzle_object",
           "x": 192,
@@ -1492,7 +1520,7 @@
           ]
         },
         {
-          "id": 38,
+          "id": 39,
           "name": "hall_bracket_lit",
           "type": "puzzle_object",
           "x": 192,
@@ -1530,7 +1558,7 @@
           ]
         },
         {
-          "id": 39,
+          "id": 40,
           "name": "exchange_tower",
           "type": "puzzle_object",
           "x": 384,

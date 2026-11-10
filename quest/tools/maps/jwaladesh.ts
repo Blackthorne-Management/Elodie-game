@@ -10,6 +10,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { QUIET_CELLS, cellPlacedText } from '../../src/data/quietCells.ts';
 import { ARGUERS, BAZAAR, CARAVAN, COURT, DAY_DONE_TEXT, FLATS, HARBOR, LIBRARY, MIRROR_SOLUTION, OIL_STORE, ROOFTOPS, facingText } from '../../src/data/jwaladesh.ts';
 
 const STONE = 'क';
@@ -227,6 +228,8 @@ export function jwaladeshBazaar(): MapSource {
     obj('lit_shrine', BAZAAR.shrine.x, BAZAAR.shrine.y, { kind: 'lamp_lit', solid: true, era: 'present', if: 'side.little_lamps.done', dialogue: 'lit_shrine' }),
     // J-1 Win Every Argument (built Oct 27): the three who out-argued Vikram, about the bazaar at dawn.
     ...(['spice', 'dyer', 'wrestler'] as const).map((who) => npc(`arguer_${who}`, ARGUERS[who].x, ARGUERS[who].y, 'down', { if: 'party.vikram, story.dhanraj_beaten, !act8.complete' })),
+    // The Nightingale Key's hidden conversation here (built Nov 10; data/quietCells.ts): a Quiet Crown cell member.
+    npc(QUIET_CELLS.agnipur.npc, QUIET_CELLS.agnipur.at.x, QUIET_CELLS.agnipur.at.y, QUIET_CELLS.agnipur.facing, { if: cellPlacedText(QUIET_CELLS.agnipur) }),
     obj('dyer_mirror', BAZAAR.dyerMirror.x, BAZAAR.dyerMirror.y, { kind: 'mirror_down', solid: true, era: 'present', dialogue: 'dyer_mirror' }),
     ...BAZAAR.downMirrors.map((p, i) => obj(`down_mirror_${i + 1}`, p.x, p.y, { kind: 'mirror_down', solid: true, era: 'present', dialogue: 'down_mirror' })),
     obj('runners_hearth', BAZAAR.hearth.x, BAZAAR.hearth.y, { kind: 'hearth', solid: true, era: 'both', dialogue: 'runners_hearth' }),

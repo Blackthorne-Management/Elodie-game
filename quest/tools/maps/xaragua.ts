@@ -14,6 +14,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { QUIET_CELLS, cellPlacedText } from '../../src/data/quietCells.ts';
 import { BEACH, CAMP, CANEY, CAVE, COMPANIES, CONUCO, FLANK_HOUSES, MOUNTAIN, OCCUPIED_TEXT, PIER_ROOT, SONG, VILLAGE, WAR_DAY_TEXT, WAR_TABLE_TEXT, WAR_TEXT } from '../../src/data/war.ts';
 
 const GRASS = 'ā';
@@ -885,6 +886,8 @@ function warCamp(): ObjSpec[] {
     npc('jordyn_war', c.jordyn.x, c.jordyn.y, 'up', { if: WAR_DAY_TEXT }),
     ...COMPANIES.map((co, i) => npc(`camp_${co.army}`, c.companies[i]!.x, c.companies[i]!.y, 'up', { npc: co.npc, if: `story.camp_reached, !story.tide_called, army.${co.army}` })),
     obj('powder_jars_camp', c.jars.x, c.jars.y, { kind: 'powder_jars', solid: true, era: 'present', if: 'side.ninth_thumbprint.done, !story.tide_called' }),
+    // The Nightingale Key's hidden conversation here (built Nov 10; data/quietCells.ts): a Quiet Crown cell member.
+    npc(QUIET_CELLS.yucayeque.npc, QUIET_CELLS.yucayeque.at.x, QUIET_CELLS.yucayeque.at.y, QUIET_CELLS.yucayeque.facing, { if: cellPlacedText(QUIET_CELLS.yucayeque) }),
   ];
 }
 

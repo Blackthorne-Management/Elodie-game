@@ -9,6 +9,7 @@
 
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
+import { QUIET_CELLS, cellPlacedText } from '../../src/data/quietCells.ts';
 import { rotorLookCondition } from '../../src/engine/rotor.ts';
 import { CODE, FILEHOUSE, FLOOR_MAKER, HALL, HALL_OPEN, LIBRARY, MARSH, MAZE, NIGHTINGALE, PIER, QUARTER, SAYO_DOOR, SAYO_HOUSE, SCREENS, STACK_SHELVES } from '../../src/data/kuroshi.ts';
 
@@ -147,6 +148,8 @@ export function kuroshiQuarter(): MapSource {
     { layer: 'doors', name: 'quarter_sayo', x: SAYO_DOOR.x, y: SAYO_DOOR.y, props: { target: 'sayo_out', map: 'kuroshi-sayo-house', exit: 'right', if: 'side.letter_floor.accepted', closed: 'sayo_house_shut' } },
     npc('floor_maker', FLOOR_MAKER.x, FLOOR_MAKER.y, 'left', { if: 'story.quarter_dawn, !act7.complete' }),
     trigger('spy_screen', 13, QUARTER.screenRow, { dialogue: 'spy_screen', if: K1_PLACE('screen') }, 7, 1),
+    // The Nightingale Key's hidden conversation here (built Nov 10; data/quietCells.ts): a Quiet Crown cell member.
+    npc(QUIET_CELLS.kirinoura.npc, QUIET_CELLS.kirinoura.at.x, QUIET_CELLS.kirinoura.at.y, QUIET_CELLS.kirinoura.facing, { if: cellPlacedText(QUIET_CELLS.kirinoura) }),
   ];
   return { id: 'kuroshi-quarter', present: g, echo: g.clone(), objects };
 }

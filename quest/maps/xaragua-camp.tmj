@@ -11,7 +11,7 @@
   "version": "1.8",
   "tiledversion": "1.8.2",
   "nextlayerid": 15,
-  "nextobjectid": 36,
+  "nextobjectid": 37,
   "layers": [
     {
       "id": 1,
@@ -813,6 +813,34 @@
               "value": "war_watch"
             }
           ]
+        },
+        {
+          "id": 21,
+          "name": "cell_baker",
+          "type": "npc",
+          "x": 144,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.war_begun, !story.tide_called, !cell.yucayeque.left"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "cell_baker"
+            }
+          ]
         }
       ]
     },
@@ -827,7 +855,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 21,
+          "id": 22,
           "name": "camp_mountain",
           "type": "door",
           "x": 192,
@@ -867,7 +895,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 22,
+          "id": 23,
           "name": "war_camp",
           "type": "trigger",
           "x": 208,
@@ -917,7 +945,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 23,
+          "id": 24,
           "name": "camp",
           "type": "spawn",
           "x": 192,
@@ -952,7 +980,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 24,
+          "id": 25,
           "name": "camp_fire",
           "type": "echo_zone",
           "x": 192,
@@ -992,7 +1020,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 25,
+          "id": 26,
           "name": "grove_flat",
           "type": "anchor",
           "x": 96,
@@ -1015,7 +1043,7 @@
           ]
         },
         {
-          "id": 26,
+          "id": 27,
           "name": "healer_grove",
           "type": "anchor",
           "x": 192,
@@ -1050,7 +1078,7 @@
       "draworder": "topdown",
       "objects": [
         {
-          "id": 27,
+          "id": 28,
           "name": "old_stumps",
           "type": "puzzle_object",
           "x": 96,
@@ -1088,7 +1116,7 @@
           ]
         },
         {
-          "id": 28,
+          "id": 29,
           "name": "cut_young_grove",
           "type": "puzzle_object",
           "x": 96,
@@ -1126,7 +1154,7 @@
           ]
         },
         {
-          "id": 29,
+          "id": 30,
           "name": "young_grove",
           "type": "puzzle_object",
           "x": 192,
@@ -1164,7 +1192,7 @@
           ]
         },
         {
-          "id": 30,
+          "id": 31,
           "name": "grove_spot_flat",
           "type": "puzzle_object",
           "x": 96,
@@ -1197,7 +1225,7 @@
           ]
         },
         {
-          "id": 31,
+          "id": 32,
           "name": "grove_spot_rocks",
           "type": "puzzle_object",
           "x": 192,
@@ -1230,7 +1258,7 @@
           ]
         },
         {
-          "id": 32,
+          "id": 33,
           "name": "camp_hamaca_1",
           "type": "puzzle_object",
           "x": 128,
@@ -1263,7 +1291,7 @@
           ]
         },
         {
-          "id": 33,
+          "id": 34,
           "name": "camp_hamaca_2",
           "type": "puzzle_object",
           "x": 160,
@@ -1296,7 +1324,7 @@
           ]
         },
         {
-          "id": 34,
+          "id": 35,
           "name": "powder_jars_camp",
           "type": "puzzle_object",
           "x": 176,
@@ -1329,7 +1357,7 @@
           ]
         },
         {
-          "id": 35,
+          "id": 36,
           "name": "ash_thumbprint",
           "type": "puzzle_object",
           "x": 272,
