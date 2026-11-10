@@ -864,13 +864,32 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   must be read measures, from the page, how far the visible controls reach over the picture (`input/touch.ts`
   controlsOverPicture, `engine/scaling.ts` controlReach and pageFit, `ui/clearOfControls.ts`): the dialogue box is
   narrowed to miss the D-pad and B over its rows and grows taller when the line then needs more rows (its choices too);
-  the menu and the shop are drawn a little smaller, between the controls (0.88 at 844x390), with taps mapped back; the
+  the menu and the shop are drawn a little smaller where needed, between the controls, with taps mapped back; the
   Journal, the credits and the cards wrap inside the controls; the battle's command grid narrows by what reaches over
-  the strip's right end, as its party rows did on the left. Where the bars are wide (932x430) nothing moves. On a phone
-  whose picture runs edge to edge (667x375, `data-layout='overlay'`) a page cannot keep Large text readable and miss a
-  132 px D-pad as well: there a page stops at `PAGE_MIN_SCALE` (0.84, Large text at about the Normal size), Menu steps
-  aside on the pages (X and B close them), and the D-pad and A/B fade to 40% on the pages and in a fight until pressed,
-  so the words under them still read. The dialogue box keeps clear at every size. Buttons keep their sizes.
+  the strip's right end, as its party rows did on the left. Where the bars are wide (932x430) nothing moves. The
+  dialogue box keeps clear at every size. (The first pass faded the D-pad and A/B to 40% on 667x375's pages and fights;
+  the compact controls below replace that.)
+- **Compact controls on short screens (Claude's call, Nov 10; the Nov 7 review's 5, third pass):** a sideways touch
+  screen whose picture runs edge to edge (`overlay`: 667x375, 640x360, 740x360) or that is under 400 px tall (844x390)
+  gets `<body data-controls='compact'>` (`engine/scaling.ts` compactControls, `TOUCH_COMPACT_MAX_HEIGHT_PX`): A and B
+  shrink to 44 px (`TOUCH_COMPACT_BUTTON_PX`; the D-pad's arms already are 3 x 44 = 132 px, the least it can be) and
+  every control hugs the screen's edge (4 px). On the map and in a conversation the D-pad stays a cross in the
+  bottom-left corner and A/B sit in the bottom-right; the dialogue box narrows past them as before. On a page, in a
+  fight and on a card (every mode but the map and a conversation) the D-pad becomes a rail of four 44 px arrows down the
+  left edge (up, left, right, down; `input/touch.ts` railDirection) and A over B down the right edge; Menu and the
+  full-screen button step aside there when there are no side bars (X and B close a page; full screen is on the map).
+  The rails reach at most 24 game px over a 640 x 360 picture, so a page drawn between them stays at 0.843 (above
+  `PAGE_MIN_SCALE`, 0.84) at 640x360, 0.88 at 667x375, and full size at 740x360 and 844x390, where the rails sit in
+  the bars; the fight's party names and commands start past them (`BattleScene.padInset`, at most 24). Why a rail and
+  not a smaller cross: a page fills the picture, so anything 132 px wide in its bottom corners cuts into it; only a
+  44 px column at each edge leaves Large text at least the Normal size. Why not a smaller picture: room for the
+  132 px cross beside a page needs a picture about a third smaller, so every word on every screen gets smaller; the
+  picture keeps its size. The 40% fade stays only as the last resort, on a page that still touches a control (a
+  screen under 640 px wide, such as 568x320; `pageFit` reports `clear`, `<body data-crowded>`). Checked with
+  Playwright (`hasTouch`, `isMobile`) at 667x375, 640x360, 844x390 and 932x430 in the market vendor's conversation,
+  her shop and its confirmation, every menu tab and `mangrove_crew`, and upright at 390x844 (unchanged): nothing to
+  read under a control. The smoke test checks the compact controls and the menu page against every control at each
+  phone size.
 - **A landmark where the party enters the Concourse (Claude's call, Nov 10; the Nov 7 review's 10):** the way in from
   the gate yard (`concourse_yard`, where `?at=concourse` starts) gets banners either side, as every gate has, and two
   lanterns with flower beds stand either side of the lane a few steps in (42-43,14 and 42-43,19; `tools/maps/seat.ts`).

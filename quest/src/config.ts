@@ -147,6 +147,15 @@ export const TOUCH_STACK_PX = 196;
  * Menu just under it and the D-pad and A/B at the bottom (style.css, body[data-layout=stack]).
  */
 export const TOUCH_STACK_TOP_PX = 60;
+/**
+ * Compact controls on a short sideways screen (Claude's call, Nov 10; the Nov 7 review's 5): when the picture runs edge to
+ * edge (`overlay`) or the screen is under TOUCH_COMPACT_MAX_HEIGHT_PX tall, A and B shrink to TOUCH_COMPACT_BUTTON_PX
+ * (the 44 px minimum; the D-pad's arms already are 44 px) and every control hugs the screen's edge. On a page, in a fight
+ * and on a card the D-pad becomes a rail of four arrows down the left edge and A over B down the right edge, so the
+ * pages, the battle's names and the cards keep clear of them (style.css, body[data-controls='compact']).
+ */
+export const TOUCH_COMPACT_MAX_HEIGHT_PX = 400;
+export const TOUCH_COMPACT_BUTTON_PX = 44;
 export const MAP_BAR_PX = 140;
 
 /** Save storage. Bump SAVE_VERSION when the save shape changes. */
@@ -572,6 +581,6 @@ export const PARTY_SETTLE_MS = 220;
 /**
  * The smallest a full page (the menu, a shop) is drawn to keep clear of the touch controls on a sideways phone: Large
  * text then reads at about the Normal size (8 / 9.5). Below it the page keeps this size (review Nov 7, finding 5;
- * Claude's call, Nov 10).
+ * Claude's call, Nov 10). On a 640 x 360 picture the compact controls' rails leave 0.843.
  */
 export const PAGE_MIN_SCALE = 0.84;
