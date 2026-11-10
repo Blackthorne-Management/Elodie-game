@@ -104,6 +104,9 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
     ...Object.keys(OBJECT_ART).map(ART_FILES.object),
     ...Object.keys(ITEM_ART).map(ART_FILES.item),
     ...Object.keys(ENEMY_ART).map(ART_FILES.enemy),
+    // Any foe's painted art, drawn in code or not (art drop 2: the Crown's soldiers fight as their walking look until
+    // their file arrives).
+    ...artFiles().filter((path) => path.startsWith('enemies/')),
     ...Object.keys(WEAPON_ART).map(ART_FILES.weapon),
     ...battleFiles(),
   ];
@@ -222,6 +225,16 @@ function makeItemArt(scene: Phaser.Scene): void {
 
 /** Enemy drawings for battles: an art file when there is one, else the placeholder. */
 function makeEnemyArt(scene: Phaser.Scene): void {
+  // A painted foe with no drawing in code (a Crown marine, Thorne): its file alone.
+  for (const path of artFiles()) {
+    const look = /^enemies\/(.+)\.png$/.exec(path)?.[1];
+    if (!look || ENEMY_ART[look]) continue;
+    const file = fileImage(scene, path);
+    if (!file) continue;
+    const { tex, ctx } = canvasTexture(scene, textureKeyForEnemy(look), file.width, file.height);
+    ctx.drawImage(file, 0, 0);
+    tex.refresh();
+  }
   for (const [look, art] of Object.entries(ENEMY_ART)) {
     const file = fileImage(scene, ART_FILES.enemy(look));
     const w = file ? file.width : art.rows[0]!.length;
