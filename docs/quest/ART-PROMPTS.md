@@ -1,5 +1,8 @@
 # Echoes of Zetwal: art prompts for art drop 1 (due Fri Oct 24)
 
+**Art drop 2 (Nov 10):** the order to work in, the six companions' battle stances and the enemies' prompts are in
+`ART-DROP-2.md`.
+
 Gemini prompts for every picture art drop 1 needs, written Oct 15. Each character gets its **own new Gemini chat**:
 the reference sheet first, then the portrait, then the walk sprites, all in that same chat so the face stays the
 same. Attach **Gianna's reference sheet** (`docs/quest/art-source/`) to the first message so the style matches. If a
