@@ -546,6 +546,16 @@ export class FieldScene extends Phaser.Scene {
       snapshot: () => this.snapshot(),
       tileToScreen: (x, y) => this.tileToScreen(x, y),
       gameToScreen: (x, y) => this.gameToScreen(x, y),
+      // A point of the open page (the menu or a shop, drawn smaller beside the touch controls; Nov 10) on the screen.
+      pageToScreen: (x, y) => {
+        const page = this.mode === 'shop' ? this.shopPanel : this.mode === 'menu' ? this.menu : null;
+        const at = page ? page.pageToGame(x, y) : { x, y };
+        return this.gameToScreen(at.x, at.y);
+      },
+      choiceToScreen: (i) => {
+        const at = this.dialogue.choicePoint(i);
+        return at ? this.gameToScreen(at.x, at.y) : null;
+      },
       showItem: (id) => this.openShowcase(id),
       startBattle: (id, extra) => this.startBattle(id, extra),
       battleFx: (kind, at) => battleFx(kind, at),
@@ -830,8 +840,9 @@ export class FieldScene extends Phaser.Scene {
           const shop = RPG.shops[e.shop];
           if (!shop) break;
           if (this.mode === 'dialogue') this.leaveDialogueMode();
-          this.shopPanel.open(shop, this.logic.state.flags);
+          // The mode first: the page keeps clear of the touch controls the mode leaves on the screen.
           this.mode = 'shop';
+          this.shopPanel.open(shop, this.logic.state.flags);
           break;
         }
         case 'rhythm': {
@@ -1761,7 +1772,15 @@ export class FieldScene extends Phaser.Scene {
       const bob = Math.round(Math.sin(this.guideT / 220 + (kind === 'side' ? 1.5 : 0)) * 2);
       // Above the "!" or sparkle when the stop already has one.
       const lift = this.markerSprites.size > 0 && this.logic.markers().some((m) => Math.round(m.pos.x) === way.at.x && m.pos.y === way.at.y) ? 10 : 0;
-      p.mark.setPosition(foot.x, foot.y - CHARACTER_HEIGHT - 6 - lift + bob).setVisible(true);
+      // Above heads, never on a person (the Nov 7 review's 13): it rises over anyone whose picture it would touch.
+      let y = foot.y - CHARACTER_HEIGHT - 6 - lift;
+      const people = this.peopleBounds();
+      for (let i = 0; i < 4; i++) {
+        const under = people.find((b) => foot.x + 5 > b.x && foot.x - 5 < b.right && y + 4 > b.y && y - 5 < b.bottom);
+        if (!under) break;
+        y = under.y - 4;
+      }
+      p.mark.setPosition(foot.x, Math.max(view.y + 6, y + bob)).setVisible(true);
       return;
     }
     p.mark?.setVisible(false);
@@ -1781,10 +1800,42 @@ export class FieldScene extends Phaser.Scene {
     const half = { x: VIEW_WIDTH / 2 - pad, y: VIEW_HEIGHT / 2 - pad };
     const t = Math.min(dx !== 0 ? half.x / Math.abs(dx) : Infinity, dy !== 0 ? half.y / Math.abs(dy) : Infinity);
     const nudge = 1 + Math.sin(this.guideT / 260) * 0.02;
+    let ax = cx + dx * t * nudge;
+    let ay = cy + dy * t * nudge;
+    // Never on a person (the Nov 7 review's 13: in the guild vault it sat on Gianna's head, the party standing at the
+    // top of a small map): it slides along its edge of the screen to the nearest place clear of everyone.
+    const people = this.peopleBounds();
+    const onPerson = (x: number, y: number) => people.some((b) => x + 8 > b.x && x - 8 < b.right && y + 8 > b.y && y - 8 < b.bottom);
+    if (onPerson(ax, ay)) {
+      const sideways = Math.abs(dx) * t >= half.x - 0.5; // on the left or right edge: slide up or down
+      for (let k = 1; k <= 16; k++) {
+        const step = Math.ceil(k / 2) * 8 * (k % 2 === 0 ? -1 : 1);
+        const x = sideways ? ax : Math.min(view.right - pad, Math.max(view.x + pad, ax + step));
+        const y = sideways ? Math.min(view.bottom - pad, Math.max(view.y + pad, ay + step)) : ay;
+        if (!onPerson(x, y)) {
+          ax = x;
+          ay = y;
+          break;
+        }
+      }
+    }
     p.arrow
-      .setPosition(Math.round(cx + dx * t * nudge), Math.round(cy + dy * t * nudge))
-      .setRotation(Math.atan2(dy, dx))
+      .setPosition(Math.round(ax), Math.round(ay))
+      .setRotation(Math.atan2(goal.y - ay, goal.x - ax))
       .setVisible(true);
+  }
+
+  /** Where the people on the map stand now (Gianna, her party, the map's people, the crowd), as their pictures' bounds. */
+  private peopleBounds(): Phaser.Geom.Rectangle[] {
+    const party = [this.follower, this.yari, this.azzy, this.samira, this.bayarmaa, this.haru, this.vikram, this.edmund];
+    const sprites: Phaser.GameObjects.Image[] = [
+      this.player,
+      ...party.flatMap((f) => (f ? [f.sprite] : [])),
+      ...this.npcSprites.values(),
+      ...this.crowd.map((c) => c.sprite),
+      ...this.goers.map((g) => g.sprite),
+    ];
+    return sprites.filter((sp) => sp?.visible).map((sp) => sp.getBounds());
   }
 
   // ---- The crowd -----------------------------------------------------------------------------
@@ -2151,7 +2202,8 @@ export class FieldScene extends Phaser.Scene {
 
   /** Where the dialogue box's name tab begins, on the screen (ui/DialogueBox.ts: 58 px plus the text size's extra, 2 px off the bottom, a 13 px tab). */
   private dialogueBoxTop(): number {
-    return VIEW_HEIGHT - 58 - dialogueExtraPx() - 2 - 13;
+    // The box is taller where it was narrowed to miss the touch controls (ui/DialogueBox.ts layout).
+    return Math.min(VIEW_HEIGHT - 58 - dialogueExtraPx() - 2 - 13, this.dialogue.visible ? this.dialogue.top : VIEW_HEIGHT);
   }
 
   /**
@@ -2505,8 +2557,8 @@ export class FieldScene extends Phaser.Scene {
     }
     lines.push({ text: atTheEnd ? '({A} for the title)' : '({B} to close)', color: UI.dimText, gap: 4 });
     this.menu.close();
-    this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
     this.mode = atTheEnd ? 'credits' : 'journal';
+    this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
     this.rt.input.clearPresses();
   }
 
@@ -3411,6 +3463,10 @@ declare global {
       snapshot: () => FieldSnapshot;
       tileToScreen: (x: number, y: number) => { x: number; y: number };
       gameToScreen: (x: number, y: number) => { x: number; y: number };
+      /** A point of the open page (the menu or a shop: its own 320 x 180 pixels) on the screen. */
+      pageToScreen: (x: number, y: number) => { x: number; y: number };
+      /** The middle of a dialogue choice's row on the screen, or null when no choice is shown. */
+      choiceToScreen: (i: number) => { x: number; y: number } | null;
       /** Show an item's showcase (display only: it changes no flags), for screenshots of every tier. */
       showItem: (id: string) => void;
       /** Start a battle by id (the smoke test plays the first battle without walking to it). */

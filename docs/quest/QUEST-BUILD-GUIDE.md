@@ -859,6 +859,38 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   its picture's empty margin (the lantern trader's picture is wide, so off Kirinoura the boat stopped in open water and
   faded there). The Kingsmere voyages carry the four who walk the map (checked at `chapter8-end`, `chapter9-end` and
   `aldermoor-dawn`: the companion, Gianna, Anissa in her glow, Azzy).
+- **Words clear of the touch controls on a sideways phone (Claude's call, Nov 10; the Nov 7 review's 5, second pass):**
+  Echo and Ask show only on the map, the one place they act (they sat on the menu and the shop). Everything else that
+  must be read measures, from the page, how far the visible controls reach over the picture (`input/touch.ts`
+  controlsOverPicture, `engine/scaling.ts` controlReach and pageFit, `ui/clearOfControls.ts`): the dialogue box is
+  narrowed to miss the D-pad and B over its rows and grows taller when the line then needs more rows (its choices too);
+  the menu and the shop are drawn a little smaller, between the controls (0.88 at 844x390), with taps mapped back; the
+  Journal, the credits and the cards wrap inside the controls; the battle's command grid narrows by what reaches over
+  the strip's right end, as its party rows did on the left. Where the bars are wide (932x430) nothing moves. On a phone
+  whose picture runs edge to edge (667x375, `data-layout='overlay'`) a page cannot keep Large text readable and miss a
+  132 px D-pad as well: there a page stops at `PAGE_MIN_SCALE` (0.84, Large text at about the Normal size), Menu steps
+  aside on the pages (X and B close them), and the D-pad and A/B fade to 40% on the pages and in a fight until pressed,
+  so the words under them still read. The dialogue box keeps clear at every size. Buttons keep their sizes.
+- **A landmark where the party enters the Concourse (Claude's call, Nov 10; the Nov 7 review's 10):** the way in from
+  the gate yard (`concourse_yard`, where `?at=concourse` starts) gets banners either side, as every gate has, and two
+  lanterns with flower beds stand either side of the lane a few steps in (42-43,14 and 42-43,19; `tools/maps/seat.ts`).
+  They keep off the lane, the tiles the party settles on, the forecourt, the market, the debate corner, the crowd's
+  square and the route.
+- **A puzzle's later steps sparkle after the earlier one (Claude's call, Nov 10; the Nov 7 review's 13):** a new
+  content rule, `GameContent.markAfter` (data in `data/content.ts` LATER_STEPS: the map, a pattern on object ids, the
+  flag of the step they wait for). An object that is only reachable or useful after an earlier step of the same puzzle
+  keeps its sparkle until that step is done; puzzle sets and quiet maps work as before. The guild vault now shows only
+  the ledger page at its start; the pan, the balance door and one weight once the memory has said the price
+  (`story.vault_echo`); the strongroom's boxes and the sun lock once the door is open; the witness's chest once the sun
+  lock has turned. The guide's marks never sit on a person: the on-screen chevron rises over anyone it would touch, and
+  the edge arrow slides along its edge of the screen to the nearest place clear of everyone, still pointing at its stop.
+- **The Hearing's crowd keeps a free row (Claude's call, Nov 10; the Nov 7 review's 13):** the free-row rule the staged
+  scenes keep now holds for the people the Throne Hall's map places (`data/claim.ts`): the witnesses' bench stands in two
+  ranks of four on rows 12 and 14 (the back rank a step aside), the gallery in two ranks on rows 13 and 15, Jordyn
+  behind Rael with a free row (21,12, between Rivera and Jaime), Jaime a step back (22,13, clear of the second witness's
+  place at 22,11), and Hollis at the clerk's table's corner (25,11), a free row below Skarragol's place behind its
+  chair. `tests/stage.test.ts` plays the route to `@hearing-verdict` and `@the-end` and fails anyone in the Hall standing
+  one above another without a free row.
 
 ---
 

@@ -236,14 +236,21 @@ export const HALL = {
   patricioChair: at(17, 9),
   /** The Echo zone: south of the eighth chair, below the row its people stand on (the review's 3.8: the chair is solid). */
   echoZone: { x: 15, y: 10, w: 3, h: 2 },
-  /** Hollis comes in by the Hall's door with the petition and walks the nave (the Hall has one door: 3.8). */
-  hollis: at(25, 10),
-  /** The clerk's table and its register; Rael kneels at the nave below the dais; Jordyn behind him. */
+  /**
+   * Hollis comes in by the Hall's door with the petition and walks the nave (the Hall has one door: 3.8). At the clerk's
+   * table's corner, a free row below Skarragol's place behind its chair (25, 9; the Nov 7 review's 13).
+   */
+  hollis: at(25, 11),
+  /**
+   * The clerk's table and its register; Rael kneels at the nave below the dais; Jordyn behind him with a free row, between
+   * Rivera and Jaime (the Nov 7 review's 13: nobody one above another without a free row); Jaime a step further back,
+   * clear of the second witness's place beside the table (22, 11).
+   */
   clerkTable: at(24, 10),
   rael: at(21, 10),
-  jordynBehind: at(21, 11),
+  jordynBehind: at(21, 12),
   rivera: at(20, 12),
-  jaime: at(22, 12),
+  jaime: at(22, 13),
   bennyBehind: at(21, 13),
   /** The witnesses' bench (x 12 to 15, row 11) and the gallery (x 26 to 31, rows 13 to 15): one screen with the dais. */
   bench: { x: 11, y: 11, w: 4 },
@@ -264,7 +271,10 @@ export const HALL = {
   echoXaraguaChair: at(2, 14),
 } as const;
 
-/** Where each witness stands on the bench's side before and after speaking (two rows of four). */
-export const BENCH_SPOTS: readonly P[] = [at(12, 12), at(13, 12), at(14, 12), at(15, 12), at(12, 13), at(13, 13), at(14, 13), at(15, 13)];
-/** The gallery's placed people (the Concourse's own, by the outline 14.1). */
-export const GALLERY_SPOTS: readonly P[] = [at(26, 13), at(27, 13), at(28, 13), at(29, 13), at(30, 13), at(27, 14), at(28, 14), at(29, 14), at(30, 14)];
+/**
+ * Where each witness stands on the bench's side before and after speaking: two ranks of four with a free row between
+ * them (the Nov 7 review's 13: rows 12 and 13 stood in each other's columns), the back rank a step aside.
+ */
+export const BENCH_SPOTS: readonly P[] = [at(12, 12), at(13, 12), at(14, 12), at(15, 12), at(11, 14), at(12, 14), at(13, 14), at(14, 14)];
+/** The gallery's placed people (the Concourse's own, by the outline 14.1): two ranks with a free row between them. */
+export const GALLERY_SPOTS: readonly P[] = [at(26, 13), at(27, 13), at(28, 13), at(29, 13), at(30, 13), at(26, 15), at(27, 15), at(28, 15), at(29, 15)];

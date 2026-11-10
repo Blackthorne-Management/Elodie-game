@@ -2285,9 +2285,11 @@ async function main() {
     for (let i = 0; i < 16 && (await snap(ppage)).mode === 'dialogue'; i++) {
       const d = (await snap(ppage)).dialogue;
       if (d?.choices && !d.typing) {
-        // The choice box sits right-aligned just above the dialogue box (box top 120, rows 11 px).
-        const top = 120 - (d.choices.length * 11 + 6) - 2;
-        await tapGame(300, top + 3 + 5);
+        // The first choice's row, wherever the box sits (clear of the touch controls; Nov 10).
+        const c = await ppage.evaluate(() => window.__quest.choiceToScreen(0));
+        await touch('touchStart', c.x, c.y);
+        await touch('touchEnd');
+        await ppage.waitForTimeout(120);
         choicesTapped++;
       } else await tapGame(160, 150);
       await ppage.waitForTimeout(200);
@@ -2298,10 +2300,17 @@ async function main() {
     await ppage.locator('.side-map').tap();
     await ppage.waitForFunction(() => window.__quest.snapshot().menu?.tab === 'Map', null, { timeout: 3000 });
     check(true, 'tapping the minimap opens the map');
-    await tapGame(14, 8); // the Status tab
+    // The menu is a page drawn smaller beside the touch controls (Nov 10): tap it through pageToScreen.
+    const tapPage = async (x, y) => {
+      const p = await ppage.evaluate(([gx, gy]) => window.__quest.pageToScreen(gx, gy), [x, y]);
+      await touch('touchStart', p.x, p.y);
+      await touch('touchEnd');
+      await ppage.waitForTimeout(120);
+    };
+    await tapPage(14, 8); // the Status tab
     await ppage.waitForFunction(() => window.__quest.snapshot().menu?.tab === 'Status', null, { timeout: 3000 });
     check(true, 'tapping a tab opens it');
-    await tapGame(314, 8); // the X
+    await tapPage(314, 8); // the X
     await ppage.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 3000 });
     check(true, "tapping the menu's X closes it");
     await ppage.locator('.touch-small.touch-menu').tap();
@@ -2342,15 +2351,15 @@ async function main() {
     await sp.waitForFunction(() => window.__quest.snapshot().mode === 'shop', null, { timeout: 4000 });
     check(true, 'tapping the vendor, then her lines, opens her shop');
     const gold0 = (await snap(sp)).flags.gold ?? 150;
-    await stap('gameToScreen', 60, 42 + 2 * 12 + 5); // choose the third item (the mango)
-    await stap('gameToScreen', 60, 42 + 2 * 12 + 5); // tap it again: the confirmation
+    await stap('pageToScreen', 60, 42 + 2 * 12 + 5); // choose the third item (the mango; the page's own pixels)
+    await stap('pageToScreen', 60, 42 + 2 * 12 + 5); // tap it again: the confirmation
     let shop = (await snap(sp)).shop;
     check(shop.confirming && shop.message.startsWith('Buy Ripe mango for 10 gold?'), `tapping an item twice asks first ("${shop.message}")`);
     check(((await snap(sp)).flags.gold ?? 150) === gold0, 'nothing is bought before Yes');
-    await stap('gameToScreen', 128, 124); // Yes
+    await stap('pageToScreen', 128, 124); // Yes
     shop = (await snap(sp)).shop;
     check(!shop.confirming && (await snap(sp)).flags.gold === gold0 - 10, `Yes buys it (gold ${gold0} to ${(await snap(sp)).flags.gold})`);
-    await stap('gameToScreen', 296, 8); // Leave
+    await stap('pageToScreen', 296, 8); // Leave
     await sp.waitForFunction(() => window.__quest.snapshot().mode === 'field', null, { timeout: 3000 });
     check(true, 'tapping Leave closes the shop');
     await shopCtx.close();

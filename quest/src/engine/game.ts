@@ -381,6 +381,9 @@ export class GameLogic {
     for (const o of this.objects()) {
       const inspect = this.content.objects?.[o.id]?.inspect;
       if (!o.dialogue && !inspect) continue;
+      // A puzzle's later step waits for the earlier one (GameContent.markAfter).
+      const after = this.content.markAfter?.(this.map.id, o.id);
+      if (after && !evaluate(after, this.state.flags)) continue;
       const set = setOf(o);
       if (set) {
         if (quiet || usedSets.has(set) || markedSets.has(set)) continue;

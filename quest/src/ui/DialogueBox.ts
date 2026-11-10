@@ -6,13 +6,13 @@ import { PORTRAIT_SIZE, UI, textureKeyForPortrait, textureKeyForPortraitMood } f
 import { TEXT_SPEEDS, VIEW_HEIGHT, VIEW_WIDTH, type TextSpeed } from '../config.ts';
 import { typewriterChars, type DialogueView } from '../engine/dialogue.ts';
 import { fillButtons } from '../input/buttonNames.ts';
+import { reachOver } from './clearOfControls.ts';
 import { dialogueExtraPx, textStyle } from './text.ts';
 
 // Tall enough for a PORTRAIT_SIZE portrait with padding.
 const BOX_X = 2;
-/** The box's height: four lines, one more in Large text (ui/text.ts; the scene restarts on a change). */
+/** The box's least height: four lines, one more in Large text (ui/text.ts; the scene restarts on a change). */
 const boxH = (): number => 58 + dialogueExtraPx();
-const boxY = (): number => VIEW_HEIGHT - boxH() - 2;
 const BOX_W = VIEW_WIDTH - 4;
 const PAD = 5;
 const DEPTH = 5000;
@@ -46,18 +46,22 @@ export class DialogueBox {
   private cps: number = TEXT_SPEEDS.normal;
   private cursor = 0;
   private choiceBox = { x: 0, y: 0, w: 0, h: 0 };
+  /**
+   * Where the box is now. Full width at the bottom; on a sideways phone it is narrowed to miss the touch controls where
+   * they reach over the picture's corners, and taller when the line then needs more rows (review Nov 7, finding 5;
+   * Nov 10).
+   */
+  private rect = { x: BOX_X, y: VIEW_HEIGHT - boxH() - 2, w: BOX_W, h: boxH() };
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.box = scene.add.graphics();
-    this.box.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(BOX_X, boxY(), BOX_W, boxH());
-    this.box.lineStyle(1, UI.boxBorder, 1).strokeRect(BOX_X + 0.5, boxY() + 0.5, BOX_W - 1, boxH() - 1);
     this.nameBg = scene.add.graphics();
     this.nameText = scene.add.text(0, 0, '', textStyle(UI.accentText));
-    this.portrait = scene.add.image(BOX_X + PAD, boxY() + PAD, '__WHITE').setOrigin(0, 0);
-    this.body = scene.add.text(0, boxY() + PAD, '', textStyle(UI.text));
+    this.portrait = scene.add.image(0, 0, '__WHITE').setOrigin(0, 0);
+    this.body = scene.add.text(0, 0, '', textStyle(UI.text));
     this.translation = scene.add.text(0, 0, '', textStyle(UI.dimText));
-    this.more = scene.add.graphics({ x: BOX_X + BOX_W - 10, y: boxY() + boxH() - 8 });
+    this.more = scene.add.graphics();
     this.more.fillStyle(0xf2d04b, 1).fillTriangle(0, 0, 6, 0, 3, 4);
     this.choiceBg = scene.add.graphics();
     this.root = scene.add.container(0, 0, [
@@ -99,6 +103,12 @@ export class DialogueBox {
     this.refresh();
   }
 
+  /** The middle of a choice's row on the screen (game pixels), or null (the tests tap there). */
+  choicePoint(index: number): { x: number; y: number } | null {
+    const t = this.choiceTexts[index];
+    return t && this.choiceBg.visible ? { x: this.choiceBox.x + this.choiceBox.w / 2, y: t.y + 5 } : null;
+  }
+
   /** The choice under a point on the screen (game pixels), or null. */
   choiceAt(x: number, y: number): number | null {
     if (this.view.kind !== 'choice' || !this.choiceBg.visible) return null;
@@ -106,9 +116,15 @@ export class DialogueBox {
     return i >= 0 ? i : null;
   }
 
+  /** The top of the box with its name tag (screen y, game pixels): nobody in the scene stands under it. */
+  get top(): number {
+    return this.rect.y - 13;
+  }
+
   /** Whether a point is on the dialogue box (or its name tag). */
   contains(x: number, y: number): boolean {
-    return this.root.visible && x >= BOX_X && x < BOX_X + BOX_W && y >= boxY() - 13 && y < boxY() + boxH();
+    const r = this.rect;
+    return this.root.visible && x >= r.x && x < r.x + r.w && y >= r.y - 13 && y < r.y + r.h;
   }
 
   show(shown: DialogueView, speed: TextSpeed): void {
@@ -136,25 +152,57 @@ export class DialogueBox {
     const face = mood && this.scene.textures.exists(mood) ? mood : textureKeyForPortrait(speaker?.portrait ?? '');
     if (hasPortrait) this.portrait.setTexture(face).setDisplaySize(PORTRAIT_SIZE, PORTRAIT_SIZE);
     this.portrait.setVisible(hasPortrait);
-    const textX = BOX_X + PAD + (hasPortrait ? PORTRAIT_SIZE + PAD : 0);
-    const textW = BOX_X + BOX_W - PAD - textX;
+    this.translation.setText(view.translation ? `(${view.translation})` : '').setVisible(false);
+    this.layout(view.text, hasPortrait);
+    const r = this.rect;
+    const textX = r.x + PAD + (hasPortrait ? PORTRAIT_SIZE + PAD : 0);
+
+    this.box.clear();
+    this.box.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(r.x, r.y, r.w, r.h);
+    this.box.lineStyle(1, UI.boxBorder, 1).strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 1);
+    this.portrait.setPosition(r.x + PAD, r.y + PAD);
+    this.more.setPosition(r.x + r.w - 10, r.y + r.h - 8);
 
     this.nameBg.clear();
     this.nameText.setText(speaker?.name ?? '').setVisible(!!speaker);
     if (speaker) {
       const w = Math.ceil(this.nameText.width) + 8;
-      this.nameText.setPosition(BOX_X + 4, boxY() - 11);
-      this.nameBg.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(BOX_X, boxY() - 13, w, 13);
-      this.nameBg.lineStyle(1, UI.boxBorder, 1).strokeRect(BOX_X + 0.5, boxY() - 12.5, w - 1, 13);
+      this.nameText.setPosition(r.x + 4, r.y - 11);
+      this.nameBg.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(r.x, r.y - 13, w, 13);
+      this.nameBg.lineStyle(1, UI.boxBorder, 1).strokeRect(r.x + 0.5, r.y - 12.5, w - 1, 13);
     }
 
-    this.body.setPosition(textX, boxY() + PAD).setWordWrapWidth(textW, true);
-    this.wrapped = this.body.getWrappedText(view.text).join('\n');
+    this.body.setPosition(textX, r.y + PAD);
     this.body.setText('');
-    this.translation.setText(view.translation ? `(${view.translation})` : '').setVisible(false);
-    this.translation.setPosition(textX, boxY() + boxH() - PAD - 9).setWordWrapWidth(textW, true);
+    this.translation.setPosition(textX, r.y + r.h - PAD - 9);
     this.drawChoices();
     this.refresh();
+  }
+
+  /**
+   * Fit the box to the touch controls on the screen now (ui/clearOfControls.ts): between what reaches in from the left
+   * and the right over its rows, and tall enough for the line wrapped to that width. Sets `rect` and `wrapped`.
+   */
+  private layout(text: string, hasPortrait: boolean): void {
+    let h = boxH();
+    for (let pass = 0; pass < 3; pass++) {
+      const y = VIEW_HEIGHT - h - 2;
+      const reach = reachOver(this.scene, y - 13, VIEW_HEIGHT);
+      const x = reach.left > 0 ? Math.max(BOX_X, reach.left + 1) : BOX_X;
+      const end = reach.right > 0 ? Math.min(BOX_X + BOX_W, VIEW_WIDTH - reach.right - 1) : BOX_X + BOX_W;
+      const w = end - x;
+      const textW = w - PAD * 2 - (hasPortrait ? PORTRAIT_SIZE + PAD : 0);
+      this.body.setWordWrapWidth(textW, true);
+      this.translation.setWordWrapWidth(textW, true);
+      this.wrapped = this.body.getWrappedText(text).join('\n');
+      this.body.setText(this.wrapped);
+      const translationH = this.translation.text ? Math.ceil(this.translation.height) + 1 : 0;
+      const need = Math.max(boxH(), Math.ceil(this.body.height) + translationH + PAD * 2 + 4);
+      this.rect = { x, y, w, h };
+      if (need <= h) return;
+      h = need;
+    }
+    this.rect = { ...this.rect, y: VIEW_HEIGHT - h - 2, h };
   }
 
   /** Hide the box for a moment (under the item showcase) without losing its place; false brings it back. */
@@ -226,10 +274,13 @@ export class DialogueBox {
       this.scene.add.text(0, 0, `  ${c.text}`, textStyle(UI.text)),
     );
     const lineH = 11;
-    const w = Math.min(BOX_W, Math.ceil(Math.max(...texts.map((t) => t.width))) + 10);
     const h = texts.length * lineH + 6;
-    const x = BOX_X + BOX_W - w;
-    const y = boxY() - h - 2;
+    const y = this.rect.y - h - 2;
+    // At the box's right end, clear of the controls over its own rows too.
+    const reach = reachOver(this.scene, y, y + h);
+    const end = Math.min(this.rect.x + this.rect.w, reach.right > 0 ? VIEW_WIDTH - reach.right - 1 : VIEW_WIDTH);
+    const w = Math.min(end, Math.ceil(Math.max(...texts.map((t) => t.width))) + 10);
+    const x = end - w;
     this.choiceBox = { x, y, w, h };
     this.choiceBg.fillStyle(UI.boxFill, UI.boxAlpha).fillRect(x, y, w, h);
     this.choiceBg.lineStyle(1, UI.boxBorder, 1).strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);

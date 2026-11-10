@@ -8,6 +8,8 @@ import { CONTENT } from '../src/data/content.ts';
 import { stageCues, stageProblems, type StageCue } from '../src/engine/stage.ts';
 import type { DialogueScript } from '../src/engine/dialogue.ts';
 import { hidesEachOther } from '../src/engine/partyPlacement.ts';
+import { playTo } from '../src/devJump.ts';
+import { START_MAP_ID, START_SPAWN } from '../src/config.ts';
 import { HARBOR } from '../src/data/muster.ts';
 import { PIER_ROOT } from '../src/data/war.ts';
 import { STARTS_FILE } from '../tools/chapter-starts.ts';
@@ -253,4 +255,22 @@ describe('the foes who leave after a fight are seen to go', () => {
     }
     expect(told).toEqual([]);
   });
+});
+
+// The Nov 7 review's 13: the Hearing's crowd below the Throne stood three deep, people in each other's columns (the bench's
+// two ranks, the gallery's, Jordyn behind Rael, Hollis under Skarragol's place). The free-row rule the staged scenes keep,
+// for the people the map itself places: at the Hearing and after it, nobody stands one above another without a free row.
+describe("the Throne Hall's people keep a free row between people in a column", () => {
+  for (const marker of ['hearing-verdict', 'the-end']) {
+    it(`at @${marker}`, () => {
+      const logic = playTo(loadMaps(), marker, { map: START_MAP_ID, spawn: START_SPAWN })!;
+      expect(logic.map.id).toBe('seat-hall');
+      const people = logic.npcs();
+      const out: string[] = [];
+      for (const [i, a] of people.entries()) {
+        for (const b of people.slice(i + 1)) if (hidesEachOther(a.pos, b.pos)) out.push(`${a.npc} ${a.pos.x},${a.pos.y} and ${b.npc} ${b.pos.x},${b.pos.y}`);
+      }
+      expect(out).toEqual([]);
+    });
+  }
 });

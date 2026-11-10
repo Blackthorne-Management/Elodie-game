@@ -171,13 +171,21 @@ body[data-layout='stack'] .touch-ask { left: auto; right: calc(var(--edge) + env
 body[data-layout='overlay'] .touch-ask { left: calc(var(--edge) + env(safe-area-inset-left, 0px)); }
 
 /* Buttons that do nothing in the moment are hidden, so they never sit over what must be read (review Nov 7, finding 5;
-   FieldScene sets <body data-play>): in a fight Ask, Echo and Menu; in a conversation and on a card Echo and Ask. */
-body[data-play='battle'] .touch-ask,
-body[data-play='battle'] .touch-top,
-body[data-play='dialogue'] .touch-ask,
-body[data-play='dialogue'] .touch-echo,
-body[data-play='card'] .touch-ask,
-body[data-play='card'] .touch-echo { display: none; }
+   FieldScene sets <body data-play>): Echo and Ask act only on the map (Nov 10: they sat on the menu and the shop), and
+   in a fight Menu does nothing either. */
+body[data-play]:not([data-play='field']) .touch-ask,
+body[data-play]:not([data-play='field']) .touch-echo,
+body[data-play='battle'] .touch-top { display: none; }
+
+/* No side bars wide enough (a 667 x 375 phone draws the picture edge to edge): a page or the battle's strip cannot keep
+   its words readable and miss a 132 px D-pad as well. There the pages are drawn at their smallest (PAGE_MIN_SCALE,
+   ui/clearOfControls.ts), Menu steps aside (X and B close a page) and the D-pad and A/B fade until pressed, so the words
+   under them still read (Claude's call, Nov 10). The dialogue box always keeps clear (ui/DialogueBox.ts). */
+body[data-layout='overlay'][data-play='menu'] .touch-top,
+body[data-layout='overlay'][data-play='shop'] .touch-top,
+body[data-layout='overlay'][data-play='journal'] .touch-top { display: none; }
+body[data-layout='overlay']:is([data-play='menu'], [data-play='shop'], [data-play='journal'], [data-play='credits'], [data-play='battle']) .touch-dpad:not(.active),
+body[data-layout='overlay']:is([data-play='menu'], [data-play='shop'], [data-play='journal'], [data-play='credits'], [data-play='battle']) .touch-btn:not(.down) { opacity: 0.4; }
 
 /* Upright (review Nov 7, finding 6): the picture first, at the top and full width (src/ui/screen.ts); under it the small
    minimap on the left and Ask, Echo and Menu in a column on the right; the D-pad and A/B, bigger (there is room),

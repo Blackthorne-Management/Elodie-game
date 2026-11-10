@@ -157,6 +157,12 @@ export interface GameContent {
    * use is "news"). A set's sparkle shows on its first object on the map until any of the set is used, then on none.
    */
   controlSet?: (dialogueId: string) => string | undefined;
+  /**
+   * A puzzle's later step (an object on a map, by its id): the condition its sparkle waits for, the earlier step of the
+   * same puzzle that makes it reachable or useful, so a room shows first what the player needs first (the guild vault's
+   * strongroom behind its door; engine/game.ts markers). Undefined for everything else.
+   */
+  markAfter?: (mapId: string, objectId: string) => Condition | undefined;
 }
 
 /** What a step changed (GameContent.onStep): a note to sound at the tile, and a line to toast. */
