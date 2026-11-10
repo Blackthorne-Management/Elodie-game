@@ -871,6 +871,11 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   132 px D-pad as well: there a page stops at `PAGE_MIN_SCALE` (0.84, Large text at about the Normal size), Menu steps
   aside on the pages (X and B close them), and the D-pad and A/B fade to 40% on the pages and in a fight until pressed,
   so the words under them still read. The dialogue box keeps clear at every size. Buttons keep their sizes.
+- **A landmark where the party enters the Concourse (Claude's call, Nov 10; the Nov 7 review's 10):** the way in from
+  the gate yard (`concourse_yard`, where `?at=concourse` starts) gets banners either side, as every gate has, and two
+  lanterns with flower beds stand either side of the lane a few steps in (42-43,14 and 42-43,19; `tools/maps/seat.ts`).
+  They keep off the lane, the tiles the party settles on, the forecourt, the market, the debate corner, the crowd's
+  square and the route.
 
 ---
 

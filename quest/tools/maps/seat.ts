@@ -153,6 +153,12 @@ export function seatConcourse(): MapSource {
   put(g, BENCH, [[18, 22], [29, 22]]);
   put(g, PLANE, [[3, 11], [8, 11], [13, 11], [3, 21], [13, 21], [36, 11], [40, 11], [44, 11], [44, 20], [38, 30], [42, 31]]);
   put(g, FLOWERS, [[4, 11], [7, 11], [9, 11], [12, 11], [37, 11], [39, 11], [41, 11], [43, 11]]);
+  // Where the party arrives from the gate yard (`concourse_yard`, 46,16) the floor was bare (the Nov 7 review's 10):
+  // the way in gets its banners like every gate, and two lanterns with flower beds stand either side of the lane a few
+  // steps in, clear of the lane itself and of the tiles the party settles on (Claude's call, Nov 10).
+  put(g, BANNER, [[W - 1, 15], [W - 1, 18]]);
+  put(g, LAMP, [[42, 14], [42, 19]]);
+  put(g, FLOWERS, [[43, 14], [43, 19]]);
 
   const gate = (name: string, x: number, y: number, kind: string, w = 1, h = 1): ObjSpec => obj(name, x, y, { kind, solid: true, era: 'present', dialogue: name }, w, h);
   const objects: ObjSpec[] = [

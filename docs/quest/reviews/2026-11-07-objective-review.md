@@ -151,6 +151,7 @@ first two findings should be fixed before anyone outside plays Chapter 10 or the
   only the tile she would step onto. Also the Concourse at the marker is still an empty floor around the party; the
   new landmarks (the tree row) are a screen away. Put one gate or stall in view of the spawn.
 - Fixed (Nov 7) for the placement: with nothing open beside or behind her outside her column, the front diagonals cost no more than the side; only the tile she would step onto is in her way. At `?at=concourse` Anissa and Azzy stand on her front diagonals (45,15 and 45,17) and Samira below (46,18); at `?at=war-village` Anissa 2,14, Yari 2,16, Azzy 1,17. Tests in `tests/partyPlacement.test.ts`. The Concourse's landmarks were not moved (map work, not in this batch).
+- Fixed (Nov 10), the landmark: at `?at=concourse` the way in from the gate yard now has banners either side (47,15 and 47,18, like every gate), and two lanterns with flower beds flank the lane a few steps in (42-43,14 and 42-43,19), all in the first view; kept off the lane, the party's settling tiles, the forecourt, the market, the debate corner, the crowd's square and the route (`tools/maps/seat.ts`; only `seat-concourse.tmj` changed). Checked at 640x360.
 
 ### 11. The pier at Yucayeque is still a file (Ch2; Low)
 - **Where:** `?at=yucayeque`. `yuc-07-d.png`: on the one-tile pier the sergeant, the fisher, Yari, Gianna and
