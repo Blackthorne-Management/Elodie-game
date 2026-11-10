@@ -21,9 +21,9 @@ Tick a box when the picture is made. A reference sheet is only a working picture
 
 | Picture | Becomes | Done |
 |---|---|---|
-| Crown Marine | `enemies/crown_marine.png` | [ ] |
-| Crown Musketeer | `enemies/crown_musketeer.png` | [ ] |
-| Crown Officer | `enemies/crown_officer.png` | [ ] |
+| Crown Marine | `enemies/crown_marine.png` | [x] Nov 10 |
+| Crown Musketeer | `enemies/crown_musketeer.png` | [x] Nov 10 |
+| Crown Officer | `enemies/crown_officer.png` | [x] Nov 10 |
 
 ### Group 2: the companions' walking sheets and portraits (Azzy is already done)
 

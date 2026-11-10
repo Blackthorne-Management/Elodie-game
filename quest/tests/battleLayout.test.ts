@@ -14,7 +14,7 @@ describe('short names', () => {
     expect(shortName('Governor Thorne')).toBe('Thorne');
     expect(shortName('Captain-General Hale')).toBe('Hale');
     expect(shortName("Regent's Sealbearer")).toBe('Sealbearer');
-    expect(shortName('Musketeer in a Breastplate')).toBe('Musketeer');
+    expect(shortName('Musketeer in a Breastplate')).toBe('Breastplate');
     expect(shortName('Champion of the eastern clans')).toBe('Champion');
     expect(shortName('Crown Musketeer (old uniform) B')).toBe('Musketeer B');
     expect(shortName('Cane-field boar')).toBe('Boar');

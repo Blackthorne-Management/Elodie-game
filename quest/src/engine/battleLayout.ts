@@ -23,13 +23,15 @@ export function overlaps(a: Rect, b: Rect): boolean {
 
 /**
  * The name a fighter goes by in tight places: the last word of the name ("Governor Thorne" -> "Thorne", "Crown Marine"
- * -> "Marine"), or the first before "of" or "in" ("Musketeer in a Breastplate" -> "Musketeer"), without a note in
- * brackets, capitalised; a duplicate's letter stays on, after a word ("Crown Marine B" -> "Marine B").
+ * -> "Marine"), or the word before "of" ("Champion of the eastern clans" -> "Champion"), without a note in brackets,
+ * capitalised; a duplicate's letter stays on, after a word ("Crown Marine B" -> "Marine B"). "In" keeps the last word,
+ * which is what tells two foes apart ("Musketeer in a Breastplate" -> "Breastplate", beside a "Musketeer"; Nov 10: both
+ * plates said "Musketeer" while Anissa named the one with the breastplate).
  */
 export function shortName(name: string): string {
   const words = name.replace(/\s*\(.*?\)\s*/g, ' ').trim().split(/\s+/);
   const letter = words.length > 1 && /^[A-Z]$/.test(words[words.length - 1]!) ? words.pop()! : '';
-  const cut = words.findIndex((w, i) => i > 0 && (w === 'of' || w === 'in'));
+  const cut = words.findIndex((w, i) => i > 0 && w === 'of');
   const word = cut > 0 ? words[cut - 1]! : words[words.length - 1]!;
   const base = word.charAt(0).toUpperCase() + word.slice(1);
   return letter ? `${base} ${letter}` : base;

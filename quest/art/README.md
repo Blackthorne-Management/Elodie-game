@@ -12,3 +12,5 @@ after adding files. Names, sizes and the palette: `../../docs/quest/ART-STYLE.md
 - `objects/<kind>.png`: a large object drawing, named after its `OBJECT_ART` entry.
 
 If you use art you did not make, add it to `../assets/CREDITS.md` and `../src/data/credits.ts`.
+
+Battle pictures (stances and foes) from an image tool come back as enlarged pixel art on magenta: `../../scripts/quest-battle-pixelart.py in.jpg out.png 42` finds the art's own pixel grid, takes one colour per pixel, removes the magenta (and the JPEG's pink fringe), scales the figure to 42 game pixels tall (level with the party) and doubles it (foes are drawn at half size). The originals are kept in `docs/quest/art-source/`.
