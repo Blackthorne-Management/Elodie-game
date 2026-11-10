@@ -6,7 +6,7 @@ is shown.
 
 **Already done, from art you made earlier:** old Patricio's **sad** (13 lines) and **stern** (10 lines), and Rael
 **by lamplight** (16 lines). They were in `docs/quest/art-source/` but had never been converted. Bayarmaa's **fierce**
-and **soft** and Haru's **caught** and **set** came in today and are now used in their lines.
+and **soft** (9 and 3 lines) and Haru's **caught** and **set** (7 and 4) came in today and are now used in their lines.
 
 ## How to make them
 
@@ -42,14 +42,14 @@ Use the same prompt and attach the plain portrait.
 
 | # | Who | Attach | [EXPRESSION] | Becomes |
 |---|---|---|---|---|
-| 10 | Gianna | `gianna-portrait.webp` | **determined**: chin up, eyes steady and bright, lips set, a decision made | `gianna_determined` |
-| 11 | Gianna | `gianna-portrait.webp` | **shaken**: eyes wide and wet, brows up, lips parted, a hard truth landing | `gianna_shaken` |
-| 12 | Anissa | `anissa-portrait.webp` | **warm**: a soft, open smile, eyes crinkled, looking at someone she loves | `anissa_warm` |
-| 13 | Anissa | `anissa-portrait.webp` | **grave**: the smile gone, brows drawn, eyes level, giving a hard warning | `anissa_grave` |
-| 14 | Yari | `yari-portrait.webp` | **grin**: a cocky lopsided grin, one eyebrow up, teasing | `yari_grin` |
-| 15 | Yari | `yari-portrait.webp` | **grief**: eyes wet and lowered, jaw clenched, holding back tears for her father | `yari_grief` |
-| 16 | Azzy | `azzy-portrait.webp` | **grim**: brows down, jaw hard, eyes narrowed, battle-ready and bleak | `azzy_grim` |
-| 17 | Azzy | `azzy-portrait.webp` | **wry**: a crooked half-smile, one eyebrow lifted, dry humour | `azzy_wry` |
+| 10 | Gianna | `gianna-portrait.webp` | **determined**: chin up, eyes steady and bright, lips set, a decision made | `gianna_determined` (21 lines) |
+| 11 | Gianna | `gianna-portrait.webp` | **shaken**: eyes wide and wet, brows up, lips parted, a hard truth landing | `gianna_shaken` (14) |
+| 12 | Anissa | `anissa-portrait.webp` | **warm**: a soft, open smile, eyes crinkled, looking at someone she loves | `anissa_warm` (15) |
+| 13 | Anissa | `anissa-portrait.webp` | **grave**: the smile gone, brows drawn, eyes level, giving a hard warning | `anissa_grave` (16) |
+| 14 | Yari | `yari-portrait.webp` | **grin**: a cocky lopsided grin, one eyebrow up, teasing | `yari_grin` (15) |
+| 15 | Yari | `yari-portrait.webp` | **grief**: eyes wet and lowered, jaw clenched, holding back tears for her father | `yari_grief` (10) |
+| 16 | Azzy | `azzy-portrait.webp` | **grim**: brows down, jaw hard, eyes narrowed, battle-ready and bleak | `azzy_grim` (15) |
+| 17 | Azzy | `azzy-portrait.webp` | **wry**: a crooked half-smile, one eyebrow lifted, dry humour | `azzy_wry` (11) |
 
 The other characters whose lines ask for expressions (Jordyn, Aiyana, Coralie, Patricia, the behique, Qasim, the
 herald and the rest) have no portrait yet. Their expressions are with their full sets in `ART-LEFT.md`.

@@ -88,7 +88,7 @@ export const OPINION_NODES: Readonly<Record<string, DialogueNode>> = {
       say(SK, 'I will cross the fair now. Slowly, so everyone can look.'),
       act([{ do: 'walk', actor: 'azzy', to: at(FAIR.salkhi.x + 1, FAIR.salkhi.y + 1), facing: 'left' }, { do: 'face', actor: 'npc:salkhi_fair', facing: 'right' }], SK, 'And Azzy.'),
       say(SK, '...Fine. No sigh.', { set: { [S1.done]: true } }),
-      say(Z, '...Thank you?'),
+      say(Z, '...Thank you?', { mood: 'wry' }),
       say(BY, 'That is the nicest thing she has ever said to a Brasador.'),
     ],
   },
@@ -138,9 +138,9 @@ const OPINION_DIALOGUE: DialogueScript[] = [
           '',
           'Salkhi walks over to the corral, and she and the bay look at each other over the rail for a long time.',
         ),
-        say(Y, 'I speak a little horse. He says your mother was a goat.'),
+        say(Y, 'I speak a little horse. He says your mother was a goat.', { mood: 'grin' }),
         say(SK, 'He says my mother was a GREAT horse, and that he is sorry. Your horse is worse than your bow.'),
-        say(Y, 'My bow is very good.'),
+        say(Y, 'My bow is very good.', { mood: 'grin' }),
         say(SK, 'Yes.'),
         act(
           [
@@ -199,7 +199,7 @@ const RACE_DIALOGUE: DialogueScript[] = [
       lines: [
         nar('The first snow of the year is falling on the fair. Riders are walking their horses up to a line drawn in it.'),
         act([{ do: 'face', actor: 'npc:race_judge', facing: 'player' }], 'race_judge', 'The first-snow race, envoy: once round the field. By custom the purse goes to the fleet\'s winter.'),
-        say(BY, 'Salkhi will race. Salkhi will complain. Salkhi will win.'),
+        say(BY, 'Salkhi will race. Salkhi will complain. Salkhi will win.', { mood: 'soft' }),
         act([{ do: 'look', actor: 'npc:salkhi_fair' }], SK, 'Salkhi will win.'),
         nar('(Press {A}, or tap the screen, on every hoofbeat as it reaches the line.)'),
       ],
@@ -246,7 +246,7 @@ const RACE_DIALOGUE: DialogueScript[] = [
         act([{ do: 'look', actor: 'npc:herd_chief' }, { do: 'face', actor: 'npc:herd_chief', facing: 'left' }], '', 'Inside the field, Khulan of the herds has watched every stride. She nods once.', {
           if: all(f(FLEET.accepted), not(FLEET.khulan)),
         }),
-        act([{ do: 'exit', actor: 'rider_a', to: at(2, 28), async: true }, { do: 'exit', actor: 'rider_b', to: at(2, 28) }, { do: 'walk', actor: 'npc:salkhi_fair', to: FAIR.salkhi, facing: 'down' }], BY, 'She will be impossible now.'),
+        act([{ do: 'exit', actor: 'rider_a', to: at(2, 28), async: true }, { do: 'exit', actor: 'rider_b', to: at(2, 28) }, { do: 'walk', actor: 'npc:salkhi_fair', to: FAIR.salkhi, facing: 'down' }], BY, 'She will be impossible now.', { mood: 'soft' }),
       ],
     },
   }),
@@ -551,7 +551,7 @@ const HRAFN_BACK: StageCue[] = [
 
 const PROMISE: DialogueLine[] = [
   act([{ do: 'face', actor: HRAFN, facing: 'player' }], HR, 'The Crown offered gold for the blockade. You sent it home in a corded chest. Who pays now, envoy?'),
-  say(G, 'The Throne. When the realm musters, I will put the blockade\'s cost to the Claim myself, to the last plank.'),
+  say(G, 'The Throne. When the realm musters, I will put the blockade\'s cost to the Claim myself, to the last plank.', { mood: 'determined' }),
 ];
 
 export const FLEET_HRAFN_NODES: Readonly<Record<string, DialogueNode>> = {

@@ -172,7 +172,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     nar('Nine days of dust. Then walls the colour of old bone, and a gate of gold that shuts behind the last camel.', { fx: 'fade' }),
     nar('Eightgate, the Seat of the realm. Every house may come here. None may draw steel inside its walls, they say.'),
     say(S, 'Eight gates and one toll-keeper. Whoever holds this city taxes the whole realm for walking.'),
-    say(A, "Mama's here, Gigi."),
+    say(A, "Mama's here, Gigi.", { mood: 'warm' }),
     say(G, 'Yes.'),
     act(
       [
@@ -471,7 +471,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
           '',
           'The chamber is empty. Azzy goes in alone, and leaves the petition on the chair, in the dust.',
         ),
-        act([{ do: 'walk', actor: 'azzy', to: at(3, 20), facing: 'right' }, { do: 'look', actor: 'player' }], Z, 'He sends his son.', { set: { 'side.seats.ardencia': true } }),
+        act([{ do: 'walk', actor: 'azzy', to: at(3, 20), facing: 'right' }, { do: 'look', actor: 'player' }], Z, 'He sends his son.', { mood: 'wry', set: { 'side.seats.ardencia': true } }),
       ],
     },
   }),
@@ -559,7 +559,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     say(CO, 'Keeper Hollis. He has not left the Archive in eleven years, and he will not for a Regent. So his robes go to him.'),
     say(CO, 'My seamstresses carry them in past the Sealbearers each morning at the bell. Two seamstresses. Two veils, two aprons.'),
     say(CO, 'And neither of you is built like a Brasador.'),
-    say(Z, 'Absolutely not.'),
+    say(Z, 'Absolutely not.', { mood: 'wry' }),
     say(CO, "I wasn't offering. You'd tear the seams."),
     act([{ do: 'face', actor: 'coralie', facing: 'left' }], '', 'Gianna has gone to the mirror. Coco measures Azzy with her eyes.'),
     say(CO, COCO.weddingCoat),
@@ -1063,7 +1063,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
         say('pilgrim_bandaged', 'We were robbed at the crossroads, south of here, by men in Crown coats.'),
         say('pilgrim_bandaged', 'The Charter\'s garrison pay stopped reaching the road posts two months ago. The men left the posts hungry.'),
         say('pilgrim_bandaged', 'The Regent\'s clerks say there are no deserters. The Regent\'s clerks have not walked the road.'),
-        say(A, 'Her head is bleeding, Gigi.'),
+        say(A, 'Her head is bleeding, Gigi.', { mood: 'grave' }),
       ],
       choices: [
         { text: 'We will go to the crossroads.', set: { 'side.deserters.accepted': true }, next: 'yes' },
@@ -1093,7 +1093,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
       'At the crossroads: a Crown wagon on its side, a cook fire, and three men in old coats. The Sergeant walks out to meet them.',
     ),
     say('deserter_sergeant', 'Toll. Everything in the bags.'),
-    say(Z, 'Try.', { set: { 'battle.next': 'deserters_road', 'battle.after': 'deserters_parley' } }),
+    say(Z, 'Try.', { mood: 'grim', set: { 'battle.next': 'deserters_road', 'battle.after': 'deserters_parley' } }),
   ]),
   // After the fight (review 3.3: nobody falls; they withdraw), the Parley on the map: three ways, all remembered.
   script('deserters_parley', {
@@ -1129,7 +1129,7 @@ export const SEAT_DIALOGUE: readonly DialogueScript[] = [
     },
     broken: {
       lines: [
-        say(Z, 'Leave the road, or the next ones through here are Brasador.'),
+        say(Z, 'Leave the road, or the next ones through here are Brasador.', { mood: 'grim' }),
         say('deserter_sergeant', '...We are leaving.'),
       ],
       next: 'end',

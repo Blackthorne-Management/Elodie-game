@@ -657,7 +657,7 @@ const CARRIER: DialogueScript = script('thumbprint_carrier', {
   },
   walk: {
     lines: [
-      act([{ do: 'face', actor: 'follower', facing: 'player' }], A, 'He walked like the ones on the strand, Gigi. The black coats.'),
+      act([{ do: 'face', actor: 'follower', facing: 'player' }], A, 'He walked like the ones on the strand, Gigi. The black coats.', { mood: 'grave' }),
       say(Z, '...A lot of people walk like that.'),
     ],
   },
@@ -795,7 +795,7 @@ const THORNE: DialogueScript = script('customs_thorne', {
   start: {
     lines: [
       act([{ do: 'look', actor: 'npc:thorne_war' }], TH, 'Miss Limyè. You said you\'d come back with the Accord. I see a navy. Which clause is that?'),
-      say(G, 'The oath that came before it. Three names, Governor. Her great-grandmother\'s is the first.'),
+      say(G, 'The oath that came before it. Three names, Governor. Her great-grandmother\'s is the first.', { mood: 'determined' }),
       say(TH, 'The Charter stands. Marines!'),
     ],
     next: 't_whistle',
@@ -826,7 +826,7 @@ const THORNE_AFTER: DialogueScript = script('thorne_after', {
         TH,
         'The Charter stands, Miss Limyè. It is written.',
       ),
-      say(G, 'So is the oath. We\'ll see which one the Throne reads.'),
+      say(G, 'So is the oath. We\'ll see which one the Throne reads.', { mood: 'determined' }),
       act(
         [
           { do: 'exit', actor: 'npc:thorne_war', to: at(8, 11), async: true },
@@ -848,7 +848,7 @@ const CELLAR: DialogueScript = script('war_cellar', {
   start: {
     lines: [
       act([{ do: 'walk', actor: 'yari', to: at(6, 3), facing: 'up' }, { do: 'look', actor: 'yari' }], '', 'Yari goes down the stairs ahead of everyone. Anaco is on the bed, the irons on its post.'),
-      say(Y, 'Father.'),
+      say(Y, 'Father.', { mood: 'grief' }),
       act([{ do: 'look', actor: 'npc:anaco_cellar' }], AN, 'You argued.'),
       say(Y, 'I came back. With every friend Caona ever had. And some she never met.'),
     ],
@@ -1006,7 +1006,7 @@ const TURN: DialogueScript = script('harbor_turn', {
     next: 'ring',
   },
   ring: {
-    lines: [act([{ do: 'look', actor: 'player' }], A, 'Gigi. His ring.')],
+    lines: [act([{ do: 'look', actor: 'player' }], A, 'Gigi. His ring.', { mood: 'grave' })],
     next: 'choose',
   },
   choose: {
@@ -1093,7 +1093,7 @@ const RAEL_STRIKE_AFTER: DialogueScript = script('rael_strike_after', {
       act([{ do: 'look', actor: 'npc:rael_pier' }], '', 'Rael is on one knee on the boards. His guards have stepped back. He has not drawn on her once.'),
       nar('Out in the mouth the black sails turn away. The headland gun does not fire.'),
       act([{ do: 'look', actor: 'player' }], '', 'The Patience and the whole Crown fleet go out through the open mouth, intact, for Eightgate.', { set: { 'story.fleet_escaped': true, 'stability.fleet_escaped': true } }),
-      act([{ do: 'sync' }, { do: 'face', actor: 'azzy', facing: 'player' }], Z, 'You had him. You had him and you had them, and you chose to fight him.'),
+      act([{ do: 'sync' }, { do: 'face', actor: 'azzy', facing: 'player' }], Z, 'You had him. You had him and you had them, and you chose to fight him.', { mood: 'grim' }),
     ],
     next: 'cords',
   },
@@ -1125,15 +1125,15 @@ const TRUTH: DialogueScript = script('harbor_truth', {
       say(R, 'Your mother and I married twenty-five years ago, in the year I was given the name you know me by.', { mood: 'lamplight' }),
       say(R, 'A man with that name has enemies who hunt children. Two daughters of two houses are a claim to a Throne.', { mood: 'lamplight' }),
       say(R, 'So you were Limyè, and I was the man who sold Xaraguá.', { mood: 'lamplight' }),
-      say(G, 'Mother said one true thing at Eightgate.'),
+      say(G, 'Mother said one true thing at Eightgate.', { mood: 'shaken' }),
       say(R, 'She said it to me too. She was right.', { mood: 'lamplight' }),
     ],
     next: 'ring',
   },
   ring: {
     lines: [
-      act([{ do: 'face', actor: 'follower', facing: 'player' }], A, 'Gigi. It isn\'t lighting. It lit when he said he stood with the Crown. On the pier, and in the hall. It isn\'t lighting now.'),
-      say(G, '...I see it.'),
+      act([{ do: 'face', actor: 'follower', facing: 'player' }], A, 'Gigi. It isn\'t lighting. It lit when he said he stood with the Crown. On the pier, and in the hall. It isn\'t lighting now.', { mood: 'grave' }),
+      say(G, '...I see it.', { mood: 'shaken' }),
     ],
     next: 'crown',
   },
@@ -1154,7 +1154,7 @@ const TRUTH: DialogueScript = script('harbor_truth', {
   },
   tested: {
     lines: [
-      say(G, 'You tested us.'),
+      say(G, 'You tested us.', { mood: 'shaken' }),
       say(R, 'Yes. Your mother told me I should never have. She was right. I needed to know you would stand in front of her. You did.', { mood: 'lamplight' }),
     ],
     next: 'azzy',

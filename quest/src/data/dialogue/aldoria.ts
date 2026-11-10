@@ -164,7 +164,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     nar('Domes, white and green, over a harbor wall. Gulls, bells, and a hundred people shouting prices.'),
     say(A, 'We passed our reef, Gigi. I saw it from the boat.'),
     say(G, 'Yes.'),
-    say(Z, 'Bab al-Dhahab. The Gate of Gold. Keep a hand on your purse; everyone else will.'),
+    say(Z, 'Bab al-Dhahab. The Gate of Gold. Keep a hand on your purse; everyone else will.', { mood: 'wry' }),
     say(Y, 'My father sold them cassava every year. They always paid. Late, but they paid.'),
   ]),
   // Unrest, shown: Yari walks to the crates under the Charter's seal.
@@ -531,7 +531,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     say(G, 'Tati Coco. What are you doing in Al-Doria?'),
     say('coralie', 'Buying blue for a queen who wants to be blue. The blockade has made our indigo dearer than gold.'),
     act([{ do: 'face', actor: 'coralie', facing: 'down' }], 'coralie', "Mama's eyes. Both of you.", { mood: 'tender' }),
-    say(G, 'Tati. Did you know? About Mother. And Lord Rael.'),
+    say(G, 'Tati. Did you know? About Mother. And Lord Rael.', { mood: 'shaken' }),
     nar('Coralie stops smiling. Only for a moment.'),
     // Claude's call (review 5.1; FAMILY.md): she deflects with love. Chapter 5's confrontation is Elodie's.
     say('coralie', "That is your mother's to tell, chérie. Not mine."),
@@ -707,7 +707,7 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
       'Envoy. A word, under the arches. The House of Ledgers is open to envoys. Nothing in it is sealed.',
     ),
     act([{ do: 'walk', actor: 'npc:chief_scribe', to: at(12, 4), facing: 'down' }, { do: 'look', actor: 'player' }], '', 'He goes back to the divan without another word.'),
-    say(A, 'Gigi. She did not look at us like the Lord did. She looked at us like a price.'),
+    say(A, 'Gigi. She did not look at us like the Lord did. She looked at us like a price.', { mood: 'grave' }),
   ]),
   script('layla_talk', {
     start: { lines: [], next: [{ if: { flag: 'story.layla_pass' }, to: 'after' }, { if: { flag: 'story.vault_refused' }, to: 'heard' }, { to: 'divan' }] },
@@ -965,9 +965,9 @@ export const ALDORIA_DIALOGUE: readonly DialogueScript[] = [
     // The siblings (review 5.2): one quiet exchange.
     act([{ do: 'place', actor: 'azzy', look: 'azzy', at: at(3, 11), facing: 'down' }], Z, 'You said "my father".'),
     say(G, 'He is.'),
-    say(Z, 'Then he is mine too. And I do not know what he is doing either.'),
+    say(Z, 'Then he is mine too. And I do not know what he is doing either.', { mood: 'grim' }),
     act([{ do: 'face', actor: 'samira', facing: 'up' }], S, 'Brasador. You still owe me for the light.'),
-    say(Z, 'Bill my father.'),
+    say(Z, 'Bill my father.', { mood: 'wry' }),
     say(S, 'I intend to.'),
     act(
       [

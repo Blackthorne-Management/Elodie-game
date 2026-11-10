@@ -57,9 +57,9 @@ export const SPY_OPEN = 'story.quarter_dawn, party.haru, !act7.complete';
 function spyEnd(x: number, y: number): DialogueNode {
   return {
     lines: [
-      act([{ do: 'face', actor: 'yari', facing: 'player' }], Y, 'Three for three. Fine. You are not a spy.'),
+      act([{ do: 'face', actor: 'yari', facing: 'player' }], Y, 'Three for three. Fine. You are not a spy.', { mood: 'grin' }),
       say(H, 'Thank you.'),
-      say(Y, 'You are a very bad one.'),
+      say(Y, 'You are a very bad one.', { mood: 'grin' }),
       act([{ do: 'walk', actor: 'haru', to: at(x, y) }, { do: 'face', actor: 'haru', facing: 'player' }], H, 'Envoy. I watched you three times before I spoke to you. You looked at the people on the pier, not at the Crown\'s boat.'),
       say(H, 'That is why I came out from behind the screen. Write that down.', { set: { 'side.not_a_spy.done': true } }),
       say(G, 'It is already written.'),
@@ -83,7 +83,7 @@ const SPY_DIALOGUE: DialogueScript[] = [
     offer: {
       lines: [
         act([{ do: 'walk', actor: 'yari', to: at(QUARTER.screen.x, QUARTER.screen.y + 1), facing: 'up' }, { do: 'face', actor: 'yari', facing: 'player' }], Y, 'This screen. You were behind it yesterday.'),
-        act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'I was not behind it. I was beside it, in the gap.'),
+        act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'I was not behind it. I was beside it, in the gap.', { mood: 'caught' }),
         say(Y, 'You followed us up from the pier. A face in a puddle. This screen. Two shoes in your mother\'s corridor. Three times.'),
         say(Y, 'Show me how. All three places. Then I will believe you are not a spy.'),
         say(H, '...That is not how believing works.'),
@@ -98,9 +98,9 @@ const SPY_DIALOGUE: DialogueScript[] = [
       lines: [
         act([{ do: 'walk', actor: 'haru', to: at(PIER.pile.x + 1, PIER.pile.y + 1), facing: 'left' }], H, 'Here. Behind the lanterns. The pile was perfect.'),
         act([{ do: 'walk', actor: 'yari', to: at(PIER.puddle.x, PIER.puddle.y + 1), facing: 'up' }, { do: 'look', actor: 'yari' }], Y, 'And the puddle shows your face over my shoulder.'),
-        say(H, 'The puddle was the mistake. Nobody can hide from a puddle. I am definitely not a spy.'),
+        say(H, 'The puddle was the mistake. Nobody can hide from a puddle. I am definitely not a spy.', { mood: 'caught' }),
         say(Z, 'Fog.'),
-        say(Y, 'Fog does not crouch.', { set: { 'side.not_a_spy.pier': true } }),
+        say(Y, 'Fog does not crouch.', { mood: 'grin', set: { 'side.not_a_spy.pier': true } }),
       ],
       next: [{ if: SPY_ALL, to: 'end' }],
     },
@@ -114,7 +114,7 @@ const SPY_DIALOGUE: DialogueScript[] = [
         act([{ do: 'walk', actor: 'yari', to: at(QUARTER.screen.x - 2, QUARTER.screen.y + 1), facing: 'right' }], '', 'Yari picks up a pebble. Haru watches her pick it up.'),
         say(H, 'You threw it at exactly this height.'),
         say(Y, 'You stood at exactly this height.'),
-        say(H, 'I am definitely not a spy. A spy would have moved.', { set: { 'side.not_a_spy.screen': true } }),
+        say(H, 'I am definitely not a spy. A spy would have moved.', { mood: 'caught', set: { 'side.not_a_spy.screen': true } }),
         say(BY, 'Say less.'),
       ],
       next: [{ if: SPY_ALL, to: 'end' }],
@@ -129,7 +129,7 @@ const SPY_DIALOGUE: DialogueScript[] = [
         act([{ do: 'look', actor: 'samira' }], S, 'Your shoes showed under the hem. Good soles. Expensive.'),
         say(H, 'Mother buys them. She says a Suzumori should be heard coming. When I mean to be quiet I take them off.'),
         say(Y, '...Then why were they on yesterday?'),
-        act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'Because I wanted to be found. By you, not by the Crown\'s man. I am definitely not a spy.', {
+        act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'Because I wanted to be found. By you, not by the Crown\'s man. I am definitely not a spy.', { mood: 'caught',
           set: { 'side.not_a_spy.shoes': true },
         }),
       ],
@@ -374,7 +374,7 @@ const ASHES_DIALOGUE: DialogueScript[] = [
         act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'Grandmother kept a file on every Crown paper that came to Kirinoura.'),
         say(EL, 'Lady Sayo\'s files are fifty years old, young lord. This paper is twenty-five.'),
         say(A, 'Kayla\'s desk is older than the paper, Gigi. The Locket.'),
-        say(G, 'Then we look at it fifty years ago.', { set: { [ASHES.accepted]: true } }),
+        say(G, 'Then we look at it fifty years ago.', { mood: 'determined', set: { [ASHES.accepted]: true } }),
         say(EL, 'Find me whose hand this is, envoy, and I will send this year\'s letter.'),
         nar('(Ashes of the Temple is in the Quests page of the menu.)'),
       ],

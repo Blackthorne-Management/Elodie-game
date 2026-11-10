@@ -116,7 +116,7 @@ const ARRIVE: DialogueScript = script('claim_arrive', {
   why: {
     lines: [
       act([{ do: 'face', actor: 'azzy', facing: 'player' }, { do: 'face', actor: 'player', facing: 'right' }], Z, 'Before we go in. You haven\'t asked me what I think. I\'ll ask you instead.'),
-      say(Z, 'Why? You had him and you had them.'),
+      say(Z, 'Why? You had him and you had them.', { mood: 'grim' }),
     ],
     choices: [
       { text: 'Because I didn\'t believe him.', set: { 'choice.strike_why': 'mistake' }, next: 'mistake' },
@@ -349,7 +349,7 @@ const CHAMBERLAIN_NIGHT: DialogueScript = script('chamberlain_night_talk', {
     lines: [
       ...handOver(),
       say(ED, 'Aldermoor\'s chair is my mother\'s to fill. She withdrew from one council. She can sit in another.'),
-      say(Z, 'Ardencia\'s chair has a Rodriguez behind it. That will have to do until tomorrow.'),
+      say(Z, 'Ardencia\'s chair has a Rodriguez behind it. That will have to do until tomorrow.', { mood: 'wry' }),
       say(CH, 'Zetwal\'s chair has its envoy, and needs no token. I will set them at the bell.', { set: { 'side.seats.handed': true } }),
     ],
     next: [{ if: BELL_READY, to: 'bell' }, { to: 'waiting' }],
@@ -666,7 +666,7 @@ const CLAIM_DECLARE: DialogueScript = script('claim_declare', {
       act([{ do: 'face', actor: 'player', facing: 'down' }, { do: 'wait', ms: 600 }], '', 'Gianna stands on the Throne tile, and turns to the Hall.'),
       { if: XARAGUA_FIRST, speaker: G, text: 'For Xaraguá. Its harbor stays with the people who fish it. Received forty-nine years ago. Heard today.' },
       { if: ANISSA_FIRST, speaker: G, text: 'So that nobody in this Hall ever counts a child again.' },
-      act([{ do: 'face', actor: 'follower', facing: 'up' }], G, 'I claim the Throne, by Zetwal and by Ardencia, under the Compact.', { set: { 'story.claim_declared': true } }),
+      act([{ do: 'face', actor: 'follower', facing: 'up' }], G, 'I claim the Throne, by Zetwal and by Ardencia, under the Compact.', { mood: 'determined', set: { 'story.claim_declared': true } }),
     ],
     next: 'challenge',
   },
@@ -699,7 +699,7 @@ const CLAIM_DECLARE: DialogueScript = script('claim_declare', {
         'Her own walk up from the chambers\' doors and stand on the dais beside her. Anissa comes up behind them.',
       ),
       say(RG, 'The Charter stands, envoy. It is written. Nothing you have done unwrites it.'),
-      say(G, 'So is the oath. Read the chair.', { set: { 'battle.next': 'claim_regent', 'battle.after': 'claim_after_regent' } }),
+      say(G, 'So is the oath. Read the chair.', { mood: 'determined', set: { 'battle.next': 'claim_regent', 'battle.after': 'claim_after_regent' } }),
     ],
   },
   again: {
@@ -884,11 +884,11 @@ const CLAIM_AFTER_REGENT: DialogueScript = script('claim_after_regent', {
   challenge: {
     lines: [
       act([{ do: 'walk', actor: 'azzy', to: at(HALL.foot.x, HALL.foot.y - 1), facing: 'up' }], Z, 'Under the Compact, two claimants. I answer yours too.'),
-      say(Z, 'Not for the chair. So that you have to say, in front of them, why you chose the fight when you had him and you had them.'),
+      say(Z, 'Not for the chair. So that you have to say, in front of them, why you chose the fight when you had him and you had them.', { mood: 'grim' }),
       act([{ do: 'look', actor: 'npc:elodie_claim' }], E, 'Azriel.'),
       act([{ do: 'look', actor: 'azzy' }, { do: 'wait', ms: 700 }], '', 'He does not turn.'),
-      act([{ do: 'face', actor: 'follower', facing: 'up' }], A, 'Don\'t hurt him, Gigi.'),
-      say(G, 'I won\'t.', { set: { 'claim.challenge': true, 'party.azzy': false, 'battle.next': 'claim_azzy', 'battle.after': 'claim_after_azzy' } }),
+      act([{ do: 'face', actor: 'follower', facing: 'up' }], A, 'Don\'t hurt him, Gigi.', { mood: 'grave' }),
+      say(G, 'I won\'t.', { mood: 'determined', set: { 'claim.challenge': true, 'party.azzy': false, 'battle.next': 'claim_azzy', 'battle.after': 'claim_after_azzy' } }),
     ],
   },
   ...claimStands(),
@@ -898,7 +898,7 @@ const CLAIM_AFTER_AZZY: DialogueScript = script('claim_after_azzy', {
   start: {
     lines: [
       act([{ do: 'look', actor: 'npc:azzy_challenge' }], '', 'Azzy is on one knee at the dais\'s foot, the cords on his wrists.'),
-      say(Z, '...Then it\'s yours. I\'ll hold you to it. Every day.', { set: { 'claim.azzy_challenged': true, 'party.azzy': true } }),
+      say(Z, '...Then it\'s yours. I\'ll hold you to it. Every day.', { mood: 'grim', set: { 'claim.azzy_challenged': true, 'party.azzy': true } }),
     ],
     next: 'stands',
   },
@@ -1074,7 +1074,7 @@ const HEARING: DialogueScript = script('hearing', {
         '',
         'The Hall at noon. The chairs filled as the Claim left them. Rael kneels below the dais, the signet on the step.',
       ),
-      act([{ do: 'look', actor: 'player' }], G, 'I will sit on it when it is a council\'s chair and not a prize.'),
+      act([{ do: 'look', actor: 'player' }], G, 'I will sit on it when it is a council\'s chair and not a prize.', { mood: 'determined' }),
       act([{ do: 'walk', actor: 'npc:chamberlain_hearing', to: at(24, 7), facing: 'left' }], CH, 'The Hall hears Lord Rael Rodriguez of Ardencia, who has surrendered himself to the Throne.'),
       say(CH, 'A Hearing is not a trial. Witnesses speak. The accused answers each. The Throne decides.'),
     ],
@@ -1139,7 +1139,7 @@ const HEARING: DialogueScript = script('hearing', {
         'Write all three.',
       ),
       act([{ do: 'walk', actor: 'npc:azzy_hall', to: at(HALL.witnessSpot.x, HALL.witnessSpot.y), facing: 'left' }, { do: 'look', actor: 'npc:azzy_hall' }], Z, 'He fought beside me on a pier. I did not ask him to. Write that too.', { if: all(TRUST, not('claim.azzy_challenged')) }),
-      act([{ do: 'walk', actor: 'npc:azzy_hall', to: at(HALL.witnessSpot.x, HALL.witnessSpot.y), facing: 'left' }, { do: 'look', actor: 'npc:azzy_hall' }], Z, 'I disobeyed him. I\'d do it again. I am still angry. Write that.', { if: any(STRIKE, has('claim.azzy_challenged')) }),
+      act([{ do: 'walk', actor: 'npc:azzy_hall', to: at(HALL.witnessSpot.x, HALL.witnessSpot.y), facing: 'left' }, { do: 'look', actor: 'npc:azzy_hall' }], Z, 'I disobeyed him. I\'d do it again. I am still angry. Write that.', { mood: 'grim', if: any(STRIKE, has('claim.azzy_challenged')) }),
       act([{ do: 'look', actor: 'npc:rael_hearing' }, { do: 'wait', ms: 900 }], '', 'Rael does not turn round.'),
       act([{ do: 'walk', actor: 'npc:azzy_hall', to: at(HALL.behind.ardencia.x, HALL.behind.ardencia.y), facing: 'up' }], '', 'Azzy goes back to Ardencia\'s chair.'),
     ],

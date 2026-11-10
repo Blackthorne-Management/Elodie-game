@@ -168,7 +168,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         say(Z, 'Zetwal\'s envoy. My father expected you a week ago.'),
         say(Z, 'I am Azriel Rodriguez. Azzy, if you prefer. I am to walk you up.'),
         say(G, 'Your father is the Lord?'),
-        say(Z, 'He is. The papers say "envoy". They do not say you would be so young.'),
+        say(Z, 'He is. The papers say "envoy". They do not say you would be so young.', { mood: 'wry' }),
         say(A, 'She is my sister. She does not give up.'),
         say(Z, 'Then I will trust her. Come. The gate is open to you.', { set: { 'story.azzy_met': true } }),
         act([{ do: 'exit', actor: 'azzy', to: at(25, 0) }], '', 'Azzy walks back up through the gate, and the halberdiers stand aside.'),
@@ -232,7 +232,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         say('zelia', 'Then no one else will see him, Jaime.', { mood: 'protective' }),
         act([{ do: 'exit', actor: 'jaime', to: at(19, 1) }, { do: 'look', actor: 'player' }], Z, 'The Crown\'s envoy, Cresswell. He has been here a month. And Jaime, my father\'s counsel.'),
         say(Z, 'The captain at the Lord\'s door is Rivera. I was named for him. He was beside my father at Cendre.'),
-        say(A, 'Gigi, the man in blue looked at me like I was a lamp he wanted to blow out.'),
+        say(A, 'Gigi, the man in blue looked at me like I was a lamp he wanted to blow out.', { mood: 'grave' }),
         say(G, 'Stay close to me here.'),
         say(Z, 'Until noon you are my guest. See the city. I would not have you fight my father without eating in his town.'),
         say(Z, 'And whatever you need from the smith, buy it today. Tomorrow you may not have the chance.'),
@@ -333,7 +333,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
     tell: {
       lines: [
         say(G, 'There was a copy behind the tapestry. And a note in his hand, from this year.'),
-        say(G, '"I am alive. I am held where the ash falls. Tell her I am alive."'),
+        say(G, '"I am alive. I am held where the ash falls. Tell her I am alive."', { mood: 'shaken' }),
         act(
           [{ do: 'walk', actor: 'npc:treasurer_daughter', to: at(12, 8), facing: 'left' }],
           '',
@@ -399,7 +399,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         nar('The treasurer\'s working copy. Every page balances. The last page is a note, folded small, the ink fresh.'),
         nar('"I am alive. I am held where the ash falls. Tell her I am alive." His hand, dated this year.', { set: { 'clue.treasurer_alive': true } }),
         say(G, 'Held where? By whom?'),
-        say(A, 'Tell his daughter, Gigi. Tell her first.'),
+        say(A, 'Tell his daughter, Gigi. Tell her first.', { mood: 'warm' }),
       ],
     },
     done: { lines: [nar('The niche behind the tapestry, empty now.')] },
@@ -423,7 +423,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         say(G, 'My grandfather asked me to ask the Lord why you said yes. Fifty years ago.'),
         say('benny_old', 'Ask him, then. My son will tell you something true. He tells the truth very carefully.', { mood: 'wry' }),
         say('benny_old', 'Tell Patricio the iron still remembers the sun. He will know what an old fool means.', { mood: 'wry', set: { 'side.treasurer.done': true } }),
-        say(A, 'He has kind eyes, Gigi. Like Grandfather.'),
+        say(A, 'He has kind eyes, Gigi. Like Grandfather.', { mood: 'warm' }),
       ],
     },
     again: { speaker: 'benny_old', lines: [{ text: 'Noon tomorrow. Stand in the ring as if it were yours, envoy. It annoys my son.', mood: 'wry' }] },
@@ -469,7 +469,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
     noon: {
       lines: [
         say(Z, 'Noon.'),
-        say(Z, 'Do not hold back in there. He will know if you do, and he will not forgive it.'),
+        say(Z, 'Do not hold back in there. He will know if you do, and he will not forgive it.', { mood: 'grim' }),
         act(
           [
             { do: 'look', actor: 'npc:azzy_court' },
@@ -526,7 +526,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         say(G, 'The elders?'),
         say('amanda', 'The elders! Ha! The elders pay for nothing. Not even their own hats. Have you seen their hats?'),
         say('amanda', 'Coma, envoy. And stop asking a cook where the bread comes from. It comes from the oven.', { set: { 'side.bread.cook': true } }),
-        say(A, 'She is so loud, Gigi. But none of the children are afraid of her.'),
+        say(A, 'She is so loud, Gigi. But none of the children are afraid of her.', { mood: 'warm' }),
       ],
     },
     after: {
@@ -637,12 +637,12 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
         ),
         say(R, 'Zetwal\'s envoy. Patricio\'s granddaughter.'),
         say(R, 'The law is older than I am. No outsider is heard here until she has stood in this ring. Stand, then.', { mood: 'stern' }),
-        say(G, 'I came to ask you to stand with Xaraguá.'),
+        say(G, 'I came to ask you to stand with Xaraguá.', { mood: 'determined' }),
         say(R, 'Ask me after.'),
         act([{ do: 'look', actor: 'cresswell' }], 'cresswell', 'The younger one. She lit a city, I am told.', { mood: 'thoughtful' }),
         act([{ do: 'look', actor: 'player' }], R, 'Children light candles, envoy.', { mood: 'unreadable' }),
-        say(A, 'Gigi...'),
-        say(G, 'Behind me, Anissa.', { set: { 'battle.next': 'rael_trial' } }),
+        say(A, 'Gigi...', { mood: 'grave' }),
+        say(G, 'Behind me, Anissa.', { mood: 'determined', set: { 'battle.next': 'rael_trial' } }),
       ],
     },
   }),
@@ -691,13 +691,13 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
     say(A, 'It\'s the same light, Gigi. His ring and your locket. They\'re one thing.'),
     say(R, 'Fifty years later, Patricio\'s daughter and Benny\'s son put them together again.'),
     say(R, 'Look at me, Gianna Elise.'),
-    say(G, '...No.'),
+    say(G, '...No.', { mood: 'shaken' }),
     say(R, 'Elodie Limyè is my wife. You and your sister are my daughters.'),
     act([{ do: 'face', actor: 'rael', facing: 'down' }], R, 'Azzy is your brother.'),
     act([{ do: 'look', actor: 'azzy' }], Z, 'Father.'),
-    act([{ do: 'look', actor: 'player' }], G, 'Why did she never say?'),
+    act([{ do: 'look', actor: 'player' }], G, 'Why did she never say?', { mood: 'shaken' }),
     say(R, 'Because of men like the one I just sent out of this court.'),
-    say(G, 'Grandfather sent me to you. Did he know?'),
+    say(G, 'Grandfather sent me to you. Did he know?', { mood: 'shaken' }),
     say(R, 'Patricio knows what Patricio chooses to know.'),
     nar('He puts the Locket back in her hand. Not around her neck. In her hand.'),
     say(R, 'It changes nothing. You lost.', { mood: 'unreadable' }),
@@ -751,7 +751,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
     say(Y, 'They left us our weapons.'),
     say(G, 'A mage and an archer behind bars and lava. Why would they bother?'),
     say(A, 'Gigi, the air is shimmering. Over the whole hall.'),
-    say(G, 'My father sold Xaraguá to the Crown. And now he has sold us.'),
+    say(G, 'My father sold Xaraguá to the Crown. And now he has sold us.', { mood: 'shaken' }),
     act(
       [
         { do: 'wait', ms: 900 },
@@ -773,12 +773,12 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
       '',
       'As he passes the bars he sets the jug down, and the gate key stays on the bar.',
     ),
-    say(Z, 'I am a clumsy host.'),
+    say(Z, 'I am a clumsy host.', { mood: 'wry' }),
     act([{ do: 'exit', actor: 'azzy', to: at(21, 1) }], '', 'He goes out after them without looking back. Gianna takes the key. The gate opens.', {
       set: { 'story.forge_open': true },
     }),
     say(A, 'He left it on purpose, Gigi.'),
-    say(G, '...'),
+    say(G, '...', { mood: 'shaken' }),
     say(Y, 'The fire is between us and that far wall. And the wall is blank.'),
     say(A, 'The shimmer starts just outside the bars. Grandfather\'s memory is here.'),
   ]),
@@ -923,10 +923,10 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
       set: { 'story.bats_seen': true },
       lines: [
         nar('A shriek ahead, in the narrow, and the dark comes apart into wings.', { fx: 'shake' }),
-        say(Z, 'Behind me. All of you.', { set: { 'battle.next': 'tunnel_bats' } }),
+        say(Z, 'Behind me. All of you.', { mood: 'grim', set: { 'battle.next': 'tunnel_bats' } }),
       ],
     },
-    again: { lines: [nar('The bats are still in the narrow, screeching.', { fx: 'shake' }), say(Z, 'Again. Behind me.', { set: { 'battle.next': 'tunnel_bats' } })] },
+    again: { lines: [nar('The bats are still in the narrow, screeching.', { fx: 'shake' }), say(Z, 'Again. Behind me.', { mood: 'grim', set: { 'battle.next': 'tunnel_bats' } })] },
   }),
   simple('tunnel_bar', [nar('The tunnel\'s mouth, barred from the outside. Daylight round the edges of the planks.')]),
   // The far end: Amanda unbars it from outside (FAMILY.md: she knows Benny's tunnel).
@@ -975,7 +975,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('sea_road_shots', [
     nar('Another volley from the wall. Dust jumps in the road ahead of them, and behind.', { fx: 'shake' }),
-    say(A, 'Gigi, they keep missing. Why do they keep missing?'),
+    say(A, 'Gigi, they keep missing. Why do they keep missing?', { mood: 'grave' }),
     say(G, 'Don\'t stop and ask them.'),
   ]),
   // Azzy's company: a patrol of four at the bend lowers its halberds and falls in behind him.
@@ -993,7 +993,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
     ),
     say(Z, 'Let me.'),
     act([{ do: 'look', actor: 'sergeant' }], 'sergeant', '...Captain Azriel.'),
-    say(Z, 'I am nobody\'s captain this morning, sergeant.'),
+    say(Z, 'I am nobody\'s captain this morning, sergeant.', { mood: 'grim' }),
     say('sergeant', 'Not against you, captain. Not today. Not any day.'),
     act(
       [
@@ -1032,7 +1032,7 @@ export const ARDENCIA_DIALOGUE: readonly DialogueScript[] = [
     ),
     say(Z, 'Then they missed.'),
     nar('A fire on the strand. The trader\'s boat at anchor. Soldiers in black coats with the sashes torn off: Free Brasador.'),
-    say(G, 'My father sold Xaraguá to the Crown, Yari. Then he sold us.'),
+    say(G, 'My father sold Xaraguá to the Crown, Yari. Then he sold us.', { mood: 'shaken' }),
     nar('Yari says nothing. She sits down beside her.'),
     say(A, 'He gave the locket back, Gigi.'),
     say(G, 'He gave it back because it is worth nothing to him.'),

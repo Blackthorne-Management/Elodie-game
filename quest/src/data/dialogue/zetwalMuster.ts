@@ -483,7 +483,7 @@ const KITCHEN: DialogueScript = script('muster_kitchen', {
       act([{ do: 'face', actor: 'rahel_k', facing: 'player' }], RA, 'You went into Kingsmere\'s keep and came out through its court. My Jordyn says you were arrested by the book.'),
       say(RA, 'That is the only compliment she has ever paid anyone.'),
       say(RA, 'My son does not explain himself. He never did. I stopped asking him to when he was nine.', { mood: 'closed' }),
-      say(G, 'He sold Xaraguá.'),
+      say(G, 'He sold Xaraguá.', { mood: 'shaken' }),
       say(RA, 'So they say.', { mood: 'closed' }),
       act([{ do: 'wait', ms: 800 }], '', 'She puts a paper crane on the table between them.'),
       say(RA, 'From Kirinoura\'s archive, unsigned. My Kayla sends it. She says she is a clerk, and clerks do not come to musters.'),
@@ -701,7 +701,7 @@ function nightWalk(h: MusterHouse): DialogueNode {
       ),
       say(G, 'Jordyn said bought men walk differently.'),
       say(Z, 'He\'s walking like a man who has somewhere to be.'),
-      say(G, 'Then we\'ll be there too.'),
+      say(G, 'Then we\'ll be there too.', { mood: 'determined' }),
     ],
   };
 }
@@ -859,7 +859,7 @@ const NIGHT_QUAY: DialogueScript = script('night_quay', {
   ...Object.fromEntries(MUSTER_HOUSES.flatMap((h) => Object.entries(nightNodes(h)))),
   seen: {
     lines: [
-      act([{ do: 'face', actor: 'follower', facing: 'player' }, { do: 'look', actor: 'player' }, { do: 'wait', ms: 700 }], A, 'He walked like the lady with the basket, Gigi. Like he already knew where he was going.'),
+      act([{ do: 'face', actor: 'follower', facing: 'player' }, { do: 'look', actor: 'player' }, { do: 'wait', ms: 700 }], A, 'He walked like the lady with the basket, Gigi. Like he already knew where he was going.', { mood: 'grave' }),
       say(G, 'Yes. I saw it too.'),
     ],
     next: 'fire',
@@ -1080,7 +1080,7 @@ const TI_JAK: DialogueScript = script('ti_jak_talk', {
   },
   later: {
     lines: [
-      say(A, 'He doesn\'t want a sermon, Gigi. He wants somebody to know her.'),
+      say(A, 'He doesn\'t want a sermon, Gigi. He wants somebody to know her.', { mood: 'warm' }),
       nar('(His mother cut cane on this road. Mother Solange\'s list in the Temple Archive keeps the cutters\' names.)'),
     ],
   },
@@ -1103,7 +1103,7 @@ const TI_JAK: DialogueScript = script('ti_jak_talk', {
   anissa: {
     lines: [
       act([{ do: 'walk', actor: 'follower', to: at(ROAD.tiJak.x + 1, ROAD.tiJak.y + 1), facing: 'left' }, { do: 'wait', ms: 800 }], '', 'Anissa goes to the hearth and sits down beside him.'),
-      say(A, 'She looked at me too. On the road. I didn\'t like it. You don\'t have to like it either.'),
+      say(A, 'She looked at me too. On the road. I didn\'t like it. You don\'t have to like it either.', { mood: 'warm' }),
       act([{ do: 'face', actor: 'npc:ti_jak', facing: 'right' }, { do: 'wait', ms: 900 }], 'ti_jak', '...No.'),
       nar('He stands up, puts the blade on his shoulder like a cutter, and goes.', { set: { 'story.ti_jak_home': true } }),
       act(
@@ -1126,7 +1126,7 @@ const SOLANGE_MUSTER: Record<string, DialogueNode> = {
     lines: [
       nar('Mother Solange\'s list. Below Rose-Aimée, the newest names are in the senior archivist\'s print, from last year.'),
       nar('"Odile, cane cutter, the Cane Road. Her son is Jak."', { set: { 'clue.ti_jak_mother': true } }),
-      say(G, 'Odile.'),
+      say(G, 'Odile.', { mood: 'shaken' }),
     ],
   },
 };

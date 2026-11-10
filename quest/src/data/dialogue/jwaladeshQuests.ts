@@ -258,7 +258,7 @@ const LITTLE_LAMPS: DialogueScript[] = [
         nar('She puts the white wick in Anissa\'s hands. Anissa holds it as if it were warm.', {
           set: { 'item.unbroken_wick': true, 'item.sealed_reservoir': false, 'side.little_lamps.done': true },
         }),
-        say(A, 'I\'ll keep it, Gigi. It waited.'),
+        say(A, 'I\'ll keep it, Gigi. It waited.', { mood: 'warm' }),
       ],
     },
     lit: { lines: [say(SC, 'It has not gone out. I check every hour. Twice in the night.')] },
@@ -396,7 +396,7 @@ export const ASHES_DELIVERY: DialogueNode = {
     say('meera', 'When the Suzumori ask to carry stones for our temple, the Keepers will see this paper first.', {
       set: { [ASHES.done]: true, [ASHES.letter]: false },
     }),
-    say(A, 'Not forgiveness yet, Gigi. But she left it on the step.'),
+    say(A, 'Not forgiveness yet, Gigi. But she left it on the step.', { mood: 'warm' }),
   ],
 };
 

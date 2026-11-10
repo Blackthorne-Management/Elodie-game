@@ -311,7 +311,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     say(HR, 'She guarded it the night it went. She rode out alone after it, against my order, and came back with nothing.'),
     say(HR, 'The Crown\'s man says a raider chief has it across the fjord. And the Crown\'s man has no reason to lie.'),
     say(HE, 'None at all.'),
-    act([{ do: 'look', actor: 'npc:bayarmaa' }, { do: 'face', actor: 'npc:bayarmaa', facing: 'up' }], BY, 'The floes took the trail at the thin water. I came back for a horse that could cross it. He said no.'),
+    act([{ do: 'look', actor: 'npc:bayarmaa' }, { do: 'face', actor: 'npc:bayarmaa', facing: 'up' }], BY, 'The floes took the trail at the thin water. I came back for a horse that could cross it. He said no.', { mood: 'fierce' }),
     act([{ do: 'look', actor: 'npc:torvald' }], TV, 'I said no because the fjord took half your grandmother\'s riders, coming home in the spring.'),
     say(TV, 'I will not sell the fleet to buy you a funeral.'),
     act([{ do: 'look', actor: 'player' }], G, 'As Zetwal\'s envoy I ask for her, under the envoy\'s bond, to bring the standard to its pole before the horn.'),
@@ -378,7 +378,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
   simple('trading_jarl_talk', [say(JR, 'Eleven hulls, envoy. The Crown measured nine. I counted them all, and I want them all back on the water.')]),
   simple('trading_jarl_quay_talk', [say(JR, 'Nine measured. None sold. The longship at the end of the pier is yours, envoy.')]),
   simple('hostage_envoy_talk', [say(HE, 'I am the steppe\'s guest, envoy, and the Throne\'s clerk. I would not want you to say you were not shown the offer.')]),
-  simple('bayarmaa_talk', [say(BY, '...'), nar('She is watching the tent flap, where the grey mare\'s head would be if they let it in.')]),
+  simple('bayarmaa_talk', [say(BY, '...'), nar('She is watching the tent flap, where the grey mare\'s head would be if they let it in.')], { mood: 'soft' }),
   simple('horn_rider_talk', [say('horn_rider', 'The Moot sits at the horn. Until then we hold the aisle, and the chieftain\'s daughter.')]),
   simple('horn_master_talk', [
     { if: { notFlag: 'story.standard_planted' }, speaker: 'horn_master', text: 'The morning horn is mine to blow, envoy. Not a breath before first light.' },
@@ -519,7 +519,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
           'Hoy! Envoys on the shore! To me! To me!',
           { fx: 'shake' },
         ),
-        say(BY, 'Should have stayed in the herd.', { set: { 'battle.next': 'camp_lookouts', 'battle.after': `lookouts_after_${side}` } }),
+        say(BY, 'Should have stayed in the herd.', { mood: 'fierce', set: { 'battle.next': 'camp_lookouts', 'battle.after': `lookouts_after_${side}` } }),
       ]),
       simple(`lookouts_after_${side}`, [
         act(
@@ -553,7 +553,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
         ),
         nar('Coin is sewn into the hem of his coat. Throne gold.'),
         say(GV, 'Ironvow\'s girl. You came for a stick with a horse\'s tail on it.'),
-        act([{ do: 'walk', actor: 'bayarmaa', to: at(25, FJORD.campRow), facing: 'left' }], BY, 'I came for the oath on it. You took that too. Give it back and ride.'),
+        act([{ do: 'walk', actor: 'bayarmaa', to: at(25, FJORD.campRow), facing: 'left' }], BY, 'I came for the oath on it. You took that too. Give it back and ride.', { mood: 'fierce' }),
         say(GV, 'Paid men don\'t ride home, girl. Ask the Crown.'),
         act([{ do: 'walk', actor: 'grimvald', to: at(23, FJORD.campRow), facing: 'right' }], '', 'He swings up onto the black horse.'),
         say(GV, 'Ride them down!', { set: { 'battle.next': 'fjord_grimvald', 'battle.after': 'grimvald_after' } }),
@@ -605,9 +605,9 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     defy: {
       lines: [
         say(HE, 'The compensation office pays many claims, envoy. I could not say which.'),
-        act([{ do: 'face', actor: 'bayarmaa', facing: 'down' }, { do: 'look', actor: 'bayarmaa' }], BY, 'You would have sold my grandmother\'s ships to the people she took them from...'),
+        act([{ do: 'face', actor: 'bayarmaa', facing: 'down' }, { do: 'look', actor: 'bayarmaa' }], BY, 'You would have sold my grandmother\'s ships to the people she took them from...', { mood: 'fierce' }),
         say(BY, '...for a page that calls our allies waters. The standard is back. The oath is back. I am not.'),
-        say(BY, 'I ride with the envoy until the Crown is off this plateau. The Moot can write that down as shameful, if it wants a word.'),
+        say(BY, 'I ride with the envoy until the Crown is off this plateau. The Moot can write that down as shameful, if it wants a word.', { mood: 'fierce' }),
         act([{ do: 'look', actor: 'npc:torvald' }, { do: 'wait', ms: 900 }], TV, 'Write it.'),
         say(TV, 'Your grandmother said it shorter.'),
         say(TV, 'Zetwal wants the fleet for its war. The Ironvow ride for whoever pays the blockade\'s cost.'),
@@ -796,8 +796,8 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     },
     polite: {
       lines: [
-        say(Z, 'Tell the khatun\'s household I am honoured. And that I am Rodriguez.'),
-        say(Z, 'A man who sheds one name for riders will shed the next for more.'),
+        say(Z, 'Tell the khatun\'s household I am honoured. And that I am Rodriguez.', { mood: 'wry' }),
+        say(Z, 'A man who sheds one name for riders will shed the next for more.', { mood: 'grim' }),
         act([{ do: 'look', actor: 'npc:ordu_envoy' }], OE, 'That is the answer she said you would give. I am to bow lower for it.', {
           set: { 'side.grandson.polite': true, 'side.grandson.done': true },
         }),
@@ -805,7 +805,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
     },
     strength: {
       lines: [
-        say(Z, 'Tell them no. And tell them I can sit a horse.'),
+        say(Z, 'Tell them no. And tell them I can sit a horse.', { mood: 'wry' }),
         act([{ do: 'look', actor: 'npc:ordu_champion' }, { do: 'face', actor: 'npc:ordu_champion', facing: 'player' }], 'ordu_champion', 'Then the clans may see it. A bout, grandson. Practice sabres. Nobody hurt past the bout.'),
         say(Z, 'Done.', { set: { 'battle.next': 'ordu_bout', 'battle.after': 'bout_after' } }),
       ],
@@ -905,7 +905,7 @@ function afterNodes(): Record<string, DialogueNode> {
     },
     broken: {
       lines: [
-        say(Z, 'Ride. Tell every raider on the plateau what happened here.'),
+        say(Z, 'Ride. Tell every raider on the plateau what happened here.', { mood: 'grim' }),
         act([{ do: 'exit', actor: 'grimvald', to: at(6, FJORD.campRow), run: true }], '', 'He goes, without his horse, without looking back.'),
       ],
       next: 'round',

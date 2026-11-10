@@ -104,7 +104,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say(Y, 'Put your hands on him again, sergeant. I dare you.'),
     act([{ do: 'face', actor: 'npc:marine_sergeant', facing: 'down' }], 'marine_sergeant', 'The cacique\'s girl. Back from Zetwal with friends.'),
     say('marine_sergeant', 'Marines! Fix bayonets. Teach the natives what the Charter protects.'),
-    say(A, 'Gigi, they are coming at Yari!'),
+    say(A, 'Gigi, they are coming at Yari!', undefined, 'grave'),
     { speaker: G, text: 'Anissa, behind me. Yari, with me!', set: { 'battle.next': 'pier_marines', 'battle.after': 'pier_after' } },
   ]),
   // Talking to the sergeant again (after a lost fight, or a reload in the middle of it).
@@ -141,7 +141,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'marine_sergeant',
       'You\'ve raised a hand to the Crown, girl! The Governor will hear of this, every word!',
     ),
-    act([{ do: 'wait', ms: 1200 }], Y, 'Tell him slowly. He reads every form twice.'),
+    act([{ do: 'wait', ms: 1200 }], Y, 'Tell him slowly. He reads every form twice.', undefined, undefined, 'grin'),
     act(
       [{ do: 'walk', actor: 'npc:canoe_fisher', to: PIER_ROOT.shoved, facing: 'down-left' }],
       'canoe_fisher',
@@ -149,7 +149,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       undefined,
       'Friend, Yari.',
     ),
-    say(Y, 'Where is my father? Why did nobody stop them?'),
+    say(Y, 'Where is my father? Why did nobody stop them?', undefined, 'grief'),
     say('canoe_fisher', 'The cacique is sick, Yari. Very sick. The elders meet without him tonight, about the Crown\'s paper.'),
     say(Y, '...Gianna, I have to go to him. The caney is at the top of the plaza, up the road.'),
     { speaker: A, text: "We'll come with you.", set: { 'story.pier_thanks': true } },
@@ -216,7 +216,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say('elder_undecided', 'The vote waits. Bring us proof that the Crown\'s clause is real, or proof that it is not.'),
     say('crown_liaison', 'The Governor will hear of this.'),
     // He rolls up the Charter and walks out, past Gianna, down the hall and out of the doors.
-    act([{ do: 'exit', actor: 'npc:crown_liaison', to: at(17, 25) }, { do: 'face', actor: 'yari', facing: 'right' }], Y, 'Run along to the Governor, then. Someone in the customs house has been watching us all day. I saw the glass.'),
+    act([{ do: 'exit', actor: 'npc:crown_liaison', to: at(17, 25) }, { do: 'face', actor: 'yari', facing: 'right' }], Y, 'Run along to the Governor, then. Someone in the customs house has been watching us all day. I saw the glass.', undefined, undefined, 'grin'),
     { speaker: A, text: 'Gigi, the songs said the first oath was carved in a cave. Where the water rises.', set: { 'story.council_defied': true } },
   ]),
   // Governor Thorne.
@@ -297,7 +297,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say('elder_resist', 'I told you. I have not unsworn it, and neither did they.'),
     { speaker: 'elder_undecided', text: 'Then the Charter rests on a clause nobody here ever swore. The vote is...', set: { 'story.proof_shown': true } },
     { speaker: '', text: 'BOOM. The posts shake. Dust falls from the thatch.', fx: 'shake' },
-    say(A, 'Gigi! The ships are firing!'),
+    say(A, 'Gigi! The ships are firing!', undefined, 'grave'),
     { speaker: '', text: 'Again, and again. Below, the harbor guns. In the plaza, drums: not areíto drums. Crown drums.', fx: 'shake' },
     say('caney_guard', 'Marines on the terrace! They are coming in!'),
     act(
@@ -320,7 +320,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'marine_lieutenant',
       'By order of the Governor! Nobody leaves this house. Least of all a pack of children.',
     ),
-    act([{ do: 'look', actor: 'player' }], Y, 'Come and take it, then.'),
+    act([{ do: 'look', actor: 'player' }], Y, 'Come and take it, then.', undefined, undefined, 'grin'),
     { speaker: 'marine_lieutenant', text: 'Marines! At them!', set: { 'story.crown_attack': true, 'battle.next': 'caney_breach', 'battle.after': 'caney_after' } },
   ]),
   // After a lost fight in the caney: the marines are still there.
@@ -365,7 +365,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'marine_lieutenant',
       'Beaten by children! This is insane! We will be back, all of us!',
     ),
-    act([{ do: 'wait', ms: 900 }], Y, 'They ran. Gianna, they ran!'),
+    act([{ do: 'wait', ms: 900 }], Y, 'They ran. Gianna, they ran!', undefined, undefined, 'grin'),
     // The captain and six men: through the doors and up the hall, into a firing line at the circle's opening.
     act(
       [
@@ -405,7 +405,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'crown_captain',
       'Gladly. Take him.',
     ),
-    act([{ do: 'look', actor: 'player' }, { do: 'walk', actor: 'yari', to: at(10, 6), facing: 'right', run: true }], Y, 'Father!'),
+    act([{ do: 'look', actor: 'player' }, { do: 'walk', actor: 'yari', to: at(10, 6), facing: 'right', run: true }], Y, 'Father!', undefined, undefined, 'grief'),
     act([{ do: 'face', actor: 'anaco', facing: 'left' }], 'anaco', 'Yari. No. Look at me. You are no use to me in chains. Take the Limyè girls and go. The cave. You know the one.', undefined, undefined, 'tender'),
     say('anaco', 'Envoy\'s daughter. They cannot touch you, by their own Accord. Remember that, and use it.'),
     say(G, 'We\'ll find you. I promise.'),
@@ -449,7 +449,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       fx: 'drum',
     },
     say(Y, 'On the batey. They are standing on the batey.'),
-    say(A, 'Gigi, I\'m scared.'),
+    say(A, 'Gigi, I\'m scared.', undefined, 'grave'),
     say(G, 'Hold my hand. Down to the village, then west to the gardens and the cave. Quietly.'),
   ]),
   // The patrol on the village trail west: the sergeant from the pier.
@@ -467,7 +467,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'marine_sergeant',
       'You! The cacique\'s girl! I told you the Governor would hear.',
     ),
-    say(Y, 'And I told you to tell him slowly.'),
+    say(Y, 'And I told you to tell him slowly.', undefined, 'grin'),
     // Review 1, finding 1: the breastplate that turns plain blows, shown before the fight (Anissa's tip names it).
     {
       speaker: 'marine_sergeant',
@@ -539,7 +539,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     say(G, 'Then I\'ll walk. I\'ll find where they are holding Anaco.'),
     say(A, 'I\'m coming too.'),
     say(G, 'Not this time. Thorne knows you glow, Anissa. Stay with Yari. Keep each other safe.'),
-    say(A, '...Come back before the lamp goes out.'),
+    say(A, '...Come back before the lamp goes out.', undefined, 'warm'),
     // The healer's request, here rather than on a second trip back to the cave (review 1, finding 3): the bark tree
     // is on Gianna's way into the city.
     act(
@@ -552,7 +552,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       text: 'The tall tree by the spring pond in the gardens, east of the water. Thin strips, from the sunny side. Crush it into his water.',
       set: { 'story.bark_asked': true },
     },
-    say(Y, 'Gianna. Bring my father home.'),
+    say(Y, 'Gianna. Bring my father home.', undefined, 'grief'),
     act(
       [
         { do: 'walk', actor: 'leader', to: at(10, 14), facing: 'right', async: true },
@@ -584,14 +584,14 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     plan: {
       set: { 'story.escape_planned': true },
       lines: [
-        say(Y, 'You saw him? Is he...'),
+        say(Y, 'You saw him? Is he...', undefined, 'grief'),
         say(G, 'Alive. The bark helped. He watched the ships from his window and told me the one way out.'),
         say(G, 'At the lowest tide, the sea cave on the Canoe Beach opens to the sea. Your great-grandmother hid canoes there.'),
         say(Y, 'Then we take him out the same way.'),
         say(G, 'He says no. He would sink the canoe and bring the Governor after you. He said to tell you not to argue.'),
-        say(Y, '...He knew I would.'),
+        say(Y, '...He knew I would.', undefined, 'grief'),
         say('camp_leader', 'The lowest tide of the month is tonight, before midnight. Every boat Thorne has will watch the harbor mouth, not the cliffs.'),
-        say(A, 'And I hold the lamp at the cave mouth so you can find your way back.'),
+        say(A, 'And I hold the lamp at the cave mouth so you can find your way back.', undefined, 'warm'),
         say(Y, 'Tonight. Then I go, and I come back with help. Zetwal\'s help. Gianna\'s grandfather owes us an oath.'),
       ],
     },
@@ -612,7 +612,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     },
     go: {
       lines: [
-        say(A, 'I\'m coming. The sea cave is darker than this one, and I glow. You need me, Gigi.'),
+        say(A, 'I\'m coming. The sea cave is darker than this one, and I glow. You need me, Gigi.', undefined, 'warm'),
         say(G, '...Yes. I do. Stay right behind me.'),
         say(Y, 'East along the Canoe Beach, to the cave under the headland. The marines are watching the harbor mouth, not the cliffs.'),
         nar('(Yari and Anissa join you again.)'),
@@ -620,7 +620,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
     },
   }),
   simple('anissa_hidden_talk', [
-    say(A, 'I\'m keeping the lamp lit. Come back before it goes out, Gigi. Promise.'),
+    say(A, 'I\'m keeping the lamp lit. Come back before it goes out, Gigi. Promise.', undefined, 'warm'),
   ]),
   simple('refugee_fisher_talk', [
     say('canoe_fisher', 'They took my canoe for firewood. A canoe! It took my father a year to carve.'),
@@ -931,7 +931,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
   simple('record_lock_open', [
     nar('The last beat rings out over the dance ground. Something heavy slides and falls inside the record house.'),
     nar('Its door swings open.'),
-    say(A, 'You played it, Gigi! The stones remembered!'),
+    say(A, 'You played it, Gigi! The stones remembered!', undefined, 'warm'),
     say(Y, 'Nobody has opened that door since my grandmother died. Go in. Carefully.'),
   ]),
   simple('record_lock_fail', [
@@ -1086,7 +1086,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
         say(G, 'He watched the ships from his window all day. This is the only way out.'),
         say(Y, 'Then we take him out the same way.'),
         say(G, 'He says no. He would sink the canoe and bring the Governor after you. He said to tell you not to argue.'),
-        say(Y, '...He knew I would.'),
+        say(Y, '...He knew I would.', undefined, 'grief'),
         say(A, 'I\'m coming. The sea cave is darker than ours, and I glow. You need me, Gigi.'),
         say(G, '...Yes. I do. Stay right behind me.'),
         say(Y, 'Tonight, then. I go, and I come back with help. Zetwal\'s help. Gianna\'s grandfather owes us an oath.'),
@@ -1166,7 +1166,7 @@ export const XARAGUA_DIALOGUE: readonly DialogueScript[] = [
       'This changes nothing, Miss Limyè! The Charter stands!',
     ),
     say(G, 'Then we will come back with the Accord, and read it beside your Charter.'),
-    act([{ do: 'face', actor: 'yari', facing: 'down' }], Y, 'Into the canoe. Father. I\'ll come back. With every friend Caona ever had.'),
+    act([{ do: 'face', actor: 'yari', facing: 'down' }], Y, 'Into the canoe. Father. I\'ll come back. With every friend Caona ever had.', undefined, undefined, 'grief'),
     { speaker: A, text: 'Gigi, look. Lights out there. A ship with no lanterns.', set: { 'story.escaped': true, 'travel.next': 'zetwal-harbor/harbor_return', 'voyage.next': 'xaragua_zetwal' } },
   ]),
 

@@ -81,7 +81,7 @@ const SAFFRON_DIALOGUE: DialogueScript[] = [
         say('spice_merchant', 'Then they drink the first of it. Saffron tea, envoy, for the road. And the reward, which I am counting again.', {
           set: { [SF.done]: true },
         }),
-        say(A, 'He is hugging the camels, Gigi.'),
+        say(A, 'He is hugging the camels, Gigi.', { mood: 'warm' }),
       ],
     },
     after: { lines: [say('spice_merchant', 'The old road is open again. I tell everyone a girl from Zetwal opened it. They do not believe me.')] },
@@ -111,7 +111,7 @@ const SAFFRON_DIALOGUE: DialogueScript[] = [
         { text: 'Not now.' },
       ],
     },
-    fight: { lines: [say(Z, 'Behind me.', { fx: 'shake' })] },
+    fight: { lines: [say(Z, 'Behind me.', { mood: 'grim', fx: 'shake' })] },
     paid: {
       lines: [
         act(

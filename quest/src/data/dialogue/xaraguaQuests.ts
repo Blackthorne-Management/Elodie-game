@@ -24,8 +24,8 @@ function script(id: string, nodes: Record<string, DialogueNode>): DialogueScript
 }
 
 /** A line with stage directions (engine/stage.ts): the cues are acted out on the map, then the line shows. */
-function act(stage: StageCue[], speaker: string, text: string): DialogueLine {
-  return { speaker, text, stage };
+function act(stage: StageCue[], speaker: string, text: string, mood?: string): DialogueLine {
+  return { speaker, text, stage, ...(mood ? { mood } : {}) };
 }
 
 function at(x: number, y: number): { x: number; y: number } {
@@ -144,7 +144,7 @@ const NETS_DIALOGUE: DialogueScript[] = [
           'canoe_fisher',
           'There. Better than new. Take this float, envoy: it rode on that net for twenty years. It always comes back up.',
         ),
-        act([{ do: 'walk', actor: 'yari', to: at(16, 19), facing: 'right' }], Y, 'Let the Governor read that in his glass.'),
+        act([{ do: 'walk', actor: 'yari', to: at(16, 19), facing: 'right' }], Y, 'Let the Governor read that in his glass.', 'grin'),
       ],
     },
     after: { lines: [say('canoe_fisher', 'The nets are back on the posts. The marines walk the long way round them now.')] },
@@ -183,7 +183,7 @@ const HUTIA_DIALOGUE: DialogueScript[] = [
       lines: [
         say('conuco_kid', 'I found a hutia in the cassava. It took my bead and ran. Hutias think shiny things are stars.'),
         say('conuco_kid', 'It was green. Sea glass. My grandmother found it on the beach when she was small like me.'),
-        say(Y, '...A hutia. Brown, round, very pleased with itself?'),
+        say(Y, '...A hutia. Brown, round, very pleased with itself?', undefined, 'grin'),
         say('conuco_kid', 'Yes! Is it yours?'),
         say(Y, '...That might be mine. It came home with me in the canoe, and it has been out every night since.'),
         say(A, 'Where would a hutia hide its stars, Gigi?'),
@@ -249,7 +249,7 @@ const HUTIA_DIALOGUE: DialogueScript[] = [
         nar('The old ceiba has a low fork now, where a stake once held it, and the trunk has grown round it. A step up, then another.'),
         nar('The hollow: a sea-glass bead on a thread, a fish hook, a Crown marine\'s brass button, two spoons...'),
         nar('...and a hutia, asleep on top of it all.'),
-        say(Y, 'That is not my hutia. ...That is my hutia\'s grandmother. I would know that face anywhere.'),
+        say(Y, 'That is not my hutia. ...That is my hutia\'s grandmother. I would know that face anywhere.', undefined, 'grin'),
         nar('(Gianna took the bead, and the button for the girl to see.)'),
       ],
     },
@@ -537,7 +537,7 @@ const MEDICINE_DIALOGUE: DialogueScript[] = [
         say('anaco', 'Ugh. The old grove. I have not tasted that since I was a boy, and I did not miss it.'),
         act([{ do: 'wait', ms: 1000 }, { do: 'face', actor: 'npc:anaco', facing: 'player' }], '', 'After a while his hands are still. He sits up on his own and looks at you.'),
         say('anaco', 'Patricio\'s blood. Tell the elders I will stand when they sit.'),
-        say(Y, 'Father...'),
+        say(Y, 'Father...', undefined, 'grief'),
         say('anaco', 'Not in front of the envoy, Yari. Later.'),
         act([{ do: 'walk', actor: 'npc:behique', to: at(30, 5) }, { do: 'face', actor: 'npc:behique', facing: 'player' }], 'behique', 'Thank you, envoy. Thank you, Yari. Wherever you found it, it was there for him.'),
       ],

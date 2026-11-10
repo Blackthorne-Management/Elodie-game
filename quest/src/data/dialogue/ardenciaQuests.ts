@@ -262,7 +262,7 @@ const FEAST_DIALOGUE: DialogueScript[] = [
     },
     tally: {
       lines: [
-        act([{ do: 'face', actor: 'npc:ard_elder_a', facing: 'player' }], G, 'Your tally, elder. From under your stair. Your blades took their pay and ran.'),
+        act([{ do: 'face', actor: 'npc:ard_elder_a', facing: 'player' }], G, 'Your tally, elder. From under your stair. Your blades took their pay and ran.', { mood: 'determined' }),
         say(FE, '...That is my hand.'),
         act([{ do: 'walk', actor: 'npc:ard_elder_b', to: at(4, 6), facing: 'left' }], 'ard_elder', 'Nine years, Ferrán?'),
         say(FE, 'The Lord never looked.'),
@@ -330,7 +330,7 @@ export const ERRAND_BENNY_NODES: Readonly<Record<string, DialogueNode>> = {
       say('benny_old', 'Then the promise is mine to be ashamed of. I wrote it, and I put it in a box, and I let the box keep it.'),
       act([{ do: 'walk', actor: 'npc:nancy', to: at(4, 16), facing: 'left' }], 'nancy', 'Benny.', { mood: 'firm' }),
       say('benny_old', 'Keep it, envoy. A promise keeps better with the young. I only kept it dry.', { mood: 'tender', set: { [E.done]: true } }),
-      say(A, 'He is holding Nancy\'s hand, Gigi.'),
+      say(A, 'He is holding Nancy\'s hand, Gigi.', { mood: 'warm' }),
     ],
   },
   errand_after: { lines: [say('benny_old', 'Keep it dry, envoy. That is most of keeping a promise.', { mood: 'wry' })] },

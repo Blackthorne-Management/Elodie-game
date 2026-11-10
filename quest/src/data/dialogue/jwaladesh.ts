@@ -507,7 +507,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
           { fx: 'shake' },
         ),
         say(EN, 'The Seth\'s contract says every jar on this road is his.'),
-        say(BY, 'The road says otherwise.', { set: { 'battle.next': 'salt_road_enforcers', 'battle.after': 'salt_road_after' } }),
+        say(BY, 'The road says otherwise.', { mood: 'fierce', set: { 'battle.next': 'salt_road_enforcers', 'battle.after': 'salt_road_after' } }),
       ],
     },
     after: { lines: [], next: 'seals' },
@@ -600,7 +600,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
         say(V, 'Twelve.'),
         act([{ do: 'face', actor: 'npc:vikram_npc', facing: 'player' }], V, 'And you. Remembers what is hidden. Your goddess watches a flame die and writes it down.'),
         say(V, 'Hesitation is the only true death. Remembering is hesitation with a pen.'),
-        say(G, 'Then stop hesitating and show it.'),
+        say(G, 'Then stop hesitating and show it.', { mood: 'determined' }),
         say(V, 'That is an argument. I settle arguments.', { set: { 'story.vikram_challenged': true } }),
         act([{ do: 'look', actor: 'npc:jw_chamberlain' }], CH, 'The yard.'),
         act(
@@ -609,7 +609,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
           'The duel yard: sand, and a rope round it. Gianna steps over the rope alone. Anissa holds it.',
         ),
         say(Y, 'He\'s already out of breath.'),
-        say(G, 'Then it\'s a fair fight.', { set: { 'battle.next': 'duel_yard_vikram' } }),
+        say(G, 'Then it\'s a fair fight.', { mood: 'determined', set: { 'battle.next': 'duel_yard_vikram' } }),
       ],
     },
   }),
@@ -619,7 +619,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
       V,
       'Again. The yard... is still here. So am I.',
     ),
-    say(G, 'Then we finish it.', { set: { 'battle.next': 'duel_yard_vikram' } }),
+    say(G, 'Then we finish it.', { mood: 'determined', set: { 'battle.next': 'duel_yard_vikram' } }),
   ]),
   script('vikram_after', {
     start: {
@@ -728,7 +728,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
       'Night watch. The quay is the Seth\'s after dark.',
       { fx: 'shake' },
     ),
-    say(BY, 'Then we are trespassing. Good.', { set: { 'battle.next': 'quay_watch', 'battle.after': 'quay_watch_after' } }),
+    say(BY, 'Then we are trespassing. Good.', { mood: 'fierce', set: { 'battle.next': 'quay_watch', 'battle.after': 'quay_watch_after' } }),
   ]),
   // Shown, not told (review Nov 7, finding 2): the beaten watch run east across the quay for the oil store's doors.
   simple('quay_watch_after', [
@@ -990,7 +990,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
           set: { 'item.token_suzumori': true, 'story.crane_accepted': true },
         }),
         say(ME, 'Take it to your chair. Tell Kaede it sat on our altar for one night. That is not an apology. It is a beginning.'),
-        act([{ do: 'look', actor: 'haru' }], H, 'Grandmother\'s files say the paper was false. I will bring you the paper.'),
+        act([{ do: 'look', actor: 'haru' }], H, 'Grandmother\'s files say the paper was false. I will bring you the paper.', { mood: 'set' }),
       ],
       next: 'price',
     },

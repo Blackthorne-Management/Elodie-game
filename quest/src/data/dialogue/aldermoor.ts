@@ -492,7 +492,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         say(RG, 'Both exist. You may see neither. You may see the city, which is open, and the Rolls House, which is public.'),
         say(RG, 'And the Assize, where you will sit in the gallery and learn how the Crown is governed.'),
         say(RG, 'And the recital. Your uncle plays very loud.'),
-        say(G, 'The Seventh Clause says "to be revisited". Zetwal asks when.'),
+        say(G, 'The Seventh Clause says "to be revisited". Zetwal asks when.', { mood: 'determined' }),
         say(RG, 'After the Assize. With a fleet. That is a revisiting.', { set: { 'story.regent_refused': true } }),
         act([{ do: 'look', actor: 'npc:rosalind' }], RO, 'Edmund. You\'ve hit someone.'),
         say(ED, 'Mother. A sergeant. I\'ve written.'),
@@ -596,7 +596,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
     },
     after: {
       lines: [
-        say(Z, 'Four of them. Four of his sisters, and this one arrests people.'),
+        say(Z, 'Four of them. Four of his sisters, and this one arrests people.', { mood: 'wry' }),
         say(G, 'She said she hasn\'t decided.'),
         say(Z, 'She\'s in the rain.'),
       ],
@@ -1256,7 +1256,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
     },
     tried: {
       lines: [
-        say(G, 'She swore falsely before the Witness. Try her for it, here, by your own law.'),
+        say(G, 'She swore falsely before the Witness. Try her for it, here, by your own law.', { mood: 'determined' }),
         say(JO, 'By the book.'),
         nar('The Regent does not object. That is its own answer.'),
       ],
@@ -1484,13 +1484,13 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         nar('The bog chapel at dusk: no roof, a lantern on the altar-stone, and the veils kneeling to the Hushed\'s word.'),
         act([{ do: 'look', actor: 'npc:chapel_veil_a' }, { do: 'face', actor: 'npc:chapel_veil_a', facing: 'up' }, { do: 'face', actor: 'npc:chapel_veil_b', facing: 'up' }], '', 'The veils turn, all together, the way birds do.'),
         act([{ do: 'place', actor: 'cell_zealot', look: 'quiet_crown_m_deep', at: at(HEATH.chapelGap.x, HEATH.chapelGap.y + 1), facing: 'up' }], 'zealot', 'The little one glows, they say. Even in the rain.', { set: { 'story.chapel_seen': true } }),
-        say(BY, 'Then come and look.', { set: { 'battle.next': 'bog_chapel_cell', 'battle.after': 'chapel_after' } }),
+        say(BY, 'Then come and look.', { mood: 'fierce', set: { 'battle.next': 'bog_chapel_cell', 'battle.after': 'chapel_after' } }),
       ],
     },
     again: {
       lines: [
         act([{ do: 'look', actor: 'npc:chapel_veil_a' }], '', 'The veils are kneeling again. They turn, all together.'),
-        say(BY, 'Again, then.', { set: { 'battle.next': 'bog_chapel_cell', 'battle.after': 'chapel_after' } }),
+        say(BY, 'Again, then.', { mood: 'fierce', set: { 'battle.next': 'bog_chapel_cell', 'battle.after': 'chapel_after' } }),
       ],
     },
   }),

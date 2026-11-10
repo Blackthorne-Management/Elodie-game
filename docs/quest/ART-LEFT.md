@@ -3,6 +3,27 @@ Expressions for the characters who already have a portrait: ART-EXPRESSIONS.md
 
 Written Nov 10. You asked for the prompts for the art you have left. This is the one list: every picture still to make, in the order that changes the most screens first (the same order as `ART-DROP-2.md`), with every prompt written out in full. Nothing is left to fill in: copy the grey box, paste it, and send.
 
+## Main cast expressions (Claude's call, Nov 10)
+
+Two expressions each for the main cast, tagged on the story's real turns (the plain portrait stays for everything else). Registered in `PORTRAIT_MOODS` (`quest/src/assets.config.ts`); file name `<portrait>_<mood>.png`.
+
+| Character | Expression | Use | Art | Lines tagged |
+| --- | --- | --- | --- | --- |
+| Haru | `caught` | spotted, flustered ("definitely not a spy") | exists | 7 |
+| Haru | `set` | resolved, defying his mother, quiet steel | exists | 4 |
+| Bayarmaa | `fierce` | defiant: the Moot, battle resolve | exists | 9 |
+| Bayarmaa | `soft` | only for her horse Salkhi, rare tenderness | exists | 3 |
+| Gianna | `determined` | resolve, a decision made | to make | 21 |
+| Gianna | `shaken` | grief, shock, a hard truth landing | to make | 14 |
+| Anissa | `warm` | affection, comfort, a smile for Gianna | to make | 15 |
+| Anissa | `grave` | serious, worried, a hard warning | to make | 16 |
+| Yari | `grin` | cocky humour, teasing | to make | 15 |
+| Yari | `grief` | her father Anaco, loss, sorrow | to make | 10 |
+| Azzy | `grim` | battle-hard, bleak, stern | to make | 15 |
+| Azzy | `wry` | dry humour | to make | 11 |
+
+A missing picture shows the plain portrait, so the tags are safe before the art lands.
+
 ## How to use
 
 1. **One chat per character.** For a character, do the prompts in order, all in that one chat, so the face stays the same: the reference sheet, then the portrait, then the extra expressions (one line each), then the walking sprite sheet. A foe, a beast or a battle stance is its own chat.

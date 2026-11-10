@@ -346,7 +346,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     ),
     say(Y, 'There. No. Gone.'),
     say(Z, 'Fog.'),
-    say(Y, 'Fog does not wear shoes.', { set: { 'story.haru_seen_1': true } }),
+    say(Y, 'Fog does not wear shoes.', { mood: 'grin', set: { 'story.haru_seen_1': true } }),
   ]),
   simple('pier_puddle', [nar('A puddle between the planks. In it: the lanterns, the fog, and you.')]),
   simple('crown_launch', [
@@ -423,7 +423,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     act([{ do: 'walk', actor: 'yari', to: at(QUARTER.screen.x, QUARTER.screen.y + 1), facing: 'up' }], '', 'Yari throws a pebble at it.'),
     act([{ do: 'exit', actor: 'grey_figure', to: at(QUARTER.screen.x - 1, QUARTER.screen.y), run: true }, { do: 'look', actor: 'player' }], '', 'The screen slides shut.'),
     say(BY, 'Say less.'),
-    say(Y, 'I said nothing. I threw something.', { set: { 'story.haru_seen_2': true } }),
+    say(Y, 'I said nothing. I threw something.', { mood: 'grin', set: { 'story.haru_seen_2': true } }),
   ]),
   simple('hall_gate', [
     act(
@@ -737,9 +737,9 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
     ),
     say(H, 'Mother, the file house is being emptied through the back.'),
     act([{ do: 'look', actor: 'npc:kaede' }], KD, 'Haru. You were told to follow them, not to speak.'),
-    act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'I am definitely not a spy.'),
+    act([{ do: 'face', actor: 'haru', facing: 'player' }], H, 'I am definitely not a spy.', { mood: 'caught' }),
     say(H, 'Somebody is selling the files. The seal is on the front door. Grandmother Sayo never used the front door.'),
-    say(H, 'I know the old way in, through the fog. I am going tonight. Write that down.'),
+    say(H, 'I know the old way in, through the fog. I am going tonight. Write that down.', { mood: 'set' }),
     say(KD, 'It is already written.'),
     say(KD, 'Envoy. If my son walks the fog with you and comes back with proof the Crown has been inside my file house...'),
     say(KD, '...the council will hear a petition at dawn. Not before.'),
@@ -889,7 +889,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
   ]),
   simple('maze_walked', [
     nar('A gap in the paper walls. Beyond it: reeds, black water, and a causeway into the fog.'),
-    say(H, 'This is not spying. This is walking.'),
+    say(H, 'This is not spying. This is walking.', { mood: 'caught' }),
   ]),
 
   // ---- Beat 5: the marsh, the posts, the press (K-3) --------------------------------------------------------------
@@ -1014,7 +1014,7 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
         nar('Beside it, the Crown clerk\'s file-box: the one that crossed the main bridge.'),
         act([{ do: 'face', actor: 'fox', facing: 'player' }], BR, 'Lady Kaede\'s son. And the envoy. You came the old way; I came the new one.'),
         say(BR, 'The keeper has a price. Everyone in this city has a price. I keep the list.'),
-        act([{ do: 'look', actor: 'haru' }], H, 'You sold Grandmother\'s files.'),
+        act([{ do: 'look', actor: 'haru' }], H, 'You sold Grandmother\'s files.', { mood: 'set' }),
         say(BR, 'I sold copies. The originals are perfectly safe. That is what neutral means now.'),
         act(
           [
@@ -1085,9 +1085,9 @@ export const KUROSHI_DIALOGUE: readonly DialogueScript[] = [
         say(KD, 'The Suzumori network is Zetwal\'s when the realm musters. What you have not paid, the Muster will ask for.', { set: { 'ally.kuroshi': true } }),
         act([{ do: 'look', actor: 'npc:kaede' }, { do: 'wait', ms: 800 }], '', 'Kaede folds a paper crane from the margin of the turned order, and presses the Suzumori seal into its wing.'),
         say(KD, 'For the chamberlain\'s chair. Suzumori sits.', { set: { 'item.token_suzumori': true } }),
-        act([{ do: 'walk', actor: 'haru', to: at(HALL.kaede.x, HALL.table.y + 2), facing: 'up' }], H, 'I am going with them, Mother.'),
+        act([{ do: 'walk', actor: 'haru', to: at(HALL.kaede.x, HALL.table.y + 2), facing: 'up' }], H, 'I am going with them, Mother.', { mood: 'set' }),
         say(KD, 'You are not a spy.'),
-        say(H, 'Definitely not.'),
+        say(H, 'Definitely not.', { mood: 'caught' }),
         act([{ do: 'face', actor: 'npc:kaede', facing: 'player' }], KD, 'He listens better than he talks. It is the family trade.', { set: { 'story.haru_left_kirinoura': true } }),
         say(KD, 'Agnipur will not take a Suzumori crane. We burned their temple on a Crown paper that was false.'),
         say(KD, 'The elder who signed it is still alive, and still sorry. Take the crane anyway.'),
