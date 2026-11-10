@@ -9,6 +9,7 @@
 // diagonal, and slide the thumb across it to turn without lifting. B (held) runs.
 
 import { PAD_DEADZONE, TOUCH_BUTTON_PX, TOUCH_PAD_PX, TOUCH_PAD_STACK_PX, TOUCH_BUTTON_STACK_PX } from '../config.ts';
+import type { Rect } from '../engine/scaling.ts';
 import type { Dir8 } from '../engine/types.ts';
 import { dirButtons, stickDirection, type Button, type InputSource } from './actions.ts';
 
@@ -166,18 +167,29 @@ export class TouchSource implements InputSource {
   }
 }
 
+/** Every touch control on the screen now (hidden ones are left out). */
+const CONTROLS = ['.touch-dpad', '.touch-ask', '.touch-btn', '.touch-small'];
+
 /**
- * Where the on-screen D-pad lies over the game picture, in the picture's own pixels (`viewW` x `viewH`), or null when no
- * pad is on the screen. A screen can keep what must be read out from under it (the battle's party names; review Nov 7,
- * finding 5).
+ * The visible touch controls that lie over the game picture, as rectangles in the picture's own pixels (`viewW` x
+ * `viewH`), clipped to it; empty without touch controls. The dialogue box, the pages and the battle's strip keep what
+ * must be read out from under them (engine/scaling.ts controlReach; review Nov 7, finding 5, and Nov 10).
  */
-export function padOverPicture(canvas: HTMLCanvasElement, viewW: number, viewH: number): { left: number; top: number; right: number; bottom: number } | null {
-  const pad = document.querySelector('.touch-dpad');
-  if (!pad) return null;
-  const r = pad.getBoundingClientRect();
+export function controlsOverPicture(canvas: HTMLCanvasElement, viewW: number, viewH: number): Rect[] {
+  if (typeof document === 'undefined') return [];
   const c = canvas.getBoundingClientRect();
-  if (r.width === 0 || c.width === 0 || c.height === 0) return null;
+  if (c.width === 0 || c.height === 0) return [];
   const sx = viewW / c.width;
   const sy = viewH / c.height;
-  return { left: (r.left - c.left) * sx, top: (r.top - c.top) * sy, right: (r.right - c.left) * sx, bottom: (r.bottom - c.top) * sy };
+  const out: Rect[] = [];
+  for (const node of document.querySelectorAll(CONTROLS.join(', '))) {
+    const r = node.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) continue;
+    const left = Math.max(0, (r.left - c.left) * sx);
+    const right = Math.min(viewW, (r.right - c.left) * sx);
+    const top = Math.max(0, (r.top - c.top) * sy);
+    const bottom = Math.min(viewH, (r.bottom - c.top) * sy);
+    if (right > left && bottom > top) out.push({ x: left, y: top, w: right - left, h: bottom - top });
+  }
+  return out;
 }

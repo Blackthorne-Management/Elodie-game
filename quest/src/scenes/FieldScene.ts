@@ -546,6 +546,16 @@ export class FieldScene extends Phaser.Scene {
       snapshot: () => this.snapshot(),
       tileToScreen: (x, y) => this.tileToScreen(x, y),
       gameToScreen: (x, y) => this.gameToScreen(x, y),
+      // A point of the open page (the menu or a shop, drawn smaller beside the touch controls; Nov 10) on the screen.
+      pageToScreen: (x, y) => {
+        const page = this.mode === 'shop' ? this.shopPanel : this.mode === 'menu' ? this.menu : null;
+        const at = page ? page.pageToGame(x, y) : { x, y };
+        return this.gameToScreen(at.x, at.y);
+      },
+      choiceToScreen: (i) => {
+        const at = this.dialogue.choicePoint(i);
+        return at ? this.gameToScreen(at.x, at.y) : null;
+      },
       showItem: (id) => this.openShowcase(id),
       startBattle: (id, extra) => this.startBattle(id, extra),
       battleFx: (kind, at) => battleFx(kind, at),
@@ -830,8 +840,9 @@ export class FieldScene extends Phaser.Scene {
           const shop = RPG.shops[e.shop];
           if (!shop) break;
           if (this.mode === 'dialogue') this.leaveDialogueMode();
-          this.shopPanel.open(shop, this.logic.state.flags);
+          // The mode first: the page keeps clear of the touch controls the mode leaves on the screen.
           this.mode = 'shop';
+          this.shopPanel.open(shop, this.logic.state.flags);
           break;
         }
         case 'rhythm': {
@@ -2151,7 +2162,8 @@ export class FieldScene extends Phaser.Scene {
 
   /** Where the dialogue box's name tab begins, on the screen (ui/DialogueBox.ts: 58 px plus the text size's extra, 2 px off the bottom, a 13 px tab). */
   private dialogueBoxTop(): number {
-    return VIEW_HEIGHT - 58 - dialogueExtraPx() - 2 - 13;
+    // The box is taller where it was narrowed to miss the touch controls (ui/DialogueBox.ts layout).
+    return Math.min(VIEW_HEIGHT - 58 - dialogueExtraPx() - 2 - 13, this.dialogue.visible ? this.dialogue.top : VIEW_HEIGHT);
   }
 
   /**
@@ -2505,8 +2517,8 @@ export class FieldScene extends Phaser.Scene {
     }
     lines.push({ text: atTheEnd ? '({A} for the title)' : '({B} to close)', color: UI.dimText, gap: 4 });
     this.menu.close();
-    this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
     this.mode = atTheEnd ? 'credits' : 'journal';
+    this.panel.open(lines, { fill: UI.boxFill, alpha: 0.97, border: true });
     this.rt.input.clearPresses();
   }
 
@@ -3411,6 +3423,10 @@ declare global {
       snapshot: () => FieldSnapshot;
       tileToScreen: (x: number, y: number) => { x: number; y: number };
       gameToScreen: (x: number, y: number) => { x: number; y: number };
+      /** A point of the open page (the menu or a shop: its own 320 x 180 pixels) on the screen. */
+      pageToScreen: (x: number, y: number) => { x: number; y: number };
+      /** The middle of a dialogue choice's row on the screen, or null when no choice is shown. */
+      choiceToScreen: (i: number) => { x: number; y: number } | null;
       /** Show an item's showcase (display only: it changes no flags), for screenshots of every tier. */
       showItem: (id: string) => void;
       /** Start a battle by id (the smoke test plays the first battle without walking to it). */

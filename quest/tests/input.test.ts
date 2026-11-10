@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../src/config.ts';
 import { InputManager, dirButtons, stickDirection, type Button, type InputSource } from '../src/input/actions.ts';
 import { padDirection } from '../src/input/touch.ts';
-import { cameraBounds, cameraScroll, fitRect, fitZoom, integerZoom, screenLayout } from '../src/engine/scaling.ts';
+import { cameraBounds, cameraScroll, controlReach, fitRect, fitZoom, integerZoom, pageFit, screenLayout } from '../src/engine/scaling.ts';
 
 class FakeSource implements InputSource {
   held = new Set<Button>();
@@ -295,5 +295,35 @@ describe('screen layout: where the controls and the minimap go', () => {
     const ultrawide = screenLayout(2560, 1080, 320, 180, 8, 2, false, bars);
     expect(ultrawide.mode).toBe('side');
     expect(ultrawide.rect).toEqual(fitRect(2560, 1080, 320, 180, 8, 2));
+  });
+});
+
+describe('keeping words clear of the touch controls (review Nov 7, finding 5; Nov 10)', () => {
+  // 844 x 390 sideways: the picture at 2x from x 102; the D-pad (6..138, 246..378) and B (709..765, 322..378) reach over it.
+  const at844 = [
+    { x: 0, y: 115.5, w: 18, h: 66 }, // the D-pad
+    { x: 303.5, y: 153.5, w: 16.5, h: 26.5 }, // B
+  ];
+
+  it('measures how far the controls reach in from each side, over the rows asked', () => {
+    expect(controlReach(at844, 320)).toEqual({ left: 18, right: 17 });
+    // Above the D-pad and B nothing reaches; over the battle strip's lower rows both do.
+    expect(controlReach(at844, 320, 0, 110)).toEqual({ left: 0, right: 0 });
+    expect(controlReach(at844, 320, 134, 180)).toEqual({ left: 18, right: 17 });
+    expect(controlReach([], 320)).toEqual({ left: 0, right: 0 });
+  });
+
+  it('draws a page smaller, between them, and never below the least scale', () => {
+    expect(pageFit([], 320, 180, 0.84)).toEqual({ x: 0, y: 0, scale: 1 });
+    const f = pageFit(at844, 320, 180, 0.84);
+    expect(f.scale).toBeGreaterThan(0.84);
+    expect(f.scale).toBeLessThan(1);
+    expect(f.x).toBeGreaterThanOrEqual(19);
+    expect(f.x + 320 * f.scale).toBeLessThanOrEqual(320 - 18 + 0.01);
+    expect(f.y).toBeCloseTo((180 - 180 * f.scale) / 2, 1);
+    // A phone with no side bars: the controls reach 65 px in; the page stops at the least scale, centred between them.
+    const tight = pageFit([{ x: 0, y: 111, w: 65, h: 69 }, { x: 256, y: 121, w: 64, h: 59 }], 320, 180, 0.84);
+    expect(tight.scale).toBe(0.84);
+    expect(tight.x + (320 * 0.84) / 2).toBeCloseTo((65 + 1 + 320 - 64 - 1) / 2, 1);
   });
 });

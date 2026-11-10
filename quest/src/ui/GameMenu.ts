@@ -63,6 +63,7 @@ import type { Era, Pos } from '../engine/types.ts';
 import type { InputManager } from '../input/actions.ts';
 import type { MenuItem } from './MenuPanel.ts';
 import type { PanelLine } from './TextPanel.ts';
+import { PageFit } from './clearOfControls.ts';
 import { RealmOverlay } from './RealmOverlay.ts';
 import { fillButtons } from '../input/buttonNames.ts';
 import { charPx, textStyle } from './text.ts';
@@ -171,11 +172,15 @@ export class GameMenu {
   private blink: Phaser.Tweens.Tween | null = null;
   /** The painted realm map, a page element over the map area. */
   private readonly realmOverlay: RealmOverlay;
+  /** Where the page sits, clear of the touch controls on a sideways phone (Nov 10). */
+  private readonly fit = new PageFit();
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     const bg = scene.add.graphics();
-    bg.fillStyle(UI.boxFill, 1).fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+    // The fill runs past the page's edges: a page drawn smaller to miss the touch controls (ui/clearOfControls.ts) still
+    // covers the whole picture.
+    bg.fillStyle(UI.boxFill, 1).fillRect(-VIEW_WIDTH, -VIEW_HEIGHT, VIEW_WIDTH * 3, VIEW_HEIGHT * 3);
     bg.lineStyle(1, UI.boxBorder, 1).strokeRect(1.5, 1.5, VIEW_WIDTH - 3, VIEW_HEIGHT - 3);
     this.content = scene.add.container(0, 0);
     this.root = scene.add.container(0, 0, [bg, this.content]).setScrollFactor(0).setDepth(DEPTH).setVisible(false);
@@ -251,11 +256,17 @@ export class GameMenu {
   tap(x: number, y: number): MenuRequest[] {
     const ctx = this.ctx;
     if (!ctx) return [];
-    const hit = [...this.hits].reverse().find((h) => x >= h.x && x < h.x + h.w && y >= h.y && y < h.y + h.h);
+    const at = this.fit.toPage(x, y);
+    const hit = [...this.hits].reverse().find((h) => at.x >= h.x && at.x < h.x + h.w && at.y >= h.y && at.y < h.y + h.h);
     if (!hit) return [];
     const out = hit.run();
     if (this.visible) this.draw();
     return out;
+  }
+
+  /** Where a point of the page (its own pixels) is on the screen, in game pixels (the tests tap there). */
+  pageToGame(x: number, y: number): { x: number; y: number } {
+    return this.fit.fromPage(x, y);
   }
 
   private hit(x: number, y: number, w: number, h: number, run: () => MenuRequest[] | void): void {
@@ -454,6 +465,7 @@ export class GameMenu {
     this.blink?.remove();
     this.blink = null;
     this.realmOverlay.hide();
+    this.fit.apply(this.scene, this.root);
     this.content.removeAll(true);
     this.labels = [];
     this.hits = [];
@@ -1020,7 +1032,8 @@ export class GameMenu {
     const known = new Set(RPG.realm.filter(reached).map((p) => p.id));
     const area = { x: 6, y: TOP + 1, w: REALM_MAP_PX, h: REALM_MAP_PX };
     g.fillStyle(MAP_ART.labelBack, 1).fillRect(area.x, area.y, area.w, area.h);
-    this.realmOverlay.show(area, { current, known, names: Object.fromEntries(RPG.realm.map((p) => [p.id, p.name])) });
+    const f = this.fit;
+    this.realmOverlay.show({ x: f.x + area.x * f.scale, y: f.y + area.y * f.scale, w: area.w * f.scale, h: area.h * f.scale }, { current, known, names: Object.fromEntries(RPG.realm.map((p) => [p.id, p.name])) });
 
     // The legend: every place and its house; the one you are in, marked.
     const LX = area.x + area.w + 8;

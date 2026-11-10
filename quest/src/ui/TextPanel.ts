@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import { UI } from '../assets.config.ts';
 import { VIEW_HEIGHT, VIEW_WIDTH } from '../config.ts';
 import { fillButtons } from '../input/buttonNames.ts';
+import { reachOver } from './clearOfControls.ts';
 import { liveButtons, textStyle } from './text.ts';
 
 export interface PanelLine {
@@ -47,12 +48,16 @@ export class TextPanel {
     this.bg.clear().fillStyle(style.fill, style.alpha).fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
     if (style.border) this.bg.lineStyle(1, UI.boxBorder, 1).strokeRect(2.5, 2.5, VIEW_WIDTH - 5, VIEW_HEIGHT - 5);
     let y = style.top ?? PAD;
+    // Clear of the touch controls where they reach over the picture's sides (ui/clearOfControls.ts; Nov 10).
+    const reach = reachOver(this.scene);
+    const left = PAD + reach.left;
+    const right = VIEW_WIDTH - PAD - reach.right;
     this.texts = lines.map((l, i) => {
       y += l.gap ?? 0;
       const t = this.scene.add
-        .text(l.center ? VIEW_WIDTH / 2 : PAD, y, l.text, textStyle(l.color ?? UI.text, { align: l.center ? 'center' : 'left' }))
+        .text(l.center ? (left + right) / 2 : left, y, l.text, textStyle(l.color ?? UI.text, { align: l.center ? 'center' : 'left' }))
         .setOrigin(l.center ? 0.5 : 0, 0)
-        .setWordWrapWidth(VIEW_WIDTH - PAD * 2, true);
+        .setWordWrapWidth(right - left, true);
       // A line naming buttons ("({Continue})") follows the device the player switches to while the panel is up.
       liveButtons(t, given[i]!.text);
       y += Math.ceil(t.height) + 2;

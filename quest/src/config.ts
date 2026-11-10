@@ -568,3 +568,10 @@ export const WALKING_COMPANIONS: readonly string[] = ['yari', 'samira', 'bayarma
  * a column behind her and were hidden). Short enough to look deliberate, long enough not to shuffle between taps.
  */
 export const PARTY_SETTLE_MS = 220;
+
+/**
+ * The smallest a full page (the menu, a shop) is drawn to keep clear of the touch controls on a sideways phone: Large
+ * text then reads at about the Normal size (8 / 9.5). Below it the page keeps this size (review Nov 7, finding 5;
+ * Claude's call, Nov 10).
+ */
+export const PAGE_MIN_SCALE = 0.84;

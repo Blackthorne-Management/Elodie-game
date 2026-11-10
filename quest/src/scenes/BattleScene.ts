@@ -16,7 +16,8 @@ import { COMPANIES } from '../data/war.ts';
 import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, VICTORY_MUSIC } from '../audio.config.ts';
 import Phaser from 'phaser';
-import { padOverPicture } from '../input/touch.ts';
+import { controlReach } from '../engine/scaling.ts';
+import { controlsOverPicture } from '../input/touch.ts';
 import {
   ANISSA_GLOW,
   BATTLE_ART,
@@ -949,7 +950,9 @@ export class BattleScene extends Phaser.Scene {
   private rowRect(i: number): { x: number; y: number; w: number; h: number } {
     const slot = i % VISIBLE_ROWS;
     const col = Math.floor(slot / 3);
-    return { x: 184 + col * 68, y: BATTLE_ART.stripY + 2 + (slot % 3) * 14.5, w: 66, h: 14 };
+    // Narrower where a touch control reaches over the strip's right end (B on a sideways phone; Nov 10), not below 48.
+    const w = Math.max(48, Math.min(66, Math.floor((VIEW_WIDTH - 2 - this.rightInset - 184 - 2) / 2)));
+    return { x: 184 + col * (w + 2), y: BATTLE_ART.stripY + 2 + (slot % 3) * 14.5, w, h: 14 };
   }
 
   private rowHit(i: number, x: number, y: number): boolean {
@@ -1427,11 +1430,14 @@ export class BattleScene extends Phaser.Scene {
     });
   }
 
-  /** How far the touch D-pad reaches over the strip's left end (game pixels, at most 24; 0 without one). */
+  /** How far a touch control reaches over the strip's right end (game pixels; 0 without one), set on every redraw. */
+  private rightInset = 0;
+
+  /** How far the touch controls reach over the strip's left end (game pixels, at most 24; 0 without one). */
   private padInset(stripY: number): number {
-    const pad = padOverPicture(this.game.canvas, VIEW_WIDTH, VIEW_HEIGHT);
-    if (!pad || pad.right <= 2 || pad.bottom <= stripY || pad.top >= VIEW_HEIGHT || pad.left >= VIEW_WIDTH / 2) return 0;
-    return Math.min(24, Math.ceil(pad.right - 2));
+    const reach = controlReach(controlsOverPicture(this.game.canvas, VIEW_WIDTH, VIEW_HEIGHT), VIEW_WIDTH, stripY, VIEW_HEIGHT);
+    this.rightInset = reach.right > 0 ? reach.right + 1 : 0;
+    return reach.left <= 2 ? 0 : Math.min(24, Math.ceil(reach.left - 2));
   }
 
   /** The top bar, the message band, names and bars, Anissa's Spark, the strip and the menu. */
@@ -1627,7 +1633,7 @@ export class BattleScene extends Phaser.Scene {
       }
     });
     const pages = Math.ceil(this.rows.length / VISIBLE_ROWS);
-    if (pages > 1) text(VIEW_WIDTH - 4, VIEW_HEIGHT - 9, `${page + 1}/${pages}`, UI.dimText, { fontSize: '6px' }).setOrigin(1, 0);
+    if (pages > 1) text(VIEW_WIDTH - 4 - this.rightInset, VIEW_HEIGHT - 9, `${page + 1}/${pages}`, UI.dimText, { fontSize: '6px' }).setOrigin(1, 0);
   }
 
   /**

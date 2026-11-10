@@ -56,6 +56,46 @@ export function fitRect(
   };
 }
 
+/** A rectangle in game pixels. */
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * How far the touch controls over the picture (`controls`, game pixels) reach in from each side across the rows
+ * [y0, y1): a control whose middle is on the left half counts from the left edge, the others from the right. 0 where
+ * nothing reaches (review Nov 7, finding 5; Nov 10: the dialogue box, the pages and the battle's strip keep clear).
+ */
+export function controlReach(controls: readonly Rect[], viewW: number, y0 = 0, y1 = Number.POSITIVE_INFINITY): { left: number; right: number } {
+  let left = 0;
+  let right = 0;
+  for (const r of controls) {
+    if (r.y >= y1 || r.y + r.h <= y0 || r.w <= 0 || r.h <= 0) continue;
+    if (r.x + r.w / 2 < viewW / 2) left = Math.max(left, r.x + r.w);
+    else right = Math.max(right, viewW - r.x);
+  }
+  return { left: Math.ceil(left), right: Math.ceil(right) };
+}
+
+/**
+ * Where a full page (the menu, a shop) is drawn so the touch controls miss it: scaled down to fit between what reaches
+ * in from the left and the right (with `margin` px to spare), never below `minScale` (then centred between them, and
+ * the controls still touch its edges), and centred top to bottom. `{ x: 0, y: 0, scale: 1 }` with nothing in the way.
+ */
+export function pageFit(controls: readonly Rect[], viewW: number, viewH: number, minScale: number, margin = 1): { x: number; y: number; scale: number } {
+  const { left, right } = controlReach(controls, viewW);
+  if (left === 0 && right === 0) return { x: 0, y: 0, scale: 1 };
+  const room = viewW - (left > 0 ? left + margin : 0) - (right > 0 ? right + margin : 0);
+  const scale = Math.max(minScale, Math.min(1, Math.floor((room / viewW) * 1000) / 1000));
+  const w = viewW * scale;
+  const from = left > 0 ? left + margin : 0;
+  const x = w <= room ? from + (room - w) / 2 : Math.max(0, Math.min(viewW - w, from + (room - w) / 2));
+  return { x: Math.round(x * 100) / 100, y: Math.round(((viewH - viewH * scale) / 2) * 100) / 100, scale };
+}
+
 export type ScreenMode = 'side' | 'stack' | 'overlay';
 
 export interface ScreenLayout {

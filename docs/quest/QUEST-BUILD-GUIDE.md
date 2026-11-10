@@ -859,6 +859,18 @@ From `docs/quest/reviews/2026-11-01-playtest-ch1-4.md` (6, 7, 16, 17, 19, 21) an
   its picture's empty margin (the lantern trader's picture is wide, so off Kirinoura the boat stopped in open water and
   faded there). The Kingsmere voyages carry the four who walk the map (checked at `chapter8-end`, `chapter9-end` and
   `aldermoor-dawn`: the companion, Gianna, Anissa in her glow, Azzy).
+- **Words clear of the touch controls on a sideways phone (Claude's call, Nov 10; the Nov 7 review's 5, second pass):**
+  Echo and Ask show only on the map, the one place they act (they sat on the menu and the shop). Everything else that
+  must be read measures, from the page, how far the visible controls reach over the picture (`input/touch.ts`
+  controlsOverPicture, `engine/scaling.ts` controlReach and pageFit, `ui/clearOfControls.ts`): the dialogue box is
+  narrowed to miss the D-pad and B over its rows and grows taller when the line then needs more rows (its choices too);
+  the menu and the shop are drawn a little smaller, between the controls (0.88 at 844x390), with taps mapped back; the
+  Journal, the credits and the cards wrap inside the controls; the battle's command grid narrows by what reaches over
+  the strip's right end, as its party rows did on the left. Where the bars are wide (932x430) nothing moves. On a phone
+  whose picture runs edge to edge (667x375, `data-layout='overlay'`) a page cannot keep Large text readable and miss a
+  132 px D-pad as well: there a page stops at `PAGE_MIN_SCALE` (0.84, Large text at about the Normal size), Menu steps
+  aside on the pages (X and B close them), and the D-pad and A/B fade to 40% on the pages and in a fight until pressed,
+  so the words under them still read. The dialogue box keeps clear at every size. Buttons keep their sizes.
 
 ---
 
