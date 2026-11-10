@@ -1718,6 +1718,13 @@ export function textureKeyForPortrait(portrait: string): string {
  * shows portraits/<portrait>_<mood>.png when that file exists, else the plain portrait. Keyed by PORTRAITS key.
  */
 export const PORTRAIT_MOODS: Readonly<Record<string, readonly string[]>> = {
+  // The main cast (Nov 10, Claude's call: two each, for the turns the story leans on; docs/quest/ART-LEFT.md).
+  gianna: ['determined', 'shaken'],
+  anissa: ['warm', 'grave'],
+  yari: ['grin', 'grief'],
+  azzy: ['grim', 'wry'],
+  bayarmaa: ['fierce', 'soft'],
+  haru: ['caught', 'set'],
   elodie: ['guarded', 'worried'],
   patricio: ['neutral', 'troubled'],
   patricio_old: ['sad', 'stern'],

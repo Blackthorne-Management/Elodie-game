@@ -1,4 +1,5 @@
 # Art left: every prompt still to use, filled in
+Expressions for the characters who already have a portrait: ART-EXPRESSIONS.md
 
 Written Nov 10. You asked for the prompts for the art you have left. This is the one list: every picture still to make, in the order that changes the most screens first (the same order as `ART-DROP-2.md`), with every prompt written out in full. Nothing is left to fill in: copy the grey box, paste it, and send.
 
