@@ -47,6 +47,7 @@ import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
 import { SAVE_FALLBACKS } from '../data/saveFallbacks.ts';
 import { applySave, newGame, placeSave, toSaveData } from '../engine/state.ts';
 import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlacement, type TiledMap } from '../engine/tiledMap.ts';
+import type { FlagStore } from '../engine/flags.ts';
 import { getRuntime, saveGame, type Runtime } from '../runtime.ts';
 import { DialogueBox } from '../ui/DialogueBox.ts';
 import { HintBubble } from '../ui/HintBubble.ts';
@@ -61,6 +62,7 @@ import { battleFx, battleLoseNow, battleSnapshot, type BattleSnapshot } from './
 import { gameOverSnapshot, type GameOverSnapshot } from './GameOverScene.ts';
 import { BATTLE_AFTER_FLAG, FIGHT_RETURN_FLAG } from '../engine/game.ts';
 import type { FxKind } from './battleFx.ts';
+import { loadBattleArtBehind } from './textures.ts';
 import type { BattleResult } from '../engine/battle.ts';
 import { dialogueExtraPx, renderScale, setTextSize, textSize, textStyle } from '../ui/text.ts';
 import { itemArtKey } from '../assets.config.ts';
@@ -255,6 +257,7 @@ export class FieldScene extends Phaser.Scene {
   private fog: Phaser.GameObjects.Image | null = null;
   private objectSprites = new Map<string, Phaser.GameObjects.GameObject[]>();
   private markerSprites = new Map<string, Phaser.GameObjects.Image>();
+  private markerTileCache: { flags: FlagStore; version: number; era: Era; map: GameMap; tiles: ReadonlySet<string> } | null = null;
   private label!: Phaser.GameObjects.Container;
   /** The name over whoever speaks the line on screen (the Nov 1 playtest's 17: who is who in a crowded room). */
   private speakerTag!: Phaser.GameObjects.Container;
@@ -378,6 +381,8 @@ export class FieldScene extends Phaser.Scene {
 
   create(data: { toast?: string }): void {
     this.rt = getRuntime();
+    // The battle stances load behind the field once it is up, so they never hold the title or the first map (once).
+    loadBattleArtBehind(this.textures);
     this.mode = 'field';
     this.mover = new Mover();
     this.buffered = null;
@@ -563,6 +568,24 @@ export class FieldScene extends Phaser.Scene {
       loseBattle: () => battleLoseNow(),
       rematch: () => this.rematch(),
       playVoyage: (id) => this.scene.start('voyage', { voyage: id }),
+      goTo: (mapId, spawn) => {
+        const map = this.rt.maps[mapId];
+        if (!map || this.mode !== 'field') return false;
+        this.logic.state.player = newGame(map, spawn ?? '').player;
+        this.logic.reset(this.logic.state);
+        this.leaving = true;
+        this.scene.restart({});
+        return true;
+      },
+      stats: () => {
+        let textures = 0;
+        let texels = 0;
+        for (const key of this.textures.getTextureKeys()) {
+          textures++;
+          for (const src of this.textures.get(key).source) texels += src.width * src.height;
+        }
+        return { textures, texels, objects: this.children.length, listeners: [this.game.events, this.scale, this.events, this.input].reduce((n, em) => n + em.eventNames().reduce((m, e) => m + em.listenerCount(e), 0), 0) };
+      },
     };
     this.events.off('battle-done');
     this.events.on('battle-done', (r: BattleResult | null, then?: string) => this.afterBattle(r, then));
@@ -679,9 +702,13 @@ export class FieldScene extends Phaser.Scene {
     this.hint.hide();
     this.scene.launch('battle', { battle: id, extra });
     this.scene.pause();
+    // The battle covers the whole picture, so the field under it is not drawn until the battle ends ('battle-done',
+    // 'battle-lost'): on an older phone that halves the drawing each frame of a fight (the performance review, Nov 13).
+    this.scene.setVisible(false);
   }
 
   private afterBattle(result: BattleResult | null, then?: string): void {
+    this.scene.setVisible(true);
     // A scene may follow the fight at once: its level-ups wait until the field says otherwise (update).
     this.toast.setHeld(true);
     this.mode = 'field';
@@ -705,6 +732,7 @@ export class FieldScene extends Phaser.Scene {
    * goddess's screen opens over the paused field, and Rise restarts the field where the party now stands.
    */
   private openGameOver(count: number): void {
+    this.scene.setVisible(true);
     this.mode = 'gameover';
     this.minimap?.setVisible(false);
     this.label.setVisible(false);
@@ -1345,6 +1373,21 @@ export class FieldScene extends Phaser.Scene {
     return art ? Math.min(o.area.y * TILE_SIZE, bottom - art.rows.length) : o.area.y * TILE_SIZE;
   }
 
+  /**
+   * The tiles under a marker (engine/game.ts markers, its x rounded), for the guide's pointer, which asks every frame.
+   * markers() plays every conversation on the map through to see who has news, so it is worked out again only when
+   * the flags, the era or the map have changed (the performance review, Nov 13: on the bazaars it took a quarter of
+   * an older phone's time). The answer is the same as working it out every frame.
+   */
+  private markerTiles(): ReadonlySet<string> {
+    const flags = this.logic.state.flags;
+    const c = this.markerTileCache;
+    if (c && c.flags === flags && c.version === flags.version && c.era === this.logic.era && c.map === this.logic.map) return c.tiles;
+    const tiles = new Set(this.logic.markers().map((m) => `${Math.round(m.pos.x)},${m.pos.y}`));
+    this.markerTileCache = { flags, version: flags.version, era: this.logic.era, map: this.logic.map, tiles };
+    return tiles;
+  }
+
   /** Markers over people with something new to say and things not used yet (engine/game.ts markers). */
   private syncMarkers(): void {
     const markers = this.logic.markers();
@@ -1772,7 +1815,7 @@ export class FieldScene extends Phaser.Scene {
       }
       const bob = Math.round(Math.sin(this.guideT / 220 + (kind === 'side' ? 1.5 : 0)) * 2);
       // Above the "!" or sparkle when the stop already has one.
-      const lift = this.markerSprites.size > 0 && this.logic.markers().some((m) => Math.round(m.pos.x) === way.at.x && m.pos.y === way.at.y) ? 10 : 0;
+      const lift = this.markerSprites.size > 0 && this.markerTiles().has(`${way.at.x},${way.at.y}`) ? 10 : 0;
       // Above heads, never on a person (the Nov 7 review's 13): it rises over anyone whose picture it would touch.
       let y = foot.y - CHARACTER_HEIGHT - 6 - lift;
       const people = this.peopleBounds();
@@ -3481,6 +3524,10 @@ declare global {
       rematch: () => boolean;
       /** Play a voyage's picture by id (display only: the party does not move), for screenshots of each one. */
       playVoyage: (id: string) => void;
+      /** The performance check (docs/quest/reviews/2026-11-13-performance.md): stand on a map's spawn (from the field). */
+      goTo: (mapId: string, spawn?: string) => boolean;
+      /** The performance check: textures held (and their pixels), objects on the field, listeners on the game, scale, scene and input events. */
+      stats: () => { textures: number; texels: number; objects: number; listeners: number };
     };
   }
 }

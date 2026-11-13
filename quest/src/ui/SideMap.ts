@@ -20,6 +20,8 @@ export class SideMap {
   private colours: string[] = [];
   private last = '';
   private blink = true;
+  /** The blink the canvas shows (with `last`: nothing to draw when neither changed). */
+  private drawnBlink = true;
   private readonly timer: number;
   private pos: Pos = { x: 0, y: 0 };
   private targets: readonly { pos: Pos; story: boolean }[] = [];
@@ -58,9 +60,13 @@ export class SideMap {
     this.last = '';
   }
 
+  /**
+   * Called every frame in the field: the canvas is drawn again only when Gianna's tile or the blink has changed (it
+   * was repainted tile by tile every frame before; the performance review, Nov 13). The picture is the same.
+   */
   follow(pos: Pos): void {
     this.pos = pos;
-    this.draw(false);
+    this.draw(true);
   }
 
   /** Where to go on this map: the story's next stop and the side quests' (empty: none). */
@@ -96,6 +102,8 @@ export class SideMap {
     const oy = map.height <= th ? Math.floor((map.height - th) / 2) : Math.max(0, Math.min(map.height - th, this.pos.y - Math.floor(th / 2)));
     const key = `${ox},${oy},${this.pos.x},${this.pos.y}`;
     const ctx = this.ctx;
+    if (blinkOnly && key === this.last && this.blink === this.drawnBlink) return;
+    this.drawnBlink = this.blink;
     if (!blinkOnly || key !== this.last) {
       this.last = key;
       ctx.fillStyle = '#000000';
