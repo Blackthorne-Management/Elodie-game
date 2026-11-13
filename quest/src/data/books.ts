@@ -113,7 +113,7 @@ export const BOOKS: readonly Book[] = [
     text:
       'The people of Xaraguá keep a different faith, and this archive keeps their account of it with respect. ' +
       'They hold that land, water, wind and fire are four living hands, and that no one owns what a hand holds. ' +
-      'Offerings are left at springs, groves, mountain passes and hearth flames. The areito, their dance of memory, carries history from the old to the young. ' +
+      'Offerings are left at springs, groves, mountain passes and hearth flames. The areíto, their dance of memory, carries history from the old to the young. ' +
       'In Xaraguá the Roots and Tides keep the earth and the sea. Far away, the Sky-Riders of Skarragol and the Flame Keepers of Jwaladesh honor the other hands. ' +
       'Their elders ask one question of every treaty: who gave you the right to sell what the hands were holding?',
   },

@@ -54,7 +54,8 @@ export class ShopPanel {
     this.side = 'buy';
     this.cursor = 0;
     this.pending = null;
-    this.message = shop.greeting ?? 'Bonjou! What will it be?';
+    // Kreyòl only in Zetwal's shops (the phrasebook check, Nov 13: Ardencia's shops said "Bonjou!" and every land's "Mèsi!").
+    this.message = shop.greeting ?? (shop.city === 'zetwal' ? 'Bonjou! What will it be?' : 'Welcome! What will it be?');
     this.root.setVisible(true);
     this.draw();
   }
@@ -141,7 +142,7 @@ export class ShopPanel {
       const r = buy(flags, RPG, this.shop!, it.id);
       audio.sfx(r === 'ok' ? 'coins' : 'bump');
       this.message =
-        r === 'ok' ? `Mèsi! One ${it.name}.` : r === 'no_gold' ? 'Not enough gold.' : r === 'bag_full' ? 'Your bag is full.' : 'Not for sale.';
+        r === 'ok' ? `${this.shop!.city === 'zetwal' ? 'Mèsi!' : 'Thank you!'} One ${it.name}.` : r === 'no_gold' ? 'Not enough gold.' : r === 'bag_full' ? 'Your bag is full.' : 'Not for sale.';
     } else {
       const r = sell(flags, RPG, it.id);
       audio.sfx(r === 'ok' ? 'coins' : 'bump');
