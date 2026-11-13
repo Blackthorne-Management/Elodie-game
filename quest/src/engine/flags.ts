@@ -9,6 +9,7 @@ export type FlagListener = (name: string, value: FlagValue | undefined) => void;
 export class FlagStore {
   private values = new Map<string, FlagValue>();
   private listeners = new Set<FlagListener>();
+  private changes = 0;
 
   constructor(initial?: FlagSnapshot) {
     if (initial) this.load(initial);
@@ -75,12 +76,18 @@ export class FlagStore {
     }
   }
 
+  /** Counts every change (set, clear, load): equal versions of one store mean the same flags. */
+  get version(): number {
+    return this.changes;
+  }
+
   subscribe(listener: FlagListener): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }
 
   private emit(name: string, value: FlagValue | undefined): void {
+    this.changes++;
     for (const l of this.listeners) l(name, value);
   }
 }

@@ -58,4 +58,20 @@ describe('FlagStore', () => {
       ['a', undefined],
     ]);
   });
+
+  it('counts changes in its version, and only real changes (the field caches its markers on it)', () => {
+    const f = new FlagStore();
+    const v0 = f.version;
+    f.set('a', 1);
+    expect(f.version).toBeGreaterThan(v0);
+    const v1 = f.version;
+    f.set('a', 1);
+    f.clear('missing');
+    expect(f.version).toBe(v1);
+    f.clear('a');
+    expect(f.version).toBeGreaterThan(v1);
+    const v2 = f.version;
+    f.load({ b: true });
+    expect(f.version).toBeGreaterThan(v2);
+  });
 });

@@ -108,11 +108,56 @@ export function preloadArtFiles(scene: Phaser.Scene): void {
     // their file arrives).
     ...artFiles().filter((path) => path.startsWith('enemies/')),
     ...Object.keys(WEAPON_ART).map(ART_FILES.weapon),
-    ...battleFiles(),
   ];
   for (const path of paths) {
     const url = artFile(path);
     if (url) scene.load.image(fileKey(path), url);
+  }
+}
+
+/**
+ * The battle stances (art/battle/, more than half of the art's bytes) are not waited for at boot: they load behind
+ * the field once it is up (loadBattleArtBehind), and a battle that opens before they are all in waits for the rest
+ * in its preload (preloadBattleArt). The performance review (docs/quest/reviews/2026-11-13-performance.md): on a slow
+ * phone connection the title and the first map come sooner. Every fight shows the same stances as before.
+ */
+const BATTLE_ART_BEHIND = new Map<string, HTMLImageElement>();
+
+/** Start loading every battle stance file in the background (the Field scene, each time it opens: once is enough). */
+export function loadBattleArtBehind(manager: Phaser.Textures.TextureManager): void {
+  for (const path of battleFiles()) {
+    const url = artFile(path);
+    const key = fileKey(path);
+    if (!url || BATTLE_ART_BEHIND.has(path) || manager.exists(key)) continue;
+    const img = new Image();
+    BATTLE_ART_BEHIND.set(path, img);
+    img.onload = () => {
+      // Taken over by a battle's preload (preloadBattleArt), or loaded there already: nothing to add.
+      if (BATTLE_ART_BEHIND.get(path) !== img || manager.exists(key)) return;
+      BATTLE_ART_BEHIND.delete(path);
+      manager.addImage(key, img);
+    };
+    img.onerror = () => {
+      if (BATTLE_ART_BEHIND.get(path) === img) BATTLE_ART_BEHIND.delete(path);
+    };
+    img.src = url;
+  }
+}
+
+/** Queue the battle stance files not loaded yet (call from the Battle scene's preload; usually there are none). */
+export function preloadBattleArt(scene: Phaser.Scene): void {
+  for (const path of battleFiles()) {
+    const url = artFile(path);
+    const key = fileKey(path);
+    if (!url || scene.textures.exists(key)) continue;
+    // The scene's loader takes over a file still loading behind (so it is added once).
+    const behind = BATTLE_ART_BEHIND.get(path);
+    if (behind) {
+      BATTLE_ART_BEHIND.delete(path);
+      behind.onload = null;
+      behind.onerror = null;
+    }
+    scene.load.image(key, url);
   }
 }
 
@@ -264,17 +309,28 @@ function battleFiles(): string[] {
   return artFiles().filter((p) => p.startsWith('battle/') && p.endsWith('.png'));
 }
 
-/** Battle stances from art files only (no placeholder: without one, the walking sprite stands in). Frames 0 and 1. */
+/**
+ * Battle stances from art files only (no placeholder: without one, the walking sprite stands in). Frames 0 and 1.
+ * Each is drawn when a battle first asks for it, once its file is in (the Battle scene's preload sees to that).
+ */
 function makeBattleStances(scene: Phaser.Scene): void {
   for (const look of battleFiles().map((p) => p.slice('battle/'.length, -'.png'.length))) {
-    const file = fileImage(scene, ART_FILES.battle(look));
-    if (!file) continue;
-    const w = Math.floor(file.width / 2);
-    const { tex, ctx } = canvasTexture(scene, textureKeyForBattle(look), w * 2, file.height);
-    ctx.drawImage(file, 0, 0);
-    tex.add('0', 0, 0, 0, w, file.height);
-    tex.add('1', 0, w, 0, w, file.height);
-    tex.refresh();
+    const key = textureKeyForBattle(look);
+    const make = (): void => {
+      const file = fileImage(scene, ART_FILES.battle(look));
+      // Asked for before its file is in: it waits to be asked again.
+      if (!file) {
+        LAZY.set(key, make);
+        return;
+      }
+      const w = Math.floor(file.width / 2);
+      const { tex, ctx } = canvasTexture(scene, key, w * 2, file.height);
+      ctx.drawImage(file, 0, 0);
+      tex.add('0', 0, 0, 0, w, file.height);
+      tex.add('1', 0, w, 0, w, file.height);
+      tex.refresh();
+    };
+    LAZY.set(key, make);
   }
 }
 
@@ -317,76 +373,123 @@ function makeMarkers(scene: Phaser.Scene): void {
 /** The shadow under a character: rows (from 3 above the cell's bottom) and their half widths. */
 const SHADOW_ROWS: readonly [number, number][] = [[0, 5], [1, 7], [2, 6]];
 
-/** Every look's walk sheet: 3 columns (standing, step A, step B) x 4 rows (down, left, right, up). */
-function makeCharacters(scene: Phaser.Scene): void {
+/** A look's walk sheet: 3 columns (standing, step A, step B) x 4 rows (down, left, right, up). */
+function makeCharacter(scene: Phaser.Scene, look: string, def: (typeof NPC_SPRITES)[string]): void {
   const rows = ART_FILES.sheetRows;
-  for (const [look, def] of Object.entries(NPC_SPRITES)) {
-    const key = textureKeyForCharacter(look);
-    const file = recolored(scene, ART_FILES.character(def.art ?? look), def.skinTone);
-    const cw = file ? Math.floor(file.width / ART_FILES.sheetColumns) : CHARACTER_WIDTH;
-    const ch = file ? Math.floor(file.height / rows.length) : CHARACTER_HEIGHT;
-    const { tex, ctx } = canvasTexture(scene, key, cw * ART_FILES.sheetColumns, ch * rows.length);
-    rows.forEach((facing, r) => {
-      for (const step of [0, 1, 2] as const) {
-        const ox = step * cw;
-        const oy = r * ch;
-        // The soft shadow under the feet (the same for real art and placeholders), pixel by pixel.
-        ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        for (const [dy, half] of SHADOW_ROWS) ctx.fillRect(ox + cw / 2 - half, oy + ch - 3 + dy, half * 2, 1);
-        if (file) ctx.drawImage(file, ox, oy, cw, ch, ox, oy, cw, ch);
-        else characterPix(def, facing, step).draw(ctx, ox, oy);
-        tex.add(characterFrame(facing, step), 0, ox, oy, cw, ch);
-      }
-    });
-    tex.refresh();
-  }
-}
-
-/** Expressions from art files only: without the file, the plain portrait stands in (DialogueBox). */
-function makePortraitMoods(scene: Phaser.Scene): void {
-  const s = PORTRAIT_SIZE;
-  for (const { path, key, portrait } of moodFiles()) {
-    const look = PORTRAITS[portrait]!.look;
-    const file = recolored(scene, path, look ? NPC_SPRITES[look]?.skinTone : undefined);
-    if (!file) continue;
-    const { tex, ctx } = canvasTexture(scene, key, s, s);
-    ctx.drawImage(file, 0, 0, file.width, file.height, 0, 0, s, s);
-    tex.refresh();
-  }
-}
-
-function makePortraits(scene: Phaser.Scene): void {
-  const s = PORTRAIT_SIZE;
-  for (const [key, def] of Object.entries(PORTRAITS)) {
-    const { tex, ctx } = canvasTexture(scene, textureKeyForPortrait(key), s, s);
-    const file = recolored(scene, ART_FILES.portrait(portraitArt(key, def)), def.look ? NPC_SPRITES[def.look]?.skinTone : undefined);
-    if (file) {
-      ctx.drawImage(file, 0, 0, file.width, file.height, 0, 0, s, s);
-    } else {
-      ctx.fillStyle = css(def.background);
-      ctx.fillRect(0, 0, s, s);
-      const scale = Math.floor(s / 16);
-      const look = def.look ? NPC_SPRITES[def.look] : undefined;
-      if (look) {
-        // Head and shoulders of the standing sprite (a 24 x 24 crop from just above the head), enlarged.
-        const pix = characterPix(look, 'down');
-        const top = (look.build === 'small' ? 8 : look.build === 'tall' ? 3 : 4) - 4;
-        const zoom = s / CHARACTER_WIDTH;
-        const crop = new Pix(CHARACTER_WIDTH, CHARACTER_WIDTH);
-        for (let y = 0; y < CHARACTER_WIDTH; y++) for (let x = 0; x < CHARACTER_WIDTH; x++) {
-          const c = pix.get(x, y + top);
-          if (c !== undefined) crop.set(x, y, c);
-        }
-        crop.draw(ctx, 0, 0, zoom);
-      } else if (def.art && TILE_ART[def.art]) {
-        artPix(TILE_ART[def.art]!).draw(ctx, (s - 16 * scale) / 2, (s - 16 * scale) / 2, scale);
-      }
+  const key = textureKeyForCharacter(look);
+  const file = recolored(scene, ART_FILES.character(def.art ?? look), def.skinTone);
+  const cw = file ? Math.floor(file.width / ART_FILES.sheetColumns) : CHARACTER_WIDTH;
+  const ch = file ? Math.floor(file.height / rows.length) : CHARACTER_HEIGHT;
+  const { tex, ctx } = canvasTexture(scene, key, cw * ART_FILES.sheetColumns, ch * rows.length);
+  rows.forEach((facing, r) => {
+    for (const step of [0, 1, 2] as const) {
+      const ox = step * cw;
+      const oy = r * ch;
+      // The soft shadow under the feet (the same for real art and placeholders), pixel by pixel.
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      for (const [dy, half] of SHADOW_ROWS) ctx.fillRect(ox + cw / 2 - half, oy + ch - 3 + dy, half * 2, 1);
+      if (file) ctx.drawImage(file, ox, oy, cw, ch, ox, oy, cw, ch);
+      else characterPix(def, facing, step).draw(ctx, ox, oy);
+      tex.add(characterFrame(facing, step), 0, ox, oy, cw, ch);
     }
-    ctx.strokeStyle = css(0xe8d8b0);
-    ctx.lineWidth = 1;
-    ctx.strokeRect(0.5, 0.5, s - 1, s - 1);
-    tex.refresh();
+  });
+  tex.refresh();
+}
+
+/** An expression, from its art file only: without the file there is no texture and the plain portrait stands in (DialogueBox). */
+function makePortraitMood(scene: Phaser.Scene, key: string, path: string, portrait: string): void {
+  const s = PORTRAIT_SIZE;
+  const look = PORTRAITS[portrait]!.look;
+  const file = recolored(scene, path, look ? NPC_SPRITES[look]?.skinTone : undefined);
+  if (!file) return;
+  const { tex, ctx } = canvasTexture(scene, key, s, s);
+  ctx.drawImage(file, 0, 0, file.width, file.height, 0, 0, s, s);
+  tex.refresh();
+}
+
+function makePortrait(scene: Phaser.Scene, key: string, def: PlaceholderPortrait): void {
+  const s = PORTRAIT_SIZE;
+  const { tex, ctx } = canvasTexture(scene, textureKeyForPortrait(key), s, s);
+  const file = recolored(scene, ART_FILES.portrait(portraitArt(key, def)), def.look ? NPC_SPRITES[def.look]?.skinTone : undefined);
+  if (file) {
+    ctx.drawImage(file, 0, 0, file.width, file.height, 0, 0, s, s);
+  } else {
+    ctx.fillStyle = css(def.background);
+    ctx.fillRect(0, 0, s, s);
+    const scale = Math.floor(s / 16);
+    const look = def.look ? NPC_SPRITES[def.look] : undefined;
+    if (look) {
+      // Head and shoulders of the standing sprite (a 24 x 24 crop from just above the head), enlarged.
+      const pix = characterPix(look, 'down');
+      const top = (look.build === 'small' ? 8 : look.build === 'tall' ? 3 : 4) - 4;
+      const zoom = s / CHARACTER_WIDTH;
+      const crop = new Pix(CHARACTER_WIDTH, CHARACTER_WIDTH);
+      for (let y = 0; y < CHARACTER_WIDTH; y++) for (let x = 0; x < CHARACTER_WIDTH; x++) {
+        const c = pix.get(x, y + top);
+        if (c !== undefined) crop.set(x, y, c);
+      }
+      crop.draw(ctx, 0, 0, zoom);
+    } else if (def.art && TILE_ART[def.art]) {
+      artPix(TILE_ART[def.art]!).draw(ctx, (s - 16 * scale) / 2, (s - 16 * scale) / 2, scale);
+    }
   }
+  ctx.strokeStyle = css(0xe8d8b0);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0.5, 0.5, s - 1, s - 1);
+  tex.refresh();
+}
+
+// ---- Drawn when first used -------------------------------------------------------------------------
+
+/**
+ * The walk sheets and portraits (about 440 looks and 450 portraits) are drawn the first time something asks for
+ * them, not all at boot: on a phone with a 4x slower processor, drawing them all held the boot for about 10 s, and
+ * the ones a map never shows took about 25 MB of graphics memory (docs/quest/reviews/2026-11-13-performance.md).
+ * Each is drawn exactly as before, from the same art.
+ */
+const LAZY = new Map<string, () => void>();
+
+/** Draw a waiting texture now (any other key: nothing to do). */
+function realize(key: unknown): void {
+  if (typeof key !== 'string') return;
+  const make = LAZY.get(key);
+  if (!make) return;
+  LAZY.delete(key);
+  make();
+}
+
+/**
+ * Every way into the texture manager by key (exists, get, getFrame) draws a waiting texture first, so every caller
+ * (sprites, setTexture, the dialogue box's and the menu's `exists` checks) finds it as if it had been made at boot.
+ */
+function drawOnFirstUse(manager: Phaser.Textures.TextureManager): void {
+  const marked = manager as Phaser.Textures.TextureManager & { drawsOnFirstUse?: boolean };
+  if (marked.drawsOnFirstUse) return;
+  marked.drawsOnFirstUse = true;
+  const exists = manager.exists.bind(manager);
+  const get = manager.get.bind(manager);
+  const getFrame = manager.getFrame.bind(manager);
+  manager.exists = (key: string) => {
+    realize(key);
+    return exists(key);
+  };
+  manager.get = ((key?: string | Phaser.Textures.Texture | Phaser.Textures.Frame) => {
+    realize(key);
+    return get(key as string);
+  }) as typeof manager.get;
+  manager.getFrame = (key: string, frame?: string | number) => {
+    realize(key);
+    return getFrame(key, frame);
+  };
+}
+
+/** The walk sheets, portraits and expressions, each drawn when first asked for. */
+function waitToDraw(scene: Phaser.Scene): void {
+  for (const [look, def] of Object.entries(NPC_SPRITES)) LAZY.set(textureKeyForCharacter(look), () => makeCharacter(scene, look, def));
+  for (const [key, def] of Object.entries(PORTRAITS)) LAZY.set(textureKeyForPortrait(key), () => makePortrait(scene, key, def));
+  // An expression has a texture only when its file is there (the files are loaded at boot: preloadArtFiles).
+  for (const { path, key, portrait } of moodFiles()) if (fileImage(scene, path)) LAZY.set(key, () => makePortraitMood(scene, key, path, portrait));
+  drawOnFirstUse(scene.textures);
 }
 
 export function makeAllTextures(scene: Phaser.Scene): void {
@@ -399,7 +502,5 @@ export function makeAllTextures(scene: Phaser.Scene): void {
   makeDither(scene);
   makeShimmer(scene);
   makeMarkers(scene);
-  makeCharacters(scene);
-  makePortraits(scene);
-  makePortraitMoods(scene);
+  waitToDraw(scene);
 }

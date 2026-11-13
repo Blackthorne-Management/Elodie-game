@@ -68,7 +68,7 @@ import {
 import { getRuntime, saveGame } from '../runtime.ts';
 import { fontPx, renderScale, textStyle } from '../ui/text.ts';
 import { playFx, type FxKind, type Point } from './battleFx.ts';
-import { fileKey } from './textures.ts';
+import { fileKey, preloadBattleArt } from './textures.ts';
 import { screenFlash } from './cameraFx.ts';
 import { reduceMotion } from '../ui/reduceMotion.ts';
 import { MenuTrail, actingFighter, actingLightRows, actingMark, battleBackPressed, type BattleMenu } from '../engine/battleMenu.ts';
@@ -261,6 +261,11 @@ export class BattleScene extends Phaser.Scene {
     this.home = new Map();
     this.leaderKey = null;
     this.plates = new Map();
+  }
+
+  /** Any battle stance file still loading behind the field (scenes/textures.ts), before the fight is drawn. */
+  preload(): void {
+    preloadBattleArt(this);
   }
 
   create(): void {
@@ -967,9 +972,22 @@ export class BattleScene extends Phaser.Scene {
   // ---- Drawing ------------------------------------------------------------------------------------
 
   /** The painted scene: sky, clouds, far hills, trees, the cane, and the road the fight stands on. */
+  /**
+   * The painted scene behind the fight. It never changes during the fight, so it is drawn once into a texture at the
+   * screen's sharpness (the render scale) and shown as one picture: the hundreds of shapes it is made of were drawn
+   * again every frame before (the performance review, Nov 13). The picture is the same, pixel for pixel.
+   */
   private drawBackdrop(id: string): void {
+    const S = renderScale();
+    const g = this.make.graphics({}, false);
+    this.paintBackdrop(g, id);
+    g.setScale(S);
+    this.add.renderTexture(0, 0, VIEW_WIDTH * S, VIEW_HEIGHT * S).setOrigin(0, 0).setScale(1 / S).setDepth(0).draw(g, 0, 0);
+    g.destroy();
+  }
+
+  private paintBackdrop(g: Phaser.GameObjects.Graphics, id: string): void {
     const p = BATTLE_BACKDROPS[id] ?? BATTLE_BACKDROPS.cane_road!;
-    const g = this.add.graphics().setDepth(0);
     const W = VIEW_WIDTH;
     const horizon = BATTLE_ART.horizon;
     // Sky in bands, with a dithered seam between each.
