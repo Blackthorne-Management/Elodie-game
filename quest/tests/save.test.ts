@@ -65,8 +65,10 @@ describe('save codes', () => {
     if (!r.ok) expect(r.error).toMatch(/newer version/);
   });
 
-  it('rejects a well-checksummed payload without a readable place or flags', () => {
-    expect(decodeSave(coded([1, 'm', -1, 0, 0, 0, {}, 0, 0], 1))).toMatchObject({ ok: false });
+  it('rejects a well-checksummed payload without a readable map or flags', () => {
+    // A bad position alone loses nothing (Nov 13): it reads as -1, -1 (the map's first way in, engine/saveCompat.ts).
+    expect(decodeSave(coded([1, 'm', -1, 0, 0, 0, {}, 0, 0], 1))).toMatchObject({ ok: true, data: { x: -1, y: -1 }, defaulted: ['position'] });
+    expect(decodeSave(coded([2, 'm', null, 1.5, 0, 0, {}, 0, 0, 1]))).toMatchObject({ ok: true, data: { x: -1, y: -1 }, defaulted: ['position'] });
     expect(decodeSave(coded([1, '', 1, 1, 0, 0, {}, 0, 0], 1))).toMatchObject({ ok: false });
     expect(decodeSave(coded([1, 'm', 1, 1, 0, 0, [], 0, 0], 1))).toMatchObject({ ok: false });
     expect(decodeSave(coded([1, 'm', 1, 1, 0, 0], 1))).toMatchObject({ ok: false });

@@ -44,6 +44,7 @@ import { dirButtons } from '../input/actions.ts';
 import { currentDevice, setDevice } from '../input/buttonNames.ts';
 import { currentObjective, journalEntries, journalNotes, questForJournal, questForMap, type QuestDef } from '../engine/quests.ts';
 import { decodeSave, deleteSave, encodeSave } from '../engine/save.ts';
+import { SAVE_FALLBACKS } from '../data/saveFallbacks.ts';
 import { applySave, newGame, placeSave, toSaveData } from '../engine/state.ts';
 import { TILE_LAYERS, rectTiles, visibleLayersFor, type GameMap, type NpcPlacement, type TiledMap } from '../engine/tiledMap.ts';
 import { getRuntime, saveGame, type Runtime } from '../runtime.ts';
@@ -3374,7 +3375,7 @@ export class FieldScene extends Phaser.Scene {
         const result = decodeSave(code);
         if (!result.ok) return result.error;
         // An older code whose spot has changed lands at the map's nearest way in (engine/state.ts placeSave).
-        const placed = placeSave(result.data, this.rt.maps);
+        const placed = placeSave(result.data, this.rt.maps, SAVE_FALLBACKS);
         if (!placed) return 'That save code points at a place this version does not have.';
         applySave(this.logic.state, placed.data);
         this.logic.reset();

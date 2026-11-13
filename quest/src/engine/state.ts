@@ -5,6 +5,7 @@ import { DEFAULT_TEXT_SPEED, SAVE_VERSION } from '../config.ts';
 import { FlagStore } from './flags.ts';
 import { findSpawn, spriteFacing } from './grid.ts';
 import { keepUnreadable, readSave, type SaveData, type SaveSettings, type StorageLike } from './save.ts';
+import { placeOnMaps, type SaveFallbacks } from './saveCompat.ts';
 import type { GameMap } from './tiledMap.ts';
 import type { Dir8, Era, Pos } from './types.ts';
 import { isOpen } from './world.ts';
@@ -65,22 +66,13 @@ export function saveFits(data: SaveData, maps: Readonly<Record<string, GameMap>>
 }
 
 /**
- * Where a save goes on these maps (Claude's call, Oct 28: an old save never traps or loses the player). Its own
- * tile when that fits; when the map has changed since (a wall where the player stood), the map's nearest open
- * spawn, in the save's era if it has one; null when the map is gone or has no open spawn. `moved` says it moved.
+ * Where a save goes on these maps (Claude's call, Oct 28: an old save never traps or loses the player; Nov 13: nor
+ * does a fix between sittings). Its own tile when the party can still stand there and leave; else the nearest such
+ * tile; else, when its map is gone, the chapter's safe spawn; renamed ids carried over and a pending journey finished
+ * on the way (engine/saveCompat.ts). Null only when none of those exists. `moved` says it moved.
  */
-export function placeSave(data: SaveData, maps: Readonly<Record<string, GameMap>>): { data: SaveData; moved: boolean } | null {
-  if (saveFits(data, maps)) return { data, moved: false };
-  const map = maps[data.mapId];
-  if (!map) return null;
-  const flags = new FlagStore(data.flags);
-  const open = map.spawns.filter((s) => isOpen(map, s.era, s.pos, flags));
-  const sameEra = open.filter((s) => s.era === data.era);
-  const pool = sameEra.length > 0 ? sameEra : open;
-  const dist = (p: Pos) => Math.max(Math.abs(p.x - data.x), Math.abs(p.y - data.y));
-  const best = [...pool].sort((a, b) => dist(a.pos) - dist(b.pos))[0];
-  if (!best) return null;
-  return { data: { ...data, x: best.pos.x, y: best.pos.y, era: best.era, facing: best.facing }, moved: true };
+export function placeSave(data: SaveData, maps: Readonly<Record<string, GameMap>>, fallbacks: SaveFallbacks = {}): { data: SaveData; moved: boolean } | null {
+  return placeOnMaps(data, maps, fallbacks);
 }
 
 /** What became of the stored save at boot, and what to tell the player (null: nothing to say). */
@@ -94,7 +86,12 @@ export type StoredSaveLoad =
  * save that cannot be read or placed is kept under `<key>.unreadable` (save.ts keepUnreadable) and reported, and
  * the game starts new; a save that loads with defaults or at a moved spot says so.
  */
-export function loadStoredSave(storage: StorageLike | undefined, key: string, maps: Readonly<Record<string, GameMap>>): StoredSaveLoad {
+export function loadStoredSave(
+  storage: StorageLike | undefined,
+  key: string,
+  maps: Readonly<Record<string, GameMap>>,
+  fallbacks: SaveFallbacks = {},
+): StoredSaveLoad {
   const result = readSave(storage, key);
   if (!result) return { status: 'none' };
   if (!result.ok) {
@@ -104,7 +101,7 @@ export function loadStoredSave(storage: StorageLike | undefined, key: string, ma
       kept: keepUnreadable(storage, key),
     };
   }
-  const placed = placeSave(result.data, maps);
+  const placed = placeSave(result.data, maps, fallbacks);
   if (!placed) {
     return {
       status: 'invalid',

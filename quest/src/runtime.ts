@@ -2,6 +2,7 @@
 // storage and Anissa's hint timer. Created once in main.ts before Phaser starts.
 
 import { SAVE_STORAGE_KEY } from './config.ts';
+import { SAVE_FALLBACKS } from './data/saveFallbacks.ts';
 import type { GameLogic } from './engine/game.ts';
 import type { HintTracker } from './engine/hints.ts';
 import { writeSave, type StorageLike } from './engine/save.ts';
@@ -56,7 +57,7 @@ export function saveGame(r: Runtime = getRuntime()): boolean {
  * (null: nothing) and, for an unreadable save, its text kept on the device (engine/state.ts loadStoredSave).
  */
 export function loadStoredGame(r: Runtime): { status: 'none' | 'loaded' | 'invalid'; notice: string | null; kept: string | null } {
-  const result = loadStoredSave(r.storage, SAVE_STORAGE_KEY, r.maps);
+  const result = loadStoredSave(r.storage, SAVE_STORAGE_KEY, r.maps, SAVE_FALLBACKS);
   if (result.status === 'none') return { status: 'none', notice: null, kept: null };
   if (result.status === 'invalid') return { status: 'invalid', notice: result.notice, kept: result.kept };
   applySave(r.logic.state, result.data);

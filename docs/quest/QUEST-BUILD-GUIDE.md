@@ -726,12 +726,39 @@ damaged save never crashes the game:
 - What makes the game (the map, the position, the flags) must read; everything else (facing, era, text speed, hints,
   time, a flag of the wrong type) takes its default and the player is told which ("Some of your save (text speed)
   came from an older version and was reset").
-- A save on a spot that has become a wall (a map changed between versions) loads at the map's nearest open spawn, and
-  says so; the same for an imported save code.
-- A save that cannot be read at all (bad JSON, a bad checksum, a newer version, a map this version does not have)
-  starts a new game with a clear message, and the old text is kept on the device (`bloodlines-quest.save.unreadable`)
-  and shown with a Copy button, so the next autosave never destroys it.
+- A save on a spot that has become a wall (a map changed between versions) loads at the nearest tile the party can
+  leave (see "Saves across fixes" below; before Nov 13, the map's nearest open spawn), and says so; the same for an
+  imported save code.
+- A save that cannot be read at all (bad JSON, a bad checksum, a newer version) starts a new game with a clear
+  message, and the old text is kept on the device (`bloodlines-quest.save.unreadable`) and shown with a Copy button,
+  so the next autosave never destroys it.
 - Storage that throws (a private tab, a full disk) reads as no save; saving says "Could not save", as before.
+
+**Saves across fixes** (Claude's call (Nov 13), for the Nov 16 to 20 play-through, with fixes shipped between
+sittings; `engine/saveCompat.ts`, `data/saveFallbacks.ts`, tests in `tests/saveCompat.test.ts`, which take every
+autosave of the scripted route and load it under each kind of fix). A save holds only the map, the tile, the facing,
+the era, the settings and the flags (party, bag, gear, gold, quests and chapter are all flags), and never a
+conversation: it is written as a scene ends. So:
+- **Renaming a map, an item or a flag:** add `old: 'new'` to `SAVE_FALLBACKS.renames` in `data/saveFallbacks.ts`
+  and leave it there. A map rename carries the save's map, a pending journey, the fight's way back and the
+  `visited.`/`seen.` flags; an item rename carries the bag count, the worn slot and the shown card.
+- **Redrawing a map:** nothing to do. The saved tile is kept when the party can still stand there and walk to a way
+  in or out (an open spawn or open door, walking or by the Echo); else the nearest such tile, in the save's era. A
+  save in a memory whose shimmer moved, with no way back from it, comes back to the present.
+- **Removing a map:** the save goes to its chapter's safe spawn (the chapter starts, `safeSpawns`, checked against
+  `src/data/starts/chapters.json`), with all its progress. Only a Chapter 1 save with Zetwal itself gone starts new.
+- **Removed ids:** unknown flags and bag items are left alone (nothing reads them, and a later fix that brings the
+  id back gets them back); gear worn that this build does not have comes off (else its slot would say "bag full").
+- **A save taken on a chapter's card** (closed before the card was) used to load on the old map with the journey
+  still pending, to fire after whatever conversation came next: it now lands where the journey was going.
+- **A bad position** (NaN written as nothing) loads at the map's first way in instead of losing the game.
+- **Pasted codes:** spaces, line breaks, invisible characters, a long dash that was two dashes, a lower-case `bq` and
+  words around the code are all cleaned before the checksum reads it.
+- **SAVE_VERSION:** not bumped. If the save shape ever changes, bump it and read the old shape too (as version 1 is
+  read today); never reject an older version. `tests/saveCompat.test.ts` reads every version up to the current one.
+- **Not covered:** a fix that renames a flag a scene's once-only trigger sets and forgets the rename table replays
+  that scene; a fix that adds a new flag the story now needs earlier on will not be set in an old save (give such a
+  flag a default in the condition, or set it in `afterDialogue`).
 
 **Performance on older phones.** Measured with `npm run build` in `quest/`:
 

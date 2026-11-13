@@ -93,8 +93,23 @@ function isInt(v: unknown): v is number {
   return typeof v === 'number' && Number.isInteger(v);
 }
 
+/**
+ * The code inside pasted text (Claude's call, Nov 13: a code kept in a phone's notes app comes back wrapped, with
+ * invisible characters, a dash pair turned into a long dash, or words around it): spaces, line breaks and
+ * zero-width characters go, long dashes become the two dashes they were, and the code is picked out of the text.
+ * The checksum still has the last word.
+ */
+export function cleanCode(text: string): string {
+  const flat = text
+    .replace(/[\s​-‍⁠﻿­]+/g, '')
+    .replace(/[–—]/g, '--');
+  const found = new RegExp(`${SAVE_CODE_PREFIX}\\d+\\.[A-Za-z0-9_-]+\\.[0-9a-fA-F]{8}(?![0-9a-fA-F])`, 'i').exec(flat);
+  if (!found) return flat;
+  return SAVE_CODE_PREFIX + found[0].slice(SAVE_CODE_PREFIX.length);
+}
+
 export function decodeSave(code: string): DecodeResult {
-  const trimmed = code.replace(/\s+/g, '');
+  const trimmed = cleanCode(code);
   const parts = trimmed.split('.');
   if (parts.length !== 3) return fail('That is not a save code.');
   const [head, body, sum] = parts as [string, string, string];
@@ -110,16 +125,19 @@ export function decodeSave(code: string): DecodeResult {
   } catch {
     return fail('That save code is damaged (unreadable).');
   }
-  // Version 1 had 9 fields; version 2 adds the hints setting. What makes the game (the place and the flags) must
+  // Version 1 had 9 fields; version 2 adds the hints setting. What makes the game (the map and the flags) must
   // be readable; the rest (facing, era, settings, time) falls back to its default rather than lose the game
   // (Claude's call, Oct 28: an old or damaged save loads with defaults).
   if (!Array.isArray(arr) || arr.length < 7) return fail('That save code is damaged (wrong shape).');
   const [v, mapId, x, y, facingIdx, eraIdx, flags, speedIdx, savedAt, hintsBit] = arr as unknown[];
   if (v !== version) return fail('That save code is damaged (version mismatch).');
   if (typeof mapId !== 'string' || mapId.length === 0) return fail('That save code is damaged (map).');
-  if (!isInt(x) || !isInt(y) || x < 0 || y < 0) return fail('That save code is damaged (position).');
   if (typeof flags !== 'object' || flags === null || Array.isArray(flags)) return fail('That save code is damaged (flags).');
   const defaulted: string[] = [];
+  // A bad position (NaN written as null, a negative) is no reason to lose the game (Claude's call, Nov 13): it reads as
+  // -1, -1 and engine/saveCompat.ts stands the party at the map's first way in.
+  const goodPos = isInt(x) && isInt(y) && x >= 0 && y >= 0;
+  if (!goodPos) defaulted.push('position');
   const facing = isInt(facingIdx) && DIRS[facingIdx] ? DIRS[facingIdx] : (defaulted.push('facing'), 'down' as Dir);
   const era = isInt(eraIdx) && ERAS[eraIdx] ? ERAS[eraIdx] : (defaulted.push('era'), 'present' as Era);
   const flagEntries = Object.entries(flags as Record<string, unknown>);
@@ -135,8 +153,8 @@ export function decodeSave(code: string): DecodeResult {
     data: {
       version: SAVE_VERSION,
       mapId,
-      x,
-      y,
+      x: goodPos ? x : -1,
+      y: goodPos ? y : -1,
       facing,
       era,
       flags: Object.fromEntries(goodFlags) as FlagSnapshot,

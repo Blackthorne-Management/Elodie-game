@@ -56,13 +56,14 @@ const code = (fields: unknown[], version = 2) => {
 };
 
 describe('old and damaged saves (Claude\'s call, Oct 28: they never crash the game)', () => {
-  it('a save whose tile became a wall moves to the nearest open spawn, in its era', () => {
+  it('a save whose tile became a wall moves to the nearest open tile joined to a way in, in its era (Nov 13)', () => {
     const data = toSaveData(newGame(map, 'start'), 0);
     expect(placeSave(data, { m: map })).toEqual({ data, moved: false });
-    // (1, 1) is a wall now: the nearest spawn is "other" at (0, 0), with that spawn's facing.
-    expect(placeSave({ ...data, x: 1, y: 1 }, { m: map })).toEqual({ data: { ...data, x: 0, y: 0, facing: 'down' }, moved: true });
-    // Off the map's edge (the map shrank): the nearest spawn to where it was, "start" at (2, 3).
-    expect(placeSave({ ...data, x: 9, y: 9 }, { m: map })?.data).toMatchObject({ x: 2, y: 3 });
+    // (1, 1) is a wall now: the nearest open tile, one step away, the facing kept.
+    expect(placeSave({ ...data, x: 1, y: 1 }, { m: map })).toEqual({ data: { ...data, x: 0, y: 1 }, moved: true });
+    // Off the map's edge (the map shrank): the nearest tile to where it was, the corner.
+    expect(placeSave({ ...data, x: 9, y: 9 }, { m: map })?.data).toMatchObject({ x: 4, y: 4 });
+    // A map this version does not have, and no chapter's safe spawn to fall back on.
     expect(placeSave({ ...data, mapId: 'gone' }, { m: map })).toBeNull();
   });
 
@@ -114,7 +115,7 @@ describe('old and damaged saves (Claude\'s call, Oct 28: they never crash the ga
 
   it('an old save on a spot that is now a wall loads at the nearest way in and says so', () => {
     const r = loadStoredSave(memoryStorage({ k: code([2, 'm', 1, 1, 0, 0, {}, 1, 0, 1]) }), 'k', { m: map });
-    expect(r).toMatchObject({ status: 'loaded', data: { x: 0, y: 0 }, notice: expect.stringMatching(/nearest way in/) });
+    expect(r).toMatchObject({ status: 'loaded', data: { x: 0, y: 1 }, notice: expect.stringMatching(/nearest way in/) });
   });
 
   it('storage that cannot keep the unreadable save still starts a new game', () => {
