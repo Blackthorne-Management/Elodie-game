@@ -108,7 +108,7 @@ function discNodes(): Record<string, DialogueNode> {
           'I ran. I should not have run.',
         ),
         act([{ do: 'face', actor: 'vikram_roof', facing: 'left' }, { do: 'wait', ms: 900 }], '', 'He looks along the beam to the window, and for once he says nothing.'),
-        act([{ do: 'exit', actor: 'vikram_roof', to: at(ROOFTOPS.ladder.x, ROOFTOPS.ladder.y - 1), run: true }], V, 'The Court. Now. Before somebody... draws a curtain on it.'),
+        act([{ do: 'exit', actor: 'vikram_roof', to: at(ROOFTOPS.ladder.x, ROOFTOPS.ladder.y - 1), run: true }], V, 'The Court. Now. Before somebody... draws a curtain on it.', { mood: 'out_of_breath' }),
       ],
     },
   };
@@ -225,7 +225,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
       '',
       'The crowd parts. A young man in saffron, bent double, hands on his knees. A dyer sits in the dust, his sword six feet off.',
     ),
-    act([{ do: 'face', actor: 'vikram_stair', facing: 'up' }], V, 'Argument... settled.'),
+    act([{ do: 'face', actor: 'vikram_stair', facing: 'up' }], V, 'Argument... settled.', { mood: 'out_of_breath' }),
     act(
       [
         { do: 'exit', actor: 'vikram_stair', to: at(HARBOR.stair.x, HARBOR.stair.y) },
@@ -626,8 +626,8 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
       lines: [act([{ do: 'place', actor: 'vikram_yard', look: 'vikram', at: at(COURT.yardCentre.x, COURT.yardCentre.y), facing: 'down' }, { do: 'look', actor: 'vikram_yard' }], '', 'Vikram, bent double in the sand, hands on his knees.')],
       next: [{ if: { flag: 'choice.duel_lost' }, to: 'lost' }, { to: 'won' }],
     },
-    won: { lines: [say(V, 'You argue... well. Breathing... is harder.', { set: { 'choice.duel_won': true } })], next: 'settled' },
-    lost: { lines: [say(V, 'I win. I think. Give me... a moment... to be sure.')], next: 'settled' },
+    won: { lines: [say(V, 'You argue... well. Breathing... is harder.', { mood: 'out_of_breath', set: { 'choice.duel_won': true } })], next: 'settled' },
+    lost: { lines: [say(V, 'I win. I think. Give me... a moment... to be sure.', { mood: 'out_of_breath' })], next: 'settled' },
     settled: {
       lines: [
         act([{ do: 'face', actor: 'vikram_yard', facing: 'player' }], V, 'The Keepers turned the mirrors down so nobody sees the chain lamp is dead.'),
@@ -677,7 +677,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
   }),
   simple('oil_factor_talk', [say(OF, 'Envoy. The Throne buys and sells oil like anyone. It is a perfectly lawful business.')]),
   simple('dhanraj_guest_talk', [nar('The merchant in white bows exactly. "Seth Dhanraj. I deal in oil. I do not deal in conversation."')]),
-  simple('vikram_npc_talk', [say(V, 'I am... listening. Breathing and listening. Go on.')]),
+  simple('vikram_npc_talk', [say(V, 'I am... listening. Breathing and listening. Go on.', { mood: 'out_of_breath' })]),
   simple('dhanraj_kneeling_talk', [say(DH, 'I signed the store over at dawn, envoy. I was paid to hold. I was never told why.')]),
   script('court_altar', {
     start: { lines: [], next: [{ if: { flag: 'story.dhanraj_beaten' }, to: 'tall' }, { if: { flag: 'story.flame_seen' }, to: 'thumb' }, { to: 'curtain' }] },
@@ -899,10 +899,10 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
         }),
         nar('Low. Never out. And everyone in the colonnade can see it.'),
         act([{ do: 'look', actor: 'npc:meera' }], ME, 'Vikram.'),
-        act([{ do: 'face', actor: 'vikram_flame', facing: 'down' }], V, 'The Court has one word. The city has eyes.'),
+        act([{ do: 'face', actor: 'vikram_flame', facing: 'down' }], V, 'The Court has one word. The city has eyes.', { mood: 'set' }),
         act([{ do: 'look', actor: 'npc:senior_keeper' }], KP, 'It will not last the night without oil.'),
-        say(V, 'Then the night is how long we have. I am going to the quay to get the oil back. Whoever comes, comes.'),
-        say(V, 'Mother, you can write it down as the thirteenth duel.'),
+        say(V, 'Then the night is how long we have. I am going to the quay to get the oil back. Whoever comes, comes.', { mood: 'set' }),
+        say(V, 'Mother, you can write it down as the thirteenth duel.', { mood: 'set' }),
         act([{ do: 'look', actor: 'npc:meera' }, { do: 'wait', ms: 900 }], '', 'Meera does not answer. She sits. Then she takes the Suzumori crane from the step and sets it on the altar.'),
         say(ME, 'For the night of the flame, it sits with ours.'),
         act([{ do: 'walk', actor: 'vikram_flame', to: at(COURT.altar.x, COURT.sceneRow - 2), facing: 'down' }], V, 'Envoy. I fight with you tonight. Argue later.', { set: { 'party.vikram': true } }),
@@ -1030,7 +1030,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
         say(ME, 'Agnivansh stands with Zetwal when the realm musters. What you have not paid, the Muster will ask for.', { set: { 'ally.jwaladesh': true } }),
         act([{ do: 'look', actor: 'npc:meera' }, { do: 'wait', ms: 800 }], '', 'She lifts a small brass lamp from the altar\'s rail, lights it from the flame, and gives it to Gianna.'),
         say(ME, 'For the chamberlain\'s chair. Agnivansh sits, and burns.', { set: { 'item.token_agnivansh': true } }),
-        act([{ do: 'walk', actor: 'vikram', to: at(COURT.altar.x - 1, COURT.altar.y + 3), facing: 'up' }], V, 'I am going with them, Mother. Somebody has to argue with the Crown.'),
+        act([{ do: 'walk', actor: 'vikram', to: at(COURT.altar.x - 1, COURT.altar.y + 3), facing: 'up' }], V, 'I am going with them, Mother. Somebody has to argue with the Crown.', { mood: 'set' }),
         say(V, 'And I am the only one in this house who has had the practice.'),
         say(ME, 'You will be out of breath for the whole war.'),
         say(V, 'I will be winning for the whole war.'),
@@ -1064,7 +1064,7 @@ export const JWALADESH_DIALOGUE: readonly DialogueScript[] = [
         act([{ do: 'look', actor: 'player' }], '', 'Up the hill, the runners\' lamps are lit all the way to the temple. Over the harbor, the chain lamp burns.'),
         nar('A Zetwal trader at the quay, bound north along the white coast for Aldermoor.'),
         nar('Salkhi is loaded last. She has stopped asking about grass.'),
-        act([{ do: 'look', actor: 'vikram' }], V, 'North. To the moor. I will... need a moment... on the boat.'),
+        act([{ do: 'look', actor: 'vikram' }], V, 'North. To the moor. I will... need a moment... on the boat.', { mood: 'out_of_breath' }),
       ],
       next: 'go',
     },
@@ -1194,7 +1194,7 @@ function dhanrajAfterNodes(): Record<string, DialogueNode> {
           '',
           'They carry the first jars up the hill in a line, lamp to lamp. The relay, run for real.',
         ),
-        act([{ do: 'look', actor: 'vikram' }], V, 'Argument... settled. Up the hill. The Court will want... to count.', { set: { 'story.dhanraj_beaten': true } }),
+        act([{ do: 'look', actor: 'vikram' }], V, 'Argument... settled. Up the hill. The Court will want... to count.', { mood: 'out_of_breath', set: { 'story.dhanraj_beaten': true } }),
       ],
     },
   };

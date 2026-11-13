@@ -1725,6 +1725,7 @@ export const PORTRAIT_MOODS: Readonly<Record<string, readonly string[]>> = {
   azzy: ['grim', 'wry'],
   bayarmaa: ['fierce', 'soft'],
   haru: ['caught', 'set'],
+  vikram: ['out_of_breath', 'set'],
   elodie: ['guarded', 'worried'],
   patricio: ['neutral', 'troubled'],
   patricio_old: ['sad', 'stern'],

@@ -54,7 +54,7 @@ Tick a box when the picture is made. A reference sheet is only a working picture
 | Samira Dorini | `samira` | - | [x] Nov 10 | [x] earnest, dismayed | [x] Nov 10 |
 | Bayarmaa Ironvow | `bayarmaa` | - | [x] Nov 10 | [x] fierce, soft | [x] Nov 10 |
 | Haru Suzumori | `haru` | - | [x] Nov 10 | [x] caught, set | [x] Nov 10 |
-| Vikram of the Agnivansh | `vikram` | [ ] | [ ] | [ ] out_of_breath, set | [ ] |
+| Vikram of the Agnivansh | `vikram` | - | [x] Nov 13 | [x] out_of_breath, set | [x] Nov 13 |
 | Edmund Stillwater | `edmund` | [ ] | [ ] | [ ] steady, gentle | [ ] |
 
 ### Group 3: the six companions' battle stances
