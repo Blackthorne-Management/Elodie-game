@@ -1531,7 +1531,7 @@ const cathedralRow: Goal = { map: 'aldermoor-cathedral', at: { x: CATHEDRAL.west
 /**
  * Chapter 9, The Regent's Keep (Kingsmere, Aldermoor: docs/quest/reviews/2026-10-22-chapter9-outline.md with its second
  * review). The Mere Stair and the road, the Market Cross and Edmund, the Regent's answer and Jordyn at the door, the
- * close after the bell, the organ and Sebastian, the day until the Toccata (Al-3 and the debate, followed by the arrow),
+ * close after the bell, the organ and Sebastien, the day until the Toccata (Al-3 and the debate, followed by the arrow),
  * the Toccata, the postern and the archive (the first revisiting, Thomas's panel, the mirror file), caught, the Assize
  * (the dock's roll, the record read, the Hushed unmasked), the price at dawn, home.
  */
@@ -1593,7 +1593,7 @@ export const ACT9: QuestDef = {
       id: 'organ',
       title: 'The organ',
       detail: 'Someone in St. Agatha\'s is playing very loud, and stopping, and starting again.',
-      done: { flag: 'story.sebastian_met' },
+      done: { flag: 'story.sebastien_met' },
       goals: [cathedralRow],
       hints: ['Somebody is playing very loud, Gigi.', 'The church beside the keep.', 'Go into St. Agatha\'s.'],
     },
@@ -1609,10 +1609,10 @@ export const ACT9: QuestDef = {
     {
       id: 'recital',
       title: 'The Toccata',
-      detail: 'The eve of the Assize. The court walks to St. Agatha\'s, and Uncle Sebastian plays.',
+      detail: 'The eve of the Assize. The court walks to St. Agatha\'s, and Uncle Sebastien plays.',
       done: { flag: 'story.recital_begun' },
       goals: [cathedralRow],
-      hints: ['The lamps are lit, Gigi.', 'Uncle Sebastian is playing tonight.', 'Go into St. Agatha\'s.'],
+      hints: ['The lamps are lit, Gigi.', 'Uncle Sebastien is playing tonight.', 'Go into St. Agatha\'s.'],
     },
     {
       id: 'postern',
@@ -2581,9 +2581,9 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     text: 'Rahel\'s daughter, Azzy\'s aunt: captain of the Regent\'s watch. She does not defect for family. She keeps the law.',
   },
   {
-    id: 'sebastian',
-    when: 'story.sebastian_met',
-    title: 'Uncle Sebastian',
+    id: 'sebastien',
+    when: 'story.sebastien_met',
+    title: 'Uncle Sebastien',
     text: 'Mummy\'s brother, organist to three courts. He plays the Agatha Toccata on the eve of the Assize, very loud, at the hour we need.',
   },
   // Chapter 8, Agnipur.

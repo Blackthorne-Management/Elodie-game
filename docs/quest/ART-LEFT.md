@@ -171,7 +171,7 @@ Samira, Bayarmaa, Haru, Vikram and Edmund are in group 2, not repeated here. The
 | The Almoner | `almoner` | [ ] | [ ] | [ ] unveiled | [ ] |
 | Lady Rosalind Stillwater | `rosalind` | [ ] | [ ] | [ ] standing | [ ] |
 | Jordyn (real family, photo) | `jordyn` | [ ] | [ ] | [ ] mothers_jaw, resigning | [ ] |
-| Sebastian (real family, photo) | `sebastian` | [ ] | [ ] | [ ] listening, tender | [ ] |
+| Sebastien (real family, photo) | `sebastien` | [ ] | [ ] | [ ] listening, tender | [ ] |
 
 **Chapter 10 (Pòdlimyè)**
 
@@ -1341,9 +1341,9 @@ Pixel art sprite sheet of the same character, Lady Rosalind Stillwater, for a to
 
 Rahel's daughter, about 38, captain of the Regent's watch (it also has an optional Chapter 10 'Freed' outfit). The three prompts are already complete in `docs/quest/ART-PROMPTS-REAL-PEOPLE.md`, section "Jordyn". Attach Gianna's reference sheet **and a clear, well-lit, front-facing photo** of the person to the first message of a new chat (the sprite prompt also takes Gianna's sprite sheet). Becomes: `characters/jordyn.png` (24 x 32 cells), `portraits/jordyn.png`, `portraits/jordyn_mothers_jaw.png`, `portraits/jordyn_resigning.png`.
 
-### Sebastian (real family: use the photo prompts)
+### Sebastien (real family: use the photo prompts)
 
-Elodie's brother, about 60, the organist. The three prompts are already complete in `docs/quest/ART-PROMPTS-REAL-PEOPLE.md`, section "Sebastian". Attach Gianna's reference sheet **and a clear, well-lit, front-facing photo** of the person to the first message of a new chat (the sprite prompt also takes Gianna's sprite sheet). Becomes: `characters/sebastian.png` (28 x 36 cells), `portraits/sebastian.png`, `portraits/sebastian_listening.png`, `portraits/sebastian_tender.png`.
+Elodie's brother, about 60, the organist. The three prompts are already complete in `docs/quest/ART-PROMPTS-REAL-PEOPLE.md`, section "Sebastien". Attach Gianna's reference sheet **and a clear, well-lit, front-facing photo** of the person to the first message of a new chat (the sprite prompt also takes Gianna's sprite sheet). Becomes: `characters/sebastien.png` (28 x 36 cells), `portraits/sebastien.png`, `portraits/sebastien_listening.png`, `portraits/sebastien_tender.png`.
 
 
 ## Group 7, Chapter 10 (Pòdlimyè)

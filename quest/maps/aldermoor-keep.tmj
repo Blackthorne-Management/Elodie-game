@@ -942,7 +942,7 @@
         },
         {
           "id": 23,
-          "name": "sebastian_court",
+          "name": "sebastien_court",
           "type": "npc",
           "x": 48,
           "y": 416,
@@ -964,7 +964,7 @@
             {
               "name": "npc",
               "type": "string",
-              "value": "sebastian"
+              "value": "sebastien"
             }
           ]
         },

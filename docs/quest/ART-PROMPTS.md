@@ -628,9 +628,9 @@ the Ember Jackals (sand-coloured, glowing eyes).
 Rules for all (as for every character): bright, saturated hand-painted storybook style; no anime or chibi in the
 sheets; magenta background for portraits and sprites; no text, frames or extra people.
 
-## 18. Edmund, Jordyn, Sebastian, the Almoner and Lady Rosalind (Chapter 9, Kingsmere; art drop 2 or after)
+## 18. Edmund, Jordyn, Sebastien, the Almoner and Lady Rosalind (Chapter 9, Kingsmere; art drop 2 or after)
 
-Added Oct 22 with the Chapter 9 build. The game draws placeholders from the looks `edmund`, `jordyn`, `sebastian`,
+Added Oct 22 with the Chapter 9 build. The game draws placeholders from the looks `edmund`, `jordyn`, `sebastien`,
 `almoner` (the Chapter 1 road watcher's veiled look, on purpose: the recognition is also a picture),
 `almoner_unveiled`, `almswoman`, `rosalind`, `regent`, `sealbearer`, `magistrate_al`, `keep_steward`,
 `witness_bishop`, `assize_clerk`, `regent_watch`, `watch_inside_out`, `echo_old_sealbearer`, `moor_constable`,
@@ -650,7 +650,7 @@ hair, a straight back. A violet watch coat with gold epaulettes and a sash, a ca
 coat turned inside out. Portrait: **by the book** (default: flat, unreadable), **Mother's jaw** (the arrest), and
 **resigning** (laying the knot on the table).
 
-**Sebastian Jean-Philippe** (about 60; organist to three courts; Elodie's brother): tall, grey hair swept back, a
+**Sebastien Jean-Philippe** (about 60; organist to three courts; Elodie's brother): tall, grey hair swept back, a
 neat grey beard, a burgundy velvet coat with gold trim, long hands. Portrait: **showman** (default: a bow to an empty
 nave), **listening** (eyes closed at the organ), **tender** (the blanket through the bars).
 

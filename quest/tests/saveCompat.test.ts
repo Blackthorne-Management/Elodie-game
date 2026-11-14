@@ -305,6 +305,13 @@ describe('saves across fixes: ids the new build does not know', () => {
     expect(placed.data.flags['story.old_flag']).toBeUndefined();
   });
 
+  it('Sebastien (respelled Nov 14): a save that met him as "Sebastian" keeps the meeting', () => {
+    const flags = Object.fromEntries(Object.entries(late.flags).filter(([k]) => k !== 'story.sebastien_met'));
+    const placed = placeSave({ ...late, flags: { ...flags, 'story.sebastian_met': true } }, maps, SAVE_FALLBACKS)!;
+    expect(placed.data.flags['story.sebastien_met']).toBe(true);
+    expect(placed.data.flags['story.sebastian_met']).toBeUndefined();
+  });
+
   it('a save taken as a fight began, its after-fight scene since removed: the field, with no scene to play', () => {
     const flags: FlagSnapshot = { ...late.flags, 'battle.after': 'removed_scene', 'fight.return': `${late.mapId}/${late.x},${late.y}`, 'battle.next': 'removed_battle' };
     const { sim, playable } = loadAndPlay({ ...late, flags });

@@ -38,7 +38,7 @@ Hearing"; Patricio "testifies at the Hearing" is the guide's proposal), `design/
 three phases: The Patient Court, The Charter, One Hand; "On defeat: Azzy's choice"**), 14 (Story x0.7 damage, x0.8
 HP), 15 (tiers 24 and 28); the **Chapter 9 outline, its review, decisions and Built section** (the Regent presides at
 Kingsmere and goes home; "Nothing in this chapter is provable against him, which is why Chapter 12 is a Challenge and
-not a trial"; the Almoner is Chapter 1's veiled woman, tried or shown; Rosalind withdrew; Jordyn's company; Sebastian
+not a trial"; the Almoner is Chapter 1's veiled woman, tried or shown; Rosalind withdrew; Jordyn's company; Sebastien
 to Eightgate's recital and then Pòdlimyè); the **Chapter 10 outline, its review and decisions** (the ally ledger and
 `army.*`; the tokens: three carried, the Dorini token from Rashid or "at the Claim by Layla if Al-Doria is kept";
 Elodie at Eightgate "till the Crown lets her go"; Patricio did not sail; Rahel and Patricia on the pier; Azzy
@@ -241,7 +241,7 @@ The epilogue (section 14) is the same morning, after the Claim, and the ending i
   **doubled** (four placed; the Hall's door is shut: `closed: 'hall_shut_night'`: "The Lord Regent receives the envoy
   at the bell. Not before."); **Jordyn's seven** at the Aldermoor Gate (placed, `army.aldermoor`), Jordyn herself at
   the fountain's rim ("I keep the law where I stand. Tonight I stand in the Crown's own city. It is very quiet.").
-  Sebastian is not here (Chapter 9: he left for Eightgate's recital "and then Pòdlimyè"; his recital was weeks ago;
+  Sebastien is not here (Chapter 9: he left for Eightgate's recital "and then Pòdlimyè"; his recital was weeks ago;
   Claude's call: he comes back for the Hearing with Anicette and Patricio, section 9.5).
 - Journal: **The Ash Road** (`noXp`, done `story.claim_arrived`), then **Mother's rooms** (beat 1).
 
@@ -426,7 +426,7 @@ desk; everything else stands). The look is the Chapter 5 city at dusk and then b
 
 | Map | Size | Section | Chapter 12 use | Echo |
 |---|---|---|---|---|
-| `seat-concourse` | 44 x 32 (built) | The Eight Gates Concourse (hub) | The arrival at the **Ardencia Gate** (a new spawn `ardencia_gate` inside the north gate; the gate object's `closed` line gains a war branch: it opens); Elodie and the clerk in the arch (placed, then walked); a company's placed pair at each gate by `army.*` (Free Brasador at Ardencia's with Joaquin; the Ironvow at the Iron Gate; Jordyn's seven at Aldermoor's; the Suzumori, Agnivansh and Dorini at theirs; Zetwal's levy at Zetwal's gate with **Zetwal's ship's people** at dawn: Anicette, Patricio, the Chancellor, Sebastian: section 9.5); the fountain's corner with its new speakers (7.3); the market and the Outfitter (tier 28); the Hall's steps with four Sealbearers and the chamberlain's lantern by night; the records-room door on the Hall's west flank (new, `if: 'story.elodie_rooms, !story.bell_claim'`, to the Hall's chairs by night) | none |
+| `seat-concourse` | 44 x 32 (built) | The Eight Gates Concourse (hub) | The arrival at the **Ardencia Gate** (a new spawn `ardencia_gate` inside the north gate; the gate object's `closed` line gains a war branch: it opens); Elodie and the clerk in the arch (placed, then walked); a company's placed pair at each gate by `army.*` (Free Brasador at Ardencia's with Joaquin; the Ironvow at the Iron Gate; Jordyn's seven at Aldermoor's; the Suzumori, Agnivansh and Dorini at theirs; Zetwal's levy at Zetwal's gate with **Zetwal's ship's people** at dawn: Anicette, Patricio, the Chancellor, Sebastien: section 9.5); the fountain's corner with its new speakers (7.3); the market and the Outfitter (tier 28); the Hall's steps with four Sealbearers and the chamberlain's lantern by night; the records-room door on the Hall's west flank (new, `if: 'story.elodie_rooms, !story.bell_claim'`, to the Hall's chairs by night) | none |
 | `seat-hall` | 44 x 32 (built) | The Throne Hall (the arena, the chairs, the Hearing) | The rope gone on `story.claim_begun` (built hook); **the tokens on the chairs** (eight small objects by `side.seats.<house>_set`; a betrayed house's chair bare); **Xaraguá's chair with two looks** (turned: the oath cut into its back, `anchor.caona_chair`); the **Echo zone** at the eighth chair (3 x 2 at (15 to 17, 8 to 9), `if: 'story.bell_claim'`; the Hall's Echo grid is the present's clone: the chairs and the dais are walkable around in both eras; the Echo-era objects: the chamberlain's desk of forty-nine years ago, the Crown's clerk's table); the houses' people at their doors by the chapter's flags; the Regent's dawn placement on `story.bell_claim, !story.claim_won` at (23, 3) with Hale or the Sealbearers and Thorne; the step trigger on the tile; the dais's step as the Regent's way back in; **the Hearing's layer** (section 14: the witnesses' bench along the west wall, the clerk's table, Rael kneeling at (21, 10), the signet object on the step, the gallery's people); the ending's layer | **the eighth chair** (new zone): the petition carried in, Caona's oath, the anchor |
 | `seat-quarter` | 24 x 16 (built) | The Envoys' Quarter | Coco's door shut with the note; the clerk in the lane outside Elodie's door; **the door to Elodie's rooms** (new, on the Quarter's Zetwal house: Chapter 5 had "Elodie's rooms (Se-1)" in CAPITALS and never built the interior) | none |
 | **`seat-rooms`** | **14 x 10 (new, interior)** | Elodie's rooms | The desk, the lamp (lit all night on `story.elodie_rooms`), the shelf with *Volume One* (Se-1), the window; Elodie placed; Azzy and Anissa walked in with Gianna | none |
@@ -444,7 +444,7 @@ the lamp, the conch, the Dorini scale, a bare chair), the chair's turned look wi
 step, the Sealbearers' seals on the floor, the petition on the chair, the clerk's table and the witnesses' bench;
 **Rael, Rivera, Jaime, old Benny, Nancy, Rahel, Patricia, Layla, Rosalind, Hale, Thorne, the chamberlain, Hollis,
 the Regent, the Crown's clerk** as their chapters' looks; **Anicette and old Patricio** as Chapter 1's;
-**Sebastian** as Chapter 9's; the Chancellor as Chapter 1's; **the treasurer's daughter** as Chapter 3's and **the
+**Sebastien** as Chapter 9's; the Chancellor as Chapter 1's; **the treasurer's daughter** as Chapter 3's and **the
 treasurer** new (a thin man in a good coat ten years old: the Hearing's one new face); **Amanda** as Chapter 3's; the
 lamp-oil seller and the camp leader as Chapter 2's; the Lower Town's cook; the printer of Kingsmere as Chapter 9's.
 
@@ -783,7 +783,7 @@ Concord here is the ending's last input.
 
 - **Zetwal's ship at dawn** (shown on the Concourse as the party goes to the Hall: an `enter` through the Zetwal
   Gate, in file): **Anicette** (Volume One, section 7.2), **old Patricio** on his cane, the **Chancellor**, and
-  **Sebastian** ("I was somewhere being famous. It was here."). Patricio did not sail to the war ("Marshals muster.
+  **Sebastien** ("I was somewhere being famous. It was here."). Patricio did not sail to the war ("Marshals muster.
   Captains sail."); he sails to a Hearing because the guide's proposal makes him "a witness at Rael's Hearing about
   the Seventh Clause" and nothing else: **his testimony is the sealing only** (he sealed the binding of six pages under
   protest, `choice.patricio_protest`, and "remembered the wrong thing", Chapter 10). He says nothing about the
@@ -866,7 +866,7 @@ meter, a new status or a timer.
 | **Captain-General Hale**, **Governor Thorne** | the dais on Trust / if spared | Chapter 11's, Chapter 2's | |
 | **Jordyn** | the watch | Chapter 9's | |
 | **Lady Rosalind Stillwater**, **Layla Dorini** (or her clerk) | Aldermoor's and Al-Doria's chairs | Chapter 9's `rosalind`; Chapter 4's `layla` | |
-| **Anicette**, **old Patricio**, **the Chancellor**, **Sebastian** | Zetwal's ship | Chapter 1's; Chapter 9's | |
+| **Anicette**, **old Patricio**, **the Chancellor**, **Sebastien** | Zetwal's ship | Chapter 1's; Chapter 9's | |
 | **Rahel**, **Patricia**, **old Benny**, **Nancy**, **Zelia**, **Amanda**, **Joaquin** | the family at the Hearing | Chapter 10's and 3's | |
 | **The treasurer** (new), **the treasurer's daughter**, the **Free Brasador sergeant**, **the lamp-oil seller**, **the printer**, **the Quiet Crown follower** (new) | the witnesses | one new look, the rest built | |
 | **The Crown's clerk** | writing, then not | Chapter 5's | |
@@ -905,7 +905,7 @@ him could settle it by accident.
    "I remembered the wrong thing"); he and Rael exchange one look and no line. *Reason:* it is the guide's own
    proposal, it is the Seventh Clause's last witness in the room where the clause is struck, and it settles nothing
    about the marriage, so the owner's answer to 13 can still go either way (one line at the look, when it comes).
-2. He stays in Zetwal (Anicette and Sebastian come; his testimony is read by the Chancellor from a letter).
+2. He stays in Zetwal (Anicette and Sebastien come; his testimony is read by the Chancellor from a letter).
 3. He testifies and the owner answers 13 now, so the look becomes a line.
 
 **Near-misses, resolved as Claude's calls (if the second review disagrees, either becomes a pop-up with the

@@ -31,7 +31,7 @@ Every role below is shown on the map (owner rule): they walk in, help and walk o
 | Who | Suggested personality | Where met | How they help | Status |
 |---|---|---|---|---|
 | **Coralie, "Tati Coco"** | Flamboyant, generous, fearless | Ch. 4, Al-Doria's bazaar, and Ch. 5, Eightgate | Bumped into in the cloth merchants' row buying dyes; she helps with a side quest (the carpet knot count) and sails on before the vault. In Eightgate she is dressing the royals for the Parley, and smuggles Gigi and Anissa into the sealed Archive disguised as her seamstresses | **settled (owner, Oct 21: both). She knows the family secret (Elodie and Rael) and keeps it: "That is your mother's to tell" (owner, Oct 22)** |
-| **Sebastian** | Proud, gentle, a showman | Ch. 9, Kingsmere's cathedral | His recital on the great organ covers the noise while the party breaks into the Regent's archive | **settled (owner, Oct 21)** |
+| **Sebastien** | Proud, gentle, a showman | Ch. 9, Kingsmere's cathedral | His recital on the great organ covers the noise while the party breaks into the Regent's archive | **settled (owner, Oct 21)** |
 
 **Built in Chapter 3 (Oct 21):** Zelia (the audience, the records room, the way to old Benny), Amanda (the Lower Town's
 kitchen in Ar-1, the tunnel's far end), Joaquin (the guns on the wall), old Benny and Nancy (the quiet rooms, Ar-2's
@@ -83,13 +83,13 @@ recital's night; the postern's hour), arrests them herself when the Almoner catc
 under you."; "Mother's jaw. I said."), testifies in the Assize, reads the Almoner's commission ("Under the Throne's seal.
 No hand."), lays her captain's knot on the clerk's table and walks out with six of the watch. At dawn she returns the
 evidence by the book, sends her company by the moor road to the Muster ("And I'll bring Mother. And her mother.") and
-says of Rael only: "He wrote to me once in twenty years. One line: 'Keep the law.' I have." **Sebastian
+says of Rael only: "He wrote to me once in twenty years. One line: 'Keep the law.' I have." **Sebastien
 Jean-Philippe** (Elodie's brother; the bill on the heath: "that's Grandpapa's name") is the organist to three courts:
-heard before he is seen at St. Agatha's ("I'm your uncle Sebastian."), plays the Agatha Toccata (twice, the slow
+heard before he is seen at St. Agatha's ("I'm your uncle Sebastien."), plays the Agatha Toccata (twice, the slow
 part) while the party is in the archive, brings a blanket to the cell, sits in the gallery at the Assize, and leaves for
 Eightgate's recital and then Pòdlimyè ("I was always somewhere being famous."). **Claude's calls (the locked rule):**
 neither says a word about anyone's goodness, the arrows or the thumbprints; a test holds them to it. The reviewer
-prompt asks for a human read of every Jordyn, Sebastian and Almoner line.
+prompt asks for a human read of every Jordyn, Sebastien and Almoner line.
 
 **Built in Chapter 10 (Oct 22):** **Rahel** comes up the long pier with Jordyn's company and her mother. In the Limyè
 kitchen she and Anicette greet each other ("Madame." / "Madame."), Anicette remembers Benny's peppers ("They were my

@@ -33,7 +33,7 @@
   voice, and a city that steps aside for a woman with a basket;
 - Jordyn's three acts (the postern in secret, the arrest by the book, the resignation in open court) are exactly
   "disciplined, blunt, fair", and the arrest is what puts the party in the dock instead of on the heath;
-- Sebastian is heard before he is seen, and his help (the loud piece at the hour) is the one `FAMILY.md` settled;
+- Sebastien is heard before he is seen, and his help (the loud piece at the hour) is the one `FAMILY.md` settled;
 - the courtroom is a real puzzle whose rule belongs to the city (a forsworn witness's evidence falls with her), and
   the lie names the two things that break it;
 - Thomas's Chapter 5 line ("Someone will read it one day") is paid in front of the city.
@@ -48,7 +48,7 @@
    **Cane Road by the old mill**, not the plaza. Her flag is `choice.warned_watcher`, not `choice.stay_away`. And
    **Gianna** says "Stay away from her", not Anissa. Meeting her is optional, nobody in the built game ever says
    "the Hushed", and she is still standing on the Cane Road in Chapter 10.
-3. **Sebastian cannot be a Limyè** (3.3). Chapter 1's elder says Elodie *took* the name Limyè, and "her father's name
+3. **Sebastien cannot be a Limyè** (3.3). Chapter 1's elder says Elodie *took* the name Limyè, and "her father's name
    was good enough for the rest of us". The family name is Jean-Philippe (Marshal Patricio Jean-Philippe, in the
    books).
 4. **Anissa is in the organ loft while Gianna is in the Echo** (3.4). The guide's rule is that Anissa stays at the
@@ -90,7 +90,7 @@
 - **The Regent** (outline:1086-1091). He gives up a margin to keep a clause and sets his agent down in one sentence,
   "three moves ahead" shown rather than told. Nothing provable, so Chapter 12 stays a Challenge (but see 3.8 on the
   commission, which proves too much as written).
-- **St. Agatha's** (outline:113-116, 591-592). `FAMILY.md` settles Sebastian's recital "on Kingsmere cathedral's
+- **St. Agatha's** (outline:113-116, 591-592). `FAMILY.md` settles Sebastien's recital "on Kingsmere cathedral's
   great organ", and `CAPITALS.md` 9 has no cathedral, so adding one is the honest fix. Holding the Townhouse back for
   Al-5 after the release is right.
 - **The design's timeline error fixed** (outline:117-120, 854-857). The Ash Wars were about twenty-five years ago, so
@@ -224,7 +224,7 @@ line already (outline:491: "It is nobody's. That is the point of a hand with no 
 Whether to keep the identity at all is section 5's borderline question. The fixes above are needed either way: as
 written, even the fallback says "plaza" (outline:1182-1183).
 
-### 3.3 Sebastian's surname contradicts Chapter 1
+### 3.3 Sebastien's surname contradicts Chapter 1
 
 - Chapter 1's elder (zetwal.ts:404-407): *"Then she took the name Limyè, for the goddess's light, she said. Her
   father's name was good enough for the rest of us." / "Well. Jean-Philippe is a mouthful to shout at a festival."*
@@ -232,14 +232,14 @@ written, even the fallback says "plaza" (outline:1182-1183).
 - The Chapter 5 outline gives Elodie's reason: she took Limyè "so no one..." (Ch5 outline:297): a name nobody could
   trace.
 
-So Elodie is the only Limyè of her generation, and her siblings are Jean-Philippes. The outline's bill (*SEBASTIAN
+So Elodie is the only Limyè of her generation, and her siblings are Jean-Philippes. The outline's bill (*SEBASTIEN
 LIMYÈ*), Anissa's "Limyè. Gigi, that's our name." (outline:152-156), and the section on his name (outline:1057-1059,
 1242) contradict a built line. They would also undo Elodie's reason for the name, because a famous organist named
 Limyè points every court at her.
 
 **Fix (a better seed):**
 
-- The bill reads *SEBASTIAN JEAN-PHILIPPE, organist to three courts*. Anissa reads it slowly: "Jean-Philippe. Gigi,
+- The bill reads *SEBASTIEN JEAN-PHILIPPE, organist to three courts*. Anissa reads it slowly: "Jean-Philippe. Gigi,
   that's Grandpapa's name." Gianna: "That's Mummy's brother. The one who writes to her about the weather."
 - The Regent's "Your uncle plays very loud" (outline:237-238) still works, and is sharper: the Marshal's son plays in
   the Regent's cathedral.
@@ -259,7 +259,7 @@ picking an interpretation where two sources conflict, which `CLAUDE.md` asks to 
 is also the less interesting choice.
 
 **The cells.** Jordyn's condition is "the little one does not come into the keep" (outline:269-270). The outline then
-has Sebastian bring Anissa *into* the keep at night, and the constable lock her in a cell, with the Almoner free and
+has Sebastien bring Anissa *into* the keep at night, and the constable lock her in a cell, with the Almoner free and
 her almswomen in the building (outline:419-424). Gianna, who has spent nine chapters standing between her sister and
 veiled people, would not allow it, and nothing on the map says why she does.
 
@@ -267,11 +267,11 @@ veiled people, would not allow it, and nothing on the map says why she does.
 
 - **Anissa comes through the postern with the party** and holds the door at the archive's filing floor, as she does
   in every Echo. Jordyn's condition becomes the opposite worry, said once in the close: "Then she stays behind you.
-  Every step." The organ still covers the noise; that is Sebastian's settled help.
+  Every step." The organ still covers the noise; that is Sebastien's settled help.
 - **The caught scene gains** (outline:399-405): the Almoner says "Where is the little one?" *to her face*, Gianna
   steps in front (a `walk`), and Jordyn's arrest ("Under arrest, Almoner. Not under you.") is what saves the child as
   well as the envoy. Anissa is in the cell because she was arrested with her sister, which needs no explanation.
-- **Sebastian** visits the cells with the Regent's leave (keep it) and brings a blanket instead of the child.
+- **Sebastien** visits the cells with the Regent's leave (keep it) and brings a blanket instead of the child.
 - **His touch for Anissa** moves from "You turned every page on the beat" to the stair at dawn: "I am told you held a
   door for an hour. I have never held anything that long but a note."
 
@@ -396,11 +396,11 @@ feuds (guide 5.4) and needs a lever.
 7. **"You will hang, Captain."** Then she walks out of Kingsmere with six of the watch (outline:513-515, 545-552).
    **Fix:** the Regent, after a breath: "Not today. The court has been interrupted enough." He lets the city watch him
    let her go, which is his method.
-8. **The cathedral before the close.** Sebastian's help depends on Gianna telling him "the postern's hour"
+8. **The cathedral before the close.** Sebastien's help depends on Gianna telling him "the postern's hour"
    (outline:298-299), which Jordyn gives in the close. The two are in any order (outline:783-785 is only the arrow's
    order). A player who goes to St. Agatha's first meets an uncle who promises to play at an hour nobody has named.
    **Fix:** the west door's constable ("Rehearsal, madam. Nobody goes in") holds until `story.jordyn_offer`, or
-   Sebastian's help line branches ("Tell me the hour when you have one. I'll be here; I'm always rehearsing.") and a
+   Sebastien's help line branches ("Tell me the hour when you have one. I'll be here; I'm always rehearsing.") and a
    second talk sets it.
 9. **The Regent at home.** His last line in Chapter 5 was "I will be here. I am always here." (seat.ts:898), at
    Eightgate. One line in the hall pays it: Haru, "He said he was always at Eightgate." Edmund: "He says that
@@ -429,7 +429,7 @@ The outline's own rule (outline:1080-1082, 1427-1428) is that no comic line shar
   deck into two looks, or drop Samira's.
 - **Edmund** (outline:254-255): "I'm tremendously good at sitting", said about sitting with Anissa. With 3.4's fix the
   line goes anyway.
-- **Sebastian in the cells** (outline:424-425): "That is the worst review of my life", with Anissa in the cell. With
+- **Sebastien in the cells** (outline:424-425): "That is the worst review of my life", with Anissa in the cell. With
   3.4's fix she is there because she was arrested. Keep the line only if it is said before she is brought down, or
   cut it.
 
@@ -441,7 +441,7 @@ blocks. **Fix:** "She takes your words, Gigi. Plain blows still land. My light s
 **Smaller:**
 
 - "She is spoken to by nobody in Kingsmere except the Hushed" (outline:1071-1072) contradicts Edmund's hat,
-  Sebastian's "Who hums" and Jordyn at the stair. Say "spoken *about*" or drop it.
+  Sebastien's "Who hums" and Jordyn at the stair. Say "spoken *about*" or drop it.
 - The coded accounts are marked "the Ash Road" (outline:387), and the chronicle on the next shelf names "the Ash
   Road" as the massacre (outline:844). A careful reader may read restitution (Rael is good) two chapters early. It is
   `STORY.md` 6.6's proposal, so keep the name, but give the reviewer prompt a human read of the archive scene against
@@ -555,7 +555,7 @@ line, then Jordyn), and keep the only global light changes for the eve and the l
 | x7 / MAG x2: a fighter down in one fight in five at the floor, none at 24 | 677, 685-691 | **False**: 4.00 down at 21, 1.33 at 24, counted party-wide (3.1). |
 | Edmund benched wins faster because the sim has no `hushed` | 630-632, 1333-1337 | Reproduced; whether the real status fixes it depends on whether `hushed` blocks moves (3.1). |
 | `choice.stay_away`; the veiled woman on the plaza; the recruiters speak of "the Hushed" | 95-96, 103-104, 1175-1176 | **False on all three**: `choice.warned_watcher`, the Cane Road by the mill, "Hushed" never said (3.2). |
-| Sebastian Limyè, as Coralie Limyè | 152-156, 1057-1059 | **Contradicts Chapter 1** (zetwal.ts:406-407); no "Coralie Limyè" in built data (3.3). |
+| Sebastien Limyè, as Coralie Limyè | 152-156, 1057-1059 | **Contradicts Chapter 1** (zetwal.ts:406-407); no "Coralie Limyè" in built data (3.3). |
 | Anissa's hints reach Gianna in the Echo from the loft | 306-307 | The guide's rule needs her at the Echo site (3.4). |
 | Played start "about 22" | 723-731 | Overtaken by `AMBUSH_XP` in the tree; plan from 21 (3.5). |
 | Al-2 required by the ground; Concord bonus unmissable | 780-782, 857-858 | **False** as written; gate the panel (3.6). |
@@ -595,7 +595,7 @@ recommendation either way.
 
 The rest of the outline's Claude's calls stand. Two I would add, both recorded and not asked:
 
-- Sebastian is a Jean-Philippe (3.3): a continuity fix, not a choice.
+- Sebastien is a Jean-Philippe (3.3): a continuity fix, not a choice.
 - The Chapter 5 aide was Edmund (3.8.12).
 
 ---
@@ -617,10 +617,10 @@ The rest of the outline's Claude's calls stand. Two I would add, both recorded a
    - "the Hushed" seeded at the bog chapel and on the purge list;
    - the Almoner's veiled look is the road watcher's;
    - correct the outline's six places and `STORY.md` 6.3's Chapter 1 sentence.
-3. **Sebastian Jean-Philippe (3.3):** the bill and Anissa's line ("that's Grandpapa's name"); outline:152-156,
+3. **Sebastien Jean-Philippe (3.3):** the bill and Anissa's line ("that's Grandpapa's name"); outline:152-156,
    1057-1059, 1242.
 4. **Anissa (3.4):** through the postern with the party, at the archive's Echo; caught and arrested with her sister;
-   Sebastian visits; his page-turning line moves to the stair.
+   Sebastien visits; his page-turning line moves to the stair.
 5. **Levels (3.5):** plan from 21; the Hushed 280, Al-3 180, SIG-ALM 90 + 90; assert with the played line;
    `CHAPTER_LEVELS` 9 unchanged; the taper language out.
 6. **Al-2 required (3.6):** the panel behind the shelf; the exit trigger needs the pact, the anchor and Al-2.
@@ -638,7 +638,7 @@ The rest of the outline's Claude's calls stand. Two I would add, both recorded a
    - the filing rule's two lines;
    - "three nights";
    - Edmund was the Chapter 5 aide.
-9. **Tone (3.9):** cut the organ line; split the voyage node; Edmund's sitting line goes with 3.4; Sebastian's review
+9. **Tone (3.9):** cut the organ line; split the voyage node; Edmund's sitting line goes with 3.4; Sebastien's review
    line before Anissa arrives or cut; the battle tip; "spoken about"; a human read of the archive scene.
 10. **Shown (3.10):** one door on the purge list is too late.
 11. **Engine claims and budget (3.11):**

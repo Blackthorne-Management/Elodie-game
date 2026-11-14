@@ -403,7 +403,7 @@ Hearing then tries the father who protected her. Players will ask what happened 
   present turns the chair. Patricio arrives the same morning (or the Hearing's: 3.9). **Fix:** at the petition's
   hearing (3.1) he stands by the eighth chair and touches the cut line (a `face`, a `wait`): "I remembered the wrong
   thing." (His Chapter 10 phrase.) It settles nothing about question 13.
-- **Patricia, Rahel, Amanda, Coralie, Sebastian, Anicette:** fine as written, with the fixes in 3.8 (Rahel's count,
+- **Patricia, Rahel, Amanda, Coralie, Sebastien, Anicette:** fine as written, with the fixes in 3.8 (Rahel's count,
   Amanda's knowledge) and 3.10 (the quips). Coralie absent with a note is acceptable for scope; say in the Just card's
   last line that she dressed the council ("Gold. She said gold.") so the family's last picture includes her.
 
@@ -474,7 +474,7 @@ rooms, the Hall, the Claim or the Hearing is a joke"):
 | Elodie: "Chief Envoy. **I will keep the Regent's guests waiting.**" | The Just ending | "Chief Envoy. Zetwal's envoy, still. I will keep both." |
 | Azzy: "Marshal of the realm. **Mother will say I got the temper.**" | The Just ending | "Marshal of the realm. I'll hold you to it." (Also keeps Azzy's mother to Chapter 6's lines: 3.7) |
 | Edmund: "Terribly sorry, Mother. I've sat." | The Hall at dawn (the outline says "at the door") | Keep only on the Concourse, before the Hall; in the Hall he says nothing |
-| Sebastian: "I was somewhere being famous. It was here." | Zetwal's ship on the Concourse, Anissa on the map | Fine on the Concourse **if no Anissa line is in that node**; test it |
+| Sebastien: "I was somewhere being famous. It was here." | Zetwal's ship on the Concourse, Anissa on the map | Fine on the Concourse **if no Anissa line is in that node**; test it |
 | Benny, Iron: "**Forty-one. I count.**" | The execution | Not a joke, but it turns a father's grief into his habit's punchline. Cut: Benny sits down on the step where the signet was, and says nothing |
 
 ### 3.11 Staging on a phone, scope of the Hearing, and the cut order (medium: owner rule and readability)

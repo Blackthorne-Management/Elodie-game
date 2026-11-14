@@ -326,7 +326,7 @@ export function aldermoorKeep(): MapSource {
     npc('magistrate_court', KEEP.courtMagistrate.x, KEEP.courtMagistrate.y, 'left', { npc: 'magistrate', if: TRIAL }),
     npc('jordyn_court', KEEP.courtJordyn.x, KEEP.courtJordyn.y, 'left', { npc: 'jordyn', if: TRIAL }),
     npc('court_watch', KEEP.courtDoorWatch.x, KEEP.courtDoorWatch.y, 'down', { if: TRIAL }),
-    npc('sebastian_court', KEEP.gallery[0]!.x, KEEP.gallery[0]!.y, 'up', { npc: 'sebastian', if: TRIAL }),
+    npc('sebastien_court', KEEP.gallery[0]!.x, KEEP.gallery[0]!.y, 'up', { npc: 'sebastien', if: TRIAL }),
     npc('pie_boy_court', KEEP.gallery[1]!.x, KEEP.gallery[1]!.y, 'up', { npc: 'pie_boy', if: TRIAL }),
     npc('printer_court', KEEP.gallery[2]!.x, KEEP.gallery[2]!.y, 'up', { npc: 'printer_gallery', if: TRIAL }),
     npc('clockmaker_court', KEEP.gallery[3]!.x, KEEP.gallery[3]!.y, 'up', { npc: 'clockmaker', if: TRIAL }),
@@ -363,7 +363,7 @@ export function aldermoorClose(): MapSource {
 
 /**
  * St. Agatha's (the Witness's great church of Kingsmere, interior): the nave and its pews, the oath-stone, the organ
- * loft with the great organ across the east end (Sebastian at the console), the vestry door to the close, the west door.
+ * loft with the great organ across the east end (Sebastien at the console), the vestry door to the close, the west door.
  */
 export function aldermoorCathedral(): MapSource {
   const { w: W, h: H } = CATHEDRAL;
@@ -378,14 +378,14 @@ export function aldermoorCathedral(): MapSource {
     { layer: 'doors', name: 'cathedral_west', x: CATHEDRAL.west.x, y: CATHEDRAL.west.y, props: { target: 'cross_cathedral', map: 'aldermoor-cross', exit: 'up' } },
     { layer: 'doors', name: 'cathedral_vestry', x: CATHEDRAL.vestry.x, y: CATHEDRAL.vestry.y, props: { target: 'close_vestry', map: 'aldermoor-close', exit: 'left', if: 'story.jordyn_offer, !story.caught', closed: 'vestry_locked' } },
     { layer: 'spawns', name: 'cathedral', x: 12, y: 15, props: { facing: 'up', era: 'present' } },
-    // Sebastian comes down from the loft (beat 3; again until they have met).
-    trigger('sebastian_meet', 11, CATHEDRAL.sceneRow, { dialogue: 'sebastian_meet', if: 'story.jordyn_offer, !story.sebastian_met' }, 4, 1),
+    // Sebastien comes down from the loft (beat 3; again until they have met).
+    trigger('sebastien_meet', 11, CATHEDRAL.sceneRow, { dialogue: 'sebastien_meet', if: 'story.jordyn_offer, !story.sebastien_met' }, 4, 1),
     // The Toccata (beat 5): the nave full, the first chord, the vestry (again until it has begun).
     trigger('recital', 11, CATHEDRAL.sceneRow, { dialogue: 'recital', if: EVE_TEXT }, 4, 1),
     obj('great_organ', o.x, o.y, { kind: 'great_organ', solid: true, era: 'present', dialogue: 'great_organ' }, o.w, o.h),
     obj('organ_console', CATHEDRAL.console.x, CATHEDRAL.console.y, { kind: 'organ_console', solid: true, era: 'present', dialogue: 'organ_console' }),
     obj('agatha_oath_stone', CATHEDRAL.oathStone.x, CATHEDRAL.oathStone.y, { kind: 'oath_stone', solid: true, era: 'present', dialogue: 'agatha_oath_stone' }, 2, 1),
-    npc('sebastian', CATHEDRAL.sebastian.x, CATHEDRAL.sebastian.y, 'down', { if: `story.jordyn_offer, !story.recital_begun` }),
+    npc('sebastien', CATHEDRAL.sebastien.x, CATHEDRAL.sebastien.y, 'down', { if: `story.jordyn_offer, !story.recital_begun` }),
     npc('verger', CATHEDRAL.verger.x, CATHEDRAL.verger.y, 'left'),
   ];
   return { id: 'aldermoor-cathedral', present: g, echo: g.clone(), objects, interior: true };

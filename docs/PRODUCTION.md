@@ -47,7 +47,7 @@ and the boar. Still missing from drop 1: Cacique Anaco (section 12) and the gaze
 characters of Chapters 1 to 12 still drawn as placeholders (prompts in `docs/quest/ART-PROMPTS.md` sections 11 to 20):
 Caona, young and old Benny, Thorne, the marine lieutenant, the Crown captain (Ch 1 and 2); Rael, Rivera, Jaime (Ch 3);
 the Regent, Hollis, Coralie (Ch 5); Bayarmaa, Grimvald, Hrafn (Ch 6); Haru, the Paper Fox (Ch 7); Vikram, Aiyana, Seth
-Dhanraj (Ch 8); Edmund, Jordyn, Sebastian, the Almoner veiled and unveiled, Rosalind (Ch 9); Rahel, Patricia, Joaquin,
+Dhanraj (Ch 8); Edmund, Jordyn, Sebastien, the Almoner veiled and unveiled, Rosalind (Ch 9); Rahel, Patricia, Joaquin,
 Ti Jak (Ch 10); Hale (Ch 11). No prompts yet for: the behique, Cresswell, Amanda, Nancy, Zelia, Samira, Qasim, Layla,
 the herald. Townsfolk, soldiers and creatures stay as drawn placeholders.
 
@@ -135,16 +135,16 @@ Every Argument and J-4 Oil for the Little Lamps, with the Unbroken Wick. Not bui
 is built with Chapter 9).
 
 **Quest, Chapter 9 (Oct 22):** The Regent's Keep is built on branch `chapter9` (Kingsmere's six maps, the voyage from
-Agnipur and the Mere Stair in the rain, Sebastian's bill, the press-gang and Edmund joining, the Regent's refusal, the
+Agnipur and the Mere Stair in the rain, Sebastien's bill, the press-gang and Edmund joining, the Regent's refusal, the
 day's four (The Purge List with the bog chapel and one door too late, the One Hand debate, Jordyn's offer in the close,
-Sebastian at the organ), the eve, the Toccata and the postern, Thomas's record in the Echo, the mirrored drawer and the
+Sebastien at the organ), the eve, the Toccata and the postern, Thomas's record in the Echo, the mirrored drawer and the
 panel behind the shelf (The Crown Chronicle), caught and arrested, the cells, the Assize and the Hushed unmasked as
 Chapter 1's veiled woman by the mill, the three defiances, the price at dawn, the voyage home). This meets the **Nov 8
 decision date** for Chapter 9 (on its branch, not merged). Waiting on the owner: a human read of every Jordyn,
-Sebastian and Almoner line, and the archive scene against the locked rule (reviewer prompt
+Sebastien and Almoner line, and the archive scene against the locked rule (reviewer prompt
 `docs/quest/reviews/reviewer-prompts/2026-10-22-review-chapter9-build.md`); the names by role (the printer, the
 clockmaker, the keep's steward, the assize clerk, the Crown magistrate, the witness bishop, the sorry constable);
-art for Edmund, Jordyn, Sebastian, the Almoner and Lady Rosalind (`docs/quest/ART-PROMPTS.md` 18). Noted: Chapter 9's
+art for Edmund, Jordyn, Sebastien, the Almoner and Lady Rosalind (`docs/quest/ART-PROMPTS.md` 18). Noted: Chapter 9's
 steps pay 70 XP; the route ends at 24, the line without side quests at 22; the dissidents' Fear can be short (5 or 6
 of 8). Chapter 9 settles two of the Dec 1 questions as Claude's calls, still the owner's to overrule: the Aldermoor
 ledger (coded accounts on the Ash Road; Haru needs the key) and Patricio in Aldermoor (under a flag of truce, in

@@ -420,7 +420,7 @@ function hallClaim(): ObjSpec[] {
     ...(['treasurer', 'daughter', 'amanda', 'lamp_oil', 'printer', 'benny', 'nancy', 'anicette'] as const).map((w, i) =>
       npc(`${w}_hearing`, BENCH_SPOTS[i]!.x, BENCH_SPOTS[i]!.y, 'up', { if: HEARING_TEXT }),
     ),
-    ...(['patricio_gallery', 'sebastian_gallery', 'rahel_gallery', 'patricia_gallery', 'zelia_gallery', 'follower_gallery', 'gallery_pilgrim', 'camp_leader_gallery', 'hearing_clerk'] as const).map((w, i) =>
+    ...(['patricio_gallery', 'sebastien_gallery', 'rahel_gallery', 'patricia_gallery', 'zelia_gallery', 'follower_gallery', 'gallery_pilgrim', 'camp_leader_gallery', 'hearing_clerk'] as const).map((w, i) =>
       npc(w, GALLERY_SPOTS[i]!.x, GALLERY_SPOTS[i]!.y, 'up', { if: HEARING_TEXT }),
     ),
     // The houses' people behind their chairs, from the Hearing to the end (the companions out of the line meanwhile:

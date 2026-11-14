@@ -98,7 +98,7 @@ Spoken mostly by the vendors and the baker of Pòdlimyè (Chapter 1) and shown i
 | 12 | Fanfan Michel | Name on a Zetwal name stone | 1 place; first: Ch 1, Zetwal (Pòdlimyè) | `data/dialogue/zetwal.ts:171` |  |
 | 13 | Odile | Ti Jak's mother, a cutter | 6 places; first: Ch 10, Zetwal again (the Muster) | `data/dialogue/zetwalMuster.ts:1089`<br>also: `quests.ts:2709`, `d/zetwalMuster.ts:1090`, `d/zetwalMuster.ts:1091`, `d/zetwalMuster.ts:1128`, `d/zetwalMuster.ts:1129` |  |
 | 14 | Solange | "Mother Solange's list" (Zetwal's names of the dead) | 27 places; first: Ch 10, Zetwal again (the Muster) | `data/dialogue/zetwalMuster.ts:1084`<br>also: `sideQuests.ts:99`, `sideQuests.ts:151`, `sideQuests.ts:175`, `sideQuests.ts:1056`, `rpg.ts:116` (+21 more) |  |
-| 15 | Jean-Philippe | A family/house name of Sebastian | 12 places; first: Ch 1, Zetwal (Pòdlimyè) | `data/dialogue/zetwal.ts:699`<br>also: `npcs.ts:501`, `npcs.ts:687`, `books.ts:48`, `books.ts:58`, `books.ts:694` (+6 more) |  |
+| 15 | Jean-Philippe | A family/house name of Sebastien | 12 places; first: Ch 1, Zetwal (Pòdlimyè) | `data/dialogue/zetwal.ts:699`<br>also: `npcs.ts:501`, `npcs.ts:687`, `books.ts:48`, `books.ts:58`, `books.ts:694` (+6 more) |  |
 
 ## 2. Taíno (Xaraguá / Yucayeque) -- Nov 18 check
 
@@ -178,7 +178,7 @@ Ardencia is Spanish-flavoured; the Brasador family and some skill names use Span
 | 9 | Rivera | Captain Rivera | 27 places; first: Ch 11, Xaraguá again | `data/dialogue/xaraguaWar.ts:1029`<br>also: `npcs.ts:209`, `npcs.ts:670`, `cards.ts:220`, `encounters.ts:138`, `encounters.ts:518` (+21 more) |  |
 | 10 | Ferrán | Elder Ferrán | 13 places; first: Ch 3 side quest, Ardencia | `data/dialogue/ardenciaQuests.ts:79`<br>also: `sideQuestsLate.ts:83`, `sideQuestsLate.ts:87`, `sideQuestsLate.ts:91`, `objects.ts:394`, `secretItems.ts:116` (+7 more) |  |
 | 11 | Alonso | Don Alonso, first Lord of Ardencia | 10 places; first: Ch 3, Ardencia | `data/dialogue/ardencia.ts:353`<br>also: `objects.ts:363`, `books.ts:477`, `books.ts:482`, `quests.ts:2238`, `quests.ts:2244` (+4 more) |  |
-| 12 | Sebastian | Uncle Sebastian | 13 places; first: Ch 9, Aldermoor (Kingsmere) | `data/dialogue/aldermoor.ts:631`<br>also: `rpg.ts:334`, `npcs.ts:501`, `npcs.ts:687`, `cards.ts:214`, `speakers.ts:365` (+7 more) | No accent (Sebastián). |
+| 12 | Sebastien | Uncle Sebastien | 13 places; first: Ch 9, Aldermoor (Kingsmere) | `data/dialogue/aldermoor.ts:631`<br>also: `rpg.ts:334`, `npcs.ts:501`, `npcs.ts:687`, `cards.ts:214`, `speakers.ts:365` (+7 more) | No accent (Sebastián). |
 | 13 | Jaime | NPC name | 20 places; first: Ch 11, Xaraguá again | `data/dialogue/xaraguaWar.ts:1029`<br>also: `npcs.ts:671`, `cards.ts:220`, `encounters.ts:138`, `encounters.ts:518`, `speakers.ts:166` (+14 more) |  |
 
 ## 4. Arabic (Al-Doria / Bab al-Dhahab) -- bonus
@@ -371,7 +371,7 @@ Nothing here was changed in the game; these are things that look inconsistent or
 
 17. **Hindi capitalisation:** "Agni ki Shakti" (lowercase *ki*, `data/rpg.ts:555`) vs "Rakt Ki Pyaas" (capital *Ki*, `data/rpg.ts:556`); the glossary copies both. Pick one. Also is "Rakt Ki Pyaas" / "Ananta Yuddha" good Hindi (or *Anant Yuddh*)?
 18. **Japanese romanisation:** *Yōkoso* and *Genzō* use macrons (`data/dialogue/kuroshi.ts:633`, `data/books.ts:849`) while the glossary has "Arigatou gozaimasu" (the *ou* style, not shown to the player) and *Irasshaimase*, *Konnichiwa* have no long marks. Pick one scheme. Also "Sasayaki Ha" (`data/battles.ts:155`) may want *Sasayaki no Ha* or *Sasayaki-ba*, and "Ayatsuri" and "Kagemimi" ("shadow-ear") should be confirmed as natural.
-19. **Spanish accents on names:** *Tío* and *Alcázar* and *Ferrán* are accented, but *Joaquin* (`data/npcs.ts:516, 616, 624`; `data/cards.ts:220`), *Rodriguez* (`data/rpg.ts:203`; `data/books.ts:693`) and *Sebastian* (`data/rpg.ts:334`; `data/npcs.ts:501`) are not. Intentional (Anglicised family names) or missing accents (*Joaquín*, *Rodríguez*, *Sebastián*)?
+19. **Spanish accents on names:** *Tío* and *Alcázar* and *Ferrán* are accented, but *Joaquin* (`data/npcs.ts:516, 616, 624`; `data/cards.ts:220`), *Rodriguez* (`data/rpg.ts:203`; `data/books.ts:693`) are not. Intentional (Anglicised family names) or missing accents (*Joaquín*, *Rodríguez*)? (*Sebastien* is settled: the owner's spelling, Nov 14.)
 20. **Aunt words:** four aunts are *Titi* (Caribbean Spanish: Kayla, Jordyn, Aiyana, Amanda) but Coralie is *Tati* ("Tati Coco", marked French in the glossary). Intended difference?
 21. **Cendre vs Cenizal vs Ceniza.** The ford is spelled *Cendre* (French "ash", `data/books.ts:70, 399`, `data/dialogue/ardencia.ts:234, 300, 495, 498`) in a Spanish land whose town is *Cenizal* and whose bread is *Pan de ceniza*. Is *Cendre* meant to be French, or should it be a Spanish form?
 22. **Spanish skill names** (*La Marca*, *Grito de Guerra*, *Reinado de Cenizas*, *Sangre Ardiente*, *La Promesa de Benny*) have the English shown only as a skill description, and "Benny's promise" appears in English in `engine/battle.ts:1484`. Are the Spanish names idiomatic (for example, is *La Marca* right for "the mark", and *Sangre Ardiente* for "burning blood")?

@@ -8,12 +8,12 @@ import type { ClockDef } from '../engine/secrets.ts';
 type P = { readonly x: number; readonly y: number };
 const at = (x: number, y: number): P => ({ x, y });
 
-/** The day's required things (Al-3 The Purge List, the debate) and the two people met (Jordyn's offer, Sebastian). */
+/** The day's required things (Al-3 The Purge List, the debate) and the two people met (Jordyn's offer, Sebastien). */
 export const DAY_DONE: Condition = {
-  all: [{ flag: 'side.purge_list.done' }, { flag: 'debate.aldermoor_one_hand.settled' }, { flag: 'story.sebastian_met' }, { flag: 'story.jordyn_offer' }],
+  all: [{ flag: 'side.purge_list.done' }, { flag: 'debate.aldermoor_one_hand.settled' }, { flag: 'story.sebastien_met' }, { flag: 'story.jordyn_offer' }],
 };
 /** The same, as map condition text. */
-export const DAY_DONE_TEXT = 'side.purge_list.done, debate.aldermoor_one_hand.settled, story.sebastian_met, story.jordyn_offer';
+export const DAY_DONE_TEXT = 'side.purge_list.done, debate.aldermoor_one_hand.settled, story.sebastien_met, story.jordyn_offer';
 /**
  * The eve of the Assize (a condition, not a flag: the outline section 6 with the Chapter 6 review's 3.11): the four
  * done and the recital not begun. The lamps are lit on the square and the court walks to St. Agatha's.
@@ -213,7 +213,7 @@ export const CATHEDRAL = {
   vestry: at(25, 6),
   organ: { x: 9, y: 1, w: 6, h: 3 },
   console: at(11, 4),
-  sebastian: at(12, 4),
+  sebastien: at(12, 4),
   oathStone: at(11, 7),
   verger: at(21, 6),
   sceneRow: 14,

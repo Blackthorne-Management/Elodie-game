@@ -26,7 +26,7 @@ colours (`ART-PROMPTS.md` section 11). The converter handles both.
 **Already drawn:** Gianna, Anissa, Azzy, Elodie Limyè, Patricio (young and old) and Anicette. They can be redone with a
 real photo too: use their sections in `ART-PROMPTS.md` and **keep the OPTIONAL photo line**, attaching the photo.
 
-**Tall men** (Rael, Sebastian, Rivera) are drawn "about 15% taller" and become **28 x 36** cells. Everyone else becomes
+**Tall men** (Rael, Sebastien, Rivera) are drawn "about 15% taller" and become **28 x 36** cells. Everyone else becomes
 24 x 32.
 
 **Photo ages:** every prompt says what age to show, so an older or younger photo of the person is fine. Young Benny is
@@ -47,7 +47,7 @@ asked for as a man of 20 to 25.
 11. [Kayla](#kayla)
 12. [Aiyana](#aiyana)
 13. [Coralie, "Tati Coco"](#coralie-tati-coco)
-14. [Sebastian](#sebastian)
+14. [Sebastien](#sebastien)
 15. [If they are real people too: Captain Azriel Rivera and Jaime](#if-they-are-real-people-too)
 16. [File names](#file-names)
 
@@ -445,21 +445,21 @@ Pixel art sprite sheet of the same character, Coralie, for a top-down 16-bit fan
 
 ---
 
-## Sebastian
+## Sebastien
 
 Elodie's brother, about 60, a world-renowned organist to three courts. Proud, gentle, a showman. Chapter 9, Kingsmere's cathedral (and he leaves for Eightgate and Pòdlimyè). Source: ART-PROMPTS section 18.
 
-Attach: Gianna's reference sheet (`docs/quest/art-source/gianna-reference.webp`) + a clear, well-lit, front-facing photo of Sebastian Jean-Philippe.
+Attach: Gianna's reference sheet (`docs/quest/art-source/gianna-reference.webp`) + a clear, well-lit, front-facing photo of Sebastien Jean-Philippe.
 
 **1. Character reference sheet** (a new chat; attach Gianna's sheet and the photo)
 ```
-Character design reference sheet for a fantasy adventure game character named Sebastian Jean-Philippe. The first attached image shows the art style to match (it is a different character, a young woman). A second image is attached: a photo of the real person Sebastian Jean-Philippe is based on. Use it as the likeness reference for the face (face shape, eyes, nose, smile, skin tone, hair), shown as a man of about 60. Do not copy the photo's clothing, background or pose. The photo wins for face, skin tone and hair; the outfit comes from this description.
+Character design reference sheet for a fantasy adventure game character named Sebastien Jean-Philippe. The first attached image shows the art style to match (it is a different character, a young woman). A second image is attached: a photo of the real person Sebastien Jean-Philippe is based on. Use it as the likeness reference for the face (face shape, eyes, nose, smile, skin tone, hair), shown as a man of about 60. Do not copy the photo's clothing, background or pose. The photo wins for face, skin tone and hair; the outfit comes from this description.
 He is a Haitian-inspired Caribbean organist of about 60, world-famous and a showman: tall, proud, gentle, theatrical and warm. Grey hair swept back, a neat grey beard, long expressive hands (the photo wins for face, skin and hair). Outfit: a burgundy velvet coat with gold trim over a cream shirt with a loose cravat, dark trousers and polished boots. Show him full body three times on one sheet: front view, side view and back view, standing tall, one arm swept out in a small bow, same scale, evenly spaced, plus one small close-up of his face. Style: hand-painted fantasy storybook illustration matching the first attached image, crisp clean outlines, bright warm saturated colours (burgundy, gold, cream, grey, warm skin), well-lit faces, soft shading, clear readable shapes. Plain flat light-grey background. No text, no labels, no letters, no frames, no extra people, no anime or chibi style, not photorealistic.
 ```
 
 **2. Dialogue portrait** (same chat)
 ```
-Same character as the reference sheet: Sebastian Jean-Philippe, about 60, with the same face as on the reference sheet (the likeness of the photographed person). Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Grey hair swept back, a neat grey beard, the burgundy velvet coat with gold trim and the loose cream cravat. Expression: showman, a grand delighted smile, chin lifted. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat magenta background (#FF00FF) filling the whole square. No text, no frame, no border, no other people.
+Same character as the reference sheet: Sebastien Jean-Philippe, about 60, with the same face as on the reference sheet (the likeness of the photographed person). Head-and-shoulders portrait for a game's dialogue box, facing three-quarters toward the viewer, centred, filling a square image. Grey hair swept back, a neat grey beard, the burgundy velvet coat with gold trim and the loose cream cravat. Expression: showman, a grand delighted smile, chin lifted. Style: the same hand-painted fantasy storybook look, crisp outlines, bright warm colours, the face well lit from the upper left, simple readable shapes that still read when shrunk very small. Solid flat magenta background (#FF00FF) filling the whole square. No text, no frame, no border, no other people.
 ```
 Then, in the same chat, ask for two more expressions, one at a time:
 - *"Same portrait, same framing, expression: **listening**, eyes closed, completely lost in music."*
@@ -467,10 +467,10 @@ Then, in the same chat, ask for two more expressions, one at a time:
 
 **3. Pixel walking sprite sheet** (same chat; also attach **Gianna's sprite sheet**, `docs/quest/art-source/gianna-sprites.webp`; cell size after conversion: 28 x 36 (tall man))
 ```
-Pixel art sprite sheet of the same character, Sebastian Jean-Philippe, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), but draw him about 15% taller than her. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Grey hair swept back, a neat grey beard, a burgundy velvet coat with gold trim, a cream shirt and loose cravat, dark trousers, polished boots. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
+Pixel art sprite sheet of the same character, Sebastien Jean-Philippe, for a top-down 16-bit fantasy RPG in Game Boy Advance style. The attached sprite sheet is a different character (a young woman): match its art style, pixel size and chibi proportions (big head about 40% of the figure), but draw him about 15% taller than her. A strict grid of 4 rows and 3 columns, 12 cells, every cell the same size, with NO lines or borders between the cells. Row 1 facing down (toward the viewer), row 2 facing left, row 3 facing right, row 4 facing up (back view). In each row: column 1 standing still, column 2 left foot forward, column 3 right foot forward. Every frame in row 2 faces left and every frame in row 3 faces right. Grey hair swept back, a neat grey beard, a burgundy velvet coat with gold trim, a cream shirt and loose cravat, dark trousers, polished boots. Bright, saturated, warm colours with clearly lit skin; dark eyes visible on the face. 1-pixel dark outline, flat colours, at most 16 colours, hard pixel edges, no anti-aliasing, no gradients, no shadows on the ground. Feet at the bottom of each cell, same size and position in every cell. Solid flat magenta background (#FF00FF). No text, no numbers, no grid lines, no labels.
 ```
 
-**Files:** `characters/sebastian.png` (28 x 36 cells), `portraits/sebastian.png`, `portraits/sebastian_listening.png`, `portraits/sebastian_tender.png`.
+**Files:** `characters/sebastien.png` (28 x 36 cells), `portraits/sebastien.png`, `portraits/sebastien_listening.png`, `portraits/sebastien_tender.png`.
 
 ---
 
@@ -542,7 +542,7 @@ Pixel art sprite sheet of the same character, Jaime, for a top-down 16-bit fanta
 ## File names
 
 Look keys: `rael`, `benny_old`, `benny_young`, `nancy`, `zelia`, `amanda`, `joaquin`, `rahel`, `patricia`, `jordyn`,
-`kayla`, `aiyana`, `coralie`, `sebastian`, `rivera`, `jaime`. The neutral/default portrait is `portraits/<look>.png`;
+`kayla`, `aiyana`, `coralie`, `sebastien`, `rivera`, `jaime`. The neutral/default portrait is `portraits/<look>.png`;
 the other expressions are `portraits/<look>_<expression>.png`. Some of these looks already have game placeholders
 (`quest/src/assets.config.ts`); a PNG with the same name replaces the placeholder. The later outfits are
 `joaquin_free` and `jordyn_free` (Chapter 10).
@@ -562,7 +562,7 @@ the other expressions are `portraits/<look>_<expression>.png`. Some of these loo
 | Kayla | `characters/kayla.png` | `portraits/kayla.png` | `kayla_listening` |
 | Aiyana | `characters/aiyana.png` | `portraits/aiyana.png` | `aiyana_dry` |
 | Coralie, "Tati Coco" | `characters/coralie.png` | `portraits/coralie.png` | `coralie_fierce`, `coralie_tender` |
-| Sebastian | `characters/sebastian.png` (28 x 36 cells) | `portraits/sebastian.png` | `sebastian_listening`, `sebastian_tender` |
+| Sebastien | `characters/sebastien.png` (28 x 36 cells) | `portraits/sebastien.png` | `sebastien_listening`, `sebastien_tender` |
 | Captain Azriel Rivera | `characters/rivera.png` (28 x 36 cells) | `portraits/rivera.png` | `rivera_grim` |
 | Jaime | `characters/jaime.png` | `portraits/jaime.png` | `jaime_casting` |
 
@@ -587,7 +587,7 @@ A dialogue line can carry a `mood`; the box then shows `portraits/<portrait>_<mo
 | `coralie_tender` | 8 | `benny_wry` | 5 |
 | `benny_old_wry` | 7 | `amanda_conspiratorial` | 4 |
 | `qasim_cold` | 7 | `anaco_stern`, `anaco_tender` | 4 each |
-| `benny_old_tender` | 4 | `sebastian_tender` | 4 |
-| `sebastian_listening`, `nancy_tender` | 3 each | `rahel_closed` | 3 |
+| `benny_old_tender` | 4 | `sebastien_tender` | 4 |
+| `sebastien_listening`, `nancy_tender` | 3 each | `rahel_closed` | 3 |
 | `samira_dismayed`, `cresswell_thoughtful`, `jordyn_resigning`, `zelia_protective`, `zelia_softened`, `benny_old_counting` | 2 each | `layla_softened`, `joaquin_torn`, `rivera_grim`, `patricia_listening`, `benny_recognising` | 1 each |
 | `patricio_neutral`, `anicette_neutral`, `qasim_defeated`, `jaime_casting` | 0 | | |

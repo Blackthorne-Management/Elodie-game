@@ -503,12 +503,12 @@ price (guide 6.3) and a companion. Levels by visit order (Section 1).
   has been bent to hunt Anissa by the Regent's people.
 - **Built (Oct 22; the outline `reviews/2026-10-22-chapter9-outline.md`, its "Built" section, and its second review):**
   Kingsmere's six maps (the heath, the Market Cross, the Rolls House, the keep, the close, St. Agatha's), the voyage
-  from Agnipur and the Mere Stair in the rain, Sebastian's bill ("that's Grandpapa's name"), the press-gang at the pie shop
+  from Agnipur and the Mere Stair in the rain, Sebastien's bill ("that's Grandpapa's name"), the press-gang at the pie shop
   on the Cross and Edmund joining, the Regent's refusal in the hall, the day's four (Al-3 The Purge List with the bog
-  chapel and one door too late, the One Hand debate, Jordyn's offer in the close, Sebastian at the organ), the eve (the
+  chapel and one door too late, the One Hand debate, Jordyn's offer in the close, Sebastien at the organ), the eve (the
   Almoner turns back at the west door), the Toccata and the postern, the filing floor's memory (Thomas writes the true
   record again at a quarter to three; Patricio leans on the panel; Anissa holds the door), the mirrored drawer and the
-  panel behind the shelf (Al-2), caught by the Almoner and arrested by Jordyn, the cells and Sebastian's blanket, the
+  panel behind the shelf (Al-2), caught by the Almoner and arrested by Jordyn, the cells and Sebastien's blanket, the
   Assize (the dock's memory of the roll, the Almoner pressed, the record read into the roll), the Hushed unmasked as the
   veiled woman by the mill, the three defiances (Edmund, Rosalind's "Sat.", Jordyn's knot), the price at dawn and the
   voyage home. Claude's calls: the close as its own map, the rain as a wash, the price of Fear 8 paid to at most 6 (floor
@@ -762,7 +762,7 @@ side quest. Azzy calls each of them *Titi* (aunt) or *Tío* (uncle).
 **Elodie's siblings:**
 - **Coralie, "Tati Coco"** to Gigi and Anissa. She lives in a foreign land, an artist and clothing designer for
   royals. Bumped into along the way, she helps them through a quest.
-- **Sebastian**, a world-renowned organist who plays across the realm for fame. Bumped into along the way, he helps.
+- **Sebastien**, a world-renowned organist who plays across the realm for fame. Bumped into along the way, he helps.
 
 **Rael's royal guard (Chapter 3):**
 - **Azriel Rivera** heads it. He fought beside Rael in the Ash Wars; Azzy (Azriel Rodriguez) is named after him.

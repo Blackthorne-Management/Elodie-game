@@ -67,7 +67,7 @@ flow, and a small staging change removes what is uncomfortable about it (3.7).
 - **The start and the hand-on.** `?chapter=8` on Agnipur's harbor quay under the chain (outline:53-58) fits the Ch7
   outline's sea voyage (Ch7 outline:911) and puts the chapter's picture (a dead lamp on a sacred chain) first. The hand-on
   to Chapter 9 (outline:1031-1073) is right: the ledger's Kingsmere purchasing office is a door, not an answer; Jordyn
-  is named by family, as `FAMILY.md` places her in the Regent's guard; Sebastian is left cold for Chapter 9, which is
+  is named by family, as `FAMILY.md` places her in the Regent's guard; Sebastien is left cold for Chapter 9, which is
   correct because nobody in Agnipur has reason to know him. It also fits `STORY.md`'s Chapter 9 lesson, "the Crown
   always meant to keep the harbor", without spending it.
 - **The Harbor Chain as the sacred thing** (outline:200-203, 952-955). It gives the Chapter 5 envoy's line an object,
@@ -524,7 +524,7 @@ outline:1187-1190, plus the debate's third round, before cutting a beat.
   `joined|mediated` (outline:605), as Chapter 4's dusk does. Mediate needs Influence 5 (`config.ts:282`), reachable by
   listening and reading.
 - **`FAMILY.md`:** Aiyana is Kayla's full sister and Rahel's daughter, an engineer of the great flame who opens the way
-  through the puzzle. Jordyn is in the Regent's guard (Chapter 9), and Sebastian's recital is in Chapter 9. The outline
+  through the puzzle. Jordyn is in the Regent's guard (Chapter 9), and Sebastien's recital is in Chapter 9. The outline
   matches all of these, apart from 3.5.
 - **`STORY.md` Chapter 8's beats** are all present (Meera and the priests hide the failing; Vikram's duel over an
   argument; the Echo at the chain; the hoarder; the join). `PUZZLES.md` SIG-JWA's logic and hints are kept.

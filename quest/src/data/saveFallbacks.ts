@@ -14,7 +14,8 @@ export const SAVE_FALLBACKS: SaveFallbacks = {
   renames: {
     maps: {},
     items: {},
-    flags: {},
+    // Nov 14 (owner): the name is spelled Sebastien.
+    flags: { 'story.sebastian_met': 'story.sebastien_met' },
   },
   safeSpawns: [
     { after: '', map: 'zetwal-town', spawn: 'start' },

@@ -5,7 +5,7 @@
 // The owner's rules here: every story moment is acted out on the map; Anissa is never touched by a foe, never a target
 // and never jokes, and no comic line shares a node with hers; Salkhi never speaks in a scene with Anissa's lines in it;
 // Vikram's breath is never in a node with Anissa's lines (tests/aldermoor.test.ts checks all three). The locked rule:
-// Jordyn and Sebastian say nothing of Rael that reads only one way (Jordyn's "Keep the law" and Sebastian's weather are
+// Jordyn and Sebastien say nothing of Rael that reads only one way (Jordyn's "Keep the law" and Sebastien's weather are
 // the family's two lines); the Regent's hand is seen and never proven (the commission is under the Throne's seal, with
 // no hand); the Almoner is Chapter 1's veiled woman by the mill (owner decision, Oct 22), and she names nobody.
 
@@ -51,7 +51,7 @@ const H = 'haru';
 const V = 'vikram';
 const ED = 'edmund';
 const JO = 'jordyn';
-const SB = 'sebastian';
+const SB = 'sebastien';
 const RG = 'regent';
 const AL = 'almoner';
 const RO = 'rosalind';
@@ -67,7 +67,7 @@ const WARNED: Condition = { flag: 'choice.warned_watcher' };
 /** The three families on the Cross, warned (Al-3 step 3). */
 const FAMILIES: Condition = { all: [{ flag: 'family.pie' }, { flag: 'family.tea' }, { flag: 'family.constable' }] };
 
-/** What Sebastian says is still left before the eve (worded from the flags). */
+/** What Sebastien says is still left before the eve (worded from the flags). */
 const LEFT: DialogueLine[] = [
   { if: { notFlag: 'side.purge_list.done' }, speaker: SB, text: 'Your friend\'s tutor is still waiting on the heath, I am told. Printers are terrible at waiting.' },
   { if: { notFlag: 'debate.aldermoor_one_hand.settled' }, speaker: SB, text: 'And the two by the cross are still at it. I can hear them from the loft.' },
@@ -211,7 +211,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
       lines: [
         nar('The Crown\'s notice post: two bills under a tin hood, out of the rain.'),
         nar('THE ASSIZE OF KINGSMERE sits on the third day. The Lord Regent presides. The Crown\'s fleet sails after it.'),
-        nar('By command of the Lord Regent: SEBASTIAN JEAN-PHILIPPE, organist to three courts, at the great organ of St. Agatha\'s.'),
+        nar('By command of the Lord Regent: SEBASTIEN JEAN-PHILIPPE, organist to three courts, at the great organ of St. Agatha\'s.'),
         nar('On the eve of the Assize: the Agatha Toccata. Admission by the Regent\'s leave.'),
       ],
       next: 'name',
@@ -223,7 +223,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         say(G, 'That\'s Mummy\'s brother. He writes to her about the weather.', { set: { 'story.recital_seen': true } }),
       ],
     },
-    again: { lines: [nar('THE ASSIZE OF KINGSMERE sits on the third day. And: SEBASTIAN JEAN-PHILIPPE, at St. Agatha\'s, on the eve.')] },
+    again: { lines: [nar('THE ASSIZE OF KINGSMERE sits on the third day. And: SEBASTIEN JEAN-PHILIPPE, at St. Agatha\'s, on the eve.')] },
   }),
   script('moor_gate', {
     start: {
@@ -609,13 +609,13 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
   }),
   simple('vestry_locked', [nar('The vestry door, locked from the other side.')]),
 
-  // ---- Beat 3: St. Agatha's; Sebastian -------------------------------------------------------------------------------
-  script('sebastian_meet', {
+  // ---- Beat 3: St. Agatha's; Sebastien -------------------------------------------------------------------------------
+  script('sebastien_meet', {
     start: {
       lines: [
         nar('St. Agatha\'s: a long nave of pews to the oath-stone, and across the whole east end the pipes of the great organ.', { fx: 'fade' }),
-        act([{ do: 'look', actor: 'npc:sebastian' }, { do: 'wait', ms: 500 }], '', 'In the loft a broad man in a velvet coat, sleeves pushed up, has stopped mid-phrase and turned round.'),
-        act([{ do: 'walk', actor: 'npc:sebastian', to: at(CATHEDRAL.sebastian.x, CATHEDRAL.sceneRow - 1), facing: 'down', run: true }], '', 'He comes down the loft stair at a run, and stops a step short of Gianna.'),
+        act([{ do: 'look', actor: 'npc:sebastien' }, { do: 'wait', ms: 500 }], '', 'In the loft a broad man in a velvet coat, sleeves pushed up, has stopped mid-phrase and turned round.'),
+        act([{ do: 'walk', actor: 'npc:sebastien', to: at(CATHEDRAL.sebastien.x, CATHEDRAL.sceneRow - 1), facing: 'down', run: true }], '', 'He comes down the loft stair at a run, and stops a step short of Gianna.'),
         say(SB, 'Gianna Elise. You have your mother\'s forehead and your grandfather\'s frown.'),
         say(SB, 'And you have walked into my rehearsal, which nobody does, and I find I don\'t mind.'),
         nar('He embraces her, and holds on a moment longer than she expects.'),
@@ -624,11 +624,11 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
     },
     anissa: {
       lines: [
-        act([{ do: 'face', actor: 'npc:sebastian', facing: 'down' }, { do: 'wait', ms: 700 }], '', 'Then he sees Anissa, and goes down on one knee on the cold flags.'),
+        act([{ do: 'face', actor: 'npc:sebastien', facing: 'down' }, { do: 'wait', ms: 700 }], '', 'Then he sees Anissa, and goes down on one knee on the cold flags.'),
         say(SB, 'And this is Anissa. Who hums. Your mother wrote that you hum.', { mood: 'tender' }),
         say(SB, 'It is the only thing about either of you she has ever written to me that was not the weather.', { mood: 'tender' }),
         say(A, 'I don\'t hum.'),
-        say(SB, 'Then I will listen for it anyway. I\'m your uncle Sebastian.', { mood: 'listening', set: { 'story.sebastian_met': true } }),
+        say(SB, 'Then I will listen for it anyway. I\'m your uncle Sebastien.', { mood: 'listening', set: { 'story.sebastien_met': true } }),
       ],
       next: 'help',
     },
@@ -644,8 +644,8 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
       ],
     },
   }),
-  script('sebastian_talk', {
-    start: { lines: [], next: [{ if: { flag: 'story.caught' }, to: 'court' }, { if: { flag: 'story.sebastian_met' }, to: 'waiting' }, { to: 'loft' }] },
+  script('sebastien_talk', {
+    start: { lines: [], next: [{ if: { flag: 'story.caught' }, to: 'court' }, { if: { flag: 'story.sebastien_met' }, to: 'waiting' }, { to: 'loft' }] },
     loft: { lines: [say(SB, 'Nobody comes up here during a rehearsal. Nobody. ...Well. Come on, then.')] },
     waiting: {
       lines: [...LEFT, { if: { all: [{ flag: 'side.purge_list.done' }, { flag: 'debate.aldermoor_one_hand.settled' }] }, speaker: SB, text: 'The court comes at the bell. I am ready. Are you?' }],
@@ -697,11 +697,11 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         { do: 'place', actor: 'r_boy', look: 'pie_boy', at: at(16, 12), facing: 'up' },
         { do: 'place', actor: 'r_mother', look: 'pie_mother', at: at(17, 12), facing: 'up' },
         { do: 'place', actor: 'r_constable', look: 'moor_constable_c', at: at(18, 12), facing: 'up' },
-        { do: 'place', actor: 'r_sebastian', look: 'sebastian', at: at(CATHEDRAL.sebastian.x, CATHEDRAL.sebastian.y), facing: 'up' },
-        { do: 'look', actor: 'r_sebastian' },
+        { do: 'place', actor: 'r_sebastien', look: 'sebastien', at: at(CATHEDRAL.sebastien.x, CATHEDRAL.sebastien.y), facing: 'up' },
+        { do: 'look', actor: 'r_sebastien' },
       ],
       '',
-      'Sebastian sits at the console with his back to the city. He lifts his hands.',
+      'Sebastien sits at the console with his back to the city. He lifts his hands.',
     ),
     act([{ do: 'wait', ms: 600 }, { do: 'sync' }], '', 'The first chord lands, and the whole church shakes with it.', { fx: 'shake', set: { 'story.recital_begun': true, 'story.postern_open': true } }),
     act([{ do: 'look', actor: 'r_regent' }], '', 'The Regent in the front pew, not moving. The almswomen are not here.'),
@@ -971,14 +971,14 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
         nar('The keep\'s undercroft. One cell, a lamp, a barred door. Anissa sits close against Gianna.', { fx: 'fade' }),
         act([{ do: 'look', actor: 'npc:sorry_constable' }], 'sorry_constable', 'I\'m sorry about all this. I\'m sorry about most things, lately.'),
         act(
-          [{ do: 'enter', actor: 'sebastian_cell', look: 'sebastian', from: at(38, 26), to: at(KEEP.cellSpawn.x, KEEP.cell.y + KEEP.cell.h + 1), facing: 'up' }, { do: 'look', actor: 'sebastian_cell' }],
+          [{ do: 'enter', actor: 'sebastien_cell', look: 'sebastien', from: at(38, 26), to: at(KEEP.cellSpawn.x, KEEP.cell.y + KEEP.cell.h + 1), facing: 'up' }, { do: 'look', actor: 'sebastien_cell' }],
           '',
-          'Sebastian comes down the stair with a blanket over his arm.',
+          'Sebastien comes down the stair with a blanket over his arm.',
         ),
         say(SB, 'The Regent gave me leave. He said, "I am not a monster, Mr. Jean-Philippe. I am a court."'),
         say(SB, 'I believe him about the second thing.'),
         say(SB, 'Whatever you took, it was worth the cathedral. I\'ll be in the gallery.', { mood: 'tender' }),
-        act([{ do: 'exit', actor: 'sebastian_cell', to: at(38, 26) }], '', 'He passes the blanket through the bars, and goes back up the stair.'),
+        act([{ do: 'exit', actor: 'sebastien_cell', to: at(38, 26) }], '', 'He passes the blanket through the bars, and goes back up the stair.'),
       ],
       next: 'blanket',
     },
@@ -1349,7 +1349,7 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           '',
           'Then Jordyn, with six of the watch, their violet coats turned inside out.',
         ),
-        act([{ do: 'enter', actor: 'sebastian_d', look: 'sebastian', from: at(26, HEATH.roadRows[1]), to: at(9, HEATH.roadRows[1]), facing: 'left' }], '', 'Sebastian last, in his velvet coat, not hurrying.'),
+        act([{ do: 'enter', actor: 'sebastien_d', look: 'sebastien', from: at(26, HEATH.roadRows[1]), to: at(9, HEATH.roadRows[1]), facing: 'left' }], '', 'Sebastien last, in his velvet coat, not hurrying.'),
       ],
       next: 'price',
     },
@@ -1400,21 +1400,21 @@ export const ALDERMOOR_DIALOGUE: readonly DialogueScript[] = [
           'She goes up the road with her seven. The dissidents go with them.',
         ),
       ],
-      next: 'sebastian',
+      next: 'sebastien',
     },
-    sebastian: {
+    sebastien: {
       lines: [
-        act([{ do: 'walk', actor: 'sebastian_d', to: at(7, HEATH.roadRows[1]), facing: 'left' }], SB, 'I have a recital at Eightgate in a month, by the Regent\'s command, which he gave before he knew what I was.'),
+        act([{ do: 'walk', actor: 'sebastien_d', to: at(7, HEATH.roadRows[1]), facing: 'left' }], SB, 'I have a recital at Eightgate in a month, by the Regent\'s command, which he gave before he knew what I was.'),
         say(SB, 'I am going to play it, very loud. Then I am coming to Pòdlimyè to hear the drums. I was always somewhere being famous.'),
       ],
-      next: 'sebastian_anissa',
+      next: 'sebastien_anissa',
     },
-    sebastian_anissa: {
+    sebastien_anissa: {
       lines: [
         say(SB, 'I am told you held a door for an hour. I have never held anything that long but a note.', { mood: 'tender' }),
         say(A, 'I counted.'),
         nar('He gives her the recital\'s bill from his coat. She keeps it.', { set: { 'item.recital_bill': true } }),
-        act([{ do: 'exit', actor: 'sebastian_d', to: at(26, HEATH.roadRows[1]) }], '', 'He goes back up the road to the city, to practise for Eightgate.'),
+        act([{ do: 'exit', actor: 'sebastien_d', to: at(26, HEATH.roadRows[1]) }], '', 'He goes back up the road to the city, to practise for Eightgate.'),
       ],
       next: 'clock',
     },

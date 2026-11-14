@@ -1089,7 +1089,7 @@ const BASE_LOOKS: Record<string, PlaceholderCharacter> = {
   // review's 3.2: the recognition is also a picture), and unveiled in the same palette.
   edmund: { skin: C.s!, hair: C.N!, hairStyle: 'curly', outfit: STILLWATER_GREY, trim: C.w!, legs: C.K!, headgear: 'brimmed', headgearColor: 0x3a3440, accessories: ['satchel'] },
   jordyn: { skin: C.s!, hair: HAIR_BLACK, hairStyle: 'cropped', outfit: SEAT_VIOLET, trim: C.y!, legs: C.K!, build: 'tall', accessories: ['epaulettes', 'sash'] },
-  sebastian: { skin: C.S!, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x5a2a3a, trim: C.y!, legs: C.K!, build: 'tall', beard: 0x6a6a72, accessories: ['sash'] },
+  sebastien: { skin: C.S!, hair: 0x4a4a52, hairStyle: 'short', outfit: 0x5a2a3a, trim: C.y!, legs: C.K!, build: 'tall', beard: 0x6a6a72, accessories: ['sash'] },
   almoner: { ...QUIET_CROWN.quiet_crown_f_brown!, outfit: 0x5a5a62 },
   almoner_unveiled: { skin: SKIN_TONES.brown, hair: C.G!, hairStyle: 'bun', outfit: 0x5a5a62, trim: 0xc8c8d0, robe: true, accessories: ['emblem'] },
   almswoman: { skin: SKIN_TONES.tan, hair: HAIR_DARK, hairStyle: 'braid', outfit: 0x6a6a72, trim: 0xc8c8d0, robe: true, headgear: 'cowl', headgearColor: 0x5a5a62, accessories: ['veil'] },
@@ -1283,7 +1283,7 @@ export const HERITAGE = {
   own: [
     'gianna', 'patricio_young', 'anissa', 'elodie', 'anicette', 'patricio_old', 'yari', 'azzy', 'samira', 'caona', 'benny_young',
     'benny_old', 'rael', 'rivera', 'jaime', 'cresswell', 'zelia', 'joaquin', 'joaquin_free', 'amanda', 'nancy', 'layla', 'qasim',
-    'coralie', 'echo_yusuf', 'regent', 'hollis', 'edmund', 'jordyn', 'jordyn_free', 'sebastian', 'rosalind', 'bayarmaa',
+    'coralie', 'echo_yusuf', 'regent', 'hollis', 'edmund', 'jordyn', 'jordyn_free', 'sebastien', 'rosalind', 'bayarmaa',
     'torvald', 'hrafn', 'grimvald', 'oyuun', 'echo_sarnai', 'haru', 'kayla', 'kaede', 'paper_fox', 'echo_sayo', 'vikram', 'aiyana',
     'meera', 'seth_dhanraj', 'echo_arjun', 'rahel', 'patricia', 'ti_jak', 'hale', 'thorne', 'anaco', 'echo_solange', 'echo_thomas',
     'gianna_seamstress', 'anissa_seamstress',
@@ -1750,7 +1750,7 @@ export const PORTRAIT_MOODS: Readonly<Record<string, readonly string[]>> = {
   kayla: ['listening'],
   aiyana: ['dry'],
   coralie: ['fierce', 'tender'],
-  sebastian: ['listening', 'tender'],
+  sebastien: ['listening', 'tender'],
   rivera: ['grim'],
   jaime: ['casting'],
 };

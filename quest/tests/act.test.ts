@@ -313,7 +313,7 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     for (const name of ['Vikram', 'Aiyana', 'Meera', 'Senior Keeper', 'Junior priest', "The Crown's oil-factor", 'Seth Dhanraj', 'Arjun', 'Chief runner', 'Carter', 'Oil Enforcer']) expect(speakers).toContain(name);
   });
 
-  it('Chapter 9: the Mere Stair, the Cross, the audience, the day (Al-3, the debate, Jordyn, Sebastian), the recital, the archive, caught, the Assize, the Hushed, the price, home', () => {
+  it('Chapter 9: the Mere Stair, the Cross, the audience, the day (Al-3, the debate, Jordyn, Sebastien), the recital, the archive, caught, the Assize, the Hushed, the price, home', () => {
     const flags = new FlagStoreView(atChapter9End.flags);
     // Every objective in order (the landing is done by the arrival itself; the toccata objective follows the side quests).
     expect(chapter9).toEqual([...ACT9.objectives.map((o) => o.id).filter((id) => id !== 'mere'), 'complete']);
@@ -326,10 +326,10 @@ describe('Chapter 1, Zetwal, start to finish, and the opening of Chapter 2', () 
     // Edmund joins at the press-gang on the Cross and leads the order for the chapter; after it he stays, behind the others.
     expect(partyMembers(flags, RPG, 'present').map((m) => m.id)).toContain('edmund');
     expect(partyMembers(flags, RPG, 'echo').map((m) => m.id)).toEqual(['patricio', 'benny', 'caona']);
-    for (const f of ['party.edmund', 'ally.aldermoor_dissidents', 'clue.crown_pact', 'anchor.thomas_record', 'story.caught', 'story.hushed_beaten', 'story.jordyn_offer', 'story.sebastian_met', 'story.families_warned', 'side.purge_list.done', 'side.crown_chronicle.done', 'debate.aldermoor_one_hand.settled', 'belief.rael_traitor']) {
+    for (const f of ['party.edmund', 'ally.aldermoor_dissidents', 'clue.crown_pact', 'anchor.thomas_record', 'story.caught', 'story.hushed_beaten', 'story.jordyn_offer', 'story.sebastien_met', 'story.families_warned', 'side.purge_list.done', 'side.crown_chronicle.done', 'debate.aldermoor_one_hand.settled', 'belief.rael_traitor']) {
       expect(flags.isSet(f), f).toBe(true);
     }
-    for (const name of ['Edmund', 'Jordyn', 'Sebastian', 'The Almoner', 'The Lord Regent']) expect(speakers).toContain(name);
+    for (const name of ['Edmund', 'Jordyn', 'Sebastien', 'The Almoner', 'The Lord Regent']) expect(speakers).toContain(name);
   });
 
   it('Chapter 10: the pier, the camp, the council, the watch, the kitchen, the lamp, the stone, the allies seated, the vote, the whistle, under the point, the tide', () => {

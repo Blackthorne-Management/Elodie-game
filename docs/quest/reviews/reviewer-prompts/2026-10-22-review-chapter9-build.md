@@ -9,7 +9,7 @@ Paste this to the objective reviewer.
 > `docs/quest/reviews/2026-10-22-chapter9-outline-review.md` (the second review whose section 6 was applied in full),
 > `docs/quest/design/COMBAT.md` 6 (Chapter 9's entry and the price table), 9.8 (Edmund as built), 10 (Hushed now takes
 > the weapon moves too) and 13.3 (the Hushed), `docs/quest/design/PUZZLES.md` SIG-ALM, `docs/quest/design/SIDE-QUESTS.md`
-> Al-2 and Al-3, `docs/quest/design/FAMILY.md` (Jordyn and Sebastian, built), `docs/quest/design/STORY.md` (Chapter 9
+> Al-2 and Al-3, `docs/quest/design/FAMILY.md` (Jordyn and Sebastien, built), `docs/quest/design/STORY.md` (Chapter 9
 > and open question 3), and the code: `quest/tools/maps/aldermoor.ts` (six maps: the heath, the Market Cross, the Rolls
 > House, the keep, the close, St. Agatha's), `quest/src/data/aldermoor.ts`, `quest/src/data/dialogue/aldermoor.ts`,
 > `ACT9` and the Journal notes in `quest/src/data/quests.ts`, the Hushed, the veils, the Hushers, the Sealbearers, the
@@ -32,14 +32,14 @@ Paste this to the objective reviewer.
 > Hush the Light as a `seize`; the kit wins 40 of 40 with 0.85 falls and Attack alone 31 of 40 with 5.9: too hard, too
 > soft, and is it right that Attack alone mostly wins a fight whose tip is "plain blows"?; the runs with Edmund benched
 > and with a party at 20), Chapter 1's veiled woman (`story.watcher_met`, the three-way branch, "No one. That is the
-> point of us." quoted back, "the Hushed" seeded on the list and at the chapel, her look), Sebastian's bill and "that's
+> point of us." quoted back, "the Hushed" seeded on the list and at the chapel, her look), Sebastien's bill and "that's
 > Grandpapa's name", Anissa through the postern holding the Echo's door and arrested with her sister, the level plan
 > (does the route really end on 24 and the line without side quests on 22, with 70 XP a step?), Al-2's panel behind the
 > shelf and the archive's door, the price's floor of 5 of 8 (option a), the twelve story-logic fixes (3.8), the tone
 > fixes (3.9), the door too late (3.10), the engine claims (3.11: the escort as stage actors, the rain as a wash, the
 > cabinets as dialogue with `eq`, Edmund on stage), Game Over in the court (3.12: the watch on the door, the dock's
 > edge, the cell's bench);
-> (2) **a human read of every Jordyn, Sebastian and Almoner line** against the locked rule (nothing that says or
+> (2) **a human read of every Jordyn, Sebastien and Almoner line** against the locked rule (nothing that says or
 > implies Rael is good, innocent or an agent; Jordyn's "He wrote to me once in twenty years. One line: 'Keep the
 > law.' I have." in particular), and of the archive scene (the coded accounts on "the Ash Road" beside the chronicle's
 > Ash Road massacre: does a careful reader learn too early that Rael is paying restitution?); is the Almoner's "And
@@ -48,7 +48,7 @@ Paste this to the objective reviewer.
 > (3) the owner rules: every story moment acted out on the map (the landing and the trader, the notice post, the
 > escort, the press-gang and Edmund, the Regent's audience, the printer, the bog chapel, the three doors, the debate,
 > the close at the bell, the organ, the court's walk and the Almoner turning back, the Toccata, the postern, the
-> filing floor's memory, the drawer, the panel, caught and arrested, the cells and Sebastian's blanket, the Assize,
+> filing floor's memory, the drawer, the panel, caught and arrested, the cells and Sebastien's blanket, the Assize,
 > the unmasking, the three defiances, the price at dawn, the trader at the stair), Anissa never a foe's target and
 > never joking, Vikram's breathing never in a node with Anissa's lines, Salkhi kept out of every scene with Anissa's
 > lines, nobody dies (the Hushed withdraws), Game Over with a way back in for every fight;

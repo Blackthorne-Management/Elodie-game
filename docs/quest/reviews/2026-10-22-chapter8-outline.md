@@ -1036,12 +1036,12 @@ line alone (the gate holds, so a player cannot) is about 18 minutes.
   The voyage `jwaladesh_aldermoor` north along the west coast from (37, 91) to Kingsmere at (22, 62). `?chapter=9`
   starts where Chapter 9's outline puts the landing (Kingsmere's moor-side quay or the heath road; the Crown's
   capital will not let an envoy's ship in by the front, which is Chapter 9's first beat to decide).
-- **Jordyn and Sebastian:** Aiyana's "Jordyn's in Kingsmere. In the Regent's guard" (beat 8) is the family's
+- **Jordyn and Sebastien:** Aiyana's "Jordyn's in Kingsmere. In the Regent's guard" (beat 8) is the family's
   hand-off: Chapter 9 bumps into Jordyn (disciplined, blunt, fair; she opens the keep's postern when she decides) and
-  into **Sebastian**, Elodie's brother, whose organ recital in Kingsmere's cathedral covers the archive break-in
-  (FAMILY.md, settled). Nothing in this chapter mentions Sebastian: the Zetwal side of the family is Coralie's and
+  into **Sebastien**, Elodie's brother, whose organ recital in Kingsmere's cathedral covers the archive break-in
+  (FAMILY.md, settled). Nothing in this chapter mentions Sebastien: the Zetwal side of the family is Coralie's and
   Elodie's to name, and Chapter 5 left Coralie at the Seat with "bring me every colour you find". Chapter 9's
-  outline should give Sebastian his bump-in cold (a poster for the recital on Kingsmere's quay is enough).
+  outline should give Sebastien his bump-in cold (a poster for the recital on Kingsmere's quay is enough).
 - **The party leaves with:** Gianna, Yari, Azzy, Samira, Bayarmaa, Haru, **Vikram**, Anissa (eight, seven fighters,
   four active by `party.active`); Salkhi; **level 20** by the tool (5,835 to 5,955), **about 23 as played** if the
   party arrived at 21 as the Chapter 7 outline predicts, 21 if the upstream fix lands (section 5: Chapter 9's

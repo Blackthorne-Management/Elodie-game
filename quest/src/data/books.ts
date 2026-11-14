@@ -1303,7 +1303,7 @@ export const BOOKS: readonly Book[] = [
     text:
       'The Regent\'s guests this season, in the order the Circular prints them. ' +
       'The legate\'s household, returned from Eightgate. A Dorini factor, about wool. ' +
-      'Sebastian Jean-Philippe, organist to three courts, whose recital on the eve of the Assize is by the Regent\'s command. ' +
+      'Sebastien Jean-Philippe, organist to three courts, whose recital on the eve of the Assize is by the Regent\'s command. ' +
       'At the Regent\'s table every night, as every season: a lady in grey, who is never named. ' +
       'The Circular notes that the Crown\'s charities were generous this year, and that the almswomen were seen on the heath. ' +
       'It does not say what they were doing there. ' +

@@ -467,7 +467,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   salt_master: n('salt_master', 'salt_master', 'Salt caravan master'),
   salt_mule_a: n('salt_mule_a', 'horse_dun', 'Salt mule', 'salt_mule_talk'),
   salt_mule_b: n('salt_mule_b', 'horse_chestnut', 'Salt mule', 'salt_mule_talk'),
-  // Chapter 9, Kingsmere (Oct 22). Named from the design and FAMILY.md: Edmund, Jordyn, Sebastian, Rosalind, Thomas, the
+  // Chapter 9, Kingsmere (Oct 22). Named from the design and FAMILY.md: Edmund, Jordyn, Sebastien, Rosalind, Thomas, the
   // Regent; the Almoner by her role (the outline's "Mrs. Sallow" stays a proposal); everyone else by role.
   printer: n('printer', 'printer', 'The printer'),
   apprentice: n('apprentice', 'apprentice', 'Apprentice'),
@@ -498,7 +498,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   night_sealbearer_b: n('night_sealbearer_b', 'sealbearer_b', 'Sealbearer', 'night_sealbearer_talk'),
   assize_clerk: n('assize_clerk', 'assize_clerk', 'Clerk of the court'),
   court_watch: n('court_watch', 'regent_watch', 'The watch'),
-  sebastian: n('sebastian', 'sebastian', 'Sebastian Jean-Philippe'),
+  sebastien: n('sebastien', 'sebastien', 'Sebastien Jean-Philippe'),
   pie_boy: n('pie_boy', 'pie_boy', 'Pie-shop boy'),
   printer_gallery: n('printer_gallery', 'printer', 'The printer'),
   clockmaker: n('clockmaker', 'clockmaker', 'Clockmaker'),
@@ -684,7 +684,7 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   rahel_gallery: n('rahel_gallery', 'rahel', 'Rahel'),
   patricia_gallery: n('patricia_gallery', 'patricia', 'Patricia'),
   patricio_gallery: n('patricio_gallery', 'patricio_old', 'Marshal Patricio, Grandfather'),
-  sebastian_gallery: n('sebastian_gallery', 'sebastian', 'Sebastian Jean-Philippe'),
+  sebastien_gallery: n('sebastien_gallery', 'sebastien', 'Sebastien Jean-Philippe'),
   zelia_gallery: n('zelia_gallery', 'zelia', 'Zelia'),
   gallery_pilgrim: n('gallery_pilgrim', 'pilgrim', 'Pilgrim'),
   camp_leader_gallery: n('camp_leader_gallery', 'camp_leader', 'Camp leader'),

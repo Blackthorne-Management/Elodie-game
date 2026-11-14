@@ -263,7 +263,7 @@ chief scribe's hint to the House of Ledgers; Azzy's "Titi" at the Majlis would m
 twice. It costs one council seat on the divan and one line; it makes the "no others recorded" clue in Ardencia's
 archive bite earlier, which may be more than Chapter 4 should carry.
 
-**Not here:** Sebastian (the touring organist) belongs where there is an organ and a court: Eightgate (Chapter 5) or
+**Not here:** Sebastien (the touring organist) belongs where there is an organ and a court: Eightgate (Chapter 5) or
 Kingsmere (Chapter 9), not a bazaar.
 
 ---

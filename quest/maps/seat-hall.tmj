@@ -1674,7 +1674,7 @@
         },
         {
           "id": 49,
-          "name": "sebastian_gallery",
+          "name": "sebastien_gallery",
           "type": "npc",
           "x": 432,
           "y": 208,
@@ -1696,7 +1696,7 @@
             {
               "name": "npc",
               "type": "string",
-              "value": "sebastian_gallery"
+              "value": "sebastien_gallery"
             }
           ]
         },

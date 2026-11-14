@@ -87,7 +87,7 @@ const KINGSMERE_NIGHT: FlagSnapshot = {
   'story.jordyn_seen': true,
   'story.jordyn_line': true,
   'story.jordyn_offer': true,
-  'story.sebastian_met': true,
+  'story.sebastien_met': true,
   'story.chapel_seen': true,
   'side.purge_list.accepted': true,
   'side.purge_list.done': true,

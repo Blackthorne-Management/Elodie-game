@@ -331,7 +331,7 @@ const ITEM_LIST: ItemDef[] = [
   // Chapter 9, Kingsmere: Edmund's hat (Anissa's), the recital bill (Anissa's), the papers from the archive, the purge
   // list (Al-3), the Crown Chronicle (Al-2).
   { id: 'edmund_hat', name: "Edmund's hat", kind: 'key', price: 0, text: 'A good grey hat, a little wet. "Hats get hit here. People don\'t, as a rule." Anissa is keeping it.' },
-  { id: 'recital_bill', name: "Uncle Sebastian's recital", kind: 'key', price: 0, text: 'The bill from the notice post: the Agatha Toccata, by the Regent\'s command. Anissa turned every page on the beat. She counted.' },
+  { id: 'recital_bill', name: "Uncle Sebastien's recital", kind: 'key', price: 0, text: 'The bill from the notice post: the Agatha Toccata, by the Regent\'s command. Anissa turned every page on the beat. She counted.' },
   { id: 'crown_pact', name: "The Crown's Pact With Ardencia", kind: 'key', price: 0, text: 'To the Lord of Ardencia, the Throne at the Regent\'s pleasure, and the harbor dues of Xaraguá for ten years. Paid, in full.' },
   { id: 'ash_road_accounts', name: 'The Ash Road Accounts', kind: 'key', price: 0, text: 'Columns of figures leaving Ardencia\'s treasury into accounts marked with a cipher and a road. Haru has no key for it yet.' },
   { id: 'thomas_record', name: "Thomas Stillwater's Record", kind: 'key', price: 0, text: 'The Seventh Clause in the Crown\'s words. In the margin: Xaraguá was never asked. T.S. At the foot: Written at a quarter to three, by the tower bell.' },

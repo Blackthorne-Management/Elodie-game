@@ -211,7 +211,7 @@ export const CARDS: readonly CardDef[] = [
     id: 'cast_1',
     when: 'end.done',
     title: 'The cast',
-    lines: ['Zetwal: Gianna, Anissa, Elodie, Grandmother Anicette, Marshal Patricio, Sebastian, Tati Coco.', 'Xaraguá: Yari, Cacique Anaco, Caona, the camp leader, the lamp-oil seller.'],
+    lines: ['Zetwal: Gianna, Anissa, Elodie, Grandmother Anicette, Marshal Patricio, Sebastien, Tati Coco.', 'Xaraguá: Yari, Cacique Anaco, Caona, the camp leader, the lamp-oil seller.'],
   },
   {
     id: 'cast_2',

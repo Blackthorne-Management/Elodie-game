@@ -362,7 +362,7 @@ export const SPEAKERS: Readonly<Record<string, Speaker>> = {
   // Chapter 9, Kingsmere (Oct 22).
   edmund: s('edmund', 'Edmund'),
   jordyn: s('jordyn', 'Jordyn'),
-  sebastian: s('sebastian', 'Sebastian'),
+  sebastien: s('sebastien', 'Sebastien'),
   almoner: s('almoner', 'The Almoner'),
   rosalind: s('rosalind', 'Lady Rosalind'),
   echo_thomas: s('echo_thomas', 'Thomas'),

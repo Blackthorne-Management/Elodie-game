@@ -22,7 +22,7 @@ Sealbearer, Crown Musketeer, Crown Officer, Bog Hound, Zealot) and 13.3 (the Hus
 `design/SECRET-ITEMS.md` 7 (the Patient Hour: after the release; its seed is Thomas's last line),
 `design/FAMILY.md` (settled: **Jordyn**, Rahel's daughter by a Black military man, Azzy's Titi Jordyn, disciplined,
 blunt, fair, an officer inside the Regent's guard who defects and opens the keep's postern, then leads a company in
-Chapter 11; **Sebastian**, Elodie's brother, a world-renowned organist, proud, gentle, a showman, whose recital on the
+Chapter 11; **Sebastien**, Elodie's brother, a world-renowned organist, proud, gentle, a showman, whose recital on the
 cathedral's great organ covers the noise while the party breaks into the archive; both bumped into, both help, both
 acted out; Tati Coco knows the family secret and keeps it; the betrayer is not revealed before the Muster),
 `QUEST-BUILD-GUIDE.md` 5.2 (the Regent: calm, patient, three moves ahead; the Hushed; ordinary Stillwater people are
@@ -112,7 +112,7 @@ the Chapter 7 review's 3.10 and the Chapter 8 outline) is taken as built by Chap
   outfitter stocks tier-24 gear and the tier-20 pieces for a player who skipped Agnipur's.
 - **Stale lines in the design, fixed here:** `CAPITALS.md` 9 gives the keep two sizes (32 x 24 in the table, "about
   40 x 30" in the seat paragraph): the larger is used, as Chapters 5 to 8 did; it has no cathedral, and
-  `FAMILY.md`'s settled line puts Sebastian's recital "on Kingsmere cathedral's great organ": **St. Agatha's** is
+  `FAMILY.md`'s settled line puts Sebastien's recital "on Kingsmere cathedral's great organ": **St. Agatha's** is
   added, across the close from the keep (section 3); `CAPITALS.md`'s Rosalind's Townhouse is Al-5's map, after the
   release (Rosalind is at the keep in the main story); `SIDE-QUESTS.md` Al-2 step 2 puts an order about the Ash Wars
   chronicle in a fifty-year-old Echo, but the Ash Wars were about twenty-five years ago (the Chapter 7 review's 3.3):
@@ -150,7 +150,7 @@ its register.
   Moor Gate and stop there; the owner's "shown": the escort is the watching). `story.escort_met`.
 - **The notice post** (a readable object; the bump-in seeded cold, as the Chapter 8 outline asked): two bills under a
   tin hood. *THE ASSIZE OF KINGSMERE sits on the third day. The Lord Regent presides. The Crown's fleet sails after
-  it.* And: *By command of the Lord Regent: SEBASTIAN LIMYÈ, organist to three courts, at the great organ of St.
+  it.* And: *By command of the Lord Regent: SEBASTIEN LIMYÈ, organist to three courts, at the great organ of St.
   Agatha's, on the eve of the Assize. The Agatha Toccata. Admission by the Regent's leave.* Anissa reads the second
   (she can read; she reads it aloud, slowly, to the name): "Limyè. Gigi, that's our name." Gianna: "That's Mummy's
   brother. The one who writes to her about the weather." Azzy: "You have an uncle who plays for the Regent?" Gianna:
@@ -273,7 +273,7 @@ its register.
   Azzy: "She's in the rain." (Reads either way; tested the same as Chapter 8's line.)
 - Journal: **The close, after the bell** (done `story.jordyn_offer`).
 
-### Beat 3: The organ (aldermoor-cathedral; Sebastian's bump-in)
+### Beat 3: The organ (aldermoor-cathedral; Sebastien's bump-in)
 
 - **Heard before it is seen:** as the party crosses the square towards St. Agatha's west door, the organ sounds inside
   (an audio slot: a run of pipes, loud, stopped short, started again), and the pigeons go up off the cross (a
@@ -284,15 +284,15 @@ its register.
   where the Assize's witnesses swear: a readable object), the **organ loft** up a stair with the great organ's pipes
   across the whole east wall (a 6 x 4 object), the **vestry** door to the close, the verger. And in the loft, at the
   console, a broad man in a velvet coat with his sleeves pushed up, who has stopped mid-phrase and turned round on
-  the bench: **Sebastian**.
+  the bench: **Sebastien**.
 - **The bump-in, shown:** he comes down the loft stair at a run (`walk`, `run: true`), stops a tile short of Gianna,
   and looks at her for a beat before anything (face). "Gianna Elise. You have your mother's forehead and your
   grandfather's frown, and you have walked into my rehearsal, which nobody does, and I find I don't mind." He embraces
   her (a `walk` to the same tile and back: the engine's hug). Then he sees Anissa, and goes down on one knee on the
   wet flags (face): "And this is Anissa. Who hums. Your mother wrote that you hum. It is the only thing about either
-  of you she has ever written to me that was not the weather." Anissa: "I don't hum." Sebastian: "You will. It's in
-  the family. I'm your uncle Sebastian, and I am very loud, and I am told you are not, and we will get on."
-  `story.sebastian_met`. (Gentle, proud, a showman: he says who he is to the whole nave.)
+  of you she has ever written to me that was not the weather." Anissa: "I don't hum." Sebastien: "You will. It's in
+  the family. I'm your uncle Sebastien, and I am very loud, and I am told you are not, and we will get on."
+  `story.sebastien_met`. (Gentle, proud, a showman: he says who he is to the whole nave.)
 - **What he is doing here:** the Regent's guest for the season; the recital is by the Regent's command, on the eve of
   the Assize, "because he likes loud things done in order, and the Agatha Toccata, which I wrote, is the loudest thing
   ever written for pipes, and the most orderly." He does not know why the party has come and does not ask twice:
@@ -300,15 +300,15 @@ its register.
   that hour and not a bar sooner, and the slow movement after it, and if the Regent stands up before the end I shall
   start the Toccata again from the top. He won't. He asked for it." And, the thing the owner's line asks for (the
   organ covers the noise): "Nobody in this city will hear a door open while I am playing. Nobody will hear a cannon."
-- **Anissa's place (Jordyn's condition, and the owner's rule that she holds the door):** Sebastian: "You'll sit in the
+- **Anissa's place (Jordyn's condition, and the owner's rule that she holds the door):** Sebastien: "You'll sit in the
   loft with me and turn the pages. The loft is the one place in Kingsmere where four hundred people can see you and
   not one of them can reach you." That is where she is during beat 5: on the loft's bench, seen by the court, in
-  Sebastian's keeping, with the vestry door below her as the party's way in and out. Her hints still reach Gianna in
+  Sebastien's keeping, with the vestry door below her as the party's way in and out. Her hints still reach Gianna in
   the Echo (the guide's rule). (Claude's call, section 12: the loft instead of the postern's foot.)
 - **The one thing he says about Rael**, which reads either way and is the only time (section 9.3): "Your mother has
   written to me about the weather for twenty years. I have come to believe the weather in Zetwal is extremely
   interesting."
-- Journal: **The organ** (done `story.sebastian_met`), then **Until the Toccata** (the gate, section 6, `followSide`).
+- Journal: **The organ** (done `story.sebastien_met`), then **Until the Toccata** (the gate, section 6, `followSide`).
 
 ### Beat 4: Until the Toccata (the required quests, any order; the arrow follows the ground)
 
@@ -316,19 +316,19 @@ its register.
   section 7.1), the **debate** *Should the Throne have one hand?* (the corner by the cross: section 7.3), the Rolls
   House's nine books (the Reason books, and the public edition of Thomas's record, which a reader compares later), the
   three vendors and the contract board.
-- When Al-3 and the debate are done (and `story.sebastian_met`, `story.jordyn_offer`): **the eve of the Assize** (a
+- When Al-3 and the debate are done (and `story.sebastien_met`, `story.jordyn_offer`): **the eve of the Assize** (a
   condition `story.eve`): the square's lamps lit under the rain, the tea shops shut, and the **court walking to St.
   Agatha's** (walkers across the square from the keep's gate to the west door: the Regent, Rosalind and the council,
   the magistrate, the clerk, two Sealbearers, the Almoner last with her basket and her almswomen, who stop at the
   door and do not go in: "The almswomen do not sit. They stand at the door." The player who notices has the first
-  tell: the Hushed's people are outside the church.) Sebastian at the west door with Anissa's hand: "Now, I think."
+  tell: the Hushed's people are outside the church.) Sebastien at the west door with Anissa's hand: "Now, I think."
   `story.recital_begun` when the player speaks to him. Edmund: "It's my family's archive. I'm terribly sorry; I'm
   coming."
 
 ### Beat 5: The Toccata (aldormoor-cathedral, the close, aldermoor-keep by night; the Echo; SIG-ALM part 1)
 
 - **The recital, shown:** the nave full (placed court, placed city: the pie-shop boy and his mother, the warned
-  families, the constables off duty), Sebastian at the console with Anissa on the bench beside him (placed; a `look`
+  families, the constables off duty), Sebastien at the console with Anissa on the bench beside him (placed; a `look`
   cue up to the loft as the first chord lands: an audio slot, the Toccata, which plays on under everything until the
   archive door), the Regent in the front pew, not moving. The party goes out through the vestry (shown). In the close
   the rain is loud and the organ is louder; the postern's look is **unbarred** (`story.recital_begun`;
@@ -418,10 +418,10 @@ its register.
   in front of the Regent's people, the family kept in a whisper.)
 - **The cells (the keep's undercroft, a short scene; a save):** the party in one cell with a barred door and a lamp;
   the watch's constable outside, who is the sorry one ("I'm sorry about all this. I'm sorry about most things, lately.").
-  Then **Sebastian and Anissa** at the bars (enter from the stair; Sebastian's coat over her head against the rain):
+  Then **Sebastien and Anissa** at the bars (enter from the stair; Sebastien's coat over her head against the rain):
   "The Regent gave me leave. He said, 'I am not a monster, Mr. Limyè. I am a court.' I believe him about the second
   thing." Anissa goes into the cell with Gianna (the constable unlocks and locks: shown; she is where she must be for
-  the morning). Sebastian, at the bars, to Gianna: "I played the slow movement twice. Nobody noticed. That is the
+  the morning). Sebastien, at the bars, to Gianna: "I played the slow movement twice. Nobody noticed. That is the
   worst review of my life." Then, not a showman for one line: "Whatever you took, it was worth the cathedral. I'll be
   in the gallery." (Exit.) Night (a fade; the dawn variant `story.assize_dawn` on waking).
 - Journal: **Out, quietly** (done `story.caught`), **The Assize** (beat 7).
@@ -432,7 +432,7 @@ its register.
   the court's** table below it with the evidence on it (the three items as objects), the **council bench** (Rosalind
   at its end), the **Crown magistrate** prosecuting, the **witness stand** by the oath-stone's twin (a Witness's
   oath-block, the law as an oath), the **dock** with its rail (an **Echo Zone**: the dock's floor, walkable in both
-  eras), the **gallery** with its stair (the city, placed: Sebastian in the front row, the pie-shop boy, the warned
+  eras), the **gallery** with its stair (the city, placed: Sebastien in the front row, the pie-shop boy, the warned
   families, the printer, the clockmaker, the Gaze exile), two **Sealbearers** at the bench, **Jordyn** as officer of
   the court at the dock's gate with four of the watch, the **Almoner** on the witnesses' bench, and the party in the
   dock with Edmund and Anissa (Anissa on the dock's bench behind Gianna, which is what "the dock" is for: she is in
@@ -523,7 +523,7 @@ its register.
   whole city's awake."). Down the heath road from the Moor Gate, **the dissidents come** (walkers in a line: the
   printer with an inked apron, the clockmaker, the sorry constable without his coat, the three warned families, the
   pie-shop boy and his mother, the Gaze exile; then Jordyn with six of the watch, their violet turned inside out).
-  Sebastian last, in his velvet coat, not hurrying.
+  Sebastien last, in his velvet coat, not hurrying.
 - **The price (Fear 8; the realm economy as built: flags and Journal notes, as Chapters 3, 6, 7 and 8):** the printer:
   "We don't want gold and we don't want a speech. We want the almswomen afraid to come to our doors. Count what you've
   done to make them so." The scene reads **Aldermoor's Fear** (the Hushed beaten: +1, the boss rule; Al-3's +3; the
@@ -550,7 +550,7 @@ its register.
   tested.) To Anissa, no joke, crouching as Edmund did: "You said 'that's the lady from the plaza' in a court full
   of people who wanted you quiet. That's the bravest thing I've seen in that building. Don't do it again without me
   there." She goes up the road with her seven (exit, the walkers after).
-- **Sebastian's going:** he stays in Kingsmere ("I have a recital at Eightgate in a month, by the Regent's command,
+- **Sebastien's going:** he stays in Kingsmere ("I have a recital at Eightgate in a month, by the Regent's command,
   which he gave before he knew what I was. I am going to play it, very loud, and then I am coming to Pòdlimyè to hear
   the drums, which I have never done, because I was always somewhere being famous.") One line to Anissa, no joke:
   "You turned every page on the beat. Every one. I've had three courts' pages turned and none of them on the beat."
@@ -582,14 +582,14 @@ Kirinoura's fog), `NOTICE` (object), `OATHSTONE` (object).
 
 | Map | Size (tiles) | Section | Echo | What is on it |
 |---|---|---|---|---|
-| `aldermoor-heath` | 46 x 28 | The Heath (wild, outdoor; the Mere Stair at its west edge) | none | The Mere Stair and the fishermen's shed (the landing, the trader's boat by flag, the voyage trigger after `ally.aldermoor_dissidents`), the notice post (the two bills), the heath road east to the Moor Gate (safe), the milestone, the bog and heather off the road (the ambush layer, `heath`), the printing barn north of the road (Al-3's safehouse; the thumbprint on its door), the bog chapel south of it (Al-3's cell; the fight), the Moor Gate and its Sealbearer, the escort pair (walkers to the gate), the dawn variant (the dissidents' line, Jordyn's company, Sebastian) |
+| `aldermoor-heath` | 46 x 28 | The Heath (wild, outdoor; the Mere Stair at its west edge) | none | The Mere Stair and the fishermen's shed (the landing, the trader's boat by flag, the voyage trigger after `ally.aldermoor_dissidents`), the notice post (the two bills), the heath road east to the Moor Gate (safe), the milestone, the bog and heather off the road (the ambush layer, `heath`), the printing barn north of the road (Al-3's safehouse; the thumbprint on its door), the bog chapel south of it (Al-3's cell; the fight), the Moor Gate and its Sealbearer, the escort pair (walkers to the gate), the dawn variant (the dissidents' line, Jordyn's company, Sebastien) |
 | `aldermoor-cross` | 42 x 30 | The Market Cross (hub, outdoor) | none | The cross and the debate corner, the pie shop, the jeweller, the outfitter, the contract board, the tea shops (doors with one line each), the Rolls House door (east), the keep's gatehouse (north centre), St. Agatha's west door (north west) and the close's gate between them, constables at the corners, the almswomen's walk (the lady in grey crosses on `story.almoner_seen` not set), the press-gang at the pie shop (the fight's trigger), the three warned families' doors (Al-3), the eve variant (lamps, the court's walk to the church), Salkhi's placements |
 | `aldermoor-rolls` | 22 x 14 | The Rolls House (library, interior) | none | The nine books on the Crown's shelves, the keeper of the rolls (formal English), the public edition of Thomas's record on a lectern (readable twice: before and after the panel, with a different line the second time) |
 | `aldermoor-keep` | 40 x 30 | The Regent's Keep (the seat of government, interior, with the close as an outdoor pocket on its north side) | **the archive's filing floor** (one zone: the first revisiting; anchor: the panel); **the dock's floor** (one zone: the ratification; no anchor) | The gatehouse and yard, the great hall (the Regent's chair, the council bench, the clerk's desk, the watch's station, the Sealbearers' posts and sightline strips by night), the archive (six cabinets, the Ash Wars shelf, the Brasador shelf and the panel, the gallery desk with the minutes), the courtroom (the bench, the clerk's table with the evidence, the witness stand and the oath-block, the dock, the gallery and its stair; the boss arena), the cells (the undercroft; a save), the clock tower door (inert), the Almoner's office (shut), the post office, the close (the bell post, the postern, the vestry door) |
-| `aldermoor-cathedral` | 26 x 18 | St. Agatha's (interior) | none | The nave and pews (the recital's placed court and city), the oath-stone, the organ loft and its stair (Sebastian; Anissa's bench during the Toccata), the vestry door to the close, the verger, the west door's constable |
+| `aldermoor-cathedral` | 26 x 18 | St. Agatha's (interior) | none | The nave and pews (the recital's placed court and city), the oath-stone, the organ loft and its stair (Sebastien; Anissa's bench during the Toccata), the vestry door to the close, the verger, the west door's constable |
 
 Five maps: CAPITALS' five with **Rosalind's Townhouse** (Al-5's, after the release) replaced by **St. Agatha's**
-(the settled Sebastian line needs a cathedral with a great organ, and the postern needs a close to open onto). The
+(the settled Sebastien line needs a cathedral with a great organ, and the postern needs a close to open onto). The
 keep is 40 x 30, the seat paragraph's size. **Outdoor areas, buildings aside: six** (the Mere Stair, the heath road,
 the bog, the Market Cross, the close, the keep's yard), the owner's rule. The seat is central (the keep at the head
 of the square), large (a hall, an archive, a courtroom, cells, a tower, offices), staffed (the chamberlain, the
@@ -760,16 +760,16 @@ item, section 10; else the line alone). Nothing in the chapter requires spending
 
 ## 6. The required-before gate: "Until the Toccata"
 
-- **In the story:** the Regent has refused; Jordyn has named the hour (the loud piece, tomorrow night); Sebastian has
+- **In the story:** the Regent has refused; Jordyn has named the hour (the loud piece, tomorrow night); Sebastien has
   agreed to play it; so the day is the party's, and the city names what is in it without saying "quests": Edmund, in
   the square: "My old tutor prints things on the heath, and he's been expecting someone who hasn't been purged. And
   the two by the cross have been arguing about whether the Throne should have one hand since before I could read,
   and I'd very much like someone to settle it so I can have my tea in peace."
 - **In the Journal:** the objective **Until the Toccata**, `followSide`, done when Al-3 and the debate (joined or
-  mediated) are done and `story.sebastian_met` and `story.jordyn_offer` are set, **or** when `story.recital_begun` is
+  mediated) are done and `story.sebastien_met` and `story.jordyn_offer` are set, **or** when `story.recital_begun` is
   already set (a save at the west door never sticks).
-- **On the map:** Sebastian at the west door on the eve is a step trigger that waits for the four (`if:
-  'side.purge_list.done, debate.aldermoor_one_hand.joined|debate.aldermoor_one_hand.mediated, story.sebastian_met,
+- **On the map:** Sebastien at the west door on the eve is a step trigger that waits for the four (`if:
+  'side.purge_list.done, debate.aldermoor_one_hand.joined|debate.aldermoor_one_hand.mediated, story.sebastien_met,
   story.jordyn_offer'`); until then he is worded from the flags: "Your friend's tutor is still waiting on the heath."
   / "The two by the cross are still at it." / "You haven't been to the close." Anissa: "Your Quests page, Gigi."
 - **The eve variant** (`story.eve`) is a **condition** (the four done and not `story.recital_begun`), not a flag some
@@ -876,7 +876,7 @@ is added.
   nobody, if the player passes (`story.hushed_beaten`): "I knelt to her. I never saw her face. I don't know what I
   knelt to." (The guide's "sincere followers joined for belonging"; the post-Harbor corner, *a faith that began as a
   political tool*, is Chapter 11's build.) Anissa's line after, the only judgement, plain: "The grey one wants
-  everybody quiet, Gigi. The sun one wants everybody watched. Uncle Sebastian is loud and everybody watches him and
+  everybody quiet, Gigi. The sun one wants everybody watched. Uncle Sebastien is loud and everybody watches him and
   nobody minds."
 - **The quest:** *Should the Throne have one hand?*, required, done on joined or mediated. No faith is a cult on this
   corner: the hierarch is a believer, and the Hushers are on the heath and in the court, where no line joins them to
@@ -961,7 +961,7 @@ the hall whenever the keep is open, and the Echo zone at its top is drawn now an
 
 ---
 
-## 9. Edmund, Jordyn, Sebastian and Anissa: how the companion joins and plays, and the family beats
+## 9. Edmund, Jordyn, Sebastien and Anissa: how the companion joins and plays, and the family beats
 
 ### 9.1 Edmund
 
@@ -1039,7 +1039,7 @@ the hall whenever the keep is open, and the Echo zone at its top is drawn now an
   11: she leads a company in the War of the Harbor (an army's name in the volley data). `army.aldermoor` is her seven
   and the barn's lot.
 
-### 9.3 Sebastian (FAMILY.md, settled)
+### 9.3 Sebastien (FAMILY.md, settled)
 
 - **Who he is on the map:** Elodie's brother, Coralie's; a world-renowned organist who plays across the realm for
   fame; proud, gentle, a showman: he says who he is to the whole nave, goes down on one knee on wet flags for a child
@@ -1054,13 +1054,13 @@ the hall whenever the keep is open, and the Echo zone at its top is drawn now an
   chapter is better for an uncle who loves his nieces without knowing their father. His one line about Rael is not
   about Rael: "Your mother has written to me about the weather for twenty years. I have come to believe the weather in
   Zetwal is extremely interesting." (Reads either way; tested with Jordyn's.)
-- **His name:** Sebastian **Limyè**, as the Chapter 5 outline named Coralie Limyè (Elodie's public name, carried by
+- **His name:** Sebastien **Limyè**, as the Chapter 5 outline named Coralie Limyè (Elodie's public name, carried by
   her siblings in public; the guide's "shared with Anissa and Elodie" is the household's, and the bill on the notice
   post is how a stranger would print it). Anissa reading the name on the bill is the bump-in's seed.
 - **His touches for Anissa (no joke):** "Who hums." / the loft ("the one place in Kingsmere where four hundred people
   can see you and not one of them can reach you") / "You turned every page on the beat." She keeps the recital bill
-  (`item.recital_bill`, a key item: *Uncle Sebastian's recital*, one line of text).
-- **Placeholder look:** a broad man in a velvet coat, sleeves pushed up, grey at the temples; `sebastian`. **Later:**
+  (`item.recital_bill`, a key item: *Uncle Sebastien's recital*, one line of text).
+- **Placeholder look:** a broad man in a velvet coat, sleeves pushed up, grey at the temples; `sebastien`. **Later:**
   FAMILY.md places him here only; he says he will come to Pòdlimyè "to hear the drums" after his Eightgate recital,
   which is a door Chapter 10's outline may open (the Muster) or Chapter 12's (an organ in Eightgate during the Claim
   is a thing a showman would do), and need not.
@@ -1077,7 +1077,7 @@ the hall whenever the keep is open, and the Echo zone at its top is drawn now an
   finds her voice* (STORY 4: shy lines, the first Surge, Calm attacks, she speaks at the Muster, she speaks at the
   Hearing): a sentence, not a speech, said to her sister and heard by a court, before the Muster's speech. It is not a
   joke and nothing near it is: the Hushed answers it, Gianna steps in front, and the fight begins.
-- **No comedy in a node with her:** Edmund's hat line is earnest; Sebastian's "who hums" is earnest; Salkhi is on the
+- **No comedy in a node with her:** Edmund's hat line is earnest; Sebastien's "who hums" is earnest; Salkhi is on the
   boat, the heath and the square and never in the church, the keep or the court; Samira prices nothing after the
   archive; Vikram is out of breath once (the hall) and not in the dock.
 
@@ -1142,7 +1142,7 @@ a half days with a new boss field and Calm in it.
 |---|---|---|---|
 | **Edmund Stillwater** | the companion (section 9.1) | a new member look: a good grey coat, a hat (off before a fight), a straight sword; a battle recolour | the Muster's hardest feud; the Hearing beside his mother |
 | **Jordyn** | captain of the watch; Azzy's Titi; the postern, the arrest, the resignation (section 9.2) | the Regent's violet with a captain's knot, hands behind her back; `jordyn` | Chapter 10 (her company, Rahel, Patricia), Chapter 11 (a company in the war); on the drop-2 list with the chapter's boss |
-| **Sebastian Limyè** | the organist; Gianna's uncle; the Toccata (section 9.3) | a velvet coat, sleeves up, grey temples; `sebastian` | a door for Chapter 10 or 12, not a plan |
+| **Sebastien Limyè** | the organist; Gianna's uncle; the Toccata (section 9.3) | a velvet coat, sleeves up, grey temples; `sebastien` | a door for Chapter 10 or 12, not a plan |
 | **Lord Regent Aldric Vane** | the antagonist; presides; three moves ahead (section 9.5) | the Chapter 5 `regent` look, seated | the boss of Chapter 12 |
 | **The Almoner** (the Hushed; "Mrs. Sallow", proposal) | the boss; the lady in grey; the plaza's veiled woman | grey, a basket, a veil; a second look unveiled (grey hair pinned, a brooch); `the_hushed` | held in the keep's cells or shown to the city; on the drop-2 list (the boss of 9) |
 | **Lady Rosalind Stillwater** | the council; Edmund's mother; "Sat." | grey-violet, a council chain, seated; `rosalind` | Al-5 after the release; the Hearing |
@@ -1159,7 +1159,7 @@ a half days with a new boss field and Calm in it.
 | **Moor Constables**, **Bog Hounds**, **Hushers**, **Sealbearers**, **Crown Musketeers**, **Crown Officers**, **Zealots**, **almswomen** (Hushers in grey) | the Heath, the chapel, the square, the court | constable: oilskins and a truncheon (the marine recolour); hound: a 1 x 1 sprite, black, low; Sealbearer: the Chapter 5 look; the built musketeer and zealot recoloured; the Husher as Chapter 7 drew it with a grey veil | the Seat's Sealbearers at 28 to 30 (Chapter 12) |
 | **Young Patricio** (the player in the Echo; Caona and Benny as data, not drawn) | beat 5, the dock | the Echo palette | |
 
-Voices: Edmund apologising in full sentences; Jordyn in short flat ones with the law in them; Sebastian in long ones
+Voices: Edmund apologising in full sentences; Jordyn in short flat ones with the law in them; Sebastien in long ones
 with himself in them; the Regent in the courteous register of Chapters 5 to 8's Crown men, now from a chair; the
 Almoner in the same register until "Enough noise", then bare; Rosalind in two words; the magistrate formal; the
 printer plain and angry; the constables sorry. Nobody in Kingsmere sounds like Agnipur: people here say nothing
@@ -1199,7 +1199,7 @@ The Claude's calls, each with its reason:
   court with six of the watch** (section 9.2). *Reason:* FAMILY.md's "defects and opens the keep's postern" kept and
   given an order; the arrest is what puts the party before the Assize instead of on the heath, keeps her cover until
   the court, and is the fair woman the owner described; her seven are the dissidents' army and Chapter 11's company.
-- **Anissa sits in the organ loft with Sebastian during the break-in, seen by the court, and is in the dock with
+- **Anissa sits in the organ loft with Sebastien during the break-in, seen by the court, and is in the dock with
   Gianna for the trial** (beats 3, 5, 7). *Reason:* Jordyn's condition ("put her where four hundred people can see
   her"); the owner's rule that she holds the door is kept in spirit (she is the thing everyone is watching while the
   door is open) and her hints still reach Gianna in the Echo; the boss needs her in the room, and the dock is where
@@ -1231,15 +1231,15 @@ The Claude's calls, each with its reason:
   not among the four the Crown can buy (guide 5.6).
 - **Al-3 and Al-2 are the required two; Al-3 opens before the court; Al-2's Echo step is replaced by Thomas's own
   margin in the present; Al-1 is the first post-release quest; Al-5's tea after; Al-4's tower inert** (section 7).
-- **St. Agatha's is added and Rosalind's Townhouse waits** (section 3). *Reason:* the settled Sebastian line.
+- **St. Agatha's is added and Rosalind's Townhouse waits** (section 3). *Reason:* the settled Sebastien line.
 - **Five maps; the keep is 40 x 30; the Heath carries the landing** (section 3).
 - **The Heath's groups are trios at 23 to 24** (section 5). *Reason:* the sim: pairs are trivial to this party.
 - **The chapter's data adds two levels to a measured start, and `CHAPTER_LEVELS` 9 is set on day 1 from the
   measurement** (section 5). *Reason:* the numbers; the Chapter 6 to 8 reviews' rule.
-- **Sebastian does not know the family secret; Jordyn knows the daughters and nothing else; each has one line about
+- **Sebastien does not know the family secret; Jordyn knows the daughters and nothing else; each has one line about
   Rael that reads either way** (sections 9.2, 9.3). *Reason:* FAMILY.md's list of who knows; Kayla's and Aiyana's
   precedent; the content test and a human read guard it.
-- **Sebastian is a Limyè in public** (section 9.3). *Reason:* the Chapter 5 outline's Coralie.
+- **Sebastien is a Limyè in public** (section 9.3). *Reason:* the Chapter 5 outline's Coralie.
 - **No Echo battle; the council is heard through a door** (section 4).
 - **Names are proposals** (Edmund, Rosalind, Thomas, Agatha, Aldric Vane from the design; Mrs. Sallow new; St.
   Agatha's new), people named by role in the build until the owner approves.
@@ -1257,13 +1257,13 @@ and 840 steps, about 30 minutes each):
 | The Market Cross: the lady in grey, the press-gang, Edmund | ~70 | 1 | ~35 | the press-gang |
 | The keep: the hall, Jordyn at the door, the Regent's answer | ~70 | 2 | ~40 | |
 | The close after the bell | ~30 | 2 | ~20 | |
-| St. Agatha's: the organ, Sebastian | ~50 | 2 | ~30 | |
+| St. Agatha's: the organ, Sebastien | ~50 | 2 | ~30 | |
 | Al-3: the barn, the bog chapel, three doors, the barn again | ~160 | 4 | ~35 | the chapel, 0 to 1 ambush |
 | The debate on the cross, the Rolls House | ~50 | 2 | ~30 | |
 | The eve: the court's walk, the recital, the close, the keep by night, the archive (both eras), the cabinets | ~120 | 4 | ~45 | |
 | Caught, the cells | ~40 | 2 | ~25 | |
 | The Assize: the witnesses, the dock's Echo, the exposure, the Hushed, the Yield, the three defiances | ~60 | 1 | ~55 | the boss |
-| The price, Jordyn's going, Sebastian's, the stair, the card | ~70 | 2 | ~35 | |
+| The price, Jordyn's going, Sebastien's, the stair, the card | ~70 | 2 | ~35 | |
 | **Chapter 9** | **~810** | **24** | **~370** | 3 to 5 |
 
 About **33 to 36 minutes**, the plan's number: fewer steps than Chapter 8 and more lines, because a court is a room
@@ -1281,7 +1281,7 @@ where people talk. The main line alone (the gate holds, so a player cannot) is a
   barn's lot: `army.aldermoor`), with **Rahel** and **Patricia** (FAMILY.md: "She arrives with Jordyn's company";
   Patricia "comes with Rahel"); Chapter 10's outline stages their arrival on the plaza and gives Rahel her scene with
   Gianna and Anissa and her line for Azzy, and Patricia her blessing. **Joaquin** brings Free Brasador (Chapter 3's
-  seed). Sebastian is a door, not a plan.
+  seed). Sebastien is a door, not a plan.
 - **The feuds for the Muster:** Suzumori and Agnivansh have taken one step (Chapter 8); Dorini and Ironvow have not;
   **the Stillwater dissidents against everyone** is this chapter's: the printer's people are the Crown's own, Edmund
   is a councillor's son, and Jordyn's company wears the Regent's violet inside out. The Muster's third mediation has
@@ -1304,7 +1304,7 @@ where people talk. The main line alone (the gate holds, so a player cannot) is a
 - **What Gianna believes:** her father took the Crown's gold for a chair and spent it where nobody can read
   (`belief.rael_traitor` unchanged, now with a receipt). No clue moved here; the "nobody dies" pattern grew by one
   (the Hushed fell and was taken, not killed); the eighth thumbprint was found inside the cult's own cells with "Warn
-  them first" on it; Jordyn's "Keep the law" and Sebastian's weather are the family's two lines, both reading either
+  them first" on it; Jordyn's "Keep the law" and Sebastien's weather are the family's two lines, both reading either
   way. Azzy's "four of his sisters, and this one arrests people" is the pattern named once more; Chapter 10's Rahel is
   the mother, and the one who speaks.
 - **What the realm knows:** the Crown pays a thief (6), buys files (7), funds a hoarder (8), and at home keeps an
@@ -1342,13 +1342,13 @@ where people talk. The main line alone (the gate holds, so a player cannot) is a
   exposure is Gianna's line only after the two are laid; the three defiances are walkers (Rosalind stands, Edmund
   steps, Jordyn's seven step out). If the build runs short, the tree keeps its three presses and the Echo, and the
   defiances keep their walks and lose a line each.
-- **Jordyn's and Sebastian's lines are the chapter's tightrope, as Kayla's and Aiyana's were.** The content test
-  (section 9.2) is the guard; the reviewer should read every Jordyn and Sebastian line, and Azzy's "she's in the
+- **Jordyn's and Sebastien's lines are the chapter's tightrope, as Kayla's and Aiyana's were.** The content test
+  (section 9.2) is the guard; the reviewer should read every Jordyn and Sebastien line, and Azzy's "she's in the
   rain", against the locked rule.
 - **Anissa in the dock.** She is behind Gianna on the dock's bench; the Hushed turns to her and Gianna steps in front
   before the fight starts; Hush the Light is a whisper and Calm, never a blow; the almswomen's heads turn and nobody's
   hand does; the Regent's breath is the Chapter 5 beat. Her one line is earnest and answered. Edmund's hat and
-  Sebastian's pages are her two touches and neither is a joke, and no Salkhi, Samira or Vikram line shares a node with
+  Sebastien's pages are her two touches and neither is a joke, and no Salkhi, Samira or Vikram line shares a node with
   hers.
 - **The Regent's hand is seen and never proven.** That is by design (Chapter 12 is a Challenge), but the reviewer
   should check that the chapter does not accidentally prove it: the commission is read by Jordyn and denied by him;
@@ -1382,13 +1382,13 @@ where people talk. The main line alone (the gate holds, so a player cannot) is a
 
 **Day 1 (Opus with Sonnet on maps and content):**
 1. **Docs and the numbers (morning, 1 hour):** the second review; `STORY.md` Chapter 9 rewritten to this outline
-   (the Mere Stair, Edmund's split join, Jordyn's three acts, Sebastian's loft, the first revisiting, the Witness's
+   (the Mere Stair, Edmund's split join, Jordyn's three acts, Sebastien's loft, the first revisiting, the Witness's
    rule, the Almoner, the price in Fear), `CAPITALS.md` 9 re-sized (five maps, St. Agatha's, the keep at 40 x 30, the
    Townhouse after the release), `SIDE-QUESTS.md` Al-2 and Al-3 marked for the release with the new numbers and
    Al-2's Echo step replaced, Al-1, Al-4, Al-5 after, `PUZZLES.md` SIG-ALM's staging (the cabinets, the tree),
    `COMBAT.md` 9.8 with Edmund's stat line, 13.3 with the Hushed's scaling and `magScale`, 8 with Calm as built,
-   `FAMILY.md` Jordyn's and Sebastian's rows marked built with the Claude's calls (the arrest; Sebastian does not
-   know), `STORY.md` 6.4's refinement noted for the Dec 1 list, Edmund's, Jordyn's, Sebastian's, the Regent's seated
+   `FAMILY.md` Jordyn's and Sebastien's rows marked built with the Claude's calls (the arrest; Sebastien does not
+   know), `STORY.md` 6.4's refinement noted for the Dec 1 list, Edmund's, Jordyn's, Sebastien's, the Regent's seated
    look, the Almoner's two looks and Rosalind's prompts into `ART-PROMPTS.md`. **The played start measured** (the
    Chapter 6 review's 3.1 (b)) and **`CHAPTER_LEVELS` 9 set from it**; **the active-order flag's state checked**;
    **`hushed` and `strip` checked** (Chapter 7's).
@@ -1413,26 +1413,26 @@ where people talk. The main line alone (the gate holds, so a player cannot) is a
 **Day 2 (Opus with Sonnet on dialogue):**
 5. **Dialogue and the story wiring (the morning):** `data/dialogue/aldermoor.ts` staged from the beats, in this order
    so an interruption leaves a playable chapter: the stair, the post, the road, the gate; the square, the lady in
-   grey, the press-gang, Edmund; the hall, Jordyn at the door, the Regent; the close; the organ, Sebastian; the eve,
+   grey, the press-gang, Edmund; the hall, Jordyn at the door, the Regent; the close; the organ, Sebastien; the eve,
    the recital, the postern, the keep by night, the archive in both eras, the cabinets; caught, the cells; the Assize
    (the tree, the dock's Echo, the exposure, the Hushed, the Yield, the three defiances); the price, the goings, the
    stair, the card. `ACT9` in `quests.ts` with hints and goals; the Journal notes (*The first revisiting*, *The mirror
    file*, *The roll*, *The ash thumbprint (8 of 9)*, *The four accounts: three read*, *The Stillwater dissidents*,
-   *Jordyn*, *Sebastian*).
+   *Jordyn*, *Sebastien*).
 6. **The quests (early afternoon):** Al-3 (the printer, the chapel, the list and its cover, three doors, the press),
    Al-2 (the shelf, the fly-leaf's two looks), the debate *Should the Throne have one hand?* (two speakers, three
    rounds, the Reason books, the hierarch's line after), the board's two jobs.
 7. **The puzzle files and tests (late afternoon):** `puzzles/aldermoor_archive/`, `puzzles/aldermoor_assize/`; an
    `assize_hushed` bot test on seeds at 21 to 24 with the real statuses, with Edmund active and benched; a
    `press_gang_cross` and `bog_chapel_cell` test; quests, guide, debate, side-quest, maps, stage and content tests
-   green; the content tests: no Salkhi, Samira or Vikram line in a node with an Anissa line; no Jordyn or Sebastian
+   green; the content tests: no Salkhi, Samira or Vikram line in a node with an Anissa line; no Jordyn or Sebastien
    line with "good", "innocent", "feeds", "the arrows" or "thumbprint"; no line joining "Regent" to "almoner" in the
    Journal without "denies"; no line naming the closed hand or the thumbprint "the Quiet Crown's" or "Rael's".
 8. **The route (evening):** Chapter 9's route from its chapter start to `@chapter9-end`; `chapter-starts.ts` with
    chapter 10; `act.test.ts`; `tools/level-curve.ts` run and the XP dials set (section 5); the smoke test's Chapter 9
    section with screenshots of the notice post in the rain, the escort on the road, the lady in grey crossing the
    square, Edmund with his hat off, the Regent seated with the Almoner behind him, Jordyn at the door, Jordyn in the
-   close, Sebastian coming down the loft stair, the court walking to the church, Anissa in the loft, the postern
+   close, Sebastien coming down the loft stair, the court walking to the church, Anissa in the loft, the postern
    unbarred, the archive's cabinets, the Echo's gallery with Thomas, the panel open, the standoff in the hall, the
    cells, the dock with the roll in the Echo, the clerk comparing hands, Rosalind standing, "Enough noise", the
    unveiling, Jordyn's seven stepping out, the dissidents' line at dawn, at 844 x 390 and 390 x 844.
@@ -1449,7 +1449,7 @@ where people talk. The main line alone (the gate holds, so a player cannot) is a
 *Thomas Stillwater's Record (public edition)*), the sightline strips (the hall dark and empty: "the Sealbearers are at
 the recital"), the Long Watch and Stillwater's Patience (their fallbacks), Calm and Comfort (`seize` with the tell),
 the law-seal brooch's special, the board's two jobs, the escort pair on the road (a line at the gate). Never cut:
-Edmund active in battle, Jordyn's three acts (the postern, the arrest, the resignation), Sebastian's organ heard
+Edmund active in battle, Jordyn's three acts (the postern, the arrest, the resignation), Sebastien's organ heard
 before he is seen and playing under the break-in, the Echo with the council through the door and the panel as the
 anchor, the cabinets with the year and the seal, the dock's Echo, the Almoner's lie broken by the roll and the
 record, the Hushed with `magScale` and `hushed`, the three defiances walked, the price with the count, the two
@@ -1466,7 +1466,7 @@ new language).
 
 - **Claude's call:** the build takes every fix in section 6 of `2026-10-22-chapter9-outline-review.md`. Specifically:
   - Anissa comes through the postern with the party and holds the Echo's door, not the organ loft.
-  - Sebastian's bill reads "that's Grandpapa's name".
+  - Sebastien's bill reads "that's Grandpapa's name".
   - Al-2's panel is behind the shelf.
   - The dissidents' price can be short.
   - The Hushed has `magScale` 1.25 at HP x7 and Hushers with `protects`.
@@ -1506,11 +1506,11 @@ actor (`STAGE_PARTY`); the shore `aldermoor` in `engine/voyage.ts` and `scenes/V
   sister has kept you very close."); at the unmasking she says "You wanted a face. It is no one's. That is the point of
   us."; "the Hushed" is seeded on the purge list and at the bog chapel; the Almoner's veiled look is the road
   watcher's (`quiet_crown_f_brown`).
-- **Sebastian Jean-Philippe (3.3).** The bill on the heath's notice post; Anissa reads it: "Jean-Philippe. Gigi,
+- **Sebastien Jean-Philippe (3.3).** The bill on the heath's notice post; Anissa reads it: "Jean-Philippe. Gigi,
   that's Grandpapa's name." Gianna: "That's Mummy's brother. He writes to her about the weather." (the organ line is
   cut).
 - **Anissa (3.4).** She comes through the postern with the party and holds the Echo's door at the archive ("The floor
-  is shimmering, Gigi. I can hold the door."); she is caught and arrested with her sister; Sebastian visits the cell
+  is shimmering, Gigi. I can hold the door."); she is caught and arrested with her sister; Sebastien visits the cell
   and passes a blanket through the bars.
 - **Levels (3.5).** Planned from 21. Chapter 9's steps pay **70** (`XP_PER_OBJECTIVE_BY_CHAPTER[8]`; three pay nothing:
   the Mere Stair, the Toccata's follow-the-quest step, home). The Hushed 260, the press-gang 50, the bog chapel's cell
@@ -1534,8 +1534,8 @@ actor (`STAGE_PARTY`); the shore `aldermoor` in `engine/voyage.ts` and `scenes/V
   Eightgate. Somebody should.", when the player met the aide in Chapter 5, `side.seats.aldermoor`), and that aide's look
   is now Edmund's.
 - **Tone (3.9).** The organ line is cut; Samira's "I may enjoy this" and Anissa's rain line are in separate nodes at the landing; Edmund's sitting line is gone with 3.4;
-  Sebastian's review line is cut; the tip is fixed; "spoken about" in the docs; a human read of the archive scene and
-  every Jordyn, Sebastian and Almoner line is in the reviewer prompt.
+  Sebastien's review line is cut; the tip is fixed; "spoken about" in the docs; a human read of the archive scene and
+  every Jordyn, Sebastien and Almoner line is in the reviewer prompt.
 - **Shown (3.10).** One of Al-3's three doors is too late: the tea shop with the shut door. A woman opens it and cannot
   say her name; Haru reads it off the list and she nods. No line from her, no Anissa in the node. Gianna: "We were too
   late for one."
@@ -1572,7 +1572,7 @@ actor (`STAGE_PARTY`); the shore `aldermoor` in `engine/voyage.ts` and `scenes/V
   steps pay by chapter; the measured curve is on target).
 - **Al-3's family step** is one flag (`story.families_warned`), set when the third door is done in any order.
 - **Names by role:** the printer, the clockmaker, the keep's steward, the assize clerk, the Crown magistrate, the
-  witness bishop, the sorry constable; Jordyn, Sebastian, Lady Rosalind, the Almoner and the Lord Regent as the outline
+  witness bishop, the sorry constable; Jordyn, Sebastien, Lady Rosalind, the Almoner and the Lord Regent as the outline
   has them.
 
 **Levels (`tools/level-curve.ts`, seeds 1 to 200):**

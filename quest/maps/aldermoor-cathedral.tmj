@@ -242,7 +242,7 @@
       "objects": [
         {
           "id": 1,
-          "name": "sebastian",
+          "name": "sebastien",
           "type": "npc",
           "x": 192,
           "y": 64,
@@ -264,7 +264,7 @@
             {
               "name": "npc",
               "type": "string",
-              "value": "sebastian"
+              "value": "sebastien"
             }
           ]
         },
@@ -383,7 +383,7 @@
       "objects": [
         {
           "id": 5,
-          "name": "sebastian_meet",
+          "name": "sebastien_meet",
           "type": "trigger",
           "x": 176,
           "y": 224,
@@ -395,12 +395,12 @@
             {
               "name": "dialogue",
               "type": "string",
-              "value": "sebastian_meet"
+              "value": "sebastien_meet"
             },
             {
               "name": "if",
               "type": "string",
-              "value": "story.jordyn_offer, !story.sebastian_met"
+              "value": "story.jordyn_offer, !story.sebastien_met"
             }
           ]
         },
@@ -423,7 +423,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "side.purge_list.done, debate.aldermoor_one_hand.settled, story.sebastian_met, story.jordyn_offer, !story.recital_begun"
+              "value": "side.purge_list.done, debate.aldermoor_one_hand.settled, story.sebastien_met, story.jordyn_offer, !story.recital_begun"
             }
           ]
         }

@@ -154,7 +154,7 @@ describe('following only the gold arrow on, through Chapter 8', () => {
 describe('following only the gold arrow on, through Chapter 9', () => {
   // On from the end of Chapter 8 (Chapter 9, Oct 22): the voyage north, the Mere Stair and the notice, the heath road,
   // the press-gang on the Cross and Edmund, the audience, the day (the printer and the bog chapel for Al-3, the three
-  // families, the debate, Jordyn in the close, Sebastian at the organ), the eve, the recital, the postern by night, the
+  // families, the debate, Jordyn in the close, Sebastien at the organ), the eve, the recital, the postern by night, the
   // filing floor's memory, the cabinets dial by dial and seal by seal, the panel behind the shelf (Al-2), caught, the
   // cells, the Assize, the Hushed, the price at dawn, the stair home.
   const start = goldWalk({ maps });
@@ -167,7 +167,7 @@ describe('following only the gold arrow on, through Chapter 9', () => {
   it('finishes Chapter 9 with no stall', () => {
     expect(walk.stalls).toEqual([]);
     expect(walk.finished).toBe(true);
-    for (const f of ['party.edmund', 'story.jordyn_offer', 'story.sebastian_met', 'side.purge_list.done', 'story.families_warned', 'debate.aldermoor_one_hand.settled', 'story.recital_begun', 'clue.crown_pact', 'anchor.thomas_record', 'side.crown_chronicle.done', 'story.caught', 'story.hushed_beaten', 'ally.aldermoor_dissidents', 'act9.complete']) {
+    for (const f of ['party.edmund', 'story.jordyn_offer', 'story.sebastien_met', 'side.purge_list.done', 'story.families_warned', 'debate.aldermoor_one_hand.settled', 'story.recital_begun', 'clue.crown_pact', 'anchor.thomas_record', 'side.crown_chronicle.done', 'story.caught', 'story.hushed_beaten', 'ally.aldermoor_dissidents', 'act9.complete']) {
       expect(walk.sim.logic.state.flags.isSet(f), f).toBe(true);
     }
   });

@@ -1,6 +1,6 @@
 // Chapter 9, The Regent's Keep (Kingsmere, Aldermoor; docs/quest/reviews/2026-10-22-chapter9-outline.md with its second
 // review's fixes): the chapter starts (?chapter=9 and 10), the owner's rules as content checks (Salkhi, Anissa, Vikram's
-// breath, Jordyn's and Sebastian's lines against the locked rule, the Crown never joined to the girl who glows, the
+// breath, Jordyn's and Sebastien's lines against the locked rule, the Crown never joined to the girl who glows, the
 // Journal's almoner disowned), the day until the eve (a condition), the archive's cabinets (the year mirrored, the house
 // the lie is about), the courtroom (the clerk's tree; a Game Over never walks the party out mid-trial), Edmund leading in
 // his chapter, the Hushed against two bots, the side quests closing, the price and its floor.
@@ -88,13 +88,13 @@ describe('the owner\'s rules as content checks', () => {
     }
   });
 
-  it('Jordyn and Sebastian keep to the locked rule: never anyone\'s goodness, the arrows or the thumbprints', () => {
-    for (const who of ['jordyn', 'sebastian']) {
+  it('Jordyn and Sebastien keep to the locked rule: never anyone\'s goodness, the arrows or the thumbprints', () => {
+    for (const who of ['jordyn', 'sebastien']) {
       const ls = allLines.filter((l) => l.speaker === who);
       expect(ls.length, who).toBeGreaterThan(8);
       for (const l of ls) expect(l.text, `${who} in ${l.d}`).not.toMatch(/\bgood\b|innocent|feeds|the arrows|thumbprint|Cenizal/i);
     }
-    // The second review's fix: Sebastian's bill names the man, and Jordyn's line about her father is the law, not him.
+    // The second review's fix: Sebastien's bill names the man, and Jordyn's line about her father is the law, not him.
     expect(allLines.map((l) => l.text).join(' ')).toMatch(/Grandpapa's name/);
   });
 
@@ -125,7 +125,7 @@ describe('the owner\'s rules as content checks', () => {
 describe('the day, the eve and the night', () => {
   it('the eve is a condition: the lamps come when the four of the day are done, and go when the recital begins', () => {
     const eve = MAP_MOODS.find((m) => m.maps.includes('aldermoor-cross') && JSON.stringify(m.if).includes('recital_begun'))!;
-    const day = new FlagStore({ 'side.purge_list.done': true, 'debate.aldermoor_one_hand.settled': true, 'story.sebastian_met': true });
+    const day = new FlagStore({ 'side.purge_list.done': true, 'debate.aldermoor_one_hand.settled': true, 'story.sebastien_met': true });
     expect(evaluate(eve.if, day)).toBe(false);
     day.set('story.jordyn_offer', true);
     expect(evaluate(eve.if, day)).toBe(true);

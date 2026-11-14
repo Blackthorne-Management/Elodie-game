@@ -932,7 +932,7 @@
             {
               "name": "if",
               "type": "string",
-              "value": "side.purge_list.done, debate.aldermoor_one_hand.settled, story.sebastian_met, story.jordyn_offer, !story.recital_begun"
+              "value": "side.purge_list.done, debate.aldermoor_one_hand.settled, story.sebastien_met, story.jordyn_offer, !story.recital_begun"
             },
             {
               "name": "once",

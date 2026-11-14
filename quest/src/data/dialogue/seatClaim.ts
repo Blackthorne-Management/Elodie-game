@@ -76,7 +76,7 @@ const LA = 'layla';
 const BO = 'benny_old';
 const PO = 'patricio_old';
 const AN = 'anicette';
-const SB = 'sebastian';
+const SB = 'sebastien';
 const AM = 'amanda';
 const ZE = 'zelia';
 const RA = 'rahel';
@@ -982,7 +982,7 @@ const ARRIVALS: DialogueScript = script('hearing_arrivals', {
       act(
         [
           { do: 'enter', actor: 'an_c', look: 'anicette', from: at(CONCOURSE.zetwalGate.x, CONCOURSE.zetwalGate.y), to: at(25, 8), facing: 'left', async: true },
-          { do: 'enter', actor: 'sb_c', look: 'sebastian', from: at(CONCOURSE.zetwalGate.x + 1, CONCOURSE.zetwalGate.y), to: at(26, 9), facing: 'left' },
+          { do: 'enter', actor: 'sb_c', look: 'sebastien', from: at(CONCOURSE.zetwalGate.x + 1, CONCOURSE.zetwalGate.y), to: at(26, 9), facing: 'left' },
           { do: 'look', actor: 'an_c' },
         ],
         AN,
@@ -992,9 +992,9 @@ const ARRIVALS: DialogueScript = script('hearing_arrivals', {
       { if: has('item.volume_one'), speaker: AN, text: 'Twenty years overdue. I will not charge her. I will tell her so, in front of people.', mood: 'sly' },
       { if: has('item.volume_one'), speaker: '', text: '(Volume One is back on Grandmother\'s shelf, or will be.)', set: { 'side.volume_one.done': true, 'item.volume_one': false } },
     ],
-    next: 'sebastian',
+    next: 'sebastien',
   },
-  sebastian: { lines: [say(SB, 'I was somewhere being famous. It was here.')], next: 'ardencia' },
+  sebastien: { lines: [say(SB, 'I was somewhere being famous. It was here.')], next: 'ardencia' },
   ardencia: {
     lines: [
       // Two staggered rows, nobody straight behind another (review Nov 7, finding 9's rule).
@@ -1414,7 +1414,7 @@ const HEARING_PEOPLE: DialogueScript[] = [
   simple('rahel_gallery_talk', [say(RA, 'I came to see it. I am seeing it.')]),
   simple('patricia_gallery_talk', [say(PA, 'Eight chairs. I counted.')]),
   simple('patricio_gallery_talk', [nar('Grandfather sits in the gallery on his cane, and watches Rael. He says nothing.')]),
-  simple('sebastian_gallery_talk', [say(SB, 'I play in this Hall on feast days. Today I am listening.', { mood: 'listening' })]),
+  simple('sebastien_gallery_talk', [say(SB, 'I play in this Hall on feast days. Today I am listening.', { mood: 'listening' })]),
   simple('zelia_gallery_talk', [say(ZE, 'The keep has the elders\' ledgers. I brought them.')]),
   simple('gallery_pilgrim_talk', [say('pilgrim', 'We walked from Zetwal to see the Throne. Today it is being used.')]),
   simple('camp_leader_gallery_talk', [say('camp_leader', 'Someone stood on it. I came to see what she does next.')]),

@@ -30,7 +30,7 @@ against Agnivansh, "Stillwater dissidents are the Crown's own people"), 5.5 (Act
 of Al-Doria, Skarragol, Kuroshi and Jwaladesh, ties to Dorini; the exposed route with the Kuroshi evidence and 60
 percent paid; a replay can force another house), 6.3 (prices; "any other currency counts at half value"; overpaying
 adds reinforcements), 7.2 (Concord; debates rotate after the Muster); the **Chapter 9 outline and its review and
-decisions** (section 14: who arrives from Kingsmere; the review's fixes taken: Anissa through the postern, Sebastian
+decisions** (section 14: who arrives from Kingsmere; the review's fixes taken: Anissa through the postern, Sebastien
 Jean-Philippe, the dissidents' price can be short (floor 5), Jordyn's evidence returned by the book, "Not today"; the
 owner's yes: the Almoner is Chapter 1's veiled woman, placed `!story.hushed_beaten`); the **Chapter 3, 6, 7 and 8
 outlines** (every price scene, token and betrayer seed, gathered in section 7.0); the **Chapter 5 outline** (Se-5's
@@ -70,7 +70,7 @@ and arrows, Game Over, and nothing else until after the release.
 ## 1. Where the chapter starts (measured against the Chapter 9 outline, section 14, and its review)
 
 - **Chapter 9 ends** on the Mere Stair at dawn: Jordyn's company goes up the moor road ("A company walks... We'll be at
-  your Muster... And I'll bring Mother. And her mother."); Sebastian stays for his Eightgate recital and will come to
+  your Muster... And I'll bring Mother. And her mother."); Sebastien stays for his Eightgate recital and will come to
   Pòdlimyè "to hear the drums"; Jordyn returns the three court papers by the book; the Regent's "Not today"; the sea
   voyage `aldermoor_zetwal` home. The card *Chapter 9 complete, The Regent's Keep. Next: Chapter 10, The Muster*
   (`act9.complete`). `?chapter=10` starts on **Pòdlimyè's long pier** (`zetwal-harbor`, the built spawn
@@ -111,7 +111,7 @@ and arrows, Game Over, and nothing else until after the release.
   warmonger." The Speaker: "Half want peace at any price, half want the old harbor chain raised."
 - **What Gianna believes:** her father sold Xaraguá and them, for a chair, and spent the gold where nobody can read.
   The player holds Rael clues 1 to 4, the "arrows missed" whisper, Kayla's "still himself", Aiyana's rod, Jordyn's
-  "Keep the law", Sebastian's weather, the "nobody dies" pattern (four withdrew; the Hushed was taken), the eighth
+  "Keep the law", Sebastien's weather, the "nobody dies" pattern (four withdrew; the Hushed was taken), the eighth
   thumbprint with "Warn them first" inside the cult's own cells. **This chapter gives no new Rael clue** (STORY 4
   assigns none to it) and must not: Rahel is his mother and Patricia his grandmother, and each has exactly one line
   that reads either way (section 9). It gives the fourth Ash Wars account's reading (Anicette), the Marshal's own
@@ -189,7 +189,7 @@ variant (flag-placed camps, ships, banners, people) and the arrow walks the city
   nothing for a beat; then: "The council sits at noon. The Chancellor will not send a Zetwal ship to a war with a
   camp that is three camps. Seat them, envoy. Then come to the Hall." `story.pier_met`.
 - **One line for the Crown's absence:** Haru: "Your mother?" Patricio: "At Eightgate. The Regent's guest, as he calls
-  it. She writes about the weather." (Sebastian's line, paid once more, by the father.) Gianna says nothing; Anissa
+  it. She writes about the weather." (Sebastien's line, paid once more, by the father.) Gianna says nothing; Anissa
   takes her hand (a `face` cue). No joke follows.
 - **The trader** ties up and stays ("I'm not sailing again until there's a fleet to sail with. Four countries and a
   horse. I want to see how it ends.").
@@ -273,7 +273,7 @@ variant (flag-placed camps, ships, banners, people) and the arrow walks the city
   on the other's arm: **Rahel** (tall, straight, a black shawl, a Brasador brooch and a steppe braid in her hair: the
   mother of six by three men and three countries) and **Patricia** (small, white-haired, a cane she does not use, the
   eldest of the family, who looks at everything once).
-- **Azzy, shown:** he goes down the pier at a run (`walk`, `run: true`) and stops a tile short, as Sebastian did.
+- **Azzy, shown:** he goes down the pier at a run (`walk`, `run: true`) and stops a tile short, as Sebastien did.
   Rahel, before he speaks: "Azriel. Don't run on a pier. You'll go in, and your Titi Jordyn will have to arrest the
   sea." Then she takes his face in both hands (a `walk` to his tile and back: the engine's embrace). **Her line for
   Azzy (FAMILY.md):** "Your grandfather's name, your father's jaw, and from me you got nothing but the temper. Use it
