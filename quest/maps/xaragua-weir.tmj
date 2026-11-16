@@ -1,0 +1,1372 @@
+{
+  "compressionlevel": -1,
+  "width": 20,
+  "height": 14,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "type": "map",
+  "version": "1.8",
+  "tiledversion": "1.8.2",
+  "nextlayerid": 15,
+  "nextobjectid": 35,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,123,124,124,124,124,124,124,124,124,123,123,123,123,123,123,123,123,
+123,123,123,123,124,124,124,124,124,124,124,124,123,123,123,123,123,123,123,123,
+123,123,123,123,124,124,124,124,124,124,124,124,123,124,124,124,124,124,124,124,
+123,123,123,123,124,124,124,124,124,124,124,124,123,123,122,122,122,122,122,123,
+123,123,123,123,124,124,124,124,124,124,124,124,123,123,122,122,122,122,122,123,
+123,123,123,123,123,122,123,123,123,123,123,123,123,123,122,122,122,122,122,123,
+123,123,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,123,
+123,123,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,123,
+123,123,122,122,122,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,122,122,122,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,94,95,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123
+      ]
+    },
+    {
+      "id": 2,
+      "name": "deco_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ground_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,123,122,122,122,122,122,122,122,122,123,123,123,123,123,123,123,123,
+123,123,123,123,122,122,122,122,122,122,122,122,123,123,123,123,123,123,123,123,
+123,123,123,123,122,122,122,122,122,122,122,122,123,124,124,124,124,124,124,124,
+123,123,123,123,122,122,122,122,122,122,122,122,123,123,122,122,122,122,122,123,
+123,123,123,123,122,122,122,122,122,122,122,122,123,123,122,122,122,122,122,123,
+123,123,123,123,123,122,123,123,123,123,123,123,123,123,122,122,122,122,122,123,
+123,123,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,123,
+123,123,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,122,123,
+123,123,122,122,122,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,122,122,122,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
+123,123,123,94,95,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123
+      ]
+    },
+    {
+      "id": 4,
+      "name": "deco_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 5,
+      "name": "above",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+      ]
+    },
+    {
+      "id": 6,
+      "name": "collide_present",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 7,
+      "name": "collide_echo",
+      "type": "tilelayer",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 14,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,0,16,16,16,16,16,16,16,16,
+16,16,16,16,0,0,0,0,0,0,0,0,16,16,0,0,0,0,0,16,
+16,16,16,16,0,0,0,0,0,0,0,0,16,16,0,0,0,0,0,16,
+16,16,16,16,16,0,16,16,16,16,16,16,16,16,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,
+16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,0,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
+16,16,16,0,0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16
+      ]
+    },
+    {
+      "id": 8,
+      "name": "npcs",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 1,
+          "name": "echo_weir_scout_a",
+          "type": "npc",
+          "x": 224,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.weir_echo_seen, !anchor.weir_high"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_weir_scout_a"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "echo_weir_scout_b",
+          "type": "npc",
+          "x": 288,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.weir_echo_seen, !anchor.weir_high"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_weir_scout_b"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "caona_weir",
+          "type": "npc",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.weir_echo_seen, !anchor.weir_high"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "caona_weir"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "echo_weir_scout_a_lip",
+          "type": "npc",
+          "x": 96,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_weir_scout_a"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "echo_weir_scout_b_lip",
+          "type": "npc",
+          "x": 160,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "echo_weir_scout_b"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "caona_weir_lip",
+          "type": "npc",
+          "x": 128,
+          "y": 144,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high"
+            },
+            {
+              "name": "npc",
+              "type": "string",
+              "value": "caona_weir"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "doors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 7,
+          "name": "weir_out",
+          "type": "door",
+          "x": 48,
+          "y": 208,
+          "width": 32,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "exit",
+              "type": "string",
+              "value": "up"
+            },
+            {
+              "name": "map",
+              "type": "string",
+              "value": "xaragua-seacave"
+            },
+            {
+              "name": "target",
+              "type": "string",
+              "value": "seacave_weir"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "triggers",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 8,
+          "name": "weir_enter",
+          "type": "trigger",
+          "x": 48,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "weir_enter"
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "story.weir_entered"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high"
+            },
+            {
+              "name": "once",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "onEnter",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "spawns",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 9,
+          "name": "weir",
+          "type": "spawn",
+          "x": 48,
+          "y": 176,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "up"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "echo_zones",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 10,
+          "name": "weir_shelf",
+          "type": "echo_zone",
+          "x": 224,
+          "y": 128,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "if",
+              "type": "string",
+              "value": "item.sun_locket, side.canoes_sleep.accepted"
+            },
+            {
+              "name": "onEcho",
+              "type": "string",
+              "value": "weir_echo_enter"
+            },
+            {
+              "name": "onReturn",
+              "type": "string",
+              "value": "weir_echo_return"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "anchors",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 11,
+          "name": "weir_high",
+          "type": "anchor",
+          "x": 256,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.weir_high"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "weir_fire"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "weir_half",
+          "type": "anchor",
+          "x": 256,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.weir_half"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "weir_fire"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "weir_lift",
+          "type": "anchor",
+          "x": 192,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "flag",
+              "type": "string",
+              "value": "anchor.weir_half"
+            },
+            {
+              "name": "object",
+              "type": "string",
+              "value": "weir_haul"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "puzzle_objects",
+      "type": "objectgroup",
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "draworder": "topdown",
+      "objects": [
+        {
+          "id": 14,
+          "name": "echo_tide_half",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 48,
+          "width": 128,
+          "height": 80,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "echo.tide_in|anchor.weir_half, !anchor.weir_high, !echo.tide_high|anchor.weir_half"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "tide_half"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "echo_tide_full",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 48,
+          "width": 128,
+          "height": 96,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "echo.tide_high|anchor.weir_high, !anchor.weir_half"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "pool_brim"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "pool_half",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 48,
+          "width": 128,
+          "height": 80,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_half, !anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "tide_half"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "pool_brim",
+          "type": "puzzle_object",
+          "x": 64,
+          "y": 48,
+          "width": 128,
+          "height": 96,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "pool_brim"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "canoe_floor_echo",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 96,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "story.weir_echo_seen|echo.canoe_down, !anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "war_canoe"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "name": "canoe_wreck",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 96,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "war_canoe_split"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "name": "sleeping_canoe",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 128,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "sleeping_canoe"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "war_canoe"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "name": "sleeping_canoe_echo",
+          "type": "puzzle_object",
+          "x": 112,
+          "y": 128,
+          "width": 48,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "war_canoe"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "pit_look",
+          "type": "puzzle_object",
+          "x": 96,
+          "y": 128,
+          "width": 96,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "pit_look"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high"
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "weir_gate_old",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high, !anchor.weir_half"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weir_open"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "weir_gate_shut_old",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high|anchor.weir_half"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weir_shut"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "weir_gate",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "weir_gate"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high, !anchor.weir_half"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weir_open"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 26,
+          "name": "weir_gate_down",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 80,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "weir_gate"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "anchor.weir_high|anchor.weir_half"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "weir_shut"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "name": "weir_post_old",
+          "type": "puzzle_object",
+          "x": 176,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "tide_post"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "weir_post",
+          "type": "puzzle_object",
+          "x": 176,
+          "y": 64,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "weir_post"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "tide_post"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "name": "weir_rockfall",
+          "type": "puzzle_object",
+          "x": 80,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!anchor.weir_high"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "name": "weir_haul_old",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "name": "weir_haul",
+          "type": "puzzle_object",
+          "x": 192,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "weir_haul"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "weir_fire_ring",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "era",
+              "type": "string",
+              "value": "present"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "fire_ring_cold"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "name": "weir_fire",
+          "type": "puzzle_object",
+          "x": 256,
+          "y": 96,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "weir_fire"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "firepit"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 34,
+          "name": "weir_floats",
+          "type": "puzzle_object",
+          "x": 288,
+          "y": 128,
+          "width": 16,
+          "height": 16,
+          "rotation": 0,
+          "visible": true,
+          "properties": [
+            {
+              "name": "dialogue",
+              "type": "string",
+              "value": "weir_floats"
+            },
+            {
+              "name": "era",
+              "type": "string",
+              "value": "echo"
+            },
+            {
+              "name": "if",
+              "type": "string",
+              "value": "!echo.floats"
+            },
+            {
+              "name": "kind",
+              "type": "string",
+              "value": "net_floats"
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "placeholder",
+      "image": "placeholder-tiles.png",
+      "imagewidth": 128,
+      "imageheight": 912,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "tilecount": 454,
+      "columns": 8,
+      "margin": 0,
+      "spacing": 0
+    }
+  ]
+}

@@ -6,6 +6,7 @@
 
 import { SECRET_ITEMS } from '../config.ts';
 import type { ItemDef } from '../engine/rpg.ts';
+import { CANOES_NAME } from './war.ts';
 
 const W = SECRET_ITEMS.wick;
 const K = SECRET_ITEMS.sakk;
@@ -110,6 +111,22 @@ export const SECRET_ITEM_LIST: readonly ItemDef[] = [
     abilities: [
       { name: 'The clause struck', text: 'At the Claim, Keeper Hollis strikes the Seventh Clause before every house: Accord Stability +15, Concord +10.' },
       { name: 'Returned by law', text: 'On the Hearing\'s morning, Cacica Yari is given the ribbon, and Xaraguá\'s harbor is returned by law.' },
+    ],
+  },
+  // X-4 Where the Canoes Sleep (Chapter 11, built Nov 16; SECRET-ITEMS.md 3 with its "Built" note): the design's Conch Call
+  // (a canoe on any shore) has no shore left to use it on, so Yucayeque's canoes answer it in the war's volley fights
+  // instead (Claude's call, Nov 16: the outline's recommended answer). A key item, like the Wick: Yari carries it.
+  {
+    id: 'caona_conch',
+    name: 'Caona\'s Conch',
+    kind: 'key',
+    price: 0,
+    text: 'A queen conch cut for blowing, its lip worn smooth by one mouth. Fifty years in the bow of a canoe that never dried. Yari carries it for the canoes.',
+    showcase: 'legendary',
+    boons: { fleetVolley: { count: SECRET_ITEMS.conch.volleys, name: CANOES_NAME } },
+    abilities: [
+      { name: 'Conch Call', text: 'Wherever the companies answer the whistle, Yucayeque\'s canoes answer the conch: one volley more, over the whistle\'s three, that the fleet\'s count never pays for.' },
+      { name: 'Heard on any shore', text: 'Yari blows it when the tide is called. The old people know the sound.' },
     ],
   },
   // What the quests carry.

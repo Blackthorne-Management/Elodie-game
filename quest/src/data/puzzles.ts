@@ -588,6 +588,40 @@ export const PUZZLES: readonly PuzzleDef[] = [
     },
     goal: { all: [{ flag: 'anchor.chain_post' }, { flag: 'story.chain_dropped' }] },
   },
+  // X-4 Where the Canoes Sleep (Chapter 11, secret, built Nov 16; PUZZLES.md S-XAR as the Nov 16 outline reduced it): the
+  // day on the hill, the quest taken; from the sleeping pool's door, into the memory, the floats through the top hole of
+  // the tide post, the fire twice, and back for the conch in the canoe's bow.
+  {
+    id: 'xaragua_weir',
+    title: 'Where the Canoes Sleep: let the sea shut its own gate at the top of the tide (secret item; PUZZLES.md S-XAR)',
+    map: 'xaragua-weir',
+    spawn: 'weir',
+    flags: {
+      ...BEFORE_LOCKET,
+      'item.sun_locket': true,
+      'party.yari': true,
+      'party.azzy': true,
+      'party.samira': true,
+      'party.bayarmaa': true,
+      'party.haru': true,
+      'party.vikram': true,
+      'party.edmund': true,
+      'story.benny_joined': true,
+      'story.xaragua_arrived': true,
+      'story.escaped': true,
+      'story.crown_attack': true,
+      'encounter.xaragua_story.pier.won': true,
+      'act10.complete': true,
+      'card.act10_end': true,
+      'story.war_begun': true,
+      'story.landed': true,
+      'story.headland_won': true,
+      'war.flank_done': true,
+      'story.camp_reached': true,
+      'side.canoes_sleep.accepted': true,
+    },
+    goal: { flag: 'side.canoes_sleep.done' },
+  },
   // Se-4's secret (S-SEA, built Oct 27): the clerk's five questions answered as it truly was (the minute sealed in his
   // register: the anchor), then Keeper Hollis's hearing, each line shown its proof from the Journal in the minute's order.
   // Chapter 12, before the bell (Thomas's record is Chapter 9's).

@@ -15,7 +15,7 @@
 import { Grid, type MapSource, type ObjSpec } from './painter.ts';
 import { npc, obj, trigger } from './zetwal-town.ts';
 import { QUIET_CELLS, cellPlacedText } from '../../src/data/quietCells.ts';
-import { BEACH, CAMP, CANEY, CAVE, COMPANIES, CONUCO, FLANK_HOUSES, MOUNTAIN, OCCUPIED_TEXT, PIER_ROOT, SONG, VILLAGE, WAR_DAY_TEXT, WAR_TABLE_TEXT, WAR_TEXT } from '../../src/data/war.ts';
+import { BEACH, CAMP, CANEY, CAVE, COMPANIES, CONUCO, FLANK_HOUSES, MOUNTAIN, OCCUPIED_TEXT, PIER_ROOT, SEACAVE, SONG, VILLAGE, WAR_DAY_TEXT, WAR_TABLE_TEXT, WAR_TEXT, WEIR } from '../../src/data/war.ts';
 
 const GRASS = 'ā';
 const TRAIL = 'ē';
@@ -758,17 +758,120 @@ export function xaraguaSeaCave(): MapSource {
   g.rect(13, 3, 3, 4, 'ǒ').rect(13, 3, 8, 2, 'ǒ');
   // The inlet below the ledge, and the channel out to the sea on the east.
   g.rect(16, 5, 5, 3, 'ǐ').rect(21, 1, 5, 11, 'ǐ');
+  // Where the tunnel turns east, a crack in the rock straight ahead, behind a curtain of weed (X-4, Chapter 11: the
+  // sleeping pool behind it). Two tiles wide like every door; closed until the shell diver's quest is taken.
+  const w = SEACAVE.weed;
+  g.rect(w.x, w.y, 2, 1, 'ĝ');
 
   const objects: ObjSpec[] = [
     { layer: 'doors', name: 'seacave_out', x: 4, y: 13, props: { target: 'beach_seacave', map: 'xaragua-beach', exit: 'up' } },
     { layer: 'spawns', name: 'seacave', x: 4, y: 11, props: { facing: 'up', era: 'present' } },
     trigger('seacave_enter', 4, 11, { dialogue: 'seacave_enter', flag: 'story.seacave_entered', once: true, onEnter: true }),
-    obj('escape_canoe', 19, 5, { dialogue: 'escape_canoe', kind: 'dugout', solid: true, era: 'present' }),
+    // Chapter 2's canoe: the party sailed out in it on the escape night, so it is gone from the ledge after (X-4's fix).
+    obj('escape_canoe', 19, 5, { dialogue: 'escape_canoe', kind: 'dugout', solid: true, era: 'present', if: '!story.escaped' }),
+    // Chapter 11 by day: the tide half out, the canoes the camp leader's plan speaks of in the inlet, a scout keeping them.
+    trigger('seacave_war', SEACAVE.dayLine.x, SEACAVE.dayLine.y, { dialogue: 'seacave_war', flag: 'story.seacave_war_seen', once: true, onEnter: true, if: 'story.war_begun, !story.tide_called' }),
+    ...SEACAVE.dugouts.map((d, i) => obj(`seacave_dugout_${i + 1}`, d.x, d.y, { kind: 'dugout', solid: true, era: 'present', if: 'story.camp_reached, !story.tide_called' })),
+    npc('seacave_canoe_guard', SEACAVE.guard.x, SEACAVE.guard.y, 'down', { if: 'story.camp_reached, !story.tide_called' }),
+    // The weed over the crack, and the way through it once the quest is taken (the sleeping pool, xaragua-weir).
+    { layer: 'doors', name: 'seacave_weir', x: w.x, y: w.y, w: 2, h: 1, props: { target: 'weir_out', map: 'xaragua-weir', exit: 'down', if: 'side.canoes_sleep.accepted', closed: 'seacave_weed' } },
+    obj('seacave_weed', w.x, w.y, { kind: 'weed_curtain', era: 'present', if: '!side.canoes_sleep.accepted' }, 2, 1),
+    { layer: 'spawns', name: 'seacave_weir', x: w.x, y: w.y + 1, props: { facing: 'down', era: 'present' } },
     // Thorne in his longboat at the sea mouth, once he springs the trap (he restarts the fight after a loss).
     obj('thorne_longboat', 22, 4, { kind: 'dugout', solid: true, era: 'present', if: 'story.thorne_ambush, !encounter.xaragua_story.thorne.won' }),
     npc('thorne_blockade', 22, 3, 'left', { npc: 'thorne_boat', if: 'story.thorne_ambush, !encounter.xaragua_story.thorne.won' }),
   ];
   return { id: 'xaragua-seacave', present: g, echo: g.clone(), objects, interior: true };
+}
+
+/**
+ * The sleeping pool (X-4 Where the Canoes Sleep, Chapter 11; the Nov 16 outline 2.3 B), behind the weed in the sea cave: a
+ * round chamber, a pit that takes up most of it, its stone weir gate on the sea wall, the tide post, the cut steps, a shelf
+ * with a fire ring, and the lip the party stands on. Now the pit holds sea water and Caona's canoe lies split at its
+ * bottom; fifty years ago, on a storm night, it is dry sand, and the tide moves only in the memory (sitting at the fire).
+ * The water is conditional objects over the pit, and the tide moves only while Patricio sits on the shelf, so nobody ever
+ * stands where water comes. The anchors: the gate falling at the top of the tide (`weir_high`), or at half (`weir_half`).
+ */
+export function xaraguaWeir(): MapSource {
+  const W = 20;
+  const H = 14;
+  const g = new Grid(W, H, 'ǔ');
+  const P = WEIR.pit;
+  // The lip, two deep, and the passage down to the door.
+  g.rect(2, 9, 17, 2, 'ǒ').rect(2, 11, 3, 2, 'ǒ').set(WEIR.door.x, WEIR.door.y, 'D');
+  // The shelf over the lip on the east, where the fire is.
+  g.rect(14, 6, 5, 3, 'ǒ');
+  // The channel from the gate to the sea, along the shelf's back.
+  g.rect(13, 5, 7, 1, 'ǐ');
+  // Now: sea water in the pit, the steps under a rockfall.
+  g.rect(P.x, P.y, P.w, P.h, 'ǐ').set(WEIR.steps.x, WEIR.steps.y, 'ǘ');
+  // Fifty years ago: the pit dry sand, the cut steps down into it.
+  const e = g.map({});
+  e.rect(P.x, P.y, P.w, P.h, 'ǒ').set(WEIR.steps.x, WEIR.steps.y, 'ǒ');
+
+  const pit = (name: string, kind: string, era: string, cond: string, h: number, dialogue?: string): ObjSpec =>
+    obj(name, P.x, P.y, { kind, solid: true, era, if: cond, ...(dialogue ? { dialogue } : {}) }, P.w, h);
+  const cf = WEIR.canoeFloor;
+  const cl = WEIR.canoeLip;
+  const objects: ObjSpec[] = [
+    { layer: 'doors', name: 'weir_out', x: WEIR.door.x, y: WEIR.door.y, props: { target: 'seacave_weir', map: 'xaragua-seacave', exit: 'up' } },
+    { layer: 'spawns', name: 'weir', x: WEIR.spawn.x, y: WEIR.spawn.y, props: { facing: 'up', era: 'present' } },
+    trigger('weir_enter', WEIR.spawn.x, WEIR.spawn.y, { dialogue: 'weir_enter', flag: 'story.weir_entered', once: true, onEnter: true, if: '!anchor.weir_high' }),
+    {
+      layer: 'echo_zones',
+      name: 'weir_shelf',
+      x: WEIR.zone.x,
+      y: WEIR.zone.y,
+      w: WEIR.zone.w,
+      h: WEIR.zone.h,
+      props: { if: 'item.sun_locket, side.canoes_sleep.accepted', onEcho: 'weir_echo_enter', onReturn: 'weir_echo_return' },
+    },
+
+    // The water. The memory's tide (echo.tide_in: Rising, High and Falling; echo.tide_high: High), and the pool the gate
+    // kept: half (the wrong anchor), or to the brim over the rim and the steps (the right one; in both eras).
+    pit('echo_tide_half', 'tide_half', 'echo', 'echo.tide_in|anchor.weir_half, !anchor.weir_high, !echo.tide_high|anchor.weir_half', P.h),
+    pit('echo_tide_full', 'pool_brim', 'echo', 'echo.tide_high|anchor.weir_high, !anchor.weir_half', P.h + 1),
+    pit('pool_half', 'tide_half', 'present', 'anchor.weir_half, !anchor.weir_high', P.h),
+    pit('pool_brim', 'pool_brim', 'present', 'anchor.weir_high', P.h + 1),
+    // The canoe: on the pit floor in the memory (once the scouts have carried her down), split there now, afloat against
+    // the lip in both eras once the sea is shut in at the top of the tide.
+    obj('canoe_floor_echo', cf.x, cf.y, { kind: 'war_canoe', solid: true, era: 'echo', if: 'story.weir_echo_seen|echo.canoe_down, !anchor.weir_high' }, cf.w, 1),
+    obj('canoe_wreck', cf.x, cf.y, { kind: 'war_canoe_split', solid: true, era: 'present', if: '!anchor.weir_high' }, cf.w, 1),
+    obj('sleeping_canoe', cl.x, cl.y, { kind: 'war_canoe', solid: true, era: 'present', if: 'anchor.weir_high', dialogue: 'sleeping_canoe' }, cl.w, 1),
+    obj('sleeping_canoe_echo', cl.x, cl.y, { kind: 'war_canoe', solid: true, era: 'echo', if: 'anchor.weir_high' }, cl.w, 1),
+    // Looking down into the pit from the lip, now.
+    obj('pit_look', 6, 8, { era: 'present', if: '!anchor.weir_high', dialogue: 'pit_look' }, 6, 1),
+    // The gate: up on its peg (its trip line rotted now), or down on either anchor.
+    obj('weir_gate_old', WEIR.gate.x, WEIR.gate.y, { kind: 'weir_open', solid: true, era: 'present', if: '!anchor.weir_high, !anchor.weir_half' }),
+    obj('weir_gate_shut_old', WEIR.gate.x, WEIR.gate.y, { kind: 'weir_shut', solid: true, era: 'present', if: 'anchor.weir_high|anchor.weir_half' }),
+    obj('weir_gate', WEIR.gate.x, WEIR.gate.y, { kind: 'weir_open', solid: true, era: 'echo', if: '!anchor.weir_high, !anchor.weir_half', dialogue: 'weir_gate' }),
+    obj('weir_gate_down', WEIR.gate.x, WEIR.gate.y, { kind: 'weir_shut', solid: true, era: 'echo', if: 'anchor.weir_high|anchor.weir_half', dialogue: 'weir_gate' }),
+    // The tide post, bored through twice; the rockfall over the steps now; the haul line over the gate.
+    obj('weir_post_old', WEIR.post.x, WEIR.post.y, { kind: 'tide_post', solid: true, era: 'present', if: '!anchor.weir_high' }),
+    obj('weir_post', WEIR.post.x, WEIR.post.y, { kind: 'tide_post', solid: true, era: 'echo', if: '!anchor.weir_high', dialogue: 'weir_post' }),
+    obj('weir_rockfall', WEIR.steps.x, WEIR.steps.y, { solid: true, era: 'present', if: '!anchor.weir_high' }),
+    obj('weir_haul_old', WEIR.haul.x, WEIR.haul.y, { solid: true, era: 'present' }),
+    obj('weir_haul', WEIR.haul.x, WEIR.haul.y, { era: 'echo', dialogue: 'weir_haul' }),
+    // The shelf: the fire ring cold now, the shimmer over it; lit fifty years ago, the scouts' net floats beside it.
+    obj('weir_fire_ring', WEIR.fire.x, WEIR.fire.y, { kind: 'fire_ring_cold', solid: true, era: 'present' }),
+    obj('weir_fire', WEIR.fire.x, WEIR.fire.y, { kind: 'firepit', solid: true, era: 'echo', dialogue: 'weir_fire' }),
+    obj('weir_floats', WEIR.floats.x, WEIR.floats.y, { kind: 'net_floats', solid: true, era: 'echo', if: '!echo.floats', dialogue: 'weir_floats' }),
+    // The anchors: the gate falls when Patricio sits the tide round at the fire (at the top of it, or at half with the
+    // floats through the low hole), and the haul line lifts a gate fallen at half.
+    { layer: 'anchors', name: 'weir_high', x: WEIR.fire.x, y: WEIR.fire.y, props: { object: 'weir_fire', flag: 'anchor.weir_high' } },
+    { layer: 'anchors', name: 'weir_half', x: WEIR.fire.x, y: WEIR.fire.y, props: { object: 'weir_fire', flag: 'anchor.weir_half' } },
+    { layer: 'anchors', name: 'weir_lift', x: WEIR.haul.x, y: WEIR.haul.y, props: { object: 'weir_haul', flag: 'anchor.weir_half' } },
+
+    // The memory's people, once the first scene has placed them: the scouts at the fire and Caona at the lip; all three
+    // at the lip once the canoe floats.
+    npc('echo_weir_scout_a', WEIR.scouts[0]!.x, WEIR.scouts[0]!.y, 'right', { era: 'echo', if: 'story.weir_echo_seen, !anchor.weir_high' }),
+    npc('echo_weir_scout_b', WEIR.scouts[1]!.x, WEIR.scouts[1]!.y, 'left', { era: 'echo', if: 'story.weir_echo_seen, !anchor.weir_high' }),
+    npc('caona_weir', WEIR.caona.x, WEIR.caona.y, 'up', { era: 'echo', if: 'story.weir_echo_seen, !anchor.weir_high' }),
+    npc('echo_weir_scout_a_lip', WEIR.scoutsLip[0]!.x, WEIR.scoutsLip[0]!.y, 'up', { npc: 'echo_weir_scout_a', era: 'echo', if: 'anchor.weir_high' }),
+    npc('echo_weir_scout_b_lip', WEIR.scoutsLip[1]!.x, WEIR.scoutsLip[1]!.y, 'up', { npc: 'echo_weir_scout_b', era: 'echo', if: 'anchor.weir_high' }),
+    npc('caona_weir_lip', WEIR.caonaLip.x, WEIR.caonaLip.y, 'up', { npc: 'caona_weir', era: 'echo', if: 'anchor.weir_high' }),
+  ];
+  return { id: 'xaragua-weir', present: g, echo: e, objects, interior: true };
 }
 
 /** The customs house cellar, where the Crown holds Cacique Anaco (the occupied city). */
@@ -886,6 +989,8 @@ function warCamp(): ObjSpec[] {
     npc('jordyn_war', c.jordyn.x, c.jordyn.y, 'up', { if: WAR_DAY_TEXT }),
     ...COMPANIES.map((co, i) => npc(`camp_${co.army}`, c.companies[i]!.x, c.companies[i]!.y, 'up', { npc: co.npc, if: `story.camp_reached, !story.tide_called, army.${co.army}` })),
     obj('powder_jars_camp', c.jars.x, c.jars.y, { kind: 'powder_jars', solid: true, era: 'present', if: 'side.ninth_thumbprint.done, !story.tide_called' }),
+    // Where the Canoes Sleep (X-4, built Nov 16): the shell diver, sitting apart west of the hamacas, facing away.
+    npc('shell_diver_war', c.shellDiver.x, c.shellDiver.y, 'left', { if: WAR_DAY_TEXT }),
     // The Nightingale Key's hidden conversation here (built Nov 10; data/quietCells.ts): a Quiet Crown cell member.
     npc(QUIET_CELLS.yucayeque.npc, QUIET_CELLS.yucayeque.at.x, QUIET_CELLS.yucayeque.at.y, QUIET_CELLS.yucayeque.facing, { if: cellPlacedText(QUIET_CELLS.yucayeque) }),
   ];
@@ -986,4 +1091,5 @@ export const XARAGUA_SOURCES: readonly (() => MapSource)[] = [
   xaraguaRecord,
   xaraguaCellar,
   xaraguaSeaCave,
+  xaraguaWeir,
 ];

@@ -57,6 +57,10 @@ export const LATE_XP = {
   sorry: 40,
   patientHour: 60,
   tea: 40,
+  // X-4 Where the Canoes Sleep (Chapter 11, built Nov 16): what the other late secret quests pay, not the design's 120
+  // (Claude's call, Nov 16): Chapter 11's route ends at 10,260 XP and level 29 is 10,338, so 120 could lift a player a
+  // level before the Regent; with 60 a player who does every side quest stays inside the curve's one level over.
+  canoesSleep: 60,
 } as const;
 
 // ---- Chapter 3 (Cenizal) -------------------------------------------------------------------------------------------

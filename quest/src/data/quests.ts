@@ -1823,7 +1823,7 @@ export const ACT10: QuestDef = {
   ],
 };
 
-const XARAGUA_MAPS = ['xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song', 'xaragua-customs', 'xaragua-cave', 'xaragua-cellar', 'xaragua-record', 'xaragua-seacave'];
+const XARAGUA_MAPS = ['xaragua-village', 'xaragua-plaza', 'xaragua-beach', 'xaragua-conuco', 'xaragua-mountain', 'xaragua-camp', 'xaragua-caney', 'xaragua-song', 'xaragua-customs', 'xaragua-cave', 'xaragua-cellar', 'xaragua-record', 'xaragua-seacave', 'xaragua-weir'];
 const beach = (x: number, y: number): Goal => ({ map: 'xaragua-beach', at: { x, y } });
 const village = (x: number, y: number): Goal => ({ map: 'xaragua-village', at: { x, y } });
 
@@ -2776,6 +2776,25 @@ export const JOURNAL_NOTES: readonly JournalNote[] = [
     when: 'story.wounded_sheltered',
     title: 'The Song House',
     text: 'The wounded of seven companies in hamacas between the song-keepers\' posts. Old Benny counted them in. Anissa held the lamp.',
+  },
+  // X-4 Where the Canoes Sleep (secret, built Nov 16).
+  {
+    id: 'two_tides',
+    when: 'side.canoes_sleep.accepted',
+    title: 'Between two tides',
+    text: 'The shell diver\'s grandmother dived the sea cave. Caona\'s own canoe is in there, behind the weed where the tunnel turns: "put to sleep between two tides". A dugout that dries, splits.',
+  },
+  {
+    id: 'changed_weir_high',
+    when: 'anchor.weir_high',
+    title: 'Something changed',
+    text: 'The pit behind the weed is a pool, brim-full and still: young Patricio let the floats shut the gate at the top of the tide, and Caona\'s canoe has floated in it, whole, for fifty years.',
+  },
+  {
+    id: 'changed_weir_half',
+    when: 'anchor.weir_half',
+    title: 'Something changed',
+    text: 'The pit behind the weed holds half a pool: the gate fell at half tide, and the canoe lies canted, sound below the waterline and split above it. The haul line in the memory lifts the gate again.',
   },
   // Chapter 12, the Claim, and the Hearing.
   {

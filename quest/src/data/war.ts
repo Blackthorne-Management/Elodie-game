@@ -178,6 +178,8 @@ export const CAMP = {
   /** One soldier per company along the camp's south edge. */
   companies: [at(16, 18), at(17, 18), at(18, 18), at(19, 18), at(20, 18), at(21, 18), at(22, 18)],
   jars: at(11, 16),
+  /** Where the Canoes Sleep (X-4, the Nov 16 outline 1.2): the shell diver, west of the hamacas, sitting apart by day. */
+  shellDiver: at(6, 9),
 } as const;
 
 // ---- The petroglyph cave (xaragua-cave): the jars at the antechamber's edge ----------------------------------------
@@ -257,4 +259,54 @@ export const CANEY = {
   doors: at(17, 23),
   elders: [at(3, 6), at(7, 6), at(5, 7)],
   captains: [at(15, 8), at(19, 8), at(15, 12), at(19, 12)],
+} as const;
+
+// ---- Where the Canoes Sleep (X-4, Caona's Conch; docs/quest/reviews/2026-11-16-conch-outline.md) --------------------
+
+/** What the battle calls the canoes' own volley (Caona's Conch: config.ts SECRET_ITEMS.conch). */
+export const CANOES_NAME = "Yucayeque's canoes";
+
+/**
+ * The sea cave (xaragua-seacave, 26 x 14) in Chapter 11: the weed over the crack where the tunnel turns (the door to the
+ * sleeping pool), the day's two canoes in the inlet below the ledge and the scout who keeps them (the outline 1.4).
+ */
+export const SEACAVE = {
+  weed: at(4, 6),
+  dugouts: [at(16, 6), at(18, 6)],
+  guard: at(17, 4),
+  dayLine: at(4, 11),
+} as const;
+
+/**
+ * The sleeping pool (xaragua-weir, 20 x 14; the outline 2.3 B, the shelf widened by a row so nobody stands over the Echo
+ * zone: Claude's call, Nov 16). The pit (x 4 to 11, rows 3 to 7), the cut steps down into it, the tide post and the weir
+ * gate at its sea wall, the haul line over the gate, the shelf with the fire, the floats and the shimmer, the lip.
+ */
+export const WEIR = {
+  pit: { x: 4, y: 3, w: 8, h: 5 },
+  steps: at(5, 8),
+  post: at(11, 4),
+  /** Where Patricio stands in the dry pit to reach the post (up) and the gate (right). */
+  postStand: at(11, 5),
+  gate: at(12, 5),
+  haul: at(12, 8),
+  fire: at(16, 6),
+  floats: at(18, 8),
+  zone: { x: 14, y: 8, w: 3, h: 1 },
+  /** The canoe on the pit floor (the memory, and her wreck now). */
+  canoeFloor: { x: 6, y: 6, w: 3 },
+  /** The canoe afloat against the lip, once the sea is shut in. */
+  canoeLip: { x: 7, y: 8, w: 3 },
+  /** Yari at the lip by the canoe, now. */
+  lipYari: at(8, 9),
+  /** The memory's people: the scouts at the fire, and at the lip once she floats; Caona at the lip. */
+  scouts: [at(14, 6), at(18, 6)],
+  scoutsLip: [at(6, 9), at(10, 9)],
+  caona: at(10, 9),
+  caonaLip: at(8, 9),
+  /** Where the scouts set the canoe down on the pit floor (a row below her), and Caona meets Patricio on the shelf (two columns off his row, so neither stands over the other). */
+  scoutsPit: [at(6, 7), at(8, 7)],
+  caonaShelf: at(12, 9),
+  door: at(3, 13),
+  spawn: at(3, 11),
 } as const;

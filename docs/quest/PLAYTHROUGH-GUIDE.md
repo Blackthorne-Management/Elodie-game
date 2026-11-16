@@ -34,6 +34,9 @@ address in a private window, e.g. `http://192.168.1.20:5180/?chapter=7`. Every j
 
 Side quests are optional: do the ones that interest you; the new ones are K-5 (Chapter 7, the old woman in the Lantern
 Library at dawn), J-5 (Chapter 8, the bazaar's contract board) and S-2 (Chapter 6, the lawspeaker after the horn).
+One secret one is new since (Nov 16): X-4 *Where the Canoes Sleep* in Chapter 11. On the hill camp, by day, talk to the
+shell diver sitting apart west of the hamacas; she sends you to the sea cave under the headland on the Canoe Beach,
+through the weed where the tunnel turns. It gives Caona's Conch, which Yari blows at the tide call.
 
 ## What to look for
 

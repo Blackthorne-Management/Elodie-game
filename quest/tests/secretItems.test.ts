@@ -371,3 +371,14 @@ describe('the singing floor (the Nightingale Key\'s puzzle, engine/secrets.ts)',
     expect(stepFloor(NIGHTINGALE, new FlagStore(), 'echo', { x: o.x + 2, y: o.y })?.note).toBe(0);
   });
 });
+
+describe('Caona\'s Conch (X-4, built Nov 16): a key item Yari carries, whose canoes answer in the volley fights', () => {
+  it('carried, it brings one volley of the canoes\' own (config SECRET_ITEMS.conch); the most volleys of any item held win', () => {
+    const item = RPG.items.caona_conch!;
+    expect(item.kind).toBe('key');
+    expect(item.showcase).toBe('legendary');
+    expect(battleBoons(new FlagStore({ 'item.caona_conch': true }), RPG)).toEqual({ fleetVolley: { count: SECRET_ITEMS.conch.volleys, name: 'Yucayeque\'s canoes' } });
+    expect(battleBoons(new FlagStore({ 'item.caona_conch': true, 'item.unbroken_wick': true }), RPG).fleetVolley?.count).toBe(1);
+    expect(battleBoons(new FlagStore({ 'item.caona_conch': false }), RPG).fleetVolley).toBeUndefined();
+  });
+});

@@ -20,7 +20,8 @@ import { Battle, battleParty, battlePurse, woundsFor, type Action, type BattleEv
 import { FlagStore, type FlagReader } from '../src/engine/flags.ts';
 import { parseRoute } from '../src/engine/sim.ts';
 import { loadMaps, newGameSim, readJson } from './sim-setup.ts';
-import { volleysFor } from '../src/engine/war.ts';
+import { volleysFor, withFleetVolley } from '../src/engine/war.ts';
+import { battleBoons } from '../src/engine/rpg.ts';
 import { COMPANIES } from '../src/data/war.ts';
 
 export type Plan = 'attack' | 'surge' | 'spells' | 'skills' | 'smoke' | 'tips';
@@ -74,11 +75,12 @@ export function fight(id: string, seed: number, flags: FlagReader, plan: Plan, g
   if (!def) throw new Error(`No battle ${id}`);
   const enemies = def.enemies.map((e) => ENEMIES[e]!).map((e) => (def.level ? { ...e, level: def.level } : e));
   const purse = plan === 'tips' ? battlePurse(flags, RPG, flags instanceof FlagStore ? Object.keys(flags.snapshot()) : []) : {};
-  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked; a
+  // The Echo's fights are the Echo party's (Chapter 11: Caona's stand); the armies' volleys as the whistle asked (and the
+  // canoes' with Caona's Conch); a
   // Challenge after a Challenge opens with the wounds the first left (Chapter 12: woundsFor).
   const members = battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present');
   const wounds = woundsFor(flags, def, members.map((p) => p.id));
-  const b = new Battle(def, members, enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES), wounds, ...purse });
+  const b = new Battle(def, members, enemies, [], { seed, grudge, reserve: battleReserve(def), volleys: withFleetVolley(volleysFor(flags, def, COMPANIES), def, battleBoons(flags, RPG).fleetVolley), wounds, ...purse });
   const party = new Set(b.party.map((c) => c.key));
   // The heavy blows a tell announces (the tips plan Guards from the tell until the blow lands): a blow on the whole
   // party, or one of 150 or more; a raider's sand is not worth a turn.
@@ -170,10 +172,16 @@ export function simulate(id: string, flags: FlagReader, plan: Plan, grudge = 0, 
 
 const isMain = process.argv[1] !== undefined && import.meta.url === `file://${process.argv[1]}`;
 if (isMain) {
-  const [id, mark, n] = process.argv.slice(2);
-  if (!id || !mark) throw new Error('usage: battle-sim.ts <battle> <marker> [runs]');
-  const flags = mark === 'fight' ? flagsAtFight(id) : flagsAt(mark);
-  console.log(`${id} at @${mark}`);
+  const [id, mark, n, set] = process.argv.slice(2);
+  if (!id || !mark) throw new Error('usage: battle-sim.ts <battle> <marker> [runs] [flag=value,...]');
+  const at = mark === 'fight' ? flagsAtFight(id) : flagsAt(mark);
+  // Extra flags over the route's (e.g. `item.caona_conch=true,war.volleys.customs_thorne=3`): a number, true or false.
+  const flags = new FlagStore(at instanceof FlagStore ? at.snapshot() : {});
+  for (const kv of (set ?? '').split(',').filter(Boolean)) {
+    const [k, v = 'true'] = kv.split('=');
+    flags.set(k!, v === 'true' ? true : v === 'false' ? false : Number(v));
+  }
+  console.log(`${id} at @${mark}${set ? ` with ${set}` : ''}`);
   for (const plan of ['attack', 'surge', 'spells', 'smoke', 'skills', 'tips'] as const) {
     for (const grudge of [0, 0.1, 0.2, 0.3, 0.4, 0.5]) {
       const r = simulate(id, flags, plan, grudge, Number(n ?? 40));

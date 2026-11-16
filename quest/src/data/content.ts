@@ -81,6 +81,8 @@ const LATER_STEPS: readonly (readonly [string, RegExp, string])[] = [
   ['aldoria-vault', /^(balance_pan|balance_door|weight_\d+(_hung)?)$/, 'story.vault_echo'],
   ['aldoria-vault', /^(box_seven(_full)?|vault_boxes|sun_lock(_open)?)$/, 'story.vault_outer'],
   ['aldoria-vault', /^witness_chest$/, 'story.vault_inner'],
+  // The sleeping pool's memory (X-4, Nov 16): the tide post once Caona has asked for the water to stay in.
+  ['xaragua-weir', /^weir_post$/, 'clue.sleep_wet'],
 ];
 
 /** The puzzle controls' sets, by their dialogue: a pattern and the set's name. */
@@ -92,6 +94,8 @@ const CONTROL_SETS: readonly (readonly [RegExp, string])[] = [
   [/^marsh_post_\d+$/, 'marsh_posts'],
   [/^cabinet_\d+$/, 'keep_cabinets'],
   [/^tower_winder$/, 'tower_winder'],
+  // The sleeping pool's memory (X-4, Nov 16): the floats, the post, the gate, the fire and the haul line, one sparkle.
+  [/^weir_(floats|post|gate|fire|haul)$/, 'weir'],
 ];
 
 /**

@@ -5,10 +5,10 @@
 import type { Condition } from '../engine/conditions.ts';
 import type { SideQuestDef } from '../engine/sideQuests.ts';
 import { CONCOURSE, HALL, ROOMS } from './claim.ts';
-import { CAMP, CAVE, CONUCO, MOUNTAIN } from './war.ts';
+import { CAMP, CAVE, CONUCO, MOUNTAIN, SEACAVE, WEIR } from './war.ts';
 import { PLINTH, STONES, Z4 } from './seventhStone.ts';
 import { BAKERY, BAKERY_TOWN_DOOR, NO_DEBT_OPEN, Z5 } from './bakery.ts';
-import { LATE_SIDE_QUESTS } from './sideQuestsLate.ts';
+import { LATE_SIDE_QUESTS, LATE_XP } from './sideQuestsLate.ts';
 
 const f = (flag: string): Condition => ({ flag });
 const INFLUENCE_ZETWAL = { pillar: 'influence', city: 'zetwal', amount: 1 } as const;
@@ -1139,6 +1139,52 @@ export const WAR_SIDE_QUESTS: readonly SideQuestDef[] = [
 ];
 
 /**
+ * X-4 Where the Canoes Sleep (secret; SIDE-QUESTS.md X-4, SECRET-ITEMS.md 3, PUZZLES.md S-XAR; built Nov 16 from
+ * docs/quest/reviews/2026-11-16-conch-outline.md): the shell diver at the hill camp by day, the weed in the sea cave, the
+ * sleeping pool and its memory (the floats tied through the top hole of the tide post, the gate shut by the sea at the top
+ * of the tide), and Caona's Conch in the canoe's bow. Never pointed to, never needed: nothing on the route reads it. Kept
+ * apart from WAR_SIDE_QUESTS, which the route finishes.
+ */
+export const CONCH_SIDE_QUESTS: readonly SideQuestDef[] = [
+  {
+    id: 'canoes_sleep',
+    title: 'Where the Canoes Sleep',
+    giver: 'Shell diver',
+    place: 'The hill camp',
+    level: 26,
+    secret: true,
+    summary:
+      'The shell diver\'s grandmother dived the sea cave. Caona\'s own canoe is in there, she said, behind the weed where the tunnel turns, "put to sleep between two tides". But a dugout that dries, splits.',
+    accepted: f('side.canoes_sleep.accepted'),
+    start: [{ map: 'xaragua-camp', at: { x: CAMP.shellDiver.x, y: CAMP.shellDiver.y } }],
+    steps: [
+      {
+        text: 'The sea cave under the headland on the Canoe Beach: up the tunnel, and straight on through the weed where it turns.',
+        done: f('story.weir_entered'),
+        goals: [{ map: 'xaragua-beach', at: { x: 31, y: 9 } }, { map: 'xaragua-seacave', at: { x: SEACAVE.weed.x, y: SEACAVE.weed.y + 1 } }],
+      },
+      { text: 'Look down into the pit from the lip.', done: f('side.canoes_sleep.wreck_seen'), goals: [{ map: 'xaragua-weir', at: { x: WEIR.lipYari.x, y: WEIR.lipYari.y } }] },
+      {
+        text: 'The air shimmers over the old fire on the shelf. Ask the cave.',
+        done: f('clue.sleep_wet'),
+        goals: [{ map: 'xaragua-weir', at: { x: WEIR.zone.x + 1, y: WEIR.zone.y } }],
+      },
+      {
+        text: 'Fifty years ago, make the water stay in: the gate must fall when the pit is full.',
+        done: f('anchor.weir_high'),
+        goals: [{ map: 'xaragua-weir', at: { x: WEIR.zone.x + 1, y: WEIR.zone.y } }],
+        echoGoals: [{ map: 'xaragua-weir', at: { x: WEIR.fire.x, y: WEIR.fire.y + 1 } }],
+      },
+      { text: 'Caona\'s canoe, at the lip.', done: f('side.canoes_sleep.done'), goals: [{ map: 'xaragua-weir', at: { x: WEIR.lipYari.x, y: WEIR.lipYari.y } }] },
+    ],
+    done: f('side.canoes_sleep.done'),
+    closed: f('act11.complete'),
+    closedText: 'Closed: the fleet sailed for Eightgate. Caona\'s canoe is still behind the weed.',
+    reward: { gold: 150, xp: LATE_XP.canoesSleep, pillar: { pillar: 'influence', city: 'xaragua', amount: 2 } },
+  },
+];
+
+/**
  * Chapter 12, the Claim (the outline section 7 with its second review's 3.3 and 3.9): two required side quests, both the ends
  * of threads the whole game carried, and the corner's debate as a quest. Each is in the bell's condition (data/claim.ts).
  */
@@ -1211,7 +1257,7 @@ export const CLAIM_SIDE_QUESTS: readonly SideQuestDef[] = [
 ];
 
 /** Every side quest, Chapters 1 to 12. */
-export const SIDE_QUESTS: readonly SideQuestDef[] = [...BUILT_SIDE_QUESTS, ...LATE_SIDE_QUESTS, ...WAR_SIDE_QUESTS, ...CLAIM_SIDE_QUESTS];
+export const SIDE_QUESTS: readonly SideQuestDef[] = [...BUILT_SIDE_QUESTS, ...LATE_SIDE_QUESTS, ...WAR_SIDE_QUESTS, ...CONCH_SIDE_QUESTS, ...CLAIM_SIDE_QUESTS];
 
 /** Chapter 5's three, all done: the Seat's evening, and Coco's "Bed." (data/quests.ts `bell`). */
 export const CHAPTER5_QUESTS_DONE: Condition = { all: [f('side.seats.stage1'), f('debate.seat_voices.settled'), f('side.deserters.done')] };

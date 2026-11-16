@@ -55,7 +55,7 @@ Secret-item quests (number 4 in each capital) also give the secret item (`SECRET
 | X-1 | Cut Nets | Yucayeque | Ch. 2 | 3 to 6 | yes | no |
 | X-2 | Oil From a Stranger (safehouse) | Yucayeque | Ch. 2 | 4 to 7 | optional | no |
 | X-3 | The Hutia's Hoard | Yucayeque | Ch. 2 | 3 to 8 | no | yes |
-| X-4 | Where the Canoes Sleep (secret) | Yucayeque | Ch. 2 | 5 to 8 | yes (cave) | yes |
+| X-4 | Where the Canoes Sleep (secret; built Nov 16 in Ch. 11, optional) | Yucayeque | Ch. 11 | 26 | no | yes |
 | X-5 | Medicine for the Cacique | Yucayeque | Ch. 2 | 5 to 8 | yes | yes |
 | X-6 | The Ninth Thumbprint (safehouse; built Oct 22, required) | Yucayeque | Ch. 11 | 26 | yes | no |
 | X-7 | Harbors Lie (built Oct 22, required) | Yucayeque | Ch. 11 | 26 | no | no |
@@ -303,7 +303,7 @@ a wrong planting is answered on screen (the second row of stumps), not refused; 
 are spoken on a second look at the tree and at the stumps; placeholder drawings for the net, glint, sapling, forked
 ceiba, stumps, seed row and grove; both memories are dated after the first oath ("the summer after", "a season
 after"), so the scouts may call Patricio Marshal before the player has seen the areíto. Caona's Conch (X-4) is not
-built (owner decision).
+built in Chapter 2 (owner decision); it was built Nov 16 in Chapter 11 (X-4 below).
 
 ### X-1 Cut Nets
 - **Giver:** a net-mender on the pier. **Accept:** after the first battle (the tutorial on the pier).
@@ -332,6 +332,15 @@ built (owner decision).
 - **Giver:** the old net-mender (after X-1). **Accept:** she tells the story of Caona's hidden canoe.
 - **Steps, puzzle and reward:** `SECRET-ITEMS.md` 3, `PUZZLES.md` (S-XAR). Caona's Conch; 150 gold, 120 XP, +2
   Influence (Xaraguá). The sea cave has crabs and bats (levels 5 to 7).
+- **Built (Nov 16, from `docs/quest/reviews/2026-11-16-conch-outline.md`; every call is Claude's call (Nov 16), and
+  `SECRET-ITEMS.md` 3's "Built" note has them in full):** in **Chapter 11**, not Chapter 2 (the built escape leaves no
+  calm visit to the sea cave). The giver is the **shell diver** at the hill camp by day (Yucayeque has no net-mender);
+  she sits apart west of the hamacas and tells of "the one she hid for herself". Secret: no dot, no nudge, never on the
+  arrow; nothing on the route reads it. Steps: the sea cave, through the weed where the tunnel turns; the pit and the
+  split canoe; the shimmer over the old fire (Caona: "Make water stay in."); in the memory the net floats tied through
+  the top hole of the tide post and the fire sat twice, so the sea shuts its own gate at the top of the tide; the
+  conch in the canoe's bow. **No fight** (the crabs and bats are dropped). Pay: 150 gold, **60 XP** (not 120), +2
+  Influence (Xaraguá). Closed at `act11.complete` ("Caona's canoe is still behind the weed").
 
 ### X-5 Medicine for the Cacique
 - **Giver:** the cacique's healer, at Anaco's house. **Accept:** after meeting Anaco.

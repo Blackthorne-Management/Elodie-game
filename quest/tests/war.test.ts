@@ -18,19 +18,19 @@ import { DEBATES } from '../src/data/debates.ts';
 import { WAR_DIALOGUE, WAR_OVERLAYS } from '../src/data/dialogue/xaraguaWar.ts';
 import { RPG } from '../src/data/rpg.ts';
 import { WAR_SIDE_QUESTS } from '../src/data/sideQuests.ts';
-import { COMPANIES, FLANK_HOUSES } from '../src/data/war.ts';
+import { CANOES_NAME, COMPANIES, FLANK_HOUSES } from '../src/data/war.ts';
 import { VOLLEY_BATTLES } from '../src/data/warBattles.ts';
 import { Battle, battleItems, battleParty, settleBattle, type BattleEvent } from '../src/engine/battle.ts';
 import { DialogueRunner, type DialogueScript } from '../src/engine/dialogue.ts';
 import { FlagStore, type FlagSnapshot } from '../src/engine/flags.ts';
 import { GameLogic } from '../src/engine/game.ts';
 import { recordLoss } from '../src/engine/gameOver.ts';
-import { sharedXp, xpForLevel } from '../src/engine/rpg.ts';
+import { battleBoons, sharedXp, xpForLevel } from '../src/engine/rpg.ts';
 import { questClosed, sideQuestStatus } from '../src/engine/sideQuests.ts';
 import { Sim, parseRoute } from '../src/engine/sim.ts';
 import { newGame } from '../src/engine/state.ts';
 import { activeNpcs } from '../src/engine/world.ts';
-import { VOLLEYS_LEFT_FLAG, VOLLEY_POOL_FLAG, poolFromArmies, spentFlag, volleysFor, volleysFlag, warTick } from '../src/engine/war.ts';
+import { VOLLEYS_LEFT_FLAG, VOLLEY_POOL_FLAG, poolFromArmies, spentFlag, volleysFor, volleysFlag, warTick, withFleetVolley } from '../src/engine/war.ts';
 import { STARTS_FILE } from '../tools/chapter-starts.ts';
 import { skillsAction } from '../tools/battle-sim.ts';
 import { goldWalk } from '../tools/gold-walk.ts';
@@ -123,6 +123,43 @@ describe('the armies\' volleys (engine/war.ts; the second review\'s 3.4)', () =>
     recordLoss(lost, def);
     expect(lost.get(spentFlag(def.id))).toBeUndefined();
     expect(VOLLEY_BATTLES).toEqual(['headland_battery', ...FLANK_HOUSES.map((h) => `harbor_flank_${h.house}`), 'customs_thorne', 'flagship_hale']);
+  });
+});
+
+// ---- Caona's Conch: the canoes answer (X-4; the Nov 16 outline 3.2) --------------------------------------------------------
+
+describe('Caona\'s Conch: Yucayeque\'s canoes answer it (engine/war.ts withFleetVolley)', () => {
+  const conch = (f: FlagStore) => battleBoons(f, RPG).fleetVolley;
+
+  it('adds one volley named for the canoes to a volley fight with the conch, none without it, none to a fight without volleys', () => {
+    const def = BATTLES.customs_thorne!;
+    const f = new FlagStore({ 'army.zetwal': 60, [volleysFlag(def.id)]: 3 });
+    expect(conch(f)).toBeUndefined();
+    expect(withFleetVolley(volleysFor(f, def, COMPANIES), def, conch(f)).count).toBe(3);
+    f.set('item.caona_conch', true);
+    expect(conch(f)).toEqual({ count: 1, name: CANOES_NAME });
+    const v = withFleetVolley(volleysFor(f, def, COMPANIES), def, conch(f));
+    expect(v.count).toBe(VOLLEY.cap + 1);
+    expect(v.names[v.names.length - 1]).toBe('Yucayeque\'s canoes');
+    for (const id of ['pier_rael', 'caona_stand', 'claim_regent']) {
+      const other = BATTLES[id]!;
+      expect(withFleetVolley(volleysFor(f, other, COMPANIES), other, conch(f)).count, id).toBe(0);
+    }
+  });
+
+  it('with the whistle held at 0 the canoes still fire one, and a won fight spends from the pool only what the whistle asked', () => {
+    const def = BATTLES.customs_thorne!;
+    const held = new FlagStore({ 'army.zetwal': 60, 'item.caona_conch': true, [volleysFlag(def.id)]: 0 });
+    const v = withFleetVolley(volleysFor(held, def, COMPANIES), def, conch(held));
+    expect(v).toEqual({ count: 1, names: [CANOES_NAME] });
+    const b = new Battle(def, battleParty(partyAt(25, 'best'), RPG, SKILL_BOOK), def.enemies.map((e) => ENEMIES[e]!), [], { seed: 1, reserve: battleReserve(def), volleys: v });
+    const events = b.start();
+    expect(events.some((e) => e.kind === 'text' && e.text === 'Yucayeque\'s canoes: a volley!')).toBe(true);
+    const asked = new FlagStore({ ...held.snapshot(), [volleysFlag(def.id)]: 2 });
+    settleBattle(asked, RPG, { def, items: battleItems(asked, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle);
+    expect(asked.get(spentFlag(def.id))).toBe(2);
+    settleBattle(held, RPG, { def, items: battleItems(held, RPG), outcome: 'won', goldSpent: 0, party: [] } as unknown as Battle);
+    expect(held.get(spentFlag(def.id))).toBeUndefined();
   });
 });
 
@@ -447,7 +484,12 @@ function fight(id: string, seed: number, flags: FlagStore, order: 'roster' | 'gl
   flags.set(volleysFlag(id), volleys);
   let party = battleParty(flags, RPG, SKILL_BOOK, def.era ?? 'present');
   if (order === 'glass') party = [...GLASS.map((g) => party.find((p) => p.id === g)!), ...party.filter((p) => !GLASS.includes(p.id))];
-  const b = new Battle(def, party, def.enemies.map((e) => ENEMIES[e]!), [], { seed, grudge, reserve: battleReserve(def), volleys: volleysFor(flags, def, COMPANIES) });
+  const b = new Battle(def, party, def.enemies.map((e) => ENEMIES[e]!), [], {
+    seed,
+    grudge,
+    reserve: battleReserve(def),
+    volleys: withFleetVolley(volleysFor(flags, def, COMPANIES), def, battleBoons(flags, RPG).fleetVolley),
+  });
   const keys = new Set(b.party.map((c) => c.key));
   let falls = 0;
   let bound = 0;
@@ -505,6 +547,22 @@ describe('the fights, against the roster four and a glass line in tier-24 gear, 
     expect(r.won).toBe(20);
     expect(r.actions).toBeGreaterThanOrEqual(17);
     expect(r.actions).toBeLessThanOrEqual(23);
+  });
+
+  // Caona's Conch (X-4, Nov 16; the outline 3.2's balance check): the canoes' volley over the whistle's three must not make
+  // either fight it lands in free. Thorne stays inside his band; Hale still costs a fall in some fights.
+  it('with Caona\'s Conch (four volleys): Thorne still 17 or more actions, Hale still a fall in some fights', () => {
+    const t3 = runs('customs_thorne', 25, 'best', 'roster', 3, 20);
+    const t4 = runs('customs_thorne', 25, 'best', 'roster', 3, 20, { 'item.caona_conch': true });
+    const h3 = runs('flagship_hale', 25, 'best', 'roster', 3, 20, { 'party.rael': true, 'fight.return': true });
+    const h4 = runs('flagship_hale', 25, 'best', 'roster', 3, 20, { 'party.rael': true, 'fight.return': true, 'item.caona_conch': true });
+    console.log(`conch: thorne ${t3.actions.toFixed(1)} -> ${t4.actions.toFixed(1)} actions (a fall in ${Math.round(t3.withFall * 100)}% -> ${Math.round(t4.withFall * 100)}%); hale ${h3.actions.toFixed(1)} -> ${h4.actions.toFixed(1)} actions, a fall in ${Math.round(h3.withFall * 100)}% -> ${Math.round(h4.withFall * 100)}%`);
+    expect(t4.won).toBe(20);
+    expect(t4.actions).toBeLessThanOrEqual(t3.actions);
+    expect(t4.actions).toBeGreaterThanOrEqual(17);
+    expect(h4.won).toBe(20);
+    expect(h4.actions).toBeLessThanOrEqual(h3.actions);
+    expect(h4.withFall).toBeGreaterThan(0.05);
   });
 
   it('Caona\'s stand: the Echo three win every seed at 25 to 28', () => {

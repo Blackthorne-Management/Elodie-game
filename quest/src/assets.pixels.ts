@@ -1170,6 +1170,48 @@ export const TILE_ART: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
+  // The scouts' net floats by the fire in the memory (X-4): dried gourds stopped with wax, on a line.
+  net_floats: {
+    rows: [
+      '................',
+      '................',
+      '..kk......kk....',
+      '.kNNk....kNNk...',
+      '.kNyk....kNyk...',
+      '..kk.kk...kk....',
+      '..n.kNNk..n.....',
+      '..n.kNyk..n.....',
+      '..nnnkknnnn.....',
+      '......n.........',
+      '......n..kk.....',
+      '......nnkNNk....',
+      '.........kNyk...',
+      '..........kk....',
+      '................',
+      '................',
+    ],
+  },
+  // The curtain of weed over the crack where the sea cave's tunnel turns (X-4): long strands to the floor.
+  weed_curtain: {
+    rows: [
+      'kkkkkkkkkkkkkkkk',
+      'lLlLllLllLlLllLl',
+      'lLlLllLllLlLllLl',
+      'lLl.llLl.LlLl.Ll',
+      'lLl.llLl.LlL..Ll',
+      'l.l.ll.l.LlL..L.',
+      'l.l.ll.l.L.L..L.',
+      'l.l..l.l.L.L..L.',
+      'l.l..l.l.L.L..L.',
+      'l....l.l.L....L.',
+      'l....l...L....L.',
+      'l....l...L....L.',
+      '.....l...L......',
+      '.....l..........',
+      '.....l..........',
+      '................',
+    ],
+  },
   // The caney's woven runner: cotton with the Yaguana teal, a step pattern down the middle.
   runner: {
     rows: [
@@ -2189,6 +2231,40 @@ export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
       '................................',
     ],
   },
+  // X-4 Where the Canoes Sleep (Nov 16): Caona's war canoe, three tiles long, room for twenty paddles; whole (afloat, or on
+  // the pit's sand in the memory), and split from end to end on the pit floor now.
+  war_canoe: {
+    rows: [
+      '................................................',
+      '................................................',
+      '..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..',
+      '.kBnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnBk.',
+      'kBnkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbknnBk',
+      'kBnbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbnBk',
+      'kBnkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbknnBk',
+      '.kBnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnBk.',
+      '..kBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBk..',
+      '...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...',
+      '................................................',
+      '................................................',
+    ],
+  },
+  war_canoe_split: {
+    rows: [
+      '................................................',
+      '................................................',
+      '..kkkkkkkkkkkkkkkkkkkkkk...kkkkkkkkkkkkkkkkkkk..',
+      '.kgnnnnnnnnnnnnnnnnnnnnk..kgnnnnnnnnnnnnnnnngk..',
+      'kgnkbbbbkbbbbkbbbbkbbbk..kbbbkbbbbkbbbbkbbknngk.',
+      'kgnbbbbbbbbbbbbbbbbbbk....kbbbbbbbbbbbbbbbbbngk.',
+      'kgnkbbbbkbbbbkbbbbkbbbk..kbbbkbbbbkbbbbkbbknngk.',
+      '.kgnnnnnnnnnnnnnnnnnnnnk..kgnnnnnnnnnnnnnnnngk..',
+      '..kggggggggggggggggggggk...kgggggggggggggggggk..',
+      '...kkkkkkkkkkkkkkkkkkkk.....kkkkkkkkkkkkkkkkk...',
+      '................................................',
+      '................................................',
+    ],
+  },
   // Fifty years ago: the war map spread out, pinned with red flags, a candle burning.
   war_table_echo: {
     rows: [
@@ -3095,6 +3171,27 @@ const ITEM_ART_BASE: Readonly<Record<string, PixelArt>> = {
       '...kkkkkkkkkk...',
       '.......kk.......',
       '.......kk.......',
+      '................',
+      '................',
+    ],
+  },
+  // Caona's Conch (Nov 16): a queen conch cut for blowing, pink in the lip, its point worn to a mouthpiece.
+  caona_conch: {
+    rows: [
+      '................',
+      '..........kk....',
+      '.........khhk...',
+      '.......kkhGhk...',
+      '.....kkhhhhhk...',
+      '...kkhhhhGhhk...',
+      '..khhhGhhhhPk...',
+      '.khhhhhhhhPPk...',
+      '.khGhhhhhPPPk...',
+      '..khhhhhPPPk....',
+      '...khhhPPPk.....',
+      '....khPPPk......',
+      '.....kPPk.......',
+      '......kk........',
       '................',
       '................',
     ],

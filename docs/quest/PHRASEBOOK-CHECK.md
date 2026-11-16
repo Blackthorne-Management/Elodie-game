@@ -104,6 +104,8 @@ Spoken mostly by the vendors and the baker of Pòdlimyè (Chapter 1) and shown i
 
 Most Taíno words are used inside English sentences with no gloss (the surrounding sentence explains them). Please judge whether each is used correctly and respectfully, and flag any that should be avoided or replaced. Spanish-style forms such as *cacica* are included here because they are built on a Taíno word.
 
+*Added Nov 16:* X-4 Where the Canoes Sleep (Caona's Conch, `data/dialogue/xaraguaConch.ts` and three conditional lines in `data/dialogue/xaraguaWar.ts`) adds **no new Taíno word**. Its only one is *cacica* (row 9, now also in the shell diver's lines and the canoes' scout); the item is named in English, and *guamo* is not shown anywhere.
+
 ### 2a. Phrases and words
 
 | # | Phrase as shown | English shown with it | Who says it / where | Source file:line | Reader's note |

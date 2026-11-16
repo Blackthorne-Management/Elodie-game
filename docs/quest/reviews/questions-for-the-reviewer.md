@@ -17,3 +17,8 @@ reviewer brief, and each records the answer once a review gives one.
    revive earns its place from Chapter 4 or 5 (a short Chapter 1 puzzle, with reward text that does not promise more
    than a two-person party can use); build the Conch once there are two or more optional sea destinations after
    Chapter 2. Settled: no change to the plan.
+
+   **Decided since (Nov 16):** the Quill was built in Chapter 1 (Oct 27). The Conch was built in **Chapter 11**
+   (`2026-11-16-conch-outline.md`, on its recommended answers, which the owner may still change): the built Chapter 2
+   leaves no calm visit to the sea cave, and its reward became "the canoes answer" (one volley of Yucayeque's canoes
+   in the war's volley fights), since a map ability would have no sea left to use. `design/SECRET-ITEMS.md` 3.
