@@ -2,7 +2,8 @@
 
 Seven tracks you generate (any AI music tool), upload to `public/audio/music/` on the board game branch with the file
 names below, and the game plays them: `src/assets.config.ts` (`MUSIC`) lists them and `src/audio/plan.ts` picks one for
-each moment. A missing track is simply silent, so they can arrive one at a time. Sound effects are made in code
+each moment. Until a track arrives, a placeholder made in code (`src/audio/music.ts`) plays in its place, so they
+can arrive one at a time. Sound effects are made in code
 (`src/audio/sfx.ts`); nothing to generate for those.
 
 **For every track:** instrumental only, no vocals or words. MP3. Dark gothic fantasy, the board game's own mood (not

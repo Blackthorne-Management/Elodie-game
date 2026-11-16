@@ -4,6 +4,7 @@
 import { AUDIO_DEFAULTS, MUSIC } from '../assets.config';
 import type { MusicId } from './plan';
 import { playSfx, type SfxId } from './sfx';
+import { renderPlaceholder } from './music';
 
 export interface Volumes { music: number; sound: number; muted: boolean }
 const KEY = 'tob-audio';
@@ -49,6 +50,9 @@ class AudioPlayer {
     this.soundBus.connect(this.ctx.destination);
     this.applyVolumes();
     if (this.wanted) void this.switchTo(this.wanted);
+    // Get the game's tracks ready in the background, one after another, so the music changes without a wait.
+    void (['title', 'realm', 'stakes', 'throne', 'victory', 'defeat', 'sudden'] as MusicId[])
+      .reduce((p, id) => p.then(() => this.track(id)).then(() => undefined), Promise.resolve());
   }
 
   getVolumes(): Volumes { return { ...this.volumes }; }
@@ -85,7 +89,7 @@ class AudioPlayer {
   // A short track over the music (the Sudden Death sting): the music dips while it plays, then comes back.
   async sting(id: MusicId) {
     if (!this.ctx || !this.musicBus) return;
-    const buf = await this.load(MUSIC[id].file);
+    const buf = await this.track(id);
     if (!buf || !this.ctx || !this.musicBus) return;
     const t = this.ctx.currentTime;
     const under = this.playing?.gain.gain;
@@ -95,6 +99,16 @@ class AudioPlayer {
     src.buffer = buf;
     src.connect(this.musicBus);
     src.start(t);
+  }
+
+  // A track's audio: the owner's MP3 when it exists, else the placeholder made in code (src/audio/music.ts).
+  private placeholders = new Map<MusicId, Promise<AudioBuffer | null>>();
+  private async track(id: MusicId): Promise<AudioBuffer | null> {
+    const real = await this.load(MUSIC[id].file);
+    if (real || !this.ctx) return real;
+    let p = this.placeholders.get(id);
+    if (!p) { p = renderPlaceholder(this.ctx.sampleRate, id).catch(() => null); this.placeholders.set(id, p); }
+    return p;
   }
 
   private load(file: string): Promise<AudioBuffer | null> {
@@ -123,7 +137,7 @@ class AudioPlayer {
     }
     if (!id || this.playing?.id === id) return;
     const track = MUSIC[id];
-    const buf = await this.load(track.file);
+    const buf = await this.track(id);
     if (!buf || this.wanted !== id || !this.ctx || !this.musicBus) return;   // missing, or the moment has moved on
     const src = this.ctx.createBufferSource();
     src.buffer = buf;

@@ -50,3 +50,16 @@ describe('music', () => {
     expect(musicFor({ ...base, over: true, throne: true })).toBe('defeat');
   });
 });
+
+describe('placeholder music (src/audio/music.ts)', () => {
+  it('has a score for every track, in key, with whole bars', async () => {
+    const { SCORES } = await import('../src/audio/music');
+    const { MUSIC } = await import('../src/assets.config');
+    expect(Object.keys(SCORES).sort()).toEqual(Object.keys(MUSIC).sort());
+    for (const [id, sc] of Object.entries(SCORES)) {
+      expect(sc.loop, id).toBe(MUSIC[id as keyof typeof MUSIC].loop);
+      expect(sc.drums).toHaveLength(8);
+      expect(sc.chords.length * sc.beatsPerChord * 60 / sc.bpm, `${id} length`).toBeGreaterThan(sc.loop ? 20 : 3);
+    }
+  });
+});

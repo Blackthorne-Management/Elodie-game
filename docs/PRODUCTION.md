@@ -87,6 +87,7 @@ and ticks items off here as they land. Last updated **Tue Oct 20**.
   setup screen. Only what the player may see makes a sound.
 - [ ] Music: 7 tracks for the owner to generate from `docs/audio/MUSIC-PROMPTS.md` and upload to
   `public/audio/music/` (title, realm, stakes, throne, victory, defeat, sudden). Each plays as soon as its file lands.
+  Until then, placeholder music made in code plays for each (`src/audio/music.ts`, Nov 16); a real file replaces it.
 - [ ] **Nov 5** (after order B), owner to decide: hide the Hand Card discard pile online (it is face down at the
   table; recommended, for consistency).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
