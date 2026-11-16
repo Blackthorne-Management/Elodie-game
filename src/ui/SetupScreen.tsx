@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { TwoPlayerMode } from '../engine/houseChoice';
 import { TwoPlayerModeField } from './TwoPlayerMode';
 import { SuddenDeathField } from './SuddenDeathField';
+import { AudioControls } from './AudioControls';
 import { validSuddenDeath } from './suddenDeath';
 import { useGame } from '../state/gameStore';
 import { StatsPanel } from './StatsPanel';
@@ -132,6 +133,7 @@ export function SetupScreen() {
       </div>
       {rules === 'howto' && <HowToPlay onClose={() => setRules(null)} onGuide={() => setRules('guide')} />}
       {rules === 'guide' && <RulesGuide onClose={() => setRules(null)} />}
+      <section className="panel-card frame"><AudioControls /></section>
       <p className="muted small">Build {BUILD}</p>
     </main>
   );

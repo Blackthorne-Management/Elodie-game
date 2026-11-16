@@ -168,3 +168,17 @@ export const CARD_ART = {
   elodieBorder: '#d9a441',   // the 10 Elodie cards get a gold border (future: distinct card back)
   image: undefined as string | undefined,
 };
+
+// Music: the owner generates each track from docs/audio/MUSIC-PROMPTS.md and uploads it to public/audio/music/ under
+// these names. A missing file is simply silent, so the game plays before every track exists. `loop: false` tracks
+// play once (the endings and the Sudden Death sting).
+export const MUSIC: Record<'title' | 'realm' | 'stakes' | 'throne' | 'victory' | 'defeat' | 'sudden', { file: string; loop: boolean }> = {
+  title: { file: '/audio/music/title.mp3', loop: true },
+  realm: { file: '/audio/music/realm.mp3', loop: true },
+  stakes: { file: '/audio/music/stakes.mp3', loop: true },
+  throne: { file: '/audio/music/throne.mp3', loop: true },
+  victory: { file: '/audio/music/victory.mp3', loop: false },
+  defeat: { file: '/audio/music/defeat.mp3', loop: false },
+  sudden: { file: '/audio/music/sudden.mp3', loop: false },
+};
+export const AUDIO_DEFAULTS = { music: 0.5, sound: 0.7, fadeSeconds: 1.5 };

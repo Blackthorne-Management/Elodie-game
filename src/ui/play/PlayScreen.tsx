@@ -30,6 +30,9 @@ import type { PeekGroup } from './Peek';
 import type { DuelShow } from './Duel';
 import { useMotion } from './motion';
 import { CARD_ART, UI_ART } from '../../assets.config';
+import { audio } from '../../audio/player';
+import { musicFor, sfxFor } from '../../audio/plan';
+import { AudioControls } from '../AudioControls';
 
 const WALK_SPEED: Record<Speed, number> = { normal: 6.5, fast: 13, instant: Infinity };   // squares per second
 const SHOW_MS: Record<Speed, number> = { normal: 1500, fast: 700, instant: 0 };
@@ -87,6 +90,16 @@ export function PlayScreen() {
     const fresh = s.log.filter(e => e.seq > lastSeen.current);
     lastSeen.current = s.seq;
     const show = SHOW_MS[speed];
+    // Sounds, only for what this player may see: no sound gives away a hidden hand. At instant speed, just a couple.
+    let heard = 0;
+    for (const e of fresh) {
+      if (!visible(e)) continue;
+      const id = sfxFor(e, seat(), s.config.suddenDeathRound);
+      if (!id || (speed === 'instant' && heard >= 2)) continue;
+      audio.sfx(id, speed === 'instant' ? 0.05 : 0.12);
+      heard++;
+      if (e.kind === 'round' && id === 'toll') void audio.sting('sudden');   // the last round before Sudden Death
+    }
     // Cards revealed to you (a rival's hand, the top of the deck) open face up, like your own hand.
     const peeks = fresh.filter(e => e.kind === 'reveal' && visible(e) && e.cards && (e.tag === 'deck' || e.player !== seat()))
       .map(e => ({ seq: e.seq, title: peekTitle(e.text), cards: e.cards! }));
@@ -114,6 +127,15 @@ export function PlayScreen() {
       }
     }
   }, [version, s, g, speed]);
+
+  // Music follows the moment: calm, rising stakes, the Throne, an ending.
+  useEffect(() => {
+    audio.music(musicFor({
+      over: runner.over, iWon: s.winner === seat(), round: s.round,
+      throne: g.inChallenge || d?.kind === 'challenge' || duel?.kind === 'challenge',
+      anyoneEligible: s.players.some(p => !p.specter && g.claimRoute(p) !== null),
+    }));
+  }, [version, runner.over, s, g, d, duel]);
 
   // Overlays fade on their own.
   useEffect(() => { if (!banner) return; const t = setTimeout(() => setBanner(null), SHOW_MS[speed] * 0.8 || 1); return () => clearTimeout(t); }, [banner, speed]);
@@ -365,6 +387,7 @@ export function PlayScreen() {
               <button key={x} type="button" className={speed === x ? 'on' : ''} onClick={() => setSpeed(x)}>{x[0].toUpperCase() + x.slice(1)}</button>
             ))}
           </div>
+          <AudioControls />
           <h3>Winning</h3>
           <p>Reach {claimGoal(g.thresholds(me))}, stand on the Throne and Claim it.</p>
           <h3>Rules</h3>
