@@ -53,7 +53,7 @@ the memory, and Anissa's third hint already names the weights.*
 | M-JWA-1 | The lamp relay | Agnipur | 8 | minor (J-2) | timing | 3 |
 | S-ZET | The Seventh Stone | Pòdlimyè | 1 | secret (built Oct 27) | sequence memory | 2 |
 | S-ALD | The Uncashed Note | Bab al-Dhahab | 4 | secret (built Oct 27) | trade chain | 3 |
-| S-XAR | Where the Canoes Sleep | Yucayeque | 2 | secret | tides | 4 |
+| S-XAR | Where the Canoes Sleep (built Nov 16) | Yucayeque | 11 | secret | tides | 3 |
 | S-JWA | Oil for the Little Lamps | Agnipur | 8 | secret | measures | 5 |
 | S-ARD | The Old Lord's Errand | Cenizal | 3 | secret (built Oct 27) | two-era stealth | 6 |
 | S-SKA | The Cairn of Nine Riders | Ordvik | 6 | secret (built Oct 27) | star positions | 7 |
@@ -180,6 +180,22 @@ whole of it is on the scripted route). Three linked parts (guide: "flooded petro
   mouth. When would you want to shut it?" / "Drop the gate at High tide in the memory. Here, wait for High, then
   Falling, and push the raft."
 - **Difficulty:** 4.
+- **Built (Nov 16, Chapter 11; Claude's call (Nov 16), from the Nov 16 outline, which replaces the three lines above):**
+  - **Present:** a pit of sea water behind the weed in the sea cave, a war canoe split at its bottom, the gate up on a
+    peg (its trip line rotted), a tide post bored through twice, the steps under a rockfall, a cold fire ring on the
+    shelf with the shimmer over it. No tide states now.
+  - **Echo** (a storm night, late in the war): the pit is dry sand; the tide moves only by sitting at the scouts' fire
+    (Low, Rising, High, Falling). The gate is at the bottom of the pit and must fall at the top of the tide.
+  - **Logic:** at Low take the net floats from beside the fire, go down the cut steps, tie them through the **top**
+    hole of the post; sit twice: at High the floats lift the peg and the gate falls on a full pool (the anchor). The
+    low hole drops it at Rising: half a pool, lasting until the haul line at the lip lifts it in the memory.
+  - **Hints (in place; side quests have no timer):** the first look into the pit: "It gets wet and then dry, Gigi.
+    Twice every day, for fifty years. Nothing could sleep like that." / the first return without the anchor:
+    "Grandfather can only stand at the gate when the pit is empty. But it has to shut when the pit is full. What goes
+    up with the water, all by itself?" / the second: "In the memory, at low water, take the net floats from beside the
+    fire. Go down the steps and tie them through the top hole of the post. Then sit by the fire twice, until the tide
+    is all the way in. The floats pull the peg."
+  - **Difficulty:** 3. Puzzle `quest/puzzles/xaragua_weir/` (solution and four wrong ways).
 
 ## Bab al-Dhahab (Al-Doria)
 

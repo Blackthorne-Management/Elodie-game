@@ -29,8 +29,8 @@ chapters are in flight at once.
 - mystery quests and arrows;
 - Game Over.
 
-**After the release:** the other side quests designed for the chapter, and the secret items (including Chapter 1's
-Quill and Chapter 2's Conch).
+**After the release:** the other side quests designed for the chapter, and the secret items. (Chapter 1's Quill was built
+Oct 27; Caona's Conch was built Nov 16 in Chapter 11, X-4 Where the Canoes Sleep: `design/SECRET-ITEMS.md` 3.)
 
 **Placeholders where art has not arrived:** the game runs and reads with placeholders; art drops in through
 `assets.config.ts` without other changes.

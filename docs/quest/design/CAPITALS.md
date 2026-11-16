@@ -109,7 +109,7 @@ scribes, the page, the steward, the usher of the throne room, the hall guards.
 | The Bridge With Two Ends | folklore | The soldier who lowered the Chain Bridge, and the pin "too clean". |
 | The Hutia and the Lamp | folklore | The little thief who tried to steal the lamp's light. |
 | Archive Ledger: Overdue | gossip | Gianna's overdue list; Anicette has kept *Ash Wars Gossip* Volume Two for three years. |
-| *Tides of the Southern Reach* (proposal, 10th) | trade | Returned by Z-2: harbor tides and sea lanes; unlocks Conch Call's sea routes on the map. |
+| *Tides of the Southern Reach* (proposal, 10th) | trade | Returned by Z-2: harbor tides and sea lanes. (Its "unlocks Conch Call's sea routes" is dropped: the Conch was built Nov 16 as the canoes' volley, `SECRET-ITEMS.md` 3.) |
 
 **Capital building: the Hall of the Accord (4 books, built):** *The Sun Accord (copy)* (six clauses, seven ribbons),
 *The Eight Houses* (any family that has headed a state may claim the Throne), *Harbor Tolls and Roads* (Papa Wout, the
@@ -269,7 +269,8 @@ Lie*; "mend nets" is after the release.
 **Signature puzzle:** SIG-XAR (flooded cave, Echo sluice, rhythm lock). **Minor:** M-XAR-1, M-XAR-2. **Secret:** S-XAR.
 
 **Echo scenes:** the areíto first oath (Caona, Patricio and Benny); the cave sluices in the dry season; Caona's scouts'
-camp (X-3, X-5); a storm night in the sea cave (X-4); in Chapter 11, Caona's stand at the harbor (proposal).
+camp (X-3, X-5); a storm night in the sea cave's sleeping pool (X-4, built Nov 16 in Chapter 11, behind the weed where
+the tunnel turns); in Chapter 11, Caona's stand at the harbor.
 
 **Companion:** **Yari** formally (she defies the elders ready to accept the Charter). **Caona** joins the Echo party.
 

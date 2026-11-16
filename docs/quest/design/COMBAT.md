@@ -712,6 +712,11 @@ Durations count the affected fighter's own turns. Lengths are `STATUS_DURATION` 
   says what the pool has left ("Three volleys (16 left)."), from `war.volleys_left` through `{v:war.volleys_left}`
   (data/content.ts `formatText`, which now formats a choice's text as well as the line's), and the fleet's Journal note
   says the same number; the line that sent the player to the Journal for it is gone.
+- **The canoes' volley (Nov 16; Caona's Conch, X-4; Claude's call (Nov 16)):** with the conch carried
+  (`BattleBoons.fleetVolley`, `config.ts` `SECRET_ITEMS.conch`), every fight that has volleys opens with one more,
+  "Yucayeque's canoes: a volley!", after the companies' (`engine/war.ts` `withFleetVolley`): over the whistle's cap,
+  never paid from the pool, and fired even when the player holds the companies' fire. Thorne and Hale only (the quest
+  opens after the headland and the flank); the Strike still has none. `SECRET-ITEMS.md` 3 has the balance check.
 
 ## 12. Game Over: the goddess's second chance (owner decisions, Oct 19; built)
 

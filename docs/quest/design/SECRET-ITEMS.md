@@ -13,7 +13,7 @@ comes after 8 minutes stuck instead of 3, and the player can always walk away: n
 |---|---|---|---|---|---|---|---|
 | 1 | **Solange's Quill** | Pòdlimyè (Zetwal) | Z-4 The Seventh Stone | Sequence memory (names spoken in order) | New skill | Gianna's *Say Their Names*: every Bound or fallen ally rises at 30% HP, Anissa calms | 2 Moderate |
 | 2 | **The Sakk of Yusuf** | Bab al-Dhahab (Al-Doria) | A-4 The Uncashed Note | Trade chain across eras (buy low in the past) | Economy | 15% off in every shop, sell for 60%, Samira cashes 300 gold once per chapter | 3 Moderate |
-| 3 | **Caona's Conch** | Yucayeque (Xaraguá) | X-4 Where the Canoes Sleep | Tides (four tide states, a weir) | Map ability | *Conch Call*: summon a canoe at any shore; hidden coves; free sea travel | 4 Moderate-hard |
+| 3 | **Caona's Conch** | Yucayeque (Xaraguá) | X-4 Where the Canoes Sleep (Chapter 11, built Nov 16) | Tides (four tide states in the memory, a weir shut by floats) | The fleet (built Nov 16; was: map ability) | *Conch Call*: Yucayeque's canoes fire one volley of their own in the war's volley fights, over the whistle's three, free of the fleet's count | 3 Moderate |
 | 4 | **The Unbroken Wick** | Agnipur (Jwaladesh) | J-4 Oil for the Little Lamps | Measures (pouring oil between jars) | Surge upgrade | Surge costs 4 Spark, Dawn Surge cleanses, Anissa's Calm never drops below 1 | 5 Moderate-hard |
 | 5 | **La Promesa de Benny** | Cenizal (Ardencia) | Ar-4 The Old Lord's Errand | Stealth in two eras at once (era-hopping past guards) | Passive charm | *Last Stand*: survive one knockout or Bind per battle at 1 HP; Azzy ignores War Cry | 6 Hard |
 | 6 | **Sarnai's Bridle Bell** | Ordvik (Skarragol) | S-4 The Cairn of Nine Riders | Star positions (a moving night sky) | Summon | *Call the Herd*: wild steppe horses stampede through every enemy, once per battle | 7 Hard |
@@ -23,7 +23,8 @@ comes after 8 minutes stuck instead of 3, and the player can always walk away: n
 
 Ordered by difficulty, which is also roughly the order the player can reach them. Effects never overlap: one skill,
 one economy perk, one map ability, one Surge upgrade, one passive, one summon, one tempo effect, one information
-effect, one story change.
+effect, one story change. (Nov 16: the Conch was built as "the fleet", an army effect, not the map ability; still
+none overlaps. Section 3's "Built" note.)
 
 **Engine notes:** each item is a key item (`kind: 'key'`, no bag space) except La Promesa, which is a charm with a
 gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` like the built ones
@@ -161,6 +162,56 @@ gear level (`level: 12`). Every puzzle gets a `solution.json` and `cheats.json` 
   Xaraguá, Zetwal, Al-Doria and Kuroshi, and free sea travel between the coastal capitals (no Guild fare).
 - **Why it fits:** Caona was a scout-commander who knew every road; in Xaraguá the roads are the sea. The canoe she hid
   is the harbor's freedom in small.
+- **Built (Nov 16; from `docs/quest/reviews/2026-11-16-conch-outline.md` on its two recommended answers, which the
+  owner may still change: the effect "the canoes answer", and Chapter 11. X-4 in `quest/src/data/sideQuests.ts`
+  `CONCH_SIDE_QUESTS`, places in `quest/src/data/war.ts` `SEACAVE` and `WEIR`, lines in
+  `quest/src/data/dialogue/xaraguaConch.ts`, the map `xaraguaWeir()` in `quest/tools/maps/xaragua.ts`, the item in
+  `quest/src/data/secretItems.ts`, the boon in `quest/src/engine/rpg.ts` and `engine/war.ts` `withFleetVolley`, puzzle
+  `quest/puzzles/xaragua_weir/`, tests `quest/tests/canoesSleep.test.ts`):** every call below is **Claude's call
+  (Nov 16)**.
+  - **Where and when:** Chapter 11, the day on the hill (`story.camp_reached` until the conch calls the tide); can be
+    finished until `act11.complete`, closed after. In the built Chapter 2 the sea cave opens only on the escape night
+    with Thorne at its mouth, so there was no calm visit to hang a puzzle on.
+  - **The giver:** the shell diver (built in Chapter 2, "At high tide the sea keeps what it finds"), sitting apart west
+    of the healer's hamacas at (6, 9), not an old net-mender (Yucayeque has none). She turns to Yari to speak (a turn,
+    not a walk, so she never steps onto whoever came to talk to her). She tells this canoe apart from the escape's
+    ("Not the ones she hid for us. The one she hid for herself.").
+  - **The place:** a new small map behind a curtain of weed where the sea cave's tunnel turns (a two-tile door, closed
+    with the weed until the quest is taken), not a rebuild of the sea cave: Chapter 2's escape map stays as built.
+  - **The puzzle, reduced:** the tide moves **in the memory only** (Low, Rising, High, Falling, stepped by sitting at
+    the scouts' fire); the present has no tide and no raft (Chapter 11's own clock is "the lowest tide, at dusk"). The
+    gate is at the bottom of the pit and must fall at the top of the tide, so the sea drops it: the scouts' net floats
+    tied to the trip line through the **top** hole of the tide post. A shut gate holds what the pit held when it fell;
+    a dugout that dries, splits. The low hole drops it at Rising: half a pool, the canoe split above the waterline,
+    lasting into the present until the haul line in the memory lifts it again (an anchor that teaches and never
+    locks). Difficulty 3 (the design's 4). The tide never moves while Patricio is in the pit; the Echo zone is on the
+    shelf, so nobody stands where the water comes.
+  - **The anchors:** the gate falls when Patricio sits at the fire, so the fire is the anchor object for both
+    `anchor.weir_high` and `anchor.weir_half`, and the haul line for lifting `anchor.weir_half` (the map validator's
+    rule: only an anchor object's dialogue may set an anchor flag).
+  - **The shelf widened (Nov 16):** the shelf is three rows deep (rows 6 to 8) instead of the outline's two, the fire at
+    (16, 6), the scouts at (14, 6) and (18, 6), the floats at (18, 8), so nobody of the memory stands next to or over
+    the Echo zone (14 to 16, 8).
+  - **No fight:** the design's crabs and bats at levels 5 to 7 are dropped (pointless at 26; Chapter 11's curve is tight).
+  - **The reward, redesigned:** *Conch Call* as designed (a canoe on any shore) has no shore left to use it on. Yari
+    carries the conch (a key item, like Anissa's wick), and **Yucayeque's canoes answer it**: in every fight where the
+    whistle asks for volleys (`customs_thorne` on both routes, `flagship_hale` on Trust), the canoes fire one volley of
+    their own (`SECRET_ITEMS.conch.volleys`, "Yucayeque's canoes: a volley!"), added to the whistle's count, never paid
+    from the fleet's pool, and fired even when the player holds the companies' fire. The Strike's `pier_rael` keeps no
+    volleys (the second review made it so on purpose). Balance check (Nov 16, tier-24 gear at 25, the roster four, 20
+    seeds): Thorne 20.1 to 19.8 actions, nobody down either way; Hale 29.4 to 28.9 actions, a fall in 20% to 15% of
+    fights. Neither becomes free, so the fallback (the canoes' volley inside the whistle's three) was not needed.
+    `tests/war.test.ts` keeps both gates.
+  - **Shown:** Yari climbs the rock beside the head runner at the tide call and blows it after his ("Hers is lower, and
+    it carries further"), the elders turn to the rock and the undecided one knows it; one line each at the whistle
+    (fire and hold); at the caney Anaco says why the carved paddle goes on the chair and the conch stays with the
+    canoes. The optional Hearing line ("free sea travel, no Guild fare") is **cut** (the outline's cut list, first).
+  - **Pay:** 150 gold, **60 XP** (not 120: what the other late secret quests pay; 120 could lift a player a level
+    before the Regent), +2 Influence (Xaraguá). The level curve's route lines do not move (the route skips it).
+  - **Found in passing, fixed:** in Chapter 11 the sea cave no longer shows Chapter 2's escape canoe (`if:
+    !story.escaped`); by day two canoes wait in the inlet with a scout on the ledge, and a line plays on entering
+    ("By day the tide is half out...").
+  - **No new Taíno word** (*cacica* is already in the chapter); *guamo* stays off the item card.
 
 ## 4. The Unbroken Wick (Agnipur, Jwaladesh)
 

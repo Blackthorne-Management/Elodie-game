@@ -252,6 +252,19 @@ Generated from the markers in `quest/routes/zetwal-act1.json`, in story order; t
 | `war-song` | xaragua-plaza |
 | `chapter11-end` | xaragua-caney (on the chapter card) |
 
+**X-4 Where the Canoes Sleep (Caona's Conch; secret, built Nov 16).** Scenes to test one at a time (after `http://localhost:5180/`):
+
+| URL | What it shows |
+|---|---|
+| `?at=war-camp&go=xaragua-camp/7,9` | The shell diver beside you (press Left, then Enter): the quest's offer |
+| `?at=war-camp&go=xaragua-seacave/seacave` | The sea cave by day: the line on entering, the day's canoes and their scout, the weed over the crack (walk up the tunnel) |
+| `?at=war-camp&set=side.canoes_sleep.accepted&go=xaragua-weir/weir` | The sleeping pool, unsolved: the entry scene (Yari at the lip); then the shelf (Up 2, Right 11, Up) and E for the memory |
+| `?at=war-camp&set=side.canoes_sleep.accepted,anchor.weir_half,story.weir_entered&go=xaragua-weir/weir` | The half pool (the wrong anchor) |
+| `?at=war-camp&set=side.canoes_sleep.accepted,anchor.weir_high,story.weir_entered&go=xaragua-weir/weir` | Solved: the brim pool and the canoe at the lip (Up 2, Right 5, Up, Enter: the conch and its card) |
+| `?at=war-tide-ready&set=item.caona_conch&go=xaragua-camp/16,7` | The tide call with the conch (press Up, then Enter): Yari on the rock, the elders turning |
+| `?at=war-village&set=item.caona_conch` | The customs house's fight with the canoes' volley ("Yucayeque's canoes: a volley!") |
+| `?at=seacave` | Chapter 2's escape, unchanged (the weed's line if you walk into the crack) |
+
 ## Chapter 12, the Claim
 
 | Type after `?at=` | Starts on |

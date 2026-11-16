@@ -551,7 +551,7 @@ export const TILESET = {
     { gid: 446, name: 'weed_curtain', base: 0x2a5e2f, accent: 0x4f9a4a, pattern: 'stripes' },
     { gid: 447, name: 'tide_half', base: 0x1e4a5a, accent: 0x2a6070, pattern: 'wave' },
     { gid: 448, name: 'pool_brim', base: 0x0e2430, accent: 0x1e4a5a, pattern: 'wave' },
-    { gid: 449, name: 'dugout_wreck', base: 0x6e6a78, accent: 0x6b4426, pattern: 'blob' },
+    { gid: 449, name: 'war_canoe_split', base: 0x6e6a78, accent: 0x6b4426, pattern: 'blob' },
     { gid: 450, name: 'weir_open', base: 0x5e5866, accent: 0x2a2018, pattern: 'border' },
     { gid: 451, name: 'weir_shut', base: 0x5e5866, accent: 0x9c7446, pattern: 'stripes' },
     { gid: 452, name: 'tide_post', base: 0x6b4426, accent: 0x1a1420, pattern: 'dots' },

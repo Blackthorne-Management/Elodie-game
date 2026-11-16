@@ -1170,28 +1170,6 @@ export const TILE_ART: Readonly<Record<string, PixelArt>> = {
       '................',
     ],
   },
-  // Caona's war canoe on the pit floor now (X-4, Nov 16): the dugout split from end to end, grey with fifty years of
-  // drying and wetting.
-  dugout_wreck: {
-    rows: [
-      '................',
-      '................',
-      '................',
-      '................',
-      '.kkkkkkkk.kkkkk.',
-      'kgnnnnnnkknnnngk',
-      'kgkbbbbkk.kbbkgk',
-      'kgbbbbk....kbbgk',
-      'kgkbbbbkk.kbbkgk',
-      '.kgnnnnnkknnngk.',
-      '..kkkkkkk.kkkk..',
-      '................',
-      '................',
-      '................',
-      '................',
-      '................',
-    ],
-  },
   // The scouts' net floats by the fire in the memory (X-4): dried gourds stopped with wax, on a line.
   net_floats: {
     rows: [
@@ -2251,6 +2229,40 @@ export const OBJECT_ART: Readonly<Record<string, ObjectArt>> = {
       '.kkbkk....................kkbkk.',
       '.KKKKK....................KKKKK.',
       '................................',
+    ],
+  },
+  // X-4 Where the Canoes Sleep (Nov 16): Caona's war canoe, three tiles long, room for twenty paddles; whole (afloat, or on
+  // the pit's sand in the memory), and split from end to end on the pit floor now.
+  war_canoe: {
+    rows: [
+      '................................................',
+      '................................................',
+      '..kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..',
+      '.kBnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnBk.',
+      'kBnkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbknnBk',
+      'kBnbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbnBk',
+      'kBnkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbkbbbbknnBk',
+      '.kBnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnBk.',
+      '..kBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBk..',
+      '...kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...',
+      '................................................',
+      '................................................',
+    ],
+  },
+  war_canoe_split: {
+    rows: [
+      '................................................',
+      '................................................',
+      '..kkkkkkkkkkkkkkkkkkkkkk...kkkkkkkkkkkkkkkkkkk..',
+      '.kgnnnnnnnnnnnnnnnnnnnnk..kgnnnnnnnnnnnnnnnngk..',
+      'kgnkbbbbkbbbbkbbbbkbbbk..kbbbkbbbbkbbbbkbbknngk.',
+      'kgnbbbbbbbbbbbbbbbbbbk....kbbbbbbbbbbbbbbbbbngk.',
+      'kgnkbbbbkbbbbkbbbbkbbbk..kbbbkbbbbkbbbbkbbknngk.',
+      '.kgnnnnnnnnnnnnnnnnnnnnk..kgnnnnnnnnnnnnnnnngk..',
+      '..kggggggggggggggggggggk...kgggggggggggggggggk..',
+      '...kkkkkkkkkkkkkkkkkkkk.....kkkkkkkkkkkkkkkkk...',
+      '................................................',
+      '................................................',
     ],
   },
   // Fifty years ago: the war map spread out, pinned with red flags, a candle burning.

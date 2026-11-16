@@ -824,7 +824,7 @@
             {
               "name": "kind",
               "type": "string",
-              "value": "dugout"
+              "value": "war_canoe"
             },
             {
               "name": "solid",
@@ -857,7 +857,7 @@
             {
               "name": "kind",
               "type": "string",
-              "value": "dugout_wreck"
+              "value": "war_canoe_split"
             },
             {
               "name": "solid",
@@ -895,7 +895,7 @@
             {
               "name": "kind",
               "type": "string",
-              "value": "dugout"
+              "value": "war_canoe"
             },
             {
               "name": "solid",
@@ -928,7 +928,7 @@
             {
               "name": "kind",
               "type": "string",
-              "value": "dugout"
+              "value": "war_canoe"
             },
             {
               "name": "solid",

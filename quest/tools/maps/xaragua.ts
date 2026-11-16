@@ -835,10 +835,10 @@ export function xaraguaWeir(): MapSource {
     pit('pool_brim', 'pool_brim', 'present', 'anchor.weir_high', P.h + 1),
     // The canoe: on the pit floor in the memory (once the scouts have carried her down), split there now, afloat against
     // the lip in both eras once the sea is shut in at the top of the tide.
-    obj('canoe_floor_echo', cf.x, cf.y, { kind: 'dugout', solid: true, era: 'echo', if: 'story.weir_echo_seen|echo.canoe_down, !anchor.weir_high' }, cf.w, 1),
-    obj('canoe_wreck', cf.x, cf.y, { kind: 'dugout_wreck', solid: true, era: 'present', if: '!anchor.weir_high' }, cf.w, 1),
-    obj('sleeping_canoe', cl.x, cl.y, { kind: 'dugout', solid: true, era: 'present', if: 'anchor.weir_high', dialogue: 'sleeping_canoe' }, cl.w, 1),
-    obj('sleeping_canoe_echo', cl.x, cl.y, { kind: 'dugout', solid: true, era: 'echo', if: 'anchor.weir_high' }, cl.w, 1),
+    obj('canoe_floor_echo', cf.x, cf.y, { kind: 'war_canoe', solid: true, era: 'echo', if: 'story.weir_echo_seen|echo.canoe_down, !anchor.weir_high' }, cf.w, 1),
+    obj('canoe_wreck', cf.x, cf.y, { kind: 'war_canoe_split', solid: true, era: 'present', if: '!anchor.weir_high' }, cf.w, 1),
+    obj('sleeping_canoe', cl.x, cl.y, { kind: 'war_canoe', solid: true, era: 'present', if: 'anchor.weir_high', dialogue: 'sleeping_canoe' }, cl.w, 1),
+    obj('sleeping_canoe_echo', cl.x, cl.y, { kind: 'war_canoe', solid: true, era: 'echo', if: 'anchor.weir_high' }, cl.w, 1),
     // Looking down into the pit from the lip, now.
     obj('pit_look', 6, 8, { era: 'present', if: '!anchor.weir_high', dialogue: 'pit_look' }, 6, 1),
     // The gate: up on its peg (its trip line rotted now), or down on either anchor.

@@ -1480,6 +1480,6 @@ houses x betrayed or turned x Trust or Strike, sixteen) plays to the card by the
 Dorini's admiral invoiced.
 
 **Not built:** the vendors' second stock after the harbor is taken (the market's three are back at their burned
-stalls, with a line each, no shop); *The First Oath*'s second look; the board's dispatches; Caona's Conch (X-4, after
-the release); the voyage to Eightgate as a scene (the card's close lands the party at the Ardencia Gate). The smoke test
+stalls, with a line each, no shop); *The First Oath*'s second look; the board's dispatches; Caona's Conch (X-4: built Nov 16 in this chapter, `design/SECRET-ITEMS.md`
+3); the voyage to Eightgate as a scene (the card's close lands the party at the Ardencia Gate). The smoke test
 has the Chapter 11 checks at `@war-landing`, `@war-chain-down` and `@chapter11-end`, but has not been run in a browser.
