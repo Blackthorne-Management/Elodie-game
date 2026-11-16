@@ -304,9 +304,9 @@ export const WEIR = {
   scoutsLip: [at(6, 9), at(10, 9)],
   caona: at(10, 9),
   caonaLip: at(8, 9),
-  /** Where the scouts set the canoe down on the pit floor (a row below her), and Caona meets Patricio on the shelf. */
+  /** Where the scouts set the canoe down on the pit floor (a row below her), and Caona meets Patricio on the shelf (two columns off his row, so neither stands over the other). */
   scoutsPit: [at(6, 7), at(8, 7)],
-  caonaShelf: at(13, 9),
+  caonaShelf: at(12, 9),
   door: at(3, 13),
   spawn: at(3, 11),
 } as const;
