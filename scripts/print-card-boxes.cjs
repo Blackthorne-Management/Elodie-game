@@ -41,12 +41,23 @@ const frame = p => `<div class="frame" style="left:${I(p.x + SAFE + 0.06)}px;top
 const title = (size = 0.34) => `<div class="title" style="--s:${I(size)}px"><b>Bloodlines</b><i>The Race to Elodie's Grace</i></div>`;
 const label = (big, small, size = 0.26) => `<div class="title" style="--s:${I(size)}px"><b>${big}</b>${small ? `<i>${small}</i>` : ''}</div>`;
 
+// Text from the rule guide: **bold** spans, and the Reference Card's blocks (paragraphs, numbered steps, lists).
+const md = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+const blocks = bs => bs.map(b => typeof b === 'string' ? `<p>${md(b)}</p>`
+  : b.steps ? `<ol>${b.steps.map(x => `<li>${md(x)}</li>`).join('')}</ol>`
+  : b.list ? `<ul>${b.list.map(x => `<li>${md(x)}</li>`).join('')}</ul>` : '').join('');
+const TILE = { court: 'Court', war: 'War', trade: 'Trade' };
+// One house inside a tarot flap: crest, name, homeland and home square, identity, Gen I passive.
+const houseCard = h => `<div class="house">${crest(h)}<b>${h.name.replace('House ', '')}</b>
+  <span>${h.homeland} · ${TILE[h.tileType]} seat</span><i>${h.identity}</i><em>${h.passiveName}</em></div>`;
+
 // Turns, following the fold: lid sides hang down from the top (their top is the fold), tray sides stand up from the
 // bottom (their bottom is the fold), and the sheet shows the outside.
 const BOXES = {
   action: {
     template: 'easy-flip-box-large.pdf', page: { w: 20, h: 19.097 },
     frames: [{ x: 3.245, y: 3.40, w: 5.74, h: 3.97 }, { x: 13.578, y: 4.78, w: 5.782, h: 3.885 }],
+    // inside the lid: the Reference Card, turned so it reads upright with the lid flipped open
     panels: [
       [{ x: 3.245, y: 3.40, w: 5.74, h: 3.97, rot: 0 },
         `<img class="logo" src="${uri(LOGO)}" style="width:${I(4.6)}px"><div class="tag">Action Cards <span>◆</span> 126</div>`, 'stack'],
@@ -54,11 +65,13 @@ const BOXES = {
       [{ x: 2.28, y: 3.40, w: 0.965, h: 3.97, rot: 90 }, label('Bloodlines', null, 0.22)],        // lid left
       [{ x: 8.985, y: 3.40, w: 0.965, h: 3.97, rot: -90 }, label('Bloodlines', null, 0.22)],      // lid right
       [{ x: 4.395, y: 11.328, w: 5.57, h: 3.834, rot: 0 }, title(0.3)],                           // underside
+      [{ x: 13.578, y: 4.78, w: 5.782, h: 3.885, rot: 180 }, `<div class="ref"><h3>Reference</h3>${blocks(data.reference)}</div>`],
     ],
   },
   tarot: {
     template: 'double-flip-box-tarot.pdf', page: { w: 17.403, h: 24.181 },
-    frames: [{ x: 3.565, y: 5.22, w: 1.571, h: 5.08 }, { x: 6.935, y: 5.22, w: 1.55, h: 5.08 }],
+    frames: [{ x: 3.565, y: 5.22, w: 1.571, h: 5.08 }, { x: 6.935, y: 5.22, w: 1.55, h: 5.08 },
+      { x: 2.015, y: 5.22, w: 1.55, h: 5.08 }, { x: 8.485, y: 5.22, w: 1.55, h: 5.08 }],
     panels: [
       // the two half-lids: four crests each, so the top reads the same whichever half sits on which side
       [{ x: 3.565, y: 5.22, w: 1.571, h: 5.08, rot: 0 }, data.houses.slice(0, 4).map(crest).join(''), 'column'],
@@ -68,6 +81,9 @@ const BOXES = {
       [{ x: 9.76, y: 15.645, w: 1.525, h: 4.923, rot: -90 }, title(0.34)],                       // tray side
       [{ x: 14.21, y: 15.645, w: 1.525, h: 4.923, rot: 90 }, title(0.34)],                       // tray side
       [{ x: 4.125, y: 14.205, w: 2.925, h: 4.827, rot: 0 }, label('The Houses', 'Bloodlines', 0.24)], // base card
+      // inside the flaps: the same four houses as the face above, with homeland, seat, identity and Gen I passive
+      [{ x: 2.015, y: 5.22, w: 1.55, h: 5.08, rot: 0 }, data.houses.slice(0, 4).map(houseCard).join(''), 'column'],
+      [{ x: 8.485, y: 5.22, w: 1.55, h: 5.08, rot: 0 }, data.houses.slice(4).map(houseCard).join(''), 'column'],
     ],
   },
 };
@@ -75,6 +91,8 @@ const BOXES = {
 const css = `<style>
 @font-face { font-family: Cinzel; font-weight: 700; src: url(${font('cinzel', 'cinzel-latin-700-normal.woff2')}); }
 @font-face { font-family: Garamond; font-style: italic; src: url(${font('eb-garamond', 'eb-garamond-latin-400-italic.woff2')}); }
+@font-face { font-family: Garamond; src: url(${font('eb-garamond', 'eb-garamond-latin-400-normal.woff2')}); }
+@font-face { font-family: Garamond; font-weight: 700; src: url(${font('eb-garamond', 'eb-garamond-latin-700-normal.woff2')}); }
 body { margin: 0; }
 .sheet { position: relative; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #183139 0%, #0f2129 55%, #0a161c 100%); }
 .panel { position: absolute; }
@@ -90,6 +108,17 @@ body { margin: 0; }
   background: linear-gradient(180deg, #fbeec4, #e2b85c 55%, #9a6a24); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .title i { font: italic calc(var(--s) * .5) Garamond; color: #e8dcc0; margin-top: calc(var(--s) * .2); }
 .crest { width: ${I(1.0)}px; height: ${I(1.0)}px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 ${I(0.02)}px ${I(0.05)}px #000); }
+.ref { width: 100%; height: 100%; box-sizing: border-box; padding: ${I(SAFE + 0.16)}px ${I(SAFE + 0.2)}px; columns: 2; column-gap: ${I(0.22)}px;
+  font: ${I(0.104)}px/1.26 Garamond, serif; color: #e8dcc0; }
+.ref h3 { column-span: all; margin: 0 0 ${I(0.06)}px; text-align: center; font: 700 ${I(0.15)}px Cinzel; letter-spacing: .16em; color: #f3d27a; text-transform: uppercase; }
+.ref p { margin: 0 0 ${I(0.04)}px; } .ref b { color: #f3d27a; font-weight: 700; }
+.ref ol, .ref ul { margin: 0 0 ${I(0.05)}px; padding-left: ${I(0.14)}px; } .ref li { margin-bottom: ${I(0.02)}px; }
+.house { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.15; width: ${I(1.25)}px; }
+.house .crest { width: ${I(0.5)}px; height: ${I(0.5)}px; margin-bottom: ${I(0.03)}px; }
+.house b { font: 700 ${I(0.135)}px Cinzel; letter-spacing: .1em; color: #f3d27a; text-transform: uppercase; }
+.house span { font: ${I(0.095)}px Garamond, serif; color: #e8dcc0; }
+.house i, .house em { font: italic ${I(0.095)}px Garamond, serif; color: #c9b99a; }
+.house em { color: #e2b85c; }
 .crest.initial { display: grid; place-items: center; font: 700 ${I(0.42)}px Cinzel; color: #fff; }
 </style>`;
 

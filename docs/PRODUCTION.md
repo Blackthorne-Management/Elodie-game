@@ -10,36 +10,87 @@ of production plus 1–2+ weeks of shipping, and pay for expedited shipping on a
 ## Open items (the one checklist; keep it current)
 
 Claude brings this list up at every milestone of any work in this repo (the quest included), most urgent first,
-and ticks items off here as they land. Last updated **Oct 27** (the remaining print files; Z-4 The Seventh Stone; the
-second batch of side quests, Chapters 1, 3 to 6 and 12).
+and ticks items off here as they land. Last updated **Tue Oct 20**.
 
-**Physical game (BoardGamesMaker)**
-- [ ] **Board (order A, Mon Oct 20):** the 4096 map (`art/board/board-dark-4k.jpg`) and the 8 seat buildings
-  (`art/seats/`, each its house's quest capital building, approved Oct 15) are in. Proof `print/board-24in.jpg`
-  (`npm run print:board`) rendered Oct 15: **approved by the owner Oct 19**; order Mon Oct 20.
-- [x] Xaraguá on the board: checked Oct 16. The proof reads XARAGUÁ, House Yaguana (seat Y), and the labelled guide
-  (`docs/art/board-guide-labelled.png`) now says Xaraguá too (it said Moa'olani).
-- [x] 8 crests.
+**Order A (Mon Oct 20), BoardGamesMaker, matte laminated (smooth) on everything (owner, Oct 20)**
+- [x] Board approved: `print/board-24in.jpg` (`npm run print:board`), the 4096 map, the 8 seats, bolder grid, each
+  homeland name touching its capital (Aldermoor's last letter reaching into Xaraguá is accepted). **Re-rendered Oct 20:
+  the round track is 1 to 18 with no Sudden Death mark** (rules-decisions 91); replace the image already uploaded.
+- [x] Game box approved: `print/box-12.5x12.5x2.pdf` (`npm run print:box`), 12.5" × 12.5" × 2".
+- [x] Action card box approved: `print/card-box-action.pdf` (**re-rendered Oct 20**: the lid's Reference Card now has Kay Soley's claim numbers; re-upload it) (`npm run print:card-boxes`), Easy Flip 140 × 96 × 24 mm,
+  custom (finger open & snap close), all 126 Action cards in two stacks; the Reference Card inside the lid.
+- [x] Tarot box approved: `print/card-box-tarot.pdf`, Double Flip magnetic 130 × 80 × 40 mm, beside the game box;
+  the houses inside the flaps.
+- [ ] Before uploading the Action box: if the finger-open option's template differs from the plain one, send it so
+  the notch doesn't cut "ACTION CARDS".
+- [ ] Upscaled logo (owner, Upscayl 4×, to `art/ui/`): the boxes print slightly soft until then; re-run
+  `npm run print:box` and `npm run print:card-boxes` when it lands. The game box can wait for it; the rest needn't.
+- [ ] With order A, ask BoardGamesMaker two numbers (observer, Oct 20): the Easy Flip box's **inner** height, and
+  the thickness of their 63 × 88 card stock in matte lamination (63 cards must fit in 24 mm).
+- [ ] Place order A.
+- **Order A locks the board today:** the round track (1 to 18, unmarked), the tile positions and the Throne squares
+  are frozen Oct 20, not Oct 31. The Sudden Death round itself (16 for now) can still move between 12 and 18.
+
+**Rules freeze (Fri Oct 31)**
+- [x] Third design review done (rules-decisions 88 to 90): Rakt Ki Pyaas is a 1-space move; Kay Soley's claim
+  numbers, a Forced March example, Grito markers and Guaíza's limits are on the reference card and in the appendix;
+  Ayatsuri reaches every card, never a house ability (`tests/ayatsuri.test.ts`); Dorini tested and kept as is.
+- [x] One source of truth (Oct 19): `src/data` + `src/config.ts` + the engine; `src/data/rules.ts` is the rulebook;
+  the three draft documents are retired.
+- [ ] **Three human playtests, at 4 and 6 players; the first by Sat Oct 24** (so a rules question it finds can still
+  be reworded by Oct 31). Three games can't judge a house's win share (don't tune a house on them). Log per game:
+  - the round of the claim, and whether Sudden Death fired (bots: claims in rounds 8 to 10);
+  - minutes from "I claim" to the end with 2+ challengers at 6 players, and whether the room stayed engaged;
+  - Agnivansh at 4: "did the 1-space move after a kill ever change what you did?" (no in both: note for a reprint);
+  - Suzumori at 6: how often Kagemimi was used, and whether a peek changed an attack or a Block;
+  - Dorini, Yaguana, Brasador: resource totals at the end, and whether Guaíza was used (reprint data);
+  - **every rules question asked at the table, verbatim** (feeds the appendix before the freeze).
+- [x] Component sizes (accepted Oct 20; confirm the player boards and rulebook total under 9 mm once BoardGamesMaker
+  gives the stock thickness): the 24 mm card boxes leave about 9 mm under the board for the
+  player boards, rulebook and score pad, so **player boards in thin card** (300 to 350 gsm, 1 mm at most, about
+  150 × 100 mm; 2 mm chipboard won't fit), and **drop the score pad** (print the score grid on the back of the
+  reference card: kills and Reckonings per player, about 8 columns by 6 rows, pale and pencil-friendly). Legacy cards tarot size in the tarot box (48 cards, plenty of room); tokens
+  about 25 mm; **dice: stock**.
+- [x] Token containers (accepted Oct 20): **zip bags, ordered with B**. No tray holding 60 tokens flat fits in 24 mm, so
+  bags are the only fit: three for the resource tokens, one each for Heart/Grudge/reminder tokens, the standees, and
+  the dice with the round and Sudden Death tokens.
+- [ ] **Art, cut by what the table sees most** (observer, Oct 20; 20 of 126 cards, none since Oct 13; 0 of 32
+  portraits): 1. the card back; 2. the 8 Gen I portraits (they are the standees too; Gen II to IV print with crest
+  plates); 3. the 10 Elodie Instants and the 8 Block cards; 4. everything else prints in the no-picture design.
+  **Fri Oct 24:** card back and 8 Gen I portraits in `art/`, then `npm run print` the same day.
 - [ ] Card art: 20 of 126 in `art/cards/` (anything missing on Oct 31 prints in the no-picture design).
 - [ ] Card back.
 - [ ] 32 character portraits (none yet in `art/characters/`; prompts in `docs/art/CHARACTER-PROMPTS.md`).
-- [x] Box and card boxes: `print/box-12.5x12.5x2.pdf`, `print/card-box-action.pdf`, `print/card-box-tarot.pdf` (Oct 15).
+- [ ] **Check this week, before building more:** `scripts/print-cards.cjs` makes MakePlayingCards sizes (game cards
+  1000 × 1360, characters 1050 × 1752). The order goes to BoardGamesMaker: compare with their 63 × 88 and tarot
+  templates (pixel size and bleed) and switch the card output if they differ.
 - [x] Print files built Oct 27 (all rebuildable, text from `src/data`): player boards (`npm run print:mats`),
   standees (`print:standees`), tokens (`print:tokens`), Legacy cards (`print:legacy`), reference cards
-  (`print:reference`), score pad (`print:scorepad`), rulebook (`print:rulebook`, 16 pages). Proof sheets:
-  `print/preview-{mats,standees,tokens,legacy,reference,rulebook}.jpg`. Rebuild the rulebook, reference and Legacy
-  cards after the Oct 31 text freeze.
-- [ ] **Before order B (Mon Nov 3), confirm on BoardGamesMaker's product pages** (assumed sizes, flagged in "Print
-  file specs" below): player-board size and material, standee size and stand, 1" round tokens, rulebook US Letter,
-  Legacy cards at tarot size. Standees switch from crests to the Gen I portraits with one line in
-  `src/assets.config.ts` (`PRINT_ART.standeeFace`) once the portraits are in.
-- [ ] **Fri Oct 31:** rules and card text freeze. **Mon Nov 3:** approve proofs, order B (expedited).
+  (`print:reference`), rulebook (`print:rulebook`, 16 pages); proof sheets `print/preview-*.jpg`. The score pad
+  script (`print:scorepad`) was built too but the pad is dropped (Oct 20: the score grid goes on the back of the
+  reference card), so it is not ordered. Rebuild the rulebook, reference and Legacy cards after the Oct 31 freeze.
+- [ ] **Proofread by someone other than the author:** every card front from the `print/preview-*.jpg` sheets, the 32
+  character cards and the rulebook, between Oct 31 and Nov 2.
+- [ ] **Print-at-home test:** one card front, one reference card and one rulebook spread on paper at true size, to
+  check the text sizes are readable at 63 × 88 mm.
+- [ ] **Language check before Oct 31** for the printed words (Limyè Elodie, Sèman Lapè, Rit Solèy, Kay Soley, and the
+  Taíno names on the board and boxes); the Nov 18 check stays for the quest.
+- [ ] **Slack:** order B on Nov 3 lands about Nov 8 to 20 against Nov 22. Decide now what ships without it if a part
+  slips (standees and Legacy cards are the easiest to replace: crest tokens and a printed sheet).
+- [ ] Optional box extras (owner to say): a "What's in the box" list on the game box underside, the card category key
+  inside the Action lid's side panels, the Legacy rule on the tarot box's inner liners.
+- [ ] **Mon Nov 3:** approve proofs, order B (expedited).
 
 **Digital game**
-- [ ] Balance watch (not retuned): Dorini at 3 players about 1.20x; Ironvow and Agnivansh at 6 about 1.13x;
-  Suzumori at 6 about 0.86x; Kay Soley at 2 to 4 slightly low. Decide before the Oct 31 freeze.
-- [ ] Owner to decide: hide the Hand Card discard pile online (it is face down at the table).
+- [ ] **Nov 5** (after order B), owner to decide: hide the Hand Card discard pile online (it is face down at the
+  table; recommended, for consistency).
 - [ ] Owner to decide: a "Story mode" link from the board game menu to `/quest/`.
+- [x] Sudden Death round setting (12 to 18, default 16) on the new-game and host screens, shown in the lobby
+  (rules-decisions 93). Edge Function `bloodlines` redeployed Oct 20 (version 4) to pass `suddenDeath`; owner to
+  confirm with one hosted game at round 12 once Netlify has published the new `server/core.js`.
+- [ ] Owner to decide: show the 8 seat buildings in the app (`SEAT_ART` in `src/assets.config.ts`; a separate build).
+- Balance record (bot games): every house within about 0.81 to 1.22 of its fair share at every count; details in
+  `docs/rules-decisions.md` [87] to [90].
 
 **Quest art (updated Oct 27):** art drop 1 is in (Oct 16): Gianna, Yari, Azzy, Anissa, Elodie Limyè, Patricio young
 and old, Anicette young and old, Mother Solange, the Quiet Crown, the Sun Locket, Solange's Quill, the battle stances
@@ -253,19 +304,19 @@ most urgent first; settled so far: the capital's name, where the Accord was sign
 
 | # | Component | Spec | Print file (built by) | Art needed |
 |---|---|---|---|---|
-| 1 | **Game box** | Telescoping (lid + base) 12.5" × 12.5" × 2" (BoardGamesMaker template, chosen Oct 15), fits the folded board flat on top; everything under it must stay within about 33 mm. Side panel: **2–8 players · 60–150 min · best with 3–6** | `print/box-12.5x12.5x2.pdf` (`npm run print:box`; proof Oct 15) | Logo ✔ (owner upscaling it), board map ✔ |
+| 1 | **Game box** | Telescoping (lid + base) 12.5" × 12.5" × 2" (BoardGamesMaker template, chosen Oct 15), fits the folded board flat on top; everything under it must stay within about 33 mm. Side panel: **2–8 players · 60–150 min · best with 3–6** | `print/box-12.5x12.5x2.pdf` (`npm run print:box`); **approved Oct 20, matte laminated (smooth) like everything** | Logo ✔ (owner upscaling it), board map ✔ |
 | 2 | **Game board** | 24" × 24" quad-fold, 7200 px | `print/board-24in.png` (`npm run print:board`) | Map ✔ (needs the 4096 file), seats or crests |
 | 3 | **Action deck** | 126 cards, 63 × 88 mm, one shared back | `print/cards/card-*.png` (`npm run print`) | Card art 1–126, card back |
 | 4 | **Character cards** (generation cards) | 32 tarot cards (8 houses × Gen I–IV), own back | `print/characters/*.png` (`npm run print`) | 32 portraits, crests |
-| 5 | **Player boards** | 8, one per house: spaces for Influence, Fear and Wealth tokens, Heart Tokens and Grudges, the turn summary | `print/mats/mat-<house>.png`, `print/mats/mats.pdf` (`npm run print:mats`) | Crests ✔ |
-| 6 | **Pawns** | 8 standees on plastic stands, the house's Gen I portrait (or crest) | `print/standees/standee-<house>-{front,back}.png`, `standees.pdf` (`npm run print:standees`; crests now) | Portraits or crests ✔ |
+| 5 | **Player boards** | 8, one per house: spaces for Influence, Fear and Wealth tokens, Heart Tokens and Grudges, the turn summary | `print/mats/mat-<house>.png`, `print/mats/mats.pdf` (`npm run print:mats`) | Crests |
+| 6 | **Pawns** | 8 standees on plastic stands, the house's Gen I portrait (or crest) | `print/standees/standee-<house>-{front,back}.png`, `standees.pdf` (`npm run print:standees`; crests now) | Portraits or crests |
 | 7 | **Heart Tokens** | 32 round chipboard tokens (3 per player + spares) | `print/tokens/heart-*.png` (`npm run print:tokens`) | — |
-| 8 | **Grudge Tokens** | 40 round tokens, 5 per house, crest on the front, plain back (also used for the house lottery) | `print/tokens/grudge-<house>-front.png`, `grudge-back.png` | Crests ✔ |
+| 8 | **Grudge Tokens** | 40 round tokens, 5 per house, crest on the front, plain back (also used for the house lottery) | `print/tokens/grudge-<house>-front.png`, `grudge-back.png` | Crests |
 | 9 | **Resource tokens** | 180 round double-sided chipboard tokens, 60 each of Influence (crown), Fear (crossed swords) and Wealth (coins): **1** on the front, **×5** on the back | `print/tokens/resource-*.png` | Icons ✔ |
-| 9b | **Round marker** | 1 wooden cube or pawn for the board's round track | stock piece | — |
-| 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 Grito de Guerra markers, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/reminder-*.png`; counts and files in `print/tokens/tokens.json` | — |
-| 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive, except Brasador's, which reads "+1 Fear on kill." (rules-decisions 87; `legacyPassive` in `src/data/houses.ts`). Yaguana's Ancestor's Voice draws one blind from the houses not at the table | `print/legacy/legacy-<house>.png`, `legacy-cards.pdf` (`npm run print:legacy`) | Crests ✔ |
-| 10c | **Score pad** | 50-sheet pad, one column per player: kills and Reckonings (read by Sudden Death, Reinado de Cenizas and Elodie's Reckoning; the fallen-houses column was dropped in rules-decisions 87) | `print/scorepad.pdf` (`npm run print:scorepad`) | — |
+| 9b | **Round token and Sudden Death token** | 2 round chipboard tokens for the board's round track (1 to 18): the round token moves each round; the Sudden Death token sits on the Sudden Death round (16 for now). The first player keeps the round and calls Sudden Death (owner, Oct 20) | `print/tokens/*.png` (to build) | — |
+| 10 | **Reminder tokens** | 27: 8 new-heir shields, 1 La Marca brand, 2 Grito de Guerra markers, 8 Specter markers, 8 Used tokens (once-per-game powers). Lasting cards are their own reminder: they stay face up in front of the player until they end | `print/tokens/*.png` (to build) | — |
+| 10b | **Legacy cards** | 8 small cards, one per house, showing its Gen I passive, except Brasador's, which reads "+1 Fear on kill." (rules-decisions 87; `legacyPassive` in `src/data/houses.ts`). Yaguana's Ancestor's Voice draws one blind from the houses not at the table | `print/legacy/*.png` (to build) | Crests |
+| 10c | **Score grid** | Printed on the back of the reference cards (dropped the score pad, Oct 20): one column per player for kills and Reckonings, about 8 × 6, pale and pencil-friendly; one per game is enough | `print/characters/reference-*.png` (to build) | — |
 | 11 | **Dice** | 2 six-sided dice (stock, or custom-printed faces) | stock / `print/dice/*.png` | — |
 | 12 | **Rulebook** | Saddle-stitched booklet, about 20 pages, from the in-app rule guide (`src/data/rules.ts`): the **core rules** (about 1,600 words, what a first game needs) first, then the **appendix** (rules-decisions 87) | `print/rulebook.pdf` (`npm run print:rulebook`): 16 pages (cover, contents, core rules, appendix with The Eight Houses and Every Card, back cover) | Board ✔, cards ✔ (portraits when painted) |
 | 13 | **Reference cards** | 8 turn-summary cards (tarot size, with the character cards), printed from the **Reference Card** section of `src/data/rules.ts`: the turn, the ◎ Target card list and the lasting-card durations (these live on the card, not in the booklet; rules-decisions 87). | `print/characters/reference-<house>.png`, `print/reference-cards.pdf` (`npm run print:reference`) | — |
@@ -313,7 +364,7 @@ piece goes in its own container underneath. Owner asked Oct 15 to order the cont
 | Bag (or 8 small bags, one per house) | 40 Grudge Tokens | small zip bag |
 | Bag | 27 reminder tokens | small zip bag |
 | Bag | 8 standees and their 8 plastic stands | small zip bag |
-| Bag | round marker and 2 dice | small zip bag |
+| Bag | round token, Sudden Death token and 2 dice | small zip bag |
 | none (flat in the box) | game board, 8 player boards, rulebook, score pad | |
 
 ## Resource tokens: how many
@@ -323,13 +374,15 @@ at once (a typical holding is 3–5) with a few to spare for tokens that go miss
 
 ## Two orders
 
+**Finish for every part: matte laminated, smooth (owner, Oct 20).** The board, game box and both card boxes are approved.
+
 Splitting it lets the board go early while the card art is still being painted. For a reorder, put both
 saved projects in one cart.
 
 | Order | What | Order by | Shipping |
 |---|---|---|---|
-| **A** | Board (2) | **Mon Oct 20** | Standard |
-| **B** | Box (1), cards (3, 4, 10b, 13), player boards (5), standees (6), tokens (7, 8, 9, 10), round marker (9b), score pad (10c), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
+| **A** | Board (2), game box (1), Action card box, tarot box | **Mon Oct 20** | Standard |
+| **B** | Cards (3, 4, 10b, 13), player boards (5), standees (6), tokens (7, 8, 9, 10) and their zip bags, round and Sudden Death tokens (9b), dice (11), rulebook (12) | **Mon Nov 3** | Expedited |
 
 ## Schedule
 

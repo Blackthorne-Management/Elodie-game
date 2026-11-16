@@ -1,3 +1,5 @@
+> **Superseded on 2026-10-19 by `src/data/rules.ts`, `src/data/houses.ts` and `src/data/cards.ts`; kept for history only; do not proofread or print from this file.** (`docs/rules-decisions.md` cites its sections.)
+
 # BLOODLINES: THE RACE TO ELODIE'S GRACE — SHARED ACTION DECK
 ### Full card list — 126 cards (71 Hand Cards, 6 of them Reactions / 55 Instant-Event Cards)
 

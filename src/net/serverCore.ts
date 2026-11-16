@@ -2,6 +2,7 @@
 // (supabase/functions/bloodlines). One Session is one row in the database; every request loads it, applies one
 // operation and saves it. The game itself is replayed from its setup and answers, so the server stores no engine state.
 import { CONTENT } from '../data';
+import { ROUND_TRACK, SUDDEN_DEATH_EARLIEST, SUDDEN_DEATH_ROUND } from '../config';
 import { Runner } from '../engine/runner';
 import { makeRng } from '../engine/rng';
 import { botChoose } from '../ai/bot';
@@ -26,6 +27,7 @@ export interface Session {
   version: number;
   created: number;
   twoMode?: TwoPlayerMode;  // 2 players: Race (houses as usual) or Battle (neighbouring houses), rules-decisions 82
+  suddenDeath?: number;     // the round Sudden Death follows, when the host chose other than the standard (rules-decisions 93)
 }
 
 export interface Env { rand: () => number; token: () => string; now: () => number }
@@ -52,9 +54,10 @@ export function pickable(s: Session): HouseId[] {
 const picksNeeded = (s: Session) => (battle(s) ? 1 : s.pickOrder?.length ?? 0);
 const houseName = (h: HouseId) => CONTENT.houses[h].name.replace('House ', '');
 
-export function createSession(env: Env, code: string, name: string, total: number, humans: number, twoMode: TwoPlayerMode = 'race'): { session: Session; token: string } {
+export function createSession(env: Env, code: string, name: string, total: number, humans: number, twoMode: TwoPlayerMode = 'race', suddenDeath: number = SUDDEN_DEATH_ROUND): { session: Session; token: string } {
   if (!Number.isInteger(total) || total < 2 || total > 8) fail('Choose 2 to 8 players.');
   if (twoMode !== 'race' && twoMode !== 'battle') fail('Choose Race or Battle.');
+  if (!Number.isInteger(suddenDeath) || suddenDeath < SUDDEN_DEATH_EARLIEST || suddenDeath > ROUND_TRACK) fail(`Choose a Sudden Death round from ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}.`);
   if (!Number.isInteger(humans) || humans < 1 || humans > total) fail('Choose how many of them are people (at least you).');
   const token = env.token();
   const seats: Seat[] = Array.from({ length: total }, (_, i) => ({
@@ -63,7 +66,7 @@ export function createSession(env: Env, code: string, name: string, total: numbe
   return {
     token,
     session: { code, status: 'lobby', total, humans, seats, pickOrder: null, pickRolls: null, pickIndex: 0, setup: null, answers: [], version: 1, created: env.now(),
-      ...(total === 2 ? { twoMode } : {}) },
+      ...(total === 2 ? { twoMode } : {}), ...(suddenDeath !== SUDDEN_DEATH_ROUND ? { suddenDeath } : {}) },
   };
 }
 
@@ -145,6 +148,7 @@ function beginGame(env: Env, s: Session) {
     seed,
     seats: s.seats.map(x => ({ name: x.name, isBot: x.bot, house: x.house! })),
     ...(elodie >= 0 ? { firstPlayer: elodie } : {}),
+    ...(s.suddenDeath ? { config: { suddenDeathRound: s.suddenDeath } } : {}),
   };
   s.answers = [];
   s.status = 'active';
@@ -190,7 +194,7 @@ export function lobbyView(s: Session, seat: number): LobbyView {
     code: s.code, status: s.status, total: s.total, humans: s.humans, me: seat, host: seat === 0, seats,
     pickAgreed: pickAgreed(s), pickOrder: s.pickOrder, pickRolls: s.pickRolls,
     pickTurn: s.status === 'picking' && s.pickOrder && s.pickIndex < picksNeeded(s) ? s.pickOrder[s.pickIndex] ?? null : null, version: s.version,
-    twoMode: s.total === 2 ? s.twoMode ?? 'race' : null, pickable: s.status === 'picking' ? pickable(s) : null,
+    twoMode: s.total === 2 ? s.twoMode ?? 'race' : null, suddenDeath: s.suddenDeath ?? SUDDEN_DEATH_ROUND, pickable: s.status === 'picking' ? pickable(s) : null,
   };
 }
 

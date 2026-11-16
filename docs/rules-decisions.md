@@ -1,7 +1,10 @@
 # Rules decisions (approved)
 
-These settle every gap found in `rules-questions.md`. Where this file and the three source documents
-differ, **this file wins**. Numbers in brackets refer to the question list.
+The change log: why each rule is what it is, with the test numbers. Everything here is folded into
+`src/data/houses.ts`, `src/data/cards.ts`, `src/config.ts` and the engine (what the game does) and `src/data/rules.ts`
+(the rulebook written from them), so this file no longer overrides anything. The three draft documents it cites by
+section were superseded on 2026-10-19 and are kept for history. Numbers in brackets refer to the question list
+(`rules-questions.md`).
 
 ## Board and setup
 - **Tile types [1]:** War = Brasador, Ironvow, Agnivansh. Trade = Dorini, Yaguana. Court = Kay Soley,
@@ -561,6 +564,50 @@ These came up in code and weren't covered above; all confirmed as they stand.
     At 6 players the heart cap's bonuses help the two attack-bonus/mobility houses: watch Ironvow and Agnivansh at
     6. Not retuned. Unbroken now saves a Stillwater heir about once a game at every count (it never fired at 6–8);
     Stillwater stays 0.89–1.18×. Fewer deaths and Specter games at 6 players, game length unchanged.
+- **Adopted: Rakt Ki Pyaas is one step [88]** (third design review, docs/REVIEW-2026-10-second.md follow-up; owner,
+  Oct 20). Agnivansh II: "after landing a kill, move up to half a d6 roll (rounded up)" → "after landing a kill, move
+  up to 1 space" (any path, like Agni ki Shakti's step). No second die inside a death. Balance (24,000 bot games each
+  way: 3,000 at 2, 3 and 4 players, 1,500 at 6 and 8, on two seed sets; win share ÷ fair share), Agnivansh before →
+  after: 2 players 0.93/0.87 → 0.94/0.89; 3: 0.89/0.99 → 0.89/0.98; 4: 0.98/1.00 → 0.89/0.95; **6: 1.11/1.16 →
+  0.98/1.06; 8: 1.11/1.22 → 1.10/0.97**. Every house stays within 0.83–1.22× at every count, as before. Engine:
+  `moveOnKill` (was `halfMoveOnKill`).
+  - **Tested, not adopted (same review): Baraka Dorini only on Dorini's own turn.** 3 players 1.18/1.15 → 1.09/1.08,
+    but 6 players 1.00/1.07 → 0.90/0.84 and 8 players 1.07/1.07 → 0.82/0.73, and Ironvow at 6 rose to 1.16/1.23.
+    Dorini stays as printed; watch it at 2–3 players in human play.
+- **Wording only [89]** (third design review; owner, Oct 20; no rule or engine change):
+  - **Kay Soley's numbers on the reference card**, derived from `THRESHOLDS` and its `claimReduction`: eligible at 7
+    total (6 from Gen III) with 2–3 players, 8 (7 from Gen III) with 4 or more; the per-pillar minimum is unchanged.
+  - **Forced March example:** it may march you onto the Throne; you stop there, and get no protection unless eligible.
+  - **Grito markers:** a marker stays on its target even if Brasador's own character has fallen in the meantime (the
+    engine's behaviour: the effect sits on the target). Owner's reasons: every other lasting effect put on a rival
+    survives the caster's death; one trigger to track at the table; dying should not also cost Brasador its pressure.
+  - **Guaíza:** the copy has the copied player's strength (their Gen III upgrade included) and its own limits (once
+    per turn, per round or per heir), counted for the Yaguana player (the engine's behaviour).
+- **Ayatsuri reaches every card [90]** (third design review; owner, Oct 20). The engine redirected attacks and the
+  cards that pick through `targetPlayer`, but not Whispered Promise, Black Market Deal's barter, Uneasy Truce, Shared
+  Purpose, Blood Pact, Duel of Honor or Mind Games. Now **every card that names a player**, friendly or hostile, goes
+  through Ayatsuri; **house abilities and trade offers never do** ("Suzumori picks for your dice, your attack and your
+  cards; your house powers are still yours"). Two strings, each lasting until it is used: the next move's direction,
+  and the player named by the next attack or card (whichever comes first). **The strings end when the puppet's
+  character dies** (`redirect` joins `ENDS_WITH_CHARACTER`, like Hex and Confusion), and stay cut if Suzumori's
+  bloodline has ended. `tests/ayatsuri.test.ts` walks every card and house ability with the strings pulled, so the
+  printed rule and the engine can't drift. Balance (24,000 bot games, two seed sets): no change beyond noise
+  (Suzumori 0.86/0.93 → 0.85/0.91 at 6 players, 0.83/1.01 → 0.81/1.02 at 8; bots rarely reach Gen IV Ayatsuri).
+- **The printed round track is 1 to 18, unmarked [91]** (observer and owner, Oct 20). Order A prints the board before
+  any human game, and the Sudden Death round is the one number playtests can still move (bots claim in rounds 8 to 10;
+  people hold, trade and wait, so games usually run longer). The track shows 18 numbered squares with no skull or
+  label (`ROUND_TRACK` in `src/config.ts`; a test keeps it at least `SUDDEN_DEATH_ROUND`), so the board stays right
+  for any value from 12 to 18. Sudden Death stays at the end of round 16 for now; the rulebook names the round and a
+  marker on that square shows it at setup. A reprint can add the skull once the round is settled.
+- **Round and Sudden Death tokens; the first player keeps the round [92]** (owner, Oct 20). The round marker is a
+  printed round token, and a Sudden Death token marks the Sudden Death round on the unmarked track ([91]); no spare
+  Grudge Token exists at 8 players, so it is a token of its own. The first player moves the round token at the start
+  of each round and calls Sudden Death when that round ends with no winner. The score pad is dropped: the score grid
+  is printed on the back of the reference cards.
+- **Sudden Death round: a table option, 16 by default [93]** (owner, Oct 20). Before setup the table may agree on any
+  round from 12 to 18 (`SUDDEN_DEATH_EARLIEST` to `ROUND_TRACK` in `src/config.ts`) and put the Sudden Death token
+  there; every rule that says round 16 then means that round. The engine takes it as `config.suddenDeathRound` and
+  refuses a round off the printed track. The playtests still decide the default.
 - **Tested, not adopted: harsher death [68]** (5,000 bot games each way, 1,000 at each of 2, 3, 4, 6 and 8 players).
   On death, lose half (rounded up) of **every** pool instead of half (rounded down) of one pool. Each death costs about
   3.1 resources instead of 1.0. Games run 1.4 rounds longer (2.6 at 8 players), Sudden Death decides 31% of games

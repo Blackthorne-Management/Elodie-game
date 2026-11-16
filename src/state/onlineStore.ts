@@ -21,7 +21,7 @@ interface OnlineStore {
   lobby: LobbyView | null;
   error: string | null;
   busy: boolean;
-  host: (name: string, total: number, humans: number, mode?: TwoPlayerMode) => Promise<void>;
+  host: (name: string, total: number, humans: number, mode?: TwoPlayerMode, suddenDeath?: number) => Promise<void>;
   join: (code: string, name: string) => Promise<void>;
   resume: () => boolean;
   refresh: () => Promise<void>;
@@ -80,9 +80,9 @@ export const useOnline = create<OnlineStore>((set, get) => {
   return {
     code: null, token: null, me: 0, lobby: null, error: null, busy: false,
 
-    host: async (name, total, humans, mode = 'race') => {
+    host: async (name, total, humans, mode = 'race', suddenDeath?: number) => {
       set({ busy: true, error: null });
-      const r = await call({ op: 'create', name, total, humans, mode });
+      const r = await call({ op: 'create', name, total, humans, mode, ...(suddenDeath ? { suddenDeath } : {}) });
       if (r.ok && r.code && r.token) {
         set({ code: r.code, token: r.token, me: 0 });
         store({ code: r.code, token: r.token, me: 0 });

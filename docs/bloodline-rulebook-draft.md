@@ -1,3 +1,5 @@
+> **Superseded on 2026-10-19 by `src/data/rules.ts`, `src/data/houses.ts` and `src/data/cards.ts`; kept for history only; do not proofread or print from this file.** (`docs/rules-decisions.md` cites its sections.)
+
 # BLOODLINES: THE RACE TO ELODIE'S GRACE
 ### A Game of Legacy, Betrayal, and Conquest
 *For 2-8 players. Playtime: ~60 minutes.*

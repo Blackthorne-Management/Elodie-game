@@ -4,11 +4,20 @@ Digital version of the Bloodlines board game (formerly Throne of Bloodlines): so
 React + TypeScript + Vite + Zustand, installable as a PWA (installing is optional). Supabase arrives in Phase 2.
 
 ## Source of truth
-- `docs/bloodline-rulebook-draft.md`, `docs/bloodline-card-list.md`, `docs/bloodline-houses.md` define every rule, card and ability.
-- `docs/rules-decisions.md` settles every ambiguity and overrides the three documents where they differ. Board picture: `docs/board-layout.png`.
+- **What the game does** lives in `src/data/houses.ts`, `src/data/cards.ts`, `src/config.ts` and `src/engine`: the
+  truth the app, the bots, the online server and the printed card text all run on.
+- `src/data/rules.ts` is the rulebook written from it (it imports the numbers from `config.ts`). Where it restates a card
+  or house in prose, the data file wins; a session that finds a difference fixes `rules.ts`, not the data, unless the
+  data is the thing that is wrong.
+- `docs/rules-decisions.md` is the change log: why each rule is what it is, with the test numbers. It no longer
+  overrides anything; everything it decided is folded into the files above. Board picture: `docs/board-layout.png`.
+- `docs/bloodline-rulebook-draft.md`, `docs/bloodline-card-list.md` and `docs/bloodline-houses.md` were superseded on
+  2026-10-19 by `rules.ts`, `houses.ts` and `cards.ts`: kept for history only (the change log cites their sections);
+  never proofread or print from them.
 - `docs/app-build-guide.md` is the engineering spec.
 - `src/data/rules.ts` is the in-app official rule guide (the rulebook with every decision folded in). Update it whenever a rule changes; the How to play slides are in `src/ui/HowToPlay.tsx`.
-- Implement rules exactly as written. If something is ambiguous or two sections conflict, stop and flag it; never pick an interpretation silently.
+- Implement rules exactly as written. If something is ambiguous or two things conflict (including the data and the
+  rule guide), stop and flag it; never pick an interpretation silently.
 
 ## Rules for the code
 - `src/engine` is pure TypeScript: no React, no DOM, no Math.random (use the seeded Rng passed in). Every rule is unit tested.
@@ -30,6 +39,12 @@ Phase 2 (started, at the owner's request): online play. Host a game (players and
   whenever the engine changes.
 - Test locally with `node scripts/dev-server.mjs` and `?server=http://localhost:8787`.
 - Not yet: QR codes, AFK bot takeover.
+
+## Keep every board game file current (owner, Oct 20)
+Whenever a rule, card, house or tunable number changes, update everything the board game prints or shows in the
+same change: `src/data/rules.ts`, the How to play slides, the app screens, `npm run build:server`, and every print file
+the change reaches (`npm run print`, `print:board`, `print:box`, `print:card-boxes`; commit the ones kept in git).
+If a file the owner has already uploaded to BoardGamesMaker changes, say so and ask them to re-upload it.
 
 ## One build: keep the board game in view
 The board game (physical and digital) and the quest are one build. At every milestone, whatever the task, remind the

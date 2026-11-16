@@ -2,6 +2,8 @@ import { UI_ART } from '../assets.config';
 import { useState } from 'react';
 import type { TwoPlayerMode } from '../engine/houseChoice';
 import { TwoPlayerModeField } from './TwoPlayerMode';
+import { SuddenDeathField } from './SuddenDeathField';
+import { validSuddenDeath } from './suddenDeath';
 import { useGame } from '../state/gameStore';
 import { StatsPanel } from './StatsPanel';
 import { HowToPlay } from './HowToPlay';
@@ -35,6 +37,8 @@ export function SetupScreen() {
   const [mode, setMode] = useState<'solo' | 'host' | 'join'>(joinCode ? 'join' : 'solo');
   const [twoMode, setTwoMode] = useState<TwoPlayerMode>(() => (stored('tob-two-mode') === 'battle' ? 'battle' : 'race'));
   const chooseTwoMode = (m: TwoPlayerMode) => { setTwoMode(m); try { localStorage.setItem('tob-two-mode', m); } catch { /* ignore */ } };
+  const [suddenDeath, setSuddenDeath] = useState(() => validSuddenDeath(Number(stored('tob-sudden-death'))));
+  const chooseSuddenDeath = (n: number) => { setSuddenDeath(n); try { localStorage.setItem('tob-sudden-death', String(n)); } catch { /* ignore */ } };
   const resumeOnline = useOnline(s => s.resume);
   const onlineGame = savedOnline();
   const notice = useGame(s => s.notice);
@@ -46,7 +50,7 @@ export function SetupScreen() {
       localStorage.setItem('tob-house-mode', picking ? 'pick' : 'lottery');
       if (pick) localStorage.setItem('tob-house', pick);
     } catch { /* ignore */ }
-    start(name, players, picking ? pick : null, twoMode);
+    start(name, players, picking ? pick : null, twoMode, suddenDeath);
   }
 
   return (
@@ -90,6 +94,7 @@ export function SetupScreen() {
           </div>
         </div>
         {players === 2 && <TwoPlayerModeField value={twoMode} onChange={chooseTwoMode} />}
+        <SuddenDeathField value={suddenDeath} onChange={chooseSuddenDeath} />
         <div className="field">
           <span>Houses</span>
           <div className="seg">

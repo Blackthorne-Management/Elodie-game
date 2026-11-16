@@ -10,7 +10,7 @@ const { ROOT, data, I, rich, launch, render, toPdf } = require('./print-common.c
 
 const W = I(8.25), H = I(5.25), PLAYERS = data.houses.length;
 const rule = data.rules.flatMap(r => r.blocks).flatMap(b => (typeof b === 'object' && 'list' in b ? b.list : []))
-  .find(s => /^\*\*The score pad:\*\*/.test(s));
+  .find(s => /^\*\*The score grid\*\*/.test(s));
 
 const css = `
 .pad { position: relative; width: ${W}px; height: ${H}px; background: #fff; color: #000; font-family: Garamond; }

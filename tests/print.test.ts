@@ -6,7 +6,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { CARDS } from '../src/data/cards';
 import { GEN_NOTES, HOUSES } from '../src/data/houses';
 import { CATEGORY_ART, HOUSE_ART, PORTRAIT_CROP, PRINT_ART } from '../src/assets.config';
-import { GRITO_MARKERS, SUDDEN_DEATH_ROUND } from '../src/config';
+import { GRITO_MARKERS, ROUND_TRACK, SUDDEN_DEATH_ROUND } from '../src/config';
 import { RULES, RULE_PARTS } from '../src/data/rules';
 import { cardTiming } from '../src/ui/cardKind';
 
@@ -20,6 +20,9 @@ it.skipIf(!process.env.PRINT)('export card and house text', () => {
     portraitCrop: PORTRAIT_CROP,
     ruleParts: RULE_PARTS,
     rules: RULES,
+    roundTrack: ROUND_TRACK,
+    // the in-app Reference Card, printed inside the Action card box lid
+    reference: RULES.find(r => r.id === 'reference')?.blocks ?? [],
     cards: CARDS.map(c => ({
       id: c.id, name: c.name, kind: c.elodie ? 'elodie' : c.kind, category: c.category, text: c.text, flavor: c.flavor ?? '',
       icon: CATEGORY_ART[c.category]?.icon ?? '',
@@ -45,7 +48,7 @@ it('the rule text the print files read is still there', () => {
   expect(ref?.blocks.some(b => typeof b === 'object' && 'steps' in b)).toBe(true);           // player boards: the turn
   expect(ref?.blocks.some(b => typeof b === 'string' && /^Free/.test(b))).toBe(true);        // player boards: free extras
   const lists = RULES.flatMap(r => r.blocks).flatMap(b => (typeof b === 'object' && 'list' in b ? b.list : []));
-  expect(lists.some(s => /^\*\*The score pad:\*\*/.test(s))).toBe(true);                    // score pad footnote
+  expect(lists.some(s => /^\*\*The score grid\*\*/.test(s))).toBe(true);                    // score pad footnote
   expect(lists.some(s => /^For \*\*2 to 8/.test(s))).toBe(true);                            // rulebook back cover
   expect(Object.values(HOUSES).filter(h => /\bLegacy\b/.test(h.passiveText[0]))).toHaveLength(1); // Legacy cards' holder
 });

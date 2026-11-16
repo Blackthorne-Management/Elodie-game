@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Runner } from '../engine/runner';
 import type { GameSetup, HouseId, Pos } from '../engine/types';
 import { CONTENT } from '../data';
+import { SUDDEN_DEATH_ROUND } from '../config';
 import { makeRng } from '../engine/rng';
 import { dealHouses, houseRing } from '../engine/houseChoice';
 import type { TwoPlayerMode } from '../engine/houseChoice';
@@ -29,7 +30,7 @@ interface GameStore {
   notice: string | null;        // shown on the setup screen (e.g. a game interrupted by an update)
   version: number;              // bumps on every change so components re-render
   speed: Speed;
-  start: (name: string, players: number, pick?: HouseId | null, twoMode?: TwoPlayerMode) => void;
+  start: (name: string, players: number, pick?: HouseId | null, twoMode?: TwoPlayerMode, suddenDeath?: number) => void;
   resume: () => boolean;
   answer: (i: number) => void;
   quit: () => void;
@@ -58,7 +59,7 @@ export const useGame = create<GameStore>((set, get) => ({
   version: 0,
   speed: 'normal',
 
-  start: (name, players, pick = null, twoMode = 'race') => {
+  start: (name, players, pick = null, twoMode = 'race', suddenDeath = SUDDEN_DEATH_ROUND) => {
     const seed = (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
     // The house lottery: every seat draws blind. Playing solo you may pick your own house (rules-decisions 74);
     // the bots then draw blind from the rest.
@@ -77,6 +78,8 @@ export const useGame = create<GameStore>((set, get) => ({
       })),
       // Elodie (Lolo, Lodie) always goes first when she plays (rules-decisions 72); otherwise the first player is random.
       ...(['elodie', 'lolo', 'lodie'].includes(name.trim().toLowerCase()) ? { firstPlayer: HUMAN } : {}),
+      // The Sudden Death round the table agreed (rules-decisions 93); the standard round stays implicit.
+      ...(suddenDeath !== SUDDEN_DEATH_ROUND ? { config: { suddenDeathRound: suddenDeath } } : {}),
     };
     // Starting over with a game in progress files the old one under "abandoned".
     const prev = get().runner;

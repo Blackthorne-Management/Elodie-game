@@ -1,13 +1,13 @@
-// The official rule guide shown in the app: the rulebook with every later decision folded in
-// (docs/bloodline-rulebook-draft.md + docs/rules-decisions.md). Numbers come from src/config.ts so the guide always
-// matches the game. The houses and the full card list are drawn from src/data by the guide screen itself.
+// The official rule guide shown in the app and printed: the rulebook written from what the game does (src/data/houses.ts,
+// cards.ts, config.ts and the engine; where prose here restates them, they win). Numbers come from src/config.ts so the
+// guide always matches the game. The houses and the full card list are drawn from src/data by the guide screen itself.
 // Inline **bold** is the only markup.
 //
 // The booklet is in three parts (rules-decisions 87, no rule change): the CORE rules a first game needs, the APPENDIX
 // (everything else: Reactions, lasting cards, the two discard piles, Specters and Sudden Death in detail, rulings,
 // two-player modes) and the REFERENCE CARD (printed on the player reference cards: the turn, the ◎ Target cards and
 // the lasting-card durations).
-import { GRITO_MARKERS, HAND_SIZE, OPENING, SPECTER_CHOICES, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
+import { GRITO_MARKERS, HAND_SIZE, OPENING, ROUND_TRACK, SPECTER_CHOICES, SUDDEN_DEATH_EARLIEST, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING } from '../config';
 import { CARDS } from './cards';
 import { HOUSES } from './houses';
 
@@ -21,6 +21,9 @@ export const RULE_PARTS: { id: RulePart; title: string; intro: string }[] = [
 ];
 
 const S = THRESHOLDS.small, N = THRESHOLDS.normal;
+// Kay Soley's own claim numbers (Rit Solèy), from the thresholds and its house data.
+const ksCut = (g: 1 | 3) => HOUSES.kaysoley.claimReduction?.(g) ?? 0;
+const KAY_SOLEY_NUMBERS = `**Kay Soley** is eligible at ${S.combined - ksCut(1)} total (${S.combined - ksCut(3)} from Gen III) with 2–3 players, and ${N.combined - ksCut(1)} (${N.combined - ksCut(3)} from Gen III) with 4 or more; the per-pillar minimum is unchanged.`;
 const truce = OPENING.truceRounds;
 const truceText = truce === 1 ? 'the first round' : `the first ${truce} rounds`;
 const big = `${TUNING.bigTablePlayers}+ players`;
@@ -59,7 +62,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         '**The board:** an 18 × 18 grid. The Throne fills the four centre squares. Each of the eight houses owns one tile around it: three **Court** tiles (Influence), three **War** tiles (Fear) and two **Trade** tiles (Wealth).',
         '**Eight houses**, each with four generation cards (Gen I to IV) and a player board.',
         '**The Shared Action Deck:** 126 cards, 71 Hand Cards and 55 Instants.',
-        '**Heart Tokens** (your life, and also your attack strength), **resource tokens** for each pillar and **Grudge Tokens**, plus pawns, dice, markers and a score pad (see Components in Detail).',
+        '**Heart Tokens** (your life, and also your attack strength), **resource tokens** for each pillar and **Grudge Tokens**, plus pawns, dice, markers and a score grid (see Components in Detail).',
         'For **2 to 8 players**, best with 3 to 6. **60 to 150 minutes:** about 20 minutes per player. For a first game, play with 3 to 5.',
       ],
     }],
@@ -74,6 +77,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         'Put your pawn on your house\'s own tile. House Yaguana draws its Legacy card (see House Powers).',
         `Shuffle the deck and deal everyone **${HAND_SIZE} Hand Cards**. Any Instant drawn in this deal is shuffled back and replaced.`,
         '**First player:** if a player named Elodie (or Lolo or Lodie) is playing, she always goes first. Otherwise everyone rolls the die and the highest roll goes first (re-roll ties). Play then goes **clockwise** around the table, in seating order, for the whole game.',
+        `**The round track:** round token on square 1, **Sudden Death token on square ${SUDDEN_DEATH_ROUND}** (for a shorter or longer game, the table may agree on any square from ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}). The first player keeps the round all game: they move the round token each round and call Sudden Death when the marked round ends with no winner.`,
       ],
     }],
   },
@@ -91,7 +95,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
       },
       '**Free extras:** your house abilities don\'t use your action (each can be used once per turn unless it says otherwise), and you may **claim the Throne** at any point in your turn while standing on it and eligible.',
       `**Opening truce:** no attacks of any kind during ${truceText}.`,
-      'A **round** is every player taking one turn. The first player moves the round marker at the start of each round.',
+      'A **round** is every player taking one turn. **The first player keeps the round** (see Setup).',
     ],
   },
   {
@@ -147,7 +151,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         list: [
           `**Everyone** during the opening truce (${truceText}).`,
           '**A new heir,** until the end of their first turn.',
-          '**A player eligible to claim who stands on the Throne:** no one can attack them there, they can\'t attack from there and they can\'t die there (other Heart Token loss stops at 1). Eligible means that player\'s own number: Kay Soley needs less. **Anyone else on the Throne gets no protection.** You can only end your own move there while eligible, but a rival\'s card may still put you there.',
+          '**A player eligible to claim who stands on the Throne:** no one can attack them there, they can\'t attack from there and they can\'t die there (other Heart Token loss stops at 1). Eligible means that player\'s own number: Kay Soley needs less (see the reference card). **Anyone else on the Throne gets no protection.** You can only end your own move there while eligible, but a rival\'s card may still put you there.',
           'Challenge fights for the Throne ignore all of these.',
         ],
       },
@@ -189,7 +193,7 @@ const CORE: Omit<RuleSection, 'part'>[] = [
         ],
       },
       'Reaching the threshold never forces a claim; it simply unlocks the option.',
-      `**Sudden Death:** if no one has won by the end of **round ${SUDDEN_DEATH_ROUND}**, the highest combined total of Influence + Fear + Wealth wins (ties: see Sudden Death in Detail).`,
+      `**Sudden Death:** if no one has won by the end of **round ${SUDDEN_DEATH_ROUND}** (or the agreed round: the round token has reached the Sudden Death token), the first player calls it: the highest combined total of Influence + Fear + Wealth wins (ties: see Sudden Death in Detail).`,
     ],
   },
 ];
@@ -204,8 +208,8 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
         '**Grudge Tokens:** 40, five per house, with the house crest. They are also the lottery tiles for drawing houses.',
         `**Reminder markers:** 8 new-heir shields, 1 La Marca brand, ${GRITO_MARKERS} Grito de Guerra markers, 8 Specter markers and 8 Used tokens (once-per-game powers).`,
         `**8 Legacy cards,** one per house, each showing that house's Gen I passive (for House Yaguana's Ancestor's Voice and Song of Coaybay). Brasador's Legacy card reads "${brasadorLegacy.replace(/\.$/, '')}" from the start.`,
-        '**Pawns, 2 dice, the round marker** and the round track printed on the board.',
-        '**The score pad:** one column per player for **kills** and **Reckonings**. Sudden Death, Reinado de Cenizas and Elodie\'s Reckoning read it. Tick a kill or a Reckoning the moment it happens.',
+        `**Pawns, 2 dice, the round token and the Sudden Death token,** and the round track (1 to ${ROUND_TRACK}) printed on the board.`,
+        '**The score grid** (on the back of the reference cards; one is enough per game): one column per player for **kills** and **Reckonings**. Sudden Death, Reinado de Cenizas and Elodie\'s Reckoning read it. Tick a kill or a Reckoning the moment it happens.',
         '**Reference cards:** one per player, with the turn, the ◎ Target cards and how long lasting cards stay out (see Reference Card).',
       ],
     }],
@@ -232,13 +236,13 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
     id: 'move', title: 'Moving in Detail',
     blocks: [{
       list: [
-        'Hand Cards can\'t be played before you move. At the start of each round, the first player moves the round marker one space along the round track on the board.',
+        'Hand Cards can\'t be played before you move. At the start of each round, the first player moves the round token one space along the round track on the board.',
         'A roll of 3 can be two up and one right. Distances are always counted in up/down/left/right steps.',
         'Every square can be walked on, sea included, and any number of pawns may share a square.',
         '**Play on the grid only.** The 18 × 18 grid is the whole play area: the ocean and islands outside it are scenery, and no move may leave the grid.',
         'Extra movement from a card moves you straight away, with no second resource check, so a card never scores a tile.',
         'Some cards name a straight line or a direction (Forced March, Forced Retreat, Suzumori\'s Ayatsuri); those keep to it.',
-        '**The Throne:** you may not **end** your own move on the Throne unless you are eligible to claim: not your roll-and-move, extra moves, your own movement cards, the steps an Instant offers you, or your house abilities. Passing through is fine, and staying where you are is always allowed. Under Ayatsuri the puppeteer picks the direction but you still pick where you stop. **A rival\'s card or effect may still put you there** (Forced March, Forced Retreat); you get no protection unless eligible.',
+        '**The Throne:** you may not **end** your own move on the Throne unless you are eligible to claim: not your roll-and-move, extra moves, your own movement cards, the steps an Instant offers you, or your house abilities. Passing through is fine, and staying where you are is always allowed. Under Ayatsuri the puppeteer picks the direction but you still pick where you stop. **A rival\'s card or effect may still put you there** (Forced March, Forced Retreat); you get no protection unless eligible. For example, Forced March may march you onto the Throne: you stop there, and get no protection unless eligible.',
       ],
     }],
   },
@@ -313,7 +317,7 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
   {
     id: 'death-detail', title: 'Death in Detail',
     blocks: [
-      '**What the heir keeps:** your hand, your remaining resources, your Grudges, your kills (and Reckonings) and La Marca. Lasting cards on the fallen character are discarded, except truces, Ceasefire and Golden Harvest. Tick the kill on the score pad.',
+      '**What the heir keeps:** your hand, your remaining resources, your Grudges, your kills (and Reckonings) and La Marca. Lasting cards on the fallen character are discarded, except truces, Ceasefire and Golden Harvest. Tick the kill on the score grid.',
       'You can hold several Grudges, even more than one against the same player; a Reckoning settles one.',
       {
         list: [
@@ -349,7 +353,9 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
         '**Once-per-game powers:** when you use one (or Stillwater\'s Patience, from Gen III), put a Used token on it on your player board. It stays used when your heir takes over.',
         'Every house has 3 Heart Tokens in each generation, except Agnivansh Gen IV (2).',
         '**House Yaguana\'s Legacy:** at setup, shuffle the Legacy cards of the houses not at the table (all the others when eight play) and draw one blind: its Ancestor\'s Voice. A Legacy card is read as printed; Brasador\'s works from the start.',
-        `**Grito de Guerra** uses the ${GRITO_MARKERS} Grito markers: put one on the player you silence, and take it back when their next Fear gain is skipped (or their character dies). A player carries at most one. With every marker out, Grito de Guerra waits until one comes back.`,
+        `**Grito de Guerra** uses the ${GRITO_MARKERS} Grito markers: put one on the player you silence, and take it back when their next Fear gain is skipped (or their character dies). A marker stays on its target even if Brasador's own character has fallen in the meantime. A player carries at most one. With every marker out, Grito de Guerra waits until one comes back.`,
+        '**Guaíza** (Yaguana) copies a passive at the strength the copied player has it (their Gen III upgrade included), with its own limits (once per turn, per round or per heir), counted for the Yaguana player.',
+        '**Ayatsuri** (Suzumori) pulls two strings, each lasting until it is used: the direction of the player\'s next move, and the player named by their next attack **or** card, whichever comes first. That covers every card that names a player, friendly or hostile, not only ◎ Target cards: Suzumori chooses who shares a Fair Exchange, a truce or Shared Purpose. **Your house powers and trade offers are still yours.** The strings end when the puppet\'s character dies, and are cut if Suzumori\'s own bloodline has ended.',
         'The full list of every house and generation is below, under **The Eight Houses**.',
       ],
     }],
@@ -366,11 +372,11 @@ const APPENDIX: Omit<RuleSection, 'part'>[] = [
   {
     id: 'sudden-death', title: 'Sudden Death in Detail',
     blocks: [
-      `If no one has won by the end of **round ${SUDDEN_DEATH_ROUND}**, the game ends:`,
+      `If no one has won by the end of **round ${SUDDEN_DEATH_ROUND}** (or the round the table agreed, ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}), the game ends:`,
       {
         steps: [
           'The highest combined total of Influence + Fear + Wealth wins.',
-          'Ties go to the highest single pillar, then the most kills, then the most Reckonings (from the score pad).',
+          'Ties go to the highest single pillar, then the most kills, then the most Reckonings (from the score grid).',
           `Still tied: the tied players duel (damage = Heart Tokens with **no bonuses**, Heart Tokens counting as at most ${heartCap} at ${big}; the earlier player in turn order strikes first; no Block/Deflect cards). With three or more, the earliest seat fights the next; the winner fights on with the Heart Tokens they have left.`,
         ],
       },
@@ -419,6 +425,7 @@ const REFERENCE: Omit<RuleSection, 'part'>[] = [
         ],
       },
       'Free at any time in your turn: house abilities, and a claim while on the Throne and eligible.',
+      KAY_SOLEY_NUMBERS,
       `**◎ Target cards** (answered by Counterspell or Turnabout): ${names(targetCards)}.`,
       '**Lasting cards stay out:**',
       {

@@ -29,6 +29,7 @@ export interface LobbyView {
   pickTurn: number | null; // whose pick it is (a seat)
   version: number;
   twoMode: TwoPlayerMode | null;   // 2 players: Race or Battle (rules-decisions 82); null with more players
+  suddenDeath: number;             // the round Sudden Death follows (rules-decisions 93)
   pickable: HouseId[] | null;      // while picking: the houses the next picker may take
 }
 
@@ -41,7 +42,7 @@ export interface GameView {
 }
 
 export type Request =
-  | { op: 'create'; name: string; total: number; humans: number; mode?: TwoPlayerMode }
+  | { op: 'create'; name: string; total: number; humans: number; mode?: TwoPlayerMode; suddenDeath?: number }
   | { op: 'join'; code: string; name: string }
   | { op: 'lobby'; code: string; token: string }
   | { op: 'vote'; code: string; token: string; pick: boolean }

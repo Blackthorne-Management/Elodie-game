@@ -13,13 +13,14 @@ import {
   DIR_NAMES, adjacent, inBoard, inLine, key, label, manhattan, onThrone, roomToEdge, samePos, squaresWithin, step, throneDistance,
 } from './board';
 import {
-  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, OPENING, TRADE, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
+  ATTACK_ENDS_TURN, CHALLENGE_FIRST_STRIKER, OPENING, TRADE, NEWBORN_PROTECTION, THRONE_SANCTUARY, HAND_SIZE, MAX_FIGHT_BLOWS, ROUND_TRACK, SUDDEN_DEATH_EARLIEST, SUDDEN_DEATH_ROUND, THRESHOLDS, TUNING,
 } from '../config';
 
 export class GameOver extends Error {}
 // Effects on a character that end when that character dies.
 const ENDS_WITH_CHARACTER: EffectKind[] = [
   'afterAttack', 'hex', 'markedForDeath', 'dreadBanner', 'confusion', 'forcedMarch', 'noFearGain', 'sabotage', 'noInfluenceGain', 'shieldWall',
+  'redirect',   // Ayatsuri's strings end with the puppet's character (rules-decisions 90)
 ];
 export const REDIRECT_MOVE = 1;
 export const REDIRECT_TARGET = 2;
@@ -52,6 +53,10 @@ export class Game {
       challengeFirstStriker: CHALLENGE_FIRST_STRIKER,
       ...setup.config,
     };
+    // The agreed Sudden Death round must be on the printed track (rules-decisions 93).
+    if (!Number.isInteger(config.suddenDeathRound) || config.suddenDeathRound < SUDDEN_DEATH_EARLIEST || config.suddenDeathRound > ROUND_TRACK) {
+      throw new Error(`Sudden Death must come at a round from ${SUDDEN_DEATH_EARLIEST} to ${ROUND_TRACK}`);
+    }
     this.s = {
       setup, config, players: [], order: [], round: 0, turnNo: 0, turn: null,
       drawPile: [], handDiscard: [], instantDiscard: [], removed: [], inPlay: [], dying: [], effects: [], log: [], seq: 0,
@@ -234,8 +239,8 @@ export class Game {
     return yield* this.ask(chooser, 'pool', prompt, pillars.map(x => ({ label: cap(x), value: x })), context);
   }
 
-  // A Hand Card (or ability) choosing a target. Handles Suzumori's Ayatsuri, and Counterspell and Turnabout for the
-  // cards marked as Target cards (rules-decisions 84).
+  // A card naming a player, friendly or hostile. Handles Suzumori's Ayatsuri (every card, never a house ability:
+  // rules-decisions 90), and Counterspell and Turnabout for the cards marked as Target cards (rules-decisions 84).
   // Returns null if the effect on that target was negated.
   *targetPlayer(user: PlayerState, candidates: PlayerState[], prompt: string, card?: CardDef): Flow<PlayerState | null> {
     if (!candidates.length) return null;
@@ -969,10 +974,9 @@ export class Game {
       }
     }
 
-    // Agnivansh II: a bonus half-move after landing a kill.
-    if (killer && !killer.specter && killer.pos && this.house(killer).halfMoveOnKill?.(killer.gen)) {
-      const n = Math.ceil(rollD6(this.rng) / 2);
-      yield* this.moveFree(killer, n, `Rakt Ki Pyaas: move up to ${n}`);
+    // Agnivansh II, Rakt Ki Pyaas: a bonus step after landing a kill (rules-decisions 88; was half a d6).
+    if (killer && !killer.specter && killer.pos && this.house(killer).moveOnKill?.(killer.gen)) {
+      yield* this.moveFree(killer, 1, 'Rakt Ki Pyaas: move up to 1');
     }
   }
 
