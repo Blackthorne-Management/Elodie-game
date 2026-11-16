@@ -71,6 +71,24 @@ the board game or bring up its open items in replies until the owner raises it a
   ```
   then http://localhost:5180 (`npm.cmd run dev -- --host` for a phone on the same Wi-Fi; `?chapter=2` jumps to
   Chapter 2, in a private window).
+- In the board game chat, end every reply with the exact commands to play the board game locally instead (owner
+  request, Nov 16). Board game work lives on its own branch, so it runs from its own folder:
+  ```
+  # once: a folder for the board game branch, next to the quest's
+  cd "D:\Blackthorne Management\Projects\elodie-game"
+  git fetch origin
+  git worktree add "..\elodie-boardgame" claude/affectionate-mendel-94x2nu
+  cd "..\elodie-boardgame"
+  npm.cmd install
+
+  # every time
+  cd "D:\Blackthorne Management\Projects\elodie-boardgame"
+  git pull
+  npm.cmd run dev
+  ```
+  then http://localhost:5173 (`npm.cmd run dev -- --host` for a phone on the same Wi-Fi). Online play on one computer:
+  `node scripts/dev-server.mjs` in a second window, then http://localhost:5173/?server=http://localhost:8787 (one
+  browser window per player, a private window for the second).
 - Quest story moments are shown, not told (owner rule, Oct 17): when people arrive, fight, flee, are taken or leave,
   the characters physically walk in, walk up to whoever they speak to, act it out and walk off on the map, with their
   lines spoken there. Sounds and screen shake are fine for off-screen events (cannon fire); narration text alone is not
