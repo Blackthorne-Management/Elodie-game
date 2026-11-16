@@ -83,6 +83,8 @@ const BETRAYED = has('muster.betrayed');
 const TRUST = has('war.trust');
 const WAR_ON: Condition = has('story.war_begun');
 const STRIKE = has('war.strike');
+/** Yari carries Caona's Conch (X-4 Where the Canoes Sleep; data/dialogue/xaraguaConch.ts). */
+const CONCH = has('item.caona_conch');
 
 // ---- The whistle (the outline 4.2 with the second review's 3.4): how many volleys before a fight ----------------------
 
@@ -119,9 +121,16 @@ function whistle(prefix: string, battle: string, after: string, set: FlagSnapsho
       lines: [
         { if: has('army.free_brasador'), speaker: Z, text: '¡Firmes! ...Fire.' },
         nar('Down the line the companies answer the whistle, one after another.', { fx: 'volley', set: go }),
+        // Caona's Conch (X-4): Yucayeque's canoes answer it, over the whistle's count.
+        nar('Yari lifts Caona\'s conch. From the water, the canoes answer too.', { if: CONCH, fx: 'conch' }),
       ],
     },
-    [`${prefix}_hold`]: { lines: [nar('The companies hold their fire.', { set: go })] },
+    [`${prefix}_hold`]: {
+      lines: [
+        nar('The companies hold their fire.', { set: go }),
+        nar('The canoes answer the conch, not the whistle. One volley, from the water.', { if: CONCH, fx: 'conch' }),
+      ],
+    },
   };
 }
 
@@ -564,6 +573,25 @@ const HEAD_RUNNER: DialogueScript = script('war_head_runner', {
       say(HR, 'Say the word, cacica.'),
       act([{ do: 'look', actor: 'yari' }], Y, 'Blow it.'),
       act([{ do: 'look', actor: 'npc:head_runner_war' }], '', 'The head runner puts the conch to his mouth. It sounds down the mountain, to the point, and to the bay.', { fx: 'conch' }),
+      // Caona's Conch (X-4): Yari climbs the rock beside him and blows hers; the old people know the sound.
+      act(
+        [{ do: 'walk', actor: Y, to: at(CAMP.headRunner.x - 1, CAMP.headRunner.y), facing: 'down' }, { do: 'look', actor: Y }],
+        '',
+        'Yari climbs the rock beside him and lifts Caona\'s conch. Hers is lower, and it carries further.',
+        { if: CONCH, fx: 'conch', set: { 'war.conch_called': true } },
+      ),
+      act(
+        [
+          { do: 'face', actor: 'npc:debate_elder_charter', facing: 'up' },
+          { do: 'face', actor: 'npc:debate_elder_resist', facing: 'up' },
+          { do: 'face', actor: 'npc:elder_undecided_war', facing: 'up' },
+          { do: 'look', actor: 'npc:elder_undecided_war' },
+        ],
+        'elder_undecided',
+        'That is Caona\'s. I heard it once. I was six.',
+        { if: CONCH },
+      ),
+      act([{ do: 'look', actor: 'npc:canoe_fisher_war' }], 'canoe_fisher', 'That one we don\'t wait for a whistle to answer, cacica.', { if: CONCH }),
       act(
         [
           { do: 'exit', actor: 'npc:canoe_fisher_war', to: at(CAMP.gate.x, CAMP.gate.y + 2), async: true },
@@ -1311,6 +1339,9 @@ const CANEY_SCENE: DialogueScript = script('war_caney', {
   paddle: {
     lines: [
       act([{ do: 'walk', actor: 'yari', to: at(CANEY.yari.x, CANEY.yari.y), facing: 'up' }], Y, 'Eightgate. We read the oath beside the Charter, in front of the chair.'),
+      // Caona's Conch (X-4): the paddle is the seat token, the conch is not (the Chapter 11 and 12 reviews' fix, said aloud).
+      act([{ do: 'look', actor: 'npc:anaco_free' }], AN, 'And you found her shell. Then hear me, daughter.', { if: CONCH }),
+      { if: CONCH, speaker: AN, text: 'The paddle is a promise: it goes on the chair. The conch is a voice: it stays with the canoes.' },
       nar('Anaco gives Yari a canoe paddle no longer than a hand, carved with the three names of the first oath.'),
       act([{ do: 'walk', actor: 'yari', to: at(CANEY.doors.x, CANEY.doors.y - 2), facing: 'down' }, { do: 'face', actor: 'player', facing: 'up' }], Y, 'Mine to carry. Yours to set down.', {
         set: { 'item.token_xaragua': true, 'story.regent_retreated': true },

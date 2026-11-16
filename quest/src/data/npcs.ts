@@ -610,6 +610,13 @@ export const NPCS: Readonly<Record<string, NpcDef>> = {
   rael_pier: n('rael_pier', 'rael', 'Rael', 'rael_again'),
   rael_truth: n('rael_truth', 'rael', 'Rael', 'harbor_truth'),
   anaco_free: n('anaco_free', 'anaco', 'Cacique Anaco'),
+  // X-4 Where the Canoes Sleep (Nov 16): the shell diver at the hill camp by day, the scout keeping the day's canoes in the
+  // sea cave, and the sleeping pool's memory (Caona and two of her scouts, a storm night fifty years ago).
+  shell_diver_war: n('shell_diver_war', 'shell_diver', 'Shell diver'),
+  seacave_canoe_guard: n('seacave_canoe_guard', 'camp_scout', 'Scout'),
+  caona_weir: n('caona_weir', 'caona', 'Caona'),
+  echo_weir_scout_a: n('echo_weir_scout_a', 'echo_yaguana', 'Scout'),
+  echo_weir_scout_b: n('echo_weir_scout_b', 'echo_yaguana', 'Scout'),
   elder_charter_free: n('elder_charter_free', 'elder_charter', 'Elder'),
   elder_resist_free: n('elder_resist_free', 'elder_resist', 'Elder'),
   elder_undecided_free: n('elder_undecided_free', 'elder_undecided', 'Elder'),

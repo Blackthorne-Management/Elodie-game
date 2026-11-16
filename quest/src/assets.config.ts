@@ -545,6 +545,18 @@ export const TILESET = {
     { gid: 443, name: 'grain_sacks', base: 0xe8dcc0, accent: 0x6e6a78, pattern: 'dots' },
     { gid: 444, name: 'grain_sacks_old', base: 0xc8a46b, accent: 0x9c7446, pattern: 'blob' },
     { gid: 445, name: 'bakery_oven', base: 0x8a4a2a, accent: 0xe0782a, pattern: 'border' },
+    // X-4 Where the Canoes Sleep (Chapter 11, Nov 16; data/war.ts WEIR): the weed over the sea cave's crack, the memory's
+    // tide half up the pit and at the brim (the brim pool now too), Caona's canoe split on the pit floor, the weir gate up
+    // on its peg and shut, the tide post bored twice, the scouts' net floats, and the shelf's cold fire ring.
+    { gid: 446, name: 'weed_curtain', base: 0x2a5e2f, accent: 0x4f9a4a, pattern: 'stripes' },
+    { gid: 447, name: 'tide_half', base: 0x1e4a5a, accent: 0x2a6070, pattern: 'wave' },
+    { gid: 448, name: 'pool_brim', base: 0x0e2430, accent: 0x1e4a5a, pattern: 'wave' },
+    { gid: 449, name: 'dugout_wreck', base: 0x6e6a78, accent: 0x6b4426, pattern: 'blob' },
+    { gid: 450, name: 'weir_open', base: 0x5e5866, accent: 0x2a2018, pattern: 'border' },
+    { gid: 451, name: 'weir_shut', base: 0x5e5866, accent: 0x9c7446, pattern: 'stripes' },
+    { gid: 452, name: 'tide_post', base: 0x6b4426, accent: 0x1a1420, pattern: 'dots' },
+    { gid: 453, name: 'net_floats', base: 0x5a5260, accent: 0xc8a46b, pattern: 'blob' },
+    { gid: 454, name: 'fire_ring_cold', base: 0x5a5260, accent: 0x2a2018, pattern: 'blob' },
   ] satisfies PlaceholderTile[],
 } as const;
 

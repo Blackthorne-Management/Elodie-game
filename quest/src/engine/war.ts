@@ -72,6 +72,17 @@ export function volleysFor(flags: FlagReader, battle: { id: string; volleys?: bo
   return { count, names: Array.from({ length: count }, (_, i) => at[i % at.length]!.name) };
 }
 
+/**
+ * The volleys a carried item adds of its own (Caona's Conch: Yucayeque's canoes answer it; config.ts SECRET_ITEMS.conch):
+ * in a fight that has volleys, `boon.count` more after the companies', named `boon.name`. They fire even when the whistle
+ * held the companies' fire or nobody is at sea, and the pool never pays for them (settleBattle spends only what the
+ * whistle asked).
+ */
+export function withFleetVolley(volleys: Volleys, battle: { volleys?: boolean }, boon?: { count: number; name: string }): Volleys {
+  if (!battle.volleys || !boon || boon.count <= 0) return volleys;
+  return { count: volleys.count + boon.count, names: [...volleys.names, ...Array.from({ length: boon.count }, () => boon.name)] };
+}
+
 /** Every flag the war writes from code (warTick and settleBattle), for the content checks. */
 export function warFlagsWritten(battles: readonly string[]): string[] {
   return [VOLLEY_POOL_FLAG, VOLLEYS_LEFT_FLAG, ...battles.map(spentFlag)];

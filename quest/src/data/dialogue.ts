@@ -24,6 +24,7 @@ import { ZETWAL_DIALOGUE } from './dialogue/zetwal.ts';
 import { ZETWAL_QUEST_DIALOGUE } from './dialogue/zetwalQuests.ts';
 import { MUSTER_DIALOGUE, MUSTER_OVERLAYS, overlay } from './dialogue/zetwalMuster.ts';
 import { WAR_DIALOGUE, WAR_OVERLAYS } from './dialogue/xaraguaWar.ts';
+import { CONCH_DIALOGUE } from './dialogue/xaraguaConch.ts';
 import { CLAIM_DIALOGUE, CLAIM_OVERLAYS } from './dialogue/seatClaim.ts';
 
 const TEST_VILLAGE: Readonly<Record<string, DialogueScript>> = {
@@ -182,6 +183,7 @@ const BASE: Record<string, DialogueScript> = {
   ...Object.fromEntries(ALDERMOOR_QUEST_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(MUSTER_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(WAR_DIALOGUE.map((d) => [d.id, d])),
+  ...Object.fromEntries(CONCH_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(CLAIM_DIALOGUE.map((d) => [d.id, d])),
   ...Object.fromEntries(QUIET_CELL_DIALOGUE.map((d) => [d.id, d])),
   ...SHELF_DIALOGUE,

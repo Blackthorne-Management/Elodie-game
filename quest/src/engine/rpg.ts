@@ -143,6 +143,11 @@ export interface BattleBoons {
   foresight?: boolean;
   /** Benny's Word (La Promesa de Benny, the letter): once a battle, the first fighter who would fall stands at 1 HP. */
   lastStand?: boolean;
+  /**
+   * Volleys of the carrier's own in every fight the whistle asks volleys for (Caona's Conch: Yucayeque's canoes), added
+   * after the companies' and never paid from the fleet's pool (engine/war.ts withFleetVolley).
+   */
+  fleetVolley?: { count: number; name: string };
 }
 
 export type ShowcaseTier = 'story' | 'legendary' | 'reward';
@@ -504,7 +509,7 @@ export function knownPassives(flags: FlagReader, member: MemberDef): Passive[] {
 
 // ---- The bag ----------------------------------------------------------------------------------
 
-/** The battle boons of every key item held, together (the lowest cost and threshold, the highest floor). */
+/** The battle boons of every key item held, together (the lowest cost and threshold, the highest floor, the most volleys). */
 export function battleBoons(flags: FlagReader, rpg: RpgContent): BattleBoons {
   const out: BattleBoons = {};
   const low = (a: number | undefined, b: number | undefined) => (a === undefined ? b : b === undefined ? a : Math.min(a, b));
@@ -517,6 +522,7 @@ export function battleBoons(flags: FlagReader, rpg: RpgContent): BattleBoons {
     if (b.calmFloor !== undefined) out.calmFloor = Math.max(out.calmFloor ?? 0, b.calmFloor);
     if (b.foresight) out.foresight = true;
     if (b.lastStand) out.lastStand = true;
+    if (b.fleetVolley && b.fleetVolley.count > (out.fleetVolley?.count ?? 0)) out.fleetVolley = { ...b.fleetVolley };
   }
   return out;
 }

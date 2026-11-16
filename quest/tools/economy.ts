@@ -89,6 +89,8 @@ export const OFF_ROUTE_QUESTS: Readonly<Record<string, number>> = {
   sorry: 9,
   patient_hour: 9,
   tea: 9,
+  // X-4 Where the Canoes Sleep (built Nov 16): the hill camp by day, Chapter 11.
+  canoes_sleep: 11,
 };
 
 /**

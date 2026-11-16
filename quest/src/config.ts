@@ -337,6 +337,11 @@ export const SECRET_ITEMS = {
   sakk: { discount: 0.15, sellShare: 0.6, coupon: 300 },
   /** Sarnai's Bridle Bell (S-4, Chapter 6): Call the Herd's power off ATK, and each foe's chance to lose its next turn. */
   bell: { power: 220, stunChance: 0.3 },
+  /**
+   * Caona's Conch (X-4, Chapter 11; the Nov 16 outline 3.2, Claude's call): Yucayeque's canoes fire this many volleys of
+   * their own in every fight the whistle asks volleys for, over the whistle's cap and free of the fleet's pool.
+   */
+  conch: { volleys: 1 },
 } as const;
 /** Anissa's Light (owner decision, Oct 15): every N of Gianna's turns, Anissa restores this share of her max SP. */
 export const ANISSA_SP_EVERY = 3;

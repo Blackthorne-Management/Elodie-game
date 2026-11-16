@@ -11,7 +11,7 @@
 // taps all work.
 
 import { fillButtons } from '../input/buttonNames.ts';
-import { volleysFor } from '../engine/war.ts';
+import { volleysFor, withFleetVolley } from '../engine/war.ts';
 import { COMPANIES } from '../data/war.ts';
 import { audio } from '../audio/player.ts';
 import { BATTLE_MUSIC, VICTORY_MUSIC } from '../audio.config.ts';
@@ -316,12 +316,13 @@ export class BattleScene extends Phaser.Scene {
     const purse = battlePurse(flags, RPG, Object.keys(flags.snapshot()));
     // Foes who can walk in mid-fight: a boss phase's guards (Rivera and Jaime), the blades Qasim hires.
     const reserve = battleReserve(def);
-    // The armies' volleys before the first turn (Chapter 11: the whistle asked how many; engine/war.ts).
-    const volleys = volleysFor(flags, def, COMPANIES);
+    // What the secret items carried bring (the Unbroken Wick, the Nightingale Key, Caona's Conch).
+    const boons = battleBoons(flags, RPG);
+    // The armies' volleys before the first turn (Chapter 11: the whistle asked how many; engine/war.ts), and the canoes'
+    // own when Yari carries Caona's Conch.
+    const volleys = withFleetVolley(volleysFor(flags, def, COMPANIES), def, boons.fleetVolley);
     // A Challenge after a Challenge opens with the wounds the first one left (Chapter 12; rules-decisions [42]).
     const wounds = woundsFor(flags, def, party.map((p) => p.id));
-    // What the secret items carried bring (the Unbroken Wick, the Nightingale Key).
-    const boons = battleBoons(flags, RPG);
     this.battle = new Battle(def, party, enemies, items, { seed: this.seed, grudge, ...purse, reserve, volleys, wounds, boons });
     this.placeFighters();
     const opening: BattleEvent[] = [];

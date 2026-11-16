@@ -90,6 +90,7 @@ export const MUSIC_BY_MAP: Readonly<Record<string, MusicId>> = {
   'xaragua-record': 'caney',
   'xaragua-cellar': 'crown_customs',
   'xaragua-seacave': 'mountain_path',
+  'xaragua-weir': 'mountain_path',
   'ardencia-flats': 'cinder_flats',
   'ardencia-town': 'ardencia',
   'ardencia-alcazar': 'ardencia',
