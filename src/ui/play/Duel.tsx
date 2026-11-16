@@ -1,5 +1,6 @@
 import type { Game } from '../../engine/game';
 import type { Decision } from '../../engine/types';
+import { FitText } from '../FitText';
 import { Portrait } from './Figures';
 import { HOUSE_ART, ICONS } from '../../assets.config';
 import { useGame } from '../../state/gameStore';
@@ -25,7 +26,7 @@ export function Duel({ g, duel, block, onAnswer, onClose }: {
       <div className={`fcard2 ${hit ? 'hit' : ''}`} style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
         <Portrait house={p.house} gen={p.gen} className="big" />
         <div className="f-name">{id === useGame.getState().me ? `${p.name} (you)` : p.name}</div>
-        <div className="f-meta">{g.house(p).heirs[p.gen - 1]} · Gen {['I', 'II', 'III', 'IV'][p.gen - 1]}</div>
+        <div className="f-meta"><FitText>{g.house(p).heirs[p.gen - 1]} · Gen {['I', 'II', 'III', 'IV'][p.gen - 1]}</FitText></div>
         <div className="f-hp">{p.specter ? ICONS.specter : `${ICONS.heart} ${p.hp}`}</div>
       </div>
     );

@@ -1,5 +1,6 @@
 // Character art pieces for the play view: portrait, emblem, the hero card and rival chips.
 import type { Game } from '../../engine/game';
+import { FitText } from '../FitText';
 import { roman } from '../../engine/game';
 import type { HouseId, PlayerState } from '../../engine/types';
 import { PILLARS } from '../../engine/types';
@@ -72,7 +73,7 @@ export function HeroCard({ g, p, dim, onOpen }: { g: Game; p: PlayerState; dim?:
       <Medallion house={p.house} gen={p.gen} size={58} />
       <span className="b3-mid">
         <span className="b3-name">{p.name}{g.eligible(p) && <span className="elig" title="Can claim the Throne"> {ICONS.eligible}</span>}{g.findEffect('newborn', p.id) && <span className="newborn" title="New heir: can't be attacked until the end of your first turn"> {ICONS.newborn}</span>}</span>
-        <span className="b3-house">{h.heirs[p.gen - 1]} · Gen {roman(p.gen)}</span>
+        <FitText className="b3-house">{h.heirs[p.gen - 1]} · Gen {roman(p.gen)}</FitText>
         <HeartRow p={p} />
         <span className="b3-goal" title={`Claim at ${claimGoal(t)}`}>Claim: {t.combined} total, {t.minEach}+ each</span>
       </span>
@@ -98,7 +99,7 @@ export function RivalChip({ g, p, n, active, done, me, onOpen }: { g: Game; p: P
       <span className="seat3-n">{done ? '✓' : n}</span>
       {g.eligible(p) && <span className="seat3-elig" title="Can claim the Throne">{ICONS.eligible}</span>}
       {g.findEffect('newborn', p.id) && <span className="seat3-newborn" title="New heir: can't be attacked yet">{ICONS.newborn}</span>}
-      <span className="seat3-name">{me ? 'You' : p.name}</span>
+      <FitText className="seat3-name">{me ? 'You' : p.name}</FitText>
       <span className="seat3-stats">
         {p.specter ? <i className="sp">{ICONS.specter}</i> : <><i className="h">♥</i>{p.hp}</>}
         <i className="r">✦</i>{g.total(p)}

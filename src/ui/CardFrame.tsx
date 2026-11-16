@@ -3,6 +3,7 @@
 // and the words once painted; until then the game draws simple plates. Hand Cards, Instants and Elodie's cards
 // each have their own look.
 import { useLayoutEffect, useRef } from 'react';
+import { FitText } from './FitText';
 import type { ReactNode } from 'react';
 import type { CardDef } from '../engine/content';
 import { CARD_ART, CATEGORY_ART } from '../assets.config';
@@ -39,7 +40,7 @@ export function CardFrame({ card, children }: { card: CardDef; children?: ReactN
           {pic ? <img src={pic} alt="" /> : <span className="cf-art-empty" aria-hidden>{CATEGORY_ART[card.category]?.glyph}</span>}
         </div>
         {overlay && <img className="cf-overlay" src={overlay} alt="" />}
-        <div className="cf-title"><CategorySymbol card={card} /><span className="cf-name">{card.name}</span></div>
+        <div className="cf-title"><CategorySymbol card={card} /><FitText className="cf-name" min={0.6}>{card.name}</FitText></div>
         <div className="cf-box" ref={box}>
           <div className="cf-type">{card.elodie ? 'Elodie · ' : ''}{card.kind === 'hand' ? 'Hand Card' : 'Instant'} · {card.category}</div>
           {cardTiming(card) && <div className="cf-when">{cardTiming(card)}</div>}

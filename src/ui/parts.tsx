@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { CardDef } from '../engine/content';
+import { FitText } from './FitText';
 import type { Game } from '../engine/game';
 import { roman } from '../engine/game';
 import type { Pillar, PlayerState } from '../engine/types';
@@ -69,7 +70,7 @@ export function CharacterCard({ game, p }: { game: Game; p: PlayerState }) {
     <div className="charcard2" style={{ ['--c' as string]: HOUSE_ART[p.house].color }}>
       {art ? <img className="art" src={art} alt={`${p.name}, Gen ${roman(p.gen)}`} /> : <span className="silhouette" aria-hidden />}
       {CARD_ART.overlays.character && <img className="ov" src={CARD_ART.overlays.character} alt="" />}
-      <div className="cc-name">{h.heirs[p.gen - 1]}</div>
+      <div className="cc-name"><FitText min={0.55}>{h.heirs[p.gen - 1]}</FitText></div>
       <div className="cc-gen" aria-label={`Generation ${roman(p.gen)}`}>{roman(p.gen)}</div>
       <div className="cc-crest"><Crest house={p.house} size={24} /></div>
       <div className="cc-panel">

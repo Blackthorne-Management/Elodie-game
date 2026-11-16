@@ -24,26 +24,24 @@ import { Stage } from './Stage';
 import { Hand } from './Hand';
 import { Duel } from './Duel';
 import { CardRow, PeekSheet, PlayedCard } from './Peek';
+import { CardFlight, type Flight } from './CardFlight';
 import { Die } from './Die';
 import { peekTitle } from './peekTitle';
 import type { PeekGroup } from './Peek';
 import type { DuelShow } from './Duel';
 import { useMotion } from './motion';
-import { CARD_ART, UI_ART } from '../../assets.config';
+import { UI_ART } from '../../assets.config';
 import { audio } from '../../audio/player';
 import { musicFor, sfxFor } from '../../audio/plan';
 import { AudioControls } from '../AudioControls';
 
 const WALK_SPEED: Record<Speed, number> = { normal: 6.5, fast: 13, instant: Infinity };   // squares per second
 const SHOW_MS: Record<Speed, number> = { normal: 1500, fast: 700, instant: 0 };
+const FLIGHT_MS: Record<Speed, number> = { normal: 1900, fast: 1000, instant: 0 };   // a played card, start to finish
 
-// Rivals' cards stay hidden: the log says that they played a card, not which.
-function displayText(g: Game, e: LogEvent): string {
-  if ((e.kind === 'card' || e.kind === 'block') && e.player !== undefined && e.player !== seat() && e.cards) {
-    let t = e.text;
-    for (const c of e.cards) t = t.replace(g.card(c).name, 'a card');
-    return t;
-  }
+// A played card is known to the table (the engine's Interference prompt names it), so the log names it too.
+// Hands stay hidden: hand reveals carry visibleTo and are filtered before they get here.
+function displayText(_g: Game, e: LogEvent): string {
   return e.text;
 }
 // Decisions whose options are cards (picking from a hand, the deck or the discard pile).
@@ -72,7 +70,7 @@ export function PlayScreen() {
   const [rules, setRules] = useState<null | 'howto' | 'guide'>(null);
   const [showMap, setShowMap] = useState(false);
   const [duel, setDuel] = useState<DuelShow | null>(null);
-  const [banner, setBanner] = useState<{ seq: number; player: number; text: string } | null>(null);
+  const [flights, setFlights] = useState<Flight[]>([]);   // cards being played, shown one after another
   const [dice, setDice] = useState<{ n: number; who: string; seq: number } | null>(null);
   const [pathState, setPathState] = useState<{ id: number; steps: Pos[] }>({ id: -1, steps: [] });
   const busyUntil = useRef(0);
@@ -110,9 +108,12 @@ export function PlayScreen() {
         setDice({ n: e.amount, who: e.player !== undefined ? s.players[e.player].name : '', seq: e.seq });
       }
       if (!show) continue;
-      if ((e.kind === 'card' || (e.kind === 'instant' && e.player !== seat())) && e.player !== undefined && e.player !== seat()) {
-        setBanner({ seq: e.seq, player: e.player, text: e.kind === 'card' ? 'is playing a card…' : `draws ${displayText(g, e).split('draws ')[1] ?? 'an event'}` });
-        busyUntil.current = Math.max(busyUntil.current, Date.now() + show * 0.8);
+      // Every card played (yours and rivals'), Instant drawn or Block used is shown to the table, then flies onto the board.
+      const flown = e.cards?.[0];
+      if ((e.kind === 'card' || e.kind === 'instant' || (e.kind === 'block' && flown !== undefined)) && e.player !== undefined && flown !== undefined && visible(e)) {
+        const verb = e.kind === 'instant' ? 'draw an Instant' : e.kind === 'block' ? 'block with' : 'play';
+        setFlights(q => [...q, { seq: e.seq, card: flown, player: e.player!, mine: e.player === seat(), verb: e.player === seat() ? verb : verb.replace(/^(\w+)/, '$1s') }]);
+        busyUntil.current = Math.max(busyUntil.current, Date.now() + FLIGHT_MS[speed] + 150);
       }
       if (e.kind === 'attack' && e.player !== undefined && e.target !== undefined) {
         let outcome: string | null = null;
@@ -138,7 +139,7 @@ export function PlayScreen() {
   }, [version, runner.over, s, g, d, duel]);
 
   // Overlays fade on their own.
-  useEffect(() => { if (!banner) return; const t = setTimeout(() => setBanner(null), SHOW_MS[speed] * 0.8 || 1); return () => clearTimeout(t); }, [banner, speed]);
+  useEffect(() => { if (!flights.length) return; const t = setTimeout(() => setFlights(q => q.slice(1)), FLIGHT_MS[speed] || 1); return () => clearTimeout(t); }, [flights, speed]);
   useEffect(() => { if (!dice) return; const t = setTimeout(() => setDice(null), speed === 'instant' ? 400 : 900); return () => clearTimeout(t); }, [dice, speed]);
   useEffect(() => {
     if (!duel || d?.kind === 'block' && d.player === seat()) return;
@@ -193,10 +194,10 @@ export function PlayScreen() {
     .filter(a => inBoard(a.to) && manhattan(a.to, moveMode.from) <= moveMode.max)
     .map(a => ({ ...a, onTap: () => setPath(p => [...p, a.to]) }));
 
-  // ---- camera: while you step it holds on the middle of your path; otherwise it follows whoever is
+  // ---- camera: while you step it follows your character; otherwise it follows whoever is
   // walking, then settles on whoever is acting.
   const activeId = s.turn?.player ?? null;
-  const stepFocus = moveMode?.free && start && end ? { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 } : null;
+  const stepFocus = moveMode?.free && end ? end : null;   // while you step, the camera follows your character
   const restOn = s.players[mine ? seat() : activeId ?? seat()].pos ?? me.pos ?? { x: 9, y: 9 };
   const focusKey = stepFocus ? `${stepFocus.x},${stepFocus.y}` : `${restOn.x},${restOn.y}`;
   useEffect(() => { motion.setFocus(stepFocus ?? restOn, !stepFocus); },
@@ -256,12 +257,7 @@ export function PlayScreen() {
           {feed.map(e => <span key={e.seq}>{displayText(g, e)}</span>)}
         </button>
         {moveMode && <div className="steps2">{moveMode.free ? `${stepsLeft} step${stepsLeft === 1 ? '' : 's'} left · or tap a lit square` : mine!.prompt}</div>}
-        {banner && (
-          <div className="banner2" key={banner.seq}>
-            <Emblem house={s.players[banner.player].house} size={22} /> {s.players[banner.player].name} {banner.text}
-            <span className="flying-card" style={{ background: CARD_ART.back }} />
-          </div>
-        )}
+        {flights[0] && <CardFlight key={flights[0].seq} g={g} f={flights[0]} ms={FLIGHT_MS[speed]} />}
         <button type="button" className="minimap2" onClick={() => setShowMap(true)} aria-label="Open the map">
           <Board game={g} version={version} highlights={new Map()} onPick={() => {}} focus={activeId} zoom={false} />
           <span>MAP</span>

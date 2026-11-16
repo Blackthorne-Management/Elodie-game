@@ -1186,3 +1186,29 @@ body { background: radial-gradient(ellipse 110% 55% at 50% -12%, #1a2236 0%, tra
 .audio-controls { display: grid; gap: 8px; }
 .audio-row { display: grid; grid-template-columns: 5.5em 1fr; align-items: center; gap: 10px; min-height: 44px; }
 .audio-row input[type='range'] { width: 100%; height: 44px; accent-color: #e2b85c; }
+
+/* Text that shrinks to fit its box (src/ui/FitText.tsx). */
+.fit { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cf-title .fit { flex: 1; min-width: 0; }
+
+/* A card being played (src/ui/play/CardFlight.tsx): rises in, holds, shrinks onto the board. */
+.flight { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; pointer-events: none; animation: flight-fade var(--ms) ease both; }
+.flight-who { padding: 6px 12px; border-radius: 999px; background: #120c0ee6; border: 1px solid #c99a45; color: #f3d27a;
+  font: 700 14px var(--display, Georgia); display: flex; align-items: center; gap: 6px; box-shadow: 0 6px 18px #000a; }
+.flight-card { width: min(56vw, 220px); filter: drop-shadow(0 14px 22px #000c); animation: flight-card var(--ms) cubic-bezier(.2, .8, .3, 1) both; }
+.from-rival .flight-card { animation-name: flight-card-down; }
+@keyframes flight-fade { 0%, 82% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes flight-card {
+  0% { transform: translateY(45vh) scale(.5) rotate(-6deg); opacity: 0; }
+  18% { transform: translateY(0) scale(1) rotate(0); opacity: 1; }
+  70% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-6vh) scale(.18) rotate(8deg); opacity: 0; }
+}
+@keyframes flight-card-down {
+  0% { transform: translateY(-40vh) scale(.5) rotate(6deg); opacity: 0; }
+  18% { transform: translateY(0) scale(1) rotate(0); opacity: 1; }
+  70% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(6vh) scale(.18) rotate(-8deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .flight-card, .from-rival .flight-card { animation: flight-fade var(--ms) ease both; } }
