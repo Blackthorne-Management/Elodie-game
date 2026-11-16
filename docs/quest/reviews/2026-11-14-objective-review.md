@@ -103,7 +103,8 @@ tent flap...')], { mood: 'soft' })`, and `simple(id, lines, set?)` (`:36`) takes
 node sets a flag named `mood` to `'soft'` and the line has no mood. `checkDialogue` (`quest/src/engine/dialogue.ts:246`)
 validates moods on lines, so it cannot see this one.
 
-Fix: `say(BY, '...', { mood: 'soft' })`. Also worth a one-line test: no node `set` may contain a key named `mood`
+Fix: `say(BY, '...', { mood: 'soft' })`.
+- Fixed (Nov 16): the mood is on the line (`skarragol.ts`); a test now rejects a node `set` holding a line option. Also worth a one-line test: no node `set` may contain a key named `mood`
 (or `fx`, `stage`, any line option), which would catch the same slip anywhere.
 
 ### 4. Vikram grins on the line that tells the party to run (Ch8; Low-Medium)
@@ -113,7 +114,8 @@ Where seen: `quest/src/data/dialogue/jwaladesh.ts:111`: "The Court. Now. Before 
 the man who just ran up the stair and made it, wrong for an urgent order. Of the seven `out_of_breath` lines, this is the
 one where the face contradicts the words; the others are jokes or arrivals and the grin fits.
 
-Fix: `mood: 'set'` on that line (his other drawn face), or no mood. More broadly: the drawn expression is "winded and
+Fix: `mood: 'set'` on that line (his other drawn face), or no mood.
+- Fixed (Nov 16): `mood: 'set'` (`jwaladesh.ts:111`); the note is in `ART-EXPRESSIONS.md`. More broadly: the drawn expression is "winded and
 pleased", and the name invites it onto any line where he has been running; a note in `docs/quest/ART-EXPRESSIONS.md`
 ("out_of_breath is a grin; use set for urgency") would stop the next one.
 
@@ -144,6 +146,7 @@ the scene is clean, but the whistle's step-up is the one moment the free-row rul
 her hand. It reads fine at 1280x800 and a little stacked at 844x390 because the three sprites share a column.
 
 Fix: step him up to her side (`29,10` or `31,10`, diagonal) rather than straight below; the hand still reaches.
+- Not changed (Nov 16, Claude's call): tried at `31,10` in the browser; the party stands shoulder to shoulder on row 9, so the diagonal puts him in front of Yari, over a third person. Straight below Gianna, the one he is taking the whistle from, reads better; the step back onto the pier follows on the next line.
 
 ### 8. Smaller things
 

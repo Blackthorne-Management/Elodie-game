@@ -378,7 +378,7 @@ export const SKARRAGOL_DIALOGUE: readonly DialogueScript[] = [
   simple('trading_jarl_talk', [say(JR, 'Eleven hulls, envoy. The Crown measured nine. I counted them all, and I want them all back on the water.')]),
   simple('trading_jarl_quay_talk', [say(JR, 'Nine measured. None sold. The longship at the end of the pier is yours, envoy.')]),
   simple('hostage_envoy_talk', [say(HE, 'I am the steppe\'s guest, envoy, and the Throne\'s clerk. I would not want you to say you were not shown the offer.')]),
-  simple('bayarmaa_talk', [say(BY, '...'), nar('She is watching the tent flap, where the grey mare\'s head would be if they let it in.')], { mood: 'soft' }),
+  simple('bayarmaa_talk', [say(BY, '...', { mood: 'soft' }), nar('She is watching the tent flap, where the grey mare\'s head would be if they let it in.')]),
   simple('horn_rider_talk', [say('horn_rider', 'The Moot sits at the horn. Until then we hold the aisle, and the chieftain\'s daughter.')]),
   simple('horn_master_talk', [
     { if: { notFlag: 'story.standard_planted' }, speaker: 'horn_master', text: 'The morning horn is mine to blow, envoy. Not a breath before first light.' },

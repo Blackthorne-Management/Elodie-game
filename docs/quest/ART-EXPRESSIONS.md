@@ -53,3 +53,5 @@ Use the same prompt and attach the plain portrait.
 
 The other characters whose lines ask for expressions (Jordyn, Aiyana, Coralie, Patricia, the behique, Qasim, the
 herald and the rest) have no portrait yet. Their expressions are with their full sets in `ART-LEFT.md`.
+
+**Note for tagging (review Nov 14):** Vikram's drawn *out of breath* is a wide grin, winded and pleased. Use it for arrivals and jokes; use *set* for urgency.

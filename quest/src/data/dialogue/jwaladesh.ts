@@ -108,7 +108,7 @@ function discNodes(): Record<string, DialogueNode> {
           'I ran. I should not have run.',
         ),
         act([{ do: 'face', actor: 'vikram_roof', facing: 'left' }, { do: 'wait', ms: 900 }], '', 'He looks along the beam to the window, and for once he says nothing.'),
-        act([{ do: 'exit', actor: 'vikram_roof', to: at(ROOFTOPS.ladder.x, ROOFTOPS.ladder.y - 1), run: true }], V, 'The Court. Now. Before somebody... draws a curtain on it.', { mood: 'out_of_breath' }),
+        act([{ do: 'exit', actor: 'vikram_roof', to: at(ROOFTOPS.ladder.x, ROOFTOPS.ladder.y - 1), run: true }], V, 'The Court. Now. Before somebody... draws a curtain on it.', { mood: 'set' }),
       ],
     },
   };

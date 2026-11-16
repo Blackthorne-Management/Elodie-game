@@ -160,3 +160,16 @@ describe('expressions', () => {
     expect(second.kind === 'line' && 'mood' in second).toBe(false);
   });
 });
+
+describe('the game\'s dialogue', () => {
+  // Review Nov 14, finding 3: `simple(id, lines, { mood: 'soft' })` set a flag named "mood" instead of the line's face.
+  // A node's flag settings never take a line option's name.
+  it('no node sets a flag named like a line option (mood, stage, fx, translation, speaker, text)', async () => {
+    const { CONTENT } = await import('../src/data/content.ts');
+    const options = ['mood', 'stage', 'fx', 'translation', 'speaker', 'text'];
+    const bad = Object.values(CONTENT.dialogue).flatMap((s) =>
+      Object.entries(s.nodes).flatMap(([id, n]) => Object.keys(n.set ?? {}).filter((k) => options.includes(k)).map((k) => `${s.id}/${id}: ${k}`)),
+    );
+    expect(bad).toEqual([]);
+  });
+});
