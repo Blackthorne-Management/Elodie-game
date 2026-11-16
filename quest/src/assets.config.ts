@@ -2445,3 +2445,19 @@ export const BATTLE_FX = {
   surge: 0xfff2a0,
 } as const;
 
+
+/**
+ * The intro film's files under public/intro/ (Claude's call, Nov 16). The full copy is 720p (6.2 MB MP4, 7.3 MB WebM);
+ * the light copy is 640x360 (3.1 MB / 3.6 MB) for slow connections and small screens (scenes/IntroScene.ts picks).
+ * Safari plays MP4, others either.
+ */
+export const INTRO_VIDEO = {
+  full: [
+    { src: 'intro/zetwal-intro.mp4', type: 'video/mp4' },
+    { src: 'intro/zetwal-intro.webm', type: 'video/webm' },
+  ],
+  light: [
+    { src: 'intro/zetwal-intro-light.mp4', type: 'video/mp4' },
+    { src: 'intro/zetwal-intro-light.webm', type: 'video/webm' },
+  ],
+} as const;

@@ -295,3 +295,5 @@ player presses a button.
 2. The narration lines (all four beats of text above).
 3. The sepia look for the past and full colour for the present.
 4. Showing the hand that takes the seventh page, but never whose it is.
+
+**Light copy of the intro film (Claude's call, Nov 16).** For slow connections (Save-Data, 2G/3G) and small screens (short side under 500 CSS px) the game plays `quest/public/intro/zetwal-intro-light.mp4` / `.webm` (3.1 MB / 3.6 MB, against 6.2 / 7.3 MB), falling back to the full copy if it fails. Made from the 720p copy with: `ffmpeg -i zetwal-intro.mp4 -vf scale=640:360 -c:v libx264 -profile:v main -preset slow -crf 30 -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart zetwal-intro-light.mp4` and `ffmpeg -i zetwal-intro.mp4 -vf scale=640:360 -c:v libvpx-vp9 -crf 42 -b:v 0 -row-mt 1 -c:a libopus -b:a 64k zetwal-intro-light.webm`.

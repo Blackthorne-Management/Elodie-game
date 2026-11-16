@@ -5,16 +5,19 @@
 
 import Phaser from 'phaser';
 import { INTRO_SEEN_KEY, introLoopSeek, introPhaseAt, introPress, introStartTime, type IntroOpening, type IntroPhase, type IntroPress } from '../engine/intro.ts';
+import { INTRO_VIDEO } from '../assets.config.ts';
 import { audio } from '../audio/player.ts';
 import { buttonName, currentDevice } from '../input/buttonNames.ts';
 import { isTouchDevice } from '../input/touch.ts';
 import { getRuntime } from '../runtime.ts';
 
-/** The game's copies of the video (720p; the 1080p original is in docs/quest/intro/). Safari plays MP4, others either. */
-const SOURCES = [
-  { src: 'intro/zetwal-intro.mp4', type: 'video/mp4' },
-  { src: 'intro/zetwal-intro.webm', type: 'video/webm' },
-];
+/** True when the light copy should play: Save-Data, a 2G/3G connection or a small screen (short side under 500 CSS px). */
+export function wantsLightIntro(): boolean {
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  if (conn?.saveData === true) return true;
+  if (conn?.effectiveType === 'slow-2g' || conn?.effectiveType === '2g' || conn?.effectiveType === '3g') return true;
+  return Math.min(window.innerWidth, window.innerHeight) < 500;
+}
 
 export interface IntroData {
   opening: IntroOpening;
@@ -150,15 +153,37 @@ export class IntroScene extends Phaser.Scene {
     video.playsInline = true;
     video.preload = 'auto';
     video.setAttribute('playsinline', '');
-    for (const s of SOURCES) {
-      const source = document.createElement('source');
-      source.src = s.src;
-      source.type = s.type;
-      video.appendChild(source);
-    }
-    // When no source can play, the last source reports the error: go on into the quest.
-    video.lastElementChild?.addEventListener('error', () => this.finish());
-    video.addEventListener('error', () => this.finish());
+    // The light copy on a slow connection or small screen; if it fails to load, the full copy takes over.
+    const light = wantsLightIntro();
+    let fellBack = !light;
+    const setSources = (list: readonly { src: string; type: string }[], onFail: () => void): void => {
+      video.replaceChildren();
+      for (const s of list) {
+        const source = document.createElement('source');
+        source.src = s.src;
+        source.type = s.type;
+        video.appendChild(source);
+      }
+      // When no source can play, the last source reports the error.
+      video.lastElementChild?.addEventListener('error', onFail);
+    };
+    const fullFallback = (): void => {
+      setSources(INTRO_VIDEO.full, () => this.finish());
+      video.addEventListener('loadedmetadata', () => { if (!this.finished) this.play(introStartTime(this.opening)); }, { once: true });
+      video.load();
+    };
+    setSources(light ? INTRO_VIDEO.light : INTRO_VIDEO.full, light ? () => { fellBack = true; fullFallback(); } : () => this.finish());
+    // A decode error on the light copy also falls back to the full one, once.
+    video.addEventListener('error', () => {
+      if (!fellBack) {
+        fellBack = true;
+        fullFallback();
+      } else this.finish();
+    });
+    video.dataset.copy = light ? 'light' : 'full';
+    video.addEventListener('loadstart', () => {
+      video.dataset.copy = video.currentSrc.includes('-light') ? 'light' : 'full';
+    });
     layer.appendChild(video);
 
     const prompt = document.createElement('div');
